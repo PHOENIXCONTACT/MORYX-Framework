@@ -21,6 +21,9 @@
 		<PackageVersion Include="Moq" Version="4.20.72" />
 		<PackageVersion Include="NUnit" Version="4.3.2" />
 		<PackageVersion Include="NUnit3TestAdapter" Version="5.0.0" />
+		<PackageVersion Include="NUnit.Analyzers" Version="4.6.0" />
+		<PackageVersion Include="WireMock.Net" Version="1.6.2" />
+		<PackageVersion Include="WireMock.Net.FluentAssertions" Version="1.5.62" />
 		<PackageVersion Include="coverlet.collector" Version="6.0.4" />
 
 		<!-- Bereits vorhandene Einträge (aus deiner Migration) -->
@@ -71,9 +74,15 @@
 		
 		<PackageVersion Include="Castle.Windsor" Version="6.0.0" />
 
-		<!-- Dependencies for drivers -->
+		<!-- Dependencies for drivers and adapters -->
 		<PackageVersion Include="MQTTnet" Version="4.3.1.873" />
 		<PackageVersion Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.376.213" />
+
+		<PackageVersion Include="InfluxDB.LineProtocol" Version="1.1.1" />
+		<PackageVersion Include="InfluxDB.Client" Version="4.18.0" />
+		<PackageVersion Include="CsvHelper" Version="33.0.1" />
+
+
 
 	</ItemGroup>
 </Project>

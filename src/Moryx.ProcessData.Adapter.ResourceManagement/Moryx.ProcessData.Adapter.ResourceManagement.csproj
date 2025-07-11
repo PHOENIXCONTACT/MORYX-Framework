@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>Moryx.ProcessData.Adapter.ResourceManagement</Description>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+	  <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+	  <ProjectReference Include="..\Moryx.ProcessData\Moryx.ProcessData.csproj" />
+	  <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
+  </ItemGroup>
+</Project>

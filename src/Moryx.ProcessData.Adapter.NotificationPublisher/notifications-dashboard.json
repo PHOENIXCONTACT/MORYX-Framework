@@ -1,0 +1,862 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 3,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": false,
+      "title": "New link",
+      "tooltip": "",
+      "type": "link",
+      "url": "localhost:3000/dashid"
+    }
+  ],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "8tE2pc5nz"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 4,
+        "w": 7,
+        "x": 0,
+        "y": 0
+      },
+      "id": 8,
+      "options": {
+        "color": "white",
+        "fromDateVariableName": "fromDate",
+        "fromDatelabel": "From",
+        "label": "From",
+        "seriesCountSize": "sm",
+        "showSeriesCount": false,
+        "text": "Default value of text input option",
+        "toDateVariableName": "toDate",
+        "toDatelabel": "To",
+        "variableName": "fromDate"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "8tE2pc5nz"
+          },
+          "refId": "A"
+        }
+      ],
+      "title": "Date Filter",
+      "type": "phoenix-contact-my-plugin"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "8tE2pc5nz"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 4,
+        "w": 17,
+        "x": 7,
+        "y": 0
+      },
+      "id": 12,
+      "options": {
+        "intervalVariableName": "time_interval",
+        "label": "Severity",
+        "severityFilterVariableName": "severity",
+        "timeIntervalLabel": "Time interval",
+        "titleVariableName": "Title",
+        "variableName": "Default value of text input option"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4g0nzM4z"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SHOW TAG VALUES  WITH KEY = \"title\"",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "type": "phoenix-contact-moryx-notification-severity-checklist"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "8tE2pc5nz"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "fillOpacity": 80,
+            "gradientMode": "scheme",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 2,
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "notifications_acknowledged.sum {severity: Error}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Error"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#ff0000",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "notifications_acknowledged.sum {severity: Fatal}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Fatal"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#800080",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "notifications_acknowledged.sum {severity: Info}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Info"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#808080",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "notifications_acknowledged.sum {severity: Warning}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Warning"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-yellow",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byType",
+              "options": "number"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "hideTimeOverride": false,
+      "id": 6,
+      "maxDataPoints": 1500,
+      "options": {
+        "barRadius": 0.05,
+        "barWidth": 0.96,
+        "groupWidth": 0.84,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "right",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "text": {},
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        },
+        "xField": "Time",
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "9.1.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4g0nzM4z"
+          },
+          "hide": false,
+          "query": "SELECT sum(\"duration\") FROM notifications_acknowledged where severity=~/^$severity$/ and time>$fromDate AND time<$toDate GROUP BY time($time_interval),severity fill(0)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "All Notifications of a specific Severity",
+      "transformations": [],
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "8tE2pc5nz"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Amount Percentage"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Duration Percentage"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Duration"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              },
+              {
+                "id": "custom.width",
+                "value": 88
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "title"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 142
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Amount"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 89
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "severity"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 108
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 2,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 1,
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "9.1.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4g0nzM4z"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT count(\"id\"), sum(\"duration\") from (select * from notifications_acknowledged where time>$fromDate AND time<$toDate  AND \"severity\"=~ /^$severity$/) group by title, severity",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4g0nzM4z"
+          },
+          "hide": false,
+          "query": "SELECT count(\"id\") as total_count, sum(\"duration\") as total_duration  FROM  (select * from notifications_acknowledged where time>$fromDate AND time<$toDate AND \"severity\"=~ /^$severity$/) ",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "Notifications grouped by Titles",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "binary": {
+              "left": "count",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "total_count"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "binary": {
+              "left": "sum",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "total_duration"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "total_count": true,
+              "total_duration": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "count": 3,
+              "count / total_count": 5,
+              "severity": 1,
+              "sum": 6,
+              "sum / total_duration": 8,
+              "title": 2,
+              "total_count": 4,
+              "total_duration": 7
+            },
+            "renameByName": {
+              "Time": "",
+              "count": "Amount",
+              "count / total_count": "Amount Percentage",
+              "severity": "Severity",
+              "sum": "Duration",
+              "sum / total_duration": "Duration Percentage",
+              "title": "Title",
+              "total_count": "",
+              "total_duration": ""
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "8tE2pc5nz"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 14,
+      "options": {
+        "label": "Title",
+        "titleVariableName": "Title"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4g0nzM4z"
+          },
+          "query": "SHOW TAG VALUES  WITH KEY = \"title\"  where time>$fromDate AND time<$toDate",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series"
+        }
+      ],
+      "title": "Notification Title Filter",
+      "type": "phoenix-contact-moryx-grafana-notification-title-dropdown"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "8tE2pc5nz"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "filterable": false,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Duration"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "ms"
+              },
+              {
+                "id": "custom.width",
+                "value": 87
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "severity"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 79
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 4,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "9.1.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "L4g0nzM4z"
+          },
+          "query": "SELECT * FROM notifications_acknowledged where title=~/^$Title$/ and time>$fromDate AND time<$toDate",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table"
+        }
+      ],
+      "title": "All Notifications of a specific Title",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "application": true,
+              "id": true
+            },
+            "indexByName": {
+              "Time": 0,
+              "application": 2,
+              "created": 1,
+              "duration": 3,
+              "id": 5,
+              "message": 6,
+              "severity": 7,
+              "title": 4,
+              "type": 8
+            },
+            "renameByName": {
+              "Time": "",
+              "acknowledger": "Acknowledger",
+              "application": "",
+              "created": "Created",
+              "duration": "Duration",
+              "message": "Message",
+              "severity": "Severity",
+              "title": "Title",
+              "type": "Notification type"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "14d",
+          "value": "14d"
+        },
+        "hide": 2,
+        "name": "time_interval",
+        "options": [
+          {
+            "selected": false,
+            "text": "7d",
+            "value": "7d"
+          }
+        ],
+        "query": "14d",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "(Warning|Error|Fatal|Info)",
+          "value": "(Warning|Error|Fatal|Info)"
+        },
+        "hide": 2,
+        "label": "",
+        "name": "severity",
+        "options": [
+          {
+            "selected": true,
+            "text": "(Warning|Error|Fatal|Info)",
+            "value": "(Warning|Error|Fatal|Info)"
+          }
+        ],
+        "query": "(Warning|Error|Fatal|Info)",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Test Error in manueller Lötzelle",
+          "value": "Test Error in manueller Lötzelle"
+        },
+        "hide": 2,
+        "name": "Title",
+        "options": [
+          {
+            "selected": true,
+            "text": "New test",
+            "value": "New test"
+          }
+        ],
+        "query": "New test",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "'2022-06-02'",
+          "value": "'2022-06-02'"
+        },
+        "hide": 2,
+        "label": "23/09/2022",
+        "name": "fromDate",
+        "options": [
+          {
+            "selected": false,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "'2022-06-02'",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "'2022-10-29'",
+          "value": "'2022-10-29'"
+        },
+        "hide": 2,
+        "label": "",
+        "name": "toDate",
+        "options": [
+          {
+            "selected": false,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "'2022-10-29'",
+        "skipUrlSync": false,
+        "type": "textbox"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6M",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Notifications Dashboard",
+  "uid": "M7-phG44z",
+  "version": 17,
+  "weekStart": ""
+}

@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>Moryx.ProcessData.Adapter.NotificationPublisher</Description>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.Notifications\Moryx.Notifications.csproj" />
+    <ProjectReference Include="..\Moryx.ProcessData\Moryx.ProcessData.csproj" />
+  </ItemGroup>
+</Project>
