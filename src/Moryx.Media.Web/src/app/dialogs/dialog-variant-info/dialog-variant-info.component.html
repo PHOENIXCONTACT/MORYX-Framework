@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>{{ TranslationConstants.VARIANT_INFO_DIALOG.TITLE | translate }} {{ data.name }}</h2>
+<mat-dialog-content class="mat-typography info-content">
+  <p matLine class="info-content-line">
+    <span class="info-content-line-label"> {{ TranslationConstants.VARIANT_INFO_DIALOG.VARIANT_NAME | translate }} </span>
+    <span class="info-content-line-value"> {{ data.name }} </span>
+  </p>
+  <p matLine class="info-content-line">
+    <span class="info-content-line-label"> {{ TranslationConstants.VARIANT_INFO_DIALOG.CONTENT_NAME | translate }} </span>
+    <span class="info-content-line-value">
+      {{ data.contentName }}
+    </span>
+  </p>
+  <p matLine class="info-content-line">
+    <span class="info-content-line-label"> {{ TranslationConstants.VARIANT_INFO_DIALOG.ID | translate }} </span>
+    <span class="info-content-line-value">
+      {{ data.contentId }}
+    </span>
+  </p>
+  <p matLine class="info-content-line">
+    <span class="info-content-line-label"> {{ TranslationConstants.VARIANT_INFO_DIALOG.SIZE | translate }} </span>
+    <span class="info-content-line-value"> {{ data.size/1024 | number: '1.0-2' }} KB </span>
+  </p>
+  <p matLine class="info-content-line">
+    <span class="info-content-line-label"> {{ TranslationConstants.VARIANT_INFO_DIALOG.LINK | translate }}: </span>
+    <a class="info-content-line-value" (click)="$event.preventDefault()" [href]="data.url" [cdkCopyToClipboard]="data.url"> {{ TranslationConstants.VARIANT_INFO_DIALOG.COPY_TO_CLIPBOARD | translate }} </a>
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button
+    mat-button
+    color="primary"
+    type="submit"
+    mat-dialog-close
+    cdkFocusInitial
+  >
+    {{ TranslationConstants.VARIANT_INFO_DIALOG.CLOSE | translate }}
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>{{ TranslationConstants.DELETE_DIALOG.TITLE | translate }}</h2>
+<mat-dialog-content class="mat-typography">
+  {{ data.deleteMessage }}
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button color="primary" type="reset" mat-dialog-close>
+    {{ TranslationConstants.DELETE_DIALOG.CANCEL | translate }}
+  </button>
+  <button
+    mat-button
+    color="primary"
+    type="submit"
+    [mat-dialog-close]="true"
+    cdkFocusInitial
+  >
+    {{ TranslationConstants.DELETE_DIALOG.DELETE | translate }}
+  </button>
+</mat-dialog-actions>
