@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <Description>Simulator to simualte a production with process and transport handling</Description>
+    <IsPackable>true</IsPackable>
+    <PackageTags>MORYX;IoT;Manufacturing;Resource;Simulation</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
+    <ProjectReference Include="..\Moryx.Simulation\Moryx.Simulation.csproj" />
+  </ItemGroup>
+</Project>
