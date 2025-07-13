@@ -1,0 +1,133 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+:host {
+    overflow: hidden;
+    height: 100%;
+    flex: 1 1;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+}
+
+.workplan-canvas {
+    position: relative;
+    background-image:
+        linear-gradient(to right, Gainsboro 1px, transparent 1px),
+        linear-gradient(to bottom, Gainsboro 1px, transparent 1px);
+}
+
+.workplan-node {
+    position: absolute;
+    z-index: 1;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-around;
+    align-items: stretch;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    background: $primary-light;
+}
+
+
+.selected-node {
+    background: $primary;
+    color: white;
+}
+
+.workplan-node .node-label {
+    width: 100%;
+    text-align: center;
+}
+
+.workplan-node .connectors {
+    height: 1em;
+    z-index: 2;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.workplan-node .connectors.outputs div {
+    margin-bottom: -1em;
+    border-top: 1em solid $primary-light;
+	border-left: 0.5em solid transparent;
+	border-right: 0.5em solid transparent;
+	height: 0;
+	width: 2em;
+
+    &:hover {
+        border-top: 1em solid $primary-dark;
+    }
+}
+
+.workplan-node .connectors.inputs div {
+    margin-top: -1em;
+    border-bottom: 1em solid $primary-light;
+	border-left: 0.5em solid transparent;
+	border-right: 0.5em solid transparent;
+	height: 0;
+	width: 2em;
+
+    &:hover {
+        border-bottom: 1em solid $primary-dark;
+    }
+}
+
+.workplan-node .connectors.inputs span.selected-node-connector{    
+    border-bottom: 1em solid $primary;
+    &:hover {
+        border-bottom: 1em solid $primary-dark;
+    }
+}
+
+.workplan-node .connectors.outputs span.selected-node-connector{    
+    border-top: 1em solid $primary;
+    &:hover {
+        border-top: 1em solid $primary-dark;
+    }
+}
+
+.workplan-path .segment {    
+    position: absolute;
+    background: $primary-dark;
+}
+
+.path-menu-area {
+    position: absolute;
+}
+
+.menu-trigger {
+    position: absolute;
+}
+
+.canvas-container {
+    flex: 1 1;
+    overflow: hidden;
+    margin: 8px;
+}
+
+.workplans-edit-drawer {
+    width: 350px;
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+.workplans-side-bar-right {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+    justify-content: flex-end;
+    padding: 5px;
+    margin-top: 10px;
+}
+
+.drawer-content {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+    padding: 20px;
+}
+
+.small-drawer{
+    width: 50px !important;
+}

@@ -10,7 +10,7 @@ The classic automation pyramid model shows a series of well-defined layers struc
 - The second level or *control level* includes logical devices such as PCs, PLCs, PIDs, etc.
 - The *supervisory level* (third level) corresponds to control and data acquisition systems (SCADA).
 - The manufacturing execution systems or MES are at a higher level or *planning level*.
-- The top of the pyramid (*management level*) is comprised of the companyâ€™s integrated management system (ERP) e.g. SAP.
+- The top of the pyramid (*management level*) is comprised of the company’s integrated management system (ERP) e.g. SAP.
 
 The main goal of this document is to give an overall understanding of the concept of the ControlSystem. The concept involves the description of `Orders`, `Operations`, `Jobs`, `Recipes`, `Processes` and `Activities`. Also the communication with `Resources` out of the AbstractionLayer will be shown.
 
@@ -208,3 +208,40 @@ With all the described sections in this document a big picture of the ControlSys
 The following picture shows the flow of information from an order to a single activity handled by some resource.
 
 ![Information Flow](articles/images/InformationFlowOfSingleOrder.svg)
+
+# Moryx Workflows Editing
+
+## Description
+
+This module provides the functiality to edit workplans graphically. It provides workplans and enables operations on workplan items.It also enables saving modified workplans with additional graphical information.
+
+## Provided facades
+
+None
+
+## Dependencies
+
+Workflows Editing depends on the following APIs and DataModels. Detailed documentation can (hopefully) be found by clicking the dependencies link.
+
+`IWorkplanEditing` (see Moryx.Workflows.IWorkplanEditing in Moryx Platform)
+
+`IWorkplans ` (see Moryx.Workflows.IWorkplans in Moryx Platform)
+
+### Referenced facades
+
+Plugin API | Start Dependency | Optional | Usage
+-----------|------------------|----------|------
+`IProductManagement` (see Moryx.Products.IProductManagement in AbstractionLayer)| Yes | No | The Product Management is used the get products and workplans information.
+
+### Used DataModels
+
+- `Moryx.Workflows.Editing.Model` (see Moryx.Workflows.Editing.Model in Moryx Platform)
+
+## Architecture
+
+### Overview
+
+Component name|Implementation|Desription
+--------------|--------------|----------
+[WorkplanEditingHost](xref:Moryx.Workflows.Editing.WorkplanEditingHost)|Public|Manages WCF connections and multiuser scenario
+[EditingManager](xref:Moryx.Workflows.Editing.EditingManager)|Public|Manages operations on workplan (eg. Add, Remove steps)

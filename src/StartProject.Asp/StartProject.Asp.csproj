@@ -41,6 +41,8 @@
     <ProjectReference Include="..\Moryx.Products.Samples\Moryx.Products.Samples.csproj" />
     <ProjectReference Include="..\Moryx.Resources.Management\Moryx.Resources.Management.csproj" />
     <ProjectReference Include="..\Moryx.Resources.Samples\Moryx.Resources.Samples.csproj" />
+    <ProjectReference Include="..\Moryx.Workplans.Editing\Moryx.Workplans.Editing.csproj" />
+    <ProjectReference Include="..\Moryx.Workplans.Web\Moryx.Workplans.Web.csproj" />
   </ItemGroup>
 
 </Project>

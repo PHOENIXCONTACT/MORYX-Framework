@@ -1,0 +1,71 @@
+{
+  "APP": {
+    "TITLE": "Arbeitspläne",
+    "OPEN_WORKPLAN_MANAGEMENT": "Öffne Verwaltungsansicht",
+    "OPEN_WORKPLAN_SESSIONS": "Öffne Bearbeitungsansicht",
+    "NO_SESSION_IS_OPEN": "Es sind noch keine Sitzungen geöffnet"
+  },
+  "NOT_FOUND": "Wir konnten leider keine Sitzung mit dieser ID  finden",
+  "DISMISS": "OKAY",
+  "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
+  "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Internetverbindung oder Proxy-Einstellungen.",
+  "SESSIONS": {
+    "CONFIRM_DIALOG": {
+      "TITLE": "Möchtest du diese Sitzung schließen?",
+      "MESSAGE": "Wenn du die Sitzung schließt gehen alle nicht gespeicherten Änderungen verloren. Möchtest du die Sitzung wirklich schließen?",
+      "CONFIRM": "FORTFAHREN",
+      "CANCEL": "ABBRECHEN"
+    },
+    "CLOSE": "Schließen"
+  },
+  "STEP_CREATOR": {
+    "CREATE": "Erstellen",
+    "CONFIGURE_UNKNOWN": "Unbekannten Schritt konfigurieren",
+    "COULD_NOT_FIND": "Wir konnten keine Schritte des angegebenen Typs finden"
+  },
+  "TOOLBOX": {
+    "HEADER": "Kontrollfluss",
+    "STEPS": "Schritte",
+    "SUB_HEADER": "Teilarbeitspläne"
+  },
+  "PROPERTIES": {
+    "TITLE": "Eigenschaften",
+    "NAME": "Name",
+    "STATE": "Zustand",
+    "VERSION": "Version",
+    "DISPLAY_NAME": "Anzeigename",
+    "NAVIGATE": "Navigiere zum Arbeitsplan"
+  },
+  "EDITOR": {
+    "AUTO_LAYOUT": "Automatisches Layout",
+    "CREATING": "Erstellen...",
+    "DELETE": "Löschen",
+    "SAVE": "Arbeitsplan speichern",
+    "SNACK_BAR": {
+      "SUCCESS": "Arbeitsplan gespeichert"
+    }
+  },
+  "MANAGEMENT": {
+    "NAME": "Name",
+    "STATE": "Zustand",
+    "VERSION": "Version",
+    "OPEN_SESSION": "Öffnen",
+    "DUPLICATE": "Duplizieren",
+    "DELETE": "Löschen",
+    "ADD": "Hinzufügen",
+    "CONFIRM_DIALOG": {
+      "TITLE": "Arbeitsplan Löschen",
+      "MESSAGE_FIRST_PART": "Der Arbeitsplan",
+      "MESSAGE_SECOND_PART": "wird im Zuge des Löschvorgangs geschlossen",
+      "MESSAGE": "Bist du sicher dass du mit dem Löschvorgang fortfahren möchtest?",
+      "CANCEL": "ABBRECHEN"
+    },
+    "SNACK_BAR": {
+      "SUCCESS_FIRST_PART": "Arbeitsplan",
+      "SUCCESS_SECOND_PART": "gelöscht"
+    }
+  },
+  "PLACEHOLDER": {
+    "DISPLAY_NAME": "Kein Name verfügbar"
+  }
+}
