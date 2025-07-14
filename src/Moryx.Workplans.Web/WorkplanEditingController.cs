@@ -12,9 +12,6 @@ using Moryx.Asp.Extensions;
 using Moryx.Serialization;
 using Moryx.Workplans.Web.Properties;
 
-#if COMMERCIAL
-using WupiEngine;
-#endif
 
 namespace Moryx.Workplans.Endpoint
 {
@@ -32,9 +29,6 @@ namespace Moryx.Workplans.Endpoint
         }
 
         [HttpGet("steps")]
-#if COMMERCIAL
-        [Protection(Trap = false)] 
-#endif
         public ActionResult<WorkplanStepRecipe[]> AvailableSteps()
         {
           var workplans = _workplans.LoadAllWorkplans();
@@ -62,9 +56,6 @@ namespace Moryx.Workplans.Endpoint
 
         [HttpPost("sessions")]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
-#if COMMERCIAL
-        [Protection(Trap = false)] 
-#endif
         public ActionResult<WorkplanSessionModel> EditWorkplan([FromBody] OpenSessionRequest openSession)
         {
             var workplan = openSession.WorkplanId > 0
@@ -88,9 +79,6 @@ namespace Moryx.Workplans.Endpoint
 
         [HttpGet("sessions/{sessionId}")]
         [Authorize(Policy = WorkplanPermissions.CanView)]
-#if COMMERCIAL 
-        [Protection(Trap = false)] 
-#endif
         public ActionResult<WorkplanSessionModel> OpenSession([FromRoute] string sessionId)
         {
             var session = _workplanEditing.OpenSession(sessionId);
@@ -101,9 +89,6 @@ namespace Moryx.Workplans.Endpoint
 
         [HttpGet("sessions/{sessionId}/autolayout")]
         [Authorize(Policy = WorkplanPermissions.CanView)]
-#if COMMERCIAL
-        [Protection(Trap = false)] 
-#endif
         public ActionResult<WorkplanSessionModel> AutoLayout([FromRoute] string sessionId)
         {
             var session = _workplanEditing.OpenSession(sessionId);
@@ -116,9 +101,6 @@ namespace Moryx.Workplans.Endpoint
 
         [HttpPut("sessions/{sessionId}")]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
-#if COMMERCIAL
-        [Protection(Trap = false)] 
-#endif
         public ActionResult<WorkplanSessionModel> UpdateSession(
             [FromRoute] string sessionId,
             [FromBody] WorkplanSessionModel sessionModel
@@ -153,9 +135,6 @@ namespace Moryx.Workplans.Endpoint
 
         [HttpPost("sessions/{sessionId}/save")]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
-#if COMMERCIAL
-        [Protection(Trap = false)] 
-#endif
         public ActionResult<WorkplanSessionModel> SaveSession(
             [FromRoute] string sessionId, 
             [FromBody] WorkplanSessionModel sessionModel)
@@ -168,9 +147,6 @@ namespace Moryx.Workplans.Endpoint
 
         [HttpDelete("sessions/{sessionId}")]
         [Authorize(Policy = WorkplanPermissions.CanView)]
-#if COMMERCIAL
-        [Protection(Trap = false)] 
-#endif
         public ActionResult CloseSession([FromRoute] string sessionId)
         {
             _workplanEditing.CloseSession(sessionId);
@@ -179,9 +155,6 @@ namespace Moryx.Workplans.Endpoint
 
         [HttpPost("sessions/{sessionId}/nodes")]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
-#if COMMERCIAL
-        [Protection(Trap = false)] 
-#endif
         public ActionResult<WorkplanNodeModel> AddStep(
             [FromRoute] string sessionId,
             [FromBody] WorkplanStepRecipe recipe
@@ -216,9 +189,6 @@ namespace Moryx.Workplans.Endpoint
 
         [HttpPut("sessions/{sessionId}/nodes/{nodeId}")]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
-#if COMMERCIAL
-        [Protection(Trap = false)] 
-#endif
         public ActionResult<WorkplanNodeModel> UpdateStep(
             [FromRoute] string sessionId,
             [FromRoute] long nodeId,
@@ -238,9 +208,6 @@ namespace Moryx.Workplans.Endpoint
 
         [HttpDelete("sessions/{sessionId}/nodes/{nodeId}")]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
-#if COMMERCIAL
-        [Protection(Trap = false)] 
-#endif
         public ActionResult<WorkplanSessionModel> RemoveNode(
             [FromRoute] string sessionId, 
             [FromRoute] long nodeId
@@ -253,9 +220,6 @@ namespace Moryx.Workplans.Endpoint
 
         [HttpPost("sessions/{sessionId}/nodes/{targetNodeId}/{targetIndex}")]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
-#if COMMERCIAL
-        [Protection(Trap = false)] 
-#endif
         public ActionResult<WorkplanSessionModel> ConnectStep(
             [FromRoute] string sessionId, 
             [FromRoute] long targetNodeId, 
@@ -273,9 +237,6 @@ namespace Moryx.Workplans.Endpoint
 
         [HttpDelete("sessions/{sessionId}/nodes/{targetNodeId}/{targetIndex}")]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
-#if COMMERCIAL
-        [Protection(Trap = false)] 
-#endif
         public ActionResult<WorkplanSessionModel> DisconnectStep(
             [FromRoute] string sessionId, 
             [FromRoute] long targetNodeId, 

@@ -56,10 +56,6 @@ namespace Moryx.Media.Server.Facades
 
         public Stream GetStream(FileDescriptor fileDescriptor)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return Stream.Null;
-#endif
             ValidateHealthState();
             return ContentManager.GetStream(fileDescriptor);
         }

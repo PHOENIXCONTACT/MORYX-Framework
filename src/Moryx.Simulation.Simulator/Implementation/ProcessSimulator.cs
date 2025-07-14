@@ -51,10 +51,6 @@ namespace Moryx.Simulation.Simulator
 
         public void Start()
         {
-#if COMMERCIAL
-            if (LicenseCheck.IsDeveloperLicense())
-                Logger.Log(LogLevel.Warning, "Running with developer license for 1h");
-#endif
             _drivers = ResourceManagement.GetAllResources<ISimulationDriver>(x => true).ToList();
             foreach (var driver in _drivers)
             {
@@ -191,10 +187,6 @@ namespace Moryx.Simulation.Simulator
 
         private void SimulateReady(ISimulationDriver target, IActivity activity)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
 
             if (target.SimulatedState > SimulationState.Idle)
             {

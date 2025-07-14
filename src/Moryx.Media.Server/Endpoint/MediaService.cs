@@ -43,10 +43,6 @@ namespace Moryx.Media.Server.Endpoint
 #endif
         public ContentDescriptorModel[] GetDescriptors()
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return new ContentDescriptorModel[0];
-#endif
             var descriptors = ContentManager.GetDescriptors();
 
             var models = new ContentDescriptorModel[descriptors.Count];
@@ -63,10 +59,6 @@ namespace Moryx.Media.Server.Endpoint
         public ContentDescriptorModel[] GetDescriptorsByPage(uint start, uint offset)
 #endif
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return new ContentDescriptorModel[0];
-#endif
             return ContentManager.GetDescriptors(start, offset).Select(ModelConverter.ConvertContent).ToArray();
         }
 
@@ -75,10 +67,6 @@ namespace Moryx.Media.Server.Endpoint
 #endif
         public ContentDescriptorModel GetDescriptor(string contentId)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return null;
-#endif
             var guid = ConvertGuid(contentId);
             if (guid == Guid.Empty)
                 return null;
@@ -102,10 +90,6 @@ namespace Moryx.Media.Server.Endpoint
 #endif
         public async Task<ContentAddingInfoModel> AddContent(ContentUploadRequest uploadRequest)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return null;
-#endif
             ContentAddingInfo addingInfo;
 
             var buffer = Convert.FromBase64String(uploadRequest.File);
@@ -129,10 +113,6 @@ namespace Moryx.Media.Server.Endpoint
 #endif
         public bool RemoveVariant(string contentId, string variantName)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return false;
-#endif
             var guid = ConvertGuid(contentId);
             if (guid == Guid.Empty)
                 return false;
@@ -145,10 +125,6 @@ namespace Moryx.Media.Server.Endpoint
 #endif
         public VariantDescriptorModel GetVariant(string contentId, string variantName)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return null;
-#endif
             var guid = ConvertGuid(contentId);
             if (guid == Guid.Empty)
                 return null;
@@ -173,10 +149,6 @@ namespace Moryx.Media.Server.Endpoint
 #endif
         public PreviewDescriptorModel GetPreview(string contentId, string variantName)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return null;
-#endif
             var guid = ConvertGuid(contentId);
             if (guid == Guid.Empty)
                 return null;
@@ -191,10 +163,6 @@ namespace Moryx.Media.Server.Endpoint
 #endif
         public Stream DownloadVariant(string contentId, string variantName)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return Stream.Null;
-#endif
             return GetFile(contentId, variantName, FileType.File);
         }
 
@@ -203,10 +171,6 @@ namespace Moryx.Media.Server.Endpoint
 #endif
         public Stream DownloadPreview(string contentId, string variantName)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return Stream.Null;
-#endif
             return GetFile(contentId, variantName, FileType.Preview);
         }
 
@@ -217,10 +181,6 @@ namespace Moryx.Media.Server.Endpoint
         public Stream FileSearch(string fileHash = null, string fileName = null, string variantName = MediaConstants.MasterName, string preview = "false")
 #endif
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return Stream.Null;
-#endif
             var descriptors = !string.IsNullOrEmpty(fileName)
                 ? ContentManager.GetDescriptors().Where(d => d.Name.Equals(fileName, StringComparison.OrdinalIgnoreCase))
                 : ContentManager.GetDescriptors();

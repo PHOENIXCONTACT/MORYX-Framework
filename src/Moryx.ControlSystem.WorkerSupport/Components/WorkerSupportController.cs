@@ -87,10 +87,6 @@ namespace Moryx.ControlSystem.WorkerSupport
 
         private void OnInstructionAdded(object sender, ActiveInstruction instruction)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             var identifier = ((IVisualInstructionSource)sender).Identifier;
             ProcessInstructionItems(instruction);
 
@@ -99,10 +95,6 @@ namespace Moryx.ControlSystem.WorkerSupport
 
         private void OnInstructionCleared(object sender, ActiveInstruction instruction)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             var identifier = ((IVisualInstructionSource)sender).Identifier;
 
             InstructionCleared?.Invoke(this, new InstructionEventArgs(identifier, instruction));

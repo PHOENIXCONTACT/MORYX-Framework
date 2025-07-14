@@ -145,10 +145,6 @@ namespace Moryx.ProcessData.InfluxDbListener
 
         private async Task UploadAsync(PointData[] points, CancellationToken cancellationToken)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
 
             try
             {

@@ -6,11 +6,6 @@ using System.Collections.Generic;
 using Moryx.Logging;
 using Moryx.Runtime.Modules;
 using Moryx.Workplans.Editing.Components;
-#if COMMERCIAL
-using System;
-using Microsoft.Extensions.Logging;
-using Moryx.Workplans.Editing;
-#endif
 namespace Moryx.Workplans.Editing.Facade
 {
     internal class WorkplanFacade : IFacadeControl, IWorkplanEditing
@@ -23,10 +18,6 @@ namespace Moryx.Workplans.Editing.Facade
 
         public void Activate()
         {
-#if COMMERCIAL
-            if (LicenseCheck.IsDeveloperLicense())
-                Logger.Log(LogLevel.Warning, "Running with developer license for 1h");
-#endif
         }
 
         public void Deactivate()
@@ -37,10 +28,6 @@ namespace Moryx.Workplans.Editing.Facade
 
         public WorkplanSession EditWorkplan(Workplan workplan, bool duplicate)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
             ValidateHealthState();
             return Editor.EditWorkplan(workplan, duplicate).Session;
         }

@@ -14,9 +14,6 @@ using Moryx.Runtime.Modules;
 using Moryx.Serialization;
 using Moryx.Users;
 using Newtonsoft.Json;
-#if COMMERCIAL
-using Moryx.ControlSystem;
-#endif
 
 namespace Moryx.Orders.Management
 {
@@ -164,10 +161,6 @@ namespace Moryx.Orders.Management
 
         public Operation AddOperation(OperationCreationContext context, IOperationSource source)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return null;
-#endif
             ValidateHealthState();
 
             // Validate source
@@ -207,10 +200,6 @@ namespace Moryx.Orders.Management
 
         public void BeginOperation(Operation operation, int amount, User user)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             ValidateHealthState();
 
             var operationData = GetOperationDataSave(operation);
@@ -255,10 +244,6 @@ namespace Moryx.Orders.Management
 
         public void ReportOperation(Operation operation, OperationReport report)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             ValidateHealthState();
 
             // Get default user if there is no in the report
@@ -312,11 +297,7 @@ namespace Moryx.Orders.Management
         }
 
         public async Task<AdviceResult> TryAdvice(Operation operation, OperationAdvice advice)
-        {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return null;
-#endif           
+        {  
             ValidateHealthState();
 
             var operationData = OperationDataPool.Get(operation);

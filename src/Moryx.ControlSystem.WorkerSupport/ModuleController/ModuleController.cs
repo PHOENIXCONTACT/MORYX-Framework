@@ -9,10 +9,6 @@ using Moryx.Container;
 using Moryx.ControlSystem.VisualInstructions;
 using Moryx.Runtime.Modules;
 
-#if COMMERCIAL
-using Moryx.Logging;
-using System;
-#endif
 
 namespace Moryx.ControlSystem.WorkerSupport
 {
@@ -57,10 +53,6 @@ namespace Moryx.ControlSystem.WorkerSupport
         {
             // Register all imported components
             Container.SetInstance(ResourceManagement);
-#if COMMERCIAL
-            if (LicenseCheck.IsDeveloperLicense())
-                Logger.Log(LogLevel.Warning, "Running with developer license for 1h");
-#endif
         }
 
         /// <summary>
@@ -68,10 +60,6 @@ namespace Moryx.ControlSystem.WorkerSupport
         /// </summary>
         protected override void OnStart()
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
             Container.Resolve<IWorkerSupportController>().Start();
 
             // Activate facade

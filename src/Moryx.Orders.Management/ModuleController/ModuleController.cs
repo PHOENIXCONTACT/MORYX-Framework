@@ -15,10 +15,6 @@ using Moryx.Users;
 using Moryx.Container;
 using Moryx.Configuration;
 using Microsoft.Extensions.Logging;
-#if COMMERCIAL
-using Moryx.ControlSystem;
-using Moryx.Logging;
-#endif
 
 namespace Moryx.Orders.Management
 {
@@ -99,19 +95,11 @@ namespace Moryx.Orders.Management
             Container.LoadComponents<ICountStrategy>();
             Container.LoadComponents<IOperationDispatcher>();
             Container.LoadComponents<IAdviceExecutor>();
-#if COMMERCIAL
-            if (LicenseCheck.IsDeveloperLicense())
-                Logger.Log(LogLevel.Warning, "Running with developer license for 1h");
-#endif
         }
 
             /// <inheritdoc />
         protected override void OnStart()
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
             if (Config.Users.UserRequired && UserManagement is NullUserManagement)
                 throw new InvalidOperationException("UserRequired configured but there is no UserManagement module available");
 

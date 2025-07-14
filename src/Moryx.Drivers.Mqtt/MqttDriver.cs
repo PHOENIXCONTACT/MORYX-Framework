@@ -250,10 +250,6 @@ public class MqttDriver : Driver, IMessageDriver<object>
 
     internal async Task OnConnected(MqttClientConnectedEventArgs args)
     {
-#if COMMERCIAL
-        if (!LicenseCheck.HasLicense())
-            return;
-#endif
         Logger.Log(LogLevel.Information, "Driver {id} connected to MqttBroker", _mqttClient.Options?.ClientId);
 
         State.TriedConnecting(true);
@@ -263,10 +259,6 @@ public class MqttDriver : Driver, IMessageDriver<object>
 
     private Task OnDisconnected(MqttClientDisconnectedEventArgs args)
     {
-#if COMMERCIAL
-        if (!LicenseCheck.HasLicense())
-            return Task.CompletedTask;
-#endif
         if (args.ClientWasConnected) // Only log info if we were connected before
             Logger.Log(LogLevel.Information, "Driver {id} disconnected from MqttBroker. Reason: {reason}", _mqttClient.Options.ClientId, args.ReasonString);
 
@@ -327,10 +319,6 @@ public class MqttDriver : Driver, IMessageDriver<object>
     /// <inheritdoc />
     public async Task SendAsync(object message)
     {
-#if COMMERCIAL
-        if (!LicenseCheck.HasLicense())
-            return;
-#endif
         IReadOnlyList<MqttTopic> topics;
         // Search by identifier if set
         if (message is IIdentifierMessage identifierMessage && !string.IsNullOrEmpty(identifierMessage.Identifier))
@@ -368,10 +356,6 @@ public class MqttDriver : Driver, IMessageDriver<object>
     /// <returns></returns>
     public async Task OnSend(MqttMessageTopic messageTopic, byte[] message)
     {
-#if COMMERCIAL
-        if (!LicenseCheck.HasLicense())
-            return;
-#endif
         var messageMqttBuilder = new MqttApplicationMessageBuilder()
           .WithTopic(messageTopic.Topic)
           .WithPayload(message)
@@ -400,10 +384,6 @@ public class MqttDriver : Driver, IMessageDriver<object>
     internal void Receive(string topicName, byte[] message)
     {
 
-#if COMMERCIAL
-        if (!LicenseCheck.HasLicense())
-            return;
-#endif
         var topic = topicName;
         if (Identifier != "")
         {

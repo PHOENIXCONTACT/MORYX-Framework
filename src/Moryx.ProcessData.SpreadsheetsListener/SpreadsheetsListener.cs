@@ -52,10 +52,6 @@ namespace Moryx.ProcessData.SpreadsheetsListener
         /// <inheritdoc />
         protected override void OnMeasurandAdded(Measurand measurand)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             lock (_pendingCsvMeasurements)
             {
                 foreach (var measurement in measurand.Measurements)
@@ -67,10 +63,6 @@ namespace Moryx.ProcessData.SpreadsheetsListener
         /// <inheritdoc />
         protected override void OnMeasurementAdded(Measurement measurement)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             lock (_pendingCsvMeasurements)
             {
                 AddPendingMeasurement(measurement).Wait();

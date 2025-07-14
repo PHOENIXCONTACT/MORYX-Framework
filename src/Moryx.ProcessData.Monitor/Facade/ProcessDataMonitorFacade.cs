@@ -22,20 +22,12 @@ namespace Moryx.ProcessData.Monitor
 
         public void Add(Measurement measurement)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             ValidateHealthState();
             ProcessDataCollector.AddMeasurement(measurement);
         }
 
         public void Add(Measurand measurand)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             ValidateHealthState();
             ProcessDataCollector.AddMeasurand(measurand);
         }

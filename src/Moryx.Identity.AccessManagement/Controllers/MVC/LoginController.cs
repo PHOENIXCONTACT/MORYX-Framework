@@ -46,10 +46,6 @@ namespace Moryx.Identity.AccessManagement.Controllers
 
         public async Task<IActionResult> Login(UserLoginModel userLoginModel, [FromQuery] string returnUrl)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return Forbid("No valid license found!");
-#endif
 
             var user = await _userManager.FindByNameAsync(userLoginModel.UserName);
             if (user is null)

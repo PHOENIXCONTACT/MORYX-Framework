@@ -15,9 +15,6 @@ using Moryx.Model;
 using Moryx.Notifications;
 using Moryx.Runtime.Modules;
 
-#if COMMERCIAL
-using System;
-#endif
 
 namespace Moryx.ControlSystem.ProcessEngine
 {
@@ -101,10 +98,6 @@ namespace Moryx.ControlSystem.ProcessEngine
             Container.LoadComponents<IJobScheduler>();
 
             Container.Resolve<ComponentOrchestration>().Initialize();
-#if COMMERCIAL
-            if (LicenseCheck.IsDeveloperLicense())
-                Logger.Log(LogLevel.Warning, "Running with developer license for 1h");
-#endif
         }
 
         /// <summary>
@@ -112,10 +105,6 @@ namespace Moryx.ControlSystem.ProcessEngine
         /// </summary>
         protected override void OnStart()
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
             // Activate facade
             ActivateFacade(_jobManagementFacade);
             ActivateFacade(_notificationSourceFacade);

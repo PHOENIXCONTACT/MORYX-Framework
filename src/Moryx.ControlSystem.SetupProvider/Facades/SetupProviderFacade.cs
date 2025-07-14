@@ -33,10 +33,6 @@ namespace Moryx.ControlSystem.SetupProvider
 
         public IRecipe LoadRecipe(long id)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return null;
-#endif
             ValidateHealthState();
 
             // TODO: Setup restore --> SetupRecipes are not saved
@@ -49,10 +45,6 @@ namespace Moryx.ControlSystem.SetupProvider
 
         public ISetupRecipe RequiredSetup(SetupExecution execution, IProductionRecipe recipe, ISetupTarget targetSystem)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return null;
-#endif
 
             ValidateHealthState();
 

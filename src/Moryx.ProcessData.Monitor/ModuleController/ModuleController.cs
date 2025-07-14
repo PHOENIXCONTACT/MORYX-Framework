@@ -7,9 +7,6 @@ using Moryx.Container;
 using Moryx.ProcessData.Listener;
 using Moryx.Runtime.Modules;
 
-#if COMMERCIAL
-using System;
-#endif
 
 namespace Moryx.ProcessData.Monitor
 {
@@ -32,10 +29,6 @@ namespace Moryx.ProcessData.Monitor
         /// <inheritdoc />
         protected override void OnInitialize()
         {
-#if COMMERCIAL
-            if (LicenseCheck.IsDeveloperLicense())
-                Logger.Log(LogLevel.Warning, "Running with developer license for 1h");
-#endif
             Container.SetInstance(ConfigManager);
 
             Container.LoadComponents<IProcessDataListener>();
@@ -44,10 +37,6 @@ namespace Moryx.ProcessData.Monitor
         /// <inheritdoc />
         protected override void OnStart()
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
             Container.Resolve<IProcessDataCollector>().Start();
             ActivateFacade(_processDataMonitorFacade);
         }

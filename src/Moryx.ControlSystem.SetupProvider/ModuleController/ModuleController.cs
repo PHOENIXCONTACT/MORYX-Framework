@@ -8,9 +8,6 @@ using Moryx.Container;
 using Moryx.ControlSystem.Setups;
 using Moryx.Runtime.Modules;
 
-#if COMMERCIAL
-using System;
-#endif
 
 namespace Moryx.ControlSystem.SetupProvider
 {
@@ -45,10 +42,6 @@ namespace Moryx.ControlSystem.SetupProvider
             // Register plugins for the setup management
             Container.LoadComponents<ISetupTrigger>();
 
-#if COMMERCIAL
-            if (LicenseCheck.IsDeveloperLicense())
-                Logger.Log(LogLevel.Warning, "Running with developer license for 1h");
-#endif
         }
 
         /// <summary>
@@ -56,10 +49,6 @@ namespace Moryx.ControlSystem.SetupProvider
         /// </summary>
         protected override void OnStart()
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
 
             // Resolve component orchestration and start all components in the correct order
             Container.Resolve<ISetupManager>().Start();

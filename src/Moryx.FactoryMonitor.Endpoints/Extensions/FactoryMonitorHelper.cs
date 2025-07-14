@@ -58,10 +58,6 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             List<OrderModel> orderModels,
             CancellationToken cancelToken)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
             if (cancelToken.IsCancellationRequested || activityEventArg.Progress == ActivityProgress.Ready) return;
 
             if (!cells.Any(x => x.Id == activityEventArg.Activity.Tracing.ResourceId)) return;

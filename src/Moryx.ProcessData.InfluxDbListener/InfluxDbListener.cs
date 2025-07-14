@@ -35,10 +35,6 @@ namespace Moryx.ProcessData.InfluxDbListener
         /// <inheritdoc />
         protected override void OnMeasurandAdded(Measurand measurand)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             lock (_pendingPoints)
                 _pendingPoints.AddRange(measurand.Measurements.Select(GetPointFromMeasurement));
 
@@ -48,10 +44,6 @@ namespace Moryx.ProcessData.InfluxDbListener
         /// <inheritdoc />
         protected override void OnMeasurementAdded(Measurement measurement)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             lock (_pendingPoints)
                 _pendingPoints.Add(GetPointFromMeasurement(measurement));
 

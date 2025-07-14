@@ -436,13 +436,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             // Use either the process related or general session cache
             var sessionCache = process?.ReportedSessions ?? _reportedSessions;
 
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-            {
-                Logger.Log(LogLevel.Warning, "No valid License available... Activities are not processed.", cell.Name);
-                CompleteProcessOnCell(process, message, cell);
-            }
-#endif
 
             ActivityData activity;
             lock (sessionCache)

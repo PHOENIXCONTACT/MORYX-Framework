@@ -29,9 +29,6 @@ using Moryx.FactoryMonitor.Endpoints.Model;
 using Moryx.FactoryMonitor.Endpoints.Extensions;
 using System.IO;
 using Timer = System.Timers.Timer;
-#if COMMERCIAL
-using Moryx.FactoryMonitor;
-#endif
 
 namespace Moryx.FactoryMonitor.Endpoints
 {
@@ -309,10 +306,6 @@ namespace Moryx.FactoryMonitor.Endpoints
         [Obsolete("Use background endpoint instead")]
         public ActionResult ChangeBackground(string url)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
             var manufacturingConfig = _resourceManager.GetResources<IManufacturingFactory>().FirstOrDefault();
             return ChangeBackground(manufacturingConfig.Id, url);
         }
@@ -327,10 +320,6 @@ namespace Moryx.FactoryMonitor.Endpoints
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult ChangeBackground(long resourceId, string url)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
             if (string.IsNullOrEmpty(url))
                 return UnprocessableEntity($"The provided {nameof(url)} is invalid");
 
@@ -355,10 +344,6 @@ namespace Moryx.FactoryMonitor.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<Dictionary<string, CellPropertySettings>> GetCellPropertiesSettings(string identifier)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
             var cellLocation = _resourceManager.GetResources<IMachineLocation>()?
                         .FirstOrDefault(x => x.Machine?.Id.ToString() == identifier);
 
@@ -377,10 +362,6 @@ namespace Moryx.FactoryMonitor.Endpoints
         [HttpPost("traceroute")]
         public ActionResult TraceRoute(TransportRouteModel route)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
             var path = route.Paths.ToList();
             var originCellLocation = _resourceManager.GetResource<IMachineLocation>(l => l.Machine.Id == route.IdCellOfOrigin);
             var destinationCellLocation = _resourceManager.GetResource<IMachineLocation>(l => l.Machine.Id == route.IdCellOfDestination);
@@ -419,10 +400,6 @@ namespace Moryx.FactoryMonitor.Endpoints
         [HttpPut("cell-settings/{id}")]
         public ActionResult CellSettings(long id, CellSettingsModel settings)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
             var cellLocation = _resourceManager.GetResource<IMachineLocation>(l => l.Machine?.Id == id);
 
             if (cellLocation is null)
@@ -443,10 +420,6 @@ namespace Moryx.FactoryMonitor.Endpoints
         [HttpPost("routes")]
         public ActionResult<List<TransportRouteModel>> GetRoutes()
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
             var locations = _resourceManager.GetResources<IMachineLocation>()?.ToList();
             return FactoryMonitorHelper.CreateRoutes(locations);
         }

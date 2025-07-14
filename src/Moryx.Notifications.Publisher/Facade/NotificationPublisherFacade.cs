@@ -4,9 +4,6 @@
 using System;
 using System.Linq;
 using Moryx.Runtime.Modules;
-#if COMMERCIAL
-using Moryx.ControlSystem;
-#endif
 
 namespace Moryx.Notifications.Publisher
 {
@@ -35,29 +32,17 @@ namespace Moryx.Notifications.Publisher
 
         public Notification[] GetAll()
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return new Notification[0];
-#endif
             ValidateHealthState();
             return NotificationManager.GetAll();
         }
 
         private void OnPublished(object sender, Notification e)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             Published?.Invoke(this, e);
         }
 
         private void OnAcknowledged(object sender, Notification e)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             Acknowledged?.Invoke(this, e);          
         }
 
@@ -73,10 +58,6 @@ namespace Moryx.Notifications.Publisher
 
         public void Acknowledge(Notification notification)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             NotificationManager.Acknowledge(notification.Identifier);
         }
 

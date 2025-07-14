@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 
 using System;
 using System.Collections.Generic;
@@ -717,10 +717,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
 
     internal void AddSubscriptionToSession(OpcUaNode node)
     {
-#if COMMERCIAL
-        if (!LicenseCheck.HasLicense())
-            return;
-#endif
 
         if (node.NodeClass != NodeClass.Variable)
         {
@@ -760,10 +756,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
 
     private void OnMonitoredItemNotification(MonitoredItem monitoredItem, MonitoredItemNotificationEventArgs e)
     {
-#if COMMERCIAL
-        if (!LicenseCheck.HasLicense())
-            return;
-#endif
         var nodeId = new ExpandedNodeId(monitoredItem.ResolvedNodeId,
             _session.NamespaceUris.GetString(monitoredItem.ResolvedNodeId.NamespaceIndex));
         var receivedObject = ((MonitoredItemNotification)e.NotificationValue).Value.Value;
@@ -799,10 +791,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     #region Browse Nodes
     internal void BrowseNodes()
     {
-#if COMMERCIAL
-        if (!LicenseCheck.HasLicense())
-            return;
-#endif
 
         var namespaceUris = _session.NamespaceUris;
         var nodes = new List<OpcUaNode>();
@@ -943,10 +931,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
 
     internal void OnWriteNode(OpcUaNode node, object payload)
     {
-#if COMMERCIAL
-        if (!LicenseCheck.HasLicense())
-            return;
-#endif
 
         var valueToBeWritten = new WriteValue
         {
@@ -972,10 +956,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// <inheritdoc/>
     public object ReadNode(string NodeId)
     {
-#if COMMERCIAL
-        if (!LicenseCheck.HasLicense())
-            return null;
-#endif
 
         var value = State.ReadValue(NodeId);
         if (value == null)

@@ -7,11 +7,6 @@ using Moryx.Container;
 using Moryx.Model;
 using Moryx.Runtime.Modules;
 using System.ComponentModel;
-#if COMMERCIAL
-using System;
-using Moryx.ControlSystem;
-using Moryx.Logging;
-#endif
 
 namespace Moryx.Notifications.Publisher
 {
@@ -50,10 +45,6 @@ namespace Moryx.Notifications.Publisher
         /// <inheritdoc />
         protected override void OnInitialize()
         {
-#if COMMERCIAL
-            if (LicenseCheck.IsDeveloperLicense())
-                Logger.Log(LogLevel.Warning, "Running with developer license for 1h");
-#endif
             // Register global components
             Container.ActivateDbContexts(DbContextManager);
 
@@ -71,10 +62,6 @@ namespace Moryx.Notifications.Publisher
         /// <inheritdoc />
         protected override void OnStart()
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                throw new InvalidOperationException("No license available!");
-#endif
             Container.Resolve<INotificationManager>().Start();
 
             ActivateFacade(_notificationPublisherFacade);

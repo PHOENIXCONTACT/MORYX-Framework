@@ -44,19 +44,11 @@ namespace Moryx.ControlSystem.WorkerSupport
 
         private void OnInstructionAdded(object sender, InstructionEventArgs e)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             InstructionAdded?.Invoke(this, e);
         }
 
         private void OnInstructionCleared(object sender, InstructionEventArgs e)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             InstructionCleared?.Invoke(this, e);
         }
 
@@ -68,30 +60,18 @@ namespace Moryx.ControlSystem.WorkerSupport
 
         public void AddInstruction(string identifier, ActiveInstruction instruction)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             ValidateHealthState();
             Controller.AddInstruction(identifier, instruction);
         }
 
         public void ClearInstruction(string identifier, ActiveInstruction instruction)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             ValidateHealthState();
             Controller.ClearInstruction(identifier, instruction);
         }
 
         public void CompleteInstruction(string identifier, ActiveInstructionResponse response)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return;
-#endif
             ValidateHealthState();
             Controller.CompleteInstruction(identifier, response);
         }

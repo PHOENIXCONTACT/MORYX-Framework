@@ -110,10 +110,6 @@ namespace Moryx.Identity.AccessManagement.Controllers
         [HttpPost("signIn")]
         public async Task<IActionResult> SignIn(UserLoginModel userLoginModel)
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return Forbid("No valid license found!");
-#endif
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByNameAsync(userLoginModel.UserName);
@@ -189,10 +185,6 @@ namespace Moryx.Identity.AccessManagement.Controllers
         [Route("RefreshToken")]
         public async Task<IActionResult> RefreshToken()
         {
-#if COMMERCIAL
-            if (!LicenseCheck.HasLicense())
-                return Forbid("No valid license found!");
-#endif
 
             TokenRequest tokenRequest = new TokenRequest()
             {
