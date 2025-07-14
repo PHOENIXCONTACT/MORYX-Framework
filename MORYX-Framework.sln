@@ -301,6 +301,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Analytics.Server", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Analytics.Web", "src\Moryx.Analytics.Web\Moryx.Analytics.Web.csproj", "{3340BFF4-132F-496C-8D70-6F3800330F7E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Operators", "Operators", "{8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Operators", "src\Moryx.Operators\Moryx.Operators.csproj", "{A7D7385D-F4FD-4026-A01F-11D811774327}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Operators.Management", "src\Moryx.Operators.Management\Moryx.Operators.Management.csproj", "{5F2DA8C5-9C92-4F50-AEA0-F646D6BAB2E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Operators.Endpoints", "src\Moryx.Operators.Endpoints\Moryx.Operators.Endpoints.csproj", "{0A1E7D04-BF6D-4C8D-A967-C19CDA0E3C90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Operators.Web", "src\Moryx.Operators.Web\Moryx.Operators.Web.csproj", "{D73F1F9A-7387-47F3-A7C8-376DB45B81A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Operators.Management.Integration.Tests", "src\Tests\Moryx.Operators.Management.Integration.Tests\Moryx.Operators.Management.Integration.Tests.csproj", "{95EE50ED-817D-4F99-96FF-25E80334A3BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -787,6 +799,26 @@ Global
 		{3340BFF4-132F-496C-8D70-6F3800330F7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3340BFF4-132F-496C-8D70-6F3800330F7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3340BFF4-132F-496C-8D70-6F3800330F7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7D7385D-F4FD-4026-A01F-11D811774327}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7D7385D-F4FD-4026-A01F-11D811774327}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7D7385D-F4FD-4026-A01F-11D811774327}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7D7385D-F4FD-4026-A01F-11D811774327}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F2DA8C5-9C92-4F50-AEA0-F646D6BAB2E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F2DA8C5-9C92-4F50-AEA0-F646D6BAB2E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F2DA8C5-9C92-4F50-AEA0-F646D6BAB2E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F2DA8C5-9C92-4F50-AEA0-F646D6BAB2E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A1E7D04-BF6D-4C8D-A967-C19CDA0E3C90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A1E7D04-BF6D-4C8D-A967-C19CDA0E3C90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A1E7D04-BF6D-4C8D-A967-C19CDA0E3C90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A1E7D04-BF6D-4C8D-A967-C19CDA0E3C90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D73F1F9A-7387-47F3-A7C8-376DB45B81A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D73F1F9A-7387-47F3-A7C8-376DB45B81A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D73F1F9A-7387-47F3-A7C8-376DB45B81A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D73F1F9A-7387-47F3-A7C8-376DB45B81A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95EE50ED-817D-4F99-96FF-25E80334A3BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95EE50ED-817D-4F99-96FF-25E80334A3BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95EE50ED-817D-4F99-96FF-25E80334A3BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95EE50ED-817D-4F99-96FF-25E80334A3BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -907,10 +939,15 @@ Global
 		{EB50C7EF-7092-434B-84C5-93F075D7FA6D} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
 		{58A936FD-D155-4397-B9AC-7E5679546F2A} = {EFA3F41A-1DEF-4E49-B3F0-D34DFA4BD56B}
 		{3340BFF4-132F-496C-8D70-6F3800330F7E} = {EFA3F41A-1DEF-4E49-B3F0-D34DFA4BD56B}
+		{A7D7385D-F4FD-4026-A01F-11D811774327} = {8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}
+		{5F2DA8C5-9C92-4F50-AEA0-F646D6BAB2E6} = {8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}
+		{0A1E7D04-BF6D-4C8D-A967-C19CDA0E3C90} = {8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}
+		{D73F1F9A-7387-47F3-A7C8-376DB45B81A7} = {8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}
+		{95EE50ED-817D-4F99-96FF-25E80334A3BE} = {8517D209-5BC1-47BD-A7C7-9CF9ADD9F5B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		    RESX_ShowErrorsInErrorList = True
-		RESX_TaskErrorCategory = Message
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		
+		RESX_TaskErrorCategory = Message
+		    RESX_ShowErrorsInErrorList = True
 	EndGlobalSection
 EndGlobal

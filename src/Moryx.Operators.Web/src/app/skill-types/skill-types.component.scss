@@ -1,0 +1,14 @@
+@use '@angular/material' as mat;
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+.mat-column-actions {
+  width: 100px;
+}
+
+.skill-types-list {
+  @include mat.table-overrides(
+    (
+      background-color: $mat-background-light,
+    )
+  );
+}

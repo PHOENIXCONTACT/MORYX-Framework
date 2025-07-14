@@ -1,0 +1,95 @@
+{
+    "DISMISS": "忽略",
+    "DEFAULT_MESSAGE": "服务器发生了错误。",
+    "SERVER_NOT_REACHABLE": "无法访问服务器，请检查您的网络连接或代理设置。"  ,
+    "WORKSTATION_OPERATORS":{
+        "EMPTY_TITLE": "工作站",
+        "EMPTY_MESSAGE" : "目前没有可用的电台。",
+        "EXPAND" : "扩张",
+        "GO_BACK" : "回去"
+    },
+    "AVAILABILITIES" : {
+        "TITLE": "可用性",
+        "THIS_WEEK": "本星期",
+        "OPERATORS": "运算符"
+    },
+    "AVAILABILITY_DIALOG" : {
+        "TITLE": "新品上市",
+        "DESCRIPTION": "为操作员创建缺勤通知",
+        "FROM": "从",
+        "TO": "到",
+        "CANCEL" : "取消",
+        "SAVE": "节省"
+    },
+    "SKILL_TYPES" : {
+        "NAME": "姓名",
+        "TRAINED_OPERATORS": "训练有素的操作员",
+        "VALIDITY_PERIOD": "有效期"
+    },
+    "OPERATORS_MANAGEMENT" : {
+        "MANAGE_OPERATORS" : "管理操作员",
+        "SKILL_TYPES" : "技能类型",
+        "AVAILABILITIES" : "可用性",
+        "NAME": "姓名",
+        "NUMBER": "数字",
+        "SKILLSET": "技能",
+        "EDIT" : "编辑",
+        "DELETE" : "删除",
+        "DELETE_TITLE" : "删除运算符",
+        "DELETE_MESSAGE" : "您想删除该操作员吗 ?"
+    },
+    "OPERATORS" : {
+        "EMPTY_TITLE" : "运营商",
+        "EMPTY_MESSAGE": "資料庫中不存在具備所需技能的操作員。請新增具有所需技能的操作員。"
+    },
+    "ADD_OPERATOR_DIALOG":{
+        "IDENTIFIER" : "标识符",
+        "FIRSTNAME": "名",
+        "LASTNAME" : "姓",
+        "PSEUDONYM" : "笔名",
+        "TITLE" : "添加技能",
+        "CANCEL" : "取消",
+        "SAVE": "节省"
+    },
+    "SKILL_EDIT_DIALOG":{
+        "TITLE": "编辑技能",
+        "NAME": "姓名",
+        "VALIDITY" : "有效性",
+        "SKILL_TYPE" : "技能类型",
+        "CANCEL" : "取消",
+        "SAVE": "节省"
+    },
+    "SKILL_TYPE_DETAILS":{
+        "SKILL_TYPE_DETAILS": "技能类型详情",
+        "NEW_SKILL_TYPE": "新技能类型",
+        "NAME": "姓名",
+        "NAME_DESCRIPTION": "技能名称",
+        "VALIDITY_PERIOD": "有效期（天）",
+        "SKILL_CAPABILITY": "技能能力",
+        "SAVE": "节省"
+    },
+    "SKILL_NEW_DIALOG":{
+        "TITLE": "新技能",
+        "NAME": "姓名",
+        "VALIDITY" : "有效性",
+        "SKILL_TYPE" : "技能类型",
+        "CANCEL" : "取消",
+        "SAVE": "节省"
+    },
+    "CONFIRMATION_DIALOG" : {
+        "DELETE_SKILL_TYPE_TITLE": "删除技能类型",
+        "DELETE_SKILL_TYPE_MESSAGE": "您要删除这个技能类型吗？",
+        "DELETE_SKILL_TITLE": "删除技能",
+        "DELETE_SKILL_MESSAGE": "您是否要删除当前操作员的该技能？",
+        "YES": "是的",
+        "NO" : "不"
+    },
+    "OPERATOR_DETAILS":{
+        "TITLE":"运营商详情",
+        "OBTAINED_ON": "获得日期",
+        "EXPIRES_ON": "到期日期",
+        "SKILLS": "技能",
+        "NAME": "姓名",
+        "SEARCH_SKILL": "搜索技巧..."
+    }
+}
