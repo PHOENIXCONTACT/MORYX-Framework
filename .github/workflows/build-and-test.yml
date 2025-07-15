@@ -39,6 +39,11 @@ jobs:
         with:
           dotnet-version: '6'
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14.21.x
+          
       - name: Build
         shell: pwsh
         run: ./Build.ps1 -Build -Pack
