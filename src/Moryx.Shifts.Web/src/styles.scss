@@ -1,0 +1,30 @@
+@use "@moryx/ngx-web-framework/styles/theme" as *; 
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+/* You can add global styles to this file, and also import other style files */
+@import "./app.css";
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.shift-element-drawer-height{
+    height: calc(100vh - 300px);
+}
+
+.day-assignment-drop-zone-height {
+    height: calc(100vh - 400px);
+}
+
+.day-assignment-drop-zone-height.cdk-drop-list-dragging {
+    background: $primary-light;
+    border: 1px dashed $primary-dark;
+}
+
+.week-assignment-drop-zone-height.cdk-drop-list-dragging {
+    background: $primary-light;
+    border: 1px dashed $primary-dark;
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch{
+    border-right: 0px !important;
+}

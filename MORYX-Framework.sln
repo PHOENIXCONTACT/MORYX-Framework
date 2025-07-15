@@ -313,6 +313,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Operators.Web", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Operators.Management.Integration.Tests", "src\Tests\Moryx.Operators.Management.Integration.Tests\Moryx.Operators.Management.Integration.Tests.csproj", "{95EE50ED-817D-4F99-96FF-25E80334A3BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Shifts", "src\Moryx.Shifts\Moryx.Shifts.csproj", "{ADDD4315-75AC-4379-85FC-5D76D58AFB0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Shifts.Endpoints", "src\Moryx.Shifts.Endpoints\Moryx.Shifts.Endpoints.csproj", "{9A294F43-2EA6-4A13-BD90-8A0823F6A89E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Shifts.Management", "src\Moryx.Shifts.Management\Moryx.Shifts.Management.csproj", "{D27EC875-D22E-4AB0-8E91-C4B7ED0DB91E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Shifts.Web", "src\Moryx.Shifts.Web\Moryx.Shifts.Web.csproj", "{22358E04-0AE4-4ADA-9018-56C881E313F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Shifts.Management.Integration.Tests", "src\Tests\Moryx.Shifts.Management.Integration.Tests\Moryx.Shifts.Management.Integration.Tests.csproj", "{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -819,6 +829,26 @@ Global
 		{95EE50ED-817D-4F99-96FF-25E80334A3BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95EE50ED-817D-4F99-96FF-25E80334A3BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95EE50ED-817D-4F99-96FF-25E80334A3BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADDD4315-75AC-4379-85FC-5D76D58AFB0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADDD4315-75AC-4379-85FC-5D76D58AFB0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADDD4315-75AC-4379-85FC-5D76D58AFB0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADDD4315-75AC-4379-85FC-5D76D58AFB0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A294F43-2EA6-4A13-BD90-8A0823F6A89E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A294F43-2EA6-4A13-BD90-8A0823F6A89E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A294F43-2EA6-4A13-BD90-8A0823F6A89E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A294F43-2EA6-4A13-BD90-8A0823F6A89E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D27EC875-D22E-4AB0-8E91-C4B7ED0DB91E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D27EC875-D22E-4AB0-8E91-C4B7ED0DB91E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D27EC875-D22E-4AB0-8E91-C4B7ED0DB91E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D27EC875-D22E-4AB0-8E91-C4B7ED0DB91E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22358E04-0AE4-4ADA-9018-56C881E313F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22358E04-0AE4-4ADA-9018-56C881E313F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22358E04-0AE4-4ADA-9018-56C881E313F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22358E04-0AE4-4ADA-9018-56C881E313F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -944,10 +974,15 @@ Global
 		{0A1E7D04-BF6D-4C8D-A967-C19CDA0E3C90} = {8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}
 		{D73F1F9A-7387-47F3-A7C8-376DB45B81A7} = {8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}
 		{95EE50ED-817D-4F99-96FF-25E80334A3BE} = {8517D209-5BC1-47BD-A7C7-9CF9ADD9F5B6}
+		{ADDD4315-75AC-4379-85FC-5D76D58AFB0F} = {8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}
+		{9A294F43-2EA6-4A13-BD90-8A0823F6A89E} = {8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}
+		{D27EC875-D22E-4AB0-8E91-C4B7ED0DB91E} = {8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}
+		{22358E04-0AE4-4ADA-9018-56C881E313F1} = {8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}
+		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF} = {8517D209-5BC1-47BD-A7C7-9CF9ADD9F5B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		
-		RESX_TaskErrorCategory = Message
 		    RESX_ShowErrorsInErrorList = True
+		RESX_TaskErrorCategory = Message
+		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		
 	EndGlobalSection
 EndGlobal

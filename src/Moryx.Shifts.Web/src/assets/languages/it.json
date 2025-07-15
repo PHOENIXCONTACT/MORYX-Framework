@@ -1,0 +1,94 @@
+{
+    "DISMISS": "CONGEDARE",
+    "DEFAULT_MESSAGE": "Si è verificato un problema sul server.",
+    "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controlla la tua connessione Internet o le impostazioni del proxy." ,
+    "ASSIGNMENT": {
+        "DETAILS": "Dettagli",
+        "DELETE": "Eliminare",
+        "NOTES": "Appunti"
+    },
+    "DIALOGS":{
+        "SHIFT_INSTANCE_DIALOG" : {
+            "SHIFT_INSTANCE": "Sposta istanza",
+            "START_DATE": "Data di inizio",
+            "END_DATE": "Data di fine",
+            "CANCEL": "Cancellare",
+            "SAVE": "Salva"
+        },
+        "SHIFT_TYPE_DIALOG" : {
+            "SHIFT_TYPE": "Tipo di turno",
+            "NAME": "Nome",
+            "NAME_ERROR": "Inserisci un nome per il turno.",
+            "DURATION": "Durata",
+            "DURATION_ERROR": "Inserisci un valore maggiore di 0.",
+            "START_TIME": "Ora di inizio",
+            "START_TIME_ERROR": "Inserisci un orario valido, ad esempio 20:00.",
+            "END_TIME": "Ora di fine",
+            "END_TIME_ERROR": "Inserisci un orario valido, ad esempio 21:00",
+            "CANCEL": "Cancellare",
+            "SAVE": "Salva",
+            "DAYS": "Giorni"
+        },
+        "WEEK_ASSIGNMENT_DIALOG": {
+            "TITLE": "Dettagli dell'assegnazione della settimana",
+            "RESOURCE": "Risorsa",
+            "RESOURCE_ERROR": "Seleziona una risorsa/posizione",
+            "OPERATOR": "Operatore",
+            "OPERATOR_ERROR": "Seleziona un operatore.",
+            "DAYS_OF_THE_SHIFT": "Giorni del Cambiamento",
+            "DAYS_OF_THE_SHIFT_ERROR": "Seleziona un giorno ",
+            "PRIORITY": "Priorità",
+            "NOTES": "Appunti",
+            "CANCEL": "Cancellare",
+            "ASSIGN": "Assegnare",
+            "NOT_QUALIFIED": "Non qualificato",
+            "ON_VACATION": "In vacanza",
+            "NOT_ALLOWED": "Non consentito",
+            "AVAILABLE": "Disponibile"
+        }
+    },
+    "APP_COMPONENT":{
+        "THIS_WEEK": "Questa settimana",
+        "ALL": "Tutto",
+        "OPERATORS": "Operatori",
+        "FILTER_OPERATORS": "Operatori di filtro",
+        "CLOSE": "Vicino",
+        "RESOURCES": "Risorse",
+        "FILTER_RESOURCES": "Filtra risorse",
+        "SEARCH": "Ricerca",
+        "WEEK_NUMBER": "S",
+        "ADD_SHIFT": "Aggiungi spostamento",
+        "NO_ASSIGNMENT": "Nessun incarico trovato per questo periodo.",
+        "NO_SHIFT": "Nessun turno trovato! Fai clic sul pulsante 'Aggiungi turno' per aggiungere un nuovo turno.",
+        "ASSIGN_TO": "Assegnare a ",
+        "ASSIGN_TO_SHIFT": "Assegna all'intero turno",
+        "SHIFT_ELEMENTS": "Elementi di spostamento",
+        "ASSIGNMENTS_SAVED": "Assignments saved successfully!",
+        "SHIFT_CREATED": "Turno creato con successo!",
+        "SHIFT_UPDATED": "Turno aggiornato con successo!",
+        "NO_SHIFT_TO_COPY": "Nessun incarico/turno trovato da copiare!",
+        "SHIFT_TO_COPIED": "I turni e le relative assegnazioni sono stati copiati correttamente nella settimana desiderata!"
+    },
+    "DAYS_OF_THE_WEEK":{
+        "Monday": "Lunedi",
+        "Tuesday": "Martedì",
+        "Wednesday": "Mercoledì",
+        "Thursday": "Giovedì",
+        "Friday": "Venerdì",
+        "Saturday": "Sabato",
+        "Sunday": "Domenica"
+    },
+    "DATE_FORMAT": {
+        "SHORT_DATE": "DD.MMM.YYYY",
+        "MONTH_AND_DAY": "DD/MM"
+    },
+    "COPY_SHIFT_AND_ASSIGNMENT":{
+        "TITLE": "Copia Spostamento e Assegnazione",
+        "LAST_FOR": "Ultimo per",
+        "DAYS": "Giorni",
+        "START_DATE": "Data di inizio",
+        "DELETE": "Eliminare",
+        "CANCEL": "Cancellare",
+        "COPY": "Copia"
+    }
+}

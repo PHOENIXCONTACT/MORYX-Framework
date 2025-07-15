@@ -1,0 +1,8 @@
+{
+    "$schema": "node_modules/ng-openapi-gen/ng-openapi-gen-schema.json",
+    "input": "ng-open-api.json",
+    "output": "src/app/api",
+    "ignoreUnusedModels": true,
+    "includeTags": ["ShiftManagement","OperatorManagement","OrderManagement","SkillManagement"],
+    "defaultTag": "ShiftManagement"
+}

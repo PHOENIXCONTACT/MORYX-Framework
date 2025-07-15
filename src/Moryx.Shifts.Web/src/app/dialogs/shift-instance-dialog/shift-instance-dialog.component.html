@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>{{ data.shiftType.name }} - {{ TranslationConstants.DIALOGS.SHIFT_INSTANCE_DIALOG.SHIFT_INSTANCE | translate }}</h2>
+<mat-dialog-content class="w-full">
+  <form class="w-full flex flex-col gap-y-2" [formGroup]="form">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ TranslationConstants.DIALOGS.SHIFT_INSTANCE_DIALOG.START_DATE | translate }}</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        [formControl]="form.controls.startDate"
+        (ngModelChange)="onStartDateChanged($event)"
+      />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ TranslationConstants.DIALOGS.SHIFT_INSTANCE_DIALOG.END_DATE | translate }}</mat-label>
+      <input matInput type="text"  disabled [value]="form.value.endDate?.toDateString()">
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>{{ TranslationConstants.DIALOGS.SHIFT_INSTANCE_DIALOG.CANCEL | translate }}</button>
+  <button mat-flat-button color="primary" (click)="submit()" cdkFocusInitial>
+    {{ TranslationConstants.DIALOGS.SHIFT_INSTANCE_DIALOG.SAVE | translate }}
+  </button>
+</mat-dialog-actions>

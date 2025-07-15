@@ -1,0 +1,10 @@
+<div class="flex flex-row items-center gap-x-1">
+    <span [ngClass]="{
+        'text-lg': size() === 'md'
+    }">
+        {{orderHours().toFixed(0)}}h/{{operatorHours().toFixed(0)}}h
+    </span>
+    <mat-icon [ngClass]="{
+        'text-base': size() === 'sm'
+    }">punch_clock</mat-icon>
+  </div>
