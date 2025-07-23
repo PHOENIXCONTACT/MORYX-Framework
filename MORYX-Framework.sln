@@ -323,6 +323,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Shifts.Web", "src\Mor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Shifts.Management.Integration.Tests", "src\Tests\Moryx.Shifts.Management.Integration.Tests\Moryx.Shifts.Management.Integration.Tests.csproj", "{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Users.Management", "src\Moryx.Users.Management\Moryx.Users.Management.csproj", "{79CB65B1-121D-42FB-9960-EF491FFD1BAC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Users", "Users", "{A7542B59-FA88-4E5B-9728-67212A865F09}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -849,6 +853,10 @@ Global
 		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79CB65B1-121D-42FB-9960-EF491FFD1BAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79CB65B1-121D-42FB-9960-EF491FFD1BAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79CB65B1-121D-42FB-9960-EF491FFD1BAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79CB65B1-121D-42FB-9960-EF491FFD1BAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -979,6 +987,7 @@ Global
 		{D27EC875-D22E-4AB0-8E91-C4B7ED0DB91E} = {8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}
 		{22358E04-0AE4-4ADA-9018-56C881E313F1} = {8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}
 		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF} = {8517D209-5BC1-47BD-A7C7-9CF9ADD9F5B6}
+		{79CB65B1-121D-42FB-9960-EF491FFD1BAC} = {A7542B59-FA88-4E5B-9728-67212A865F09}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		    RESX_ShowErrorsInErrorList = True
