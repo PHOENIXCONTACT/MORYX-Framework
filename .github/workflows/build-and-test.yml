@@ -23,7 +23,7 @@ env:
 
 jobs:
   Build:
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v2
       
@@ -39,6 +39,11 @@ jobs:
         with:
           dotnet-version: '6'
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14.21.x
+          
       - name: Build
         shell: pwsh
         run: ./Build.ps1 -Build -Pack
@@ -52,7 +57,7 @@ jobs:
 
   UnitTests:
     needs: [Build]
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v2
 
@@ -82,7 +87,7 @@ jobs:
 
   IntegrationTests:
     needs: [Build]
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v2
 
@@ -112,7 +117,7 @@ jobs:
 
   Codecov:
     needs: [UnitTests, IntegrationTests]
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - name: Download test results
         uses: actions/download-artifact@v4
@@ -133,7 +138,7 @@ jobs:
 
   Documentation:
     needs: [Build]
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v2
 
@@ -151,7 +156,7 @@ jobs:
   Publish:
     needs: [Build, UnitTests, IntegrationTests]
     if: ${{ github.event_name == 'push' }}
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v2
       

@@ -27,6 +27,8 @@ namespace Moryx.Tools.Wcf
                     return CreateDefaultNetTcpBinding();
                 case ServiceBindingType.BasicHttp:
                     return CreateDefaultBasicHttpBinding(requiresAuthentication, proxyConfig);
+                case ServiceBindingType.BasicHttps:
+                    return CreateDefaultBasicHttpsBinding(requiresAuthentication, proxyConfig);
                 default:
                     return null;
             }
@@ -79,6 +81,61 @@ namespace Moryx.Tools.Wcf
                 Security =
                 {
                     Mode = requiresAuthentication ?  BasicHttpSecurityMode.TransportCredentialOnly : BasicHttpSecurityMode.None,
+                    Transport =
+                    {
+                        ClientCredentialType = HttpClientCredentialType.Ntlm,
+                        ProxyCredentialType = HttpProxyCredentialType.Ntlm,
+                    },
+                    Message =
+                    {
+                        ClientCredentialType = BasicHttpMessageCredentialType.UserName,
+                    }
+
+                },
+                UseDefaultWebProxy = false,
+            };
+
+            if (proxyConfig != null && proxyConfig.EnableProxy)
+            {
+                binding.UseDefaultWebProxy = proxyConfig.UseDefaultWebProxy;
+
+                if (!string.IsNullOrEmpty(proxyConfig.Address) && proxyConfig.Port != 0)
+                {
+                    var proxyUrl = $"http://{proxyConfig.Address}:{proxyConfig.Port}";
+
+                    binding.ProxyAddress = new Uri(proxyUrl);
+                }
+            }
+
+            return binding;
+        }
+
+        /// <summary>
+        /// Creates a default BasicHttps binding including proxy configuration as configured for this factory.
+        /// </summary>
+        /// <param name="requiresAuthentication">If <c>true</c>, set the security mode to <c>BasicHttpSecurityMode.Transport</c>,
+        ///     otherwise <c>BasicHttpSecurityMode.Transport</c> will be used.</param>
+        /// <param name="proxyConfig">An optional proxy configuration.</param>
+        /// <returns>The binding</returns>
+        public static BasicHttpBinding CreateDefaultBasicHttpsBinding(bool requiresAuthentication, IProxyConfig proxyConfig)
+        {
+            var binding = new BasicHttpBinding
+            {
+                MaxBufferSize = int.MaxValue,
+                MaxReceivedMessageSize = int.MaxValue,
+                ReceiveTimeout = TimeSpan.FromSeconds(30),
+                SendTimeout = TimeSpan.FromSeconds(30),
+                OpenTimeout = TimeSpan.FromSeconds(30),
+                CloseTimeout = TimeSpan.FromSeconds(30),
+                ReaderQuotas =
+                {
+                    MaxArrayLength = int.MaxValue,
+                    MaxStringContentLength = int.MaxValue,
+                    MaxBytesPerRead = int.MaxValue
+                },
+                Security =
+                {
+                    Mode = BasicHttpSecurityMode.Transport,
                     Transport =
                     {
                         ClientCredentialType = HttpClientCredentialType.Ntlm,

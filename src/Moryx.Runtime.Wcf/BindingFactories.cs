@@ -15,7 +15,7 @@ namespace Moryx.Runtime.Wcf
         /// <summary>
         /// Creates a new basic http binding with our default configuration.
         /// Most parts are set to nearly int max, timeouts are set to 5 min.
-        /// Encoding is Text and TransferMode is bufferd.
+        /// Encoding is Text and TransferMode is buffered.
         /// </summary>
         /// <param name="requiresAuthentication">Is authentication required?</param>
         /// <returns>The new created binding.</returns>
@@ -114,6 +114,84 @@ namespace Moryx.Runtime.Wcf
             };
 
             return binding;
+        }
+
+        /// <summary>
+        /// Creates a new Web Https Binding with our default configuration.
+        /// Most values are set to nearly int max, timeouts are set to 5 min.
+        /// </summary>
+        /// <returns>A new Web Https binding.</returns>
+        public static Binding CreateWebHttpsBinding()
+        {
+            var binding = new WebHttpBinding()
+            {
+                MaxBufferSize = int.MaxValue,
+                MaxReceivedMessageSize = int.MaxValue,
+                MaxBufferPoolSize = int.MaxValue,
+                CloseTimeout = TimeSpan.FromSeconds(30),
+                OpenTimeout = TimeSpan.FromSeconds(30),
+                ReceiveTimeout = TimeSpan.FromSeconds(30),
+                SendTimeout = TimeSpan.FromSeconds(30),
+                TransferMode = TransferMode.Buffered,
+                UseDefaultWebProxy = true,
+                ReaderQuotas =
+                {
+                    MaxStringContentLength = int.MaxValue,
+                    MaxArrayLength = int.MaxValue,
+                    MaxBytesPerRead = int.MaxValue,
+                    MaxNameTableCharCount = int.MaxValue
+                },
+                Security =
+                {
+                    Mode = WebHttpSecurityMode.Transport
+                }
+            };
+            binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.None;
+            return binding;
+        }
+
+        /// <summary>
+        /// Creates a new basic https binding with our default configuration.
+        /// Most parts are set to nearly int max, timeouts are set to 5 min.
+        /// Encoding is Text and TransferMode is buffered.
+        /// </summary>
+        /// <param name="requiresAuthentication">Is authentication required?</param>
+        /// <returns>The new created binding.</returns>
+        public static Binding CreateBasicHttpsBinding(bool requiresAuthentication)
+        {
+            var basicHttpBinding = new BasicHttpBinding
+            {
+                MaxBufferSize = int.MaxValue,
+                MaxReceivedMessageSize = int.MaxValue,
+                MaxBufferPoolSize = int.MaxValue,
+                CloseTimeout = TimeSpan.FromSeconds(30),
+                OpenTimeout = TimeSpan.FromSeconds(30),
+                ReceiveTimeout = TimeSpan.FromSeconds(30),
+                SendTimeout = TimeSpan.FromSeconds(30),
+                MessageEncoding = WSMessageEncoding.Text,
+                TransferMode = TransferMode.Buffered,
+                UseDefaultWebProxy = true,
+                ReaderQuotas =
+                {
+                    MaxStringContentLength = int.MaxValue,
+                    MaxArrayLength = int.MaxValue,
+                    MaxBytesPerRead = int.MaxValue,
+                    MaxNameTableCharCount = int.MaxValue
+                }
+            };
+
+            if (requiresAuthentication)
+            {
+                basicHttpBinding.Security.Mode = BasicHttpSecurityMode.Transport;
+                basicHttpBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Ntlm;
+            }
+            else
+            {
+                basicHttpBinding.Security.Mode = BasicHttpSecurityMode.Transport;
+                basicHttpBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.None;
+            }
+
+            return basicHttpBinding;
         }
     }
 }

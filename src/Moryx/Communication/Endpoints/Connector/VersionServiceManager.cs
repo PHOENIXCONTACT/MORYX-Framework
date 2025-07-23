@@ -31,7 +31,15 @@ namespace Moryx.Communication.Endpoints
         protected VersionServiceManager(IProxyConfig proxyConfig, string host, int port)
         {
             ProxyConfig = proxyConfig;
-            Client = HttpClientBuilder.GetClient($"http://{host}:{port}/{ServiceName}/", ProxyConfig);
+            // Most likely used ports for https. Since no other clues are given, use this for decision. 
+            if (port == 443 || port == 444)
+            {
+                Client = HttpClientBuilder.GetClient($"https://{host}:{port}/{ServiceName}/", ProxyConfig);
+            }
+            else
+            {
+                Client = HttpClientBuilder.GetClient($"http://{host}:{port}/{ServiceName}/", ProxyConfig);
+            }
         }
 
         /// <inheritdoc />
