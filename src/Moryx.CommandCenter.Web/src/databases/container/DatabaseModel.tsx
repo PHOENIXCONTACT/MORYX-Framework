@@ -48,6 +48,7 @@ interface DatabaseModelStateModel {
     selectedBackup: string;
     testConnectionPending: boolean;
     testConnectionResult: TestConnectionResult;
+    busy: boolean;
 }
 
 interface DatabaseModelDispatchPropsModel {
@@ -74,6 +75,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
             selectedBackup : (props.DataModel.backups.length !== 0 ? props.DataModel.backups[0].fileName : ""),
             testConnectionPending : false,
             testConnectionResult : TestConnectionResult.ConfigurationError,
+            busy : false,
         };
 
         this.activeTab = this.activeTab.bind(this);
@@ -180,12 +182,12 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
 
     public onSave(): void {
         this.props.onShowWaitDialog(true);
+        this.setState({ busy: true });
 
         this.onTestConnection();
         this.props.RestClient.saveDatabaseConfig(this.createConfigModel(), this.state.targetModel).then((response) => {
             this.props.onShowWaitDialog(false);
-
-            this.setState({ config: response.config });
+            this.setState({ config: response.config, busy: false });
             this.props.onUpdateDatabaseConfig(response);
             toast.success("Configuration saved", { autoClose: 5000 });
             this.onTestConnection();
@@ -193,11 +195,12 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     }
 
     public onTestConnection(): void {
-        this.setState({ testConnectionPending: true });
+        this.setState({ testConnectionPending: true, busy: true });
         this.props.RestClient.testDatabaseConfig(this.createConfigModel(), this.props.DataModel.targetModel)
             .then((response) => {
                 this.setState({
                     testConnectionPending: false,
+                    busy: false,
                     testConnectionResult: response.result !== undefined ? response.result : TestConnectionResult.ConnectionError
                 });
             });
@@ -376,7 +379,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                 </Stack>
                             </Grid>
                             <Grid item={true} md={12}>
-                                <Button color="primary" onClick={() => this.onSave()}>Save</Button>
+                                <Button color="primary" variant="outlined" disabled={this.state.busy} onClick={() => this.onSave()}>Save</Button>
                             </Grid>
                         </DatabaseSection>
                         <DatabaseSection title="Backup &amp; Restore">
