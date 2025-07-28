@@ -66,6 +66,60 @@ namespace Moryx.Tests
         }
 
         [Test]
+        public void ShouldCreateInstanceArray_WithIdentifier_ThatStart_With_CREATED()
+        {
+            // Arrange
+            var @object = new ArrayDummy
+            {
+                Array = new[] { 2, 3, 4, 5, 6 },
+                Keys = new[] { "Number: 1", "Number: 2", "Number: 3", "Number: 4", "Number: 5" }
+            };
+            var encoded = EntryConvert.EncodeObject(@object);
+
+            for (var i = 0; i < 5; i++)
+            {
+                var entry = encoded.SubEntries[0].SubEntries[i];
+                entry.Identifier = Entry.CreatedIdentifier + i;
+            }
+
+            // Act
+            var dummy = EntryConvert.CreateInstance<ArrayDummy>(encoded);
+
+            // Assert
+            for (var i = 1; i <= 5; i++)
+            {
+                Assert.AreEqual(i + 1, dummy.Array[i - 1]);
+            }
+        }
+
+        [Test]
+        public void ShouldNotCreateInstanceArray_WithIdentifier_ThatEnd_With_CREATED()
+        {
+            // Arrange
+            var @object = new ArrayDummy
+            {
+                Array = new[] { 2, 3, 4, 5, 6 },
+                Keys = new[] { "Number: 1", "Number: 2", "Number: 3", "Number: 4", "Number: 5" }
+            };
+            var encoded = EntryConvert.EncodeObject(@object);
+
+            for (var i = 0; i < 5; i++)
+            {
+                var entry = encoded.SubEntries[0].SubEntries[i];
+                entry.Identifier = i + Entry.CreatedIdentifier;
+            }
+
+            // Act
+            var dummy = EntryConvert.CreateInstance<ArrayDummy>(encoded);
+
+            // Assert
+            for (var i = 1; i <= 5; i++)
+            {
+                Assert.AreNotEqual(i + 1, dummy.Array[i - 1]);
+            }
+        }
+
+        [Test]
         public void CreateInstanceWithArray()
         {
             // Arrange
