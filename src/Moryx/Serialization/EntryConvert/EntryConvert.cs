@@ -659,7 +659,7 @@ namespace Moryx.Serialization
             }
 
             // Add new entries to the collection
-            foreach (var subEntry in rootEntry.SubEntries.Where(se => se.Identifier == Entry.CreatedIdentifier))
+            foreach (var subEntry in rootEntry.SubEntries.Where(se => se.Identifier.ToLower().StartsWith(Entry.CreatedIdentifier.ToLower())))
             {
                 object item;
                 // All value types
