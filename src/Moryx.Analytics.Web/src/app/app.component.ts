@@ -30,24 +30,24 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: true,
-    imports: [
-      EmptyStateComponent,
-      MatProgressSpinnerModule,
-      TranslateModule,
-      MatListModule,
-      MatMenuModule,
-      CommonModule,
-      MatDrawer,
-      MatDrawerContent,
-      MatIconModule,
-      MatButtonModule,
-      MatToolbarModule,
-      MatDrawerContainer
-    ]
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  standalone: true,
+  imports: [
+    EmptyStateComponent,
+    MatProgressSpinnerModule,
+    TranslateModule,
+    MatListModule,
+    MatMenuModule,
+    CommonModule,
+    MatDrawer,
+    MatDrawerContent,
+    MatIconModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatDrawerContainer
+  ]
 })
 export class AppComponent implements OnInit, OnDestroy {
   trigger = viewChild.required(MatMenuTrigger);
@@ -55,13 +55,11 @@ export class AppComponent implements OnInit, OnDestroy {
   isLoading= signal(true);
   selectedUrl = signal<string | undefined>(undefined);
   dashboards = signal<DashboardInformation[]>([]);
-  selectedSafeUrl = computed(() => {
+  selectedSafeUrl = computed((): SafeResourceUrl | undefined => {
     const url = this.selectedUrl();
-    if(!url) return undefined;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(
-      url
-    ); 
-  })
+    if (!url) return undefined;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  });
   TranslationConstants = TranslationConstants;
 
   title = 'Moryx.Analytics.Web';
@@ -81,6 +79,7 @@ export class AppComponent implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.EN,
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
+      TranslationConstants.LANGUAGES.ZH
     ]);
     this.translate.setDefaultLang('en');
     this.translate.use(this.languageService.getDefaultLanguage());
@@ -91,6 +90,11 @@ export class AppComponent implements OnInit, OnDestroy {
       next: (dashboards) => {
         this.dashboards.update(_=> dashboards);
         this.isLoading.update(_=> false);
+
+        const last = localStorage.getItem('lastSelectedDashboard');
+        if (last && dashboards.find(d => d.url === last)) {
+          this.selectedUrl.set(last);
+        }
       },
       error: async (err) => {
         const translations = await this.translate
@@ -100,7 +104,7 @@ export class AppComponent implements OnInit, OnDestroy {
           translations[TranslationConstants.APP.FAILED_LOADING]
         );
         this.isLoading.update(_=> false);
-      },
+      }
     });
 
     this.translate.get([TranslationConstants.APP.TITLE]).subscribe((title) => {
@@ -114,14 +118,15 @@ export class AppComponent implements OnInit, OnDestroy {
     if (!url) return;
     if (url === this.selectedUrl()) return;
 
-    this.selectedUrl.update(_ => url);
+    this.selectedUrl.set(url);
+    localStorage.setItem('lastSelectedDashboard', url);
   }
 
   onAnalyseContext(event: MouseEvent, url: string | undefined | null) {
     event.preventDefault();
     this.open(event.clientX, event.clientY, url);
   }
- 
+
   open(x: number, y: number, url: string | undefined | null){
     if (!url) return;
 
@@ -136,7 +141,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   async onAdd() {
     const dialogRef = this.dialog.open(DialogAddDashboardComponent, {});
-
     const dashboard = await dialogRef.afterClosed().toAsync();
     if (!dashboard || !dashboard.url) return;
 
@@ -151,7 +155,9 @@ export class AppComponent implements OnInit, OnDestroy {
       items.push(dashboard);
       return items;
     });
-    this.selectedUrl.update(_ => dashboard.url);
+
+    this.selectedUrl.set(dashboard.url);
+    localStorage.setItem('lastSelectedDashboard', dashboard.url);
   }
 
   async onDelete(url: string) {
@@ -163,7 +169,6 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
     const result = await dialogRef.afterClosed().toAsync();
-
     if (!result) return;
 
     await this.service
@@ -176,7 +181,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.dashboards.update(_=> this.dashboards().filter((d) => d.url !== url));
     if (url === this.selectedUrl()) {
-      this.selectedUrl.update(_=> undefined);
+      this.selectedUrl.set(undefined);
+      localStorage.removeItem('lastSelectedDashboard');
     }
   }
 
@@ -209,8 +215,8 @@ export class AppComponent implements OnInit, OnDestroy {
     dashboard.name = changedDashboard.name;
     dashboard.url = changedDashboard.url;
     if (url === this.selectedUrl() && dashboard.url !== this.selectedUrl()) {
-      this.selectedUrl.update(_=> changedDashboard.url);
+      this.selectedUrl.set(changedDashboard.url);
+      localStorage.setItem('lastSelectedDashboard', changedDashboard.url);
     }
   }
-
 }
