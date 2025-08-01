@@ -909,6 +909,14 @@ namespace Moryx.Tests
             Assert.AreSame(streamInstanceToCheck, targetStreamDummy.MemoryStream);
         }
 
+        [Test(Description = "Testing nullable properties")]
+        public void NullableProperty()
+        {
+            var nullablePropertiesObject = new NullablePropertiesClass();
+
+            Assert.DoesNotThrow(() => EntryConvert.EncodeObject(nullablePropertiesObject));
+        }
+
         [Test(Description = "Encodes a FileStream")]
         public void FileStreamEncode()
         {
