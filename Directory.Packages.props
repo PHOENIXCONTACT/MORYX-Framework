@@ -42,7 +42,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.Authorization" Version="$(AspNetCoreVersion)" />
 		
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
-    <PackageVersion Include="Microsoft.Identity.Web" Version="3.9.4" />
+    <PackageVersion Include="Microsoft.Identity.Web" Version="3.12.0" />
     <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="3.9.4" />
     <PackageVersion Include="Microsoft.Identity.Web.UI" Version="3.9.4" />
 		
