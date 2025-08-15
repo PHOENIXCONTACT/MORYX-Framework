@@ -10,25 +10,39 @@
 <mat-dialog-content>
   <div *ngIf="restrictions.length" class="restrictions">
     <ng-container *ngFor="let restriction of restrictions">
-      <mat-card *ngIf="restriction.severity == 'Error'" class="error-restriction" appearance="outlined">
+      <mat-card
+        *ngIf="restriction.severity == 'Error'"
+        class="error-restriction"
+        appearance="outlined"
+      >
         <mat-card-content> {{ restriction.text }}</mat-card-content>
       </mat-card>
-      <mat-card *ngIf="restriction.severity == 'Warning'" class="warning-restriction" appearance="outlined">
+      <mat-card
+        *ngIf="restriction.severity == 'Warning'"
+        class="warning-restriction"
+        appearance="outlined"
+      >
         <mat-card-content> {{ restriction.text }}</mat-card-content>
       </mat-card>
-      <mat-card *ngIf="restriction.severity == 'Info'" class="info-restriction" appearance="outlined">
+      <mat-card
+        *ngIf="restriction.severity == 'Info'"
+        class="info-restriction"
+        appearance="outlined"
+      >
         <mat-card-content> {{ restriction.text }}</mat-card-content>
       </mat-card>
     </ng-container>
   </div>
 
   <p>
-    {{ TranslationConstants.BEGIN_DIALOG.ORDER | translate }}: {{ operation.model.order }} -
+    {{ TranslationConstants.BEGIN_DIALOG.ORDER | translate }}:
+    {{ operation.model.order }} -
     {{ operation.model.number }}
   </p>
   <p>
-    {{ TranslationConstants.BEGIN_DIALOG.PRODUCT | translate }}: {{ operation.model.productIdentifier }}-{{
-      operation.model.productRevision | number : '2.0'
+    {{ TranslationConstants.BEGIN_DIALOG.PRODUCT | translate }}:
+    {{ operation.model.productIdentifier }}-{{
+      operation.model.productRevision | number : "2.0"
     }}
     {{ operation.model.productName }}
   </p>
@@ -36,7 +50,9 @@
     <mat-grid-tile>
       <div class="content-data-entry">
         <label
-          ><b>{{ TranslationConstants.BEGIN_DIALOG.TOTAL_AMOUNT | translate }}</b></label
+          ><b>{{
+            TranslationConstants.BEGIN_DIALOG.TOTAL_AMOUNT | translate
+          }}</b></label
         >
         <div>{{ operation.model.totalAmount }}</div>
       </div>
@@ -44,7 +60,9 @@
     <mat-grid-tile>
       <div class="content-data-entry">
         <label
-          ><b>{{ TranslationConstants.BEGIN_DIALOG.OVERDELIVERY | translate }}</b></label
+          ><b>{{
+            TranslationConstants.BEGIN_DIALOG.OVERDELIVERY | translate
+          }}</b></label
         >
         <div [ngStyle]="{ color: overDeliveryReached() ? 'red' : 'black' }">
           {{ operation.model.overDeliveryAmount }} ({{ operation.overDelivery }}
@@ -55,10 +73,14 @@
     <mat-grid-tile>
       <div class="content-data-entry">
         <label
-          ><b>{{ TranslationConstants.BEGIN_DIALOG.UNDERDELIVERY | translate }}</b></label
+          ><b>{{
+            TranslationConstants.BEGIN_DIALOG.UNDERDELIVERY | translate
+          }}</b></label
         >
         <div [ngStyle]="{ color: underDeliveryReached() ? 'red' : 'black' }">
-          {{ operation.model.underDeliveryAmount }} ({{ operation.underDelivery }}
+          {{ operation.model.underDeliveryAmount }} ({{
+            operation.underDelivery
+          }}
           %)
         </div>
       </div>
@@ -66,7 +88,9 @@
     <mat-grid-tile>
       <div class="content-data-entry">
         <label
-          ><b>{{ TranslationConstants.BEGIN_DIALOG.ESTIMATED | translate }}</b></label
+          ><b>{{
+            TranslationConstants.BEGIN_DIALOG.ESTIMATED | translate
+          }}</b></label
         >
         <div>{{ currentPartialAmount }}</div>
       </div>
@@ -74,7 +98,9 @@
     <mat-grid-tile>
       <div class="content-data-entry">
         <label
-          ><b>{{ TranslationConstants.BEGIN_DIALOG.SUCCESS | translate }}</b></label
+          ><b>{{
+            TranslationConstants.BEGIN_DIALOG.SUCCESS | translate
+          }}</b></label
         >
         <div>{{ successCount }}</div>
       </div>
@@ -82,35 +108,64 @@
     <mat-grid-tile>
       <div class="content-data-entry">
         <label
-          ><b>{{ TranslationConstants.BEGIN_DIALOG.SCRAP | translate }}</b></label
+          ><b>{{
+            TranslationConstants.BEGIN_DIALOG.SCRAP | translate
+          }}</b></label
         >
         <div>{{ scrapCount }}</div>
       </div>
     </mat-grid-tile>
     <mat-grid-tile colspan="3">
-      <mat-progress-bar mode="determinate" value="100" color="accent" [ngStyle]="{ width: successPercent() + '%' }">
-      </mat-progress-bar>
-      <mat-progress-bar mode="determinate" value="100" color="warn" [ngStyle]="{ width: scrapPercent() + '%' }">
-      </mat-progress-bar>
-      <mat-progress-bar mode="determinate" value="100" [ngStyle]="{ width: partialPercent() + '%' }">
-      </mat-progress-bar>
-      <mat-progress-bar mode="determinate" value="0" [ngStyle]="{ width: residualPercent() + '%' }"> </mat-progress-bar>
+      <div class="multi-progress-container">
+        <div
+          class="bar success"
+          [style.flex-basis.%]="successPercent()"
+          matTooltip="{{
+            TranslationConstants.OPERATIONS.SUCCESS | translate
+          }}: {{ successPercent() | number : '1.1-1' }}%"
+        ></div>
+        <div
+          class="bar scrap"
+          [style.flex-basis.%]="scrapPercent()"
+          matTooltip="{{
+            TranslationConstants.OPERATIONS.SCRAP | translate
+          }}: {{ scrapPercent() | number : '1.1-1' }}%"
+        ></div>
+        <div
+          class="bar partial"
+          [style.flex-basis.%]="partialPercent()"
+          matTooltip="{{
+            TranslationConstants.OPERATIONS.PARTIAL | translate
+          }}: {{ partialPercent() | number : '1.1-1' }}%"
+        ></div>
+        <div
+          class="bar residual"
+          [style.flex-basis.%]="residualPercent()"
+          matTooltip="{{
+            TranslationConstants.OPERATIONS.RESIDUAL | translate
+          }}: {{ residualPercent() | number : '1.1-1' }}%"
+        ></div>
+      </div>
     </mat-grid-tile>
   </mat-grid-list>
   <mat-form-field appearance="outline">
-    <mat-label>{{ TranslationConstants.BEGIN_DIALOG.PARTIAL_AMOUNT | translate }}</mat-label>
+    <mat-label>{{
+      TranslationConstants.BEGIN_DIALOG.PARTIAL_AMOUNT | translate
+    }}</mat-label>
     <input
       matInput
       type="number"
       [formControl]="targetAmountControl"
-      (blur)="limitTargetAmount()" />
+      (blur)="limitTargetAmount()"
+    />
     <button
       mat-icon-button
       type="button"
       matPrefix
       [disabled]="hasMinimalValue()"
       (click)="setMinTargetAmount()"
-      class="min-amount-button">
+      class="min-amount-button"
+    >
       <span class="material-symbols-outlined">align_justify_flex_start</span>
     </button>
     <button
@@ -121,7 +176,8 @@
       [disabled]="hasMinimalValue()"
       color="primary"
       (click)="changeTargetAmount(-10)"
-      class="content-calculation-button">
+      class="content-calculation-button"
+    >
       -10
     </button>
     <button
@@ -132,7 +188,8 @@
       [disabled]="hasMinimalValue()"
       color="primary"
       (click)="changeTargetAmount(-1)"
-      class="content-calculation-button">
+      class="content-calculation-button"
+    >
       -1
     </button>
     <button
@@ -143,7 +200,8 @@
       [disabled]="!canBegin"
       color="primary"
       (click)="changeTargetAmount(1)"
-      class="content-calculation-button">
+      class="content-calculation-button"
+    >
       +1
     </button>
     <button
@@ -154,29 +212,43 @@
       [disabled]="!canBegin"
       color="primary"
       (click)="changeTargetAmount(10)"
-      class="content-calculation-button">
+      class="content-calculation-button"
+    >
       +10
     </button>
     <mat-hint *ngIf="hasMinimalValue()">
-      {{ TranslationConstants.CHANGE_AMOUNT_DIALOG.CANNOT_REDUCE_TARGET_AMOUNT | translate }}
+      {{
+        TranslationConstants.CHANGE_AMOUNT_DIALOG.CANNOT_REDUCE_TARGET_AMOUNT
+          | translate
+      }}
     </mat-hint>
   </mat-form-field>
 
   <mat-form-field *ngIf="providesOperatorSelection" appearance="outline">
-    <mat-label>{{ TranslationConstants.BEGIN_DIALOG.OPERATOR_SELECTION_LABEL | translate }}</mat-label>
+    <mat-label>{{
+      TranslationConstants.BEGIN_DIALOG.OPERATOR_SELECTION_LABEL | translate
+    }}</mat-label>
     <input
       type="text"
-      placeholder="{{ TranslationConstants.BEGIN_DIALOG.OPERATOR_SELECTION_PLACEHOLDER | translate }}"
+      placeholder="{{
+        TranslationConstants.BEGIN_DIALOG.OPERATOR_SELECTION_PLACEHOLDER
+          | translate
+      }}"
       aria-label="Operator"
       matInput
       [formControl]="operatorFormControl"
-      [matAutocomplete]="auto" />
+      [matAutocomplete]="auto"
+    />
     <mat-autocomplete #auto="matAutocomplete">
       @for (operator of filteredOperators | async; track operator) {
-      <mat-option [value]="operator.identifier">{{ operator.pseudonym ?? '-' }} ({{ operator.identifier }})</mat-option>
+      <mat-option [value]="operator.identifier"
+        >{{ operator.pseudonym ?? "-" }} ({{ operator.identifier }})</mat-option
+      >
       }
     </mat-autocomplete>
-    <mat-error *ngIf="operatorFormControl.hasError('failed')">{{ operatorFormControl.getError('failed') }}</mat-error>
+    <mat-error *ngIf="operatorFormControl.hasError('failed')">{{
+      operatorFormControl.getError("failed")
+    }}</mat-error>
   </mat-form-field>
 </mat-dialog-content>
 
@@ -188,7 +260,7 @@
     {{
       operation.model.classification !== OperationClassification.Running &&
       operation.model.classification !== OperationClassification.Interrupting
-        ? (TranslationConstants.BEGIN_DIALOG.BEGIN  | translate)
+        ? (TranslationConstants.BEGIN_DIALOG.BEGIN | translate)
         : (TranslationConstants.CHANGE_AMOUNT_DIALOG.UPDATE_AMOUNT | translate)
     }}
   </button>

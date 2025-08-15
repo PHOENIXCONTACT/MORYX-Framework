@@ -21,6 +21,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatTooltip } from "@angular/material/tooltip";
+
 @Component({
   selector: 'app-begin-dialog',
   templateUrl: './begin-dialog.component.html',
@@ -39,7 +41,9 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatInputModule,
     MatButtonToggleModule,
     MatCardModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatButtonToggleModule,
+    MatTooltip
   ],
 })
 export class BeginDialogComponent implements OnInit {
