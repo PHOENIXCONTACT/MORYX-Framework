@@ -35,14 +35,15 @@ namespace Moryx.Notifications
         /// </summary>
         public INotificationSourceAdapter NotificationAdapter { get; set; }
 
+
         /// <inheritdoc />
         public override void Activate()
         {
             base.Activate();
-
+            
             NotificationAdapter.Published += OnNotificationPublished;
             NotificationAdapter.Acknowledged += OnNotificationAcknowledged;
-        }
+       }
 
         /// <inheritdoc />
         public override void Deactivate()
@@ -56,35 +57,40 @@ namespace Moryx.Notifications
         /// <inheritdoc />
         public IReadOnlyList<Notification> GetPublished()
         {
-            ValidateHealthState();
+            if (!IsActivated)
+                ValidateHealthState();
             return NotificationAdapter.GetPublished();
         }
 
         /// <inheritdoc />
         public void Sync()
         {
-            ValidateHealthState();
+            if (!IsActivated)
+                ValidateHealthState();
             NotificationAdapter.Sync();
         }
 
         /// <inheritdoc />
         public void Acknowledge(Notification notification)
         {
-            ValidateHealthState();
+            if (!IsActivated)
+                ValidateHealthState();
             NotificationAdapter.Acknowledge(notification);
         }
 
         /// <inheritdoc />
         public void PublishProcessed(Notification notification)
         {
-            ValidateHealthState();
+            if (!IsActivated)
+                ValidateHealthState();
             NotificationAdapter.PublishProcessed(notification);
         }
 
         /// <inheritdoc />
         public void AcknowledgeProcessed(Notification notification)
         {
-            ValidateHealthState();
+            if (!IsActivated)
+                ValidateHealthState();
             NotificationAdapter.AcknowledgeProcessed(notification);
         }
 
