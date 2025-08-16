@@ -49,6 +49,8 @@
 
     <PackageReference Update="Castle.Windsor" Version="6.0.0" />
 
+	<PackageReference Update="Grpc.Core" Version="2.46.6" />
+	<PackageReference Update="Grpc.Net.Client" Version="2.71.0" />
   </ItemGroup>
 
 </Project>

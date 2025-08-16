@@ -15,7 +15,10 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" />
-    <PackageReference Include="Microsoft.Extensions.Logging"/>
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+	  
+	<PackageReference Include="Grpc.Net.Client" />
+	<PackageReference Include="Grpc.Core" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
