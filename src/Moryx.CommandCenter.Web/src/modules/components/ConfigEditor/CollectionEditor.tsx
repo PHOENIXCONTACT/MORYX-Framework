@@ -27,6 +27,7 @@ import StringEditor from "./StringEditor";
 interface CollectionEditorStateModel {
     SelectedEntry: string;
     ExpandedEntryNames: string[];
+    CreatedPrototypesCount: number;
 }
 
 export default class CollectionEditor extends CollapsibleEntryEditorBase<CollectionEditorStateModel> {
@@ -35,6 +36,7 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
         this.state = {
             SelectedEntry: props.Entry.value.possible[0],
             ExpandedEntryNames: [],
+            CreatedPrototypesCount: 0
         };
     }
 
@@ -57,7 +59,9 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
     public addEntry(): void {
         const prototype = this.props.Entry.prototypes.find((proto: Entry) => proto.displayName === this.state.SelectedEntry);
         const entryPrototype = Entry.entryFromPrototype(prototype, this.props.Entry);
-        entryPrototype.identifier = "CREATED";
+        entryPrototype.identifier = "CREATED" + this.state.CreatedPrototypesCount.toString();
+
+        this.setState({ CreatedPrototypesCount: this.state.CreatedPrototypesCount + 1 });
 
         let counter: number = 0;
         let entryName: string = entryPrototype.displayName;
