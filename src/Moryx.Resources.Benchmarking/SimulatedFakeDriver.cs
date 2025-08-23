@@ -1,19 +1,22 @@
 ﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Drivers.Message;
-using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer;
 using Moryx.ControlSystem.Cells;
-using Moryx.Simulation.Examples.Messages;
-using Moryx.Simulation.Examples;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Moryx.AbstractionLayer.Drivers.Message;
+using Moryx.AbstractionLayer.Drivers;
 using Moryx.StateMachines;
 using Moryx.ControlSystem.Simulation;
+using Moryx.Resources.Benchmarking.Messages;
 
-namespace Moryx.Simulation.Tests
+namespace Moryx.Resources.Benchmarking
 {
-    public  class SimulatedDummyTestDriver : Driver, IMessageDriver<object>, ISimulationDriver
+    [ResourceRegistration]
+    public class SimulatedFakeDriver : Driver, IMessageDriver<object>, ISimulationDriver
     {
         public bool HasChannels => false;
 
@@ -22,7 +25,7 @@ namespace Moryx.Simulation.Tests
         public string Identifier => Name;
 
         private SimulationState _simulatedState;
-        public virtual SimulationState SimulatedState
+        public SimulationState SimulatedState
         {
             get => _simulatedState;
             private set
@@ -33,9 +36,9 @@ namespace Moryx.Simulation.Tests
         }
 
         [ResourceReference(ResourceRelationType.Driver, ResourceReferenceRole.Source)]
-        public virtual AssemblyTestCell Cell { get; set; }
+        public AssemblyCell Cell { get; set; }
 
-        public virtual IEnumerable<ICell> Usages => new[] { Cell };
+        public IEnumerable<ICell> Usages => new[] { Cell };
 
         protected override void OnStart()
         {
@@ -54,7 +57,7 @@ namespace Moryx.Simulation.Tests
             throw new NotImplementedException();
         }
 
-        public virtual void Send(object payload)
+        public void Send(object payload)
         {
             switch (payload)
             {
@@ -72,29 +75,29 @@ namespace Moryx.Simulation.Tests
             return Task.CompletedTask;
         }
 
-        public virtual void Ready(IActivity activity)
+        public void Ready(IActivity activity)
         {
             SimulatedState = SimulationState.Requested;
 
             Received?.Invoke(this, new WorkpieceArrivedMessage { ProcessId = activity.Process.Id });
         }
 
-        public virtual void Result(SimulationResult result)
+        public void Result(SimulationResult result)
         {
             Received?.Invoke(this, new AssemblyCompletedMessage { Result = result.Result });
         }
 
-        public virtual event EventHandler<object> Received;
+        public event EventHandler<object> Received;
 
-        public virtual event EventHandler<SimulationState> SimulatedStateChanged;
+        public event EventHandler<SimulationState> SimulatedStateChanged;
     }
 
-    public class DummyDriverState : DriverState<SimulatedDummyTestDriver>
+    public class FakeDriverState : DriverState<SimulatedFakeDriver>
     {
         [StateDefinition(typeof(FakeDriverState), IsInitial = true)]
         public int InitialState = 0;
 
-        public DummyDriverState(SimulatedDummyTestDriver context, StateMap stateMap) : base(context, stateMap, StateClassification.Offline)
+        public FakeDriverState(SimulatedFakeDriver context, StateMap stateMap) : base(context, stateMap, StateClassification.Offline)
         {
         }
 

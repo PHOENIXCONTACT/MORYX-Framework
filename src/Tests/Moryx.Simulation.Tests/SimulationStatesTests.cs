@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.ControlSystem.Processes;
+using Moryx.ControlSystem.Simulation;
 using Moryx.Simulation.Examples.Messages;
 using NUnit.Framework;
 

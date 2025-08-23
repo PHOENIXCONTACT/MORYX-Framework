@@ -3,6 +3,7 @@
 
 using System;
 using Moryx.AbstractionLayer;
+using Moryx.ControlSystem.Simulation;
 
 namespace Moryx.Simulation.Simulator
 {

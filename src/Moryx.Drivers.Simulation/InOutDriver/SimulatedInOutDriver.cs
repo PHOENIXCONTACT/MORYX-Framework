@@ -6,8 +6,8 @@ using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Drivers.InOut;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
+using Moryx.ControlSystem.Simulation;
 using Moryx.Serialization;
-using Moryx.Simulation;
 using System.ComponentModel;
 
 namespace Moryx.Drivers.Simulation.InOutDriver

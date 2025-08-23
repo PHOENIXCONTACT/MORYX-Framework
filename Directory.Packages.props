@@ -29,7 +29,6 @@
     <!-- Bereits vorhandene Einträge (aus deiner Migration) -->
     <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="$(AspNetCoreVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="$(dotnetVersion)" />
-	<PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
 

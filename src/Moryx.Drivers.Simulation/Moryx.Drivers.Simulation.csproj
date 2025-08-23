@@ -8,6 +8,6 @@
     <PackageTags>MORYX;IoT;Manufacturing;Resource;Simulation</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Moryx.Simulation\Moryx.Simulation.csproj" />
+    <ProjectReference Include="..\Moryx.ControlSystem\Moryx.ControlSystem.csproj" />
   </ItemGroup>
 </Project>

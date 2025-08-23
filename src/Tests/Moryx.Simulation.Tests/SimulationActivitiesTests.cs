@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moryx.AbstractionLayer;
 using Moryx.ControlSystem.Cells;
+using Moryx.ControlSystem.Simulation;
 using Moryx.Simulation.Examples.Messages;
 using NUnit.Framework;
 using System.Diagnostics;
