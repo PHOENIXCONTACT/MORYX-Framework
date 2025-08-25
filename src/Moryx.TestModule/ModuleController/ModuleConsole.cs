@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using Moryx.Runtime.Modules;
 using Moryx.Serialization;
+using Moryx.Container;
 using IContainer = Moryx.Container.IContainer;
 
 namespace Moryx.TestModule

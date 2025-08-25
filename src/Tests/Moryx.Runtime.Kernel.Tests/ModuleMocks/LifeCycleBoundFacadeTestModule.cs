@@ -10,7 +10,7 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 {
-    public class LifeCycleBoundFacadeTestModule : ServerModuleFacadeControllerBase<RuntimeConfigManagerTestConfig2>
+    public class LifeCycleBoundFacadeTestModule : ServerModuleBase<RuntimeConfigManagerTestConfig2>
     {
         public override string Name => "LifeCycleBoundTestModule";
 

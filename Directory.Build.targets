@@ -1,55 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-	<Import Project=".build\Common.props" Condition="'$(CreatePackage)' == 'true'" />
+  <Import Project=".build\Common.props" Condition="'$(IsPackable)' == 'true'" />
 
-	<PropertyGroup>
-		<dotnetVersion>6.0.0</dotnetVersion>
-		<efCoreVersion>6.0.0</efCoreVersion>
+  <PropertyGroup>
+    <dotnetVersion>8.0.0</dotnetVersion>
+    <efCoreVersion>8.0.4</efCoreVersion>
 
-	</PropertyGroup>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
 
-	<!-- Package refereces for all projects if CreatePackage=true -->
-	<ItemGroup Condition="'$(CreatePackage)' == 'true'">
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-	</ItemGroup>
+  <!-- Package refereces for all projects if IsPackable=true -->
+  <ItemGroup Condition="'$(IsPackable)' == 'true'">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
 
-	<!-- Package versions for package references across all projects -->
-	<ItemGroup>
-		<!--3rd party dependencies-->
-		<PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.6.3" />
-		<PackageReference Update="Moq" Version="4.17.2" />
-		<PackageReference Update="NUnit" Version="3.13.3" />
-		<PackageReference Update="NUnit3TestAdapter" Version="4.5.0" />
-		<PackageReference Update="coverlet.collector" Version="3.2.0" >
-      		<PrivateAssets>all</PrivateAssets>
-      		<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-  		</PackageReference>
+  <!-- Package versions for package references across all projects -->
+  <ItemGroup>
+    <!--3rd party dependencies-->
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Update="Moq" Version="4.20.69" />
+    <PackageReference Update="NUnit" Version="3.14.0" />
+    <PackageReference Update="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Update="coverlet.collector" Version="6.0.0" >
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
 
-		<PackageReference Update="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Update="CommandLineParser" Version="2.9.1" />
+    <PackageReference Update="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Update="CommandLineParser" Version="2.9.1" />
 
-		<FrameworkReference Update="Microsoft.AspNetCore.App" Version="$(dotnetVersion)"/>
-		<PackageReference Update="Microsoft.Extensions.Logging" Version="$(dotnetVersion)" />
-		<PackageReference Update="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
-		<PackageReference Update="Microsoft.Extensions.Configuration.FileExtensions" Version="$(dotnetVersion)" />
-		<PackageReference Update="Microsoft.Data.Sqlite" Version="$(dotnetVersion)" />
+    <FrameworkReference Update="Microsoft.AspNetCore.App" Version="$(dotnetVersion)"/>
+    <PackageReference Update="Microsoft.Extensions.Logging" Version="$(dotnetVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Configuration.FileExtensions" Version="$(dotnetVersion)" />
+    <PackageReference Update="Microsoft.Data.Sqlite" Version="$(dotnetVersion)" />
 
-		<PackageReference Update="Microsoft.EntityFrameworkCore" Version="$(efCoreVersion)" />
-		<PackageReference Update="Microsoft.EntityFrameworkCore.Design" Version="$(efCoreVersion)" />
-		<PackageReference Update="Microsoft.EntityFrameworkCore.Proxies" Version="$(efCoreVersion)" />
-		<PackageReference Update="Microsoft.EntityFrameworkCore.Relational" Version="$(efCoreVersion)" />
-		<PackageReference Update="Microsoft.EntityFrameworkCore.InMemory" Version="$(efCoreVersion)" />
-		<PackageReference Update="Microsoft.EntityFrameworkCore.Sqlite" Version="$(efCoreVersion)" />
-		<PackageReference Update="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(efCoreVersion)" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore" Version="$(efCoreVersion)" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Design" Version="$(efCoreVersion)" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Proxies" Version="$(efCoreVersion)" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Relational" Version="$(efCoreVersion)" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.InMemory" Version="$(efCoreVersion)" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Sqlite" Version="$(efCoreVersion)" />
+    <PackageReference Update="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(efCoreVersion)" />
 
-		<PackageReference Update="System.IO.Ports" Version="6.0.0" />
-		<PackageReference Update="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Update="System.IO.Ports" Version="$(dotnetVersion)" />
+    <PackageReference Update="System.ComponentModel.Annotations" Version="5.0.0" />
 
-		<PackageReference Update="Castle.Windsor" Version="5.1.1" />
-		<PackageReference Update="Castle.WcfIntegrationFacility" Version="5.1.1" />
-		<PackageReference Update="Castle.Windsor.Extensions.DependencyInjection" Version="5.1.1" />
+    <PackageReference Update="Castle.Windsor" Version="6.0.0" />
 
-	</ItemGroup>
+  </ItemGroup>
 
 </Project>

@@ -46,7 +46,7 @@ namespace Moryx.Container
             return candidate.IsGenericType && candidate.GetGenericTypeDefinition() == typeof(IContainerChild<>);
         }
 
-        private UseChildAttribute GetAttribute(Type targetType, DependencyModel dependency)
+        private static UseChildAttribute GetAttribute(Type targetType, DependencyModel dependency)
         {
             UseChildAttribute att = null;
             if (dependency.IsOptional)

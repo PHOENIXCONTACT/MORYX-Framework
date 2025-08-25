@@ -1,6 +1,7 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -10,7 +11,7 @@ using Moryx.Serialization;
 namespace Moryx.Resources.Samples
 {
     [ResourceRegistration]
-    public class BufferResource : PublicResource
+    public class BufferResource : Resource
     {
         [ReferenceOverride(nameof(Children), AutoSave = true)]
         public IReferences<BufferValue> Values { get; set; }

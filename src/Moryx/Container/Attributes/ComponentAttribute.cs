@@ -8,21 +8,48 @@ namespace Moryx.Container
     /// <summary>
     /// Registration attribute to decorate components of a module.
     /// </summary>
-    public class ComponentAttribute : RegistrationAttribute
+    public class ComponentAttribute : Attribute
     {
+        /// <summary>
+        /// Life cycle of this component
+        /// </summary>
+        public LifeCycle LifeStyle { get; }
+
+        /// <summary>
+        /// Implemented service
+        /// </summary>
+        public Type[] Services { get; }
+
+        /// <summary>
+        /// Optional name of component
+        /// </summary>
+        public string Name { get; set; }
+
         /// <summary>
         /// Constructor with life cycle
         /// </summary>
         /// <param name="lifeStyle">Life style of component</param>
         /// <param name="services">Implemented service</param>
-        public ComponentAttribute(LifeCycle lifeStyle, params Type[] services) 
-            : base(lifeStyle, services)
-        {
+        public ComponentAttribute(LifeCycle lifeStyle, params Type[] services)
+        { 
+            LifeStyle = lifeStyle;
+            Services = services;
         }
+    }
+
+    /// <summary>
+    /// Life cycle for this component
+    /// </summary>
+    public enum LifeCycle
+    {
+        /// <summary>
+        /// Create only one instance during container life time
+        /// </summary>
+        Singleton,
 
         /// <summary>
-        /// Flag that this plugin shall not be intercepted
+        /// Create a new instance for every request
         /// </summary>
-        public bool DontIntercept { get; set; }    
+        Transient
     }
 }

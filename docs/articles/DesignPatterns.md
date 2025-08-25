@@ -67,7 +67,7 @@ public class MyContext : IStateContext
 
     public void Initial()
     {
-        StateMachine.Initialize<MyStateBase>(this);
+        StateMachine.Initialize(this).With<MyStateBase>();
         //State is not Initial = A
         _currentValue = 0;
     }
@@ -167,7 +167,7 @@ The state machine will be initialized with the static helper class [StateMachine
 ````cs
 private void InitializeMachine()
 {
-    StateMachine.Initialize<MyStateBase>(this);
+    StateMachine.Initialize(this).With<MyStateBase>();
 }
 ````
 

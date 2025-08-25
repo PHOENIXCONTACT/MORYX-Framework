@@ -13,30 +13,6 @@ namespace Moryx.Container
     public interface IContainer
     {
         /// <summary>
-        /// Destroy the internal container and all registered objects
-        /// </summary>
-        void Destroy();
-
-        #region Resolve
-
-        /// <summary>
-        /// Resolve an instance of the given service
-        /// </summary>
-        /// <typeparam name="T">Type to resolve</typeparam>
-        /// <returns>Instance of type</returns>
-        T Resolve<T>();
-
-        /// <summary>
-        /// Resolve this dependency
-        /// </summary>
-        object Resolve(Type service);
-
-        /// <summary>
-        /// Resolve a named instance of the given service
-        /// </summary>
-        T Resolve<T>(string name);
-
-        /// <summary>
         /// Resolve this named dependency
         /// </summary>
         object Resolve(Type service, string name);
@@ -44,106 +20,34 @@ namespace Moryx.Container
         /// <summary>
         /// Resolve all implementations of this contract
         /// </summary>
-        /// <typeparam name="T">Type to resolve</typeparam>
-        /// <returns></returns>
-        T[] ResolveAll<T>();
-
-        /// <summary>
-        /// Resolve all implementations of this contract
-        /// </summary>
         /// <param name="service">Service to resolve implementation for</param>
         /// <returns></returns>
         Array ResolveAll(Type service);
-        #endregion
 
         /// <summary>
         /// Get all implementations for a given component interface
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Type> GetRegisteredImplementations(Type componentInterface);
-
-        #region LoadComponents
+        IEnumerable<Type> GetRegisteredImplementations(Type service);
 
         /// <summary>
-        /// Load all implementations of type from currently known types
-        /// KnownTypes: Types in default framework folders and deeper.
+        /// Full registration method
         /// </summary>
-        void LoadComponents<T>()
-            where T : class;
+        void Register(Type type, Type[] services, string name, LifeCycle lifeCycle);
 
         /// <summary>
-        /// Load all implementations of type from currently known types
-        /// KnownTypes: Types in default framework folders and deeper.
+        /// Register a factory interface for automatic implementation
         /// </summary>
-        void LoadComponents<T>(Predicate<Type> condition)
-            where T : class;
-
-        #endregion
-
-        #region Register
+        void RegisterFactory(Type factoryInterface, string name, Type selector);
 
         /// <summary>
-        /// Execute the installer
+        /// Register instance for given services in the container
         /// </summary>
-        /// <param name="installer"></param>
-        IContainer ExecuteInstaller(IContainerInstaller installer);
+        void RegisterInstance(Type[] services, object instance, string name);
 
         /// <summary>
-        /// Register external type in local container
+        /// Destroy the internal container and all registered objects
         /// </summary>
-        IContainer Register<TService, TComp>()
-            where TComp : TService
-            where TService : class;
-
-        /// <summary>
-        /// Register external type in local container
-        /// </summary>
-        IContainer Register<TService, TComp>(string name, LifeCycle lifeCycle)
-            where TComp : TService
-            where TService : class;
-
-        /// <summary>
-        /// Register factory interface
-        /// </summary>
-        /// <typeparam name="TFactory"></typeparam>
-        IContainer Register<TFactory>()
-            where TFactory : class;
-
-        /// <summary>
-        /// Register factory interface
-        /// </summary>
-        /// <typeparam name="TFactory"></typeparam>
-        IContainer Register<TFactory>(string name)
-            where TFactory : class;
-
-        #endregion
-
-        #region Set instance
-
-        /// <summary>
-        /// Set instance of service
-        /// </summary>
-        /// <typeparam name="T">Type of service</typeparam>
-        /// <param name="instance">Instance implementing the service</param>
-        IContainer SetInstance<T>(T instance) where T : class;
-
-        /// <summary>
-        /// Set globally imported instance with name
-        /// </summary>
-        /// <typeparam name="T">Type of service</typeparam>
-        /// <param name="instance">Instance to register</param>
-        /// <param name="name">Name of instance</param>
-        IContainer SetInstance<T>(T instance, string name) where T : class;
-
-        #endregion
-
-        #region Extensions
-
-        /// <summary>
-        /// 
-        /// </summary>
-        void Extend<TExtension>() where TExtension : new();
-
-        #endregion
+        void Destroy();
     }
 }

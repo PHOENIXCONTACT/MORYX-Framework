@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<IsPackable>true</IsPackable>
     <Description>ResourceManagement module composing and maintaining the resource graph as the habitat for digital twins of manufacturing assets.</Description>
-    <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;IIoT;IoT;Manufacturing;API;Resource</PackageTags>
 	<IsPackable>true</IsPackable>
   </PropertyGroup>

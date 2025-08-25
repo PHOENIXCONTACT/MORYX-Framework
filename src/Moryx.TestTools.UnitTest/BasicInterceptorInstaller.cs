@@ -10,13 +10,13 @@ namespace Moryx.TestTools.UnitTest
     /// <summary>
     /// Installer registering the interceptor
     /// </summary>
-    public class BasicInterceptorInstaller : IContainerInstaller
+    public static class BasicInterceptorInstaller
     {
         /// <inheritdoc />
-        public void Install(IComponentRegistrator registrator)
+        public static void Install(this IContainer container)
         {
-            registrator.Register(typeof(EmptyInterceptor));
-            registrator.Register(typeof(NullLoggerFactory), new []{typeof(ILoggerFactory)});
+            container.Register(typeof(EmptyInterceptor));
+            container.Register(typeof(NullLoggerFactory), new []{typeof(ILoggerFactory)});
         }
     }
 }

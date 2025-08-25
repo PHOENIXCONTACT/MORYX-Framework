@@ -1,8 +1,10 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.Resources.Management
@@ -17,6 +19,8 @@ namespace Moryx.Resources.Management
         /// </summary>
         private IResourceTypeController _typeController;
 
+        public event EventHandler<ICapabilities> CapabilitiesChanged;
+
         /// <summary>
         /// Target resource of the proxy
         /// </summary>
@@ -29,13 +33,17 @@ namespace Moryx.Resources.Management
         {
             Target = target;
             _typeController = typeController;
+            Target.CapabilitiesChanged += OnCapabilitiesChanged;
         }
+
 
         /// <inheritdoc />
         long IResource.Id => Target.Id;
 
         /// <inheritdoc />
         string IResource.Name => Target.Name;
+
+        public ICapabilities Capabilities => Target.Capabilities;
 
         public virtual void Attach()
         {
@@ -52,6 +60,10 @@ namespace Moryx.Resources.Management
             return Target.ToString();
         }
 
+        private void OnCapabilitiesChanged(object sender, ICapabilities e)
+        {
+            CapabilitiesChanged?.Invoke(this, e);
+        }
         /// <summary>
         /// Convert a referenced instance to a proxy
         /// </summary>

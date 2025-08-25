@@ -23,6 +23,10 @@ namespace Moryx.Serialization
         /// <summary>
         /// Unit directory
         /// </summary>
-        Directory
+        Directory,
+        /// <summary>
+        /// Unit with <see cref="System.FlagsAttribute"/>
+        /// </summary>
+        Flags,
     }
 }

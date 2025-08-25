@@ -41,70 +41,70 @@ namespace Moryx.Resources.Management
 
         private void OnCapabilitiesChanged(object sender, ICapabilities args)
         {
-            CapabilitiesChanged?.Invoke(((IPublicResource)sender).Proxify(TypeController), args);
+            CapabilitiesChanged?.Invoke(((IResource)sender).Proxify(TypeController), args);
         }
 
-        private void OnResourceAdded(object sender, IPublicResource publicResource)
+        private void OnResourceAdded(object sender, IResource publicResource)
         {
             ResourceAdded?.Invoke(this, publicResource.Proxify(TypeController));
         }
 
-        private void OnResourceRemoved(object sender, IPublicResource publicResource)
+        private void OnResourceRemoved(object sender, IResource publicResource)
         {
             ResourceRemoved?.Invoke(this, publicResource.Proxify(TypeController));
         }
         #endregion
 
         #region IResourceManagement
-        public TResource GetResource<TResource>() where TResource : class, IPublicResource
+        public TResource GetResource<TResource>() where TResource : class, IResource
         {
             ValidateHealthState();
             return ResourceGraph.GetResource<TResource>()?.Proxify(TypeController);
         }
 
         public TResource GetResource<TResource>(long id)
-            where TResource : class, IPublicResource
+            where TResource : class, IResource
         {
             ValidateHealthState();
             return ResourceGraph.GetResource<TResource>(id)?.Proxify(TypeController);
         }
 
         public TResource GetResource<TResource>(string name)
-            where TResource : class, IPublicResource
+            where TResource : class, IResource
         {
             ValidateHealthState();
             return ResourceGraph.GetResource<TResource>(name)?.Proxify(TypeController);
         }
 
         public TResource GetResource<TResource>(ICapabilities requiredCapabilities)
-            where TResource : class, IPublicResource
+            where TResource : class, IResource
         {
             ValidateHealthState();
             return ResourceGraph.GetResource<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities))?.Proxify(TypeController);
         }
 
         public TResource GetResource<TResource>(Func<TResource, bool> predicate)
-            where TResource : class, IPublicResource
+            where TResource : class, IResource
         {
             ValidateHealthState();
             return ResourceGraph.GetResource(predicate)?.Proxify(TypeController);
         }
 
-        public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IPublicResource
+        public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IResource
         {
             ValidateHealthState();
             return ResourceGraph.GetResources<TResource>().Proxify(TypeController);
         }
 
         public IEnumerable<TResource> GetResources<TResource>(ICapabilities requiredCapabilities)
-            where TResource : class, IPublicResource
+            where TResource : class, IResource
         {
             ValidateHealthState();
             return ResourceGraph.GetResources<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities)).Proxify(TypeController);
         }
 
         public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate)
-            where TResource : class, IPublicResource
+            where TResource : class, IResource
         {
             ValidateHealthState();
             return ResourceGraph.GetResources(predicate).Proxify(TypeController);
@@ -175,10 +175,10 @@ namespace Moryx.Resources.Management
 
 
         /// <inheritdoc />
-        public event EventHandler<IPublicResource> ResourceAdded;
+        public event EventHandler<IResource> ResourceAdded;
 
         /// <inheritdoc />
-        public event EventHandler<IPublicResource> ResourceRemoved;
+        public event EventHandler<IResource> ResourceRemoved;
 
         /// <inheritdoc />
         public event EventHandler<ICapabilities> CapabilitiesChanged;

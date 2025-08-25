@@ -12,14 +12,13 @@ namespace Moryx.Runtime.Kernel
     /// <summary>
     /// Factory to create local containers of <see cref="IServerModule"/>
     /// </summary>
-    [KernelComponent(typeof(IModuleContainerFactory))]
     public class ModuleContainerFactory : IModuleContainerFactory
     {
         /// <inheritdoc />
         public IContainer Create(IDictionary<Type, string> strategies, Assembly moduleAssembly)
         {
-            var container = new LocalContainer(strategies)
-                .ExecuteInstaller(new AutoInstaller(moduleAssembly));
+            var container = new CastleContainer(strategies);
+            container.LoadFromAssembly(moduleAssembly);
             return container;
         }
     }

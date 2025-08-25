@@ -1,12 +1,15 @@
 ﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Capabilities;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Serialization;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+using Moryx.AbstractionLayer.Localizations;
 
 namespace Moryx.AbstractionLayer.Resources
 {
@@ -51,12 +54,14 @@ namespace Moryx.AbstractionLayer.Resources
         /// Parent resource of this resource
         /// </summary>
         [ResourceReference(ResourceRelationType.ParentChild, ResourceReferenceRole.Source)]
+        [Display(Name = nameof(Strings.PARENT), ResourceType = typeof(Localizations.Strings))]
         public Resource Parent { get; set; }
 
         /// <summary>
         /// All children of this resource
         /// </summary>
         [ResourceReference(ResourceRelationType.ParentChild, ResourceReferenceRole.Target)]
+        [Display(Name = nameof(Strings.CHILDREN), ResourceType = typeof(Localizations.Strings))]
         public IReferences<Resource> Children { get; set; }
 
         /// <inheritdoc />
@@ -143,6 +148,31 @@ namespace Moryx.AbstractionLayer.Resources
         {
             return $"{Id}:{Name} ({GetType().Name})";
         }
+
+
+        /// <summary>
+        /// Current capabilities of this resource
+        /// </summary>
+        private ICapabilities _capabilities = NullCapabilities.Instance;
+
+        /// <inheritdoc />
+        public ICapabilities Capabilities
+        {
+            get
+            {
+                return _capabilities;
+            }
+            protected set
+            {
+                _capabilities = value;
+                CapabilitiesChanged?.Invoke(this, _capabilities);
+            }
+        }
+
+        /// <summary>
+        /// <seealso cref="IResource"/>
+        /// </summary>
+        public event EventHandler<ICapabilities> CapabilitiesChanged;
 
         /// <summary>
         /// Event raised when the resource was modified and the changes should be

@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>MORYX container functionality based on Castle.Windsor.</Description>
-    <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;Container;IoC</PackageTags>
     <IsPackable>true</IsPackable>
   </PropertyGroup>

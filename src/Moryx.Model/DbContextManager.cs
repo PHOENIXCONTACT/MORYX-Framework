@@ -18,7 +18,6 @@ namespace Moryx.Model
     /// <summary>
     /// Kernel component handling data models and their runtime configurators
     /// </summary>
-    [InitializableKernelComponent(typeof(IDbContextManager))]
     public class DbContextManager : IDbContextManager
     {
         private ModelWrapper[] _knownModels;

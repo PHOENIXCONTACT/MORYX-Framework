@@ -14,7 +14,6 @@ namespace Moryx.Runtime.Kernel
     /// <summary>
     /// Manages all the modules on the server side. 
     /// </summary>
-    [InitializableKernelComponent(typeof(IModuleManager))]
     public class ModuleManager : IModuleManager
     {
         #region Fields and Properties

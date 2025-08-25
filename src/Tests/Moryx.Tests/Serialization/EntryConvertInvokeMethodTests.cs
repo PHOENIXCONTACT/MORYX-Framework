@@ -1,9 +1,6 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using Moryx.Serialization;
 using NUnit.Framework;
 
@@ -16,7 +13,6 @@ namespace Moryx.Tests
     public class EntryConvertInvokeMethodTests
     {
         private readonly EntrySerialize_Methods _sut;
-        private readonly EntrySerializeSerialization _serialization;
 
         public EntryConvertInvokeMethodTests() {
             _sut = new EntrySerialize_Methods();

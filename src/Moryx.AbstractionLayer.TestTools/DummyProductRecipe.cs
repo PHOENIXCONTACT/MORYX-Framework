@@ -13,6 +13,7 @@ namespace Moryx.AbstractionLayer.TestTools
     /// </summary>
     public class DummyProductRecipe : ProductRecipe
     {
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             var toCompareWith = obj as DummyProductRecipe;
@@ -27,12 +28,18 @@ namespace Moryx.AbstractionLayer.TestTools
         }
     }
 
+    /// <summary>
+    /// Dummy implementation of a workplan recipe.
+    /// </summary>
     public class DummyProductWorkplanRecipe : DummyProductRecipe, IWorkplanRecipe
     {
+        /// <inheritdoc/>
         public IWorkplan Workplan { get; set; }
 
+        /// <inheritdoc/>
         public ICollection<long> DisabledSteps { get; set; }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             var toCompareWith = obj as DummyProductWorkplanRecipe;

@@ -50,10 +50,23 @@ namespace Moryx.Tools
         /// </summary>
         private static Type[] LoadPublicClasses()
         {
-            return (from assembly in RelevantAssemblies.Value
-                    from type in assembly.GetExportedTypes()
-                    where type.IsClass && !type.IsAbstract
-                    select type).ToArray();
+            // Assume 30 exports per assembly for initial size
+            var publicClasses = new List<Type>(RelevantAssemblies.Value.Length * 30);
+            foreach (var assembly in RelevantAssemblies.Value)
+            {
+                try
+                {
+                    var exports = assembly.GetExportedTypes()
+                        .Where(type => type.IsClass && !type.IsAbstract);
+                    publicClasses.AddRange(exports);
+                }
+                catch(Exception x)
+                {
+                    CrashHandler.WriteErrorToFile($"Failed to load types from {assembly.FullName}. Error: {x.Message}");
+                }
+            }
+
+            return publicClasses.ToArray();
         }
 
         /// <summary>

@@ -8,7 +8,7 @@ using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.Resources.Management.Tests
 {
-    public interface IReferenceResource : IPublicResource
+    public interface IReferenceResource : IResource
     {
         ISimpleResource Reference { get; set; }
 
@@ -48,7 +48,7 @@ namespace Moryx.Resources.Management.Tests
         public IReferences<SimpleResource> References { get; set; }
     }
 
-    public class ReferenceResource : PublicResource, IReferenceResource
+    public class ReferenceResource : Resource, IReferenceResource
     {
         private ISimpleResource _reference;
 
@@ -111,7 +111,7 @@ namespace Moryx.Resources.Management.Tests
         public event EventHandler<ISimpleResource[]> SomeChanged;
     }
 
-    public class BidirectionalReferenceResource : PublicResource
+    public class BidirectionalReferenceResource : Resource
     {
         [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Source, nameof(SourceReference))]
         public ReferenceResource SourceReference { get; set; }

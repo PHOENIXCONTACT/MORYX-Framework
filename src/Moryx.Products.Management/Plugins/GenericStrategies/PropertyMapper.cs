@@ -103,6 +103,7 @@ namespace Moryx.Products.Management
             return Convert.ChangeType(value, Column.PropertyType);
         }
 
+        /// <inheritdoc />
         public bool HasChanged(IGenericColumns current, object updated)
         {
             var objectValue = ObjectAccessor.ReadProperty(updated);
@@ -114,12 +115,14 @@ namespace Moryx.Products.Management
             return !columnValue.Equals(objectValue);
         }
 
+        /// <inheritdoc />
         public void ReadValue(IGenericColumns source, object target)
         {
             var value = ColumnAccessor.ReadProperty(source);
             ObjectAccessor.WriteProperty(target, value);
         }
 
+        /// <inheritdoc />
         public void WriteValue(object source, IGenericColumns target)
         {
             var value = ObjectAccessor.ReadProperty(source);

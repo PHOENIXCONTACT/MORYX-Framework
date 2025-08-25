@@ -16,7 +16,7 @@ namespace Moryx.Resources.Management
     /// <summary>
     /// The main controller of all resource modules.
     /// </summary>
-    public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>,
+    public class ModuleController : ServerModuleBase<ModuleConfig>,
         IFacadeContainer<IResourceManagement>,
         IFacadeContainer<IResourceTypeTree>,
         IFacadeContainer<INotificationSource>
@@ -33,6 +33,7 @@ namespace Moryx.Resources.Management
         /// </summary>
         public IDbContextManager DbContextManager { get; }
 
+        /// <inheritdoc />
         public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
             : base(containerFactory, configManager, loggerFactory)
         {

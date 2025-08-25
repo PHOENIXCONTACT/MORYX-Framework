@@ -10,12 +10,12 @@ namespace Moryx.Resources.Management.Tests
         int Add(int value);
     }
 
-    public interface IResourceWithImplicitApi : IPublicResource, IExtension
+    public interface IResourceWithImplicitApi : IResource, IExtension
     {
         
     }
 
-    public class ResourceWithImplicitApi : PublicResource, IResourceWithImplicitApi
+    public class ResourceWithImplicitApi : Resource, IResourceWithImplicitApi
     {
         public int Add(int value)
         {

@@ -3,9 +3,7 @@
 
 using System.Runtime.Serialization;
 using Moryx.Configuration;
-using Moryx.Model.Attributes;
 using Moryx.Model.Configuration;
-using Moryx.Serialization;
 
 namespace Moryx.Model
 {

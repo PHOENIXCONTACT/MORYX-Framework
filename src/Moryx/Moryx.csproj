@@ -1,16 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Description>Core package of the MORYX ecosystem. It defines the necessary types for MORYX compatibility as well as commonly required tools.</Description>
-    <CreatePackage>true</CreatePackage>
     <PackageTags>MORYX;Serialization;Configuration;Logging;Core;Modules;Workplans</PackageTags>
 	<IsPackable>true</IsPackable>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <DefineConstants>HAVE_TCP_KEEPALIVE</DefineConstants>
   </PropertyGroup>
 

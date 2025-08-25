@@ -3,8 +3,10 @@
 
 namespace Moryx.Products.Management
 {
+    /// <inheritdoc/>
     public class FloatStrategyConfigurationAttribute : PropertyStrategyConfigurationAttribute
     {
+        /// <inheritdoc/>
         public FloatStrategyConfigurationAttribute()
         {
             ColumnType = typeof(double);

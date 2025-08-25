@@ -13,7 +13,7 @@ using Moryx.Runtime.Modules;
 namespace Moryx.TestModule
 {
     [Description("Test module for System tests")]
-    public class ModuleController : ServerModuleFacadeControllerBase<ModuleConfig>, IFacadeContainer<ITestModule>
+    public class ModuleController : ServerModuleBase<ModuleConfig>, IFacadeContainer<ITestModule>
     {
         /// <summary>
         /// Db context factory for data models

@@ -53,4 +53,9 @@ namespace Moryx.Tests
         ValueA,
         ValueB
     }
+
+    public class NullablePropertiesClass
+    {
+        public int? Value { get; set; } = 0;
+    }
 }

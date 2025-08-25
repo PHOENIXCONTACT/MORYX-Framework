@@ -24,6 +24,7 @@ namespace Moryx.Configuration
         /// Save configuration using its type
         /// </summary>
         /// <param name="configuration">Configuration object</param>
+        /// <param name="name">Name of the configuration</param>
         /// <param name="liveUpdate">Update currently active config live</param>
         void SaveConfiguration(IConfig configuration, string name, bool liveUpdate);
 

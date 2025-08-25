@@ -10,7 +10,7 @@ using System;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 {
-    public class ServerModuleA : ServerModuleFacadeControllerBase<RuntimeConfigManagerTestConfig2>, IFacadeContainer<IFacadeA>
+    public class ServerModuleA : ServerModuleBase<RuntimeConfigManagerTestConfig2>, IFacadeContainer<IFacadeA>
 
     {
         public ServerModuleA(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) : base(containerFactory, configManager, loggerFactory)

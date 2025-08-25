@@ -1,12 +1,8 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.IO;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Moryx.Model;
-using Moryx.Model.Attributes;
-using Moryx.Model.PostgreSQL;
 
 // ReSharper disable once CheckNamespace
 namespace Moryx.Resources.Model

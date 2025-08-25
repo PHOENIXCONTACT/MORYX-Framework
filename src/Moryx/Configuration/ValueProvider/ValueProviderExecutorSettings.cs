@@ -64,7 +64,7 @@ namespace Moryx.Configuration
         }
 
         /// <summary>
-        /// Adds <see cref="DefaultValueProvider"/>
+        /// Adds a <see cref="DefaultValueAttributeProvider"/>
         /// </summary>
         /// <returns></returns>
         public ValueProviderExecutorSettings AddDefaultValueProvider()

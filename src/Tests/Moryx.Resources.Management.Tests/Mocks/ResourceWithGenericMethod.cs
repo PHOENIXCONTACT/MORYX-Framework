@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Moryx.Resources.Management.Tests
 {
-    public interface IGenericMethodCall : IPublicResource
+    public interface IGenericMethodCall : IResource
     {
         /// <summary>
         /// Get channel using specialized API
