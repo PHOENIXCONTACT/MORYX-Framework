@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Generic;
+
 namespace Moryx.AbstractionLayer
 {
     /// <summary>
@@ -9,19 +11,41 @@ namespace Moryx.AbstractionLayer
     public static class ProcessExtensions
     {
         /// <summary>
-        /// Prepared activity that will be dispatched as soon as a ready to work was send.
+        /// Get one prepared activity that will be dispatched as soon as a ready to work was send.
+        /// Mention that, in case of parallel path in a workplan, a process could have multiple prepared activities!
+        /// See also: <seealso cref="NextActivities"/>
         /// </summary>
+        /// <returns>Last activity of the process that is prepared</returns>
         public static IActivity NextActivity(this IProcess process)
         {
             return process.GetActivity(ActivitySelectionType.LastOrDefault, activity => activity.Tracing?.Started == null);
         }
 
         /// <summary>
-        /// Current running activity
+        /// Get all prepared activities that will be dispatched as soon as a ready to work was send.
         /// </summary>
+        public static IEnumerable<IActivity> NextActivities(this IProcess process)
+        {
+            return process.GetActivities(activity => activity.Tracing?.Started == null);
+        }
+
+        /// <summary>
+        /// Get one of the current running activities of the process. 
+        /// Mention that, in case of parallel path in a workplan, a process could have multiple running activities!
+        /// See also: <seealso cref="CurrentActivities"/>
+        /// </summary>
+        /// <returns>Last activity of the process that is running</returns>
         public static IActivity CurrentActivity(this IProcess process)
         {
             return process.GetActivity(ActivitySelectionType.LastOrDefault, activity => activity.Tracing?.Started != null && activity.Result == null);
+        }
+
+        /// <summary>
+        /// Get all current running activities of the process.
+        /// </summary>
+        public static IEnumerable<IActivity> CurrentActivities(this IProcess process)
+        {
+            return process.GetActivities(activity => activity.Tracing?.Started != null && activity.Result == null);
         }
 
         /// <summary>
