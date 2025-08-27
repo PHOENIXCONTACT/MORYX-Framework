@@ -103,7 +103,7 @@ namespace Moryx.Tools.Wcf
             }
 
             // Parse endpoint url
-            var endpoint = resp.Result.FirstOrDefault(e => ((Endpoint)e).Binding == ServiceBindingType.WebHttp);
+            var endpoint = resp.Result.FirstOrDefault();
             if (endpoint == null || string.IsNullOrEmpty(endpoint.Address))
             {
                 Logger.Log(LogLevel.Error, "Endpoint for {0} has wrong binding or empty address: {1}-{2}",
