@@ -81,7 +81,7 @@
 
     <PackageVersion Include="InfluxDB.LineProtocol" Version="1.1.1" />
     <PackageVersion Include="InfluxDB.Client" Version="4.18.0" />
-    <PackageVersion Include="CsvHelper" Version="33.0.1" />
+    <PackageVersion Include="CsvHelper" Version="33.1.0" />
 
     <PackageVersion Include="MimeTypeMapOfficial" Version="1.0.17" />
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.8" />
