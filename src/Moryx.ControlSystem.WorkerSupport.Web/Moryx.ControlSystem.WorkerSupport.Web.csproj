@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
 
   <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\main.js')) And ('$(NoBuild)' != 'true') ">
-	<Exec WorkingDirectory=".\" Command="npm config set strict-ssl false" />
-	<Exec WorkingDirectory=".\" Command="npm install --no-audit" />
-	<Exec WorkingDirectory=".\" Command="npm run build:prod" />
-	<Exec WorkingDirectory=".\" Command="npm config set strict-ssl true" />
+	  <!-- Run yarn install in the parent directory -->
+    <Exec WorkingDirectory="..\.." Command="yarn install" />
+    <!-- Build the Angular project using yarn in the current directory -->
+    <Exec WorkingDirectory=".\\" Command="yarn run build:prod" />
   </Target>
 	
   <PropertyGroup>

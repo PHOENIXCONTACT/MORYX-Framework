@@ -31,7 +31,7 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/@moryx/ngx-web-framework/styles/theme.scss",
+              "../../node_modules/@moryx/ngx-web-framework/styles/theme.scss",
               "src/styles.scss"
             ],
             "scripts": [],

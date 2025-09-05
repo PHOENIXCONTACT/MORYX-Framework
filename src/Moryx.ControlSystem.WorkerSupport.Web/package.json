@@ -1,5 +1,5 @@
 {
-  "name": "moryx.control-system.worker-support.web",
+  "name": "moryx.controlsystem.workersupport.web",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
