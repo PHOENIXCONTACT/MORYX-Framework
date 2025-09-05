@@ -55,11 +55,8 @@
 	</ItemGroup>
 
 	<Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\js\dist\main.js')) And ('$(NoBuild)' != 'true') ">
-		<Exec WorkingDirectory="./" Command="npm config set strict-ssl false" />
-		<Exec WorkingDirectory="./" Command="npm install --no-audit" />
-		<Exec WorkingDirectory="./" Command="npm run build:css" />
-		<Exec WorkingDirectory="./" Command="npm run build:prod" />
-		<Exec WorkingDirectory="./" Command="npm run copy:componentsfiles" />
-		<Exec WorkingDirectory="./" Command="npm config set strict-ssl true" />
-	  </Target>
+	  <Exec WorkingDirectory="./" Command="yarn run build:css" />
+	  <Exec WorkingDirectory="./" Command="yarn run build:prod" />
+	  <Exec WorkingDirectory="./" Command="yarn run copy:componentsfiles" />
+	</Target>
 </Project>

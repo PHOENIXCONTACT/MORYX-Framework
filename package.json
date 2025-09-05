@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "workspaces": [
+    "src/Moryx.Analytics.Web",
+    "src/Moryx.CommandCenter.Web",
+    "src/Moryx.ControlSystem.ProcessEngine.Web",
+    "src/Moryx.ControlSystem.WorkerSupport.Web",
+    "src/Moryx.FactoryMonitor.Web",
+    "src/Moryx.Media.Web",
+    "src/Moryx.Notifications.Web",
+    "src/Moryx.Operators.Web",
+    "src/Moryx.Orders.Web",
+    "src/Moryx.Products.Web",
+    "src/Moryx.Resources.Web",
+    "src/Moryx.Shifts.Web",
+    "src/Moryx.Workplans.Web"
+  ]
+}
