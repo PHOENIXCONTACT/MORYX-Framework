@@ -1,3 +1,6 @@
+# Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+# Licensed under the Apache License, Version 2.0
+
 name: CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
