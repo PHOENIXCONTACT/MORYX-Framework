@@ -376,7 +376,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                 </Stack>
                             </Grid>
                             <Grid item={true} md={12}>
-                                <Button color="primary" onClick={() => this.onSave()}>Save</Button>
+                                <Button color="primary" variant="outlined" onClick={() => this.onSave()}>Save</Button>
                             </Grid>
                         </DatabaseSection>
                         <DatabaseSection title="Backup &amp; Restore">
