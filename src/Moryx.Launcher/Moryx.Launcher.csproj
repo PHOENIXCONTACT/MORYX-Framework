@@ -55,7 +55,8 @@
 	</ItemGroup>
 
 	<Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\js\dist\main.js')) And ('$(NoBuild)' != 'true') ">
-	  <Exec WorkingDirectory="./" Command="yarn run build:css" />
+	  <!-- NPM run is required here to use npx for tailwind execution -->
+	  <Exec WorkingDirectory="./" Command="npm run build:css" />
 	  <Exec WorkingDirectory="./" Command="yarn run build:prod" />
 	  <Exec WorkingDirectory="./" Command="yarn run copy:componentsfiles" />
 	</Target>
