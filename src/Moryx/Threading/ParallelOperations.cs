@@ -145,18 +145,23 @@ namespace Moryx.Threading
         /// </summary>
         public int ScheduleExecution<T>(Action<T> operation, T userState, int delayMs, int periodMs, bool criticalOperation) where T : class
         {
-            var id = ++_lastTimerId;
+            // thread safe increment of timer id
+            int id = Interlocked.Increment(ref _lastTimerId);
+            
             var timer = new Timer(new NonStackingTimerCallback(state =>
             {
                 try
                 {
                     operation((T)state);
-                    if (periodMs <= 0)
-                        StopExecution(id);
                 }
                 catch (Exception ex)
                 {
                     HandleException(ex, operation, criticalOperation);
+                }
+                finally
+                {
+                    if (periodMs <= 0)
+                        StopExecution(id);
                 }
             }), userState, delayMs, periodMs);
 
