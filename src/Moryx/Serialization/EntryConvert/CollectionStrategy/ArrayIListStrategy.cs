@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace Moryx.Serialization
 {
+    /// <inheritdoc/>
     public class ArrayIListStrategy : ICollectionStrategy
     {
         private readonly IList _list;
@@ -14,6 +15,7 @@ namespace Moryx.Serialization
         private readonly object _instance;
         private readonly IList _toAdd = new List<object>();
 
+        /// <inheritdoc/>
         public ArrayIListStrategy(IList list, ICustomSerialization customSerialization,
              ICustomAttributeProvider attributeProvider, object instance)
         {
@@ -23,6 +25,7 @@ namespace Moryx.Serialization
             _instance = instance;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<Entry> Serialize()
         {
             var entries = new List<Entry>();
@@ -34,31 +37,37 @@ namespace Moryx.Serialization
             return entries;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<string> Keys()
         {
             return CollectionStrategyTools.GenerateKeys(_list.Count);
         }
 
+        /// <inheritdoc/>
         public object ElementAt(string key)
         {
             return _list[int.Parse(key)];
         }
 
+        /// <inheritdoc/>
         public void Added(Entry entry, object addedValue)
         {
             _toAdd.Add(addedValue);
         }
 
+        /// <inheritdoc/>
         public void Updated(Entry entry, object updatedValue)
         {
             _list[int.Parse(entry.Identifier)] = updatedValue;
         }
 
+        /// <inheritdoc/>
         public void Removed(string key)
         {
             _toDelete.Add(_list[int.Parse(key)]);
         }
 
+        /// <inheritdoc/>
         public void Flush()
         {
            

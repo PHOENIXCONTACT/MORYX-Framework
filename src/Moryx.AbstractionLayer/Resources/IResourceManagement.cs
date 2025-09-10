@@ -16,51 +16,51 @@ namespace Moryx.AbstractionLayer.Resources
         /// Get only resources of this type
         /// </summary>
         TResource GetResource<TResource>()
-            where TResource : class, IPublicResource;
+            where TResource : class, IResource;
 
         /// <summary>
         /// Get typed resource by id
         /// </summary>
         TResource GetResource<TResource>(long id)
-            where TResource : class, IPublicResource;
+            where TResource : class, IResource;
 
         /// <summary>
         /// Get typed resource by name
         /// </summary>
         TResource GetResource<TResource>(string name)
-            where TResource : class, IPublicResource;
+            where TResource : class, IResource;
 
         /// <summary>
         /// Get the only resource that provides the required capabilities.
         /// </summary>
         /// <returns>Instance if only one match was found, otherwise <value>null</value></returns>
         TResource GetResource<TResource>(ICapabilities requiredCapabilities)
-            where TResource : class, IPublicResource;
+            where TResource : class, IResource;
 
         /// <summary>
         /// Get the only resource that matches the given predicate
         /// </summary>
         /// <returns>Instance if only one match was found, otherwise <value>null</value></returns>
         TResource GetResource<TResource>(Func<TResource, bool> predicate)
-            where TResource : class, IPublicResource;
+            where TResource : class, IResource;
 
         /// <summary>
         /// Get all resources of this type
         /// </summary>
         IEnumerable<TResource> GetResources<TResource>()
-            where TResource : class, IPublicResource;
+            where TResource : class, IResource;
 
         /// <summary>
         /// Get all resources of this type that provide the required capabilities
         /// </summary>
         IEnumerable<TResource> GetResources<TResource>(ICapabilities requiredCapabilities)
-            where TResource : class, IPublicResource;
+            where TResource : class, IResource;
 
         /// <summary>
         /// Get all resources of this type that match the predicate
         /// </summary>
         IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate)
-            where TResource : class, IPublicResource;
+            where TResource : class, IResource;
 
         /// <summary>
         /// Get all resources inluding the private ones of this type that match the predicate
@@ -95,12 +95,12 @@ namespace Moryx.AbstractionLayer.Resources
         /// <summary>
         /// Event raised when a resource was added at runtime
         /// </summary>
-        event EventHandler<IPublicResource> ResourceAdded;
+        event EventHandler<IResource> ResourceAdded;
 
         /// <summary>
         /// Event raised when a resource was removed at runtime
         /// </summary>
-        event EventHandler<IPublicResource> ResourceRemoved;
+        event EventHandler<IResource> ResourceRemoved;
 
         /// <summary>
         /// Raised when the capabilities have changed.
