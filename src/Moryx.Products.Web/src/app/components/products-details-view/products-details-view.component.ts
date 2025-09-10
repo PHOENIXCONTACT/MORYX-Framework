@@ -1,5 +1,5 @@
-import { Component, effect, input, OnInit, signal, untracked } from '@angular/core';
-import { ActivatedRoute, NavigationCancel, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Component, signal } from '@angular/core';
+import { ActivatedRoute, NavigationCancel, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { SessionService } from 'src/app/services/session.service';
@@ -8,7 +8,7 @@ import { EditProductsService } from '../../services/edit-products.service';
 import { ProductsDetailsHeaderComponent } from './products-details-header/products-details-header.component';
 import { CommonModule } from '@angular/common';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatTabLink, MatTabNav, MatTabNavPanel, MatTabsModule } from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
     selector: 'app-products-details-view',
@@ -43,37 +43,31 @@ export class ProductsDetailsViewComponent {
     public route: ActivatedRoute,
     public translate: TranslateService
   ) {
-    editService.currentProduct.subscribe((product) => {
-      if (product) this.currentProduct.set(product);
-
-      const wipProduct = this.sessionService.getWipProduct();
+    this.route.data.subscribe(data => {
+      const product = data['product'];
 
       if (this.lastProductId() === product?.id) return;
-      const url = router.url;
+      if (product) this.currentProduct.set(product);
+      
+      const wipProduct = this.sessionService.getWipProduct();
+      
       if (
         this.lastProductId() !== undefined &&
         product?.properties &&
         !wipProduct
       ) {
-        
         const newUrl = `details/${product?.id}/properties`;
-        this.activeLink.set(Tabs.Properties);
         this.router.navigate([newUrl]);
-      } else if (
-          !this.regexProperties.test(url) &&
-          !this.regexParts.test(url) &&
-          !this.regexRecipes.test(url) &&
-          !this.regexReferences.test(url) &&
-          product?.properties
-        ) {
-          this.router.navigate([`details/${product?.id}/properties`]);
       }
+      
       this.lastProductId.set(product?.id);
+      
       if (wipProduct) {
-        editService.edit = true;
+        this.editService.edit = true;
         this.sessionService.removeWipProduct();
       }
     });
+
     router.events.subscribe((val) => {
       if (val instanceof NavigationEnd || val instanceof NavigationCancel) {
         let url = this.router.url;
@@ -89,7 +83,6 @@ export class ProductsDetailsViewComponent {
       }
     });
   }
-
 
   routeTo(target: number) {
     const url = this.router.url;
