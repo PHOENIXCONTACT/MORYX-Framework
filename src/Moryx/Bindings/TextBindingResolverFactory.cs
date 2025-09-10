@@ -14,7 +14,7 @@ namespace Moryx.Bindings
         /// Regex for binding.
         /// It matches strings of type "Product.Id" or "Recipe".
         /// </summary>
-        private const string BindingRegex = @"\{(?<binding>[A-Z][a-z][0-9]+(\.?[A-Z]\w+(?:\[\w+\])?)*)(?<hasFormat>:(?<format>\w+))?\}";
+        private const string BindingRegex = @"\{(?<binding>([A-Za-z_][A-Za-z0-9_]*)(\[\d+\])?(\.([A-Za-z_][A-Za-z0-9_]*)(\[\d+\])?)*)?(?<hasFormat>:(?<format>\w+))?\}";
 
         /// <summary>
         /// Create resolver for this instruction
