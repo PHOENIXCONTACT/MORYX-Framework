@@ -80,7 +80,7 @@ namespace Moryx.Runtime.Kernel
         /// </summary>
         public static void AddMoryxService(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddHostedService<MoryxService>();
+            serviceCollection.AddHostedService<MoryxHost>();
         }
         
         /// <summary>

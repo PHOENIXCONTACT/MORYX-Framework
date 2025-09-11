@@ -1,21 +1,18 @@
-﻿using Castle.Core.Logging;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Moryx.Runtime.Modules;
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Moryx.Runtime.Kernel
 {
-    internal class MoryxService : BackgroundService
+    internal class MoryxHost : BackgroundService
     {
         private readonly IModuleManager moduleManager;
         private readonly IHost lifeTime;
-        private readonly ILogger<MoryxService> logger;
+        private readonly ILogger<MoryxHost> logger;
 
         // Console shutdown handling according to https://stackoverflow.com/questions/21751545/how-to-make-a-console-app-exit-gracefully-when-it-is-closed
         [DllImport("Kernel32")]
@@ -54,18 +51,39 @@ namespace Moryx.Runtime.Kernel
             return true;
         }
 
-        public MoryxService(IModuleManager moduleManager, IHost lifetTime, ILogger<MoryxService> logger)
+        public MoryxHost(IModuleManager moduleManager, IHost lifetTime, ILogger<MoryxHost> logger)
         {
             this.moduleManager = moduleManager;
             this.lifeTime = lifetTime;
             this.logger = logger;
         }
+        public enum MoryxHostState {
+            NotStarted,
+            Starting,
+            Started,
+            Stopping,
+            Stopped
+        }
+
+        public MoryxHostState State {get;private set;}
+        public event EventHandler<MoryxHostState> StateChanged;
+
 
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
-            SetConsoleCtrlHandler(ConsoleCtrlCheck, true);
+            State = MoryxHostState.Starting;
+            StateChanged?.Invoke(this, State);
+            // Only register on windows, because the behavior is os specific
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                SetConsoleCtrlHandler(ConsoleCtrlCheck, true);
+            }
             moduleManager.StartModules();
+
             await base.StartAsync(cancellationToken);
+
+            State = MoryxHostState.Started;
+            StateChanged?.Invoke(this, State);
         }
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -74,8 +92,12 @@ namespace Moryx.Runtime.Kernel
 
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
+            State = MoryxHostState.Stopping;
+            StateChanged?.Invoke(this, State);
             moduleManager.StopModules();
             await base.StopAsync(cancellationToken);
+            State = MoryxHostState.Stopped;
+            StateChanged?.Invoke(this, State);
         }
     }
 }
