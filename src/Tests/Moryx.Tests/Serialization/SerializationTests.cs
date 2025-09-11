@@ -847,6 +847,14 @@ namespace Moryx.Tests
             Assert.AreEqual("VGhpcyBpcyBhIHRlc3Q=", entry.SubEntries[0].Value.Current);
         }
 
+        [Test(Description = "Testing nullable properties")]
+        public void NullableProperty()
+        {
+            var nullablePropertiesObject = new NullablePropertiesClass();
+
+            Assert.DoesNotThrow(() => EntryConvert.EncodeObject(nullablePropertiesObject));
+        }
+
         [Test(Description = "Decodes to a MemoryStream and creates a new stream")]
         public void MemoryStreamDecode()
         {
