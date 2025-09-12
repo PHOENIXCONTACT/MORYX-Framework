@@ -11,7 +11,7 @@
   <!-- Global version definitions need to be done here, this file is loaded before all others-->
   <PropertyGroup>
     <dotnetVersion>8.0.1</dotnetVersion>
-    <efCoreVersion>8.0.11</efCoreVersion>
+    <efCoreVersion>8.0.20</efCoreVersion>
 
     <AspNetCoreVersion>8.0.11</AspNetCoreVersion>
   </PropertyGroup>
