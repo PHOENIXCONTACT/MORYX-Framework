@@ -33,7 +33,7 @@
         "react-toastify": "^10.0.4",
         "redux": "^5.0.1",
         "ts-loader": "^9.5.1",
-        "uuid": "^9.0.1"
+        "uuid": "^13.0.0"
     },
     "devDependencies": {
         "@types/react-router": "^5.1.20",
