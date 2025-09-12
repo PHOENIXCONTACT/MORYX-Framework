@@ -5,7 +5,7 @@ using Moq;
 using Moryx.AbstractionLayer;
 using Moryx.ControlSystem.Processes;
 using Moryx.ControlSystem.Simulation;
-using Moryx.Simulation.Examples.Messages;
+using Moryx.Resources.Benchmarking.Messages;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 

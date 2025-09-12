@@ -88,7 +88,7 @@ namespace Moryx.Tests
             // Assert
             for (var i = 1; i <= 5; i++)
             {
-                Assert.AreEqual(i + 1, dummy.Array[i - 1]);
+                Assert.That(dummy.Array[i - 1], Is.EqualTo(i + 1));
             }
         }
 
@@ -115,7 +115,7 @@ namespace Moryx.Tests
             // Assert
             for (var i = 1; i <= 5; i++)
             {
-                Assert.AreNotEqual(i + 1, dummy.Array[i - 1]);
+                Assert.That(dummy.Array[i - 1], Is.Not.EqualTo(i + 1));
             }
         }
 

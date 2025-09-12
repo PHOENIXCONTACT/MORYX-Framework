@@ -3,7 +3,7 @@
 
 using Moryx.ControlSystem.Processes;
 using Moryx.ControlSystem.Simulation;
-using Moryx.Simulation.Examples.Messages;
+using Moryx.Resources.Benchmarking.Messages;
 using NUnit.Framework;
 
 namespace Moryx.Simulation.Tests

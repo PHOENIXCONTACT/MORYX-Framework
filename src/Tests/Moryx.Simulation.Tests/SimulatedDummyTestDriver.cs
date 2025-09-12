@@ -6,10 +6,10 @@ using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer;
 using Moryx.ControlSystem.Cells;
-using Moryx.Simulation.Examples.Messages;
-using Moryx.Simulation.Examples;
 using Moryx.StateMachines;
 using Moryx.ControlSystem.Simulation;
+using Moryx.Resources.Benchmarking.Messages;
+using Moryx.Resources.Benchmarking;
 
 namespace Moryx.Simulation.Tests
 {

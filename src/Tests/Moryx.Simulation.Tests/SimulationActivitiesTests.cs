@@ -1,14 +1,12 @@
 ﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Microsoft.Extensions.Logging;
 using Moq;
 using Moryx.AbstractionLayer;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Simulation;
-using Moryx.Simulation.Examples.Messages;
+using Moryx.Resources.Benchmarking.Messages;
 using NUnit.Framework;
-using System.Diagnostics;
 using Activity = Moryx.AbstractionLayer.Activity;
 
 namespace Moryx.Simulation.Tests
