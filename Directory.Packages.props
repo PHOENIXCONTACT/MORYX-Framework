@@ -29,7 +29,8 @@
     <!-- Bereits vorhandene Einträge (aus deiner Migration) -->
     <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="$(AspNetCoreVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="$(dotnetVersion)" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+	<PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
 
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="$(AspNetCoreVersion)" />
@@ -40,9 +41,9 @@
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="$(AspNetCoreVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Authorization" Version="$(AspNetCoreVersion)" />
 		
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
-    <PackageVersion Include="Microsoft.Identity.Web" Version="3.9.4" />
-    <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="3.9.4" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+    <PackageVersion Include="Microsoft.Identity.Web" Version="3.14.1" />
+    <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="3.14.1" />
     <PackageVersion Include="Microsoft.Identity.Web.UI" Version="3.9.4" />
 		
     <PackageVersion Include="Nerdbank.GitVersioning" Version="3.7.115" />
@@ -80,7 +81,7 @@
 
     <PackageVersion Include="InfluxDB.LineProtocol" Version="1.1.1" />
     <PackageVersion Include="InfluxDB.Client" Version="4.18.0" />
-    <PackageVersion Include="CsvHelper" Version="33.0.1" />
+    <PackageVersion Include="CsvHelper" Version="33.1.0" />
 
     <PackageVersion Include="MimeTypeMapOfficial" Version="1.0.17" />
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.8" />
