@@ -7,6 +7,7 @@ import Chip from "@mui/material/Chip";
 import * as React from "react";
 import { ModuleServerModuleState } from "../../modules/models/ModuleServerModuleState";
 import { HealthStateToCssClassConverter } from "../converter/HealthStateToCssClassConverter";
+import { getEnumTypeValue } from "../../modules/converter/EnumTypeHelper";
 
 interface HealthStateBadgeProps {
     HealthState: ModuleServerModuleState;
@@ -18,8 +19,8 @@ export class HealthStateBadge extends React.Component<HealthStateBadgeProps> {
     }
 
     public render(): React.ReactNode {
-        const text = ModuleServerModuleState[this.props.HealthState];
-        const color = HealthStateToCssClassConverter.Color(this.props.HealthState);
+        const text = getEnumTypeValue(ModuleServerModuleState, this.props.HealthState);
+        const color = HealthStateToCssClassConverter.Color(text);
 
         return (<Chip sx={{fontSize: "0.6rem", height: "1rem"}} color={color} size="small" label={text}/>);
     }
