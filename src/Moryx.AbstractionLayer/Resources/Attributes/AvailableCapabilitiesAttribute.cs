@@ -51,27 +51,9 @@ namespace Moryx.AbstractionLayer.Resources
         /// <summary>
         /// Names of available capabilities
         /// </summary>
-        [Obsolete("Replaced by PossibleValues with access to global service registration")]
-        public override IEnumerable<string> GetValues(IContainer pluginContainer)
-        {
-            return GetValues(pluginContainer, null);
-        }
-
-        /// <summary>
-        /// Names of available capabilities
-        /// </summary>
         public override IEnumerable<string> GetValues(IContainer pluginContainer, IServiceProvider serviceProvider)
         {
             return GetCapabilities().Keys;
-        }
-
-        /// <summary>
-        /// Create capabilities object from name
-        /// </summary>
-        [Obsolete("Replaced by Parse with ServiceProvider reference")]
-        public override object Parse(IContainer container, string value)
-        {
-            return Parse(container, null, value);
         }
 
         /// <summary>
@@ -113,10 +95,8 @@ namespace Moryx.AbstractionLayer.Resources
 
         private IDictionary<string, Type> GetCapabilities()
         {
-#pragma warning disable 618
             return ReflectionTool.GetPublicClasses<CapabilitiesBase>(type => _capabilitiesFilter(type))
                 .ToDictionary(t => t.FullName, t => t);
-#pragma warning restore 618
         }
     }
 }

@@ -1,16 +1,16 @@
 <Project>
 
   <PropertyGroup>
-    <AssemblyVersion>6.0.0</AssemblyVersion>
+    <AssemblyVersion>8.0.0</AssemblyVersion>
     <AssemblyVersion Condition="'$(MORYX_ASSEMBLY_VERSION)'!=''">$(MORYX_ASSEMBLY_VERSION)</AssemblyVersion>
 
-    <FileVersion>6.0.0.0</FileVersion>
+    <FileVersion>8.0.0.0</FileVersion>
     <FileVersion Condition="'$(MORYX_FILE_VERSION)'!=''">$(MORYX_FILE_VERSION)</FileVersion>
 
-    <InformationalVersion>6.0.0.0</InformationalVersion>
+    <InformationalVersion>8.0.0.0</InformationalVersion>
     <InformationalVersion Condition="'$(MORYX_INFORMATIONAL_VERSION)'!=''">$(MORYX_INFORMATIONAL_VERSION)</InformationalVersion>
 
-    <PackageVersion>6.0.0</PackageVersion>
+    <PackageVersion>8.0.0</PackageVersion>
     <PackageVersion Condition="'$(MORYX_PACKAGE_VERSION)'!=''">$(MORYX_PACKAGE_VERSION)</PackageVersion>
 
     <Authors>PHOENIXCONTACT</Authors>

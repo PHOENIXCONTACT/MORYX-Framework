@@ -17,6 +17,7 @@ namespace Moryx.AbstractionLayer.TestTools
         {
             return new DummyProductInstance();
         }
+/// <inheritdoc/>
 
         public override bool Equals(object obj)
         {
@@ -51,6 +52,7 @@ namespace Moryx.AbstractionLayer.TestTools
         /// </summary>
         public IEnumerable<DummyProductPartLink> ProductPartLinkEnumerable { get; set; }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             var toCompareWith = obj as DummyProductTypeWithParts;
@@ -86,7 +88,8 @@ namespace Moryx.AbstractionLayer.TestTools
         /// Second dummy ProductFile
         /// </summary>
         public ProductFile SecondProductFile { get; set; }
-
+        
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             var toCompareWith = obj as DummyProductTypeWithFiles;

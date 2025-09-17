@@ -35,6 +35,7 @@ import { TestConnectionResult } from "../models/TestConnectionResult";
 import { updateDatabaseConfig } from "../redux/DatabaseActions";
 import { DatabaseSection } from "./DatabaseSection";
 import { ExecuterList } from "./ExecuterList";
+import { getEnumTypeValue } from "../../modules/converter/EnumTypeHelper";
 
 interface DatabaseModelPropsModel {
     RestClient: DatabasesRestClient;
@@ -198,7 +199,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
             .then((response) => {
                 this.setState({
                     testConnectionPending: false,
-                    testConnectionResult: response.result !== undefined ? response.result : TestConnectionResult.ConnectionError
+                    testConnectionResult: response.result !== undefined ? getEnumTypeValue(TestConnectionResult, response.result) : TestConnectionResult.ConnectionError
                 });
             });
     }
