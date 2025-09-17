@@ -16,38 +16,48 @@ namespace Moryx.AbstractionLayer.TestTools.Resources
     {
         private IDictionary<string, Type> _typeMap;
 
+        /// <summary>
+        /// The list of resources in this graph
+        /// </summary>
         public List<Resource> Graph { get; set; }
 
+        /// <inheritdoc />
         public Resource Get(long id)
         {
             return Graph.FirstOrDefault(r => r.Id == id);
         }
 
+        /// <inheritdoc />
         public TResource GetResource<TResource>() where TResource : class, IResource
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public TResource GetResource<TResource>(long id) where TResource : class, IResource
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public TResource GetResource<TResource>(string name) where TResource : class, IResource
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public TResource GetResource<TResource>(Func<TResource, bool> predicate) where TResource : class, IResource
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IResource
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
         public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate) where TResource : class, IResource
         {
             throw new NotImplementedException();
@@ -101,6 +111,7 @@ namespace Moryx.AbstractionLayer.TestTools.Resources
             return Destroy(resource);
         }
 
+        /// <inheritdoc />
         public void Save(IResource resource)
         {
         }

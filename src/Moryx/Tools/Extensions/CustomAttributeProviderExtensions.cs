@@ -60,7 +60,7 @@ namespace Moryx.Tools
         /// <summary>
         /// Tries to get attributes defining display names on this attribute provider.
         /// If no attribute was found, null will be the result.
-        /// The chain follows: <see cref="DisplayAttribute"/>, <see cref="ClassDisplayAttribute"/> and <see cref="DisplayNameAttribute"/>
+        /// The chain follows: <see cref="DisplayAttribute"/> and <see cref="DisplayNameAttribute"/>
         /// </summary>
         /// <param name="attributeProvider">Provider of the attributes</param>
         /// <returns>The value of the display name or <c>null</c>.</returns>
@@ -77,7 +77,7 @@ namespace Moryx.Tools
         /// <summary>
         /// Tries to get attributes defining a description on this attribute provider.
         /// If no attribute was found, null will be the result.
-        /// The chain follows: <see cref="DisplayAttribute"/>, <see cref="ClassDisplayAttribute"/> and <see cref="DescriptionAttribute"/>
+        /// The chain follows: <see cref="DisplayAttribute"/> and <see cref="DescriptionAttribute"/>
         /// </summary>
         /// <param name="attributeProvider">Provider of the attributes</param>
         /// <returns>The value of the description or <c>null</c>.</returns>

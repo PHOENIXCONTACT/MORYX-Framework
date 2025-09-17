@@ -1,9 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<Description>Extensions for the Integration of MORYX in ASP.NET Core</Description>
-		<CreatePackage>true</CreatePackage>
 		<PackageTags>MORYX;ASP</PackageTags>
 		<IsPackable>true</IsPackable>
 	</PropertyGroup>

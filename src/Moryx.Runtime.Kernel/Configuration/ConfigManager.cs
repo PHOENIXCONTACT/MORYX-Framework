@@ -14,7 +14,6 @@ namespace Moryx.Runtime.Kernel
     /// <summary>
     /// Manages the configs of the runtime and its modules.
     /// </summary>
-    [KernelComponent(typeof(IConfigManager))]
     public class ConfigManager : IConfigManager, IEmptyPropertyProvider
     {
         private readonly ConfigLiveUpdater _liveUpdater = new ConfigLiveUpdater();
