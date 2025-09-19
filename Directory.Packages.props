@@ -48,7 +48,7 @@
 
 	  <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
 	  
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="CommandLineParser" Version="2.9.1" />
     <PackageVersion Include="AutoMapper" Version="14.0.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.4" />		
