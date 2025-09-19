@@ -229,6 +229,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [Route("types/{id}")]
         [Authorize(Policy = ProductPermissions.CanDuplicateType)]
         public ActionResult<ProductModel> Duplicate(long id, [FromBody] string newIdentity)
@@ -240,7 +241,15 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             if (identityArray.Length != 2)
                 return BadRequest($"Identity has wrong format. Must be identifier-revision");
             var identity = new ProductIdentity(identityArray[0], Convert.ToInt16(identityArray[1]));
-            var newProductType = _productManagement.Duplicate(template, identity);
+            IProductType newProductType;
+            try
+            {
+                newProductType = _productManagement.Duplicate(template, identity);
+            }
+            catch (IdentityConflictException ex)
+            {
+                return Conflict(ex.Message);
+            }
             if (newProductType == null)
                 return BadRequest($"Error while duplicating");
             return _productConverter.ConvertProduct(newProductType, false);
