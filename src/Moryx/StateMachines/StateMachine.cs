@@ -207,6 +207,18 @@ namespace Moryx.StateMachines
             {
                 StateBase.Create<TStateBase>(_context, _key);
             }
+
+            /// <summary>
+            /// Finalize the state machine creation by defining the state machine type.
+            /// </summary>
+            /// <param name="stateType">Type of state machine base class</param>
+            /// <exception cref="InvalidOperationException">Thrown if 0 or more states are flagged as initial.</exception>
+            /// <exception cref="InvalidOperationException">Thrown if types are registered more than one time.</exception>
+            /// <exception cref="ArgumentException">Given base class is not abstract.</exception>
+            public void With(Type stateType)
+            {
+                StateBase.Create(stateType, _context, _key);
+            }
         }
     }
 }

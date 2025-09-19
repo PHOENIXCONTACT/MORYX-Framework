@@ -70,21 +70,21 @@ namespace Moryx.Notifications
         /// <inheritdoc />
         public void Acknowledge(Notification notification)
         {
-            ValidateHealthState();
+            // No ValidateHealthState: Source published the notification; it must be able to handle a response, too!
             NotificationAdapter.Acknowledge(notification);
         }
 
         /// <inheritdoc />
         public void PublishProcessed(Notification notification)
         {
-            ValidateHealthState();
+            // No ValidateHealthState: Source published the notification; it must be able to handle a response, too!
             NotificationAdapter.PublishProcessed(notification);
         }
 
         /// <inheritdoc />
         public void AcknowledgeProcessed(Notification notification)
         {
-            ValidateHealthState();
+            // No ValidateHealthState: Source acknowledge the notification; it must be able to handle a response, too!
             NotificationAdapter.AcknowledgeProcessed(notification);
         }
 

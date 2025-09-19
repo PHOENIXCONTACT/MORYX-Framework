@@ -34,6 +34,7 @@
     <PackageReference Update="Microsoft.Extensions.Logging" Version="$(dotnetVersion)" />
     <PackageReference Update="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
     <PackageReference Update="Microsoft.Extensions.Configuration.FileExtensions" Version="$(dotnetVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Hosting" Version="$(dotnetVersion)" />
     <PackageReference Update="Microsoft.Data.Sqlite" Version="$(dotnetVersion)" />
 
     <PackageReference Update="Microsoft.EntityFrameworkCore" Version="$(efCoreVersion)" />

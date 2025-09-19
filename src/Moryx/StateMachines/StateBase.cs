@@ -99,11 +99,21 @@ namespace Moryx.StateMachines
             where TStateBase : StateBase
         {
             var stateBaseType = typeof(TStateBase);
+            Create(stateBaseType, context, initialKey);
+        }
 
+        /// <summary>
+        /// Create a state machine of the given base type and will set it on the given context
+        /// Will internally called by the <see cref="StateMachine"/> wrapper class
+        /// </summary>
+        internal static void Create(Type stateBaseType, IStateContext context, int? initialKey)
+        {
             // Check the base type
             if (!stateBaseType.IsAbstract)
                 throw new ArgumentException("The state base class must be abstract!");
-
+            if(!typeof(StateBase).IsAssignableFrom(stateBaseType))
+                throw new ArgumentException($"'{stateBaseType.Name}' class is not a valid 'StateBase'!");
+            
             // Load all fields
             // 1. Get all fields which are static constant with the attribute
             // 2. let attribute and create an anonymous array
@@ -126,14 +136,14 @@ namespace Moryx.StateMachines
                 var typeNames = string.Join(", ", duplicates.Select(type => type.Name));
                 throw new InvalidOperationException($"State types are only allowed once: {typeNames}");
             }
-            
+
             var stateMap = new StateMap();
             StateBase initialState = null;
             foreach (var definedState in definedStates)
             {
                 var instance =  (StateBase) Activator.CreateInstance(definedState.Type, context, stateMap);
                 instance.Key = definedState.Key;
-                
+
                 if (initialKey.HasValue && initialKey.Value == definedState.Key)
                     initialState = instance;
                 else if (definedState.IsInitial && initialState == null)
