@@ -155,7 +155,7 @@ internal class DisconnectedState: ExampleStateBase{
 }
 ```
 
-For futher information about the configuration and implementation of the State machine look [here](../articles/DesignPatterns.md).
+For further information about the configuration and implementation of the State machine look [here](/docs/articles/framework/StateMachine.md).
 
 ## When to use a driver
 
