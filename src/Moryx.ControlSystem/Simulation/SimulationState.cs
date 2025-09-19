@@ -1,7 +1,7 @@
 // Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Simulation
+namespace Moryx.ControlSystem.Simulation
 {
     /// <summary>
     /// State the <see cref="ISimulationDriver"/> currently has or represents

@@ -4,7 +4,7 @@
 using Moryx.AbstractionLayer;
 using System;
 
-namespace Moryx.Simulation
+namespace Moryx.ControlSystem.Simulation
 {
     /// <summary>
     /// Optional interface for <see cref="IParameters"/> to define or bind the activities execution time
