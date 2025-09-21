@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="MqttDriver_BrokerUrl_Description" xml:space="preserve">
+  <data name="BROKER_URL_DESCRIPTION" xml:space="preserve">
     <value>URL oder IP-Adresse des MQTT-Brokers</value>
   </data>
   <data name="MqttDriver_BrokerUrl" xml:space="preserve">
@@ -126,8 +126,8 @@
   <data name="MqttDriver_MqttVersion" xml:space="preserve">
     <value>MQTT-Version</value>
   </data>
-  <data name="MqttDriver_MqttVersion_Description" xml:space="preserve">
-    <value>MQTT-Versionsnummer. Falls unbekannt, wird Version 3.1.0 verwendet</value>
+  <data name="MQTT_VERSION_DESCRIPTION" xml:space="preserve">
+    <value>MQTT-Versionsnummer. Falls unbekannt, wird Version 3.1.0 verwendet.</value>
   </data>
   <data name="MqttDriver_Password" xml:space="preserve">
     <value>Passwort</value>
@@ -135,17 +135,17 @@
   <data name="MqttDriver_Password_Description" xml:space="preserve">
     <value>Passwort zur Authentifizierung beim MQTT-Broker</value>
   </data>
-  <data name="MqttDriver_Port_Description" xml:space="preserve">
-    <value>Portnummer. Wenn nicht angegeben, wird der Standardport 1883 verwendet</value>
+  <data name="PORT_DESCRIPTION" xml:space="preserve">
+    <value>Portnummer. Wenn nicht angegeben, wird der Standardport 1883 verwendet.</value>
   </data>
   <data name="MqttDriver_ReconnectWithoutCleanSession" xml:space="preserve">
     <value>Neu verbinden mit sauberer Sitzung</value>
   </data>
-  <data name="MqttDriver_ReconnectWithoutCleanSession_Description" xml:space="preserve">
-    <value>Festlegen, ob die Verbindung mit einer neuen, sauberen Sitzung wiederhergestellt werden soll</value>
+  <data name="RECONNECT_CLEAN_SESSION_DESCRIPTION" xml:space="preserve">
+    <value>Festlegen, ob die Verbindung mit einer neuen, sauberen Sitzung wiederhergestellt werden soll.</value>
   </data>
-  <data name="MqttDriver_ReconnectDelayMs_Description" xml:space="preserve">
-    <value>Verzögerung in Millisekunden beim Öffnen einer neuen Verbindung nach einem Verbindungsfehler</value>
+  <data name="RECONNECT_DELAY_MS_DESCRIPTION" xml:space="preserve">
+    <value>Verzögerung in Millisekunden beim Öffnen einer neuen Verbindung nach einem Verbindungsfehler.</value>
   </data>
   <data name="MqttDriver_ReconnectDelayMs" xml:space="preserve">
     <value>Verzögerung bei der Verbindungswiederherstellung</value>
@@ -201,8 +201,8 @@
   <data name="MqttTopic_ResponseTopic" xml:space="preserve">
     <value>Thema für Antworten</value>
   </data>
-  <data name="MqttTopic_ResponseTopic_Description" xml:space="preserve">
-    <value>Thema, auf das andere Clients antworten können.</value>
+  <data name="RESPONSE_TOPIC_DESCRIPTION" xml:space="preserve">
+    <value>Thema, auf das andere Clients antworten können</value>
   </data>
   <data name="MqttTopicPrimitive_DisplayName" xml:space="preserve">
     <value>MQTT-Thema für primitive Datentypen</value>

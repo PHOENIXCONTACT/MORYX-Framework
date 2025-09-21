@@ -1,6 +1,8 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
@@ -31,7 +33,6 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
             get => Type.GetTypeCode(MessageType);
             set => MessageName = TypeCodeToString(value);
         }
-
         #endregion
 
         /// <inheritdoc />
@@ -85,32 +86,33 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         }
 
         /// <inheritdoc />
-        protected internal override IConvertible Deserialize(byte[] messageAsBytes)
+        protected internal override IConvertible Deserialize(ArraySegment<byte> messageAsBytes)
         {
+            ReadOnlySpan<byte> messageSpan = messageAsBytes.AsSpan();
             if (MessageType == typeof(bool))
-                return BitConverter.ToBoolean(messageAsBytes, 0);
+                return BitConverter.ToBoolean(messageSpan);
             if (MessageType == typeof(char))
-                return BitConverter.ToChar(messageAsBytes, 0);
+               return BitConverter.ToChar(messageSpan);
             if (MessageType == typeof(double))
-                return BitConverter.ToDouble(messageAsBytes, 0);
+               return BitConverter.ToDouble(messageSpan);
             if (MessageType == typeof(short))
-                return BitConverter.ToInt16(messageAsBytes, 0);
+               return BitConverter.ToInt16(messageSpan);
             if (MessageType == typeof(int))
-                return BitConverter.ToInt32(messageAsBytes, 0);
+               return BitConverter.ToInt32(messageSpan);
             if (MessageType == typeof(long))
-                return BitConverter.ToInt64(messageAsBytes, 0);
+               return BitConverter.ToInt64(messageSpan);
             if (MessageType == typeof(ushort))
-                return BitConverter.ToUInt16(messageAsBytes, 0);
+               return BitConverter.ToUInt16(messageSpan);
             if (MessageType == typeof(uint))
-                return BitConverter.ToUInt32(messageAsBytes, 0);
+               return BitConverter.ToUInt32(messageSpan);
             if (MessageType == typeof(ulong))
-                return BitConverter.ToUInt64(messageAsBytes, 0);
+               return BitConverter.ToUInt64(messageSpan);
             if (MessageType == typeof(string))
-                return Encoding.ASCII.GetString(messageAsBytes);
+               return Encoding.ASCII.GetString(messageSpan);
             if (MessageType == typeof(byte))
-                return messageAsBytes[0];
+               return messageSpan[0];
             if (MessageType == typeof(float))
-                return BitConverter.ToSingle(messageAsBytes, 0);
+               return BitConverter.ToSingle(messageSpan);
             throw new NotImplementedException();
         }
 

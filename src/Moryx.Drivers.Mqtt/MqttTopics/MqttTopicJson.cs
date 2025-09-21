@@ -44,10 +44,10 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         }
 
         /// <inheritdoc />
-        protected internal override object Deserialize(byte[] messageAsBytes)
+        protected internal override object Deserialize(ArraySegment<byte> messageAsBytes)
         {
             var msg = Constructor();
-            var json = Encoding.UTF8.GetString(messageAsBytes, 0, messageAsBytes.Length);
+            var json = Encoding.UTF8.GetString(messageAsBytes.AsSpan()); // TODO: consider moving to system.text.json. This would make creating a temporary string unnecessary
             JsonConvert.PopulateObject(json, msg, GetSettings());
             return msg;
         }

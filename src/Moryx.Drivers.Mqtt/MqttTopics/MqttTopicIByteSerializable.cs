@@ -7,6 +7,7 @@ using Moryx.Communication;
 using Moryx.Serialization;
 using Moryx.Drivers.Mqtt.Properties;
 using Moryx.AbstractionLayer.Resources;
+using System;
 namespace Moryx.Drivers.Mqtt.MqttTopics;
 
 /// <summary>
@@ -44,10 +45,10 @@ public class MqttTopicIByteSerializable : MqttTopic<IByteSerializable>
     /// </summary>
     /// <param name="messageAsBytes"></param>
     /// <returns></returns>
-    protected internal override IByteSerializable Deserialize(byte[] messageAsBytes)
+    protected internal override IByteSerializable Deserialize(ArraySegment<byte> messageAsBytes)
     {
         var msg = Constructor();
-        msg.FromBytes(messageAsBytes);
+        msg.FromBytes(messageAsBytes.ToArray());
         return msg;
     }
 }

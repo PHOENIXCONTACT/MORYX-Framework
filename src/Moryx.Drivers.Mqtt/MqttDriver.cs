@@ -20,6 +20,8 @@ using System.Security.Claims;
 using Moryx.Drivers.Mqtt.Properties;
 using System.ComponentModel.DataAnnotations;
 using Moryx.Drivers.Mqtt.States;
+using System.Diagnostics;
+using MQTTnet.Exceptions;
 
 namespace Moryx.Drivers.Mqtt;
 
@@ -116,6 +118,9 @@ public class MqttDriver : Driver, IMessageDriver
     [Display(Name = nameof(Strings.MqttDriver_ReconnectWithoutCleanSession), Description = nameof(Strings.MqttDriver_ReconnectWithoutCleanSession_Description), ResourceType = typeof(Strings))]
     public bool ReconnectWithoutCleanSession { get; set; }
 
+    [DataMember, EntrySerialize]
+    public bool TraceMessageContent { get; set; }
+
     /// <summary>
     /// All MQTT Topics the driver subscribed
     /// </summary>
@@ -128,6 +133,8 @@ public class MqttDriver : Driver, IMessageDriver
     [EntrySerialize, DataMember, DefaultValue(100)]
     [Display(Name = nameof(Strings.MqttDriver_ReconnectDelayMs), Description = nameof(Strings.MqttDriver_ReconnectDelayMs_Description), ResourceType = typeof(Strings))]
     public int ReconnectDelayMs { get; set; }
+
+     public static readonly System.Diagnostics.ActivitySource activitySource = new System.Diagnostics.ActivitySource("Moryx.Drivers.Mqtt.MqttDriver");
 
     #endregion
 
@@ -222,6 +229,15 @@ public class MqttDriver : Driver, IMessageDriver
         }
     }
 
+    [EntrySerialize, DataMember]
+    public bool HasLastWill { get; set; }
+
+    [EntrySerialize, DataMember]
+    public string LastWillTopic { get; set; }
+
+    [EntrySerialize, DataMember]
+    public string LastWillContent { get; set; }
+
     private MqttClientOptionsBuilder ConfigureMqttClient()
     {
         _clientId = $"{System.Net.Dns.GetHostName()}-{Id}-{Name}";
@@ -230,6 +246,14 @@ public class MqttDriver : Driver, IMessageDriver
                             .WithTcpServer(BrokerUrl, Port)
                             .WithTlsOptions(new MqttClientTlsOptions() { UseTls = UseTls })
                             .WithCleanSession(!ReconnectWithoutCleanSession);
+        
+        if(HasLastWill)
+        {
+            optionsBuilder
+                .WithWillRetain(true)
+                .WithWillTopic(LastWillTopic)
+                .WithWillPayload(LastWillContent);
+        }
 
         if (!string.IsNullOrEmpty(Username))
             optionsBuilder.WithCredentials(Username, Password);
@@ -265,7 +289,11 @@ public class MqttDriver : Driver, IMessageDriver
     {
         if (_mqttClient.IsConnected)
         {
-            await _mqttClient.DisconnectAsync(new MqttClientDisconnectOptions { Reason = MqttClientDisconnectOptionsReason.NormalDisconnection });
+            await _mqttClient.DisconnectAsync(new MqttClientDisconnectOptions {
+                Reason = HasLastWill
+                    ? MqttClientDisconnectOptionsReason.DisconnectWithWillMessage
+                    : MqttClientDisconnectOptionsReason.NormalDisconnection
+            });
         }
     }
 
@@ -319,52 +347,82 @@ public class MqttDriver : Driver, IMessageDriver
     /// <returns></returns>
     public async Task OnSend(MqttMessageTopic messageTopic, byte[] message, CancellationToken cancellationToken)
     {
-        var messageMqttBuilder = new MqttApplicationMessageBuilder()
-          .WithTopic(messageTopic.Topic)
-          .WithPayload(message)
-          .WithQualityOfServiceLevel(ConvertStringToQoS(QualityOfService));
+        using(var span = activitySource.StartActivity("Send", ActivityKind.Producer, parentContext: default, tags: new Dictionary<string, object>() {
+            {"message.topic", messageTopic.Topic},
+            {"message.retain", messageTopic.retain},
+            {"message.length", message.Length},
+            
+        })) {
+            if(span is not null && TraceMessageContent) {
+                span.AddTag("message.content", System.Text.Encoding.UTF8.GetString(message));
+            }
 
-        if (MqttVersion >= MqttProtocolVersion.V500
-            && !string.IsNullOrEmpty(messageTopic.ResponseTopic))
-        {
-            messageMqttBuilder
-                .WithResponseTopic(messageTopic.ResponseTopic)
-                .WithUserProperty(ClaimTypes.Sid, _clientId);
+            var messageMqttBuilder = new MqttApplicationMessageBuilder()
+            .WithTopic(messageTopic.Topic)
+            .WithPayload(message)
+            .WithRetainFlag(messageTopic.retain)
+            .WithQualityOfServiceLevel(ConvertStringToQoS(QualityOfService));
+
+            if (MqttVersion >= MqttProtocolVersion.V500
+                && !string.IsNullOrEmpty(messageTopic.ResponseTopic))
+            {
+                messageMqttBuilder
+                    .WithResponseTopic(messageTopic.ResponseTopic)
+                    .WithUserProperty(ClaimTypes.Sid, _clientId);
+            }
+
+            var messageMqtt = messageMqttBuilder.Build();
+            await _mqttClient.PublishAsync(messageMqtt, cancellationToken);
         }
-
-        var messageMqtt = messageMqttBuilder.Build();
-        await _mqttClient.PublishAsync(messageMqtt, cancellationToken);
     }
 
     private Task OnReceived(MqttApplicationMessageReceivedEventArgs args)
     {
         // Experimental: Dispatch to new thread to prevent exceptions or deadlocks from causing inflight blockage
-        ParallelOperations.ExecuteParallel(param => Receive(param.Topic, param.Payload), new
-        {
-            args.ApplicationMessage.Topic,
-            Payload = args.ApplicationMessage.Payload.ToArray()
-        });
+        ParallelOperations.ExecuteParallel(
+            param => Receive(param.ApplicationMessage), 
+            new { args.ApplicationMessage }
+        );
 
         return Task.CompletedTask;
     }
 
-    internal void Receive(string topicName, byte[] message)
+    internal void Receive(MqttApplicationMessage appMessage)
     {
-        var topic = topicName;
-        if (Identifier != "")
+        var topicName = appMessage.Topic;
+        var message = appMessage.Payload;
+        using (var span = activitySource.StartActivity("Receive", System.Diagnostics.ActivityKind.Consumer, parentContext: default, tags: new Dictionary<string, object>{
+            { "driver.id", Id },
+            { "driver.name", Name },
+            { "message.topic", topicName },
+            { "message.length", message.Length }
+        }))
         {
-            var regex = new Regex(Regex.Escape(Identifier));
-            topic = regex.Replace(topicName, "", 1);
-        }
-        var topicList = Channels.Where(t => t.Matches(topic)).ToList();
-        if (topicList.Count >= 1)
-        {
-            foreach (var topicResource in topicList)
-                topicResource.OnReceived(topic, message);
-        }
-        else
-        {
-            Logger.Log(LogLevel.Warning, "Message on topic {topicName} received, but no corresponding Topicresource found", topicName);
+
+            if (TraceMessageContent && span is not null)
+            {
+                span.AddTag("message.content", appMessage.ConvertPayloadToString());
+            }
+
+
+            var topic = topicName;
+            if (!string.IsNullOrEmpty(Identifier) && topicName.StartsWith(Identifier))
+            {
+                topic = topicName.Substring(Identifier.Length);
+            }
+            var topicList = groupedTopics.Where(t => MqttTopicFilterComparer.Compare(topic, t.Key) == MqttTopicFilterCompareResult.IsMatch).SelectMany(t => t.Value).ToList();
+            if (topicList.Count >= 1)
+            {
+                foreach (var topicResource in topicList)
+                {
+                    topicResource.OnReceived(topic, message, MqttVersion == MqttProtocolVersion.V500 ? appMessage.ResponseTopic : null);
+                }
+            }
+            else
+            {
+                Logger.Log(LogLevel.Warning, "Message on topic {topicName} received, but no corresponding Topic Resource found", topicName);
+                span?.SetStatus(ActivityStatusCode.Error, "No receiver found");
+            }
         }
     }
 
@@ -420,6 +478,25 @@ public class MqttDriver : Driver, IMessageDriver
             return MqttQualityOfServiceLevel.ExactlyOnce;
         return (MqttQualityOfServiceLevel)Enum.Parse(typeof(MqttQualityOfServiceLevel), qos);
     }
+
+    internal void ExistingTopicRemoved(string subscribedTopic)
+    {
+        try
+        {
+            if(!_mqttClient.IsConnected)
+            {
+                return;
+            }
+            var result = _mqttClient.UnsubscribeAsync(Identifier + subscribedTopic).Result;
+        }
+        // Ignore exceptions that can occure during shutdown
+        catch (ObjectDisposedException) { } 
+        catch (MqttClientDisconnectedException) { }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to unsubscribe from topic {topic}", subscribedTopic);
+        }
+    }
 }
 
 internal class MqttQoSAttribute : PossibleValuesAttribute
@@ -436,5 +513,4 @@ internal class MqttQoSAttribute : PossibleValuesAttribute
     }
 }
 
-public record MqttMessageTopic(string ResponseTopic, string Topic);
-
+public record MqttMessageTopic(string ResponseTopic, string Topic, bool retain = false);

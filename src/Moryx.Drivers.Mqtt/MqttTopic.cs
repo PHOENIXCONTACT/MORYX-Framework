@@ -14,9 +14,18 @@ using Moryx.Threading;
 using Moryx.Tools;
 using Moryx.Drivers.Mqtt.Properties;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Moryx.Drivers.Mqtt.Messages;
 
 namespace Moryx.Drivers.Mqtt
 {
+    public enum TopicType
+    {
+        BiDirectional, SubscribeOnly, PublishOnly
+    }
+
     /// <summary>
     /// Base class for MQTT topics a MQTT Driver can subscribe.
     /// </summary>
@@ -27,6 +36,9 @@ namespace Moryx.Drivers.Mqtt
         /// Event raised, when a message is received
         /// </summary>
         public event EventHandler<object> Received;
+
+        [DataMember, EntrySerialize]
+        public TopicType TopicType { get; set; }
 
         public IParallelOperations ParallelOperations { get; set; }
 
@@ -42,7 +54,7 @@ namespace Moryx.Drivers.Mqtt
             set
             {
                 var (validationResult, errorMessage) = ValidateTopicString(value);
-
+            
                 switch (validationResult)
                 {
                     case TopicValidationResult.Valid:
@@ -172,6 +184,12 @@ namespace Moryx.Drivers.Mqtt
             MqttDriver?.NewTopicAdded(SubscribedTopic);
         }
 
+        protected override void OnStop()
+        {
+            base.OnStop();
+            MqttDriver?.ExistingTopicRemoved(SubscribedTopic);
+        }
+
         /// <inheritdoc />
         public abstract void Send(object payload);
 
@@ -182,7 +200,7 @@ namespace Moryx.Drivers.Mqtt
         internal abstract Task OnSend(object payload, CancellationToken cancellationToken);
 
         //This method has to call MqttDriver.OnReceive
-        internal abstract void OnReceived(string receivedTopic, byte[] messageAsBytes);
+        internal abstract void OnReceived(string receivedTopic, ArraySegment<byte> messageAsBytes, string? responseTopic = null);
 
         /// <summary>
         ///
@@ -218,6 +236,15 @@ namespace Moryx.Drivers.Mqtt
     /// <inheritdoc cref="MqttTopic" />
     public abstract class MqttTopic<TMessage> : MqttTopic, IMessageChannel
     {
+
+        [DataMember, EntrySerialize]
+        public bool TraceDecodedMessage { get; set; }
+
+        public static readonly System.Diagnostics.ActivitySource activitySource = new System.Diagnostics.ActivitySource("Moryx.Drivers.Mqtt.MqttTopic");
+
+        protected virtual System.Diagnostics.ActivitySource ActivitySource => activitySource;
+
+
         /// <summary>
         /// Constructor for MessageType
         /// </summary>
@@ -332,47 +359,73 @@ namespace Moryx.Drivers.Mqtt
             return MqttDriver.OnSend(new MqttMessageTopic(ResponseTopic, topic), msg, cancellationToken);
         }
 
-        internal override void OnReceived(string receivedTopic, byte[] messageAsBytes)
+        internal override void OnReceived(string receivedTopic, ArraySegment<byte> messageAsBytes, string? responseTopic)
         {
-            if (MessageType != null)
+            TMessage msg;
+            using (var span = ActivitySource.StartActivity("parsing", ActivityKind.Internal, parentContext: default, tags: new Dictionary<string, object>{
+                { "topic.name", Name },
+                { "topic.id", Id },
+                { "topic.type", MessageName }
+            }))
             {
-                var msg = Deserialize(messageAsBytes);
-                if (msg is IIdentifierMessage identMessage)
+                if (MessageType != null)
                 {
-                    identMessage.Identifier = receivedTopic;
-                }
-
-                var groupNames = RegexTopic.GetGroupNames();
-                if (groupNames.Length > 1)
-                {
-                    var placeholderValues = RegexTopic.Match(receivedTopic).Groups;
-                    if (placeholderValues.Count == groupNames.Length)
+                    msg = Deserialize(messageAsBytes);
+                    if (msg is IIdentifierMessage identMessage)
                     {
-                        for (var i = 1; i < placeholderValues.Count; i++)
+                        identMessage.Identifier = receivedTopic;
+                    }
+                    if (responseTopic is not null && msg is IRespondableMessage respondable)
+                    {
+                        respondable.ResponseIdentifier = responseTopic;
+                    }
+
+                    var groupNames = RegexTopic.GetGroupNames();
+                    if (groupNames.Length > 1)
+                    {
+                        var placeholderValues = RegexTopic.Match(receivedTopic).Groups;
+                        if (placeholderValues.Count == groupNames.Length)
                         {
-                            var placeholderName = groupNames[i].Replace("__", ".");
-                            var resolver = new BindingResolverFactory().Create(placeholderName);
-                            var placeholderValue = placeholderValues[i].ToString();
-                            if (!resolver.Update(msg, placeholderValue))
+                            for (var i = 1; i < placeholderValues.Count; i++)
                             {
-                                Logger.Log(LogLevel.Error, "Placeholder " + placeholderName + " cannot be filled. " +
-                                                           "MessageType " + typeof(TMessage).Name + " may not contain a " +
-                                                           "matching property");
+                                var placeholderName = groupNames[i].Replace("__", ".");
+                                var resolver = new BindingResolverFactory().Create(placeholderName);
+                                var placeholderValue = placeholderValues[i].ToString();
+                                if (!resolver.Update(msg, placeholderValue))
+                                {
+                                    Logger.Log(LogLevel.Error, "Placeholder " + placeholderName + " cannot be filled. " +
+                                                               "MessageType " + typeof(TMessage).Name + " may not contain a " +
+                                                               "matching property");
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        Logger.Log(LogLevel.Warning, "Number of found Placeholders does not match of number of possible " +
-                                                    "corresponding values");
+                        else
+                        {
+                            Logger.Log(LogLevel.Warning, "Number of found Placeholders does not match of number of possible " +
+                                                        "corresponding values");
+                        }
+
+                        if (TraceDecodedMessage && span is not null)
+                        {
+                            span.AddTag("message.decoded", Newtonsoft.Json.JsonConvert.SerializeObject(msg));
+                        }
                     }
                 }
+                else
+                {
+                    Logger.Log(LogLevel.Error, "Message was received, but not MessageType was set.");
+                    span.SetStatus(ActivityStatusCode.Error, "MessageType not set");
+                    return;
+                }
+            }
+
+            using(var span = ActivitySource.StartActivity("PublishReceived", ActivityKind.Internal, parentContext: default, tags: new Dictionary<string, object>{
+                { "topic.name", Name },
+                { "topic.id", Id },
+                { "topic.type", MessageName }
+            })) {
                 RaiseReceived(msg);
                 MqttDriver.OnReceived(msg);
-            }
-            else
-            {
-                Logger.Log(LogLevel.Error, "Message was received, but not MessageType was set.");
             }
         }
 
@@ -388,6 +441,6 @@ namespace Moryx.Drivers.Mqtt
         /// </summary>
         /// <param name="messageAsBytes"></param>
         /// <returns></returns>
-        protected internal abstract TMessage Deserialize(byte[] messageAsBytes);
+        protected internal abstract TMessage Deserialize(ArraySegment<byte> messageAsBytes);
     }
 }
