@@ -216,4 +216,10 @@
   <data name="MqttTopicJson_Format" xml:space="preserve">
     <value>Message format</value>
   </data>
+  <data name="RETAIN" xml:space="preserve">
+    <value>Retain</value>
+  </data>
+  <data name="RETAIN_DESCRIPTION" xml:space="preserve">
+    <value>Send Messages should be marked as retain</value>
+  </data>
 </root>

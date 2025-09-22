@@ -328,9 +328,9 @@ public class MqttDriver : Driver, IMessageDriver
         IReadOnlyList<MqttTopic> topics;
         // Search by identifier if set
         if (message is IIdentifierMessage identifierMessage && !string.IsNullOrEmpty(identifierMessage.Identifier))
-            topics = Channels.Where(t => t.Matches(identifierMessage.Identifier)).ToList();
+            topics = Channels.Where(t => t.TopicType != TopicType.SubscribeOnly && t.Matches(identifierMessage.Identifier)).ToList();
         else
-            topics = Channels.Where(t => t.MessageType.IsInstanceOfType(message)).ToList();
+            topics = Channels.Where(t => t.TopicType != TopicType.SubscribeOnly && t.MessageType.IsInstanceOfType(message)).ToList();
 
         if (topics.Count == 1)
             await State.SendAsync(topics[0], message, cancellationToken);
@@ -410,12 +410,15 @@ public class MqttDriver : Driver, IMessageDriver
             {
                 topic = topicName.Substring(Identifier.Length);
             }
-            var topicList = groupedTopics.Where(t => MqttTopicFilterComparer.Compare(topic, t.Key) == MqttTopicFilterCompareResult.IsMatch).SelectMany(t => t.Value).ToList();
+            var topicList =
+                Channels
+                    .Where(t => t.TopicType != TopicType.PublishOnly && t.Matches(topic))
+                    .ToList();
             if (topicList.Count >= 1)
             {
                 foreach (var topicResource in topicList)
                 {
-                    topicResource.OnReceived(topic, message, MqttVersion == MqttProtocolVersion.V500 ? appMessage.ResponseTopic : null);
+                    topicResource.OnReceived(topic, message, MqttVersion == MqttProtocolVersion.V500 ? appMessage.ResponseTopic : null, appMessage.Retain);
                 }
             }
             else

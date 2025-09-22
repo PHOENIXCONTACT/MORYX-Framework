@@ -242,5 +242,21 @@ namespace Moryx.Drivers.Mqtt.Properties {
                 return ResourceManager.GetString("MqttTopicJson_Format", resourceCulture);
             }
         }
+
+        public static string RETAIN
+        {
+            get
+            {
+                return ResourceManager.GetString("RETAIN", resourceCulture);
+            }
+        }
+        
+        public static string RETAIN_DESCRIPTION
+        {
+            get
+            {
+                return ResourceManager.GetString("RETAIN_DESCRIPTION", resourceCulture);
+            }
+        }
     }
 }

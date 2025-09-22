@@ -18,13 +18,10 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Moryx.Drivers.Mqtt.Messages;
+using System.Buffers;
 
 namespace Moryx.Drivers.Mqtt
 {
-    public enum TopicType
-    {
-        BiDirectional, SubscribeOnly, PublishOnly
-    }
 
     /// <summary>
     /// Base class for MQTT topics a MQTT Driver can subscribe.
@@ -131,6 +128,10 @@ namespace Moryx.Drivers.Mqtt
         [Display(Name = nameof(Strings.MqttTopic_ResponseTopic), Description = nameof(Strings.MqttTopic_ResponseTopic_Description), ResourceType = typeof(Strings))]
         public string ResponseTopic { get; set; }
 
+        [EntrySerialize, DataMember, DefaultValue(false)]
+        [Display(Name = nameof(Strings.RETAIN), Description = nameof(Strings.RETAIN_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+        public bool Retain { get; set; }
+
         private void ReportToDriverThatTopicChanged(TopicChanged args)
         {
             MqttDriver.OnTopicChanged(args.OldTopic, args.NewTopic);
@@ -200,7 +201,7 @@ namespace Moryx.Drivers.Mqtt
         internal abstract Task OnSend(object payload, CancellationToken cancellationToken);
 
         //This method has to call MqttDriver.OnReceive
-        internal abstract void OnReceived(string receivedTopic, ArraySegment<byte> messageAsBytes, string? responseTopic = null);
+        internal abstract void OnReceived(string receivedTopic, ReadOnlySequence<byte> messageAsBytes, string? responseTopic = null, bool retain = false);
 
         /// <summary>
         ///
@@ -356,10 +357,15 @@ namespace Moryx.Drivers.Mqtt
             }
 
             topic = MqttDriver.Identifier + topic;
-            return MqttDriver.OnSend(new MqttMessageTopic(ResponseTopic, topic), msg, cancellationToken);
+            var retain = payload is IRetainAwareMessage ram
+                ? ram.Retain 
+                : Retain;
+            return MqttDriver.OnSend(
+                new MqttMessageTopic(ResponseTopic, topic,retain),
+                msg, cancellationToken);
         }
 
-        internal override void OnReceived(string receivedTopic, ArraySegment<byte> messageAsBytes, string? responseTopic)
+        internal override void OnReceived(string receivedTopic, ReadOnlySequence<byte> messageAsBytes, string? responseTopic, bool retain)
         {
             TMessage msg;
             using (var span = ActivitySource.StartActivity("parsing", ActivityKind.Internal, parentContext: default, tags: new Dictionary<string, object>{
@@ -378,6 +384,10 @@ namespace Moryx.Drivers.Mqtt
                     if (responseTopic is not null && msg is IRespondableMessage respondable)
                     {
                         respondable.ResponseIdentifier = responseTopic;
+                    }
+                    if (msg is IRetainAwareMessage retainAware)
+                    {
+                        retainAware.Retain = retain;
                     }
 
                     var groupNames = RegexTopic.GetGroupNames();
