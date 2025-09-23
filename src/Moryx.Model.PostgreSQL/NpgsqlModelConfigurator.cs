@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -92,6 +93,41 @@ namespace Moryx.Model.PostgreSQL
             }
 
             return builder;
+        }
+
+        /// <summary>
+        /// Replaces given config's database with "postgres".
+        /// This config can be used to check availability of
+        /// the database server.
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns>Modified copy of given config</returns>
+        private static IDatabaseConfig CreateTestDatabaseConfig(IDatabaseConfig config)
+        {
+            var testConfig = new DatabaseConfig<DatabaseConnectionSettings>
+            {
+                ConfiguratorTypename = config.ConfiguratorTypename,
+                ConnectionSettings = config.ConnectionSettings,
+                ConfigState = config.ConfigState,
+                LoadError = config.LoadError
+            };
+
+            var builder = new NpgsqlConnectionStringBuilder(testConfig.ConnectionSettings.ConnectionString)
+            {
+                Database = "postgres"
+            };
+
+            testConfig.ConnectionSettings.ConnectionString = builder.ConnectionString;
+
+            return testConfig;
+        }
+
+        /// <inheritdoc/>
+        public override Task<TestConnectionResult> TestConnection(IDatabaseConfig config)
+        {
+            // Using the "postgres" database to check the server's availability.
+            // might lead to edge-case when "postgres" database has been deleted.
+            return base.TestConnection(CreateTestDatabaseConfig(config));
         }
 
         /// <inheritdoc />
