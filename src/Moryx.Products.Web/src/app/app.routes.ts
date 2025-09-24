@@ -11,34 +11,35 @@ import { SearchResultComponent } from "./components/search-result/search-result.
 import { ImporterGuard } from "./guards/importer.guard";
 
 export const routes: Routes = [
-    {
-        path: 'details/:id',
-        component: ProductsDetailsViewComponent,
+  {
+    path: 'details/:id',
+    component: ProductsDetailsViewComponent,
+    children: [
+      { path: '', redirectTo: 'properties', pathMatch: 'full' },
+      { path: 'properties', component: ProductPropertiesComponent },
+      { path: 'references', component: ProductReferencesComponent },
+      {
+        path: 'parts/:partName/:partId',
+        component: ProductPartsComponent,
+      },
+      {
+        path: 'recipes',
+        component: ProductRecipesComponent,
         children: [
-          { path: 'properties', component: ProductPropertiesComponent },
-          { path: 'references', component: ProductReferencesComponent },
-          {
-            path: 'parts/:partName/:partId',
-            component: ProductPartsComponent,
-          },
-          {
-            path: 'recipes',
-            component: ProductRecipesComponent,
-            children: [
-              { path: '', component: DefaultViewComponent, pathMatch: 'full' },
+          { path: '', component: DefaultViewComponent, pathMatch: 'full' },
               {
                 path: ':recipeId',
                 component: ProductRecipesDetailsComponent,
               },
-            ],
-          },
         ],
       },
-      { path: '', component: DefaultViewComponent, pathMatch: 'full' },
-      {
-        path: 'import/:importer',
-        component: ProductsImporterComponent,
-        canActivate: [ImporterGuard]
-      },
+    ],
+  },
+  { path: '', component: DefaultViewComponent, pathMatch: 'full' },
+  {
+    path: 'import/:importer',
+    component: ProductsImporterComponent,
+    canActivate: [ImporterGuard]
+  },
       {path: 'search', component: SearchResultComponent}
 ]
