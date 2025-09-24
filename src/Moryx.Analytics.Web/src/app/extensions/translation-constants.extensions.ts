@@ -3,6 +3,7 @@ export class TranslationConstants {
     EN: 'en',
     DE: 'de',
     IT: 'it',
+    ZH: 'zh',
   };
 
   public static readonly APP = {
