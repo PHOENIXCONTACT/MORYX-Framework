@@ -17,7 +17,13 @@ namespace Moryx.Drivers.Mqtt.States
             if (successful)
                 NextState(StateConnected);
             else
-                Context.ParallelOperations.ScheduleExecution(async () => await Context.Connect(false), Context.ReconnectDelayMs, -1);
+                Context.ParallelOperations.ScheduleExecution(() => Context.Connect(false).ContinueWith(t =>
+                {
+                    if (t.IsFaulted)
+                    {
+                        Context.Logger?.LogWarning(t.Exception, "Failed to connect to broker");
+                    }
+                }, scheduler: TaskScheduler.Current), Context.ReconnectDelayMs, -1);
         }
 
         public override void Disconnect()
