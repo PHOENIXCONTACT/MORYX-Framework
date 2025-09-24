@@ -16,7 +16,6 @@ using Moryx.Drivers.Mqtt.Properties;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using Moryx.Drivers.Mqtt.Messages;
 using System.Buffers;
 
@@ -134,6 +133,8 @@ namespace Moryx.Drivers.Mqtt
 
         private void ReportToDriverThatTopicChanged(TopicChanged args)
         {
+            if (TopicType == TopicType.PublishOnly) // TODO check for changes in topic type too
+                return;
             MqttDriver.OnTopicChanged(args.OldTopic, args.NewTopic);
         }
 
@@ -156,6 +157,7 @@ namespace Moryx.Drivers.Mqtt
         /// corresponding topic to be subscribed
         /// placeholders are replaced with +
         /// </summary>
+        [EntrySerialize, ReadOnly(true)]
         public string SubscribedTopic => _subscribedTopic;
 
         private string _subscribedTopic;
@@ -221,17 +223,6 @@ namespace Moryx.Drivers.Mqtt
         {
             return RegexTopic.IsMatch(receivedTopic);
         }
-
-        /// <summary>
-        /// log-function, which adjusts logMessages so that they can be logged without format exceptions
-        /// </summary>
-        /// <param name="level"></param>
-        /// <param name="logMessage"></param>
-        protected void Log(LogLevel level, string logMessage)
-        {
-            logMessage = logMessage.Replace("{", @"{{").Replace("}", @"}}");
-            Logger.Log(level, logMessage);
-        }
     }
 
     /// <inheritdoc cref="MqttTopic" />
@@ -270,8 +261,7 @@ namespace Moryx.Drivers.Mqtt
                             var prop = type.GetProperty(placeholder);
                             if (prop == null)
                             {
-                                Log(LogLevel.Information, "MessageType " + type.Name + " does not contain" +
-                                                   " a property with the name " + placeholder);
+                                Logger.Log(LogLevel.Information, "MessageType {typeName} does not contain a property with the name {placeholder}", type.Name, placeholder);
                                 return;
                             }
                         }
@@ -403,9 +393,7 @@ namespace Moryx.Drivers.Mqtt
                                 var placeholderValue = placeholderValues[i].ToString();
                                 if (!resolver.Update(msg, placeholderValue))
                                 {
-                                    Logger.Log(LogLevel.Error, "Placeholder " + placeholderName + " cannot be filled. " +
-                                                               "MessageType " + typeof(TMessage).Name + " may not contain a " +
-                                                               "matching property");
+                                    Logger.Log(LogLevel.Error, "Placeholder {placeholderName} cannot be filled. MessageType {typeName} may not contain a matching property", placeholderName, MessageType.Name);
                                 }
                             }
                         }
