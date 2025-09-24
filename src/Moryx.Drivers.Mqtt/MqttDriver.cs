@@ -271,7 +271,9 @@ public class MqttDriver : Driver, IMessageDriver
         Logger.Log(LogLevel.Information, "Driver {id} connected to MqttBroker", _mqttClient.Options?.ClientId);
 
         State.TriedConnecting(true);
-        var tasks = Channels.Select(c => SubscribeTopicAsync(c.SubscribedTopic));
+        var tasks = Channels
+            .Where(c => c.TopicType != TopicType.PublishOnly)
+            .Select(c => SubscribeTopicAsync(c.SubscribedTopic));
         await Task.WhenAll(tasks);
     }
 
@@ -326,11 +328,20 @@ public class MqttDriver : Driver, IMessageDriver
     public async Task SendAsync(object message, CancellationToken cancellationToken = default)
     {
         IReadOnlyList<MqttTopic> topics;
-        // Search by identifier if set
-        if (message is IIdentifierMessage identifierMessage && !string.IsNullOrEmpty(identifierMessage.Identifier))
-            topics = Channels.Where(t => t.TopicType != TopicType.SubscribeOnly && t.Matches(identifierMessage.Identifier)).ToList();
-        else
-            topics = Channels.Where(t => t.TopicType != TopicType.SubscribeOnly && t.MessageType.IsInstanceOfType(message)).ToList();
+        try
+        {
+            // Search by identifier if set
+            if (message is IIdentifierMessage identifierMessage && !string.IsNullOrEmpty(identifierMessage.Identifier))
+                topics = Channels.Where(t => t.TopicType != TopicType.SubscribeOnly && t.Matches(identifierMessage.Identifier)).ToList();
+            else
+                topics = Channels.Where(t => t.TopicType != TopicType.SubscribeOnly && (t.MessageType?.IsInstanceOfType(message) ?? false)).ToList();
+
+        }
+        catch (Exception ex)
+        {
+            Logger?.LogError(ex, "Failed to find matching topic, because of an error");
+            throw;
+        }
 
         if (topics.Count == 1)
             await State.SendAsync(topics[0], message, cancellationToken);
@@ -454,10 +465,15 @@ public class MqttDriver : Driver, IMessageDriver
     /// <param name="newTopic"></param>
     public void OnTopicChanged(string oldTopic, string newTopic)
     {
-        var result = _mqttClient.UnsubscribeAsync(Identifier + oldTopic).Result;
+        var combinedOldTopic = Identifier + oldTopic;
+        var result = _mqttClient.UnsubscribeAsync(combinedOldTopic).Result;
         if (MqttVersion == MqttProtocolVersion.V500 && !string.IsNullOrEmpty(result.ReasonString))
-            Logger.LogError("Failed to unsubscribe from topic: {reason}", result.ReasonString);
+        {
+            Logger.LogError("Failed to unsubscribe from topic '{topic}': {reason}", combinedOldTopic, result.ReasonString);
+        }
+        
         SubscribeTopicAsync(newTopic).Wait();
+
     }
 
     internal async Task SubscribeTopicAsync(string topic)
@@ -469,8 +485,11 @@ public class MqttDriver : Driver, IMessageDriver
             .Build();
         if (MqttVersion == MqttProtocolVersion.V500)
             topicFilter.NoLocal = true;
-        var result = await _mqttClient.SubscribeAsync(topicFilter);
 
+        Logger.LogInformation("Subscribing to topic {topic}", topicName);
+        
+        var result = await _mqttClient.SubscribeAsync(topicFilter);
+        
         if (MqttVersion == MqttProtocolVersion.V500 && !string.IsNullOrEmpty(result.ReasonString))
             Logger.LogError("Failed to subscribe to topic: {reason}", result.ReasonString);
     }
