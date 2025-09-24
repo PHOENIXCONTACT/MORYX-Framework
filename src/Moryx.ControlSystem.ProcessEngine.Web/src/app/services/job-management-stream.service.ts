@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { JobModel } from '../api/models';
 import { JobManagementService } from '../api/services';
+import { JobModel } from '../api/models/Moryx/ControlSystem/Jobs/Endpoints/job-model';
 
 @Injectable({
   providedIn: 'root'

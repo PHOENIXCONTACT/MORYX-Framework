@@ -20,7 +20,8 @@ import {
 } from "@moryx/ngx-web-framework";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BehaviorSubject, Subscription } from "rxjs";
-import { JobProcessModel, ProcessActivityModel } from "src/app/api/models";
+import { JobProcessModel } from "src/app/api/models/Moryx/ControlSystem/Processes/Endpoints/job-process-model";
+import { ProcessActivityModel } from "src/app/api/models/Moryx/ControlSystem/Processes/Endpoints/process-activity-model";
 import { ProcessEngineService } from "src/app/api/services";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { JobViewModel } from "src/app/models/job-view-model";
@@ -66,7 +67,9 @@ export class ProcessesComponent implements OnInit, OnDestroy {
     public processEngineEvents: ProcessEngineStreamService,
     public translate: TranslateService,
     private moryxSnackbar: MoryxSnackbarService
-  ) {}
+  ) {
+    console.log('loadede')
+  }
 
   ngOnInit(): void {
     this.processEngineService
