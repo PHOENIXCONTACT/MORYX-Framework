@@ -1,5 +1,36 @@
 @use "@moryx/ngx-web-framework/styles/variables" as *;
 
+.multi-progress-container {
+  display: flex;
+  width: 100%;
+  height: 8px;
+  margin-top: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+.bar {
+  height: 100%;
+  transition: flex-basis 0.3s ease-in-out;
+}
+
+.success {
+  background-color: #4caf50;
+}
+
+.scrap {
+  background-color: #f44336;
+}
+
+.partial {
+  background-color: #42a5f5;
+}
+
+.residual {
+  background-color: #ffa726;
+}
+
 .content-data-entry {
     position: absolute;
     left: 0px;

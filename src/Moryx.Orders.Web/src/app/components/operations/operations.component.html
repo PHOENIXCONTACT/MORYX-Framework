@@ -2,13 +2,15 @@
   <mat-drawer-container
     class="operations-drawer-container"
     *ngIf="operations().length; else emptyStatePage"
-    [hasBackdrop]="mobileQuery.matches">
+    [hasBackdrop]="mobileQuery.matches"
+  >
     <mat-drawer
       #drawer
       [ngSwitch]="drawerContent()"
       [mode]="mobileQuery.matches ? 'over' : 'side'"
       position="end"
-      class="operations-drawer">
+      class="operations-drawer"
+    >
       <ng-container *ngSwitchCase="DrawerContent.Messages">
         <div class="operations-drawer-content">
           <div class="operations-drawer-title">
@@ -17,7 +19,9 @@
               <mat-icon>close</mat-icon>
             </a>
           </div>
-          <app-log-message-list [guid]="selectedOperation()?.identifier!"></app-log-message-list>
+          <app-log-message-list
+            [guid]="selectedOperation()?.identifier!"
+          ></app-log-message-list>
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="DrawerContent.Parts">
@@ -28,18 +32,24 @@
               <mat-icon>close</mat-icon>
             </a>
           </div>
-          <app-part-list [guid]="selectedOperation()?.identifier!"></app-part-list>
+          <app-part-list
+            [guid]="selectedOperation()?.identifier!"
+          ></app-part-list>
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="DrawerContent.Source">
         <div class="operations-drawer-content">
           <div class="operations-drawer-title">
-            <h2>{{ TranslationConstants.OPERATIONS.SOURCE_TITLE | translate }}</h2>
+            <h2>
+              {{ TranslationConstants.OPERATIONS.SOURCE_TITLE | translate }}
+            </h2>
             <a mat-icon-button (click)="drawer.close()">
               <mat-icon>close</mat-icon>
             </a>
           </div>
-          <app-operation-source [operationSource]="selectedOperation()?.operationSource!"></app-operation-source>
+          <app-operation-source
+            [operationSource]="selectedOperation()?.operationSource!"
+          ></app-operation-source>
         </div>
       </ng-container>
     </mat-drawer>
@@ -50,11 +60,13 @@
           <mat-expansion-panel
             class="operation"
             *ngFor="let operation of filteringOperations(operations())"
-            (expandedChange)="onPanelExpandedChange($event, operation)">
+            (expandedChange)="onPanelExpandedChange($event, operation)"
+          >
             <mat-expansion-panel-header
               [collapsedHeight]="'128px'"
               [expandedHeight]="'128px'"
-              class="operation-header flex-row-center">
+              class="operation-header flex-row-center"
+            >
               <div class="flex-row-center">
                 <mat-icon
                   *ngIf="!operation.model.canBegin"
@@ -72,20 +84,27 @@
                   >settings</mat-icon
                 >
                 <mat-icon
-                  *ngIf="operation.model.classification === 'Running' && !operation.isProducing"
+                  *ngIf="
+                    operation.model.classification === 'Running' &&
+                    !operation.isProducing
+                  "
                   color="accent"
                   class="operation-state-indicator"
                   >settings</mat-icon
                 >
                 <mat-icon
-                  *ngIf="operation.model.classification === 'Running' && operation.isProducing"
+                  *ngIf="
+                    operation.model.classification === 'Running' &&
+                    operation.isProducing
+                  "
                   color="accent"
                   class="operation-state-indicator operation-indicator-animation"
                   >settings
                 </mat-icon>
                 <mat-icon
                   *ngIf="operation.model.classification === 'Interrupting'"
-                  class="flex-row-center operation-state-indicator operation-indicator-interrupting operation-indicator-animation">
+                  class="flex-row-center operation-state-indicator operation-indicator-interrupting operation-indicator-animation"
+                >
                   settings</mat-icon
                 >
               </div>
@@ -101,23 +120,30 @@
                 <div class="operation-header-row">
                   <h3 class="operation-subtitle">
                     {{ TranslationConstants.OPERATIONS.PRODUCT | translate }}:
-                    {{ operation.model.productIdentifier }}-{{ operation.model.productRevision | number : '2.0' }}
+                    {{ operation.model.productIdentifier }}-{{
+                      operation.model.productRevision | number : "2.0"
+                    }}
                     {{ operation.model.productName }} |
                     {{
                       (operation.model.recipeIds?.length ?? 0) > 1
-                        ? operation.model.recipeName + ', ...'
+                        ? operation.model.recipeName + ", ..."
                         : operation.model.recipeName
                     }}
                   </h3>
                 </div>
 
                 <div class="operation-header-row">
-                  <div>{{ TranslationConstants.OPERATIONS.AMOUNT | translate }}: {{ operation.model.totalAmount }}</div>
                   <div>
-                    {{ TranslationConstants.OPERATIONS.SUCCESS | translate }}: {{ operation.model.successCount }}
+                    {{ TranslationConstants.OPERATIONS.AMOUNT | translate }}:
+                    {{ operation.model.totalAmount }}
                   </div>
                   <div>
-                    {{ TranslationConstants.OPERATIONS.RUNNING | translate }}: {{ operation.model.progressRunning }}
+                    {{ TranslationConstants.OPERATIONS.SUCCESS | translate }}:
+                    {{ operation.model.successCount }}
+                  </div>
+                  <div>
+                    {{ TranslationConstants.OPERATIONS.RUNNING | translate }}:
+                    {{ operation.model.progressRunning }}
                   </div>
                   <div>
                     {{ TranslationConstants.OPERATIONS.SCRAP | translate }}:
@@ -126,45 +152,53 @@
                 </div>
 
                 <div class="operation-header-row operation-progress">
-                  <mat-progress-bar
-                    mode="determinate"
-                    value="100"
-                    class="progress-accent-color"
-                    [ngStyle]="{
-                      width: operation.progressSuccessPercent + '%'
-                    }">
-                  </mat-progress-bar>
-                  <mat-progress-bar
-                    mode="determinate"
-                    value="100"
-                    class="progress-warn-color"
-                    [ngStyle]="{
-                      width: operation.progressScrapPercent + '%'
-                    }"></mat-progress-bar>
-                  <mat-progress-bar
-                    mode="determinate"
-                    value="100"
-                    [ngStyle]="{
-                      width: operation.progressRunningPercent + '%'
-                    }">
-                  </mat-progress-bar>
-                  <mat-progress-bar
-                    class="operation-pending-parts"
-                    mode="determinate"
-                    value="100"
-                    [ngStyle]="{
-                      width: operation.progressPendingPercent + '%'
-                    }">
-                  </mat-progress-bar>
-                  <mat-progress-bar
-                    mode="determinate"
-                    value="0"
-                    [class.progress-error-color]=" operation.model.classification === 'Failed'"
-                    [ngStyle]="{
-                      width: operation.progressResidualPercent + '%',
-                      'background-color': operation.model.classification === 'Failed' ? '#e3232f' : 'initial'
-                    }">
-                  </mat-progress-bar>
+                  <div class="multi-progress-container">
+                    <div
+                      class="bar success"
+                      [style.flex-basis.%]="operation.progressSuccessPercent"
+                      matTooltip="{{
+                        TranslationConstants.OPERATIONS.SUCCESS | translate
+                      }}: {{
+                        operation.progressSuccessPercent | number : '1.1-1'
+                      }}%"
+                    ></div>
+                    <div
+                      class="bar scrap"
+                      [style.flex-basis.%]="operation.progressScrapPercent"
+                      matTooltip="{{
+                        TranslationConstants.OPERATIONS.SCRAP | translate
+                      }}: {{
+                        operation.progressScrapPercent | number : '1.1-1'
+                      }}%"
+                    ></div>
+                    <div
+                      class="bar running"
+                      [style.flex-basis.%]="operation.progressRunningPercent"
+                      matTooltip="{{
+                        TranslationConstants.OPERATIONS.RUNNING | translate
+                      }}: {{
+                        operation.progressRunningPercent | number : '1.1-1'
+                      }}%"
+                    ></div>
+                    <div
+                      class="bar pending"
+                      [style.flex-basis.%]="operation.progressPendingPercent"
+                      matTooltip="{{
+                        TranslationConstants.OPERATIONS.PENDING | translate
+                      }}: {{
+                        operation.progressPendingPercent | number : '1.1-1'
+                      }}%"
+                    ></div>
+                    <div
+                      class="bar residual"
+                      [style.flex-basis.%]="operation.progressResidualPercent"
+                      matTooltip="{{
+                        TranslationConstants.OPERATIONS.RESIDUAL | translate
+                      }}: {{
+                        operation.progressResidualPercent | number : '1.1-1'
+                      }}%"
+                    ></div>
+                  </div>
                 </div>
               </div>
             </mat-expansion-panel-header>
@@ -176,26 +210,41 @@
                   {{ operation.model.recipeName }}
                 </div>
                 <div>
-                  {{ TranslationConstants.OPERATIONS.REPORTED_SUCCESS | translate }}:
+                  {{
+                    TranslationConstants.OPERATIONS.REPORTED_SUCCESS
+                      | translate
+                  }}:
                   {{ operation.model.reportedSuccessCount }}
                 </div>
                 <div>
-                  {{ TranslationConstants.OPERATIONS.REPORTED_SCRAP | translate }}:
+                  {{
+                    TranslationConstants.OPERATIONS.REPORTED_SCRAP | translate
+                  }}:
                   {{ operation.model.reportedFailureCount }}
                 </div>
                 <div>
-                  {{ TranslationConstants.OPERATIONS.OVERDELIVERY | translate }}:
+                  {{
+                    TranslationConstants.OPERATIONS.OVERDELIVERY | translate
+                  }}:
                   {{ operation.model.overDeliveryAmount }}
                 </div>
                 <div>
-                  {{ TranslationConstants.OPERATIONS.UNDERDELIVERY | translate }}:
+                  {{
+                    TranslationConstants.OPERATIONS.UNDERDELIVERY | translate
+                  }}:
                   {{ operation.model.underDeliveryAmount }}
                 </div>
               </div>
 
               <div
                 class="operation-details-state"
-                [ngStyle]="{ color: operation.model.classification === 'Failed' ? '#e3232f' : 'inherit' }">
+                [ngStyle]="{
+                  color:
+                    operation.model.classification === 'Failed'
+                      ? '#e3232f'
+                      : 'inherit'
+                }"
+              >
                 {{ operation.model.stateDisplayName }}
               </div>
             </div>
@@ -204,20 +253,31 @@
               <span
                 [matTooltip]="
                   !operation.model.canAssign
-                    ? (TranslationConstants.OPERATIONS.REASSIGN_NOT_POSSIBLE | translate)
-                    : (operation.model.isCreated
-                        ? (TranslationConstants.OPERATIONS.REFRESH_RECOMMENDED | translate)
-                        : (TranslationConstants.OPERATIONS.REFRESH_OPTIONAL | translate)
-                      )"
-                matTooltipShowDelay="300">
+                    ? (TranslationConstants.OPERATIONS.REASSIGN_NOT_POSSIBLE
+                      | translate)
+                    : operation.model.isCreated
+                    ? (TranslationConstants.OPERATIONS.REFRESH_RECOMMENDED
+                      | translate)
+                    : (TranslationConstants.OPERATIONS.REFRESH_OPTIONAL
+                      | translate)
+                "
+                matTooltipShowDelay="300"
+              >
                 <button
                   mat-stroked-button
                   color="primary"
                   (click)="onAssign(operation)"
                   [disabled]="!operation.model.canAssign"
-                  [matBadge]="operation.model.canAssign && operation.model.isCreated ? '!' : ''"
-                  [matBadgeHidden]="!(operation.model.canAssign && operation.model.isCreated)"
-                  matBadgeColor="accent">
+                  [matBadge]="
+                    operation.model.canAssign && operation.model.isCreated
+                      ? '!'
+                      : ''
+                  "
+                  [matBadgeHidden]="
+                    !(operation.model.canAssign && operation.model.isCreated)
+                  "
+                  matBadgeColor="accent"
+                >
                   <mat-icon>sync</mat-icon>
                   {{ TranslationConstants.OPERATIONS.REFRESH_DATA | translate }}
                 </button>
@@ -228,7 +288,8 @@
                 (click)="onShowMessages(operation)"
                 [matBadge]="operation.errorMessagesCount"
                 [matBadgeHidden]="operation.errorMessagesCount < 1"
-                matBadgeColor="warn">
+                matBadgeColor="warn"
+              >
                 <mat-icon>chat_alt</mat-icon>
                 {{ TranslationConstants.OPERATIONS.MESSAGES | translate }}
               </button>
@@ -236,7 +297,8 @@
                 *ngIf="operation.model.operationSource"
                 mat-stroked-button
                 color="primary"
-                (click)="onToggleSource(operation)">
+                (click)="onToggleSource(operation)"
+              >
                 <mat-icon>move_to_inbox</mat-icon>
                 {{ TranslationConstants.OPERATIONS.SOURCE | translate }}
               </button>
@@ -244,15 +306,19 @@
                 mat-stroked-button
                 color="primary"
                 *ngIf="!operation.model.isFailed && operation.model.hasPartList"
-                (click)="onShowPartList(operation)">
+                (click)="onShowPartList(operation)"
+              >
                 <mat-icon>summarize</mat-icon>
                 {{ TranslationConstants.OPERATIONS.PART_LIST | translate }}
               </button>
               <button
                 mat-stroked-button
                 color="primary"
-                *ngIf="!operation.model.isFailed && operation.model.hasDocuments"
-                (click)="showDocuments(operation)">
+                *ngIf="
+                  !operation.model.isFailed && operation.model.hasDocuments
+                "
+                (click)="showDocuments(operation)"
+              >
                 <mat-icon>perm_media</mat-icon>
                 {{ TranslationConstants.OPERATIONS.DOCUMENTS | translate }}
               </button>
@@ -265,7 +331,8 @@
                   operation.model.recipeIds &&
                   operation.model.recipeIds.length > 0
                 "
-                (click)="showRecipes(operation)">
+                (click)="showRecipes(operation)"
+              >
                 <mat-icon>tune</mat-icon>
                 {{ TranslationConstants.OPERATIONS.RECIPES | translate }}
               </button>
@@ -276,33 +343,40 @@
                 mat-flat-button
                 color="primary"
                 *ngIf="operation.model.canAssign && !operation.model.isCreated"
-                (click)="onAssign(operation)">
+                (click)="onAssign(operation)"
+              >
                 {{ TranslationConstants.OPERATIONS.TRY_AGAIN | translate }}
               </button>
               <button
                 mat-flat-button
                 color="primary"
                 (click)="onBegin(operation)"
-                [disabled]="!operation.model.canBegin">
+                [disabled]="!operation.model.canBegin"
+              >
                 {{
-                  operation.model.classification !== OperationClassification.Running &&
-                  operation.model.classification !== OperationClassification.Interrupting
+                  operation.model.classification !==
+                    OperationClassification.Running &&
+                  operation.model.classification !==
+                    OperationClassification.Interrupting
                     ? (TranslationConstants.OPERATIONS.BEGIN | translate)
-                    : (TranslationConstants.OPERATIONS.CHANGE_AMOUNT | translate)
+                    : (TranslationConstants.OPERATIONS.CHANGE_AMOUNT
+                      | translate)
                 }}
               </button>
               <button
                 mat-flat-button
                 color="primary"
                 (click)="onInterrupt(operation)"
-                [disabled]="!operation.model.canInterrupt">
+                [disabled]="!operation.model.canInterrupt"
+              >
                 {{ TranslationConstants.OPERATIONS.INTERRUPT | translate }}
               </button>
               <button
                 mat-flat-button
                 color="primary"
                 [disabled]="!operation.model.canReport"
-                (click)="onReport(operation)">
+                (click)="onReport(operation)"
+              >
                 {{ TranslationConstants.OPERATIONS.REPORT | translate }}
               </button>
             </mat-action-row>
@@ -311,7 +385,12 @@
       </div>
     </mat-drawer-content>
   </mat-drawer-container>
-  <button class="operation-create-fab-button" mat-mini-fab color="primary" (click)="onCreate()">
+  <button
+    class="operation-create-fab-button"
+    mat-mini-fab
+    color="primary"
+    (click)="onCreate()"
+  >
     <mat-icon>add</mat-icon>
   </button>
 </ng-container>
@@ -324,6 +403,9 @@
 
 <ng-template #emptyStatePage>
   <empty-state
-    header="{{ TranslationConstants.OPERATIONS.EMPTY_STATE_HEADER | translate }}"
-    message="{{ TranslationConstants.OPERATIONS.EMPTY_STATE_TEXT | translate }}"></empty-state>
+    header="{{
+      TranslationConstants.OPERATIONS.EMPTY_STATE_HEADER | translate
+    }}"
+    message="{{ TranslationConstants.OPERATIONS.EMPTY_STATE_TEXT | translate }}"
+  ></empty-state>
 </ng-template>
