@@ -1,6 +1,6 @@
 namespace Moryx.Drivers.Mqtt.Messages;
 
-public class IRetainAwareMessage
+public interface IRetainAwareMessage
 {
     public bool Retain { get; set; }
 }
