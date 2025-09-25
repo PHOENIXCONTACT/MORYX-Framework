@@ -1,3 +1,6 @@
+# Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+# Licensed under the Apache License, Version 2.0
+
 name: CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
@@ -6,6 +9,7 @@ on:
     branches: 
       - dev
       - future
+      - feature/shared-node-modules
     tags:
       - v[0-9]+.[0-9]+.[0-9]+ # Matches all semantic versioning tags with major, minor, patch
   pull_request:
@@ -37,37 +41,40 @@ jobs:
       MORYX_PACKAGE_TARGET_V3_FUTURE: ${{ env.MORYX_PACKAGE_TARGET_V3_FUTURE }}
       MORYX_PACKAGE_TARGET_RELEASE: ${{ env.MORYX_PACKAGE_TARGET_RELEASE }}
       MORYX_PACKAGE_TARGET_V3_RELEASE: ${{ env.MORYX_PACKAGE_TARGET_V3_RELEASE }}
-
-  Build:
+  BuildYarn:
     needs: [EnvVar]
-    uses: phoenixcontact/tools/.github/workflows/build-tool.yml@main
+    uses: phoenixcontact/tools/.github/workflows/build-yarn-tool.yml@yarn-build
+
+  BuildDotNet:
+    needs: [BuildYarn]
+    uses: phoenixcontact/tools/.github/workflows/build-tool.yml@yarn-build
     with:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
 #  UnitTests:
-#    needs: [EnvVar, Build]
-#    uses: phoenixcontact/tools/.github/workflows/unittest-tool.yml@main
+#    needs: [EnvVar, BuildDotNet]
+#    uses: phoenixcontact/tools/.github/workflows/unittest-tool.yml@yarn-build
 #    with:
 #      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
 #      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 #
 #  IntegrationTests:
-#    needs: [EnvVar, Build]
-#    uses: phoenixcontact/tools/.github/workflows/integrationtest-tool.yml@main
+#    needs: [EnvVar, BuildDotNet]
+#    uses: phoenixcontact/tools/.github/workflows/integrationtest-tool.yml@yarn-build
 #    with:
 #      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
 #      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 #
 #  ReportGenerator:
 #    needs: [EnvVar, UnitTests, IntegrationTests]
-#    uses: phoenixcontact/tools/.github/workflows/reportgenerator-tool.yml@main
+#    uses: phoenixcontact/tools/.github/workflows/reportgenerator-tool.yml@yarn-build
 #    with:
 #      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 #               
 #  Publish-Test-Coverage:
 #    needs: [EnvVar, ReportGenerator]
-#    uses: phoenixcontact/tools/.github/workflows/publish-test-coverage-tool.yml@main
+#    uses: phoenixcontact/tools/.github/workflows/publish-test-coverage-tool.yml@yarn-build
 #    with:
 #      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 #    secrets:
@@ -77,22 +84,22 @@ jobs:
   # currently not working
   # Documentation:
   #   needs: [EnvVar, UnitTests]
-  #   uses: phoenixcontact/tools/.github/workflows/documentation-tool.yml@main
+  #   uses: phoenixcontact/tools/.github/workflows/documentation-tool.yml@yarn-build
   #   with:
   #     REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
-  Publish:
-    needs: [EnvVar, Build] #, UnitTests]
-    uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@main
-    with:
-      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
-      MORYX_PACKAGE_TARGET_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_DEV }}
-      MORYX_PACKAGE_TARGET_V3_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_DEV }}
-      MORYX_PACKAGE_TARGET_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_FUTURE }}
-      MORYX_PACKAGE_TARGET_V3_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_FUTURE }}
-      MORYX_PACKAGE_TARGET_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_RELEASE }}
-      MORYX_PACKAGE_TARGET_V3_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_RELEASE }}
-    secrets: 
-      MYGET_TOKEN: ${{secrets.MYGET_TOKEN}}
-      NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}
+  # Publish:
+  #   needs: [EnvVar, BuildDotNet] #, UnitTests]
+  #   uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@yarn-build
+  #   with:
+  #     dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+  #     REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+  #     MORYX_PACKAGE_TARGET_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_DEV }}
+  #     MORYX_PACKAGE_TARGET_V3_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_DEV }}
+  #     MORYX_PACKAGE_TARGET_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_FUTURE }}
+  #     MORYX_PACKAGE_TARGET_V3_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_FUTURE }}
+  #     MORYX_PACKAGE_TARGET_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_RELEASE }}
+  #     MORYX_PACKAGE_TARGET_V3_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_RELEASE }}
+  #   secrets: 
+  #     MYGET_TOKEN: ${{secrets.MYGET_TOKEN}}
+  #     NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}

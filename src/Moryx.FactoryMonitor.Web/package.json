@@ -1,5 +1,5 @@
 {
-  "name": "moryx.factory-monitor.web",
+  "name": "moryx.factorymonitor.web",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",

@@ -1,5 +1,5 @@
 {
-  "name": "moryx.orders.web",
+  "name": "moryx.controlsystem.processengine.web",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
