@@ -10,6 +10,7 @@ using Moq;
 using NUnit.Framework;
 using Moryx.Logging;
 using Moryx.TestTools.UnitTest;
+using Moryx.ControlSystem.Simulation;
 
 namespace Moryx.Simulation.Tests
 {
