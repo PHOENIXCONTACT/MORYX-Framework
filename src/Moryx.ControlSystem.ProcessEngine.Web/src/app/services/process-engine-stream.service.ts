@@ -1,7 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { JobProcessModel, ProcessActivityModel } from '../api/models';
 import { ProcessEngineService } from '../api/services';
+import { JobProcessModel } from '../api/models/Moryx/ControlSystem/Processes/Endpoints/job-process-model';
+import { ProcessActivityModel } from '../api/models/Moryx/ControlSystem/Processes/Endpoints/process-activity-model';
 
 @Injectable({
   providedIn: 'root'

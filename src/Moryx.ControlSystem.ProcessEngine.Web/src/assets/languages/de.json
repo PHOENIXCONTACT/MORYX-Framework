@@ -31,6 +31,23 @@
       "EMPTY_STATE_HEADER": "Keine aktiven Prozesse",
       "EMPTY_STATE_TEXT": "Starte eine Produktion und die Prozesse werden hier angezeigt."
     },
+  "PROCESS_HOLDER_GROUPS":{
+      "OPERATION_SUCCEEDED": "Vorgang erfolgreich",
+      "PROCESSES_TITLE": "Prozesse",
+      "PROCESS_HOLDER_GROUP_TITLE": "Prozesshaltergruppe",
+      "SEARCH": "Suchen",
+      "COLLAPSE_ALL": "Alle ausblenden",
+      "EXPAND_ALL" : "Alle erweitern",
+      "NAME": "Name",
+      "POSITION": "Position",
+      "POSITIONS": "Positionen",
+      "ACTIVITY": "Aktivität",
+      "ORDER": "Auftrag",
+      "PROCESS" : "Prozess",
+      "RESET_POSITION": "Position zurücksetzen und in den Ausgangszustand zurückkehren. Alle Mount-Informationen gehen verloren.",
+      "RESET_GROUP": "Setzen Sie die gesamte Gruppe zurück",
+      "EMPTY_STATE_TEXT": "Keine Gruppen/Positionen. Hier ist derzeit nichts, was Ihre Aufmerksamkeit erfordert."
+  },
     "DISMISS": "OKAY",
     "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
     "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Internetverbindung oder Proxy-Einstellungen."

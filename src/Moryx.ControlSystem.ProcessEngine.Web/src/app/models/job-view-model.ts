@@ -1,4 +1,5 @@
-import { JobModel } from '../api/models';
+import { JobModel } from "../api/models/Moryx/ControlSystem/Jobs/Endpoints/job-model";
+
 export class JobViewModel {
   model: JobModel;
 

@@ -303,7 +303,7 @@ export class RequestBuilder {
       return value;
     }
     if (typeof value === 'object') {
-      return JSON.stringify(value);
+      return new Blob([JSON.stringify(value)], {type: 'application/json'})
     }
     return String(value);
   }
