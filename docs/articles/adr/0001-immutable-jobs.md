@@ -1,6 +1,6 @@
 # ADR: Immutable Jobs
 
-In the design of the ProcessEngine there was the reoccuring question whether or not jobs can be altered after creation. 
+In the design of the ProcessEngine there was the reoccurring question whether or not jobs can be altered after creation. 
 
 ## Status
 
@@ -12,4 +12,4 @@ We declare jobs immutable. After creation its attributes like recipe and amount 
 
 ## Consequences
 
-Limiting external interference reduces complexity of the ProcessEngines internal implementation and increases stability. By considering jobs directly startable after creation without any external influences the state machine and job scheduler could be simplified. On the downside the job list can not be used to create jobs for later execution. The inabilty to pause jobs also means that external users of the ProcessEngine have to interrupt running jobs and create new ones with the remaining count if they want to pause execution.
+Limiting external interference reduces complexity of the ProcessEngines internal implementation and increases stability. By considering jobs directly startable after creation without any external influences the state machine and job scheduler could be simplified. On the downside the job list can not be used to create jobs for later execution. The inability to pause jobs also means that external users of the ProcessEngine have to interrupt running jobs and create new ones with the remaining count if they want to pause execution.

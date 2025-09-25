@@ -1,4 +1,4 @@
-# Factory 6.x to 8.x
+# MORYX 8.x to 10.x
 
 ## Replaced result of visual instructions with dedicated result object
 
