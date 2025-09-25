@@ -9,6 +9,8 @@ using Moryx.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Moryx.Drivers.Mqtt.Properties;
+using System;
+using System.Text.Json;
 
 namespace Moryx.Drivers.Mqtt.MqttTopics
 {
@@ -36,6 +38,13 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         [Display(Name = nameof(Strings.MqttTopicJson_Format), ResourceType = typeof(Strings))]
         public JsonFormat Format { get; set; }
 
+        [DataMember, EntrySerialize]
+        // TODO: Add localized display attribute
+        public bool UseNewSerialization { get; set; }
+
+        [DataMember, EntrySerialize]
+        public bool EnumsAsStrings { get; private set; }
+
         /// <inheritdoc />
         protected internal override byte[] Serialize(object payload)
         {
@@ -46,10 +55,28 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         /// <inheritdoc />
         protected internal override object Deserialize(ArraySegment<byte> messageAsBytes)
         {
+            if (UseNewSerialization)
+            {
+                var options = GetSystemTextJsonOptions();
+                return System.Text.Json.JsonSerializer.Deserialize(messageAsBytes, MessageType, options);
+            }
+
             var msg = Constructor();
             var json = Encoding.UTF8.GetString(messageAsBytes.AsSpan()); // TODO: consider moving to system.text.json. This would make creating a temporary string unnecessary
             JsonConvert.PopulateObject(json, msg, GetSettings());
             return msg;
+        }
+
+        private JsonSerializerOptions GetSystemTextJsonOptions()
+        {
+            var options = new System.Text.Json.JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = Format == JsonFormat.camelCase ? JsonNamingPolicy.CamelCase : null,
+            };
+            options.Converters.Clear();
+            if (EnumsAsStrings)
+                options.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+            return options;
         }
 
         private JsonSerializerSettings GetSettings()
@@ -58,6 +85,8 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
             {
                 NullValueHandling = NullValueHandling.Ignore,
             };
+            if(EnumsAsStrings)
+                settings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
             if (Format == JsonFormat.camelCase)
                 settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
