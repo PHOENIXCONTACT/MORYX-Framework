@@ -33,7 +33,7 @@ namespace Moryx.Drivers.Mqtt
         /// </summary>
         public event EventHandler<object> Received;
 
-        [DataMember, EntrySerialize]
+        [DataMember, EntrySerialize] // TODO: Description
         public TopicType TopicType { get; set; }
 
         public IParallelOperations ParallelOperations { get; set; }
@@ -171,6 +171,10 @@ namespace Moryx.Drivers.Mqtt
         /// Type sent through this topic
         /// </summary>
         public Type MessageType { get; set; }
+
+        [EntrySerialize, ReadOnly(true)] // TODO describe
+        public string ResolveTypeName => MessageType?.FullName ?? "Unresolved";
+
 
         /// <summary>
         /// Driver, who subscribes this topic.
