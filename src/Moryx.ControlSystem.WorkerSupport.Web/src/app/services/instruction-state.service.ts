@@ -6,8 +6,8 @@ const FULLSCREEN_KEY = 'workerInstructions.fullscreenEnabled';
   providedIn: 'root',
 })
 export class InstructionStateService {
-  private fullscreen = signal<boolean>(this.loadInitialState());
-
+  private _fullscreen = signal<boolean>(this.loadInitialState());
+  fullscreen = this._fullscreen.asReadonly();
   constructor() {}
 
   private loadInitialState(): boolean {
@@ -21,13 +21,10 @@ export class InstructionStateService {
 
   toggleFullscreen(): void {
     const newValue = !this.fullscreen();
-    this.fullscreen.set(newValue);
+    this._fullscreen.set(newValue);
     try {
       localStorage.setItem(FULLSCREEN_KEY, JSON.stringify(newValue));
     } catch {}
   }
 
-  getFullscreenState() {
-    return this.fullscreen.asReadonly();
-  }
 }
