@@ -1,10 +1,12 @@
-﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.Modules;
+using Moryx.ProcessData.Localization;
 using Moryx.Serialization;
 
 namespace Moryx.ProcessData.Listener
@@ -31,13 +33,14 @@ namespace Moryx.ProcessData.Listener
         /// Unique Name of the Listener
         /// </summary>
         [DataMember]
-        [Description("Unique Name of the Listener")]
+        [Display(Name = nameof(Strings.LISTENERNAME), Description = nameof(Strings.LISTENERNAME_DESCRIPTION), ResourceType = typeof(Strings))]
         public string ListenerName { get; set; }
 
         /// <summary>
         /// Configuration for the occurred measurand. They can be enabled or disabled.
         /// </summary>
         [DataMember]
+        [Display(Name = nameof(Strings.MEASURAND_CONFIG), ResourceType = typeof(Strings))]
         public List<MeasurandConfig> MeasurandConfigs { get; set; }
     }
 
@@ -51,14 +54,14 @@ namespace Moryx.ProcessData.Listener
         /// Name of the measurand
         /// </summary>
         [DataMember]
-        [Description("Name of the measurand")]
+        [Display(Name = nameof(Strings.MEASURAND_NAME), Description = nameof(Strings.MEASURAND_NAME_DESCRIPTION), ResourceType = typeof(Strings))]
         public string Name { get; set; }
 
         /// <summary>
         /// Indicator if measurand processing is enabled
         /// </summary>
         [DataMember]
-        [Description("If enabled, process data will be processed")]
+        [Display(Name = nameof(Strings.IS_ENABLED), Description = nameof(Strings.IS_ENABLED_DESCRIPTION), ResourceType = typeof(Strings))]
         public bool IsEnabled { get; set; }
 
         /// <inheritdoc />
