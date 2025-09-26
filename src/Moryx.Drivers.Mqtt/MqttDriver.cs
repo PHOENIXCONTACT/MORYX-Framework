@@ -251,7 +251,7 @@ public class MqttDriver : Driver, IMessageDriver
         {
             optionsBuilder
                 .WithWillRetain(true)
-                .WithWillTopic(LastWillTopic)
+                .WithWillTopic(Identifier + LastWillTopic)
                 .WithWillPayload(LastWillContent);
         }
 
