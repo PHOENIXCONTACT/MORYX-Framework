@@ -20,6 +20,11 @@ namespace Moryx.ControlSystem.VisualInstructions
         public VisualInstruction[] Instructions { get; set; }
 
         /// <summary>
+        /// Inputs for this activity.
+        /// </summary>
+        public object Inputs { get; set; }
+
+        /// <summary>
         /// Binder to resolve visual instruction bindings
         /// </summary>
         protected VisualInstructionBinder InstructionBinder { get; private set; }
