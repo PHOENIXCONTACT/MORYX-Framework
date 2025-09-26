@@ -168,7 +168,7 @@ namespace Moryx.StateMachines
         /// </summary>
         internal static IEnumerable<FieldInfo> GetStateFields(Type stateBaseType)
         {
-            var stateFields = from field in stateBaseType.GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+            var stateFields = from field in stateBaseType.GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy)
                 where field.IsLiteral && !field.IsInitOnly &&
                       field.FieldType.IsAssignableFrom(typeof(int)) &&
                       field.GetCustomAttribute<StateDefinitionAttribute>() != null
