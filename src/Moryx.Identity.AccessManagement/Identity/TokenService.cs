@@ -224,11 +224,8 @@ namespace Moryx.Identity.AccessManagement
         public async Task InvalidateRefreshTokens(MoryxUser user)
         {
             var refreshTokens = await _dbContext.RefreshTokens.Where(token => token.UserId == user.Id).ToListAsync();
-            foreach (var refreshToken in refreshTokens)
-            {
-                _dbContext.RefreshTokens.Remove(refreshToken);
-                await _dbContext.SaveChangesAsync();
-            }
+            _dbContext.RefreshTokens.RemoveRange(refreshTokens);
+            await _dbContext.SaveChangesAsync();
         }
 
         /// <inheritdoc/>
