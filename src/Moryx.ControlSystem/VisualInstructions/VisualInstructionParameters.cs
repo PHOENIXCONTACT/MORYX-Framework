@@ -11,7 +11,7 @@ namespace Moryx.ControlSystem.VisualInstructions
     /// Provides parameters with visual instructions
     /// </summary>
     [DataContract]
-    public class VisualInstructionParameters : Parameters, IVisualInstructions
+    public class VisualInstructionParameters : Parameters
     {
         /// <summary>
         /// All instructions for this activity, if it used as a visual activity
