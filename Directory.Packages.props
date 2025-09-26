@@ -58,7 +58,7 @@
     <!-- Dependencies for drivers and adapters -->
     <PackageVersion Include="System.IO.Ports" Version="8.0.0" />
     <PackageVersion Include="MQTTnet" Version="4.3.1.873" />
-    <PackageVersion Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.376.213" />
+    <PackageVersion Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.377.21" />
 
     <PackageVersion Include="InfluxDB.LineProtocol" Version="1.1.1" />
     <PackageVersion Include="InfluxDB.Client" Version="4.18.0" />
