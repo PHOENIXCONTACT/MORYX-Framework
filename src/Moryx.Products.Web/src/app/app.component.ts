@@ -471,7 +471,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(async(productToBeDeleted) => {
       if (productToBeDeleted) {
-        this.cacheService.deleteProduct(productToBeDeleted);
           const actualProduct = productToBeDeleted();
           await this.cacheService.deleteProduct(actualProduct);
           this.editService.unloadProduct();
