@@ -14,6 +14,12 @@ using System.Text.Json;
 
 namespace Moryx.Drivers.Mqtt.MqttTopics
 {
+
+    public enum SerializerSelection
+    {
+        NewtonsoftJson,
+        SystemTextJson
+    }
     /// <summary>
     /// MQTT Topic, where the published messages are in a JSON format
     /// </summary>
@@ -40,14 +46,20 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
 
         [DataMember, EntrySerialize]
         // TODO: Add localized display attribute
-        public bool UseNewSerialization { get; set; }
+        public SerializerSelection Serializer { get; set; }
 
         [DataMember, EntrySerialize]
-        public bool EnumsAsStrings { get; private set; }
+        public bool EnumsAsStrings { get; set; }
 
         /// <inheritdoc />
         protected internal override byte[] Serialize(object payload)
         {
+            if (Serializer == SerializerSelection.SystemTextJson)
+            {
+
+                var options = GetSystemTextJsonOptions();
+                return System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(payload, options);
+            }
             var json = JsonConvert.SerializeObject(payload, GetSettings());
             return Encoding.UTF8.GetBytes(json);
         }
@@ -55,7 +67,7 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         /// <inheritdoc />
         protected internal override object Deserialize(ArraySegment<byte> messageAsBytes)
         {
-            if (UseNewSerialization)
+            if (Serializer == SerializerSelection.SystemTextJson)
             {
                 var options = GetSystemTextJsonOptions();
                 return System.Text.Json.JsonSerializer.Deserialize(messageAsBytes, MessageType, options);
@@ -85,7 +97,7 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
             {
                 NullValueHandling = NullValueHandling.Ignore,
             };
-            if(EnumsAsStrings)
+            if (EnumsAsStrings)
                 settings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
             if (Format == JsonFormat.camelCase)
                 settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
