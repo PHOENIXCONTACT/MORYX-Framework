@@ -98,7 +98,8 @@ namespace Moryx.Identity.AccessManagement.Controllers
             }
 
             await _userManager.UpdateAsync(user);
-
+            // Refetch the user from db to avoid concurrency exception while generating a token
+            user = await _userManager.FindByIdAsync(user.Id);
             var jwtToken = await _tokenService.GenerateToken(user);
             HttpContext.Response.Cookies.SetJwtCookie(jwtToken, user);
 
