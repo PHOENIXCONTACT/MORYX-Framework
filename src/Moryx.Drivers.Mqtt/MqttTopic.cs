@@ -351,8 +351,8 @@ namespace Moryx.Drivers.Mqtt
             }
 
             topic = MqttDriver.Identifier + topic;
-            var retain = payload is IRetainAwareMessage ram
-                ? ram.Retain 
+            var retain = payload is IRetainAwareMessage ram && ram.Retain.HasValue
+                ? ram.Retain.Value
                 : Retain;
             return MqttDriver.OnSend(
                 new MqttMessageTopic(ResponseTopic, topic,retain),
