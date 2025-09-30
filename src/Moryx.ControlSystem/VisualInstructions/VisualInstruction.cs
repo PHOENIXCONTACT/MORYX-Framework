@@ -49,15 +49,4 @@ namespace Moryx.ControlSystem.VisualInstructions
         [DataMember, EntrySerialize]
         public string Preview { get; set; }
     }
-
-    /// <summary>
-    /// Interface for classes that define instructions
-    /// </summary>
-    public interface IVisualInstructions
-    {
-        /// <summary>
-        /// All instructions for this activity
-        /// </summary>
-        VisualInstruction[] Instructions { get; }
-    }
 }
