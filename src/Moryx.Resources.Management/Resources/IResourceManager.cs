@@ -31,5 +31,11 @@ namespace Moryx.AbstractionLayer.Resources
         /// Raised when the capabilities have changed.
         /// </summary>
         event EventHandler<ICapabilities> CapabilitiesChanged;
+
+        /// <summary>
+        /// Raised when a resource reports a change (via Resource.RaiseResourceChanged)
+        /// or is changed via the ResourceManagement facade (e.g. Modify).
+        /// </summary>
+        event EventHandler<IResource> ResourceChanged;
     }
 }
