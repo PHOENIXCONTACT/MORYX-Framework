@@ -9,7 +9,7 @@ using Moryx.Runtime.Modules;
 
 namespace Moryx.Resources.Management
 {
-    internal class ResourceManagementFacade : FacadeBase, IResourceManagement
+    internal class ResourceManagementFacade : FacadeBase, IResourceManagement, IResourceManagementChanges
     {
         #region Dependency Injection
 
@@ -29,6 +29,7 @@ namespace Moryx.Resources.Management
             Manager.ResourceAdded += OnResourceAdded;
             Manager.CapabilitiesChanged += OnCapabilitiesChanged;
             Manager.ResourceRemoved += OnResourceRemoved;
+            Manager.ResourceChanged += OnResourceChanged;
         }
 
         /// <seealso cref="IFacadeControl"/>
@@ -37,6 +38,7 @@ namespace Moryx.Resources.Management
             Manager.ResourceAdded -= OnResourceAdded;
             Manager.CapabilitiesChanged -= OnCapabilitiesChanged;
             Manager.ResourceRemoved -= OnResourceRemoved;
+            Manager.ResourceChanged -= OnResourceChanged;
         }
 
         private void OnCapabilitiesChanged(object sender, ICapabilities args)
@@ -53,6 +55,12 @@ namespace Moryx.Resources.Management
         {
             ResourceRemoved?.Invoke(this, publicResource.Proxify(TypeController));
         }
+
+        private void OnResourceChanged(object sender, IResource resource)
+        {
+            ResourceChanged?.Invoke(this, resource.Proxify(TypeController));
+        }
+
         #endregion
 
         #region IResourceManagement
@@ -182,6 +190,9 @@ namespace Moryx.Resources.Management
 
         /// <inheritdoc />
         public event EventHandler<ICapabilities> CapabilitiesChanged;
+
+        /// <inheritdoc />
+        public event EventHandler<IResource> ResourceChanged;
     }
 
 }

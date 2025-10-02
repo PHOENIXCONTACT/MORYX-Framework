@@ -18,6 +18,7 @@ namespace Moryx.Resources.Management
     /// </summary>
     public class ModuleController : ServerModuleBase<ModuleConfig>,
         IFacadeContainer<IResourceManagement>,
+        IFacadeContainer<IResourceManagementChanges>,
         IFacadeContainer<IResourceTypeTree>,
         IFacadeContainer<INotificationSource>
     {
@@ -104,7 +105,7 @@ namespace Moryx.Resources.Management
         private readonly ResourceManagementFacade _resourceManagementFacade = new ResourceManagementFacade();
         private readonly ResourceTypeTreeFacade _resourceTypeTreeFacade = new ResourceTypeTreeFacade();
         IResourceManagement IFacadeContainer<IResourceManagement>.Facade => _resourceManagementFacade;
-
+        IResourceManagementChanges IFacadeContainer<IResourceManagementChanges>.Facade => _resourceManagementFacade;
         IResourceTypeTree IFacadeContainer<IResourceTypeTree>.Facade => _resourceTypeTreeFacade;
 
         private readonly NotificationSourceFacade _notificationSourceFacade = new NotificationSourceFacade(ModuleName);
