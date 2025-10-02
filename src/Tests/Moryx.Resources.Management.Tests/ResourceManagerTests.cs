@@ -27,7 +27,6 @@ namespace Moryx.Resources.Management.Tests
         private ResourceGraph _graph;
         private ResourceManager _resourceManager;
         private Mock<IResourceInitializer> _initializerMock;
-
         private const string DatabaseResourceName = "Resource Mock";
 
         [SetUp]
@@ -64,8 +63,8 @@ namespace Moryx.Resources.Management.Tests
                 Graph = _graph,
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory())
             };
-
-            _typeControllerMock.Setup(tc => tc.Create(typeof(ResourceMock).ResourceType())).Returns(_resourceMock);
+            
+                _typeControllerMock.Setup(tc => tc.Create(typeof(ResourceMock).ResourceType())).Returns(_resourceMock);
             _typeControllerMock.Setup(tc => tc.Create(typeof(PublicResourceMock).ResourceType())).Returns(new PublicResourceMock()
             {
                 References = new ReferenceCollectionMock<IResource>()
@@ -210,6 +209,24 @@ namespace Moryx.Resources.Management.Tests
 
             Assert.IsNotNull(entity);
             Assert.AreEqual(testResource.Name, entity.Name);
+        }
+
+        [Test(Description = "Should notify facade listeners when resource is saved")]
+        public void RaiseResourceChangesOnSave()
+        {
+            // Arrange
+            var testResource = _graph.Instantiate<PublicResourceMock>();
+            int notifications = 0;
+            _resourceManager.ResourceChanged += (sender, resource) =>
+            {
+                notifications = +1;
+            };
+
+            // Act
+            _resourceManager.Save(testResource);
+
+            // Assert
+            Assert.That(notifications, Is.EqualTo(1));
         }
 
         [Test(Description = "Adds a resource while the ResourceManager was initialized but not started")]
