@@ -94,6 +94,7 @@
     "CANCEL": "CANCEL",
     "CLEAR": "CLEAR",
     "CREATE": "CREATE",
+    "ADD": "ADD",
     "OPERATION_NUMBER_INVALID": "The operation number must be 4 digits",
     "HINT": "Only products with a recipe can be selected here."
   },

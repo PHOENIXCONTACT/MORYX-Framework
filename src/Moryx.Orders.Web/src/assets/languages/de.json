@@ -94,6 +94,7 @@
     "CANCEL": "ABBRECHEN",
     "CLEAR": "ZURÜCKSETZEN",
     "CREATE": "ERSTELLEN",
+    "ADD": "HINZUFÜGEN",
     "OPERATION_NUMBER_INVALID": "Die Vorgangsnummer muss 4-stellig sein.",
     "HINT": "Nur Produkte mit einem Rezept können hier ausgewählt werden."
   },

@@ -94,6 +94,7 @@
     "CANCEL": "CANCELLA",
     "CLEAR": "PULISCI",
     "CREATE": "CREA",
+    "ADD": "AGGIUNGERE",
     "OPERATION_NUMBER_INVALID": "Il numero dell'operazione deve essere di 4 cifre",
     "HINT": "Sono visibili solo i prodotti che contengono una ricetta."
   },
