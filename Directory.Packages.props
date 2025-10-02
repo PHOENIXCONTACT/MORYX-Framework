@@ -24,6 +24,8 @@
 	  <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(dotnetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(dotnetVersion)" />
 
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="$(dotnetVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(dotnetVersion)" />

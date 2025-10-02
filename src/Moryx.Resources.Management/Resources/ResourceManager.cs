@@ -337,7 +337,6 @@ internal class ResourceManager : IResourceManager
         try
         {
             var isNew = resource.Id == 0;
-
             using var uow = UowFactory.Create();
             var newResources = new HashSet<Resource>();
 

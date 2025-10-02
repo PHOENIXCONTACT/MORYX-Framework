@@ -7,7 +7,7 @@ Afterwards you can create the environment using an implementation of the `Server
 The first two parameters are usually your `ModuleController` and your `ModuleConfig`.
 The following example shows a setup for the `IShiftManagement` facade interface. The module depends on the `IResourceManagement` and `IOperatorManagement` facades.
 
-```csharp
+```cs
 private ModuleConfig _config;
 private Mock<IResourceManagement> _resourceManagementMock;
 private Mock<IOperatorManagement> _operatorManagementMock;
@@ -28,7 +28,7 @@ public void SetUp()
 Using the created environment you can start and stop the module as you please.
 You can also retrieve the facade of the module to test all the functionalities the running module should provide.
 
-```csharp
+```cs
 [Test]
 public async Task Start_WhenModuleIsStopped_StartsModule()
 {
