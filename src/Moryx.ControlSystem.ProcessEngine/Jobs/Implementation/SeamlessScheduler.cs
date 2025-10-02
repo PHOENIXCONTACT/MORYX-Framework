@@ -83,7 +83,9 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
             var allJobs = startableJobs.ToList();
             // If the RunningSlot is currently assigned, with a completing job, we move it
-            if (_running.Target?.Classification == JobClassification.Completing && JobList.Next(_running.Target).IsCleanup())
+            var runningJob = _running.Target;
+            if (runningJob is not null &&
+                (IsCompletingProductionFollowedByCleanUp(_running.Target) || IsCompletingSetupNotFollowedByProduction(_running.Target)))
             {
                 // Move to completing slots
                 MoveToCompleting();
@@ -124,6 +126,14 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             }
         }
 
+        // WARNING: We assume production jobs following on a setup to be waiting already,
+        // as there is no direct reference between setup and its first production job
+        private bool IsCompletingSetupNotFollowedByProduction(Job target)
+            => target.Classification == JobClassification.Completing && target.IsPreparingSetup() && JobList.Next(target).Classification != JobClassification.Waiting;
+
+        private bool IsCompletingProductionFollowedByCleanUp(Job target)
+            => target.Classification == JobClassification.Completing && JobList.Next(target).IsCleanup();
+
         public override void JobUpdated(Job job, JobClassification classification)
         {
             // After restart we move jobs from resume slots to productive slots
@@ -150,8 +160,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             if (classification < JobClassification.Completing)
                 return;
 
-            // If the completed job was a cleanup, remove the slot
-            if (classification == JobClassification.Completed && job.IsCleanup() && _completingSlots.TryRelease(job))
+            // If the completed job was a cleanup or a setup which was moved to completing, remove the slot
+            if (classification == JobClassification.Completed && (job.IsCleanup() || job.IsSetup()) && _completingSlots.TryRelease(job))
             {
                 _completingSlots.TryResize(_completingSlots.Size - 1);
                 return;
@@ -159,8 +169,16 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
             // Find the next waiting job
             var next = JobList.Forward(job).FirstOrDefault(n => n.Classification == JobClassification.Waiting);
-            if (next == null)
+            if (next is null)
+            {
+                // There is a completing setup, for which the production job is gone, e.g. aborted
+                if(classification == JobClassification.Completing && job.IsSetup())
+                {
+                    MoveToCompleting(job);
+                    RaiseSlotAvailable();
+                }
                 return;
+            }
 
             if (_running.Target == job && next.SameRecipeAs(job))
             {
