@@ -11,13 +11,13 @@
         <span class="material-symbols-outlined">fullscreen</span>
       </button>
 
-      <mat-divider vertical *ngIf="textItems().length && mediaItems().length && !instructionStateService.getFullscreenState()"></mat-divider>
+      <mat-divider vertical *ngIf="textItems().length && mediaItems().length && !instructionStateService.fullscreen()"></mat-divider>
 
-      <div class="text-instruction-container" *ngIf="textItems().length && !instructionStateService.getFullscreenState()">
+      <div class="text-instruction-container" *ngIf="textItems().length && !instructionStateService.fullscreen()">
         <mat-card-title class="card-title">{{ displayedInstruction()?.sender }}</mat-card-title>
          <mat-card-content class="card-content">
           <div *ngFor="let item of textItems()">
-            <markdown [data]="item.content"></markdown>
+            <markdown [data]="item.content"  [disableSanitizer]="true"></markdown>
           </div>
         </mat-card-content>
         <div class="input-instructions" *ngIf="inputs()">

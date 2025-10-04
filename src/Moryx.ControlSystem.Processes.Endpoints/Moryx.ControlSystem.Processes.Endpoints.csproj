@@ -10,6 +10,7 @@
 	  <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
 	  <ProjectReference Include="..\Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj" />
 	  <ProjectReference Include="..\Moryx.ControlSystem\Moryx.ControlSystem.csproj" />
+	  <ProjectReference Include="..\Moryx.Factory\Moryx.Factory.csproj" />
 	</ItemGroup>
 	
 	<ItemGroup>

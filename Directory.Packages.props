@@ -5,61 +5,34 @@
     <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
     <RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">false</RestoreLockedMode>
     <CentralPackageFloatingVersionsEnabled>false</CentralPackageFloatingVersionsEnabled>
-    <!-- Set to true to allow floating versions if necessary. Only works with .net sdk >8.0.200 -->
   </PropertyGroup>
 	
-  <!-- Global version definitions need to be done here, this file is loaded before all others-->
   <PropertyGroup>
     <dotnetVersion>8.0.1</dotnetVersion>
-    <efCoreVersion>8.0.11</efCoreVersion>
+    <efCoreVersion>8.0.20</efCoreVersion>
 
-    <AspNetCoreVersion>8.0.11</AspNetCoreVersion>
+    <AspNetCoreVersion>8.0.20</AspNetCoreVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- Test libraries -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="Moq" Version="4.20.72" />
-    <PackageVersion Include="NUnit" Version="4.3.2" />
-    <PackageVersion Include="NUnit3TestAdapter" Version="5.0.0" />
-    <PackageVersion Include="NUnit.Analyzers" Version="4.6.0" />
-    <PackageVersion Include="WireMock.Net" Version="1.6.2" />
-    <PackageVersion Include="WireMock.Net.FluentAssertions" Version="1.5.62" />
+    <PackageVersion Include="NUnit" Version="4.4.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="5.1.0" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.10.0" />
+    <PackageVersion Include="WireMock.Net" Version="1.13.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
 
-    <!-- Bereits vorhandene Einträge (aus deiner Migration) -->
-    <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="$(AspNetCoreVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="$(dotnetVersion)" />
-	<PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-
+	  <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(dotnetVersion)" />
+    
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="$(AspNetCoreVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(AspNetCoreVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(AspNetCoreVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(AspNetCoreVersion)" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI" Version="$(AspNetCoreVersion)" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="$(AspNetCoreVersion)" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authorization" Version="$(AspNetCoreVersion)" />
-		
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
-    <PackageVersion Include="Microsoft.Identity.Web" Version="3.14.1" />
-    <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="3.14.1" />
-    <PackageVersion Include="Microsoft.Identity.Web.UI" Version="3.9.4" />
-		
-    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.7.115" />
-    <PackageVersion Include="JunitXml.TestLogger" Version="5.0.0" />
-
-    <!-- Übertragene Einträge aus Build.targets -->
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageVersion Include="CommandLineParser" Version="2.9.1" />
-    <PackageVersion Include="AutoMapper" Version="14.0.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.4" />
-		
-    <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(dotnetVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.FileExtensions" Version="$(dotnetVersion)" />
-    <PackageVersion Include="Microsoft.Data.Sqlite" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="$(AspNetCoreVersion)" />
 		
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(efCoreVersion)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(efCoreVersion)" />
@@ -67,15 +40,23 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="$(efCoreVersion)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="$(efCoreVersion)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(efCoreVersion)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="$(efCoreVersion)" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(efCoreVersion)" />
-		
-    <PackageVersion Include="System.IO.Ports" Version="$(dotnetVersion)" />
-    <PackageVersion Include="System.ComponentModel.Annotations" Version="5.0.0" />
-		
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+	  
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+    <PackageVersion Include="Microsoft.Identity.Web" Version="3.14.1" />
+    <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="3.14.1" />
+
+	  <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+	  
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageVersion Include="CommandLineParser" Version="2.9.1" />
+    <PackageVersion Include="AutoMapper" Version="14.0.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.4" />		
+				
     <PackageVersion Include="Castle.Windsor" Version="6.0.0" />
 
     <!-- Dependencies for drivers and adapters -->
+    <PackageVersion Include="System.IO.Ports" Version="8.0.0" />
     <PackageVersion Include="MQTTnet" Version="4.3.1.873" />
     <PackageVersion Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.376.213" />
 
@@ -84,7 +65,7 @@
     <PackageVersion Include="CsvHelper" Version="33.1.0" />
 
     <PackageVersion Include="MimeTypeMapOfficial" Version="1.0.17" />
-    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.8" />
+    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.11" />
 
   </ItemGroup>
 </Project>

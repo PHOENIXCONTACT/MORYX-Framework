@@ -31,6 +31,23 @@
     "EMPTY_STATE_HEADER": "Nessun processo attivo",
     "EMPTY_STATE_TEXT": "Avviate una produzione e i suoi processi saranno visualizzati qui."
   },
+  "WPCS":{
+      "OPERATION_SUCCEEDED": "Operazione riuscita",
+      "PROCESSES_TITLE": "Processi",
+      "PROCESS_HOLDER_GROUP_TITLE": "Gruppo titolare del processo",
+      "SEARCH": "Ricerca",
+      "COLLAPSE_ALL": "Comprimi tutto",
+      "EXPAND_ALL" : "Espandi tutto",
+      "NAME": "Nome",
+      "POSITION": "Posizione",
+      "POSITIONS": "Posizioni",
+      "ACTIVITY": "Attività",
+      "ORDER": "Ordine",
+      "PROCESS" : "Processo",
+      "RESET_POSITION": "Ripristina la posizione e torna allo stato iniziale. Tutte le informazioni sulla montatura vengono perse.",
+      "RESET_GROUP": "Reimposta l'intero gruppo",
+      "EMPTY_STATE_TEXT": "Nessun gruppo/posizione. Al momento non c'è nulla che richieda la tua attenzione."
+  },
   "DISMISS": "RIFIUTARE",
   "DEFAULT_MESSAGE": "Qualcosa è andato storto sul server.",
   "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controllare la connessione a Internet o le impostazioni del proxy."

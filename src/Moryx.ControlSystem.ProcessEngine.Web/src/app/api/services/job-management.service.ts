@@ -1,30 +1,33 @@
 /* tslint:disable */
 /* eslint-disable */
-import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import { ApiConfiguration } from '../api-configuration';
+import { map } from 'rxjs/operators';
+
 import { BaseService } from '../base-service';
-import { RequestBuilder } from '../request-builder';
+import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { JobModel } from '../models/job-model';
+import { abort } from '../fn/job-management/abort';
+import { Abort$Params } from '../fn/job-management/abort';
+import { complete } from '../fn/job-management/complete';
+import { Complete$Params } from '../fn/job-management/complete';
+import { getAll_1 } from '../fn/job-management/get-all-1';
+import { GetAll_1$Params } from '../fn/job-management/get-all-1';
+import { getJob } from '../fn/job-management/get-job';
+import { GetJob$Params } from '../fn/job-management/get-job';
+import { JobModel as MoryxControlSystemJobsEndpointsJobModel } from '../models/Moryx/ControlSystem/Jobs/Endpoints/job-model';
+import { progressStream } from '../fn/job-management/progress-stream';
+import { ProgressStream$Params } from '../fn/job-management/progress-stream';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class JobManagementService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
-  /**
-   * Path part for operation getJob
-   */
+  /** Path part for operation `getJob()` */
   static readonly GetJobPath = '/api/moryx/jobs/{jobId}';
 
   /**
@@ -33,97 +36,48 @@ export class JobManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getJob$Response(params: {
-    jobId: number;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<JobModel>> {
-
-    const rb = new RequestBuilder(this.rootUrl, JobManagementService.GetJobPath, 'get');
-    if (params) {
-      rb.path('jobId', params.jobId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<JobModel>;
-      })
-    );
+  getJob$Response(params: GetJob$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxControlSystemJobsEndpointsJobModel>> {
+    return getJob(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getJob$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getJob(params: {
-    jobId: number;
-    context?: HttpContext
-  }
-): Observable<JobModel> {
-
-    return this.getJob$Response(params).pipe(
-      map((r: StrictHttpResponse<JobModel>) => r.body as JobModel)
+  getJob(params: GetJob$Params, context?: HttpContext): Observable<MoryxControlSystemJobsEndpointsJobModel> {
+    return this.getJob$Response(params, context).pipe(
+      map((r: StrictHttpResponse<MoryxControlSystemJobsEndpointsJobModel>): MoryxControlSystemJobsEndpointsJobModel => r.body)
     );
   }
 
-  /**
-   * Path part for operation getAll
-   */
-  static readonly getAllPath = '/api/moryx/jobs';
+  /** Path part for operation `getAll_1()` */
+  static readonly GetAll_1Path = '/api/moryx/jobs';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getAll()` instead.
+   * To access only the response body, use `getAll_1()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAll$Response(params?: {
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<Array<JobModel>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, JobManagementService.getAllPath, 'get');
-    if (params) {
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<JobModel>>;
-      })
-    );
+  getAll_1$Response(params?: GetAll_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxControlSystemJobsEndpointsJobModel>>> {
+    return getAll_1(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `getAll$Response()` instead.
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getAll_1$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAll(params?: {
-    context?: HttpContext
-  }
-): Observable<Array<JobModel>> {
-
-    return this.getAll$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<JobModel>>) => r.body as Array<JobModel>)
+  getAll_1(params?: GetAll_1$Params, context?: HttpContext): Observable<Array<MoryxControlSystemJobsEndpointsJobModel>> {
+    return this.getAll_1$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<MoryxControlSystemJobsEndpointsJobModel>>): Array<MoryxControlSystemJobsEndpointsJobModel> => r.body)
     );
   }
 
-  /**
-   * Path part for operation complete
-   */
+  /** Path part for operation `complete()` */
   static readonly CompletePath = '/api/moryx/jobs/{jobId}/complete';
 
   /**
@@ -132,49 +86,23 @@ export class JobManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  complete$Response(params: {
-    jobId: number;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, JobManagementService.CompletePath, 'post');
-    if (params) {
-      rb.path('jobId', params.jobId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  complete$Response(params: Complete$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return complete(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `complete$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  complete(params: {
-    jobId: number;
-    context?: HttpContext
-  }
-): Observable<void> {
-
-    return this.complete$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  complete(params: Complete$Params, context?: HttpContext): Observable<void> {
+    return this.complete$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation abort
-   */
+  /** Path part for operation `abort()` */
   static readonly AbortPath = '/api/moryx/jobs/{jobId}/abort';
 
   /**
@@ -183,49 +111,23 @@ export class JobManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  abort$Response(params: {
-    jobId: number;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, JobManagementService.AbortPath, 'post');
-    if (params) {
-      rb.path('jobId', params.jobId, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  abort$Response(params: Abort$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return abort(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `abort$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  abort(params: {
-    jobId: number;
-    context?: HttpContext
-  }
-): Observable<void> {
-
-    return this.abort$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  abort(params: Abort$Params, context?: HttpContext): Observable<void> {
+    return this.abort$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation progressStream
-   */
+  /** Path part for operation `progressStream()` */
   static readonly ProgressStreamPath = '/api/moryx/jobs/stream';
 
   /**
@@ -234,40 +136,19 @@ export class JobManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  progressStream$Response(params?: {
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, JobManagementService.ProgressStreamPath, 'get');
-    if (params) {
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  progressStream$Response(params?: ProgressStream$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return progressStream(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `progressStream$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  progressStream(params?: {
-    context?: HttpContext
-  }
-): Observable<void> {
-
-    return this.progressStream$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  progressStream(params?: ProgressStream$Params, context?: HttpContext): Observable<void> {
+    return this.progressStream$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

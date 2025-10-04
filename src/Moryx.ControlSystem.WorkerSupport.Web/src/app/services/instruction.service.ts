@@ -71,7 +71,7 @@ export class InstructionService {
     const url = window.URL.createObjectURL(downloadedFile);
     return {
       type: data.body?.type,
-      url: data.body?.type == 'application/pdf' ? url : this.sanitizer.bypassSecurityTrustUrl(url),
+      url: data.body?.type == 'application/pdf' || 'text/html' ? url : this.sanitizer.bypassSecurityTrustUrl(url),
     } as DisplayedMediaContent;
   }
 }

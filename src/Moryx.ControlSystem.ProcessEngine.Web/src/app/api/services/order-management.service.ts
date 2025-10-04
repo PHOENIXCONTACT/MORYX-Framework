@@ -1,41 +1,71 @@
 /* tslint:disable */
 /* eslint-disable */
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse, HttpContext } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
 
-import { AdviceContext } from '../models/advice-context';
-import { AdviceModel } from '../models/advice-model';
-import { BeginContext } from '../models/begin-context';
-import { BeginModel } from '../models/begin-model';
-import { DocumentModel } from '../models/document-model';
-import { OperationCreationContextModel } from '../models/operation-creation-context-model';
-import { OperationLogMessageModel } from '../models/operation-log-message-model';
-import { OperationModel } from '../models/operation-model';
-import { OperationRecipeModel } from '../models/operation-recipe-model';
-import { ProductPartModel } from '../models/product-part-model';
-import { ReportContext } from '../models/report-context';
-import { ReportModel } from '../models/report-model';
+import { abortOperation } from '../fn/order-management/abort-operation';
+import { AbortOperation$Params } from '../fn/order-management/abort-operation';
+import { addOperation } from '../fn/order-management/add-operation';
+import { AddOperation$Params } from '../fn/order-management/add-operation';
+import { adviceOperation } from '../fn/order-management/advice-operation';
+import { AdviceOperation$Params } from '../fn/order-management/advice-operation';
+import { beginOperation } from '../fn/order-management/begin-operation';
+import { BeginOperation$Params } from '../fn/order-management/begin-operation';
+import { getAdviceContext } from '../fn/order-management/get-advice-context';
+import { GetAdviceContext$Params } from '../fn/order-management/get-advice-context';
+import { getAssignableRecipes } from '../fn/order-management/get-assignable-recipes';
+import { GetAssignableRecipes$Params } from '../fn/order-management/get-assignable-recipes';
+import { getBeginContext } from '../fn/order-management/get-begin-context';
+import { GetBeginContext$Params } from '../fn/order-management/get-begin-context';
+import { getDocuments } from '../fn/order-management/get-documents';
+import { GetDocuments$Params } from '../fn/order-management/get-documents';
+import { getDocumentStream } from '../fn/order-management/get-document-stream';
+import { GetDocumentStream$Params } from '../fn/order-management/get-document-stream';
+import { getInterruptContext } from '../fn/order-management/get-interrupt-context';
+import { GetInterruptContext$Params } from '../fn/order-management/get-interrupt-context';
+import { getLogs } from '../fn/order-management/get-logs';
+import { GetLogs$Params } from '../fn/order-management/get-logs';
+import { getOperation } from '../fn/order-management/get-operation';
+import { GetOperation$Params } from '../fn/order-management/get-operation';
+import { getOperations } from '../fn/order-management/get-operations';
+import { GetOperations$Params } from '../fn/order-management/get-operations';
+import { getProductParts } from '../fn/order-management/get-product-parts';
+import { GetProductParts$Params } from '../fn/order-management/get-product-parts';
+import { getReportContext } from '../fn/order-management/get-report-context';
+import { GetReportContext$Params } from '../fn/order-management/get-report-context';
+import { interruptOperation } from '../fn/order-management/interrupt-operation';
+import { InterruptOperation$Params } from '../fn/order-management/interrupt-operation';
+import { AdviceContext as MoryxOrdersAdviceContext } from '../models/Moryx/Orders/advice-context';
+import { BeginContext as MoryxOrdersBeginContext } from '../models/Moryx/Orders/begin-context';
+import { DocumentModel as MoryxOrdersEndpointsDocumentModel } from '../models/Moryx/Orders/Endpoints/document-model';
+import { OperationChangedModel as MoryxOrdersEndpointsModelsOperationChangedModel } from '../models/Moryx/Orders/Endpoints/Models/operation-changed-model';
+import { OperationLogMessageModel as MoryxOrdersEndpointsOperationLogMessageModel } from '../models/Moryx/Orders/Endpoints/operation-log-message-model';
+import { OperationModel as MoryxOrdersEndpointsOperationModel } from '../models/Moryx/Orders/Endpoints/operation-model';
+import { OperationRecipeModel as MoryxOrdersEndpointsOperationRecipeModel } from '../models/Moryx/Orders/Endpoints/operation-recipe-model';
+import { ProductPartModel as MoryxOrdersEndpointsProductPartModel } from '../models/Moryx/Orders/Endpoints/product-part-model';
+import { ReportContext as MoryxOrdersReportContext } from '../models/Moryx/Orders/report-context';
+import { operationStream } from '../fn/order-management/operation-stream';
+import { OperationStream$Params } from '../fn/order-management/operation-stream';
+import { reload } from '../fn/order-management/reload';
+import { Reload$Params } from '../fn/order-management/reload';
+import { reportOperation } from '../fn/order-management/report-operation';
+import { ReportOperation$Params } from '../fn/order-management/report-operation';
+import { setOperationSortOrder } from '../fn/order-management/set-operation-sort-order';
+import { SetOperationSortOrder$Params } from '../fn/order-management/set-operation-sort-order';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class OrderManagementService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
-  /**
-   * Path part for operation getOperations
-   */
+  /** Path part for operation `getOperations()` */
   static readonly GetOperationsPath = '/api/moryx/orders';
 
   /**
@@ -44,52 +74,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getOperations$Response(params?: {
-    orderNumber?: string;
-    operationNumber?: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<Array<OperationModel>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.GetOperationsPath, 'get');
-    if (params) {
-      rb.query('orderNumber', params.orderNumber, {});
-      rb.query('operationNumber', params.operationNumber, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<OperationModel>>;
-      })
-    );
+  getOperations$Response(params?: GetOperations$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOrdersEndpointsOperationModel>>> {
+    return getOperations(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getOperations$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getOperations(params?: {
-    orderNumber?: string;
-    operationNumber?: string;
-    context?: HttpContext
-  }
-): Observable<Array<OperationModel>> {
-
-    return this.getOperations$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<OperationModel>>) => r.body as Array<OperationModel>)
+  getOperations(params?: GetOperations$Params, context?: HttpContext): Observable<Array<MoryxOrdersEndpointsOperationModel>> {
+    return this.getOperations$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<MoryxOrdersEndpointsOperationModel>>): Array<MoryxOrdersEndpointsOperationModel> => r.body)
     );
   }
 
-  /**
-   * Path part for operation addOperation
-   */
+  /** Path part for operation `addOperation()` */
   static readonly AddOperationPath = '/api/moryx/orders';
 
   /**
@@ -98,52 +99,48 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  addOperation$Response(params?: {
-    sourceId?: string;
-    context?: HttpContext
-    body?: OperationCreationContextModel
-  }
-): Observable<StrictHttpResponse<OperationModel>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.AddOperationPath, 'post');
-    if (params) {
-      rb.query('sourceId', params.sourceId, {});
-      rb.body(params.body, 'application/*+json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<OperationModel>;
-      })
-    );
+  addOperation$Response(params?: AddOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersEndpointsOperationModel>> {
+    return addOperation(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `addOperation$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  addOperation(params?: {
-    sourceId?: string;
-    context?: HttpContext
-    body?: OperationCreationContextModel
-  }
-): Observable<OperationModel> {
-
-    return this.addOperation$Response(params).pipe(
-      map((r: StrictHttpResponse<OperationModel>) => r.body as OperationModel)
+  addOperation(params?: AddOperation$Params, context?: HttpContext): Observable<MoryxOrdersEndpointsOperationModel> {
+    return this.addOperation$Response(params, context).pipe(
+      map((r: StrictHttpResponse<MoryxOrdersEndpointsOperationModel>): MoryxOrdersEndpointsOperationModel => r.body)
     );
   }
 
+  /** Path part for operation `operationStream()` */
+  static readonly OperationStreamPath = '/api/moryx/orders/stream';
+
   /**
-   * Path part for operation getOperation
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `operationStream()` instead.
+   *
+   * This method doesn't expect any request body.
    */
+  operationStream$Response(params?: OperationStream$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersEndpointsModelsOperationChangedModel>> {
+    return operationStream(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `operationStream$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  operationStream(params?: OperationStream$Params, context?: HttpContext): Observable<MoryxOrdersEndpointsModelsOperationChangedModel> {
+    return this.operationStream$Response(params, context).pipe(
+      map((r: StrictHttpResponse<MoryxOrdersEndpointsModelsOperationChangedModel>): MoryxOrdersEndpointsModelsOperationChangedModel => r.body)
+    );
+  }
+
+  /** Path part for operation `getOperation()` */
   static readonly GetOperationPath = '/api/moryx/orders/{guid}';
 
   /**
@@ -152,49 +149,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getOperation$Response(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<OperationModel>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.GetOperationPath, 'get');
-    if (params) {
-      rb.path('guid', params.guid, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<OperationModel>;
-      })
-    );
+  getOperation$Response(params: GetOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersEndpointsOperationModel>> {
+    return getOperation(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getOperation$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getOperation(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<OperationModel> {
-
-    return this.getOperation$Response(params).pipe(
-      map((r: StrictHttpResponse<OperationModel>) => r.body as OperationModel)
+  getOperation(params: GetOperation$Params, context?: HttpContext): Observable<MoryxOrdersEndpointsOperationModel> {
+    return this.getOperation$Response(params, context).pipe(
+      map((r: StrictHttpResponse<MoryxOrdersEndpointsOperationModel>): MoryxOrdersEndpointsOperationModel => r.body)
     );
   }
 
-  /**
-   * Path part for operation getDocuments
-   */
+  /** Path part for operation `getDocuments()` */
   static readonly GetDocumentsPath = '/api/moryx/orders/{guid}/documents';
 
   /**
@@ -203,49 +174,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDocuments$Response(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<Array<DocumentModel>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.GetDocumentsPath, 'get');
-    if (params) {
-      rb.path('guid', params.guid, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<DocumentModel>>;
-      })
-    );
+  getDocuments$Response(params: GetDocuments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOrdersEndpointsDocumentModel>>> {
+    return getDocuments(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getDocuments$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getDocuments(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<Array<DocumentModel>> {
-
-    return this.getDocuments$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<DocumentModel>>) => r.body as Array<DocumentModel>)
+  getDocuments(params: GetDocuments$Params, context?: HttpContext): Observable<Array<MoryxOrdersEndpointsDocumentModel>> {
+    return this.getDocuments$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<MoryxOrdersEndpointsDocumentModel>>): Array<MoryxOrdersEndpointsDocumentModel> => r.body)
     );
   }
 
-  /**
-   * Path part for operation getDocumentStream
-   */
+  /** Path part for operation `getDocumentStream()` */
   static readonly GetDocumentStreamPath = '/api/moryx/orders/{guid}/document/{identifier}/stream';
 
   /**
@@ -254,52 +199,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDocumentStream$Response(params: {
-    guid: string;
-    identifier: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<Blob>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.GetDocumentStreamPath, 'get');
-    if (params) {
-      rb.path('guid', params.guid, {});
-      rb.path('identifier', params.identifier, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'blob',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Blob>;
-      })
-    );
+  getDocumentStream$Response(params: GetDocumentStream$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
+    return getDocumentStream(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getDocumentStream$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getDocumentStream(params: {
-    guid: string;
-    identifier: string;
-    context?: HttpContext
-  }
-): Observable<Blob> {
-
-    return this.getDocumentStream$Response(params).pipe(
-      map((r: StrictHttpResponse<Blob>) => r.body as Blob)
+  getDocumentStream(params: GetDocumentStream$Params, context?: HttpContext): Observable<Blob> {
+    return this.getDocumentStream$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Blob>): Blob => r.body)
     );
   }
 
-  /**
-   * Path part for operation getProductParts
-   */
+  /** Path part for operation `getProductParts()` */
   static readonly GetProductPartsPath = '/api/moryx/orders/{guid}/productparts';
 
   /**
@@ -308,49 +224,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getProductParts$Response(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<Array<ProductPartModel>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.GetProductPartsPath, 'get');
-    if (params) {
-      rb.path('guid', params.guid, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<ProductPartModel>>;
-      })
-    );
+  getProductParts$Response(params: GetProductParts$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOrdersEndpointsProductPartModel>>> {
+    return getProductParts(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getProductParts$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getProductParts(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<Array<ProductPartModel>> {
-
-    return this.getProductParts$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<ProductPartModel>>) => r.body as Array<ProductPartModel>)
+  getProductParts(params: GetProductParts$Params, context?: HttpContext): Observable<Array<MoryxOrdersEndpointsProductPartModel>> {
+    return this.getProductParts$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<MoryxOrdersEndpointsProductPartModel>>): Array<MoryxOrdersEndpointsProductPartModel> => r.body)
     );
   }
 
-  /**
-   * Path part for operation getBeginContext
-   */
+  /** Path part for operation `getBeginContext()` */
   static readonly GetBeginContextPath = '/api/moryx/orders/{guid}/begin';
 
   /**
@@ -359,49 +249,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getBeginContext$Response(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<BeginContext>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.GetBeginContextPath, 'get');
-    if (params) {
-      rb.path('guid', params.guid, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<BeginContext>;
-      })
-    );
+  getBeginContext$Response(params: GetBeginContext$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersBeginContext>> {
+    return getBeginContext(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getBeginContext$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getBeginContext(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<BeginContext> {
-
-    return this.getBeginContext$Response(params).pipe(
-      map((r: StrictHttpResponse<BeginContext>) => r.body as BeginContext)
+  getBeginContext(params: GetBeginContext$Params, context?: HttpContext): Observable<MoryxOrdersBeginContext> {
+    return this.getBeginContext$Response(params, context).pipe(
+      map((r: StrictHttpResponse<MoryxOrdersBeginContext>): MoryxOrdersBeginContext => r.body)
     );
   }
 
-  /**
-   * Path part for operation beginOperation
-   */
+  /** Path part for operation `beginOperation()` */
   static readonly BeginOperationPath = '/api/moryx/orders/{guid}/begin';
 
   /**
@@ -410,52 +274,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  beginOperation$Response(params: {
-    guid: string;
-    context?: HttpContext
-    body?: BeginModel
-  }
-): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.BeginOperationPath, 'post');
-    if (params) {
-      rb.path('guid', params.guid, {});
-      rb.body(params.body, 'application/*+json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  beginOperation$Response(params: BeginOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return beginOperation(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `beginOperation$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  beginOperation(params: {
-    guid: string;
-    context?: HttpContext
-    body?: BeginModel
-  }
-): Observable<void> {
-
-    return this.beginOperation$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  beginOperation(params: BeginOperation$Params, context?: HttpContext): Observable<void> {
+    return this.beginOperation$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation getReportContext
-   */
+  /** Path part for operation `getReportContext()` */
   static readonly GetReportContextPath = '/api/moryx/orders/{guid}/report';
 
   /**
@@ -464,49 +299,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getReportContext$Response(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<ReportContext>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.GetReportContextPath, 'get');
-    if (params) {
-      rb.path('guid', params.guid, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<ReportContext>;
-      })
-    );
+  getReportContext$Response(params: GetReportContext$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersReportContext>> {
+    return getReportContext(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getReportContext$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getReportContext(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<ReportContext> {
-
-    return this.getReportContext$Response(params).pipe(
-      map((r: StrictHttpResponse<ReportContext>) => r.body as ReportContext)
+  getReportContext(params: GetReportContext$Params, context?: HttpContext): Observable<MoryxOrdersReportContext> {
+    return this.getReportContext$Response(params, context).pipe(
+      map((r: StrictHttpResponse<MoryxOrdersReportContext>): MoryxOrdersReportContext => r.body)
     );
   }
 
-  /**
-   * Path part for operation reportOperation
-   */
+  /** Path part for operation `reportOperation()` */
   static readonly ReportOperationPath = '/api/moryx/orders/{guid}/report';
 
   /**
@@ -515,52 +324,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  reportOperation$Response(params: {
-    guid: string;
-    context?: HttpContext
-    body?: ReportModel
-  }
-): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.ReportOperationPath, 'post');
-    if (params) {
-      rb.path('guid', params.guid, {});
-      rb.body(params.body, 'application/*+json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  reportOperation$Response(params: ReportOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return reportOperation(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `reportOperation$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  reportOperation(params: {
-    guid: string;
-    context?: HttpContext
-    body?: ReportModel
-  }
-): Observable<void> {
-
-    return this.reportOperation$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  reportOperation(params: ReportOperation$Params, context?: HttpContext): Observable<void> {
+    return this.reportOperation$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation getInterruptContext
-   */
+  /** Path part for operation `getInterruptContext()` */
   static readonly GetInterruptContextPath = '/api/moryx/orders/{guid}/interrupt';
 
   /**
@@ -569,49 +349,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getInterruptContext$Response(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<ReportContext>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.GetInterruptContextPath, 'get');
-    if (params) {
-      rb.path('guid', params.guid, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<ReportContext>;
-      })
-    );
+  getInterruptContext$Response(params: GetInterruptContext$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersReportContext>> {
+    return getInterruptContext(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getInterruptContext$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getInterruptContext(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<ReportContext> {
-
-    return this.getInterruptContext$Response(params).pipe(
-      map((r: StrictHttpResponse<ReportContext>) => r.body as ReportContext)
+  getInterruptContext(params: GetInterruptContext$Params, context?: HttpContext): Observable<MoryxOrdersReportContext> {
+    return this.getInterruptContext$Response(params, context).pipe(
+      map((r: StrictHttpResponse<MoryxOrdersReportContext>): MoryxOrdersReportContext => r.body)
     );
   }
 
-  /**
-   * Path part for operation interruptOperation
-   */
+  /** Path part for operation `interruptOperation()` */
   static readonly InterruptOperationPath = '/api/moryx/orders/{guid}/interrupt';
 
   /**
@@ -620,52 +374,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  interruptOperation$Response(params: {
-    guid: string;
-    context?: HttpContext
-    body?: ReportModel
-  }
-): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.InterruptOperationPath, 'post');
-    if (params) {
-      rb.path('guid', params.guid, {});
-      rb.body(params.body, 'application/*+json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  interruptOperation$Response(params: InterruptOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return interruptOperation(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `interruptOperation$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  interruptOperation(params: {
-    guid: string;
-    context?: HttpContext
-    body?: ReportModel
-  }
-): Observable<void> {
-
-    return this.interruptOperation$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  interruptOperation(params: InterruptOperation$Params, context?: HttpContext): Observable<void> {
+    return this.interruptOperation$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation getAdviceContext
-   */
+  /** Path part for operation `getAdviceContext()` */
   static readonly GetAdviceContextPath = '/api/moryx/orders/{guid}/advice';
 
   /**
@@ -674,49 +399,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAdviceContext$Response(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<AdviceContext>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.GetAdviceContextPath, 'get');
-    if (params) {
-      rb.path('guid', params.guid, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<AdviceContext>;
-      })
-    );
+  getAdviceContext$Response(params: GetAdviceContext$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersAdviceContext>> {
+    return getAdviceContext(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getAdviceContext$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAdviceContext(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<AdviceContext> {
-
-    return this.getAdviceContext$Response(params).pipe(
-      map((r: StrictHttpResponse<AdviceContext>) => r.body as AdviceContext)
+  getAdviceContext(params: GetAdviceContext$Params, context?: HttpContext): Observable<MoryxOrdersAdviceContext> {
+    return this.getAdviceContext$Response(params, context).pipe(
+      map((r: StrictHttpResponse<MoryxOrdersAdviceContext>): MoryxOrdersAdviceContext => r.body)
     );
   }
 
-  /**
-   * Path part for operation adviceOperation
-   */
+  /** Path part for operation `adviceOperation()` */
   static readonly AdviceOperationPath = '/api/moryx/orders/{guid}/advice';
 
   /**
@@ -725,52 +424,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  adviceOperation$Response(params: {
-    guid: string;
-    context?: HttpContext
-    body?: AdviceModel
-  }
-): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.AdviceOperationPath, 'post');
-    if (params) {
-      rb.path('guid', params.guid, {});
-      rb.body(params.body, 'application/*+json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  adviceOperation$Response(params: AdviceOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return adviceOperation(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `adviceOperation$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  adviceOperation(params: {
-    guid: string;
-    context?: HttpContext
-    body?: AdviceModel
-  }
-): Observable<void> {
-
-    return this.adviceOperation$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  adviceOperation(params: AdviceOperation$Params, context?: HttpContext): Observable<void> {
+    return this.adviceOperation$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation getLogs
-   */
+  /** Path part for operation `getLogs()` */
   static readonly GetLogsPath = '/api/moryx/orders/{guid}/logs';
 
   /**
@@ -779,49 +449,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getLogs$Response(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<Array<OperationLogMessageModel>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.GetLogsPath, 'get');
-    if (params) {
-      rb.path('guid', params.guid, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<OperationLogMessageModel>>;
-      })
-    );
+  getLogs$Response(params: GetLogs$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOrdersEndpointsOperationLogMessageModel>>> {
+    return getLogs(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getLogs$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getLogs(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<Array<OperationLogMessageModel>> {
-
-    return this.getLogs$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<OperationLogMessageModel>>) => r.body as Array<OperationLogMessageModel>)
+  getLogs(params: GetLogs$Params, context?: HttpContext): Observable<Array<MoryxOrdersEndpointsOperationLogMessageModel>> {
+    return this.getLogs$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<MoryxOrdersEndpointsOperationLogMessageModel>>): Array<MoryxOrdersEndpointsOperationLogMessageModel> => r.body)
     );
   }
 
-  /**
-   * Path part for operation getAssignableRecipes
-   */
+  /** Path part for operation `getAssignableRecipes()` */
   static readonly GetAssignableRecipesPath = '/api/moryx/orders/recipes';
 
   /**
@@ -830,52 +474,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAssignableRecipes$Response(params?: {
-    identifier?: string;
-    revision?: number;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<Array<OperationRecipeModel>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.GetAssignableRecipesPath, 'get');
-    if (params) {
-      rb.query('identifier', params.identifier, {});
-      rb.query('revision', params.revision, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<OperationRecipeModel>>;
-      })
-    );
+  getAssignableRecipes$Response(params?: GetAssignableRecipes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOrdersEndpointsOperationRecipeModel>>> {
+    return getAssignableRecipes(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getAssignableRecipes$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAssignableRecipes(params?: {
-    identifier?: string;
-    revision?: number;
-    context?: HttpContext
-  }
-): Observable<Array<OperationRecipeModel>> {
-
-    return this.getAssignableRecipes$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<OperationRecipeModel>>) => r.body as Array<OperationRecipeModel>)
+  getAssignableRecipes(params?: GetAssignableRecipes$Params, context?: HttpContext): Observable<Array<MoryxOrdersEndpointsOperationRecipeModel>> {
+    return this.getAssignableRecipes$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<MoryxOrdersEndpointsOperationRecipeModel>>): Array<MoryxOrdersEndpointsOperationRecipeModel> => r.body)
     );
   }
 
-  /**
-   * Path part for operation abortOperation
-   */
+  /** Path part for operation `abortOperation()` */
   static readonly AbortOperationPath = '/api/moryx/orders/{guid}/abort';
 
   /**
@@ -884,49 +499,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  abortOperation$Response(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.AbortOperationPath, 'post');
-    if (params) {
-      rb.path('guid', params.guid, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  abortOperation$Response(params: AbortOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return abortOperation(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `abortOperation$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  abortOperation(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<void> {
-
-    return this.abortOperation$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  abortOperation(params: AbortOperation$Params, context?: HttpContext): Observable<void> {
+    return this.abortOperation$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation setOperationSortOrder
-   */
+  /** Path part for operation `setOperationSortOrder()` */
   static readonly SetOperationSortOrderPath = '/api/moryx/orders/{guid}/position';
 
   /**
@@ -935,52 +524,23 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  setOperationSortOrder$Response(params: {
-    guid: string;
-    context?: HttpContext
-    body?: number
-  }
-): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.SetOperationSortOrderPath, 'put');
-    if (params) {
-      rb.path('guid', params.guid, {});
-      rb.body(params.body, 'application/*+json');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  setOperationSortOrder$Response(params: SetOperationSortOrder$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return setOperationSortOrder(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `setOperationSortOrder$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  setOperationSortOrder(params: {
-    guid: string;
-    context?: HttpContext
-    body?: number
-  }
-): Observable<void> {
-
-    return this.setOperationSortOrder$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  setOperationSortOrder(params: SetOperationSortOrder$Params, context?: HttpContext): Observable<void> {
+    return this.setOperationSortOrder$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation reload
-   */
+  /** Path part for operation `reload()` */
   static readonly ReloadPath = '/api/moryx/orders/{guid}/reload';
 
   /**
@@ -989,43 +549,19 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  reload$Response(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, OrderManagementService.ReloadPath, 'put');
-    if (params) {
-      rb.path('guid', params.guid, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: params?.context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  reload$Response(params: Reload$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return reload(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `reload$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  reload(params: {
-    guid: string;
-    context?: HttpContext
-  }
-): Observable<void> {
-
-    return this.reload$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  reload(params: Reload$Params, context?: HttpContext): Observable<void> {
+    return this.reload$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

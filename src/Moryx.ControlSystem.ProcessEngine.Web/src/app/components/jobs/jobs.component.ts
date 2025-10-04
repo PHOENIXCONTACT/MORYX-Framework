@@ -1,6 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, importProvidersFrom, OnInit, signal } from "@angular/core";
-import { JobModel, OperationModel } from "src/app/api/models";
 import {
   JobManagementService,
   OrderManagementService,
@@ -26,6 +25,8 @@ import { ProcessesComponent } from "../processes/processes.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatButtonModule } from "@angular/material/button";
+import { JobModel } from "src/app/api/models/Moryx/ControlSystem/Jobs/Endpoints/job-model";
+import { OperationModel } from "src/app/api/models/Moryx/Orders/Endpoints/operation-model";
 
 @Component({
   selector: "app-jobs",
@@ -110,7 +111,7 @@ export class JobsComponent implements OnInit {
   }
 
   private fetchJobs() {
-    this.jobManagementService.getAll().subscribe({
+    this.jobManagementService.getAll_1().subscribe({
       next: (data) => {
         this.jobCollection.update(_=> data.map((model) => new JobViewModel(model)));
         this.isLoading.update(_=> false);

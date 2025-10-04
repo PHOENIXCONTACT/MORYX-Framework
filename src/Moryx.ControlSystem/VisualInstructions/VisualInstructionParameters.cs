@@ -11,13 +11,18 @@ namespace Moryx.ControlSystem.VisualInstructions
     /// Provides parameters with visual instructions
     /// </summary>
     [DataContract]
-    public class VisualInstructionParameters : Parameters, IVisualInstructions
+    public class VisualInstructionParameters : Parameters
     {
         /// <summary>
         /// All instructions for this activity, if it used as a visual activity
         /// </summary>
         [EntrySerialize, DataMember]
         public VisualInstruction[] Instructions { get; set; }
+
+        /// <summary>
+        /// Inputs for this activity.
+        /// </summary>
+        public object Inputs { get; set; }
 
         /// <summary>
         /// Binder to resolve visual instruction bindings

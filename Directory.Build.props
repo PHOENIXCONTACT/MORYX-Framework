@@ -1,18 +1,25 @@
 <Project>
-  <PropertyGroup>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+	<Import Project=".build\Common.props" Condition="'$(IsPackable)' == 'true'" />
+	
+	<PropertyGroup>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+	<PropertyGroup>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<!-- Package refereces for all projects if IsPackable=true -->
+	<ItemGroup Condition="'$(IsPackable)' == 'true'">
+		<PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+	</ItemGroup>
 
 </Project>

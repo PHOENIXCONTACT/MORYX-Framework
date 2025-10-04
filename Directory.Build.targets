@@ -1,21 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-  <Import Project=".build\Common.props" Condition="'$(IsPackable)' == 'true'" />
-
-  <!-- Package refereces for all projects if IsPackable=true -->
-  <ItemGroup Condition="'$(IsPackable)' == 'true'">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
-  </ItemGroup>
-
-	<!-- Package versions for package references across all projects -->
 	<ItemGroup>
-		<!-- MORYX Core dependencies -->
-		
-		<!-- Asp.Net Core dependencies -->
+		<!-- Asp.Net Core Framework dependency -->
 		<FrameworkReference Update="Microsoft.AspNetCore.App" Version="$(AspNetCoreVersion)" />
-		
-		<!-- Other 3rd Party Dependencies -->
 	</ItemGroup>
 
 </Project>

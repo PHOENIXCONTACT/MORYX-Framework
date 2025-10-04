@@ -11,6 +11,9 @@
   [url]="selectedContent()?.url ?? ''"
   class="media-content-detail-image"
 ></ngx-doc-viewer>
+  <iframe style="width: 100%; height: calc(100vh - 300px); border: 0px"
+    *ngIf="selectedContent()?.type?.includes('text/html')" 
+    [src]="getSafeUrl(selectedContent()?.url!)">Your browser doesn't support Iframe</iframe>
  </div>
 <div class="media-navigation" *ngIf="medias().length > 1">
       <button
