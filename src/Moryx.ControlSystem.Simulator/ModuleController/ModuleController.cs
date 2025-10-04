@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -9,7 +9,7 @@ using Moryx.ControlSystem.Processes;
 using Moryx.Runtime.Modules;
 using System.ComponentModel;
 
-namespace Moryx.Simulation.Simulator
+namespace Moryx.ControlSystem.Simulator
 {
     /// <summary>
     /// The main module class for the Simulation.

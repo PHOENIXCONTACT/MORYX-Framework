@@ -259,7 +259,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.ProcessData.InfluxDbL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.ProcessData.SpreadsheetsListener.Tests", "src\Tests\Moryx.ProcessData.SpreadsheetsListener.Tests\Moryx.ProcessData.SpreadsheetsListener.Tests.csproj", "{0470D9C6-FEE3-4D84-AB66-55BC0A90B36E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Simulation.Simulator", "src\Moryx.Simulation.Simulator\Moryx.Simulation.Simulator.csproj", "{ED68454D-5302-4F4F-A5C5-EC5AD178D627}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.ControlSystem.Simulator", "src\Moryx.ControlSystem.Simulator\Moryx.ControlSystem.Simulator.csproj", "{ED68454D-5302-4F4F-A5C5-EC5AD178D627}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Drivers.Simulation", "src\Moryx.Drivers.Simulation\Moryx.Drivers.Simulation.csproj", "{FE8335A2-7C38-45AF-8C8D-5484C8D58165}"
 EndProject
@@ -965,8 +965,8 @@ Global
 		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF} = {8517D209-5BC1-47BD-A7C7-9CF9ADD9F5B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		    RESX_ShowErrorsInErrorList = True
-		RESX_TaskErrorCategory = Message
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		
+		RESX_TaskErrorCategory = Message
+		    RESX_ShowErrorsInErrorList = True
 	EndGlobalSection
 EndGlobal

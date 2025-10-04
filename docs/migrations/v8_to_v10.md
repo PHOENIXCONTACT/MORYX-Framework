@@ -7,3 +7,10 @@ In *Moryx.Factory* **6.3** and **8.1** we introduced the new result object and o
 ## Replaced `IVisualInstructions` with `VisualInstructionParameters`
 The interface was only used in `VisualInstructionParameters` which can and is being used as a base class in most cases anyway.
 Hence, `IVisualInstructions` is removed in favor of a more extendable base class.
+
+## Integration of Moryx.Simulation into Moryx.ControlSystem
+
+To reduce the number of API packages and simplify the overall architecture, **Moryx.Simulation** has been integrated into **Moryx.ControlSystem** starting with Moryx 10. All simulation-related APIs and functionality are now part of the Moryx.ControlSystem package. This change streamlines dependency management and makes it easier to maintain and extend simulation features within the control system context.
+
+The simulator module has also been renamed, and its namespace and package id have changed accordingly to reflect its new location within Moryx.ControlSystem.
+

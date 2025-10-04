@@ -1,11 +1,11 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
-using Moryx.Simulation.Simulator;
+using Moryx.ControlSystem.Simulator;
 using Moq;
 using NUnit.Framework;
 using Moryx.Logging;
@@ -16,6 +16,7 @@ namespace Moryx.Simulation.Tests
 {
     internal class BaseTest
     {
+
         protected ModuleConfig _moduleConfig;
         protected Mock<IModuleLogger> _simulationLoggerMock;
         protected Mock<IProcessControl> _processControlMock;
