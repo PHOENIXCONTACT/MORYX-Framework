@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json.Serialization;
 using Moryx.Serialization;
 using System.Threading.Channels;
+using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.ControlSystem.VisualInstructions.Endpoints
 {
@@ -24,7 +25,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
     public class WorkerSupportController : ControllerBase
     {
         private const string CookieName = "moryx-client-identifier";
-        private readonly IWorkerSupport _workerSupport;
+        private readonly IResourceManagement _resourceMgmt;
 
         private static readonly JsonSerializerSettings _serializerSettings = CreateSerializerSettings();
 
@@ -36,13 +37,14 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
             return serializerSettings;
         }
 
-        public WorkerSupportController(IWorkerSupport workerSupport)
-            => _workerSupport = workerSupport;
+        public WorkerSupportController(IResourceManagement resourceManagement)
+            => _resourceMgmt = resourceManagement;
 
         [HttpGet("stream")]
         [ProducesResponseType(typeof(InstructionModel[]), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [Authorize(Policy = VisualInstructionPermissions.CanView)]
+
         public async Task InstructionStream(CancellationToken cancelToken)
         {
             var response = Response;
@@ -57,25 +59,30 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
                 return;
             }
 
+            var instructor = _resourceMgmt.GetResource<IVisualInstructionSource>(identifier);
+            if (instructor == null)
+            {
+                await response.CompleteAsync();
+                BadRequest($"There is no resource with identifier {identifier}. Make sure the identifier is correct and try again.");
+                return;
+            }
+
             var instructionSetChannel = Channel.CreateUnbounded<string>();
 
             // Define event handling
-            var eventHandler = new EventHandler<InstructionEventArgs>((_, eventArgs) =>
+            var eventHandler = new EventHandler<ActiveInstruction>((_, eventArgs) =>
             {
-                if (eventArgs.Identifier != identifier)
-                {
-                    return;
-                }
-
-                WriteIdentifiers(identifier, instructionSetChannel);
+                var json = JsonConvert.SerializeObject(instructor.Instructions, _serializerSettings);
+                instructionSetChannel.Writer.TryWrite(json);
             });
-            _workerSupport.InstructionAdded += eventHandler;
-            _workerSupport.InstructionCleared += eventHandler;
+            instructor.Added += eventHandler;
+            instructor.Cleared += eventHandler;
 
             try
             {
                 // Send initial instruction set via stream
-                WriteIdentifiers(identifier, instructionSetChannel);
+                var json = JsonConvert.SerializeObject(instructor.Instructions, _serializerSettings);
+                instructionSetChannel.Writer.TryWrite(json);
 
                 // Create infinite loop awaiting changes or cancellation
                 while (!cancelToken.IsCancellationRequested)
@@ -96,20 +103,13 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
             finally
             {
                 // Unregister handler from facade
-                _workerSupport.InstructionAdded -= eventHandler;
-                _workerSupport.InstructionCleared -= eventHandler;
+                instructor.Added -= eventHandler;
+                instructor.Cleared -= eventHandler;
 
                 instructionSetChannel.Writer.TryComplete();
             }
 
             await response.CompleteAsync();
-        }
-
-        private void WriteIdentifiers(string identifier, Channel<string> _instructionSetChannel)
-        {
-            var instructions = _workerSupport.GetInstructions(identifier).Select(Converter.ToModel);
-            var json = JsonConvert.SerializeObject(instructions, _serializerSettings);
-            _instructionSetChannel.Writer.TryWrite(json);
         }
 
         [HttpGet("{identifier}")]
@@ -121,23 +121,11 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
             if (string.IsNullOrEmpty(identifier))
                 return BadRequest($"{identifier} is not a valid identifier");
 
-            return _workerSupport.GetInstructions(identifier).Select(Converter.ToModel).ToArray();
-        }
+            var instructor = _resourceMgmt.GetResource<IVisualInstructionSource>(identifier);
+            if (instructor == null)
+                return NotFound($"There is no resource with identifier {identifier}");
 
-        [HttpPost("{identifier}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(Policy = VisualInstructionPermissions.CanAdd)]
-        public void AddInstruction(string identifier, InstructionModel instruction)
-        {
-            _workerSupport.AddInstruction(identifier, Converter.FromModel(instruction));
-        }
-
-        [HttpDelete("{identifier}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(Policy = VisualInstructionPermissions.CanClear)]
-        public void ClearInstruction(string identifier, InstructionModel instruction)
-        {
-            _workerSupport.ClearInstruction(identifier, Converter.FromModel(instruction));
+            return instructor.Instructions.Select(Converter.ToModel).ToArray();
         }
 
         [HttpPut("{identifier}/response")]
@@ -146,17 +134,21 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
         [Authorize(Policy = VisualInstructionPermissions.CanComplete)]
         public void CompleteInstruction(string identifier, InstructionResponseModel response)
         {
-            var activeInstruction = _workerSupport.GetInstructions(identifier)?.FirstOrDefault(ai => ai.Id == response.Id);
+            var instructor = _resourceMgmt.GetResource<IVisualInstructionSource>(identifier);
+            if (instructor is null)
+                NotFound($"There is no resource with identifier {identifier}");
+
+            var activeInstruction = instructor.Instructions.FirstOrDefault(ai => ai.Id == response.Id);
             if (activeInstruction is null)
                 NotFound($"There is no active instruction corresponding to response id {response.Id}");
 
             var instructionResponse = new ActiveInstructionResponse
             {
                 Id = response.Id,
-                SelectedResult = new InstructionResult 
-                { 
-                    Key = response.SelectedResult?.Key ?? response.Result, 
-                    DisplayValue = response.SelectedResult?.DisplayValue 
+                SelectedResult = new InstructionResult
+                {
+                    Key = response.SelectedResult?.Key ?? response.Result,
+                    DisplayValue = response.SelectedResult?.DisplayValue
                 }
             };
 
@@ -167,7 +159,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
                 instructionResponse.Inputs = activeInstruction.Inputs;
             }
 
-            _workerSupport.CompleteInstruction(identifier, instructionResponse);
+            instructor.Completed(instructionResponse);
         }
 
         [HttpGet("instructors")]
@@ -175,7 +167,8 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
         [Authorize(Policy = VisualInstructionPermissions.CanView)]
         public ActionResult<string[]> GetInstructors()
         {
-            return _workerSupport.GetInstructors().ToArray();
+            var instructors = _resourceMgmt.GetResources<IVisualInstructionSource>();
+            return instructors.Select(i => i.Identifier).ToArray();
         }
     }
 }
