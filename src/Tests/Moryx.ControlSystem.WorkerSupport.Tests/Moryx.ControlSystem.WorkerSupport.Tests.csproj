@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Moryx.Resources.AssemblyInstruction\Moryx.Resources.AssemblyInstruction.csproj" />
-    <ProjectReference Include="..\..\Moryx.ControlSystem.WorkerSupport\Moryx.ControlSystem.WorkerSupport.csproj" />
     <ProjectReference Include="..\..\Moryx.ControlSystem.TestTools\Moryx.ControlSystem.TestTools.csproj" />
   </ItemGroup>
 

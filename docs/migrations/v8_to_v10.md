@@ -14,3 +14,7 @@ To reduce the number of API packages and simplify the overall architecture, **Mo
 
 The simulator module has also been renamed, and its namespace and package id have changed accordingly to reflect its new location within Moryx.ControlSystem.
 
+## Removal of WorkerSupport Module
+
+The **WorkerSupport** module has been removed in Moryx 10. Endpoints that previously relied on WorkerSupport to access instructors now retrieve instructors directly from the resource management. This change simplifies the architecture and reduces indirection, making instructor access more straightforward and maintainable.
+

@@ -8,9 +8,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Moryx.ControlSystem.WorkerSupport\Moryx.ControlSystem.WorkerSupport.csproj" />
+	  <ProjectReference Include="..\Moryx.ControlSystem\Moryx.ControlSystem.csproj" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<Compile Update="Properties\Strings.Designer.cs">
 			<DesignTime>True</DesignTime>
