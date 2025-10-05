@@ -2,7 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.ControlSystem.Processes;
-using Moryx.Simulation.Examples.Messages;
+using Moryx.ControlSystem.Simulation;
+using Moryx.Resources.Benchmarking.Messages;
 using NUnit.Framework;
 
 namespace Moryx.Simulation.Tests

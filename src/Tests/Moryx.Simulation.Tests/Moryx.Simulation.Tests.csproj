@@ -16,9 +16,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj" />
     <ProjectReference Include="..\..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
-    <ProjectReference Include="..\..\Moryx.Simulation.Examples\Moryx.Simulation.Examples.csproj" />
-    <ProjectReference Include="..\..\Moryx.Simulation.Simulator\Moryx.Simulation.Simulator.csproj" />
-    <ProjectReference Include="..\..\Moryx.Simulation\Moryx.Simulation.csproj" />
+    <ProjectReference Include="..\..\Moryx.Resources.Benchmarking\Moryx.Resources.Benchmarking.csproj" />
+    <ProjectReference Include="..\..\Moryx.ControlSystem.Simulator\Moryx.ControlSystem.Simulator.csproj" />
     <ProjectReference Include="..\..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj" />
   </ItemGroup>
 </Project>

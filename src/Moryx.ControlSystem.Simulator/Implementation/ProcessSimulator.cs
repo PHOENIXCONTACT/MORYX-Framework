@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -9,6 +9,7 @@ using Moryx.Container;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
+using Moryx.ControlSystem.Simulation;
 using Moryx.Logging;
 using Moryx.Threading;
 using System;
@@ -18,7 +19,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Activity = Moryx.AbstractionLayer.Activity;
 
-namespace Moryx.Simulation.Simulator
+namespace Moryx.ControlSystem.Simulator
 {
     [Component(LifeCycle.Singleton, typeof(IProcessSimulator))]
     internal sealed class ProcessSimulator : IProcessSimulator

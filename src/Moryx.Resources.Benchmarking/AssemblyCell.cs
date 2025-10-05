@@ -6,9 +6,9 @@ using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
-using Moryx.Simulation.Examples.Messages;
+using Moryx.Resources.Benchmarking.Messages;
 
-namespace Moryx.Simulation.Examples
+namespace Moryx.Resources.Benchmarking
 {
     /// <summary>
     /// Example Class copied from the Demo

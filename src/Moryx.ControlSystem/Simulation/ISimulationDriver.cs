@@ -7,7 +7,7 @@ using Moryx.ControlSystem.Cells;
 using System;
 using System.Collections.Generic;
 
-namespace Moryx.Simulation
+namespace Moryx.ControlSystem.Simulation
 {
     /// <summary>
     /// Interface for driver based simulation

@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.StateMachines;
-using Moryx.Simulation.Examples.Messages;
+using Moryx.ControlSystem.Simulation;
+using Moryx.Resources.Benchmarking.Messages;
 
-namespace Moryx.Simulation.Examples
+namespace Moryx.Resources.Benchmarking
 {
     [ResourceRegistration]
     public class SimulatedFakeDriver : Driver, IMessageDriver<object>, ISimulationDriver

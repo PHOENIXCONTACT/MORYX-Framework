@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using Moryx.AbstractionLayer;
 using Moryx.Configuration;
 using Moryx.Serialization;
 
-namespace Moryx.Simulation.Simulator
+namespace Moryx.ControlSystem.Simulator
 {
     /// <summary>
     /// Configuration of this module

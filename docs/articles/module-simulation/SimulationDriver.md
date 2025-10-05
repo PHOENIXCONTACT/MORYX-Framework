@@ -1,12 +1,12 @@
 # Simulation Driver
 
-If none of the existing, commercial drivers from `Moryx.Drivers.Simulation` fits your requirements, you can easily implement your own driver. All you need to do is implement the interface `Moryx.Simulation.ISimulationDriver` as well as the interface of the driver you want to replace like `IMessageDriver<object>` or `IInOutDriver`.
+If none of the existing, commercial drivers from `Moryx.Drivers.Simulation` fits your requirements, you can easily implement your own driver. All you need to do is implement the interface `Moryx.ControlSystem.ISimulationDriver` as well as the interface of the driver you want to replace like `IMessageDriver<object>` or `IInOutDriver`.
 
 A module like the commercial simulator will call `Ready` and `Result` on your instance as a replacement for the events usually received from real drivers and sensors. You need to translate them into values or events of you driver interface like `IMessageDriver.Received`. The methods references the activity which you can use to extract the relevant attributes like process id, carrier or product identifiers as needed by your cell. Process execution initiated by the drivers API like parameter values or `Send` methods need to be represented by the `SimulatedState`.
 
 ## Example of simulated driver
 
-So here is an example of how your mock driver can implement `Moryx.Simulation.ISimulationDriver`:
+So here is an example of how your mock driver can implement `Moryx.ControlSystem.ISimulationDriver`:
 ``` csharp
     [ResourceRegistration]
     public class TestMockDriver : Driver, IMessageDriver<object>,ISimulationDriver {
@@ -92,7 +92,7 @@ So here is an example of how your mock driver can implement `Moryx.Simulation.IS
     }
 ```
 
-Note: The `Send()` method might differ from cell to cell.You can override the `Send()` and do your implementation of what needs to happend when your "mock" driver receives something from the cell. In case your driver doesn't have a `send()` method, you can use your own method and react upon the type of message you received just like described inside the `TestMockDriver.Send()` method above.
+Note: The `Send()` method might differ from cell to cell.You can override the `Send()` and do your implementation of what needs to happened when your "mock" driver receives something from the cell. In case your driver doesn't have a `send()` method, you can use your own method and react upon the type of message you received just like described inside the `TestMockDriver.Send()` method above.
 
  # How does my Cell use my `MockDriver` ?
 
@@ -130,7 +130,7 @@ Moryx will take care of the relationship once you assign the driver to the cell.
     //AssembleProductMessage.cs
 
     /// <summary>
-    /// Message specificto start an activity
+    /// Message specific to start an activity
     /// </summary>
     public class AssembleProductMessage
     {

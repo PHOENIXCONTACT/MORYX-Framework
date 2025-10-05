@@ -1,6 +1,6 @@
 # Simulation parameters
 
-If you need to influence the simulation behavior of activites you can add `ISimulationParameters` to your parameters and return different execution times either by configuration or through binding on digital twins.
+If you need to influence the simulation behavior of activities you can add `ISimulationParameters` to your parameters and return different execution times either by configuration or through binding on digital twins.
 
 ## Configurable execution time
 
