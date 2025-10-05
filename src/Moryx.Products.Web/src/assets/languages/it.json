@@ -1,0 +1,113 @@
+{
+  "APP": {
+    "PRODUCTS": "Prodotti",
+    "SELECTOR": "Selettore",
+    "RESET_FILTER": "Resetta Filter",
+    "APPLY_FILTER": "Applica Filter",
+    "EMPTY_STATE_HEADER": "Nessun prodotto",
+    "EMPTY_STATE_TEXT": "Selezionare un prodotto dall'elenco o importarne uno nuovo facendo clic sul segno più.",
+    "EMPTY_STATE_RECIPES_HEADER": "Nessuna ricetta",
+    "EMPTY_STATE_RECIPES_TEXT": "Selezionare una ricetta dall'elenco o accedere alla modalità di modifica per crearne una nuova.",
+    "EMPTY_STATE_PARTS_HEADER": "Nessuna Pezzi",
+    "EMPTY_STATE_PARTS_TEXT": "Selezionare una Pezz dall'elenco o accedere alla modalità di modifica per crearne una nuova.",
+    "FAILED_LOADING": "Non è stato possibile stabilire la connessione al server. Controllare la connessione di rete o riprovare più tardi.",
+    "SNACK_BAR": {
+      "NO_IMPORTER": "Nessun importatore è stato definito"
+    }
+  },
+  "DISMISS": "RIFIUTARE",
+  "DEFAULT_MESSAGE": "Qualcosa è andato storto sul server.",
+  "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controllare la connessione a Internet o le impostazioni del proxy.",
+  "SHARED": {
+    "DELETE": "Elimina",
+    "EDIT": "Modifica",
+    "SAVE": "Salva",
+    "DUPLICATE": "Duplica",
+    "REVISION": "Revisione",
+    "NAME": "Nome",
+    "CANCEL": "Cancella",
+    "IDENTIFIER": "Identificatore",
+    "STATE": "Stato",
+    "PROPERTIES": "Proprietà",
+    "WORKPLAN": "Piano di lavoro",
+    "CLASSIFICATION": "Classificazione"
+  },
+  "IMPORTER": {
+    "TITLE": "Importatore di prodotti",
+    "SUB_TITLE": "Importa prodotto utilizzando l'importatori",
+    "IMPORT": "Importa"
+  },
+  "DETAILS": {
+    "PARTS": "Pezzi",
+    "REFERENCES": "Riferimenti",
+    "RECIPES": "Ricette",
+    "HEADER": {
+      "TITLE": "Generale"
+    },
+    "REFS": {
+      "TITLE": "Questo prodotto è utilizzato nei seguenti prodotti",
+      "NO_REF": "Questo prodotto non è utilizzato in altri prodotti",
+      "NO_REF_HEADER": "Nessun Referente"
+    },
+    "RECIPS": {
+      "ADD_RECIPE": "Aggiungi Ricetta",
+      "CHOOSE_OTHER": "Si prega di sceglierne un altro"
+    }
+  },
+  "PARTS": {
+    "REMOVE": "RIMUOVI",
+    "ADD": "AGGIUNGI",
+    "REPLACE": "SOSTITUISCI",
+    "DETAILS": {
+      "TITLE": "Configurazione per la connessione tra il prodotto e i suoi pezzi"
+    }
+  },
+  "ADD_DIALOG": {
+    "TITLE": "Seleziona Pezzo",
+    "SUB_TITLE": "Seleziona un prodotto dall'elenco",
+    "SEARCH": "Cerca",
+    "CANCEL": "CANCELLA",
+    "SELECT": "SELEZIONA"
+  },
+  "CREATE_RECIPE_DIALOG": {
+    "TITLE": "Aggiungi Ricetta",
+    "RECIPE_TYPE": "Tipo di Ricetta",
+    "RECIPE_NAME": "Nome della Ricetta",
+    "WORKPLAN": "Piano di Lavoro",
+    "CANCEL": "CANCELLA",
+    "CREATE": "CREA"
+  },
+  "CREATE_REVISION_DIALOG": {
+    "TITLE": "Nuova Revisione",
+    "SUB_TITLE": "Crea revisione per il prodotto",
+    "REVISION": "Revisione",
+    "CANCEL": "CANCELLA",
+    "CREATE": "CREA"
+  },
+  "DUPLICATE_PRODUCT_DIALOG": {
+    "TITLE": "Duplica Prodotto",
+    "IDENTIFIER": "Identificatore",
+    "REVISION": "Revisione",
+    "CANCEL": "CANCELLA",
+    "DUPLICATE": "DUPLICA"
+  },
+  "REMOVE_PRODUCT_DIALOG": {
+    "TITLE": "Rimuovi Prodotto",
+    "SUB_TITLE": "Il seguente prodotto sarà rimosso irreversibilmente:",
+    "CANNOT_REMOVE": "Il prodotto non può essere rimosso perché è ancora utilizzato da questi prodotti",
+    "CANCEL": "CANCELLA",
+    "REMOVE": "RIMUOVI"
+  },
+  "SHOW_REVISION_DIALOG": {
+    "TITLE": "Selezionare una Revisione",
+    "CANCEL": "CANCELLA",
+    "ADD_REVISION": "NOUVA"
+  },
+  "SIDEBAR_BUTTONS": {
+    "HIERARCHY_VIEW": "Vista gerarchia",
+    "LIST_VIEW": "Vista lista",
+    "REFRESH": "Aggiorna",
+    "FILTER": "Filtra",
+    "ADD": "Aggiungere"
+  }
+}

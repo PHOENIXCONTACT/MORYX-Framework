@@ -42,13 +42,13 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
             // Arrange
             CreateAndStartServer(IPAddress.Any, TestPort, 0, new TestDelimiterValidator());
 
-            var clientIdx = CreateAndStartClient(IPAddress.Parse(Tests), TestPort, 500, 0, new TestDelimiterValidator());
+            var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAddress), TestPort, 500, 0, new TestDelimiterValidator());
 
             WaitForConnectionState(clientIdx, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
 
             // Act
             SendMessages(1, 1, payloadMultiplier, ServerConnections, "ClientIdx");
-            Assert.IsTrue(WaitForMessageReception(new TimeSpan(0, 0, 0, 5), 1, Clients));
+            Assert.That(WaitForMessageReception(new TimeSpan(0, 0, 0, 5), 1, Clients));
 
             var payload = Clients[0].Received[0].Payload;
 
@@ -57,13 +57,14 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
             _interpreter.ProcessReadBytes(_context, payload.Length, m => published = m);
 
             // Assert
-            Assert.IsFalse(_context.StartFound);
-            Assert.AreEqual(0, _context.CurrentIndex);
+            Assert.That(_context.StartFound, Is.False);
+            Assert.That(_context.CurrentIndex, Is.EqualTo(0));
             
-            Assert.NotNull(published);
+            Assert.That(published, Is.Not.Null);
 
-            Assert.AreEqual(TestDelimiterInterpreter.TestStartDelimiter.Length + payloadMultiplier * 4 +
-                EndDelimiterOnlyInterpreter.TestEndDelimiter.Length, published.Payload.Length);
+            var expectedMsgLenth = TestDelimiterInterpreter.TestStartDelimiter.Length + payloadMultiplier * 4 +
+                EndDelimiterOnlyInterpreter.TestEndDelimiter.Length;
+            Assert.That(published.Payload.Length, Is.EqualTo(expectedMsgLenth));
         }
     }
 }

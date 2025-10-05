@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>Material management module</Description>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.ControlSystem\Moryx.ControlSystem.csproj" />
+    <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
+  </ItemGroup>
+
+</Project>

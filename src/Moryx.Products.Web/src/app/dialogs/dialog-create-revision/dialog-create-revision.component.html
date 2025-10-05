@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>
+  {{ TranslationConstants.CREATE_REVISION_DIALOG.TITLE | translate }}
+</h2>
+<div mat-dialog-content class="create-revision">
+  <p>
+    {{ TranslationConstants.CREATE_REVISION_DIALOG.SUB_TITLE | translate }}
+    {{
+      editService.createProductIdentity(product()!.identifier, product()!.revision)
+    }}
+    {{ product()!.name }}
+  </p>
+  <mat-form-field appearance="outline">
+    <mat-label>{{
+      TranslationConstants.CREATE_REVISION_DIALOG.REVISION | translate
+    }}</mat-label>
+    <input matInput [(ngModel)]="revision" />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button type="submit" color="primary" (click)="onClose()">
+    {{ TranslationConstants.CREATE_REVISION_DIALOG.CANCEL | translate }}
+  </button>
+  <button
+    mat-flat-button
+    type="submit"
+    [disabled]="revision === undefined"
+    (click)="onCreate()"
+  >
+    {{ TranslationConstants.CREATE_REVISION_DIALOG.CREATE | translate }}
+  </button>
+</div>

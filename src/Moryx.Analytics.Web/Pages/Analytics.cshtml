@@ -1,0 +1,26 @@
+@page "{*_}"
+@using Microsoft.AspNetCore.Authorization;
+@using Moryx.Analytics.Web;
+@using Moryx.Asp.Integration
+@using System.ComponentModel.DataAnnotations
+@using Moryx.Analytics.Web.Properties
+@{
+  ViewData["Title"] = "Analytics";
+  ViewData["BaseRef"] = "Analytics";
+
+  Layout = "_Layout";
+}
+@attribute [WebModule("Analytics", "analytics")]
+@attribute [Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description"), 
+Authorize( Policy = AnalyticsPermissions.CanView),AllowAnonymous]
+@section Styles {
+  <link rel="stylesheet" href="/_content/Moryx.Analytics.Web/styles.css">
+}
+@section Scripts
+{
+  <script src="/_content/Moryx.Analytics.Web/runtime.js" type="module"></script>
+  <script src="/_content/Moryx.Analytics.Web/polyfills.js" type="module"></script>
+  <script src="/_content/Moryx.Analytics.Web/main.js" type="module"></script>
+}
+
+<app-root></app-root>

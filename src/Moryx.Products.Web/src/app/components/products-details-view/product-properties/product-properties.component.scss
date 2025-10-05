@@ -1,0 +1,16 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+:host {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+    max-width: 60em;
+    height: 100%;
+    background: #fff;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.property-navigation {
+    height: 100%;
+    overflow: hidden;
+}

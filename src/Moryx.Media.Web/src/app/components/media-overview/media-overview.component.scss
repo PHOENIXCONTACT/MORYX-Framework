@@ -1,0 +1,103 @@
+
+:host {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.contents-list {
+  box-sizing: border-box;
+  padding: 8px;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  background-position: center;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 80%;
+  column-gap: 30px;
+}
+
+.contents-list-item {
+  width: 350px;
+  height: 300px;
+}
+.overall-container {
+  padding: 8px;
+  overflow: auto;
+  height: 100%;
+  box-sizing: border-box;
+}
+.overall-container.loading {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.upload-button {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+}
+
+.file-input {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+.fileover{
+  border: 2px dashed #EBEBEB;
+  animation-name: blink;
+  animation-duration: 5s;
+  margin: 10px;
+}
+
+.drop-area{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: transparent;
+  z-index: 2;
+}
+
+@keyframes blink {
+  0%{
+    background: #fff;
+  }
+  10%{
+    background: #EBEBEB;
+  }
+  20%{
+    background: #fff;
+  }
+  30%{
+    background: #EBEBEB;
+  }
+  40%{
+    background: #fff;
+  }
+  50%{
+    background: #EBEBEB;
+  }
+  60%{
+    background: #fff;
+  }
+  70%{
+    background: #EBEBEB;
+  }
+  80%{
+    background: #fff;
+  }
+  90%{
+    background: #EBEBEB;
+  }
+  100%{
+    background: #fff;
+  }
+}

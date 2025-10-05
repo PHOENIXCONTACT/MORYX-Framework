@@ -1,0 +1,18 @@
+<div
+  #cell
+  class="cell-container"
+  [ngStyle]="{
+    'border-color': borderColor(),
+    background: backgroundColor(),
+    top: (currentCell()?.location?.positionY ?? 0) * 100 + '%',
+    left: (currentCell()?.location?.positionX ?? 0) * 100 + '%'
+  }"
+  cdkDrag
+  cdkDragBoundary=".draggable-area"
+  (cdkDragEnded)="onCellMove($event)"
+  [cdkDragDisabled]="!isEditMode()"
+  (click)="onCellClicked()">
+  <mat-icon [ngStyle]="{ color: iconColor() }">{{
+    currentCell()?.iconName
+  }}</mat-icon>
+</div>

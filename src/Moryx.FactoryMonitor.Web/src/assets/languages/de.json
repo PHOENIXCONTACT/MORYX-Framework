@@ -1,0 +1,47 @@
+{
+  "SHARED": {
+    "SAVE": "SPEICHERN",
+    "CANCEL": "ABBRECHEN"
+  },
+  "CELL_DETAILS": {
+    "RUNNING_STATE": "LAUFEND",
+    "IDLE_STATE": "WARTEND",
+    "NOT_READY_TO_WORK_STATE": "NICHT BEREIT",
+    "NO_PROPERTIES": "Keine Eigenschaften konfiguriert"
+  },
+  "CELL_ICON_SELECTOR_DIALOG": {
+    "ICON_SELECTOR": "Symbol",
+    "ICON_NAME": "Symbolbezeichner",
+    "ICON_NAME_REQUIRED": "Der Symbolbezeichner ist erforderlich",
+    "PREVIEW": "Vorschau"
+  },
+  "CELL_IMAGE_DIALOG": {
+    "CELL_IMAGE": "Zellenbild",
+    "NO_IMAGE": "Kein Bild hinterlegt",
+    "IMAGE_URL": "Bild URL",
+    "ENTER_IMAGE_URL": "Bitte geben Sie eine URL für das Bild der Zelle ein"
+  },
+  "CHANGE_BACKGROUND_DIALOG": {
+    "BACKGROUND_IMAGE": "Hintergrundbild",
+    "BACKGROUND_URL": "Hintergrundbild URL",
+    "ENTER_URL": "Bitte gib eine URL ein",
+    "NO_MANUFACTURING_RESOURCE": "Wir konnten keine ManufactoringFactoryResource zum Speichern deines Hintergrundbildes finden. Bitte wende dich an deinen Systemadministrator, wenn du den Hintergrund ändern möchten."
+  },
+  "DETAILS_CONFIGURATION_DIALOG": {
+    "PROPERTIES_CONFIGURATION": "Eigenschaftskonfiguration",
+    "PROPERTY": "Eigenschaft",
+    "DISPLAY": "Anzeigen"
+  },
+  "APP": {
+    "DEFAULT_BACKGROUND_URL": "Wir konnten keine Hintergrund-URL finden. Bis du eine angibst, verwenden wir weiter das Standardbild."
+  },
+  "DISMISS": "VERWERFEN",
+  "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
+  "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Netzwerkverbindung oder Proxy-Einstellungen.",
+  "EDIT_MENU": {
+    "EDIT": "Editieren",
+    "CONFIRM": "Bestätigen",
+    "MOVE": "Verschieben",
+    "BACKGROUND": "Hintergrund"
+  }
+}

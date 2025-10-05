@@ -1,0 +1,89 @@
+@use '@angular/material' as mat;
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+.dashboard {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.dashboard-sidebar {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  width: 300px;
+  box-shadow: 0 0.25rem 0.75rem rgba(8, 8, 8, 0.05);
+  overflow: hidden;
+  height: 100%;
+  background-color: $mat-background-light;
+}
+
+.dashboard-sidebar-add {
+  position: absolute;
+  top: 75px;
+  right: 16px;
+  z-index: 10;
+}
+
+.dashboard-sidebar-list {
+  flex: 1 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: $mat-background-light;
+  padding-top: 0px;
+  @include mat.list-overrides((
+    list-item-one-line-container-height: 40px
+  ));
+}
+
+.dashboard-sidebar-list-item {
+  cursor: pointer !important;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  padding-right: 16px;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
+.dashboard-sidebar-list-item:hover {
+    background-color: $light-background-hover;
+  }
+
+.dashboard-sidebar-header {
+  width: 100%;
+  height: fit-content;
+  color: $mat-background-light;
+  mat-toolbar-row{
+    button{
+      color: $mat-background-light;
+    }
+  }
+}
+
+.dashboard-view {
+  flex: 1 1;
+  display: flex;
+}
+
+.dashboard-view-website {
+  flex: 1 1;
+}
+
+.dashboards-loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+.selected {
+  background-color: $primary-light !important;
+}

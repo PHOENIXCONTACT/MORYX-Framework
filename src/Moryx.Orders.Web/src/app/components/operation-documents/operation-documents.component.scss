@@ -1,0 +1,81 @@
+@use "@angular/material" as mat;
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+.operation-document-loading {
+    position: absolute;
+    bottom: 0px;
+    z-index: 10;
+}
+
+.operation-document-container {
+    height: 100%;
+    @include mat.sidenav-overrides((
+        container-background-color: $mat-background-light,
+        container-width : 300px
+     ));
+}
+
+.operation-document-toolbar {
+    width: 100%;
+    height: fit-content;
+    color: $mat-background-light !important;
+}
+.mat-toolbar .mat-mdc-button-base.mat-mdc-button-base.mat-unthemed{
+    color: $mat-background-light !important;
+}
+.operation-document-title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+mat-list {
+    padding-top: 0px;
+
+    mat-list-item {
+        height: 80px;
+    }
+}
+
+.operation-documents-list-item {
+    margin: 0px 0px;
+}
+
+.operation-document-number-version-text {
+    padding-left: 5px;
+}
+
+.operation-documents-list-item:hover {
+    background-color: $light-background-hover;
+    cursor: pointer;
+}
+
+.operation-document-details {
+    flex: 1 1 auto;
+    height: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;  
+}
+
+.operation-document-toolbar-details {
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+}
+
+.operation-image {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.operation-pdf {
+    height: 100%;
+    width: 100%;  
+}
+.moryx-selected{
+    background-color: $primary-light;
+}

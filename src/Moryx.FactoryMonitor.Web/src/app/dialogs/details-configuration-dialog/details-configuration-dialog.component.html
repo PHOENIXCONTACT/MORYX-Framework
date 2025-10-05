@@ -1,0 +1,20 @@
+<div mat-dialog-title>
+  <span>Property configuration</span>
+  <br>
+  <span class="cell-name">Manualle-1</span>
+</div>
+<div mat-dialog-content>
+  <div class="property-list-header">
+    <h5 class="PropertyName">Property</h5>
+    <h5>Display</h5>
+  </div>
+  <mat-selection-list #shoes>
+    <mat-list-option *ngFor="let property of propertyNames">
+      {{ property }}
+    </mat-list-option>
+  </mat-selection-list>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close color="primary">SAVE</button>
+  <button mat-flat-button mat-dialog-close color="primary">CANCEL</button>
+</div>

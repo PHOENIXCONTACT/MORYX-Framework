@@ -108,16 +108,16 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             // - Products originally converted with the flat flag will only affect certain properties
             if (flat)
             {
-                Assert.AreEqual(originalProductType.Id, recoveredOriginal.Id);
-                Assert.AreEqual(originalProductType.Name, recoveredOriginal.Name);
-                Assert.AreEqual(originalProductType.State, recoveredOriginal.State);
-                Assert.AreEqual(originalProductType.Identity, recoveredOriginal.Identity);
+                Assert.That(recoveredOriginal.Id, Is.EqualTo(originalProductType.Id));
+                Assert.That(recoveredOriginal.Name, Is.EqualTo(originalProductType.Name));
+                Assert.That(recoveredOriginal.State, Is.EqualTo(originalProductType.State));
+                Assert.That(recoveredOriginal.Identity, Is.EqualTo(originalProductType.Identity));
                 _productManagerMock.VerifyNoOtherCalls();
                 _productManagerMock.VerifyNoOtherCalls();
                 return;
             }
             // - The following assert uses overwritten Equals methods to check for VALUE equality
-            Assert.AreEqual(originalProductType, recoveredOriginal);
+            Assert.That(recoveredOriginal, Is.EqualTo(originalProductType));
             // - If there are Recipes the RecipeManagement should be called
             if (recipes.Any())
             {
@@ -236,7 +236,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             if (originalRecipe.Product is null)
                 originalRecipe.Product = backupProductType;
 
-            Assert.AreEqual(originalRecipe, recoveredOriginal);
+            Assert.That(recoveredOriginal, Is.EqualTo(originalRecipe));
             // - If there is a workplan and it changed, reload it at backward conversion
             if (originalWorkplanRecipe?.Workplan is not null && originalWorkplanRecipe.Workplan.Id != workplanInTargetRecipe.Id)
                 _productManagerMock.Verify(wm => wm.LoadWorkplan(originalWorkplanRecipe.Workplan.Id), Times.Once);
@@ -269,10 +269,10 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             var convertedmodel = ProductConverter.ConvertWorkplan(originalWorkplan);
 
             // Assert
-            Assert.AreEqual(originalWorkplan.Id, convertedmodel.Id);
-            Assert.AreEqual(originalWorkplan.Name, convertedmodel.Name);
-            Assert.AreEqual(originalWorkplan.Version, convertedmodel.Version);
-            Assert.AreEqual(originalWorkplan.State, convertedmodel.State);
+            Assert.That(convertedmodel.Id, Is.EqualTo(originalWorkplan.Id));
+            Assert.That(convertedmodel.Name, Is.EqualTo(originalWorkplan.Name));
+            Assert.That(convertedmodel.Version, Is.EqualTo(originalWorkplan.Version));
+            Assert.That(convertedmodel.State, Is.EqualTo(originalWorkplan.State));
         }
         #endregion
     }

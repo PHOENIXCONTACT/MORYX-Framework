@@ -1,0 +1,14 @@
+<div class="px-2 py-1 group">
+    <div
+      class="relative flex flex-col w-full p-2 bg-white rounded-sm border border-gray-100 group-hover:border group-hover:border-primary-700"
+    >
+      <!-- card menu -->
+      <div class="flex flex-row justify-between items-center">
+        <span>{{order.orderNumber}} - {{order.operationNumber}}</span>
+        <mat-icon>shopping_cart</mat-icon>
+      </div>
+      <span class="font-medium mt-2">
+        {{prettyMilliseconds(order.totalHours*hourToMillisecond)}}
+      </span>
+    </div>
+  </div>

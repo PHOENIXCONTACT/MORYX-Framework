@@ -33,9 +33,9 @@ namespace Moryx.Tests.Bindings
             var value = _resolver.Resolve(data) as SomeComplexClass;
 
             // Assert
-            Assert.NotNull(value);
-            Assert.AreEqual(2, value.Value);
-            Assert.AreEqual(2, CountChainLinks(_resolver));
+            Assert.That(value, Is.Not.Null);
+            Assert.That(value.Value, Is.EqualTo(2));
+            Assert.That(CountChainLinks(_resolver), Is.EqualTo(2));
         }
 
         [TestCase(1, Description = "Call append (1 time) to append an item to chain")]
@@ -54,9 +54,9 @@ namespace Moryx.Tests.Bindings
             var value = _resolver.Resolve(data) as SomeComplexClass;
 
             // Assert
-            Assert.NotNull(value);
-            Assert.AreEqual(appendCount + 1, value.Value);
-            Assert.AreEqual(appendCount + 1, CountChainLinks(_resolver));
+            Assert.That(value, Is.Not.Null);
+            Assert.That(value.Value, Is.EqualTo(appendCount + 1));
+            Assert.That(CountChainLinks(_resolver), Is.EqualTo(appendCount + 1));
         }
 
         [TestCase(1, Description = "Call insert (1 time) to insert an item into chain")]
@@ -75,9 +75,9 @@ namespace Moryx.Tests.Bindings
             var value = _resolver.Resolve(data) as SomeComplexClass;
 
             // Assert
-            Assert.NotNull(value);
-            Assert.AreEqual(insertCount + 1, value.Value);
-            Assert.AreEqual(insertCount + 1, CountChainLinks(_resolver));
+            Assert.That(value, Is.Not.Null);
+            Assert.That(value.Value, Is.EqualTo(insertCount + 1));
+            Assert.That(CountChainLinks(_resolver), Is.EqualTo(insertCount + 1));
         }
 
         [Test(Description = "Call replace to replace an item from chain")]
@@ -94,9 +94,9 @@ namespace Moryx.Tests.Bindings
             var value = _resolver.Resolve(data) as SomeComplexClass;
 
             // Assert
-            Assert.NotNull(value);
-            Assert.AreEqual(300, value.Value);
-            Assert.AreEqual(4, CountChainLinks(_resolver));
+            Assert.That(value, Is.Not.Null);
+            Assert.That(value.Value, Is.EqualTo(300));
+            Assert.That(CountChainLinks(_resolver), Is.EqualTo(4));
         }
 
         [TestCase(0, Description = "Call remove (0 times) to remove an item from chain")]
@@ -120,9 +120,9 @@ namespace Moryx.Tests.Bindings
             var value = _resolver.Resolve(data) as SomeComplexClass;
 
             // Assert
-            Assert.NotNull(value);
-            Assert.AreEqual(5 - removeCount, value.Value);
-            Assert.AreEqual(5 - removeCount, CountChainLinks(_resolver));
+            Assert.That(value, Is.Not.Null);
+            Assert.That(value.Value, Is.EqualTo(5 - removeCount));
+            Assert.That(CountChainLinks(_resolver), Is.EqualTo(5 - removeCount));
         }
 
         [TestCase(null, Description = "should return null value")]
@@ -135,7 +135,7 @@ namespace Moryx.Tests.Bindings
             var resolver = TextBindingResolverFactory.Create(textToFormat, bindingResolverFactory);
             var result = resolver.Resolve(data);
 
-            Assert.That(result, Is.EqualTo(textToFormat));
+            Assert.That(textToFormat, Is.EqualTo(result));
         }
 
         private int CountChainLinks(IBindingResolverChain chain)

@@ -29,7 +29,7 @@ namespace Moryx.AbstractionLayer.Tests
         public void ToStringTest()
         {
             var expectedString = $"{Identifier}-{Revision:D2}";
-            Assert.AreEqual(expectedString, _identity.ToString());
+            Assert.That(_identity.ToString(), Is.EqualTo(expectedString));
         }
 
         /// <summary>

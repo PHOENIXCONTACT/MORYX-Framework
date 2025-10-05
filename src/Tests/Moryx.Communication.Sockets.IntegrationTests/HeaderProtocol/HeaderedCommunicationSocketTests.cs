@@ -34,7 +34,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             {
                 CreateAndStartServer(IPAddress.Any, TestPort, i, new SystemTestValidator(i));
 
-                var clientIdx = CreateAndStartClient(IPAddress.Parse(Tests), TestPort, 500, i, new SystemTestValidator(i));
+                var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAddress), TestPort, 500, i, new SystemTestValidator(i));
 
                 // Client should be connected
                 WaitForConnectionState(clientIdx, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
@@ -50,7 +50,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             // Assert
             Console.WriteLine("Waiting for all client Messages to be send");
             var allReceived = WaitForMessageReception(timeout, numberOfMessages, ServerConnections);
-            Assert.IsTrue(allReceived, "Not all ServerConnections received the right number of messages");
+            Assert.That(allReceived, "Not all ServerConnections received the right number of messages");
             Console.WriteLine("Waiting for sending the client messages complete");
 
             //Send messages from the server to clients
@@ -58,19 +58,19 @@ namespace Moryx.Communication.Sockets.IntegrationTests
 
             Console.WriteLine("Waiting for all server Messages to be send");
             allReceived = WaitForMessageReception(timeout, numberOfMessages, Clients);
-            Assert.IsTrue(allReceived, "Not all Clients received the right number of messages");
+            Assert.That(allReceived, "Not all Clients received the right number of messages");
             Console.WriteLine("Waiting for sending the server messages complete");
 
             //Check all received Messages
             for (var i = 0; i < numberOfClients; i++)
             {
-                Assert.AreEqual(ServerConnections[i].Received.Count, Clients[i].Received.Count,
+                Assert.That(Clients[i].Received.Count, Is.EqualTo(ServerConnections[i].Received.Count),
                     "Server and Client received a different number of messages");
 
                 for (var j = 0; j < ServerConnections[i].Received.Count; j++)
                 {
                     Console.WriteLine("CompareMessagesfor ServerConnection/ClientIdx: {0}, MessageNumber: {1}", i, j);
-                    Assert.IsTrue(CompareMessages(ServerConnections[i].Received[j], Clients[i].Received[j]),
+                    Assert.That(CompareMessages(ServerConnections[i].Received[j], Clients[i].Received[j]),
                         "Telegrams do not match");
                 }
             }
@@ -110,7 +110,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             SendMessages(numberOfClients, 1, 1, Clients, "ClientIdx");
 
             var timeout = new TimeSpan(0, 0, 2, 0);
-            Assert.IsTrue(WaitForMessageReception(timeout, 1, ServerConnections),
+            Assert.That(WaitForMessageReception(timeout, 1, ServerConnections),
                 "Not all ServerConnections received the right number of messages");
 
             //Reset Buffers
@@ -140,9 +140,9 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             }
 
             // Assert
-            Clients.ForEach(c => Assert.AreEqual(BinaryConnectionState.Disconnected, c.LastStateChangeEvents.LastOrDefault(), "Client did not receive Disconnected-Event"));
+            Clients.ForEach(c => Assert.That(c.LastStateChangeEvents.LastOrDefault(), Is.EqualTo(BinaryConnectionState.Disconnected), "Client did not receive Disconnected-Event"));
 
-            ServerConnections.ForEach(s => Assert.AreEqual(BinaryConnectionState.Disconnected, s.LastStateChangeEvents.LastOrDefault(), "Serverconnection did not receive Disconnected-Event"));
+            ServerConnections.ForEach(s => Assert.That(s.LastStateChangeEvents.LastOrDefault(), Is.EqualTo(BinaryConnectionState.Disconnected), "Serverconnection did not receive Disconnected-Event"));
         }
 
         [Ignore("Test fails because of timing issue on different system")]
@@ -173,11 +173,11 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             WaitForConnectionState(clientId, new TimeSpan(0, 0, 0, 20), BinaryConnectionState.Connected);
             Thread.Sleep(20);
             var connectionBuffer = clientSendsMessage ? server : client;
-            Assert.AreEqual(0, connectionBuffer.Received.Count, "Server should not receive a message");
+            Assert.That(connectionBuffer.Received.Count, Is.EqualTo(0), "Server should not receive a message");
             var history = connectionBuffer.LastStateChangeEvents;
-            Assert.LessOrEqual(4, history.Count);
-            Assert.AreEqual(BinaryConnectionState.AttemptingConnection, history[history.Count - 2], "Server should have triggered a reconnect");
-            Assert.AreEqual(BinaryConnectionState.Connected, history[history.Count - 1], "Server should have triggered a reconnect");
+            Assert.That(history.Count, Is.LessThanOrEqualTo(4));
+            Assert.That(history[history.Count - 2], Is.EqualTo(BinaryConnectionState.AttemptingConnection), "Server should have triggered a reconnect");
+            Assert.That(history[history.Count - 1], Is.EqualTo(BinaryConnectionState.Connected), "Server should have triggered a reconnect");
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             Console.WriteLine("Sending {0} messages", numberOfMessages);
 
             SendMessages(numberOfClients, numberOfMessages, 1, ServerConnections, "ClientIdx");
-            Assert.IsTrue(WaitForMessageReception(new TimeSpan(0, 0, 0, 5), numberOfMessages, Clients));
+            Assert.That(WaitForMessageReception(new TimeSpan(0, 0, 0, 5), numberOfMessages, Clients));
 
             Console.WriteLine("Reconnecting all clients...");
 
@@ -226,7 +226,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             SendMessages(numberOfClients, numberOfMessages, 1, Clients, "ClientIdx");
 
             // Assert
-            Assert.IsTrue(WaitForMessageReception(new TimeSpan(0, 0, 0, 5), numberOfMessages, ServerConnections));
+            Assert.That(WaitForMessageReception(new TimeSpan(0, 0, 0, 5), numberOfMessages, ServerConnections));
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             Console.WriteLine("Sending {0} messages", numberOfMessages);
 
             SendMessages(numberOfClients, numberOfMessages, 1, ServerConnections, "ClientIdx");
-            Assert.IsTrue(WaitForMessageReception(new TimeSpan(0, 0, 0, 10), numberOfMessages, Clients));
+            Assert.That(WaitForMessageReception(new TimeSpan(0, 0, 0, 10), numberOfMessages, Clients));
 
             Console.WriteLine("Disconnecting all clients...");
 
@@ -285,7 +285,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             Thread.Sleep(2000);
 
             // Assert
-            Assert.IsTrue(WaitForMessageReception(new TimeSpan(0, 0, 0, 10), numberOfMessages, ServerConnections));
+            Assert.That(WaitForMessageReception(new TimeSpan(0, 0, 0, 10), numberOfMessages, ServerConnections));
         }
 
         protected override BinaryMessage CreateMessage(int senderId, byte[] payload)

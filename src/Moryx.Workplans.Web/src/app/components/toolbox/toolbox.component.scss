@@ -1,0 +1,38 @@
+.step-list {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+}
+
+.step-category {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    margin: 0px;
+}
+
+.step-category-header {
+    font-weight: 400;
+    flex-grow: 1;
+}
+
+.step-card {
+    margin: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.step-card-header {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+.step-card-header-text {
+    text-align: center;
+    line-break: loose;
+}

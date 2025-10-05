@@ -60,7 +60,7 @@ namespace Moryx.Tests.Threading
 
             _callbackReceivedEvent.Wait(50);
 
-            Assert.IsTrue(_callbackReceivedEvent.IsSet, "Callback not called.");
+            Assert.That(_callbackReceivedEvent.IsSet, "Callback not called.");
         }
 
         [TestCase(true)]
@@ -73,8 +73,8 @@ namespace Moryx.Tests.Threading
 
             AwaitLogMessage();
 
-            Assert.AreEqual(critical, _message.Item1 == LogLevel.Critical, "Failure received");
-            Assert.AreEqual(!critical, _message.Item1 == LogLevel.Error, "Warning received");
+            Assert.That(_message.Item1 == LogLevel.Critical, Is.EqualTo(critical), "Failure received");
+            Assert.That(_message.Item1 == LogLevel.Error, Is.EqualTo(!critical), "Warning received");
         }
 
         [Ignore("Test fails because of timing issue on different system")]
@@ -87,21 +87,21 @@ namespace Moryx.Tests.Threading
 
             Thread.Sleep(75);
 
-            Assert.AreEqual(0, state.Counter, "First check");
+            Assert.That(state.Counter, Is.EqualTo(0), "First check");
 
             Thread.Sleep(50);
 
-            Assert.AreEqual(1, state.Counter, "Second check");
+            Assert.That(state.Counter, Is.EqualTo(1), "Second check");
 
             Thread.Sleep(50);
 
-            Assert.AreEqual(2, state.Counter, "Third check");
+            Assert.That(state.Counter, Is.EqualTo(2), "Third check");
 
             _threadFactory.StopExecution(id);
 
             Thread.Sleep(50);
 
-            Assert.AreEqual(2, state.Counter, "Last check");
+            Assert.That(state.Counter, Is.EqualTo(2), "Last check");
         }
 
         [Test]
@@ -113,21 +113,21 @@ namespace Moryx.Tests.Threading
 
             Thread.Sleep(150);
 
-            Assert.AreEqual(0, state.Counter, "First check");
+            Assert.That(state.Counter, Is.EqualTo(0), "First check");
 
             Thread.Sleep(100);
 
-            Assert.AreEqual(1, state.Counter, "Second check");
+            Assert.That(state.Counter, Is.EqualTo(1), "Second check");
 
             Thread.Sleep(100);
 
-            Assert.AreEqual(2, state.Counter, "Third check");
+            Assert.That(state.Counter, Is.EqualTo(2), "Third check");
 
             _threadFactory.StopExecution(42);
 
             Thread.Sleep(100);
 
-            Assert.AreEqual(3, state.Counter, "Last check");
+            Assert.That(state.Counter, Is.EqualTo(3), "Last check");
         }
 
         [Ignore("Test fails because of timing issue on different system")]
@@ -140,21 +140,21 @@ namespace Moryx.Tests.Threading
 
             Thread.Sleep(75);
 
-            Assert.AreEqual(0, state.Counter, "First check");
+            Assert.That(state.Counter, Is.EqualTo(0), "First check");
 
             Thread.Sleep(50);
 
-            Assert.AreEqual(1, state.Counter, "Second check");
+            Assert.That(state.Counter, Is.EqualTo(1), "Second check");
 
             Thread.Sleep(50);
 
-            Assert.AreEqual(2, state.Counter, "Third check");
+            Assert.That(state.Counter, Is.EqualTo(2), "Third check");
 
             _threadFactory.Dispose();
 
             Thread.Sleep(50);
 
-            Assert.AreEqual(2, state.Counter, "Last check");
+            Assert.That(state.Counter, Is.EqualTo(2), "Last check");
         }
 
         [Test]
@@ -166,15 +166,15 @@ namespace Moryx.Tests.Threading
 
             Thread.Sleep(75);
 
-            Assert.AreEqual(0, state.Counter, "First check");
+            Assert.That(state.Counter, Is.EqualTo(0), "First check");
 
             Thread.Sleep(50);
 
-            Assert.AreEqual(1, state.Counter, "Second check");
+            Assert.That(state.Counter, Is.EqualTo(1), "Second check");
 
             Thread.Sleep(50);
 
-            Assert.AreEqual(1, state.Counter, "Last check");
+            Assert.That(state.Counter, Is.EqualTo(1), "Last check");
         }
 
        [TestCase(true)]
@@ -187,8 +187,8 @@ namespace Moryx.Tests.Threading
 
             AwaitLogMessage();
 
-            Assert.AreEqual(critical, _message.Item1 == LogLevel.Critical, "Failure received");
-            Assert.AreEqual(!critical, _message.Item1 == LogLevel.Error, "Warning received");
+            Assert.That(_message.Item1 == LogLevel.Critical, Is.EqualTo(critical), "Failure received");
+            Assert.That(_message.Item1 == LogLevel.Error, Is.EqualTo(!critical), "Warning received");
         }
 
         private void SimpleCallback(StateObject state)

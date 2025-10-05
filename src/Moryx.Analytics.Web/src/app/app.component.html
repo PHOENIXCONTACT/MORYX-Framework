@@ -1,0 +1,105 @@
+<ng-container *ngIf="!isLoading(); else loadingSpinner">
+    <mat-drawer-container class="dashboard">
+      <mat-drawer
+        #drawer
+        mode="side"
+        position="start"
+        class="dashboard-sidebar"
+        opened
+      >
+        <mat-toolbar
+          class="dashboard-sidebar-header"
+          [ngStyle]="{
+            'background-image': 'url(' + analyticsToolbarImage + ')'
+          }"
+          color="primary"
+        >
+          <mat-toolbar-row>
+            <span class="spacer"></span>
+            <button
+              mat-icon-button
+              (click)="drawer.toggle()"
+              aria-label="close_drawer"
+            >
+            
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <button mat-icon-button title="Disabled toggle" disabled></button>
+            <span>{{ TranslationConstants.APP.TITLE | translate }}</span>
+          </mat-toolbar-row>
+        </mat-toolbar>
+        <button
+          mat-fab
+          color="primary"
+          class="dashboard-sidebar-add"
+          type="button"
+          aria-label="Import Products"
+          (click)="onAdd()"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+        <mat-menu #contextMenu="matMenu">
+          <ng-template matMenuContent let-url="url">
+            <button mat-menu-item (click)="onDelete(url)">
+              <mat-icon>delete_forever</mat-icon>
+              <span>
+                {{ TranslationConstants.SHARED.DELETE | translate }}
+              </span>
+            </button>
+            <button mat-menu-item (click)="onEdit(url)">
+              <mat-icon>edit</mat-icon>
+              <span>{{ TranslationConstants.SHARED.EDIT | translate }}</span>
+            </button>
+          </ng-template>
+        </mat-menu>
+        <!-- A hidden div is created to set the position of the menu-->
+        <div
+          style="visibility: hidden; position: fixed"
+          [style.left]="menuTopLeftPosition().x"
+          [style.top]="menuTopLeftPosition().y"
+          [matMenuTriggerFor]="contextMenu"
+        ></div>
+        <mat-selection-list class="dashboard-sidebar-list" [multiple]="false" [hideSingleSelectionIndicator]="true" >
+          <mat-list-option
+            *ngFor="let url of dashboards()"
+            (click)="onSelect(url.url)"
+            (contextmenu)="onAnalyseContext($event, url.url)"
+            (press)="onOpenContextMenuOnTouch($event, url.url)"
+            class="dashboard-sidebar-list-item"
+            [ngClass]="{ selected: selectedUrl() == url.url }"
+          >
+            {{ url.name }}
+          </mat-list-option>
+        </mat-selection-list>
+      </mat-drawer>
+
+      <mat-drawer-content class="dashboard-view">
+        <button *ngIf="!drawer.opened" mat-icon-button aria-label="open_drawer" (click)="drawer.toggle()">
+          <mat-icon>navigate_next</mat-icon>
+        </button>
+    
+        <iframe
+          class="dashboard-view-dashboard dashboard-view-website"
+          *ngIf="selectedSafeUrl(); else emptyStatePage"
+          [src]="selectedSafeUrl()"
+          title="description"
+        ></iframe>
+      </mat-drawer-content>
+    </mat-drawer-container>
+
+</ng-container>
+
+<ng-template #loadingSpinner>
+  <div class="dashboards-loading">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</ng-template>
+
+<ng-template #emptyStatePage>
+  <empty-state
+    header="{{ TranslationConstants.APP.EMPTY_STATE_HEADER | translate }}"
+    message="{{ TranslationConstants.APP.EMPTY_STATE_TEXT | translate }}"
+  ></empty-state>
+</ng-template>

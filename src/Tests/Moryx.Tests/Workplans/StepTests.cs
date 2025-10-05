@@ -23,8 +23,8 @@ namespace Moryx.Tests.Workplans
             var transition = step.CreateInstance(null);
 
             // Assert
-            Assert.IsInstanceOf<SplitTransition>(transition);
-            Assert.AreEqual(2, step.Outputs.Length);
+            Assert.That(transition, Is.InstanceOf<SplitTransition>());
+            Assert.That(step.Outputs.Length, Is.EqualTo(2));
         }
 
         [Test]
@@ -44,8 +44,8 @@ namespace Moryx.Tests.Workplans
             var transition = step.CreateInstance(null);
 
             // Assert
-            Assert.IsInstanceOf<JoinTransition>(transition);
-            Assert.AreEqual(1, step.Outputs.Length);
+            Assert.That(transition, Is.InstanceOf<JoinTransition>());
+            Assert.That(step.Outputs.Length, Is.EqualTo(1));
         }
 
         [Test]
@@ -60,17 +60,17 @@ namespace Moryx.Tests.Workplans
             var trans = step.CreateInstance(null);
 
             // Assert
-            Assert.IsInstanceOf<SubworkplanTransition>(trans);
-            Assert.AreEqual(2, step.Outputs.Length);
-            Assert.AreEqual(2, step.OutputDescriptions.Length);
+            Assert.That(trans, Is.InstanceOf<SubworkplanTransition>());
+            Assert.That(step.Outputs.Length, Is.EqualTo(2));
+            Assert.That(step.OutputDescriptions.Length, Is.EqualTo(2));
             var success = step.OutputDescriptions[0];
-            Assert.AreEqual("End", success.Name);
-            Assert.AreEqual(OutputType.Success, success.OutputType);
-            Assert.AreEqual(exits[0].Id, success.MappingValue);
+            Assert.That(success.Name, Is.EqualTo("End"));
+            Assert.That(success.OutputType, Is.EqualTo(OutputType.Success));
+            Assert.That(success.MappingValue, Is.EqualTo(exits[0].Id));
             var failed = step.OutputDescriptions[1];
-            Assert.AreEqual("Failed", failed.Name);
-            Assert.AreEqual(OutputType.Failure, failed.OutputType);
-            Assert.AreEqual(exits[1].Id, failed.MappingValue);
+            Assert.That(failed.Name, Is.EqualTo("Failed"));
+            Assert.That(failed.OutputType, Is.EqualTo(OutputType.Failure));
+            Assert.That(failed.MappingValue, Is.EqualTo(exits[1].Id));
         }
     }
 }

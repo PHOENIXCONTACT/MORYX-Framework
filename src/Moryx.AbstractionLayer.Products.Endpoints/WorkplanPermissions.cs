@@ -1,4 +1,7 @@
-﻿namespace Moryx.AbstractionLayer.Products.Endpoints
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Moryx.AbstractionLayer.Products.Endpoints
 {
     /// <summary>
     /// Permissions used to authorize for the <see cref="WorkplanController"/>
@@ -26,3 +29,4 @@
         public const string CanDelete = _prefix + "CanDelete";
     }
 }
+

@@ -24,17 +24,17 @@ namespace Moryx.Tests.Workplans
             var workplanInstance = WorkplanInstanceFactory.Instantiate(workplan, context);
 
             // Simple assert
-            Assert.AreEqual(workplan.Connectors.Count(), workplanInstance.Places.Count(), "Not all connectors transformed to places!");
-            Assert.AreEqual(workplan.Steps.Count(), workplanInstance.Transitions.Count(), "Not all steps transformed to transitions!");
-            Assert.IsTrue(workplanInstance.Transitions.Cast<DummyTransition>().All(t => t.Context == context), "Context not passed to all transitions!");
+            Assert.That(workplan.Connectors.Count(), Is.EqualTo(workplanInstance.Places.Count()), "Not all connectors transformed to places!");
+            Assert.That(workplan.Steps.Count(), Is.EqualTo(workplanInstance.Transitions.Count()), "Not all steps transformed to transitions!");
+            Assert.That(workplanInstance.Transitions.Cast<DummyTransition>().All(t => t.Context == context), "Context not passed to all transitions!");
             // Structure assert
             var transitions = workplanInstance.Transitions;
-            Assert.AreEqual(2, transitions[0].Outputs.Length);
-            Assert.AreEqual(transitions[0].Outputs[1], transitions[1].Inputs[0]);
-            Assert.AreEqual(transitions[0].Outputs[0], transitions[2].Inputs[0]);
-            Assert.AreEqual(transitions[1].Outputs[0], transitions[2].Inputs[0]);
-            Assert.AreEqual(transitions[2].Outputs[0], transitions[2].Outputs[1]);
-            Assert.AreEqual(transitions[2].Outputs[0], workplanInstance.EndPlaces().First());
+            Assert.That(transitions[0].Outputs.Length, Is.EqualTo(2));
+            Assert.That(transitions[1].Inputs[0], Is.EqualTo(transitions[0].Outputs[1]));
+            Assert.That(transitions[2].Inputs[0], Is.EqualTo(transitions[0].Outputs[0]));
+            Assert.That(transitions[2].Inputs[0], Is.EqualTo(transitions[1].Outputs[0]));
+            Assert.That(transitions[2].Outputs[1], Is.EqualTo(transitions[2].Outputs[0]));
+            Assert.That(workplanInstance.EndPlaces().First(), Is.EqualTo(transitions[2].Outputs[0]));
         }
 
         private class FakeContext : IWorkplanContext
@@ -55,8 +55,8 @@ namespace Moryx.Tests.Workplans
             var validation = WorkplanInstance.Validate(workplan, ValidationAspect.DeadEnd | ValidationAspect.LoneWolf);
 
             // Assert
-            Assert.IsTrue(validation.Success, "Validation did not return success for a valid workplan!");
-            Assert.AreEqual(0, validation.Errors.Length, "Valid workplan must not report errors!");
+            Assert.That(validation.Success, "Validation did not return success for a valid workplan!");
+            Assert.That(validation.Errors.Length, Is.EqualTo(0), "Valid workplan must not report errors!");
         }
 
         [Test]
@@ -69,13 +69,13 @@ namespace Moryx.Tests.Workplans
             var validation = WorkplanInstance.Validate(workplan, ValidationAspect.LoneWolf);
 
             // Assert
-            Assert.IsFalse(validation.Success, "Validation did not detect error!");
-            Assert.AreEqual(1, validation.Errors.Length, "Validation should have found one error!");
-            Assert.IsInstanceOf<LoneWolfValidationError>(validation.Errors[0], "Error should be of type \"LoneWolfValidationError\"");
+            Assert.That(validation.Success, Is.False, "Validation did not detect error!");
+            Assert.That(validation.Errors.Length, Is.EqualTo(1), "Validation should have found one error!");
+            Assert.That(validation.Errors[0], Is.InstanceOf<LoneWolfValidationError>(), "Error should be of type \"LoneWolfValidationError\"");
             var expected = workplan.Steps.First(s => s.Name == "LoneWolf");
-            Assert.AreEqual(expected.Id, validation.Errors[0].PositionId);
+            Assert.That(validation.Errors[0].PositionId, Is.EqualTo(expected.Id));
             var error = validation.Errors[0].Print(workplan);
-            Assert.NotNull(error);
+            Assert.That(error, Is.Not.Null);
         }
 
         [Test]
@@ -88,13 +88,13 @@ namespace Moryx.Tests.Workplans
             var validation = WorkplanInstance.Validate(workplan, ValidationAspect.DeadEnd);
 
             // Assert
-            Assert.IsFalse(validation.Success, "Validation did not detect error!");
-            Assert.AreEqual(1, validation.Errors.Length, "Validation should have found one error!");
-            Assert.IsInstanceOf<DeadEndValidationError>(validation.Errors[0], "Error should be of type \"DeadEndValidationError\"");
+            Assert.That(validation.Success, Is.False, "Validation did not detect error!");
+            Assert.That(validation.Errors.Length, Is.EqualTo(1), "Validation should have found one error!");
+            Assert.That(validation.Errors[0], Is.InstanceOf<DeadEndValidationError>(), "Error should be of type \"DeadEndValidationError\"");
             var expected = workplan.Connectors.First(c => c.Name == "DeadEnd");
-            Assert.AreEqual(expected.Id, validation.Errors[0].PositionId);
+            Assert.That(validation.Errors[0].PositionId, Is.EqualTo(expected.Id));
             var error = validation.Errors[0].Print(workplan);
-            Assert.NotNull(error);
+            Assert.That(error, Is.Not.Null);
         }
 
         [TestCase(ExecutionPath.Default, 2, "->A->C", Description = "Executing workplan instance on default path")]
@@ -122,9 +122,9 @@ namespace Moryx.Tests.Workplans
             WorkplanInstance.Destroy(engine);
 
             // Assert
-            Assert.IsTrue(_completed);
-            Assert.AreEqual(expectedTransitions, triggerCount, "Less transitions triggered than expected!");
-            Assert.AreEqual(expectedPath, path, "Workplan engine did not take the correct path!");
+            Assert.That(_completed);
+            Assert.That(triggerCount, Is.EqualTo(expectedTransitions), "Less transitions triggered than expected!");
+            Assert.That(path, Is.EqualTo(expectedPath), "Workplan engine did not take the correct path!");
         }
 
         public enum ExecutionPath
@@ -151,11 +151,11 @@ namespace Moryx.Tests.Workplans
 
             // Assert
             var stepId = workplan.Steps.Single(s => s is PausableStep).Id;
-            Assert.IsTrue(_completed);
-            Assert.AreEqual(1, snapShot.Holders.Length);
-            Assert.AreEqual(stepId, snapShot.Holders[0].HolderId);
-            Assert.IsInstanceOf<MainToken>(snapShot.Holders[0].HolderState);
-            Assert.AreEqual(1, snapShot.Holders[0].Tokens.Length);
+            Assert.That(_completed);
+            Assert.That(snapShot.Holders.Length, Is.EqualTo(1));
+            Assert.That(snapShot.Holders[0].HolderId, Is.EqualTo(stepId));
+            Assert.That(snapShot.Holders[0].HolderState, Is.InstanceOf<MainToken>());
+            Assert.That(snapShot.Holders[0].Tokens.Length, Is.EqualTo(1));
         }
 
         [Test]
@@ -184,7 +184,7 @@ namespace Moryx.Tests.Workplans
             engine.Start(); // <-- This run to the end
 
             // Assert
-            Assert.IsTrue(_completed);
+            Assert.That(_completed);
         }
 
         private void EngineCompleted(object sender, IPlace place)

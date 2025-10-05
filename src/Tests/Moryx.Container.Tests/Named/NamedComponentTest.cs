@@ -26,8 +26,8 @@ namespace Moryx.Container.Tests
         {
             var comp = _container.Resolve<Component>();
 
-            Assert.NotNull(comp.Unnamed, "Container did not inject dependency");
-            Assert.AreEqual("DepA", comp.Unnamed.GetName(), "Container did not inject default implementation");
+            Assert.That(comp.Unnamed, Is.Not.Null, "Container did not inject dependency");
+            Assert.That(comp.Unnamed.GetName(), Is.EqualTo("DepA"), "Container did not inject default implementation");
         }
 
         [Test]
@@ -35,8 +35,8 @@ namespace Moryx.Container.Tests
         {
             var comp = _container.Resolve<Component>();
 
-            Assert.NotNull(comp.DepA, "Container did not inject DependencyA");
-            Assert.AreEqual("DepA", comp.DepA.GetName(), "Container did not inject default implementation");
+            Assert.That(comp.DepA, Is.Not.Null, "Container did not inject DependencyA");
+            Assert.That(comp.DepA.GetName(), Is.EqualTo("DepA"), "Container did not inject default implementation");
         }
 
         [Test]
@@ -44,8 +44,8 @@ namespace Moryx.Container.Tests
         {
             var comp = _container.Resolve<Component>();
 
-            Assert.NotNull(comp.DepB, "Container did not inject DependencyB");
-            Assert.AreEqual("DepB", comp.DepB.GetName(), "Container did not inject default implementation");
+            Assert.That(comp.DepB, Is.Not.Null, "Container did not inject DependencyB");
+            Assert.That(comp.DepB.GetName(), Is.EqualTo("DepB"), "Container did not inject default implementation");
         }
     }
 }

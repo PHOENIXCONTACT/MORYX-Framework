@@ -441,9 +441,9 @@ namespace Moryx.Products.IntegrationTests
             var secondsNeedle = watch.Needles.Find(t => t.Role == NeedleRole.Seconds);
 
             //Assert
-            Assert.AreNotEqual(minuteNeedle.Product.Id, 0, "Id of Needle for minutes was 0");
-            Assert.AreNotEqual(secondsNeedle.Product.Id, 0, "Id of Needle for seconds was 0");
-            Assert.AreEqual(secondsNeedle.Product.Id, minuteNeedle.Product.Id, "Both needles must have the same Id since they are the same product");
+            Assert.That(minuteNeedle.Product.Id, Is.Not.EqualTo(0), "Id of Needle for minutes was 0");
+            Assert.That(secondsNeedle.Product.Id, Is.Not.EqualTo(0), "Id of Needle for seconds was 0");
+            Assert.That(minuteNeedle.Product.Id, Is.EqualTo(secondsNeedle.Product.Id), "Both needles must have the same Id since they are the same product");
         }
 
         [Test]
@@ -461,7 +461,7 @@ namespace Moryx.Products.IntegrationTests
                 var productEntityRepo = uow.GetRepository<IProductTypeRepository>();
 
                 var watchEntity = productEntityRepo.GetByKey(savedWatchId);
-                Assert.NotNull(watchEntity, "Failed to save or id not written");
+                Assert.That(watchEntity, Is.Not.Null, "Failed to save or id not written");
 
                 CheckProduct(watch, watchEntity, productEntityRepo, savedWatchId);
             }
@@ -485,9 +485,9 @@ namespace Moryx.Products.IntegrationTests
                 var productEntityRepo = uow.GetRepository<IProductTypeRepository>();
 
                 var watchEntity = productEntityRepo.GetByKey(savedWatchId);
-                Assert.NotNull(watchEntity, "Failed to save or id not written");
-                Assert.AreEqual(123.45, watchEntity.OldVersions.First().Float1, "Old data are not equal to the previous version");
-                Assert.AreEqual(234.56, watchEntity.CurrentVersion.Float1, "Latest changes are not in the new version");
+                Assert.That(watchEntity, Is.Not.Null, "Failed to save or id not written");
+                Assert.That(watchEntity.OldVersions.First().Float1, Is.EqualTo(123.45), "Old data are not equal to the previous version");
+                Assert.That(watchEntity.CurrentVersion.Float1, Is.EqualTo(234.56), "Latest changes are not in the new version");
 
                 CheckProduct(watch, watchEntity, productEntityRepo, savedWatchId);
             }
@@ -497,15 +497,15 @@ namespace Moryx.Products.IntegrationTests
         {
             var watchNeedlesCount = watch.Needles.Count;
             var watchEntityNeedlesCount = watchProductTypeEntity.Parts.Count(p => p.Child.TypeName.Equals(typeof(NeedleType).FullName));
-            Assert.AreEqual(watchNeedlesCount, watchEntityNeedlesCount, "Different number of needles");
+            Assert.That(watchEntityNeedlesCount, Is.EqualTo(watchNeedlesCount), "Different number of needles");
 
             var watchfaceEntity = watchProductTypeEntity.Parts.First(p => p.Child.TypeName.Equals(typeof(WatchFaceType).FullName)).Child;
-            Assert.NotNull(watchfaceEntity, "There is no watchface");
+            Assert.That(watchfaceEntity, Is.Not.Null, "There is no watchface");
 
             var identity = (ProductIdentity)watch.Identity;
             var byIdentifier = productTypeRepo.GetByIdentity(identity.Identifier, identity.Revision);
-            Assert.NotNull(byIdentifier, "New version of watch not found by identifier ");
-            Assert.AreEqual(savedWatchId, byIdentifier.Id, "Different id´s");
+            Assert.That(byIdentifier, Is.Not.Null, "New version of watch not found by identifier ");
+            Assert.That(byIdentifier.Id, Is.EqualTo(savedWatchId), "Different id´s");
         }
 
         [Test]
@@ -520,12 +520,12 @@ namespace Moryx.Products.IntegrationTests
             var loadedWatch = (WatchType)_storage.LoadType(savedWatchId);
 
             // Assert
-            Assert.NotNull(loadedWatch, "Failed to load from database");
-            Assert.AreEqual(watch.Identity.Identifier, loadedWatch.Identity.Identifier, "Different identifier of the saved an loaded watch");
-            Assert.AreEqual(watch.WatchFace.Product.Identity.Identifier, loadedWatch.WatchFace.Product.Identity.Identifier, "Different watchface identifier of the saved and loaded watch");
-            Assert.AreEqual(watch.Needles.Count, loadedWatch.Needles.Count, "Different number of needles");
+            Assert.That(loadedWatch, Is.Not.Null, "Failed to load from database");
+            Assert.That(loadedWatch.Identity.Identifier, Is.EqualTo(watch.Identity.Identifier), "Different identifier of the saved an loaded watch");
+            Assert.That(loadedWatch.WatchFace.Product.Identity.Identifier, Is.EqualTo(watch.WatchFace.Product.Identity.Identifier), "Different watchface identifier of the saved and loaded watch");
+            Assert.That(loadedWatch.Needles.Count, Is.EqualTo(watch.Needles.Count), "Different number of needles");
             var loadedWatchface = (WatchFaceType)loadedWatch.WatchFace.Product;
-            Assert.AreEqual(watchface.Numbers.Length, loadedWatchface.Numbers.Length, "Different number of watch numbers");
+            Assert.That(loadedWatchface.Numbers.Length, Is.EqualTo(watchface.Numbers.Length), "Different number of watch numbers");
         }
 
         [Test(Description = "This test saves a product with a null string property and saves it again. " +
@@ -576,11 +576,11 @@ namespace Moryx.Products.IntegrationTests
             var all = _storage.LoadRecipes(watch.Id, RecipeClassification.CloneFilter);
 
             // Assert
-            Assert.AreEqual(1, defaults.Count);
-            Assert.AreEqual(2, alternatives.Count);
-            Assert.AreEqual(3, defaultsAndAlternatives.Count);
-            Assert.AreEqual(1, parts.Count);
-            Assert.AreEqual(4, all.Count);
+            Assert.That(defaults.Count, Is.EqualTo(1));
+            Assert.That(alternatives.Count, Is.EqualTo(2));
+            Assert.That(defaultsAndAlternatives.Count, Is.EqualTo(3));
+            Assert.That(parts.Count, Is.EqualTo(1));
+            Assert.That(all.Count, Is.EqualTo(4));
 
             void CreateRecipe(RecipeClassification classification)
             {
@@ -614,7 +614,7 @@ namespace Moryx.Products.IntegrationTests
             var loaded = (WatchFaceType)_storage.LoadType(savedId);
 
             // Assert
-            Assert.AreEqual(0, loaded.Color);
+            Assert.That(loaded.Color, Is.EqualTo(0));
         }
 
         [TestCase(true, Description = "Get the latest revision of an existing product")]
@@ -635,13 +635,13 @@ namespace Moryx.Products.IntegrationTests
             // Assert
             if (exists)
             {
-                Assert.NotNull(loadedWatch);
-                Assert.AreEqual(42, ((ProductIdentity)loadedWatch.Identity).Revision);
-                Assert.AreEqual(newName, loadedWatch.Name);
+                Assert.That(loadedWatch, Is.Not.Null);
+                Assert.That(((ProductIdentity)loadedWatch.Identity).Revision, Is.EqualTo(42));
+                Assert.That(loadedWatch.Name, Is.EqualTo(newName));
             }
             else
             {
-                Assert.IsNull(loadedWatch);
+                Assert.That(loadedWatch, Is.Null);
             }
         }
 
@@ -676,12 +676,12 @@ namespace Moryx.Products.IntegrationTests
             });
 
             // Assert
-            Assert.Greater(all.Count, latestRevision.Count);
-            Assert.IsTrue(byType.All(p => p is NeedleType));
-            Assert.IsTrue(allRevision.All(p => p.Identity.Identifier == WatchMaterial));
-            Assert.GreaterOrEqual(latestByType.Count, 1);
-            Assert.IsTrue(usages.All(u => u is WatchType));
-            Assert.GreaterOrEqual(needles.Count, 3);
+            Assert.That(all.Count, Is.GreaterThan(latestRevision.Count));
+            Assert.That(byType.All(p => p is NeedleType));
+            Assert.That(allRevision.All(p => p.Identity.Identifier == WatchMaterial));
+            Assert.That(latestByType.Count, Is.GreaterThanOrEqualTo(1));
+            Assert.That(usages.All(u => u is WatchType));
+            Assert.That(needles.Count, Is.GreaterThanOrEqualTo(3));
         }
 
         [Test]
@@ -717,12 +717,12 @@ namespace Moryx.Products.IntegrationTests
             });
 
             // Assert
-            Assert.AreEqual(loaded.Count, 1);
-            Assert.AreEqual(watchface.Id, loaded[0].Id);
-            Assert.AreEqual(loaded2.Count, 1);
-            Assert.AreEqual(watchface.Id, loaded2[0].Id);
-            Assert.AreEqual(loaded3.Count, 1);
-            Assert.AreEqual(watchface.Id, loaded3[0].Id);
+            Assert.That(1, Is.EqualTo(loaded.Count));
+            Assert.That(loaded[0].Id, Is.EqualTo(watchface.Id));
+            Assert.That(1, Is.EqualTo(loaded2.Count));
+            Assert.That(loaded2[0].Id, Is.EqualTo(watchface.Id));
+            Assert.That(1, Is.EqualTo(loaded3.Count));
+            Assert.That(loaded3[0].Id, Is.EqualTo(watchface.Id));
         }
 
         [Test]
@@ -745,7 +745,7 @@ namespace Moryx.Products.IntegrationTests
             });
 
             // Assert
-            Assert.GreaterOrEqual(needles.Count, 0, "There should be no products if a wildcard was used for the name");
+            Assert.That(needles.Count, Is.GreaterThanOrEqualTo(0), "There should be no products if a wildcard was used for the name");
         }
 
         [Test]
@@ -768,7 +768,7 @@ namespace Moryx.Products.IntegrationTests
             });
 
             // Assert
-            Assert.AreEqual(1, products.Count, "There should be a product for the given query");
+            Assert.That(products.Count, Is.EqualTo(1), "There should be a product for the given query");
         }
 
         [TestCase(false, false, Description = "Duplicate product with valid id")]
@@ -805,7 +805,7 @@ namespace Moryx.Products.IntegrationTests
                 {
                     duplicate = (WatchType)productMgr.Duplicate(watch, newIdentity);
                 });
-                Assert.AreEqual(crossTypeIdentifier, ex.InvalidTemplate);
+                Assert.That(ex.InvalidTemplate, Is.EqualTo(crossTypeIdentifier));
                 return;
             }
 
@@ -818,12 +818,12 @@ namespace Moryx.Products.IntegrationTests
             var recipeDuplicates = _storage.LoadRecipes(duplicate.Id, RecipeClassification.CloneFilter);
 
             // Assert
-            Assert.AreEqual(watch.WatchFace.Product.Id, duplicate.WatchFace.Product.Id);
-            Assert.AreEqual(watch.Needles.Sum(n => n.Product.Id), duplicate.Needles.Sum(n => n.Product.Id));
-            Assert.Greater(recipeDuplicates.Count, 0);
-            Assert.AreNotEqual(recipe.Id, recipeDuplicates[0].Id);
-            Assert.AreEqual(recipe.Name, recipeDuplicates[0].Name);
-            Assert.AreEqual(recipe.Classification, recipeDuplicates[0].Classification);
+            Assert.That(duplicate.WatchFace.Product.Id, Is.EqualTo(watch.WatchFace.Product.Id));
+            Assert.That(duplicate.Needles.Sum(n => n.Product.Id), Is.EqualTo(watch.Needles.Sum(n => n.Product.Id)));
+            Assert.That(recipeDuplicates.Count, Is.GreaterThan(0));
+            Assert.That(recipe.Id, Is.Not.EqualTo(recipeDuplicates[0].Id));
+            Assert.That(recipeDuplicates[0].Name, Is.EqualTo(recipe.Name));
+            Assert.That(recipeDuplicates[0].Classification, Is.EqualTo(recipe.Classification));
         }
 
         [TestCase(true, Description = "Remove a product that is still used")]
@@ -847,7 +847,7 @@ namespace Moryx.Products.IntegrationTests
                 result = productMgr.DeleteType(watch.Id);
 
             // Assert
-            Assert.AreEqual(stillUsed, !result);
+            Assert.That(!result, Is.EqualTo(stillUsed));
             if (stillUsed)
                 return;
 
@@ -857,7 +857,7 @@ namespace Moryx.Products.IntegrationTests
                 Revision = 5,
                 Identifier = watch.Identity.Identifier
             });
-            Assert.AreEqual(0, matches.Count);
+            Assert.That(matches.Count, Is.EqualTo(0));
         }
 
         [Test]
@@ -880,15 +880,15 @@ namespace Moryx.Products.IntegrationTests
             using (var uow = _factory.Create())
             {
                 var root = uow.GetRepository<IProductInstanceRepository>().GetByKey(instance.Id);
-                Assert.NotNull(root, "Failed to save or id not written");
-                Assert.AreEqual(instance.DeliveryDate.Ticks, root.Integer1, "DateTime not saved");
-                Assert.AreEqual(1, root.Integer2, "Bool not saved");
+                Assert.That(root, Is.Not.Null, "Failed to save or id not written");
+                Assert.That(root.Integer1, Is.EqualTo(instance.DeliveryDate.Ticks), "DateTime not saved");
+                Assert.That(root.Integer2, Is.EqualTo(1), "Bool not saved");
 
                 var parts = root.Parts;
-                Assert.AreEqual(1, parts.Count, "Invalid number of parts!"); // needles will be skipped for saving
+                Assert.That(parts.Count, Is.EqualTo(1), "Invalid number of parts!"); // needles will be skipped for saving
 
                 var single = parts.FirstOrDefault(p => p.PartLinkEntityId == watch.WatchFace.Id);
-                Assert.NotNull(single, "Single part not saved!");
+                Assert.That(single, Is.Not.Null, "Single part not saved!");
             }
 
             // Act
@@ -907,24 +907,24 @@ namespace Moryx.Products.IntegrationTests
             var byType6 = _storage.LoadInstances<WatchInstance>(i => i.Type.Identity == identity);
 
             // Assert
-            Assert.NotNull(watchCopy);
-            Assert.AreEqual(instance.DeliveryDate, watchCopy.DeliveryDate);
-            Assert.AreEqual(instance.TimeSet, watchCopy.TimeSet);
-            Assert.NotNull(instance.WatchFace);
-            Assert.AreEqual(instance.WatchFace.Identifier, watchCopy.WatchFace.Identifier, "Guid does not match");
-            Assert.NotNull(instance.Needles);
-            Assert.AreEqual(3, instance.Needles.Count);
+            Assert.That(watchCopy, Is.Not.Null);
+            Assert.That(watchCopy.DeliveryDate, Is.EqualTo(instance.DeliveryDate));
+            Assert.That(watchCopy.TimeSet, Is.EqualTo(instance.TimeSet));
+            Assert.That(instance.WatchFace, Is.Not.Null);
+            Assert.That(watchCopy.WatchFace.Identifier, Is.EqualTo(instance.WatchFace.Identifier), "Guid does not match");
+            Assert.That(instance.Needles, Is.Not.Null);
+            Assert.That(instance.Needles.Count, Is.EqualTo(3));
 
-            Assert.LessOrEqual(1, byIdentity.Count);
-            Assert.LessOrEqual(1, byDateTime.Count);
-            Assert.LessOrEqual(1, byBool.Count);
-            Assert.LessOrEqual(1, byType.Count);
-            Assert.LessOrEqual(1, byType1.Count);
-            Assert.LessOrEqual(1, byType2.Count);
-            Assert.LessOrEqual(1, byType3.Count);
-            Assert.LessOrEqual(1, byType4.Count);
-            Assert.LessOrEqual(1, byType5.Count);
-            Assert.LessOrEqual(1, byType6.Count);
+            Assert.That(byIdentity.Count, Is.GreaterThanOrEqualTo(1));
+            Assert.That(byDateTime.Count, Is.GreaterThanOrEqualTo(1));
+            Assert.That(byBool.Count, Is.GreaterThanOrEqualTo(1));
+            Assert.That(byType.Count, Is.GreaterThanOrEqualTo(1));
+            Assert.That(byType1.Count, Is.GreaterThanOrEqualTo(1));
+            Assert.That(byType2.Count, Is.GreaterThanOrEqualTo(1));
+            Assert.That(byType3.Count, Is.GreaterThanOrEqualTo(1));
+            Assert.That(byType4.Count, Is.GreaterThanOrEqualTo(1));
+            Assert.That(byType5.Count, Is.GreaterThanOrEqualTo(1));
+            Assert.That(byType6.Count, Is.GreaterThanOrEqualTo(1));
         }
     }
 }

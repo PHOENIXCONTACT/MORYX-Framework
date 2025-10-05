@@ -7,6 +7,10 @@ using Moryx.AbstractionLayer.Capabilities;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Serialization;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+using Moryx.AbstractionLayer.Localizations;
 
 namespace Moryx.AbstractionLayer.Resources
 {
@@ -51,12 +55,14 @@ namespace Moryx.AbstractionLayer.Resources
         /// Parent resource of this resource
         /// </summary>
         [ResourceReference(ResourceRelationType.ParentChild, ResourceReferenceRole.Source)]
+        [Display(Name = nameof(Strings.PARENT), ResourceType = typeof(Localizations.Strings))]
         public Resource Parent { get; set; }
 
         /// <summary>
         /// All children of this resource
         /// </summary>
         [ResourceReference(ResourceRelationType.ParentChild, ResourceReferenceRole.Target)]
+        [Display(Name = nameof(Strings.CHILDREN), ResourceType = typeof(Localizations.Strings))]
         public IReferences<Resource> Children { get; set; }
 
         /// <inheritdoc />

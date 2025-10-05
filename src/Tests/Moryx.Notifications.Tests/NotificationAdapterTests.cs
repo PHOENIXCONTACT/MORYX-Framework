@@ -59,10 +59,10 @@ namespace Moryx.Notifications.Tests
             _adapter.Publish(_sender, notification);
 
             // Assert
-            Assert.NotNull(_publishedEventNotification, "Published-event was not triggered.");
-            Assert.AreEqual(notification, _publishedEventNotification, "Published-event was triggered with wrong notification.");
-            Assert.NotNull(_publishedEventNotification.Identifier, "Identifier should not be null.");
-            Assert.AreNotEqual(_publishedEventNotification.Created, default(DateTime), "Created date should have been set");
+            Assert.That(_publishedEventNotification, Is.Not.Null, "Published-event was not triggered.");
+            Assert.That(_publishedEventNotification, Is.EqualTo(notification), "Published-event was triggered with wrong notification.");
+            Assert.That(_publishedEventNotification.Identifier, Is.Not.Null, "Identifier should not be null.");
+            Assert.That(_publishedEventNotification.Created, Is.Not.EqualTo(default(DateTime)), "Created date should have been set");
 
             Assert.Throws<InvalidOperationException>(delegate
             {
@@ -83,7 +83,7 @@ namespace Moryx.Notifications.Tests
 
             // Arrange
             var published = _adapter.GetPublished(_sender, tag);
-            Assert.AreEqual(1, published.Count);
+            Assert.That(published.Count, Is.EqualTo(1));
         }
 
         [Test(Description = "Check that acknowledging a notification by the adapter for a known notification.")]
@@ -97,9 +97,9 @@ namespace Moryx.Notifications.Tests
             _adapter.Acknowledge(_sender, notification);
 
             // Assert
-            Assert.NotNull(_acknowledgedEventNotification, "Acknowledged-event was not triggered.");
-            Assert.AreEqual(notification, _acknowledgedEventNotification, "Acknowledged-event was triggered with wrong notification.");
-            Assert.AreNotEqual(_acknowledgedEventNotification.Acknowledged, default(DateTime), "Acknowledged date should have been set");
+            Assert.That(_acknowledgedEventNotification, Is.Not.Null, "Acknowledged-event was not triggered.");
+            Assert.That(_acknowledgedEventNotification, Is.EqualTo(notification), "Acknowledged-event was triggered with wrong notification.");
+            Assert.That(_acknowledgedEventNotification.Acknowledged, Is.Not.EqualTo(default(DateTime)), "Acknowledged date should have been set");
         }
 
         [Test(Description = "Check that acknowledging a notification by the adapter for a known notification.")]
@@ -114,9 +114,9 @@ namespace Moryx.Notifications.Tests
             _adapter.Acknowledge(_sender, notification);
 
             // Assert
-            Assert.NotNull(_acknowledgedEventNotification, "Acknowledged-event was not triggered.");
-            Assert.AreEqual(notification, _acknowledgedEventNotification, "Acknowledged-event was triggered with wrong notification.");
-            Assert.AreNotEqual(_acknowledgedEventNotification.Acknowledged, default(DateTime), "Acknowledged date should have been set");
+            Assert.That(_acknowledgedEventNotification, Is.Not.Null, "Acknowledged-event was not triggered.");
+            Assert.That(_acknowledgedEventNotification, Is.EqualTo(notification), "Acknowledged-event was triggered with wrong notification.");
+            Assert.That(_acknowledgedEventNotification.Acknowledged, Is.Not.EqualTo(default(DateTime)), "Acknowledged date should have been set");
         }
 
         [Test(Description = "Check that acknowledging a notification by the adapter for a known notification throws an exception.")]
@@ -146,8 +146,8 @@ namespace Moryx.Notifications.Tests
             ((INotificationSourceAdapter)_adapter).Acknowledge(notification);
 
             //Assert
-            Assert.NotNull(_acknowledgeCallNotification, "Acknowledged was not called on the sender.");
-            Assert.AreEqual(notification, _acknowledgeCallNotification, "Acknowledged was not called for the wrong notification.");
+            Assert.That(_acknowledgeCallNotification, Is.Not.Null, "Acknowledged was not called on the sender.");
+            Assert.That(_acknowledgeCallNotification, Is.EqualTo(notification), "Acknowledged was not called for the wrong notification.");
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace Moryx.Notifications.Tests
             ((INotificationSourceAdapter) _adapter).Sync();
 
             // Assert
-            Assert.AreEqual(4, counter, "There should be four publish events. One for each pending notification");
+            Assert.That(counter, Is.EqualTo(4), "There should be four publish events. One for each pending notification");
         }
 
         [Test(Description = "Pending acknowledgements should be acknowledged again during a sync because of a restart of the Publisher")]
@@ -202,7 +202,7 @@ namespace Moryx.Notifications.Tests
             ((INotificationSourceAdapter) _adapter).Sync();
 
             // Assert
-            Assert.AreEqual(2, counter, "There should be two ackowledge events. One for each pending acknowledgement which should be synchronized with the Publisher");
+            Assert.That(counter, Is.EqualTo(2), "There should be two ackowledge events. One for each pending acknowledgement which should be synchronized with the Publisher");
         }
 
         [Test(Description = "Nothing to do during the synchronization if everything is up to date")]
@@ -222,7 +222,7 @@ namespace Moryx.Notifications.Tests
             ((INotificationSourceAdapter) _adapter).Sync();
 
             // Assert
-            Assert.AreEqual(0, counter, "There should be no publish events because everything should be up to date");
+            Assert.That(counter, Is.EqualTo(0), "There should be no publish events because everything should be up to date");
         }
     }
 }

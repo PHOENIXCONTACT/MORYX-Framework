@@ -1,0 +1,122 @@
+
+:host {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.content-details {
+  flex: 1;
+}
+
+.media-sidenav{
+  width: 300px;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05); 
+}
+
+.media-side-bar{
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.upload-button {
+  position: absolute;
+  top: 75px;
+  right: 16px;
+  z-index: 10;
+}
+
+.variant-item {
+  cursor: pointer;
+  width: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.variant-list {
+  flex: 1 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+::ng-deep .variant-item {
+  height: fit-content !important;
+  padding: 4px  !important;
+}
+
+::ng-deep .variant-item .mdc-list-item__content {
+  height: 100%;
+  justify-content: flex-start;
+  display: flex;
+  padding-left: 16px;
+}
+
+::ng-deep .variant-item .mat-mdc-list-item-unscoped-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+  }
+
+  .variant-item-details {
+    display: flex;
+    flex-direction: column;
+    padding-left: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+
+    h3 {
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      height: 20px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.variant-container {
+  flex: 1 1 auto;
+  height: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.variant-image {
+  max-height: 100%;
+  max-width: 100%;
+}
+.variant-pdf {
+  height: 100%;
+  width: 100%;
+}
+.media-toolbar{
+  color: white;
+}
+.media-toolbar-button {
+  color: white;
+}

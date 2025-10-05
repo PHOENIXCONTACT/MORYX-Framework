@@ -34,8 +34,8 @@ namespace Moryx.Model.Tests
             context = inMemoryFactory.Create<TestModelContext>();
             var reloadedCar = await context.Cars.FirstAsync();
 
-            Assert.IsNotNull(reloadedCar);
-            Assert.AreEqual(carName, reloadedCar.Name);
+            Assert.That(reloadedCar, Is.Not.Null);
+            Assert.That(reloadedCar.Name, Is.EqualTo(carName));
             
         }
 
@@ -57,9 +57,9 @@ namespace Moryx.Model.Tests
             var reloadedCar = await context.Cars.FirstAsync();
 
             // Assert
-            Assert.IsNotNull(reloadedCar);
-            Assert.AreEqual(DateTimeKind.Utc, reloadedCar.ReleaseDateUtc.Kind);
-            Assert.AreEqual(DateTimeKind.Local, reloadedCar.ReleaseDateLocal.Kind);
+            Assert.That(reloadedCar, Is.Not.Null);
+            Assert.That(reloadedCar.ReleaseDateUtc.Kind, Is.EqualTo(DateTimeKind.Utc));
+            Assert.That(reloadedCar.ReleaseDateLocal.Kind, Is.EqualTo(DateTimeKind.Local));
         }
     }
 }

@@ -1,0 +1,9 @@
+<a [class]="class" (click)="onClick()">
+    @if(isChecked()){
+        <span class="material-symbols-outlined">check_small</span>
+    }
+    @else {
+        <span style="margin-right: 8px; width: 16px; height: 4px;"></span>
+    }
+    <ng-content></ng-content>
+</a>

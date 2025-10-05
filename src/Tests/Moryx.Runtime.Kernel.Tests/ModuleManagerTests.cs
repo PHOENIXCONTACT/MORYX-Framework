@@ -63,8 +63,8 @@ namespace Moryx.Runtime.Kernel.Tests
             moduleManager.StartModules();
 
             // Assert
-            Assert.NotNull(dependent.Facades, "No facade injected");
-            Assert.AreEqual(3, dependent.Facades.Length, "Faulty number of facades");
+            Assert.That(dependent.Facades, Is.Not.Null, "No facade injected");
+            Assert.That(dependent.Facades.Length, Is.EqualTo(3), "Faulty number of facades");
         }
 
         [Test]
@@ -80,8 +80,8 @@ namespace Moryx.Runtime.Kernel.Tests
             moduleManager.StartModules();
 
             // Assert
-            Assert.NotNull(dependent.Facades, "No facade injected");
-            Assert.AreEqual(0, dependent.Facades.Length, "Faulty number of facades");
+            Assert.That(dependent.Facades, Is.Not.Null, "No facade injected");
+            Assert.That(dependent.Facades.Length, Is.EqualTo(0), "Faulty number of facades");
         }
 
         [Test]
@@ -98,8 +98,8 @@ namespace Moryx.Runtime.Kernel.Tests
             moduleManager.StartModules();
 
             // Assert
-            Assert.NotNull(dependent.Facades, "No facade injected");
-            Assert.AreEqual(1, dependent.Facades.Length, "Faulty number of facades");
+            Assert.That(dependent.Facades, Is.Not.Null, "No facade injected");
+            Assert.That(dependent.Facades.Length, Is.EqualTo(1), "Faulty number of facades");
         }
 
 
@@ -118,7 +118,7 @@ namespace Moryx.Runtime.Kernel.Tests
             moduleManager.StartModules();
 
             // Assert
-            Assert.NotNull(depend.Dependency, "Facade not injected correctly");
+            Assert.That(depend.Dependency, Is.Not.Null, "Facade not injected correctly");
         }
 
         [Test]
@@ -136,10 +136,10 @@ namespace Moryx.Runtime.Kernel.Tests
             moduleManager.StartModules();
 
             // Assert
-            Assert.AreEqual(4, moduleManager.AllModules.Count());
+            Assert.That(moduleManager.AllModules.Count(), Is.EqualTo(4));
             var available = moduleManager.DependencyTree.RootModules
                 .Flatten(md => md.Dependents).ToList();
-            Assert.AreEqual(2, available.Count);
+            Assert.That(available.Count, Is.EqualTo(2));
         }
 
         [Test]
@@ -156,10 +156,10 @@ namespace Moryx.Runtime.Kernel.Tests
             moduleManager.StartModules();
 
             // Assert
-            Assert.AreEqual(3, moduleManager.AllModules.Count());
+            Assert.That(moduleManager.AllModules.Count(), Is.EqualTo(3));
             var available = moduleManager.DependencyTree.RootModules
                 .Flatten(md => md.Dependents).ToList();
-            Assert.AreEqual(2, available.Count);
+            Assert.That(available.Count, Is.EqualTo(2));
         }
 
         [Test]
@@ -177,9 +177,9 @@ namespace Moryx.Runtime.Kernel.Tests
             moduleManager.StartModules();
 
             // Assert
-            Assert.AreEqual(3, moduleManager.AllModules.Count());
+            Assert.That(moduleManager.AllModules.Count(), Is.EqualTo(3));
             var moduleBUsingA_Dependencies = moduleManager.StartDependencies(moduleBUsingA);
-            Assert.AreEqual(1,moduleBUsingA_Dependencies.Count());
+            Assert.That(moduleBUsingA_Dependencies.Count(), Is.EqualTo(1));
         }
 
         [Test]
@@ -273,7 +273,7 @@ namespace Moryx.Runtime.Kernel.Tests
             mockModule.Raise(mock => mock.StateChanged += null, null, new ModuleStateChangedEventArgs());
 
             // Assert
-            Assert.IsTrue(eventFired, "ModuleManager doesn't observe state changed events of modules.");
+            Assert.That(eventFired, "ModuleManager doesn't observe state changed events of modules.");
         }
 
         [Test]
@@ -289,7 +289,7 @@ namespace Moryx.Runtime.Kernel.Tests
             WaitForTimeboxed(() => module.State == ServerModuleState.Running);
 
             // Assert
-            Assert.AreEqual(1, module.ActivatedCount);
+            Assert.That(module.ActivatedCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -309,7 +309,7 @@ namespace Moryx.Runtime.Kernel.Tests
             WaitForTimeboxed(() => module.State == ServerModuleState.Stopped);
 
             // Assert
-            Assert.AreEqual(1, module.ActivatedCount);
+            Assert.That(module.ActivatedCount, Is.EqualTo(1));
         }
 
         private static void WaitForTimeboxed(Func<bool> condition, int maxSeconds = 10) {

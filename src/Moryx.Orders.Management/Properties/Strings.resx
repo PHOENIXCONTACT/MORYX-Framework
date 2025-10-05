@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="OperationManager_NoPartialReportErrorText" xml:space="preserve">
+    <value>Partial report is not possible in the current operation state.</value>
+  </data>
+  <data name="OperationManager_NoFinalReportErrorText" xml:space="preserve">
+    <value>Final report is not possible in the current operation state.</value>
+  </data>
+  <data name="OperationManager_StateErrorText" xml:space="preserve">
+    <value>Operation in this state cannot be started.</value>
+  </data>
+  <data name="OperationManager_MaxRunningErrorText" xml:space="preserve">
+    <value>Maximum amount of running operations is reached.</value>
+  </data>
+  <data name="RecipeAssignStep_WorkplanValidation_Failed" xml:space="preserve">
+    <value>Workplan validation failed. Error: \n{0}</value>
+  </data>
+  <data name="OperationState_AbortedState" xml:space="preserve">
+    <value>Aborted</value>
+  </data>
+  <data name="OperationState_AmountReachedState" xml:space="preserve">
+    <value>Amount Reached</value>
+  </data>
+  <data name="OperationState_CompletedState" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="OperationState_InitialAssignState" xml:space="preserve">
+    <value>Creating</value>
+  </data>
+  <data name="OperationState_InitialAssignFailedState" xml:space="preserve">
+    <value>Creation Failed</value>
+  </data>
+  <data name="OperationState_InitialState" xml:space="preserve">
+    <value>Initial</value>
+  </data>
+  <data name="OperationState_InterruptedState" xml:space="preserve">
+    <value>Interrupted</value>
+  </data>
+  <data name="OperationState_InterruptingState" xml:space="preserve">
+    <value>Interrupting</value>
+  </data>
+  <data name="OperationState_ReadyState" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="OperationState_RunningState" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="RecipeAssignStep_Processing_Failed" xml:space="preserve">
+    <value>It was not possible to process recipe '{0}' successfully!</value>
+  </data>
+  <data name="RecipeAssignStep_Selection_Failed" xml:space="preserve">
+    <value>It was not possible to select recipes for the operation! There was a null value or no recipe selected!</value>
+  </data>
+  <data name="ProductAssignStep_Selection_Failed" xml:space="preserve">
+    <value>It was not possible to assign the product!</value>
+  </data>
+  <data name="OperationManager_NoReportErrorText" xml:space="preserve">
+    <value>No report possible in the current operation state.</value>
+  </data>
+  <data name="OperationState_AmountReachedAssignState" xml:space="preserve">
+    <value>Assigning</value>
+  </data>
+  <data name="OperationState_AmountReachedAssignFailedState" xml:space="preserve">
+    <value>Assigning failed</value>
+  </data>
+  <data name="OperationState_InterruptedAssignState" xml:space="preserve">
+    <value>Assigning</value>
+  </data>
+  <data name="OperationState_InterruptedAssignFailedState" xml:space="preserve">
+    <value>Assigning failed</value>
+  </data>
+  <data name="OperationState_ReadyAssignFailedState" xml:space="preserve">
+    <value>Assigning failed</value>
+  </data>
+  <data name="OperationState_ReadyAssignState" xml:space="preserve">
+    <value>Assigning</value>
+  </data>
+  <data name="OperationAssignment_Exception_Assign" xml:space="preserve">
+    <value>Failed to assign operation</value>
+  </data>
+  <data name="RecipeAssignStep_Restore_Failed" xml:space="preserve">
+    <value>Failed to assign recipes. There should only be references.</value>
+  </data>
+  <data name="RegexOperationValidation_Regex_Match_Failed" xml:space="preserve">
+    <value>Operation number does not match regex: {0}.</value>
+  </data>
+  <data name="RegexOperationValidation_Wrong_Amount" xml:space="preserve">
+    <value>The operation amount must be bigger than zero.</value>
+  </data>
+  <data name="RegexOperationValidation_No_Valid_Recipe" xml:space="preserve">
+    <value>The operation has no valid recipe.</value>
+  </data>
+  <data name="DocumentAssignStep_Documents_Loading_Failed" xml:space="preserve">
+    <value>Error while loading document information from document provider!</value>
+  </data>
+  <data name="DocumentAssignStep_Document_Loading_Failed" xml:space="preserve">
+    <value>Error while loading document '{0}' from document provider!</value>
+  </data>
+  <data name="DocumentAssignStep_Restore_Documents_Failed" xml:space="preserve">
+    <value>Unable to restore documents from FileSystem!</value>
+  </data>
+  <data name="OperationData_AmountReachedNotificationTitle" xml:space="preserve">
+	  <value>Operation is ready to report</value>
+  </data>
+  <data name="OperationData_AmountReachedNotificationMessage" xml:space="preserve">
+	  <value>Operation {0} has finished the last parts and is ready to report. Please report the produced parts.</value>
+  </data>
+  <data name="OperationAssignment_Successful" xml:space="preserve">
+    <value>Successful execution of operation assignment step {0}</value>
+  </data>
+  <data name="OperationAssignment_RecipeReassigned" xml:space="preserve">
+    <value>Recipe {0} reassigned to operation</value>
+  </data>
+  <data name="OperationAssignment_Started" xml:space="preserve">
+    <value>Starting operation assignment...</value>
+  </data>
+  <data name="PartsAssignStep_Threw_Exception" xml:space="preserve">
+    <value>{0} threw an exception when loading product parts</value>
+  </data>
+  <data name="PartsAssignStep_Failed" xml:space="preserve">
+    <value>It was not possible to assign the product parts.</value>
+  </data>
+  <data name="OperationManager_OverDeliveryNotice" xml:space="preserve">
+    <value>Cannot reduce the target amount below number of successfully produced pieces.</value>
+  </data>
+</root>

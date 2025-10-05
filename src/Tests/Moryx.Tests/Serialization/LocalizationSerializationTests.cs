@@ -30,9 +30,9 @@ namespace Moryx.Tests
             var expectedDisplayPropDescription = resourceManager.GetString(nameof(strings.PropDisplayAttribute_Description), germanCulture);
             var encoded = EntryConvert.EncodeClass(typeof(LocalizedClass));
 
-            Assert.AreEqual(expectedDisplayPropName, encoded.SubEntries[0].DisplayName);
-            Assert.AreEqual(expectedDisplayPropDescription, encoded.SubEntries[0].Description);
-            Assert.AreEqual(LocalizedClass.PropDisplayNameAttributeDisplayName, encoded.SubEntries[1].DisplayName);
+            Assert.That(encoded.SubEntries[0].DisplayName, Is.EqualTo(expectedDisplayPropName));
+            Assert.That(encoded.SubEntries[0].Description, Is.EqualTo(expectedDisplayPropDescription));
+            Assert.That(encoded.SubEntries[1].DisplayName, Is.EqualTo(LocalizedClass.PropDisplayNameAttributeDisplayName));
 
             // Switch to invariant
             Thread.CurrentThread.CurrentUICulture = invariantCulture;
@@ -40,9 +40,9 @@ namespace Moryx.Tests
             expectedDisplayPropDescription = resourceManager.GetString(nameof(strings.PropDisplayAttribute_Description), invariantCulture);
             encoded = EntryConvert.EncodeClass(typeof(LocalizedClass));
 
-            Assert.AreEqual(expectedDisplayPropName, encoded.SubEntries[0].DisplayName);
-            Assert.AreEqual(expectedDisplayPropDescription, encoded.SubEntries[0].Description);
-            Assert.AreEqual(LocalizedClass.PropDisplayNameAttributeDisplayName, encoded.SubEntries[1].DisplayName);
+            Assert.That(encoded.SubEntries[0].DisplayName, Is.EqualTo(expectedDisplayPropName));
+            Assert.That(encoded.SubEntries[0].Description, Is.EqualTo(expectedDisplayPropDescription));
+            Assert.That(encoded.SubEntries[1].DisplayName, Is.EqualTo(LocalizedClass.PropDisplayNameAttributeDisplayName));
         }
 
         [Test]
@@ -56,8 +56,8 @@ namespace Moryx.Tests
             var entriesGerman = EntryConvert.EncodeObject(dummyClass);
 
             // Assert
-            Assert.AreEqual(nameof(DummyClass.SingleClassNonLocalized), entriesGerman.SubEntries[14].DisplayName);
-            Assert.IsNull(entriesGerman.SubEntries[14].Description);
+            Assert.That(entriesGerman.SubEntries[14].DisplayName, Is.EqualTo(nameof(DummyClass.SingleClassNonLocalized)));
+            Assert.That(entriesGerman.SubEntries[14].Description, Is.Null);
         }
 
         [Test]
@@ -74,8 +74,8 @@ namespace Moryx.Tests
             var entriesInvariant = EntryConvert.EncodeObject(subClass);
 
             // Assert
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.ClassName), _germanCulture), entriesGerman.DisplayName);
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.ClassName), _invariantCulture), entriesInvariant.DisplayName);
+            Assert.That(strings.ResourceManager.GetString(nameof(strings.ClassName), _germanCulture), Is.EqualTo(entriesGerman.DisplayName));
+            Assert.That(strings.ResourceManager.GetString(nameof(strings.ClassName), _invariantCulture), Is.EqualTo(entriesInvariant.DisplayName));
         }
 
         [Test]
@@ -92,23 +92,22 @@ namespace Moryx.Tests
             var entriesInvariant = EntryConvert.EncodeMethods(methodClass).ToArray();
 
             // Assert
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.InitiateWorldTermination), _germanCulture), entriesGerman[0].DisplayName);
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.InitiateWorldTerminationDescription), _germanCulture), entriesGerman[0].Description);
+            Assert.That(strings.ResourceManager.GetString(nameof(strings.InitiateWorldTermination), _germanCulture), Is.EqualTo(entriesGerman[0].DisplayName));
+            Assert.That(strings.ResourceManager.GetString(nameof(strings.InitiateWorldTerminationDescription), _germanCulture), Is.EqualTo(entriesGerman[0].Description));
+            Assert.That(strings.ResourceManager.GetString(nameof(strings.EvacuatePeopleParam), _germanCulture), Is.EqualTo(entriesGerman[0].Parameters.SubEntries[0].DisplayName));
+            Assert.That(strings.ResourceManager.GetString(nameof(strings.EvacuatePeopleParamDescription), _germanCulture), Is.EqualTo(entriesGerman[0].Parameters.SubEntries[0].Description));
 
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.EvacuatePeopleParam), _germanCulture), entriesGerman[0].Parameters.SubEntries[0].DisplayName);
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.EvacuatePeopleParamDescription), _germanCulture), entriesGerman[0].Parameters.SubEntries[0].Description);
+            Assert.That(strings.ResourceManager.GetString(nameof(strings.NameOfTerminatorParam), _germanCulture), Is.EqualTo(entriesGerman[0].Parameters.SubEntries[1].DisplayName));
+            Assert.That(entriesGerman[0].Parameters.SubEntries[1].Description, Is.Null);
 
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.NameOfTerminatorParam), _germanCulture), entriesGerman[0].Parameters.SubEntries[1].DisplayName);
-            Assert.IsNull(entriesGerman[0].Parameters.SubEntries[1].Description);
+            Assert.That(strings.ResourceManager.GetString(nameof(strings.InitiateWorldTermination), _invariantCulture), Is.EqualTo(entriesInvariant[0].DisplayName));
+            Assert.That(strings.ResourceManager.GetString(nameof(strings.InitiateWorldTerminationDescription), _invariantCulture), Is.EqualTo(entriesInvariant[0].Description));
 
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.InitiateWorldTermination), _invariantCulture), entriesInvariant[0].DisplayName);
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.InitiateWorldTerminationDescription), _invariantCulture), entriesInvariant[0].Description);
+            Assert.That(strings.ResourceManager.GetString(nameof(strings.EvacuatePeopleParam), _invariantCulture), Is.EqualTo(entriesInvariant[0].Parameters.SubEntries[0].DisplayName));
+            Assert.That(strings.ResourceManager.GetString(nameof(strings.EvacuatePeopleParamDescription), _invariantCulture), Is.EqualTo(entriesInvariant[0].Parameters.SubEntries[0].Description));
 
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.EvacuatePeopleParam), _invariantCulture), entriesInvariant[0].Parameters.SubEntries[0].DisplayName);
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.EvacuatePeopleParamDescription), _invariantCulture), entriesInvariant[0].Parameters.SubEntries[0].Description);
-
-            Assert.AreEqual(strings.ResourceManager.GetString(nameof(strings.NameOfTerminatorParam), _invariantCulture), entriesInvariant[0].Parameters.SubEntries[1].DisplayName);
-            Assert.IsNull(entriesInvariant[0].Parameters.SubEntries[1].Description);
+            Assert.That(strings.ResourceManager.GetString(nameof(strings.NameOfTerminatorParam), _invariantCulture), Is.EqualTo(entriesInvariant[0].Parameters.SubEntries[1].DisplayName));
+            Assert.That(entriesInvariant[0].Parameters.SubEntries[1].Description, Is.Null);
         }
     }
 }

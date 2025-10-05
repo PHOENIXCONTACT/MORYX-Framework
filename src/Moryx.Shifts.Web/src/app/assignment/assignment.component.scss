@@ -1,0 +1,9 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+.not-qualified-operator {
+    color: $warning;
+}
+
+.not-allowed-operator {
+    color: $danger;
+}

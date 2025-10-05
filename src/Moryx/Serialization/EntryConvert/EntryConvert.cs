@@ -1,4 +1,7 @@
-﻿using System.Collections;
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.Collections;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -123,8 +126,12 @@ namespace Moryx.Serialization
             else if (entryValue.Possible != null && entryValue.Possible.Length >= 1)
                 entryValue.Default = entryValue.Possible[0];
             else if (property.PropertyType.IsValueType)
-                entryValue.Default = Activator.CreateInstance(property.PropertyType).ToString();
-
+            {
+                var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
+                entryValue.Default = underlyingType != null 
+                    ? Activator.CreateInstance(underlyingType).ToString() 
+                    : Activator.CreateInstance(property.PropertyType).ToString();
+            }
             // Value types should have the default value as current value
             if (ValueOrStringType(property.PropertyType))
                 entryValue.Current = ConvertToString(entryValue.Default, customSerialization.FormatProvider);
@@ -655,7 +662,7 @@ namespace Moryx.Serialization
             }
 
             // Add new entries to the collection
-            foreach (var subEntry in rootEntry.SubEntries.Where(se => se.Identifier == Entry.CreatedIdentifier))
+            foreach (var subEntry in rootEntry.SubEntries.Where(se => se.Identifier.ToLower().StartsWith(Entry.CreatedIdentifier.ToLower())))
             {
                 object item;
                 // All value types

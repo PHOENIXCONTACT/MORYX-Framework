@@ -1,4 +1,7 @@
-﻿using System.Collections;
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.Collections;
 using System.Reflection;
 
 namespace Moryx.Configuration
@@ -104,3 +107,4 @@ namespace Moryx.Configuration
         }
     }
 }
+

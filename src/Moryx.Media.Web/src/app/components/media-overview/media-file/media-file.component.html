@@ -1,0 +1,27 @@
+<div class="media-item" 
+[ngSwitch]="loaded()"
+[style.background-image]="'url('+path()+')'"
+(click)="onClick($event)"
+>
+  <mat-spinner
+    class="no-preview"
+    *ngSwitchCase="false"
+    title="Preview Loading Spinner"
+  >
+  </mat-spinner>
+  <div class="media-content">
+    <div class="media-action-bar">
+      <div class="media-text">
+        <div class="media-item-title truncate">
+          {{ name() }}
+        </div>
+        <span class="media-item-subtitle">
+          {{ amount() }}x {{ TranslationConstants.MEDIA_FILE_VARIANTS | translate }}
+        </span>
+      </div>
+      <button class="media-button" mat-icon-button >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+{
+    "DISMISS": "DISMISS",
+    "DEFAULT_MESSAGE": "Something went wrong on the server.",
+    "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings." ,
+    "ASSIGNMENT": {
+        "DETAILS": "Details",
+        "DELETE": "Delete",
+        "NOTES": "Notes"
+    },
+    "DIALOGS":{
+        "SHIFT_INSTANCE_DIALOG" : {
+            "SHIFT_INSTANCE": "Shift Instance",
+            "START_DATE": "Start Date",
+            "END_DATE": "End date",
+            "CANCEL": "Cancel",
+            "SAVE": "Save"
+        },
+        "SHIFT_TYPE_DIALOG" : {
+            "SHIFT_TYPE": "Shift Type",
+            "NAME": "Name",
+            "NAME_ERROR": "Please enter a name for the shift.",
+            "DURATION": "Duration",
+            "DURATION_ERROR": "Please enter a value greater than 0.",
+            "START_TIME": "Start Time",
+            "START_TIME_ERROR": "Please enter a valid time ex: 20:00 .",
+            "END_TIME": "End Time",
+            "END_TIME_ERROR": "Please enter a valid time ex: 21:00",
+            "CANCEL": "Cancel",
+            "SAVE": "Save",
+            "DAYS": "Days"
+        },
+        "WEEK_ASSIGNMENT_DIALOG": {
+            "TITLE": "Week Assignment Details",
+            "RESOURCE": "Resource",
+            "RESOURCE_ERROR": "Please select a Resource/Location",
+            "OPERATOR": "Operator",
+            "OPERATOR_ERROR": "Please select an Operator.",
+            "DAYS_OF_THE_SHIFT": "Days of the Shift",
+            "DAYS_OF_THE_SHIFT_ERROR": "Please select a day ",
+            "PRIORITY": "Priority",
+            "NOTES": "Notes",
+            "CANCEL": "Cancel",
+            "ASSIGN": "Assign",
+            "NOT_QUALIFIED": "Not Qualified",
+            "ON_VACATION": "On Vacation",
+            "NOT_ALLOWED": "Not Allowed",
+            "AVAILABLE": "Available"
+        }
+    },
+    "APP_COMPONENT":{
+        "THIS_WEEK": "This Week",
+        "ALL": "All",
+        "OPERATORS": "Operators",
+        "FILTER_OPERATORS": "Filter Operators",
+        "CLOSE": "Close",
+        "RESOURCES": "Resources",
+        "FILTER_RESOURCES": "Filter Resources",
+        "SEARCH": "Search",
+        "WEEK_NUMBER": "W",
+        "ADD_SHIFT": "Add Shift",
+        "NO_ASSIGNMENT": "No assignment found for this period.",
+        "NO_SHIFT": " No shift found! Click on the 'Add Shift' button to add a new Shift.",
+        "ASSIGN_TO": "Assign to ",
+        "ASSIGN_TO_SHIFT": "Assign to Entire Shift",
+        "SHIFT_ELEMENTS": "Shift Elements",
+        "ASSIGNMENTS_SAVED": "Assignments saved successfully!",
+        "SHIFT_CREATED": "Shift created successfully!",
+        "SHIFT_UPDATED": "Shift updated successfully!",
+        "NO_SHIFT_TO_COPY": "No assignments/Shifts found to copy!",
+        "SHIFT_TO_COPIED": "The shifts and their assignments were copied successfully to the desired week!"
+    },
+    "DAYS_OF_THE_WEEK":{
+        "Monday": "Monday",
+        "Tuesday": "Tuesday",
+        "Wednesday": "Wednesday",
+        "Thursday": "Thursday",
+        "Friday": "Friday",
+        "Saturday": "Saturday",
+        "Sunday": "Sunday"
+    },
+    "DATE_FORMAT": {
+        "SHORT_DATE": "MMM/DD/YYYY",
+        "MONTH_AND_DAY": "MM/DD"
+    },
+    "COPY_SHIFT_AND_ASSIGNMENT":{
+        "TITLE": "Copy Shift and Assignment",
+        "LAST_FOR": "Last for",
+        "DAYS": "Days",
+        "START_DATE": "Start Date",
+        "DELETE": "Delete",
+        "CANCEL": "Cancel",
+        "COPY": "Copy"
+    }
+}

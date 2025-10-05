@@ -1,4 +1,7 @@
-﻿namespace Moryx.Communication
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Moryx.Communication
 {
     /// <summary>
     /// Extensions to improve use of message hooks in your application

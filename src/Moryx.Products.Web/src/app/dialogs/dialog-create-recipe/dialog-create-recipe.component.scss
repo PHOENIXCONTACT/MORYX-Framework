@@ -1,0 +1,11 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+.create-recipe {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+.mat-mdc-dialog-content>:first-child {
+  margin-top: 10px;
+}

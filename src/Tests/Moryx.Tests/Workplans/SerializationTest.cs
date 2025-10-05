@@ -33,13 +33,13 @@ namespace Moryx.Tests.Workplans
 
             // Assert
             var connectors = workplan.Connectors.ToList();
-            Assert.AreEqual(connectors.Count, deserialized.Connectors.Count());
-            Assert.AreEqual(connectors[0].Name, deserialized.Connectors.First().Name);
-            Assert.AreEqual(connectors[1].Classification, deserialized.Connectors.ElementAt(1).Classification);
-            Assert.AreEqual(workplan.Steps.Count(), deserialized.Steps.Count());
-            Assert.IsInstanceOf<DummyStep>(deserialized.Steps.First());
-            Assert.AreEqual(workplan.Steps.First().Name, deserialized.Steps.First().Name);
-            Assert.AreEqual(workplan.Steps.First().Position, deserialized.Steps.First().Position);
+            Assert.That(deserialized.Connectors.Count(), Is.EqualTo(connectors.Count));
+            Assert.That(deserialized.Connectors.First().Name, Is.EqualTo(connectors[0].Name));
+            Assert.That(deserialized.Connectors.ElementAt(1).Classification, Is.EqualTo(connectors[1].Classification));
+            Assert.That(deserialized.Steps.Count(), Is.EqualTo(workplan.Steps.Count()));
+            Assert.That(deserialized.Steps.First(), Is.InstanceOf<DummyStep>());
+            Assert.That(deserialized.Steps.First().Name, Is.EqualTo(workplan.Steps.First().Name));
+            Assert.That(deserialized.Steps.First().Position, Is.EqualTo(workplan.Steps.First().Position));
         }
     }
 }

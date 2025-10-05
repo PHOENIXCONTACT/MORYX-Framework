@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.Benchmarking\Moryx.Benchmarking.csproj" />
+    <ProjectReference Include="..\Moryx.Products.Management\Moryx.Products.Management.csproj" />
+  </ItemGroup>
+
+</Project>
+

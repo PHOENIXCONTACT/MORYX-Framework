@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -17,11 +17,6 @@ namespace Moryx.Resources.Management
         /// Factory to create the resource initializer
         /// </summary>
         public IResourceInitializerFactory InitializerFactory { get; set; }
-
-        /// <summary>
-        /// Config to load all configured initializer
-        /// </summary>
-        public ModuleConfig ModuleConfig { get; set; }
 
         /// <summary>
         /// Resource manager to execute initializer
@@ -49,6 +44,5 @@ namespace Moryx.Resources.Management
 
             return "Success";
         }
-
     }
 }

@@ -1,4 +1,7 @@
-﻿﻿using Moryx.Model.Sqlite;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+﻿using Moryx.Model.Sqlite;
 using Moryx.Products.Model;
 using Moryx.Runtime.Kernel;
 using NUnit.Framework;
@@ -30,12 +33,12 @@ namespace Moryx.Model.Tests
         public async Task SqliteCreateDatabaseShouldWork()
         {
             var result = await configurator.TestConnection(dbConfig);
-            Assert.AreEqual(TestConnectionResult.ConnectionOkDbDoesNotExist, result);
+            Assert.That(result, Is.EqualTo(TestConnectionResult.ConnectionOkDbDoesNotExist));
 
             bool isCreated = await configurator.CreateDatabase(dbConfig);
 
-            Assert.IsTrue(isCreated);
-            Assert.IsTrue(File.Exists(datasource));
+            Assert.That(isCreated);
+            Assert.That(File.Exists(datasource));
 
             //remove the database
             await configurator.DeleteDatabase(dbConfig);
@@ -46,13 +49,13 @@ namespace Moryx.Model.Tests
         public async Task SqliteDeleteDatabaseShouldWork()
         {
             var connectionResult = await configurator.TestConnection(dbConfig);
-            Assert.AreEqual(TestConnectionResult.ConnectionOkDbDoesNotExist, connectionResult);
+            Assert.That(connectionResult, Is.EqualTo(TestConnectionResult.ConnectionOkDbDoesNotExist));
 
             bool isCreated = await configurator.CreateDatabase(dbConfig);
-            Assert.IsTrue(isCreated);
+            Assert.That(isCreated);
 
             await configurator.DeleteDatabase(dbConfig);
-            Assert.IsFalse(File.Exists(datasource));
+            Assert.That(!File.Exists(datasource));
         }
 
         private static ConfigManager CreateConfigManager()

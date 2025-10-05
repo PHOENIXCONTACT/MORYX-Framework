@@ -1,0 +1,123 @@
+﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
+#nullable disable
+
+namespace Moryx.Shifts.Management.Model.Migrations.Npgsql
+{
+    public partial class InitialCreate : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.EnsureSchema(
+                name: "public");
+
+            migrationBuilder.CreateTable(
+                name: "ShiftTypeEntities",
+                schema: "public",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    StartTime = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    Endtime = table.Column<TimeOnly>(type: "time without time zone", nullable: false),
+                    Periode = table.Column<byte>(type: "smallint", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Updated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Deleted = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShiftTypeEntities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShiftEntities",
+                schema: "public",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    State = table.Column<int>(type: "integer", nullable: false),
+                    ShiftTypeId = table.Column<long>(type: "bigint", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Updated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Deleted = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShiftEntities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShiftEntities_ShiftTypeEntities_ShiftTypeId",
+                        column: x => x.ShiftTypeId,
+                        principalSchema: "public",
+                        principalTable: "ShiftTypeEntities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShiftAssignementEntities",
+                schema: "public",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ResourceId = table.Column<long>(type: "bigint", nullable: false),
+                    OperatorIdentifier = table.Column<string>(type: "text", nullable: false),
+                    Note = table.Column<string>(type: "character varying(2048)", maxLength: 2048, nullable: true),
+                    Priority = table.Column<int>(type: "integer", nullable: false),
+                    AssignedDays = table.Column<int>(type: "integer", nullable: false),
+                    ShiftId = table.Column<long>(type: "bigint", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Updated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Deleted = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShiftAssignementEntities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShiftAssignementEntities_ShiftEntities_ShiftId",
+                        column: x => x.ShiftId,
+                        principalSchema: "public",
+                        principalTable: "ShiftEntities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShiftAssignementEntities_ShiftId",
+                schema: "public",
+                table: "ShiftAssignementEntities",
+                column: "ShiftId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShiftEntities_ShiftTypeId",
+                schema: "public",
+                table: "ShiftEntities",
+                column: "ShiftTypeId");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "ShiftAssignementEntities",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "ShiftEntities",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "ShiftTypeEntities",
+                schema: "public");
+        }
+    }
+}
+

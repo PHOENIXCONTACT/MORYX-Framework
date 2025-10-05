@@ -1,0 +1,94 @@
+{
+    "DISMISS": "DISMISS",
+    "DEFAULT_MESSAGE": "Something went wrong on the server.",
+    "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings."  ,
+    "WORKSTATION_OPERATORS":{
+        "EMPTY_TITLE": "Workstations",
+        "EMPTY_MESSAGE" : "No station currently available.",
+        "EXPAND" : "Expand",
+        "GO_BACK" : "Go back"
+    },
+    "AVAILABILITIES" : {
+        "TITLE": "Availabilities",
+        "THIS_WEEK": " This Week",
+        "OPERATORS": "Operators"
+    },
+    "AVAILABILITY_DIALOG" : {
+        "TITLE": "New Availability",
+        "DESCRIPTION": "Create an absence notice for an operator",
+        "FROM": "From",
+        "TO": "To",
+        "CANCEL" : "Cancel",
+        "SAVE": "Save"
+    },
+    "SKILL_TYPES" : {
+        "NAME": "Name",
+        "TRAINED_OPERATORS": "Trained Operators",
+        "VALIDITY_PERIOD": "Validity Period"
+    },
+    "OPERATORS_MANAGEMENT" : {
+        "MANAGE_OPERATORS" : "Manage Operators",
+        "SKILL_TYPES" : "Skill Types",
+        "AVAILABILITIES" : "Availabilities",
+        "NAME": "Name",
+        "NUMBER": "Number",
+        "EDIT" : "EDIT",
+        "DELETE" : "DELETE",
+        "DELETE_TITLE" : "Delete operator",
+        "DELETE_MESSAGE" : "Do you wanna delete this operator ?"
+    },
+    "OPERATORS" : {
+        "EMPTY_TITLE" : "Operators",
+        "EMPTY_MESSAGE": "No operator with the required skill exist in the database. Please add an operator with the required skill."
+    },
+    "ADD_OPERATOR_DIALOG":{
+        "IDENTIFIER" : "Identifier",
+        "FIRSTNAME": "First Name",
+        "LASTNAME" : "Last Name",
+        "PSEUDONYM" : "Pseudonym",
+        "TITLE" : "Add Operator",
+        "CANCEL" : "Cancel",
+        "SAVE": "Save"
+    },
+    "SKILL_EDIT_DIALOG":{
+        "TITLE": "Edit Skill",
+        "NAME": "Name",
+        "VALIDITY" : "Validity",
+        "SKILL_TYPE" : "Skill Type",
+        "CANCEL" : "Cancel",
+        "SAVE": "Save"
+    },
+    "SKILL_NEW_DIALOG":{
+        "TITLE": "Edit Skill",
+        "NAME": "Name",
+        "VALIDITY" : "Validity",
+        "SKILL_TYPE" : "Skill Type",
+        "CANCEL" : "Cancel",
+        "SAVE": "Save"
+    },
+    "SKILL_TYPE_DETAILS":{
+        "SKILL_TYPE_DETAILS": "Skill Type Details",
+        "NEW_SKILL_TYPE": "New Skill Type",
+        "NAME": "Name",
+        "NAME_DESCRIPTION": "Name of the skill",
+        "VALIDITY_PERIOD": "Validity Period (days)",
+        "SKILL_CAPABILITY": "Skill Capability",
+        "SAVE": "Save"
+    },
+    "CONFIRMATION_DIALOG" : {
+        "DELETE_SKILL_TYPE_TITLE": "Delete Skill Type",
+        "DELETE_SKILL_TYPE_MESSAGE": "Do you wanna delete this skill type ?",
+        "DELETE_SKILL_TITLE": "Delete Skill",
+        "DELETE_SKILL_MESSAGE": "Do you wanna delete this skill for the current operator?",
+        "YES": "YES",
+        "NO" : "NO"
+    },
+    "OPERATOR_DETAILS":{
+        "TITLE":"Operator Details",
+        "OBTAINED_ON": "Obtained On",
+        "EXPIRES_ON": "Expires On",
+        "SKILLS": "Skills",
+        "NAME": "Name",
+        "SEARCH_SKILL": "Search Skill..."
+    }
+}

@@ -36,7 +36,7 @@ namespace Moryx.Tests.Extensions
 
             foreach (var item in _enumerable)
             {
-                Assert.IsTrue(enumerated.Contains(item));
+                Assert.That(enumerated.Contains(item));
             }
         }
     }

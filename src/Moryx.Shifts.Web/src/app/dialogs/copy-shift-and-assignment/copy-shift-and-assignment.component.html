@@ -1,0 +1,58 @@
+<h2 mat-dialog-title>{{ TranslationConstants.COPY_SHIFT_AND_ASSIGNMENT.TITLE | translate }}</h2>
+<mat-dialog-content class="w-full">
+  <form class="w-full flex flex-col gap-y-2 pb-2">
+    <mat-accordion>
+      @for (shiftData of formData()?.shiftInstances; track $index) {
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ shiftData.shiftType.name }}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ TranslationConstants.COPY_SHIFT_AND_ASSIGNMENT.LAST_FOR| translate }} {{ shiftData.shiftType.duration }} {{ TranslationConstants.COPY_SHIFT_AND_ASSIGNMENT.DAYS| translate }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="flex flex-col">
+          <mat-form-field appearance="outline">
+            <mat-label>{{ TranslationConstants.COPY_SHIFT_AND_ASSIGNMENT.START_DATE | translate }}</mat-label>
+            <input
+              name="startDate"
+              matInput
+              [(ngModel)]="shiftData.startDate"
+              [matDatepicker]="picker"
+              (ngModelChange)="onStartDateChanged(shiftData)"
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <app-week-day-toggle-button
+            [days]="
+              calendarState()?.viewDatesStartingFrom(
+                shiftData.startDate,
+                shiftData.shiftType.duration
+              )!
+            "
+            [startDate]="shiftData.startDate"
+            [endDate]="shiftData.endDate"
+            [calendarState]="calendarState()!"
+            [shiftNumberOfDay]="shiftData.shiftType.duration"
+            [readOnly]="true"
+          />
+        </div>
+
+        <mat-action-row>
+          <button mat-stroked-button  (click)="deleteItem(shiftData)">{{ TranslationConstants.COPY_SHIFT_AND_ASSIGNMENT.DELETE| translate }}</button>
+        </mat-action-row>
+      </mat-expansion-panel>
+      }
+    </mat-accordion>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">{{ TranslationConstants.COPY_SHIFT_AND_ASSIGNMENT.CANCEL | translate }}</button>
+  <button mat-flat-button color="primary" cdkFocusInitial (click)="save()">{{ TranslationConstants.COPY_SHIFT_AND_ASSIGNMENT.COPY| translate }}</button>
+</mat-dialog-actions>

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>full</DebugType>
+    <IsTestProject>true</IsTestProject>
+    <IsPublishable>false</IsPublishable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+	<PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="coverlet.collector" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Moryx.ControlSystem.VisualInstructions.Endpoints\Moryx.ControlSystem.VisualInstructions.Endpoints.csproj" />
+	  <ProjectReference Include="..\..\Moryx.ControlSystem.TestTools\Moryx.ControlSystem.TestTools.csproj" />
+	  <ProjectReference Include="..\..\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj" />
+	  <ProjectReference Include="..\..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
+  </ItemGroup>
+
+</Project>

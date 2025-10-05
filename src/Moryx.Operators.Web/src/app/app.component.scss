@@ -1,0 +1,6 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+
+:host{
+    background-color: $mat-background;
+}

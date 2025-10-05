@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <DefaultItemExcludes>src\**;node_modules\**</DefaultItemExcludes>
+    <IsPackable>true</IsPackable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageTags>MORYX;IoT;Manufacturing</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="tsconfig*.json; prettierrc.json; .prettierrc.json; angular.json; package.json; package-lock.json; service-config.json;" />
+    <ProjectReference Include="..\Moryx\Moryx.csproj" />
+    <Content Update="@(Content)" Pack="false" />
+    <Content Update="wwwroot\**" Pack="true" PackagePath="staticwebassets" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Localizations\Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Localizations\Strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\main.js')) And ('$(NoBuild)' != 'true') ">
+    <Exec WorkingDirectory=".\" Command="npm config set strict-ssl false" />
+    <Exec WorkingDirectory=".\" Command="npm install" />
+    <Exec WorkingDirectory=".\" Command="npm run build:prod" />
+    <Exec WorkingDirectory=".\" Command="npm config set strict-ssl true" />
+  </Target>
+</Project>

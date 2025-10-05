@@ -40,15 +40,15 @@ namespace Moryx.Runtime.Kernel.Tests
             var parallelOperations = provider.GetRequiredService(typeof(IParallelOperations));
             var moduleContainerFactory = provider.GetRequiredService(typeof(IModuleContainerFactory));
             var currentPlatform = Platform.Current;
-            Assert.NotNull(configManager, "Config Manager not resolvable");
-            Assert.NotNull(moduleManager, "Module Manager not resolvable");
-            Assert.NotNull(parallelOperations, "Parallel Operations not resolvable");
-            Assert.NotNull(moduleContainerFactory, "Module Container Factory not resolvable");
-            Assert.NotNull(currentPlatform.PlatformName);
-            Assert.NotNull(currentPlatform.PlatformVersion);
-            Assert.NotNull(currentPlatform.ProductName);
-            Assert.NotNull(currentPlatform.ProductVersion);
-            Assert.NotNull(currentPlatform.ProductDescription);
+            Assert.That(configManager, Is.Not.Null, "Config Manager not resolvable");
+            Assert.That(moduleManager, Is.Not.Null, "Module Manager not resolvable");
+            Assert.That(parallelOperations, Is.Not.Null, "Parallel Operations not resolvable");
+            Assert.That(moduleContainerFactory, Is.Not.Null, "Module Container Factory not resolvable");
+            Assert.That(currentPlatform.PlatformName, Is.Not.Null);
+            Assert.That(currentPlatform.PlatformVersion, Is.Not.Null);
+            Assert.That(currentPlatform.ProductName, Is.Not.Null);
+            Assert.That(currentPlatform.ProductVersion, Is.Not.Null);
+            Assert.That(currentPlatform.ProductDescription, Is.Not.Null);
         }
 
         [Test]
@@ -80,8 +80,8 @@ namespace Moryx.Runtime.Kernel.Tests
             provider.UseMoryxConfigurations(directoryPath);
 
             // Assert
-            Assert.AreEqual(directoryPath, provider.GetRequiredService<ConfigManager>().ConfigDirectory);
-            Assert.IsTrue(Directory.Exists(directoryPath));
+            Assert.That(provider.GetRequiredService<ConfigManager>().ConfigDirectory, Is.EqualTo(directoryPath));
+            Assert.That(Directory.Exists(directoryPath));
         }
 
         [Test]

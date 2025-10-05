@@ -22,17 +22,17 @@ namespace Moryx.Tests.Modules
             // Act
 
             // Assert
-            Assert.Greater(pMax.CompareTo(pMin), 0);
-            Assert.AreEqual(pMax.CompareTo(p0), 0);
-            Assert.Less(pMin.CompareTo(p3), 0);
-            Assert.LessOrEqual(pCustom.CompareTo(p3), pCustom.CompareTo(p3));
-            Assert.IsTrue(p0 > p3);
-            Assert.IsTrue(p0 >= p3);
-            Assert.IsTrue(pMax == p0);
-            Assert.IsTrue(pMax <= p0);
-            Assert.IsTrue(pMax >= p0);
-            Assert.IsTrue(pCustom < p3);
-            Assert.IsTrue(pCustom <= p3);
+            Assert.That(pMax.CompareTo(pMin), Is.GreaterThan(0));
+            Assert.That(0, Is.EqualTo(pMax.CompareTo(p0)));
+            Assert.That(pMin.CompareTo(p3), Is.LessThan(0));
+            Assert.That(pCustom.CompareTo(p3), Is.LessThanOrEqualTo(pCustom.CompareTo(p3)));
+            Assert.That(p0 > p3);
+            Assert.That(p0 >= p3);
+            Assert.That(pMax == p0);
+            Assert.That(pMax <= p0);
+            Assert.That(pMax >= p0);
+            Assert.That(pCustom < p3);
+            Assert.That(pCustom <= p3);
         }
     }
 }

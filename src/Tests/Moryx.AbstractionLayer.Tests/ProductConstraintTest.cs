@@ -19,7 +19,7 @@ namespace Moryx.AbstractionLayer.Tests
             var ident = new ProductIdentity(identifier, revision);
             var constraint = ExpressionConstraint.Equals<IProcess>(p => ((IProductRecipe) p.Recipe).Product.Identity, ident);
             // Act Assert
-            Assert.AreEqual(expectedResult, constraint.Check(CreateProcess()));            
+            Assert.That(constraint.Check(CreateProcess()), Is.EqualTo(expectedResult));            
         }
 
        private static IProcess CreateProcess()

@@ -1,4 +1,7 @@
-﻿using Moryx.AbstractionLayer.Tests.TestData;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.AbstractionLayer.Tests.TestData;
 using NUnit.Framework;
 using System.Linq;
 
@@ -24,8 +27,9 @@ namespace Moryx.AbstractionLayer.Tests
                 .FirstOrDefault(x => x.MappingValue == (long)TestResults.Success);
 
             //assert
-            Assert.That(failedResultDescription.Name, Is.EqualTo(expectedFailedDisplayName));
-            Assert.That(successResultDescription.Name, Is.EqualTo(expectedSuccesDisplayName));
+            Assert.That(expectedFailedDisplayName, Is.EqualTo(failedResultDescription.Name));
+            Assert.That(expectedSuccesDisplayName, Is.EqualTo(successResultDescription.Name));
         }
     }
 }
+

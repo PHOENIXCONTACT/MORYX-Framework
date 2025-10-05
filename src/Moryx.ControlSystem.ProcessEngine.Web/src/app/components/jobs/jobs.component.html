@@ -1,0 +1,205 @@
+<div *ngIf="!isLoading(); else loadingSpinner" class="overall-container">
+  <mat-accordion
+    *ngIf="jobCollection().length; else emptyStatePage"
+    [ngStyle]="{
+      'background-image':
+        'url(' +
+        environment.assets +
+        'assets/moryx_transparent_colored.png' +
+        ')'
+    }"
+    class="process-list"
+  >
+  @for (job of jobCollection(); track job.model.id) 
+    {
+      <mat-expansion-panel
+      class="job"
+    >
+      <mat-expansion-panel-header
+        [collapsedHeight]="'70px'"
+        [expandedHeight]="'70px'"
+      >
+        <div
+          *ngIf="job.model.productionJob; then productionJob; else setupJob"
+        ></div>
+        <ng-template #productionJob>
+          <div class="job-container">
+            <div class="job-details-container">
+              <mat-icon class="icon-primary-color" *ngIf="job.model.isWaiting"
+                >precision_manufacturing</mat-icon
+              >
+              <mat-icon class="icon-accent-color" *ngIf="job.model.isRunning"
+                >precision_manufacturing</mat-icon
+              >
+              <div class="job-details">
+                <span
+                  >{{ TranslationConstants.JOBS.ORDER | translate }}:
+                  {{ getOrderNumber(job.model) }}</span
+                >
+                <span
+                  >{{ TranslationConstants.JOBS.OPERATION | translate }}:
+                  {{ getOperationNumber(job.model) }}</span
+                >
+              </div>
+              <div class="job-details">
+                <span
+                  >{{ TranslationConstants.JOBS.ID | translate }}:
+                  {{ job.model.id }}</span
+                >
+                <span
+                  >{{ TranslationConstants.JOBS.STATE | translate }}:
+                  {{ job.model.displayState }}</span
+                >
+              </div>
+              <div class="job-details">
+                <span
+                  >{{ TranslationConstants.JOBS.AMOUNT | translate }}:
+                  {{ job.model.productionJob?.amount }}</span
+                >
+                <span
+                  >{{ TranslationConstants.JOBS.PRODUCT | translate }}:
+                  {{ job.model.productionJob?.productIdentity }}</span
+                >
+              </div>
+              <div class="job-details">
+                <span
+                  >{{ TranslationConstants.JOBS.RUNNING | translate }}:
+                  {{ job.model.productionJob?.runningCount }}</span
+                >
+                <span
+                  >{{ TranslationConstants.JOBS.WORKPLAN | translate }}:
+                  {{ job.model.workplan }}</span
+                >
+              </div>
+              <div class="job-details">
+                <span
+                  >{{ TranslationConstants.JOBS.SUCCESS | translate }}:
+                  {{ job.model.productionJob?.successCount }}</span
+                >
+                <span
+                  >{{ TranslationConstants.JOBS.REWORKED | translate }}:
+                  {{ job.model.productionJob?.reworkedCount }}</span
+                >
+              </div>
+              <div>
+                <span
+                  >{{ TranslationConstants.JOBS.FAILED | translate }}:
+                  {{ job.model.productionJob?.failureCount }}</span
+                >
+              </div>
+            </div>
+            <div class="job-progress">
+              <mat-progress-bar
+                mode="determinate"
+                value="100"
+                class="progress-accent-color"
+                [ngStyle]="{ width: job.productionSuccessPercent + '%' }"
+              >
+              </mat-progress-bar>
+              <mat-progress-bar
+                mode="determinate"
+                value="100"
+                class="progress-warn-color"
+                [ngStyle]="{ width: job.productionScrapPercent + '%' }"
+              >
+              </mat-progress-bar>
+              <mat-progress-bar
+                mode="determinate"
+                value="100"
+                [ngStyle]="{ width: job.productionRunningPercent + '%' }"
+              ></mat-progress-bar>
+              <mat-progress-bar
+                mode="determinate"
+                value="0"
+                [ngStyle]="{ width: job.productionResidualPercent + '%' }"
+              ></mat-progress-bar>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #setupJob>
+          <div class="job-container">
+            <div class="job-details-container">
+              <mat-icon class="icon-primary-color" *ngIf="job.model.isWaiting"
+                >settings</mat-icon
+              >
+              <mat-icon class="icon-accent-color" *ngIf="job.model.isRunning"
+                >settings</mat-icon
+              >
+              <span class="job-details">Id: {{ job.model.id }}</span>
+              <span class="job-details">State: {{ job.model.displayState }}</span>
+              <span class="job-details"
+                >{{ TranslationConstants.JOBS.WORKPLAN | translate }}:
+                {{ job.model.workplan }}</span
+              >
+            </div>
+            <div class="job-progress">
+              <mat-progress-bar
+                mode="determinate"
+                value="100"
+                class="progress-accent-color"
+                [ngStyle]="{ width: job.setupCompletedPercent + '%' }"
+              >
+              </mat-progress-bar>
+              <mat-progress-bar
+                mode="determinate"
+                value="100"
+                [ngStyle]="{ width: job.setupRunningPercent + '%' }"
+              ></mat-progress-bar>
+              <mat-progress-bar
+                mode="determinate"
+                value="0"
+                [ngStyle]="{ width: job.setupResidualPercent + '%' }"
+              ></mat-progress-bar>
+            </div>
+          </div>
+        </ng-template>
+      </mat-expansion-panel-header>
+      <div *ngIf="job.model.setupJob" class="job-details-setup-container">
+        <div
+          class="job-details-setup-steps"
+          *ngFor="let step of job.model.setupJob.steps"
+        >
+          <mat-icon class="icon-primary-color" *ngIf="step.state === 'Completed'"
+            >check_circle</mat-icon
+          >
+          <mat-icon class="icon-accent-color" *ngIf="step.state === 'Running'"
+            >build_circle</mat-icon
+          >
+          <mat-icon *ngIf="step.state === 'Initial'">build_circle</mat-icon>
+          {{ step.name }}
+        </div>
+      </div>
+      <app-processes [job]="job"></app-processes>
+      <mat-action-row>
+        <button
+          mat-flat-button
+          (click)="onComplete(job.model)"
+          [disabled]="!job.model.canComplete"
+        >
+          {{ TranslationConstants.JOBS.COMPLETE | translate }}
+        </button>
+        <button
+          mat-flat-button
+          (click)="onAbort(job.model)"
+          [disabled]="!job.model.canAbort"
+        >
+          {{ TranslationConstants.JOBS.ABORT | translate }}
+        </button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  }
+  </mat-accordion>
+</div>
+
+<ng-template #loadingSpinner>
+  <div class="overall-container loading">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</ng-template>
+
+<ng-template #emptyStatePage>
+  <empty-state
+    header="{{ TranslationConstants.JOBS.EMPTY_STATE_HEADER | translate }}"
+    message="{{ TranslationConstants.JOBS.EMPTY_STATE_TEXT | translate }}"
+  ></empty-state>
+</ng-template>

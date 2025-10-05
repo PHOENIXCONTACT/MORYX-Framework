@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>New Availability</h2>
+<mat-dialog-content>
+  <form class="tw:flex tw:flex-col tw:p-2 tw:bg-white">
+    <span class="mb-2"> Create an absence notice for an operator </span>
+    <section>
+      <mat-form-field class="tw:w-full">
+        <mat-label>From</mat-label>
+        <input matInput [matDatepicker]="startPicker" />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="startPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="tw:w-full">
+        <mat-label>To</mat-label>
+        <input matInput [matDatepicker]="endPicker" />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="endPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+      </mat-form-field>
+    </section>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="tw:flex tw:justify-end tw:w-full">
+      <button mat-button (click)="onCancel()">CANCEL</button>
+      <button mat-button cdkFocusInitial (click)="onSave()">SAVE</button>
+  </div>
+</mat-dialog-actions>

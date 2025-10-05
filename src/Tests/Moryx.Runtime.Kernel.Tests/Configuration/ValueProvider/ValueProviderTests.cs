@@ -20,10 +20,10 @@ namespace Moryx.Tests.Configuration.ValueProvider
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddDefaultValueProvider());
 
             // Assert
-            Assert.AreEqual(DefaultValues.Number, config.DummyNumber);
-            Assert.AreEqual(1024, config.DummyNumberReadOnly);
-            Assert.AreEqual(25, config.DummyNumber2);
-            Assert.AreEqual(DefaultValues.Text, config.DummyText);
+            Assert.That(config.DummyNumber, Is.EqualTo(DefaultValues.Number));
+            Assert.That(config.DummyNumberReadOnly, Is.EqualTo(1024));
+            Assert.That(config.DummyNumber2, Is.EqualTo(25));
+            Assert.That(config.DummyText, Is.EqualTo(DefaultValues.Text));
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace Moryx.Tests.Configuration.ValueProvider
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddDefaultValueProvider());
 
             //Assert
-            Assert.AreEqual(25, config.DummyNumber2);
+            Assert.That(config.DummyNumber2, Is.EqualTo(25));
         }
 
         [Test]
@@ -49,10 +49,10 @@ namespace Moryx.Tests.Configuration.ValueProvider
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings());
 
             // Assert
-            Assert.AreEqual(0, config.DummyNumber);
-            Assert.AreEqual(1024, config.DummyNumberReadOnly);
-            Assert.AreEqual(25, config.DummyNumber2);
-            Assert.IsNull(config.DummyText);
+            Assert.That(config.DummyNumber, Is.EqualTo(0));
+            Assert.That(config.DummyNumberReadOnly, Is.EqualTo(1024));
+            Assert.That(config.DummyNumber2, Is.EqualTo(25));
+            Assert.That(config.DummyText, Is.Null);
         }
 
         [Test]
@@ -65,11 +65,11 @@ namespace Moryx.Tests.Configuration.ValueProvider
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddDefaultValueProvider());
 
             // Assert
-            Assert.IsNotNull(config.Config);
-            Assert.AreEqual(DefaultValues.Number, config.DummyNumber);
-            Assert.AreEqual(DefaultValues.Number, config.Config.DummyNumber);
-            Assert.AreEqual(1024, config.Config.DummyNumberReadOnly);
-            Assert.AreEqual(DefaultValues.Text, config.Config.DummyText);
+            Assert.That(config.Config, Is.Not.Null);
+            Assert.That(config.DummyNumber, Is.EqualTo(DefaultValues.Number));
+            Assert.That(config.Config.DummyNumber, Is.EqualTo(DefaultValues.Number));
+            Assert.That(config.Config.DummyNumberReadOnly, Is.EqualTo(1024));
+            Assert.That(config.Config.DummyText, Is.EqualTo(DefaultValues.Text));
         }
 
         [Test]
@@ -84,11 +84,11 @@ namespace Moryx.Tests.Configuration.ValueProvider
                     .AddFilter(new NoStringValueProviderFilter()));
 
             // Assert
-            Assert.IsNotNull(config.Config);
-            Assert.AreEqual(DefaultValues.Number, config.DummyNumber);
-            Assert.AreEqual(DefaultValues.Number, config.Config.DummyNumber);
-            Assert.AreEqual(1024, config.Config.DummyNumberReadOnly);
-            Assert.IsNull(config.Config.DummyText);
+            Assert.That(config.Config, Is.Not.Null);
+            Assert.That(config.DummyNumber, Is.EqualTo(DefaultValues.Number));
+            Assert.That(config.Config.DummyNumber, Is.EqualTo(DefaultValues.Number));
+            Assert.That(config.Config.DummyNumberReadOnly, Is.EqualTo(1024));
+            Assert.That(config.Config.DummyText, Is.Null);
         }
 
         [Test]
@@ -103,13 +103,13 @@ namespace Moryx.Tests.Configuration.ValueProvider
             // Assert
             foreach (var subConfig in config.Configs)
             {
-                Assert.AreEqual(DefaultValues.Number, subConfig.DummyNumber);
-                Assert.AreEqual(1024, subConfig.DummyNumberReadOnly);
-                Assert.AreEqual(25, subConfig.DummyNumber2);
-                Assert.AreEqual(DefaultValues.Text, subConfig.DummyText);
+                Assert.That(subConfig.DummyNumber, Is.EqualTo(DefaultValues.Number));
+                Assert.That(subConfig.DummyNumberReadOnly, Is.EqualTo(1024));
+                Assert.That(subConfig.DummyNumber2, Is.EqualTo(25));
+                Assert.That(subConfig.DummyText, Is.EqualTo(DefaultValues.Text));
             }
 
-            Assert.AreEqual(DefaultValues.Number, config.DummyNumber);
+            Assert.That(config.DummyNumber, Is.EqualTo(DefaultValues.Number));
         }
 
         [Test]
@@ -122,10 +122,10 @@ namespace Moryx.Tests.Configuration.ValueProvider
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddDefaultValueProvider());
 
             // Assert
-            Assert.NotNull(config.Numbers);
-            Assert.NotNull(config.Strings);
-            Assert.NotNull(config.ArrayNumbers);
-            Assert.IsNull(config.EnumerableNumbers);
+            Assert.That(config.Numbers, Is.Not.Null);
+            Assert.That(config.Strings, Is.Not.Null);
+            Assert.That(config.ArrayNumbers, Is.Not.Null);
+            Assert.That(config.EnumerableNumbers, Is.Null);
         }
 
         [Test]
@@ -148,9 +148,9 @@ namespace Moryx.Tests.Configuration.ValueProvider
             // Act
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddDefaultValueProvider().AddProvider(new ThreeProvider()));
 
-            Assert.AreEqual(5, config.WithDefaultValue, "Not null default value was not applied");
-            Assert.IsNull(config.WithDefaultValueNull, "Did not respect default value null");
-            Assert.AreEqual(3, config.WithoutDefaultValue, "DefaultValueProvider did handle the field without a DefaultValue Attribute");
+            Assert.That(config.WithDefaultValue, Is.EqualTo(5), "Not null default value was not applied");
+            Assert.That(config.WithDefaultValueNull, Is.Null, "Did not respect default value null");
+            Assert.That(config.WithoutDefaultValue, Is.EqualTo(3), "DefaultValueProvider did handle the field without a DefaultValue Attribute");
         }
     }
 }

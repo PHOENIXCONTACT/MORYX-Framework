@@ -1,0 +1,8 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+.create-revision {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}

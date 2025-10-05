@@ -1,0 +1,121 @@
+<mat-accordion
+  *ngIf="referenceTypes(); else loadingReferences"
+  class="references"
+>
+  <mat-expansion-panel
+    *ngFor="let ref of referenceTypes()"
+    (opened)="onReferenceChanged(ref)"
+    [expanded]="selectedReferenceType()?.name === ref.name"
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title> {{ ref.displayName }} </mat-panel-title>
+      <mat-panel-description class="references-description"> {{ ref.description }} </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <ng-container *ngIf="selectedReferenceType()?.isCollection">
+      <table mat-table #table [dataSource]="selectedReference()?.targets ?? []">
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ TranslationConstants.SHARED.ID | translate }}
+          </th>
+          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ TranslationConstants.SHARED.NAME | translate }}
+          </th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <!-- Type Column -->
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ TranslationConstants.SHARED.TYPE | translate }}
+          </th>
+          <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+        </ng-container>
+
+        <!-- Delete Symbol Column -->
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button
+              mat-icon-button
+              (click)="deleteTarget(element)"
+              [disabled]="editService.edit === false"
+              class="delete-reference"
+              aria-label="Delete link in this row"
+            >
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="['id', 'name', 'type', 'delete']"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: ['id', 'name', 'type', 'delete']"
+        ></tr>
+      </table>
+
+      <div *ngIf="editService.edit" class="reference-targets-actions">
+        <mat-form-field class="reference-targets-selector" appearance="outline">
+          <mat-label>{{
+            TranslationConstants.DETAILS.REFS.LINKED_RESOURCE | translate
+          }}</mat-label>
+          <mat-select
+            [(value)]="selectedTarget"
+            placeholder="{{
+              TranslationConstants.DETAILS.REFS.PLACEHOLDER | translate
+            }}"
+            (selectionChange)="addTarget(table)"
+          >
+            <mat-option *ngFor="let pr of possibleResources()" [value]="pr">
+              {{ "#" + pr.id + " " + pr.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </ng-container>
+
+    <ng-container
+      *ngIf="selectedReferenceType() && !selectedReferenceType()?.isCollection"
+    >
+      <div class="single-reference-targets-selector">
+        <mat-form-field class="reference-targets-selector" appearance="outline">
+          <mat-label>{{
+            TranslationConstants.DETAILS.REFS.LINKED_RESOURCE | translate
+          }}</mat-label>
+          <mat-select
+            [disabled]="!editService.edit"
+            [(value)]="selectedTarget"
+            placeholder="{{
+              TranslationConstants.DETAILS.REFS.PLACEHOLDER | translate
+            }}"
+            [compareWith]="compareWith"
+            (selectionChange)="setTarget()"
+          >
+            <mat-option [value]="undefined">
+              {{ TranslationConstants.DETAILS.REFS.NO_TARGET | translate }}
+            </mat-option>
+            <mat-option *ngFor="let pr of possibleResources()" [value]="pr">
+              {{ pr.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </ng-container>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<ng-template #loadingReferences>
+  <div class="references-loading-screen">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</ng-template>

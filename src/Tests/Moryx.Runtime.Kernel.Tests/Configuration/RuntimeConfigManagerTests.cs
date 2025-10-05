@@ -51,7 +51,7 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration
 
             // try to read the config
             var config = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>(false);
-            Assert.NotNull(config, "Config not saved!");
+            Assert.That(config, Is.Not.Null, "Config not saved!");
             // get a copy of the config
             var copyOfConfig = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>(true);
 
@@ -59,7 +59,7 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration
             config.ConfigChanged += delegate (object sender, ConfigChangedEventArgs args)
             {
                 configChangedEvent = true;
-                Assert.True(args.Contains(() => copyOfConfig.BooleanField), "the changed event do not acknowlege the correct property.");
+                Assert.That(args.Contains(() => copyOfConfig.BooleanField), Is.True, "the changed event do not acknowlege the correct property.");
                 manualResetEvent.Set();
             };
 
@@ -71,7 +71,7 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration
             manualResetEvent.WaitOne(1000);
 
             // check if the event has been rised or not.
-            Assert.True(liveUpdate == configChangedEvent);
+            Assert.That(liveUpdate == configChangedEvent, Is.True);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration
 
             var config = _manager.GetConfiguration(typeof(RuntimeConfigManagerTestConfig1), false);
 
-            Assert.NotNull(config, "Config not saved!");
+            Assert.That(config, Is.Not.Null, "Config not saved!");
         }
 
         /// <summary>
@@ -100,27 +100,27 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration
             var emptyConfig = new RuntimeConfigManagerTestConfig1();
 
             // check if all system default values are not the same like the configured default values.
-            Assert.False(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, "Nullable Boolean: The system default value equals the test setup default value.");
-            Assert.False(emptyConfig.BooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, "Boolean: The system default value equals the test setup default value.");
-            Assert.False(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, "Byte: The system default value equals the test setup default value.");
-            Assert.False(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, "Double: The system default value equals the test setup default value.");
-            Assert.False(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, "Enum: The system default value equals the test setup default value.");
-            Assert.False(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, "Integer: The system default value equals the test setup default value.");
-            Assert.False(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, "Long: The system default value equals the test setup default value.");
-            Assert.False(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, "String: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Nullable Boolean: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.BooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Boolean: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, Is.False, "Byte: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, Is.False, "Double: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, Is.False, "Enum: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, Is.False, "Integer: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, Is.False, "Long: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, Is.False, "String: The system default value equals the test setup default value.");
 
             // load the default values for unset properties
             _manager.FillEmpty(emptyConfig);
 
             // check if all properties got their default values.
-            Assert.True(emptyConfig.BooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, "Boolean field has been initialized!");
-            Assert.True(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, "Enum field has not been initialized!");
-            Assert.True(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, "Nullable boolean field has not been initialized!");
-            Assert.True(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, "Double field has not been initialized!");
-            Assert.True(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, "Integer field has not been initialized!");
-            Assert.True(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, "String field has not been initialized!");
-            Assert.True(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, "Byte field has not been initialized!");
-            Assert.True(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, "Long field has not been initialized!");
+            Assert.That(emptyConfig.BooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.True, "Boolean field has been initialized!");
+            Assert.That(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, Is.True, "Enum field has not been initialized!");
+            Assert.That(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.True, "Nullable boolean field has not been initialized!");
+            Assert.That(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, Is.True, "Double field has not been initialized!");
+            Assert.That(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, Is.True, "Integer field has not been initialized!");
+            Assert.That(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, Is.True, "String field has not been initialized!");
+            Assert.That(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, Is.True, "Byte field has not been initialized!");
+            Assert.That(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, Is.True, "Long field has not been initialized!");
         }
 
         /// <summary>
@@ -143,26 +143,26 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration
             // it makes no sense to test boolean here!
 
             // check if all properties are now not the same like the configured default values.
-            Assert.False(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, "Nullable Boolean: The system default value equals the test setup default value.");
-            Assert.False(emptyConfig.BooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, "Boolean: The system default value equals the test setup default value.");
-            Assert.False(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, "Byte: The system default value equals the test setup default value.");
-            Assert.False(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, "Double: The system default value equals the test setup default value.");
-            Assert.False(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, "Enum: The system default value equals the test setup default value.");
-            Assert.False(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, "Integer: The system default value equals the test setup default value.");
-            Assert.False(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, "Long: The system default value equals the test setup default value.");
-            Assert.False(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, "String: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Nullable Boolean: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.BooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Boolean: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, Is.False, "Byte: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, Is.False, "Double: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, Is.False, "Enum: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, Is.False, "Integer: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, Is.False, "Long: The system default value equals the test setup default value.");
+            Assert.That(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, Is.False, "String: The system default value equals the test setup default value.");
 
             // fillup empty properties
             _manager.FillEmpty(emptyConfig);
 
             // check that no property value has been overwritten.
-            Assert.False(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, "Enum field has been overwritten!");
-            Assert.False(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, "Nullable boolean field has not been overwritten!");
-            Assert.False(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, "Double field has not been overwritten!");
-            Assert.False(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, "Integer field has not been overwritten!");
-            Assert.False(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, "String field has not been overwritten!");
-            Assert.False(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, "Byte field has not been overwritten!");
-            Assert.False(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, "Long field has not been overwritten!");
+            Assert.That(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, Is.False, "Enum field has been overwritten!");
+            Assert.That(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Nullable boolean field has not been overwritten!");
+            Assert.That(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, Is.False, "Double field has not been overwritten!");
+            Assert.That(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, Is.False, "Integer field has not been overwritten!");
+            Assert.That(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, Is.False, "String field has not been overwritten!");
+            Assert.That(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, Is.False, "Byte field has not been overwritten!");
+            Assert.That(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, Is.False, "Long field has not been overwritten!");
         }
 
 
@@ -180,7 +180,7 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration
         /// </summary>
         private void CreateTempFolder()
         {
-            Assert.False(Directory.Exists(_tempDirectory));
+            Assert.That(Directory.Exists(_tempDirectory), Is.False);
             Directory.CreateDirectory(_tempDirectory);
         }
 
@@ -192,7 +192,7 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration
             if (Directory.Exists(_tempDirectory))
                 Directory.Delete(_tempDirectory, true);
 
-            Assert.False(Directory.Exists(_tempDirectory));
+            Assert.That(Directory.Exists(_tempDirectory), Is.False);
         }
     }
 }

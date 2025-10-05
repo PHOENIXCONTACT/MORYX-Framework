@@ -37,9 +37,9 @@ namespace Moryx.Runtime.Tests
 
             var containerConfig = _moduleUnderTest.Strategies;
 
-            Assert.GreaterOrEqual(containerConfig.Count, 1, "No strategy found!");
-            Assert.IsTrue(containerConfig.ContainsKey(typeof(IStrategy)), "Wrong type!");
-            Assert.AreEqual("Test", containerConfig[typeof(IStrategy)], "Wrong implementation instance set!");
+            Assert.That(containerConfig.Count, Is.GreaterThanOrEqualTo(1), "No strategy found!");
+            Assert.That(containerConfig.ContainsKey(typeof(IStrategy)), "Wrong type!");
+            Assert.That(containerConfig[typeof(IStrategy)], Is.EqualTo("Test"), "Wrong implementation instance set!");
         }
     }
 }

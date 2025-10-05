@@ -1,0 +1,26 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Moryx.Identity.AccessManagement.Data
+@inject SignInManager<MoryxUser> SignInManager
+@inject MoryxUserManager UserManager
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var username = User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name");
+    if (username != null)
+    {
+        <h1 class="display-4">Welcome @username.Value</h1>
+    }
+    else
+    {
+        <h1 class="display-4">Welcome User</h1>
+    }
+
+}
+else
+{
+    <h1 class="display-4">Welcome</h1>
+}

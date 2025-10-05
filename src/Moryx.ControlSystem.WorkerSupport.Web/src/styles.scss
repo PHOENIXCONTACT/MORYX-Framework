@@ -1,0 +1,59 @@
+@use "@moryx/ngx-web-framework/styles/theme" as *;
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+app-root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ng2-pdf-viewer-container::-webkit-scrollbar { 
+  display: none; 
+}
+
+.ng2-pdf-viewer-container {  
+  height: 300% !important; 
+  width: 300% !important;
+  transform: scale(0.33);
+}
+
+.image-quick-link {
+  .mat-mdc-button-touch-target {
+    width: 10px !important;
+    height: 10px !important;
+  }
+}
+
+.next-image {
+  .mat-mdc-button-touch-target {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
+.navigation-bar {
+  display: none !important;
+}
+
+.hover-button {
+  background-color: $light-background-hover;
+  opacity: 0.5;
+  box-shadow: none;
+  width: 60px;
+  height: 60px;
+
+  &::ng-deep .mat-button-wrapper {
+    vertical-align: middle;
+  }
+}

@@ -1,0 +1,33 @@
+@page "{*_}"
+@using Microsoft.AspNetCore.Authorization;
+@using Moryx.Asp.Integration
+@using System.ComponentModel.DataAnnotations
+@using Moryx.Shifts.Web
+@using Moryx.Shifts.Web.Localizations
+
+@{
+    ViewData["Title"] = "Shifts Management";
+    ViewData["BaseRef"] = "ShiftManagement/";
+
+    Layout = "_Layout";
+}
+@attribute [WebModule("ShiftManagement", "calendar_month"),
+  Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description"),
+    AllowAnonymous]
+
+<!DOCTYPE html>
+
+@section Styles {
+    <link rel="stylesheet" href="/_content/Moryx.Shifts.Web/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,1,0" />
+}
+@section Scripts
+{
+  <script src="/_content/Moryx.Shifts.Web/runtime.js" type="module"></script>
+  <script src="/_content/Moryx.Shifts.Web/polyfills.js" type="module"></script>
+  <script src="/_content/Moryx.Shifts.Web/main.js" type="module"></script>
+}
+
+<app-root></app-root>

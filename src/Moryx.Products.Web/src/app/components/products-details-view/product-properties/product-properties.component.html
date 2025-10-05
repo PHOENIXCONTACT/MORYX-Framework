@@ -1,0 +1,13 @@
+<navigable-entry-editor
+  *ngIf="properties() !== undefined; else elseBlock"
+  [entry]="properties()!"
+  queryParam="productProperty"
+  [disabled]="editService.edit === false"
+  class="property-navigation"
+></navigable-entry-editor>
+
+<ng-template #elseBlock>
+  <div class="properties-loading-screen">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</ng-template>

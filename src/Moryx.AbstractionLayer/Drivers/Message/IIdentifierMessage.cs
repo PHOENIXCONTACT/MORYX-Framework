@@ -1,4 +1,7 @@
-﻿namespace Moryx.AbstractionLayer.Drivers.Message
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Moryx.AbstractionLayer.Drivers.Message
 {
     /// <summary>
     /// Common interface for messages objects that define recipient or sender
@@ -12,3 +15,4 @@
         string Identifier { get; set; }
     }
 }
+

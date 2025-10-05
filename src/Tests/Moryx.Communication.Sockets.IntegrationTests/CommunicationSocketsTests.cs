@@ -70,7 +70,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
 
             for (int i = 0; i < numberOfClients; i++)
             {
-                Assert.AreNotEqual(BinaryConnectionState.Connected, Clients[i].Connection.CurrentState,
+                Assert.That(Clients[i].Connection.CurrentState, Is.Not.EqualTo(BinaryConnectionState.Connected),
                     "Client is in a connected-state, but there should be no server.");
             }
         }

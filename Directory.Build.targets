@@ -1,52 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-  <Import Project=".build\Common.props" Condition="'$(IsPackable)' == 'true'" />
-
-  <PropertyGroup>
-    <dotnetVersion>8.0.0</dotnetVersion>
-    <efCoreVersion>8.0.4</efCoreVersion>
-  </PropertyGroup>
-
-  <!-- Package refereces for all projects if IsPackable=true -->
-  <ItemGroup Condition="'$(IsPackable)' == 'true'">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-  </ItemGroup>
-
-  <!-- Package versions for package references across all projects -->
-  <ItemGroup>
-    <!--3rd party dependencies-->
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.*" />
-    <PackageReference Update="Moq" Version="4.*" />
-    <PackageReference Update="NUnit" Version="3.14.0" />
-    <PackageReference Update="NUnit3TestAdapter" Version="4.5.0" />
-    <PackageReference Update="coverlet.collector" Version="6.0.0" >
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-
-    <PackageReference Update="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Update="CommandLineParser" Version="2.9.1" />
-
-    <FrameworkReference Update="Microsoft.AspNetCore.App" Version="$(dotnetVersion)"/>
-    <PackageReference Update="Microsoft.Extensions.Logging" Version="$(dotnetVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Configuration.FileExtensions" Version="$(dotnetVersion)" />
-    <PackageReference Update="Microsoft.Data.Sqlite" Version="$(dotnetVersion)" />
-
-    <PackageReference Update="Microsoft.EntityFrameworkCore" Version="$(efCoreVersion)" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.Design" Version="$(efCoreVersion)" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.Proxies" Version="$(efCoreVersion)" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.Relational" Version="$(efCoreVersion)" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.InMemory" Version="$(efCoreVersion)" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.Sqlite" Version="$(efCoreVersion)" />
-    <PackageReference Update="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(efCoreVersion)" />
-
-    <PackageReference Update="System.IO.Ports" Version="$(dotnetVersion)" />
-    <PackageReference Update="System.ComponentModel.Annotations" Version="5.0.0" />
-
-    <PackageReference Update="Castle.Windsor" Version="6.0.0" />
-
-  </ItemGroup>
+	<ItemGroup>
+		<!-- Asp.Net Core Framework dependency -->
+		<FrameworkReference Update="Microsoft.AspNetCore.App" Version="$(AspNetCoreVersion)" />
+	</ItemGroup>
 
 </Project>

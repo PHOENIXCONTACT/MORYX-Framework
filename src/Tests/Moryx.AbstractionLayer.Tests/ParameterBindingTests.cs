@@ -28,7 +28,7 @@ namespace Moryx.AbstractionLayer.Tests
             var result = resolver.Resolve(process);
 
             // Assert
-            Assert.AreEqual(resultType, result.GetType(), "Wrong object resolved");
+            Assert.That(result.GetType(), Is.EqualTo(resultType), "Wrong object resolved");
         }
 
         [Test(Description = "Test for identifier, order of resolver is important here")]
@@ -75,10 +75,10 @@ namespace Moryx.AbstractionLayer.Tests
             }
 
             // Assert
-            Assert.AreEqual("Bob", result);
-            Assert.LessOrEqual(newCount, oldCount);
-            Assert.AreEqual(8, oldCount);
-            Assert.AreEqual(4, newCount);
+            Assert.That(result, Is.EqualTo("Bob"));
+            Assert.That(newCount, Is.LessThanOrEqualTo(oldCount));
+            Assert.That(oldCount, Is.EqualTo(8));
+            Assert.That(newCount, Is.EqualTo(4));
         }
 
         public class InsertPartParameters : Parameters

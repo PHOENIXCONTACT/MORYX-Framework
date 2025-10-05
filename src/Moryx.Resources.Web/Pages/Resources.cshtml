@@ -1,0 +1,27 @@
+@page "{*_}"
+@using Microsoft.AspNetCore.Authorization;
+@using Moryx.AbstractionLayer.Resources.Endpoints;
+@using Moryx.Asp.Integration
+@using System.ComponentModel.DataAnnotations
+@using Moryx.Resources.Web.Properties
+@{
+  ViewData["Title"] = "Resources";
+  ViewData["BaseRef"] = "Resources";
+
+  Layout = "_Layout";
+}
+@attribute [WebModule("Resources", "component_exchange"), 
+  Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description"),
+  Authorize(Policy = ResourcePermissions.CanViewTree),
+  AllowAnonymous]
+@section Styles {
+  <link rel="stylesheet" href="/_content/Moryx.Resources.Web/styles.css">
+}
+@section Scripts
+{
+  <script src="/_content/Moryx.Resources.Web/runtime.js" type="module"></script>
+  <script src="/_content/Moryx.Resources.Web/polyfills.js" type="module"></script>
+  <script src="/_content/Moryx.Resources.Web/main.js" type="module"></script>
+}
+
+<app-root></app-root>

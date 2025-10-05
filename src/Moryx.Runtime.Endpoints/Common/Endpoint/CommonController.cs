@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.Runtime.Endpoints.Common.Endpoint.Response;
 using System.Globalization;
@@ -54,3 +57,4 @@ namespace Moryx.Runtime.Endpoints.Common.Endpoint
         }
     }
 }
+

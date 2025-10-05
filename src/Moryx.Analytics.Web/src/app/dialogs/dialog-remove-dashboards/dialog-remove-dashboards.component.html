@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>{{ TranslationConstants.REMOVE.TITLE | translate }}</h2>
+<div mat-dialog-content>
+  <p>
+    {{ TranslationConstants.REMOVE.DESCRIPTION | translate }}
+    {{ dashboardName() }}
+  </p>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button type="submit"  (click)="onClose()">
+    {{ TranslationConstants.SHARED.CANCEL | translate }}
+  </button>
+  <button mat-button type="submit"  [mat-dialog-close]="true">
+    {{ TranslationConstants.REMOVE.REMOVE | translate }}
+  </button>
+</div>

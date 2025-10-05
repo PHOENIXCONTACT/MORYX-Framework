@@ -30,7 +30,7 @@ namespace Moryx.Tests.Workplans
             engine.Start();
 
             // Assert
-            Assert.IsFalse(triggered, "Path predictor should not have been activiated");
+            Assert.That(triggered, Is.False, "Path predictor should not have been activiated");
         }
 
         [Test(Description = "The path predictor should predict the end classification before the workplan instance is executed completly")]
@@ -65,8 +65,8 @@ namespace Moryx.Tests.Workplans
             while (finalResult == NodeClassification.Intermediate)
                 Thread.Sleep(1); // Await completion
             stopWatch.Stop();
-            Assert.Less(predictionTime, completionTime, "Engine was completed before a prediction was published.");
-            Assert.AreEqual(finalResult, prediction, "Predication was incorrect");
+            Assert.That(predictionTime, Is.LessThan(completionTime), "Engine was completed before a prediction was published.");
+            Assert.That(prediction, Is.EqualTo(finalResult), "Predication was incorrect");
         }
 
         [Test(Description = "The path predictor must be able to publish a prediction when the execution of a workplan instance was interrupted in a predictable path")]
@@ -99,7 +99,7 @@ namespace Moryx.Tests.Workplans
             // Assert
             while (finalResult == NodeClassification.Intermediate)
                 Thread.Sleep(1); // Await completion
-            Assert.AreEqual(finalResult, prediction, "Predication was incorrect");
+            Assert.That(prediction, Is.EqualTo(finalResult), "Predication was incorrect");
         }
 
         private void ResumeAsync(object state)
@@ -132,7 +132,7 @@ namespace Moryx.Tests.Workplans
             // Assert
             while (finalResult == NodeClassification.Intermediate)
                 Thread.Sleep(1); // Await completion
-            Assert.AreEqual(finalResult, prediction, "Predication was incorrect");
+            Assert.That(prediction, Is.EqualTo(finalResult), "Predication was incorrect");
         }
 
         

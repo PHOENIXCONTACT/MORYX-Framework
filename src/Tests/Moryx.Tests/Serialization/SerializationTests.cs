@@ -49,19 +49,73 @@ namespace Moryx.Tests
 
             // Assert
             var doubles = encoded.SubEntries[1];
-            Assert.AreEqual(nameof(EntryValueType.Double), doubles.Value.Possible[0]);
-            Assert.AreEqual(1, doubles.Prototypes.Count);
+            Assert.That(doubles.Value.Possible[0], Is.EqualTo(nameof(EntryValueType.Double)));
+            Assert.That(doubles.Prototypes.Count, Is.EqualTo(1));
             if (possibleValues)
-                Assert.AreEqual(3, doubles.Prototypes[0].Value.Possible.Length);
+                Assert.That(doubles.Prototypes[0].Value.Possible.Length, Is.EqualTo(3));
             else
-                Assert.IsNull(doubles.Prototypes[0].Value.Possible);
+                Assert.That(doubles.Prototypes[0].Value.Possible, Is.Null);
 
 
             var enums = encoded.SubEntries[2];
-            Assert.AreEqual(3, enums.Value.Possible.Length);
-            Assert.AreEqual(3, enums.Prototypes.Count);
+            Assert.That(enums.Value.Possible.Length, Is.EqualTo(3));
+            Assert.That(enums.Prototypes.Count, Is.EqualTo(3));
             for (int i = 0; i < 3; i++)
-                Assert.AreEqual(enums.Value.Possible[i], enums.Prototypes[i].Value.Current);
+                Assert.That(enums.Prototypes[i].Value.Current, Is.EqualTo(enums.Value.Possible[i]));
+        }
+
+        [Test]
+        public void ShouldCreateInstanceArray_WithIdentifier_ThatStart_With_CREATED()
+        {
+            // Arrange
+            var @object = new ArrayDummy
+            {
+                Array = new[] { 2, 3, 4, 5, 6 },
+                Keys = new[] { "Number: 1", "Number: 2", "Number: 3", "Number: 4", "Number: 5" }
+            };
+            var encoded = EntryConvert.EncodeObject(@object);
+
+            for (var i = 0; i < 5; i++)
+            {
+                var entry = encoded.SubEntries[0].SubEntries[i];
+                entry.Identifier = Entry.CreatedIdentifier + i;
+            }
+
+            // Act
+            var dummy = EntryConvert.CreateInstance<ArrayDummy>(encoded);
+
+            // Assert
+            for (var i = 1; i <= 5; i++)
+            {
+                Assert.That(dummy.Array[i - 1], Is.EqualTo(i + 1));
+            }
+        }
+
+        [Test]
+        public void ShouldNotCreateInstanceArray_WithIdentifier_ThatEnd_With_CREATED()
+        {
+            // Arrange
+            var @object = new ArrayDummy
+            {
+                Array = new[] { 2, 3, 4, 5, 6 },
+                Keys = new[] { "Number: 1", "Number: 2", "Number: 3", "Number: 4", "Number: 5" }
+            };
+            var encoded = EntryConvert.EncodeObject(@object);
+
+            for (var i = 0; i < 5; i++)
+            {
+                var entry = encoded.SubEntries[0].SubEntries[i];
+                entry.Identifier = i + Entry.CreatedIdentifier;
+            }
+
+            // Act
+            var dummy = EntryConvert.CreateInstance<ArrayDummy>(encoded);
+
+            // Assert
+            for (var i = 1; i <= 5; i++)
+            {
+                Assert.That(dummy.Array[i - 1], Is.Not.EqualTo(i + 1));
+            }
         }
 
         [Test]
@@ -94,8 +148,8 @@ namespace Moryx.Tests
             // Assert
             for (var i = 1; i <= 5; i++)
             {
-                Assert.AreEqual(i + 1, dummy.Array[i - 1]);
-                Assert.AreEqual("Number: " + i, dummy.Keys[i - 1]);
+                Assert.That(dummy.Array[i - 1], Is.EqualTo(i + 1));
+                Assert.That(dummy.Keys[i - 1], Is.EqualTo("Number: " + i));
             }
         }
 
@@ -131,10 +185,10 @@ namespace Moryx.Tests
             // Assert
             for (var i = 1; i <= 5; i++)
             {
-                Assert.AreEqual(3, dummy.EnumDictionary.Count);
-                Assert.AreEqual(5, dummy.SubDictionary.Count);
-                Assert.AreEqual(6, dummy.SubDictionary["Key5"]);
-                Assert.AreEqual(DummyEnum.Unset, dummy.EnumDictionary["Key_01213"]);
+                Assert.That(dummy.EnumDictionary.Count, Is.EqualTo(3));
+                Assert.That(dummy.SubDictionary.Count, Is.EqualTo(5));
+                Assert.That(dummy.SubDictionary["Key5"], Is.EqualTo(6));
+                Assert.That(dummy.EnumDictionary["Key_01213"], Is.EqualTo(DummyEnum.Unset));
             }
         }
 
@@ -188,10 +242,10 @@ namespace Moryx.Tests
             EntryConvert.UpdateInstance(dummy, encoded);
 
             // Assert
-            Assert.AreEqual(5, dummy.EnumDictionary.Count);
-            Assert.AreEqual(4, dummy.SubDictionary.Count);
-            Assert.AreEqual(123, dummy.SubDictionary["022"]);
-            Assert.AreEqual(DummyEnum.ValueA, dummy.EnumDictionary["555"]);
+            Assert.That(dummy.EnumDictionary.Count, Is.EqualTo(5));
+            Assert.That(dummy.SubDictionary.Count, Is.EqualTo(4));
+            Assert.That(dummy.SubDictionary["022"], Is.EqualTo(123));
+            Assert.That(dummy.EnumDictionary["555"], Is.EqualTo(DummyEnum.ValueA));
         }
 
         [Test]
@@ -229,18 +283,18 @@ namespace Moryx.Tests
             EntryConvert.UpdateInstance(dummy, encoded);
 
             // Assert
-            Assert.AreEqual(4, dummy.Array.Length);
-            Assert.AreEqual(42, dummy.Array[1]);
-            Assert.AreEqual(1337, dummy.Array[3]);
-            Assert.AreEqual(4, dummy.Keys.Length);
-            Assert.AreEqual("test1_2", dummy.Keys[0]);
-            Assert.AreEqual("test_02", dummy.Keys[1]);
-            Assert.AreEqual("hallo", dummy.Keys[2]);
-            Assert.AreEqual("new_Value", dummy.Keys[3]);
-            Assert.AreEqual(DummyEnum.ValueA, dummy.Enums[0]);
-            Assert.AreEqual(DummyEnum.ValueB, dummy.Enums[1]);
-            Assert.AreEqual(DummyEnum.ValueA, dummy.Enums[2]);
-            Assert.AreEqual(DummyEnum.ValueB, dummy.Enums[3]);
+            Assert.That(dummy.Array.Length, Is.EqualTo(4));
+            Assert.That(dummy.Array[1], Is.EqualTo(42));
+            Assert.That(dummy.Array[3], Is.EqualTo(1337));
+            Assert.That(dummy.Keys.Length, Is.EqualTo(4));
+            Assert.That(dummy.Keys[0], Is.EqualTo("test1_2"));
+            Assert.That(dummy.Keys[1], Is.EqualTo("test_02"));
+            Assert.That(dummy.Keys[2], Is.EqualTo("hallo"));
+            Assert.That(dummy.Keys[3], Is.EqualTo("new_Value"));
+            Assert.That(dummy.Enums[0], Is.EqualTo(DummyEnum.ValueA));
+            Assert.That(dummy.Enums[1], Is.EqualTo(DummyEnum.ValueB));
+            Assert.That(dummy.Enums[2], Is.EqualTo(DummyEnum.ValueA));
+            Assert.That(dummy.Enums[3], Is.EqualTo(DummyEnum.ValueB));
         }
 
         [Test]
@@ -264,7 +318,7 @@ namespace Moryx.Tests
             // Assert
             for (var i = 1; i <= 5; i++)
             {
-                Assert.AreEqual(i + 1, listDummy.DoubleList[i - 1]);
+                Assert.That(listDummy.DoubleList[i - 1], Is.EqualTo(i + 1));
             }
         }
 
@@ -300,18 +354,18 @@ namespace Moryx.Tests
             EntryConvert.UpdateInstance(dummy, encoded, defaultSerialization);
 
             // Assert
-            Assert.AreEqual(5, dummy.Number);
-            Assert.AreEqual(4, dummy.DoubleList.Count);
-            Assert.AreEqual(1.7, dummy.DoubleList[0]);
-            Assert.AreEqual(12.34, dummy.DoubleList[1]);
-            Assert.AreEqual(3.0, dummy.DoubleList[2]);
-            Assert.AreEqual(133.7, dummy.DoubleList[3]);
+            Assert.That(dummy.Number, Is.EqualTo(5));
+            Assert.That(dummy.DoubleList.Count, Is.EqualTo(4));
+            Assert.That(dummy.DoubleList[0], Is.EqualTo(1.7));
+            Assert.That(dummy.DoubleList[1], Is.EqualTo(12.34));
+            Assert.That(dummy.DoubleList[2], Is.EqualTo(3.0));
+            Assert.That(dummy.DoubleList[3], Is.EqualTo(133.7));
 
-            Assert.AreEqual(4, dummy.EnumList.Count);
-            Assert.AreEqual(DummyEnum.ValueA, dummy.EnumList[0]);
-            Assert.AreEqual(DummyEnum.ValueB, dummy.EnumList[1]);
-            Assert.AreEqual(DummyEnum.ValueB, dummy.EnumList[2]);
-            Assert.AreEqual(DummyEnum.ValueA, dummy.EnumList[3]);
+            Assert.That(dummy.EnumList.Count, Is.EqualTo(4));
+            Assert.That(dummy.EnumList[0], Is.EqualTo(DummyEnum.ValueA));
+            Assert.That(dummy.EnumList[1], Is.EqualTo(DummyEnum.ValueB));
+            Assert.That(dummy.EnumList[2], Is.EqualTo(DummyEnum.ValueB));
+            Assert.That(dummy.EnumList[3], Is.EqualTo(DummyEnum.ValueA));
         }
 
         [Test]
@@ -325,9 +379,9 @@ namespace Moryx.Tests
             
             // Assert
             var readList = encoded.SubEntries[3];
-            Assert.AreEqual(1, readList.SubEntries.Count);
-            Assert.IsTrue(readList.Value.IsReadOnly);
-            Assert.IsEmpty(readList.Prototypes);
+            Assert.That(readList.SubEntries.Count, Is.EqualTo(1));
+            Assert.That(readList.Value.IsReadOnly);
+            Assert.That(readList.Prototypes, Is.Empty);
         }
 
         [Test]
@@ -357,7 +411,7 @@ namespace Moryx.Tests
             var expected = new[] { "10", "Thomas", "10" };
             for (var i = 0; i < 3; i++)
             {
-                Assert.AreEqual(expected[i], encoded[i].Value.Current, "Property value missmatch");
+                Assert.That(encoded[i].Value.Current, Is.EqualTo(expected[i]), "Property value missmatch");
             }
         }
 
@@ -371,12 +425,12 @@ namespace Moryx.Tests
             var encoded = EntryConvert.EncodeObject(values);
 
             // Assert
-            Assert.NotNull(encoded);
-            Assert.AreEqual(EntryValueType.Collection, encoded.Value.Type);
-            Assert.AreEqual(2, encoded.SubEntries.Count);
+            Assert.That(encoded, Is.Not.Null);
+            Assert.That(encoded.Value.Type, Is.EqualTo(EntryValueType.Collection));
+            Assert.That(encoded.SubEntries.Count, Is.EqualTo(2));
             var se = encoded.SubEntries;
-            Assert.AreEqual(values[0], se[0].Value.Current);
-            Assert.AreEqual(values[1], se[1].Value.Current);
+            Assert.That(se[0].Value.Current, Is.EqualTo(values[0]));
+            Assert.That(se[1].Value.Current, Is.EqualTo(values[1]));
         }
 
         [Test]
@@ -389,9 +443,9 @@ namespace Moryx.Tests
             var encoded = EntryConvert.EncodeObject(dummy);
 
             // Assert
-            Assert.NotNull(encoded);
-            Assert.AreEqual(EntryValueType.Exception, encoded.SubEntries[0].Value.Type);
-            Assert.NotNull(encoded.SubEntries[0].Value.Current);
+            Assert.That(encoded, Is.Not.Null);
+            Assert.That(encoded.SubEntries[0].Value.Type, Is.EqualTo(EntryValueType.Exception));
+            Assert.That(encoded.SubEntries[0].Value.Current, Is.Not.Null);
         }
 
 
@@ -407,7 +461,7 @@ namespace Moryx.Tests
 
             // Assert
             var alwaysProperties = 1;
-            Assert.That(encoded.SubEntries.Count, Is.EqualTo(alwaysProperties));
+            Assert.That(alwaysProperties, Is.EqualTo(encoded.SubEntries.Count));
         }
 
         [Test(Description = "Class with EntrySerializationAttribute should not Override the attribute on the Base Class Resource|PublicResource")]
@@ -422,7 +476,7 @@ namespace Moryx.Tests
 
             // Assert
             var alwaysProperties = 3;
-            Assert.That(encoded.SubEntries.Count, Is.EqualTo(alwaysProperties));
+            Assert.That(alwaysProperties, Is.EqualTo(encoded.SubEntries.Count));
         }
 
 
@@ -476,17 +530,17 @@ namespace Moryx.Tests
             // Assert
             var collection = ExtractCollection(type, obj);
             var totalSize = prefill + newValues;
-            Assert.AreEqual(totalSize, collection.Count, "New size invalid");
+            Assert.That(collection.Count, Is.EqualTo(totalSize), "New size invalid");
 
             if (type == CollectionType.Dictionary)
             {
                 var array = (collection as IEnumerable<KeyValuePair<int, SubClass>>).ToArray();
                 for (var i = 0; i < totalSize; i++)
                 {
-                    Assert.AreEqual((float)i + 1, array[i].Key, "Key not set!");
-                    Assert.AreEqual((float)i + 1, array[i].Value.Foo, "Value not set!");
+                    Assert.That(array[i].Key, Is.EqualTo((float)i + 1), "Key not set!");
+                    Assert.That(array[i].Value.Foo, Is.EqualTo((float)i + 1), "Value not set!");
                     var expectedEnum = i < prefill ? DummyEnum.ValueA : DummyEnum.ValueB;
-                    Assert.AreEqual(expectedEnum, array[i].Value.Enum, "Enum not set");
+                    Assert.That(array[i].Value.Enum, Is.EqualTo(expectedEnum), "Enum not set");
                 }
             }
             else
@@ -494,9 +548,9 @@ namespace Moryx.Tests
                 var array = (collection as IEnumerable<SubClass>).ToArray();
                 for (var i = 0; i < totalSize; i++)
                 {
-                    Assert.AreEqual((float)i + 1, array[i].Foo, "Value not set!");
+                    Assert.That(array[i].Foo, Is.EqualTo((float)i + 1), "Value not set!");
                     var expectedEnum = i < prefill ? DummyEnum.ValueA : DummyEnum.ValueB;
-                    Assert.AreEqual(expectedEnum, array[i].Enum, "Enum not set");
+                    Assert.That(array[i].Enum, Is.EqualTo(expectedEnum), "Enum not set");
                 }
             }
         }
@@ -532,9 +586,9 @@ namespace Moryx.Tests
 
                 for (var i = 0; i < collection.Count; i++)
                 {
-                    Assert.IsTrue(obj.SubDictionary.ContainsKey(11 + i));
-                    Assert.AreEqual((float)11 + i, obj.SubDictionary[11 + i].Foo);
-                    Assert.AreEqual(DummyEnum.ValueB, obj.SubDictionary[11 + i].Enum);
+                    Assert.That(obj.SubDictionary.ContainsKey(11 + i));
+                    Assert.That(obj.SubDictionary[11 + i].Foo, Is.EqualTo((float)11 + i));
+                    Assert.That(obj.SubDictionary[11 + i].Enum, Is.EqualTo(DummyEnum.ValueB));
                 }
             }
             else
@@ -553,8 +607,8 @@ namespace Moryx.Tests
 
                 for (var i = 0; i < collection.Count; i++)
                 {
-                    Assert.AreEqual((float)11 + i, array[i].Foo);
-                    Assert.AreEqual(DummyEnum.ValueB, array[i].Enum);
+                    Assert.That(array[i].Foo, Is.EqualTo((float)11 + i));
+                    Assert.That(array[i].Enum, Is.EqualTo(DummyEnum.ValueB));
                 }
             }
         }
@@ -585,7 +639,7 @@ namespace Moryx.Tests
             // Assert
             var collection = ExtractCollection(type, obj);
             var totalSize = prefill - removedIndexes.Length;
-            Assert.AreEqual(totalSize, collection.Count, "New size invalid");
+            Assert.That(collection.Count, Is.EqualTo(totalSize), "New size invalid");
 
 
             if (type == CollectionType.Dictionary)
@@ -597,7 +651,7 @@ namespace Moryx.Tests
                         continue;
 
                     var match = array.FirstOrDefault(e => e.Key == i + 1);
-                    Assert.NotNull(match);
+                    Assert.That(match, Is.Not.Null);
                 }
             }
             else
@@ -609,7 +663,7 @@ namespace Moryx.Tests
                         continue;
 
                     var match = array.FirstOrDefault(e => e.Foo == i + 1);
-                    Assert.NotNull(match);
+                    Assert.That(match, Is.Not.Null);
                 }
             }
         }
@@ -640,15 +694,15 @@ namespace Moryx.Tests
             var obj = EntryConvert.CreateInstance<DummyClass>(encoded);
 
             // Assert
-            Assert.AreEqual(10, obj.Number);
-            Assert.AreEqual("Thomas", obj.Name);
-            Assert.AreEqual(DummyEnum.ValueB, obj.SingleClass.Enum);
+            Assert.That(obj.Number, Is.EqualTo(10));
+            Assert.That(obj.Name, Is.EqualTo("Thomas"));
+            Assert.That(obj.SingleClass.Enum, Is.EqualTo(DummyEnum.ValueB));
             var colAssert = new[] { CollectionType.Array, CollectionType.List, CollectionType.Enumerable };
             for (var i = 0; i < colAssert.Length; i++)
             {
                 var length = 4 + i;
                 var collection = ExtractCollection(colAssert[i], obj);
-                Assert.AreEqual(length, collection.Count);
+                Assert.That(collection.Count, Is.EqualTo(length));
 
                 if (colAssert[i] == CollectionType.Dictionary)
                 {
@@ -659,8 +713,8 @@ namespace Moryx.Tests
                     var array = (collection as IEnumerable<SubClass>).ToArray();
                     for (var j = 0; j < length; j++)
                     {
-                        Assert.AreEqual((float)j, array[j].Foo);
-                        Assert.AreEqual(DummyEnum.ValueA, array[j].Enum);
+                        Assert.That(array[j].Foo, Is.EqualTo((float)j));
+                        Assert.That(array[j].Enum, Is.EqualTo(DummyEnum.ValueA));
                     }
                 }
             }
@@ -679,9 +733,9 @@ namespace Moryx.Tests
             var instance = (ConstructorDummy)EntryConvert.CreateInstance(dummyType, constructor);
 
             // Assert
-            Assert.NotNull(instance);
-            Assert.AreEqual(42, instance.Foo);
-            Assert.AreEqual(string.Empty, instance.Text, "EntryConvert did not pick the correct overload");
+            Assert.That(instance, Is.Not.Null);
+            Assert.That(instance.Foo, Is.EqualTo(42));
+            Assert.That(instance.Text, Is.EqualTo(string.Empty), "EntryConvert did not pick the correct overload");
         }
 
         [Test]
@@ -695,7 +749,7 @@ namespace Moryx.Tests
             var equals = Entry.ValuesEqual(entry, clone);
 
             // Assert
-            Assert.IsTrue(equals);
+            Assert.That(equals);
         }
 
         [Test]
@@ -709,7 +763,7 @@ namespace Moryx.Tests
             var equals = Entry.ValuesEqual(entry, entry2);
 
             // Assert
-            Assert.IsTrue(equals);
+            Assert.That(equals);
         }
 
         [Test]
@@ -725,7 +779,7 @@ namespace Moryx.Tests
             var equals = Entry.ValuesEqual(entry, entry2);
 
             // Assert
-            Assert.IsFalse(equals);
+            Assert.That(equals, Is.False);
         }
 
         [Test]
@@ -741,7 +795,7 @@ namespace Moryx.Tests
             var equals = entry.Equals(entry2);
 
             // Assert
-            Assert.IsFalse(equals);
+            Assert.That(equals, Is.False);
         }
 
         [Test]
@@ -757,7 +811,7 @@ namespace Moryx.Tests
             var equals = entry.Equals(entry2);
 
             // Assert
-            Assert.IsFalse(equals);
+            Assert.That(equals, Is.False);
         }
 
         [Test]
@@ -773,7 +827,7 @@ namespace Moryx.Tests
             var equals = entry.Equals(entry2);
 
             // Assert
-            Assert.IsFalse(equals);
+            Assert.That(equals, Is.False);
         }
 
         [Test(Description = "Encodes a MemoryStream")]
@@ -787,9 +841,9 @@ namespace Moryx.Tests
             var entry = EntryConvert.EncodeObject(streamDummy);
 
             // Assert
-            Assert.AreEqual(1, entry.SubEntries.Count);
-            Assert.AreEqual(EntryValueType.Stream, entry.SubEntries[0].Value.Type);
-            Assert.AreEqual("VGhpcyBpcyBhIHRlc3Q=", entry.SubEntries[0].Value.Current);
+            Assert.That(entry.SubEntries.Count, Is.EqualTo(1));
+            Assert.That(entry.SubEntries[0].Value.Type, Is.EqualTo(EntryValueType.Stream));
+            Assert.That(entry.SubEntries[0].Value.Current, Is.EqualTo("VGhpcyBpcyBhIHRlc3Q="));
         }
 
         [Test(Description = "Decodes to a MemoryStream and creates a new stream")]
@@ -808,8 +862,8 @@ namespace Moryx.Tests
             // Assert
             var stringValue = Encoding.UTF8.GetString(targetStreamDummy.MemoryStream.ToArray());
 
-            Assert.AreEqual(testString, stringValue);
-            Assert.AreNotSame(streamInstanceToCheck, targetStreamDummy.MemoryStream);
+            Assert.That(stringValue, Is.EqualTo(testString));
+            Assert.That(streamInstanceToCheck, Is.Not.SameAs(targetStreamDummy.MemoryStream));
         }
 
         [Test(Description = "Decodes to a MemoryStream and reuses the stream")]
@@ -829,8 +883,8 @@ namespace Moryx.Tests
             // Assert
             var stringValue = Encoding.UTF8.GetString(targetStreamDummy.MemoryStream.ToArray());
 
-            Assert.AreEqual(testString, stringValue);
-            Assert.AreSame(streamInstanceToCheck, targetStreamDummy.MemoryStream);
+            Assert.That(stringValue, Is.EqualTo(testString));
+            Assert.That(streamInstanceToCheck, Is.SameAs(targetStreamDummy.MemoryStream));
         }
 
         [Test(Description = "Decodes to a MemoryStream and reuses the stream but the initial stream size is greater than the new applied value")]
@@ -850,8 +904,16 @@ namespace Moryx.Tests
             // Assert
             var stringValue = Encoding.UTF8.GetString(targetStreamDummy.MemoryStream.ToArray());
 
-            Assert.AreEqual(testString, stringValue);
-            Assert.AreSame(streamInstanceToCheck, targetStreamDummy.MemoryStream);
+            Assert.That(stringValue, Is.EqualTo(testString));
+            Assert.That(streamInstanceToCheck, Is.SameAs(targetStreamDummy.MemoryStream));
+        }
+
+        [Test(Description = "Testing nullable properties")]
+        public void NullableProperty()
+        {
+            var nullablePropertiesObject = new NullablePropertiesClass();
+
+            Assert.DoesNotThrow(() => EntryConvert.EncodeObject(nullablePropertiesObject));
         }
 
         [Test(Description = "Encodes a FileStream")]
@@ -868,9 +930,9 @@ namespace Moryx.Tests
             var entry = EntryConvert.EncodeObject(streamDummy);
 
             // Assert
-            Assert.AreEqual(1, entry.SubEntries.Count);
-            Assert.AreEqual(EntryValueType.Stream, entry.SubEntries[0].Value.Type);
-            Assert.AreEqual("VGhpcyBpcyBhIHRlc3Q=", entry.SubEntries[0].Value.Current);
+            Assert.That(entry.SubEntries.Count, Is.EqualTo(1));
+            Assert.That(entry.SubEntries[0].Value.Type, Is.EqualTo(EntryValueType.Stream));
+            Assert.That(entry.SubEntries[0].Value.Current, Is.EqualTo("VGhpcyBpcyBhIHRlc3Q="));
 
             streamDummy.FileStream.Close();
             File.Delete(testFilePath);
@@ -904,8 +966,8 @@ namespace Moryx.Tests
 
             var stringValue = Encoding.UTF8.GetString(buffer);
 
-            Assert.AreEqual(testString, stringValue);
-            Assert.AreSame(streamInstanceToCheck, targetStreamDummy.FileStream);
+            Assert.That(stringValue, Is.EqualTo(testString));
+            Assert.That(streamInstanceToCheck, Is.SameAs(targetStreamDummy.FileStream));
 
             streamDummy.FileStream.Close();
             File.Delete(testFilePath);
@@ -937,11 +999,11 @@ namespace Moryx.Tests
             var dummyDecoded = EntryConvert.CreateInstance<DummyClass>(encoded, serialization);
 
             // Assert
-            Assert.AreEqual(1001.ToString(formatProvider), encoded.SubEntries[0].Value.Current);
-            Assert.AreEqual(1.1234f.ToString(formatProvider), encoded.SubEntries[3].SubEntries[0].Value.Current);
+            Assert.That(encoded.SubEntries[0].Value.Current, Is.EqualTo(1001.ToString(formatProvider)));
+            Assert.That(encoded.SubEntries[3].SubEntries[0].Value.Current, Is.EqualTo(1.1234f.ToString(formatProvider)));
 
-            Assert.AreEqual(1001, dummyDecoded.Number);
-            Assert.AreEqual(1.1234f, dummyDecoded.SingleClass.Foo);
+            Assert.That(dummyDecoded.Number, Is.EqualTo(1001));
+            Assert.That(dummyDecoded.SingleClass.Foo, Is.EqualTo(1.1234f));
         }
 
         private static Entry CreateTestEntry()
@@ -1101,19 +1163,19 @@ namespace Moryx.Tests
                 new {Name = "BoolEnumerable", Type = EntryValueType.Collection, ReadOnly = false},
                 new {Name = "SingleClassNonLocalized", Type = EntryValueType.Class, ReadOnly = false}
             };
-            Assert.AreEqual(expected.Length, encoded.Count, "Number of entries does not match");
+            Assert.That(encoded.Count, Is.EqualTo(expected.Length), "Number of entries does not match");
             for (var i = 0; i < encoded.Count; i++)
             {
-                Assert.AreEqual(expected[i].Name, encoded[i].Identifier, "Property name missmatch");
-                Assert.AreEqual(expected[i].Type, encoded[i].Value.Type, "Type missmatch");
-                Assert.AreEqual(expected[i].ReadOnly, encoded[i].Value.IsReadOnly, "ReadOnly missmatch");
+                Assert.That(encoded[i].Identifier, Is.EqualTo(expected[i].Name), "Property name missmatch");
+                Assert.That(encoded[i].Value.Type, Is.EqualTo(expected[i].Type), "Type missmatch");
+                Assert.That(encoded[i].Value.IsReadOnly, Is.EqualTo(expected[i].ReadOnly), "ReadOnly missmatch");
             }
-            Assert.AreEqual("Foo", encodedSub[0].Identifier, "Name missmatch");
-            Assert.AreEqual(EntryValueType.Single, encodedSub[0].Value.Type, "Float not detected");
-            Assert.AreEqual("Enum", encodedSub[1].Identifier);
-            Assert.AreEqual(EntryValueType.Enum, encodedSub[1].Value.Type, "Enum not detected");
-            Assert.AreEqual("Unset", encodedSub[1].Value.Default);
-            Assert.AreEqual(3, encodedSub[1].Value.Possible.Length, "Possible values not set");
+            Assert.That(encodedSub[0].Identifier, Is.EqualTo("Foo"), "Name missmatch");
+            Assert.That(encodedSub[0].Value.Type, Is.EqualTo(EntryValueType.Single), "Float not detected");
+            Assert.That(encodedSub[1].Identifier, Is.EqualTo("Enum"));
+            Assert.That(encodedSub[1].Value.Type, Is.EqualTo(EntryValueType.Enum), "Enum not detected");
+            Assert.That(encodedSub[1].Value.Default, Is.EqualTo("Unset"));
+            Assert.That(encodedSub[1].Value.Possible.Length, Is.EqualTo(3), "Possible values not set");
         }
     }
 }
