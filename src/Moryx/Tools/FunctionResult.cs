@@ -170,8 +170,7 @@ namespace Moryx.Tools.FunctionResult
         /// <exception cref="ArgumentNullException">In case of <paramref name="message"/> is null</exception>
         public FunctionResultError(string message)
         {
-            if (message is null)
-                throw new ArgumentNullException(nameof(message));
+            ArgumentNullException.ThrowIfNull(message);
 
             Message = message;
         }
@@ -182,8 +181,7 @@ namespace Moryx.Tools.FunctionResult
         /// <exception cref="ArgumentNullException">In case of <paramref name="exception"/> is null</exception>
         public FunctionResultError(Exception exception)
         {
-            if (exception is null)
-                throw new ArgumentNullException(nameof(exception));
+            ArgumentNullException.ThrowIfNull(exception);
 
             Message = exception.Message;
             Exception = exception;

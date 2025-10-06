@@ -169,8 +169,7 @@ namespace Moryx.ControlSystem.ProcessEngine
         {
             ValidateHealthState();
 
-            if (recipe == null)
-                throw new ArgumentNullException(nameof(recipe));
+            ArgumentNullException.ThrowIfNull(recipe);
 
             if (recipe.Origin == null)
                 throw new ArgumentException("Origin must not be null on recipe", nameof(recipe));
@@ -191,8 +190,7 @@ namespace Moryx.ControlSystem.ProcessEngine
         /// </summary>
         private IJobData ValidateAndGet(Job job)
         {
-            if (job == null)
-                throw new ArgumentNullException(nameof(job));
+            ArgumentNullException.ThrowIfNull(job);
 
             ValidateHealthState();
             return JobList.Get(job.Id)

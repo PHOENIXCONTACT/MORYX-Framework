@@ -131,8 +131,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         [Authorize(Policy = RuntimePermissions.ModulesCanConfigure)]
         public ActionResult Update([FromRoute] string moduleName, [FromBody] ServerModuleModel module)
         {
-            if (module == null)
-                throw new ArgumentNullException(nameof(module));
+            ArgumentNullException.ThrowIfNull(module);
 
             var serverModule = GetModuleFromManager(moduleName);
             if (serverModule == null)
@@ -238,8 +237,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         [Authorize(Policy = RuntimePermissions.ModulesCanInvoke)]
         public ActionResult<Entry> InvokeMethod([FromRoute] string moduleName, [FromBody] MethodEntry method)
         {
-            if (method == null)
-                throw new ArgumentNullException(nameof(method));
+            ArgumentNullException.ThrowIfNull(method);
 
             var serverModule = GetModuleFromManager(moduleName);
             if (serverModule == null)

@@ -216,8 +216,7 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
 
-            if (identity == null)
-                throw new ArgumentNullException(nameof(identity));
+            ArgumentNullException.ThrowIfNull(identity);
 
             var instances = ProductManager
                 .GetInstances<IIdentifiableObject>(i => identity.Equals(i.Identity));
@@ -236,8 +235,7 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
 
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+            ArgumentNullException.ThrowIfNull(selector);
 
             return ProductManager.GetInstances(selector).SingleOrDefault();
         }
@@ -258,8 +256,7 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
 
-            if (ids == null)
-                throw new ArgumentNullException(nameof(ids));
+            ArgumentNullException.ThrowIfNull(ids);
 
             return ProductManager.GetInstances(ids);
         }
@@ -269,8 +266,7 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
 
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+            ArgumentNullException.ThrowIfNull(selector);
 
             return ProductManager.GetInstances(selector);
         }

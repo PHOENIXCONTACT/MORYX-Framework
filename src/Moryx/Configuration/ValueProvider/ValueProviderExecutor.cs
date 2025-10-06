@@ -36,10 +36,7 @@ namespace Moryx.Configuration
         /// <exception cref="ArgumentNullException"></exception>
         public static void Execute(object targetObject, ValueProviderExecutorSettings settings)
         {
-            if (targetObject is null)
-            {
-                throw new ArgumentNullException(nameof(targetObject));
-            }
+            ArgumentNullException.ThrowIfNull(targetObject);
 
             if (settings.Providers == null)
             {

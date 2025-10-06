@@ -481,10 +481,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         public void Remove(IJobData completedJob, Action<ModifiedJobsFragment> saveCallback)
         {
 
-            if (completedJob == null)
-            {
-                throw new ArgumentNullException(nameof(completedJob));
-            }
+            ArgumentNullException.ThrowIfNull(completedJob);
             Logger.Log(LogLevel.Information, "Removing job {0}", completedJob.Id);
 
             _jobLock.EnterWriteLock();

@@ -138,8 +138,7 @@ namespace Moryx.ControlSystem.Cells
 
         private static ReadyToWork CreateSession(ActivityClassification classification, ReadyToWorkType type, ProcessReference reference, IConstraint[] constraints)
         {
-            if (constraints == null)
-                throw new ArgumentNullException(nameof(constraints));
+            ArgumentNullException.ThrowIfNull(constraints);
             return new ReadyToWork(classification, type, reference, constraints);
         }
 

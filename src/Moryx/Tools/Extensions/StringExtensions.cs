@@ -38,10 +38,7 @@ namespace Moryx.Tools
         /// <returns>new string instance.</returns>
         public static string Append(this string s, string separator, string value)
         {
-            if (s == null)
-            {
-                throw new ArgumentNullException(nameof(s));
-            }
+            ArgumentNullException.ThrowIfNull(s);
 
             if (s.Length == 0)
             {
