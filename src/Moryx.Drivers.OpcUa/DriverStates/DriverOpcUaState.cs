@@ -1,10 +1,9 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.StateMachines;
 using Opc.Ua;
 using Opc.Ua.Client;
-using System;
 
 namespace Moryx.Drivers.OpcUa.DriverStates;
 

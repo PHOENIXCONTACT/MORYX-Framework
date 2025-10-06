@@ -1,10 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 
-using System;
-using System.Linq;
-using System.Threading;
 using System.Threading.Channels;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Processes.Endpoints.EventHandlers;

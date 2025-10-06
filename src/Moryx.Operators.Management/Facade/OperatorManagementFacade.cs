@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Immutable;
@@ -9,7 +9,6 @@ using Moryx.Threading;
 using Moryx.Operators.Management.Localizations;
 using Moryx.Operators.Exceptions;
 using Moryx.Users;
-using Castle.Core.Resource;
 
 namespace Moryx.Operators.Management.Facade;
 

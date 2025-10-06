@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -7,7 +7,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.AbstractionLayer;
-using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs.Production;
 using Moryx.ControlSystem.ProcessEngine.Model;

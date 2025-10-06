@@ -2,9 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Workplans;
-using Moryx.Workplans.WorkplanSteps;
 using System.Drawing;
-using System.Linq;
 
 namespace Moryx.Tests.Workplans
 {

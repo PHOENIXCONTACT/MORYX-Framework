@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers.InOut;
-using System;
 
 namespace Moryx.Drivers.OpcUa;
 

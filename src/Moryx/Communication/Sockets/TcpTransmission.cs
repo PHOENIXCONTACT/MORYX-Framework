@@ -2,9 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
-using Moryx.Serialization;
 
 namespace Moryx.Communication.Sockets
 {

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -9,8 +9,6 @@ using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.TestTools;
 using Moq;
 using NUnit.Framework;
-using Microsoft.Extensions.Logging.Abstractions;
-using Moryx.Threading;
 using Moryx.TestTools.UnitTest;
 
 namespace Moryx.Orders.Management.Tests

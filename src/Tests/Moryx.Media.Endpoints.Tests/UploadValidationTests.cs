@@ -1,16 +1,12 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing.Constraints;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Globalization;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moryx.Media.Endpoints.Tests
 {

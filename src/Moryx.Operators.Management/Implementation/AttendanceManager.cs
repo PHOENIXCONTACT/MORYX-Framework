@@ -1,9 +1,8 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
 using Moryx.Model.Repositories;
-using Moryx.Operators.Management.Implementation;
 using Moryx.Operators.Management.Model;
 using System.Runtime.CompilerServices;
 

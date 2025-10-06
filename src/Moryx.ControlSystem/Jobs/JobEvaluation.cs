@@ -1,11 +1,6 @@
 // Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Moryx.ControlSystem.Setups;
-
 namespace Moryx.ControlSystem.Jobs
 {
     /// <summary>

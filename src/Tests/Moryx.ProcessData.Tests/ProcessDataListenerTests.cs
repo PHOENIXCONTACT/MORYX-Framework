@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.TestTools.UnitTest;
 using Moq;
 using Moq.Protected;
 using Moryx.ProcessData.Listener;

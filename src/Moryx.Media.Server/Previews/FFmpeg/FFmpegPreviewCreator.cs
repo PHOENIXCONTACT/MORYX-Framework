@@ -1,12 +1,9 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Moryx.Container;
-using Moryx.Logging;
 using Moryx.Media.Previews;
 using Moryx.Modules;
 

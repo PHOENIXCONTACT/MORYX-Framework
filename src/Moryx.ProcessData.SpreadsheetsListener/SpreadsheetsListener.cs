@@ -1,20 +1,10 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System.Threading.Tasks;
-using System.Globalization;
 
 using Moryx.Container;
 using Moryx.Modules;
 using Moryx.ProcessData.Listener;
 using Moryx.Threading;
-
-using CsvHelper.Configuration;
-using System.Collections.Generic;
-using Moryx.Logging;
-using System.Linq;
-using System;
-using Moryx.Tools;
 using Microsoft.Extensions.Logging;
 
 namespace Moryx.ProcessData.SpreadsheetsListener

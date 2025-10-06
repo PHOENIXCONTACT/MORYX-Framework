@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 #if NETFRAMEWORK
@@ -116,12 +116,8 @@ namespace Moryx.Media.Server.Previews
 
 }
 #else
-using System;
-using System.IO;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Moryx.Container;
-using Moryx.Logging;
 using Moryx.Media.Previews;
 using Moryx.Modules;
 using SixLabors.ImageSharp;

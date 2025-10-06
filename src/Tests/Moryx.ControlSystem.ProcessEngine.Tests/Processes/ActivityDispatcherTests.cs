@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging.Abstractions;
@@ -12,7 +12,6 @@ using Moryx.ControlSystem.TestTools;
 using Moryx.ControlSystem.TestTools.Activities;
 using Moryx.Logging;
 using Moryx.TestTools.UnitTest;
-using Moryx.Threading;
 using NUnit.Framework;
 using System.Collections.Generic;
 

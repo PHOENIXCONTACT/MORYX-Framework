@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Tools;
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG

@@ -1,7 +1,6 @@
 // Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using Moryx.AbstractionLayer;
 
 namespace Moryx.ControlSystem.Cells

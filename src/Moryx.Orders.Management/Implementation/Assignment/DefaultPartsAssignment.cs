@@ -1,10 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
 using Moryx.Orders.Assignment;

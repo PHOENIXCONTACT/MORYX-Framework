@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Http;
@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators;
 using Moryx.Runtime.Modules;
-using Moryx.Shifts.Endpoints.Models;
 using Moryx.Shifts.Extensions;
 using System.ComponentModel.DataAnnotations;
 using Moryx.Shifts.Endpoints.Localizations;

@@ -1,15 +1,10 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Processes;
 using Moryx.Factory;
@@ -27,7 +22,6 @@ using Moryx.FactoryMonitor.Endpoints.Localizations;
 //old models in '.Model' namespace. Only ones still in use: TransoirtRoute- / PathModel & CellSettingsModel
 using Moryx.FactoryMonitor.Endpoints.Model;
 using Moryx.FactoryMonitor.Endpoints.Extensions;
-using System.IO;
 using Timer = System.Timers.Timer;
 
 namespace Moryx.FactoryMonitor.Endpoints

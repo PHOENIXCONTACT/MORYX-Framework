@@ -1,11 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Recipes;

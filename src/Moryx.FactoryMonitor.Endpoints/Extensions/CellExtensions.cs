@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer;
@@ -11,9 +11,6 @@ using Moryx.ControlSystem.Recipes;
 using Moryx.Factory;
 using Moryx.FactoryMonitor.Endpoints.Model;
 using Moryx.FactoryMonitor.Endpoints.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.FactoryMonitor.Endpoints.Extensions
 {

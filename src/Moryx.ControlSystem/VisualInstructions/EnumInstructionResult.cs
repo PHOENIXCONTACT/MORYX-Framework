@@ -2,9 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.ControlSystem.VisualInstructions
 {

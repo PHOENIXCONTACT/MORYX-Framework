@@ -1,11 +1,10 @@
-﻿// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.ControlSystem.Recipes;
-using System;
 using Moryx.ControlSystem.Processes;
 
 namespace Moryx.ControlSystem.Cells

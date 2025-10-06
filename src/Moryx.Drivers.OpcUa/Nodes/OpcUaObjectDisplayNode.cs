@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 
 using Opc.Ua;
-using System.Collections.Generic;
 
 namespace Moryx.Drivers.OpcUa.Nodes;
 

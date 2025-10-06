@@ -1,10 +1,7 @@
-﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.IO;
-using System.Net.Http;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 
 namespace Moryx.Orders.Documents
 {

@@ -1,7 +1,5 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 
-using System;
-using System.Linq;
 using System.Threading.Channels;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Resources;

@@ -5,7 +5,6 @@ using Moryx.AbstractionLayer.Recipes;
 using Moryx.Bindings;
 using Moryx.Logging;
 using Moryx.Workplans;
-using System.Collections.Generic;
 
 namespace Moryx.ControlSystem.Setups
 {

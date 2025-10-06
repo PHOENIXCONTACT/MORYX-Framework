@@ -1,8 +1,5 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Moryx.ControlSystem.Processes.Endpoints;
 
 public class ProcessHolderGroupModel

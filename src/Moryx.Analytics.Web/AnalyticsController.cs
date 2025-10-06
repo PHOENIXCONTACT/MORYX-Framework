@@ -1,9 +1,8 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Mvc;
 using Moryx.Configuration;
-using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Moryx.Analytics.Server;
 using Moryx.Analytics.Server.ModuleController;

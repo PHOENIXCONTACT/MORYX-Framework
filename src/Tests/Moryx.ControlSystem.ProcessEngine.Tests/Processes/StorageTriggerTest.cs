@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Identity;
@@ -19,7 +18,6 @@ using Moryx.Model;
 using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
 using Moryx.TestTools.UnitTest;
-using Moryx.Threading;
 using Moryx.Tools;
 using NUnit.Framework;
 using NUnit.Framework.Internal;

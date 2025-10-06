@@ -6,8 +6,6 @@ using Moryx.AbstractionLayer.Recipes;
 using Moryx.Collections;
 using Moryx.Modules;
 using Moryx.Workplans;
-using System;
-using System.Collections.Generic;
 
 namespace Moryx.ControlSystem.Setups
 {

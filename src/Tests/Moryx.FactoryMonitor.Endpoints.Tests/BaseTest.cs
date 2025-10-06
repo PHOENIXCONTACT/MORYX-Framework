@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
@@ -7,7 +7,6 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer.TestTools.Resources;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
-using Moryx.ControlSystem.Processes.Endpoints;
 using Moryx.Factory;
 using Moryx.FactoryMonitor.Endpoints.Model;
 using Moryx.FactoryMonitor.Endpoints.Models;

@@ -1,14 +1,11 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Tools;
 using Moryx.Workplans.Editing.Components;
 using Moryx.Workplans.Editing.Properties;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Linq;
 
 namespace Moryx.Workplans.Editing.Implementation
 {

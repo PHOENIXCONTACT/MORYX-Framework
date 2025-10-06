@@ -1,15 +1,11 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Configuration;
 using Moryx.Modules;
 using Moryx.ProcessData.Endpoints.Models;
 using Moryx.ProcessData.Listener;
-using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Modules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.ProcessData.Endpoints.Services
 {

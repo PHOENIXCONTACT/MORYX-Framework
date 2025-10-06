@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -7,9 +7,6 @@ using Moryx.ControlSystem.Cells;
 using Moryx.Factory;
 using Moryx.FactoryMonitor.Endpoints.Extensions;
 using Moryx.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.FactoryMonitor.Endpoints.Models
 {
