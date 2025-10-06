@@ -393,7 +393,7 @@ namespace Moryx.Tests
                 SingleClass = null,
                 SubArray = [new SubClass { Foo = (float)1.2, Enum = DummyEnum.ValueB }],
                 SubList = [new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA }],
-                SubEnumerable = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } },
+                SubEnumerable = new List<SubClass> { new() { Foo = (float)3.4, Enum = DummyEnum.ValueA } },
                 SubDictionary = new Dictionary<int, SubClass>()
             };
 

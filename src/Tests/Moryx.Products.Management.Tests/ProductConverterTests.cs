@@ -39,12 +39,12 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             // Create ProductType objects for test cases
             var dummyProductTypes = new List<DummyProductType>()
             {
-                new DummyProductType(),
+                new(),
                 new DummyProductTypeWithParts(),
                 new DummyProductTypeWithParts()
                 {
                     ProductPartLink = new DummyProductPartLink() { Id=1, Product = new DummyProductType() { Id = 2022 } },
-                    ProductPartLinkEnumerable = new List<DummyProductPartLink>(){ new DummyProductPartLink() { Id=2, Product = new DummyProductType() { Id = 2023 } } }
+                    ProductPartLinkEnumerable = new List<DummyProductPartLink>(){ new() { Id=2, Product = new DummyProductType() { Id = 2023 } } }
                 },
                 new DummyProductTypeWithFiles(),
                 new DummyProductTypeWithFiles() { FirstProductFile = new ProductFile() { Name="FirstFile" }, SecondProductFile = new ProductFile() { Name="SecondFile" }}
@@ -52,9 +52,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             // Create Recipe objects for test cases
             var dummyRecipeLists = new List<List<IProductRecipe>>()
             {
-                new List<IProductRecipe>(),
-                new List<IProductRecipe>() { new ProductRecipe() { Id = 0 } },
-                new List<IProductRecipe>() { new ProductRecipe() { Id = 1923 } }
+                new(),
+                new() { new ProductRecipe() { Id = 0 } },
+                new() { new ProductRecipe() { Id = 1923 } }
             };
 
             // Create all possible combinations of input settings for the ConvertProduct method
@@ -172,7 +172,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             // Create Recipe objects for test cases
             var dummyRecipes = new List<DummyProductRecipe>()
             {
-                new DummyProductRecipe(),
+                new(),
                 new DummyProductWorkplanRecipe() { Workplan = new DummyWorkplan() { Id=2021 } }
             };
             // Create all classifications to consider
@@ -182,7 +182,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             classifications.AddRange(clonedClassifications);
 
             // Create all possible combinations of input settings for the ConvertRecipe method
-            foreach (var backupProductType in new List<DummyProductType>() { null, new DummyProductType() })
+            foreach (var backupProductType in new List<DummyProductType>() { null, new() })
                 foreach (RecipeState state in Enum.GetValues(typeof(RecipeState)))
                     foreach (var classification in classifications)
                         foreach (var dummyRecipe in dummyRecipes)

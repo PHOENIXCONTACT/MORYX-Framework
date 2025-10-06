@@ -45,7 +45,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// All processes that are currently created
         /// </summary>
-        private readonly List<ProcessData> _creatingProcesses = new List<ProcessData>();
+        private readonly List<ProcessData> _creatingProcesses = new();
 
         /// <inheritdoc />
         public int StartOrder => 20;

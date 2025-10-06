@@ -96,7 +96,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// <summary>
         /// Lock object to lock state handling
         /// </summary>
-        protected readonly object StateLock = new object();
+        protected readonly object StateLock = new();
 
         /// <summary>
         /// General representation of the current state of the Job

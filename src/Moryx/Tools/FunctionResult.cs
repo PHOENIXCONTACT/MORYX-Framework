@@ -109,7 +109,7 @@ namespace Moryx.Tools.FunctionResult
         /// </summary>
         /// <returns><see cref="FunctionResult"/></returns>
         public static FunctionResult Ok()
-            => new FunctionResult();
+            => new();
 
         /// <summary>
         /// Helper to create a <see cref="FunctionResult"/> with an error message in a descriptive way.

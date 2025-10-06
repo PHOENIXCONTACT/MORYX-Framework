@@ -78,7 +78,7 @@ namespace Moryx.TestTools.UnitTest
         }
 
         private int _lastTimerId;
-        private readonly CountdownEvent _countdown = new CountdownEvent(1);
+        private readonly CountdownEvent _countdown = new(1);
         private readonly List<TimerInfo> _timers = [];
 
         /// <inheritdoc />

@@ -35,7 +35,7 @@ namespace Moryx.AbstractionLayer
             }
         }
 
-        private readonly Regex _lastActivityRegex = new Regex(@"LastActivity(?<typed>\[(?<name>\w+)\])?");
+        private readonly Regex _lastActivityRegex = new(@"LastActivity(?<typed>\[(?<name>\w+)\])?");
 
         /// <inheritdoc />
         protected override IBindingResolverChain AddToChain(IBindingResolverChain resolver, string property)

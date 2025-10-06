@@ -204,7 +204,7 @@ namespace Moryx.Tests.Extensions
             var target = new ReferenceClass
             {
                 ChildRef = new ChildClass2(),
-                Children2 = new List<ChildClass2> { new ChildClass2(), new ChildClass2() }
+                Children2 = new List<ChildClass2> { new(), new() }
             };
 
             // Act

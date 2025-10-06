@@ -377,16 +377,13 @@ namespace Moryx.Products.IntegrationTests
 
             var needles = new List<NeedlePartLink>
             {
-                new NeedlePartLink
-                {
+                new() {
                     Product = new NeedleType { Name = "Hours needle", Identity = new ProductIdentity(identifierPrefix + "24", 1) }
                 },
-                new NeedlePartLink
-                {
+                new() {
                     Product = new NeedleType { Name = "Minutes needle", Identity = new ProductIdentity(identifierPrefix + "1440", 2) }
                 },
-                new NeedlePartLink
-                {
+                new() {
                     Product = new NeedleType { Name = "Seconds needle", Identity = new ProductIdentity(identifierPrefix + "B86400", 3) }
                 }
             };

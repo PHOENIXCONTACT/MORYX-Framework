@@ -21,19 +21,19 @@ namespace Moryx.ProcessData.Adapter.ProcessEngine
         {
             ProcessBindings = new List<MeasurementBinding>
             {
-                new MeasurementBinding {Name = "productIdent", Binding = "Product.Identifier", ValueTarget = ValueTarget.Tag},
-                new MeasurementBinding {Name = "productRev", Binding = "Product.Identity.Revision", ValueTarget = ValueTarget.Tag},
-                new MeasurementBinding {Name = "order", Binding = "Recipe.OrderNumber", ValueTarget = ValueTarget.Tag},
-                new MeasurementBinding {Name = "operation", Binding = "Recipe.OperationNumber", ValueTarget = ValueTarget.Tag}
+                new() {Name = "productIdent", Binding = "Product.Identifier", ValueTarget = ValueTarget.Tag},
+                new() {Name = "productRev", Binding = "Product.Identity.Revision", ValueTarget = ValueTarget.Tag},
+                new() {Name = "order", Binding = "Recipe.OrderNumber", ValueTarget = ValueTarget.Tag},
+                new() {Name = "operation", Binding = "Recipe.OperationNumber", ValueTarget = ValueTarget.Tag}
             };
 
             ActivityBindings = new List<MeasurementBinding>
             {
-                new MeasurementBinding {Name = "errorCode", Binding = "Tracing.ErrorCode", ValueTarget = ValueTarget.Field},
-                new MeasurementBinding {Name = "productIdent", Binding = "Product.Identifier", ValueTarget = ValueTarget.Tag},
-                new MeasurementBinding {Name = "productRev", Binding = "Product.Identity.Revision", ValueTarget = ValueTarget.Tag},
-                new MeasurementBinding {Name = "order", Binding = "Recipe.OrderNumber", ValueTarget = ValueTarget.Tag},
-                new MeasurementBinding {Name = "operation", Binding = "Recipe.OperationNumber", ValueTarget = ValueTarget.Tag}
+                new() {Name = "errorCode", Binding = "Tracing.ErrorCode", ValueTarget = ValueTarget.Field},
+                new() {Name = "productIdent", Binding = "Product.Identifier", ValueTarget = ValueTarget.Tag},
+                new() {Name = "productRev", Binding = "Product.Identity.Revision", ValueTarget = ValueTarget.Tag},
+                new() {Name = "order", Binding = "Recipe.OrderNumber", ValueTarget = ValueTarget.Tag},
+                new() {Name = "operation", Binding = "Recipe.OperationNumber", ValueTarget = ValueTarget.Tag}
             };
         }
 

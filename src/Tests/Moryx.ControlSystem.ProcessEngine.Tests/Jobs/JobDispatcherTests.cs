@@ -63,7 +63,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
         public void Resume()
         {
             // Arrange
-            var runningProcesses = new List<ProcessData> { new ProcessData(_recipe.CreateProcess()) };
+            var runningProcesses = new List<ProcessData> { new(_recipe.CreateProcess()) };
             _processControllerMock.Setup(pc => pc.LoadProcesses(_jobDataMock.Object)).Returns(runningProcesses);
 
             // Act

@@ -16,7 +16,7 @@ namespace Moryx.Tools
         /// </summary>
         public static bool TestMode { get; set; }
 
-        private static readonly Lazy<Assembly[]> RelevantAssemblies = new Lazy<Assembly[]>(LoadAssemblies, LazyThreadSafetyMode.ExecutionAndPublication);
+        private static readonly Lazy<Assembly[]> RelevantAssemblies = new(LoadAssemblies, LazyThreadSafetyMode.ExecutionAndPublication);
         /// <summary>
         /// Load assemblies
         /// </summary>
@@ -42,7 +42,7 @@ namespace Moryx.Tools
             return RelevantAssemblies.Value;
         }
 
-        private static readonly Lazy<Type[]> PublicClasses = new Lazy<Type[]>(LoadPublicClasses, LazyThreadSafetyMode.ExecutionAndPublication);
+        private static readonly Lazy<Type[]> PublicClasses = new(LoadPublicClasses, LazyThreadSafetyMode.ExecutionAndPublication);
         /// <summary>
         /// Load all public classes
         /// </summary>

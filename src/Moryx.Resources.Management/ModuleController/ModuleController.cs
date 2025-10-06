@@ -101,13 +101,13 @@ namespace Moryx.Resources.Management
             DeactivateFacade(_notificationSourceFacade);
         }
 
-        private readonly ResourceManagementFacade _resourceManagementFacade = new ResourceManagementFacade();
-        private readonly ResourceTypeTreeFacade _resourceTypeTreeFacade = new ResourceTypeTreeFacade();
+        private readonly ResourceManagementFacade _resourceManagementFacade = new();
+        private readonly ResourceTypeTreeFacade _resourceTypeTreeFacade = new();
         IResourceManagement IFacadeContainer<IResourceManagement>.Facade => _resourceManagementFacade;
 
         IResourceTypeTree IFacadeContainer<IResourceTypeTree>.Facade => _resourceTypeTreeFacade;
 
-        private readonly NotificationSourceFacade _notificationSourceFacade = new NotificationSourceFacade(ModuleName);
+        private readonly NotificationSourceFacade _notificationSourceFacade = new(ModuleName);
         INotificationSource IFacadeContainer<INotificationSource>.Facade => _notificationSourceFacade;
     }
 }

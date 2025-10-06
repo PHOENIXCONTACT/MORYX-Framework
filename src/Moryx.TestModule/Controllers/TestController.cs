@@ -10,7 +10,7 @@ namespace Moryx.TestModule.Kestrel
     {
         [HttpGet("foo/{value}")]
         [Produces("application/json")]
-        public Foo GetFoo(int value) => new Foo { Value = value };
+        public Foo GetFoo(int value) => new() { Value = value };
     }
 
     public class Foo

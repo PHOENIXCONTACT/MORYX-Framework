@@ -16,7 +16,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         private IProductManagement _productManagement;
 
         // Null object pattern for identity
-        private static readonly ProductIdentity EmptyIdentity = new ProductIdentity(string.Empty, 0);
+        private static readonly ProductIdentity EmptyIdentity = new(string.Empty, 0);
 
         private readonly ICustomSerialization _productSerialization;
         private readonly ICustomSerialization _recipeSerialization;

@@ -23,7 +23,7 @@ namespace Moryx.ProcessData.SpreadsheetsListener
         private string _measurand;
         private string _completeFilePath;
 
-        private CsvConfiguration _csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture);
+        private CsvConfiguration _csvConfig = new(CultureInfo.InvariantCulture);
         private IModuleLogger _logger;
 
         private int _writtenRows = 0;

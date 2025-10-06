@@ -18,7 +18,7 @@ namespace Moryx.Model.Repositories
         private readonly IDbContextManager _manager;
 
         // ReSharper disable once StaticMemberInGenericType
-        private static readonly RepositoryProxyBuilder ProxyBuilder = new RepositoryProxyBuilder();
+        private static readonly RepositoryProxyBuilder ProxyBuilder = new();
         // ReSharper disable once StaticMemberInGenericType
         private static readonly IDictionary<Type, Func<Repository>> Repositories = new Dictionary<Type, Func<Repository>>();
 

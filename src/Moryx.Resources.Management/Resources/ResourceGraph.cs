@@ -20,7 +20,7 @@ namespace Moryx.Resources.Management
         /// </summary>
         public IResourceTypeController TypeController { get; set; }
 
-        private readonly ReaderWriterLockSlim _graphLock = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim _graphLock = new();
 
         /// <summary>
         /// All resources of the graph

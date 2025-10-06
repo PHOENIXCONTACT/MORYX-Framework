@@ -12,7 +12,7 @@ namespace Moryx.Runtime.Kernel
     /// </summary>
     public class ConfigManager : IConfigManager, IEmptyPropertyProvider
     {
-        private readonly ConfigLiveUpdater _liveUpdater = new ConfigLiveUpdater();
+        private readonly ConfigLiveUpdater _liveUpdater = new();
         private readonly SharedConfigProvider _sharedProvider;
 
         /// <summary>

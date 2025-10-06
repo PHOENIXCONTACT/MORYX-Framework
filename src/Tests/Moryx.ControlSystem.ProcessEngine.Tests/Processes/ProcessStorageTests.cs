@@ -27,7 +27,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
     public class ProcessStorageTests
     {
         private static int _index;
-        private readonly Dictionary<JobEntity, int> _jobEntities = new Dictionary<JobEntity, int>();
+        private readonly Dictionary<JobEntity, int> _jobEntities = new();
         private IUnitOfWorkFactory<ProcessContext> _unitOfWorkFactory;
         private ProcessStorage _storage;
 

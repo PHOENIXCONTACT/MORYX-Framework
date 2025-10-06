@@ -11,7 +11,7 @@ namespace Moryx.Media.Endpoints
         private const int Megabyte = 1048576;
 
         // To add further signatures, see the File Signatures Database (https://www.filesignatures.net/)
-        private static readonly Dictionary<string, List<byte[]>> _signatures = new Dictionary<string, List<byte[]>>
+        private static readonly Dictionary<string, List<byte[]>> _signatures = new()
         {
             { ".gif", new List<byte[]> { new byte[] { 0x47, 0x49, 0x46, 0x38 } } },
             { ".png", new List<byte[]> { new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A } } },

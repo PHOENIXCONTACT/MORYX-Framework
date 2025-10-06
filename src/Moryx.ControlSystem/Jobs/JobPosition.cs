@@ -33,11 +33,11 @@ namespace Moryx.ControlSystem.Jobs
         /// <summary>
         /// Default position
         /// </summary>
-        public static JobPosition Append = new JobPosition(JobPositionType.Append, null);
+        public static JobPosition Append = new(JobPositionType.Append, null);
 
         /// <summary>
         /// Position new jobs around the ones already part of the list
         /// </summary>
-        public static JobPosition Expand = new JobPosition(JobPositionType.AroundExisting, null);
+        public static JobPosition Expand = new(JobPositionType.AroundExisting, null);
     }
 }

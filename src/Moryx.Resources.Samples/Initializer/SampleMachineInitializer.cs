@@ -28,14 +28,12 @@ namespace Moryx.Resources.Samples.Initializer
             machine.Values = new List<int> { 1, 2, 3, 4 };
             machine.PossibleTechnicalStaffs = new List<TechnicalStaff>()
             {
-                new TechnicalStaff
-                {
+                new() {
                     FirstName = "Max",
                     LastName = "Mustermann",
                     StaffNumber = 0815
                 },
-                new TechnicalStaff
-                {
+                new() {
                     FirstName = "Flynn",
                     LastName = "Rider",
                     StaffNumber = 4711

@@ -14,7 +14,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Regex used to check for the naming conventing
         /// </summary>
-        private static readonly Regex PossibleValuesRegex = new Regex(@"Possible(?<key>\w+)s");
+        private static readonly Regex PossibleValuesRegex = new(@"Possible(?<key>\w+)s");
 
         /// <summary>
         /// Indicates that this reader can read this property

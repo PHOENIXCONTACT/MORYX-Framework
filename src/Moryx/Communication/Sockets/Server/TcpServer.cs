@@ -85,7 +85,7 @@ namespace Moryx.Communication.Sockets
         /// Lazy ThreadSafe instance of the tcp server
         /// </summary>
         private static readonly Lazy<TcpServer> LazyInstance =
-            new Lazy<TcpServer>(() => new TcpServer(), LazyThreadSafetyMode.ExecutionAndPublication);
+            new(() => new TcpServer(), LazyThreadSafetyMode.ExecutionAndPublication);
 
         /// <summary>
         /// Singleton instance of the server

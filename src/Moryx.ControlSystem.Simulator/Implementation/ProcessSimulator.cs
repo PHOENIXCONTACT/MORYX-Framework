@@ -17,7 +17,7 @@ namespace Moryx.ControlSystem.Simulator
     [Component(LifeCycle.Singleton, typeof(IProcessSimulator))]
     internal sealed class ProcessSimulator : IProcessSimulator
     {
-        private readonly Random _simulationRandomness = new Random();
+        private readonly Random _simulationRandomness = new();
 
         public ModuleConfig Config { get; set; }
 

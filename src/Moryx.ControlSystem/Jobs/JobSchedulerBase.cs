@@ -26,7 +26,7 @@ namespace Moryx.ControlSystem.Jobs
         /// <summary>
         /// Dependency map that can be helpful for job scheduling
         /// </summary>
-        private readonly Dictionary<Job, List<Job>> _dependencies = new Dictionary<Job, List<Job>>();
+        private readonly Dictionary<Job, List<Job>> _dependencies = new();
 
         /// <summary>
         /// Gets or sets the configuration of the scheduler

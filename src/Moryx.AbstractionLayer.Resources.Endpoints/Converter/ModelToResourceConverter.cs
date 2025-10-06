@@ -13,7 +13,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// <summary>
         /// Resource cache to avoid redundant conversions AND make use of WCFs "IsReference" feature
         /// </summary>
-        private readonly Dictionary<long, Resource> _resourceCache = new Dictionary<long, Resource>();
+        private readonly Dictionary<long, Resource> _resourceCache = new();
 
         private readonly IResourceGraph _resourceGraph;
         private readonly ICustomSerialization _serialization;

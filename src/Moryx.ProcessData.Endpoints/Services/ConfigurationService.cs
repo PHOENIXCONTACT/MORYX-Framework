@@ -117,7 +117,7 @@ namespace Moryx.ProcessData.Endpoints.Services
                 .Select(p => MeasurandFromModuleProperty(module, p));
 
         private static MeasurandResponse MeasurandFromModuleProperty(IServerModule module, PropertyInfo p)
-            => new MeasurandResponse(p.Name)
+            => new(p.Name)
             {
                 GeneratedName = GetGeneratedName(p),
                 Description = p.GetDescription(),

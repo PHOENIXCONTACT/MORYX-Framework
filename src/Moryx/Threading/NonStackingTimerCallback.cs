@@ -17,7 +17,7 @@ namespace Moryx.Threading
         /// <summary>
         /// Lock used to sync multiple timer threads
         /// </summary>
-        private readonly object _syncLock = new object();
+        private readonly object _syncLock = new();
 
         /// <summary>
         /// Callback for timer

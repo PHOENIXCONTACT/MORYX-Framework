@@ -75,7 +75,7 @@ namespace Moryx.Notifications.Publisher
             Container.Resolve<INotificationManager>().Stop();
         }
 
-        private readonly NotificationPublisherFacade _notificationPublisherFacade = new NotificationPublisherFacade();
+        private readonly NotificationPublisherFacade _notificationPublisherFacade = new();
 
         INotificationPublisher IFacadeContainer<INotificationPublisher>.Facade => _notificationPublisherFacade;
     }

@@ -106,7 +106,7 @@ namespace Moryx.Tests
             dummy.SingleClass = null;
             dummy.SubArray = [new SubClass { Foo = (float)1.2, Enum = DummyEnum.ValueB }];
             dummy.SubList = [new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA }];
-            dummy.SubEnumerable = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } };
+            dummy.SubEnumerable = new List<SubClass> { new() { Foo = (float)3.4, Enum = DummyEnum.ValueA } };
             dummy.SubDictionary = new Dictionary<int, SubClass>();
             dummy.SubIList = [1, 2, 3, 7];
 
@@ -131,7 +131,7 @@ namespace Moryx.Tests
             dummy.SingleClass = null;
             dummy.SubArray = [new SubClass { Foo = (float)1.2, Enum = DummyEnum.ValueB }];
             dummy.SubList = [new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA }];
-            dummy.SubEnumerable = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } };
+            dummy.SubEnumerable = new List<SubClass> { new() { Foo = (float)3.4, Enum = DummyEnum.ValueA } };
             dummy.SubDictionary = new Dictionary<int, SubClass>();
             dummy.SubIList = [1, 2, 3, 7];
 

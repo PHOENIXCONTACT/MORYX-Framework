@@ -15,7 +15,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Internally we wrap an observable collection
         /// </summary>
-        private readonly Dictionary<string, ModelAndEntry> _internalCollection = new Dictionary<string, ModelAndEntry>();
+        private readonly Dictionary<string, ModelAndEntry> _internalCollection = new();
 
         /// <summary>
         /// Create a new instance of the collection

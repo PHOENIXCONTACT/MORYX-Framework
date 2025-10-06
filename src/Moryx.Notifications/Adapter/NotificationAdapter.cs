@@ -11,9 +11,9 @@ namespace Moryx.Notifications
     /// </summary>
     public class NotificationAdapter : INotificationAdapter, INotificationSourceAdapter
     {
-        private readonly List<NotificationMap> _published = new List<NotificationMap>(16);
-        private readonly List<NotificationMap> _pendingAcks = new List<NotificationMap>(16);
-        private readonly List<NotificationMap> _pendingPubs = new List<NotificationMap>(16);
+        private readonly List<NotificationMap> _published = new(16);
+        private readonly List<NotificationMap> _pendingAcks = new(16);
+        private readonly List<NotificationMap> _pendingPubs = new(16);
 
         private readonly object _listLock = new();
 

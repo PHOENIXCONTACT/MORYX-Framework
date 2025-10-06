@@ -84,7 +84,7 @@ namespace Moryx.Products.Management
             DeactivateFacade(_productManagement);
         }
 
-        private readonly ProductManagementFacade _productManagement = new ProductManagementFacade();
+        private readonly ProductManagementFacade _productManagement = new();
 
         IProductManagement IFacadeContainer<IProductManagement>.Facade => _productManagement;
         IWorkplans IFacadeContainer<IWorkplans>.Facade => _productManagement;

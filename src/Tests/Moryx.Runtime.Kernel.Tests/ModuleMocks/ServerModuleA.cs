@@ -20,7 +20,7 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 
         public override string Name => "ServerModuleA";
 
-        private readonly FacadaA _aFacade = new FacadaA();
+        private readonly FacadaA _aFacade = new();
         IFacadeA IFacadeContainer<IFacadeA>.Facade => _aFacade;
         public IFacadeA Facade { get; private set; }
 

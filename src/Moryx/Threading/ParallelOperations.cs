@@ -111,7 +111,7 @@ namespace Moryx.Threading
 
         #region Execute Periodically
         private int _lastTimerId;
-        private readonly Dictionary<int, Timer> _runningTimers = new Dictionary<int, Timer>();
+        private readonly Dictionary<int, Timer> _runningTimers = new();
 
         /// <summary>
         /// Execute non-critical operation periodically but non-stacking

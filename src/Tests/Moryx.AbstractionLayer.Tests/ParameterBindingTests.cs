@@ -151,7 +151,7 @@ namespace Moryx.AbstractionLayer.Tests
 
             public int[] Bobs { get; set; }
 
-            public DummyValue Dummy => new DummyValue(this);
+            public DummyValue Dummy => new(this);
 
             protected override ProductInstance Instantiate()
             {

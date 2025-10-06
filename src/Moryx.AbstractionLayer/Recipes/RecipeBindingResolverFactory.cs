@@ -30,7 +30,7 @@ namespace Moryx.AbstractionLayer.Recipes
             }
         }
 
-        private readonly Regex _wpOperationRegex = new Regex(@"^Step\[(?<name>\w)\]");
+        private readonly Regex _wpOperationRegex = new(@"^Step\[(?<name>\w)\]");
 
         /// <inheritdoc />
         protected override IBindingResolverChain AddToChain(IBindingResolverChain resolver, string property)

@@ -38,37 +38,37 @@ namespace Moryx.Modules
         /// <summary>
         /// Minimum priority is the highest possible value
         /// </summary>
-        public static Priority Min => new Priority(ushort.MaxValue);
+        public static Priority Min => new(ushort.MaxValue);
 
         /// <summary>
         /// Priority value 0
         /// </summary>
-        public static Priority P0 => new Priority(0);
+        public static Priority P0 => new(0);
 
         /// <summary>
         /// Priority value 1
         /// </summary>
-        public static Priority P1 => new Priority(1);
+        public static Priority P1 => new(1);
 
         /// <summary>
         /// Priority value 2
         /// </summary>
-        public static Priority P2 => new Priority(2);
+        public static Priority P2 => new(2);
 
         /// <summary>
         /// Priority value 3
         /// </summary>
-        public static Priority P3 => new Priority(3);
+        public static Priority P3 => new(3);
 
         /// <summary>
         /// Priority value 4
         /// </summary>
-        public static Priority P4 => new Priority(4);
+        public static Priority P4 => new(4);
 
         /// <summary>
         /// Custom value priority
         /// </summary>
-        public static Priority P(ushort value) => new Priority(value);
+        public static Priority P(ushort value) => new(value);
 
         /// <inheritdoc />
         public int CompareTo(Priority other)

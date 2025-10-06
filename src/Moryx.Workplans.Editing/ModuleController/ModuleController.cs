@@ -60,7 +60,7 @@ namespace Moryx.Workplans.Editing
             DeactivateFacade(_facade);
         }
 
-        private readonly WorkplanFacade _facade = new WorkplanFacade();
+        private readonly WorkplanFacade _facade = new();
 
         Workplans.IWorkplanEditing IFacadeContainer<Workplans.IWorkplanEditing>.Facade => _facade;
     }

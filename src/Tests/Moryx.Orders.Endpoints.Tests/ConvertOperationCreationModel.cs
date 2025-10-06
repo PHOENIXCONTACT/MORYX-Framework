@@ -35,7 +35,7 @@ namespace Moryx.Orders.Endpoints.Tests
                 TargetCycleTime = 3,
                 Unit = "s",
                 TargetStock = "ab",
-                Parts = new List<PartCreationContext> { new PartCreationContext() },
+                Parts = new List<PartCreationContext> { new() },
                 MaterialParameters = new List<IMaterialParameter> { new DummyMaterialParameter() { Color = "Green" } }
             };
 
@@ -56,7 +56,7 @@ namespace Moryx.Orders.Endpoints.Tests
                 TargetCycleTime = 3,
                 Unit = "s",
                 TargetStock = "ab",
-                Parts = new List<PartCreationContext> { new PartCreationContext() },
+                Parts = new List<PartCreationContext> { new() },
                 MaterialParameters = null
             };
         }

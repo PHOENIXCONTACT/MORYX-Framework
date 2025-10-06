@@ -37,7 +37,7 @@ namespace Moryx.Communication.Sockets
         /// <summary>
         /// Lock object
         /// </summary>
-        private readonly object _stateLock = new object();
+        private readonly object _stateLock = new();
 
         /// <summary>
         /// Open transmission object

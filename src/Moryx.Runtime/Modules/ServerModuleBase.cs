@@ -280,7 +280,7 @@ namespace Moryx.Runtime.Modules
 
         private ServerModuleStateBase _state;
 
-        private readonly object _stateLock = new object();
+        private readonly object _stateLock = new();
 
         void IStateContext.SetState(IState state)
         {

@@ -20,7 +20,7 @@ namespace Moryx.Tests.Threading
         private const int SleepTime = 1000;
 
         private ParallelOperations _threadFactory;
-        private readonly ManualResetEventSlim _callbackReceivedEvent = new ManualResetEventSlim(false);
+        private readonly ManualResetEventSlim _callbackReceivedEvent = new(false);
 
         private ModuleLogger _logger;
         private Tuple<LogLevel, string, Exception> _message;

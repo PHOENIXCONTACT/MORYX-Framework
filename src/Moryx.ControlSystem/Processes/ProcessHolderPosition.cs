@@ -65,7 +65,7 @@ namespace Moryx.ControlSystem.Processes
         }
 
         /// <inheritdoc />
-        public MountInformation MountInformation => new MountInformation(Process, Session);
+        public MountInformation MountInformation => new(Process, Session);
 
         /// <inheritdoc />
         protected override void OnInitialize()

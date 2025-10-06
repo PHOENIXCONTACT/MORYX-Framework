@@ -36,7 +36,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
         private Mock<IJobDataList> _jobListMock;
 
-        private readonly CultureInfo _culture = new CultureInfo("de-DE");
+        private readonly CultureInfo _culture = new("de-DE");
 
         [SetUp]
         public void Setup()
@@ -198,8 +198,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 Activities =
                     new List<ActivityEntity>
                     {
-                        new ActivityEntity
-                        {
+                        new() {
                             Started = processStart,
                             Completed = processEnd
                         }
@@ -269,12 +268,11 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             {
                 // Job 1
                 new ProcessEntity { JobId = jobs[0].Id, Job = jobs[0],
-                    Activities = new List<ActivityEntity> { new ActivityEntity { Started = new DateTime(2000, 1, 1, 1, 0, 1), Completed = new DateTime(2000, 1, 1, 1, 0, 2) } }, State = (int)ProcessState.Success },
+                    Activities = new List<ActivityEntity> { new() { Started = new DateTime(2000, 1, 1, 1, 0, 1), Completed = new DateTime(2000, 1, 1, 1, 0, 2) } }, State = (int)ProcessState.Success },
                 new ProcessEntity { Id = 1337, JobId = jobs[0].Id, Job = jobs[0], ReferenceId = 42,
                     Activities = new List<ActivityEntity>
                     {
-                        new ActivityEntity
-                        {
+                        new() {
                             TaskId = 1,
                             Started = new DateTime(2000, 1, 1, 1, 0, 3),
                             Completed = new DateTime(2000, 1, 1, 1, 0, 9)
@@ -282,7 +280,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                     }, State = (int)ProcessState.Success },
 
                 // Job 2
-                new ProcessEntity { JobId = jobs[1].Id, Job = jobs[1], Activities = new List<ActivityEntity> { new ActivityEntity { Started = new DateTime(2000, 1, 1, 1, 15, 1), Completed = new DateTime(2000, 1, 1, 1, 15, 2) } }, State = (int)ProcessState.Failure }
+                new ProcessEntity { JobId = jobs[1].Id, Job = jobs[1], Activities = new List<ActivityEntity> { new() { Started = new DateTime(2000, 1, 1, 1, 15, 1), Completed = new DateTime(2000, 1, 1, 1, 15, 2) } }, State = (int)ProcessState.Failure }
             };
         }
 

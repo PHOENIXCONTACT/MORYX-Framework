@@ -30,7 +30,7 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Creates a product identity that represents the latest revision of a given identifier
         /// </summary>
-        public static ProductIdentity AsLatestRevision(string identifier) => new ProductIdentity(identifier, LatestRevision);
+        public static ProductIdentity AsLatestRevision(string identifier) => new(identifier, LatestRevision);
 
         /// <summary>
         /// Create a product identity from a string. Counterpart to ToString() method

@@ -20,11 +20,11 @@ namespace Moryx.Media.Server
         /// <summary>
         /// Collection for all iterating and index based accesses
         /// </summary>
-        private readonly List<ContentDescriptor> _descriptors = new List<ContentDescriptor>();
+        private readonly List<ContentDescriptor> _descriptors = new();
         /// <summary>
         /// Dictionary for all guid based accesses
         /// </summary>
-        private readonly Dictionary<Guid, ContentDescriptor> _descriptorMap = new Dictionary<Guid, ContentDescriptor>();
+        private readonly Dictionary<Guid, ContentDescriptor> _descriptorMap = new();
 
         private string _descriptorDirectory;
 

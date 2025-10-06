@@ -20,7 +20,7 @@ namespace Moryx.Resources.Management.Tests
     {
         private ResourceLinker _linker;
 
-        private readonly Dictionary<long, Resource> _graph = new Dictionary<long, Resource>();
+        private readonly Dictionary<long, Resource> _graph = new();
 
         [OneTimeSetUp]
         public void PrepareLinker()

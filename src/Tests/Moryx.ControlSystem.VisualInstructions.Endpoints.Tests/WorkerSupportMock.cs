@@ -20,9 +20,9 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
         {
             _instructions = new Dictionary<string, List<ActiveInstruction>>()
             {
-                ["Instructor"] = new List<ActiveInstruction> { new ActiveInstruction() },
-                ["Instructor with spaces"] = new List<ActiveInstruction> { new ActiveInstruction() },
-                ["Ümlaut"] = new List<ActiveInstruction> { new ActiveInstruction() },
+                ["Instructor"] = new List<ActiveInstruction> { new() },
+                ["Instructor with spaces"] = new List<ActiveInstruction> { new() },
+                ["Ümlaut"] = new List<ActiveInstruction> { new() },
             };
         }
 

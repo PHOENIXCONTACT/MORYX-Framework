@@ -14,8 +14,8 @@ namespace Moryx.Tests
     [TestFixture]
     public class LocalizationSerializationTests
     {
-        private readonly CultureInfo _germanCulture = new CultureInfo("de");
-        private readonly CultureInfo _invariantCulture = new CultureInfo("en");
+        private readonly CultureInfo _germanCulture = new("de");
+        private readonly CultureInfo _invariantCulture = new("en");
 
         [Test]
         public void PropertyLocalization()

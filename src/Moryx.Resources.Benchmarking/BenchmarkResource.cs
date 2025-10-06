@@ -56,9 +56,9 @@ namespace Moryx.Resources.Benchmarking
         private long _instructionId;
 
         private int _activityCount;
-        private readonly Stopwatch _rtwWait = new Stopwatch();
-        private readonly Stopwatch _acWait = new Stopwatch();
-        private readonly Stopwatch _runtimeWait = new Stopwatch();
+        private readonly Stopwatch _rtwWait = new();
+        private readonly Stopwatch _acWait = new();
+        private readonly Stopwatch _runtimeWait = new();
 
         /// <summary>
         /// Step id of this resource

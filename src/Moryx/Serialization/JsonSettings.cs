@@ -14,7 +14,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Json settings for optimal performance and minimal number of characters
         /// </summary>
-        public static JsonSerializerSettings Minimal => new JsonSerializerSettings
+        public static JsonSerializerSettings Minimal => new()
         {
             TypeNameHandling = TypeNameHandling.Auto,
             DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate,
@@ -25,7 +25,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Json settings for human-readable text files
         /// </summary>
-        public static JsonSerializerSettings Readable => new JsonSerializerSettings
+        public static JsonSerializerSettings Readable => new()
         {
             Formatting = Formatting.Indented,
             TypeNameHandling = TypeNameHandling.Auto,

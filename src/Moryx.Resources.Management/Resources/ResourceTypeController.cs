@@ -34,18 +34,18 @@ namespace Moryx.Resources.Management
         /// proxy because they do not define any additional public API and can use the same proxy. This
         /// cache is only built on the first module start and kept after a restart to avoid redundant proxy building
         /// </summary>
-        private readonly Dictionary<string, string> _proxyTypeCache = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _proxyTypeCache = new();
 
         /// <summary>
         /// Cache of all proxy instances that were created during the runtime of the ResourceManagement. They
         /// all need to be
         /// </summary>
-        private readonly Dictionary<long, ResourceProxy> _proxyCache = new Dictionary<long, ResourceProxy>();
+        private readonly Dictionary<long, ResourceProxy> _proxyCache = new();
 
         /// <summary>
         /// Cache to directly access a resource type
         /// </summary>
-        private readonly Dictionary<string, ResourceTypeNode> _typeCache = new Dictionary<string, ResourceTypeNode>();
+        private readonly Dictionary<string, ResourceTypeNode> _typeCache = new();
 
         /// <inheritdoc />
         public ResourceTypeNode RootType { get; private set; }

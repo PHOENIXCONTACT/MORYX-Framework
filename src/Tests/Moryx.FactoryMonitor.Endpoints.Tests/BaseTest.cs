@@ -20,9 +20,9 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 {
     public abstract class BaseTest
     {
-        protected Mock<IResourceManagement> _resourceManagementMock = new Mock<IResourceManagement>();
-        protected Mock<IProcessControl> _processFacadeMock = new Mock<IProcessControl>();
-        protected Mock<IOrderManagement> _orderFacadeMock = new Mock<IOrderManagement>();
+        protected Mock<IResourceManagement> _resourceManagementMock = new();
+        protected Mock<IProcessControl> _processFacadeMock = new();
+        protected Mock<IOrderManagement> _orderFacadeMock = new();
         protected FactoryMonitorController _factoryMonitor;
         protected DummyCell _assemblyCell;
         protected DummyCell _solderingCell;
@@ -133,7 +133,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
                 Paths = new List<Position>
                 {
                     _solderingCellLocation.Position,
-                    new Position{ PositionX = 0.1, PositionY = 0.2},
+                    new() { PositionX = 0.1, PositionY = 0.2},
                     _assemblyCellLocation.Position
                 }
             };

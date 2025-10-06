@@ -40,12 +40,12 @@ namespace Moryx.ControlSystem.Setups
         /// <summary>
         /// Value is converted to <see cref="Required"/> flag
         /// </summary>
-        public static implicit operator SetupEvaluation(bool argument) => new SetupEvaluation(argument);
+        public static implicit operator SetupEvaluation(bool argument) => new(argument);
 
         /// <summary>
         /// Convert <see cref="SetupClassification"/> to <see cref="SetupEvaluation"/>
         /// </summary>
-        public static implicit operator SetupEvaluation(SetupClassification classification) => new SetupEvaluation(classification);
+        public static implicit operator SetupEvaluation(SetupClassification classification) => new(classification);
 
         /// <summary>
         /// Special setup evaluation that indicates a capabilities reservation

@@ -16,7 +16,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// <summary>
         /// Type cache to avoid redundant conversions AND make use of WCFs "IsReference" feature
         /// </summary>
-        private static readonly Dictionary<string, ResourceTypeModel> TypeCache = new Dictionary<string, ResourceTypeModel>();
+        private static readonly Dictionary<string, ResourceTypeModel> TypeCache = new();
 
         /// <summary>
         /// Internal ref id sequence
@@ -26,7 +26,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// <summary>
         /// Resource cache to avoid redundant conversions AND make use of WCFs "IsReference" feature
         /// </summary>
-        private readonly Dictionary<Resource, ResourceModel> _resourceCache = new Dictionary<Resource, ResourceModel>();
+        private readonly Dictionary<Resource, ResourceModel> _resourceCache = new();
 
         protected ICustomSerialization Serialization { get; }
 

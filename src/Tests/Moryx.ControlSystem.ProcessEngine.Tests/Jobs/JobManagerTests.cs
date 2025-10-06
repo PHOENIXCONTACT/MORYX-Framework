@@ -22,9 +22,9 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
         private JobManager _jobManager;
         private Mock<IJobDataList> _jobListMock;
         private Mock<IJobStorage> _jobStorageMock;
-        private List<IProductionJobData> _jobList = new List<IProductionJobData>();
+        private List<IProductionJobData> _jobList = new();
         private Mock<IJobScheduler> _jobSchedulerMock;
-        private List<IJobData> _jobs = new List<IJobData>();
+        private List<IJobData> _jobs = new();
         private Mock<IJobHandler> _handlerMock;
 
         [SetUp]

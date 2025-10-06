@@ -22,7 +22,7 @@ namespace Moryx.Threading
         /// <summary>
         /// Queue of unprocessed events
         /// </summary>
-        private readonly ConcurrentQueue<TElement> _eventQueue = new ConcurrentQueue<TElement>();
+        private readonly ConcurrentQueue<TElement> _eventQueue = new();
 
         /// <summary>
         /// Target callback for the event

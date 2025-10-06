@@ -21,9 +21,9 @@ namespace Moryx.ProcessData.Adapter.NotificationPublisher
         {
             NotificationBindings = new List<MeasurementBinding>
             {
-                new MeasurementBinding {Name = "source", Binding = "Notification.Source", ValueTarget = ValueTarget.Tag},
-                new MeasurementBinding {Name = "sender", Binding = "Notification.Sender", ValueTarget = ValueTarget.Tag},
-                new MeasurementBinding {Name = "acknowledger", Binding = "Notification.Acknowledger", ValueTarget = ValueTarget.Tag}
+                new() {Name = "source", Binding = "Notification.Source", ValueTarget = ValueTarget.Tag},
+                new() {Name = "sender", Binding = "Notification.Sender", ValueTarget = ValueTarget.Tag},
+                new() {Name = "acknowledger", Binding = "Notification.Acknowledger", ValueTarget = ValueTarget.Tag}
 
             };
         }

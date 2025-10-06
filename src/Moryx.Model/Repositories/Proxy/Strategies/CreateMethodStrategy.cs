@@ -11,7 +11,7 @@ namespace Moryx.Model.Repositories.Proxy
     {
         //TODO: Collection Properties
 
-        private static readonly Regex CreateRegex = new Regex(@"(?:Create)$");
+        private static readonly Regex CreateRegex = new(@"(?:Create)$");
 
         public override bool CanImplement(MethodInfo methodInfo)
         {

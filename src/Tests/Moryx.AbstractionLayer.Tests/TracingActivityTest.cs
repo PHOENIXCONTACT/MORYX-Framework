@@ -10,8 +10,8 @@ namespace Moryx.AbstractionLayer.Tests
     [TestFixture]
     public class TracingActivityTest
     {
-        private readonly DateTime _startDateTime = new DateTime(1000, 1, 10, 10, 10, 10);
-        private readonly DateTime _endDateTime = new DateTime(2000, 12, 20, 20, 20, 20);
+        private readonly DateTime _startDateTime = new(1000, 1, 10, 10, 10, 10);
+        private readonly DateTime _endDateTime = new(2000, 12, 20, 20, 20, 20);
 
         /// <summary>
         /// Helper method to create tracings

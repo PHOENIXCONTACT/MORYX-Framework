@@ -61,7 +61,7 @@ namespace Moryx.DependentTestModule
         #endregion
 
         #region FacadeContainer
-        private readonly DependentTestModuleFacade _testModuleFacade = new DependentTestModuleFacade();
+        private readonly DependentTestModuleFacade _testModuleFacade = new();
 
         IDependentTestModule IFacadeContainer<IDependentTestModule>.Facade => _testModuleFacade;
 

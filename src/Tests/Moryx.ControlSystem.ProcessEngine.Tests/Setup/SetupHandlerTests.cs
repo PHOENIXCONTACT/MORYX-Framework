@@ -34,9 +34,9 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
         private Mock<IResourceManagement> _resourceManagerMock;
         private Mock<IJobDataFactory> _jobDataFactoryMock;
         private Mock<ISetupProvider> _providerMock;
-        private readonly List<Mock<ISetupJobData>> _setupJobs = new List<Mock<ISetupJobData>>();
+        private readonly List<Mock<ISetupJobData>> _setupJobs = new();
 
-        private readonly List<IJobData> _jobList = new List<IJobData>();
+        private readonly List<IJobData> _jobList = new();
 
         /// <summary>
         /// Initialize the test-environment before every test

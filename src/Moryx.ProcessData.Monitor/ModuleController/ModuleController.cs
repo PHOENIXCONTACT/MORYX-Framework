@@ -47,7 +47,7 @@ namespace Moryx.ProcessData.Monitor
             DeactivateFacade(_processDataMonitorFacade);
         }
 
-        private readonly ProcessDataMonitorFacade _processDataMonitorFacade = new ProcessDataMonitorFacade();
+        private readonly ProcessDataMonitorFacade _processDataMonitorFacade = new();
         IProcessDataMonitor IFacadeContainer<IProcessDataMonitor>.Facade => _processDataMonitorFacade;
     }
 }

@@ -21,11 +21,11 @@ namespace Moryx.Model.Annotations
         private const string AnnotationName = "DateTimeKind";
 
         private static readonly ValueConverter<DateTime, DateTime> UtcConverter =
-            new ValueConverter<DateTime, DateTime>(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+            new(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
         private static readonly ValueConverter<DateTime, DateTime> LocalConverter =
-            new ValueConverter<DateTime, DateTime>(v => ConvertToUtc(v), v => ConvertToLocal(v));
+            new(v => ConvertToUtc(v), v => ConvertToLocal(v));
         private static readonly ValueConverter<DateTime, DateTime> UnspecifiedConverter =
-           new ValueConverter<DateTime, DateTime>(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified));
+           new(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified));
 
         private static DateTime ConvertToUtc(DateTime dateTime)
         {

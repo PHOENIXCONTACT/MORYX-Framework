@@ -51,7 +51,7 @@ namespace Moryx.ControlSystem.Jobs
         /// <summary>
         /// All slots managed by this instance
         /// </summary>
-        private readonly List<TSlot> _slots = new List<TSlot>();
+        private readonly List<TSlot> _slots = new();
 
         /// <summary>
         /// Create a new job slot wrapper class

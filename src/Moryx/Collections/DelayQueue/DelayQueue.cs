@@ -32,7 +32,7 @@ namespace Moryx.Collections
         /// <summary>
         /// Lock object for this instance of the queue
         /// </summary>
-        private readonly object _stateLock = new object();
+        private readonly object _stateLock = new();
 
         /// <summary>
         /// Explicit implementation to use in state machine

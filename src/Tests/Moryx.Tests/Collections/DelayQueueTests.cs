@@ -22,7 +22,7 @@ namespace Moryx.Tests.Collections
         private const int Delay = 300;
 
         private DelayQueue<DummyMessage> _queue;
-        private readonly Stopwatch _stopwatch = new Stopwatch();
+        private readonly Stopwatch _stopwatch = new();
         private readonly List<long> _times = [];
 
         [SetUp]

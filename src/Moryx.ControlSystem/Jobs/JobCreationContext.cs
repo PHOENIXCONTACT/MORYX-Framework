@@ -33,7 +33,7 @@ namespace Moryx.ControlSystem.Jobs
         {
         }
 
-        private readonly List<JobTemplate> _templates = new List<JobTemplate>();
+        private readonly List<JobTemplate> _templates = new();
         /// <summary>
         /// Recipe for the job to produce
         /// </summary>
