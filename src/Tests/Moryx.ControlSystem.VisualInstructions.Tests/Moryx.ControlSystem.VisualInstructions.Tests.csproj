@@ -22,6 +22,7 @@
 	  <ProjectReference Include="..\..\Moryx.ControlSystem.TestTools\Moryx.ControlSystem.TestTools.csproj" />
 	  <ProjectReference Include="..\..\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj" />
 	  <ProjectReference Include="..\..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
+    <ProjectReference Include="..\..\Moryx.Resources.AssemblyInstruction\Moryx.Resources.AssemblyInstruction.csproj" />
   </ItemGroup>
 
 </Project>

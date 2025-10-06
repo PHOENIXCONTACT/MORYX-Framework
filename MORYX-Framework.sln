@@ -197,9 +197,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.ControlSystem.Process
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.ControlSystem.SetupProvider.Tests", "src\Tests\Moryx.ControlSystem.SetupProvider.Tests\Moryx.ControlSystem.SetupProvider.Tests.csproj", "{C334086A-DC3E-46C0-A8BD-AB4A11D80F53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.ControlSystem.VisualInstructions.Endpoints.Tests", "src\Tests\Moryx.ControlSystem.VisualInstructions.Endpoints.Tests\Moryx.ControlSystem.VisualInstructions.Endpoints.Tests.csproj", "{8446C13A-5CB2-4FE6-8FEF-3115E9B69471}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.AssemblyInstruction.Tests", "src\Tests\Moryx.Resources.AssemblyInstruction.Tests\Moryx.Resources.AssemblyInstruction.Tests.csproj", "{CA399231-D9A2-486F-8DFD-A0C639CB7E1C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.ControlSystem.VisualInstructions.Tests", "src\Tests\Moryx.ControlSystem.VisualInstructions.Tests\Moryx.ControlSystem.VisualInstructions.Tests.csproj", "{8446C13A-5CB2-4FE6-8FEF-3115E9B69471}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.ControlSystem.TestTools.Assemble", "src\Moryx.ControlSystem.Assemble\Moryx.ControlSystem.TestTools.Assemble.csproj", "{A5ECC27A-31AD-46E5-BD5F-8F6AD6789257}"
 EndProject
@@ -625,10 +623,6 @@ Global
 		{8446C13A-5CB2-4FE6-8FEF-3115E9B69471}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8446C13A-5CB2-4FE6-8FEF-3115E9B69471}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8446C13A-5CB2-4FE6-8FEF-3115E9B69471}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CA399231-D9A2-486F-8DFD-A0C639CB7E1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CA399231-D9A2-486F-8DFD-A0C639CB7E1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CA399231-D9A2-486F-8DFD-A0C639CB7E1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CA399231-D9A2-486F-8DFD-A0C639CB7E1C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A5ECC27A-31AD-46E5-BD5F-8F6AD6789257}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A5ECC27A-31AD-46E5-BD5F-8F6AD6789257}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5ECC27A-31AD-46E5-BD5F-8F6AD6789257}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -905,7 +899,6 @@ Global
 		{6BB528D2-EB45-4EBD-9BEE-72EC2A5910D1} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
 		{C334086A-DC3E-46C0-A8BD-AB4A11D80F53} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
 		{8446C13A-5CB2-4FE6-8FEF-3115E9B69471} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
-		{CA399231-D9A2-486F-8DFD-A0C639CB7E1C} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
 		{A5ECC27A-31AD-46E5-BD5F-8F6AD6789257} = {953AAE25-26C8-4A28-AB08-61BAFE41B22F}
 		{39B087D4-D384-4FC1-9EAC-01E2D8EEB91B} = {E0E7AB53-7008-476A-AADA-ED49220C1B6F}
 		{E1E32C87-43BF-4178-9AE1-588BEF46A532} = {0A466330-6ED6-4861-9C94-31B1949CDDB9}
@@ -958,8 +951,8 @@ Global
 		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF} = {8517D209-5BC1-47BD-A7C7-9CF9ADD9F5B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
+		RESX_ShowErrorsInErrorList = True
 		RESX_TaskErrorCategory = Message
-						RESX_ShowErrorsInErrorList = True
+		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
 	EndGlobalSection
 EndGlobal
