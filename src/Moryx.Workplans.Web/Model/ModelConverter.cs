@@ -80,7 +80,7 @@ namespace Moryx.Workplans.Endpoint
 
             if (classification == WorkplanNodeClassification.Input)
             {
-                nodeModel.Inputs = Array.Empty<NodeConnectionPoint>();
+                nodeModel.Inputs = [];
                 var output = new NodeConnectionPoint { Name = "Out" };
                 output.Connections.AddRange(steps.SelectMany(s => s.Inputs.Where(o => o == connector)
                     .Select(o => new NodeConnector { NodeId = s.Id, Index = Array.IndexOf(s.Inputs, connector) })));
@@ -88,7 +88,7 @@ namespace Moryx.Workplans.Endpoint
             }
             else
             {
-                nodeModel.Outputs = Array.Empty<NodeConnectionPoint>();
+                nodeModel.Outputs = [];
                 var input = new NodeConnectionPoint { Name = "In" };
                 input.Connections.AddRange(steps.SelectMany(s => s.Outputs.Where(o => o == connector)
                     .Select(o => new NodeConnector { NodeId = s.Id, Index = Array.IndexOf(s.Outputs, connector) })));

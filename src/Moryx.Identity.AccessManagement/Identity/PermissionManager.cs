@@ -74,7 +74,7 @@ namespace Moryx.Identity.AccessManagement
 
             var permissions = role != null
                 ? role.Permissions.ToArray()
-                : Array.Empty<Permission>();
+                : [];
 
             return Task.FromResult<IList<Permission>>(permissions);
         }

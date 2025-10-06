@@ -21,7 +21,7 @@ namespace Moryx.ControlSystem.Assemble
         /// <summary>
         /// Creates a new instance of <see cref="AssembleParameters"/>
         /// </summary>
-        public AssembleParameters() : this(Array.Empty<VisualInstruction>())
+        public AssembleParameters() : this([])
         {
         }
 

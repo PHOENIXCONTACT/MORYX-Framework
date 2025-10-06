@@ -16,7 +16,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         private ICell _resource;
         private ITask _task;
 
-        public static readonly ICell[] EmptyTargets = Array.Empty<ICell>();
+        public static readonly ICell[] EmptyTargets = [];
 
         /// <summary>
         /// Wrap this activity

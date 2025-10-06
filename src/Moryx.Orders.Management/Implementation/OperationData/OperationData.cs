@@ -161,7 +161,7 @@ namespace Moryx.Orders.Management
                 Unit = p.Unit,
                 StagingIndicator = p.StagingIndicator,
                 Classification = p.Classification
-            }).ToArray() ?? Array.Empty<ProductPart>();
+            }).ToArray() ?? [];
 
             Operation.Number = context.Number;
             Operation.TotalAmount = context.TotalAmount;

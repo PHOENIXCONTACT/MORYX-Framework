@@ -15,7 +15,7 @@ namespace Moryx.ControlSystem.Cells
         /// <summary>
         /// Empty array of constraints
         /// </summary>
-        protected static readonly IConstraint[] EmptyConstraints = Array.Empty<IConstraint>();
+        protected static readonly IConstraint[] EmptyConstraints = [];
 
         /// <summary>
         /// Initialize a new resource request for a certain resource
@@ -132,7 +132,7 @@ namespace Moryx.ControlSystem.Cells
         public static UnknownActivityAborted WrapUnknownActivity(IActivity unknown)
         {
             var wrapper = StartSession(ActivityClassification.Unknown, ReadyToWorkType.Unset, unknown.Process.Id)
-                .CompleteSequence(null, false, Array.Empty<long>());
+                .CompleteSequence(null, false, []);
             return new UnknownActivityAborted(unknown, wrapper);
         }
 

@@ -34,7 +34,7 @@ namespace Moryx.ControlSystem.WorkerSupport.Tests
                 ResourceManagement = resourceManagement.Object,
                 Config = new ModuleConfig
                 {
-                    ProcessorConfigs = Array.Empty<InstructionProcessorConfig>()
+                    ProcessorConfigs = []
                 }
             };
             _controller.InstructionAdded += EmptyListener;

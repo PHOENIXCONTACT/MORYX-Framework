@@ -24,7 +24,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
 
         internal static InstructionModel ToModel(ActiveInstruction instruction)
         {
-            InstructionResultModel[] results = Array.Empty<InstructionResultModel>();
+            InstructionResultModel[] results = [];
             if (instruction.Results?.Count > 0)
                 results = instruction.Results.Select(i => new InstructionResultModel { Key = i.Key, DisplayValue = i.DisplayValue }).ToArray();
 

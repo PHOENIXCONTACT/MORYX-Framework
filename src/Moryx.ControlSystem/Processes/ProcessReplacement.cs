@@ -38,13 +38,13 @@ namespace Moryx.ControlSystem.Processes
         /// <inheritdoc />
         public IEnumerable<IActivity> GetActivities()
         {
-            return Enumerable.Empty<IActivity>();
+            return [];
         }
 
         /// <inheritdoc />
         public IEnumerable<IActivity> GetActivities(Func<IActivity, bool> predicate)
         {
-            return Enumerable.Empty<IActivity>();
+            return [];
         }
 
         /// <inheritdoc />

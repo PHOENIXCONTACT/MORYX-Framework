@@ -131,7 +131,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             var endDate = DateTime.Parse(end, _culture);
 
             // Act
-            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, startDate, endDate, Array.Empty<long>()).ToList();
+            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, startDate, endDate, []).ToList();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(expectedJobCount));
@@ -165,7 +165,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                                     Updated = new DateTime(2000, 1, 1, 1, 59, 0)
                                 }));
 
-            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, new DateTime(2000, 1, 1, 1, 50, 0), new DateTime(2000, 1, 1, 1, 59, 0), Array.Empty<long>()).ToList();
+            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, new DateTime(2000, 1, 1, 1, 50, 0), new DateTime(2000, 1, 1, 1, 59, 0), []).ToList();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(0));
@@ -219,7 +219,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Act
             _jobListMock.Raise(j => j.StateChanged += null, _jobListMock.Object, jobData);
 
-            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, nowStart, nowEnd, Array.Empty<long>()).ToList();
+            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, nowStart, nowEnd, []).ToList();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(1));
@@ -231,7 +231,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             stateMock.SetupGet(s => s.Classification).Returns(JobClassification.Completed);
             _jobListMock.Raise(jl => jl.StateChanged += null, _jobListMock.Object, new JobStateEventArgs(jobData, null, stateMock.Object));
 
-            chunks = _processArchive.GetProcesses(RequestFilter.Timed, nowStart, nowEnd, Array.Empty<long>()).ToList();
+            chunks = _processArchive.GetProcesses(RequestFilter.Timed, nowStart, nowEnd, []).ToList();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(1));

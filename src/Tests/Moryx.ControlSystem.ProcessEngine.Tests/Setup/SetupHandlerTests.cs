@@ -115,7 +115,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             _resourceManagerMock = new Mock<IResourceManagement>();
             _resourceManagerMock
                 .Setup(rmm => rmm.GetResources<ICell>(It.IsAny<ICapabilities>()))
-                .Returns(Enumerable.Empty<ICell>());
+                .Returns([]);
         }
 
         private ISetupRecipe ProvideSetup(SetupExecution execution, IProductionRecipe recipe, ISetupTarget target)
@@ -649,7 +649,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
                     var setupCapabilities = (TestSetupCapabilities)capabilities;
                     return setupCapabilities.SetupState == setupState
                         ? [new Mock<ICell>().Object]
-                        : Enumerable.Empty<ICell>();
+                        : [];
                 });
         }
 

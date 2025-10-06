@@ -98,7 +98,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 catch (Exception ex)
                 {
                     Logger.Log(LogLevel.Error, ex, "Failed to attach cell #{id} {name}.", cell.Id, cell.Name);
-                    sessions[index] = Array.Empty<ResourceAndSession>();
+                    sessions[index] = [];
                 }
             });
 

@@ -14,7 +14,7 @@ namespace Moryx.Orders.Endpoints
     {
         public OperationModel()
         {
-            JobIds = Array.Empty<long>();
+            JobIds = [];
         }
 
         [DataMember]

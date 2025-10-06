@@ -126,7 +126,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
             return new InstructionModel
             {
                 Id = id,
-                Items = Array.Empty<InstructionItemModel>(),
+                Items = [],
             };
         }
     }

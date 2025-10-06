@@ -208,7 +208,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
             // Fetch all affected entities, including the previous id, in a single query
             var ids = jobs.Select(j => j.Id)
-                .Concat(previousId.HasValue ? [previousId.Value] : Enumerable.Empty<long>())
+                .Concat(previousId.HasValue ? [previousId.Value] : [])
                 .ToArray();
             var jobEntities = jobRepo.GetByKeys(ids);
 

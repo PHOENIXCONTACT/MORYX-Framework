@@ -14,8 +14,8 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
     {
         public InstructionModel()
         {
-            PossibleResults = Array.Empty<string>();
-            Results = Array.Empty<InstructionResultModel>();
+            PossibleResults = [];
+            Results = [];
         }
 
         /// <summary>
