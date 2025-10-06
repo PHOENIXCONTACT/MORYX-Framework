@@ -211,8 +211,28 @@ namespace Moryx.Resources.Management.Tests
             Assert.AreEqual(testResource.Name, entity.Name);
         }
 
-        [Test(Description = "Should notify facade listeners when resource is saved")]
-        public void RaiseResourceChangesOnSave()
+        [Test(Description = "Should notify facade listeners when resource Changed")]
+        public void RaiseResourceChangesOnRaiseChanged()
+        {
+            // Arrange
+            var testResource = _graph.Instantiate<PublicResourceMock>();
+            int notifications = 0;
+            _resourceManager.ResourceChanged += (sender, resource) =>
+            {
+                notifications = +1;
+            };
+            _resourceManager.Save(testResource);
+
+            // Act
+            testResource.Name = "Hello World";
+            testResource.RaiseChanged();
+
+            // Assert
+            Assert.That(notifications, Is.EqualTo(1));
+        }
+
+        [Test(Description = "Should not notify facade listeners when new resource added")]
+        public void DontRaiseResourceChangesOnAdded()
         {
             // Arrange
             var testResource = _graph.Instantiate<PublicResourceMock>();
@@ -226,7 +246,7 @@ namespace Moryx.Resources.Management.Tests
             _resourceManager.Save(testResource);
 
             // Assert
-            Assert.That(notifications, Is.EqualTo(1));
+            Assert.That(notifications, Is.EqualTo(0));
         }
 
         [Test(Description = "Adds a resource while the ResourceManager was initialized but not started")]
