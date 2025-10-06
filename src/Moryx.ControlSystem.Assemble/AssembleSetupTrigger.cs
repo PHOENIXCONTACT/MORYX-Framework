@@ -68,11 +68,11 @@ namespace Moryx.ControlSystem.Assemble
 
             // Only create resolve if config was valid
             if (!string.IsNullOrEmpty(Config.Instruction))
-                _instructionBinder = new VisualInstructionBinder(new[] {new VisualInstruction
+                _instructionBinder = new VisualInstructionBinder([new VisualInstruction
                 {
                     Type = InstructionContentType.Text,
                     Content = Config.Instruction
-                }}, RecipeResolverFactory);
+                }], RecipeResolverFactory);
         }
 
         /// <inheritdoc />
@@ -110,7 +110,7 @@ namespace Moryx.ControlSystem.Assemble
                 }
             };
 
-            return new[] { setupTask };
+            return [setupTask];
         }
     }
 }

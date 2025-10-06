@@ -26,10 +26,10 @@ namespace Moryx.Simulation.Tests
             _assemblyDriverMock = new Mock<SimulatedDummyTestDriver>() { DefaultValue = DefaultValue.Mock };
             _anotherAssemblyDriverMock = new Mock<SimulatedDummyTestDriver>() { DefaultValue = DefaultValue.Mock };
             _assemblyDriverMock.SetupGet(dr => dr.Cell).Returns(_assemblyCell);
-            _assemblyDriverMock.SetupGet(dr => dr.Usages).Returns(new[] { _assemblyCell });
+            _assemblyDriverMock.SetupGet(dr => dr.Usages).Returns([_assemblyCell]);
             _assemblyDriverMock.SetupGet(dr => dr.SimulatedState).Returns(SimulationState.Idle);
             _anotherAssemblyDriverMock.SetupGet(dr => dr.Cell).Returns(_anotherAssemblyCell);
-            _anotherAssemblyDriverMock.SetupGet(dr => dr.Usages).Returns(new[] { _anotherAssemblyCell });
+            _anotherAssemblyDriverMock.SetupGet(dr => dr.Usages).Returns([_anotherAssemblyCell]);
             _anotherAssemblyDriverMock.SetupGet(dr => dr.SimulatedState).Returns(SimulationState.Idle);
 
             _assemblyDriverMock.Setup(dr => dr.Send(It.IsAny<AssembleProductMessage>()))
@@ -99,14 +99,14 @@ namespace Moryx.Simulation.Tests
 
             //resource management
             _resourceManagementMock.Setup(rm => rm.GetAllResources(It.IsAny<Func<ISimulationDriver, bool>>()))
-                .Returns(new[] { _assemblyDriverMock.Object, _anotherAssemblyDriverMock.Object });
+                .Returns([_assemblyDriverMock.Object, _anotherAssemblyDriverMock.Object]);
 
             _processControlMock.SetupSequence(pc => pc.Targets(It.IsAny<IProcess>()))
-                 .Returns(new[] { _assemblyCell, _anotherAssemblyCell })
+                 .Returns([_assemblyCell, _anotherAssemblyCell])
                  .Returns(Array.Empty<ICell>())
-                 .Returns(new[] { _assemblyCell, _anotherAssemblyCell })
-                 .Returns(new[] { _assemblyCell, _anotherAssemblyCell })
-                 .Returns(new[] { _assemblyCell, _anotherAssemblyCell });
+                 .Returns([_assemblyCell, _anotherAssemblyCell])
+                 .Returns([_assemblyCell, _anotherAssemblyCell])
+                 .Returns([_assemblyCell, _anotherAssemblyCell]);
 
             _processControlMock.Setup(pc => pc.Targets(It.IsAny<IActivity>()))
                  .Returns<IActivity>(activity => _activityTargets[activity]);
@@ -160,19 +160,19 @@ namespace Moryx.Simulation.Tests
             completedActivity.Tracing.Started = DateTime.Now;
             completedActivity.Result = new ActivityResult();
             completedActivity.Tracing.ResourceId = _assemblyCell.Id;
-            CreateActivity(completedActivity, _processMock.Object, new[] { _assemblyCell });
+            CreateActivity(completedActivity, _processMock.Object, [_assemblyCell]);
 
             var readyActivity = new AssemblyActivity();
             readyActivity.Id = 1337;
-            CreateActivity(readyActivity, _processMock.Object, new[] { _assemblyCell });
+            CreateActivity(readyActivity, _processMock.Object, [_assemblyCell]);
 
             _processMock.Setup(p => p.GetActivities(It.IsAny<Func<IActivity, bool>>()))
-                .Returns(new[] { completedActivity, readyActivity });
+                .Returns([completedActivity, readyActivity]);
 
             _processMock.SetupGet(x => x.Id).Returns(processId);
             _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()))
                 .Returns(completedActivity);
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns(new[] { _processMock.Object });
+            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
 
             // Act
             _processSimulator.Start();
@@ -192,14 +192,14 @@ namespace Moryx.Simulation.Tests
             var readyActivity = new AssemblyActivity();
 
             _processMock.Setup(p => p.GetActivities(It.IsAny<Func<IActivity, bool>>()))
-                .Returns(new[] { readyActivity });
+                .Returns([readyActivity]);
             _processMock.Setup(p => p.GetActivities())
-                .Returns(new[] { completedActivity, readyActivity });
+                .Returns([completedActivity, readyActivity]);
             _processMock.SetupGet(x => x.Id).Returns(processId);
             _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()));
 
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns(new[] { _processMock.Object });
-            CreateActivity(readyActivity, _processMock.Object, new[] { _anotherAssemblyCell });
+            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
+            CreateActivity(readyActivity, _processMock.Object, [_anotherAssemblyCell]);
 
             // Act
             _processSimulator.Start();
@@ -219,14 +219,14 @@ namespace Moryx.Simulation.Tests
             var runningActivity = new AssemblyActivity();
             runningActivity.Tracing.Started = DateTime.Now;
             runningActivity.Tracing.ResourceId = _assemblyCell.Id;
-            CreateActivity(runningActivity, _processMock.Object, new[] { _assemblyCell });
+            CreateActivity(runningActivity, _processMock.Object, [_assemblyCell]);
 
             _processMock.Setup(p => p.GetActivities(It.IsAny<Func<IActivity, bool>>()))
-                .Returns(new[] { runningActivity });
+                .Returns([runningActivity]);
 
             _processMock.SetupGet(x => x.Id).Returns(processId);
             _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()));
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns(new[] { _processMock.Object });
+            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
 
             // Act
             _processSimulator.Start();
@@ -244,14 +244,14 @@ namespace Moryx.Simulation.Tests
             _moduleConfig.DefaultExecutionTime = 1;
             var processId = 42;
             var readyActivity = new AssemblyActivity();
-            CreateActivity(readyActivity, _processMock.Object, new[] { _assemblyCell });
+            CreateActivity(readyActivity, _processMock.Object, [_assemblyCell]);
 
             _processMock.Setup(p => p.GetActivities(It.IsAny<Func<IActivity, bool>>()))
-                .Returns(new[] { readyActivity });
+                .Returns([readyActivity]);
 
             _processMock.SetupGet(x => x.Id).Returns(processId);
             _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()));
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns(new[] { _processMock.Object });
+            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
 
             var exception = new Exception("Test");
             _assemblyDriverMock.Setup(d => d.Ready(It.IsAny<Activity>())).Throws(exception);
@@ -273,14 +273,14 @@ namespace Moryx.Simulation.Tests
             var runningActivity = new AssemblyActivity();
             runningActivity.Tracing.Started = DateTime.Now;
             runningActivity.Tracing.ResourceId = _assemblyCell.Id;
-            CreateActivity(runningActivity, _processMock.Object, new[] { _assemblyCell });
+            CreateActivity(runningActivity, _processMock.Object, [_assemblyCell]);
 
             _processMock.Setup(p => p.GetActivities(It.IsAny<Func<IActivity, bool>>()))
-                .Returns(new[] { runningActivity });
+                .Returns([runningActivity]);
 
             _processMock.SetupGet(x => x.Id).Returns(processId);
             _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()));
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns(new[] { _processMock.Object });
+            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
 
             var exception = new Exception("Test");
             _assemblyDriverMock.Setup(d => d.Result(It.IsAny<SimulationResult>())).Throws(exception);
@@ -299,20 +299,20 @@ namespace Moryx.Simulation.Tests
             ((AssemblyTestCell)cell2).TestInit();
             // process
             _processMock.SetupSequence(p => p.GetActivities())
-                .Returns(new[] { activity1 })
-                .Returns(new[] { activity1, activity2 })
-                .Returns(new[] { activity1, activity2 })
-                .Returns(new[] { activity1, activity2 })
-                .Returns(new[] { activity1, activity2 });
+                .Returns([activity1])
+                .Returns([activity1, activity2])
+                .Returns([activity1, activity2])
+                .Returns([activity1, activity2])
+                .Returns([activity1, activity2]);
 
             _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()))
                 .Returns(activity2);
 
             _processMock.SetupGet(x => x.Id).Returns(processId);
 
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns(new[] { _processMock.Object });
-            CreateActivity(activity1, _processMock.Object, new[] { cell2, cell1 });
-            CreateActivity(activity2, _processMock.Object, new[] { cell1, cell2 });
+            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
+            CreateActivity(activity1, _processMock.Object, [cell2, cell1]);
+            CreateActivity(activity2, _processMock.Object, [cell1, cell2]);
         }
 
         private Activity CreateActivity(Activity activity, IProcess process, ICell[] cells)

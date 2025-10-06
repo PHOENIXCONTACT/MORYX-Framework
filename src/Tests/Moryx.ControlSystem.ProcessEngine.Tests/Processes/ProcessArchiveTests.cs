@@ -42,10 +42,10 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         public void Setup()
         {
             _workplanMock = new Mock<IWorkplan>();
-            _workplanMock.Setup(w => w.Steps).Returns(new IWorkplanStep[]
-            {
+            _workplanMock.Setup(w => w.Steps).Returns(
+            [
                 new MountTask{Id = 1}
-            });
+            ]);
 
             var recipeMock = new Mock<IProductionRecipe>();
             recipeMock.Setup(r => r.CreateProcess()).Returns(new ProductionProcess { Recipe = recipeMock.Object });
@@ -212,8 +212,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             var jobData = new ProductionJobData(new DummyRecipe(), jobEntity);
             jobData.RunningProcesses.Add(processData);
 
-            var jobs = CreateJobEntities().Concat(new[] { jobEntity }).ToArray();
-            var processEntities = CreateProcessEntities(jobs).Concat(new[] { processEntity }).ToArray();
+            var jobs = CreateJobEntities().Concat([jobEntity]).ToArray();
+            var processEntities = CreateProcessEntities(jobs).Concat([processEntity]).ToArray();
             CreateTestData(jobs, processEntities);
 
             // Act
@@ -253,19 +253,19 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
         private JobEntity[] CreateJobEntities()
         {
-            return new[]
-            {
+            return
+            [
                 new JobEntity { Id = 1, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 0, 0), Updated = new DateTime(2000, 1, 1, 1, 10, 0)},
                 new JobEntity { Id = 2, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 15, 0), Updated = new DateTime(2000, 1, 1, 1, 20, 0)},
                 new JobEntity { Id = 3, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 30, 0), Updated = new DateTime(2000, 1, 1, 1, 40, 0)},
                 new JobEntity { Id = 4, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 25, 0), Updated = new DateTime(2000, 1, 1, 1, 40, 0)},
-            };
+            ];
         }
 
         private ProcessEntity[] CreateProcessEntities(JobEntity[] jobs)
         {
-            return new[]
-            {
+            return
+            [
                 // Job 1
                 new ProcessEntity { JobId = jobs[0].Id, Job = jobs[0],
                     Activities = new List<ActivityEntity> { new() { Started = new DateTime(2000, 1, 1, 1, 0, 1), Completed = new DateTime(2000, 1, 1, 1, 0, 2) } }, State = (int)ProcessState.Success },
@@ -281,7 +281,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
                 // Job 2
                 new ProcessEntity { JobId = jobs[1].Id, Job = jobs[1], Activities = new List<ActivityEntity> { new() { Started = new DateTime(2000, 1, 1, 1, 15, 1), Completed = new DateTime(2000, 1, 1, 1, 15, 2) } }, State = (int)ProcessState.Failure }
-            };
+            ];
         }
 
         public static void SetupIQueryable<T>(Mock<T> mock, IQueryable queryable)

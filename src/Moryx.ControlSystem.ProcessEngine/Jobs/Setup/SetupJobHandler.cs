@@ -318,7 +318,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
             public IReadOnlyList<ICell> Cells(ICapabilities capabilities)
             {
                 // Return a match for every cell to get all possible clean-ups
-                return new ICell[] { new CellReference() };
+                return [new CellReference()];
             }
         }
 

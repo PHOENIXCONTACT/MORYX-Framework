@@ -68,11 +68,11 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
 
             // Act
             // The initial job is started and than completing BEFORE the other one is added
-            JobScheduler.SchedulableJobs(new[] { job, waiting });
-            JobScheduler.JobsReady(new[] { job, cleanup });
+            JobScheduler.SchedulableJobs([job, waiting]);
+            JobScheduler.JobsReady([job, cleanup]);
             job.Classification = JobClassification.Completing;
             JobScheduler.JobUpdated(job, JobClassification.Completing);
-            JobScheduler.JobsReady(new[] { waiting });
+            JobScheduler.JobsReady([waiting]);
 
             // Assert
             Assert.That(waiting, Is.EqualTo(ScheduledJob));
@@ -146,7 +146,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             {
                 Classification = JobClassification.Idle
             };
-            var schedulable = JobScheduler.SchedulableJobs(new[] { job });
+            var schedulable = JobScheduler.SchedulableJobs([job]);
             Assert.That(schedulable.Any());
         }
     }

@@ -15,7 +15,7 @@ namespace Moryx.Identity.AccessManagement
     /// </summary>
     public static class HostExtensions
     {
-        private static readonly string[] _permissions = {
+        private static readonly string[] _permissions = [
             "Moryx.Runtime.Database.CanView",
             "Moryx.Runtime.Database.CanSetAndTestConfig",
             "Moryx.Runtime.Database.CanCreate",
@@ -77,7 +77,7 @@ namespace Moryx.Identity.AccessManagement
             "Moryx.Skills.CanManage",
             "Moryx.Operators.CanView",
             "Moryx.Operators.CanManage"
-        };
+        ];
 
         /// <summary>
         /// Extension method to apply all migrations to the <see cref="MoryxIdentitiesDbContext"/> of the application.

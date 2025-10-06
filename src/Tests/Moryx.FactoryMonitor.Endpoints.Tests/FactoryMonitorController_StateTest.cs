@@ -108,7 +108,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 
             _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<IProcess>()))
                 .Returns<IProcess>(p => _activityTargets.Where(pair => pair.Key.Process == p).SelectMany(pair => pair.Value).ToList());
-            _processFacadeMock.SetupGet(pm => pm.RunningProcesses).Returns(new[] { process });
+            _processFacadeMock.SetupGet(pm => pm.RunningProcesses).Returns([process]);
             //Act
 
             Task.Run(async () =>
@@ -242,7 +242,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             activity.Tracing.ResourceId = cell.Id;
             process.AddActivity(activity);
             // Assign resources AFTER creation
-            _activityTargets[activity] = new[] { cell };
+            _activityTargets[activity] = [cell];
             return activity;
         }
     }

@@ -42,7 +42,7 @@ namespace Moryx.Orders.Management.Tests
 
             _operationPoolMock = new Mock<IOperationDataPool>();
             _operationPoolMock.Setup(p => p.Get(_operation)).Returns(_operationData);
-            _operationPoolMock.Setup(p => p.GetAll(It.IsAny<Func<IOperationData, bool>>())).Returns(new[] { _operationData });
+            _operationPoolMock.Setup(p => p.GetAll(It.IsAny<Func<IOperationData, bool>>())).Returns([_operationData]);
 
             _dispatcher = new SingleJobOperationDispatcher
             {
@@ -72,7 +72,7 @@ namespace Moryx.Orders.Management.Tests
         {
             // Arrange
             var someJob = new Job(new ProductRecipe(), 1) { Id = 1 };
-            _operation.Jobs = new[] { someJob };
+            _operation.Jobs = [someJob];
 
             // Act
             var args = new JobStateChangedEventArgs(someJob, JobClassification.Idle, JobClassification.Running);
@@ -95,10 +95,10 @@ namespace Moryx.Orders.Management.Tests
                 Id = 2
             };
 
-            _jobManagementMock.Setup(j => j.Add(It.IsAny<JobCreationContext>())).Returns(new[] { newJob });
+            _jobManagementMock.Setup(j => j.Add(It.IsAny<JobCreationContext>())).Returns([newJob]);
 
             // Act
-            _jobHandler.Dispatch(_operationData, new[] { new DispatchContext(new DummyRecipe(), amount) });
+            _jobHandler.Dispatch(_operationData, [new DispatchContext(new DummyRecipe(), amount)]);
 
             // Assert
             Assert.DoesNotThrow(delegate
@@ -129,11 +129,11 @@ namespace Moryx.Orders.Management.Tests
             _jobManagementMock.Setup(j => j.Add(It.IsAny<JobCreationContext>())).Returns(delegate (JobCreationContext context)
             {
                 createdContext = context;
-                return new[] { newJob };
+                return [newJob];
             });
 
             // Act
-            _jobHandler.Dispatch(_operationData, new[] { new DispatchContext(new DummyRecipe(), amount) });
+            _jobHandler.Dispatch(_operationData, [new DispatchContext(new DummyRecipe(), amount)]);
 
             // Assert
             Assert.That(createdContext.Position.PositionType, Is.EqualTo(JobPositionType.AfterOther));

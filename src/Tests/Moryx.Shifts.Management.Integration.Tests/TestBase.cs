@@ -25,7 +25,7 @@ namespace Moryx.Shifts.Management.IntegrationTests
             _resourceManagementMock = MoryxTestEnvironment.CreateModuleMock<IResourceManagement>();
             _operatorManagementMock = MoryxTestEnvironment.CreateModuleMock<IOperatorManagement>();
             _env = new MoryxTestEnvironment(typeof(ModuleController),
-                new Mock[] { _resourceManagementMock, _operatorManagementMock }, config);
+                [_resourceManagementMock, _operatorManagementMock], config);
             _facade = _env.GetTestModule<IShiftManagement>();
         }
 

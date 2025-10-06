@@ -20,7 +20,7 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
         public override IReadOnlyList<IWorkplanStep> CreateSteps(IProductRecipe recipe)
         {
             CreateStepCalled = true;
-            return new[] { new TestSetupTask() };
+            return [new TestSetupTask()];
         }
     }
 

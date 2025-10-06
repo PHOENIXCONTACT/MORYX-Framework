@@ -126,9 +126,9 @@ namespace Moryx.ControlSystem.Processes
         public static IEnumerable<Session> Attach(this ProcessHolderPosition position)
         {
             if (position.Session != null)
-                return new[] { position.Session };
+                return [position.Session];
 
-            return position.Process == null ? Enumerable.Empty<Session>() : new[] { position.StartSession() };
+            return position.Process == null ? Enumerable.Empty<Session>() : [position.StartSession()];
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace Moryx.ControlSystem.Processes
         /// This is usually used when detaching from the control system.
         /// </summary>
         public static IEnumerable<Session> Detach(this ProcessHolderPosition position)
-            => position.Session != null ? new[] { position.Session } : Enumerable.Empty<Session>();
+            => position.Session != null ? [position.Session] : Enumerable.Empty<Session>();
 
         /// <summary>
         /// Gets the session from each <see cref="ProcessHolderPosition"/> in the <paramref name="positions"/> 

@@ -69,8 +69,8 @@ namespace Moryx.Tests
             // Arrange
             var @object = new ArrayDummy
             {
-                Array = new[] { 2, 3, 4, 5, 6 },
-                Keys = new[] { "Number: 1", "Number: 2", "Number: 3", "Number: 4", "Number: 5" }
+                Array = [2, 3, 4, 5, 6],
+                Keys = ["Number: 1", "Number: 2", "Number: 3", "Number: 4", "Number: 5"]
             };
             var encoded = EntryConvert.EncodeObject(@object);
 
@@ -96,8 +96,8 @@ namespace Moryx.Tests
             // Arrange
             var @object = new ArrayDummy
             {
-                Array = new[] { 2, 3, 4, 5, 6 },
-                Keys = new[] { "Number: 1", "Number: 2", "Number: 3", "Number: 4", "Number: 5" }
+                Array = [2, 3, 4, 5, 6],
+                Keys = ["Number: 1", "Number: 2", "Number: 3", "Number: 4", "Number: 5"]
             };
             var encoded = EntryConvert.EncodeObject(@object);
 

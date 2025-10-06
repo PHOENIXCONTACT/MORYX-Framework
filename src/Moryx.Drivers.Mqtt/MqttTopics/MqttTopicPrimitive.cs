@@ -60,7 +60,7 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
             if (payload is string str)
                 return Encoding.ASCII.GetBytes(str);
             if (payload is byte byteMessage)
-                return new[] { byteMessage };
+                return [byteMessage];
             if (payload is Enum e)
             {
                 throw new NotImplementedException();

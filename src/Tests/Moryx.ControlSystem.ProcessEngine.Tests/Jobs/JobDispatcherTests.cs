@@ -174,7 +174,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
         {
             // Arrange
             var firstJob = new Mock<IJobData>();
-            var jobs = new List<IJobData>(new[] { firstJob.Object });
+            var jobs = new List<IJobData>([firstJob.Object]);
 
             _jobListMock.Setup(list => list.GetEnumerator()).Returns(jobs.GetEnumerator());
 

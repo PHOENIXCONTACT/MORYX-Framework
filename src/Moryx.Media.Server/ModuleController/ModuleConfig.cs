@@ -35,7 +35,7 @@ namespace Moryx.Media.Server
         /// </summary>
         [DataMember]
         [Description("Allowed file types defined by extension")]
-        public string[] SupportedFileTypes { get; set; } = { ".png", ".jpeg", ".jpg", ".gif", ".pdf", ".txt", ".csv" };
+        public string[] SupportedFileTypes { get; set; } = [".png", ".jpeg", ".jpg", ".gif", ".pdf", ".txt", ".csv"];
 
         /// <summary>
         /// Preview creator plugin configurations
@@ -48,10 +48,10 @@ namespace Moryx.Media.Server
         /// <inheritdoc />
         public override void Initialize()
         {
-            PreviewCreators = new PreviewCreatorConfig[]
-            {
+            PreviewCreators =
+            [
                 new ImagePreviewCreatorConfig()
-            };
+            ];
         }
     }
 }

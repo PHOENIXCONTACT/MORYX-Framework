@@ -11,7 +11,7 @@ namespace Moryx.Resources.Mqtt.Tests.TestMessages
         public bool Message;
         public byte[] ToBytes()
         {
-            return new[] { Convert.ToByte(Message) };
+            return [Convert.ToByte(Message)];
         }
 
         public void FromBytes(byte[] bytes)

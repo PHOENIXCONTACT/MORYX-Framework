@@ -67,7 +67,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
                 Classification = JobClassification.Waiting
             };
             JobListMock.Setup(j => j.Previous(job)).Returns(setup);
-            JobScheduler.JobsReady(new[] { setup, job });
+            JobScheduler.JobsReady([setup, job]);
             var slots = JobScheduler.SchedulableJobs(otherJobs).ToArray();
 
             // Assert
@@ -104,19 +104,19 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             var slotAvailableCalled = false;
             JobScheduler.SlotAvailable += (sender, args) => slotAvailableCalled = true;
             JobListMock.Setup(j => j.Previous(waiting)).Returns(setup);
-            JobListMock.Setup(j => j.Forward(setup)).Returns(new[] { waiting });
+            JobListMock.Setup(j => j.Forward(setup)).Returns([waiting]);
             JobListMock.Setup(j => j.Previous(cleanup)).Returns(waiting);
-            JobListMock.Setup(j => j.Forward(waiting)).Returns(new[] { cleanup });
+            JobListMock.Setup(j => j.Forward(waiting)).Returns([cleanup]);
 
             // Act
-            JobScheduler.JobsReady(new[] { setup, waiting, cleanup });
+            JobScheduler.JobsReady([setup, waiting, cleanup]);
             Assert.That(setup, Is.EqualTo(ScheduledJob));
             setup.Classification = JobClassification.Running;
             JobScheduler.JobUpdated(setup, JobClassification.Running);
             // Abort production
             waiting.Classification = JobClassification.Completed;
             JobListMock.Setup(j => j.Next(waiting)).Returns(cleanup);
-            JobListMock.Setup(j => j.Forward(setup)).Returns(new[] { cleanup });
+            JobListMock.Setup(j => j.Forward(setup)).Returns([cleanup]);
             JobScheduler.JobUpdated(waiting, JobClassification.Completed);
             // Setup manager aborts setup
             setup.Classification = JobClassification.Completing;
@@ -138,7 +138,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             {
                 Classification = JobClassification.Idle
             };
-            var schedulable = JobScheduler.SchedulableJobs(new[] { anotherJob });
+            var schedulable = JobScheduler.SchedulableJobs([anotherJob]);
             Assert.That(schedulable.FirstOrDefault(), Is.EqualTo(anotherJob));
         }
 
@@ -155,11 +155,11 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             {
                 Classification = JobClassification.Waiting
             };
-            JobListMock.Setup(j => j.Forward(job)).Returns(new[] { waiting });
+            JobListMock.Setup(j => j.Forward(job)).Returns([waiting]);
 
             // Act
-            JobScheduler.SchedulableJobs(new[] { job, waiting });
-            JobScheduler.JobsReady(new[] { job, waiting });
+            JobScheduler.SchedulableJobs([job, waiting]);
+            JobScheduler.JobsReady([job, waiting]);
             job.Classification = JobClassification.Completing;
             JobScheduler.JobUpdated(job, JobClassification.Completing);
 
@@ -182,10 +182,10 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             {
                 Classification = JobClassification.Idle
             };
-            JobListMock.Setup(j => j.Forward(It.IsAny<Job>())).Returns(new[] { idleJob });
+            JobListMock.Setup(j => j.Forward(It.IsAny<Job>())).Returns([idleJob]);
 
             // Act
-            JobScheduler.JobsReady(new[] { job });
+            JobScheduler.JobsReady([job]);
             job.Classification = JobClassification.Completing;
             JobScheduler.JobUpdated(job, JobClassification.Completing);
 
@@ -205,16 +205,16 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             {
                 Classification = JobClassification.Idle
             };
-            JobScheduler.SchedulableJobs(new[] { completedJob, otherJob });
+            JobScheduler.SchedulableJobs([completedJob, otherJob]);
 
             completedJob.Classification = JobClassification.Waiting;
             JobListMock.Setup(j => j.Previous(otherJob)).Returns(completedJob);
-            JobScheduler.JobsReady(new[] { completedJob, otherJob });
+            JobScheduler.JobsReady([completedJob, otherJob]);
             completedJob.Classification = JobClassification.Completing;
 
             otherJob.Classification = JobClassification.Waiting;
             JobListMock.Setup(j => j.Next(completedJob)).Returns(otherJob);
-            JobListMock.Setup(j => j.Forward(completedJob)).Returns(new[] { otherJob });
+            JobListMock.Setup(j => j.Forward(completedJob)).Returns([otherJob]);
 
             // Act
             JobScheduler.JobUpdated(completedJob, JobClassification.Completing);
@@ -243,11 +243,11 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
                 Classification = JobClassification.Waiting
             };
             JobListMock.Setup(j => j.Previous(cleanup)).Returns(completedJob);
-            JobScheduler.JobsReady(new[] { completedJob, cleanup });
+            JobScheduler.JobsReady([completedJob, cleanup]);
 
             completedJob.Classification = JobClassification.Completed;
             JobListMock.Setup(j => j.Next(completedJob)).Returns(cleanup);
-            JobListMock.Setup(j => j.Forward(completedJob)).Returns(new[] { cleanup });
+            JobListMock.Setup(j => j.Forward(completedJob)).Returns([cleanup]);
 
             JobScheduler.SlotAvailable += (sender, args) => slotAvailableCalled = true;
 
@@ -305,7 +305,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             };
 
             // Act
-            var schedulable = JobScheduler.SchedulableJobs(new[] { runningInterrupted, completingInterrupted, completingInterruptedFollowUp }).ToList();
+            var schedulable = JobScheduler.SchedulableJobs([runningInterrupted, completingInterrupted, completingInterruptedFollowUp]).ToList();
             runningInterrupted.Classification = JobClassification.Waiting;
             completingInterrupted.Classification = JobClassification.Waiting;
             JobScheduler.JobsReady(new List<Job> { runningInterrupted, runningCleanup, completingInterrupted, completingCleanup });

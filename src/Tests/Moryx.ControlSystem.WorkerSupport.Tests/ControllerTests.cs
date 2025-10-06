@@ -26,7 +26,7 @@ namespace Moryx.ControlSystem.WorkerSupport.Tests
             _instructor.SetupGet(i => i.Identifier).Returns("Foo");
 
             resourceManagement.Setup(rm => rm.GetResources<IVisualInstructionSource>())
-                .Returns(new IVisualInstructionSource[] { _instructor.Object });
+                .Returns([_instructor.Object]);
 
             _controller = new WorkerSupportController
             {
@@ -83,7 +83,7 @@ namespace Moryx.ControlSystem.WorkerSupport.Tests
         {
             // Arrange
             var instruction = new ActiveInstruction { Id = 42 };
-            _instructor.SetupGet(i => i.Instructions).Returns(new[] { instruction });
+            _instructor.SetupGet(i => i.Instructions).Returns([instruction]);
 
             // Act
             var response = new ActiveInstructionResponse { Id = 42, SelectedResult = new InstructionResult { Key = "Ok" } };

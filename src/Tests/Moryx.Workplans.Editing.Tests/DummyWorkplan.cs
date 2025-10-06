@@ -49,7 +49,7 @@ namespace Moryx.Tests.Workplans
             this.Add(StartConnector, EndConnector);
 
             StepA = new DummyStep(2, "A");
-            StepA.OutputDescriptions = new[] { new OutputDescription { Name = "succeed" }, new OutputDescription { Name = "Failed" } };
+            StepA.OutputDescriptions = [new OutputDescription { Name = "succeed" }, new OutputDescription { Name = "Failed" }];
             StepA.Inputs[0] = StartConnector;
             StepA.Position = new Point(1, 1);
             this.Add(StepA);
@@ -70,7 +70,7 @@ namespace Moryx.Tests.Workplans
             StepB.Outputs[0] = left;
 
             StepC = new DummyStep(2, "C");
-            StepC.OutputDescriptions = new[] { new OutputDescription { Name = "succeed" }, new OutputDescription { Name = "Failed" } };
+            StepC.OutputDescriptions = [new OutputDescription { Name = "succeed" }, new OutputDescription { Name = "Failed" }];
             StepC.Inputs[0] = left;
             StepC.Position = new Point(1, 4);
             this.Add(StepC);

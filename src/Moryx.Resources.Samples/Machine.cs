@@ -139,7 +139,7 @@ namespace Moryx.Resources.Samples
 
         public override IEnumerable<string> GetValues(Container.IContainer container)
         {
-            return new[] { nameof(TechnicalStaff), nameof(ExpertStaff) };
+            return [nameof(TechnicalStaff), nameof(ExpertStaff)];
         }
 
         public override object Parse(Container.IContainer container, string value)

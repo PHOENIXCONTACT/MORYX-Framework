@@ -57,8 +57,8 @@ namespace Moryx.ProcessData.Tests
 
         private static IEnumerable<MeasurementBinding> CreateBindingConfiguration()
         {
-            return new[]
-            {
+            return
+            [
                 new MeasurementBinding
                 {
                     Name = "propA",
@@ -71,7 +71,7 @@ namespace Moryx.ProcessData.Tests
                     Binding = BindingPropB,
                     ValueTarget = ValueTarget.Tag
                 }
-            };
+            ];
         }
     }
 }

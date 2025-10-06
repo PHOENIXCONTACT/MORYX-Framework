@@ -22,14 +22,14 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Activities
             // Arrange
             var parameters = new AssembleParameters
             {
-                Instructions = new[]
-                {
+                Instructions =
+                [
                     new VisualInstruction
                     {
                         Content = "The name of this Product was {Product.Name}",
                         Type = InstructionContentType.Text
                     }
-                }
+                ]
             };
 
             // Act

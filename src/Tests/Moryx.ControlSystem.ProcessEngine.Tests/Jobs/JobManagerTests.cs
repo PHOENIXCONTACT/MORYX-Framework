@@ -46,7 +46,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
                 JobStorage = _jobStorageMock.Object,
                 JobDataFactory = new Mock<IJobDataFactory>().Object,
                 JobList = _jobListMock.Object,
-                JobHandlers = new[] { _handlerMock.Object },
+                JobHandlers = [_handlerMock.Object],
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 ParallelOperations = new NotSoParallelOps()
             };
@@ -97,7 +97,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             _jobListMock.Setup(j => j.Next(jobs[1])).Returns(jobs[2]);
             _jobListMock.Setup(j => j.Next(jobs[2])).Returns(jobs[3]);
             _jobSchedulerMock.Setup(j => j.SchedulableJobs(It.IsAny<IEnumerable<Job>>()))
-                .Returns<IEnumerable<Job>>(j => new[] { jobs[0].Job, jobs[2].Job, jobs[3].Job });
+                .Returns<IEnumerable<Job>>(j => [jobs[0].Job, jobs[2].Job, jobs[3].Job]);
             _handlerMock.Setup(h => h.Handle(It.IsAny<LinkedList<IJobData>>()))
                 .Callback((LinkedList<IJobData> j) => { j.AddFirst(CreateJobMock()); j.AddLast(CreateJobMock()); });
 
@@ -117,7 +117,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
         public void JobManagerRemovesCompletedJob()
         {
             // Arrange
-            _jobList.AddRange(new[] { CreateJobMock(1), CreateJobMock(2), CreateJobMock(3) });
+            _jobList.AddRange([CreateJobMock(1), CreateJobMock(2), CreateJobMock(3)]);
 
             // Act
             var completed = _jobList[1];

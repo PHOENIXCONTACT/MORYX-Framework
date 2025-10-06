@@ -177,18 +177,18 @@ namespace Moryx.Orders.Management.Tests
             _recipe = new DummyRecipe { Id = 1 };
 
             _productManagementMock.Setup(p => p.LoadType(_productIdentity)).Returns(_product);
-            _productManagementMock.Setup(p => p.GetRecipes(_product, RecipeClassification.Default)).Returns(new[] { _recipe });
+            _productManagementMock.Setup(p => p.GetRecipes(_product, RecipeClassification.Default)).Returns([_recipe]);
 
             // Prepare jobs
             _jobManagementMock.Setup(j => j.Add(It.IsAny<JobCreationContext>()))
-                .Returns((JobCreationContext creationContext) => new[]
-                {
+                .Returns((JobCreationContext creationContext) =>
+                [
                     new Job(_recipe, (int)creationContext.Templates.Single().Amount)
                     {
                         Id = ++_jobIdCounter,
                         Classification = JobClassification.Waiting
                     }
-                });
+                ]);
         }
 
         [Test(Description = "Runs a full production of a operation. At the end, a final report will be executed.")]

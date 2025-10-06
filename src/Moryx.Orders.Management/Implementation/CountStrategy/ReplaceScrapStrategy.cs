@@ -60,7 +60,7 @@ namespace Moryx.Orders.Management
         {
             var missingAmount = operation.TargetAmount - ReachableAmount(operation);
             return missingAmount > 0
-                ? new[] { new DispatchContext((IProductionRecipe)operation.Recipes.Single(), (uint)missingAmount) }
+                ? [new DispatchContext((IProductionRecipe)operation.Recipes.Single(), (uint)missingAmount)]
                 : Array.Empty<DispatchContext>();
         }
     }

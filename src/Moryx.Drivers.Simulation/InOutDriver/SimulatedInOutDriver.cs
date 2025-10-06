@@ -20,7 +20,7 @@ namespace Moryx.Drivers.Simulation.InOutDriver
         [ResourceReference(ResourceRelationType.Driver, ResourceReferenceRole.Source)]
         public Cell Cell { get; set; }
 
-        public IEnumerable<ICell> Usages => new[] { Cell };
+        public IEnumerable<ICell> Usages => [Cell];
 
         private SimulationState _simulatedState;
         [EntrySerialize]

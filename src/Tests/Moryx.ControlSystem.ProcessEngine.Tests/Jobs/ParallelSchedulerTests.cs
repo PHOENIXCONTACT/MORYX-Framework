@@ -48,7 +48,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             var otherJobs = CreateProductionJobs(4);
 
             // Act
-            JobScheduler.JobsReady(new[] { job });
+            JobScheduler.JobsReady([job]);
             var slots = JobScheduler.SchedulableJobs(otherJobs).ToArray();
 
             // Assert

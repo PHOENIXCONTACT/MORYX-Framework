@@ -182,10 +182,10 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
                 Process = new Process { Id = 4711 },
                 Parameters = new MountingParameters
                 {
-                    Instructions = new[]
-                    {
+                    Instructions =
+                    [
                         new VisualInstruction {Content = "Hello World", Type = InstructionContentType.Text}
-                    }
+                    ]
                 }
             };
 
@@ -195,10 +195,10 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
 
         private static VisualInstruction[] GetTextInstruction()
         {
-            return new[]
-            {
+            return
+            [
                 new VisualInstruction {Content = "Hello World", Type = InstructionContentType.Text}
-            };
+            ];
         }
     }
 }

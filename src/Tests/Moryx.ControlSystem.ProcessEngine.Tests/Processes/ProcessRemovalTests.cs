@@ -37,7 +37,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             _productionCellMock = CreateProductionCell(_resourceManagementMock);
 
             _resourceManagementMock.Setup(rm => rm.GetResources<IProcessReporter>())
-                .Returns(() => new[] { _removalResourceMock.Object });
+                .Returns(() => [_removalResourceMock.Object]);
 
             var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, s, e) => { });
             _removal = new ProcessRemoval

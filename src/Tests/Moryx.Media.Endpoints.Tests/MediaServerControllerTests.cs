@@ -165,7 +165,7 @@ namespace Moryx.Media.Endpoints.Tests
                 .Returns(() => Task.FromResult(contentAddingInfo));
             _mediaServerMock
                 .Setup(ms => ms.GetSupportedFileTypes())
-                .Returns(new[] { ".png", ".jpeg" });
+                .Returns([".png", ".jpeg"]);
 
             using var stream = File.OpenRead(Path.Combine(_testContentPath, filename));
             var file = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name))

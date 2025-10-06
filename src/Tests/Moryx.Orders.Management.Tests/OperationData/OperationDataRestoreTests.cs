@@ -255,7 +255,7 @@ namespace Moryx.Orders.Management.Tests
             var initialJob = operationData.Operation.Jobs.First();
 
             JobHandlerMock.Setup(d => d.Restore(It.IsAny<IEnumerable<long>>()))
-                .Returns(new Job[] { initialJob });
+                .Returns([initialJob]);
 
             // Simulate some running job
             initialJob.Classification = JobClassification.Running;

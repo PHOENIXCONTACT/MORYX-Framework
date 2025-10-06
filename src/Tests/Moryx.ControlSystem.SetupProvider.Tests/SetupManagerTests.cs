@@ -160,7 +160,7 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
                 {
                     var setupCapabilities = (TestSetupCapabilities)capabilities;
                     return setupCapabilities.SetupState == setupState
-                        ? new[] { new Mock<ICell>().Object }
+                        ? [new Mock<ICell>().Object]
                         : Enumerable.Empty<ICell>();
                 });
         }

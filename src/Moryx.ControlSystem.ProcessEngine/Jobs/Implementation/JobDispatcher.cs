@@ -92,7 +92,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         public void Complete(IJobData jobData)
         {
             var cached = jobData.RunningProcesses[jobData.RunningProcesses.Count - 1];
-            ProcessController.Interrupt(new[] { cached }, false);
+            ProcessController.Interrupt([cached], false);
         }
 
         /// <inheritdoc cref="IJobDispatcher"/>

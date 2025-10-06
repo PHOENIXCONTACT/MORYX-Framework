@@ -89,7 +89,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             serialCellMock.SetupGet(r => r.Capabilities).Returns(() => new AssignIdentityCapabilities(IdentitySource.Pool));
 
             resourceManagementMock.Setup(rm => rm.GetResources<ICell>(It.IsAny<AssignIdentityCapabilities>()))
-                .Returns(() => new[] { serialCellMock.Object });
+                .Returns(() => [serialCellMock.Object]);
 
             resourceManagementMock.Setup(rm => rm.GetResource<ICell>(SerialCellId)).Returns(serialCellMock.Object);
 
@@ -103,7 +103,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             mountCellMock.SetupGet(r => r.Capabilities).Returns(new MountCapabilities(canMount, canUnmount));
 
             resourceManagementMock.Setup(rm => rm.GetResources<ICell>(It.Is<MountCapabilities>(c => c.CanMount == canMount && c.CanUnmount == canUnmount)))
-                .Returns(() => new[] { mountCellMock.Object });
+                .Returns(() => [mountCellMock.Object]);
 
             resourceManagementMock.Setup(rm => rm.GetResource<ICell>(MountCellId)).Returns(mountCellMock.Object);
 
@@ -148,7 +148,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             DataPool.AddProcess(processData);
             DataPool.AddActivity(processData, activityData);
 
-            activityData.Targets = new[] { cell };
+            activityData.Targets = [cell];
 
             DataPool.UpdateProcess(processData, ProcessState.EngineStarted);
 

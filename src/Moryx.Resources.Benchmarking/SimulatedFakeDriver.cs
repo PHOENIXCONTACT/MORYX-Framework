@@ -35,7 +35,7 @@ namespace Moryx.Resources.Benchmarking
         [ResourceReference(ResourceRelationType.Driver, ResourceReferenceRole.Source)]
         public AssemblyCell Cell { get; set; }
 
-        public IEnumerable<ICell> Usages => new[] { Cell };
+        public IEnumerable<ICell> Usages => [Cell];
 
         protected override void OnStart()
         {

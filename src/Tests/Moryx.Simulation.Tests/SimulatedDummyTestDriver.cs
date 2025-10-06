@@ -35,7 +35,7 @@ namespace Moryx.Simulation.Tests
         [ResourceReference(ResourceRelationType.Driver, ResourceReferenceRole.Source)]
         public virtual AssemblyTestCell Cell { get; set; }
 
-        public virtual IEnumerable<ICell> Usages => new[] { Cell };
+        public virtual IEnumerable<ICell> Usages => [Cell];
 
         protected override void OnStart()
         {

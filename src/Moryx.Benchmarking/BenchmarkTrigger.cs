@@ -27,8 +27,8 @@ namespace Moryx.Benchmarking
 
         public override IReadOnlyList<IWorkplanStep> CreateSteps(IProductRecipe recipe)
         {
-            return new[]
-            {
+            return
+            [
                 new BenchmarkStep
                 {
                     Parameters = new BenchmarkParameters
@@ -36,7 +36,7 @@ namespace Moryx.Benchmarking
                         Step = 42
                     }
                 }
-            };
+            ];
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Moryx.Simulation.Tests
 
             _simulationDriverTestMock = new Mock<SimulatedDummyTestDriver>() { DefaultValue = DefaultValue.Mock };
             _simulationDriverTestMock.SetupGet(dr => dr.Cell).Returns(_assemblyCell);
-            _simulationDriverTestMock.SetupGet(dr => dr.Usages).Returns(new[] { _assemblyCell });
+            _simulationDriverTestMock.SetupGet(dr => dr.Usages).Returns([_assemblyCell]);
             _simulationDriverTestMock.Setup(dr => dr.Send(It.IsAny<AssembleProductMessage>()))
                 .Callback<object>(param =>
                 {
@@ -63,7 +63,7 @@ namespace Moryx.Simulation.Tests
 
             //resource management
             _resourceManagementMock.Setup(rm => rm.GetAllResources<ISimulationDriver>(It.IsAny<Func<ISimulationDriver, bool>>()))
-                .Returns(new[] { _simulationDriverTestMock.Object });
+                .Returns([_simulationDriverTestMock.Object]);
 
             //start the simulator
             _processSimulator.Start();

@@ -36,12 +36,12 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             _mountCellMock = CreateMountCell(_resourceManagementMock, true, false);
             _serialCellMock = CreateSerialCell(_resourceManagementMock);
 
-            _resourceManagementMock.Setup(rm => rm.GetResources<ICell>()).Returns(() => new[]
-            {
+            _resourceManagementMock.Setup(rm => rm.GetResources<ICell>()).Returns(() =>
+            [
                 _productionCellMock.Object,
                 _mountCellMock.Object,
                 _serialCellMock.Object
-            });
+            ]);
 
             _dispatcher = new ActivityDispatcher
             {
@@ -319,7 +319,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Act: Override rtw and update activity
             var second = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Push);
             RaiseReadyToWork(_serialCellMock, second);
-            activityData.Targets = new[] { _serialCellMock.Object };
+            activityData.Targets = [_serialCellMock.Object];
             DataPool.UpdateActivity(activityData, ActivityState.Configured);
 
             // Assert: Make sure activity was started on second session

@@ -84,7 +84,7 @@ namespace Moryx.Workplans.Endpoint
                 var output = new NodeConnectionPoint { Name = "Out" };
                 output.Connections.AddRange(steps.SelectMany(s => s.Inputs.Where(o => o == connector)
                     .Select(o => new NodeConnector { NodeId = s.Id, Index = Array.IndexOf(s.Inputs, connector) })));
-                nodeModel.Outputs = new[] { output };
+                nodeModel.Outputs = [output];
             }
             else
             {
@@ -92,7 +92,7 @@ namespace Moryx.Workplans.Endpoint
                 var input = new NodeConnectionPoint { Name = "In" };
                 input.Connections.AddRange(steps.SelectMany(s => s.Outputs.Where(o => o == connector)
                     .Select(o => new NodeConnector { NodeId = s.Id, Index = Array.IndexOf(s.Outputs, connector) })));
-                nodeModel.Inputs = new[] { input };
+                nodeModel.Inputs = [input];
             }
 
             return nodeModel;

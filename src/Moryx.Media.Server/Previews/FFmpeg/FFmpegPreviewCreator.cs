@@ -15,9 +15,9 @@ namespace Moryx.Media.Server.Previews
     {
         private string _ffmpeg;
         private static readonly string[] SupportedMimeTypes =
-        {
+        [
             "video/mp4", "video/x-m4v", "video/mpeg", "video/ogg", "video/x-matroska", "video/webm", "video/x-msvideo"
-        };
+        ];
 
         /// <inheritdoc />
         public override void Initialize(PreviewCreatorConfig config)

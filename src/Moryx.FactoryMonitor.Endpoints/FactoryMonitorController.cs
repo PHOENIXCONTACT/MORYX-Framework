@@ -35,7 +35,7 @@ namespace Moryx.FactoryMonitor.Endpoints
     [Route("api/moryx/factory-monitor/")]
     public class FactoryMonitorController : ControllerBase
     {
-        private readonly string[] _colorPalette = { "#97bf0d", "#0098a0", "#ffa906", "#03ad3b", "#d60f4e", "#4A4033", "#6EC1C5", "#93E0B0", "#BC9989", "#EE60EA", "#D7F7C3", "#CE9250", "#AF7E81", "#61666C", "#04629A", "#E39332", "#90A39E", "#98199E", "#DB97C9" };
+        private readonly string[] _colorPalette = ["#97bf0d", "#0098a0", "#ffa906", "#03ad3b", "#d60f4e", "#4A4033", "#6EC1C5", "#93E0B0", "#BC9989", "#EE60EA", "#D7F7C3", "#CE9250", "#AF7E81", "#61666C", "#04629A", "#E39332", "#90A39E", "#98199E", "#DB97C9"];
 
         private readonly IResourceManagement _resourceManager;
         private readonly IProcessControl _processControl;

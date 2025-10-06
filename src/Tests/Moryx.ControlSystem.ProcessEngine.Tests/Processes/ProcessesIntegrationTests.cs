@@ -95,23 +95,23 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
             // Prepare ResourceManagement mock
             _resourceManagementMock = new Mock<IResourceManagement>();
-            _resourceManagementMock.Setup(rm => rm.GetResources<ICell>()).Returns(() => new[]
-            {
+            _resourceManagementMock.Setup(rm => rm.GetResources<ICell>()).Returns(() =>
+            [
                 _mountResourceMock.Object,
                 _assignIdentityResourceMock.Object,
                 _unmountResourceMock.Object
-            });
+            ]);
 
             _notificationAdapterMock = new Mock<INotificationAdapter>();
 
             _resourceManagementMock.Setup(rm => rm.GetResources<ICell>(It.Is<MountCapabilities>(c => c.CanMount && !c.CanUnmount)))
-                .Returns(() => new[] { _mountResourceMock.Object });
+                .Returns(() => [_mountResourceMock.Object]);
 
             _resourceManagementMock.Setup(rm => rm.GetResources<ICell>(It.IsAny<AssignIdentityCapabilities>()))
-                .Returns(() => new[] { _assignIdentityResourceMock.Object });
+                .Returns(() => [_assignIdentityResourceMock.Object]);
 
             _resourceManagementMock.Setup(rm => rm.GetResources<ICell>(It.Is<MountCapabilities>(c => !c.CanMount && c.CanUnmount)))
-                .Returns(() => new[] { _unmountResourceMock.Object });
+                .Returns(() => [_unmountResourceMock.Object]);
 
             // Prepare container
             var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, s, e) => { });

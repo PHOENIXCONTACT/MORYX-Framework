@@ -76,7 +76,7 @@ namespace Moryx.Serialization
             // Enum names, member name or null
             return memberType.IsEnum
                 ? Enum.GetNames(memberType)
-                : isCollection ? new[] { memberType.Name } : null;
+                : isCollection ? [memberType.Name] : null;
         }
 
         /// <see cref="ICustomSerialization"/>

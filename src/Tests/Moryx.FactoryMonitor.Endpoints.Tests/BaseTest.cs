@@ -55,7 +55,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             _manufactoringFactory.Children.Add(_assemblyCellLocation);
             _manufactoringFactory.Children.Add(_solderingCellLocation);
             _resourceManagementMock.Setup(rm => rm.GetResources<IManufacturingFactory>())
-                        .Returns(new[] { _manufactoringFactory });
+                        .Returns([_manufactoringFactory]);
             _resourceManagementMock.Setup(rm => rm.GetResource(It.IsAny<Func<IManufacturingFactory, bool>>()))
                         .Returns(_manufactoringFactory);
             //_assemblyCell
@@ -95,7 +95,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 
             // resource management cells
             _resourceManagementMock.Setup(rm => rm.GetResources<ICell>())
-                .Returns(new[] { _assemblyCell, _solderingCell });
+                .Returns([_assemblyCell, _solderingCell]);
             _resourceManagementMock.Setup(rm => rm.GetResources<IMachineLocation>())
                 .Returns(GetLocations());
             _resourceManagementMock.Setup(rm => rm.GetResources(It.IsAny<Func<IMachineLocation, bool>>()))
@@ -141,7 +141,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 
         protected IMachineLocation[] GetLocations()
         {
-            return new[] { _assemblyCellLocation, _solderingCellLocation };
+            return [_assemblyCellLocation, _solderingCellLocation];
         }
 
     }

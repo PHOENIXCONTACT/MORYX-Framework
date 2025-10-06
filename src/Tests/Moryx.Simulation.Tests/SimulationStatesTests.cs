@@ -22,7 +22,7 @@ namespace Moryx.Simulation.Tests
         {
             //Arrange
             var message = new ReleaseWorkpieceMessage();
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns(new[] { new AbstractionLayer.Process { } });
+            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([new AbstractionLayer.Process { }]);
 
             //Act
             _assemblyCell.Driver.Send(message);

@@ -382,7 +382,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
         [HttpPost("roles/{roleName}/permission")]
         public async Task<IActionResult> AddPermissionToRole(string roleName, [FromBody] string permission)
         {
-            var result = await _permissionManager.AddToRoleAsync(roleName, new[] { permission });
+            var result = await _permissionManager.AddToRoleAsync(roleName, [permission]);
 
             if (result.Succeeded)
                 return Ok();

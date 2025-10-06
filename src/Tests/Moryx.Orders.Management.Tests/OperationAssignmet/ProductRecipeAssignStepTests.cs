@@ -101,7 +101,7 @@ namespace Moryx.Orders.Management.Tests
         {
             // Arrange
             _productManagementMock.Setup(m => m.LoadType(It.IsAny<ProductIdentity>())).Returns(new DummyProductType());
-            _productManagementMock.Setup(m => m.GetRecipes(It.IsAny<IProductType>(), RecipeClassification.Default)).Returns(new[] { new DummyRecipe() });
+            _productManagementMock.Setup(m => m.GetRecipes(It.IsAny<IProductType>(), RecipeClassification.Default)).Returns([new DummyRecipe()]);
 
             // Act
             var productAssigned = await _productAssignStep.AssignStep(_operationData, _operationLogger);
@@ -234,7 +234,7 @@ namespace Moryx.Orders.Management.Tests
         {
             // Arrange
             _productManagementMock.Setup(m => m.LoadType(_productIdentity)).Returns(new DummyProductType());
-            _productManagementMock.Setup(m => m.GetRecipes(It.IsAny<IProductType>(), RecipeClassification.Default)).Returns(new[] { new DummyRecipe() });
+            _productManagementMock.Setup(m => m.GetRecipes(It.IsAny<IProductType>(), RecipeClassification.Default)).Returns([new DummyRecipe()]);
 
             IProductRecipe clonedRecipe = null;
             _productManagementMock.Setup(m => m.SaveRecipe(It.IsAny<IProductRecipe>())).Callback(

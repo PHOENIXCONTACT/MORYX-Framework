@@ -250,7 +250,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 ParallelOperations = _notSoParallelOps
             };
 
-            jobStorage.Save(new ModifiedJobsFragment(new[] { job }, null));
+            jobStorage.Save(new ModifiedJobsFragment([job], null));
 
             return job;
         }

@@ -48,7 +48,7 @@ namespace Moryx.Resources.Benchmarking
                 reporter.Children.Add(instance);
             }
 
-            return new Resource[] { reporter };
+            return [reporter];
         }
     }
 }

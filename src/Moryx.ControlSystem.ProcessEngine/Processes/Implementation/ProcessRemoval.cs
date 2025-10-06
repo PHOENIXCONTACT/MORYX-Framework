@@ -208,14 +208,14 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             {
                 _parameters = new VisualInstructionParameters
                 {
-                    Instructions = new[]
-                    {
+                    Instructions =
+                    [
                         new VisualInstruction
                         {
                             Type = InstructionContentType.Text,
                             Content = removalMsg
                         },
-                    }
+                    ]
                 };
             }
 
