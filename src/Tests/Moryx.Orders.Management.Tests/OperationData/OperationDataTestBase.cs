@@ -95,7 +95,7 @@ namespace Moryx.Orders.Management.Tests
                 Number = "0010",
                 ProductIdentifier = "123456",
                 ProductRevision = 1,
-                Parts = new PartCreationContext[0],
+                Parts = Array.Empty<PartCreationContext>(),
                 PlannedStart = DateTime.Now,
                 PlannedEnd = DateTime.UtcNow,
             };

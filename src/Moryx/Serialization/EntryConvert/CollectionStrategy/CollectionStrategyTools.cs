@@ -47,7 +47,7 @@ namespace Moryx.Serialization
         /// </summary>
         public static IEnumerable<string> GenerateKeys(int count)
         {
-            return count == 0 ? new string[0] : Enumerable.Range(0, count).Select(i => i.ToString("D"));
+            return count == 0 ? Array.Empty<string>() : Enumerable.Range(0, count).Select(i => i.ToString("D"));
         }
     }
 }

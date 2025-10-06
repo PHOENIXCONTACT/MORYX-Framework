@@ -23,7 +23,7 @@ public class HandleContinuationPoint : OpcUaTestBase
         _references = CreateNodes();
 
         _sessionMock = new Mock<ISession>();
-        var byteArray = new byte[0];
+        var byteArray = Array.Empty<byte>();
         _sessionMock.Setup(s => s.NamespaceUris).Returns(_namespaceTable);
         _sessionMock.Setup(s => s.AddSubscription(It.IsAny<Subscription>())).Returns(true);
 

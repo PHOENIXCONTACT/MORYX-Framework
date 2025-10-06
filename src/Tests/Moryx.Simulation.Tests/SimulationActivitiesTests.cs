@@ -104,7 +104,7 @@ namespace Moryx.Simulation.Tests
 
             _processControlMock.SetupSequence(pc => pc.Targets(It.IsAny<IProcess>()))
                  .Returns(new[] { _assemblyCell, _anotherAssemblyCell })
-                 .Returns(new ICell[0])
+                 .Returns(Array.Empty<ICell>())
                  .Returns(new[] { _assemblyCell, _anotherAssemblyCell })
                  .Returns(new[] { _assemblyCell, _anotherAssemblyCell })
                  .Returns(new[] { _assemblyCell, _anotherAssemblyCell });

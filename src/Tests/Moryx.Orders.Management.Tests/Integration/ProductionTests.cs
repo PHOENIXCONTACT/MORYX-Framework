@@ -314,7 +314,7 @@ namespace Moryx.Orders.Management.Tests
                 UnderDeliveryAmount = 9,
                 ProductIdentifier = productIdentity.Identifier,
                 ProductRevision = productIdentity.Revision,
-                Parts = new PartCreationContext[0]
+                Parts = Array.Empty<PartCreationContext>()
             };
             orderContext.Operations.Add(operationContext);
 

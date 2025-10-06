@@ -22,7 +22,7 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
         var nextRefs = CreateNodes();
 
         _sessionMock = new Mock<ISession>();
-        var byteArray = new byte[0];
+        var byteArray = Array.Empty<byte>();
         _sessionMock.Setup(s => s.NamespaceUris).Returns(_namespaceTable);
         _sessionMock.Setup(s => s.AddSubscription(It.IsAny<Subscription>())).Returns(true);
         _sessionMock.Setup(s => s.Browse(null, null, ObjectIds.RootFolder, It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,

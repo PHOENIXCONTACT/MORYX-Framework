@@ -434,7 +434,7 @@ namespace Moryx.Products.Management
                 // No query or no result => Nothing to do
                 List<ProductTypeEntity> entities;
                 if (query == null || (entities = query.ToList()).Count == 0)
-                    return new TType[0];
+                    return Array.Empty<TType>();
 
                 var loadedProducts = new Dictionary<long, IProductType>();
                 var instances = entities.Select(entity => Transform(uow, entity, false, loadedProducts)).OfType<TType>().ToArray();
@@ -808,7 +808,7 @@ namespace Moryx.Products.Management
                 // No query or no result => Nothing to do
                 List<ProductInstanceEntity> entities;
                 if (query == null || (entities = query.ToList()).Count == 0)
-                    return new TInstance[0];
+                    return Array.Empty<TInstance>();
 
                 var instances = TransformInstances(uow, entities).OfType<TInstance>().ToArray();
                 // Final check against compiled expression

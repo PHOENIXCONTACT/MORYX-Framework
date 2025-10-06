@@ -133,7 +133,7 @@ namespace Moryx.ControlSystem.Cells
         public static UnknownActivityAborted WrapUnknownActivity(IActivity unknown)
         {
             var wrapper = StartSession(ActivityClassification.Unknown, ReadyToWorkType.Unset, unknown.Process.Id)
-                .CompleteSequence(null, false, new long[] { });
+                .CompleteSequence(null, false, Array.Empty<long>());
             return new UnknownActivityAborted(unknown, wrapper);
         }
 

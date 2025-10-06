@@ -161,7 +161,7 @@ namespace Moryx.Media.Server.Tests
                 }
             }
 
-            IReadOnlyList<ContentDescriptor> descriptors = new ContentDescriptor[0];
+            IReadOnlyList<ContentDescriptor> descriptors = Array.Empty<ContentDescriptor>();
 
             try
             {

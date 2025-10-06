@@ -193,7 +193,7 @@ namespace Moryx.Resources.Management
         public static ICollection<ResourceRelationAccessor> FromEntity(IUnitOfWork uow, ResourceEntity entity)
         {
             if (entity.Id <= 0)
-                return new ResourceRelationAccessor[0];
+                return Array.Empty<ResourceRelationAccessor>();
 
             var relationRepo = uow.GetRepository<IResourceRelationRepository>();
             var result = (from target in relationRepo.Linq

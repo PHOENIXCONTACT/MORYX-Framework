@@ -65,7 +65,7 @@ namespace Moryx.Workplans.Endpoint
         {
             var consturctors = step.GetConstructors().ToList();
             MethodEntry constructor;
-            if (consturctors.Count == 1 && step.GetConstructor(new Type[0]) != null)
+            if (consturctors.Count == 1 && step.GetConstructor(Array.Empty<Type>()) != null)
                 constructor = null;
             else
                 constructor = EntryConvert.EncodeConstructors(step).First();

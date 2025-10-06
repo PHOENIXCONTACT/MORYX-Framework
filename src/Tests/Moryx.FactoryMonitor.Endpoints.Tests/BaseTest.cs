@@ -116,7 +116,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             _processFacadeMock.SetupGet(pm => pm.RunningProcesses)
                 .Returns(Array.Empty<IProcess>());
             _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<IActivity>()))
-                .Returns<IActivity>(a => _activityTargets.ContainsKey(a) ? _activityTargets[a] : new ICell[0]);
+                .Returns<IActivity>(a => _activityTargets.ContainsKey(a) ? _activityTargets[a] : Array.Empty<ICell>());
 
             //orders
             _orderFacadeMock.Setup(o => o.GetOperations(It.IsAny<Func<Operation, bool>>()))
