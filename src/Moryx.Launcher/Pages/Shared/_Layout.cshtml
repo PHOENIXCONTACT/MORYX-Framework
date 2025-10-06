@@ -70,7 +70,7 @@
                                     @foreach (var culture in _localizationOptions.CurrentValue.SupportedCultures)
                                     {
                                         <moryx-dropdown-item class="tw-p-1 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200">
-                                            <moryx-language-selector language="@culture.Name" class="tw-flex tw-items-center">
+                                            <moryx-language-selector language="@culture.Name" class="tw-flex tw-items-center tw-w-full tw-h-full">
                                                 <span class="tw-whitespace-nowrap">@culture.DisplayName</span>
                                             </moryx-language-selector>
                                         </moryx-dropdown-item>
