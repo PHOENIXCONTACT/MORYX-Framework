@@ -133,7 +133,7 @@ namespace Moryx.Tests.Configuration.ValueProvider
             // Arrange
             var config = new TestConfig5();
             var settings = new ValueProviderExecutorSettings().AddDefaultValueProvider();
-            
+
             // Act
             // Assert
             Assert.DoesNotThrow(() => ValueProviderExecutor.Execute(config, settings));

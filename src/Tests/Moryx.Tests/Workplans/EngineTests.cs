@@ -108,7 +108,7 @@ namespace Moryx.Tests.Workplans
             // Act
             var triggerCount = 0;
             var path = string.Empty;
-            engine.TransitionTriggered += delegate(object sender, ITransition transition)
+            engine.TransitionTriggered += delegate (object sender, ITransition transition)
             {
                 var dummy = (DummyTransition)transition;
                 if (route == ExecutionPath.Alternative)

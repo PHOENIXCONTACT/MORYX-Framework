@@ -132,7 +132,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Arrange
             var process = PrepareProcessData(ProcessTypes.ProductionProcessWithInstance, instanceId);
             DataPool.AddProcess(process);
-            ((ProductionProcess) process.Process).ProductInstance.Id = instanceId;
+            ((ProductionProcess)process.Process).ProductInstance.Id = instanceId;
 
             // Act
             DataPool.UpdateProcess(process, processState);

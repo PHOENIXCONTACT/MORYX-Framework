@@ -27,7 +27,7 @@ namespace Moryx.Drivers.Mqtt.DriverStates
 
         internal override void ConnectionToBrokerLost()
         {
-            Context.Logger.Log(LogLevel.Information,"Connection to broker lost");
+            Context.Logger.Log(LogLevel.Information, "Connection to broker lost");
             NextState(StateConnecting);
             Context.ParallelOperations.ScheduleExecution(() => Context.Connect(true).Wait(), Context.ReconnectDelayMs, -1);
         }

@@ -20,8 +20,8 @@ namespace Moryx.Products.Management.Importers
     {
         /// <inheritdoc />
         protected override Task<ProductImporterResult> Import(ProductImportContext context, DefaultImporterParameters parameters)
-        {       
-            var productType = (ProductType)TypeTool.CreateInstance<ProductType>(parameters.ProductType);                     
+        {
+            var productType = (ProductType)TypeTool.CreateInstance<ProductType>(parameters.ProductType);
             productType.Identity = new ProductIdentity(parameters.Identifier, parameters.Revision);
             productType.Name = parameters.Name;
 

@@ -11,7 +11,7 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// All server modules that do not require other modules to start
         /// </summary>
-        IReadOnlyList<IModuleDependency> RootModules { get; } 
+        IReadOnlyList<IModuleDependency> RootModules { get; }
     }
 
     /// <summary>
@@ -27,11 +27,11 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// All modules this module depends on
         /// </summary>
-        IReadOnlyList<IModuleDependency> Dependencies { get; } 
+        IReadOnlyList<IModuleDependency> Dependencies { get; }
 
         /// <summary>
         /// All modules that depend on this module
         /// </summary>
-        IReadOnlyList<IModuleDependency> Dependents { get; } 
+        IReadOnlyList<IModuleDependency> Dependents { get; }
     }
 }

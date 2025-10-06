@@ -22,16 +22,16 @@ namespace Moryx.ControlSystem.Jobs
         /// <summary>
         /// The job is currently dispatching new processes
         /// </summary>
-        Running = 1<<3,
+        Running = 1 << 3,
 
         /// <summary>
         /// The job is attempting to complete. Last processes will be finished
         /// </summary>
-        Completing = 1<<12,
+        Completing = 1 << 12,
 
         /// <summary>
         /// The job is completed. No processes are running and all work is done
         /// </summary>
-        Completed = 1<<16
+        Completed = 1 << 16
     }
 }

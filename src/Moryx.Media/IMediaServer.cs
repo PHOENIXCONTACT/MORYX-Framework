@@ -78,7 +78,7 @@ namespace Moryx.Media
         /// <exception cref="System.IO.PathTooLongException">Thrown when the specified path, file name, or both exceed the system-defined maximum length.</exception>
 
         bool RemoveVariant(Guid contentId, string variantName);
-    
+
         /// <summary>
         /// List of file types allowed to be uploaded
         /// </summary>

@@ -40,8 +40,8 @@ namespace Moryx.AbstractionLayer.Products
         public static ProductIdentity Parse(string identityString)
         {
             Regex rx = new Regex(@"(?<identifier>\w+)-(?<revision>\d+)");
-            if (!rx.IsMatch(identityString) )
-                throw new FormatException("identityString should consist of <identity>-<revision> instead of "+identityString);
+            if (!rx.IsMatch(identityString))
+                throw new FormatException("identityString should consist of <identity>-<revision> instead of " + identityString);
             var groups = rx.Match(identityString).Groups;
             return new ProductIdentity(groups["identifier"].Value, Convert.ToInt16(groups["revision"].Value));
         }
@@ -60,11 +60,11 @@ namespace Moryx.AbstractionLayer.Products
                 result = Parse(identityString);
                 return true;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 result = null;
                 return false;
-            } 
+            }
         }
 
         /// <summary>

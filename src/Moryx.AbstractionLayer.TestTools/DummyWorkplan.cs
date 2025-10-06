@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Workplans;
@@ -17,10 +17,10 @@ namespace Moryx.AbstractionLayer.TestTools
             if (toCompareWith == null)
                 return false;
 
-            return toCompareWith.Id == Id && toCompareWith.Name == Name 
+            return toCompareWith.Id == Id && toCompareWith.Name == Name
                 && toCompareWith.Version == toCompareWith.Version && toCompareWith.State == State
                 && ((toCompareWith.Connectors is null && Connectors is null) || Enumerable.SequenceEqual(toCompareWith.Connectors, Connectors))
-                && ((toCompareWith.Steps is null && Steps is null) || Enumerable.SequenceEqual(toCompareWith.Steps, Steps)); 
+                && ((toCompareWith.Steps is null && Steps is null) || Enumerable.SequenceEqual(toCompareWith.Steps, Steps));
         }
     }
 }

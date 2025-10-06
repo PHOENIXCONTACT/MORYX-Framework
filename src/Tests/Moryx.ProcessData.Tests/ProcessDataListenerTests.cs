@@ -48,7 +48,7 @@ namespace Moryx.ProcessData.Tests
         {
             // Arrange
             const string testMeasurand = "HelloWorld";
-            _listenerConfig.MeasurandConfigs.Add(new MeasurandConfig {Name = testMeasurand, IsEnabled = true});
+            _listenerConfig.MeasurandConfigs.Add(new MeasurandConfig { Name = testMeasurand, IsEnabled = true });
 
             // Act
             _listenerMock.Object.MeasurementAdded(new Measurement(testMeasurand));

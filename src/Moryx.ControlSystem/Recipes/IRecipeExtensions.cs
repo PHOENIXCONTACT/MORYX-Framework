@@ -20,7 +20,7 @@ namespace Moryx.ControlSystem.Recipes
         public static string GetOrderOperationString(this IRecipe recipe, string seperator = "-")
         {
             var target = (recipe is ISetupRecipe setup ? setup.TargetRecipe : recipe) as IOrderBasedRecipe;
-            return $"{target?.OrderNumber}{(target is null ? "" : seperator)}{target?.OperationNumber}";            
+            return $"{target?.OrderNumber}{(target is null ? "" : seperator)}{target?.OperationNumber}";
         }
     }
 }

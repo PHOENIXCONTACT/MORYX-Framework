@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +10,7 @@ namespace Moryx.TestModule.Kestrel
     {
         [HttpGet("foo/{value}")]
         [Produces("application/json")]
-        public Foo GetFoo(int value) => new Foo {Value = value};
+        public Foo GetFoo(int value) => new Foo { Value = value };
     }
 
     public class Foo

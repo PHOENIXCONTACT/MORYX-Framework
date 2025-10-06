@@ -22,7 +22,7 @@ namespace Moryx.TestModule
     {
         [DataMember]
         [PluginConfigs(typeof(IAnotherSubPlugin))]
-        public List<AnotherSubConfig> SubConfigs { get; set; }    
+        public List<AnotherSubConfig> SubConfigs { get; set; }
     }
 
     [DataContract]

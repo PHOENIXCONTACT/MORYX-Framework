@@ -16,7 +16,7 @@ namespace Moryx.Products.Samples
         /// <inheritdoc />
         public override bool HasChanged(IProductType current, IGenericColumns dbProperties)
         {
-            var watch = (WatchType) current;
+            var watch = (WatchType)current;
             return Math.Abs(watch.Weight - dbProperties.Float1) > 0.01
                 || Math.Abs(watch.Price - dbProperties.Float2) > 0.01;
         }
@@ -55,7 +55,7 @@ namespace Moryx.Products.Samples
         /// <inheritdoc />
         public override void SaveInstance(ProductInstance source, IGenericColumns target)
         {
-            var watch = (WatchInstance) source;
+            var watch = (WatchInstance)source;
             target.Integer1 = watch.TimeSet ? 1 : 0;
             target.Integer2 = watch.DeliveryDate.ToBinary();
         }
@@ -63,7 +63,7 @@ namespace Moryx.Products.Samples
         /// <inheritdoc />
         public override void LoadInstance(IGenericColumns source, ProductInstance target)
         {
-            var watch = (WatchInstance) target;
+            var watch = (WatchInstance)target;
             watch.TimeSet = source.Integer1 == 1;
             watch.DeliveryDate = DateTime.FromBinary(source.Integer2);
         }
@@ -75,14 +75,14 @@ namespace Moryx.Products.Samples
     {
         public override void LoadPartLink(IGenericColumns linkEntity, IProductPartLink target)
         {
-            var link = (NeedlePartLink) target;
-            link.Role = (NeedleRole) linkEntity.Integer1;
+            var link = (NeedlePartLink)target;
+            link.Role = (NeedleRole)linkEntity.Integer1;
         }
 
         public override void SavePartLink(IProductPartLink source, IGenericColumns target)
         {
-            var link = (NeedlePartLink) source;
-            target.Integer1 = (int) link.Role;
+            var link = (NeedlePartLink)source;
+            target.Integer1 = (int)link.Role;
         }
     }
 }

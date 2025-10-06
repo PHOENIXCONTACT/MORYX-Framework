@@ -30,7 +30,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// Module configuration to configure sample size for the dispatcher shutdown
         /// </summary>
         public ModuleConfig Config { get; set; }
-        
+
         #endregion
 
         /// <inheritdoc cref="IJobDispatcher"/>
@@ -77,7 +77,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         {
             // Create new process, generate id and add to job
             var process = jobData.Recipe.CreateProcess();
-            var processData = new ProcessData(process) {Job = jobData};
+            var processData = new ProcessData(process) { Job = jobData };
             process.Id = IdShiftGenerator.Generate(jobData.Id, jobData.AllProcesses.Count);
             jobData.AddProcess(processData);
             // Pass to controller
@@ -92,7 +92,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         public void Complete(IJobData jobData)
         {
             var cached = jobData.RunningProcesses[jobData.RunningProcesses.Count - 1];
-            ProcessController.Interrupt(new[] {cached}, false);
+            ProcessController.Interrupt(new[] { cached }, false);
         }
 
         /// <inheritdoc cref="IJobDispatcher"/>

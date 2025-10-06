@@ -35,7 +35,7 @@ namespace Moryx.ControlSystem.Simulator
         [RequiredModuleApi(IsStartDependency = true)]
         public IProcessControl ProcessControl { get; set; }
 
-        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) 
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory)
             : base(containerFactory, configManager, loggerFactory)
         {
         }

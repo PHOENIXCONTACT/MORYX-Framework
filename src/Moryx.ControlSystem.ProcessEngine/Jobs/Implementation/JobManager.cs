@@ -192,13 +192,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
                     linkedJobs = new LinkedList<IJobData>();
             }
 
-        // If non of the available jobs could be readied
-        if (totalJobs.Count == 0)
-            return;
+            // If non of the available jobs could be readied
+            if (totalJobs.Count == 0)
+                return;
 
-        // Set ready AFTER they were added to the job list to avoid race conditions
-        foreach (var jobData in totalJobs)
-            jobData.Ready();
+            // Set ready AFTER they were added to the job list to avoid race conditions
+            foreach (var jobData in totalJobs)
+                jobData.Ready();
 
             // Inform the scheduler about our new jobs
             _scheduler.JobsReady(totalJobs.Select(j => j.Job));

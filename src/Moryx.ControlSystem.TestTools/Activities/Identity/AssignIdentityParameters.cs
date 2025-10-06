@@ -49,7 +49,7 @@ namespace Moryx.ControlSystem.TestTools.Activities
         /// <inheritdoc />
         protected override void Populate(IProcess process, Parameters instance)
         {
-            var parameters = (AssignIdentityParameters) instance;
+            var parameters = (AssignIdentityParameters)instance;
 
             if (_resolver == null && !string.IsNullOrWhiteSpace(TargetBinding))
                 _resolver = ResolverFactory.Create(TargetBinding);

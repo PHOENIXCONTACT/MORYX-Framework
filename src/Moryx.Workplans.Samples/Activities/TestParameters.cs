@@ -10,12 +10,12 @@ namespace Moryx.Workplans.Samples.Activities
     {
         [EntrySerialize(EntrySerializeMode.Never)]
         public int SomeData { get; set; }
-                
+
         public List<string> Items { get; set; }
 
         protected override void Populate(IProcess process, Parameters instance)
         {
-            
+
         }
     }
 }

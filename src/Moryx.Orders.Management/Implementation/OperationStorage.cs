@@ -109,7 +109,7 @@ namespace Moryx.Orders.Management
                 reportEntity.SuccessCount = report.SuccessCount;
                 reportEntity.FailureCount = report.FailureCount;
                 reportEntity.Comment = report.Comment;
-                reportEntity.ReportedDate = report.ReportedDate.Kind == DateTimeKind.Utc ? 
+                reportEntity.ReportedDate = report.ReportedDate.Kind == DateTimeKind.Utc ?
                     report.ReportedDate : TimeZoneInfo.ConvertTimeToUtc(report.ReportedDate, TimeZoneInfo.Local);
                 reportEntity.ConfirmationType = (int)report.ConfirmationType;
                 reportEntity.UserIdentifier = report.User.Identifier;

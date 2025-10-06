@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer;
@@ -36,7 +36,7 @@ namespace Moryx.ControlSystem.TestTools.Activities
         /// </summary>
         protected override ActivityResult CreateResult(long resultNumber)
         {
-            ModificationType = resultNumber == (int) MountingResult.Mounted ? InstanceModificationType.Created : InstanceModificationType.None;
+            ModificationType = resultNumber == (int)MountingResult.Mounted ? InstanceModificationType.Created : InstanceModificationType.None;
             return ActivityResult.Create((MountingResult)resultNumber);
         }
 

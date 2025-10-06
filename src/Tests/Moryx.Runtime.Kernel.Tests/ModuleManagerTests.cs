@@ -26,7 +26,7 @@ namespace Moryx.Runtime.Kernel.Tests
         public void Setup()
         {
             _mockConfigManager = new Mock<IConfigManager>();
-            var moduleManagerConfig = new ModuleManagerConfig {ManagedModules = [] };
+            var moduleManagerConfig = new ModuleManagerConfig { ManagedModules = [] };
             _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(ModuleManagerConfig), typeof(ModuleManagerConfig).FullName, false)).Returns(moduleManagerConfig);
             _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(RuntimeConfigManagerTestConfig2), typeof(RuntimeConfigManagerTestConfig2).FullName, false)).Returns(new RuntimeConfigManagerTestConfig2());
 
@@ -126,7 +126,7 @@ namespace Moryx.Runtime.Kernel.Tests
             // Arrange
             var moduleManager = CreateObjectUnderTest([
                 new ModuleB1(),
-                new ModuleCSingle(), 
+                new ModuleCSingle(),
                 new ModuleADependent(),
                 new ModuleADependentTransient()
             ]);
@@ -311,7 +311,8 @@ namespace Moryx.Runtime.Kernel.Tests
             Assert.That(module.ActivatedCount, Is.EqualTo(1));
         }
 
-        private static void WaitForTimeboxed(Func<bool> condition, int maxSeconds = 10) {
+        private static void WaitForTimeboxed(Func<bool> condition, int maxSeconds = 10)
+        {
             var i = 0;
             while (!condition() && (i < maxSeconds))
             {

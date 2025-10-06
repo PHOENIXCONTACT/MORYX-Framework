@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Model.Repositories;
@@ -9,7 +9,7 @@ namespace Moryx.Shifts.Management.Model
     public interface IShiftTypeRepository : IRepository<ShiftTypeEntity>
     {
         ShiftTypeEntity CreateFromContext(ShiftTypeCreationContext context);
-        
+
         Task<ShiftTypeEntity> CreateFromContextAsync(ShiftTypeCreationContext context);
     }
 

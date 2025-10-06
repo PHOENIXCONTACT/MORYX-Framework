@@ -15,7 +15,7 @@ namespace Moryx.AbstractionLayer.TestTools
         {
             return new DummyProductInstance();
         }
-/// <inheritdoc/>
+        /// <inheritdoc/>
 
         public override bool Equals(object obj)
         {
@@ -23,7 +23,7 @@ namespace Moryx.AbstractionLayer.TestTools
             if (toCompareWith == null)
                 return false;
 
-            return toCompareWith.Id == Id && toCompareWith.Name == Name && toCompareWith.State == State 
+            return toCompareWith.Id == Id && toCompareWith.Name == Name && toCompareWith.State == State
                 && ((toCompareWith.Identity is null && Identity is null) || toCompareWith.Identity.Equals(Identity));
         }
     }
@@ -57,10 +57,10 @@ namespace Moryx.AbstractionLayer.TestTools
             if (toCompareWith == null)
                 return false;
 
-            return base.Equals(toCompareWith) && 
-                ((toCompareWith.ProductPartLink is null && ProductPartLink is null) || 
+            return base.Equals(toCompareWith) &&
+                ((toCompareWith.ProductPartLink is null && ProductPartLink is null) ||
                 toCompareWith.ProductPartLink.Equals(ProductPartLink))
-                && ((toCompareWith.ProductPartLinkEnumerable is null && ProductPartLinkEnumerable is null) || 
+                && ((toCompareWith.ProductPartLinkEnumerable is null && ProductPartLinkEnumerable is null) ||
                 Enumerable.SequenceEqual<DummyProductPartLink>(toCompareWith.ProductPartLinkEnumerable, ProductPartLinkEnumerable));
         }
     }
@@ -86,7 +86,7 @@ namespace Moryx.AbstractionLayer.TestTools
         /// Second dummy ProductFile
         /// </summary>
         public ProductFile SecondProductFile { get; set; }
-        
+
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {

@@ -20,7 +20,7 @@ namespace Moryx.Workplans.WorkplanSteps
         {
             Inputs = new IConnector[1];
             Outputs = new IConnector[1];
-            OutputDescriptions = [new OutputDescription { Name = "Complete", OutputType = OutputType.Success}];
+            OutputDescriptions = [new OutputDescription { Name = "Complete", OutputType = OutputType.Success }];
         }
 
         /// <inheritdoc/>

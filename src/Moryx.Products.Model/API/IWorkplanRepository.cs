@@ -13,6 +13,6 @@ namespace Moryx.Products.Model
         /// <summary>
         /// Creates instance with all not nullable properties prefilled
         /// </summary>
-        WorkplanEntity Create(string name, int version, int state); 
+        WorkplanEntity Create(string name, int version, int state);
     }
 }

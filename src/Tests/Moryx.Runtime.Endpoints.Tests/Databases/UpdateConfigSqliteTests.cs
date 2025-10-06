@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -66,7 +66,7 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
                 .WithDefaults()
                 .WithConnectionString("rubbish");
 
-            BadRequestException exception  = Assert.Throws<BadRequestException>(
+            BadRequestException exception = Assert.Throws<BadRequestException>(
                 () => _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config));
 
             Assert.That(exception.Message, Is.EqualTo("Requested config values aren't valid"));
@@ -123,7 +123,8 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
             };
         }
 
-        private static ConfigManager CreateConfigManager() {
+        private static ConfigManager CreateConfigManager()
+        {
             var configManager = new ConfigManager
             {
                 ConfigDirectory = ""

@@ -119,7 +119,7 @@ namespace Moryx.FactoryMonitor.Endpoints
                 .Where(CellFilterBaseOnLocation);
 
             var converter = new Converter(_serialization);
-            return cells.Select(x => new SimpleGraph { Id = x.Id}.ToVisualItemModel(_resourceManager,_logger, converter, CellFilterBaseOnLocation)).ToList();
+            return cells.Select(x => new SimpleGraph { Id = x.Id }.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation)).ToList();
         }
 
 

@@ -23,7 +23,7 @@ namespace Moryx.Runtime.Kernel
         /// <param name="module"></param>
         public void Stop(IServerModule module)
         {
-            if(!AvailableModules.Contains(module))
+            if (!AvailableModules.Contains(module))
                 return;
 
             // First we have to find all running modules that depend on this service

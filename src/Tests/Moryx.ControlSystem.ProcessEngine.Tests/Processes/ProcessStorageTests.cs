@@ -105,7 +105,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                     if (i > 0)
                         activityData.Task = task;
                     else // Append another completed activity where the task is missing later
-                        activityData.Task = new TaskTransition<UnmountActivity>(new MountingParameters(), null) {Id = 1337};
+                        activityData.Task = new TaskTransition<UnmountActivity>(new MountingParameters(), null) { Id = 1337 };
                     activityData.Resource = new CellReference(i * 100);
                     activityData.State = ActivityState.Running;
 

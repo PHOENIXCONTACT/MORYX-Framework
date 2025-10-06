@@ -29,7 +29,7 @@ namespace Moryx.Container
         /// <param name="lifeStyle">Life style of component</param>
         /// <param name="services">Implemented service</param>
         public ComponentAttribute(LifeCycle lifeStyle, params Type[] services)
-        { 
+        {
             LifeStyle = lifeStyle;
             Services = services;
         }

@@ -180,7 +180,7 @@ namespace Moryx.Communication
         /// <inheritdoc />
         public bool Equals(IMessageInterpreter messageInterpreter)
         {
-            return Equals((object) messageInterpreter);
+            return Equals((object)messageInterpreter);
         }
 
         /// <inheritdoc />
@@ -189,7 +189,7 @@ namespace Moryx.Communication
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != GetType()) return false;
-            return Equals((DelimitedMessageInterpreter) obj);
+            return Equals((DelimitedMessageInterpreter)obj);
         }
     }
 }

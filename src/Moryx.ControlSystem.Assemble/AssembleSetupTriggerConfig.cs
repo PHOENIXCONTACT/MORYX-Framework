@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -35,7 +35,7 @@ namespace Moryx.ControlSystem.Assemble
         [DataMember, Description("Required capability type to find the resource which should be setup")]
         [PossibleTypes(typeof(AssembleCapabilities))]
         public string RequiredCapabilityType { get; set; }
-        
+
         /// <summary>
         /// Pairs of binding condition and instruction text.
         /// </summary>

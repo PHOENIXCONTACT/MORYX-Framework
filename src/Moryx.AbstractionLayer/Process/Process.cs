@@ -36,7 +36,7 @@ namespace Moryx.AbstractionLayer
         {
             _activitiesLock.EnterReadLock();
 
-            IActivity []result;
+            IActivity[] result;
 
             if (predicate == null)
                 result = _activities.ToArray();

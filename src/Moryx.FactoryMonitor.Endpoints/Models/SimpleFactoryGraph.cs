@@ -13,22 +13,22 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
         /// Parent factory ID.
         /// </summary>
         /// The current factory can be inside another factory
-        public long ParentId { get;  set; }
+        public long ParentId { get; set; }
 
-        public long CurrentId { get;  set; }
+        public long CurrentId { get; set; }
         /// <summary>
         /// Specify if this is a cell.
         /// An item on the UI can be a Cell or a Factory
         /// </summary>
-        public bool IsACellLocation { get;  set; }
+        public bool IsACellLocation { get; set; }
         /// <summary>
         /// Holds the name of the type of the Item (Cell,Factory,Location,etc...)
         /// </summary>
-        public string Type {  get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// Contains the elements that should be displayed in the current factory
         /// </summary>
-        public List<SimpleFactoryGraph> Children { get;  set; } = new List<SimpleFactoryGraph>();
+        public List<SimpleFactoryGraph> Children { get; set; } = new List<SimpleFactoryGraph>();
     }
 }
 

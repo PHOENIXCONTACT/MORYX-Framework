@@ -28,7 +28,7 @@ namespace Moryx.Products.Management
         public override void Initialize(ProductInstanceConfiguration config)
         {
             base.Initialize(config);
-            
+
             EntityMapper.Initialize(TargetType, Config);
         }
 

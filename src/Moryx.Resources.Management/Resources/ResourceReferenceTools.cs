@@ -77,10 +77,10 @@ namespace Moryx.Resources.Management
         public static ICollection<IReferenceCollection> GetAutoSaveCollections(Resource instance)
         {
             return (from collectionProperty in CollectionReferenceProperties(instance.GetType())
-                let refAtt = collectionProperty.GetCustomAttribute<ResourceReferenceAttribute>()
-                let overrideAtt = collectionProperty.GetCustomAttribute<ReferenceOverrideAttribute>()
-                where (refAtt?.AutoSave ?? false) || (overrideAtt?.AutoSave ?? false)
-                select (IReferenceCollection)collectionProperty.GetValue(instance)).ToList();
+                    let refAtt = collectionProperty.GetCustomAttribute<ResourceReferenceAttribute>()
+                    let overrideAtt = collectionProperty.GetCustomAttribute<ReferenceOverrideAttribute>()
+                    where (refAtt?.AutoSave ?? false) || (overrideAtt?.AutoSave ?? false)
+                    select (IReferenceCollection)collectionProperty.GetValue(instance)).ToList();
         }
 
         /// <summary>
@@ -89,9 +89,9 @@ namespace Moryx.Resources.Management
         public static IEnumerable<PropertyInfo> CollectionReferenceProperties(Type resourceType)
         {
             return from referenceProperty in ReferenceProperties(resourceType, true)
-                let propertyType = referenceProperty.PropertyType
-                where propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(IReferences<>)
-                select referenceProperty;
+                   let propertyType = referenceProperty.PropertyType
+                   where propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(IReferences<>)
+                   select referenceProperty;
         }
 
         /// <summary>
@@ -100,10 +100,10 @@ namespace Moryx.Resources.Management
         public static IEnumerable<PropertyInfo> ReferenceProperties(Type resourceType, bool includeOverrides)
         {
             return from property in resourceType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                where property.CanWrite &&
-                      (Attribute.IsDefined(property, typeof(ResourceReferenceAttribute))
-                       || includeOverrides && Attribute.IsDefined(property, typeof(ReferenceOverrideAttribute)))
-                select property;
+                   where property.CanWrite &&
+                         (Attribute.IsDefined(property, typeof(ResourceReferenceAttribute))
+                          || includeOverrides && Attribute.IsDefined(property, typeof(ReferenceOverrideAttribute)))
+                   select property;
         }
     }
 }

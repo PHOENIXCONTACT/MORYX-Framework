@@ -59,9 +59,9 @@ namespace Moryx.Serialization
             // All value types can be simply copied
             var copy = new EntryValidation
             {
-                Minimum = Minimum, 
-                Maximum = Maximum, 
-                Regex = Regex, 
+                Minimum = Minimum,
+                Maximum = Maximum,
+                Regex = Regex,
                 IsRequired = IsRequired
             };
             return copy;

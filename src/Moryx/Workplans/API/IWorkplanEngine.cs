@@ -42,7 +42,7 @@ namespace Moryx.Workplans
         /// <summary>
         /// Event raised when the execution of a workplan instance was completed
         /// </summary>
-        event EventHandler<IPlace> Completed; 
+        event EventHandler<IPlace> Completed;
     }
 
     /// <summary>

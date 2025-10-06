@@ -29,7 +29,7 @@ namespace Moryx.ProcessData.Listener
         /// <inheritdoc />
         public void Initialize(ProcessDataListenerConfig config)
         {
-            Config = (TConf) config;
+            Config = (TConf)config;
             Logger = Logger.GetChild(Config.PluginName, GetType());
         }
 

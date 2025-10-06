@@ -9,8 +9,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
     /// Iterator for <see cref="JobDataBase.AllProcesses"/> and <see cref="JobDataBase.RunningProcesses"/> that is not affected by collection changes
     /// </summary>
     internal class ProcessDataIterator<T> : IEnumerator<T>
-    where T: class
-    { 
+    where T : class
+    {
         private int _currentIndex = -1;
 
         private T _currentProcess;
@@ -33,7 +33,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             {
                 _currentProcess = null;
                 return false;
-            }            
+            }
         }
 
         public void Reset() => _currentIndex = -1;

@@ -135,7 +135,7 @@ namespace Moryx.Tests.Workplans
             Assert.That(prediction, Is.EqualTo(finalResult), "Predication was incorrect");
         }
 
-        
+
 
         private class SingleLoopExecution
         {
@@ -145,7 +145,7 @@ namespace Moryx.Tests.Workplans
             {
                 var transition = (DummyTransition)state;
                 Thread.Sleep(100);
-                if(_loopTaken || transition.Name != "Set pole")
+                if (_loopTaken || transition.Name != "Set pole")
                     transition.ResumeAsync(0);
                 else
                 {

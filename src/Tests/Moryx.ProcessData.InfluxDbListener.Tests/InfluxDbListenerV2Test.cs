@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Diagnostics;
@@ -169,7 +169,7 @@ namespace Moryx.ProcessData.InfluxDbListener.Tests
             _moduleLogger = new Mock<IModuleLogger>();
             _moduleLogger.Setup(l => l.GetChild(It.IsAny<string>(), It.IsAny<Type>())).Returns(_moduleLogger.Object);
         }
-        
+
         private void CreateParrallelOps() => _parallelOperations = new NotSoParallelOps();
 
         private static InfluxDbListenerConfigV2 CreateListenerConfig() => new()

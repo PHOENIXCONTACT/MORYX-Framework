@@ -17,7 +17,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
 
         public override bool IsStable => true;
 
-        public InitialState(JobDataBase context, StateMap stateMap) 
+        public InitialState(JobDataBase context, StateMap stateMap)
             : base(context, stateMap, JobClassification.Idle)
         {
         }
@@ -31,7 +31,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
         {
             NextState(StateWaiting);
         }
-        
+
         public override void Complete()
         {
             NextState(StateCompleted);

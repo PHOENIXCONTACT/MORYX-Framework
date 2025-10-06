@@ -84,7 +84,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             // Act
             // Assert
             WaitForConnectionState(0, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.AttemptingConnection);
-            
+
             for (var i = 0; i < 10; i++)
             {
                 Clients[clientIdx].Connection.Reconnect();

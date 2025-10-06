@@ -18,7 +18,7 @@ namespace Moryx.Analytics.Server.ModuleController
         ///Dashboards
         /// </summary>
         [DataMember]
-        public List<DashboardInformation> Dashboards { get; set; } = new List<DashboardInformation>();     
+        public List<DashboardInformation> Dashboards { get; set; } = new List<DashboardInformation>();
 
     }
 }

@@ -26,7 +26,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint.Models
         public ModuleNotificationModel(IModuleNotification notification)
         {
             Timestamp = notification.Timestamp;
-            if(notification.Exception != null)
+            if (notification.Exception != null)
                 Exception = new SerializableException(notification.Exception);
             Message = notification.Message;
             Severity = notification.Severity;

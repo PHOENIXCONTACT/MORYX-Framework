@@ -188,9 +188,9 @@ namespace Moryx.ControlSystem.Simulator
                             target.Id, target.Name, activity.ToString(), target.SimulatedState.ToString(), nameof(SimulationState.Idle));
                 return;
             }
-            
+
             Logger.LogDebug("Simulating 'Ready' on driver {0}-{1} for activity '{2}'.", target.Id, target.Name, activity.ToString());
-            
+
             try
             {
                 target.Ready(activity);
@@ -278,7 +278,7 @@ namespace Moryx.ControlSystem.Simulator
 
         private int CalculateDuration()
         {
-            return (int) Math.Ceiling(Convert.ToDouble(Config.MovingDuration) * 1/Convert.ToDouble(Config.Acceleration));
+            return (int)Math.Ceiling(Convert.ToDouble(Config.MovingDuration) * 1 / Convert.ToDouble(Config.Acceleration));
         }
 
         private void CompleteMovement(ProcessMovement movement)
@@ -286,7 +286,7 @@ namespace Moryx.ControlSystem.Simulator
             lock (_movements)
                 _movements.Remove(movement);
 
-            if (movement.NextActivity.Tracing.Started is not null) 
+            if (movement.NextActivity.Tracing.Started is not null)
             {
                 Logger.LogDebug("Skipping 'Ready' on driver {0}-{1} for activity '{2}': Activity has already started or was canceled.",
                         movement.Target.Id, movement.Target.Name, movement.NextActivity.ToString());
@@ -311,7 +311,7 @@ namespace Moryx.ControlSystem.Simulator
             var driver = aad.Driver;
             var activity = aad.Activity;
 
-            if(activity.Tracing.Completed is not null)
+            if (activity.Tracing.Completed is not null)
             {
                 Logger.LogDebug("Skipping 'Result' on driver {0}-{1} for activity '{2}': Activity is already completed.",
                         driver.Id, driver.Name, activity.ToString());
@@ -331,7 +331,7 @@ namespace Moryx.ControlSystem.Simulator
             catch (Exception ex)
             {
                 Logger.LogError(ex, "Could not simulate 'Result' on driver {0}-{1}: Unexpected exception.", driver.Id, driver.Name);
-            }            
+            }
         }
 
         private class ActivityAndDriver

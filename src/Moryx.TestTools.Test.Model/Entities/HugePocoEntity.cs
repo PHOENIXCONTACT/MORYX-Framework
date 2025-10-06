@@ -5,7 +5,7 @@ using Moryx.Model;
 
 namespace Moryx.TestTools.Test.Model
 {
-    public  class HugePocoEntity : EntityBase
+    public class HugePocoEntity : EntityBase
     {
         public virtual double Float1 { get; set; }
 

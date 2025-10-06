@@ -17,7 +17,7 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
         /// Single value output
         /// Only available for <see cref="SupportedAccess.Single"/>
         /// </summary>
-        TOut Value { get; set;  }
+        TOut Value { get; set; }
 
         /// <summary>
         /// Index based output

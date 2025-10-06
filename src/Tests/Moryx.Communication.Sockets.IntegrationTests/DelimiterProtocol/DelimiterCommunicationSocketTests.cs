@@ -59,7 +59,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
             // Assert
             Assert.That(_context.StartFound, Is.False);
             Assert.That(_context.CurrentIndex, Is.EqualTo(0));
-            
+
             Assert.That(published, Is.Not.Null);
 
             var expectedMsgLenth = TestDelimiterInterpreter.TestStartDelimiter.Length + payloadMultiplier * 4 +

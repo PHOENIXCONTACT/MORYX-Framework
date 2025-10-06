@@ -52,7 +52,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// Get process by id
         /// </summary>
         ProcessData GetProcess(long id);
-        
+
         /// <summary>
         /// Get process by id
         /// </summary>

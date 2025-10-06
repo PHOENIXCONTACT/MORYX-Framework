@@ -362,7 +362,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             }
             else
             {
-                dbActivity = new() {
+                dbActivity = new()
+                {
                     Id = activity.Id,
                     TaskId = activityData.Task.Id,
                     ResourceId = activityData.Resource.Id,
@@ -432,7 +433,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
 
             public Func<Tracing> Constructor { get; }
 
-            public Func<object,bool> TypeCheck { get; }
+            public Func<object, bool> TypeCheck { get; }
 
             public TracingWrapper(Type type)
             {

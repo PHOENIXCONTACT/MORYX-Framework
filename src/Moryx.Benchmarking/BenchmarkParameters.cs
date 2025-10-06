@@ -28,7 +28,7 @@ namespace Moryx.Benchmarking
         /// <inheritdoc />
         protected override void Populate(IProcess process, Parameters instance)
         {
-            var parameters = (BenchmarkParameters) instance;
+            var parameters = (BenchmarkParameters)instance;
             parameters.Step = Step;
             parameters.Instructions = [string.Format(Instructions[0].Content, Step).AsInstruction()];
         }

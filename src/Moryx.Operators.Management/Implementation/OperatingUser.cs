@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Users;
@@ -10,7 +10,7 @@ internal class OperatingUser(IReadOnlyList<IOperatorAssignable> assignedResource
     {
         get => base.Identifier;
         set => base.Identifier = value;
-    } 
+    }
 
     public new string? FirstName
     {
@@ -24,8 +24,9 @@ internal class OperatingUser(IReadOnlyList<IOperatorAssignable> assignedResource
         set => base.LastName = value;
     }
 
-    public override bool SignedIn { 
-        get => AssignedResources.Any(); 
+    public override bool SignedIn
+    {
+        get => AssignedResources.Any();
         protected set => throw new InvalidOperationException();
     }
 

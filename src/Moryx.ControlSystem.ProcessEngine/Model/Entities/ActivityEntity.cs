@@ -19,7 +19,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Model
             get { return _id; }
             set
             {
-                if(_id == value)
+                if (_id == value)
                     return;
 
                 _id = value;

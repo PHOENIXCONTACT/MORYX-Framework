@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 namespace Moryx.Asp.Integration
@@ -28,7 +28,7 @@ namespace Moryx.Asp.Integration
         /// </summary>
         public WebModuleAttribute(string route) : this(route, "favorite")
         {
-            
+
         }
 
         /// <summary>

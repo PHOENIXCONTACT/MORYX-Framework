@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -21,12 +21,12 @@ namespace Moryx.Shifts
         /// Creates a shift.
         /// </summary>
         Shift CreateShift(ShiftCreationContext context);
-    
+
         /// <summary>
         /// Updates a shift.
         /// </summary>
         void UpdateShift(Shift shift);
-    
+
         /// <summary>
         /// Deletes a shift.
         /// </summary>
@@ -36,17 +36,17 @@ namespace Moryx.Shifts
         /// Gets the list of shift types.
         /// </summary>
         IReadOnlyList<ShiftType> ShiftTypes { get; }
-    
+
         /// <summary>
         /// Creates a shift type.
         /// </summary>
         ShiftType CreateShiftType(ShiftTypeCreationContext context);
-    
+
         /// <summary>
         /// Updates a shift type.
         /// </summary>
         void UpdateShiftType(ShiftType type);
-    
+
         /// <summary>
         /// Deletes a shift type.
         /// </summary>
@@ -56,7 +56,7 @@ namespace Moryx.Shifts
         /// Gets the list of shift assignments.
         /// </summary>
         IReadOnlyList<ShiftAssignement> ShiftAssignements { get; }
-    
+
         /// <summary>
         /// Creates a shift assignment.
         /// </summary>
@@ -76,12 +76,12 @@ namespace Moryx.Shifts
         /// Event triggered when a shift is changed.
         /// </summary>
         event EventHandler<ShiftsChangedEventArgs> ShiftsChanged;
-    
+
         /// <summary>
         /// Event triggered when a shift type is changed.
         /// </summary>
         event EventHandler<ShiftTypesChangedEventArgs> TypesChanged;
-    
+
         /// <summary>
         /// Event triggered when a shift assignment is changed.
         /// </summary>

@@ -64,8 +64,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
                 var query = (from processEntity in processRepo.Linq
-                    where processEntity.ReferenceId == productInstance.Id
-                    select new {processEntity.Id, processEntity.Job.RecipeId}).ToList();
+                             where processEntity.ReferenceId == productInstance.Id
+                             select new { processEntity.Id, processEntity.Job.RecipeId }).ToList();
 
                 var processes = new List<IProcess>();
                 foreach (var match in query)

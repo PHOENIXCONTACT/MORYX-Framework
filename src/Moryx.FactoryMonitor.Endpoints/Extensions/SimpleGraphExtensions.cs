@@ -5,7 +5,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
 {
     internal static class SimpleGraphExtensions
     {
-        
+
     }
 }
 

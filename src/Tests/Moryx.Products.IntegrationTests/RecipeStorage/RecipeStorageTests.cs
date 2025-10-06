@@ -132,8 +132,8 @@ namespace Moryx.Products.IntegrationTests
 
             var unmount1 = new TaskA
             {
-                Inputs = {[0] = inter2},
-                Outputs = {[0] = end, [1] = end, [2] = end },
+                Inputs = { [0] = inter2 },
+                Outputs = { [0] = end, [1] = end, [2] = end },
                 Position = new Point(5, 6),
             };
 

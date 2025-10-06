@@ -78,7 +78,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         private void MonitorProcess(ProcessData processData)
         {
             // Only monitor production jobs
-            if(!(processData.Recipe is IProductRecipe))
+            if (!(processData.Recipe is IProductRecipe))
                 return;
 
             var recipe = (IWorkplanRecipe)processData.Recipe;

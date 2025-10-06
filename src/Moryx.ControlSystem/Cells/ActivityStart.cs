@@ -29,7 +29,7 @@ namespace Moryx.ControlSystem.Cells
         /// </summary>
         public ActivityCompleted CreateResult()
         {
-            if(Activity.Result == null)
+            if (Activity.Result == null)
                 throw new InvalidOperationException("Can not create completed message for activity without result");
 
             return new ActivityCompleted(Activity, this);

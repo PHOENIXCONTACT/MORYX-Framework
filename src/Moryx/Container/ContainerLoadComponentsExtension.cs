@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Tools;
@@ -16,7 +16,7 @@ namespace Moryx.Container
         /// </summary>
         public static void LoadFromAssembly(this IContainer container, Assembly assembly)
         {
-           container.LoadFromAssembly(assembly, t => true);
+            container.LoadFromAssembly(assembly, t => true);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Moryx.Container
 
             return true;
         }
-        
+
         private static void RegisterAdditionalDependencies(IContainer container, Type implementation)
         {
             var att = implementation.GetCustomAttribute<DependencyRegistrationAttribute>();

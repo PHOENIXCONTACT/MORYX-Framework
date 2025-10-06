@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -231,7 +231,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             var stateMock = new Mock<IJobState>();
             stateMock.SetupGet(s => s.Classification).Returns(JobClassification.Completed);
             _jobListMock.Raise(jl => jl.StateChanged += null, _jobListMock.Object, new JobStateEventArgs(jobData, null, stateMock.Object));
-            
+
             chunks = _processArchive.GetProcesses(RequestFilter.Timed, nowStart, nowEnd, Array.Empty<long>()).ToList();
 
             // Assert

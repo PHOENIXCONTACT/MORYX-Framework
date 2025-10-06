@@ -32,7 +32,7 @@ namespace Moryx.Identity.AccessManagement
         {
             var principal = await base.CreateAsync(user);
 
-            var claimIdentity = ((ClaimsIdentity) principal.Identity);
+            var claimIdentity = ((ClaimsIdentity)principal.Identity);
             if (claimIdentity == null)
                 return principal;
 

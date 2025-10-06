@@ -5,6 +5,6 @@ namespace Moryx.Tests.Extensions
 {
     public class GranChildClass2 : ChildClass1
     {
-         
+
     }
 }

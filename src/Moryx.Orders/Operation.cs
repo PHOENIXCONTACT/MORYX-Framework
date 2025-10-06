@@ -108,7 +108,7 @@ namespace Moryx.Orders
         /// </summary>
         public virtual OperationClassification State
         {
-            get => (OperationClassification)((int)FullState & 0xFF); 
+            get => (OperationClassification)((int)FullState & 0xFF);
             protected set => FullState = value;
         }
 

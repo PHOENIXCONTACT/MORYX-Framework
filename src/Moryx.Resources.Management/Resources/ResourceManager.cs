@@ -330,7 +330,7 @@ namespace Moryx.Resources.Management
                 {
                     uow.SaveChanges();
                     resource.Id = entity.Id;
-                    foreach(var instance in newResources)
+                    foreach (var instance in newResources)
                     {
                         if (!references.ContainsKey(instance))
                             continue;

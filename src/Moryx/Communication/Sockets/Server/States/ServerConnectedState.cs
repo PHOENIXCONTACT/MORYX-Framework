@@ -3,7 +3,7 @@
 
 namespace Moryx.Communication.Sockets
 {
-    internal class ServerConnectedState: ServerStateBase
+    internal class ServerConnectedState : ServerStateBase
     {
         public ServerConnectedState(TcpListenerConnection context, StateMap stateMap) : base(context, stateMap, BinaryConnectionState.Connected)
         {

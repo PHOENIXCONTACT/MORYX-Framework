@@ -15,6 +15,6 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
         /// <summary>
         /// Facade controlled by this module
         /// </summary>
-        public IFacadeB Facade { get; } 
+        public IFacadeB Facade { get; }
     }
 }

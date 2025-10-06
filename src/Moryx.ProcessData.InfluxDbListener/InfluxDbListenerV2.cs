@@ -112,7 +112,7 @@ namespace Moryx.ProcessData.InfluxDbListener
         {
             lock (_pendingPointsLock)
                 _pendingPoints.Add(GetPointFromMeasurement(measurement));
-            
+
             StartTimerIfStopped();
         }
 
@@ -153,7 +153,7 @@ namespace Moryx.ProcessData.InfluxDbListener
             {
                 Logger.LogError(e, "Error while writing points to influxDB '{name}'. Moving {number} points back to queue. " +
                     "Remaining retries: {retries}", Config.DatabaseName, points.Length, --_retries);
-                
+
                 lock (_pendingPointsLock)
                     _pendingPoints.AddRange(points);
 
@@ -161,7 +161,7 @@ namespace Moryx.ProcessData.InfluxDbListener
                 {
                     ParallelOperations.StopExecution(_timerId);
                     throw new Exception($"Out of retires for {Config.ListenerName}. Stopping listener...", e);
-                }                
+                }
             }
         }
 

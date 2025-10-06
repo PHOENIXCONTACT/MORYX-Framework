@@ -13,7 +13,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
     {
         public override bool CanAbort => true;
 
-        public CleanUpWaitingState(JobDataBase context, StateMap stateMap) 
+        public CleanUpWaitingState(JobDataBase context, StateMap stateMap)
             : base(context, stateMap, JobClassification.Waiting)
         {
         }

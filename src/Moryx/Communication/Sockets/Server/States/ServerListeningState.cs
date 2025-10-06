@@ -13,7 +13,7 @@ namespace Moryx.Communication.Sockets
         {
             Context.ExecuteAssignConnection(transmission);
             NextState(StateConnected);
-            if(message != null)
+            if (message != null)
                 Context.PublishInitialMessage(message);
         }
 

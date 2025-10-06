@@ -133,7 +133,7 @@ namespace Moryx.Orders
         /// Event which will be raised when the report context of the operation will be requested
         /// </summary>
         event EventHandler<OperationReportRequestEventArgs> OperationReportRequest;
-    
+
         /// <summary>
         /// Assigns or updates operation related information like the corresponding product or recipes on the existing operation instance.
         /// </summary>

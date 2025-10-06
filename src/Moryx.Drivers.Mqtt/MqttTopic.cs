@@ -41,7 +41,7 @@ namespace Moryx.Drivers.Mqtt
             set
             {
                 var (validationResult, errorMessage) = ValidateTopicString(value);
-                
+
                 switch (validationResult)
                 {
                     case TopicValidationResult.Valid:
@@ -80,13 +80,14 @@ namespace Moryx.Drivers.Mqtt
 
         private (TopicValidationResult result, string errorMessage) ValidateTopicString(string value)
         {
-            if (value is null)  {
-                if(_topicName is null)
+            if (value is null)
+            {
+                if (_topicName is null)
                 {
                     return (TopicValidationResult.Uninitialized, "topic is null");
                 }
 
-                return (TopicValidationResult.Invalid, "topic is null");;
+                return (TopicValidationResult.Invalid, "topic is null"); ;
             }
 
             var regexPlaceholders = new Regex(@"(\w|})({\w*})|({\w*})(\w|{)");
@@ -367,14 +368,14 @@ namespace Moryx.Drivers.Mqtt
                     {
                         for (var i = 1; i < placeholderValues.Count; i++)
                         {
-                            var placeholderName = groupNames[i].Replace("__",".");
+                            var placeholderName = groupNames[i].Replace("__", ".");
                             var resolver = new BindingResolverFactory().Create(placeholderName);
                             var placeholderValue = placeholderValues[i].ToString();
-                            if(!resolver.Update(msg, placeholderValue))
+                            if (!resolver.Update(msg, placeholderValue))
                             {
-                                Logger.Log(LogLevel.Error, "Placeholder " + placeholderName+ " cannot be filled. " +
+                                Logger.Log(LogLevel.Error, "Placeholder " + placeholderName + " cannot be filled. " +
                                                            "MessageType " + typeof(TMessage).Name + " may not contain a " +
-                                                           "matching property" );
+                                                           "matching property");
                             }
                         }
                     }

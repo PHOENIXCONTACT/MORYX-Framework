@@ -92,7 +92,7 @@ namespace Moryx.ControlSystem.Cells
         {
             if (ReferenceEquals(null, obj))
                 return false;
-            return obj is ProcessReference && Equals((ProcessReference) obj);
+            return obj is ProcessReference && Equals((ProcessReference)obj);
         }
 
         /// <summary>

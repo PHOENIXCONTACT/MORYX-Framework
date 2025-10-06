@@ -7,11 +7,11 @@ namespace Moryx.TestModule
 {
     public interface IAnotherPlugin : IConfiguredPlugin<AnotherPluginConfig>
     {
-         
+
     }
 
     public interface IAnotherSubPlugin : IConfiguredPlugin<AnotherSubConfig>
     {
-        
+
     }
 }

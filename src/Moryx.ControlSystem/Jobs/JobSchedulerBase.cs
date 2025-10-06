@@ -57,7 +57,7 @@ namespace Moryx.ControlSystem.Jobs
         protected IReadOnlyList<Job> Dependencies(Job target)
         {
             return _dependencies.ContainsKey(target)
-                ? (IReadOnlyList<Job>) _dependencies[target]
+                ? (IReadOnlyList<Job>)_dependencies[target]
                 : EmptyDependencies;
         }
 

@@ -21,7 +21,7 @@ namespace Moryx.AbstractionLayer
         /// <param name="input">The input for the step</param>
         /// <param name="outputs">The outputs of the steps.</param>
         /// <returns></returns>
-        public static TaskStep<TActivity, TParam> AddStep<TActivity,TParam>(this Workplan workplan, TaskStep<TActivity,TParam> task, TParam parameter, IConnector input, params IConnector[] outputs)
+        public static TaskStep<TActivity, TParam> AddStep<TActivity, TParam>(this Workplan workplan, TaskStep<TActivity, TParam> task, TParam parameter, IConnector input, params IConnector[] outputs)
             where TActivity : IActivity<TParam>, new()
             where TParam : IParameters, new()
         {

@@ -91,7 +91,7 @@ namespace Moryx.Resources.Management
         private void SaveReferences(ReferenceSaverContext context, Resource instance, Dictionary<Resource, ResourceEntity> dict = null)
         {
             var entity = GetOrCreateEntity(context, instance);
-            if(dict != null)
+            if (dict != null)
                 dict.Add(instance, entity);
 
             var referenceAccessors = ResourceRelationAccessor.FromEntity(context.UnitOfWork, entity)
@@ -327,7 +327,7 @@ namespace Moryx.Resources.Management
             }
             else if (prop.GetValue(target) is IReferenceCollection collection && !collection.UnderlyingCollection.Contains(value))
                 collection.UnderlyingCollection.Add(value);
-            
+
             var backAttr = prop.GetCustomAttribute<ResourceReferenceAttribute>();
             UpdateRelationEntity(relationEntity, backAttr);
         }

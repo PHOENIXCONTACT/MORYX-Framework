@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Http;
@@ -31,7 +31,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             _productManagement = productManagement;
 
-            var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IProductManagement>);    
+            var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IProductManagement>);
             _productConverter = new ProductConverter(_productManagement, module.Container, serviceProvider);
         }
 
@@ -50,7 +50,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 Importers = _productManagement.Importers.Select(i => new ProductImporter
                 {
                     Name = i.Key,
-                    Parameters = EntryConvert.EncodeObject(i.Value, parameterSerialization) 
+                    Parameters = EntryConvert.EncodeObject(i.Value, parameterSerialization)
                 }).ToArray()
             };
         }
@@ -175,16 +175,16 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             if (id == 0)
                 return BadRequest($"Id was 0");
-            IProductType productType=null;
+            IProductType productType = null;
             try
             {
-                 productType = _productManagement.LoadType(id);
+                productType = _productManagement.LoadType(id);
             }
             catch (ProductNotFoundException)
             {
             }
             if (productType == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.TYPE_NOT_FOUND } );
+                return NotFound(new MoryxExceptionResponse { Title = Strings.TYPE_NOT_FOUND });
             return _productConverter.ConvertProduct(productType, false);
         }
 
@@ -333,7 +333,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 return BadRequest($"Id was 0");
             var recipe = _productManagement.LoadRecipe(id);
             if (recipe == null)
-                return NotFound(new MoryxExceptionResponse {Title= string.Format(Strings.RecipeNotFoundException_Message, id) });
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.RecipeNotFoundException_Message, id) });
             return _productConverter.ConvertRecipeV2(recipe);
         }
 

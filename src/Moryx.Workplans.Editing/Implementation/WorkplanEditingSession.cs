@@ -97,7 +97,7 @@ namespace Moryx.Workplans.Editing.Implementation
                 }
 
                 // Now we can remove the connector
-                if(output.Classification == NodeClassification.Intermediate)
+                if (output.Classification == NodeClassification.Intermediate)
                     _workplan.Remove(output);
             }
 
@@ -134,10 +134,10 @@ namespace Moryx.Workplans.Editing.Implementation
             // Remove from plan
             return _workplan.Remove(connector);
         }
-        
+
         public void Connect(IWorkplanNode sourceNode, int sourceIndex, IWorkplanNode targetNode, int targetIndex)
         {
-            if(sourceNode is IConnector start)
+            if (sourceNode is IConnector start)
             {
                 if (targetNode is IConnector)
                     throw new InvalidOperationException("Cannot connect start to End or Failed");
@@ -149,7 +149,7 @@ namespace Moryx.Workplans.Editing.Implementation
                 var targetConnector = targetStep.Inputs[targetIndex];
                 ConnectStart(targetIndex, start, targetStep, targetConnector);
             }
-            else if(targetNode is IConnector end)
+            else if (targetNode is IConnector end)
             {
                 var step = (IWorkplanStep)sourceNode;
                 step.Outputs[sourceIndex] = end;
@@ -168,7 +168,7 @@ namespace Moryx.Workplans.Editing.Implementation
                 {
                     connector = new Connector { Classification = NodeClassification.Intermediate };
                     _workplan.Add(connector);
-                    
+
                 }
                 ReplaceConnector(start, connector);
             }
@@ -319,23 +319,23 @@ namespace Moryx.Workplans.Editing.Implementation
             var (lastLayerX, lastLayerY) = PlaceSteps(repositionedSteps, firstSteps, start.Position.X, start.Position.Y);
 
             // Place end
-            _workplan.GetEnd().Position = new Point(lastLayerX, lastLayerY + nextYOffset+ extraYOffset);
+            _workplan.GetEnd().Position = new Point(lastLayerX, lastLayerY + nextYOffset + extraYOffset);
             _workplan.GetFailed().Position = new Point(initialX, lastLayerY + nextYOffset + extraYOffset);
         }
 
-        private (int,int) PlaceSteps(ICollection<IWorkplanStep> repositionedSteps, IEnumerable<IWorkplanStep> nextSteps, int currentX, int currentY)
+        private (int, int) PlaceSteps(ICollection<IWorkplanStep> repositionedSteps, IEnumerable<IWorkplanStep> nextSteps, int currentX, int currentY)
         {
             var newNextSteps = new Collection<IWorkplanStep>();
 
             var nextY = currentY + nextYOffset;
             var nextX = currentX + nextXOffset;
-            currentY += nextYOffset + nextSteps.Count()*extraYOffset;
+            currentY += nextYOffset + nextSteps.Count() * extraYOffset;
 
             foreach (var step in nextSteps)
             {
                 step.Position = new Point(currentX, currentY);
                 currentY -= extraYOffset;
-                currentX -= 4*nextXOffset;
+                currentX -= 4 * nextXOffset;
                 nextY = Math.Max(currentY + step.Outputs.Length * extraYOffset, nextY);
 
                 var newNexts = _workplan.GetNextSteps(step)

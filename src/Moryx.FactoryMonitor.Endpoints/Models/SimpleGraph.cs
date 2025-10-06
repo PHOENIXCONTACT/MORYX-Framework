@@ -20,17 +20,17 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
         /// <summary>
         /// Resource Id of this node in the graph
         /// </summary>
-        public long Id { get;  set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Holds the name of the type of the Item (Cell,Factory,Location,etc...)
         /// </summary>
-        public string Type {  get; set; }
+        public string Type { get; set; }
 
         /// <summary>
         /// Contains the elements that should be displayed in the current factory
         /// </summary>
-        public List<SimpleGraph> Children { get;  set; } = new List<SimpleGraph>();
+        public List<SimpleGraph> Children { get; set; } = new List<SimpleGraph>();
 
         /// <summary>
         /// Creates a full simple Graph from the <paramref name="factory"/>

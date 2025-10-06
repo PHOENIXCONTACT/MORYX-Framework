@@ -23,9 +23,9 @@ namespace Moryx.Container
     /// <typeparam name="TParent"></typeparam>
     public interface IContainerChild<TParent> where TParent : INamedChildContainer<object>
     {
-       /// <summary>
-       /// Parent container of this child
-       /// </summary>
-       TParent Parent { get; set;  }
+        /// <summary>
+        /// Parent container of this child
+        /// </summary>
+        TParent Parent { get; set; }
     }
 }

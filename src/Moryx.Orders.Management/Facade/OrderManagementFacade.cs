@@ -230,7 +230,7 @@ namespace Moryx.Orders.Management
         }
 
         public ReportContext GetReportContext(Operation operation)
-        {         
+        {
             ValidateHealthState();
 
             var operationData = GetOperationDataSave(operation);
@@ -293,7 +293,7 @@ namespace Moryx.Orders.Management
         }
 
         public async Task<AdviceResult> TryAdvice(Operation operation, OperationAdvice advice)
-        {  
+        {
             ValidateHealthState();
 
             var operationData = OperationDataPool.Get(operation);

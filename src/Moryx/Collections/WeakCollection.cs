@@ -27,7 +27,7 @@ namespace Moryx.Collections
                 var weakReference = _list[readIndex];
                 T item;
 
-                if (!weakReference.TryGetTarget(out item)) 
+                if (!weakReference.TryGetTarget(out item))
                     continue;
 
                 ret.Add(item);
@@ -64,7 +64,7 @@ namespace Moryx.Collections
                 var weakReference = _list[i];
                 T entry;
 
-                if (!weakReference.TryGetTarget(out entry) || entry != item) 
+                if (!weakReference.TryGetTarget(out entry) || entry != item)
                     continue;
 
                 _list.RemoveAt(i);

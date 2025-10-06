@@ -25,7 +25,7 @@ namespace Moryx.TestModule
         public override string Name => "TestModule";
 
 
-        public ModuleController(IOptions<ModuleConfig> options, IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
+        public ModuleController(IOptions<ModuleConfig> options, IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
             : base(containerFactory, configManager, loggerFactory)
         {
             ContextManager = contextManager;
@@ -50,7 +50,7 @@ namespace Moryx.TestModule
             var plugin = Container.Resolve<ITestPlugin>("TestPlugin");
             plugin.Start();
 
-               
+
             // Activate facades
             ActivateFacade(_testModule);
         }

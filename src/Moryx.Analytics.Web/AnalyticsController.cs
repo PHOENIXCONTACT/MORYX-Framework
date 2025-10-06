@@ -21,7 +21,7 @@ namespace Moryx.Analytics.Web
 
         public AnalyticsController(IConfigManager configManager)
         {
-            _configManager = configManager;           
+            _configManager = configManager;
         }
 
         [HttpGet]

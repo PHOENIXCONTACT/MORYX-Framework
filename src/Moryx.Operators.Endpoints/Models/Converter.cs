@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
@@ -21,17 +21,18 @@ internal static class Converter
             .ToDictionary(t => t, t => EntryConvert.Prototype(new EntryPrototype(t.Name, Activator.CreateInstance(t))));
     }
 
-    internal static SkillTypeCreationContext ToContext(this SkillTypeCreationContextModel model) 
+    internal static SkillTypeCreationContext ToContext(this SkillTypeCreationContextModel model)
         => new(VerifyNotNull(model.Name), CreateInstance(VerifyNotNull(model.Capabilities)))
-    {
-        Duration = model.Duration,
-    };
+        {
+            Duration = model.Duration,
+        };
 
     internal static SkillCreationContext ToContext(this SkillCreationContextModel model,
         IOperatorManagement operators,
         ISkillManagement skills) =>
-        new(operators.GetOperator(VerifyNotNull(model.OperatorIdentifier)) ?? throw new KeyNotFoundException($"No operator with identifier {model.OperatorIdentifier} could be found."), 
-            skills.GetSkillType(model.TypeId) ?? throw new KeyNotFoundException($"No skill with id {model.OperatorIdentifier} could be found.")) { ObtainedOn = model.ObtainedOn };
+        new(operators.GetOperator(VerifyNotNull(model.OperatorIdentifier)) ?? throw new KeyNotFoundException($"No operator with identifier {model.OperatorIdentifier} could be found."),
+            skills.GetSkillType(model.TypeId) ?? throw new KeyNotFoundException($"No skill with id {model.OperatorIdentifier} could be found."))
+        { ObtainedOn = model.ObtainedOn };
 
 
     internal static ExtendedOperatorModel ToModel(this AssignableOperator @operator) => new()
@@ -70,7 +71,7 @@ internal static class Converter
         OperatorIdentifier = skill.Operator.Identifier,
         ObtainedOn = skill.ObtainedOn,
         IsExpired = skill.IsExpired,
-        ExpiresOn = skill.ObtainedOn.AddDays((int)skill.Type.Duration.TotalDays)           
+        ExpiresOn = skill.ObtainedOn.AddDays((int)skill.Type.Duration.TotalDays)
     };
 
 
@@ -102,7 +103,7 @@ internal static class Converter
                 Exception = e.ToString()
             };
         }
-        
+
     }
 
 

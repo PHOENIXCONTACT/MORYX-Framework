@@ -28,7 +28,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         public string Type { get; set; }
 
         [DataMember]
-        public Entry Properties { get; set; }      
+        public Entry Properties { get; set; }
 
         [DataMember]
         public ProductFileModel[] Files { get; set; }

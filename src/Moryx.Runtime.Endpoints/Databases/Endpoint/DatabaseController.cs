@@ -86,7 +86,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             if (targetConfigurator == null)
                 return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
 
-            if(targetConfigurator.GetType() == typeof(NullModelConfigurator))
+            if (targetConfigurator.GetType() == typeof(NullModelConfigurator))
             {
                 return new TestConnectionResponse { Result = TestConnectionResult.ConfigurationError };
             }

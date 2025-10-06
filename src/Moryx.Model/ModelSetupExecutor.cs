@@ -30,7 +30,7 @@ namespace Moryx.Model
                 // Try to read context from attribute
                 var setupAttr = type.GetCustomAttribute<ModelSetupAttribute>();
                 return setupAttr != null && setupAttr.TargetContext == typeof(TContext);
-            }).Select(s => (IModelSetup)Activator.CreateInstance((Type) s)).ToArray();
+            }).Select(s => (IModelSetup)Activator.CreateInstance((Type)s)).ToArray();
         }
 
         /// <inheritdoc />

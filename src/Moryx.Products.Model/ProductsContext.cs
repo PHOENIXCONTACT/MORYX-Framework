@@ -148,7 +148,7 @@ namespace Moryx.Products.Model
 
             // Indexes
             modelBuilder.Entity<ProductTypeEntity>()
-                .HasIndex(p => new { p.Identifier, p.Revision});
+                .HasIndex(p => new { p.Identifier, p.Revision });
 
             modelBuilder.Entity<ProductTypeEntity>()
                 .HasIndex(p => new { p.Identifier, p.Revision });

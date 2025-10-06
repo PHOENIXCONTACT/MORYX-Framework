@@ -158,7 +158,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                     return _activities.ToArray();
             }
         }
-        
+
         /// <summary>
         /// Sessions that were reported for this process from a cell
         /// </summary>

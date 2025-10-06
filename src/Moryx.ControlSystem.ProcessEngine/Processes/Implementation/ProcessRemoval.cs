@@ -115,11 +115,11 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 ActivityPool.UpdateActivity(activityData, ActivityState.EngineProceeded);
             }
             // And for aborting processes we process the completed or aborted activities
-            else if (processData.State == ProcessState.Aborting 
+            else if (processData.State == ProcessState.Aborting
                 && (args.Trigger == ActivityState.Completed || args.Trigger == ActivityState.Aborted))
             {
                 CheckProcessAborted(processData);
-            }                
+            }
         }
 
         private void CheckProcessAborted(ProcessData processData)
@@ -140,7 +140,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 var activityData = new ActivityData(unmount) { Task = _fixUpTask };
                 ActivityPool.AddActivity(processData, activityData);
             }
-            else if(processData.Activities.Any(a => a.EntityCreated | a.State >= ActivityState.Running))
+            else if (processData.Activities.Any(a => a.EntityCreated | a.State >= ActivityState.Running))
             {
                 // Fail process if there is any progress worth saving
                 ActivityPool.UpdateProcess(processData, ProcessState.Failure);
@@ -214,7 +214,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                         {
                             Type = InstructionContentType.Text,
                             Content = removalMsg
-                        }, 
+                        },
                     }
                 };
             }

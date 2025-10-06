@@ -21,7 +21,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
         public List<IProcess> TotalProcesses { get; set; }
 
-        public EngineJob(IRecipe recipe, int amount):base(recipe, amount)
+        public EngineJob(IRecipe recipe, int amount) : base(recipe, amount)
         {
             // Prepare both process lists
             PredictedFailures = new ProcessList<IProcess>();

@@ -34,7 +34,7 @@ namespace Moryx.Products.Management
         public override void Initialize(ProductLinkConfiguration config)
         {
             base.Initialize(config);
-            
+
             PropertyName = config.PartName;
             PartCreation = config.PartCreation;
 

@@ -64,10 +64,10 @@ namespace Moryx.Products.Management
             }
 
             // Configure part links
-            var typeWrapper = Storage.GetTypeWrapper(product.FullName);           
-            var links = typeWrapper != null && typeWrapper.PartLinks != null ? typeWrapper.PartLinks : 
+            var typeWrapper = Storage.GetTypeWrapper(product.FullName);
+            var links = typeWrapper != null && typeWrapper.PartLinks != null ? typeWrapper.PartLinks :
                 product.GetProperties().Where(p => typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) || typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType));
-            
+
             foreach (var link in links)
             {
                 if (Config.LinkStrategies.Any(s => s.TargetType == productType && s.PartName == link.Name))

@@ -76,7 +76,7 @@ namespace Moryx.Tests
     }
 
     [EntrySerialize]
-    public class EntrySerialize_AlwaysClassAlwaysMember 
+    public class EntrySerialize_AlwaysClassAlwaysMember
     {
         [EntrySerialize]
         public string AlwaysProperty { get; set; } = "123456";
@@ -132,14 +132,14 @@ namespace Moryx.Tests
         public void InvocablePublic() { }
 
         [EntrySerialize]
-        public void InvocablePublic(int intValue,string stringValue1,string stringValue2 = "testing value") { }
+        public void InvocablePublic(int intValue, string stringValue1, string stringValue2 = "testing value") { }
 
         [EntrySerialize]
         internal void InvocableInternal() { }
 
         [EntrySerialize]
         protected void NonInvocableProtected() { }
-     
+
         [EntrySerialize]
         private void NonInvocablePrivate() { }
     }

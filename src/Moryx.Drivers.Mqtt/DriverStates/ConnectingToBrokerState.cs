@@ -1,11 +1,11 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Drivers;
 
 namespace Moryx.Drivers.Mqtt.DriverStates
 {
-    internal class ConnectingToBrokerState: DriverMqttState
+    internal class ConnectingToBrokerState : DriverMqttState
     {
         public ConnectingToBrokerState(MqttDriver context, StateMap stateMap) : base(context, stateMap, StateClassification.Initializing)
         {

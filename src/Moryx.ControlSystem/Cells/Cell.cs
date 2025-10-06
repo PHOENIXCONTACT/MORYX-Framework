@@ -25,7 +25,7 @@ namespace Moryx.ControlSystem.Cells
 
         /// <inheritdoc />
         public virtual void ProcessAborting(IActivity affectedActivity) { }
-        
+
         /// <inheritdoc />
         public abstract void SequenceCompleted(SequenceCompleted completed);
         private ICapabilities _capabilities = NullCapabilities.Instance;

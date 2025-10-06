@@ -186,7 +186,7 @@ namespace Moryx.ProcessData.Endpoints.Services
 
             _moduleManager.ReincarnateModule(module);
 
-            return new ConfiguredBindings{ Bindings = bindings };
+            return new ConfiguredBindings { Bindings = bindings };
         }
     }
 

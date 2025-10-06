@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -23,7 +23,7 @@ namespace Moryx.Products.IntegrationTests
         [TestCase(typeof(object), 0, Description = "Checks the TextStrategy type compliance for Object")]
         [TestCase(typeof(SomeType), 1, Description = "Checks the TextStrategy type compliance for simple not inherited classes")]
         [TestCase(typeof(SomeInheritedType), 2, Description = "Checks the TextStrategy type compliance for a inherited classes")]
-        [TestCase(typeof(ICloneable), int.MaxValue-1, Description = "Checks the TextStrategy type compliance for interfaces")]
+        [TestCase(typeof(ICloneable), int.MaxValue - 1, Description = "Checks the TextStrategy type compliance for interfaces")]
         public void TextStrategyComplianceString(Type type, int expCompliance)
         {
             // Act

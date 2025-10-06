@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,7 @@ namespace Moryx.Identity.Web.Pages
     {
         private IConfiguration _configuration;
 
-        public string IdentityUrl { get;set; }
+        public string IdentityUrl { get; set; }
 
         public IdentityModel(IConfiguration configuration)
         {
@@ -21,9 +21,9 @@ namespace Moryx.Identity.Web.Pages
         public IActionResult OnGet()
         {
             var identityUrl = _configuration["IdentityUrl"];
-            if(identityUrl == null)
+            if (identityUrl == null)
                 return RedirectToPage("/IdentityError");
-            
+
             IdentityUrl = identityUrl;
             return null;
         }

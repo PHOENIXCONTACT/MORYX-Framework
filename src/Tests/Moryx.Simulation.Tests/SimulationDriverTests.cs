@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
@@ -89,7 +89,7 @@ namespace Moryx.Simulation.Tests
         {
             //Arrange
             var activity = new AssemblyActivity();
-            Arrange(4,_assemblyCell, activity);
+            Arrange(4, _assemblyCell, activity);
 
             //Act
             _processControlMock.Raise(p => p.ActivityUpdated += null, new ActivityUpdatedEventArgs(activity, ActivityProgress.Ready));
@@ -98,7 +98,7 @@ namespace Moryx.Simulation.Tests
             _simulationDriverTestMock.Verify(dr => dr.Ready(It.IsAny<IActivity>()), Times.Once);
         }
 
-        
+
 
         [Test]
         public void Driver_Should_Receive_Result_message()

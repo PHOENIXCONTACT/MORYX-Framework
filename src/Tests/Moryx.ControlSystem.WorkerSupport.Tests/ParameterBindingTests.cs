@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -259,8 +259,8 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
                 if (_resolver == null)
                     _resolver = ResolverFactory.Create(Part);
 
-                var parameters = (InsertPartParameters) instance;
-                parameters.Target = (IProductType) _resolver.Resolve(process);
+                var parameters = (InsertPartParameters)instance;
+                parameters.Target = (IProductType)_resolver.Resolve(process);
             }
         }
 
@@ -297,7 +297,7 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
                 ProductInstance = product.CreateInstance()
             };
 
-            var instance = ((DummyProductInstance) process.ProductInstance);
+            var instance = ((DummyProductInstance)process.ProductInstance);
 
             instance.Id = 42;
             instance.State = ProductInstanceState.Success;

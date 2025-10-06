@@ -338,7 +338,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             var testCase1 = new TestCaseData(ReadyToWorkType.Push, null, ProcessState.Initial);
             testCase1.SetDescription("Raising a RTW Push without a ProcessReference, the ProcessState is arbitrary.");
             yield return testCase1;
-            
+
             var testCase2 = new TestCaseData(ReadyToWorkType.Push, InvalidProcessId, ProcessState.Initial);
             testCase2.SetDescription("Raising an RTW Push, with a ProcessId that exists but does not have an Activity waiting in the Pool, " +
                 "the ProcessState is arbitrary.");

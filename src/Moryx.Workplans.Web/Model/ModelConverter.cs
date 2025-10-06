@@ -6,10 +6,10 @@ using Moryx.Workplans.WorkplanSteps;
 
 namespace Moryx.Workplans.Endpoint
 {
-  public static class ModelConverter
+    public static class ModelConverter
     {
-    private static readonly ICustomSerialization WorkplanStepSerialization = new WorkplanStepSerialization();
-    public static WorkplanNodeClassification ToClassification(Type type)
+        private static readonly ICustomSerialization WorkplanStepSerialization = new WorkplanStepSerialization();
+        public static WorkplanNodeClassification ToClassification(Type type)
         {
             // Everything not explicitly set is an execution step
             var classification = WorkplanNodeClassification.Execution;
@@ -120,29 +120,29 @@ namespace Moryx.Workplans.Endpoint
                 connections[i] = new NodeConnectionPoint { Name = "Input_" + i, Index = i };
                 var connector = step.Inputs[i];
                 if (connector == null)
-                  continue;
+                    continue;
 
                 connections[i].Connections.AddRange(steps.SelectMany(s => s.Outputs.Where(o => o == connector)
                     .Select(o => new NodeConnector { NodeId = s.Id, Index = Array.IndexOf(s.Outputs, connector) })));
 
                 if (connector.Classification != NodeClassification.Intermediate)
-                  connections[i].Connections.Add(new NodeConnector { NodeId = connector.Id, Index = 0 });
+                    connections[i].Connections.Add(new NodeConnector { NodeId = connector.Id, Index = 0 });
             }
             nodeModel.Inputs = connections;
 
             connections = new NodeConnectionPoint[step.Outputs.Length];
             for (int i = 0; i < step.Outputs.Length; i++)
             {
-              connections[i] = new NodeConnectionPoint { Name = step.OutputDescriptions[i].Name , Index = i };
-              var connector = step.Outputs[i];
-              if (connector == null)
-                continue;
+                connections[i] = new NodeConnectionPoint { Name = step.OutputDescriptions[i].Name, Index = i };
+                var connector = step.Outputs[i];
+                if (connector == null)
+                    continue;
 
-              connections[i].Connections.AddRange(steps.SelectMany(s => s.Inputs.Where(i => i == connector)
-                  .Select(o => new NodeConnector { NodeId = s.Id, Index = Array.IndexOf(s.Inputs, connector) })));
+                connections[i].Connections.AddRange(steps.SelectMany(s => s.Inputs.Where(i => i == connector)
+                    .Select(o => new NodeConnector { NodeId = s.Id, Index = Array.IndexOf(s.Inputs, connector) })));
 
-              if (connector.Classification != NodeClassification.Intermediate)
-                connections[i].Connections.Add(new NodeConnector { NodeId = connector.Id, Index = 0 });
+                if (connector.Classification != NodeClassification.Intermediate)
+                    connections[i].Connections.Add(new NodeConnector { NodeId = connector.Id, Index = 0 });
             }
             nodeModel.Outputs = connections;
 

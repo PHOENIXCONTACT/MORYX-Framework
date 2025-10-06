@@ -206,7 +206,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
                     // Assign slot back to previous job
                 }
                 // A running job from the completing slots has completed, start the cleanup
-                else if(_completingSlots.TryReplace(job, next))
+                else if (_completingSlots.TryReplace(job, next))
                 {
                     RaiseJobScheduled(next);
                 }

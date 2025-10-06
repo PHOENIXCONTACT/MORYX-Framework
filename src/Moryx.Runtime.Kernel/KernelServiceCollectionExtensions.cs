@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.DependencyInjection;
@@ -41,14 +41,14 @@ namespace Moryx.Runtime.Kernel
         /// Add MORYX modules to the service collection
         /// </summary>
         public static void AddMoryxModules(this IServiceCollection serviceCollection)
-        {           
+        {
             // Find all module types in the app domain
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(p => !p.IsDynamic);
             var modules = loadedAssemblies
                 .SelectMany(assembly => assembly.GetExportedTypes())
                 .Where(type => !type.IsInterface & !type.IsAbstract & typeof(IServerModule).IsAssignableFrom(type))
                 .ToList();
-            foreach(var module in modules)
+            foreach (var module in modules)
             {
                 // Register module as server module
                 serviceCollection.AddSingleton(module);
@@ -56,7 +56,7 @@ namespace Moryx.Runtime.Kernel
 
                 // Determine the exported facades
                 var facadeContainers = module.GetInterfaces().Where(api => api.IsGenericType && api.GetGenericTypeDefinition() == typeof(IFacadeContainer<>));
-                foreach(var facadeContainer in facadeContainers)
+                foreach (var facadeContainer in facadeContainers)
                 {
                     // Register module as facade container
                     serviceCollection.AddSingleton(facadeContainer, x => x.GetRequiredService(module));
@@ -77,7 +77,7 @@ namespace Moryx.Runtime.Kernel
         public static IConfigManager UseMoryxConfigurations(this IServiceProvider serviceProvider, string configDirectory)
         {
             // Load config manager
-            var configManager = serviceProvider.GetRequiredService<ConfigManager>(); 
+            var configManager = serviceProvider.GetRequiredService<ConfigManager>();
             if (!Directory.Exists(configDirectory))
                 Directory.CreateDirectory(configDirectory);
             configManager.ConfigDirectory = configDirectory;

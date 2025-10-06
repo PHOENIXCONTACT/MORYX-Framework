@@ -16,7 +16,7 @@ namespace Moryx.Tests
 
         public override void Initial()
         {
-            
+
         }
 
         public override void AtoB()

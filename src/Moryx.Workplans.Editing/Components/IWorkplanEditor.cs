@@ -5,7 +5,7 @@ using Moryx.Modules;
 
 namespace Moryx.Workplans.Editing.Components
 {
-    internal interface IWorkplanEditor: IPlugin
+    internal interface IWorkplanEditor : IPlugin
     {
         /// <summary>
         /// Available steps

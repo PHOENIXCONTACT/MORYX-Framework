@@ -29,7 +29,7 @@ namespace Moryx.Orders.Management.Assignment
         /// <inheritdoc />
         public void Initialize(OperationValidationConfig config)
         {
-            _config = (RegexOperationValidationConfig) config;
+            _config = (RegexOperationValidationConfig)config;
             _operationNumberRegex = new Regex(_config.RegularExpression);
         }
 

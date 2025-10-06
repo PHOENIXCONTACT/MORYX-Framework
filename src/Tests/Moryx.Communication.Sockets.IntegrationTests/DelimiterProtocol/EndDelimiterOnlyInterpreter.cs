@@ -13,12 +13,12 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
         /// Size of the read buffer
         /// </summary>
         protected override int BufferSize => TestBufferSize;
-        
+
         /// <summary>
         /// Number of bytes to read in each iteration
         /// </summary>
         protected override int ReadSize => TestReadSize;
-        
+
         /// <summary>
         /// Byte sequence for end of message
         /// </summary>

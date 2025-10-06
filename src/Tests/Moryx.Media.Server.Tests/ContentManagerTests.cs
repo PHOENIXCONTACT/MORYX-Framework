@@ -36,8 +36,8 @@ namespace Moryx.Media.Server.Tests
 
             _contentManager = new ContentManager
             {
-                Config = new ModuleConfig {StoragePath = _testStoragePath},
-                Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),               
+                Config = new ModuleConfig { StoragePath = _testStoragePath },
+                Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 PreviewService = previewService.Object
             };
 

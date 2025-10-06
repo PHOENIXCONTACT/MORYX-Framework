@@ -26,14 +26,14 @@ namespace Moryx.Products.Management
             if (objectProp.PropertyType.IsEnum)
             {
                 _enumType = Enum.GetUnderlyingType(objectProp.PropertyType);
-                return new ConversionAccessor<long,object>(objectProp, ReadEnum, WriteEnum);
+                return new ConversionAccessor<long, object>(objectProp, ReadEnum, WriteEnum);
             }
 
             if (objectProp.PropertyType == typeof(DateTime))
-                return new ConversionAccessor<long,DateTime>(objectProp, dt => dt.Ticks, DateTime.FromBinary);
+                return new ConversionAccessor<long, DateTime>(objectProp, dt => dt.Ticks, DateTime.FromBinary);
 
-            if(objectProp.PropertyType == typeof(bool))
-                return new ConversionAccessor<long,bool>(objectProp, v => v ? 1 : 0, l => l > 0);
+            if (objectProp.PropertyType == typeof(bool))
+                return new ConversionAccessor<long, bool>(objectProp, v => v ? 1 : 0, l => l > 0);
 
             return base.CreatePropertyAccessor(objectProp);
         }

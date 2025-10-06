@@ -12,7 +12,7 @@ namespace Moryx.Serialization
     /// Base class for EntryCollections
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class EntryCollectionBase<T> : INotifyPropertyChanged, INotifyCollectionChanged, IEnumerable<T>, IEntryCollection 
+    public abstract class EntryCollectionBase<T> : INotifyPropertyChanged, INotifyCollectionChanged, IEnumerable<T>, IEntryCollection
         where T : class, new()
     {
         /// <summary>

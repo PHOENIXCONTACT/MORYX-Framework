@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -19,22 +19,23 @@ namespace Moryx.Workplans.Editing.Tests
 
         private WorkplanEditingSession _editingSession;
         private WorkplanDummy _workplan;
-        
+
         [SetUp]
-        public void SetUp() {
+        public void SetUp()
+        {
             //Arrange
             _workplan = new WorkplanDummy();
             _editingSession = new WorkplanEditingSession(_workplan);
         }
 
-        [Test(Description ="Check if the Connector gets removed when trying to create a duplicate connection")]
+        [Test(Description = "Check if the Connector gets removed when trying to create a duplicate connection")]
         public void StartConnectorExistsAfterConnectingAgain()
         {
             // Act
-            _editingSession.Connect( _workplan.StartConnector, 0, _workplan.StepA, 0);
+            _editingSession.Connect(_workplan.StartConnector, 0, _workplan.StepA, 0);
 
             // Assert
-            Assert.That(_workplan.Connectors.Any(c =>  c.Classification.Equals(_workplan.StartConnector.Classification)));
+            Assert.That(_workplan.Connectors.Any(c => c.Classification.Equals(_workplan.StartConnector.Classification)));
         }
         [Test(Description = "Check if start gets replaced when connecting start somewhere else")]
         public void StartConnectorGetsReplaced()
@@ -49,12 +50,12 @@ namespace Moryx.Workplans.Editing.Tests
             Assert.That(_workplan.StepC.Inputs[0], Is.EqualTo(_workplan.StepB.Outputs[0]));
         }
 
-        [Test(Description ="Check that the connections do not get changed when connecting somewhere else and connecting back again")]
+        [Test(Description = "Check that the connections do not get changed when connecting somewhere else and connecting back again")]
         public void ConnectionSwitchesOverAndBack()
         {
             // Act
             _editingSession.Connect(_workplan.StepA, 1, _workplan.StepC, 0);
-            
+
             //Assert
             Assert.That(_workplan.StepB.Inputs[0], Is.Null);
             Assert.That(HasLoseConnectors(_workplan), Is.False);
@@ -78,7 +79,7 @@ namespace Moryx.Workplans.Editing.Tests
             Assert.That(HasLoseConnectors(_workplan), Is.False);
             Assert.That(_workplan.StepC.Inputs[0], Is.EqualTo(_workplan.StepA.Outputs[0]));
             Assert.That(_workplan.StepC.Inputs[0], Is.EqualTo(_workplan.StepB.Outputs[0]));
-            
+
         }
 
         private static bool HasLoseConnectors(WorkplanDummy workplan)

@@ -41,7 +41,7 @@ namespace Moryx.Model
         /// <param name="other">An object to compare with this object.</param>
         public bool Equals(ModifiedEntity<TEntity> other)
         {
-            if(other == null)
+            if (other == null)
                 return false;
             return Data.Id == other.Data.Id;
         }

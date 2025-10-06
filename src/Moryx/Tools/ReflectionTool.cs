@@ -26,7 +26,7 @@ namespace Moryx.Tools
             // Fetch location of binaries from our assembly
             var currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).ToLower();
             var relevantAssemblies = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                                      // Only load non-dynamic assemblies from our directory
+                                          // Only load non-dynamic assemblies from our directory
                                       where !assembly.IsDynamic && !string.IsNullOrEmpty(assembly.Location)
                                       let path = Path.GetDirectoryName(assembly.Location).ToLower()
                                       where TestMode || path == currentDir
@@ -58,7 +58,7 @@ namespace Moryx.Tools
                         .Where(type => type.IsClass && !type.IsAbstract);
                     publicClasses.AddRange(exports);
                 }
-                catch(Exception x)
+                catch (Exception x)
                 {
                     CrashHandler.WriteErrorToFile($"Failed to load types from {assembly.FullName}. Error: {x.Message}");
                 }

@@ -6,7 +6,7 @@ namespace Moryx.Notifications
     /// <summary>
     /// Base class of all notifications.
     /// </summary>
-    public class Notification 
+    public class Notification
     {
         /// <summary>
         /// Unique identifier of this notification

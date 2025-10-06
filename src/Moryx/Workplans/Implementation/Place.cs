@@ -9,7 +9,7 @@ namespace Moryx.Workplans
     public class Place : IPlace
     {
         private bool _running = true;
-        
+
         #region ITokenHolder
 
         /// 

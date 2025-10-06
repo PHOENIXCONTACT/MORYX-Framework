@@ -376,7 +376,7 @@ namespace Moryx.Tests
 
             // Act
             var encoded = EntryConvert.EncodeObject(dummy);
-            
+
             // Assert
             var readList = encoded.SubEntries[3];
             Assert.That(readList.SubEntries.Count, Is.EqualTo(1));

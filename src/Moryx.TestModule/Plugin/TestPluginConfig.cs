@@ -48,6 +48,6 @@ namespace Moryx.TestModule
         [DataMember]
         [PluginConfigs(typeof(ITestSubPlugin), false)]
         public List<TestSubPluginConfig> SubPlugins { get; set; }
-         
+
     }
 }

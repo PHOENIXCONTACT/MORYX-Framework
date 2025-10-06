@@ -12,7 +12,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
     {
         public override bool CanAbort => true;
 
-        public CompletingInterruptedWaitingState(JobDataBase context, StateMap stateMap) 
+        public CompletingInterruptedWaitingState(JobDataBase context, StateMap stateMap)
             : base(context, stateMap, JobClassification.Waiting)
         {
         }

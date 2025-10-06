@@ -82,8 +82,8 @@ namespace Moryx.Model.PostgreSQL
         private static NpgsqlConnectionStringBuilder CreateConnectionStringBuilder(IDatabaseConfig config, bool includeModel = true)
         {
             var builder = new NpgsqlConnectionStringBuilder(config.ConnectionSettings.ConnectionString);
-            
-            if(includeModel)
+
+            if (includeModel)
             {
                 builder.Database = config.ConnectionSettings.Database;
             }

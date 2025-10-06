@@ -19,7 +19,7 @@ namespace Moryx.ControlSystem.Processes
         /// </summary>
         public UnknownProcess() : base(ProcessId)
         {
-            
+
         }
 
         /// <summary>

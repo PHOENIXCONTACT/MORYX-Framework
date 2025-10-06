@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
@@ -115,7 +115,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             _setupJobData.Start();
             _setupJobData.ProcessChanged(new ProcessData(new Process()), ProcessState.Failure);
             var oldDisabled = _setupJobData.Recipe.DisabledSteps.First();
-            
+
             var recipe = new SetupRecipe
             {
                 Workplan = _setupJobData.Recipe.Workplan

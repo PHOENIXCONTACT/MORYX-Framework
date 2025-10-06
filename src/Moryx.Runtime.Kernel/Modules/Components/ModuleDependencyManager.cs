@@ -57,7 +57,7 @@ namespace Moryx.Runtime.Kernel
             // Fill facade dependencies
             var facadeProviders = BuildFacadeCache(allModules);
             var availableModules = FillDependencies(allModules, facadeProviders);
-            
+
             // Build dependency tree from available modules
             var dependencyBranches = Convert(availableModules, facadeProviders);
             _dependencyTree = new PluginDependencyTree(dependencyBranches.Where(c => c.Dependencies.Count == 0)
@@ -107,7 +107,7 @@ namespace Moryx.Runtime.Kernel
                     else
                         FillFacade(propType, importingProperty, module, facadeProviders);
                 }
-                 satisfiedModules.Add(module);
+                satisfiedModules.Add(module);
             }
 
             return satisfiedModules;
@@ -194,7 +194,7 @@ namespace Moryx.Runtime.Kernel
                     // of the current module
                     var nullDependencies = dependencies.Where(d => d.GetType() == typeof(MissingServerModule)).ToList();
                     if (nullDependencies != null && nullDependencies.Count() > 0)
-                        branch.Dependencies.AddRange(nullDependencies.Select( nd => new MissingModuleDependency((MissingServerModule)nd)));
+                        branch.Dependencies.AddRange(nullDependencies.Select(nd => new MissingModuleDependency((MissingServerModule)nd)));
 
                     remaining.Remove(module);
                 }
@@ -209,7 +209,7 @@ namespace Moryx.Runtime.Kernel
             var dependencyServices = new List<IServerModule>();
             foreach (var importingProperty in GetImportingProperties(module))
             {
-                if(!importingProperty.Attribute.IsStartDependency)
+                if (!importingProperty.Attribute.IsStartDependency)
                     continue;
 
                 var propType = importingProperty.Property.PropertyType;
@@ -221,7 +221,7 @@ namespace Moryx.Runtime.Kernel
 
                 // when there is no facade provider for the dependency,
                 // add a missing dependency for the property type
-                if(dependencyProviders.Count() == 0)
+                if (dependencyProviders.Count() == 0)
                     dependencyServices.Add(new MissingServerModule(propType, importingProperty.Attribute.IsOptional));
             }
 

@@ -21,16 +21,16 @@ namespace Moryx.Orders.Management.Assignment
                 operation.CreationContext.RecipePreselection != 0)
             {
                 var recipe = ProductManagement.LoadRecipe(operation.CreationContext.RecipePreselection);
-                return new[] {(IProductRecipe) recipe};
+                return new[] { (IProductRecipe)recipe };
             }
 
             if (operation.Recipes.Any() && operation.Recipes.First() is IRecipe template && template.TemplateId != 0)
             {
                 var recipe = ProductManagement.LoadRecipe(template.TemplateId);
-                return new[] {(IProductRecipe) recipe};
+                return new[] { (IProductRecipe)recipe };
             }
 
-            return new[] {await LoadDefaultRecipe(operation.Product)};
+            return new[] { await LoadDefaultRecipe(operation.Product) };
         }
 
         /// <inheritdoc />

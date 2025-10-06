@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -57,8 +57,8 @@ namespace Moryx.Notifications.Tests
             {
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 ParallelOperations = new NotSoParallelOps(),
-                Sources = new [] {_notificationSource1Mock.Object, _notificationSource2Mock.Object },
-                Processors = new []{_processorMock.Object},
+                Sources = new[] { _notificationSource1Mock.Object, _notificationSource2Mock.Object },
+                Processors = new[] { _processorMock.Object },
                 UnitOfWorkFactory = _notificationModel
             };
         }
@@ -76,7 +76,7 @@ namespace Moryx.Notifications.Tests
         {
             // Arrange
             var notification = CreateTestNotification();
-            _notificationSource1Mock.Setup(s => s.GetPublished()).Returns(new[] {notification});
+            _notificationSource1Mock.Setup(s => s.GetPublished()).Returns(new[] { notification });
 
             // Act
             _notificationManager.Start();
@@ -170,7 +170,7 @@ namespace Moryx.Notifications.Tests
 
             parallelOpsMock.Setup(p => p.ExecuteParallel(It.IsAny<Action<NotificationManager.NotificationMap>>(),
                     It.IsAny<NotificationManager.NotificationMap>()))
-                .Callback(delegate(Action<NotificationManager.NotificationMap> action,
+                .Callback(delegate (Action<NotificationManager.NotificationMap> action,
                     NotificationManager.NotificationMap map)
                 {
                     processAction = action;

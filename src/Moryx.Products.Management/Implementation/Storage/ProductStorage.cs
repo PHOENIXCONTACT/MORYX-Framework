@@ -88,7 +88,7 @@ namespace Moryx.Products.Management
                     continue;
                 TypeInformation.Add(type.FullName, new ProductTypeInformation(type));
             }
-                
+
             foreach (var config in Config.TypeStrategies)
             {
                 var strategy = StrategyFactory.CreateTypeStrategy(config);
@@ -625,7 +625,7 @@ namespace Moryx.Products.Management
             var linkRepo = saverContext.GetRepository<IPartLinkRepository>();
             foreach (var partLinkInfo in TypeInformation[type.FullName].GetAllPartLinks(modifiedInstance))
             {
-                var linkStrategy = partLinkInfo.ProductLinkStrategy;             
+                var linkStrategy = partLinkInfo.ProductLinkStrategy;
                 if (partLinkInfo.Type == PartLinkType.single)
                 {
                     var link = (IProductPartLink)partLinkInfo.Value;
@@ -635,7 +635,7 @@ namespace Moryx.Products.Management
                         linkEntity = linkRepo.Create(linkStrategy.PropertyName);
                         saverContext.UnitOfWork.LinkEntityToBusinessObject(link, linkEntity);
                         linkEntity.Parent = typeEntity;
-                        linkStrategy.SavePartLink(link, linkEntity);                     
+                        linkStrategy.SavePartLink(link, linkEntity);
                         linkEntity.Child = GetPartEntity(saverContext, link);
                         saverContext.PersistentObjectCache.Add(link, linkEntity);
 
@@ -649,7 +649,7 @@ namespace Moryx.Products.Management
                     {
                         linkStrategy.SavePartLink(link, linkEntity);
                         linkEntity.Child = GetPartEntity(saverContext, link);
-       //                 linkEntity.Id = linkEntity.Child.Id;
+                        //                 linkEntity.Id = linkEntity.Child.Id;
                     }
                     // else: link was null and is still null
 
@@ -694,7 +694,7 @@ namespace Moryx.Products.Management
         {
             if (saverContext.EntityCache.ContainsKey((ProductIdentity)link.Product.Identity))
             {
-                var part = saverContext.EntityCache[(ProductIdentity)link.Product.Identity];            
+                var part = saverContext.EntityCache[(ProductIdentity)link.Product.Identity];
                 saverContext.PersistentObjectCache.Add(link.Product, part);
                 return part;
             }
@@ -887,7 +887,7 @@ namespace Moryx.Products.Management
                         if (!partGroup.Value.Any())
                         {
                             Logger.LogWarning("No reconstruction of the property {1} possible. You have configured the {0} strategy, but the property was null." +
-                                "Please initialize the property in the Initialize method or select the {2} strategy.", 
+                                "Please initialize the property in the Initialize method or select the {2} strategy.",
                                 nameof(PartSourceStrategy.FromPartLink), partGroup.Key.Name, nameof(PartSourceStrategy.FromEntities));
                             continue;
                         }

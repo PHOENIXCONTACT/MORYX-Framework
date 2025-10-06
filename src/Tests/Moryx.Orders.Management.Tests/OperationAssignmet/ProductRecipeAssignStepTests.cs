@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -118,7 +118,7 @@ namespace Moryx.Orders.Management.Tests
             // Arrange
             const long preselection = 42;
 
-            _operation.CreationContext = new OperationCreationContext {RecipePreselection = preselection};
+            _operation.CreationContext = new OperationCreationContext { RecipePreselection = preselection };
             _operation.Recipes = new List<IProductRecipe>();
 
             _productManagementMock.Setup(m => m.LoadRecipe(preselection)).Returns(() => new DummyRecipe());
@@ -176,7 +176,7 @@ namespace Moryx.Orders.Management.Tests
             // Assert
             Assert.That(productAssigned, "The product assignment should be successful");
             Assert.That(recipeAssigned, "The recipe assignment should be successful");
-            Assert.That( _operationData.Product, Is.InstanceOf<DummyProductType>(), "There should be an assigned DummyProduct");
+            Assert.That(_operationData.Product, Is.InstanceOf<DummyProductType>(), "There should be an assigned DummyProduct");
             Assert.That(_operation.Recipes.Single(), Is.InstanceOf<DummyRecipe>(), "There should be a selected DummyRecipe");
         }
 
@@ -187,7 +187,7 @@ namespace Moryx.Orders.Management.Tests
             _productManagementMock.Setup(m => m.LoadType(_productIdentity)).Returns((IProductType)null);
             _productManagementMock.Setup(m => m.GetRecipes(It.IsAny<IProductType>(), RecipeClassification.Default)).Returns(Array.Empty<IProductRecipe>());
 
-            _operation.Recipes = new List<IProductRecipe>(1) {new ProductRecipeReference(0)};
+            _operation.Recipes = new List<IProductRecipe>(1) { new ProductRecipeReference(0) };
 
             // Act
             var productAssigned = await _productAssignStep.AssignStep(_operationData, _operationLogger);
@@ -263,7 +263,7 @@ namespace Moryx.Orders.Management.Tests
             // Arrange
             var recipe = DummyRecipe.BuildRecipe();
             recipe.TemplateId = templateId;
-            recipe.Id = templateId+1;
+            recipe.Id = templateId + 1;
             var clone = DummyRecipe.BuildRecipe();
             clone.TemplateId = 1;
             clone.Id = 2;
@@ -278,7 +278,7 @@ namespace Moryx.Orders.Management.Tests
             runningOperationDataMock.SetupGet(o => o.Operation).Returns(runningOperation);
             runningOperationDataMock.SetupGet(o => o.State.Classification).Returns(OperationClassification.Running);
 
-            runningOperation.Recipes = new List<IProductRecipe> {clone};
+            runningOperation.Recipes = new List<IProductRecipe> { clone };
 
             var operations = new List<IOperationData>
             {

@@ -72,6 +72,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         /// Whether this Recipe is a clone or not
         /// </summary>
         [DataMember]
-        public bool IsClone{ get; set; }
+        public bool IsClone { get; set; }
     }
 }

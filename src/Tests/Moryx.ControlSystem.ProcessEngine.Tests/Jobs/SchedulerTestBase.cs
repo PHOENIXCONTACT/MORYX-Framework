@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
@@ -109,7 +109,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             JobListMock.Setup(j => j.Forward(waiting)).Returns(new[] { cleanup });
 
             // Act
-            JobScheduler.JobsReady(new []{setup, waiting, cleanup});
+            JobScheduler.JobsReady(new[] { setup, waiting, cleanup });
             Assert.That(setup, Is.EqualTo(ScheduledJob));
             setup.Classification = JobClassification.Running;
             JobScheduler.JobUpdated(setup, JobClassification.Running);
@@ -138,7 +138,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             {
                 Classification = JobClassification.Idle
             };
-            var schedulable = JobScheduler.SchedulableJobs(new[] {anotherJob});
+            var schedulable = JobScheduler.SchedulableJobs(new[] { anotherJob });
             Assert.That(schedulable.FirstOrDefault(), Is.EqualTo(anotherJob));
         }
 
@@ -214,7 +214,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
 
             otherJob.Classification = JobClassification.Waiting;
             JobListMock.Setup(j => j.Next(completedJob)).Returns(otherJob);
-            JobListMock.Setup(j => j.Forward(completedJob)).Returns(new []{ otherJob });
+            JobListMock.Setup(j => j.Forward(completedJob)).Returns(new[] { otherJob });
 
             // Act
             JobScheduler.JobUpdated(completedJob, JobClassification.Completing);
@@ -247,7 +247,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
 
             completedJob.Classification = JobClassification.Completed;
             JobListMock.Setup(j => j.Next(completedJob)).Returns(cleanup);
-            JobListMock.Setup(j => j.Forward(completedJob)).Returns(new []{ cleanup });
+            JobListMock.Setup(j => j.Forward(completedJob)).Returns(new[] { cleanup });
 
             JobScheduler.SlotAvailable += (sender, args) => slotAvailableCalled = true;
 
@@ -268,7 +268,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             {
                 Classification = JobClassification.Idle,
                 SuccessCount = 10,
-                Running = { new Process{Id = 1} }
+                Running = { new Process { Id = 1 } }
             };
             var runningCleanup = new Job(new SetupRecipe
             {
@@ -308,7 +308,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             var schedulable = JobScheduler.SchedulableJobs(new[] { runningInterrupted, completingInterrupted, completingInterruptedFollowUp }).ToList();
             runningInterrupted.Classification = JobClassification.Waiting;
             completingInterrupted.Classification = JobClassification.Waiting;
-            JobScheduler.JobsReady(new List<Job>{runningInterrupted, runningCleanup, completingInterrupted, completingCleanup});
+            JobScheduler.JobsReady(new List<Job> { runningInterrupted, runningCleanup, completingInterrupted, completingCleanup });
             JobScheduler.JobUpdated(completingInterrupted, JobClassification.Completing);
             JobScheduler.JobUpdated(runningInterrupted, JobClassification.Running);
 

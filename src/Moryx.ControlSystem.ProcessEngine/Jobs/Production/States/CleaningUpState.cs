@@ -54,7 +54,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
         public override void ProcessChanged(ProcessData processData, ProcessState trigger)
         {
             // Complete failed processes
-            if ( trigger >= ProcessState.Discarded)
+            if (trigger >= ProcessState.Discarded)
             {
                 Context.ProcessCompleted(processData);
 

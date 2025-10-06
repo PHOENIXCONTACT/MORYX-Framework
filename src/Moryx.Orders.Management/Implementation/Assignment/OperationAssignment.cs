@@ -90,7 +90,7 @@ namespace Moryx.Orders.Management.Assignment
                     if (!result)
                         break;
 
-                    operationLogger.Log(LogLevel.Information, Strings.OperationAssignment_Successful, createStep.GetType().Name); 
+                    operationLogger.Log(LogLevel.Information, Strings.OperationAssignment_Successful, createStep.GetType().Name);
                 }
             }
             catch (Exception ex)

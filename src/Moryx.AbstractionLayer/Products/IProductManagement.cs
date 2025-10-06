@@ -129,7 +129,7 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
 
-         /// <summary>
+        /// <summary>
         /// List of available product types
         /// </summary>
         IReadOnlyList<Type> ProductTypes { get; }

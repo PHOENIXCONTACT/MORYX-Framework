@@ -41,7 +41,7 @@ namespace Moryx.Resources.Samples.Initializer
                     StaffNumber = 4711
                 }
             };
-           
+
             machine.MachineType = MachineType.halfAutomatic;
             machine.Power = 234.1;
 

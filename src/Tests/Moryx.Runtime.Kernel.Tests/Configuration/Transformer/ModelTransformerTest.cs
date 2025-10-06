@@ -44,7 +44,7 @@ namespace Moryx.Tests.Configuration
                 foreach (var entry in converted.SubEntries)
                 {
                     // find the property in the generic object
-                    if (propertyInfo.Name != entry.Identifier) 
+                    if (propertyInfo.Name != entry.Identifier)
                         continue;
 
                     found = true;
@@ -108,7 +108,7 @@ namespace Moryx.Tests.Configuration
                         foundPropertyWithoutValueAttribute = true;
                         Assert.That(entry.Value.Possible, Is.Not.Null, "Enums always have their default values!");
                     }
-                        // collections are using the default to safe the type.
+                    // collections are using the default to safe the type.
                     else if (typeof(IList).IsAssignableFrom(propertyInfo.PropertyType))
                     {
                         Assert.That(entry.Value.Possible, Is.Not.Null, "The possible value should contain the type of list!");
@@ -129,7 +129,7 @@ namespace Moryx.Tests.Configuration
                         }
                         else
                         {
-                            var possibleValuesAttribute = (PossibleValuesAttribute) attribute;
+                            var possibleValuesAttribute = (PossibleValuesAttribute)attribute;
                             foundPropertyWithValuesAttribute = true;
                             foreach (var value in possibleValuesAttribute.GetValues(null, null))
                             {

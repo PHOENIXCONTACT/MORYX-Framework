@@ -106,8 +106,10 @@ namespace Moryx.Resources.Management
         {
             IEnumerable<TResource> matches;
             _graphLock.EnterReadLock();
-                matches = from resource in _graph.Values let target = resource as TResource 
-                    where target != null && predicate(target) select target;
+            matches = from resource in _graph.Values
+                      let target = resource as TResource
+                      where target != null && predicate(target)
+                      select target;
             _graphLock.ExitReadLock();
 
             return matches;

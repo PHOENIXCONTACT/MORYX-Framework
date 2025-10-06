@@ -69,7 +69,7 @@ namespace Moryx.Collections
         {
             // ReSharper disable once InconsistentlySynchronizedField
             // All state changes will be do in locked block
-            _state = (QueueStateBase) state;
+            _state = (QueueStateBase)state;
         }
 
         /// <inheritdoc />

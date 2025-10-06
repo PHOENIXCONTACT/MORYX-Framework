@@ -19,7 +19,7 @@ namespace Moryx.Tools
             string crashText;
             try
             {
-                crashText = ExceptionPrinter.Print((Exception) e.ExceptionObject);
+                crashText = ExceptionPrinter.Print((Exception)e.ExceptionObject);
             }
             catch
             {
@@ -60,12 +60,12 @@ namespace Moryx.Tools
             }
             catch
             {
-               // Kill corrupted directory
-               Directory.Delete(crashDir, true);
-               Directory.CreateDirectory(crashDir);
+                // Kill corrupted directory
+                Directory.Delete(crashDir, true);
+                Directory.CreateDirectory(crashDir);
 
-               // Now try again
-               File.WriteAllText(fileName, message);
+                // Now try again
+                File.WriteAllText(fileName, message);
             }
         }
     }

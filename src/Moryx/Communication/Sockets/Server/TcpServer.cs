@@ -14,7 +14,7 @@ namespace Moryx.Communication.Sockets
         /// Application global map of ports
         /// </summary>
         private static readonly List<PortMap> Registrations = [];
-        
+
         /// <summary>
         /// IP Address of the registration
         /// </summary>

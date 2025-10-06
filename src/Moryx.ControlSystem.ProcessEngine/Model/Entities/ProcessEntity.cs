@@ -11,7 +11,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Model
     public class ProcessEntity : ModificationTrackedEntityBase
     {
         [Key, Required, DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public override long Id {
+        public override long Id
+        {
             get => base.Id;
             set => base.Id = value;
         }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -45,7 +45,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             NotificationAdapterMock = new Mock<INotificationAdapter>();
             LoggerMock = new Mock<IModuleLogger>();
         }
-                
+
         /// <summary>
         /// Creates a new production job with the given amount
         /// </summary>
@@ -137,10 +137,10 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             requestingRecipeSetupJob.Start();
             return requestingRecipeSetupJob;
         }
-        
+
         /// <summary>
-         /// Creates a new setup job in retrying setup blocked state
-         /// </summary>
+        /// Creates a new setup job in retrying setup blocked state
+        /// </summary>
         internal SetupJobData GetRetrySetupBlockedSetupJob()
         {
             var retrySetupBlockedSetupJob = GetRunningSetupJob();

@@ -31,86 +31,86 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
             get => Type.GetTypeCode(MessageType);
             set => MessageName = TypeCodeToString(value);
         }
-        
+
         #endregion
 
         /// <inheritdoc />
         protected internal override byte[] Serialize(object payload)
         {
-           if (payload is bool b)
+            if (payload is bool b)
                 return BitConverter.GetBytes(b);
-           if (payload is char c)
-               return BitConverter.GetBytes(c);
-           if (payload is double d)
-               return BitConverter.GetBytes(d);
-           if (payload is short s)
-               return BitConverter.GetBytes(s);
-           if (payload is int i)
-               return BitConverter.GetBytes(i);
-           if (payload is long l)
-               return BitConverter.GetBytes(l);
-           if (payload is float f)
-               return BitConverter.GetBytes(f);
-           if (payload is ushort us)
-               return BitConverter.GetBytes(us);
-           if (payload is uint ui)
-               return BitConverter.GetBytes(ui);
-           if (payload is ulong ul)
-               return BitConverter.GetBytes(ul);
-           if (payload is string str)
-               return Encoding.ASCII.GetBytes(str);
-           if (payload is byte byteMessage)
-               return new[] {byteMessage};
-           if (payload is Enum e)
-           {
-               throw new NotImplementedException();
-           }
-           if (payload is decimal dec)
-           {
-               throw new NotImplementedException();
-           }
-           if (payload is DateTime dt)
-           {
-               throw new NotImplementedException();
-           }
-           if (payload is DBNull dbNull)
-           {
-               throw new NotImplementedException();
-           }
-           if (payload is sbyte sByte)
-           {
-               throw new NotImplementedException();
-           }
-           throw new NotImplementedException();
+            if (payload is char c)
+                return BitConverter.GetBytes(c);
+            if (payload is double d)
+                return BitConverter.GetBytes(d);
+            if (payload is short s)
+                return BitConverter.GetBytes(s);
+            if (payload is int i)
+                return BitConverter.GetBytes(i);
+            if (payload is long l)
+                return BitConverter.GetBytes(l);
+            if (payload is float f)
+                return BitConverter.GetBytes(f);
+            if (payload is ushort us)
+                return BitConverter.GetBytes(us);
+            if (payload is uint ui)
+                return BitConverter.GetBytes(ui);
+            if (payload is ulong ul)
+                return BitConverter.GetBytes(ul);
+            if (payload is string str)
+                return Encoding.ASCII.GetBytes(str);
+            if (payload is byte byteMessage)
+                return new[] { byteMessage };
+            if (payload is Enum e)
+            {
+                throw new NotImplementedException();
+            }
+            if (payload is decimal dec)
+            {
+                throw new NotImplementedException();
+            }
+            if (payload is DateTime dt)
+            {
+                throw new NotImplementedException();
+            }
+            if (payload is DBNull dbNull)
+            {
+                throw new NotImplementedException();
+            }
+            if (payload is sbyte sByte)
+            {
+                throw new NotImplementedException();
+            }
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
         protected internal override IConvertible Deserialize(byte[] messageAsBytes)
         {
             if (MessageType == typeof(bool))
-               return BitConverter.ToBoolean(messageAsBytes, 0);
+                return BitConverter.ToBoolean(messageAsBytes, 0);
             if (MessageType == typeof(char))
-               return BitConverter.ToChar(messageAsBytes, 0);
+                return BitConverter.ToChar(messageAsBytes, 0);
             if (MessageType == typeof(double))
-               return BitConverter.ToDouble(messageAsBytes, 0);
+                return BitConverter.ToDouble(messageAsBytes, 0);
             if (MessageType == typeof(short))
-               return BitConverter.ToInt16(messageAsBytes, 0);
+                return BitConverter.ToInt16(messageAsBytes, 0);
             if (MessageType == typeof(int))
-               return BitConverter.ToInt32(messageAsBytes, 0);
+                return BitConverter.ToInt32(messageAsBytes, 0);
             if (MessageType == typeof(long))
-               return BitConverter.ToInt64(messageAsBytes, 0);
+                return BitConverter.ToInt64(messageAsBytes, 0);
             if (MessageType == typeof(ushort))
-               return BitConverter.ToUInt16(messageAsBytes, 0);
+                return BitConverter.ToUInt16(messageAsBytes, 0);
             if (MessageType == typeof(uint))
-               return BitConverter.ToUInt32(messageAsBytes, 0);
+                return BitConverter.ToUInt32(messageAsBytes, 0);
             if (MessageType == typeof(ulong))
-               return BitConverter.ToUInt64(messageAsBytes, 0);
+                return BitConverter.ToUInt64(messageAsBytes, 0);
             if (MessageType == typeof(string))
-               return Encoding.ASCII.GetString(messageAsBytes);
+                return Encoding.ASCII.GetString(messageAsBytes);
             if (MessageType == typeof(byte))
-               return messageAsBytes[0];
+                return messageAsBytes[0];
             if (MessageType == typeof(float))
-               return BitConverter.ToSingle(messageAsBytes, 0);
+                return BitConverter.ToSingle(messageAsBytes, 0);
             throw new NotImplementedException();
         }
 

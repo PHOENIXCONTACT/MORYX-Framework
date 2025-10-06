@@ -13,7 +13,7 @@ namespace Moryx.Orders.Management
 
         public IOperationManager OperationManager { get; set; }
 
-		public void ExecuteCommand(string[] args, Action<string> outputStream)
+        public void ExecuteCommand(string[] args, Action<string> outputStream)
         {
             if (!args.Any())
                 outputStream("OrderManagement console requires arguments");
@@ -66,7 +66,7 @@ namespace Moryx.Orders.Management
             }
 
             outputStream($"Trying to import {operations.Length} operations ...");
-            operations.ForEach(delegate(IOperationData data)
+            operations.ForEach(delegate (IOperationData data)
             {
                 outputStream($"{data.OrderData.Number}-{data.Number}");
                 data.Assign();

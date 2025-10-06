@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
@@ -56,7 +56,7 @@ namespace Moryx.Orders.Management.Tests
         [TestCase(10, 6, 2, 0, 2, JobClassification.Running, 10, true, false, 0, 2, Description = "Validate data: Production without reworked parts")]
         [TestCase(10, 9, 0, 5, 0, JobClassification.Running, 10, true, false, 0, 1, Description = "Validate data: Production with reworked parts but no scrap")]
         [TestCase(10, 9, 0, 9, 0, JobClassification.Running, 10, true, false, 0, 1, Description = "Validate data: Production with completely reworked parts")]
-        [TestCase(10, 6, 2, 0, 2,JobClassification.Completing, 8, false, false, 2, 0, Description = "Validate data: Completing production without reworked parts")]
+        [TestCase(10, 6, 2, 0, 2, JobClassification.Completing, 8, false, false, 2, 0, Description = "Validate data: Completing production without reworked parts")]
         [TestCase(10, 9, 0, 5, 1, JobClassification.Completing, 9, false, false, 1, 0, Description = "Validate data: Completing production with reworked parts but no scrap")]
         [TestCase(10, 9, 0, 9, 1, JobClassification.Completing, 9, false, false, 1, 0, Description = "Validate data: Completing production with completely reworked parts")]
         public void ValidateData(int targetAmount, int success, int failure, int reworked, int running, JobClassification classification,

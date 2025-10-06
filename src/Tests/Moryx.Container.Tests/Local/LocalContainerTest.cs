@@ -52,7 +52,7 @@ namespace Moryx.Container.Tests
         [Test]
         public void SpecificDependencyRegistration()
         {
-            
+
         }
 
         [TearDown]

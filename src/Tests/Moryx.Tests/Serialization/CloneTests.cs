@@ -35,10 +35,10 @@ namespace Moryx.Tests
                 DisplayName = string.Format("Entry-{0}", id),
                 Value = new EntryValue
                 {
-                    Current = (id*123).ToString("D"),
+                    Current = (id * 123).ToString("D"),
                     Default = "42",
-                    Type = (EntryValueType) (id%7),
-                    UnitType = (EntryUnitType) (id%Enum.GetNames(typeof(EntryUnitType)).Length),
+                    Type = (EntryValueType)(id % 7),
+                    UnitType = (EntryUnitType)(id % Enum.GetNames(typeof(EntryUnitType)).Length),
                     Possible = ["12334", "1123361", "11236"]
                 }
             };

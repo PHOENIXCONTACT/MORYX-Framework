@@ -25,7 +25,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
         {
             return typeof(Resource).IsAssignableFrom(sourceType)
-                ? base.GetProperties(sourceType).Where(p => p.GetCustomAttribute<EntryVisualizationAttribute>() != null )
+                ? base.GetProperties(sourceType).Where(p => p.GetCustomAttribute<EntryVisualizationAttribute>() != null)
                 : new EntrySerializeSerialization().GetProperties(sourceType);
         }
 

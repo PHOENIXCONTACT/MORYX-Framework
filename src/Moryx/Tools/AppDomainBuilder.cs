@@ -19,14 +19,14 @@ namespace Moryx.Tools
             var assemblies = Directory.GetFiles(parentDir, "*.dll", SearchOption.TopDirectoryOnly);
             foreach (var assemblyFile in assemblies)
             {
-                if(AppDomain.CurrentDomain.GetAssemblies().Any(loadedAssembly => NamesMatch(loadedAssembly, assemblyFile)))
+                if (AppDomain.CurrentDomain.GetAssemblies().Any(loadedAssembly => NamesMatch(loadedAssembly, assemblyFile)))
                     continue;
 
                 try
                 {
                     Assembly.LoadFrom(assemblyFile);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     var loadEx = new FileLoadException("Failed to load assembly file " + assemblyFile, ex);
                     Console.WriteLine(ExceptionPrinter.Print(loadEx));

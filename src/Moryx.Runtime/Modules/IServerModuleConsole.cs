@@ -8,6 +8,6 @@ namespace Moryx.Runtime.Modules
     /// </summary>
     public interface IServerModuleConsole
     {
-      
+
     }
 }

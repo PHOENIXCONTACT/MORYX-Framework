@@ -26,7 +26,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             // Find any step, that has an empty output
             foreach (var step in workplan.Steps)
             {
-                if(step.Outputs.Any(o => o is null))
+                if (step.Outputs.Any(o => o is null))
                     errors.Add(string.Format(Strings.WorkplanValidation_OutputUnset, step.Name));
             }
 

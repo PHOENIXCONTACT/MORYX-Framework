@@ -32,7 +32,7 @@ namespace Moryx.ControlSystem.VisualInstructions
         /// <inheritdoc />
         protected override void Populate(IProcess process, Parameters instance)
         {
-            var parameters = (VisualInstructionParameters) instance;
+            var parameters = (VisualInstructionParameters)instance;
 
             // No instructions, no binding!
             if (Instructions == null || Instructions.Length == 0)

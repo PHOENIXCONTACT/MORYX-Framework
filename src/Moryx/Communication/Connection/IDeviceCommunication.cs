@@ -17,7 +17,7 @@ namespace Moryx.Communication.Connection
         /// <param name="communicate">The procedure that executes
         /// this communication</param>
         void Start(Func<FunctionResult> communicate);
-        
+
         /// <summary>
         /// Stops the communication
         /// </summary>

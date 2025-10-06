@@ -126,7 +126,7 @@ namespace Moryx.Workplans.Transitions
             {
                 allEqual &= (i == descriptions[i].MappingValue);
             }
-            return allEqual ? (IIndexResolver) new CastResolver() : new DescriptionResolver(descriptions);
+            return allEqual ? (IIndexResolver)new CastResolver() : new DescriptionResolver(descriptions);
         }
 
         /// <summary>

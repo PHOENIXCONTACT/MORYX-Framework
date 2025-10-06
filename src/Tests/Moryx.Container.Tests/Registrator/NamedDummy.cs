@@ -11,6 +11,6 @@ namespace Moryx.Container.Tests
     [Component(LifeCycle.Transient)]
     public class UnnamedDummy
     {
-        
+
     }
 }

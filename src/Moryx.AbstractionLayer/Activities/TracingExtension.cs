@@ -13,7 +13,7 @@ namespace Moryx.AbstractionLayer
         /// </summary>
         public static T TransformTracing<T>(this IActivity activity) where T : Tracing, new()
         {
-            var baseType = (Activity) activity;
+            var baseType = (Activity)activity;
             var tracing = baseType.Tracing.Transform<T>();
             baseType.Tracing = tracing;
             return tracing;

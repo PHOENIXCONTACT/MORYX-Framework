@@ -149,10 +149,10 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
             var instructionResponse = new ActiveInstructionResponse
             {
                 Id = response.Id,
-                SelectedResult = new InstructionResult 
-                { 
-                    Key = response.SelectedResult?.Key ?? response.Result, 
-                    DisplayValue = response.SelectedResult?.DisplayValue 
+                SelectedResult = new InstructionResult
+                {
+                    Key = response.SelectedResult?.Key ?? response.Result,
+                    DisplayValue = response.SelectedResult?.DisplayValue
                 }
             };
 

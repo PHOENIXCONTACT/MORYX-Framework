@@ -6,8 +6,8 @@ namespace Moryx.Workplans.Editing.Implementation
     internal struct InvolvedSteps
     {
         /// <summary>
-         /// Create instance with all involved entities
-         /// </summary>
+        /// Create instance with all involved entities
+        /// </summary>
         public InvolvedSteps(IWorkplanStep source, IWorkplanStep target, IConnector connector)
             : this()
         {

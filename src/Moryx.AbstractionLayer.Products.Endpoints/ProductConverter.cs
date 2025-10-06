@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
@@ -59,7 +59,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         }
         public ProductModel ConvertProduct(IProductType productType, bool flat)
         {
-            
+
             // Base object
             var identity = (ProductIdentity)productType.Identity ?? EmptyIdentity;
             var converted = new ProductModel
@@ -200,7 +200,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 recipes.Add(productRecipe);
             }
             if (recipes.Any())
-                foreach(var recipe in recipes)
+                foreach (var recipe in recipes)
                     _productManagement.SaveRecipe(recipe);
 
             // Product is flat

@@ -20,7 +20,7 @@ namespace Moryx.Container.Tests
             _container.Register<IDependency, DependencyA>("DepA", LifeCycle.Singleton);
             _container.Register<IDependency, DependencyB>("DepB", LifeCycle.Singleton);
         }
-        
+
         [Test]
         public void UnnamedInjectsFirst()
         {

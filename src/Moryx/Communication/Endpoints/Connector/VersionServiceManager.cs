@@ -17,7 +17,7 @@ namespace Moryx.Communication.Endpoints
         /// Underlying http client for the requests
         /// </summary>
         protected HttpClient Client { get; set; }
-        
+
         /// <inheritdoc/>
         public IProxyConfig ProxyConfig { get; private set; }
 

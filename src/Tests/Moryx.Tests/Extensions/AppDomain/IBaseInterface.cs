@@ -5,6 +5,6 @@ namespace Moryx.Tests.Extensions
 {
     internal interface IBaseInterface
     {
-         
+
     }
 }

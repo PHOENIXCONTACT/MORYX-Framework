@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Net;
@@ -194,7 +194,8 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 return Conflict($"The resource '{model.Id}' already exists.");
             try
             {
-                var id = _resourceManagement.Create(_resourceTypeTree[model.Type].ResourceType, r => {
+                var id = _resourceManagement.Create(_resourceTypeTree[model.Type].ResourceType, r =>
+                {
                     var resourcesToSave = new HashSet<long>();
                     var resourceCache = new Dictionary<long, Resource>();
                     FromModel(model, resourcesToSave, resourceCache, r);
@@ -358,7 +359,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 if (e is ArgumentException or SerializationException or ValidationException)
                     return BadRequest(e.Message);
                 throw;
-            }            
+            }
 
             return GetDetails(id);
         }

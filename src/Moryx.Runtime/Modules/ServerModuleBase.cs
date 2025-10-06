@@ -192,7 +192,7 @@ namespace Moryx.Runtime.Modules
                 return;
 
             facade.Deactivate();
-            FillProperties(facade, (a, b) => null);            
+            FillProperties(facade, (a, b) => null);
 
             var lifeCycleBoundFacade = facade as ILifeCycleBoundFacade;
             lifeCycleBoundFacade?.Deactivated();

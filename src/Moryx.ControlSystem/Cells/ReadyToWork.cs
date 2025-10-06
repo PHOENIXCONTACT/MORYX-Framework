@@ -52,7 +52,7 @@ namespace Moryx.ControlSystem.Cells
         /// </summary>
         /// <param name="activity">The activity.</param>
         public ActivityStart StartActivity(IActivity activity)
-        {           
+        {
             return new ActivityStart(this, activity) { Process = activity.Process };
         }
 

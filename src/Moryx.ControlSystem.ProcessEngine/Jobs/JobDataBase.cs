@@ -280,7 +280,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         internal virtual void ProcessCompleted(ProcessData processData)
         {
             // Only raise progress changed while we have running processes
-            if(RunningProcesses.Count > 0)
+            if (RunningProcesses.Count > 0)
                 RaiseProgressChanged();
         }
 

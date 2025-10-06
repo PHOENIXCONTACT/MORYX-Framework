@@ -21,7 +21,7 @@ namespace Moryx.Products.Samples
 
         public override ProductInstance Instantiate()
         {
-            var needle = (NeedleInstance) base.Instantiate();
+            var needle = (NeedleInstance)base.Instantiate();
             needle.Role = Role;
             return needle;
         }

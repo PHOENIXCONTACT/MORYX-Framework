@@ -45,8 +45,8 @@ namespace Moryx.Serialization
         /// <inheritdoc />
         public override IEnumerable<string> GetValues(IContainer container)
         {
-            var modeCalculation = (Func<int, int>)(possibleValue =>  _mode == StepMode.Addition 
-                                                                   ? possibleValue + _step 
+            var modeCalculation = (Func<int, int>)(possibleValue => _mode == StepMode.Addition
+                                                                   ? possibleValue + _step
                                                                    : possibleValue * _step);
             for (var possibleValue = _min; possibleValue <= _max; possibleValue = modeCalculation(possibleValue))
             {

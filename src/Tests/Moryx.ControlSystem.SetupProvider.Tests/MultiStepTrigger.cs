@@ -23,7 +23,7 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
         {
             CreateStepCalled = true;
             return new IWorkplanStep[] { new TestSetupTask { Name = "P1" }, new TestSetupTask { Name = "P2" } };
-        } 
+        }
     }
 }
 

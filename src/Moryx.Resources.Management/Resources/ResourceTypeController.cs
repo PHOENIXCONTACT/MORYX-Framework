@@ -268,12 +268,12 @@ namespace Moryx.Resources.Management
 
             var interfaces = RelevantInterfaces(linker);
             // Move up the type tree until the parent offers less interfaces than the current linker, is abstract or a generic
-            while (linker.BaseType != null && !linker.BaseType.ResourceType.IsGenericType 
+            while (linker.BaseType != null && !linker.BaseType.ResourceType.IsGenericType
                 && interfaces.Count == RelevantInterfaces(linker.BaseType).Count)
             {
                 linker = linker.BaseType;
             }
-                
+
 
             // Step 2: Check if we already created a proxy for this type. If we already
             // did use this one for the requested type as well.

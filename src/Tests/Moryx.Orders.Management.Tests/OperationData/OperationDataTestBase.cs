@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -74,7 +74,7 @@ namespace Moryx.Orders.Management.Tests
 
             public TestJob SetRunning(int amount)
             {
-                RunningProcesses = Enumerable.Range(1, amount).Select(i => new Process {Id = i}).ToList();
+                RunningProcesses = Enumerable.Range(1, amount).Select(i => new Process { Id = i }).ToList();
                 return this;
             }
 
@@ -97,7 +97,7 @@ namespace Moryx.Orders.Management.Tests
                 ProductRevision = 1,
                 Parts = new PartCreationContext[0],
                 PlannedStart = DateTime.Now,
-                PlannedEnd= DateTime.UtcNow,                
+                PlannedEnd = DateTime.UtcNow,
             };
 
             var operationData = GetOperationDataInstance(replaceScrap);

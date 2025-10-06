@@ -59,7 +59,7 @@ namespace Moryx.Media.Endpoints
 
                 var fileTypes = mediaServer.GetSupportedFileTypes();
                 errorMessage = $"{trustedFileName} file type isn't permitted.";
-                if(!fileTypes.Contains(Path.GetExtension(formFile.FileName)))
+                if (!fileTypes.Contains(Path.GetExtension(formFile.FileName)))
                     return false;
 
                 errorMessage = $"{trustedFileName} file signature doesn't match the file's extension.";

@@ -5,6 +5,6 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 {
     public interface IFacadeA
     {
-         
+
     }
 }

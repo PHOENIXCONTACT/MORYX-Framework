@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -43,7 +43,7 @@ namespace Moryx.ControlSystem.ProcessEngine
             DbContextManager = dbContextManager;
         }
 
-#region Generated imports
+        #region Generated imports
 
         /// <summary>
         /// Provides access to the ControlSystem model that stores jobs, processes and activities
@@ -69,9 +69,9 @@ namespace Moryx.ControlSystem.ProcessEngine
         [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
         public IProductManagement ProductManagement { get; set; }
 
-#endregion
+        #endregion
 
-#region State transition
+        #region State transition
 
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
@@ -128,9 +128,9 @@ namespace Moryx.ControlSystem.ProcessEngine
             DeactivateFacade(_processControlFacade);
         }
 
-#endregion
+        #endregion
 
-#region FacadeContainer
+        #region FacadeContainer
 
         private readonly JobManagementFacade _jobManagementFacade = new();
         IJobManagement IFacadeContainer<IJobManagement>.Facade => _jobManagementFacade;
@@ -142,6 +142,6 @@ namespace Moryx.ControlSystem.ProcessEngine
 
         IProcessControl IFacadeContainer<IProcessControl>.Facade => _processControlFacade;
 
-#endregion
+        #endregion
     }
 }

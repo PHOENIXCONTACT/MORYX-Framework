@@ -7,7 +7,7 @@ namespace Moryx.Runtime.Modules
     {
         public override ServerModuleState Classification => ServerModuleState.Stopped;
 
-        public StoppedState(IServerModuleStateContext context, StateMap stateMap) 
+        public StoppedState(IServerModuleStateContext context, StateMap stateMap)
             : base(context, stateMap)
         {
         }

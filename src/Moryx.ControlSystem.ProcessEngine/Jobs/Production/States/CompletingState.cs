@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -12,7 +12,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
     {
         public override bool CanAbort => true;
 
-        public CompletingState(JobDataBase context, StateMap stateMap) 
+        public CompletingState(JobDataBase context, StateMap stateMap)
             : base(context, stateMap, JobClassification.Completing)
         {
         }

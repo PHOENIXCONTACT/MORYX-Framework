@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Operators.Exceptions;
@@ -18,7 +18,8 @@ internal class IOperatorManagementTests : TestsBase
     }
 
     [TearDown]
-    public void TearDown() { 
+    public void TearDown()
+    {
         _env.StopTestModule();
     }
 
@@ -99,7 +100,7 @@ internal class IOperatorManagementTests : TestsBase
     {
         // Arrange
         _facade.AddOperator(Operator);
-        
+
         // Act
         // Assert
         Assert.Multiple(() =>

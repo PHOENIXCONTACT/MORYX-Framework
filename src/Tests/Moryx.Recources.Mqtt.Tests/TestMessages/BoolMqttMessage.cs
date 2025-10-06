@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -8,7 +8,7 @@ using Moryx.Communication;
 
 namespace Moryx.Resources.Mqtt.Tests.TestMessages
 {
-    public class BoolMqttMessage: IIdentifierMessage, IByteSerializable
+    public class BoolMqttMessage : IIdentifierMessage, IByteSerializable
     {
         public byte[] ToBytes()
         {

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -63,14 +63,14 @@ namespace Moryx.Notifications.Tests
             {
                 var repo = uow.GetRepository<INotificationEntityRepository>();
                 var entities = repo.GetAll();
-                Assert.That(entities.Count, Is.EqualTo(1),"There should be one entry");
+                Assert.That(entities.Count, Is.EqualTo(1), "There should be one entry");
                 var entity = entities.First();
-                Assert.That(entity.Identifier, Is.EqualTo(managed.Identifier),"There was a wrong identifier saved");
-                Assert.That(entity.Sender, Is.EqualTo(managed.Sender),"There was a wrong Sender saved");
-                Assert.That(entity.Source, Is.EqualTo(managed.Source),"There was a wrong Source saved");
-                Assert.That(entity.Message, Is.EqualTo(managed.Message),"There was a wrong Message saved");
-                Assert.That(entity.Title, Is.EqualTo(managed.Title),"There was a wrong Title saved");
-                Assert.That(entity.Created.Kind, Is.EqualTo(DateTimeKind.Utc),"DateTime is not in UTC format");
+                Assert.That(entity.Identifier, Is.EqualTo(managed.Identifier), "There was a wrong identifier saved");
+                Assert.That(entity.Sender, Is.EqualTo(managed.Sender), "There was a wrong Sender saved");
+                Assert.That(entity.Source, Is.EqualTo(managed.Source), "There was a wrong Source saved");
+                Assert.That(entity.Message, Is.EqualTo(managed.Message), "There was a wrong Message saved");
+                Assert.That(entity.Title, Is.EqualTo(managed.Title), "There was a wrong Title saved");
+                Assert.That(entity.Created.Kind, Is.EqualTo(DateTimeKind.Utc), "DateTime is not in UTC format");
             }
         }
 
@@ -91,13 +91,13 @@ namespace Moryx.Notifications.Tests
             {
                 var repo = uow.GetRepository<INotificationEntityRepository>();
                 var entities = repo.GetAll();
-                Assert.That(entities.Count, Is.EqualTo(1),"There should be one entry after the update");
+                Assert.That(entities.Count, Is.EqualTo(1), "There should be one entry after the update");
                 var entity = entities.First();
-                Assert.That(entity.Identifier, Is.EqualTo(managed.Identifier),"There was a wrong identifier saved");
-                Assert.That(entity.Sender, Is.EqualTo(managed.Sender),"There was a wrong Sender saved");
-                Assert.That(entity.Source, Is.EqualTo(managed.Source),"There was a wrong Source saved");
-                Assert.That(entity.Message, Is.EqualTo(managed.Message),"There was a wrong Message saved. It should be the updated one.");
-                Assert.That(entity.Title, Is.EqualTo(managed.Title),"There was a wrong Title saved");
+                Assert.That(entity.Identifier, Is.EqualTo(managed.Identifier), "There was a wrong identifier saved");
+                Assert.That(entity.Sender, Is.EqualTo(managed.Sender), "There was a wrong Sender saved");
+                Assert.That(entity.Source, Is.EqualTo(managed.Source), "There was a wrong Source saved");
+                Assert.That(entity.Message, Is.EqualTo(managed.Message), "There was a wrong Message saved. It should be the updated one.");
+                Assert.That(entity.Title, Is.EqualTo(managed.Title), "There was a wrong Title saved");
                 Assert.That(_processor.GetTypes().Any(t => t.Id == 0), Is.False, "Id of type was not set correctly and is still 0");
             }
         }

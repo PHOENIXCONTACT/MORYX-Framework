@@ -91,7 +91,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                     // Interrupted processes are saved synchronous for secure shutdown
                     ProcessStorage.SaveProcess(args.ProcessData);
                     // Save instances if existing and configured
-                    if(ModuleConfig.SaveInstancesOnInterrupt && (processData.Process as ProductionProcess)?.ProductInstance?.Id > 0)
+                    if (ModuleConfig.SaveInstancesOnInterrupt && (processData.Process as ProductionProcess)?.ProductInstance?.Id > 0)
                         ParallelOperations.ExecuteParallel(SaveInstance, processData);
                     break;
                 case ProcessState.Success:
@@ -204,7 +204,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             // Signal process ready for execution
             if (processData.State == ProcessState.Restored)
                 ActivityPool.UpdateProcess(processData, ProcessState.RestoredReady);
-            else if(processData.State == ProcessState.CleaningUp)
+            else if (processData.State == ProcessState.CleaningUp)
                 ActivityPool.UpdateProcess(processData, ProcessState.CleaningUpReady);
         }
 

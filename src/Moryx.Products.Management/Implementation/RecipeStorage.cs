@@ -208,7 +208,7 @@ namespace Moryx.Products.Management
                 var reference = referenceRepo.Create((int)WorkplanReferenceType.NewVersion);
                 reference.Source = workplanEntity;
                 reference.Target = workplanEntity = workplanRepo.Create(workplan.Name, workplanEntity.Version + 1, (int)workplan.State);
-                
+
             }
 
             // Set properties of the workplan entity
@@ -261,7 +261,7 @@ namespace Moryx.Products.Management
 
             // Remove connectors, that are now longer used. We only use Created/Updated columns
             // and do not want the entities flagged as deleted
-            var removedSteps = workplanEntity.Steps != null ?  workplanEntity.Steps.Where(se => workplan.Steps.All(s => s.Id != se.StepId)) : new List<WorkplanStepEntity>() ;
+            var removedSteps = workplanEntity.Steps != null ? workplanEntity.Steps.Where(se => workplan.Steps.All(s => s.Id != se.StepId)) : new List<WorkplanStepEntity>();
             foreach (var removedStep in removedSteps.ToList())
             {
                 descriptionRepo.RemoveRange(removedStep.OutputDescriptions);

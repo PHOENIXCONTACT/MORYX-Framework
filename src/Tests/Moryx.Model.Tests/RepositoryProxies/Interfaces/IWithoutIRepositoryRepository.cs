@@ -5,6 +5,6 @@ namespace Moryx.Model.Tests
 {
     public interface IWithoutIRepositoryRepository
     {
-        
+
     }
 }

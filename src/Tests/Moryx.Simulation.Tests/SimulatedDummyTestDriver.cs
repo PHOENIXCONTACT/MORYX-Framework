@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Drivers.Message;
@@ -13,7 +13,7 @@ using Moryx.Resources.Benchmarking;
 
 namespace Moryx.Simulation.Tests
 {
-    public  class SimulatedDummyTestDriver : Driver, IMessageDriver<object>, ISimulationDriver
+    public class SimulatedDummyTestDriver : Driver, IMessageDriver<object>, ISimulationDriver
     {
         public bool HasChannels => false;
 

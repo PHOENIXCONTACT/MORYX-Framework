@@ -15,7 +15,7 @@ namespace Moryx.Runtime.Kernel.Tests.Dummys
         /// </summary>
         public ConfigState ConfigState
         {
-            get; set; 
+            get; set;
         }
 
         /// <summary>

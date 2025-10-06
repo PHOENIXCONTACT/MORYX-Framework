@@ -11,7 +11,7 @@ namespace Moryx.AbstractionLayer
         /// <summary>
         /// The recipe provider's name
         /// </summary>
-        public string RecipeProvider { get; set; } 
+        public string RecipeProvider { get; set; }
 
         /// <summary>
         /// The ID of the recipe used to handle this process.

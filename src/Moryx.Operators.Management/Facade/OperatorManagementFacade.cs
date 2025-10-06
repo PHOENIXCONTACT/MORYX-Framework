@@ -23,7 +23,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     public ISkillManager SkillManager { get; set; }
 
     public IParallelOperations ParallelOperations { get; set; }
-    
+
     public IResourceManagement ResourceManagement { get; set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     #endregion
@@ -48,14 +48,14 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     {
         ArgumentNullException.ThrowIfNull(@operator);
         if (string.IsNullOrEmpty(@operator.Identifier))
-            throw new ArgumentException(string.Format(Strings.NOT_NULL,nameof(Operator.Identifier)));
+            throw new ArgumentException(string.Format(Strings.NOT_NULL, nameof(Operator.Identifier)));
         if (Operators.Any(o => o.Identifier == @operator.Identifier))
             throw new AlreadyExistsException(@operator.Identifier);
         return @operator;
     }
 
     public void DeleteOperator(string identifier)
-    {            
+    {
         OperatorManager.Delete(VerifiedExisting(identifier));
     }
 
@@ -68,7 +68,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         return identifier;
     }
 
-    public void UpdateOperator(Operator @operator) 
+    public void UpdateOperator(Operator @operator)
         => OperatorManager.Update(VerifiedKnown(@operator));
 
     private Operator VerifiedKnown(Operator @operator) => Operators.Any(o => o.Identifier == @operator.Identifier) ? @operator :
@@ -106,7 +106,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         AttendanceManager.SignIn(VerifiedExisting(@operator), resource);
     }
 
-    private OperatorData VerifiedExisting(AssignableOperator @operator) 
+    private OperatorData VerifiedExisting(AssignableOperator @operator)
         => OperatorManager.Operators.SingleOrDefault(o => o.Identifier == @operator.Identifier) ??
             throw new ArgumentException(string.Format(Strings.REFERENCE_NOT_FOUND, nameof(Operator), @operator.Identifier));
 
@@ -203,7 +203,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     #endregion
 
     #region IUserManagement
-    
+
     /// <inheritdoc/>
     public IReadOnlyList<User> Users
     {
@@ -231,7 +231,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         AttendanceManager.SignIn(VerifiedExisting(user), UserResource.Instance);
     }
 
-    private OperatorData VerifiedExisting(User user) 
+    private OperatorData VerifiedExisting(User user)
         => OperatorManager.Operators.SingleOrDefault(o => o.Identifier == user.Identifier) ??
             throw new ArgumentException(string.Format(Strings.REFERENCE_NOT_FOUND, nameof(Operator), user.Identifier));
 

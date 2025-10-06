@@ -7,7 +7,7 @@ namespace Moryx.Container.Tests
     {
         string GetName();
     }
-    
+
     [Plugin(LifeCycle.Transient, typeof(INamedComponent), Name = ComponentName)]
     public class NamedComponentA : INamedComponent
     {

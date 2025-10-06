@@ -46,9 +46,9 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         private ResourceReferenceModel[] FilteredReferences(Resource current)
         {
             // Get references of the instance and filter them
-            var node = TypeController[current.GetType().FullName];     
+            var node = TypeController[current.GetType().FullName];
             var references = node.References;
-    
+
 
             var includedReferences = new List<ResourceReferenceModel>();
             foreach (var reference in references)

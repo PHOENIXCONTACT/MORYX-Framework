@@ -20,7 +20,7 @@ namespace Moryx.Resources.Management
         /// <inheritdoc />
         public bool CheckProperty(PropertyInfo propertyInfo)
         {
-            if(_filterDataMembers)
+            if (_filterDataMembers)
                 return propertyInfo.GetCustomAttribute<DataMemberAttribute>() == null;
             return propertyInfo.GetCustomAttribute<DataMemberAttribute>() != null;
         }

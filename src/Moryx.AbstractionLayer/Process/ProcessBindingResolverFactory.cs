@@ -160,7 +160,7 @@ namespace Moryx.AbstractionLayer
             // of IBindingResolver.Resolve which calls the whole chain the call order is important here.
             // First the value of the replacement is called and then the replacement is placed into the chain.
             var replacement = new ReflectionResolver(_fallbackProperty);
-            var resolvedValue = ((IBindingResolverChain) replacement).Resolve(source);
+            var resolvedValue = ((IBindingResolverChain)replacement).Resolve(source);
             this.Replace(replacement);
             return resolvedValue;
         }

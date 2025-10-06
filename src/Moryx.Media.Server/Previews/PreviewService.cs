@@ -45,7 +45,7 @@ namespace Moryx.Media.Server.Previews
 
         public void Stop()
         {
-            lock(_jobLock)
+            lock (_jobLock)
                 _jobs.Clear();
         }
 

@@ -406,11 +406,11 @@ namespace Moryx.Products.IntegrationTests
         [Test]
         public void PartLinksWithTheSameIdentifierAreOnlySavedOnce()
         {
-           //Arrange
+            //Arrange
             var watch = new WatchType
             {
                 Name = "watch",
-                Identity = new ProductIdentity("223",1),
+                Identity = new ProductIdentity("223", 1),
                 Needles =
                 [
                     new NeedlePartLink
@@ -867,7 +867,7 @@ namespace Moryx.Products.IntegrationTests
             var watch = SetupProduct("TestWatch", string.Empty);
             _storage.SaveType(watch);
             // Reload from storage for partlink ids if the object exists
-            watch = (WatchType) _storage.LoadType(watch.Id);
+            watch = (WatchType)_storage.LoadType(watch.Id);
 
             // Act
             var instance = (WatchInstance)watch.CreateInstance();

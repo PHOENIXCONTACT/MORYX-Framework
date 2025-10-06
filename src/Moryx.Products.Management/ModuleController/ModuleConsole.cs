@@ -15,7 +15,7 @@ namespace Moryx.Products.Management
     {
         public AutoConfigurator Configurator { get; set; }
 
-        public IConfigManager ConfigManager { get; set; }       
+        public IConfigManager ConfigManager { get; set; }
 
         [EntrySerialize]
         [Description("Automatically configure the necessary strategies for a product type.")]

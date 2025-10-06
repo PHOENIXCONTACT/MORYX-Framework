@@ -16,7 +16,7 @@ namespace Moryx.Resources.Management
         public IResourceGraph ResourceGraph { get; set; }
 
         public IResourceTypeController TypeController { get; set; }
-   
+
         #endregion
 
         #region IFacadeControl

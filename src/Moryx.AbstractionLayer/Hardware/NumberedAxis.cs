@@ -48,7 +48,7 @@ namespace Moryx.AbstractionLayer.Hardware
         {
             if (ReferenceEquals(null, obj))
                 return false;
-            return obj is NumberedAxis && Equals((NumberedAxis) obj);
+            return obj is NumberedAxis && Equals((NumberedAxis)obj);
         }
 
 
@@ -57,7 +57,7 @@ namespace Moryx.AbstractionLayer.Hardware
         {
             unchecked
             {
-                return ((int) Axis * 397) ^ Number;
+                return ((int)Axis * 397) ^ Number;
             }
         }
     }

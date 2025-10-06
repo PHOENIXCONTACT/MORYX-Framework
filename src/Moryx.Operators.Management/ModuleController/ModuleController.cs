@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -21,8 +21,8 @@ namespace Moryx.Operators.Management;
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 public class ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager dbContextManager) :
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    ServerModuleBase<ModuleConfig>(containerFactory, configManager, loggerFactory), 
-    IFacadeContainer<IOperatorManagement>, IFacadeContainer<IAttendanceManagement>, 
+    ServerModuleBase<ModuleConfig>(containerFactory, configManager, loggerFactory),
+    IFacadeContainer<IOperatorManagement>, IFacadeContainer<IAttendanceManagement>,
     IFacadeContainer<ISkillManagement>
 {
     /// <summary>

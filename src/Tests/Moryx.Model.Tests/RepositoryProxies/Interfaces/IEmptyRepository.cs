@@ -7,6 +7,6 @@ namespace Moryx.Model.Tests
 {
     public interface IEmptyRepository : IRepository<SomeEntity>
     {
-        
+
     }
 }

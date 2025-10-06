@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Operators.Skills;
@@ -19,7 +19,8 @@ internal class ISkillManagementTests : TestsBase
     }
 
     [TearDown]
-    public void TearDown() { 
+    public void TearDown()
+    {
         _env.StopTestModule();
     }
 

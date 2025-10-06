@@ -16,8 +16,8 @@ namespace Moryx.ControlSystem.Jobs.Endpoints
             return new StateChangeModel()
             {
                 JobModel = Converter.ToModel(eventArgs.Job),
-                CurrentState= eventArgs.CurrentState,
-                PreviousState = eventArgs.PreviousState                
+                CurrentState = eventArgs.CurrentState,
+                PreviousState = eventArgs.PreviousState
             };
         }
 

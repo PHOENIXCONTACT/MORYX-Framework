@@ -107,14 +107,14 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// The task transition that created this activity. Temporary reference only
         /// </summary>
-        public ITask Task 
-        { 
-            get => _task; 
+        public ITask Task
+        {
+            get => _task;
             set
             {
                 _task = value;
                 Activity.StepId = _task.Id;
-            } 
+            }
         }
 
         /// <summary>

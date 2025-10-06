@@ -52,7 +52,7 @@ namespace Moryx.TestModule
         public void Initialize(AnotherSubConfig config)
         {
         }
-        
+
         /// <inheritdoc />
         public void Start()
         {

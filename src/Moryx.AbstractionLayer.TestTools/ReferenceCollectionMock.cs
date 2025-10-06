@@ -23,7 +23,7 @@ namespace Moryx.AbstractionLayer.TestTools
         /// <param name="eventArgs"></param>
         public void RaiseCollectionChanged(ReferenceCollectionChangedEventArgs eventArgs)
         {
-            CollectionChanged ?.Invoke(this, eventArgs);
+            CollectionChanged?.Invoke(this, eventArgs);
         }
     }
 }

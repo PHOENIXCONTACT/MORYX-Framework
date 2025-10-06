@@ -13,7 +13,7 @@ namespace Moryx.AbstractionLayer.Drivers.Axis
         /// </summary>
         public AxisMovementResponse() : base()
         {
-            
+
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Moryx.AbstractionLayer.Drivers.Axis
         /// <param name="errorMessage">Occured error</param>
         public AxisMovementResponse(string errorMessage) : base(new TransmissionError(errorMessage))
         {
-            
+
         }
     }
 }

@@ -3,7 +3,7 @@
 
 namespace Moryx.Communication.Sockets
 {
-    internal class ServerNotListeningState: ServerStateBase
+    internal class ServerNotListeningState : ServerStateBase
     {
         public ServerNotListeningState(TcpListenerConnection context, StateMap stateMap) : base(context, stateMap, BinaryConnectionState.Disconnected)
         {

@@ -57,7 +57,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             _resourceManagementMock.Setup(rm => rm.GetResources<IManufacturingFactory>())
                         .Returns(new[] { _manufactoringFactory });
             _resourceManagementMock.Setup(rm => rm.GetResource(It.IsAny<Func<IManufacturingFactory, bool>>()))
-                        .Returns(_manufactoringFactory); 
+                        .Returns(_manufactoringFactory);
             //_assemblyCell
             _assemblyCell = _graph.Instantiate<DummyCell>();
             _assemblyCell.Id = _assemblyCellId;

@@ -5,6 +5,6 @@ namespace Moryx.Tests.Extensions
 {
     public class ChildClass2 : BaseClass
     {
-         
+
     }
 }

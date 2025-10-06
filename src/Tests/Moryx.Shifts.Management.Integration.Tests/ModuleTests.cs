@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
@@ -66,7 +66,8 @@ namespace Moryx.Shifts.Management.IntegrationTests
             var module = _env.StartTestModule();
 
             // Assert
-            Assert.Multiple(() => {
+            Assert.Multiple(() =>
+            {
                 Assert.That(module.State, Is.EqualTo(ServerModuleState.Running), "Module is not in state running");
                 Assert.That(ObjectsAreEqual(_facade.Shifts.Single(), shift), "Shifts do not match after restart");
                 Assert.That(ObjectsAreEqual(_facade.ShiftTypes.Single(), shiftType), "ShiftTypes do not match after restart");

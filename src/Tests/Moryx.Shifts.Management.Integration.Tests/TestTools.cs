@@ -5,6 +5,6 @@ namespace Moryx.Shifts.Management.IntegrationTests
 {
     internal static class TestTools
     {
-        
+
     }
 }

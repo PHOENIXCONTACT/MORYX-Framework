@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -16,7 +16,7 @@ namespace Moryx.Configuration
         {
             var propertyType = property.PropertyType;
             var value = property.GetValue(parent);
-            
+
             var defaultValue = propertyType.IsValueType ? Activator.CreateInstance(propertyType) : null;
             // We only operate on properties currently having their system default
             if (!Equals(value, defaultValue))
@@ -52,7 +52,7 @@ namespace Moryx.Configuration
             {
                 return ValueProviderResult.Skipped;
             }
-            
+
         }
     }
 }

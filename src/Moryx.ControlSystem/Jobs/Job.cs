@@ -70,7 +70,7 @@ namespace Moryx.ControlSystem.Jobs
             get => _runningProcesses ?? Array.Empty<IProcess>();
             protected set => _runningProcesses = value;
         }
-        
+
         private IReadOnlyList<IProcess> _allProcesses;
         /// <summary>
         /// All processes of the job including running and completed processes

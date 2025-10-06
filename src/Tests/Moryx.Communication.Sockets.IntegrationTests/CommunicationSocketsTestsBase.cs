@@ -116,7 +116,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             // Client should be connected
             Assert.That(_clients[clientIdx].Connection.CurrentState, Is.EqualTo(wantedState),
                 $"Client ({clientIdx}) is not in the state '{wantedState:G}'. " +
-                $"CurrentState: {_clients[clientIdx].Connection.CurrentState:G}. Waited for {stopWatch.ElapsedMilliseconds/1000}s");
+                $"CurrentState: {_clients[clientIdx].Connection.CurrentState:G}. Waited for {stopWatch.ElapsedMilliseconds / 1000}s");
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
                     var resetEvent = new ManualResetEvent(false);
                     ThreadPool.QueueUserWorkItem(obj =>
                     {
-                        var sync = (ManualResetEvent) obj;
+                        var sync = (ManualResetEvent)obj;
                         var pl = CreatePayload(payloadMultiplier, BitConverter.GetBytes(i1));
                         Console.WriteLine(">>>{4:HH:mm:ss,ffff}-Sending Message for {0}: {1}, Message: {2}, MessageLength: {3}",
                             consoleText, i1, j1, pl.Length, DateTime.Now);

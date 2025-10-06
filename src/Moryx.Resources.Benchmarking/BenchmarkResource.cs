@@ -124,7 +124,7 @@ namespace Moryx.Resources.Benchmarking
             _runtimeWait.Stop();
 
             var activity = activityStart.Activity;
-            var tracing = (BenchmarkTracing) activity.Tracing;
+            var tracing = (BenchmarkTracing)activity.Tracing;
             tracing.RuntimeMs = _runtimeWait.ElapsedMilliseconds;
 
             _runtimeWait.Reset();
@@ -168,7 +168,7 @@ namespace Moryx.Resources.Benchmarking
 
         [DisplayName("Change Capabilities")]
         [EntrySerialize, Description("Change capabilities of the cell")]
-        public void ChangeCapabilities([Description("New step value for the capabilities. '0' resets to LocalIdentifier")]int stepId = 0)
+        public void ChangeCapabilities([Description("New step value for the capabilities. '0' resets to LocalIdentifier")] int stepId = 0)
         {
             Capabilities = new BenchmarkCapabilities(stepId == 0 ? StepId : stepId);
         }
@@ -202,7 +202,7 @@ namespace Moryx.Resources.Benchmarking
         public void AcknowledgeLast()
         {
             var notifications = NotificationAdapter.GetPublished(this);
-            if(notifications.Any())
+            if (notifications.Any())
                 NotificationAdapter.Acknowledge(this, notifications.Last());
         }
 

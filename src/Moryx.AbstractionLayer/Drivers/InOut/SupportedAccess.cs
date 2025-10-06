@@ -18,7 +18,7 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
         /// Input and output is a single value with index or key
         /// </summary>
         Single = 1 << 8,
-        
+
         /// <summary>
         /// Driver supports indexed access to values
         /// </summary>

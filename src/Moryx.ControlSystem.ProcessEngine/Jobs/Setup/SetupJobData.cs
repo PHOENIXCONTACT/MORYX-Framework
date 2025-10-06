@@ -118,7 +118,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
 
         internal void NotifyAboutBlockedRetry()
         {
-            var notification = new Notification(Strings.SetupJobData_RetryFailedNotification_Title, 
+            var notification = new Notification(Strings.SetupJobData_RetryFailedNotification_Title,
                 string.Format(Strings.SetupJobData_RetryFailedNotification_Message, Recipe.Name), Severity.Error, true);
 
             NotificationAdapter.Publish(this, notification);
@@ -186,7 +186,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
         /// <inheritdoc/>
         public void Acknowledge(Notification notification, object tag)
         {
-            InvokeStateMachine(s  => ((SetupJobStateBase)s).UnBlockRetrySetup());
+            InvokeStateMachine(s => ((SetupJobStateBase)s).UnBlockRetrySetup());
         }
 
         /// <inheritdoc/>

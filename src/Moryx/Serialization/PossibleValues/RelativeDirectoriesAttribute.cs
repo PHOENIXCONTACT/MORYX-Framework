@@ -34,7 +34,7 @@ namespace Moryx.Serialization
             var dirs = new List<string>();
             var childDirs = Directory.GetDirectories(currentDir);
 
-            if(!string.IsNullOrEmpty(_parentPath) && childDirs.Contains(Path.Combine(currentDir, _parentPath)))
+            if (!string.IsNullOrEmpty(_parentPath) && childDirs.Contains(Path.Combine(currentDir, _parentPath)))
             {
                 currentDir = Path.Combine(currentDir, _parentPath);
                 childDirs = Directory.GetDirectories(currentDir);

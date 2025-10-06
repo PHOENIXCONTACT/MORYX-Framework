@@ -7,7 +7,7 @@ namespace Moryx.Runtime.Modules
     {
         public override ServerModuleState Classification => ServerModuleState.Initializing;
 
-        public InitializingState(IServerModuleStateContext context, StateMap stateMap) 
+        public InitializingState(IServerModuleStateContext context, StateMap stateMap)
             : base(context, stateMap)
         {
         }

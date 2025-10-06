@@ -16,7 +16,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
             {
                 Id = instruction.Id,
                 Title = instruction.Sender,
-                Results = instruction.Results.Select(r => new InstructionResult() { Key = r.Key, DisplayValue = r.DisplayValue}).ToArray(),
+                Results = instruction.Results.Select(r => new InstructionResult() { Key = r.Key, DisplayValue = r.DisplayValue }).ToArray(),
                 Instructions = instruction.Items.Select(i =>
                     new VisualInstruction() { Type = i.ContentType, Content = i.Content, Preview = i.Preview }).ToArray()
             };
@@ -28,7 +28,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
             if (instruction.Results?.Count > 0)
                 results = instruction.Results.Select(i => new InstructionResultModel { Key = i.Key, DisplayValue = i.DisplayValue }).ToArray();
 
-            var model =  new InstructionModel
+            var model = new InstructionModel
             {
                 Id = instruction.Id,
                 Sender = instruction.Title,

@@ -58,7 +58,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Components
         public bool CanComplete => throw new NotImplementedException();
 
         public bool CanAbort => throw new NotImplementedException();
-        
+
         public bool IsStable => throw new NotImplementedException();
 
         public int RunningCount => throw new NotImplementedException();

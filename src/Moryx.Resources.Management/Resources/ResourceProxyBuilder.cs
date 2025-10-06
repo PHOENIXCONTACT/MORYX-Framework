@@ -263,7 +263,7 @@ namespace Moryx.Resources.Management
         /// Create a unique name for each explicit member implementation
         /// </summary>
         private static string ExplicitMemberName(MemberInfo member) => $"{member.DeclaringType.Name}_{member.Name}";
-        
+
 
         /// <summary>
         /// Determine if the return type indicates a resource reference

@@ -138,11 +138,11 @@ namespace Moryx.AbstractionLayer.Tests
             public string FooName { get; set; }
 
             public int FooNumber { get; set; }
-            
+
             public new FooProgress Progress
             {
-                get { return (FooProgress) base.Progress; }
-                set { base.Progress = (int) value; }
+                get { return (FooProgress)base.Progress; }
+                set { base.Progress = (int)value; }
             }
 
             public void Processing()

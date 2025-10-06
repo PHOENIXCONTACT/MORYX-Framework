@@ -86,7 +86,7 @@ namespace Moryx.Products.Management
         {
             var wrapper = Storage.GetTypeWrapper(type);
             if (wrapper == null || wrapper.Constructor == null)
-                return (ProductType)TypeTool.CreateInstance<ProductType>(type);          
+                return (ProductType)TypeTool.CreateInstance<ProductType>(type);
             return wrapper.Constructor();
         }
 

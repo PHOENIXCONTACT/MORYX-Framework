@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -220,7 +220,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                         if (procCount < 20)
                         {
                             var process = new ProcessData(new ProductionProcess());
-                            process.AddActivity(new ActivityData(new DummyActivity()) { Resource =  new CellReference(random.Next(10)) });
+                            process.AddActivity(new ActivityData(new DummyActivity()) { Resource = new CellReference(random.Next(10)) });
 
                             myProcesses.Add(process);
                             DataPool.AddProcess(process);

@@ -43,7 +43,7 @@ namespace Moryx.ProcessData.Endpoints.Controllers
         {
             name = name.Trim();
             var measurand = _configService.GetMeasuarand(name);
-            if(measurand == null)
+            if (measurand == null)
             {
                 return MeasurandNotFound(name);
             }

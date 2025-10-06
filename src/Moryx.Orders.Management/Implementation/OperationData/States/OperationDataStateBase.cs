@@ -84,8 +84,8 @@ namespace Moryx.Orders.Management
 
         public virtual void UpdateRecipes(IReadOnlyList<IProductRecipe> recipes) => InvalidState();
 
-        public virtual void ProgressChanged(Job job) 
-        { 
+        public virtual void ProgressChanged(Job job)
+        {
         }
 
         public OperationClassification GetFullClassification()
@@ -158,7 +158,7 @@ namespace Moryx.Orders.Management
         protected const int StateCompleted = CompletedKey;
 
         [StateDefinition(typeof(AbortedState))]
-        protected const int StateAborted = CompletedKey+1;
+        protected const int StateAborted = CompletedKey + 1;
 
     }
 }

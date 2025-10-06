@@ -41,7 +41,7 @@ namespace Moryx.Runtime.Kernel
             var config = ManagedModules.FirstOrDefault(item => item.ModuleName == moduleName);
             if (config == null)
             {
-                config = new ManagedModuleConfig {ModuleName = moduleName};
+                config = new ManagedModuleConfig { ModuleName = moduleName };
                 ManagedModules.Add(config);
             }
             return config;

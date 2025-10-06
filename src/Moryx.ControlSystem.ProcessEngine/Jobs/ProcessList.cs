@@ -6,7 +6,7 @@ using System.Collections;
 namespace Moryx.ControlSystem.ProcessEngine.Jobs
 {
     internal class ProcessList<T> : List<T>, IReadOnlyList<T>
-    where T: class
+    where T : class
     {
         public ProcessList() : base()
         {

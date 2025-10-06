@@ -318,7 +318,7 @@ public class ProcessEngineController : ControllerBase
             var ungrouped = allPositions.GetUngroupedPostions();
             var groups = _resourceManagement.GetAllResources<IProcessHolderGroup>(x => true);
 
-            return new ApiResponse<ProcessHolderGroupModel[]>([..groups.ToDto(), ..ungrouped.ToDto()]);
+            return new ApiResponse<ProcessHolderGroupModel[]>([.. groups.ToDto(), .. ungrouped.ToDto()]);
         });
     }
 

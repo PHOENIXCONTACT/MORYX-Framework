@@ -144,7 +144,7 @@ namespace Moryx.Orders.Endpoints
                     !operation.FullState.HasFlag(OperationClassification.Failed),
                 IsAborted = operation.FullState.HasFlag(OperationClassification.Aborted),
                 IsAmountReached = operation.FullState.HasFlag(OperationClassification.IsAmountReached),
-                
+
                 RecipeIds = operation.Recipes.Select(r => r.Id).ToArray()
             };
 

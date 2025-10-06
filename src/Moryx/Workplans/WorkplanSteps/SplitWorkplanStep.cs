@@ -24,7 +24,7 @@ namespace Moryx.Workplans.WorkplanSteps
         /// Create new split instance
         /// </summary>
         /// <param name="outputs"></param>
-        public SplitWorkplanStep([Display(Name = "Outputs", Description = "Number of parallel paths")]int outputs = 2)
+        public SplitWorkplanStep([Display(Name = "Outputs", Description = "Number of parallel paths")] int outputs = 2)
         {
             if (outputs <= 1)
                 throw new ArgumentException("Split must have at least two outputs!");
@@ -33,7 +33,7 @@ namespace Moryx.Workplans.WorkplanSteps
             OutputDescriptions = new OutputDescription[outputs];
             for (var i = 0; i < outputs; i++)
             {
-                OutputDescriptions[i] = new OutputDescription{OutputType = OutputType.Success};
+                OutputDescriptions[i] = new OutputDescription { OutputType = OutputType.Success };
             }
         }
 

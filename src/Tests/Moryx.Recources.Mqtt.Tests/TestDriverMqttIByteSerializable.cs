@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -95,7 +95,7 @@ namespace Moryx.Resources.Mqtt.Tests
                     It.IsAny<MqttApplicationMessage>(), It.IsAny<CancellationToken>()))
                 .Callback<MqttApplicationMessage, CancellationToken>((sentMsg, token) => SendMessageBoolMqttMessage(sentMsg, token));
             //Act
-            _driver.Send(new BoolMqttMessage{Message = MESSAGE_VALUE, Identifier = _topicBoolMqtt.Identifier});
+            _driver.Send(new BoolMqttMessage { Message = MESSAGE_VALUE, Identifier = _topicBoolMqtt.Identifier });
 
             //Assert 1
             _mockClient.Verify((m => m.PublishAsync(
@@ -108,10 +108,10 @@ namespace Moryx.Resources.Mqtt.Tests
             //Arrange
             _mockClient.Setup(m => m.PublishAsync(
                     It.IsAny<MqttApplicationMessage>(), It.IsAny<CancellationToken>()))
-                .Callback<MqttApplicationMessage, CancellationToken>((sentMsg, token) 
+                .Callback<MqttApplicationMessage, CancellationToken>((sentMsg, token)
                     => SendMessageBoolMqttMessage(sentMsg, token));
             //Act
-            _topicBoolMqtt.Send(new BoolMqttMessage{ Message = MESSAGE_VALUE, Identifier = _topicBoolMqtt.Identifier });
+            _topicBoolMqtt.Send(new BoolMqttMessage { Message = MESSAGE_VALUE, Identifier = _topicBoolMqtt.Identifier });
 
             //Assert 1
             _mockClient.Verify((m => m.PublishAsync(
@@ -138,7 +138,7 @@ namespace Moryx.Resources.Mqtt.Tests
             //Arrange
             _mockClient.Setup(m => m.PublishAsync(
                     It.IsAny<MqttApplicationMessage>(), It.IsAny<CancellationToken>()))
-                .Callback<MqttApplicationMessage, CancellationToken>((sentMsg, token) 
+                .Callback<MqttApplicationMessage, CancellationToken>((sentMsg, token)
                     => SendMessageBoolIByteSerializableMessage(sentMsg, token));
 
             //Act
@@ -155,7 +155,7 @@ namespace Moryx.Resources.Mqtt.Tests
             //Assert 2
             Assert.That(token, Is.EqualTo(CancellationToken.None));
             Assert.That(sentMsg.Topic.Equals(_driver.Identifier + _topicBoolIByteSerializable.Identifier),
-                "Topic should be " + _driver.Identifier  + _topicBoolIByteSerializable.Identifier + ", but is " + sentMsg.Topic);
+                "Topic should be " + _driver.Identifier + _topicBoolIByteSerializable.Identifier + ", but is " + sentMsg.Topic);
             Assert.That(sentMsg.QualityOfServiceLevel, Is.EqualTo(MqttQualityOfServiceLevel.ExactlyOnce),
                 "Qos should be ExactlyOnce, but is " + sentMsg.QualityOfServiceLevel);
             var msg = new BoolByteSerializableMessage();
@@ -177,7 +177,8 @@ namespace Moryx.Resources.Mqtt.Tests
             //Act
             _driver.Receive(_driver.Identifier + _topicBoolMqtt.Identifier, new BoolMqttMessage
             {
-                Message = MESSAGE_VALUE, Identifier = _topicBoolMqtt.Identifier
+                Message = MESSAGE_VALUE,
+                Identifier = _topicBoolMqtt.Identifier
             }.ToBytes());
 
             //Assert 1
@@ -189,8 +190,8 @@ namespace Moryx.Resources.Mqtt.Tests
             //Assert 2
             var msg = e as BoolMqttMessage;
             Assert.That(msg != null, "Not the right type: Should be TestMessage but is " + e.GetType());
-            Assert.That(msg.Message==MESSAGE_VALUE, "Message should " + MESSAGE_VALUE + ", but is " + msg.Message);
-            Assert.That(msg.Identifier.Equals(_topicBoolMqtt.Identifier),"Topic should be "+_topicBoolMqtt.Identifier+", but is "+ msg.Identifier);
+            Assert.That(msg.Message == MESSAGE_VALUE, "Message should " + MESSAGE_VALUE + ", but is " + msg.Message);
+            Assert.That(msg.Identifier.Equals(_topicBoolMqtt.Identifier), "Topic should be " + _topicBoolMqtt.Identifier + ", but is " + msg.Identifier);
         }
 
         [Test(Description = "Receive a Message via Topic")]
@@ -220,7 +221,7 @@ namespace Moryx.Resources.Mqtt.Tests
         public void Receive_NotSubscribedTopic_ReceivedEventWillNotBeRaised()
         {
             //Arrange
-            var msg = new BoolMqttMessage{ Message = MESSAGE_VALUE , Identifier = "shouldNotBeFound"};
+            var msg = new BoolMqttMessage { Message = MESSAGE_VALUE, Identifier = "shouldNotBeFound" };
             var wait = new AutoResetEvent(false);
             _driver.Received += (sender, eventArgs) => { wait.Set(); };
 
@@ -230,7 +231,7 @@ namespace Moryx.Resources.Mqtt.Tests
             //Assert
             Assert.That(!wait.WaitOne(TimeSpan.FromSeconds(TIMEOUT)), "Received Event was raised, although topic is not the driver's child");
         }
-        
+
     }
 }
 

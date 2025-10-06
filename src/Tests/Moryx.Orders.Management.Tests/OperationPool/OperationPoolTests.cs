@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -169,7 +169,7 @@ namespace Moryx.Orders.Management.Tests
 
             // Assert
             Assert.That(operationData.Operation.Parts.Count, Is.EqualTo(2), "There should be 2 restored product parts");
-            Assert.That(operationData.Operation.Advices.Count, Is.EqualTo(2),  "There should be 2 restored advices");
+            Assert.That(operationData.Operation.Advices.Count, Is.EqualTo(2), "There should be 2 restored advices");
         }
 
         [Test(Description = "Add an operation to the pool and check the returned object")]
@@ -255,7 +255,7 @@ namespace Moryx.Orders.Management.Tests
             NullUserManagement userManager = new NullUserManagement();
             string operationNumber = "123456";
             string orderNumber = "1234";
-            var operationDataMock1 = InitializeOperation(operationNumber, orderNumber,_operationDataPool,true);
+            var operationDataMock1 = InitializeOperation(operationNumber, orderNumber, _operationDataPool, true);
 
             // Act
             var operation1 = _operationDataPool.Get(orderNumber, operationNumber);
@@ -275,15 +275,15 @@ namespace Moryx.Orders.Management.Tests
         }
 
         private Mock<IOperationData> InitializeOperation(string operationNumber, string orderNumber,
-            OperationDataPool operationDataPool,bool startOperationPool)
+            OperationDataPool operationDataPool, bool startOperationPool)
         {
             var context = CreateOperationContext(orderNumber, operationNumber);
             var mock = new Mock<IOperationData>();
             mock = SetupOperationDataMock();
             _operationFactoryMock.Setup(opf => opf.Create()).Returns(mock.Object);
 
-            if(startOperationPool)
-            operationDataPool.Start();
+            if (startOperationPool)
+                operationDataPool.Start();
 
             operationDataPool.Add(context, new NullOperationSource());
             mock.SetupGet(op => op.State).Returns(new ReadyState(null, null));

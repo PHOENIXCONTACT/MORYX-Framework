@@ -36,7 +36,7 @@ namespace Moryx.Tests.Workplans
         /// </summary>
         public override void Pause()
         {
-            State = (MainToken) StoredTokens.First();
+            State = (MainToken)StoredTokens.First();
             base.Pause();
         }
 

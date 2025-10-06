@@ -41,7 +41,7 @@ namespace Moryx.Runtime.Modules
         /// </summary>
         /// <param name="module"></param>
         void ReincarnateModule(IServerModule module);
-            
+
         /// <summary>
         /// All modules managed by the service manager
         /// </summary>
@@ -51,7 +51,7 @@ namespace Moryx.Runtime.Modules
         /// Event raised when one of the modules changed its state
         /// </summary>
         event EventHandler<ModuleStateChangedEventArgs> ModuleStateChanged;
-        
+
         /// <summary>
         /// All other modules this module depends on
         /// </summary>

@@ -9,6 +9,6 @@ namespace Moryx.TestModule
     public class TestSubPluginConfig2 : TestSubPluginConfig
     {
         public override string PluginName { get { return TestSubPlugin2.ComponentName; } }
-         
+
     }
 }

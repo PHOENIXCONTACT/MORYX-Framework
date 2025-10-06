@@ -39,7 +39,7 @@ namespace Moryx.Runtime.Modules
     {
         public override ServerModuleState Classification => ServerModuleState.Failure;
 
-        protected FailureStateBase(IServerModuleStateContext context, StateMap stateMap) 
+        protected FailureStateBase(IServerModuleStateContext context, StateMap stateMap)
             : base(context, stateMap)
         {
         }

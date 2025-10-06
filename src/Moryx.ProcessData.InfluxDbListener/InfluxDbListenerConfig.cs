@@ -80,7 +80,7 @@ namespace Moryx.ProcessData.InfluxDbListener
         /// <inheritdoc />
         public override string PluginName
         {
-            get =>  nameof(InfluxDbListenerV2);
+            get => nameof(InfluxDbListenerV2);
             set { }
         }
 
@@ -124,7 +124,7 @@ namespace Moryx.ProcessData.InfluxDbListener
         /// Number of retries after a failed attempt to write data
         /// </summary>
         [DataMember, DefaultValue(5)]
-        [DisplayName("Retries"),Description("Maximum number of retries after a failed attempt to write data")]
+        [DisplayName("Retries"), Description("Maximum number of retries after a failed attempt to write data")]
         public short MaxNumberOfRetries { get; set; }
     }
 }

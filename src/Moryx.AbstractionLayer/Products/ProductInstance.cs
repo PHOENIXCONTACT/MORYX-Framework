@@ -43,7 +43,7 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         public new TProduct Type
         {
-            get => (TProduct) base.Type;
+            get => (TProduct)base.Type;
             set => base.Type = value;
         }
     }

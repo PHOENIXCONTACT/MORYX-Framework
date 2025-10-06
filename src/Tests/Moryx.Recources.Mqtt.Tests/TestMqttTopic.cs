@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -10,11 +10,11 @@ namespace Moryx.Resources.Mqtt.Tests
 {
     [TestFixture]
     public class TestMqttTopic
-    {      
+    {
         private string _topicWithPlaceholders;
         private List<string> _placeHolderNames;
 
-       [SetUp]
+        [SetUp]
         public void Setup()
         {
             _placeHolderNames = new List<string> { "{MachineNR}", "{PC_Name}" };
@@ -57,13 +57,13 @@ namespace Moryx.Resources.Mqtt.Tests
 
             //Act
             var allNames = topicResource.RegexTopic.GetGroupNames();
-            var names = new string[allNames.Length-1];
-            Array.Copy(allNames,1,names,0,names.Length);
+            var names = new string[allNames.Length - 1];
+            Array.Copy(allNames, 1, names, 0, names.Length);
 
             //Assert
             Assert.That(_placeHolderNames.Count, Is.EqualTo(names.Length));
-            foreach(var n in names)
-                Assert.That(_placeHolderNames.Contains("{"+n+"}"));
+            foreach (var n in names)
+                Assert.That(_placeHolderNames.Contains("{" + n + "}"));
         }
 
     }

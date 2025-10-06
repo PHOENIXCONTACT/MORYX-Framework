@@ -11,7 +11,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
     [Display(Name = nameof(Strings.JobStates_Interrupting), ResourceType = typeof(Strings))]
     internal sealed class InterruptingState : ProductionJobStateBase
     {
-        public InterruptingState(JobDataBase context, StateMap stateMap) 
+        public InterruptingState(JobDataBase context, StateMap stateMap)
             : base(context, stateMap, JobClassification.Running)
         {
         }

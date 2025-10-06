@@ -74,7 +74,7 @@ namespace Moryx.Workplans
         /// Delegate that tries to invoke the callback if type matches
         /// </summary>
         private readonly struct AttemptInvocation<T> : IAttemptInvocation
-            where T : class , ITransition
+            where T : class, ITransition
         {
             private readonly Action<T> _callback;
 
@@ -98,7 +98,7 @@ namespace Moryx.Workplans
         /// Delegate that tries to match the type and invokes the handler on a new thread
         /// </summary>
         private readonly struct AsyncAttemptInvocation<T> : IAttemptInvocation
-            where T : class , ITransition
+            where T : class, ITransition
         {
             private readonly Action<T> _callback;
             private readonly IParallelOperations _parallelOperations;

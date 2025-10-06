@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using NUnit.Framework;
@@ -33,7 +33,7 @@ namespace Moryx.Shifts.Management.IntegrationTests
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.That(type, Is.Not.Null); 
+                Assert.That(type, Is.Not.Null);
                 Assert.That(type.Id, Is.GreaterThan(0));
                 Assert.That(IsObjectMatchingContext(TypeContext, type));
             });
@@ -288,7 +288,7 @@ namespace Moryx.Shifts.Management.IntegrationTests
         }
 
         private static readonly object[] InvalidArgumentsForUpdateShift = {
-            new object[] { null, typeof(ArgumentNullException), "ArgumentNullException on null parameter" }, 
+            new object[] { null, typeof(ArgumentNullException), "ArgumentNullException on null parameter" },
             new object[] { new Shift(new ShiftType("Incomplete type")) { Id = 1 }, typeof(ArgumentException), "ArgumentException on unknown inputs" },
             new object[] { new Shift(null) { Id = 1 }, typeof(ArgumentException), "ArgumentException on invalid inputs" }
         };

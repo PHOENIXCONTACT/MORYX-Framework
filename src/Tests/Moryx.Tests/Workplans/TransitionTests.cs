@@ -57,7 +57,7 @@ namespace Moryx.Tests.Workplans
             // Act
             trans.Initialize();
             _inputs[0].Add(_token);
-            
+
             // Assert
             Assert.Multiple(() =>
             {
@@ -145,7 +145,8 @@ namespace Moryx.Tests.Workplans
             _inputs[0].Add(_token);
 
             // Assert
-            Assert.Multiple(() => { 
+            Assert.Multiple(() =>
+            {
                 MAssert.That(_inputs[0].Tokens, Is.Empty);
                 MAssert.That(_token, Is.EqualTo(_outputs[0].Tokens.First()));
                 MAssert.That(2, Is.EqualTo(triggered.Count));

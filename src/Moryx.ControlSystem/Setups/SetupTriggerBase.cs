@@ -42,7 +42,7 @@ namespace Moryx.ControlSystem.Setups
         /// <inheritdoc />
         public virtual void Initialize(SetupTriggerConfig config)
         {
-            Config = (TConfig) config;
+            Config = (TConfig)config;
             Logger = Logger?.GetChild(GetType().Name, GetType());
         }
 

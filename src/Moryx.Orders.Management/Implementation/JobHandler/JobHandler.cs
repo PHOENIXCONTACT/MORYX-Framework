@@ -99,7 +99,7 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc />
-        public IEnumerable<Job> Restore(IEnumerable<long> jobIds) 
+        public IEnumerable<Job> Restore(IEnumerable<long> jobIds)
             => jobIds.Select(id => JobManagement.Get(id));
     }
 }

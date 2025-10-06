@@ -11,7 +11,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
     [Display(Name = nameof(Strings.JobStates_Aborting), ResourceType = typeof(Strings))]
     internal sealed class AbortingState : ProductionJobStateBase
     {
-        public AbortingState(JobDataBase context, StateMap stateMap) 
+        public AbortingState(JobDataBase context, StateMap stateMap)
             : base(context, stateMap, JobClassification.Completing)
         {
         }

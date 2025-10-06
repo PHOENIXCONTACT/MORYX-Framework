@@ -20,6 +20,6 @@ namespace Moryx.ControlSystem.Activities
         /// <summary>
         /// Modification that was performed on the product instance depending on the activities result
         /// </summary>
-        InstanceModificationType  ModificationType { get; set; }
+        InstanceModificationType ModificationType { get; set; }
     }
 }

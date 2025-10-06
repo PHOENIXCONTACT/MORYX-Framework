@@ -54,7 +54,7 @@ namespace Moryx.Threading
             // Retrieve lock only to ready execution flag
             lock (_syncLock)
             {
-                if(_callbackExecuting)
+                if (_callbackExecuting)
                     return;
                 _callbackExecuting = true;
             }

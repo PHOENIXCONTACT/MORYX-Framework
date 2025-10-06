@@ -32,12 +32,12 @@ namespace Moryx.Runtime.Kernel
         /// <inheritdoc />
         public void Start(IServerModule module)
         {
-            if(!AvailableModules.Contains(module))
+            if (!AvailableModules.Contains(module))
                 return; // Module not executable
 
             module.Initialize();
 
-            StartModule(module);   
+            StartModule(module);
         }
 
         /// <inheritdoc />
@@ -90,7 +90,7 @@ namespace Moryx.Runtime.Kernel
                 module.Initialize();
                 module.Start();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to start module {0}", module.Name);
             }

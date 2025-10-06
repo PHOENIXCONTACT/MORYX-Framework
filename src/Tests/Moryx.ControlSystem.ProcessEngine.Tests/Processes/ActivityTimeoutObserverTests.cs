@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -79,7 +79,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Arrange
             Action<ActivityData> callback = null;
             _parallelOpsMock.Setup(p => p.ScheduleExecution(It.IsAny<Action<ActivityData>>(), It.IsAny<ActivityData>(), Timeout * 1000, -1))
-                .Callback(delegate(Action<ActivityData> action, ActivityData param, int delay, int period) { callback = action; });
+                .Callback(delegate (Action<ActivityData> action, ActivityData param, int delay, int period) { callback = action; });
 
             var activityData = PublishRunningActivity();
 

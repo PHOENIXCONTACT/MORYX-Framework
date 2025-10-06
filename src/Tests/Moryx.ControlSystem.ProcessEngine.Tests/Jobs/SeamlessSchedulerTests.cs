@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
     {
         protected override IJobScheduler CreateScheduler()
         {
-            var scheduler =  new SeamlessScheduler
+            var scheduler = new SeamlessScheduler
             {
                 JobList = JobListMock.Object
             };
@@ -108,7 +108,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             {
                 Execution = SetupExecution.AfterProduction,
                 TargetRecipe = Recipe
-            }, 1){Classification = JobClassification.Waiting});
+            }, 1)
+            { Classification = JobClassification.Waiting });
 
             JobListMock.Setup(j => j.Previous(It.IsAny<Job>())).Returns<Job>(j =>
             {
@@ -120,7 +121,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
                 var index = jobs.IndexOf(j) + 1;
                 return jobs.Skip(index);
             });
-            
+
             Job scheduled = null;
             JobScheduler.Scheduled += (sender, args) => scheduled = args;
             var slotAvailable = false;
@@ -147,7 +148,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             {
                 Classification = JobClassification.Idle
             };
-            var schedulable = JobScheduler.SchedulableJobs(new[] {job});
+            var schedulable = JobScheduler.SchedulableJobs(new[] { job });
             Assert.That(schedulable.Any());
         }
     }

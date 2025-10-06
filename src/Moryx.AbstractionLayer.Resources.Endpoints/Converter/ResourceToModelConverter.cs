@@ -85,7 +85,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             else
             {
                 // Only generate reference ids and add to cache for non-partial instance
-                model.ReferenceId = --_refId; 
+                model.ReferenceId = --_refId;
                 _resourceCache.Add(current, model);
 
                 // Properties and methods are read from the descriptor
@@ -106,7 +106,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         {
             var name = current.GetType().FullName;
             var node = TypeController[name];
-       
+
             // Find all reference properties on the object
             var referenceProperties = node.References;
 
@@ -115,7 +115,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         }
 
         #region Convert References
-       
+
         /// <summary>
         /// Convert a property referencing another resource into a <see cref="ResourceReferenceModel"/>
         /// </summary>

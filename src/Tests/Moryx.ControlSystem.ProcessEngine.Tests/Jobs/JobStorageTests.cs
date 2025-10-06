@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -106,7 +106,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
 
             // Act
             _jobStorage.Save(new ModifiedJobsFragment(jobsToAdd, 2));
-           
+
             // Assert
             var jobs = _jobStorage.GetAll().ToArray();
 
@@ -130,7 +130,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
 
             // Act
             _jobStorage.Save(new ModifiedJobsFragment(jobList, null));
-            
+
             // Assert
             var jobs = _jobStorage.GetAll().ToArray();
 

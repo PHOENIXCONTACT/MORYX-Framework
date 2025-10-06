@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
@@ -10,7 +10,7 @@ namespace Moryx.Shifts
     /// Class representing the context for creating a shift assignment.
     /// </summary>
     public class ShiftAssignementCreationContext
-    {     
+    {
         /// <summary>
         /// The resource of the shift assignment.
         /// </summary>

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Runtime.Modules;
@@ -59,7 +59,7 @@ namespace Moryx.Shifts.Management
         {
             var verifiedShift = Shifts.SingleOrDefault(s => s.Id == shift.Id) ??
                 throw new ArgumentException(string.Format(Strings.ID_NOT_FOUND, nameof(Shift), shift.Id));
-            verifiedShift.Type = ShiftTypes.SingleOrDefault(t =>  t.Id == shift.Type?.Id) ??
+            verifiedShift.Type = ShiftTypes.SingleOrDefault(t => t.Id == shift.Type?.Id) ??
                 throw new ArgumentException(string.Format(Strings.ID_NOT_FOUND, nameof(ShiftType), shift.Type?.Id));
 
             return shift;

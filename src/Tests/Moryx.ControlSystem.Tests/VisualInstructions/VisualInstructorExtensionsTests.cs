@@ -20,6 +20,6 @@ namespace Moryx.ControlSystem.Tests.VisualInstructions
             Assert.That(instruction.Type, Is.EqualTo(InstructionContentType.Text));
             Assert.That(instruction.Content, Is.EqualTo(str));
         }
-        
+
     }
 }

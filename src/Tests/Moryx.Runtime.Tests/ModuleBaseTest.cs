@@ -32,7 +32,7 @@ namespace Moryx.Runtime.Tests
         [Test]
         public void StrategiesInConfigFound()
         {
-            var casted = (IServerModule) _moduleUnderTest;
+            var casted = (IServerModule)_moduleUnderTest;
             casted.Initialize();
 
             var containerConfig = _moduleUnderTest.Strategies;

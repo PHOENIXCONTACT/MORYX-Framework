@@ -38,7 +38,7 @@ namespace Moryx.ProcessData.Adapter.ProcessEngine
 
         protected override object Resolve(object source)
         {
-            var tracing = ((Activity) source).Tracing.Transform<Tracing>();
+            var tracing = ((Activity)source).Tracing.Transform<Tracing>();
             if (tracing == null)
                 return null;
 

@@ -11,7 +11,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Default instance creation from partlink
         /// </summary>
-        FromPartLink = 0, 
+        FromPartLink = 0,
 
         /// <summary>
         /// Create parts from entity relation

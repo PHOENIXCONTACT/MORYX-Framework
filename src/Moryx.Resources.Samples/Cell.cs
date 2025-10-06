@@ -23,7 +23,7 @@ namespace Moryx.Resources.Samples
         public int EditorValue { get; set; }
 
         [EntrySerialize, DisplayName("Do Foo")]
-        public int Foo([Description("Very important parameter")]string bla = "Hallo")
+        public int Foo([Description("Very important parameter")] string bla = "Hallo")
         {
             LastCall = bla.Length;
             RaiseResourceChanged();

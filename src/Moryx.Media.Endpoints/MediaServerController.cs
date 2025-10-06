@@ -54,7 +54,7 @@ namespace Moryx.Media.Endpoints
 
             var content = _mediaServer.Get(parsedGuid);
             if (content is null)
-                return NotFound(new MoryxExceptionResponse { Title =Strings.NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.NOT_FOUND });
 
             return MediaModelConverter.ConvertContent(content);
         }

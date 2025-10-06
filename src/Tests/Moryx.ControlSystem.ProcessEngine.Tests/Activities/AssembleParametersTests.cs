@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer;
@@ -38,7 +38,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Activities
             // Assert
             Assert.That(resolved, Is.Not.Null);
             Assert.That(resolved, Is.InstanceOf<AssembleParameters>());
-            AssembleParameters resolveAssemble = (AssembleParameters) resolved;
+            AssembleParameters resolveAssemble = (AssembleParameters)resolved;
             Assert.That(resolveAssemble.Instructions.Length, Is.EqualTo(1));
             Assert.That(resolveAssemble.Instructions[0].Content, Is.EqualTo("The name of this Product was Hugonotte"));
         }
@@ -64,7 +64,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Activities
                 ProductInstance = product.CreateInstance()
             };
             process.ProductInstance.Id = 42;
-            if(process.ProductInstance is IIdentifiableObject identifiableObject)
+            if (process.ProductInstance is IIdentifiableObject identifiableObject)
                 identifiableObject.Identity = new TestNumberIdentity(0, "0816");
 
             return process;

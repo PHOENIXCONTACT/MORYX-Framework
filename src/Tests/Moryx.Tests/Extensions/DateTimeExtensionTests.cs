@@ -128,7 +128,7 @@ namespace Moryx.Tests.Extensions
         }
 
         #endregion
-        
+
         #region NumberOfCalendarWeeksForYear
 
         [Test]

@@ -43,8 +43,8 @@ namespace Moryx.Resources.Management.Tests
             _typeControllerMock = new Mock<IResourceTypeController>();
 
             _linkerMock = new Mock<IResourceLinker>();
-            _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(), 
-                It.IsAny<Dictionary<Resource,ResourceEntity>>()))
+            _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(),
+                It.IsAny<Dictionary<Resource, ResourceEntity>>()))
                 .Returns(new Resource[0]);
 
             _initializerMock = new Mock<IResourceInitializer>();

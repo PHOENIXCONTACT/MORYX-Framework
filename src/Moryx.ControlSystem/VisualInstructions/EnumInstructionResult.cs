@@ -44,7 +44,7 @@ namespace Moryx.ControlSystem.VisualInstructions
         /// </summary>
         public static int ResultToEnumValue(Type resultEnum, ActiveInstructionResponse response)
         {
-            if(response.SelectedResult != null)
+            if (response.SelectedResult != null)
                 return ResultToEnumValue(resultEnum, response.SelectedResult);
 
             if (response.SelectedResult != null)

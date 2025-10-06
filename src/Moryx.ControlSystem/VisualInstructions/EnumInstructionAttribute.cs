@@ -19,7 +19,7 @@ namespace Moryx.ControlSystem.VisualInstructions
         /// </summary>
         public EnumInstructionAttribute()
         {
-            
+
         }
     }
 }

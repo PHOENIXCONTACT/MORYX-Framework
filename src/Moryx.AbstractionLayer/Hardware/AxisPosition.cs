@@ -23,7 +23,7 @@ namespace Moryx.AbstractionLayer.Hardware
         /// <summary>
         /// Move a vertical axes up
         /// </summary>
-        Up, 
+        Up,
         /// <summary>
         /// Move a vertical axes down
         /// </summary>

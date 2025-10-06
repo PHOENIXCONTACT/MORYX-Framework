@@ -21,8 +21,8 @@ namespace Moryx.Model
             get => _id;
             set
             {
-                _id = value;            
+                _id = value;
             }
-        }      
+        }
     }
 }

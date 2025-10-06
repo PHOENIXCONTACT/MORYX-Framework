@@ -58,7 +58,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         protected void CreateList()
         {
             var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, s, e) => { });
-            DataPool = new ActivityPool { Logger =  logger };
+            DataPool = new ActivityPool { Logger = logger };
             DataPool.ProcessChanged += OnProcessChanged;
             DataPool.ActivityChanged += OnActivityChanged;
         }
@@ -172,7 +172,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 Resource = new CellReference(42),
                 Task = new TaskTransition<MountActivity>(null, null) { Id = taskId },
                 ProcessData = processData,
-                Result = new ActivityResult { Numeric = 0, Success = true},
+                Result = new ActivityResult { Numeric = 0, Success = true },
                 State = ActivityState.Completed,
             };
             processData.AddActivity(activityData);

@@ -10,6 +10,6 @@ namespace Moryx.Tests
         public int ThrowsException
         {
             get { throw new Exception("BAM!"); }
-        } 
+        }
     }
 }

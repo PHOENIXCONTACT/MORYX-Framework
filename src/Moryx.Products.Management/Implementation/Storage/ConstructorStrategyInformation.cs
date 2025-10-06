@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Products;
@@ -14,8 +14,8 @@ namespace Moryx.Products.Management.Implementation.Storage
         public Func<TObject> Constructor { get; set; }
         public TStrategy Strategy { get; set; }
     }
- 
-    internal class ProductTypeInformation 
+
+    internal class ProductTypeInformation
     {
         public string Identifier { get; set; }
         public Func<ProductType> Constructor { get; set; }
@@ -72,7 +72,7 @@ namespace Moryx.Products.Management.Implementation.Storage
             var partLinks = new Dictionary<string, Func<IProductPartLink>>();
             foreach (var partLinkInfo in PartLinksInformation)
                 partLinks.Add(partLinkInfo.Key, partLinkInfo.Value.Constructor);
-            return new ProductTypeWrapper(Identifier,Constructor, partLinks, _properties.Values.ToList());
+            return new ProductTypeWrapper(Identifier, Constructor, partLinks, _properties.Values.ToList());
         }
 
     }

@@ -5,6 +5,6 @@ namespace Moryx.Tests.Extensions
 {
     public abstract class AbstractBaseClass : ITestInterface
     {
-         
+
     }
 }

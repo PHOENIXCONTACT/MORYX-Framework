@@ -28,7 +28,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             if (location is null || machine is null) return null;
             return machineLocation;
         }
-        
+
         public static Resource GetFactory(this Resource resource)
         {
             var parent = resource.Parent;

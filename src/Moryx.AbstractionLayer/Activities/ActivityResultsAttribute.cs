@@ -20,6 +20,6 @@ namespace Moryx.AbstractionLayer
         /// <summary>
         /// Type of the enum containing the results
         /// </summary>
-        public Type ResultEnum{ get; private set; }
+        public Type ResultEnum { get; private set; }
     }
 }

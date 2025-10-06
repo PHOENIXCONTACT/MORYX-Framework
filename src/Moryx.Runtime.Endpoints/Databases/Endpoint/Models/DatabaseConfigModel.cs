@@ -16,6 +16,6 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Models
         /// <summary>
         /// Configuration of the database model.
         /// </summary>
-        public Dictionary<string, string> Entries { get;set; }
+        public Dictionary<string, string> Entries { get; set; }
     }
 }

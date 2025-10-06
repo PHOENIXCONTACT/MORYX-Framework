@@ -34,7 +34,7 @@ namespace Moryx.Resources.Management
         public IDbContextManager DbContextManager { get; }
 
         /// <inheritdoc />
-        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
             : base(containerFactory, configManager, loggerFactory)
         {
             DbContextManager = contextManager;
@@ -84,7 +84,7 @@ namespace Moryx.Resources.Management
             // Activate external facade to register events
             ActivateFacade(_resourceTypeTreeFacade);
             ActivateFacade(_resourceManagementFacade);
-  
+
         }
 
         /// <summary>

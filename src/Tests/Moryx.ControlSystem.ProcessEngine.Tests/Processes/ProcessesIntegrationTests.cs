@@ -123,7 +123,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             _container.SetInstance(_productManagementMock.Object);
             _container.SetInstance(_resourceManagementMock.Object);
             _container.SetInstance(_notificationAdapterMock.Object);
-            _container.SetInstance(new ModuleConfig { RemovalMessage = "Foo", ResourceSelectors = new List<CellSelectorConfig>()});
+            _container.SetInstance(new ModuleConfig { RemovalMessage = "Foo", ResourceSelectors = new List<CellSelectorConfig>() });
             // Load components and boot
             _container.Resolve<IProcessStorage>().Start();
             var listeners = _container.ResolveAll<IActivityPoolListener>().OrderBy(l => l.StartOrder);
@@ -133,7 +133,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 listener.Start();
             }
         }
- 
+
         [TearDown]
         public void Destroy()
         {

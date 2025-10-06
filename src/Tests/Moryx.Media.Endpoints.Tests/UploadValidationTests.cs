@@ -68,7 +68,7 @@ namespace Moryx.Media.Endpoints.Tests
             using var stream = new MemoryStream();
             stream.SetLength(1024 * 1024 + 1);
             var file = FormFileBuilder.FromStream(stream, "exceeded.dat", MimeTypeString.ApplicationData);
-            
+
             // Act
             var result = UploadValidation.ValidateFormFile(file, _mediaServerMock.Object, out _errorMessage);
 
@@ -173,7 +173,7 @@ namespace Moryx.Media.Endpoints.Tests
     public static class MediaServerMock
     {
         public static void SetupFileSize(this Mock<IMediaServer> mediaServer, int sizeInMb)
-        { 
+        {
             mediaServer
                 .Setup(ms => ms.FileSizeLimitInMb())
                 .Returns(sizeInMb);

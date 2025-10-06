@@ -22,14 +22,14 @@ namespace Moryx.Tests.Extensions
             8,
             9
         };
-        
+
         [Test]
         public void ForEachTest()
         {
             var enumerated = new List<int>();
 
             // ReSharper disable once ConvertClosureToMethodGroup
-            _enumerable.ForEach(delegate(int i)
+            _enumerable.ForEach(delegate (int i)
             {
                 enumerated.Add(i);
             });

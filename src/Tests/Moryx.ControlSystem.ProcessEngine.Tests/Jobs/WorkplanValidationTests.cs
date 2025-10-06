@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
@@ -34,7 +34,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
         {
             // Arrange
             var dummy = DummyRecipe.BuildRecipe(1);
-            var step = (AssignIdentityTask) dummy.Workplan.Steps.ElementAt(1);
+            var step = (AssignIdentityTask)dummy.Workplan.Steps.ElementAt(1);
             step.Parameters = new ValidationParameters();
 
             // Act
@@ -46,7 +46,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
 
         private class ValidationParameters : AssignIdentityParameters
         {
-            [System.ComponentModel.DataAnnotations.Range(0, 7)] 
+            [System.ComponentModel.DataAnnotations.Range(0, 7)]
             public int Invalid { get; set; } = 42;
 
             protected override void Populate(IProcess process, Parameters instance)

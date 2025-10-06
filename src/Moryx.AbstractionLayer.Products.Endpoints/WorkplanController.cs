@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Authorization;
@@ -57,7 +57,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 return BadRequest($"Workplan id was 0");
             var versions = _workplans.LoadVersions(id);
             if (versions == null)
-                return NotFound(new MoryxExceptionResponse { Title =string.Format(Strings.WORKPLAN_NOT_FOUND,id) });
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.WORKPLAN_NOT_FOUND, id) });
             var model = new List<WorkplanModel>();
             foreach (var v in versions)
             {
@@ -78,7 +78,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 return BadRequest($"Workplan id was 0");
             var workplan = _workplans.LoadWorkplan(id);
             if (workplan == null)
-                return NotFound(new MoryxExceptionResponse { Title =string.Format(Strings.WORKPLAN_NOT_FOUND,id)});
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.WORKPLAN_NOT_FOUND, id) });
             return ProductConverter.ConvertWorkplan(workplan);
         }
 
@@ -101,9 +101,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
         public ActionResult<long> UpdateWorkplan(WorkplanModel model)
         {
-            if(model == null)
+            if (model == null)
                 return BadRequest($"Workplan id was 0");
-            if(_workplans.LoadWorkplan(model.Id) == null)
+            if (_workplans.LoadWorkplan(model.Id) == null)
                 return BadRequest($"Workplan with id {model.Id} does not exist");
             return _workplans.SaveWorkplan(ProductConverter.ConvertWorkplanBack(model));
         }

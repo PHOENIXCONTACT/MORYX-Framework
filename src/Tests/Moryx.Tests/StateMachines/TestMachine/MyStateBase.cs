@@ -9,7 +9,7 @@ namespace Moryx.Tests
     {
         protected MyStateBase(MyContext context, StateMap stateMap) : base(context, stateMap)
         {
-            
+
         }
 
         public virtual void Initial()

@@ -48,7 +48,7 @@ namespace Moryx.Tools
         /// </summary>
         public static DateTime StartOfWeek(int year, int calendarweek)
         {
-            var result = StartOfWeek(new DateTime(year, 1, 1).AddDays((calendarweek-1) * 7));
+            var result = StartOfWeek(new DateTime(year, 1, 1).AddDays((calendarweek - 1) * 7));
             return result;
         }
 

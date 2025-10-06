@@ -50,7 +50,7 @@ namespace Moryx.Notifications.Endpoints
         {
             var notification = _notificationPublisher.Get(guid);
             if (notification == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.NOTIFICATION_NOT_FOUND});
+                return NotFound(new MoryxExceptionResponse { Title = Strings.NOTIFICATION_NOT_FOUND });
 
             return Converter.ToModel(notification);
         }
@@ -81,23 +81,23 @@ namespace Moryx.Notifications.Endpoints
                     var notifications = _notificationPublisher.GetAll()
                         .Select(Converter.ToModel).ToList();
                     var json = JsonConvert.SerializeObject(notifications, _serializerSettings);
-                    
+
                     await response.WriteAsync($"data: {json}\r\r", cancelToken);
 
                     // Await task completion
-                    await Task.WhenAny(_notificationTcs.Task , Task.Delay(30000, cancelToken));
+                    await Task.WhenAny(_notificationTcs.Task, Task.Delay(30000, cancelToken));
 
                     // Create new TCS
                     _notificationTcs = new TaskCompletionSource();
                 }
             }
-            catch(OperationCanceledException)
+            catch (OperationCanceledException)
             {
             }
             finally
             {
                 // Unregister handler from facade
-                _notificationPublisher.Published -= eventHandler; 
+                _notificationPublisher.Published -= eventHandler;
                 _notificationPublisher.Acknowledged -= eventHandler;
 
                 _notificationTcs.TrySetCanceled();

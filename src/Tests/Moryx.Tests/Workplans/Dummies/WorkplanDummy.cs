@@ -44,7 +44,7 @@ namespace Moryx.Tests.Workplans
             rightOnly.Outputs[0] = left;
 
             var merge = new DummyStep(2, "C");
-            merge.Inputs[0] = left; 
+            merge.Inputs[0] = left;
             merge.Position = new Point(1, 4);
             workplan.Add(merge);
             merge.Outputs[0] = merge.Outputs[1] = complete;

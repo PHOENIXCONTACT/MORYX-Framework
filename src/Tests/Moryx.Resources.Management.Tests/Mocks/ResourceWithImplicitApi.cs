@@ -12,7 +12,7 @@ namespace Moryx.Resources.Management.Tests
 
     public interface IResourceWithImplicitApi : IResource, IExtension
     {
-        
+
     }
 
     public class ResourceWithImplicitApi : Resource, IResourceWithImplicitApi

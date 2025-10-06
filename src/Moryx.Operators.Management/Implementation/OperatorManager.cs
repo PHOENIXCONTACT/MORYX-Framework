@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
@@ -40,7 +40,7 @@ internal class OperatorManager : IOperatorManager
             Pseudonym = @operator.Pseudonym,
         };
 
-        if(@operator is AssignableOperator assignableOperator)
+        if (@operator is AssignableOperator assignableOperator)
         {
             data.AssignedResources.AddRange(assignableOperator.AssignedResources);
         }
@@ -61,12 +61,12 @@ internal class OperatorManager : IOperatorManager
         toBeUpdated.FirstName = @operator.FirstName;
         toBeUpdated.LastName = @operator.LastName;
         toBeUpdated.Pseudonym = @operator.Pseudonym;
-        if (@operator is AssignableOperator assignableOperator 
+        if (@operator is AssignableOperator assignableOperator
             && !toBeUpdated.AssignedResources.SequenceEqual(assignableOperator.AssignedResources))
         {
             toBeUpdated.AssignedResources.Clear();
             toBeUpdated.AssignedResources.AddRange(assignableOperator.AssignedResources);
-        }        
+        }
         OperatorStorage.Save(uow, toBeUpdated);
         OperatorChanged?.Invoke(this, new OperatorChangedEventArgs(toBeUpdated.Operator) { Change = OperatorChange.Update });
     }

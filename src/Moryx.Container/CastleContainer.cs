@@ -51,9 +51,9 @@ namespace Moryx.Container
         /// </summary>
         public object Resolve(Type service, string name)
         {
-            if(name == null && _strategies.ContainsKey(service))
+            if (name == null && _strategies.ContainsKey(service))
                 name = _strategies[service];
-            
+
             // Resolve by name if given or determined
             if (name != null && _container.Kernel.HasComponent(name))
                 return _container.Resolve(name, service);

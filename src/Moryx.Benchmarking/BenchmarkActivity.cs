@@ -48,7 +48,7 @@ namespace Moryx.Benchmarking
                 }
             }
 
-            return ActivityResult.Create((BenchmarkResult) resultNumber);
+            return ActivityResult.Create((BenchmarkResult)resultNumber);
         }
 
         /// <summary>
@@ -58,5 +58,5 @@ namespace Moryx.Benchmarking
         {
             throw new NotImplementedException();
         }
-}
+    }
 }

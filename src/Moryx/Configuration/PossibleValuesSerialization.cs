@@ -33,7 +33,7 @@ namespace Moryx.Configuration
         /// </summary>
         [Obsolete("Construct possible values with ServiceProvider for attributes that rely on it")]
         public PossibleValuesSerialization(IContainer container, IEmptyPropertyProvider emptyPropertyProvider)
-            :this(container, null, emptyPropertyProvider) { }
+            : this(container, null, emptyPropertyProvider) { }
 
         /// <summary>
         /// Initialize base class

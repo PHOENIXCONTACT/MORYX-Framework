@@ -29,17 +29,17 @@ internal class AttendanceManager : IAttendanceManager
 
     public void SignIn(OperatorData operatorData, IOperatorAssignable resource)
     {
-        if (operatorData.AssignedResources.Any(r => r.Id == resource.Id)) 
+        if (operatorData.AssignedResources.Any(r => r.Id == resource.Id))
             return;
 
         operatorData.AssignedResources.Add(resource);
         OperatorManager.Update(operatorData.Operator);
         OperatorSignedIn?.Invoke(this, operatorData);
-    } 
+    }
 
     public void SignOut(OperatorData operatorData, IOperatorAssignable resource)
     {
-        if(!operatorData.AssignedResources.Remove(resource))
+        if (!operatorData.AssignedResources.Remove(resource))
             return;
         OperatorManager.Update(operatorData.Operator);
         OperatorSignedOut?.Invoke(this, operatorData);
@@ -76,7 +76,7 @@ internal class AttendanceManager : IAttendanceManager
             LastName = "Stewart-Baxter",
             Pseudonym = "MS2024"
         };
-        
+
         defaultOperatorData = OperatorManager.Add(defaultOperator);
 
         return defaultOperatorData;

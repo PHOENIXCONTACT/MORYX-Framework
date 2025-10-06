@@ -54,7 +54,7 @@ namespace Moryx.StateMachines
         /// <summary>
         /// Throws an exception that the current state is invalid.
         /// </summary>
-        protected void InvalidState([CallerMemberName]string methodName = "")
+        protected void InvalidState([CallerMemberName] string methodName = "")
         {
             throw CreateAndLogInvalidStateException(methodName);
         }
@@ -122,14 +122,14 @@ namespace Moryx.StateMachines
                 var typeNames = string.Join(", ", duplicates.Select(type => type.Name));
                 throw new InvalidOperationException($"State types are only allowed once: {typeNames}");
             }
-            
+
             var stateMap = new StateMap();
             StateBase initialState = null;
             foreach (var definedState in definedStates)
             {
-                var instance =  (StateBase) Activator.CreateInstance(definedState.Type, context, stateMap);
+                var instance = (StateBase)Activator.CreateInstance(definedState.Type, context, stateMap);
                 instance.Key = definedState.Key;
-                
+
                 if (initialKey.HasValue && initialKey.Value == definedState.Key)
                     initialState = instance;
                 else if (definedState.IsInitial && initialState == null)
@@ -155,10 +155,10 @@ namespace Moryx.StateMachines
         internal static IEnumerable<FieldInfo> GetStateFields(Type stateBaseType)
         {
             var stateFields = from field in stateBaseType.GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
-                where field.IsLiteral && !field.IsInitOnly &&
-                      field.FieldType.IsAssignableFrom(typeof(int)) &&
-                      field.GetCustomAttribute<StateDefinitionAttribute>() != null
-                select field;
+                              where field.IsLiteral && !field.IsInitOnly &&
+                                    field.FieldType.IsAssignableFrom(typeof(int)) &&
+                                    field.GetCustomAttribute<StateDefinitionAttribute>() != null
+                              select field;
             return stateFields;
         }
 
@@ -176,7 +176,7 @@ namespace Moryx.StateMachines
             // If requested, exit current state
             if (exitCurrent)
                 OnExit();
-            
+
             var next = Map[state];
             Context.SetState(next);
 
@@ -242,7 +242,7 @@ namespace Moryx.StateMachines
         /// <summary>
         /// Context of the state machine
         /// </summary>
-        protected new TContext Context => (TContext) base.Context;
+        protected new TContext Context => (TContext)base.Context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StateBase"/> class.

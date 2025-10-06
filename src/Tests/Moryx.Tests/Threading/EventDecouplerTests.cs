@@ -117,7 +117,7 @@ namespace Moryx.Tests.Threading
         {
             public Tuple<LogLevel, string, Exception> Message { get; set; }
 
-            public IModuleLogger Logger { get; set; } 
+            public IModuleLogger Logger { get; set; }
 
             public InvocationTarget()
             {
@@ -131,8 +131,8 @@ namespace Moryx.Tests.Threading
             }
         }
 
-       [TestCase(true, Description = "The handler raises throws an exception and is a logging component")]
-       [TestCase(false, Description = "The handler raises throws an exception and is a logging component")]
+        [TestCase(true, Description = "The handler raises throws an exception and is a logging component")]
+        [TestCase(false, Description = "The handler raises throws an exception and is a logging component")]
         public void ExceptionInHandler(bool targetHasLogger)
         {
             // Arrange
@@ -171,7 +171,7 @@ namespace Moryx.Tests.Threading
 
         private const int MaxIndex = 100;
 
-        private event EventHandler<int> IndexEvent; 
+        private event EventHandler<int> IndexEvent;
 
         [Test]
         public void WriteFromMultipleThreads()
@@ -220,7 +220,7 @@ namespace Moryx.Tests.Threading
             var newValue = value + index;
             Thread.Sleep(1);
             _total = newValue;
-            
+
             _count++;
         }
 

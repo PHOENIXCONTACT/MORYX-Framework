@@ -87,7 +87,8 @@ namespace Moryx.Orders.Management
             {
                 restrictions.Add(new BeginRestriction(canBegin: true, canReduce: true, operationData.Operation.Progress.SuccessCount,
                     Strings.OperationManager_OverDeliveryNotice, RestrictionSeverity.Info));
-            };
+            }
+            ;
         }
 
         private void AddExternalRestrictions(IList<BeginRestriction> restrictions, IOperationData operationData)

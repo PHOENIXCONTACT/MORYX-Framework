@@ -18,7 +18,7 @@ namespace Moryx.Products.IntegrationTests
 
         protected override void Populate(IProcess process, Parameters instance)
         {
-            var parameters = (ParametersA) instance;
+            var parameters = (ParametersA)instance;
             parameters.Foo = Foo;
         }
     }

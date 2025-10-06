@@ -91,12 +91,12 @@ namespace Moryx.AbstractionLayer.Tests
 
             protected override void Populate(IProcess process, Parameters instance)
             {
-                var parameters = (InsertPartParameters) instance;
+                var parameters = (InsertPartParameters)instance;
 
                 if (_resolver == null)
                     _resolver = ResolverFactory.Create(Part);
 
-                parameters.Target = (IProductType) _resolver.Resolve(process);
+                parameters.Target = (IProductType)_resolver.Resolve(process);
             }
         }
 

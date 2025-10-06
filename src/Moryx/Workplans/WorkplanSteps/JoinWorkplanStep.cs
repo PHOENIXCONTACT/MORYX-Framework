@@ -11,7 +11,7 @@ namespace Moryx.Workplans.WorkplanSteps
     /// <summary>
     /// Workplan step to join multiple inputs
     /// </summary>
-    [DataContract]    
+    [DataContract]
     [Display(ResourceType = typeof(Strings), Name = "JoinWorkplanStep_Name", Description = "JoinWorkplanStep_Description")]
     public class JoinWorkplanStep : WorkplanStepBase
     {

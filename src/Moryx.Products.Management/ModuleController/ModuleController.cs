@@ -14,7 +14,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// The main controller of all product modules.
     /// </summary>
-    public class ModuleController : ServerModuleBase<ModuleConfig>, 
+    public class ModuleController : ServerModuleBase<ModuleConfig>,
         IFacadeContainer<IProductManagement>,
         IFacadeContainer<IWorkplans>
     {

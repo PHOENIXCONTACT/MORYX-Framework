@@ -27,7 +27,7 @@ namespace Moryx.Model
             _configManager = configManager;
 
             var dbContextTypes = ReflectionTool.GetPublicClasses(
-                typeof(DbContext), 
+                typeof(DbContext),
                 type => type != typeof(DbContext) && !type.GetCustomAttributes<DatabaseSpecificContextAttribute>().Any());
 
             _knownModels = dbContextTypes

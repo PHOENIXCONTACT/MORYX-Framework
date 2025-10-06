@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -65,7 +65,7 @@ namespace Moryx.Orders.Management.Tests
 
             _documentAssignStep.Start();
 
-            var productType = new DummyProductType {Identity = _productIdentity};
+            var productType = new DummyProductType { Identity = _productIdentity };
 
             _operation = new InternalOperation
             {
@@ -115,7 +115,7 @@ namespace Moryx.Orders.Management.Tests
             {
                 Assert.That(files, Does.Contain("29025550-00.txt"));
             }
-            else if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 Assert.That(files, Does.Contain("29025550-00"));
             }

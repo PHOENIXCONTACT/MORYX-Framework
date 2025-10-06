@@ -60,7 +60,7 @@ namespace Moryx.Orders.Management
 
         public override void JobsUpdated(JobStateChangedEventArgs args)
         {
-            if(args.CurrentState < JobClassification.Completed)
+            if (args.CurrentState < JobClassification.Completed)
                 return;
 
             if (Context.Operation.Jobs.All(j => j.Classification == JobClassification.Completed))

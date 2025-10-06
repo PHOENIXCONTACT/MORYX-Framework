@@ -23,6 +23,6 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 
     internal class FacadeB1 : IFacadeB
     {
-        
+
     }
 }

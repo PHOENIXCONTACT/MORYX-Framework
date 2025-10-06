@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
@@ -21,7 +21,7 @@ public class SimpleSkill : CapabilitiesBase
     /// </summary>
     [Display(Name = nameof(Strings.NAME), ResourceType = typeof(Strings))]
     public string? Name { get; set; }
-    
+
     /// <inheritdoc/>
     protected override bool ProvidedBy(ICapabilities provided)
     {
@@ -29,7 +29,7 @@ public class SimpleSkill : CapabilitiesBase
         if (simpleSkill == null)
             return false;
 
-        if (string.IsNullOrEmpty(Name) || !Equals(Name,simpleSkill.Name))
+        if (string.IsNullOrEmpty(Name) || !Equals(Name, simpleSkill.Name))
             return false;
 
         return true;

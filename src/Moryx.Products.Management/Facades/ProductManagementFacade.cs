@@ -227,8 +227,8 @@ namespace Moryx.Products.Management
                 Logger.LogError(ex, "Please make sure that an identity is unique.");
                 throw ex;
             }
-                
-            return (ProductInstance) instances.SingleOrDefault(); ;
+
+            return (ProductInstance)instances.SingleOrDefault(); ;
         }
 
         public TInstance GetInstance<TInstance>(Expression<Func<TInstance, bool>> selector)
@@ -258,7 +258,7 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
 
-            if(ids == null)
+            if (ids == null)
                 throw new ArgumentNullException(nameof(ids));
 
             return ProductManager.GetInstances(ids);
@@ -281,7 +281,7 @@ namespace Moryx.Products.Management
                 throw new ArgumentException("Recipe could not be found");
         }
 
-        private TRecipe ReplaceOrigin<TRecipe>(TRecipe recipe) where  TRecipe : IRecipe
+        private TRecipe ReplaceOrigin<TRecipe>(TRecipe recipe) where TRecipe : IRecipe
         {
             recipe.Origin = this;
             return recipe;

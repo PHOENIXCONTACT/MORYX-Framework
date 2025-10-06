@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Serialization;
@@ -21,7 +21,7 @@ namespace Moryx.Notifications.Endpoints
                 Severity = notification.Severity,
                 Title = notification.Title,
                 Message = notification.Message,
-                
+
                 Acknowledged = notification.Acknowledged,
                 IsAcknowledgable = notification.IsAcknowledgable,
                 Sender = notification.Sender,
@@ -29,7 +29,7 @@ namespace Moryx.Notifications.Endpoints
                 Properties = EntryConvert.EncodeObject(notification, NotificationSerialization)
             };
 
-            if(notification.Created != null)
+            if (notification.Created != null)
                 model.Created = (System.DateTime)notification.Created;
             return model;
         }

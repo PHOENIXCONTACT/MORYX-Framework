@@ -56,7 +56,8 @@ namespace Moryx.Model.Sqlite
             {
                 var builder = new SqliteConnectionStringBuilder(ConnectionString);
                 return !string.IsNullOrEmpty(ConnectionString);
-            } catch(ArgumentException)
+            }
+            catch (ArgumentException)
             {
                 return false;
             }

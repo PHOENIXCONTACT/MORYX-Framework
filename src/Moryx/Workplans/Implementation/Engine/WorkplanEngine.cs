@@ -16,7 +16,7 @@ namespace Moryx.Workplans
 
         void IStateContext.SetState(IState state)
         {
-            State = (EngineState) state;
+            State = (EngineState)state;
         }
 
         ///
@@ -55,7 +55,7 @@ namespace Moryx.Workplans
 
         private void OnPlaceReached(object sender, IToken token)
         {
-            var place = (IPlace) sender;
+            var place = (IPlace)sender;
             // Check if the engine completed its execution
             if (place.Classification.HasFlag(NodeClassification.Exit)
               && (place.Classification == NodeClassification.Failed || token is MainToken))
@@ -63,7 +63,7 @@ namespace Moryx.Workplans
                 State.Completed();
                 Completed(this, place);
             }
-            else if(place.Classification == NodeClassification.Intermediate)
+            else if (place.Classification == NodeClassification.Intermediate)
             {
                 PlaceReached?.Invoke(this, place);
             }

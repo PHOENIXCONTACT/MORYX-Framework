@@ -230,8 +230,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
         private void Log(IReadOnlyList<IJobData> newJobs, JobPosition jobPosition)
         {
-            var addedJobInformation = newJobs.Count == 1 
-                ? $"job {newJobs[0].Id}" 
+            var addedJobInformation = newJobs.Count == 1
+                ? $"job {newJobs[0].Id}"
                 : $"jobs {string.Join(", ", newJobs.Select(j => j.Id))}";
             Logger.LogInformation(jobPosition.PositionType switch
             {

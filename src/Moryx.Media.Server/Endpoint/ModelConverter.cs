@@ -39,7 +39,7 @@ namespace Moryx.Media.Server.Endpoint
             {
                 Name = variantDescriptor.Name,
                 IsMaster = variantDescriptor.Name == MediaConstants.MasterName,
-                Size =variantDescriptor.Size,
+                Size = variantDescriptor.Size,
                 FileHash = variantDescriptor.FileHash,
                 CreationDate = variantDescriptor.CreationDate,
                 MimeType = variantDescriptor.MimeType,

@@ -54,8 +54,8 @@ namespace Moryx.AbstractionLayer
         private static OutputDescription[] DescriptionsFromEnum(Type enumType)
         {
             return (from value in Enum.GetValues(enumType).OfType<object>()
-                    let name = GetEnumName(value,enumType)
-                    let numeric = (int) value
+                    let name = GetEnumName(value, enumType)
+                    let numeric = (int)value
                     select new OutputDescription
                     {
                         Name = name,
@@ -74,7 +74,7 @@ namespace Moryx.AbstractionLayer
         private static string GetEnumName(object value, Type enumType)
         {
             var enumMembers = enumType.GetMembers();
-            var enumValueInfo = enumMembers.FirstOrDefault(x => x.DeclaringType == enumType && 
+            var enumValueInfo = enumMembers.FirstOrDefault(x => x.DeclaringType == enumType &&
             x.Name == value.ToString());
             var displayAttributeValue = enumValueInfo.GetDisplayName();
 

@@ -10,7 +10,7 @@ internal static class ProcessHolderPositionsExtensions
     public static Dictionary<Resource, IEnumerable<IProcessHolderPosition>> GetUngroupedPostions(
         this IEnumerable<IProcessHolderPosition> positions)
     {
-        var result = new Dictionary<Resource, IEnumerable<IProcessHolderPosition>>();        
+        var result = new Dictionary<Resource, IEnumerable<IProcessHolderPosition>>();
         foreach (var position in positions)
         {
             if (position is Resource resource && !(resource.ParentCategory() == Category.ProcessHolderGroup))

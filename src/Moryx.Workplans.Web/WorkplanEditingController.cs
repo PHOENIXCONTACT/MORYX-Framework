@@ -28,27 +28,27 @@ namespace Moryx.Workplans.Endpoint
         [HttpGet("steps")]
         public ActionResult<WorkplanStepRecipe[]> AvailableSteps()
         {
-          var workplans = _workplans.LoadAllWorkplans();
+            var workplans = _workplans.LoadAllWorkplans();
 
-          var recipeSteps = _workplanEditing.AvailableSteps
-            .Where(step => ModelConverter.ToClassification(step) != WorkplanNodeClassification.Subworkplan)
-            .Select(step => WorkplanStepRecipe.FromStepType(step));
+            var recipeSteps = _workplanEditing.AvailableSteps
+              .Where(step => ModelConverter.ToClassification(step) != WorkplanNodeClassification.Subworkplan)
+              .Select(step => WorkplanStepRecipe.FromStepType(step));
 
-          var subWorkplans = _workplanEditing.AvailableSteps
-            .Where(step => ModelConverter.ToClassification(step) == WorkplanNodeClassification.Subworkplan)
-            .SelectMany(step =>
-            {
-              var stepRecipe = WorkplanStepRecipe.FromStepType(step);
-              return workplans.Select(workplan => new WorkplanStepRecipe
+            var subWorkplans = _workplanEditing.AvailableSteps
+              .Where(step => ModelConverter.ToClassification(step) == WorkplanNodeClassification.Subworkplan)
+              .SelectMany(step =>
               {
-                SubworkplanId = workplan.Id,
-                Type = stepRecipe.Type,
-                Classification = WorkplanNodeClassification.Subworkplan,
-                Name = workplan.Name
+                  var stepRecipe = WorkplanStepRecipe.FromStepType(step);
+                  return workplans.Select(workplan => new WorkplanStepRecipe
+                  {
+                      SubworkplanId = workplan.Id,
+                      Type = stepRecipe.Type,
+                      Classification = WorkplanNodeClassification.Subworkplan,
+                      Name = workplan.Name
+                  });
               });
-            });
 
-          return recipeSteps.Concat(subWorkplans).ToArray();
+            return recipeSteps.Concat(subWorkplans).ToArray();
         }
 
         [HttpPost("sessions")]
@@ -68,9 +68,9 @@ namespace Moryx.Workplans.Endpoint
         private Workplan CreateNew()
         {
             var workplan = new Workplan { Name = "New workplan", State = WorkplanState.New };
-            workplan.Add(new Connector { Name = "Start", Classification = NodeClassification.Start, Position = new Point(200, 100)});
+            workplan.Add(new Connector { Name = "Start", Classification = NodeClassification.Start, Position = new Point(200, 100) });
             workplan.Add(new Connector { Name = "End", Classification = NodeClassification.End, Position = new Point(100, 500) });
-            workplan.Add(new Connector { Name = "Failed", Classification = NodeClassification.Failed, Position = new Point(300, 500)});
+            workplan.Add(new Connector { Name = "Failed", Classification = NodeClassification.Failed, Position = new Point(300, 500) });
             return workplan;
         }
 
@@ -133,7 +133,7 @@ namespace Moryx.Workplans.Endpoint
         [HttpPost("sessions/{sessionId}/save")]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
         public ActionResult<WorkplanSessionModel> SaveSession(
-            [FromRoute] string sessionId, 
+            [FromRoute] string sessionId,
             [FromBody] WorkplanSessionModel sessionModel)
         {
             var session = _workplanEditing.OpenSession(sessionId);
@@ -206,7 +206,7 @@ namespace Moryx.Workplans.Endpoint
         [HttpDelete("sessions/{sessionId}/nodes/{nodeId}")]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
         public ActionResult<WorkplanSessionModel> RemoveNode(
-            [FromRoute] string sessionId, 
+            [FromRoute] string sessionId,
             [FromRoute] long nodeId
         )
         {
@@ -218,9 +218,9 @@ namespace Moryx.Workplans.Endpoint
         [HttpPost("sessions/{sessionId}/nodes/{targetNodeId}/{targetIndex}")]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
         public ActionResult<WorkplanSessionModel> ConnectStep(
-            [FromRoute] string sessionId, 
-            [FromRoute] long targetNodeId, 
-            [FromRoute] int targetIndex, 
+            [FromRoute] string sessionId,
+            [FromRoute] long targetNodeId,
+            [FromRoute] int targetIndex,
             [FromBody] NodeConnector source)
         {
             var session = _workplanEditing.OpenSession(sessionId);
@@ -235,9 +235,9 @@ namespace Moryx.Workplans.Endpoint
         [HttpDelete("sessions/{sessionId}/nodes/{targetNodeId}/{targetIndex}")]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
         public ActionResult<WorkplanSessionModel> DisconnectStep(
-            [FromRoute] string sessionId, 
-            [FromRoute] long targetNodeId, 
-            [FromRoute] int targetIndex, 
+            [FromRoute] string sessionId,
+            [FromRoute] long targetNodeId,
+            [FromRoute] int targetIndex,
             [FromBody] NodeConnector source)
         {
             var session = _workplanEditing.OpenSession(sessionId);

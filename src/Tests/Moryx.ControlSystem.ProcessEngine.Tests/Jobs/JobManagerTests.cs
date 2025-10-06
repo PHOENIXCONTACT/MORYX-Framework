@@ -131,7 +131,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
 
         private static IProductionJobData CreateJobMock(int id = 0)
         {
-            var job = new EngineJob(new ProductRecipe {Id = id + 20}, 1)
+            var job = new EngineJob(new ProductRecipe { Id = id + 20 }, 1)
             {
                 Id = id,
                 Classification = JobClassification.Idle

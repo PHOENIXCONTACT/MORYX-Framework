@@ -57,7 +57,7 @@ namespace Moryx.Benchmarking.Setups
 
             openContext.SaveChanges();
 
-            recipe.Classification = (int) RecipeClassification.Default;
+            recipe.Classification = (int)RecipeClassification.Default;
 
             openContext.SaveChanges();
 
@@ -71,7 +71,7 @@ namespace Moryx.Benchmarking.Setups
             // Create workplan
             var workplan = new Workplan
             {
-                Name  = "Workplan-Steps:" + stepCount,
+                Name = "Workplan-Steps:" + stepCount,
                 Version = 1,
                 State = WorkplanState.Released
             };

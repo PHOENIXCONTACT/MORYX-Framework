@@ -18,11 +18,11 @@ namespace Moryx.Workplans.Validation
             foreach (var connector in workplan.Connectors)
             {
                 // Find a step using the connector as input
-                if(workplan.Steps.Any(step => step.Inputs.Contains(connector)))
+                if (workplan.Steps.Any(step => step.Inputs.Contains(connector)))
                     continue;
 
                 //  or if it is the end connector
-                if(connector.Classification.HasFlag(NodeClassification.Exit))
+                if (connector.Classification.HasFlag(NodeClassification.Exit))
                     continue;
 
                 //  or if it is not used as an output anywhere and is not a start connector

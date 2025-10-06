@@ -144,8 +144,8 @@ namespace Moryx.ControlSystem.ProcessEngine
         public Job Get(long jobId)
         {
             ValidateHealthState();
-            return JobList.Get(jobId)?.Job 
-                ?? History.Get(jobId) 
+            return JobList.Get(jobId)?.Job
+                ?? History.Get(jobId)
                 ?? throw new ArgumentException("Job does not refer to managed job", nameof(jobId));
         }
 
@@ -175,7 +175,7 @@ namespace Moryx.ControlSystem.ProcessEngine
             if (recipe.Origin == null)
                 throw new ArgumentException("Origin must not be null on recipe", nameof(recipe));
 
-            var productionRecipe = recipe as IProductionRecipe 
+            var productionRecipe = recipe as IProductionRecipe
                 ?? throw new NotSupportedException("Process engine only supports 'IProductionRecipe'!");
 
             var errors = WorkplanValidation.Validate(productionRecipe.Workplan);
@@ -195,7 +195,7 @@ namespace Moryx.ControlSystem.ProcessEngine
                 throw new ArgumentNullException(nameof(job));
 
             ValidateHealthState();
-            return JobList.Get(job.Id) 
+            return JobList.Get(job.Id)
                 ?? throw new ArgumentException("Job does not refer to managed job", nameof(job));
         }
 

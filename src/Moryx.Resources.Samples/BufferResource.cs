@@ -17,7 +17,7 @@ namespace Moryx.Resources.Samples
 
         [EntrySerialize, DisplayName("Add Value")]
         [Description("Add typed value to the buffer")]
-        public int AddValue([ResourceTypes(typeof(BufferValue))]string type, string name, string value)
+        public int AddValue([ResourceTypes(typeof(BufferValue))] string type, string name, string value)
         {
             var bufferValue = Graph.Instantiate<BufferValue>(type);
             bufferValue.Name = name;

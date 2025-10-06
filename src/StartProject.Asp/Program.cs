@@ -8,7 +8,7 @@ namespace StartProject.Asp
     public class Program
     {
         public static void Main(string[] args)
-        {            
+        {
             AppDomainBuilder.LoadAssemblies();
 
             var host = Host.CreateDefaultBuilder(args)

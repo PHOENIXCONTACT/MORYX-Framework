@@ -164,7 +164,7 @@ namespace Moryx.Media.Server.Previews
                     .Resize(width, height));
 
                 var targetStream = new MemoryStream();
-                var encoder = new JpegEncoder {Quality = Config.Quality};
+                var encoder = new JpegEncoder { Quality = Config.Quality };
                 image.SaveAsJpeg(targetStream, encoder);
 
                 result.Preview = targetStream;

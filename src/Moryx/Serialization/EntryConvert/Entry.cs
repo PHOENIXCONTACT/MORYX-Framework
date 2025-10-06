@@ -190,7 +190,7 @@ namespace Moryx.Serialization
 
             return true;
         }
-        
+
         /// <inheritdoc />
         public override string ToString() =>
             $"{DisplayName}: {Value.Current}";

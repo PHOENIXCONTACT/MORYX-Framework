@@ -29,7 +29,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
 
         [DataMember]
         public Dictionary<string, CellPropertySettings> CellPropertySettings { get; set; }
-        
+
         [DataMember]
         public long FactoryId { get; internal set; }
     }

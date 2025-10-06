@@ -14,7 +14,7 @@ namespace Moryx.Container
         /// </summary>
         /// <param name="lifeStyle">Life style of component</param>
         /// <param name="services">Implemented service</param>
-        public PluginAttribute(LifeCycle lifeStyle, params Type[] services) 
+        public PluginAttribute(LifeCycle lifeStyle, params Type[] services)
             : base(lifeStyle, services)
         {
         }

@@ -268,7 +268,7 @@ namespace Moryx.Media.Server
                 RemovePreview(variantDescriptor);
 
             contentDescriptor.Variants.Remove(variantDescriptor);
-            if(contentDescriptor.Variants.Count > 0)
+            if (contentDescriptor.Variants.Count > 0)
                 SaveDescriptorToFile(contentDescriptor);
             return true;
         }

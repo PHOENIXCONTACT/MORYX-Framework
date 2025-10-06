@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
@@ -12,7 +12,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Model
         public virtual long Id { get; set; }
 
         [DataMember]
-        public virtual CellLocationModel Location { get; set; } 
+        public virtual CellLocationModel Location { get; set; }
 
         [DataMember]
         public virtual string IconName { get; set; }

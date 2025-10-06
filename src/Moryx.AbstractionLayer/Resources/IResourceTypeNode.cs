@@ -34,17 +34,17 @@ namespace Moryx.AbstractionLayer.Resources
         /// Base type this node is derived from
         /// </summary>
         IResourceTypeNode BaseType { get; }
-        
+
         /// <summary>
         /// Types derived from this node
         /// </summary>
         IEnumerable<IResourceTypeNode> DerivedTypes { get; }
 
-        IEnumerable<PropertyInfo> References { get;  }
+        IEnumerable<PropertyInfo> References { get; }
 
-        IEnumerable<PropertyInfo> PropertiesOfResourceType { get;  }
+        IEnumerable<PropertyInfo> PropertiesOfResourceType { get; }
 
-        Dictionary<string, List<Type>> ReferenceOverrides { get;  }
+        Dictionary<string, List<Type>> ReferenceOverrides { get; }
 
 
     }

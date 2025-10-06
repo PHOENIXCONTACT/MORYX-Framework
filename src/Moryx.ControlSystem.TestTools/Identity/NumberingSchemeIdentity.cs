@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
@@ -42,8 +42,8 @@ namespace Moryx.ControlSystem.TestTools.Identity
         /// </summary>
         public int Scheme
         {
-            get => (int) NumberType;
-            set => NumberType = (int) value;
+            get => (int)NumberType;
+            set => NumberType = (int)value;
         }
     }
 }

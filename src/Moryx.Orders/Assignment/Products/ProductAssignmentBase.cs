@@ -36,7 +36,7 @@ namespace Moryx.Orders.Assignment
         /// <inheritdoc cref="IProductAssignment"/>
         public void Initialize(ProductAssignmentConfig config)
         {
-            Config = (TConfig) config;
+            Config = (TConfig)config;
             Logger = Logger.GetChild(Config.PluginName, GetType());
         }
 

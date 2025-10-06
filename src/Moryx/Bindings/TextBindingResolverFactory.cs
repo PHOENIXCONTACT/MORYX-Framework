@@ -108,7 +108,7 @@ namespace Moryx.Bindings
                 foreach (var resolver in _resolvers)
                 {
                     var resolvedReference = resolver.Value.Resolve(source);
-                    result = resolvedReference is null ? 
+                    result = resolvedReference is null ?
                              result : result.Replace(resolver.Key, resolvedReference.ToString());
                 }
                 return result;

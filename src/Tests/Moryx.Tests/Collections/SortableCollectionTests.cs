@@ -35,7 +35,7 @@ namespace Moryx.Tests.Collections
         {
 
         }
-        
+
         [TestCase(0, 0, 1, TestName = "Move A up")]
         [TestCase(1, 0, 1, TestName = "Move B up")]
         [TestCase(2, 1, 2, TestName = "Move C up")]
@@ -69,7 +69,7 @@ namespace Moryx.Tests.Collections
             }
 
             var changedItems = _collection.FlushModifications();
-            
+
             Assert.That(originItem.SortOrder, Is.EqualTo(targetOrder));
 
             if (defaultIndex != targetIndex)

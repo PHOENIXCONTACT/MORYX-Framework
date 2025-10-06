@@ -54,7 +54,7 @@ namespace Moryx.ControlSystem.MaterialManager
                 return;
 
             // Update reference with values from product management
-            if(container.ProvidedMaterial is ProductReference && container.ProvidedMaterial.Identity is ProductIdentity prodIdent)
+            if (container.ProvidedMaterial is ProductReference && container.ProvidedMaterial.Identity is ProductIdentity prodIdent)
             {
                 var material = ProductManagement.LoadType(prodIdent);
                 container.SetMaterial(material);

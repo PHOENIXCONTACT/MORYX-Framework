@@ -42,7 +42,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint.Models
         /// <summary>
         /// Dependencies for this module.
         /// </summary>
-        public List<ServerModuleModel> Dependencies  { get; set; }
+        public List<ServerModuleModel> Dependencies { get; set; }
 
         /// <summary>
         /// Contains a list of notifications for that model.

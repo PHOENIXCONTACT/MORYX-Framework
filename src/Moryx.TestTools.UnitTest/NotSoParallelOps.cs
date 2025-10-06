@@ -30,7 +30,7 @@ namespace Moryx.TestTools.UnitTest
         /// </summary>
         public void ExecuteParallel(Action operation, bool criticalOperation)
         {
-            ExecuteParallel(state => operation(), new{}, criticalOperation);
+            ExecuteParallel(state => operation(), new { }, criticalOperation);
         }
 
         /// <summary>

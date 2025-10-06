@@ -160,7 +160,7 @@ namespace Moryx.ControlSystem.SetupProvider
 
             // Wire it all together
             var input = start;
-            foreach(var stepGroup in stepGroups.OrderBy(sg => sg.Key))
+            foreach (var stepGroup in stepGroups.OrderBy(sg => sg.Key))
             {
                 var output = stepGroup.Key == stepGroups.Keys.Max() ? end : WorkplanInstance.CreateConnector("Intermediate" + (stepGroup.Key));
                 workplan.Add(output);

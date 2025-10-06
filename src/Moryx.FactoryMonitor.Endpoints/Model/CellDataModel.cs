@@ -11,7 +11,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Model
     [DataContract]
     [Obsolete("Use CellStateChanged model instead")]
     public class CellDataModel
-    {      
+    {
         [DataMember]
         public virtual CellState State { get; set; }
 

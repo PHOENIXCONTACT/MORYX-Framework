@@ -7,7 +7,7 @@ namespace Moryx.Runtime.Modules
     {
         public override ServerModuleState Classification => ServerModuleState.Ready;
 
-        public ReadyState(IServerModuleStateContext context, StateMap stateMap) 
+        public ReadyState(IServerModuleStateContext context, StateMap stateMap)
             : base(context, stateMap)
         {
         }

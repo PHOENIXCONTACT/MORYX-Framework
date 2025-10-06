@@ -127,7 +127,7 @@ namespace Moryx.AbstractionLayer
         ///
         public new TTracing Tracing
         {
-            get => (TTracing) base.Tracing;
+            get => (TTracing)base.Tracing;
             set => base.Tracing = value;
         }
     }

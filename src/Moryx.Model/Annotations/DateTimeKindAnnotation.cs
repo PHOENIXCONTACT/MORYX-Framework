@@ -28,13 +28,13 @@ namespace Moryx.Model.Annotations
            new ValueConverter<DateTime, DateTime>(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified));
 
         private static DateTime ConvertToUtc(DateTime dateTime)
-        {                
+        {
             if (dateTime.Kind == DateTimeKind.Utc)
                 return dateTime;
             else
                 return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.Local);
         }
-       
+
         private static DateTime ConvertToLocal(DateTime timeUtc)
         {
             var result = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, TimeZoneInfo.Local);

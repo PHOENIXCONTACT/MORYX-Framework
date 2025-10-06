@@ -15,7 +15,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// Creates a resource initializer registration
         /// </summary>
         /// <param name="name">Name of this registration</param>
-        public ResourceInitializerAttribute(string name) 
+        public ResourceInitializerAttribute(string name)
             : base(LifeCycle.Singleton, typeof(IResourceInitializer))
         {
             Name = name;

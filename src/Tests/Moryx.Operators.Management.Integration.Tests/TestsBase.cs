@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
@@ -32,13 +32,13 @@ internal abstract class TestsBase
     /// <summary>
     /// Standard test operator
     /// </summary>
-    protected static Operator Operator 
+    protected static Operator Operator
         => CreateOperator("Test Operator", "Test First Name", "Test Last Name", "Test Pseudonym");
 
     /// <summary>
     /// Updated test operator with changed properties but identical identifier
     /// </summary>
-    protected static Operator UpdatedOperator 
+    protected static Operator UpdatedOperator
         => CreateOperator("Test Operator", "Updated First Name", "Updated Last Name", "Updated Pseudonym");
 
     /// <summary>
@@ -71,9 +71,9 @@ internal abstract class TestsBase
     /// <summary>
     /// An assignable test operator
     /// </summary>
-    protected static AssignableOperator AssignableOperator 
+    protected static AssignableOperator AssignableOperator
         => CreateAssignableOperator("Assignable Test Operator", "Assignable First Name", "Assignable Last Name", "Assignable Pseudonym");
-    
+
     /// <summary>
     /// An invalid assignable test operator
     /// </summary>
@@ -110,13 +110,13 @@ internal abstract class TestsBase
     /// Verifies whether all properties of the two assignable operators are equal, i.e. checks for value based equality.
     /// </summary>
     protected static bool ObjectsAreEqual(AssignableOperator o1, AssignableOperator o2)
-        => o1.Identifier == o2.Identifier && o1.FirstName == o2.FirstName && o1.LastName == o2.LastName && 
+        => o1.Identifier == o2.Identifier && o1.FirstName == o2.FirstName && o1.LastName == o2.LastName &&
         o1.Pseudonym == o2.Pseudonym && ObjectsAreEqual(o1.AssignedResources, o2.AssignedResources);
 
     /// <summary>
     /// Verifies whether the sets of assigned resources contain the same resources
     /// </summary>
-    private static bool ObjectsAreEqual(IReadOnlyList<IOperatorAssignable> assignedResources1, IReadOnlyList<IOperatorAssignable> assignedResources2) 
+    private static bool ObjectsAreEqual(IReadOnlyList<IOperatorAssignable> assignedResources1, IReadOnlyList<IOperatorAssignable> assignedResources2)
         => assignedResources1.All(r1 => assignedResources2.Any(r2 => r1.Id == r2.Id));
 
     #endregion
@@ -126,7 +126,7 @@ internal abstract class TestsBase
     /// <summary>
     /// Standard skill type creation context
     /// </summary>
-    protected static SkillTypeCreationContext SkillTypeCreationContext 
+    protected static SkillTypeCreationContext SkillTypeCreationContext
         => CreateSkillTypeCreationContext("Test Skill Type", TimeSpan.FromHours(42), new TestCapabilities(1));
 
     private static SkillTypeCreationContext CreateSkillTypeCreationContext(string name, TimeSpan duration, ICapabilities acquiredCapabilities)
@@ -151,7 +151,7 @@ internal abstract class TestsBase
     /// Standard skill type with id 1
     /// </summary>
     protected static SkillType SkillType => CreateSkillType(1, "Test Skill Type", TimeSpan.FromHours(42), new TestCapabilities(1));
-    
+
     /// <summary>
     /// An updated skill type with id 1 and changed properties
     /// </summary>
@@ -162,7 +162,7 @@ internal abstract class TestsBase
     /// </summary>
     protected static SkillType UnknownSkillType => CreateSkillType(0, "", TimeSpan.Zero, NullCapabilities.Instance);
 
-    private static SkillType CreateSkillType(int id, string name, TimeSpan duration, ICapabilities acquiredCapabilities) 
+    private static SkillType CreateSkillType(int id, string name, TimeSpan duration, ICapabilities acquiredCapabilities)
         => new(name, acquiredCapabilities) { Id = id, Duration = duration };
 
     /// <summary>
@@ -182,7 +182,7 @@ internal abstract class TestsBase
     /// Verifies whether the sets of assigned resources contain the same resources
     /// </summary>
     protected static bool ObjectsAreEqual(SkillType s1, SkillType s2)
-        => s1.Id == s2.Id && s1.Name == s2.Name && s1.Duration == s2.Duration && 
+        => s1.Id == s2.Id && s1.Name == s2.Name && s1.Duration == s2.Duration &&
         s1.AcquiredCapabilities.ProvidedBy(s2.AcquiredCapabilities) && s1.AcquiredCapabilities.Provides(s2.AcquiredCapabilities);
 
     /// <summary>
@@ -209,7 +209,7 @@ public class TestCapabilities : CapabilitiesBase
     {
         if (provided is not TestCapabilities providedTestCapabilities)
             return false;
-        if(providedTestCapabilities.Number != Number)
+        if (providedTestCapabilities.Number != Number)
             return false;
         return true;
     }

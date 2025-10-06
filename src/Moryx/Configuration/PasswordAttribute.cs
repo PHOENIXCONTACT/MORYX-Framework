@@ -9,6 +9,6 @@ namespace Moryx.Configuration
     [AttributeUsage(AttributeTargets.Property)]
     public class PasswordAttribute : Attribute
     {
-        
+
     }
 }

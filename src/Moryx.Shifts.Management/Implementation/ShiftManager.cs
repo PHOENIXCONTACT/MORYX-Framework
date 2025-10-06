@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -94,7 +94,7 @@ namespace Moryx.Shifts.Management
         public void DeleteShift(Shift shift)
         {
             var referencingAssignements = _assignements.Where(a => a.Shift == shift).ToArray();
-            Logger.Log(LogLevel.Debug, "Deleting {shift} -Id: {id}- and all {count} assignement that reference it", 
+            Logger.Log(LogLevel.Debug, "Deleting {shift} -Id: {id}- and all {count} assignement that reference it",
                 nameof(Shift), shift.Id, referencingAssignements.Length);
             Storage.Delete(shift);
             foreach (var assignement in referencingAssignements)
@@ -140,7 +140,7 @@ namespace Moryx.Shifts.Management
         {
             Logger.Log(LogLevel.Debug, "Updating {shift} -Id: {id}-", nameof(Shift), shift.Id);
             Storage.Update(shift);
-            _shifts.ReplaceItem(s => s.Id ==  shift.Id, shift);
+            _shifts.ReplaceItem(s => s.Id == shift.Id, shift);
             ShiftsChanged.Invoke(this, new ShiftsChangedEventArgs(ShiftChange.Update, shift));
             Logger.Log(LogLevel.Debug, "Updated {shift} -Id: {id}-", nameof(Shift), shift.Id);
         }

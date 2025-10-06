@@ -61,14 +61,14 @@ namespace Moryx.Model.Sqlite
         {
             var builder = new DbContextOptionsBuilder();
             builder.UseSqlite(BuildConnectionString(config));
-            
+
 
             return builder.Options;
         }
 
         private static string BuildConnectionString(IDatabaseConfig config)
         {
-                return config.ConnectionSettings.ConnectionString;
+            return config.ConnectionSettings.ConnectionString;
         }
 
         /// <inheritdoc />

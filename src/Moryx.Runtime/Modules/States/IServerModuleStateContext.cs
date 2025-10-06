@@ -40,7 +40,7 @@ namespace Moryx.Runtime.Modules
         /// Report a failure
         /// </summary>
         void ReportError(Exception exception);
-        
+
         /// <summary>
         /// Adds a notification to the module
         /// </summary>>

@@ -6,7 +6,7 @@ using Moryx.Media.Endpoints.Model;
 namespace Moryx.Media.Endpoints
 {
     public static class MediaModelConverter
-    {    
+    {
         public static ContentDescriptorModel ConvertContent(ContentDescriptor contentDescriptor)
         {
             if (contentDescriptor == null)
@@ -20,7 +20,7 @@ namespace Moryx.Media.Endpoints
                 Variants = variants.ToArray(),
                 Master = contentDescriptor.GetMaster()
             };
-        }       
+        }
     }
 }
 

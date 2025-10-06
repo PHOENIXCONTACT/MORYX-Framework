@@ -108,8 +108,8 @@ namespace Moryx.Tests
             dummy.SubList = [new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA }];
             dummy.SubEnumerable = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } };
             dummy.SubDictionary = new Dictionary<int, SubClass>();
-            dummy.SubIList = [1,2,3,7];
-            
+            dummy.SubIList = [1, 2, 3, 7];
+
             var entry = EntryConvert.EncodeObject(dummy);
             var x = entry.SubEntries.FirstOrDefault(e => e.Identifier == "SubIList");
             x.SubEntries.RemoveAt(0);

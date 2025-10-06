@@ -37,10 +37,10 @@ namespace Moryx.ControlSystem.Assemble
         protected override void Populate(IProcess process, Parameters instance)
         {
             base.Populate(process, instance);
-            var parameters = (AssembleParameters) instance;
+            var parameters = (AssembleParameters)instance;
 
             // Assign product
-            var recipe = (IProductRecipe) process.Recipe;
+            var recipe = (IProductRecipe)process.Recipe;
             parameters.Product = recipe.Target;
         }
     }

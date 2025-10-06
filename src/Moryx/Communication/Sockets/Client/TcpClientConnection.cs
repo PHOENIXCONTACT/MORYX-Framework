@@ -147,7 +147,7 @@ namespace Moryx.Communication.Sockets
         /// <inheritdoc />
         public void Reconnect(int delayMs)
         {
-            lock(_stateLock)
+            lock (_stateLock)
                 _state.Reconnect(delayMs);
         }
 

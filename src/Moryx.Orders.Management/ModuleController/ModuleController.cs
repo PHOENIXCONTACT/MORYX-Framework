@@ -21,8 +21,8 @@ namespace Moryx.Orders.Management
     /// The main module class for the OrderManagement.
     /// </summary>
     [Description("Module to handle orders provided by several plugins e.g. Hydra or Web.")]
-    public class ModuleController : ServerModuleBase<ModuleConfig>, 
-        IFacadeContainer<INotificationSource>, 
+    public class ModuleController : ServerModuleBase<ModuleConfig>,
+        IFacadeContainer<INotificationSource>,
         IFacadeContainer<IOrderManagement>
     {
         private const string ModuleName = "OrderManagement";
@@ -32,7 +32,7 @@ namespace Moryx.Orders.Management
         /// </summary>
         public override string Name => ModuleName;
 
-#region Imports
+        #region Imports
 
         /// <summary>
         /// Generic component to manage database contexts
@@ -63,9 +63,9 @@ namespace Moryx.Orders.Management
         [RequiredModuleApi(IsOptional = true, IsStartDependency = true)]
         public IUserManagement UserManagement { get; set; }
 
-#endregion
+        #endregion
 
-        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
             : base(containerFactory, configManager, loggerFactory)
         {
             DbContextManager = contextManager;
@@ -96,7 +96,7 @@ namespace Moryx.Orders.Management
             Container.LoadComponents<IAdviceExecutor>();
         }
 
-            /// <inheritdoc />
+        /// <inheritdoc />
         protected override void OnStart()
         {
             if (Config.Users.UserRequired && UserManagement is NullUserManagement)
@@ -119,7 +119,7 @@ namespace Moryx.Orders.Management
             Container.Resolve<ComponentOrchestration>().Stop();
         }
 
-#endregion
+        #endregion
 
         private readonly NotificationSourceFacade _notificationSourceFacade = new(ModuleName);
 

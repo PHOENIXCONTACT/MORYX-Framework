@@ -23,7 +23,7 @@ namespace Moryx.Resources.Samples
         public int ProductionHours { get; set; }
 
         [DataMember, EntrySerialize]
-        public double Power { get;  set; }
+        public double Power { get; set; }
 
         [DataMember, EntrySerialize]
         public MachineType MachineType { get; set; }
@@ -31,7 +31,7 @@ namespace Moryx.Resources.Samples
         [DataMember, EntrySerialize]
         public MachineInfos AdditionalInformation { get; set; }
 
-        [DataMember,EntrySerialize]
+        [DataMember, EntrySerialize]
         [PossibleStaff]
         public IList<TechnicalStaff> PossibleTechnicalStaffs { get; set; }
 

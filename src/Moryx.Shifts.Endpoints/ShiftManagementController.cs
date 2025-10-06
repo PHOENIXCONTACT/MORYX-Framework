@@ -52,7 +52,7 @@ namespace Moryx.Shifts.Endpoints
         }
 
         [HttpGet("filter")]
-        public ActionResult<IReadOnlyList<ShiftModel>> GetShifts([FromQuery, DataType(DataType.Time)] DateOnly? earliestDate, 
+        public ActionResult<IReadOnlyList<ShiftModel>> GetShifts([FromQuery, DataType(DataType.Time)] DateOnly? earliestDate,
             [FromQuery, DataType(DataType.Time)] DateOnly? latestDate)
         {
             try
@@ -235,7 +235,7 @@ namespace Moryx.Shifts.Endpoints
         }
 
         [HttpGet("assignements/filter")]
-        public ActionResult<IReadOnlyList<ShiftAssignementModel>> GetShiftAssignements([FromQuery, DataType(DataType.Time)] DateOnly? earliestDate, 
+        public ActionResult<IReadOnlyList<ShiftAssignementModel>> GetShiftAssignements([FromQuery, DataType(DataType.Time)] DateOnly? earliestDate,
             [FromQuery, DataType(DataType.Time)] DateOnly? latestDate)
         {
             try
