@@ -33,7 +33,6 @@ public class FunctionResultWithNothingTests : FunctionResultTestsBase
         _actionMockError = new Mock<Action<FunctionResultError>>();
     }
 
-
     [Test]
     public void ResultWithValueGetCreated()
     {
@@ -89,7 +88,6 @@ public class FunctionResultWithNothingTests : FunctionResultTestsBase
 
         Assert.That(result.Success, Is.False);
         Assert.That(result.Result, Is.Null);
-
 
         Assert.That(Message, Is.EqualTo(result.Error.Message));
         Assert.That(result.Error.Exception, Is.Null);

@@ -56,7 +56,6 @@ namespace Moryx.Tools
             return s;
         }
 
-
         /// <summary>
         /// Die Funktions stellt sicher, ob mindestens ein Zeichen in dem value eine Buchstabe oder eine Zahl ist
         /// </summary>

@@ -56,7 +56,6 @@ namespace Moryx.Orders.Management.Model
         /// </summary>
         public virtual DbSet<OperationAdviceEntity> OperationAdviceEntities { get; set; }
 
-
         /// <inheritdoc />
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

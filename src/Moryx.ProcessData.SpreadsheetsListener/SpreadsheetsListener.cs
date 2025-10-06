@@ -66,7 +66,6 @@ namespace Moryx.ProcessData.SpreadsheetsListener
                 _timerId = ParallelOperations.ScheduleExecution(Report, Config.ReportIntervalMs, -1);
         }
 
-
         private void Report()
         {
             _timerId = 0;

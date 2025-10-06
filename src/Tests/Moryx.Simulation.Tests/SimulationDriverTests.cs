@@ -98,8 +98,6 @@ namespace Moryx.Simulation.Tests
             _simulationDriverTestMock.Verify(dr => dr.Ready(It.IsAny<IActivity>()), Times.Once);
         }
 
-
-
         [Test]
         public void Driver_Should_Receive_Result_message()
         {
@@ -118,7 +116,6 @@ namespace Moryx.Simulation.Tests
             //Assert 
             _simulationDriverTestMock.Verify(dr => dr.Result(It.IsAny<SimulationResult>()), Times.Once);
         }
-
 
     }
 }

@@ -44,7 +44,6 @@ namespace Moryx.Model.Tests
             await configurator.DeleteDatabase(dbConfig);
         }
 
-
         [Test]
         public async Task SqliteDeleteDatabaseShouldWork()
         {

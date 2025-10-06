@@ -75,7 +75,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             _processController.Start();
         }
 
-
         /// Updates the variable when the event occurred.
         private void OnProcessChanged(object sender, ProcessEventArgs args)
         {
@@ -125,7 +124,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
             // Act
             var processes = jobNr <= amount ? _processController.LoadProcesses(jobs[jobNr]) : new Collection<ProcessData>();
-
 
             // Assert
             Assert.That(processes.Count, Is.EqualTo(runningProcesses), "The wanted process was not added.");

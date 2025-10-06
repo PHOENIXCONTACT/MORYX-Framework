@@ -85,7 +85,6 @@ namespace Moryx.Orders.Endpoints.Tests
             Assert.That(convertedContext.MaterialParameters, Is.Empty);
         }
 
-
         [Test(Description = "Convert OperationCreationContext to model and then convert it back")]
         public void ConvertModel()
         {

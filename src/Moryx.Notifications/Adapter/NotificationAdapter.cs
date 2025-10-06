@@ -64,7 +64,6 @@ namespace Moryx.Notifications
             if (notification == null)
                 throw new ArgumentNullException(nameof(notification), "Notification must be set");
 
-
             lock (_listLock)
             {
                 // Lets check if the notification was already published

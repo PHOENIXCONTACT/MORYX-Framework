@@ -56,7 +56,6 @@ namespace Moryx.Tests
             else
                 Assert.That(doubles.Prototypes[0].Value.Possible, Is.Null);
 
-
             var enums = encoded.SubEntries[2];
             Assert.That(enums.Value.Possible.Length, Is.EqualTo(3));
             Assert.That(enums.Prototypes.Count, Is.EqualTo(3));
@@ -214,7 +213,6 @@ namespace Moryx.Tests
 
             var entry1 = encoded.SubEntries[1];
             var entry2 = encoded.SubEntries[2];
-
 
             for (var i = 1; i <= 2; i++)
             {
@@ -448,7 +446,6 @@ namespace Moryx.Tests
             Assert.That(encoded.SubEntries[0].Value.Current, Is.Not.Null);
         }
 
-
         [Test(Description = "Class with EntrySerializationAttribute should not Override the attribute on the Base Class Resource|PublicResource")]
         public void ClassWithSerializationAttribute_AndBaseClass()
         {
@@ -478,8 +475,6 @@ namespace Moryx.Tests
             var alwaysProperties = 3;
             Assert.That(alwaysProperties, Is.EqualTo(encoded.SubEntries.Count));
         }
-
-
 
         [TestCase(CollectionType.Array, 3, 2)]
         [TestCase(CollectionType.Array, 0, 4)]
@@ -640,7 +635,6 @@ namespace Moryx.Tests
             var collection = ExtractCollection(type, obj);
             var totalSize = prefill - removedIndexes.Length;
             Assert.That(collection.Count, Is.EqualTo(totalSize), "New size invalid");
-
 
             if (type == CollectionType.Dictionary)
             {

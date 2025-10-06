@@ -64,7 +64,6 @@ namespace Moryx.Tests
             Assert.That(possibleValues[2], Is.EqualTo(nameof(MyStateBase.StateC)));
         }
 
-
         public class SomeBase
         {
 

@@ -227,7 +227,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 .Setup(rm => rm.GetResources<ICell>(It.IsAny<MountCapabilities>()))
                 .Returns(() => new[] { _mountCellMock.Object });
 
-
             // Add activity and assign
             DataPool.AddActivity(process, activityData);
             DataPool.UpdateActivity(activityData, ActivityState.Configured);

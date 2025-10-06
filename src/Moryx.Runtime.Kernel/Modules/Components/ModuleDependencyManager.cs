@@ -125,7 +125,6 @@ namespace Moryx.Runtime.Kernel
             importingProperty.Property.SetValue(module, facadeArray);
         }
 
-
         private void FillFacade(Type propType, ImportingProperty importingProperty, IServerModule service, IDictionary<object, IServerModule> facadeProviders)
         {
             var match = facadeProviders.Keys.FirstOrDefault(propType.IsInstanceOfType);

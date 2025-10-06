@@ -39,8 +39,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             Assert.That(slots.Length, Is.EqualTo(1), "There should be three slots");
         }
 
-
-
         [Test]
         public void StartNextJobOnCompleting()
         {

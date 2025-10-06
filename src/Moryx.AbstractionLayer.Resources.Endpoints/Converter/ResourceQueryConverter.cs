@@ -49,7 +49,6 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             var node = TypeController[current.GetType().FullName];
             var references = node.References;
 
-
             var includedReferences = new List<ResourceReferenceModel>();
             foreach (var reference in references)
             {

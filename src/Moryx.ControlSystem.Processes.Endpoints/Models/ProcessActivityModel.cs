@@ -46,6 +46,5 @@ namespace Moryx.ControlSystem.Processes.Endpoints
         public bool IsCompleted { get; set; }
     }
 
-
 }
 

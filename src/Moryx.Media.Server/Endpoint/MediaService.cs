@@ -268,7 +268,6 @@ namespace Moryx.Media.Server.Endpoint
                 return null;
             }
 
-
 #if USE_WCF
             var context = WebOperationContext.Current;
             // ReSharper disable once PossibleNullReferenceException

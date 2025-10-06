@@ -124,7 +124,6 @@ namespace Moryx.ControlSystem.Cells
             return CreateSession(classification, type, ProcessReference.InstanceIdentity(identity), constraints);
         }
 
-
         /// <summary>
         /// Creates a new <see cref="Session"/> for the <paramref name="unknown"/> activity
         /// with a new session context and marks the activity as failed.

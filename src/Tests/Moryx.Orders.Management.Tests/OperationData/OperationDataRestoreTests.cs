@@ -129,7 +129,6 @@ namespace Moryx.Orders.Management.Tests
             JobHandlerMock.Verify(d => d.Dispatch(It.IsAny<IOperationData>(), It.IsAny<IReadOnlyList<DispatchContext>>()), Times.Never);
         }
 
-
         [Test(Description = "Will restore an operation which is interrupting. " +
                             "After the restore, the operation should be interrupted.")]
         public void RestoreInterrupting()

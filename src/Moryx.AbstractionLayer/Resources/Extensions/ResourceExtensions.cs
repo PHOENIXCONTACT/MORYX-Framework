@@ -36,7 +36,6 @@ namespace Moryx.AbstractionLayer.Resources
                 return GetFirstRelatedResource(methodToNavigate(resource), conditionToMatch, methodToNavigate);
         }
 
-
         /// <summary>
         /// Recursive method to return the first resource that matches the <paramref name="conditionToMatch"/> 
         /// while selecting the next resources to check using the <paramref name="methodToNavigate"/>.

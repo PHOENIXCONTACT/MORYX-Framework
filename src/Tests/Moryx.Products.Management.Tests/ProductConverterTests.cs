@@ -161,7 +161,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
               || type.Equals(typeof(decimal));
         }
 
-
         #endregion
 
         #region Recipes
@@ -225,11 +224,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             if (originalRecipe.Classification.HasFlag(RecipeClassification.Clone))
                 targetDummyRecipe.Classification = originalRecipe.Classification;
 
-
             // Act
             var convertedModel = _productConverter.ConvertRecipeV2(originalRecipe);
             var recoveredOriginal = _productConverter.ConvertRecipeBack(convertedModel, targetDummyRecipe, backupProductType);
-
 
             // Assert
             // - Backup products are used for recipes without products

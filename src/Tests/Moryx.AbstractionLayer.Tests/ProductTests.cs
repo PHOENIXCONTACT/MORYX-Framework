@@ -38,7 +38,6 @@ namespace Moryx.AbstractionLayer.Tests
                 });
             }
 
-
             // Create instance
             var watchInstance = (WatchInstance)watch.CreateInstance();
 

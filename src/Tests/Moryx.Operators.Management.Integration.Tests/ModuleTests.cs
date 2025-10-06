@@ -76,7 +76,6 @@ internal class ModuleTests : TestsBase
         });
     }
 
-
     [Test]
     public void AnyMethod_WhenFacadeNotActivated_ThrowsHealthStateException()
     {

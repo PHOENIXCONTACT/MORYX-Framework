@@ -36,7 +36,6 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         public ActionResult<DependencyEvaluation> GetDependencyEvaluation()
             => new DependencyEvaluation(_moduleManager.DependencyTree);
 
-
         [HttpGet]
         [Authorize(Policy = RuntimePermissions.ModulesCanView)]
         public ActionResult<IEnumerable<ServerModuleModel>> GetAll()

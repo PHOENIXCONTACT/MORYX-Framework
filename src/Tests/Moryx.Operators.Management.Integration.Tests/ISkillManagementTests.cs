@@ -24,7 +24,6 @@ internal class ISkillManagementTests : TestsBase
         _env.StopTestModule();
     }
 
-
     [Test]
     public void Start_WithExpiredSkillInDB_FiltersSkill()
     {

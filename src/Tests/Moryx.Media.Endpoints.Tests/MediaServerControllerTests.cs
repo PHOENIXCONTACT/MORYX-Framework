@@ -128,7 +128,6 @@ namespace Moryx.Media.Endpoints.Tests
             Assert.That(okResult.Value, Is.EqualTo(targetGuid));
         }
 
-
         [TestCase("test.jpg", "image/jpg")]
         public async Task ShouldNotAcceptUploadOfInvalidFileSignatureAsync(string fileName, string mimeType)
         {
@@ -208,7 +207,6 @@ namespace Moryx.Media.Endpoints.Tests
 
         private FormFile CreateFormFile(string filename, string mimeType, string overwriteFilename = "")
             => FormFileBuilder.Load(Path.Combine(_testContentPath, filename), mimeType, overwriteFilename);
-
 
         [TestCase("test.jpg", "image/jpeg")]
         [TestCase("test.jpeg", "image/jpeg")]

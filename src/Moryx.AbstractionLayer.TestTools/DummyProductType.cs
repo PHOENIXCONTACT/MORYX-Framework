@@ -28,7 +28,6 @@ namespace Moryx.AbstractionLayer.TestTools
         }
     }
 
-
     /// <summary>
     /// Dummy implementation of a <see cref="ProductType"/> with Product Parts 
     /// </summary>
@@ -64,7 +63,6 @@ namespace Moryx.AbstractionLayer.TestTools
                 Enumerable.SequenceEqual<DummyProductPartLink>(toCompareWith.ProductPartLinkEnumerable, ProductPartLinkEnumerable));
         }
     }
-
 
     /// <summary>
     /// Dummy implementation of a <see cref="ProductType"/> with Files

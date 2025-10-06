@@ -22,12 +22,10 @@ namespace Moryx.ProcessData.Endpoints.Services
             _configManager = configManager;
         }
 
-
         public Models.Listener GetListener(string name)
             => GetListenerConfigs()
                 .FirstOrDefault(c => c.ListenerName == name)
                 .ToDto();
-
 
         public ListenersResponse GetListeners()
             => new()
@@ -57,10 +55,8 @@ namespace Moryx.ProcessData.Endpoints.Services
             return listener.ToDto();
         }
 
-
         public IServerModule GetModule(string moduleName)
             => _moduleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
-
 
         private IConfig GetConfig(IModule module, bool copy)
         {
@@ -79,7 +75,6 @@ namespace Moryx.ProcessData.Endpoints.Services
         private Monitor.ModuleConfig ProcessMonitorConfig()
             => (Monitor.ModuleConfig)GetConfig(ProcessDataMonitor(), false);
 
-
         private IServerModule ProcessDataMonitor()
             => GetModule("ProcessDataMonitor");
 
@@ -88,7 +83,6 @@ namespace Moryx.ProcessData.Endpoints.Services
                 .Where(p => p.PropertyType == typeof(List<ProcessDataListenerConfig>))
                 .SelectMany(info => (List<ProcessDataListenerConfig>)info.GetValue(config, null))
                 .ToList();
-
 
         public List<string> GetAvailableBindings(Type typeInQuestion)
             => AppDomain.CurrentDomain.GetAssemblies()

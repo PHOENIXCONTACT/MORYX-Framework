@@ -578,8 +578,6 @@ namespace Moryx.Products.Management
                     item.Key.Id = item.Value.Id;
                 }
 
-
-
                 return entity.Id;
             }
         }

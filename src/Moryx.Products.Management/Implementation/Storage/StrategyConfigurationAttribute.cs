@@ -38,7 +38,6 @@ namespace Moryx.Products.Management
             SupportedTypes = supportedTypes;
         }
 
-
         public virtual int TypeCompliance(Type targetType)
         {
             // Determine compliance as inheritance distance

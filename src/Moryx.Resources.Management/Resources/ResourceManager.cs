@@ -441,7 +441,6 @@ namespace Moryx.Resources.Management
 
         #region IResourceManagement
 
-
         private void RaiseResourceAdded(IResource newResource)
         {
             ResourceAdded?.Invoke(this, newResource);

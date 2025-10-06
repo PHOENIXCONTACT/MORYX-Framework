@@ -23,7 +23,6 @@ namespace Moryx.ProcessData.Endpoints.Controllers
             _listenerService = new ListenerService(moduleManager, configManager);
         }
 
-
         /// <summary>
         /// Get all measurands
         /// </summary>
@@ -31,7 +30,6 @@ namespace Moryx.ProcessData.Endpoints.Controllers
         [HttpGet("measurands")]
         public ActionResult<List<MeasurandResponse>> GetMeasurands()
             => Ok(_configService.GetMeasuarands());
-
 
         /// <summary>
         /// Get details for a specific measurand
@@ -49,7 +47,6 @@ namespace Moryx.ProcessData.Endpoints.Controllers
             }
             return Ok(measurand);
         }
-
 
         /// <summary>
         /// Get a list of a measurands bindings
@@ -113,7 +110,6 @@ namespace Moryx.ProcessData.Endpoints.Controllers
             return Ok(_configService.GetAvailableBindings(name));
         }
 
-
         /// <summary>
         /// Get configured listener configurations
         /// </summary>        
@@ -124,7 +120,6 @@ namespace Moryx.ProcessData.Endpoints.Controllers
         [HttpGet("listeners")]
         public ActionResult<ListenersResponse> GetListeners()
             => Ok(_listenerService.GetListeners());
-
 
         /// <summary>
         /// Update listener configuration
@@ -149,7 +144,6 @@ namespace Moryx.ProcessData.Endpoints.Controllers
             return Ok(_listenerService.UpdateListener(name, configuration));
         }
 
-
         private ActionResult MeasurandNotFound(string name)
             => NotFound($"Measurand with name \"{name}\" not found");
 
@@ -157,5 +151,4 @@ namespace Moryx.ProcessData.Endpoints.Controllers
             => NotFound($"Listener with name \"{name}\" not found");
     }
 }
-
 

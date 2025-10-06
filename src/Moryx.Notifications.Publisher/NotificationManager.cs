@@ -9,7 +9,6 @@ using Moryx.Threading;
 using Moryx.Tools;
 using Microsoft.Extensions.Logging;
 
-
 namespace Moryx.Notifications.Publisher
 {
     [Plugin(LifeCycle.Singleton, typeof(INotificationManager))]

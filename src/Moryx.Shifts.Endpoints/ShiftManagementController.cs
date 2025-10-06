@@ -320,7 +320,6 @@ namespace Moryx.Shifts.Endpoints
             }
         }
 
-
         [HttpDelete("assignements/{id}")]
         public ActionResult DeleteShiftAssignement(long id)
         {

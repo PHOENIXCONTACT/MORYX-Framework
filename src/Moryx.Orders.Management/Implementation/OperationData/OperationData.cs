@@ -119,7 +119,6 @@ namespace Moryx.Orders.Management
             }
         }
 
-
         /// <inheritdoc cref="IOperationData"/>
         // ReSharper disable once InconsistentlySynchronizedField
         public IOperationState State => _state;

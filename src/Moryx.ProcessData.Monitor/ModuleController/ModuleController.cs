@@ -7,7 +7,6 @@ using Moryx.Container;
 using Moryx.ProcessData.Listener;
 using Moryx.Runtime.Modules;
 
-
 namespace Moryx.ProcessData.Monitor
 {
     /// <summary>

@@ -4,7 +4,6 @@
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Resources.AssemblyInstruction;
 
-
 namespace Moryx.Resources.Benchmarking
 {
     [ResourceInitializer(nameof(BenchmarkInitializer))]
@@ -29,7 +28,6 @@ namespace Moryx.Resources.Benchmarking
 
             // Reference to reporter
             reporter.VisualInstructor = instructor;
-
 
             // Create cells
             var instances = new BenchmarkResource[CellCount];

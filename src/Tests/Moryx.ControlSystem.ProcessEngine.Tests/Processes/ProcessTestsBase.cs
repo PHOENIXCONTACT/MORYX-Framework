@@ -46,10 +46,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         protected const long SerialCellId = 3;
         protected const long NewCellId = 4;
 
-
         protected const long ValidProcessId = 1;
         protected const long InvalidProcessId = 2;
-
 
         private static int IdSequence;
 

@@ -84,7 +84,6 @@ namespace Moryx.Workplans.Transitions
             StoredTokens.Remove(token);
         }
 
-
         /// <summary>
         /// Resume execution of this transition, if we hold any tokens
         /// </summary>

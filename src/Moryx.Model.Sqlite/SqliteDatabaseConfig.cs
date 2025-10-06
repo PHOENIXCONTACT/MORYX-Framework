@@ -24,7 +24,6 @@ namespace Moryx.Model.Sqlite
         }
     }
 
-
     /// <summary>
     /// Database connection settings for the Sqlite databases
     /// </summary>

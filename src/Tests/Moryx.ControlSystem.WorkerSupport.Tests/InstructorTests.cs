@@ -123,7 +123,6 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
 
             _instructor.Completed(new ActiveInstructionResponse { Id = instructionId, SelectedResult = new InstructionResult { Key = defaultResult } });
 
-
             // Assert
             Assert.That(callbackRaised);
             Assert.That(callbackResult, Is.EqualTo(defaultResult));
@@ -150,7 +149,6 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
                 });
 
             _instructor.Completed(new ActiveInstructionResponse { Id = instructionId, SelectedResult = new InstructionResult { Key = "0" } });
-
 
             // Assert
             Assert.That(callbackResult, Is.EqualTo((int)MountingResult.Mounted));

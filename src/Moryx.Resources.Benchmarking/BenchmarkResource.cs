@@ -40,7 +40,6 @@ namespace Moryx.Resources.Benchmarking
 
         public INotificationAdapter NotificationAdapter { get; set; }
 
-
         [ResourceReference(ResourceRelationType.Extension, IsRequired = true)]
         [DisplayName("Visual Instructor")]
         [Description("Target to show instructions while benchmarking")]
@@ -150,7 +149,6 @@ namespace Moryx.Resources.Benchmarking
             ReadyToWork?.Invoke(this, rtw);
         }
 
-
         /// <inheritdoc />
         public BenchmarkReport GetReport()
         {
@@ -224,7 +222,6 @@ namespace Moryx.Resources.Benchmarking
         }
 
         string INotificationSender.Identifier => Id.ToString();
-
 
 #pragma warning disable 67
         /// <inheritdoc />

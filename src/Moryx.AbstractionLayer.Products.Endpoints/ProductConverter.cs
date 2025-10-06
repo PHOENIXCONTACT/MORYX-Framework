@@ -159,7 +159,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return prodType.FullName;
         }
 
-
         private PartModel ConvertPart(IProductPartLink link)
         {
             // No link, no DTO!
@@ -174,7 +173,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             };
             return part;
         }
-
 
         public IProductType ConvertProductBack(ProductModel source, ProductType converted)
         {
@@ -303,7 +301,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             value.Product = part.Product is null ? null : _productManagement.LoadType(part.Product.Id);
         }
 
-
         private static void ConvertFilesBack(object converted, ProductModel product, PropertyInfo[] properties)
         {
             foreach (var fileModel in product.Files)
@@ -416,7 +413,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return productRecipe;
         }
 
-
         public ProductInstanceModel ConvertProductInstance(ProductInstance instance)
         {
             var model = new ProductInstanceModel
@@ -428,7 +424,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             };
             return model;
         }
-
 
         public ProductInstance ConvertProductInstanceBack(ProductInstanceModel model, IProductType type)
         {
@@ -460,7 +455,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 State = model.State
             };
         }
-
 
     }
 }

@@ -4,7 +4,6 @@
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 
-
 namespace Moryx.Analytics.Server.ModuleController
 {
     /// <summary>

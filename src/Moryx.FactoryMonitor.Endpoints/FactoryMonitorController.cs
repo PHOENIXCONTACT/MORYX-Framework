@@ -122,7 +122,6 @@ namespace Moryx.FactoryMonitor.Endpoints
             return cells.Select(x => new SimpleGraph { Id = x.Id }.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation)).ToList();
         }
 
-
         /// <summary>
         /// Get the list of displayable item for this current factory view
         /// </summary>
@@ -145,8 +144,6 @@ namespace Moryx.FactoryMonitor.Endpoints
             // 1 level tree graph
             graph = graph.GetSubGraphById(factoryId);
             if (graph is null) return NotFound();
-
-
 
             var output = graph.Children.Select(e => e.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation))
                 .Where(x => x is not null).ToList();
@@ -303,7 +300,6 @@ namespace Moryx.FactoryMonitor.Endpoints
             var manufacturingConfig = _resourceManager.GetResources<IManufacturingFactory>().FirstOrDefault();
             return ChangeBackground(manufacturingConfig.Id, url);
         }
-
 
         /// <summary>
         /// Changes the background of the factory  

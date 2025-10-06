@@ -61,7 +61,6 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             _resourceManagementMock.Verify(rm => rm.Modify(_assemblyCellLocation.Id, It.IsAny<Func<Resource, bool>>()), Times.Once, "The Location resource was not updated!");
         }
 
-
         [Test]
         public void CellSettings_Shoud_Return_NotFound()
         {

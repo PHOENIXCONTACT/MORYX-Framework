@@ -5,7 +5,6 @@ using System;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.Communication;
 
-
 namespace Moryx.Resources.Mqtt.Tests.TestMessages
 {
     public class BoolMqttMessage : IIdentifierMessage, IByteSerializable

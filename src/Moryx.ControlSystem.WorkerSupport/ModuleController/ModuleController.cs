@@ -9,7 +9,6 @@ using Moryx.Container;
 using Moryx.ControlSystem.VisualInstructions;
 using Moryx.Runtime.Modules;
 
-
 namespace Moryx.ControlSystem.WorkerSupport
 {
     /// <summary>
@@ -73,7 +72,6 @@ namespace Moryx.ControlSystem.WorkerSupport
         {
             // Deactivate facade
             DeactivateFacade(_workerSupportFacade);
-
 
             Container.Resolve<IWorkerSupportController>().Stop();
         }

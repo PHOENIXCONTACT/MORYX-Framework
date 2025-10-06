@@ -64,7 +64,6 @@ namespace Moryx.Resources.AssemblyInstruction
             }
         }
 
-
         /// <inheritdoc />
         public void Completed(ActiveInstructionResponse response)
         {

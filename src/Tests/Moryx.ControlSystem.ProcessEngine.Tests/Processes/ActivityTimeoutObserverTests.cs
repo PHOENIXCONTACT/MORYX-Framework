@@ -58,7 +58,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 timeout * 1000, -1), Times.Exactly(timeoutStarted ? 1 : 0));
         }
 
-
         [Test(Description = "Running timer should be stopped of received activity result.")]
         public void RunningTimerShouldBeStoppedOnReceivedResult()
         {

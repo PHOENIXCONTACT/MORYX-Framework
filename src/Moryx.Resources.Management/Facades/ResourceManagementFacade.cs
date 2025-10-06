@@ -108,7 +108,6 @@ namespace Moryx.Resources.Management
             return ResourceGraph.GetResources(predicate).Proxify(TypeController);
         }
 
-
         #endregion
 
         #region IResourceModification
@@ -170,7 +169,6 @@ namespace Moryx.Resources.Management
             return ResourceGraph.GetResources(predicate);
         }
         #endregion
-
 
         /// <inheritdoc />
         public event EventHandler<IResource> ResourceAdded;

@@ -131,7 +131,6 @@ namespace Moryx.Communication.Sockets
                     tcpTransmission.Received += InitialReceive;
                 }
 
-
                 // If we have listners without a connection keep accepting clients
                 if (_listeners.Count > 0)
                     _tcpListener.BeginAcceptTcpClient(ClientConnected, null);

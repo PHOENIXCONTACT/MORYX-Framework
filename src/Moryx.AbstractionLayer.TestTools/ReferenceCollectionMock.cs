@@ -14,7 +14,6 @@ namespace Moryx.AbstractionLayer.TestTools
         /// <inheritdoc />
         public ICollection<IResource> UnderlyingCollection => new List<IResource>((IEnumerable<IResource>)this);
 
-
         /// <inheritdoc />
         public event EventHandler<ReferenceCollectionChangedEventArgs> CollectionChanged;
         /// <summary>

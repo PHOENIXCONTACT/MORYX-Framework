@@ -24,7 +24,6 @@ namespace Moryx.TestModule
         /// </summary>
         public override string Name => "TestModule";
 
-
         public ModuleController(IOptions<ModuleConfig> options, IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
             : base(containerFactory, configManager, loggerFactory)
         {
@@ -32,7 +31,6 @@ namespace Moryx.TestModule
 
             var config = options.Value;
         }
-
 
         #region State transition
 
@@ -49,7 +47,6 @@ namespace Moryx.TestModule
 
             var plugin = Container.Resolve<ITestPlugin>("TestPlugin");
             plugin.Start();
-
 
             // Activate facades
             ActivateFacade(_testModule);

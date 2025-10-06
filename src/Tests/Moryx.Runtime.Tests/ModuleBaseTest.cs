@@ -25,7 +25,6 @@ namespace Moryx.Runtime.Tests
                 StrategyName = "Test"
             });
 
-
             _moduleUnderTest = new TestModule(null, configManagerMock.Object, new TestLoggerMgmt());
         }
 

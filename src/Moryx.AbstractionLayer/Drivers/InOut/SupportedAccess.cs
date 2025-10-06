@@ -29,7 +29,6 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
         /// </summary>
         Key = 1 << 10,
 
-
         /// <summary>
         /// Driver supports changed events for inputs
         /// </summary>

@@ -22,7 +22,6 @@ namespace Moryx.Products.Model
 
         public virtual int PositionY { get; set; }
 
-
         public virtual WorkplanEntity Workplan { get; set; }
 
         public virtual ICollection<WorkplanConnectorReferenceEntity> Usages { get; set; }

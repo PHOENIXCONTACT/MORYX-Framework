@@ -20,14 +20,12 @@ namespace Moryx.ControlSystem.TestTools
         {
         }
 
-
         /// <summary>
         /// Creates a new instances of the <see cref="DummyResult"/> forwarding the constructor to the base class
         /// </summary>
         protected DummyRecipe(DummyRecipe source) : base(source)
         {
         }
-
 
         /// <summary>
         /// Creates a <see cref="ProductionRecipe"/> and fills the properties with reasonable values

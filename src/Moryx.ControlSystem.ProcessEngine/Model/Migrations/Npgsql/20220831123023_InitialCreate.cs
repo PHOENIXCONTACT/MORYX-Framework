@@ -154,7 +154,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Model.Migrations.Npgsql
                     onDelete: ReferentialAction.Cascade);
             });
 
-
             migrationBuilder.CreateIndex(
                 name: "IX_ActivityEntities_JobId",
                 schema: "public",

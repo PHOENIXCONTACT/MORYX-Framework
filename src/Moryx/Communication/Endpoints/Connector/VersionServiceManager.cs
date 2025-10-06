@@ -57,7 +57,6 @@ namespace Moryx.Communication.Endpoints
             return JsonConvert.DeserializeObject<TEndpoint[]>(response).ToArray<Endpoint>();
         }
 
-
         /// <inheritdoc />
         public virtual Endpoint[] ServiceEndpoints(string service)
         {

@@ -37,7 +37,6 @@ namespace Moryx.ControlSystem.Assemble
         }
     }
 
-
     /// <summary>
     /// Setup activity for an AssembleCell
     /// </summary>

@@ -135,8 +135,6 @@ namespace Moryx.Tests.Workplans
             Assert.That(prediction, Is.EqualTo(finalResult), "Predication was incorrect");
         }
 
-
-
         private class SingleLoopExecution
         {
             private bool _loopTaken;

@@ -11,7 +11,6 @@ using Moryx.Notifications;
 using Moryx.Runtime.Configuration;
 using Moryx.Serialization;
 
-
 namespace Moryx.ControlSystem.ProcessEngine
 {
     /// <summary>

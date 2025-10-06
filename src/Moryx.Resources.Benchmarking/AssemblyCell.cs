@@ -36,7 +36,6 @@ namespace Moryx.Resources.Benchmarking
             yield break;
         }
 
-
         public override IEnumerable<Session> ControlSystemDetached()
         {
             yield break;

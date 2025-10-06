@@ -44,7 +44,6 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         public async Task<ActionResult<DatabasesResponse>> GetAll()
             => Ok(new DatabasesResponse { Databases = await Task.WhenAll(_dbContextManager.Contexts.Select(Convert)) });
 
-
         [HttpGet("{targetModel}")]
         [Authorize(Policy = RuntimePermissions.DatabaseCanView)]
         public async Task<ActionResult<DataModel>> GetModel([FromRoute] string targetModel)
@@ -183,7 +182,6 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             if (!IsConfigValid(updatedConfig))
                 return BadConfigValues();
 
-
             var targetPath = Path.Combine(DataDirectory, targetModel);
             if (!Directory.Exists(targetPath))
                 Directory.CreateDirectory(targetPath);
@@ -239,7 +237,6 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             var config = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
             if (!IsConfigValid(config))
                 return BadConfigValues();
-
 
             var setupExecutor = _dbContextManager.GetSetupExecutor(contextType);
 

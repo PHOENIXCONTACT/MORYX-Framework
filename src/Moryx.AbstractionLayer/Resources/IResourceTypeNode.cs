@@ -46,6 +46,5 @@ namespace Moryx.AbstractionLayer.Resources
 
         Dictionary<string, List<Type>> ReferenceOverrides { get; }
 
-
     }
 }

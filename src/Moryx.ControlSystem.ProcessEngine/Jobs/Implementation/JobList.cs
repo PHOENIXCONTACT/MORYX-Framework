@@ -144,7 +144,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             return new JobListEnumerable(this, forward: false, current: startJob);
         }
 
-
         Job IJobList.Previous(Job reference)
         {
             return Previous(Get(reference.Id))?.Job;

@@ -89,7 +89,6 @@ namespace Moryx.AbstractionLayer.Resources
             return Activator.CreateInstance(type, ctorArgs);
         }
 
-
         private IDictionary<string, Type> GetCapabilities()
         {
 #pragma warning disable 618

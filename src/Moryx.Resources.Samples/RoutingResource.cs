@@ -29,7 +29,6 @@ namespace Moryx.Resources.Samples
         }
     }
 
-
     public interface IWpc : IResource
     {
     }

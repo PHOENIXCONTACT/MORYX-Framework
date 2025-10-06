@@ -125,7 +125,6 @@ namespace Moryx.Communication
             context.State = nextState;
         }
 
-
         /// <summary>
         /// Create incoming message from transmission
         /// </summary>

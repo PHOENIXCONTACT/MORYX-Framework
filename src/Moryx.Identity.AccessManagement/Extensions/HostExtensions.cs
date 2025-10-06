@@ -159,7 +159,6 @@ namespace Moryx.Identity.AccessManagement
                 PhoneNumberConfirmed = true,
             };
 
-
             var user = await userManager.FindByNameAsync(defaultUser.UserName);
             if (user == null)
             {

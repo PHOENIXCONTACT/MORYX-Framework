@@ -320,7 +320,6 @@ public class MqttDriver : Driver, IMessageDriver<object>
         else
             topics = Channels.Where(t => t.MessageType.IsInstanceOfType(message)).ToList();
 
-
         if (topics.Count == 1)
             await State.Send(topics[0], message);
         else
@@ -450,7 +449,6 @@ public class MqttDriver : Driver, IMessageDriver<object>
     }
 }
 
-
 internal class MqttQoSAttribute : PossibleValuesAttribute
 {
     /// <inheritdoc />
@@ -458,7 +456,6 @@ internal class MqttQoSAttribute : PossibleValuesAttribute
 
     /// <inheritdoc />
     public override bool UpdateFromPredecessor => false;
-
 
     public override IEnumerable<string> GetValues(Container.IContainer container)
     {

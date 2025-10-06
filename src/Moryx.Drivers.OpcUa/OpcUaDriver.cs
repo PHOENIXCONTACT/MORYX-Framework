@@ -938,7 +938,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
             }
         };
 
-
         _session.Write(null, [valueToBeWritten], out var results, out var diagnosticInfos);
 
         if (results != null)

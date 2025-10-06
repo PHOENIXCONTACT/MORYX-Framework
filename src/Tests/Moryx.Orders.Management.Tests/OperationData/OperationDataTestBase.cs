@@ -63,7 +63,6 @@ namespace Moryx.Orders.Management.Tests
             JobHandlerMock.Setup(d => d.Dispatch(It.IsAny<IOperationData>(), It.IsAny<IReadOnlyList<DispatchContext>>())).Callback(dispatchDelegate);
         }
 
-
         internal class TestJob : Job, IPredictiveJob
         {
             public TestJob(IRecipe recipe, int amount) : base(recipe, amount)

@@ -132,7 +132,6 @@ namespace Moryx.Media.Server.Facades
             return ContentManager.FileSizeLimitInMb();
         }
 
-
         #endregion
     }
 }

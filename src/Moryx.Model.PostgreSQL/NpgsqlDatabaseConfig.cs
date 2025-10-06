@@ -23,7 +23,6 @@ namespace Moryx.Model.PostgreSQL
         }
     }
 
-
     /// <summary>
     /// Database connection settings for the Npgsql databases
     /// </summary>

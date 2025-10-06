@@ -15,7 +15,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
         {
         }
 
-
         public override void Load()
         {
             // After we restart we can simply discard everything

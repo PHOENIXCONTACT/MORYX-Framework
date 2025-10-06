@@ -21,7 +21,6 @@ namespace Moryx.Orders.Management
 
         public override bool CanFinalReport => false;
 
-
         public InterruptingState(OperationData context, StateMap stateMap)
             : base(context, stateMap, OperationClassification.Interrupting)
         {
@@ -56,7 +55,6 @@ namespace Moryx.Orders.Management
                     throw new ArgumentOutOfRangeException();
             }
         }
-
 
         public override void JobsUpdated(JobStateChangedEventArgs args)
         {

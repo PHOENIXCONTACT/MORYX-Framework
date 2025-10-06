@@ -75,9 +75,6 @@ namespace Moryx.Simulation.Tests
             _processSimulator.Config = _moduleConfig;
         }
 
-
-
-
         protected Activity CreateActivity(Activity activity, Process process, ICell cell)
         {
             activity.Process = process;

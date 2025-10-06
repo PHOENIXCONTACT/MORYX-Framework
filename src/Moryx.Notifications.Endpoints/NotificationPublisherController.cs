@@ -21,7 +21,6 @@ namespace Moryx.Notifications.Endpoints
     {
         private readonly INotificationPublisher _notificationPublisher;
 
-
         private static readonly JsonSerializerSettings _serializerSettings = CreateSerializerSettings();
 
         private static JsonSerializerSettings CreateSerializerSettings()

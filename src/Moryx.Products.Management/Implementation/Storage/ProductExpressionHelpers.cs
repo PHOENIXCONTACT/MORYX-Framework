@@ -27,8 +27,6 @@ namespace Moryx.Products.Management
             throw new NotSupportedException("Expression type not supported yet");
         }
 
-
-
         public static bool IsTypeQuery<TInstance>(Expression<Func<TInstance, bool>> selector, out MemberInfo typeMember, out object memberValue)
         {
             typeMember = null;

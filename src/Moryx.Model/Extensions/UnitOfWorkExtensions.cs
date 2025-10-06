@@ -58,6 +58,5 @@ namespace Moryx.Model
             return entity;
         }
 
-
     }
 }

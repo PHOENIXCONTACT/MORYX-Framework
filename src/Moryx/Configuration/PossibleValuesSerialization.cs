@@ -89,7 +89,6 @@ namespace Moryx.Configuration
             return EntryConvert.ValueOrStringType(elementType);
         }
 
-
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override string[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {

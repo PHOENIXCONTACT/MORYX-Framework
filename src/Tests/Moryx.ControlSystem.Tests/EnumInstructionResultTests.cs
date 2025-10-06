@@ -105,7 +105,6 @@ namespace Moryx.ControlSystem.Tests
             // Arrange
             var instructionResult = EnumInstructionResult.PossibleResults(typeof(TestResults1));
 
-
             // Act
             var enumValue = (TestResults1)EnumInstructionResult.ResultToEnumValue(typeof(TestResults1), instructionResult[1]);
             var directValue = EnumInstructionResult.ResultToGenericEnumValue<TestResults1>(instructionResult[1]);

@@ -81,7 +81,6 @@ namespace Moryx.ControlSystem.WorkerSupport
 
         }
 
-
         private void OnInstructionAdded(object sender, ActiveInstruction instruction)
         {
             var identifier = ((IVisualInstructionSource)sender).Identifier;

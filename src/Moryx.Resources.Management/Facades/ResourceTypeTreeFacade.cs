@@ -39,7 +39,6 @@ namespace Moryx.Resources.Management.Facades
 
         }
 
-
         #endregion
     }
 }

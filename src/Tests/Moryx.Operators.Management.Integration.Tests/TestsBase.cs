@@ -51,7 +51,6 @@ internal abstract class TestsBase
     /// </summary>
     protected static Operator InvalidOperator => CreateOperator("", "", "", "");
 
-
     /// <summary>
     /// Creates an operator with the given parameters
     /// </summary>
@@ -78,7 +77,6 @@ internal abstract class TestsBase
     /// An invalid assignable test operator
     /// </summary>
     protected static AssignableOperator InvalidAssignableOperator => CreateAssignableOperator("", "", "", "");
-
 
     /// <summary>
     /// Mock of an IOperatorAssignable resource with ID 1

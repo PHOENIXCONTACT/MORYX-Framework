@@ -110,7 +110,6 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         => OperatorManager.Operators.SingleOrDefault(o => o.Identifier == @operator.Identifier) ??
             throw new ArgumentException(string.Format(Strings.REFERENCE_NOT_FOUND, nameof(Operator), @operator.Identifier));
 
-
     public void SignOut(AssignableOperator @operator, IOperatorAssignable resource)
     {
         ValidateHealthState();

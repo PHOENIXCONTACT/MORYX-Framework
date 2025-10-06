@@ -9,7 +9,6 @@ using Moryx.Asp.Extensions;
 using Moryx.Serialization;
 using Moryx.Workplans.Web.Properties;
 
-
 namespace Moryx.Workplans.Endpoint
 {
     [Route("api/moryx/workplans/")]

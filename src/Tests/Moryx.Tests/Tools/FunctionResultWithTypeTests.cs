@@ -90,7 +90,6 @@ public class FunctionResultWithTypeTests : FunctionResultTestsBase
         Assert.That(result.Success, Is.False);
         Assert.That(0, Is.EqualTo(result.Result));
 
-
         Assert.That(Message, Is.EqualTo(result.Error.Message));
         Assert.That(result.Error.Exception, Is.Null);
         Assert.That(Message, Is.EqualTo(result.ToString()));
@@ -153,7 +152,6 @@ public class FunctionResultWithTypeTests : FunctionResultTestsBase
 
         Assert.That(result, Is.Not.SameAs(matchResult));
     }
-
 
     [Test]
     public void ErrorResultMatchesErrorWithException()

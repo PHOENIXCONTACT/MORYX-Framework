@@ -36,8 +36,6 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             return resourceChangedCellModel;
         }
 
-
-
         public static long GetFactoryId(this ICell cell, IResourceManagement resourceManagement)
         {
             var resource = resourceManagement.Read(cell, x => x.GetFactory());
@@ -103,7 +101,6 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
 
             return CellState.Idle;
         }
-
 
     }
 }

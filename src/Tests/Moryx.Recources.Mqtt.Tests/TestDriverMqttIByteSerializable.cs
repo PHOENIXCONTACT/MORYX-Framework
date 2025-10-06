@@ -163,7 +163,6 @@ namespace Moryx.Resources.Mqtt.Tests
             Assert.That(msg.Message == MESSAGE_VALUE, "Message should be " + MESSAGE_VALUE + ", but is " + msg.Message);
         }
 
-
         [Test(Description = "Receive Message using the Driver")]
         public void Receive_SubscribedTopic_IIdentifierMessage_MessageType_Topic_Message()
         {

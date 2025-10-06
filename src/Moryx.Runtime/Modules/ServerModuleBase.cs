@@ -198,7 +198,6 @@ namespace Moryx.Runtime.Modules
             lifeCycleBoundFacade?.Deactivated();
         }
 
-
         private void FillProperties(object instance, Func<IContainer, PropertyInfo, object> fillingFunc)
         {
             // Fill everything available in the container

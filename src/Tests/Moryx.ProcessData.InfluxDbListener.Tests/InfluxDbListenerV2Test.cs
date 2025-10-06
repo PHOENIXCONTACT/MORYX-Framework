@@ -155,7 +155,6 @@ namespace Moryx.ProcessData.InfluxDbListener.Tests
             Assert.That(GetWritesCount(), Is.EqualTo(0));
         }
 
-
         private void CreateInfluxDbV2Listener() => _listener = new InfluxDbListenerV2
         {
             ParallelOperations = _parallelOperations,

@@ -42,7 +42,6 @@ namespace Moryx.Model
         TContext Create<TContext>(IDatabaseConfig config)
             where TContext : DbContext;
 
-
         /// <summary>
         /// Updates the database configurator for the given context type
         /// </summary>

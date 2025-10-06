@@ -10,7 +10,6 @@ using Moryx.FactoryMonitor.Endpoints.Model;
 using Moryx.Orders;
 using Moryx.ControlSystem.Cells;
 
-
 namespace Moryx.FactoryMonitor.Endpoints
 {
     /// <summary>

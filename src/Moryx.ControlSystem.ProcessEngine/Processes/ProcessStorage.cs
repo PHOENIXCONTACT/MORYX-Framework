@@ -193,7 +193,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             return completedActivities;
         }
 
-
         /// <inheritdoc />
         public void TryReloadRunningActivity(long processId, ActivityData activityData)
         {

@@ -20,7 +20,6 @@ namespace Moryx.Resources.Samples
         [DataMember]
         public string ClientId { get; set; }
 
-
         [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Source)]
         public IReferences<Resource> Users { get; set; }
 

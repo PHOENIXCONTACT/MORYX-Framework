@@ -288,7 +288,6 @@ namespace Moryx.Identity.AccessManagement.Controllers
             {
                 await _roleManager.AddClaimAsync(newRole, new Claim("permission", "order.create"));
 
-
                 return Ok();
             }
 

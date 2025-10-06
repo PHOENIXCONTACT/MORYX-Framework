@@ -34,7 +34,6 @@ namespace Moryx.Runtime.Kernel.Tests
             _mockLogger.Setup(ml => ml.GetChild(It.IsAny<string>(), It.IsAny<Type>())).Returns(_mockLogger.Object);
         }
 
-
         private ModuleManager CreateObjectUnderTest(IServerModule[] modules)
         {
             return new ModuleManager(modules, _mockConfigManager.Object, new NullLogger<ModuleManager>());
@@ -56,7 +55,6 @@ namespace Moryx.Runtime.Kernel.Tests
                 new ModuleB3(),
                 dependent
             ]);
-
 
             // Act
             moduleManager.StartModules();
@@ -100,7 +98,6 @@ namespace Moryx.Runtime.Kernel.Tests
             Assert.That(dependent.Facades, Is.Not.Null, "No facade injected");
             Assert.That(dependent.Facades.Length, Is.EqualTo(1), "Faulty number of facades");
         }
-
 
         [Test]
         public void FacadeInjection()

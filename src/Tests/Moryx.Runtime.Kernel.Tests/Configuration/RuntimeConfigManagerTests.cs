@@ -165,7 +165,6 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration
             Assert.That(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, Is.False, "Long field has not been overwritten!");
         }
 
-
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.
         /// </summary>

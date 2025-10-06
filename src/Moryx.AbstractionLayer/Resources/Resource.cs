@@ -148,7 +148,6 @@ namespace Moryx.AbstractionLayer.Resources
             return $"{Id}:{Name} ({GetType().Name})";
         }
 
-
         /// <summary>
         /// Current capabilities of this resource
         /// </summary>

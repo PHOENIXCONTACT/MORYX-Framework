@@ -264,7 +264,6 @@ namespace Moryx.Resources.Management
         /// </summary>
         private static string ExplicitMemberName(MemberInfo member) => $"{member.DeclaringType.Name}_{member.Name}";
 
-
         /// <summary>
         /// Determine if the return type indicates a resource reference
         /// </summary>

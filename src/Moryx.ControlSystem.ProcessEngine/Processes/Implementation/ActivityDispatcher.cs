@@ -432,7 +432,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             // Use either the process related or general session cache
             var sessionCache = process?.ReportedSessions ?? _reportedSessions;
 
-
             ActivityData activity;
             lock (sessionCache)
             {

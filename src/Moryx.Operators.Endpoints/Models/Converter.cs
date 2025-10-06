@@ -34,7 +34,6 @@ internal static class Converter
             skills.GetSkillType(model.TypeId) ?? throw new KeyNotFoundException($"No skill with id {model.OperatorIdentifier} could be found."))
         { ObtainedOn = model.ObtainedOn };
 
-
     internal static ExtendedOperatorModel ToModel(this AssignableOperator @operator) => new()
     {
         FirstName = @operator.FirstName,
@@ -74,7 +73,6 @@ internal static class Converter
         ExpiresOn = skill.ObtainedOn.AddDays((int)skill.Type.Duration.TotalDays)
     };
 
-
     internal static Operator ToType(this OperatorModel @operator) => new(VerifyNotNull(@operator.Identifier))
     {
         FirstName = @operator.FirstName,
@@ -105,7 +103,6 @@ internal static class Converter
         }
 
     }
-
 
     private static Entry VerifyNotNull(Entry? entry) => entry ?? throw new ArgumentNullException(nameof(entry));
 

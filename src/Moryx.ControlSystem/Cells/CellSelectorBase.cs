@@ -12,7 +12,6 @@ namespace Moryx.ControlSystem.Cells
     {
     }
 
-
     /// <summary>
     /// Base class for <see cref="ICellSelector"/> with typed config
     /// </summary>

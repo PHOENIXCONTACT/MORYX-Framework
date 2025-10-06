@@ -144,7 +144,6 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             return new[] { _assemblyCellLocation, _solderingCellLocation };
         }
 
-
     }
 }
 

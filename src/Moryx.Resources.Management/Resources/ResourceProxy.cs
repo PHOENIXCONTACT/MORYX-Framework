@@ -33,7 +33,6 @@ namespace Moryx.Resources.Management
             Target.CapabilitiesChanged += OnCapabilitiesChanged;
         }
 
-
         /// <inheritdoc />
         long IResource.Id => Target.Id;
 

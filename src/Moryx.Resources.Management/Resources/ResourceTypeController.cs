@@ -190,7 +190,6 @@ namespace Moryx.Resources.Management
         /// <inheritdoc />
         IEnumerable<IResourceTypeNode> IResourceTypeTree.SupportedTypes(ICollection<Type> constraints) => SupportedTypes(constraints);
 
-
         /// <summary>
         /// Recursively check if any type in the tree supports the referenced type
         /// </summary>
@@ -273,7 +272,6 @@ namespace Moryx.Resources.Management
             {
                 linker = linker.BaseType;
             }
-
 
             // Step 2: Check if we already created a proxy for this type. If we already
             // did use this one for the requested type as well.

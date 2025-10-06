@@ -38,7 +38,6 @@ namespace Moryx.AbstractionLayer.Recipes
         public override IProcess CreateProcess() =>
             new ProductionProcess { Recipe = this };
 
-
         /// <inheritdoc />
         public override IRecipe Clone() =>
             new ProductionRecipe(this);

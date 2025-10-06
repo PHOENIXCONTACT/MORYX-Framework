@@ -47,7 +47,6 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
 
         public override ICapabilities RequiredCapabilities => Parameters.TargetCapabilities;
 
-
         protected override ActivityResult CreateResult(long resultNumber)
         {
             return ActivityResult.Create((DefaultActivityResult)resultNumber);

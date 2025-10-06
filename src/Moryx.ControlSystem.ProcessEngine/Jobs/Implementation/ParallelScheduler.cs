@@ -135,7 +135,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
                 // Remove possible dependency on next job
                 RemoveDependency(next, job);
 
-
                 if (job.IsPrepareOf(next) && _slots.TryReplace(job, next))
                 {
                     // If the completed job was a prepare, start its production target

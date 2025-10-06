@@ -12,7 +12,6 @@ namespace Moryx.TestModule
     {
         public const string ComponentName = "TestPlugin2";
 
-
         public void Initialize(TestPluginConfig config)
         {
         }

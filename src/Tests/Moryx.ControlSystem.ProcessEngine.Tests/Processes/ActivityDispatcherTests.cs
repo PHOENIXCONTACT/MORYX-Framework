@@ -26,7 +26,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         private Mock<ICell> _mountCellMock;
         private Mock<ICell> _serialCellMock;
 
-
         [SetUp]
         public void CreateDispatcher()
         {
@@ -445,7 +444,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                     "There should be no StartActivity call at the ProductionCell");
             });
         }
-
 
     }
 }

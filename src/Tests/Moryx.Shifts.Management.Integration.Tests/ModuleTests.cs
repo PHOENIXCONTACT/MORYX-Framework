@@ -47,7 +47,6 @@ namespace Moryx.Shifts.Management.IntegrationTests
             Assert.That(module.State, Is.EqualTo(ServerModuleState.Stopped));
         }
 
-
         [Test]
         public void Start_WithDatabaseIsFilled_StartsModule()
         {
@@ -74,7 +73,6 @@ namespace Moryx.Shifts.Management.IntegrationTests
                 Assert.That(ObjectsAreEqual(_facade.ShiftAssignements.Single(), assignement), "ShiftAssignements do not match after restart");
             });
         }
-
 
         [Test]
         public void AnyMethod_WhenFacadeNotActivated_ThrowsHealthStateException()

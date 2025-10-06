@@ -344,7 +344,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             ModifiedJobsFragment fragment = null;
             _jobList.Remove(jobData, f => fragment = f);
 
-
             // Assert
             Assert.That(_recievedJobCompleted, Is.EqualTo(jobData));
             Assert.That(fragment, Is.Not.Null);

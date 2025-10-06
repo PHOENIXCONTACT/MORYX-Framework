@@ -181,7 +181,6 @@ namespace Moryx.Products.Management
             return references;
         }
 
-
         /// <summary>
         /// Convert a Workplan to a WorkplanEntity
         /// </summary>

@@ -135,7 +135,6 @@ namespace Moryx.Workplans
             Remove((IWorkplanEngine)sender);
         }
 
-
         public void Dispose()
         {
             lock (_monitoredEngines)

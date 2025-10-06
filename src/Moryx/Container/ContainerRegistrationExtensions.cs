@@ -67,7 +67,6 @@ namespace Moryx.Container
             return interfaces.Any() ? interfaces : [type];
         }
 
-
         /// <summary>
         /// Register a type for different services
         /// </summary>

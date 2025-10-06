@@ -425,7 +425,6 @@ namespace Moryx.Resources.Management
                 relEntity.TargetName = att.Name;
         }
 
-
         /// <inheritdoc />
         public void RemoveLinking(IResource deletedInstance, IResource reference)
         {

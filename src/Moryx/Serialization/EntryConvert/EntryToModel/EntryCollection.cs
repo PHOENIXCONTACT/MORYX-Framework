@@ -104,6 +104,5 @@ namespace Moryx.Serialization
             return $"{typeof(T).Name}[{_internalCollection.Count}]";
         }
 
-
     }
 }

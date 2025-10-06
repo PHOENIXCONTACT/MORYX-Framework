@@ -22,7 +22,6 @@ namespace Moryx.Drivers.Simulation.InOutDriver
 
         public IEnumerable<ICell> Usages => new[] { Cell };
 
-
         private SimulationState _simulatedState;
         [EntrySerialize]
         public SimulationState SimulatedState
@@ -54,7 +53,6 @@ namespace Moryx.Drivers.Simulation.InOutDriver
         /// Driver should publish the result for the currently executed activity
         /// </summary>
         public abstract void Result(SimulationResult result);
-
 
         protected SimulatedInput<TIn> SimulatedInput { get; } = new SimulatedInput<TIn>();
         [EntrySerialize]

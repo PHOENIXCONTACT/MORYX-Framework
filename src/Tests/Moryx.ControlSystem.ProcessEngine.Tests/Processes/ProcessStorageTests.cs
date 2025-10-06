@@ -95,7 +95,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 jobId = jobEntity.Id;
                 processData = CreateProcessData(jobId, processId);
 
-
                 // Create [activityCount] Activities
                 for (int i = 0; i <= activityCount; i++)
                 {

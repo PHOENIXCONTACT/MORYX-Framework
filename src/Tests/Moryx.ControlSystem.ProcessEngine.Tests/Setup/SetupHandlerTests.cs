@@ -310,7 +310,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             AssertHelper(current, NodePosition.Last, SetupClassification.Unspecified, _setupJobs[3].Object);
         }
 
-
         [Test(Description = "There should be a prepare and a cleanup job before and after the second job, " +
             "even if the first job caused an exception.")]
         public void ContinueHandlingOfOtherJobsAfterException()
@@ -715,7 +714,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
                 Assert.That(((ISetupRecipe)currentNode.Value.Recipe).SetupClassification, Is.EqualTo(setupClassification), $"The Recipe is not {setupClassification}.");
             }
             Assert.That(matchingJob, Is.EqualTo(currentNode.Value), "The Job at this position is not the one we thought it is.");
-
 
         }
 

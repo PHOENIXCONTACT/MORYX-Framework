@@ -29,7 +29,6 @@ namespace Moryx.Orders.Endpoints
             };
         }
 
-
         internal static ReportModel ToModel(OperationReport document)
         {
             return new ReportModel()

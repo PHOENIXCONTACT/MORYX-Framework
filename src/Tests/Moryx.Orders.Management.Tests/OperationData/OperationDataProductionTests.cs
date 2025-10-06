@@ -89,7 +89,6 @@ namespace Moryx.Orders.Management.Tests
         public void Adjust_WithCompletedOperationAndNegativeAmount_Throws() =>
             Assert.That(() => GetCompletedOperation(10, false, 10, 10).Adjust(-1, User), Throws.InvalidOperationException);
 
-
         [Test(Description = "If an operation is running or interrupting the target " +
             "amount can be reduced. A new job with the residual amount should be dispatched.")]
         public void Adjust_WithNegativeAmountToOneRemaining_CompletesJobAndDispatchesNewForRemaining()

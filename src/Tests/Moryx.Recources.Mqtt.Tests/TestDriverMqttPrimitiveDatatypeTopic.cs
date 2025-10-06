@@ -89,7 +89,6 @@ namespace Moryx.Resources.Mqtt.Tests
                         (o.ChannelOptions as MqttClientTcpOptions).Port == _driver.Port;
         }
 
-
         [Test(Description = "Publish int32 Message using the MqttTopicPrimitive")]
         public void SendInt_UsingMqttTopicPrimitive_Topic_QOS_Message()
         {
@@ -158,7 +157,6 @@ namespace Moryx.Resources.Mqtt.Tests
             _mqttTopicInt.Received += (sender, eventArgs) => { wait.Set(); };
             _mqttTopicInt.Received += OnReceivedIntMessage;
 
-
             //Act
             _driver.Receive(_driver.Identifier + _mqttTopicInt.Identifier,
                 BitConverter.GetBytes(MESSAGE_VALUE_INT));
@@ -181,7 +179,6 @@ namespace Moryx.Resources.Mqtt.Tests
             var wait = new AutoResetEvent(false);
             _mqttTopicString.Received += (sender, eventArgs) => { wait.Set(); };
             _mqttTopicString.Received += OnReceivedStringMessage;
-
 
             //Act
             _driver.Receive(_driver.Identifier + _mqttTopicString.Identifier,

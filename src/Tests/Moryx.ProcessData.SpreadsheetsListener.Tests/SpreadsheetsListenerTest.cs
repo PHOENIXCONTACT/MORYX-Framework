@@ -171,7 +171,6 @@ namespace Moryx.ProcessData.SpreadsheetsListener.Tests
             var changedHdrFileContent = ReadInCsv(changedHdrFile);
             Assert.That(changedHdrFileContent, Has.Count.EqualTo(maxNumOfRows), $"{maxNumOfRows} lines in csv file were expected");
 
-
             Assert.That(changedHdrFileContent[0].SequenceEqual(ogHeader.Concat(new List<string>() { "A", "C" })), "Header was not changed properly");
             for (int i = 1; i < ogFileContent.Count; i++)
                 Assert.That(changedHdrFileContent[i].SequenceEqual(ogFileContent[i]), $"Row {i} was modified");

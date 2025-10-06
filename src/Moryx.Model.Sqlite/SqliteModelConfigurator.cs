@@ -62,7 +62,6 @@ namespace Moryx.Model.Sqlite
             var builder = new DbContextOptionsBuilder();
             builder.UseSqlite(BuildConnectionString(config));
 
-
             return builder.Options;
         }
 

@@ -106,7 +106,6 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             _factoryMonitor.ControllerContext.HttpContext = new DefaultHttpContext();
             _factoryMonitor.ControllerContext.HttpContext.Response.Body = memoryStream;
 
-
             _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<IProcess>()))
                 .Returns<IProcess>(p => _activityTargets.Where(pair => pair.Key.Process == p).SelectMany(pair => pair.Value).ToList());
             _processFacadeMock.SetupGet(pm => pm.RunningProcesses).Returns(new[] { process });
@@ -231,7 +230,6 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
         {
             _processFacadeMock.Raise(pm => pm.ActivityUpdated += null, new ActivityUpdatedEventArgs(activity, progress));
         }
-
 
         private void RaiseProcessUpdated(IProcess process, ProcessProgress progress)
         {

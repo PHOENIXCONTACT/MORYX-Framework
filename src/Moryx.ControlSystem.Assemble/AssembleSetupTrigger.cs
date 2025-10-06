@@ -29,7 +29,6 @@ namespace Moryx.ControlSystem.Assemble
         private IBindingResolver _sourceResolver;
         private IPropertyAccessor<ICapabilities, object> _descriptorAccessor;
 
-
         /// <inheritdoc />
         public override SetupExecution Execution => Config.Execution;
 

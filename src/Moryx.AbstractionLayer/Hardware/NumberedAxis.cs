@@ -51,7 +51,6 @@ namespace Moryx.AbstractionLayer.Hardware
             return obj is NumberedAxis && Equals((NumberedAxis)obj);
         }
 
-
         /// <inheritdoc />
         public override int GetHashCode()
         {

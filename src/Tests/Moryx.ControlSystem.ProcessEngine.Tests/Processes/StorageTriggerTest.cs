@@ -42,7 +42,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Prepare InMemory resource db
             _unitOfWorkFactory = new UnitOfWorkFactory<ProcessContext>(new InMemoryDbContextManager(Guid.NewGuid().ToString()));
 
-
             using (var uow = _unitOfWorkFactory.Create())
             {
                 var jobRepo = uow.GetRepository<IJobEntityRepository>();

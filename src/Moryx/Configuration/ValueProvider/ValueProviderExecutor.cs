@@ -51,7 +51,6 @@ namespace Moryx.Configuration
                 throw new ArgumentNullException(nameof(settings.Filters));
             }
 
-
             Iterate(targetObject, settings);
         }
 

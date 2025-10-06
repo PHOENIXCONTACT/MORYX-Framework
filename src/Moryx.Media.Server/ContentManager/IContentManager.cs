@@ -13,7 +13,6 @@ namespace Moryx.Media.Server
         /// <returns></returns>
         IReadOnlyList<ContentDescriptor> GetDescriptors();
 
-
         /// <summary>
         /// Get all ContentDescriptors with index between "start"Index and  "start"Index plus the "offset".
         /// </summary>
@@ -28,7 +27,6 @@ namespace Moryx.Media.Server
         /// Get the VariantDescriptor with the "variantName" from the ContentDescriptor with the "contentId".
         /// </summary>
         VariantDescriptor GetVariant(Guid contentId, string variantName);
-
 
         /// <summary>
         /// Get the file stream from the file described by the fileDescriptor.

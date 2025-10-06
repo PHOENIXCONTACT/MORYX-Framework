@@ -70,7 +70,6 @@ namespace Moryx.Orders.Management
             // --Start pool
             OperationDataPool.Start();
 
-
             // --Start Effort Calculator
             EffortCalculator.Start();
         }

@@ -33,7 +33,6 @@ namespace Moryx.Orders.Management
         {
         }
 
-
         private void OnEvaluationsOutdated(object sender, EventArgs eventArgs)
         {
         }

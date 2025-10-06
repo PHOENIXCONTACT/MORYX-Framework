@@ -49,7 +49,6 @@ namespace Moryx.Tests.Threading
             Assert.That(SimpleEventSource, Is.Null);
         }
 
-
         #region Event without Arguments
 
         private EventArgs _receivedArgument;

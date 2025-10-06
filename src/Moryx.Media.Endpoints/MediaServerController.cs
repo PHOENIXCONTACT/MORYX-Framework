@@ -107,7 +107,6 @@ namespace Moryx.Media.Endpoints
             if (stream is null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.NOT_FOUND });
 
-
             return new FileStreamResult(stream, usedDescriptor.MimeType)
             {
                 FileDownloadName = usedDescriptor.FileHash + usedDescriptor.MimeType

@@ -312,7 +312,6 @@ namespace Moryx.Serialization
                 return currentValue ?? Activator.CreateInstance(collectionType);
             }
 
-
             // Other collections are not supported
             return null;
         }

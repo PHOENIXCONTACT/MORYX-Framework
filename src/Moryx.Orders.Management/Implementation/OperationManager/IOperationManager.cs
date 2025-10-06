@@ -63,7 +63,6 @@ namespace Moryx.Orders.Management
         event EventHandler<ReportRequestEventArgs> ReportRequest;
     }
 
-
     internal class ActionEventArgs<TRestrictionType> : OperationEventArgs where TRestrictionType : IOperationRestriction
     {
         /// <summary>

@@ -8,7 +8,6 @@ using Moryx.Container;
 using Moryx.ControlSystem.Setups;
 using Moryx.Runtime.Modules;
 
-
 namespace Moryx.ControlSystem.SetupProvider
 {
     /// <summary>

@@ -48,7 +48,6 @@ namespace Moryx.Notifications.Publisher
 
         public event EventHandler<Notification> Acknowledged;
 
-
         public Notification Get(Guid id)
         {
             return GetAll().Single(n => n.Identifier == id) as Notification;
