@@ -29,10 +29,10 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint.Models
                 .Flatten(md => md.Dependents).ToList();
             if (tree.RootModules.Any())
             {
-                RootModules = tree.RootModules.Count();
+                RootModules = tree.RootModules.Count;
                 MaxDepth = tree.RootModules.Max(branch => CalculateTreeDepth(1, branch));
-                MaxDependencies = allModules.Max(item => item.Dependencies.Count());
-                MaxDependends = allModules.Max(item => item.Dependents.Count());
+                MaxDependencies = allModules.Max(item => item.Dependencies.Count);
+                MaxDependends = allModules.Max(item => item.Dependents.Count);
             }
         }
 

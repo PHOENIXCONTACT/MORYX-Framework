@@ -121,7 +121,7 @@ namespace Moryx.Orders.Management
                 {
                     operationData = results[0];
                 }
-                else if (results.Count() > 1)
+                else if (results.Count > 1)
                 {
 
                     var firstElement = results.First();

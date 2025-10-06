@@ -54,7 +54,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             //Assert
             Assert.That(endpointResult, Is.Not.Null);
             //number of cells in the factory
-            Assert.That(GetLocations().Length, Is.EqualTo(endpointResult.Value.ResourceChangedModels.Count()));
+            Assert.That(GetLocations().Length, Is.EqualTo(endpointResult.Value.ResourceChangedModels.Count));
 
             foreach (var endpointCell in endpointResult.Value.ResourceChangedModels)
                 //machine location matches

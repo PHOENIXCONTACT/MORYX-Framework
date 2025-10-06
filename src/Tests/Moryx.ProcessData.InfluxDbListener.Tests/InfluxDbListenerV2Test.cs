@@ -196,7 +196,7 @@ namespace Moryx.ProcessData.InfluxDbListener.Tests
 
         private static Measurement CreateMeasurement() => new(MeasurandName);
 
-        private int GetWritesCount() => _mockServer.FindLogEntries(Request.Create().WithPath("/api/v2/write")).Count();
+        private int GetWritesCount() => _mockServer.FindLogEntries(Request.Create().WithPath("/api/v2/write")).Count;
 
         private void AwaitParrallelOperations() => _parallelOperations.WaitForScheduledExecution(ReportInterval * 1000);
 

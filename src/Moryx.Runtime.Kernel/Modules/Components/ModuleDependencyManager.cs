@@ -192,7 +192,7 @@ namespace Moryx.Runtime.Kernel
                     // check for missing dependencies and add them to the dependencies list
                     // of the current module
                     var nullDependencies = dependencies.Where(d => d.GetType() == typeof(MissingServerModule)).ToList();
-                    if (nullDependencies != null && nullDependencies.Count() > 0)
+                    if (nullDependencies != null && nullDependencies.Count > 0)
                         branch.Dependencies.AddRange(nullDependencies.Select(nd => new MissingModuleDependency((MissingServerModule)nd)));
 
                     remaining.Remove(module);

@@ -24,8 +24,8 @@ namespace Moryx.Tests.Workplans
             var workplanInstance = WorkplanInstanceFactory.Instantiate(workplan, context);
 
             // Simple assert
-            Assert.That(workplan.Connectors.Count(), Is.EqualTo(workplanInstance.Places.Count()), "Not all connectors transformed to places!");
-            Assert.That(workplan.Steps.Count(), Is.EqualTo(workplanInstance.Transitions.Count()), "Not all steps transformed to transitions!");
+            Assert.That(workplan.Connectors.Count(), Is.EqualTo(workplanInstance.Places.Count), "Not all connectors transformed to places!");
+            Assert.That(workplan.Steps.Count(), Is.EqualTo(workplanInstance.Transitions.Count), "Not all steps transformed to transitions!");
             Assert.That(workplanInstance.Transitions.Cast<DummyTransition>().All(t => t.Context == context), "Context not passed to all transitions!");
             // Structure assert
             var transitions = workplanInstance.Transitions;

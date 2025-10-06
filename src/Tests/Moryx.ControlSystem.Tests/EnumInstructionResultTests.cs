@@ -25,8 +25,8 @@ namespace Moryx.ControlSystem.Tests
             var possibleResults = EnumInstructionResult.PossibleInstructionResults(typeof(TestResults1));
 
             // Assert
-            Assert.That(instructionResult.Count(), Is.EqualTo(2), "There should be 2 results because all of the results are not decorated");
-            Assert.That(possibleResults.Count(), Is.EqualTo(2), "There should be 2 results because all of the results are not decorated");
+            Assert.That(instructionResult.Count, Is.EqualTo(2), "There should be 2 results because all of the results are not decorated");
+            Assert.That(possibleResults.Count, Is.EqualTo(2), "There should be 2 results because all of the results are not decorated");
         }
 
         private enum TestResults2
@@ -134,7 +134,7 @@ namespace Moryx.ControlSystem.Tests
             var instructionResult = EnumInstructionResult.PossibleResults(typeof(TestResults6));
 
             // Assert
-            Assert.That(instructionResult.Count(), Is.EqualTo(1), "There should be two results, because one does not have the EnumInstruction attribute");
+            Assert.That(instructionResult.Count, Is.EqualTo(1), "There should be two results, because one does not have the EnumInstruction attribute");
             Assert.That(instructionResult[0].DisplayValue, Is.EqualTo("Value 1"));
         }
     }
