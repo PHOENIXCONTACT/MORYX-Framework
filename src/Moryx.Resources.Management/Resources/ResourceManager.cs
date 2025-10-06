@@ -318,6 +318,8 @@ namespace Moryx.Resources.Management
         {
             lock (Graph.GetResource(resource.Id) ?? _fallbackLock)
             {
+                var isNew = resource.Id == 0;
+
                 using var uow = UowFactory.Create();
                 var newResources = new HashSet<Resource>();
 
@@ -350,8 +352,12 @@ namespace Moryx.Resources.Management
 
                 foreach (var instance in newResources)
                     AddResource(instance, true);
+
+                if (!isNew)
+                {
+                    RaiseResourceChanged(resource);
+                }
             }
-            RaiseResourceChanged(resource);
         }
 
         /// <summary>
