@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
@@ -39,12 +39,12 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             // Create ProductType objects for test cases
             var dummyProductTypes = new List<DummyProductType>()
             {
-                new DummyProductType(),
+                new(),
                 new DummyProductTypeWithParts(),
                 new DummyProductTypeWithParts()
                 {
                     ProductPartLink = new DummyProductPartLink() { Id=1, Product = new DummyProductType() { Id = 2022 } },
-                    ProductPartLinkEnumerable = new List<DummyProductPartLink>(){ new DummyProductPartLink() { Id=2, Product = new DummyProductType() { Id = 2023 } } }
+                    ProductPartLinkEnumerable = new List<DummyProductPartLink>(){ new() { Id=2, Product = new DummyProductType() { Id = 2023 } } }
                 },
                 new DummyProductTypeWithFiles(),
                 new DummyProductTypeWithFiles() { FirstProductFile = new ProductFile() { Name="FirstFile" }, SecondProductFile = new ProductFile() { Name="SecondFile" }}
@@ -52,9 +52,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             // Create Recipe objects for test cases
             var dummyRecipeLists = new List<List<IProductRecipe>>()
             {
-                new List<IProductRecipe>(),
-                new List<IProductRecipe>() { new ProductRecipe() { Id = 0 } },
-                new List<IProductRecipe>() { new ProductRecipe() { Id = 1923 } }
+                new(),
+                new() { new ProductRecipe() { Id = 0 } },
+                new() { new ProductRecipe() { Id = 1923 } }
             };
 
             // Create all possible combinations of input settings for the ConvertProduct method
@@ -136,7 +136,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
         {
             if (A is null || B is null)
                 throw new ArgumentNullException("You need to provide 2 non-null objects");
-            
+
             var type = typeof(T);
             var allProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
             var allSimpleProperties = allProperties.Where(pi => IsSimpleType(pi.PropertyType));
@@ -154,14 +154,13 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
                 // nullable type, check if the nested type is simple.
                 return IsSimpleType(type.GetGenericArguments()[0]);
-            
+
             return type.IsPrimitive
               || type.IsEnum
               || type.Equals(typeof(string))
               || type.Equals(typeof(decimal));
         }
 
-        
         #endregion
 
         #region Recipes
@@ -173,7 +172,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             // Create Recipe objects for test cases
             var dummyRecipes = new List<DummyProductRecipe>()
             {
-                new DummyProductRecipe(),
+                new(),
                 new DummyProductWorkplanRecipe() { Workplan = new DummyWorkplan() { Id=2021 } }
             };
             // Create all classifications to consider
@@ -183,7 +182,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             classifications.AddRange(clonedClassifications);
 
             // Create all possible combinations of input settings for the ConvertRecipe method
-            foreach (var backupProductType in new List<DummyProductType>() { null, new DummyProductType() })
+            foreach (var backupProductType in new List<DummyProductType>() { null, new() })
                 foreach (RecipeState state in Enum.GetValues(typeof(RecipeState)))
                     foreach (var classification in classifications)
                         foreach (var dummyRecipe in dummyRecipes)
@@ -225,11 +224,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             if (originalRecipe.Classification.HasFlag(RecipeClassification.Clone))
                 targetDummyRecipe.Classification = originalRecipe.Classification;
 
-
             // Act
             var convertedModel = _productConverter.ConvertRecipeV2(originalRecipe);
             var recoveredOriginal = _productConverter.ConvertRecipeBack(convertedModel, targetDummyRecipe, backupProductType);
-
 
             // Assert
             // - Backup products are used for recipes without products

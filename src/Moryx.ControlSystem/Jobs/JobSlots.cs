@@ -1,9 +1,7 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.ControlSystem.Jobs
 {
@@ -53,7 +51,7 @@ namespace Moryx.ControlSystem.Jobs
         /// <summary>
         /// All slots managed by this instance
         /// </summary>
-        private readonly List<TSlot> _slots = new List<TSlot>();
+        private readonly List<TSlot> _slots = new();
 
         /// <summary>
         /// Create a new job slot wrapper class

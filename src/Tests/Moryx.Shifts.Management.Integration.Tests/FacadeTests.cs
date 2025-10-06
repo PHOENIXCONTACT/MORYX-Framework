@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using NUnit.Framework;
@@ -33,7 +33,7 @@ namespace Moryx.Shifts.Management.IntegrationTests
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.That(type, Is.Not.Null); 
+                Assert.That(type, Is.Not.Null);
                 Assert.That(type.Id, Is.GreaterThan(0));
                 Assert.That(IsObjectMatchingContext(TypeContext, type));
             });
@@ -122,10 +122,10 @@ namespace Moryx.Shifts.Management.IntegrationTests
             Assert.That(() => _facade.UpdateShiftType(type), Throws.InstanceOf(exception));
         }
 
-        private static readonly object[] InvalidArgumentsForUpdateShiftType = {
+        private static readonly object[] InvalidArgumentsForUpdateShiftType = [
             new object[] { null, typeof(ArgumentNullException) }, // , $"Throws {nameof(ArgumentNullException)}"
             new object[] { new ShiftType("Incomplete type"), typeof(ArgumentException) }, // , $"Throws {nameof(ArgumentException)} on invalid inputs"
-        };
+        ];
 
         [Test]
         public void DeleteShiftType_WithValidId_RemovesShiftType()
@@ -223,11 +223,11 @@ namespace Moryx.Shifts.Management.IntegrationTests
             Assert.That(() => _facade.CreateShift(context), Throws.InstanceOf(exception));
         }
 
-        private static readonly object[] InvalidArgumentsForCreateShift = {
+        private static readonly object[] InvalidArgumentsForCreateShift = [
             new object[] { null, typeof(ArgumentNullException) }, // ArgumentNullException on null parameter
             new object[] { new ShiftCreationContext(new ShiftType("Unknown Type")), typeof(ArgumentException) }, // ArgumentException on invalid inputs
             new object[] { new ShiftCreationContext(null), typeof(ArgumentException) }, // ArgumentException on invalid inputs
-        };
+        ];
 
         [Test]
         public void UpdateShift_WithValidShift_UpdatesShift()
@@ -287,11 +287,11 @@ namespace Moryx.Shifts.Management.IntegrationTests
             Assert.That(() => _facade.UpdateShift(type), Throws.InstanceOf(exception), message);
         }
 
-        private static readonly object[] InvalidArgumentsForUpdateShift = {
-            new object[] { null, typeof(ArgumentNullException), "ArgumentNullException on null parameter" }, 
+        private static readonly object[] InvalidArgumentsForUpdateShift = [
+            new object[] { null, typeof(ArgumentNullException), "ArgumentNullException on null parameter" },
             new object[] { new Shift(new ShiftType("Incomplete type")) { Id = 1 }, typeof(ArgumentException), "ArgumentException on unknown inputs" },
             new object[] { new Shift(null) { Id = 1 }, typeof(ArgumentException), "ArgumentException on invalid inputs" }
-        };
+        ];
 
         [Test]
         public void DeleteShift_WithValidId_RemovesShift()
@@ -395,10 +395,10 @@ namespace Moryx.Shifts.Management.IntegrationTests
             Assert.That(() => _facade.CreateShiftAssignement(context), Throws.InstanceOf(exception));
         }
 
-        private static readonly object[] InvalidArgumentsForCreateShiftAssignement = {
+        private static readonly object[] InvalidArgumentsForCreateShiftAssignement = [
             new object[] { null, typeof(ArgumentNullException) }, // Argument is null
             new object[] { new ShiftAssignementCreationContext(new Shift(new ShiftType("Unknown Type")), CreateResourceMock().Object, CreateOperator()), typeof(ArgumentException) }, // Context has invalid Shift
-        };
+        ];
 
         [Test]
         public void DeleteShiftAssignement_WithValidId_RemovesShiftAssignement()

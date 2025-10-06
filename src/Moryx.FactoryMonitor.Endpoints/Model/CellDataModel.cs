@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Moryx.FactoryMonitor.Endpoints.Model
@@ -13,7 +11,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Model
     [DataContract]
     [Obsolete("Use CellStateChanged model instead")]
     public class CellDataModel
-    {      
+    {
         [DataMember]
         public virtual CellState State { get; set; }
 

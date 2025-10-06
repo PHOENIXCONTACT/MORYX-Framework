@@ -1,9 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using Moryx.ControlSystem.Jobs;
 using Moryx.Orders.Management.Properties;
 using Moryx.Users;
@@ -22,7 +20,6 @@ namespace Moryx.Orders.Management
         public override bool CanPartialReport => true;
 
         public override bool CanFinalReport => false;
-
 
         public InterruptingState(OperationData context, StateMap stateMap)
             : base(context, stateMap, OperationClassification.Interrupting)
@@ -59,10 +56,9 @@ namespace Moryx.Orders.Management
             }
         }
 
-
         public override void JobsUpdated(JobStateChangedEventArgs args)
         {
-            if(args.CurrentState < JobClassification.Completed)
+            if (args.CurrentState < JobClassification.Completed)
                 return;
 
             if (Context.Operation.Jobs.All(j => j.Classification == JobClassification.Completed))

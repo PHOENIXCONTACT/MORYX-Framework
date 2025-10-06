@@ -1,7 +1,6 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer;
@@ -66,7 +65,7 @@ namespace Moryx.ControlSystem.Processes
         }
 
         /// <inheritdoc />
-        public MountInformation MountInformation => new MountInformation(Process, Session);
+        public MountInformation MountInformation => new(Process, Session);
 
         /// <inheritdoc />
         protected override void OnInitialize()

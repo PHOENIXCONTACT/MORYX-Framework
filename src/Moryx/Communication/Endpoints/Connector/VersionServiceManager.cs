@@ -1,10 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Moryx.Communication.Endpoints
@@ -21,7 +17,7 @@ namespace Moryx.Communication.Endpoints
         /// Underlying http client for the requests
         /// </summary>
         protected HttpClient Client { get; set; }
-        
+
         /// <inheritdoc/>
         public IProxyConfig ProxyConfig { get; private set; }
 
@@ -60,7 +56,6 @@ namespace Moryx.Communication.Endpoints
             var response = await Client.GetStringAsync("");
             return JsonConvert.DeserializeObject<TEndpoint[]>(response).ToArray<Endpoint>();
         }
-
 
         /// <inheritdoc />
         public virtual Endpoint[] ServiceEndpoints(string service)

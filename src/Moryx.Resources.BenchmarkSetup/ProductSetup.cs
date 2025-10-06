@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
@@ -8,7 +8,6 @@ using Moryx.Model.Repositories;
 using Moryx.Products.Management;
 using Moryx.Products.Model;
 using Moryx.Workplans;
-using System.Threading.Tasks;
 
 namespace Moryx.Benchmarking.Setups
 {
@@ -58,7 +57,7 @@ namespace Moryx.Benchmarking.Setups
 
             openContext.SaveChanges();
 
-            recipe.Classification = (int) RecipeClassification.Default;
+            recipe.Classification = (int)RecipeClassification.Default;
 
             openContext.SaveChanges();
 
@@ -72,7 +71,7 @@ namespace Moryx.Benchmarking.Setups
             // Create workplan
             var workplan = new Workplan
             {
-                Name  = "Workplan-Steps:" + stepCount,
+                Name = "Workplan-Steps:" + stepCount,
                 Version = 1,
                 State = WorkplanState.Released
             };

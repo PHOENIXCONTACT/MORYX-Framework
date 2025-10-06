@@ -1,9 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Products;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.AbstractionLayer.TestTools
 {
@@ -17,7 +15,7 @@ namespace Moryx.AbstractionLayer.TestTools
         {
             return new DummyProductInstance();
         }
-/// <inheritdoc/>
+        /// <inheritdoc/>
 
         public override bool Equals(object obj)
         {
@@ -25,11 +23,10 @@ namespace Moryx.AbstractionLayer.TestTools
             if (toCompareWith == null)
                 return false;
 
-            return toCompareWith.Id == Id && toCompareWith.Name == Name && toCompareWith.State == State 
+            return toCompareWith.Id == Id && toCompareWith.Name == Name && toCompareWith.State == State
                 && ((toCompareWith.Identity is null && Identity is null) || toCompareWith.Identity.Equals(Identity));
         }
     }
-
 
     /// <summary>
     /// Dummy implementation of a <see cref="ProductType"/> with Product Parts 
@@ -59,14 +56,13 @@ namespace Moryx.AbstractionLayer.TestTools
             if (toCompareWith == null)
                 return false;
 
-            return base.Equals(toCompareWith) && 
-                ((toCompareWith.ProductPartLink is null && ProductPartLink is null) || 
+            return base.Equals(toCompareWith) &&
+                ((toCompareWith.ProductPartLink is null && ProductPartLink is null) ||
                 toCompareWith.ProductPartLink.Equals(ProductPartLink))
-                && ((toCompareWith.ProductPartLinkEnumerable is null && ProductPartLinkEnumerable is null) || 
+                && ((toCompareWith.ProductPartLinkEnumerable is null && ProductPartLinkEnumerable is null) ||
                 Enumerable.SequenceEqual<DummyProductPartLink>(toCompareWith.ProductPartLinkEnumerable, ProductPartLinkEnumerable));
         }
     }
-
 
     /// <summary>
     /// Dummy implementation of a <see cref="ProductType"/> with Files
@@ -88,7 +84,7 @@ namespace Moryx.AbstractionLayer.TestTools
         /// Second dummy ProductFile
         /// </summary>
         public ProductFile SecondProductFile { get; set; }
-        
+
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {

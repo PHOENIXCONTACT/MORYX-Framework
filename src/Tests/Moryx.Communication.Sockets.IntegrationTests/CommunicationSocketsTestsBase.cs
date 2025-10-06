@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -20,7 +20,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         private List<ConnectionBuffer<TMessage>> _overallClients;
 
         private int _testPort;
-        protected const string TestIpAdress = "127.0.0.1";
+        protected const string TestIpAddress = "127.0.0.1";
 
         protected List<ConnectionBuffer<TMessage>> ServerConnections => _serverConnections;
         protected List<ConnectionBuffer<TMessage>> Clients => _clients;
@@ -33,7 +33,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             var rnd = new Random();
             _testPort = rnd.Next(2000, 2101);
 
-            _overallClients = new List<ConnectionBuffer<TMessage>>();
+            _overallClients = [];
         }
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         public void SetupTestCase()
         {
             _binaryConnectionFactory = new BinaryConnectionFactoryMock();
-            _clients = new List<ConnectionBuffer<TMessage>>();
-            _serverConnections = new List<ConnectionBuffer<TMessage>>();
+            _clients = [];
+            _serverConnections = [];
         }
 
         [TearDown]
@@ -116,7 +116,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
             // Client should be connected
             Assert.That(_clients[clientIdx].Connection.CurrentState, Is.EqualTo(wantedState),
                 $"Client ({clientIdx}) is not in the state '{wantedState:G}'. " +
-                $"CurrentState: {_clients[clientIdx].Connection.CurrentState:G}. Waited for {stopWatch.ElapsedMilliseconds/1000}s");
+                $"CurrentState: {_clients[clientIdx].Connection.CurrentState:G}. Waited for {stopWatch.ElapsedMilliseconds / 1000}s");
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
                     var resetEvent = new ManualResetEvent(false);
                     ThreadPool.QueueUserWorkItem(obj =>
                     {
-                        var sync = (ManualResetEvent) obj;
+                        var sync = (ManualResetEvent)obj;
                         var pl = CreatePayload(payloadMultiplier, BitConverter.GetBytes(i1));
                         Console.WriteLine(">>>{4:HH:mm:ss,ffff}-Sending Message for {0}: {1}, Message: {2}, MessageLength: {3}",
                             consoleText, i1, j1, pl.Length, DateTime.Now);
@@ -314,7 +314,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         {
             return new TcpClientConfig
             {
-                IpAdress = adress.ToString(),
+                IpAddress = adress.ToString(),
                 Port = port,
                 RetryWaitMs = connectRetryWaitMs,
                 MonitoringIntervalMs = 100,
@@ -332,7 +332,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         {
             return new TcpListenerConfig
             {
-                IpAdress = adress.ToString(),
+                IpAddress = adress.ToString(),
                 Port = port,
                 MonitoringIntervalMs = 100,
                 MonitoringTimeoutMs = 500

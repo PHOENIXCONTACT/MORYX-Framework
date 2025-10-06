@@ -1,10 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model.Repositories;
@@ -13,13 +9,12 @@ using Moryx.Threading;
 using Moryx.Tools;
 using Microsoft.Extensions.Logging;
 
-
 namespace Moryx.Notifications.Publisher
 {
     [Plugin(LifeCycle.Singleton, typeof(INotificationManager))]
     internal class NotificationManager : INotificationManager
     {
-#region Dependencies
+        #region Dependencies
 
         /// <summary>
         /// Facade sources for notifications
@@ -46,9 +41,9 @@ namespace Moryx.Notifications.Publisher
         /// </summary>
         public IUnitOfWorkFactory<NotificationsContext> UnitOfWorkFactory { get; set; }
 
-#endregion
+        #endregion
 
-#region Fields and Properties
+        #region Fields and Properties
 
         /// <summary>
         /// Collection of tasks which are running because of deactivation from notification sources
@@ -60,7 +55,7 @@ namespace Moryx.Notifications.Publisher
         /// </summary>
         private readonly ICollection<NotificationMap> _current = new List<NotificationMap>();
 
-#endregion
+        #endregion
 
         /// <inheritdoc />
         public void Initialize()
@@ -147,13 +142,13 @@ namespace Moryx.Notifications.Publisher
             });
 
             // Add to running tasks
-            lock(_deactivationTasks)
+            lock (_deactivationTasks)
                 _deactivationTasks.Add(task);
 
             // If task finishes, remove from running tasks
-            task.ContinueWith(delegate(Task target)
+            task.ContinueWith(delegate (Task target)
             {
-                lock(_deactivationTasks)
+                lock (_deactivationTasks)
                     _deactivationTasks.Remove(target);
             });
         }
@@ -174,8 +169,8 @@ namespace Moryx.Notifications.Publisher
                 var notificationRepo = uow.GetRepository<INotificationEntityRepository>();
 
                 var entities = (from entity in notificationRepo.Linq
-                    where !entity.Acknowledged.HasValue && entity.Source == source.Name
-                    select entity).ToArray();
+                                where !entity.Acknowledged.HasValue && entity.Source == source.Name
+                                select entity).ToArray();
 
                 var timeStamp = DateTime.UtcNow;
                 if (entities.Length > 0)
@@ -322,8 +317,8 @@ namespace Moryx.Notifications.Publisher
             using var uow = UnitOfWorkFactory.Create();
             var notificationRepo = uow.GetRepository<INotificationEntityRepository>();
             var entities = (from entity in notificationRepo.Linq
-                where !entity.Acknowledged.HasValue
-                select entity).ToArray();
+                            where !entity.Acknowledged.HasValue
+                            select entity).ToArray();
 
             // If entity exists which is not existing anymore, we acknowledge it
             var acknowledged = entities.Where(entity => existing.All(n => n.Identifier != entity.Identifier)).ToArray();

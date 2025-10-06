@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
@@ -22,7 +22,7 @@ namespace Moryx.Simulation.Tests
 
             _simulationDriverTestMock = new Mock<SimulatedDummyTestDriver>() { DefaultValue = DefaultValue.Mock };
             _simulationDriverTestMock.SetupGet(dr => dr.Cell).Returns(_assemblyCell);
-            _simulationDriverTestMock.SetupGet(dr => dr.Usages).Returns(new[] { _assemblyCell });
+            _simulationDriverTestMock.SetupGet(dr => dr.Usages).Returns([_assemblyCell]);
             _simulationDriverTestMock.Setup(dr => dr.Send(It.IsAny<AssembleProductMessage>()))
                 .Callback<object>(param =>
                 {
@@ -63,7 +63,7 @@ namespace Moryx.Simulation.Tests
 
             //resource management
             _resourceManagementMock.Setup(rm => rm.GetAllResources<ISimulationDriver>(It.IsAny<Func<ISimulationDriver, bool>>()))
-                .Returns(new[] { _simulationDriverTestMock.Object });
+                .Returns([_simulationDriverTestMock.Object]);
 
             //start the simulator
             _processSimulator.Start();
@@ -89,7 +89,7 @@ namespace Moryx.Simulation.Tests
         {
             //Arrange
             var activity = new AssemblyActivity();
-            Arrange(4,_assemblyCell, activity);
+            Arrange(4, _assemblyCell, activity);
 
             //Act
             _processControlMock.Raise(p => p.ActivityUpdated += null, new ActivityUpdatedEventArgs(activity, ActivityProgress.Ready));
@@ -97,8 +97,6 @@ namespace Moryx.Simulation.Tests
             //Assert 
             _simulationDriverTestMock.Verify(dr => dr.Ready(It.IsAny<IActivity>()), Times.Once);
         }
-
-        
 
         [Test]
         public void Driver_Should_Receive_Result_message()
@@ -118,7 +116,6 @@ namespace Moryx.Simulation.Tests
             //Assert 
             _simulationDriverTestMock.Verify(dr => dr.Result(It.IsAny<SimulationResult>()), Times.Once);
         }
-
 
     }
 }

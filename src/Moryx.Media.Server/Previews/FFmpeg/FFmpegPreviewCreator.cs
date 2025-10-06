@@ -1,12 +1,9 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Moryx.Container;
-using Moryx.Logging;
 using Moryx.Media.Previews;
 using Moryx.Modules;
 
@@ -18,9 +15,9 @@ namespace Moryx.Media.Server.Previews
     {
         private string _ffmpeg;
         private static readonly string[] SupportedMimeTypes =
-        {
+        [
             "video/mp4", "video/x-m4v", "video/mpeg", "video/ogg", "video/x-matroska", "video/webm", "video/x-msvideo"
-        };
+        ];
 
         /// <inheritdoc />
         public override void Initialize(PreviewCreatorConfig config)

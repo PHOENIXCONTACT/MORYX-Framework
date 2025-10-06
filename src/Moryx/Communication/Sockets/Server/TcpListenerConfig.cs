@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -16,11 +16,11 @@ namespace Moryx.Communication.Sockets
         public override string PluginName => nameof(TcpListenerConnection);
 
         /// <summary>
-        /// Gets or sets the ip adress. Usually this is IPAddress.Any which (for IPv4) is "0.0.0.0"
+        /// Gets or sets the ip address. Usually this is IPAddress.Any which (for IPv4) is "0.0.0.0"
         /// </summary>
         [DataMember, DefaultValue("0.0.0.0")]
-        [Description("The IPAdress for this device")]
-        public string IpAdress { get; set; }
+        [Description("The IP-Address for this device")]
+        public string IpAddress { get; set; }
 
         /// <summary>
         /// TCP Port of the connection

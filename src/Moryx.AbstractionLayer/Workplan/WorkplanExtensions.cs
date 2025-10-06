@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.ComponentModel.DataAnnotations;
 using Moryx.Workplans;
 using Moryx.Workplans.Validation;
@@ -22,7 +21,7 @@ namespace Moryx.AbstractionLayer
         /// <param name="input">The input for the step</param>
         /// <param name="outputs">The outputs of the steps.</param>
         /// <returns></returns>
-        public static TaskStep<TActivity, TParam> AddStep<TActivity,TParam>(this Workplan workplan, TaskStep<TActivity,TParam> task, TParam parameter, IConnector input, params IConnector[] outputs)
+        public static TaskStep<TActivity, TParam> AddStep<TActivity, TParam>(this Workplan workplan, TaskStep<TActivity, TParam> task, TParam parameter, IConnector input, params IConnector[] outputs)
             where TActivity : IActivity<TParam>, new()
             where TParam : IParameters, new()
         {

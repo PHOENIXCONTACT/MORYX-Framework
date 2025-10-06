@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -20,8 +20,8 @@ namespace Moryx.Tests.Threading
         private const int SleepTime = 1000;
 
         private ParallelOperations _threadFactory;
-        private readonly ManualResetEventSlim _callbackReceivedEvent = new ManualResetEventSlim(false);
-        
+        private readonly ManualResetEventSlim _callbackReceivedEvent = new(false);
+
         private ModuleLogger _logger;
         private Tuple<LogLevel, string, Exception> _message;
 
@@ -177,8 +177,8 @@ namespace Moryx.Tests.Threading
             Assert.That(state.Counter, Is.EqualTo(1), "Last check");
         }
 
-       [TestCase(true)]
-       [TestCase(false)]
+        [TestCase(true)]
+        [TestCase(false)]
         public void DelayedExecutionWithException(bool critical)
         {
             StateObject state = new StateObject();

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
@@ -24,8 +24,8 @@ namespace Moryx.Shifts.Management.IntegrationTests
             var config = new ModuleConfig();
             _resourceManagementMock = MoryxTestEnvironment.CreateModuleMock<IResourceManagement>();
             _operatorManagementMock = MoryxTestEnvironment.CreateModuleMock<IOperatorManagement>();
-            _env = new MoryxTestEnvironment(typeof(ModuleController), 
-                new Mock[] { _resourceManagementMock, _operatorManagementMock }, config);
+            _env = new MoryxTestEnvironment(typeof(ModuleController),
+                [_resourceManagementMock, _operatorManagementMock], config);
             _facade = _env.GetTestModule<IShiftManagement>();
         }
 
@@ -35,7 +35,7 @@ namespace Moryx.Shifts.Management.IntegrationTests
         }
 
         #region Test tools 
-        
+
         protected readonly ShiftTypeCreationContext TypeContext = new("testType") { StartTime = new TimeOnly(6, 0), EndTime = new TimeOnly(14, 0), Periode = 5 };
         protected readonly Mock<IResource> ResourceMock = CreateResourceMock();
         protected readonly AssignableOperator Operator = CreateOperator();

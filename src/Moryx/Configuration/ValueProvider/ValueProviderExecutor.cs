@@ -1,10 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace Moryx.Configuration
@@ -39,10 +36,7 @@ namespace Moryx.Configuration
         /// <exception cref="ArgumentNullException"></exception>
         public static void Execute(object targetObject, ValueProviderExecutorSettings settings)
         {
-            if (targetObject is null)
-            {
-                throw new ArgumentNullException(nameof(targetObject));
-            }
+            ArgumentNullException.ThrowIfNull(targetObject);
 
             if (settings.Providers == null)
             {
@@ -53,7 +47,6 @@ namespace Moryx.Configuration
             {
                 throw new ArgumentNullException(nameof(settings.Filters));
             }
-
 
             Iterate(targetObject, settings);
         }

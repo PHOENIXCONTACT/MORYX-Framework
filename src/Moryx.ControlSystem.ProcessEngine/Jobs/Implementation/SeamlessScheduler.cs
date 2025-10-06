@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
 using Moryx.Modules;
@@ -208,7 +206,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
                     // Assign slot back to previous job
                 }
                 // A running job from the completing slots has completed, start the cleanup
-                else if(_completingSlots.TryReplace(job, next))
+                else if (_completingSlots.TryReplace(job, next))
                 {
                     RaiseJobScheduled(next);
                 }

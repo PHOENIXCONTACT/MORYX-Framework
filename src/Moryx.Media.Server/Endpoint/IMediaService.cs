@@ -1,8 +1,5 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System.IO;
-using System.Threading.Tasks;
 
 #if USE_WCF
 using System.Net;

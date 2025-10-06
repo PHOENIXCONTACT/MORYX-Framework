@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moryx.Container;
 
 namespace Moryx.AbstractionLayer.Resources
@@ -16,7 +15,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// Creates a resource initializer registration
         /// </summary>
         /// <param name="name">Name of this registration</param>
-        public ResourceInitializerAttribute(string name) 
+        public ResourceInitializerAttribute(string name)
             : base(LifeCycle.Singleton, typeof(IResourceInitializer))
         {
             Name = name;

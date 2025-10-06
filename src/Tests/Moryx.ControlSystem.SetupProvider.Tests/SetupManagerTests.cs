@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
@@ -69,7 +69,7 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
             _resourceManagerMock = new Mock<IResourceManagement>();
             _resourceManagerMock
                 .Setup(rmm => rmm.GetResources<ICell>(It.IsAny<ICapabilities>()))
-                .Returns(Enumerable.Empty<ICell>());
+                .Returns([]);
         }
 
         [TearDown]
@@ -109,7 +109,7 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
             if (steps > 0)
             {
                 Assert.That(requiredSetup.Workplan.Steps.Count(), Is.EqualTo(steps));
-            }                
+            }
             else
                 Assert.That(requiredSetup, Is.Null);
         }
@@ -160,8 +160,8 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
                 {
                     var setupCapabilities = (TestSetupCapabilities)capabilities;
                     return setupCapabilities.SetupState == setupState
-                        ? new[] { new Mock<ICell>().Object }
-                        : Enumerable.Empty<ICell>();
+                        ? [new Mock<ICell>().Object]
+                        : [];
                 });
         }
 

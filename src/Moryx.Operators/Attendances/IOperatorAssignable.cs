@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
@@ -7,7 +7,7 @@ using Moryx.Operators.Skills;
 
 namespace Moryx.Operators;
 
-public interface IOperatorAssignable: IResource
+public interface IOperatorAssignable : IResource
 {
     /// <summary>
     /// Skill required for an operator to work on this machine

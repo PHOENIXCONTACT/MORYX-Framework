@@ -1,9 +1,8 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
 using Moryx.Model.Repositories;
-using Moryx.Operators.Management.Implementation;
 using Moryx.Operators.Management.Model;
 using System.Runtime.CompilerServices;
 
@@ -30,17 +29,17 @@ internal class AttendanceManager : IAttendanceManager
 
     public void SignIn(OperatorData operatorData, IOperatorAssignable resource)
     {
-        if (operatorData.AssignedResources.Any(r => r.Id == resource.Id)) 
+        if (operatorData.AssignedResources.Any(r => r.Id == resource.Id))
             return;
 
         operatorData.AssignedResources.Add(resource);
         OperatorManager.Update(operatorData.Operator);
         OperatorSignedIn?.Invoke(this, operatorData);
-    } 
+    }
 
     public void SignOut(OperatorData operatorData, IOperatorAssignable resource)
     {
-        if(!operatorData.AssignedResources.Remove(resource))
+        if (!operatorData.AssignedResources.Remove(resource))
             return;
         OperatorManager.Update(operatorData.Operator);
         OperatorSignedOut?.Invoke(this, operatorData);
@@ -77,7 +76,7 @@ internal class AttendanceManager : IAttendanceManager
             LastName = "Stewart-Baxter",
             Pseudonym = "MS2024"
         };
-        
+
         defaultOperatorData = OperatorManager.Add(defaultOperator);
 
         return defaultOperatorData;

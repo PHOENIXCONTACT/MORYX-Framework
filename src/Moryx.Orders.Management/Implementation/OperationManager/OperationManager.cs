@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Orders.Management.Properties;
@@ -90,7 +87,8 @@ namespace Moryx.Orders.Management
             {
                 restrictions.Add(new BeginRestriction(canBegin: true, canReduce: true, operationData.Operation.Progress.SuccessCount,
                     Strings.OperationManager_OverDeliveryNotice, RestrictionSeverity.Info));
-            };
+            }
+            ;
         }
 
         private void AddExternalRestrictions(IList<BeginRestriction> restrictions, IOperationData operationData)

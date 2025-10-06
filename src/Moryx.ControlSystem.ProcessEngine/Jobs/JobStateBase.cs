@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -25,7 +25,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
         public virtual bool IsStable => false;
 
-        protected JobStateBase(JobDataBase context, StateMap stateMap, JobClassification classification) 
+        protected JobStateBase(JobDataBase context, StateMap stateMap, JobClassification classification)
             : base(context, stateMap)
         {
             Classification = classification;
@@ -59,7 +59,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         {
             InvalidJobState();
         }
-        
+
         public virtual void Abort()
         {
             InvalidJobState();

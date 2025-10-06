@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Threading.Tasks;
@@ -34,7 +34,7 @@ namespace Moryx.Orders.Management.Tests
             Assert.That(result, "There should be a successful validation");
         }
 
-        [Test(Description="Validate that null is a valid parameter when calling the Validation of CreationContext.")]
+        [Test(Description = "Validate that null is a valid parameter when calling the Validation of CreationContext.")]
         public void ValidateCreationContextNull()
         {
             //Assert

@@ -1,11 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
@@ -151,7 +147,7 @@ namespace Moryx.Model.Configuration
             if (pendingMigrations.Length == 0)
             {
                 result.Result = MigrationResult.NoMigrationsAvailable;
-                result.ExecutedMigrations = Array.Empty<string>();
+                result.ExecutedMigrations = [];
                 Logger.Log(LogLevel.Warning, "Database migration for database '{0}' was failed. There are no migrations available!", config.ConnectionSettings.Database);
 
                 return result;
@@ -254,7 +250,6 @@ namespace Moryx.Model.Configuration
         /// <inheritdoc />
         public abstract Task RestoreDatabase(IDatabaseConfig config, string filePath);
 
-
         /// <summary>
         /// Generally tests the connection to the database
         /// </summary>
@@ -269,7 +264,7 @@ namespace Moryx.Model.Configuration
                 await conn.OpenAsync();
                 return true;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }

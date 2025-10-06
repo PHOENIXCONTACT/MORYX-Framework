@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using Moryx.AbstractionLayer;
 using Moryx.ControlSystem.Cells;
 
@@ -54,7 +52,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// Get process by id
         /// </summary>
         ProcessData GetProcess(long id);
-        
+
         /// <summary>
         /// Get process by id
         /// </summary>

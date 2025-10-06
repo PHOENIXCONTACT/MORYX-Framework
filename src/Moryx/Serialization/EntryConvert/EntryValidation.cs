@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Runtime.Serialization;
 
 namespace Moryx.Serialization
@@ -60,9 +59,9 @@ namespace Moryx.Serialization
             // All value types can be simply copied
             var copy = new EntryValidation
             {
-                Minimum = Minimum, 
-                Maximum = Maximum, 
-                Regex = Regex, 
+                Minimum = Minimum,
+                Maximum = Maximum,
+                Regex = Regex,
                 IsRequired = IsRequired
             };
             return copy;

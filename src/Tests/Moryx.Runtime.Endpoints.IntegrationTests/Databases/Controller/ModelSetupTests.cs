@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Model;
@@ -16,7 +16,7 @@ namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
     {
         private IDbContextManager? _dbContextManager;
         private DatabaseController _databaseController;
-        private readonly List<Exception> _exceptions = new List<Exception>();
+        private readonly List<Exception> _exceptions = [];
 
         [SetUp]
         public void Setup()
@@ -33,7 +33,7 @@ namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
             _exceptions.Clear();
         }
 
-        [Test] 
+        [Test]
         public async Task ExecuteSetupDoesNotThrowDisposedObjectException()
         {
             // Add unobserved task exceptions to a list, to be checked later.

@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
@@ -22,14 +22,14 @@ namespace Moryx.Tests.Extensions
             8,
             9
         };
-        
+
         [Test]
         public void ForEachTest()
         {
             var enumerated = new List<int>();
 
             // ReSharper disable once ConvertClosureToMethodGroup
-            _enumerable.ForEach(delegate(int i)
+            _enumerable.ForEach(delegate (int i)
             {
                 enumerated.Add(i);
             });

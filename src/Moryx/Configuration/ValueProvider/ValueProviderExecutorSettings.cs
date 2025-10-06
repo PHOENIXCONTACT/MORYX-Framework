@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace Moryx.Configuration
@@ -11,9 +10,9 @@ namespace Moryx.Configuration
     /// </summary>
     public class ValueProviderExecutorSettings
     {
-        private readonly List<IValueProvider> _providers = new List<IValueProvider>();
+        private readonly List<IValueProvider> _providers = [];
 
-        private readonly List<IValueProviderFilter> _filters = new List<IValueProviderFilter> { new DefaultCanWriteValueProviderFilter() };
+        private readonly List<IValueProviderFilter> _filters = [new DefaultCanWriteValueProviderFilter()];
 
         /// <summary>
         /// Configured filters

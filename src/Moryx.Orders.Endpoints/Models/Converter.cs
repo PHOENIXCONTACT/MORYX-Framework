@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Products;
@@ -7,7 +7,6 @@ using Moryx.Orders.Documents;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Moryx.Users;
-using System.Linq;
 
 namespace Moryx.Orders.Endpoints
 {
@@ -29,7 +28,6 @@ namespace Moryx.Orders.Endpoints
                 Comment = model.Comment
             };
         }
-
 
         internal static ReportModel ToModel(OperationReport document)
         {
@@ -145,7 +143,7 @@ namespace Moryx.Orders.Endpoints
                     !operation.FullState.HasFlag(OperationClassification.Failed),
                 IsAborted = operation.FullState.HasFlag(OperationClassification.Aborted),
                 IsAmountReached = operation.FullState.HasFlag(OperationClassification.IsAmountReached),
-                
+
                 RecipeIds = operation.Recipes.Select(r => r.Id).ToArray()
             };
 

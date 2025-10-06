@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.IO;
@@ -24,7 +24,7 @@ namespace Moryx.Tests
         {
             // Arrange
             var attrWithBase = new PossibleTypesAttribute(typeof(SomeBase));
-            var attrWithArray = new PossibleTypesAttribute(new[] { typeof(SomeImpl) });
+            var attrWithArray = new PossibleTypesAttribute([typeof(SomeImpl)]);
             var attrWithFull = new PossibleTypesAttribute(typeof(SomeBase)) { UseFullname = true };
 
             // Act
@@ -63,7 +63,6 @@ namespace Moryx.Tests
             Assert.That(possibleValues[1], Is.EqualTo(nameof(MyStateBase.StateB)));
             Assert.That(possibleValues[2], Is.EqualTo(nameof(MyStateBase.StateC)));
         }
-
 
         public class SomeBase
         {

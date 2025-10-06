@@ -1,13 +1,8 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading;
 
 namespace Moryx.Tools
 {
@@ -21,7 +16,7 @@ namespace Moryx.Tools
         /// </summary>
         public static bool TestMode { get; set; }
 
-        private static readonly Lazy<Assembly[]> RelevantAssemblies = new Lazy<Assembly[]>(LoadAssemblies, LazyThreadSafetyMode.ExecutionAndPublication);
+        private static readonly Lazy<Assembly[]> RelevantAssemblies = new(LoadAssemblies, LazyThreadSafetyMode.ExecutionAndPublication);
         /// <summary>
         /// Load assemblies
         /// </summary>
@@ -31,7 +26,7 @@ namespace Moryx.Tools
             // Fetch location of binaries from our assembly
             var currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location).ToLower();
             var relevantAssemblies = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                                      // Only load non-dynamic assemblies from our directory
+                                          // Only load non-dynamic assemblies from our directory
                                       where !assembly.IsDynamic && !string.IsNullOrEmpty(assembly.Location)
                                       let path = Path.GetDirectoryName(assembly.Location).ToLower()
                                       where TestMode || path == currentDir
@@ -47,7 +42,7 @@ namespace Moryx.Tools
             return RelevantAssemblies.Value;
         }
 
-        private static readonly Lazy<Type[]> PublicClasses = new Lazy<Type[]>(LoadPublicClasses, LazyThreadSafetyMode.ExecutionAndPublication);
+        private static readonly Lazy<Type[]> PublicClasses = new(LoadPublicClasses, LazyThreadSafetyMode.ExecutionAndPublication);
         /// <summary>
         /// Load all public classes
         /// </summary>
@@ -63,7 +58,7 @@ namespace Moryx.Tools
                         .Where(type => type.IsClass && !type.IsAbstract);
                     publicClasses.AddRange(exports);
                 }
-                catch(Exception x)
+                catch (Exception x)
                 {
                     CrashHandler.WriteErrorToFile($"Failed to load types from {assembly.FullName}. Error: {x.Message}");
                 }

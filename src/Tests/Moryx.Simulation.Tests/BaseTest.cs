@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
@@ -56,13 +56,13 @@ namespace Moryx.Simulation.Tests
                 .Returns<IActivity>(a => _activityTargets.TryGetValue(a, out IReadOnlyList<ICell>? value) ? value : []);
 
             _processControlMock.Setup(pc => pc.Targets(It.IsAny<IProcess>()))
-                .Returns(new[] { _assemblyCell, _anotherAssemblyCell });
+                .Returns([_assemblyCell, _anotherAssemblyCell]);
             _processControlMock.Setup(pc => pc.RunningProcesses).Returns([]);
 
             //resource management
             _resourceManagementMock = new Mock<IResourceManagement>();
             _resourceManagementMock.Setup(rm => rm.GetAllResources<ISimulationDriver>(It.IsAny<Func<ISimulationDriver, bool>>()))
-                .Returns(new[] { _assemblyCellDriver, _anotherAssemblyCellDriver });
+                .Returns([_assemblyCellDriver, _anotherAssemblyCellDriver]);
 
             //logger mock
             _simulationLoggerMock = new();
@@ -74,9 +74,6 @@ namespace Moryx.Simulation.Tests
             _processSimulator.ParallelOperations = _parallelOperations;
             _processSimulator.Config = _moduleConfig;
         }
-
-
-
 
         protected Activity CreateActivity(Activity activity, Process process, ICell cell)
         {
@@ -103,7 +100,7 @@ namespace Moryx.Simulation.Tests
         {
             ((AssemblyTestCell)cell).TestInit();
             var process = new ProductionProcess { Id = processId };
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns(new[] { process });
+            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([process]);
             CreateActivity(activity, process, cell);
 
         }

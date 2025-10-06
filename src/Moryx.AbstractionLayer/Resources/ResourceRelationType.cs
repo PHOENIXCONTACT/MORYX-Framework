@@ -1,7 +1,5 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
 
 namespace Moryx.AbstractionLayer.Resources
 {
@@ -56,17 +54,17 @@ namespace Moryx.AbstractionLayer.Resources
         /// <summary>
         /// Defines a transport route from one resource to another
         /// </summary>
-        TransportRoute =  (9 << 3)  + 4,  // Transport relation of type usage relation
+        TransportRoute = (9 << 3) + 4,  // Transport relation of type usage relation
 
         /// <summary>
         /// Defines the current mounted exchangeable part like a probe head.
         /// </summary>
-        CurrentExchangablePart = (16 << 3) + 4, // Exchangable parts are usages
+        CurrentExchangeablePart = (16 << 3) + 4, // Exchangeable parts are usages
 
         /// <summary>
         /// Defines the possible exchangeable parts like probe heads.
         /// </summary>
-        PossibleExchangablePart = (17 << 3) + 4, // Exchangeable parts are usages
+        PossibleExchangeablePart = (17 << 3) + 4, // Exchangeable parts are usages
 
         /// <summary>
         /// Indicates that the source decorates the target

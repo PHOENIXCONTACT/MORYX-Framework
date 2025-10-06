@@ -1,9 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
@@ -31,7 +29,7 @@ namespace Moryx.Orders.Management.Assignment
         /// <inheritdoc />
         public void Initialize(OperationValidationConfig config)
         {
-            _config = (RegexOperationValidationConfig) config;
+            _config = (RegexOperationValidationConfig)config;
             _operationNumberRegex = new Regex(_config.RegularExpression);
         }
 

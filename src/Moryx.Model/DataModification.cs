@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Runtime.Serialization;
 
 namespace Moryx.Model
@@ -42,7 +41,7 @@ namespace Moryx.Model
         /// <param name="other">An object to compare with this object.</param>
         public bool Equals(ModifiedEntity<TEntity> other)
         {
-            if(other == null)
+            if (other == null)
                 return false;
             return Data.Id == other.Data.Id;
         }

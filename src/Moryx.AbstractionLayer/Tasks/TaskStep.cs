@@ -1,9 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Moryx.Serialization;
@@ -57,8 +54,8 @@ namespace Moryx.AbstractionLayer
         private static OutputDescription[] DescriptionsFromEnum(Type enumType)
         {
             return (from value in Enum.GetValues(enumType).OfType<object>()
-                    let name = GetEnumName(value,enumType)
-                    let numeric = (int) value
+                    let name = GetEnumName(value, enumType)
+                    let numeric = (int)value
                     select new OutputDescription
                     {
                         Name = name,
@@ -77,7 +74,7 @@ namespace Moryx.AbstractionLayer
         private static string GetEnumName(object value, Type enumType)
         {
             var enumMembers = enumType.GetMembers();
-            var enumValueInfo = enumMembers.FirstOrDefault(x => x.DeclaringType == enumType && 
+            var enumValueInfo = enumMembers.FirstOrDefault(x => x.DeclaringType == enumType &&
             x.Name == value.ToString());
             var displayAttributeValue = enumValueInfo.GetDisplayName();
 

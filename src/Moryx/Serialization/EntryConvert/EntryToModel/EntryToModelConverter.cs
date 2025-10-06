@@ -1,10 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace Moryx.Serialization
 {
@@ -109,13 +106,13 @@ namespace Moryx.Serialization
         /// Responsibility chain starting with most specific shifting towards the least specific
         /// </summary>
         private static readonly ITypeWrapperFactory[] TypeWrapperFactories =
-        {
+        [
             new CollectionWrapperFactory(),
             new DictionaryWrapperFactory(),
             new ClassWrapperFactory(),
             new PossibleValuesWrapperFactory(),
             new AttributeWrapperFactory(),
-            new NameWrapperFactory(),
-        };
+            new NameWrapperFactory()
+        ];
     }
 }

@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
@@ -166,7 +163,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 .AddDefaultValueProvider());
 
             var model = new ResourceToModelConverter(_resourceTypeTree, _serialization).GetDetails(resource);
-            model.Methods = Array.Empty<MethodEntry>(); // Reset methods because they can not be invoked on new objects
+            model.Methods = []; // Reset methods because they can not be invoked on new objects
             return model;
         }
 
@@ -197,7 +194,8 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 return Conflict($"The resource '{model.Id}' already exists.");
             try
             {
-                var id = _resourceManagement.Create(_resourceTypeTree[model.Type].ResourceType, r => {
+                var id = _resourceManagement.Create(_resourceTypeTree[model.Type].ResourceType, r =>
+                {
                     var resourcesToSave = new HashSet<long>();
                     var resourceCache = new Dictionary<long, Resource>();
                     FromModel(model, resourcesToSave, resourceCache, r);
@@ -361,7 +359,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 if (e is ArgumentException or SerializationException or ValidationException)
                     return BadRequest(e.Message);
                 throw;
-            }            
+            }
 
             return GetDetails(id);
         }

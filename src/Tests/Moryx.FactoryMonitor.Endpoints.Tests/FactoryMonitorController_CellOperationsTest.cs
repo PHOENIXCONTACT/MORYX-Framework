@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Mvc;
@@ -60,7 +60,6 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             Assert.That(((OkResult)endPointResult).StatusCode, Is.EqualTo(200));
             _resourceManagementMock.Verify(rm => rm.Modify(_assemblyCellLocation.Id, It.IsAny<Func<Resource, bool>>()), Times.Once, "The Location resource was not updated!");
         }
-
 
         [Test]
         public void CellSettings_Shoud_Return_NotFound()

@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -42,7 +41,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Model.Migrations.Npgsql
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-            
+
             migrationBuilder.CreateTable(
                 name: "TracingTypes",
                 schema: "public",
@@ -58,7 +57,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Model.Migrations.Npgsql
                 {
                     table.PrimaryKey("PK_TracingTypes", x => x.Id);
                 });
-            
+
             migrationBuilder.CreateTable(
                 name: "ProcessEntities",
                 schema: "public",
@@ -85,7 +84,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Model.Migrations.Npgsql
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-            
+
             migrationBuilder.CreateTable(
                 name: "ActivityEntities",
                 schema: "public",
@@ -131,7 +130,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Model.Migrations.Npgsql
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-            
+
             migrationBuilder.CreateTable(
             name: "TokenHolderEntities",
             schema: "public",
@@ -154,7 +153,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Model.Migrations.Npgsql
                     principalColumn: "Id",
                     onDelete: ReferentialAction.Cascade);
             });
-                       
 
             migrationBuilder.CreateIndex(
                 name: "IX_ActivityEntities_JobId",

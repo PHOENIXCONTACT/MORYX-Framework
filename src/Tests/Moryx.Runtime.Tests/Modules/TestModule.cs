@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -11,7 +11,7 @@ namespace Moryx.Runtime.Tests.Modules
 {
     internal class TestModule : ServerModuleBase<TestConfig>
     {
-        public TestModule(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerManagement) 
+        public TestModule(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerManagement)
             : base(containerFactory, configManager, loggerManagement)
         {
         }

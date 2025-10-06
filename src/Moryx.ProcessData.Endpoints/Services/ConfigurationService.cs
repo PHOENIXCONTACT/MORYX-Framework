@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer;
@@ -7,12 +7,8 @@ using Moryx.Modules;
 using Moryx.Notifications;
 using Moryx.ProcessData.Configuration;
 using Moryx.ProcessData.Endpoints.Models;
-using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Modules;
 using Moryx.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace Moryx.ProcessData.Endpoints.Services
@@ -50,7 +46,6 @@ namespace Moryx.ProcessData.Endpoints.Services
                 Bindings = GetAvailableBindings(GetMeasurandType(adapterName)),
             };
 
-
         private static Type GetMeasurandType(string measurandName)
             => measurandName.Contains("Activity")
                 ? typeof(IActivity)
@@ -60,13 +55,11 @@ namespace Moryx.ProcessData.Endpoints.Services
                         ? typeof(IProcess)
                         : throw new ArgumentException("Measurand type not available");
 
-
         private List<MeasurementBinding> GetBindingsForMeasurandName(string name)
             => _moduleManager.AllModules
                 .SelectMany(m => FindMeasurandBindings(GetConfig(m, false), name))
                 .Distinct()
                 .ToList();
-
 
         private static List<MeasurementBinding> FindMeasurandBindings(IConfig config, string measurandName)
         {
@@ -79,7 +72,6 @@ namespace Moryx.ProcessData.Endpoints.Services
             return bindings.GetMeasurementBindings(config);
         }
 
-
         public List<string> GetAvailableBindings(Type typeInQuestion)
             => AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(domainAssembly => domainAssembly.GetTypes())
@@ -87,7 +79,6 @@ namespace Moryx.ProcessData.Endpoints.Services
                 .SelectMany(t => ListProperties(t, "", typeInQuestion))
                 .Distinct()
                 .ToList();
-
 
         public List<string> ListProperties(Type root, string name, Type baseType)
         {
@@ -126,7 +117,7 @@ namespace Moryx.ProcessData.Endpoints.Services
                 .Select(p => MeasurandFromModuleProperty(module, p));
 
         private static MeasurandResponse MeasurandFromModuleProperty(IServerModule module, PropertyInfo p)
-            => new MeasurandResponse(p.Name)
+            => new(p.Name)
             {
                 GeneratedName = GetGeneratedName(p),
                 Description = p.GetDescription(),
@@ -155,7 +146,6 @@ namespace Moryx.ProcessData.Endpoints.Services
         public IServerModule GetModule(string moduleName)
            => _moduleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
 
-
         private IConfig GetConfig(IModule module, bool copy)
         {
             var moduleType = module.GetType();
@@ -165,7 +155,6 @@ namespace Moryx.ProcessData.Endpoints.Services
 
             return _configManager.GetConfiguration(configType, copy);
         }
-
 
         public ConfiguredBindings UpdateMeasuarandBindings(string name, ConfiguredBindings measurandBindings)
         {
@@ -190,7 +179,7 @@ namespace Moryx.ProcessData.Endpoints.Services
 
             _moduleManager.ReincarnateModule(module);
 
-            return new ConfiguredBindings{ Bindings = bindings };
+            return new ConfiguredBindings { Bindings = bindings };
         }
     }
 

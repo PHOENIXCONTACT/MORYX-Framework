@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -14,7 +14,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// The main controller of all product modules.
     /// </summary>
-    public class ModuleController : ServerModuleBase<ModuleConfig>, 
+    public class ModuleController : ServerModuleBase<ModuleConfig>,
         IFacadeContainer<IProductManagement>,
         IFacadeContainer<IWorkplans>
     {
@@ -84,7 +84,7 @@ namespace Moryx.Products.Management
             DeactivateFacade(_productManagement);
         }
 
-        private readonly ProductManagementFacade _productManagement = new ProductManagementFacade();
+        private readonly ProductManagementFacade _productManagement = new();
 
         IProductManagement IFacadeContainer<IProductManagement>.Facade => _productManagement;
         IWorkplans IFacadeContainer<IWorkplans>.Facade => _productManagement;

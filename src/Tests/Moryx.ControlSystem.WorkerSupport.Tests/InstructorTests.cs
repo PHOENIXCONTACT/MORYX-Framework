@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Threading;
@@ -123,7 +123,6 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
 
             _instructor.Completed(new ActiveInstructionResponse { Id = instructionId, SelectedResult = new InstructionResult { Key = defaultResult } });
 
-
             // Assert
             Assert.That(callbackRaised);
             Assert.That(callbackResult, Is.EqualTo(defaultResult));
@@ -150,7 +149,6 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
                 });
 
             _instructor.Completed(new ActiveInstructionResponse { Id = instructionId, SelectedResult = new InstructionResult { Key = "0" } });
-
 
             // Assert
             Assert.That(callbackResult, Is.EqualTo((int)MountingResult.Mounted));
@@ -184,10 +182,10 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
                 Process = new Process { Id = 4711 },
                 Parameters = new MountingParameters
                 {
-                    Instructions = new[]
-                    {
+                    Instructions =
+                    [
                         new VisualInstruction {Content = "Hello World", Type = InstructionContentType.Text}
-                    }
+                    ]
                 }
             };
 
@@ -197,10 +195,10 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
 
         private static VisualInstruction[] GetTextInstruction()
         {
-            return new[]
-            {
+            return
+            [
                 new VisualInstruction {Content = "Hello World", Type = InstructionContentType.Text}
-            };
+            ];
         }
     }
 }

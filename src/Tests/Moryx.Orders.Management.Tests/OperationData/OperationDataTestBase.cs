@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -63,7 +63,6 @@ namespace Moryx.Orders.Management.Tests
             JobHandlerMock.Setup(d => d.Dispatch(It.IsAny<IOperationData>(), It.IsAny<IReadOnlyList<DispatchContext>>())).Callback(dispatchDelegate);
         }
 
-
         internal class TestJob : Job, IPredictiveJob
         {
             public TestJob(IRecipe recipe, int amount) : base(recipe, amount)
@@ -74,7 +73,7 @@ namespace Moryx.Orders.Management.Tests
 
             public TestJob SetRunning(int amount)
             {
-                RunningProcesses = Enumerable.Range(1, amount).Select(i => new Process {Id = i}).ToList();
+                RunningProcesses = Enumerable.Range(1, amount).Select(i => new Process { Id = i }).ToList();
                 return this;
             }
 
@@ -95,9 +94,9 @@ namespace Moryx.Orders.Management.Tests
                 Number = "0010",
                 ProductIdentifier = "123456",
                 ProductRevision = 1,
-                Parts = new PartCreationContext[0],
+                Parts = Array.Empty<PartCreationContext>(),
                 PlannedStart = DateTime.Now,
-                PlannedEnd= DateTime.UtcNow,                
+                PlannedEnd = DateTime.UtcNow,
             };
 
             var operationData = GetOperationDataInstance(replaceScrap);

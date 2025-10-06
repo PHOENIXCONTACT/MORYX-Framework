@@ -1,9 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Globalization;
-using System.Threading;
 
 namespace Moryx.Tools
 {
@@ -50,7 +48,7 @@ namespace Moryx.Tools
         /// </summary>
         public static DateTime StartOfWeek(int year, int calendarweek)
         {
-            var result = StartOfWeek(new DateTime(year, 1, 1).AddDays((calendarweek-1) * 7));
+            var result = StartOfWeek(new DateTime(year, 1, 1).AddDays((calendarweek - 1) * 7));
             return result;
         }
 

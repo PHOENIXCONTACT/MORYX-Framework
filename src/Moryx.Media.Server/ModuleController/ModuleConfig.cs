@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -29,13 +29,13 @@ namespace Moryx.Media.Server
         [DataMember]
         [Description("Maximum file size in MB")]
         public int MaxFileSizeInMb { get; set; } = 10;
-        
+
         /// <summary>
         /// List of allowed file types
         /// </summary>
         [DataMember]
         [Description("Allowed file types defined by extension")]
-        public string[] SupportedFileTypes { get; set; } = { ".png", ".jpeg", ".jpg", ".gif", ".pdf", ".txt", ".csv" };
+        public string[] SupportedFileTypes { get; set; } = [".png", ".jpeg", ".jpg", ".gif", ".pdf", ".txt", ".csv"];
 
         /// <summary>
         /// Preview creator plugin configurations
@@ -48,10 +48,10 @@ namespace Moryx.Media.Server
         /// <inheritdoc />
         public override void Initialize()
         {
-            PreviewCreators = new PreviewCreatorConfig[]
-            {
+            PreviewCreators =
+            [
                 new ImagePreviewCreatorConfig()
-            };
+            ];
         }
     }
 }

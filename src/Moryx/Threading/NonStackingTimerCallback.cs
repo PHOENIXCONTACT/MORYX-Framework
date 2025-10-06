@@ -1,8 +1,5 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
-using System.Threading;
 
 namespace Moryx.Threading
 {
@@ -20,7 +17,7 @@ namespace Moryx.Threading
         /// <summary>
         /// Lock used to sync multiple timer threads
         /// </summary>
-        private readonly object _syncLock = new object();
+        private readonly object _syncLock = new();
 
         /// <summary>
         /// Callback for timer
@@ -57,7 +54,7 @@ namespace Moryx.Threading
             // Retrieve lock only to ready execution flag
             lock (_syncLock)
             {
-                if(_callbackExecuting)
+                if (_callbackExecuting)
                     return;
                 _callbackExecuting = true;
             }

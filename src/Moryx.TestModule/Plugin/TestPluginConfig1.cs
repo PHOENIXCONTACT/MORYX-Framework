@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Serialization;
@@ -12,7 +11,7 @@ namespace Moryx.TestModule
     {
         public TestPluginConfig1()
         {
-            OrderSources = new List<SourceConfig>();
+            OrderSources = [];
         }
 
         /// <summary>

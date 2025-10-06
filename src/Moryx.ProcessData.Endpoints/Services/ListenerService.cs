@@ -1,15 +1,11 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Configuration;
 using Moryx.Modules;
 using Moryx.ProcessData.Endpoints.Models;
 using Moryx.ProcessData.Listener;
-using Moryx.Runtime.Configuration;
 using Moryx.Runtime.Modules;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.ProcessData.Endpoints.Services
 {
@@ -26,12 +22,10 @@ namespace Moryx.ProcessData.Endpoints.Services
             _configManager = configManager;
         }
 
-
         public Models.Listener GetListener(string name)
             => GetListenerConfigs()
                 .FirstOrDefault(c => c.ListenerName == name)
                 .ToDto();
-
 
         public ListenersResponse GetListeners()
             => new()
@@ -61,10 +55,8 @@ namespace Moryx.ProcessData.Endpoints.Services
             return listener.ToDto();
         }
 
-
         public IServerModule GetModule(string moduleName)
             => _moduleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
-
 
         private IConfig GetConfig(IModule module, bool copy)
         {
@@ -83,7 +75,6 @@ namespace Moryx.ProcessData.Endpoints.Services
         private Monitor.ModuleConfig ProcessMonitorConfig()
             => (Monitor.ModuleConfig)GetConfig(ProcessDataMonitor(), false);
 
-
         private IServerModule ProcessDataMonitor()
             => GetModule("ProcessDataMonitor");
 
@@ -92,7 +83,6 @@ namespace Moryx.ProcessData.Endpoints.Services
                 .Where(p => p.PropertyType == typeof(List<ProcessDataListenerConfig>))
                 .SelectMany(info => (List<ProcessDataListenerConfig>)info.GetValue(config, null))
                 .ToList();
-
 
         public List<string> GetAvailableBindings(Type typeInQuestion)
             => AppDomain.CurrentDomain.GetAssemblies()

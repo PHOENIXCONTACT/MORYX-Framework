@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -164,7 +164,6 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration
             Assert.That(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, Is.False, "Byte field has not been overwritten!");
             Assert.That(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, Is.False, "Long field has not been overwritten!");
         }
-
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.

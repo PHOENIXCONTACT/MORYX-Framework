@@ -1,8 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.IO;
-using System.Threading.Tasks;
 using Moryx.Container;
 using Moryx.Modules;
 using Moryx.AbstractionLayer.Products;
@@ -35,14 +33,14 @@ namespace Moryx.Products.Samples
 
                 return Task.FromResult(new ProductImporterResult
                 {
-                    ImportedTypes = new ProductType[]
-                    {
+                    ImportedTypes =
+                    [
                         new NeedleType
                         {
                             Name = name,
                             Identity = new ProductIdentity(identifier, revision)
                         }
-                    }
+                    ]
                 });
             }
         }

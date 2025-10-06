@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -60,7 +60,7 @@ namespace Moryx.Workplans.Editing
             DeactivateFacade(_facade);
         }
 
-        private readonly WorkplanFacade _facade = new WorkplanFacade();
+        private readonly WorkplanFacade _facade = new();
 
         Workplans.IWorkplanEditing IFacadeContainer<Workplans.IWorkplanEditing>.Facade => _facade;
     }

@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using Moryx.Communication;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -41,7 +39,7 @@ namespace Moryx.Media.Server.Endpoint
             {
                 Name = variantDescriptor.Name,
                 IsMaster = variantDescriptor.Name == MediaConstants.MasterName,
-                Size =variantDescriptor.Size,
+                Size = variantDescriptor.Size,
                 FileHash = variantDescriptor.FileHash,
                 CreationDate = variantDescriptor.CreationDate,
                 MimeType = variantDescriptor.MimeType,

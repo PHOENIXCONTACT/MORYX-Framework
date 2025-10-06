@@ -1,11 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
 
 namespace Moryx.Media.Endpoints
@@ -15,7 +11,7 @@ namespace Moryx.Media.Endpoints
         private const int Megabyte = 1048576;
 
         // To add further signatures, see the File Signatures Database (https://www.filesignatures.net/)
-        private static readonly Dictionary<string, List<byte[]>> _signatures = new Dictionary<string, List<byte[]>>
+        private static readonly Dictionary<string, List<byte[]>> _signatures = new()
         {
             { ".gif", new List<byte[]> { new byte[] { 0x47, 0x49, 0x46, 0x38 } } },
             { ".png", new List<byte[]> { new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A } } },
@@ -63,7 +59,7 @@ namespace Moryx.Media.Endpoints
 
                 var fileTypes = mediaServer.GetSupportedFileTypes();
                 errorMessage = $"{trustedFileName} file type isn't permitted.";
-                if(!fileTypes.Contains(Path.GetExtension(formFile.FileName)))
+                if (!fileTypes.Contains(Path.GetExtension(formFile.FileName)))
                     return false;
 
                 errorMessage = $"{trustedFileName} file signature doesn't match the file's extension.";

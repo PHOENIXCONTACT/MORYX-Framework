@@ -1,8 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moryx.Configuration;
@@ -25,15 +24,13 @@ namespace Moryx.TestModule
         /// </summary>
         public override string Name => "TestModule";
 
-
-        public ModuleController(IOptions<ModuleConfig> options, IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
+        public ModuleController(IOptions<ModuleConfig> options, IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
             : base(containerFactory, configManager, loggerFactory)
         {
             ContextManager = contextManager;
 
             var config = options.Value;
         }
-
 
         #region State transition
 
@@ -51,7 +48,6 @@ namespace Moryx.TestModule
             var plugin = Container.Resolve<ITestPlugin>("TestPlugin");
             plugin.Start();
 
-               
             // Activate facades
             ActivateFacade(_testModule);
         }
@@ -69,7 +65,7 @@ namespace Moryx.TestModule
 
         #region FacadeContainer
 
-        private readonly TestModuleFacade _testModule = new TestModuleFacade();
+        private readonly TestModuleFacade _testModule = new();
 
         ITestModule IFacadeContainer<ITestModule>.Facade => _testModule;
 

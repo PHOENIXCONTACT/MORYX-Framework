@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer;
@@ -20,7 +20,6 @@ namespace Moryx.Workplans.Samples.Activities
         [Display(Name = "Test Integer Property", Description = "This is a Description of an Integer Property")]
         public int TestInt { get; set; }
 
-
         [Display(Name = "Test String Property", Description = "This is a Description of an String Property")]
         public string TestString { get; set; }
     }
@@ -30,7 +29,6 @@ namespace Moryx.Workplans.Samples.Activities
     {
         [Display(Name = "Test Integer Property", Description = "This is a Description of an Integer Property, which cannot be set by a constructor")]
         public int TestInt { get; set; }
-
 
         [Display(Name = "Test String Property", Description = "This is a Description of an String Property, which cannot be set by a constructor")]
         public string TestString { get; set; }

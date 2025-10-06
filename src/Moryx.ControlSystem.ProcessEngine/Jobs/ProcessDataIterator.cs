@@ -1,9 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.ControlSystem.ProcessEngine.Processes;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace Moryx.ControlSystem.ProcessEngine.Jobs
 {
@@ -11,8 +9,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
     /// Iterator for <see cref="JobDataBase.AllProcesses"/> and <see cref="JobDataBase.RunningProcesses"/> that is not affected by collection changes
     /// </summary>
     internal class ProcessDataIterator<T> : IEnumerator<T>
-    where T: class
-    { 
+    where T : class
+    {
         private int _currentIndex = -1;
 
         private T _currentProcess;
@@ -35,7 +33,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             {
                 _currentProcess = null;
                 return false;
-            }            
+            }
         }
 
         public void Reset() => _currentIndex = -1;

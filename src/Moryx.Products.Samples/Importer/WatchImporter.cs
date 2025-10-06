@@ -1,9 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Products.Management;
@@ -27,19 +25,20 @@ namespace Moryx.Products.Samples
                 {
                     Product = (WatchFaceType)Storage.LoadType(new ProductIdentity(parameters.WatchfaceIdentifier, ProductIdentity.LatestRevision))
                 },
-                Needles = new List<NeedlePartLink>
-                {
+                Needles =
+                [
                     new NeedlePartLink
                     {
                         Role = NeedleRole.Minutes,
-                        Product = (NeedleType)Storage.LoadType(new ProductIdentity(parameters.MinuteNeedleIdentifier, ProductIdentity.LatestRevision))
+                        Product = (NeedleType)Storage.LoadType(new ProductIdentity(parameters.MinuteNeedleIdentifier,
+                            ProductIdentity.LatestRevision))
                     }
-                }
+                ]
             };
 
             return Task.FromResult(new ProductImporterResult
             {
-                ImportedTypes = new ProductType[] { product }
+                ImportedTypes = [product]
             });
         }
     }

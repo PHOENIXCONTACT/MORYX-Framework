@@ -1,9 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Moryx.Container;
 using Moryx.Serialization;
@@ -36,7 +33,7 @@ namespace Moryx.Configuration
         /// </summary>
         [Obsolete("Construct possible values with ServiceProvider for attributes that rely on it")]
         public PossibleValuesSerialization(IContainer container, IEmptyPropertyProvider emptyPropertyProvider)
-            :this(container, null, emptyPropertyProvider) { }
+            : this(container, null, emptyPropertyProvider) { }
 
         /// <summary>
         /// Initialize base class
@@ -91,7 +88,6 @@ namespace Moryx.Configuration
             var elementType = EntryConvert.ElementType(memberType);
             return EntryConvert.ValueOrStringType(elementType);
         }
-
 
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override string[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)

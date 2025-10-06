@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Workplans;
@@ -44,7 +44,7 @@ namespace Moryx.Tests.Workplans
             rightOnly.Outputs[0] = left;
 
             var merge = new DummyStep(2, "C");
-            merge.Inputs[0] = left; 
+            merge.Inputs[0] = left;
             merge.Position = new Point(1, 4);
             workplan.Add(merge);
             merge.Outputs[0] = merge.Outputs[1] = complete;

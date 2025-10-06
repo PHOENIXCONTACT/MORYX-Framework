@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging.Abstractions;
@@ -12,7 +12,6 @@ using Moryx.ControlSystem.TestTools;
 using Moryx.ControlSystem.TestTools.Activities;
 using Moryx.Logging;
 using Moryx.TestTools.UnitTest;
-using Moryx.Threading;
 using NUnit.Framework;
 using System.Collections.Generic;
 
@@ -27,7 +26,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         private Mock<ICell> _mountCellMock;
         private Mock<ICell> _serialCellMock;
 
-
         [SetUp]
         public void CreateDispatcher()
         {
@@ -38,12 +36,12 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             _mountCellMock = CreateMountCell(_resourceManagementMock, true, false);
             _serialCellMock = CreateSerialCell(_resourceManagementMock);
 
-            _resourceManagementMock.Setup(rm => rm.GetResources<ICell>()).Returns(() => new[]
-            {
+            _resourceManagementMock.Setup(rm => rm.GetResources<ICell>()).Returns(() =>
+            [
                 _productionCellMock.Object,
                 _mountCellMock.Object,
                 _serialCellMock.Object
-            });
+            ]);
 
             _dispatcher = new ActivityDispatcher
             {
@@ -321,7 +319,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Act: Override rtw and update activity
             var second = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Push);
             RaiseReadyToWork(_serialCellMock, second);
-            activityData.Targets = new[] { _serialCellMock.Object };
+            activityData.Targets = [_serialCellMock.Object];
             DataPool.UpdateActivity(activityData, ActivityState.Configured);
 
             // Assert: Make sure activity was started on second session
@@ -339,7 +337,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             var testCase1 = new TestCaseData(ReadyToWorkType.Push, null, ProcessState.Initial);
             testCase1.SetDescription("Raising a RTW Push without a ProcessReference, the ProcessState is arbitrary.");
             yield return testCase1;
-            
+
             var testCase2 = new TestCaseData(ReadyToWorkType.Push, InvalidProcessId, ProcessState.Initial);
             testCase2.SetDescription("Raising an RTW Push, with a ProcessId that exists but does not have an Activity waiting in the Pool, " +
                 "the ProcessState is arbitrary.");
@@ -446,7 +444,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                     "There should be no StartActivity call at the ProductionCell");
             });
         }
-
 
     }
 }

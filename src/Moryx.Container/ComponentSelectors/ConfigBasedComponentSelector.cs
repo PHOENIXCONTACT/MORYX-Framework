@@ -1,8 +1,6 @@
-
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Reflection;
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel;
@@ -45,8 +43,9 @@ namespace Moryx.Container
                 var configType = config.GetType();
                 var genericPluginApi = typeof(IConfiguredInitializable<>).MakeGenericType(configType);
 
-                var initMethod = genericPluginApi.GetMethod(nameof(IConfiguredInitializable<IPluginConfig>.Initialize), new[] { configType });
-                initMethod.Invoke(instance, new[] { config });
+                var initMethod = genericPluginApi.GetMethod(nameof(IConfiguredInitializable<IPluginConfig>.Initialize),
+                    [configType]);
+                initMethod.Invoke(instance, [config]);
                 return instance;
             });
             return createFunc;

@@ -1,13 +1,8 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using InfluxDB.Client;
 using InfluxDB.Client.Api.Domain;
 using InfluxDB.Client.Writes;
@@ -117,7 +112,7 @@ namespace Moryx.ProcessData.InfluxDbListener
         {
             lock (_pendingPointsLock)
                 _pendingPoints.Add(GetPointFromMeasurement(measurement));
-            
+
             StartTimerIfStopped();
         }
 
@@ -158,7 +153,7 @@ namespace Moryx.ProcessData.InfluxDbListener
             {
                 Logger.LogError(e, "Error while writing points to influxDB '{name}'. Moving {number} points back to queue. " +
                     "Remaining retries: {retries}", Config.DatabaseName, points.Length, --_retries);
-                
+
                 lock (_pendingPointsLock)
                     _pendingPoints.AddRange(points);
 
@@ -166,7 +161,7 @@ namespace Moryx.ProcessData.InfluxDbListener
                 {
                     ParallelOperations.StopExecution(_timerId);
                     throw new Exception($"Out of retires for {Config.ListenerName}. Stopping listener...", e);
-                }                
+                }
             }
         }
 

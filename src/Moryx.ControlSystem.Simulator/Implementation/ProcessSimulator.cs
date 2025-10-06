@@ -1,9 +1,8 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer;
-using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.ControlSystem.Activities;
@@ -12,19 +11,13 @@ using Moryx.ControlSystem.Processes;
 using Moryx.ControlSystem.Simulation;
 using Moryx.Logging;
 using Moryx.Threading;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using Activity = Moryx.AbstractionLayer.Activity;
 
 namespace Moryx.ControlSystem.Simulator
 {
     [Component(LifeCycle.Singleton, typeof(IProcessSimulator))]
     internal sealed class ProcessSimulator : IProcessSimulator
     {
-        private readonly Random _simulationRandomness = new Random();
+        private readonly Random _simulationRandomness = new();
 
         public ModuleConfig Config { get; set; }
 
@@ -195,9 +188,9 @@ namespace Moryx.ControlSystem.Simulator
                             target.Id, target.Name, activity.ToString(), target.SimulatedState.ToString(), nameof(SimulationState.Idle));
                 return;
             }
-            
+
             Logger.LogDebug("Simulating 'Ready' on driver {0}-{1} for activity '{2}'.", target.Id, target.Name, activity.ToString());
-            
+
             try
             {
                 target.Ready(activity);
@@ -285,7 +278,7 @@ namespace Moryx.ControlSystem.Simulator
 
         private int CalculateDuration()
         {
-            return (int) Math.Ceiling(Convert.ToDouble(Config.MovingDuration) * 1/Convert.ToDouble(Config.Acceleration));
+            return (int)Math.Ceiling(Convert.ToDouble(Config.MovingDuration) * 1 / Convert.ToDouble(Config.Acceleration));
         }
 
         private void CompleteMovement(ProcessMovement movement)
@@ -293,7 +286,7 @@ namespace Moryx.ControlSystem.Simulator
             lock (_movements)
                 _movements.Remove(movement);
 
-            if (movement.NextActivity.Tracing.Started is not null) 
+            if (movement.NextActivity.Tracing.Started is not null)
             {
                 Logger.LogDebug("Skipping 'Ready' on driver {0}-{1} for activity '{2}': Activity has already started or was canceled.",
                         movement.Target.Id, movement.Target.Name, movement.NextActivity.ToString());
@@ -318,7 +311,7 @@ namespace Moryx.ControlSystem.Simulator
             var driver = aad.Driver;
             var activity = aad.Activity;
 
-            if(activity.Tracing.Completed is not null)
+            if (activity.Tracing.Completed is not null)
             {
                 Logger.LogDebug("Skipping 'Result' on driver {0}-{1} for activity '{2}': Activity is already completed.",
                         driver.Id, driver.Name, activity.ToString());
@@ -338,7 +331,7 @@ namespace Moryx.ControlSystem.Simulator
             catch (Exception ex)
             {
                 Logger.LogError(ex, "Could not simulate 'Result' on driver {0}-{1}: Unexpected exception.", driver.Id, driver.Name);
-            }            
+            }
         }
 
         private class ActivityAndDriver

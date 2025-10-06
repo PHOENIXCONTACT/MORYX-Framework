@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
@@ -22,7 +21,7 @@ namespace Moryx.ControlSystem.Assemble
         /// <summary>
         /// Creates a new instance of <see cref="AssembleParameters"/>
         /// </summary>
-        public AssembleParameters() : this(Array.Empty<VisualInstruction>())
+        public AssembleParameters() : this([])
         {
         }
 
@@ -38,10 +37,10 @@ namespace Moryx.ControlSystem.Assemble
         protected override void Populate(IProcess process, Parameters instance)
         {
             base.Populate(process, instance);
-            var parameters = (AssembleParameters) instance;
+            var parameters = (AssembleParameters)instance;
 
             // Assign product
-            var recipe = (IProductRecipe) process.Recipe;
+            var recipe = (IProductRecipe)process.Recipe;
             parameters.Product = recipe.Target;
         }
     }

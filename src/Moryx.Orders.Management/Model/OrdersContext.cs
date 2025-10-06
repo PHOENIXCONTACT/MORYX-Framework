@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
@@ -55,7 +55,6 @@ namespace Moryx.Orders.Management.Model
         /// There are no comments for <see cref="OperationAdviceEntities"/> in the schema.
         /// </summary>
         public virtual DbSet<OperationAdviceEntity> OperationAdviceEntities { get; set; }
-
 
         /// <inheritdoc />
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

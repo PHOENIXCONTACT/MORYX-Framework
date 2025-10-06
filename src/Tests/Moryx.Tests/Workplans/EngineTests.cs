@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
@@ -24,8 +24,8 @@ namespace Moryx.Tests.Workplans
             var workplanInstance = WorkplanInstanceFactory.Instantiate(workplan, context);
 
             // Simple assert
-            Assert.That(workplan.Connectors.Count(), Is.EqualTo(workplanInstance.Places.Count()), "Not all connectors transformed to places!");
-            Assert.That(workplan.Steps.Count(), Is.EqualTo(workplanInstance.Transitions.Count()), "Not all steps transformed to transitions!");
+            Assert.That(workplan.Connectors.Count(), Is.EqualTo(workplanInstance.Places.Count), "Not all connectors transformed to places!");
+            Assert.That(workplan.Steps.Count(), Is.EqualTo(workplanInstance.Transitions.Count), "Not all steps transformed to transitions!");
             Assert.That(workplanInstance.Transitions.Cast<DummyTransition>().All(t => t.Context == context), "Context not passed to all transitions!");
             // Structure assert
             var transitions = workplanInstance.Transitions;
@@ -108,7 +108,7 @@ namespace Moryx.Tests.Workplans
             // Act
             var triggerCount = 0;
             var path = string.Empty;
-            engine.TransitionTriggered += delegate(object sender, ITransition transition)
+            engine.TransitionTriggered += delegate (object sender, ITransition transition)
             {
                 var dummy = (DummyTransition)transition;
                 if (route == ExecutionPath.Alternative)
@@ -167,14 +167,14 @@ namespace Moryx.Tests.Workplans
             var stepId = workplan.Steps.Single(s => s is PausableStep).Id;
             var snapShot = new WorkplanSnapshot
             {
-                Holders = new[]
-                {
+                Holders =
+                [
                     new HolderSnapshot
                     {
                         HolderId = stepId,
-                        Tokens = new IToken[] { new MainToken() }
+                        Tokens = [new MainToken()]
                     }
-                }
+                ]
             };
 
             // Act

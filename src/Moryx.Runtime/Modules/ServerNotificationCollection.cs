@@ -1,18 +1,16 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using Moryx.Modules;
 
 namespace Moryx.Runtime.Modules
 {
     internal class ServerNotificationCollection : INotificationCollection
     {
-        private readonly List<IModuleNotification> _internalList = new List<IModuleNotification>();
-        private readonly object _lockObj = new object();
+        private readonly List<IModuleNotification> _internalList = [];
+        private readonly object _lockObj = new();
 
         // ReSharper disable once InconsistentlySynchronizedField
         public int Count => _internalList.Count;

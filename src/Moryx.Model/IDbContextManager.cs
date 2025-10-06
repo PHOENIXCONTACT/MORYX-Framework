@@ -1,8 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
 
@@ -43,7 +41,6 @@ namespace Moryx.Model
         /// <returns>Preconfigured instance of the given DbContext</returns>
         TContext Create<TContext>(IDatabaseConfig config)
             where TContext : DbContext;
-
 
         /// <summary>
         /// Updates the database configurator for the given context type

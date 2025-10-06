@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 namespace Moryx.AbstractionLayer.Drivers.InOut
@@ -17,7 +17,7 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
         /// Single value output
         /// Only available for <see cref="SupportedAccess.Single"/>
         /// </summary>
-        TOut Value { get; set;  }
+        TOut Value { get; set; }
 
         /// <summary>
         /// Index based output

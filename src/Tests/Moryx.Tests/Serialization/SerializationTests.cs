@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using Moryx.Configuration;
 using Moryx.Serialization;
@@ -57,7 +56,6 @@ namespace Moryx.Tests
             else
                 Assert.That(doubles.Prototypes[0].Value.Possible, Is.Null);
 
-
             var enums = encoded.SubEntries[2];
             Assert.That(enums.Value.Possible.Length, Is.EqualTo(3));
             Assert.That(enums.Prototypes.Count, Is.EqualTo(3));
@@ -71,8 +69,8 @@ namespace Moryx.Tests
             // Arrange
             var @object = new ArrayDummy
             {
-                Array = new[] { 2, 3, 4, 5, 6 },
-                Keys = new[] { "Number: 1", "Number: 2", "Number: 3", "Number: 4", "Number: 5" }
+                Array = [2, 3, 4, 5, 6],
+                Keys = ["Number: 1", "Number: 2", "Number: 3", "Number: 4", "Number: 5"]
             };
             var encoded = EntryConvert.EncodeObject(@object);
 
@@ -98,8 +96,8 @@ namespace Moryx.Tests
             // Arrange
             var @object = new ArrayDummy
             {
-                Array = new[] { 2, 3, 4, 5, 6 },
-                Keys = new[] { "Number: 1", "Number: 2", "Number: 3", "Number: 4", "Number: 5" }
+                Array = [2, 3, 4, 5, 6],
+                Keys = ["Number: 1", "Number: 2", "Number: 3", "Number: 4", "Number: 5"]
             };
             var encoded = EntryConvert.EncodeObject(@object);
 
@@ -216,7 +214,6 @@ namespace Moryx.Tests
             var entry1 = encoded.SubEntries[1];
             var entry2 = encoded.SubEntries[2];
 
-
             for (var i = 1; i <= 2; i++)
             {
                 var newInstance = entry1.Prototypes[0].Instantiate();
@@ -255,9 +252,9 @@ namespace Moryx.Tests
             // Arrange
             var dummy = new ArrayDummy
             {
-                Array = new[] { 2, 5, 7 },
-                Keys = new[] { "test1_2", "test_02", "1245" },
-                Enums = new[] { DummyEnum.Unset, DummyEnum.ValueB, DummyEnum.ValueA }
+                Array = [2, 5, 7],
+                Keys = ["test1_2", "test_02", "1245"],
+                Enums = [DummyEnum.Unset, DummyEnum.ValueB, DummyEnum.ValueA]
             };
 
             // Act
@@ -332,8 +329,8 @@ namespace Moryx.Tests
             var dummy = new ListDummy
             {
                 Number = 0,
-                DoubleList = new List<double> { 1.7, 2.5, 3 },
-                EnumList = new List<DummyEnum> { DummyEnum.ValueA, DummyEnum.Unset, DummyEnum.ValueB }
+                DoubleList = [1.7, 2.5, 3],
+                EnumList = [DummyEnum.ValueA, DummyEnum.Unset, DummyEnum.ValueB]
             };
 
             var encoded = EntryConvert.EncodeObject(dummy, defaultSerialization);
@@ -377,7 +374,7 @@ namespace Moryx.Tests
 
             // Act
             var encoded = EntryConvert.EncodeObject(dummy);
-            
+
             // Assert
             var readList = encoded.SubEntries[3];
             Assert.That(readList.SubEntries.Count, Is.EqualTo(1));
@@ -394,9 +391,9 @@ namespace Moryx.Tests
                 Number = 10,
                 Name = "Thomas",
                 SingleClass = null,
-                SubArray = new[] { new SubClass { Foo = (float)1.2, Enum = DummyEnum.ValueB } },
-                SubList = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } },
-                SubEnumerable = new List<SubClass> { new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA } },
+                SubArray = [new SubClass { Foo = (float)1.2, Enum = DummyEnum.ValueB }],
+                SubList = [new SubClass { Foo = (float)3.4, Enum = DummyEnum.ValueA }],
+                SubEnumerable = new List<SubClass> { new() { Foo = (float)3.4, Enum = DummyEnum.ValueA } },
                 SubDictionary = new Dictionary<int, SubClass>()
             };
 
@@ -449,7 +446,6 @@ namespace Moryx.Tests
             Assert.That(encoded.SubEntries[0].Value.Current, Is.Not.Null);
         }
 
-
         [Test(Description = "Class with EntrySerializationAttribute should not Override the attribute on the Base Class Resource|PublicResource")]
         public void ClassWithSerializationAttribute_AndBaseClass()
         {
@@ -479,8 +475,6 @@ namespace Moryx.Tests
             var alwaysProperties = 3;
             Assert.That(alwaysProperties, Is.EqualTo(encoded.SubEntries.Count));
         }
-
-
 
         [TestCase(CollectionType.Array, 3, 2)]
         [TestCase(CollectionType.Array, 0, 4)]
@@ -642,7 +636,6 @@ namespace Moryx.Tests
             var totalSize = prefill - removedIndexes.Length;
             Assert.That(collection.Count, Is.EqualTo(totalSize), "New size invalid");
 
-
             if (type == CollectionType.Dictionary)
             {
                 var array = (collection as IEnumerable<KeyValuePair<int, SubClass>>).ToArray();
@@ -790,7 +783,7 @@ namespace Moryx.Tests
             var entry = CreateTestEntry();
             var entry2 = CreateTestEntry();
 
-            entry2.SubEntries = new List<Entry>();
+            entry2.SubEntries = [];
 
             // Act
             var equals = entry.Equals(entry2);

@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moryx.Modules;
 using Moryx.StateMachines;
 
@@ -41,7 +40,7 @@ namespace Moryx.Runtime.Modules
         /// Report a failure
         /// </summary>
         void ReportError(Exception exception);
-        
+
         /// <summary>
         /// Adds a notification to the module
         /// </summary>>

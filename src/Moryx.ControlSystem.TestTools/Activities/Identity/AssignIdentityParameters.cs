@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer;
@@ -50,7 +49,7 @@ namespace Moryx.ControlSystem.TestTools.Activities
         /// <inheritdoc />
         protected override void Populate(IProcess process, Parameters instance)
         {
-            var parameters = (AssignIdentityParameters) instance;
+            var parameters = (AssignIdentityParameters)instance;
 
             if (_resolver == null && !string.IsNullOrWhiteSpace(TargetBinding))
                 _resolver = ResolverFactory.Create(TargetBinding);

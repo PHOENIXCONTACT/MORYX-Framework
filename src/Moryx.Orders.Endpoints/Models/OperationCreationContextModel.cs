@@ -1,11 +1,8 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Serialization;
 using Moryx.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 
 namespace Moryx.Orders.Endpoints.Models
@@ -18,28 +15,28 @@ namespace Moryx.Orders.Endpoints.Models
         /// </summary>
         public OperationCreationContextModel()
         {
-           
+
         }
 
         public OperationCreationContextModel(OperationCreationContext context)
         {
             OrderNumber = context.Order.Number;
-            TotalAmount= context.TotalAmount;
-            Name= context.Name;
+            TotalAmount = context.TotalAmount;
+            Name = context.Name;
             OperationNumber = context.Number;
-            ProductIdentifier= context.ProductIdentifier;
-            ProductRevision= context.ProductRevision;
-            ProductName= context.ProductName;
-            RecipePreselection= context.RecipePreselection;
-            OverDeliveryAmount= context.OverDeliveryAmount;
-            UnderDeliveryAmount= context.UnderDeliveryAmount;
+            ProductIdentifier = context.ProductIdentifier;
+            ProductRevision = context.ProductRevision;
+            ProductName = context.ProductName;
+            RecipePreselection = context.RecipePreselection;
+            OverDeliveryAmount = context.OverDeliveryAmount;
+            UnderDeliveryAmount = context.UnderDeliveryAmount;
             PlannedStart = context.PlannedStart;
-            PlannedEnd= context.PlannedEnd;
-            TargetCycleTime= context.TargetCycleTime;
+            PlannedEnd = context.PlannedEnd;
+            TargetCycleTime = context.TargetCycleTime;
             Unit = context.Unit;
             TargetStock = context.TargetStock;
             Parts = context.Parts.ToArray();
-            
+
             if (context.MaterialParameters != null && context.MaterialParameters.Count > 0)
             {
                 var materialParameterList = new List<Entry>();
@@ -56,7 +53,7 @@ namespace Moryx.Orders.Endpoints.Models
         {
             var context = new OperationCreationContext
             {
-                Order = new OrderCreationContext { Number = OrderNumber},
+                Order = new OrderCreationContext { Number = OrderNumber },
                 TotalAmount = TotalAmount,
                 Name = Name,
                 Number = OperationNumber,

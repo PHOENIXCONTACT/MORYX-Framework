@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
@@ -18,8 +18,8 @@ namespace Moryx.Model
         {
             container.SetInstance(contextManager);
 
-            container.Register(typeof(ContextFactory<>), new[] { typeof(IContextFactory<>) }, "GenericContextFactory", LifeCycle.Singleton);
-            container.Register(typeof(UnitOfWorkFactory<>), new[] { typeof(IUnitOfWorkFactory<>) }, "UnitOfWorkFactory", LifeCycle.Singleton);
+            container.Register(typeof(ContextFactory<>), [typeof(IContextFactory<>)], "GenericContextFactory", LifeCycle.Singleton);
+            container.Register(typeof(UnitOfWorkFactory<>), [typeof(IUnitOfWorkFactory<>)], "UnitOfWorkFactory", LifeCycle.Singleton);
 
             return container;
         }

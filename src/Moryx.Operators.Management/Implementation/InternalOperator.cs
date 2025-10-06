@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 namespace Moryx.Operators.Management.Implementation;
@@ -31,7 +31,7 @@ internal class InternalOperator : AssignableOperator
 
     public new List<IOperatorAssignable> AssignedResources
     {
-        get => (List<IOperatorAssignable>)base.AssignedResources; 
+        get => (List<IOperatorAssignable>)base.AssignedResources;
         private set => base.AssignedResources = value;
     }
 

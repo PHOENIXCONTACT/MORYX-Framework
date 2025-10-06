@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Text.RegularExpressions;
@@ -17,7 +17,7 @@ namespace Moryx.Bindings
         /// 
         /// To test and extend, please use this link: https://regex101.com/r/tpjBIw/4
         /// </summary>
-        private readonly Regex _bindingRegex = new Regex(@"(?<base>\w+)(?:\.(?<property>\w+(?:\[\w+\])?))*");
+        private readonly Regex _bindingRegex = new(@"(?<base>\w+)(?:\.(?<property>\w+(?:\[\w+\])?))*");
 
         /// <summary>
         /// Create a property resolver by base key and forward the property info
@@ -51,7 +51,7 @@ namespace Moryx.Bindings
             return new ReflectionResolver(baseKey);
         }
 
-        private readonly Regex _propertyRegex = new Regex(@"(?<property>\w+)(?<indexer>\[(?<index>\w+)\])?");
+        private readonly Regex _propertyRegex = new(@"(?<property>\w+)(?<indexer>\[(?<index>\w+)\])?");
         /// <summary>
         /// Create resolver for a property
         /// </summary>

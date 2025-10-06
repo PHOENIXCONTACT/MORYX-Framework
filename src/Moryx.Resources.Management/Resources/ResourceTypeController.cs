@@ -1,9 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
@@ -37,18 +34,18 @@ namespace Moryx.Resources.Management
         /// proxy because they do not define any additional public API and can use the same proxy. This
         /// cache is only built on the first module start and kept after a restart to avoid redundant proxy building
         /// </summary>
-        private readonly Dictionary<string, string> _proxyTypeCache = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _proxyTypeCache = new();
 
         /// <summary>
         /// Cache of all proxy instances that were created during the runtime of the ResourceManagement. They
         /// all need to be
         /// </summary>
-        private readonly Dictionary<long, ResourceProxy> _proxyCache = new Dictionary<long, ResourceProxy>();
+        private readonly Dictionary<long, ResourceProxy> _proxyCache = new();
 
         /// <summary>
         /// Cache to directly access a resource type
         /// </summary>
-        private readonly Dictionary<string, ResourceTypeNode> _typeCache = new Dictionary<string, ResourceTypeNode>();
+        private readonly Dictionary<string, ResourceTypeNode> _typeCache = new();
 
         /// <inheritdoc />
         public ResourceTypeNode RootType { get; private set; }
@@ -178,7 +175,7 @@ namespace Moryx.Resources.Management
         /// <inheritdoc />
         public IEnumerable<ResourceTypeNode> SupportedTypes(Type constraint)
         {
-            return SupportedTypes(new[] { constraint });
+            return SupportedTypes([constraint]);
         }
         /// <inheritdoc />
         IEnumerable<IResourceTypeNode> IResourceTypeTree.SupportedTypes(Type constraint) => SupportedTypes(constraint);
@@ -192,7 +189,6 @@ namespace Moryx.Resources.Management
         }
         /// <inheritdoc />
         IEnumerable<IResourceTypeNode> IResourceTypeTree.SupportedTypes(ICollection<Type> constraints) => SupportedTypes(constraints);
-
 
         /// <summary>
         /// Recursively check if any type in the tree supports the referenced type
@@ -271,12 +267,11 @@ namespace Moryx.Resources.Management
 
             var interfaces = RelevantInterfaces(linker);
             // Move up the type tree until the parent offers less interfaces than the current linker, is abstract or a generic
-            while (linker.BaseType != null && !linker.BaseType.ResourceType.IsGenericType 
+            while (linker.BaseType != null && !linker.BaseType.ResourceType.IsGenericType
                 && interfaces.Count == RelevantInterfaces(linker.BaseType).Count)
             {
                 linker = linker.BaseType;
             }
-                
 
             // Step 2: Check if we already created a proxy for this type. If we already
             // did use this one for the requested type as well.

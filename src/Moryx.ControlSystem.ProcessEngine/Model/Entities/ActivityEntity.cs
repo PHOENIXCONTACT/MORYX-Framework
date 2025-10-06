@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Moryx.Model;
@@ -20,7 +19,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Model
             get { return _id; }
             set
             {
-                if(_id == value)
+                if (_id == value)
                     return;
 
                 _id = value;

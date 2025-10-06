@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -9,8 +9,6 @@ using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.TestTools;
 using Moq;
 using NUnit.Framework;
-using Microsoft.Extensions.Logging.Abstractions;
-using Moryx.Threading;
 using Moryx.TestTools.UnitTest;
 
 namespace Moryx.Orders.Management.Tests
@@ -35,7 +33,7 @@ namespace Moryx.Orders.Management.Tests
 
             _operation = new InternalOperation
             {
-                Recipes = new List<IProductRecipe>(1) {new DummyRecipe()}
+                Recipes = new List<IProductRecipe>(1) { new DummyRecipe() }
             };
 
             _operationDataMock = new Mock<IOperationData>();
@@ -44,7 +42,7 @@ namespace Moryx.Orders.Management.Tests
 
             _operationPoolMock = new Mock<IOperationDataPool>();
             _operationPoolMock.Setup(p => p.Get(_operation)).Returns(_operationData);
-            _operationPoolMock.Setup(p => p.GetAll(It.IsAny<Func<IOperationData, bool>>())).Returns(new[] {_operationData});
+            _operationPoolMock.Setup(p => p.GetAll(It.IsAny<Func<IOperationData, bool>>())).Returns([_operationData]);
 
             _dispatcher = new SingleJobOperationDispatcher
             {
@@ -73,8 +71,8 @@ namespace Moryx.Orders.Management.Tests
         public void JobUpdateUpdatesJobOnOperation()
         {
             // Arrange
-            var someJob = new Job(new ProductRecipe(), 1) {Id = 1};
-            _operation.Jobs = new[] {someJob};
+            var someJob = new Job(new ProductRecipe(), 1) { Id = 1 };
+            _operation.Jobs = [someJob];
 
             // Act
             var args = new JobStateChangedEventArgs(someJob, JobClassification.Idle, JobClassification.Running);
@@ -97,10 +95,10 @@ namespace Moryx.Orders.Management.Tests
                 Id = 2
             };
 
-            _jobManagementMock.Setup(j => j.Add(It.IsAny<JobCreationContext>())).Returns(new[] {newJob});
+            _jobManagementMock.Setup(j => j.Add(It.IsAny<JobCreationContext>())).Returns([newJob]);
 
             // Act
-            _jobHandler.Dispatch(_operationData, new[] {new DispatchContext(new DummyRecipe(), amount)});
+            _jobHandler.Dispatch(_operationData, [new DispatchContext(new DummyRecipe(), amount)]);
 
             // Assert
             Assert.DoesNotThrow(delegate
@@ -112,7 +110,7 @@ namespace Moryx.Orders.Management.Tests
         [Test(Description = "If the operation have multiple jobs, the new dispatched job should be moved after the last job of the operation")]
         public void DispatchMovesJobAfterLastOfOperation()
         {
-            var lastJob = new Job(new ProductRecipe(), 1) {Id = 3, Classification = JobClassification.Completing};
+            var lastJob = new Job(new ProductRecipe(), 1) { Id = 3, Classification = JobClassification.Completing };
             var jobs = new[]
             {
                 new Job(new ProductRecipe(), 1) {Id = 1, Classification = JobClassification.Completing},
@@ -131,11 +129,11 @@ namespace Moryx.Orders.Management.Tests
             _jobManagementMock.Setup(j => j.Add(It.IsAny<JobCreationContext>())).Returns(delegate (JobCreationContext context)
             {
                 createdContext = context;
-                return new[] {newJob};
+                return [newJob];
             });
 
             // Act
-            _jobHandler.Dispatch(_operationData, new[] {new DispatchContext(new DummyRecipe(), amount)});
+            _jobHandler.Dispatch(_operationData, [new DispatchContext(new DummyRecipe(), amount)]);
 
             // Assert
             Assert.That(createdContext.Position.PositionType, Is.EqualTo(JobPositionType.AfterOther));
@@ -150,9 +148,9 @@ namespace Moryx.Orders.Management.Tests
         public void CompleteCompletesAllJobs()
         {
             // Arrange
-            var firstJob = new Job(new ProductRecipe(), 1) {Id = 1};
-            var secondJob = new Job(new ProductRecipe(), 1) {Id = 2};
-            var jobs = new[] {firstJob, secondJob};
+            var firstJob = new Job(new ProductRecipe(), 1) { Id = 1 };
+            var secondJob = new Job(new ProductRecipe(), 1) { Id = 2 };
+            var jobs = new[] { firstJob, secondJob };
             _operation.Jobs = jobs;
 
             // Act

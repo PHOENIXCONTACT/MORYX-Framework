@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Orders.Endpoints.Models;
@@ -35,7 +35,7 @@ namespace Moryx.Orders.Endpoints.Tests
                 TargetCycleTime = 3,
                 Unit = "s",
                 TargetStock = "ab",
-                Parts = new List<PartCreationContext> { new PartCreationContext() },
+                Parts = new List<PartCreationContext> { new() },
                 MaterialParameters = new List<IMaterialParameter> { new DummyMaterialParameter() { Color = "Green" } }
             };
 
@@ -56,7 +56,7 @@ namespace Moryx.Orders.Endpoints.Tests
                 TargetCycleTime = 3,
                 Unit = "s",
                 TargetStock = "ab",
-                Parts = new List<PartCreationContext> { new PartCreationContext() },
+                Parts = new List<PartCreationContext> { new() },
                 MaterialParameters = null
             };
         }
@@ -82,9 +82,8 @@ namespace Moryx.Orders.Endpoints.Tests
             Assert.That(convertedContext.Unit, Is.EqualTo(_context2.Unit));
             Assert.That(convertedContext.TargetStock, Is.EqualTo(_context2.TargetStock));
             Assert.That(convertedContext.Parts.Count, Is.EqualTo(_context2.Parts.Count));
-            Assert.That(convertedContext.MaterialParameters, Is.Empty);          
+            Assert.That(convertedContext.MaterialParameters, Is.Empty);
         }
-
 
         [Test(Description = "Convert OperationCreationContext to model and then convert it back")]
         public void ConvertModel()

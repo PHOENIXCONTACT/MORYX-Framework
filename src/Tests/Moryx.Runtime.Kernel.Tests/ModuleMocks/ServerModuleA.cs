@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -20,7 +20,7 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 
         public override string Name => "ServerModuleA";
 
-        private readonly FacadaA _aFacade = new FacadaA();
+        private readonly FacadaA _aFacade = new();
         IFacadeA IFacadeContainer<IFacadeA>.Facade => _aFacade;
         public IFacadeA Facade { get; private set; }
 

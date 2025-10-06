@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Authorization;
@@ -7,10 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moryx.Asp.Extensions;
 using Moryx.ControlSystem.Jobs.Endpoints.Properties;
 using Newtonsoft.Json;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Threading.Channels;
 using Newtonsoft.Json.Serialization;
 

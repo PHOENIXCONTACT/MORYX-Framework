@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -14,8 +14,8 @@ namespace Moryx.Notifications.Publisher
     /// Module controller of the notifications module
     /// </summary>
     [Description("Module to handle publishing of notifications from the applications.")]
-    public class ModuleController : ServerModuleBase<ModuleConfig>, 
-        IFacadeContainer<INotificationPublisher>        
+    public class ModuleController : ServerModuleBase<ModuleConfig>,
+        IFacadeContainer<INotificationPublisher>
     {
         private const string ModuleName = "NotificationPublisher";
 
@@ -36,7 +36,7 @@ namespace Moryx.Notifications.Publisher
         /// <summary>
         /// Creates a new instance of the module
         /// </summary>
-        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
             : base(containerFactory, configManager, loggerFactory)
         {
             DbContextManager = contextManager;
@@ -75,9 +75,9 @@ namespace Moryx.Notifications.Publisher
             Container.Resolve<INotificationManager>().Stop();
         }
 
-        private readonly NotificationPublisherFacade _notificationPublisherFacade = new NotificationPublisherFacade();
+        private readonly NotificationPublisherFacade _notificationPublisherFacade = new();
 
-        INotificationPublisher IFacadeContainer<INotificationPublisher>.Facade => _notificationPublisherFacade;      
+        INotificationPublisher IFacadeContainer<INotificationPublisher>.Facade => _notificationPublisherFacade;
     }
 }
 

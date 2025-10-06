@@ -1,15 +1,10 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Processes;
 using Moryx.Factory;
@@ -27,7 +22,6 @@ using Moryx.FactoryMonitor.Endpoints.Localizations;
 //old models in '.Model' namespace. Only ones still in use: TransoirtRoute- / PathModel & CellSettingsModel
 using Moryx.FactoryMonitor.Endpoints.Model;
 using Moryx.FactoryMonitor.Endpoints.Extensions;
-using System.IO;
 using Timer = System.Timers.Timer;
 
 namespace Moryx.FactoryMonitor.Endpoints
@@ -41,7 +35,7 @@ namespace Moryx.FactoryMonitor.Endpoints
     [Route("api/moryx/factory-monitor/")]
     public class FactoryMonitorController : ControllerBase
     {
-        private readonly string[] _colorPalette = { "#97bf0d", "#0098a0", "#ffa906", "#03ad3b", "#d60f4e", "#4A4033", "#6EC1C5", "#93E0B0", "#BC9989", "#EE60EA", "#D7F7C3", "#CE9250", "#AF7E81", "#61666C", "#04629A", "#E39332", "#90A39E", "#98199E", "#DB97C9" };
+        private readonly string[] _colorPalette = ["#97bf0d", "#0098a0", "#ffa906", "#03ad3b", "#d60f4e", "#4A4033", "#6EC1C5", "#93E0B0", "#BC9989", "#EE60EA", "#D7F7C3", "#CE9250", "#AF7E81", "#61666C", "#04629A", "#E39332", "#90A39E", "#98199E", "#DB97C9"];
 
         private readonly IResourceManagement _resourceManager;
         private readonly IProcessControl _processControl;
@@ -125,9 +119,8 @@ namespace Moryx.FactoryMonitor.Endpoints
                 .Where(CellFilterBaseOnLocation);
 
             var converter = new Converter(_serialization);
-            return cells.Select(x => new SimpleGraph { Id = x.Id}.ToVisualItemModel(_resourceManager,_logger, converter, CellFilterBaseOnLocation)).ToList();
+            return cells.Select(x => new SimpleGraph { Id = x.Id }.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation)).ToList();
         }
-
 
         /// <summary>
         /// Get the list of displayable item for this current factory view
@@ -151,8 +144,6 @@ namespace Moryx.FactoryMonitor.Endpoints
             // 1 level tree graph
             graph = graph.GetSubGraphById(factoryId);
             if (graph is null) return NotFound();
-
-
 
             var output = graph.Children.Select(e => e.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation))
                 .Where(x => x is not null).ToList();
@@ -309,7 +300,6 @@ namespace Moryx.FactoryMonitor.Endpoints
             var manufacturingConfig = _resourceManager.GetResources<IManufacturingFactory>().FirstOrDefault();
             return ChangeBackground(manufacturingConfig.Id, url);
         }
-
 
         /// <summary>
         /// Changes the background of the factory  

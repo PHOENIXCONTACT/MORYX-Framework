@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Logging;
@@ -170,7 +170,6 @@ namespace Moryx.ProcessData.SpreadsheetsListener.Tests
             var changedHdrFile = Directory.GetFiles(_path, measurementName + "*").Single();
             var changedHdrFileContent = ReadInCsv(changedHdrFile);
             Assert.That(changedHdrFileContent, Has.Count.EqualTo(maxNumOfRows), $"{maxNumOfRows} lines in csv file were expected");
-
 
             Assert.That(changedHdrFileContent[0].SequenceEqual(ogHeader.Concat(new List<string>() { "A", "C" })), "Header was not changed properly");
             for (int i = 1; i < ogFileContent.Count; i++)

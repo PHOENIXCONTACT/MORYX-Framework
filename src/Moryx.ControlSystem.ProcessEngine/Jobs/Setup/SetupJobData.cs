@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Diagnostics;
-using System.Linq;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.ControlSystem.ProcessEngine.Model;
@@ -119,7 +118,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
 
         internal void NotifyAboutBlockedRetry()
         {
-            var notification = new Notification(Strings.SetupJobData_RetryFailedNotification_Title, 
+            var notification = new Notification(Strings.SetupJobData_RetryFailedNotification_Title,
                 string.Format(Strings.SetupJobData_RetryFailedNotification_Message, Recipe.Name), Severity.Error, true);
 
             NotificationAdapter.Publish(this, notification);
@@ -187,7 +186,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
         /// <inheritdoc/>
         public void Acknowledge(Notification notification, object tag)
         {
-            InvokeStateMachine(s  => ((SetupJobStateBase)s).UnBlockRetrySetup());
+            InvokeStateMachine(s => ((SetupJobStateBase)s).UnBlockRetrySetup());
         }
 
         /// <inheritdoc/>

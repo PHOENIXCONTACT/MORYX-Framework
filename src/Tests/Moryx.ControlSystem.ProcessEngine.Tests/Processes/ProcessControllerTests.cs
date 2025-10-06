@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.ObjectModel;
@@ -75,7 +75,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             _processController.Start();
         }
 
-
         /// Updates the variable when the event occurred.
         private void OnProcessChanged(object sender, ProcessEventArgs args)
         {
@@ -126,11 +125,10 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Act
             var processes = jobNr <= amount ? _processController.LoadProcesses(jobs[jobNr]) : new Collection<ProcessData>();
 
-
             // Assert
             Assert.That(processes.Count, Is.EqualTo(runningProcesses), "The wanted process was not added.");
         }
-        
+
         [TestCase(RecipeType.Setup, Description = "Recipe Type Setup.")]
         [TestCase(RecipeType.Production, Description = "Recipe Type Production")]
         public void StartTest(RecipeType recipeType)
@@ -138,7 +136,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Arrange
             var job = CreateJobDataAndSave(recipeType);
             var process = job.Recipe.CreateProcess();
-            var processData = new ProcessData(process) {Job = job};
+            var processData = new ProcessData(process) { Job = job };
 
             // Act
             _processController.Start(processData);
@@ -239,8 +237,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
             recipe.Origin = _recipeProvider;
 
-            var job = recipeType == RecipeType.Production 
-                ? (IJobData)new ProductionJobData((IProductionRecipe)recipe, 10) 
+            var job = recipeType == RecipeType.Production
+                ? (IJobData)new ProductionJobData((IProductionRecipe)recipe, 10)
                 : new SetupJobData(recipe) { NotificationAdapter = NotificationAdapterMock.Object };
 
             job.ProgressChanged += delegate { };
@@ -252,7 +250,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 ParallelOperations = _notSoParallelOps
             };
 
-            jobStorage.Save(new ModifiedJobsFragment(new []{job}, null));
+            jobStorage.Save(new ModifiedJobsFragment([job], null));
 
             return job;
         }

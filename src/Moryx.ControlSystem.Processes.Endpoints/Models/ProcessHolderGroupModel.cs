@@ -1,7 +1,5 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
-
-using System.Collections.Generic;
-using System.Linq;
+// Licensed under the Apache License, Version 2.0
 
 namespace Moryx.ControlSystem.Processes.Endpoints;
 

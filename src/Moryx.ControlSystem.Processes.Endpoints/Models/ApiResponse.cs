@@ -1,6 +1,5 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
-
-using System;
+// Licensed under the Apache License, Version 2.0
 
 namespace Moryx.ControlSystem.Processes.Endpoints.Models;
 
@@ -22,7 +21,7 @@ public class ApiResponse<T>(T data) where T : notnull
     /// <summary>
     /// Errors during the processing of the request
     /// </summary>
-    public ApiError[] Errors { get;} = [];
+    public ApiError[] Errors { get; } = [];
 
     /// <summary>
     /// Returns the status of the request. True if the request was successful.

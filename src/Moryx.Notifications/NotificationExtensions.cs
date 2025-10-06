@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
@@ -18,7 +18,7 @@ namespace Moryx.Notifications
         {
             var logger = container.Resolve<IModuleLogger>();
 
-            var adapter = new NotificationAdapter() { Logger = logger};
+            var adapter = new NotificationAdapter() { Logger = logger };
 
             container.SetInstance((INotificationAdapter)adapter, "NotificationAdapter");
             container.SetInstance((INotificationSourceAdapter)adapter, "NotificationSenderAdapter");

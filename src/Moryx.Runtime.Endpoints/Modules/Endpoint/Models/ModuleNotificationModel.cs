@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moryx.Modules;
 using Moryx.Notifications;
 
@@ -27,7 +26,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint.Models
         public ModuleNotificationModel(IModuleNotification notification)
         {
             Timestamp = notification.Timestamp;
-            if(notification.Exception != null)
+            if (notification.Exception != null)
                 Exception = new SerializableException(notification.Exception);
             Message = notification.Message;
             Severity = notification.Severity;

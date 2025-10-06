@@ -1,11 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
-using System.Linq;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
@@ -185,7 +181,6 @@ namespace Moryx.Products.Management
             return references;
         }
 
-
         /// <summary>
         /// Convert a Workplan to a WorkplanEntity
         /// </summary>
@@ -212,7 +207,7 @@ namespace Moryx.Products.Management
                 var reference = referenceRepo.Create((int)WorkplanReferenceType.NewVersion);
                 reference.Source = workplanEntity;
                 reference.Target = workplanEntity = workplanRepo.Create(workplan.Name, workplanEntity.Version + 1, (int)workplan.State);
-                
+
             }
 
             // Set properties of the workplan entity
@@ -265,7 +260,7 @@ namespace Moryx.Products.Management
 
             // Remove connectors, that are now longer used. We only use Created/Updated columns
             // and do not want the entities flagged as deleted
-            var removedSteps = workplanEntity.Steps != null ?  workplanEntity.Steps.Where(se => workplan.Steps.All(s => s.Id != se.StepId)) : new List<WorkplanStepEntity>() ;
+            var removedSteps = workplanEntity.Steps != null ? workplanEntity.Steps.Where(se => workplan.Steps.All(s => s.Id != se.StepId)) : new List<WorkplanStepEntity>();
             foreach (var removedStep in removedSteps.ToList())
             {
                 descriptionRepo.RemoveRange(removedStep.OutputDescriptions);

@@ -1,9 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Configuration;
@@ -67,10 +64,10 @@ namespace Moryx.Products.Management
             }
 
             // Configure part links
-            var typeWrapper = Storage.GetTypeWrapper(product.FullName);           
-            var links = typeWrapper != null && typeWrapper.PartLinks != null ? typeWrapper.PartLinks : 
+            var typeWrapper = Storage.GetTypeWrapper(product.FullName);
+            var links = typeWrapper != null && typeWrapper.PartLinks != null ? typeWrapper.PartLinks :
                 product.GetProperties().Where(p => typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) || typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType));
-            
+
             foreach (var link in links)
             {
                 if (Config.LinkStrategies.Any(s => s.TargetType == productType && s.PartName == link.Name))

@@ -1,15 +1,9 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Castle.Facilities.TypedFactory;
-using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
-using Moryx.Tools;
 
 namespace Moryx.Container
 {
@@ -47,7 +41,7 @@ namespace Moryx.Container
             _container.AddFacility<MoryxFacility>(mf => mf.AddStrategies(strategies));
 
             // Self registration for framework functionality
-            RegisterInstance(new[] { typeof(IContainer) }, this, null);
+            RegisterInstance([typeof(IContainer)], this, null);
         }
 
         #endregion
@@ -57,9 +51,9 @@ namespace Moryx.Container
         /// </summary>
         public object Resolve(Type service, string name)
         {
-            if(name == null && _strategies.ContainsKey(service))
+            if (name == null && _strategies.ContainsKey(service))
                 name = _strategies[service];
-            
+
             // Resolve by name if given or determined
             if (name != null && _container.Kernel.HasComponent(name))
                 return _container.Resolve(name, service);

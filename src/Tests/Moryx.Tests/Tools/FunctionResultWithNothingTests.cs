@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using NUnit.Framework;
@@ -32,7 +32,6 @@ public class FunctionResultWithNothingTests : FunctionResultTestsBase
         _actionMockSuccess = new Mock<Action<Nothing>>();
         _actionMockError = new Mock<Action<FunctionResultError>>();
     }
-
 
     [Test]
     public void ResultWithValueGetCreated()
@@ -89,7 +88,6 @@ public class FunctionResultWithNothingTests : FunctionResultTestsBase
 
         Assert.That(result.Success, Is.False);
         Assert.That(result.Result, Is.Null);
-
 
         Assert.That(Message, Is.EqualTo(result.Error.Message));
         Assert.That(result.Error.Exception, Is.Null);

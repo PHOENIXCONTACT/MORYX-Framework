@@ -1,14 +1,12 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
 
 namespace Moryx.Notifications
 {
     /// <summary>
     /// Base class of all notifications.
     /// </summary>
-    public class Notification 
+    public class Notification
     {
         /// <summary>
         /// Unique identifier of this notification

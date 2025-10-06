@@ -1,11 +1,7 @@
-// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
@@ -220,8 +216,7 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
 
-            if (identity == null)
-                throw new ArgumentNullException(nameof(identity));
+            ArgumentNullException.ThrowIfNull(identity);
 
             var instances = ProductManager
                 .GetInstances<IIdentifiableObject>(i => identity.Equals(i.Identity));
@@ -231,8 +226,8 @@ namespace Moryx.Products.Management
                 Logger.LogError(ex, "Please make sure that an identity is unique.");
                 throw ex;
             }
-                
-            return (ProductInstance) instances.SingleOrDefault(); ;
+
+            return (ProductInstance)instances.SingleOrDefault(); ;
         }
 
         public TInstance GetInstance<TInstance>(Expression<Func<TInstance, bool>> selector)
@@ -240,8 +235,7 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
 
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+            ArgumentNullException.ThrowIfNull(selector);
 
             return ProductManager.GetInstances(selector).SingleOrDefault();
         }
@@ -262,8 +256,7 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
 
-            if(ids == null)
-                throw new ArgumentNullException(nameof(ids));
+            ArgumentNullException.ThrowIfNull(ids);
 
             return ProductManager.GetInstances(ids);
         }
@@ -273,8 +266,7 @@ namespace Moryx.Products.Management
         {
             ValidateHealthState();
 
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+            ArgumentNullException.ThrowIfNull(selector);
 
             return ProductManager.GetInstances(selector);
         }
@@ -285,7 +277,7 @@ namespace Moryx.Products.Management
                 throw new ArgumentException("Recipe could not be found");
         }
 
-        private TRecipe ReplaceOrigin<TRecipe>(TRecipe recipe) where  TRecipe : IRecipe
+        private TRecipe ReplaceOrigin<TRecipe>(TRecipe recipe) where TRecipe : IRecipe
         {
             recipe.Origin = this;
             return recipe;

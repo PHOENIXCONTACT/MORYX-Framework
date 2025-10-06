@@ -1,16 +1,11 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
-using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.Logging;
 using Moryx.Tools;
 
@@ -149,7 +144,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             return new JobListEnumerable(this, forward: false, current: startJob);
         }
 
-
         Job IJobList.Previous(Job reference)
         {
             return Previous(Get(reference.Id))?.Job;
@@ -235,8 +229,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
         private void Log(IReadOnlyList<IJobData> newJobs, JobPosition jobPosition)
         {
-            var addedJobInformation = newJobs.Count == 1 
-                ? $"job {newJobs[0].Id}" 
+            var addedJobInformation = newJobs.Count == 1
+                ? $"job {newJobs[0].Id}"
                 : $"jobs {string.Join(", ", newJobs.Select(j => j.Id))}";
             Logger.LogInformation(jobPosition.PositionType switch
             {
@@ -487,10 +481,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         public void Remove(IJobData completedJob, Action<ModifiedJobsFragment> saveCallback)
         {
 
-            if (completedJob == null)
-            {
-                throw new ArgumentNullException(nameof(completedJob));
-            }
+            ArgumentNullException.ThrowIfNull(completedJob);
             Logger.Log(LogLevel.Information, "Removing job {0}", completedJob.Id);
 
             _jobLock.EnterWriteLock();

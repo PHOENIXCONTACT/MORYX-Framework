@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
@@ -21,7 +20,7 @@ namespace Moryx.Resources.Management
         /// <inheritdoc />
         public bool CheckProperty(PropertyInfo propertyInfo)
         {
-            if(_filterDataMembers)
+            if (_filterDataMembers)
                 return propertyInfo.GetCustomAttribute<DataMemberAttribute>() == null;
             return propertyInfo.GetCustomAttribute<DataMemberAttribute>() != null;
         }

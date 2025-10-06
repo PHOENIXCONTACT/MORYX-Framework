@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.Runtime.Modules;
@@ -44,7 +42,7 @@ namespace Moryx.ControlSystem.ProcessEngine
             var sessions = ActivityDispatcher.ExportSessions();
             foreach (var session in sessions)
             {
-                outputStream($"  {session.Resource.Id:D4} : {session.Resource.Name,-30}| {session.ReadyToWork.AcceptedClassification,-15}| {session.ReadyToWork.ReadyToWorkType, -6}| {session.ReadyToWork.Constraints.FirstOrDefault()?.GetType().Name}");
+                outputStream($"  {session.Resource.Id:D4} : {session.Resource.Name,-30}| {session.ReadyToWork.AcceptedClassification,-15}| {session.ReadyToWork.ReadyToWorkType,-6}| {session.ReadyToWork.Constraints.FirstOrDefault()?.GetType().Name}");
             }
         }
 
@@ -114,16 +112,16 @@ namespace Moryx.ControlSystem.ProcessEngine
             outputStream("ProcessId    | State         | ActivityId      | ResourceIds    | ActivityState   | Type");
             foreach (var processData in processes)
             {
-                outputStream($" {processData.Id, 11} | {processData.State, -13} |                 |                |                 |");
+                outputStream($" {processData.Id,11} | {processData.State,-13} |                 |                |                 |");
                 foreach (var activityData in processData.Activities)
                 {
-                    if(args.Any(a => a == "-r") && activityData.State > ActivityState.Running)
+                    if (args.Any(a => a == "-r") && activityData.State > ActivityState.Running)
                         continue;
 
                     var possibleResources = activityData.Targets
                         .Select(pr => pr.Id).ToArray();
 
-                    outputStream($"                             | {activityData.Id, 15} | {string.Join(",", possibleResources), -14} | {activityData.State, -15} | {activityData.Activity.GetType().Name} ");
+                    outputStream($"                             | {activityData.Id,15} | {string.Join(",", possibleResources),-14} | {activityData.State,-15} | {activityData.Activity.GetType().Name} ");
                 }
 
                 var reportedSessions = processData.ReportedSessions.ToArray();
@@ -132,7 +130,7 @@ namespace Moryx.ControlSystem.ProcessEngine
                     continue;
 
                 foreach (var session in reportedSessions)
-                    outputStream($"    {session.Resource.Id:D5} | {session.Resource.Name, -14}| {session.ReadyToWork.AcceptedClassification, -11}| {session.ReadyToWork.ReadyToWorkType}");
+                    outputStream($"    {session.Resource.Id:D5} | {session.Resource.Name,-14}| {session.ReadyToWork.AcceptedClassification,-11}| {session.ReadyToWork.ReadyToWorkType}");
             }
         }
     }

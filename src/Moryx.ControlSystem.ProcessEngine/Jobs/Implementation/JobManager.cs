@@ -1,11 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
@@ -196,13 +192,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
                     linkedJobs = new LinkedList<IJobData>();
             }
 
-        // If non of the available jobs could be readied
-        if (totalJobs.Count == 0)
-            return;
+            // If non of the available jobs could be readied
+            if (totalJobs.Count == 0)
+                return;
 
-        // Set ready AFTER they were added to the job list to avoid race conditions
-        foreach (var jobData in totalJobs)
-            jobData.Ready();
+            // Set ready AFTER they were added to the job list to avoid race conditions
+            foreach (var jobData in totalJobs)
+                jobData.Ready();
 
             // Inform the scheduler about our new jobs
             _scheduler.JobsReady(totalJobs.Select(j => j.Job));
@@ -259,5 +255,4 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         }
     }
 }
-
 

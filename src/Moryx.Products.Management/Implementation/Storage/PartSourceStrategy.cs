@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 namespace Moryx.Products.Management
@@ -11,7 +11,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Default instance creation from partlink
         /// </summary>
-        FromPartLink = 0, 
+        FromPartLink = 0,
 
         /// <summary>
         /// Create parts from entity relation

@@ -1,17 +1,12 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading;
 using Moryx.AbstractionLayer.Drivers;
 using MQTTnet;
 using MQTTnet.Client;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Drivers.Mqtt.DriverStates;
@@ -25,7 +20,6 @@ using Moryx.Configuration;
 using System.Security.Claims;
 using Moryx.Drivers.Mqtt.Localizations;
 using System.ComponentModel.DataAnnotations;
-using Moryx.Container;
 
 namespace Moryx.Drivers.Mqtt;
 
@@ -326,7 +320,6 @@ public class MqttDriver : Driver, IMessageDriver<object>
         else
             topics = Channels.Where(t => t.MessageType.IsInstanceOfType(message)).ToList();
 
-
         if (topics.Count == 1)
             await State.Send(topics[0], message);
         else
@@ -456,7 +449,6 @@ public class MqttDriver : Driver, IMessageDriver<object>
     }
 }
 
-
 internal class MqttQoSAttribute : PossibleValuesAttribute
 {
     /// <inheritdoc />
@@ -464,7 +456,6 @@ internal class MqttQoSAttribute : PossibleValuesAttribute
 
     /// <inheritdoc />
     public override bool UpdateFromPredecessor => false;
-
 
     public override IEnumerable<string> GetValues(Container.IContainer container)
     {

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -26,7 +26,7 @@ namespace Moryx.Model.Tests
 
             // Assert
             var carsSet = context.Cars;
-            var someCar = new CarEntity {Name = carName};
+            var someCar = new CarEntity { Name = carName };
             await carsSet.AddAsync(someCar);
 
             await context.SaveChangesAsync();
@@ -36,7 +36,7 @@ namespace Moryx.Model.Tests
 
             Assert.That(reloadedCar, Is.Not.Null);
             Assert.That(reloadedCar.Name, Is.EqualTo(carName));
-            
+
         }
 
         [Test]

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using CsvHelper;
@@ -6,13 +6,8 @@ using CsvHelper.Configuration;
 using Microsoft.Extensions.Logging;
 using Moryx.Logging;
 using Moryx.Tools;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("Moryx.ProcessData.SpreadsheetsListener.Tests")]
 namespace Moryx.ProcessData.SpreadsheetsListener
@@ -28,7 +23,7 @@ namespace Moryx.ProcessData.SpreadsheetsListener
         private string _measurand;
         private string _completeFilePath;
 
-        private CsvConfiguration _csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture);
+        private CsvConfiguration _csvConfig = new(CultureInfo.InvariantCulture);
         private IModuleLogger _logger;
 
         private int _writtenRows = 0;

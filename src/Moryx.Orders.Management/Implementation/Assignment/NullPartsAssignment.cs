@@ -1,9 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Moryx.Container;
 using Moryx.Orders.Assignment;
 
@@ -33,7 +30,7 @@ namespace Moryx.Orders.Management.Assignment
         /// <summary>
         /// Always returns an empty parts list
         /// </summary>
-        public Task<IEnumerable<ProductPart>> LoadParts(Operation operation, IOperationLogger operationLogger) 
+        public Task<IEnumerable<ProductPart>> LoadParts(Operation operation, IOperationLogger operationLogger)
             => Task.FromResult(operation.Parts ?? Enumerable.Empty<ProductPart>());
     }
 }

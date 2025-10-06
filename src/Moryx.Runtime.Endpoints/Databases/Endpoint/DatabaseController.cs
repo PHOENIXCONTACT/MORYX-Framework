@@ -1,9 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Moryx.Model;
 using Moryx.Model.Configuration;
@@ -11,8 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moryx.Runtime.Endpoints.Databases.Endpoint.Models;
 using Moryx.Runtime.Endpoints.Databases.Endpoint.Response;
 using Moryx.Runtime.Endpoints.Databases.Endpoint.Request;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Moryx.Tools;
 using System.Runtime.Serialization;
@@ -48,7 +43,6 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         [Authorize(Policy = RuntimePermissions.DatabaseCanView)]
         public async Task<ActionResult<DatabasesResponse>> GetAll()
             => Ok(new DatabasesResponse { Databases = await Task.WhenAll(_dbContextManager.Contexts.Select(Convert)) });
-
 
         [HttpGet("{targetModel}")]
         [Authorize(Policy = RuntimePermissions.DatabaseCanView)]
@@ -91,7 +85,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             if (targetConfigurator == null)
                 return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
 
-            if(targetConfigurator.GetType() == typeof(NullModelConfigurator))
+            if (targetConfigurator.GetType() == typeof(NullModelConfigurator))
             {
                 return new TestConnectionResponse { Result = TestConnectionResult.ConfigurationError };
             }
@@ -188,7 +182,6 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             if (!IsConfigValid(updatedConfig))
                 return BadConfigValues();
 
-
             var targetPath = Path.Combine(DataDirectory, targetModel);
             if (!Directory.Exists(targetPath))
                 Directory.CreateDirectory(targetPath);
@@ -244,7 +237,6 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             var config = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
             if (!IsConfigValid(config))
                 return BadConfigValues();
-
 
             var setupExecutor = _dbContextManager.GetSetupExecutor(contextType);
 
@@ -409,7 +401,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             }
             catch (NotSupportedException)
             {
-                return Array.Empty<DbMigrationsModel>();
+                return [];
             }
         }
 
@@ -425,7 +417,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             }
             catch (NotSupportedException)
             {
-                return Array.Empty<DbMigrationsModel>();
+                return [];
             }
         }
 

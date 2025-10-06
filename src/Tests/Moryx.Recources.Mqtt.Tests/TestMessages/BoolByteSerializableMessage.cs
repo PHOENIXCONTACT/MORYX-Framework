@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -11,7 +11,7 @@ namespace Moryx.Resources.Mqtt.Tests.TestMessages
         public bool Message;
         public byte[] ToBytes()
         {
-            return new[] { Convert.ToByte(Message) };
+            return [Convert.ToByte(Message)];
         }
 
         public void FromBytes(byte[] bytes)

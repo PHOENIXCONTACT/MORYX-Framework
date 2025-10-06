@@ -1,11 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 using Moryx.Configuration;
 using Moryx.Modules;
 using Moryx.Runtime.Modules;
@@ -39,7 +35,6 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         [HttpGet("dependencies")]
         public ActionResult<DependencyEvaluation> GetDependencyEvaluation()
             => new DependencyEvaluation(_moduleManager.DependencyTree);
-
 
         [HttpGet]
         [Authorize(Policy = RuntimePermissions.ModulesCanView)]
@@ -136,8 +131,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         [Authorize(Policy = RuntimePermissions.ModulesCanConfigure)]
         public ActionResult Update([FromRoute] string moduleName, [FromBody] ServerModuleModel module)
         {
-            if (module == null)
-                throw new ArgumentNullException(nameof(module));
+            ArgumentNullException.ThrowIfNull(module);
 
             var serverModule = GetModuleFromManager(moduleName);
             if (serverModule == null)
@@ -243,8 +237,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         [Authorize(Policy = RuntimePermissions.ModulesCanInvoke)]
         public ActionResult<Entry> InvokeMethod([FromRoute] string moduleName, [FromBody] MethodEntry method)
         {
-            if (method == null)
-                throw new ArgumentNullException(nameof(method));
+            ArgumentNullException.ThrowIfNull(method);
 
             var serverModule = GetModuleFromManager(moduleName);
             if (serverModule == null)

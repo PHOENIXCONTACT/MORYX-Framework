@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.ControlSystem.Activities;
@@ -18,7 +16,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         private ICell _resource;
         private ITask _task;
 
-        public static readonly ICell[] EmptyTargets = Array.Empty<ICell>();
+        public static readonly ICell[] EmptyTargets = [];
 
         /// <summary>
         /// Wrap this activity
@@ -109,14 +107,14 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// The task transition that created this activity. Temporary reference only
         /// </summary>
-        public ITask Task 
-        { 
-            get => _task; 
+        public ITask Task
+        {
+            get => _task;
             set
             {
                 _task = value;
                 Activity.StepId = _task.Id;
-            } 
+            }
         }
 
         /// <summary>

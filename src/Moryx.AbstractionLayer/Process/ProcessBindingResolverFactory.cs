@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Text.RegularExpressions;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
@@ -36,7 +35,7 @@ namespace Moryx.AbstractionLayer
             }
         }
 
-        private readonly Regex _lastActivityRegex = new Regex(@"LastActivity(?<typed>\[(?<name>\w+)\])?");
+        private readonly Regex _lastActivityRegex = new(@"LastActivity(?<typed>\[(?<name>\w+)\])?");
 
         /// <inheritdoc />
         protected override IBindingResolverChain AddToChain(IBindingResolverChain resolver, string property)
@@ -161,7 +160,7 @@ namespace Moryx.AbstractionLayer
             // of IBindingResolver.Resolve which calls the whole chain the call order is important here.
             // First the value of the replacement is called and then the replacement is placed into the chain.
             var replacement = new ReflectionResolver(_fallbackProperty);
-            var resolvedValue = ((IBindingResolverChain) replacement).Resolve(source);
+            var resolvedValue = ((IBindingResolverChain)replacement).Resolve(source);
             this.Replace(replacement);
             return resolvedValue;
         }

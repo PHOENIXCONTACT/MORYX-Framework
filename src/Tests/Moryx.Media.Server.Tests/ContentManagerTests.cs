@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -12,7 +12,6 @@ using Moq;
 using NUnit.Framework;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 
 namespace Moryx.Media.Server.Tests
 {
@@ -37,8 +36,8 @@ namespace Moryx.Media.Server.Tests
 
             _contentManager = new ContentManager
             {
-                Config = new ModuleConfig {StoragePath = _testStoragePath},
-                Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),               
+                Config = new ModuleConfig { StoragePath = _testStoragePath },
+                Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 PreviewService = previewService.Object
             };
 
@@ -162,7 +161,7 @@ namespace Moryx.Media.Server.Tests
                 }
             }
 
-            IReadOnlyList<ContentDescriptor> descriptors = new ContentDescriptor[0];
+            IReadOnlyList<ContentDescriptor> descriptors = Array.Empty<ContentDescriptor>();
 
             try
             {

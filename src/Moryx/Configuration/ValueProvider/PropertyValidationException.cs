@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Reflection;
 
 namespace Moryx.Configuration
@@ -20,7 +19,7 @@ namespace Moryx.Configuration
         {
         }
 
-        public PropertyValidationException(PropertyInfo property, ValueProviderExecutorSettings settings) 
+        public PropertyValidationException(PropertyInfo property, ValueProviderExecutorSettings settings)
             : this($"Failed to provide acceptable value for property {property.Name} on type {property.DeclaringType}")
         {
             this.property = property;

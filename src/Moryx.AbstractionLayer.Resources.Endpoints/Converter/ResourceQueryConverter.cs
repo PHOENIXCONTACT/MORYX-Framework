@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.Reflection;
 using Moryx.Serialization;
 
@@ -26,7 +25,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             {
                 var model = ToModel(matches[i], true);
                 model.References = Query.IncludedReferences?.Length > 0
-                    ? FilteredReferences(matches[i]) : new ResourceReferenceModel[0];
+                    ? FilteredReferences(matches[i]) : [];
                 models[i] = model;
             }
 
@@ -40,16 +39,15 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         {
             var model = ToModel(match, true);
             model.References = Query.IncludedReferences?.Length > 0
-                ? FilteredReferences(match) : new ResourceReferenceModel[0];
+                ? FilteredReferences(match) : [];
             return model;
         }
 
         private ResourceReferenceModel[] FilteredReferences(Resource current)
         {
             // Get references of the instance and filter them
-            var node = TypeController[current.GetType().FullName];     
+            var node = TypeController[current.GetType().FullName];
             var references = node.References;
-    
 
             var includedReferences = new List<ResourceReferenceModel>();
             foreach (var reference in references)

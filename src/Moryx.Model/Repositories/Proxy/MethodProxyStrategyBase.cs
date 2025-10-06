@@ -1,8 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -33,7 +31,7 @@ namespace Moryx.Model.Repositories.Proxy
             if (targetProperty == null)
                 throw new InvalidOperationException($"Cannot find property with name '{propertyName}' on target type '{targetType.Name}'.");
 
-            if(!targetProperty.PropertyType.IsAssignableFrom(parameterInfo.ParameterType))
+            if (!targetProperty.PropertyType.IsAssignableFrom(parameterInfo.ParameterType))
                 throw new InvalidOperationException($"Types doesn't match: Property '{parameterInfo.Name}', Target type: {targetProperty.PropertyType}, Source type: {parameterInfo.ParameterType}.");
 
             return new ParameterPropertyMap(parameterInfo, targetProperty);

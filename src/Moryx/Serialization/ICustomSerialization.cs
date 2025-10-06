@@ -1,8 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace Moryx.Serialization
@@ -60,7 +58,7 @@ namespace Moryx.Serialization
         /// Filter relevant constructors of an object
         /// </summary>
         IEnumerable<ConstructorInfo> GetConstructors(Type sourceType);
-            /// <summary>
+        /// <summary>
         /// Filter the properties that shall be included when creating the object
         /// </summary>
         IEnumerable<MappedProperty> WriteFilter(Type targetType, IEnumerable<Entry> entries);

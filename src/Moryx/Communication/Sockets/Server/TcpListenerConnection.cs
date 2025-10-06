@@ -1,10 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Modules;
@@ -40,7 +37,7 @@ namespace Moryx.Communication.Sockets
         /// <summary>
         /// Lock object
         /// </summary>
-        private readonly object _stateLock = new object();
+        private readonly object _stateLock = new();
 
         /// <summary>
         /// Open transmission object
@@ -94,10 +91,10 @@ namespace Moryx.Communication.Sockets
         {
             _config = (TcpListenerConfig)config;
 
-            if (IPAddress.TryParse(_config.IpAdress, out var address))
+            if (IPAddress.TryParse(_config.IpAddress, out var address))
                 Address = address;
             else
-                throw new FormatException($"Failed to parse IPAddress: {_config.IpAdress}");
+                throw new FormatException($"Failed to parse IPAddress: {_config.IpAddress}");
 
             StateMachine.Initialize(this).With<ServerStateBase>();
         }
@@ -148,7 +145,7 @@ namespace Moryx.Communication.Sockets
         void IStateContext.SetState(IState state)
         {
             // ReSharper disable once InconsistentlySynchronizedField
-            _state = (ServerStateBase) state;
+            _state = (ServerStateBase)state;
             try
             {
                 NotifyConnectionState?.Invoke(this, _state.CurrentState);

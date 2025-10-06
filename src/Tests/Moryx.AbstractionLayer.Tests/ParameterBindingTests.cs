@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -91,12 +91,12 @@ namespace Moryx.AbstractionLayer.Tests
 
             protected override void Populate(IProcess process, Parameters instance)
             {
-                var parameters = (InsertPartParameters) instance;
+                var parameters = (InsertPartParameters)instance;
 
                 if (_resolver == null)
                     _resolver = ResolverFactory.Create(Part);
 
-                parameters.Target = (IProductType) _resolver.Resolve(process);
+                parameters.Target = (IProductType)_resolver.Resolve(process);
             }
         }
 
@@ -107,7 +107,7 @@ namespace Moryx.AbstractionLayer.Tests
                 Id = 42,
                 Name = "Bob",
                 Foo = 1337,
-                Bobs = new[] { 1, 3, 7, 42, 1337 },
+                Bobs = [1, 3, 7, 42, 1337],
                 Identity = new ProductIdentity("123456", 01),
                 Part = new ProductPartLink<DummyType>(2)
                 {
@@ -151,7 +151,7 @@ namespace Moryx.AbstractionLayer.Tests
 
             public int[] Bobs { get; set; }
 
-            public DummyValue Dummy => new DummyValue(this);
+            public DummyValue Dummy => new(this);
 
             protected override ProductInstance Instantiate()
             {

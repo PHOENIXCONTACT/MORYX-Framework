@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Moryx.Communication.Endpoints;
 using Moryx.Container;
@@ -48,8 +46,8 @@ namespace Moryx.ControlSystem.ProcessEngine
 
         #endregion
 
-        public void Initialize() 
-        { 
+        public void Initialize()
+        {
             // Called to make sure the component orchestration resolves all internal components first
         }
 

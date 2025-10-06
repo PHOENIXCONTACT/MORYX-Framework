@@ -1,10 +1,9 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer;
@@ -96,23 +95,23 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
             // Prepare ResourceManagement mock
             _resourceManagementMock = new Mock<IResourceManagement>();
-            _resourceManagementMock.Setup(rm => rm.GetResources<ICell>()).Returns(() => new[]
-            {
+            _resourceManagementMock.Setup(rm => rm.GetResources<ICell>()).Returns(() =>
+            [
                 _mountResourceMock.Object,
                 _assignIdentityResourceMock.Object,
                 _unmountResourceMock.Object
-            });
+            ]);
 
             _notificationAdapterMock = new Mock<INotificationAdapter>();
 
             _resourceManagementMock.Setup(rm => rm.GetResources<ICell>(It.Is<MountCapabilities>(c => c.CanMount && !c.CanUnmount)))
-                .Returns(() => new[] { _mountResourceMock.Object });
+                .Returns(() => [_mountResourceMock.Object]);
 
             _resourceManagementMock.Setup(rm => rm.GetResources<ICell>(It.IsAny<AssignIdentityCapabilities>()))
-                .Returns(() => new[] { _assignIdentityResourceMock.Object });
+                .Returns(() => [_assignIdentityResourceMock.Object]);
 
             _resourceManagementMock.Setup(rm => rm.GetResources<ICell>(It.Is<MountCapabilities>(c => !c.CanMount && c.CanUnmount)))
-                .Returns(() => new[] { _unmountResourceMock.Object });
+                .Returns(() => [_unmountResourceMock.Object]);
 
             // Prepare container
             var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, s, e) => { });
@@ -124,7 +123,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             _container.SetInstance(_productManagementMock.Object);
             _container.SetInstance(_resourceManagementMock.Object);
             _container.SetInstance(_notificationAdapterMock.Object);
-            _container.SetInstance(new ModuleConfig { RemovalMessage = "Foo", ResourceSelectors = new List<CellSelectorConfig>()});
+            _container.SetInstance(new ModuleConfig { RemovalMessage = "Foo", ResourceSelectors = new List<CellSelectorConfig>() });
             // Load components and boot
             _container.Resolve<IProcessStorage>().Start();
             var listeners = _container.ResolveAll<IActivityPoolListener>().OrderBy(l => l.StartOrder);
@@ -134,7 +133,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 listener.Start();
             }
         }
- 
+
         [TearDown]
         public void Destroy()
         {

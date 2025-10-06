@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Operators.Management.Implementation;
@@ -42,11 +42,11 @@ internal class OperatorData : IPersistentObject
 
     public virtual string? Pseudonym
     {
-        get => Operator.Pseudonym; 
+        get => Operator.Pseudonym;
         set => Operator.Pseudonym = value;
     }
 
-    public virtual List<IOperatorAssignable> AssignedResources 
+    public virtual List<IOperatorAssignable> AssignedResources
         => Operator.AssignedResources;
 
     public OperatorData(string identifier)

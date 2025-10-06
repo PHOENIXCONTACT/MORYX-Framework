@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
@@ -13,16 +13,16 @@ namespace Moryx.Resources.Samples
         [ReferenceOverride(nameof(Children))]
         public IReferences<IStation> Stations { get; set; }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart, "Pre")]
+        [ResourceReference(ResourceRelationType.CurrentExchangeablePart, "Pre")]
         public SolderingStation PreSoldering { get; set; }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart, "Final")]
+        [ResourceReference(ResourceRelationType.CurrentExchangeablePart, "Final")]
         public SolderingStation FinalSoldering { get; set; }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
+        [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
         public HeatingStation Heating { get; set; }
 
-        [ResourceReference(ResourceRelationType.PossibleExchangablePart)]
+        [ResourceReference(ResourceRelationType.PossibleExchangeablePart)]
         public IReferences<IStation> EnabledStations { get; set; }
     }
 
@@ -33,7 +33,7 @@ namespace Moryx.Resources.Samples
 
     public abstract class Station : Resource, IStation
     {
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart, ResourceReferenceRole.Source)]
+        [ResourceReference(ResourceRelationType.CurrentExchangeablePart, ResourceReferenceRole.Source)]
         public SolderingCell BackRef { get; set; }
 
         public abstract void ProcessActivity(IActivity sa);

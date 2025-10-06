@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Authorization;
@@ -64,7 +64,7 @@ public class SkillManagementController(ISkillManagement skillManagement, IOperat
     [HttpGet("types/prototype")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-    public ActionResult<SkillTypeModel> GetTypePrototype() => 
+    public ActionResult<SkillTypeModel> GetTypePrototype() =>
         Response(() => new SkillType("Enter Skill Name", new SimpleSkill()).ToModel(true));
 
     #endregion
@@ -92,7 +92,7 @@ public class SkillManagementController(ISkillManagement skillManagement, IOperat
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
     [Authorize(Policy = SkillPermissions.CanManage)]
     public ActionResult<SkillModel> Create(SkillCreationContextModel model) =>
-        Response(() => _skillManagement.CreateSkill(model.ToContext(_operatorManagement, _skillManagement)).ToModel(), result => Created("api/moryx/skills/"+result.Id, result));
+        Response(() => _skillManagement.CreateSkill(model.ToContext(_operatorManagement, _skillManagement)).ToModel(), result => Created("api/moryx/skills/" + result.Id, result));
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

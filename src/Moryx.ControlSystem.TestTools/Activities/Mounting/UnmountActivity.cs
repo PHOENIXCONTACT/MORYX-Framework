@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer;
@@ -12,7 +12,7 @@ namespace Moryx.ControlSystem.TestTools.Activities
     /// Activity to unmount article from carrier manually
     /// </summary>
     [ActivityResults(typeof(UnmountingResult))]
-    public class UnmountActivity: Activity<MountingParameters>, IMountingActivity
+    public class UnmountActivity : Activity<MountingParameters>, IMountingActivity
     {
         /// <inheritdoc />
         public MountOperation Operation => Result.Numeric == (int)UnmountingResult.Removed

@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 namespace Moryx.Communication
@@ -11,7 +11,7 @@ namespace Moryx.Communication
         /// <summary>
         /// Empty payload to optimize memory usage and avoid creating unnecessary objects
         /// </summary>
-        public static byte[] EmptyBytes = new byte[0];
+        public static byte[] EmptyBytes = [];
 
         /// <summary>
         /// Default constructor used to create a <see cref="BinaryMessage"/>

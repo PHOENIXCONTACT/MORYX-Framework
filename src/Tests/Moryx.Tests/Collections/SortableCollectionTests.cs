@@ -1,8 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Linq;
 using Moryx.Collections;
 using NUnit.Framework;
 
@@ -22,13 +21,13 @@ namespace Moryx.Tests.Collections
         [SetUp]
         public void SetUp()
         {
-            _collection = new SortableCollection<SortObj>
-            {
+            _collection =
+            [
                 new SortObj("A"),
                 new SortObj("B"),
                 new SortObj("C"),
-                new SortObj("D"),
-            };
+                new SortObj("D")
+            ];
         }
 
         [TearDown]
@@ -36,7 +35,7 @@ namespace Moryx.Tests.Collections
         {
 
         }
-        
+
         [TestCase(0, 0, 1, TestName = "Move A up")]
         [TestCase(1, 0, 1, TestName = "Move B up")]
         [TestCase(2, 1, 2, TestName = "Move C up")]
@@ -70,7 +69,7 @@ namespace Moryx.Tests.Collections
             }
 
             var changedItems = _collection.FlushModifications();
-            
+
             Assert.That(originItem.SortOrder, Is.EqualTo(targetOrder));
 
             if (defaultIndex != targetIndex)

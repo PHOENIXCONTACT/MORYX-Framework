@@ -1,11 +1,10 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Microsoft.Data.Sqlite;
-using System;
 
 namespace Moryx.Model.Sqlite
 {
@@ -24,7 +23,6 @@ namespace Moryx.Model.Sqlite
             ConfiguratorTypename = typeof(SqliteModelConfigurator).AssemblyQualifiedName;
         }
     }
-
 
     /// <summary>
     /// Database connection settings for the Sqlite databases
@@ -57,7 +55,8 @@ namespace Moryx.Model.Sqlite
             {
                 var builder = new SqliteConnectionStringBuilder(ConnectionString);
                 return !string.IsNullOrEmpty(ConnectionString);
-            } catch(ArgumentException)
+            }
+            catch (ArgumentException)
             {
                 return false;
             }

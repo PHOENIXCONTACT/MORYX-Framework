@@ -1,10 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Attributes;
 using Moryx.Model.Configuration;
@@ -34,7 +30,7 @@ namespace Moryx.Model
                 // Try to read context from attribute
                 var setupAttr = type.GetCustomAttribute<ModelSetupAttribute>();
                 return setupAttr != null && setupAttr.TargetContext == typeof(TContext);
-            }).Select(s => (IModelSetup)Activator.CreateInstance((Type) s)).ToArray();
+            }).Select(s => (IModelSetup)Activator.CreateInstance((Type)s)).ToArray();
         }
 
         /// <inheritdoc />

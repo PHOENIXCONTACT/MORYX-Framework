@@ -1,8 +1,6 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Recipes;
 
@@ -72,7 +70,7 @@ namespace Moryx.ControlSystem.Jobs
             get => _runningProcesses ?? Array.Empty<IProcess>();
             protected set => _runningProcesses = value;
         }
-        
+
         private IReadOnlyList<IProcess> _allProcesses;
         /// <summary>
         /// All processes of the job including running and completed processes

@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Processes;
@@ -15,7 +13,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
     {
         public override bool CanAbort => true;
 
-        public CleanUpWaitingState(JobDataBase context, StateMap stateMap) 
+        public CleanUpWaitingState(JobDataBase context, StateMap stateMap)
             : base(context, stateMap, JobClassification.Waiting)
         {
         }

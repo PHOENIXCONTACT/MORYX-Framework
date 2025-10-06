@@ -1,10 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Moryx.Container;
 
 namespace Moryx.Serialization
@@ -38,7 +34,7 @@ namespace Moryx.Serialization
             var dirs = new List<string>();
             var childDirs = Directory.GetDirectories(currentDir);
 
-            if(!string.IsNullOrEmpty(_parentPath) && childDirs.Contains(Path.Combine(currentDir, _parentPath)))
+            if (!string.IsNullOrEmpty(_parentPath) && childDirs.Contains(Path.Combine(currentDir, _parentPath)))
             {
                 currentDir = Path.Combine(currentDir, _parentPath);
                 childDirs = Directory.GetDirectories(currentDir);

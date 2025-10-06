@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.ControlSystem.Jobs;
@@ -49,7 +49,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// </summary>
         public static bool IsCleanup(this Job candidate)
         {
-            return candidate != null 
+            return candidate != null
                 && candidate.Recipe is ISetupRecipe cleanup
                 && cleanup.Execution == SetupExecution.AfterProduction;
         }

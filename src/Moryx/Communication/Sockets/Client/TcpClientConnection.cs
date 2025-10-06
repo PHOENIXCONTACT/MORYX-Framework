@@ -1,11 +1,8 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Logging;
@@ -49,7 +46,7 @@ namespace Moryx.Communication.Sockets
         /// <summary>
         /// Lock object
         /// </summary>
-        private readonly object _stateLock = new object();
+        private readonly object _stateLock = new();
 
         /// <summary>
         /// Current tcp client instance
@@ -86,7 +83,7 @@ namespace Moryx.Communication.Sockets
 
             StateMachine.Initialize(this).With<ClientStateBase>();
 
-            Endpoint = GetIpEndpointFromHost(Config.IpAdress, Config.Port);
+            Endpoint = GetIpEndpointFromHost(Config.IpAddress, Config.Port);
         }
 
         /// <summary>
@@ -150,7 +147,7 @@ namespace Moryx.Communication.Sockets
         /// <inheritdoc />
         public void Reconnect(int delayMs)
         {
-            lock(_stateLock)
+            lock (_stateLock)
                 _state.Reconnect(delayMs);
         }
 

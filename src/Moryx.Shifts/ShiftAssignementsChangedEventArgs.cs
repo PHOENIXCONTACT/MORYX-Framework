@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -19,7 +19,7 @@ namespace Moryx.Shifts
         /// The shift assignment that was changed.
         /// </summary>
         public ShiftAssignement Assignement { get; set; }
-        
+
         /// <summary>
         /// Creates new event args with the given <paramref name="change"/> and <paramref name="assignement"/> parameters
         /// </summary>

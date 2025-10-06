@@ -1,16 +1,12 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moryx.Model.Attributes;
-using Newtonsoft.Json.Linq;
 
 namespace Moryx.Model.Annotations
 {
@@ -25,20 +21,20 @@ namespace Moryx.Model.Annotations
         private const string AnnotationName = "DateTimeKind";
 
         private static readonly ValueConverter<DateTime, DateTime> UtcConverter =
-            new ValueConverter<DateTime, DateTime>(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+            new(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
         private static readonly ValueConverter<DateTime, DateTime> LocalConverter =
-            new ValueConverter<DateTime, DateTime>(v => ConvertToUtc(v), v => ConvertToLocal(v));
+            new(v => ConvertToUtc(v), v => ConvertToLocal(v));
         private static readonly ValueConverter<DateTime, DateTime> UnspecifiedConverter =
-           new ValueConverter<DateTime, DateTime>(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified));
+           new(v => ConvertToUtc(v), v => DateTime.SpecifyKind(v, DateTimeKind.Unspecified));
 
         private static DateTime ConvertToUtc(DateTime dateTime)
-        {                
+        {
             if (dateTime.Kind == DateTimeKind.Utc)
                 return dateTime;
             else
                 return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.Local);
         }
-       
+
         private static DateTime ConvertToLocal(DateTime timeUtc)
         {
             var result = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, TimeZoneInfo.Local);

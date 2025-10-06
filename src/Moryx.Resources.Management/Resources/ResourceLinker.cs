@@ -1,11 +1,8 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
@@ -14,7 +11,6 @@ using Moryx.Logging;
 using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Resources.Model;
-using Moryx.Tools;
 using static Moryx.Resources.Management.ResourceReferenceTools;
 
 namespace Moryx.Resources.Management
@@ -95,7 +91,7 @@ namespace Moryx.Resources.Management
         private void SaveReferences(ReferenceSaverContext context, Resource instance, Dictionary<Resource, ResourceEntity> dict = null)
         {
             var entity = GetOrCreateEntity(context, instance);
-            if(dict != null)
+            if (dict != null)
                 dict.Add(instance, entity);
 
             var referenceAccessors = ResourceRelationAccessor.FromEntity(context.UnitOfWork, entity)
@@ -280,14 +276,14 @@ namespace Moryx.Resources.Management
             // Check if it is a single reference
             var asResource = propertyValue as IResource;
             if (asResource != null)
-                return new[] { asResource };
+                return [asResource];
 
             // Otherwise it must be a collection
             var asEnumerable = propertyValue as IEnumerable;
             if (asEnumerable != null)
                 return asEnumerable.Cast<IResource>();
 
-            return Enumerable.Empty<IResource>();
+            return [];
         }
 
         /// <summary>
@@ -331,7 +327,7 @@ namespace Moryx.Resources.Management
             }
             else if (prop.GetValue(target) is IReferenceCollection collection && !collection.UnderlyingCollection.Contains(value))
                 collection.UnderlyingCollection.Add(value);
-            
+
             var backAttr = prop.GetCustomAttribute<ResourceReferenceAttribute>();
             UpdateRelationEntity(relationEntity, backAttr);
         }
@@ -428,7 +424,6 @@ namespace Moryx.Resources.Management
             else
                 relEntity.TargetName = att.Name;
         }
-
 
         /// <inheritdoc />
         public void RemoveLinking(IResource deletedInstance, IResource reference)

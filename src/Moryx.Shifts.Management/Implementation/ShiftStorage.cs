@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Castle.MicroKernel.Registration;
@@ -33,7 +33,7 @@ namespace Moryx.Shifts.Management
         #region Lifecylce
 
         public void Start()
-        {         
+        {
             //Todo: Add parallel operation with cancelation tokens to mark shifts as obsolete
             //when they lie in the past as soon as the IShiftHistory facade is available
         }

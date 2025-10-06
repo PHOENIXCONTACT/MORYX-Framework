@@ -1,11 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 
 namespace Moryx.Notifications
 {
@@ -15,9 +11,9 @@ namespace Moryx.Notifications
     /// </summary>
     public class NotificationAdapter : INotificationAdapter, INotificationSourceAdapter
     {
-        private readonly List<NotificationMap> _published = new List<NotificationMap>(16);
-        private readonly List<NotificationMap> _pendingAcks = new List<NotificationMap>(16);
-        private readonly List<NotificationMap> _pendingPubs = new List<NotificationMap>(16);
+        private readonly List<NotificationMap> _published = new(16);
+        private readonly List<NotificationMap> _pendingAcks = new(16);
+        private readonly List<NotificationMap> _pendingPubs = new(16);
 
         private readonly object _listLock = new();
 
@@ -67,7 +63,6 @@ namespace Moryx.Notifications
 
             if (notification == null)
                 throw new ArgumentNullException(nameof(notification), "Notification must be set");
-
 
             lock (_listLock)
             {
@@ -155,7 +150,7 @@ namespace Moryx.Notifications
                 }
             }
 
-            foreach (var published in publishes ?? Array.Empty<NotificationMap>())
+            foreach (var published in publishes ?? [])
                 Acknowledged?.Invoke(this, published.Notification);
         }
 
@@ -234,7 +229,7 @@ namespace Moryx.Notifications
         void INotificationSourceAdapter.Sync()
         {
             // Publish pending notifications
-            NotificationMap[] pendingPublishes = Array.Empty<NotificationMap>();
+            NotificationMap[] pendingPublishes = [];
             lock (_listLock)
             {
                 pendingPublishes = _pendingPubs.ToArray();
@@ -245,7 +240,7 @@ namespace Moryx.Notifications
             }
 
             // Acknowledge pending acknowledges
-            NotificationMap[] pendingAcks = Array.Empty<NotificationMap>();
+            NotificationMap[] pendingAcks = [];
             lock (_listLock)
             {
                 pendingAcks = _pendingAcks.ToArray();

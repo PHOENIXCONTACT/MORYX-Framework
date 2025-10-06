@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging.Abstractions;
@@ -37,7 +37,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             _productionCellMock = CreateProductionCell(_resourceManagementMock);
 
             _resourceManagementMock.Setup(rm => rm.GetResources<IProcessReporter>())
-                .Returns(() => new[] { _removalResourceMock.Object });
+                .Returns(() => [_removalResourceMock.Object]);
 
             var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, s, e) => { });
             _removal = new ProcessRemoval

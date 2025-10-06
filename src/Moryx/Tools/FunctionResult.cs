@@ -1,7 +1,5 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
 
 namespace Moryx.Tools.FunctionResult
 {
@@ -111,7 +109,7 @@ namespace Moryx.Tools.FunctionResult
         /// </summary>
         /// <returns><see cref="FunctionResult"/></returns>
         public static FunctionResult Ok()
-            => new FunctionResult();
+            => new();
 
         /// <summary>
         /// Helper to create a <see cref="FunctionResult"/> with an error message in a descriptive way.
@@ -172,8 +170,7 @@ namespace Moryx.Tools.FunctionResult
         /// <exception cref="ArgumentNullException">In case of <paramref name="message"/> is null</exception>
         public FunctionResultError(string message)
         {
-            if (message is null)
-                throw new ArgumentNullException(nameof(message));
+            ArgumentNullException.ThrowIfNull(message);
 
             Message = message;
         }
@@ -184,8 +181,7 @@ namespace Moryx.Tools.FunctionResult
         /// <exception cref="ArgumentNullException">In case of <paramref name="exception"/> is null</exception>
         public FunctionResultError(Exception exception)
         {
-            if (exception is null)
-                throw new ArgumentNullException(nameof(exception));
+            ArgumentNullException.ThrowIfNull(exception);
 
             Message = exception.Message;
             Exception = exception;

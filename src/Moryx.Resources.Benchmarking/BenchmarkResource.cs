@@ -1,11 +1,8 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Resources;
@@ -43,7 +40,6 @@ namespace Moryx.Resources.Benchmarking
 
         public INotificationAdapter NotificationAdapter { get; set; }
 
-
         [ResourceReference(ResourceRelationType.Extension, IsRequired = true)]
         [DisplayName("Visual Instructor")]
         [Description("Target to show instructions while benchmarking")]
@@ -60,9 +56,9 @@ namespace Moryx.Resources.Benchmarking
         private long _instructionId;
 
         private int _activityCount;
-        private readonly Stopwatch _rtwWait = new Stopwatch();
-        private readonly Stopwatch _acWait = new Stopwatch();
-        private readonly Stopwatch _runtimeWait = new Stopwatch();
+        private readonly Stopwatch _rtwWait = new();
+        private readonly Stopwatch _acWait = new();
+        private readonly Stopwatch _runtimeWait = new();
 
         /// <summary>
         /// Step id of this resource
@@ -127,7 +123,7 @@ namespace Moryx.Resources.Benchmarking
             _runtimeWait.Stop();
 
             var activity = activityStart.Activity;
-            var tracing = (BenchmarkTracing) activity.Tracing;
+            var tracing = (BenchmarkTracing)activity.Tracing;
             tracing.RuntimeMs = _runtimeWait.ElapsedMilliseconds;
 
             _runtimeWait.Reset();
@@ -153,7 +149,6 @@ namespace Moryx.Resources.Benchmarking
             ReadyToWork?.Invoke(this, rtw);
         }
 
-
         /// <inheritdoc />
         public BenchmarkReport GetReport()
         {
@@ -171,7 +166,7 @@ namespace Moryx.Resources.Benchmarking
 
         [DisplayName("Change Capabilities")]
         [EntrySerialize, Description("Change capabilities of the cell")]
-        public void ChangeCapabilities([Description("New step value for the capabilities. '0' resets to LocalIdentifier")]int stepId = 0)
+        public void ChangeCapabilities([Description("New step value for the capabilities. '0' resets to LocalIdentifier")] int stepId = 0)
         {
             Capabilities = new BenchmarkCapabilities(stepId == 0 ? StepId : stepId);
         }
@@ -205,7 +200,7 @@ namespace Moryx.Resources.Benchmarking
         public void AcknowledgeLast()
         {
             var notifications = NotificationAdapter.GetPublished(this);
-            if(notifications.Any())
+            if (notifications.Any())
                 NotificationAdapter.Acknowledge(this, notifications.Last());
         }
 
@@ -227,7 +222,6 @@ namespace Moryx.Resources.Benchmarking
         }
 
         string INotificationSender.Identifier => Id.ToString();
-
 
 #pragma warning disable 67
         /// <inheritdoc />

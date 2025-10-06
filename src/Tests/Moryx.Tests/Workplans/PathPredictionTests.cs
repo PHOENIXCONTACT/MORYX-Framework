@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Diagnostics;
@@ -135,8 +135,6 @@ namespace Moryx.Tests.Workplans
             Assert.That(prediction, Is.EqualTo(finalResult), "Predication was incorrect");
         }
 
-        
-
         private class SingleLoopExecution
         {
             private bool _loopTaken;
@@ -145,7 +143,7 @@ namespace Moryx.Tests.Workplans
             {
                 var transition = (DummyTransition)state;
                 Thread.Sleep(100);
-                if(_loopTaken || transition.Name != "Set pole")
+                if (_loopTaken || transition.Name != "Set pole")
                     transition.ResumeAsync(0);
                 else
                 {

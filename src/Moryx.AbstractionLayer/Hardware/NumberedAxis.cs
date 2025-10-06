@@ -1,7 +1,5 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
 
 namespace Moryx.AbstractionLayer.Hardware
 {
@@ -50,16 +48,15 @@ namespace Moryx.AbstractionLayer.Hardware
         {
             if (ReferenceEquals(null, obj))
                 return false;
-            return obj is NumberedAxis && Equals((NumberedAxis) obj);
+            return obj is NumberedAxis && Equals((NumberedAxis)obj);
         }
-
 
         /// <inheritdoc />
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((int) Axis * 397) ^ Number;
+                return ((int)Axis * 397) ^ Number;
             }
         }
     }

@@ -1,9 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using Moryx.Configuration;
 using Moryx.Modules;
@@ -37,15 +35,15 @@ namespace Moryx.Runtime.Modules
                         : (string)property.GetValue(instance);
                     containerConfig[attribute.Strategy] = pluginName;
                 }
-                
+
                 // Now filter strings
-                if(propType == typeof(string))
+                if (propType == typeof(string))
                     continue;
 
                 // Check for collection
-                if (typeof (IEnumerable).IsAssignableFrom(propType))
+                if (typeof(IEnumerable).IsAssignableFrom(propType))
                 {
-                    foreach (var entry in (IEnumerable) property.GetValue(instance))
+                    foreach (var entry in (IEnumerable)property.GetValue(instance))
                     {
                         ParseEntry(entry, containerConfig);
                     }

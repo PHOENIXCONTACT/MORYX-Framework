@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Recipes;
@@ -321,7 +318,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
             public IReadOnlyList<ICell> Cells(ICapabilities capabilities)
             {
                 // Return a match for every cell to get all possible clean-ups
-                return new ICell[] { new CellReference() };
+                return [new CellReference()];
             }
         }
 

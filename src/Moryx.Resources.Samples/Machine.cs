@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
@@ -24,7 +23,7 @@ namespace Moryx.Resources.Samples
         public int ProductionHours { get; set; }
 
         [DataMember, EntrySerialize]
-        public double Power { get;  set; }
+        public double Power { get; set; }
 
         [DataMember, EntrySerialize]
         public MachineType MachineType { get; set; }
@@ -32,7 +31,7 @@ namespace Moryx.Resources.Samples
         [DataMember, EntrySerialize]
         public MachineInfos AdditionalInformation { get; set; }
 
-        [DataMember,EntrySerialize]
+        [DataMember, EntrySerialize]
         [PossibleStaff]
         public IList<TechnicalStaff> PossibleTechnicalStaffs { get; set; }
 
@@ -140,7 +139,7 @@ namespace Moryx.Resources.Samples
 
         public override IEnumerable<string> GetValues(Container.IContainer container)
         {
-            return new[] { nameof(TechnicalStaff), nameof(ExpertStaff) };
+            return [nameof(TechnicalStaff), nameof(ExpertStaff)];
         }
 
         public override object Parse(Container.IContainer container, string value)

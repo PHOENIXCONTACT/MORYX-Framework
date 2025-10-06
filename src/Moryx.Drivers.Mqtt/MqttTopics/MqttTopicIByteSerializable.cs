@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations;
@@ -36,7 +36,7 @@ public class MqttTopicIByteSerializable : MqttTopic<IByteSerializable>
     /// <returns></returns>
     protected internal override byte[] Serialize(object payload)
     {
-        return ((IByteSerializable) payload).ToBytes();
+        return ((IByteSerializable)payload).ToBytes();
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
@@ -12,7 +12,7 @@ public static class ISkillManagementExtensions
     /// Returns the skill with the given id.
     /// </summary>
     /// <param name="id">Id of the skill</param>
-    public static Skill? GetSkill(this ISkillManagement source, long id) => 
+    public static Skill? GetSkill(this ISkillManagement source, long id) =>
         source.Skills.SingleOrDefault(s => s.Id == id);
 
     /// <summary>
@@ -27,7 +27,7 @@ public static class ISkillManagementExtensions
     /// </summary>
     /// <param name="@operator">Operator to retrieve the acquired capabilities for</param>
     public static ICapabilities GetAcquiredCapabilities(this ISkillManagement source, Operator @operator) =>
-        new CombinedCapabilities(GetSkills(source,@operator)
+        new CombinedCapabilities(GetSkills(source, @operator)
         .Select(x => x.AcquiredCapabilities()).ToList());
 
     /// <summary>

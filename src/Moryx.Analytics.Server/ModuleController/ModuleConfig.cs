@@ -1,11 +1,8 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
-
 
 namespace Moryx.Analytics.Server.ModuleController
 {
@@ -20,7 +17,7 @@ namespace Moryx.Analytics.Server.ModuleController
         ///Dashboards
         /// </summary>
         [DataMember]
-        public List<DashboardInformation> Dashboards { get; set; } = new List<DashboardInformation>();     
+        public List<DashboardInformation> Dashboards { get; set; } = new List<DashboardInformation>();
 
     }
 }

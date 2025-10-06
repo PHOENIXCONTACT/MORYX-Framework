@@ -1,7 +1,6 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using Moryx.AbstractionLayer;
 
 namespace Moryx.ControlSystem.Cells
@@ -12,7 +11,6 @@ namespace Moryx.ControlSystem.Cells
     public abstract class CellSelectorBase : CellSelectorBase<CellSelectorConfig>
     {
     }
-
 
     /// <summary>
     /// Base class for <see cref="ICellSelector"/> with typed config

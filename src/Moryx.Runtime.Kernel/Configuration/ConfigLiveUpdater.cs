@@ -1,10 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Moryx.Configuration;
 
@@ -19,8 +16,8 @@ namespace Moryx.Runtime.Kernel
 
         private bool UpdateObject(Type sharedType, object target, object source)
         {
-            var modifiedProperties = (from propertyInfo in sharedType.GetProperties() 
-                                      where UpdateProperty(propertyInfo, target, source) 
+            var modifiedProperties = (from propertyInfo in sharedType.GetProperties()
+                                      where UpdateProperty(propertyInfo, target, source)
                                       select propertyInfo.Name).ToList();
 
             if (modifiedProperties.Any() & target is IUpdatableConfig)
@@ -36,7 +33,7 @@ namespace Moryx.Runtime.Kernel
                 // Add and remove of entries is not supported jet
                 var collectionModified = false;
                 var targetEnum = ((IEnumerable)prop.GetValue(target)).GetEnumerator();
-                var sourceEnum = ((IEnumerable) prop.GetValue(source)).GetEnumerator();
+                var sourceEnum = ((IEnumerable)prop.GetValue(source)).GetEnumerator();
                 while (targetEnum.MoveNext() && sourceEnum.MoveNext())
                 {
                     var sharedType = prop.PropertyType.GetGenericArguments()[0];
@@ -47,13 +44,13 @@ namespace Moryx.Runtime.Kernel
 
             var targetValue = prop.GetValue(target);
             var sourceValue = prop.GetValue(source);
-            if (targetValue != null && targetValue.Equals(sourceValue) || sourceValue == null) 
+            if (targetValue != null && targetValue.Equals(sourceValue) || sourceValue == null)
                 return false;
 
-            if (prop.PropertyType.IsClass && prop.PropertyType != typeof(string) 
+            if (prop.PropertyType.IsClass && prop.PropertyType != typeof(string)
                 && (targetValue != null && targetValue.GetType() == sourceValue.GetType()))
                 return UpdateObject(GetSharedType(prop.PropertyType, targetValue, sourceValue), targetValue, sourceValue);
-            
+
             prop.SetValue(target, sourceValue);
             return true;
         }

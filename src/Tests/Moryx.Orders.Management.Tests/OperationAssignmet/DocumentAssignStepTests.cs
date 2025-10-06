@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -65,7 +65,7 @@ namespace Moryx.Orders.Management.Tests
 
             _documentAssignStep.Start();
 
-            var productType = new DummyProductType {Identity = _productIdentity};
+            var productType = new DummyProductType { Identity = _productIdentity };
 
             _operation = new InternalOperation
             {
@@ -96,15 +96,15 @@ namespace Moryx.Orders.Management.Tests
         {
             // Arrange
             var operationLoggerMock = new Mock<IOperationLogger>();
-            _documentLoaderMock.Setup(l => l.Load(_operation)).ReturnsAsync(new[]
-            {
+            _documentLoaderMock.Setup(l => l.Load(_operation)).ReturnsAsync(
+            [
                 new FileSystemDocument("29025550", 0, Path.Combine(_savePath, "29025550-00.txt"))
                 {
                     ContentType = "text/plain",
                     Description = "",
                     Type = "",
                 }
-            });
+            ]);
 
             // Act
             await _documentAssignStep.AssignStep(_operationData, operationLoggerMock.Object);
@@ -115,7 +115,7 @@ namespace Moryx.Orders.Management.Tests
             {
                 Assert.That(files, Does.Contain("29025550-00.txt"));
             }
-            else if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 Assert.That(files, Does.Contain("29025550-00"));
             }

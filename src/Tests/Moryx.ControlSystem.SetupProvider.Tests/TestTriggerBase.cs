@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer;
@@ -20,7 +20,7 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
         public override IReadOnlyList<IWorkplanStep> CreateSteps(IProductRecipe recipe)
         {
             CreateStepCalled = true;
-            return new[] { new TestSetupTask() };
+            return [new TestSetupTask()];
         }
     }
 
@@ -47,7 +47,6 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
 
         public override ICapabilities RequiredCapabilities => Parameters.TargetCapabilities;
 
-
         protected override ActivityResult CreateResult(long resultNumber)
         {
             return ActivityResult.Create((DefaultActivityResult)resultNumber);
@@ -65,7 +64,7 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
 
         protected override void Populate(IProcess process, Parameters instance)
         {
-            var parameters = (TestSetupParameters) instance;
+            var parameters = (TestSetupParameters)instance;
             parameters.TargetCapabilities = TargetCapabilities;
         }
     }

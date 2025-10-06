@@ -1,9 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace Moryx.Serialization
@@ -73,25 +71,25 @@ namespace Moryx.Serialization
         /// <inheritdoc/>
         public void Flush()
         {
-           
-            if(_property is PropertyInfo propertyInfo)
+
+            if (_property is PropertyInfo propertyInfo)
             {
                 var type = propertyInfo.PropertyType;
                 var elementType = type.GenericTypeArguments[0];
-                var list = Array.CreateInstance(elementType,_list.Count - _toDelete.Count + _toAdd.Count);
+                var list = Array.CreateInstance(elementType, _list.Count - _toDelete.Count + _toAdd.Count);
                 var index = 0;
                 foreach (var e in _list)
                 {
                     if (!_toDelete.Contains(e))
                     {
                         list.SetValue(e, index++);
-                    }                       
+                    }
                 }
-                foreach(var e in _toAdd)
+                foreach (var e in _toAdd)
                 {
                     list.SetValue(e, index++);
                 }
-                   
+
                 propertyInfo.SetValue(_instance, list);
             }
         }

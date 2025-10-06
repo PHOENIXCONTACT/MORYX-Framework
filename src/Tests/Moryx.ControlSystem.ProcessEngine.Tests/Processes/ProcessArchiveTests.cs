@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -36,16 +36,16 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
         private Mock<IJobDataList> _jobListMock;
 
-        private readonly CultureInfo _culture = new CultureInfo("de-DE");
+        private readonly CultureInfo _culture = new("de-DE");
 
         [SetUp]
         public void Setup()
         {
             _workplanMock = new Mock<IWorkplan>();
-            _workplanMock.Setup(w => w.Steps).Returns(new IWorkplanStep[]
-            {
+            _workplanMock.Setup(w => w.Steps).Returns(
+            [
                 new MountTask{Id = 1}
-            });
+            ]);
 
             var recipeMock = new Mock<IProductionRecipe>();
             recipeMock.Setup(r => r.CreateProcess()).Returns(new ProductionProcess { Recipe = recipeMock.Object });
@@ -131,7 +131,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             var endDate = DateTime.Parse(end, _culture);
 
             // Act
-            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, startDate, endDate, Array.Empty<long>()).ToList();
+            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, startDate, endDate, []).ToList();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(expectedJobCount));
@@ -165,7 +165,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                                     Updated = new DateTime(2000, 1, 1, 1, 59, 0)
                                 }));
 
-            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, new DateTime(2000, 1, 1, 1, 50, 0), new DateTime(2000, 1, 1, 1, 59, 0), Array.Empty<long>()).ToList();
+            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, new DateTime(2000, 1, 1, 1, 50, 0), new DateTime(2000, 1, 1, 1, 59, 0), []).ToList();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(0));
@@ -198,8 +198,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 Activities =
                     new List<ActivityEntity>
                     {
-                        new ActivityEntity
-                        {
+                        new() {
                             Started = processStart,
                             Completed = processEnd
                         }
@@ -213,14 +212,14 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             var jobData = new ProductionJobData(new DummyRecipe(), jobEntity);
             jobData.RunningProcesses.Add(processData);
 
-            var jobs = CreateJobEntities().Concat(new[] { jobEntity }).ToArray();
-            var processEntities = CreateProcessEntities(jobs).Concat(new[] { processEntity }).ToArray();
+            var jobs = CreateJobEntities().Concat([jobEntity]).ToArray();
+            var processEntities = CreateProcessEntities(jobs).Concat([processEntity]).ToArray();
             CreateTestData(jobs, processEntities);
 
             // Act
             _jobListMock.Raise(j => j.StateChanged += null, _jobListMock.Object, jobData);
 
-            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, nowStart, nowEnd, Array.Empty<long>()).ToList();
+            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, nowStart, nowEnd, []).ToList();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(1));
@@ -231,8 +230,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             var stateMock = new Mock<IJobState>();
             stateMock.SetupGet(s => s.Classification).Returns(JobClassification.Completed);
             _jobListMock.Raise(jl => jl.StateChanged += null, _jobListMock.Object, new JobStateEventArgs(jobData, null, stateMock.Object));
-            
-            chunks = _processArchive.GetProcesses(RequestFilter.Timed, nowStart, nowEnd, Array.Empty<long>()).ToList();
+
+            chunks = _processArchive.GetProcesses(RequestFilter.Timed, nowStart, nowEnd, []).ToList();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(1));
@@ -254,27 +253,26 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
         private JobEntity[] CreateJobEntities()
         {
-            return new[]
-            {
+            return
+            [
                 new JobEntity { Id = 1, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 0, 0), Updated = new DateTime(2000, 1, 1, 1, 10, 0)},
                 new JobEntity { Id = 2, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 15, 0), Updated = new DateTime(2000, 1, 1, 1, 20, 0)},
                 new JobEntity { Id = 3, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 30, 0), Updated = new DateTime(2000, 1, 1, 1, 40, 0)},
                 new JobEntity { Id = 4, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 25, 0), Updated = new DateTime(2000, 1, 1, 1, 40, 0)},
-            };
+            ];
         }
 
         private ProcessEntity[] CreateProcessEntities(JobEntity[] jobs)
         {
-            return new[]
-            {
+            return
+            [
                 // Job 1
                 new ProcessEntity { JobId = jobs[0].Id, Job = jobs[0],
-                    Activities = new List<ActivityEntity> { new ActivityEntity { Started = new DateTime(2000, 1, 1, 1, 0, 1), Completed = new DateTime(2000, 1, 1, 1, 0, 2) } }, State = (int)ProcessState.Success },
+                    Activities = new List<ActivityEntity> { new() { Started = new DateTime(2000, 1, 1, 1, 0, 1), Completed = new DateTime(2000, 1, 1, 1, 0, 2) } }, State = (int)ProcessState.Success },
                 new ProcessEntity { Id = 1337, JobId = jobs[0].Id, Job = jobs[0], ReferenceId = 42,
                     Activities = new List<ActivityEntity>
                     {
-                        new ActivityEntity
-                        {
+                        new() {
                             TaskId = 1,
                             Started = new DateTime(2000, 1, 1, 1, 0, 3),
                             Completed = new DateTime(2000, 1, 1, 1, 0, 9)
@@ -282,8 +280,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                     }, State = (int)ProcessState.Success },
 
                 // Job 2
-                new ProcessEntity { JobId = jobs[1].Id, Job = jobs[1], Activities = new List<ActivityEntity> { new ActivityEntity { Started = new DateTime(2000, 1, 1, 1, 15, 1), Completed = new DateTime(2000, 1, 1, 1, 15, 2) } }, State = (int)ProcessState.Failure }
-            };
+                new ProcessEntity { JobId = jobs[1].Id, Job = jobs[1], Activities = new List<ActivityEntity> { new() { Started = new DateTime(2000, 1, 1, 1, 15, 1), Completed = new DateTime(2000, 1, 1, 1, 15, 2) } }, State = (int)ProcessState.Failure }
+            ];
         }
 
         public static void SetupIQueryable<T>(Mock<T> mock, IQueryable queryable)

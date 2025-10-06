@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -10,8 +10,8 @@ namespace Moryx.AbstractionLayer.Tests
     [TestFixture]
     public class TracingActivityTest
     {
-        private readonly DateTime _startDateTime = new DateTime(1000, 1, 10, 10, 10, 10);
-        private readonly DateTime _endDateTime = new DateTime(2000, 12, 20, 20, 20, 20);
+        private readonly DateTime _startDateTime = new(1000, 1, 10, 10, 10, 10);
+        private readonly DateTime _endDateTime = new(2000, 12, 20, 20, 20, 20);
 
         /// <summary>
         /// Helper method to create tracings
@@ -138,11 +138,11 @@ namespace Moryx.AbstractionLayer.Tests
             public string FooName { get; set; }
 
             public int FooNumber { get; set; }
-            
+
             public new FooProgress Progress
             {
-                get { return (FooProgress) base.Progress; }
-                set { base.Progress = (int) value; }
+                get { return (FooProgress)base.Progress; }
+                set { base.Progress = (int)value; }
             }
 
             public void Processing()

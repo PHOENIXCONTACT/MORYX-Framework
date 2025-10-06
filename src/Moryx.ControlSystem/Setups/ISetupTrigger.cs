@@ -1,4 +1,4 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
@@ -6,8 +6,6 @@ using Moryx.AbstractionLayer.Recipes;
 using Moryx.Collections;
 using Moryx.Modules;
 using Moryx.Workplans;
-using System;
-using System.Collections.Generic;
 
 namespace Moryx.ControlSystem.Setups
 {

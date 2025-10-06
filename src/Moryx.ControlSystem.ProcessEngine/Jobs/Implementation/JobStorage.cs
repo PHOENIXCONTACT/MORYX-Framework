@@ -1,10 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.AbstractionLayer;
@@ -56,7 +52,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// All recipe providers
         /// </summary>
         public IEnumerable<IRecipeProvider> RecipeProviders => SetupProvider == null
-            ? new IRecipeProvider[] { ProductManagement, CleanupProvider } : new IRecipeProvider[] { ProductManagement, CleanupProvider, SetupProvider };
+            ? new IRecipeProvider[] { ProductManagement, CleanupProvider } : [ProductManagement, CleanupProvider, SetupProvider];
 
         /// <summary>
         /// Unit of work factory to open a database context
@@ -212,7 +208,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
             // Fetch all affected entities, including the previous id, in a single query
             var ids = jobs.Select(j => j.Id)
-                .Concat(previousId.HasValue ? new[] { previousId.Value } : Enumerable.Empty<long>())
+                .Concat(previousId.HasValue ? [previousId.Value] : [])
                 .ToArray();
             var jobEntities = jobRepo.GetByKeys(ids);
 
@@ -247,7 +243,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
         public void UpdateState(IJobData jobData, IJobState newState)
         {
-            ParallelOperations.ScheduleExecution(() => ConcurrentAccess(new[] { jobData }, ExecuteUpdateState, jobData), 0, 0);
+            ParallelOperations.ScheduleExecution(() => ConcurrentAccess([jobData], ExecuteUpdateState, jobData), 0, 0);
         }
 
         private static void ExecuteUpdateState(IUnitOfWork uow, IJobData jobData)

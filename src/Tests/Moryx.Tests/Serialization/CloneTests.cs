@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -35,11 +35,11 @@ namespace Moryx.Tests
                 DisplayName = string.Format("Entry-{0}", id),
                 Value = new EntryValue
                 {
-                    Current = (id*123).ToString("D"),
+                    Current = (id * 123).ToString("D"),
                     Default = "42",
-                    Type = (EntryValueType) (id%7),
-                    UnitType = (EntryUnitType) (id%Enum.GetNames(typeof(EntryUnitType)).Length),
-                    Possible = new[] {"12334", "1123361", "11236"}
+                    Type = (EntryValueType)(id % 7),
+                    UnitType = (EntryUnitType)(id % Enum.GetNames(typeof(EntryUnitType)).Length),
+                    Possible = ["12334", "1123361", "11236"]
                 }
             };
             for (var i = 0; i < children; i++)

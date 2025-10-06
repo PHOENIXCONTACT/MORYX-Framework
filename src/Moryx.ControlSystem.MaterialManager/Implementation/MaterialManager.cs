@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
@@ -56,7 +54,7 @@ namespace Moryx.ControlSystem.MaterialManager
                 return;
 
             // Update reference with values from product management
-            if(container.ProvidedMaterial is ProductReference && container.ProvidedMaterial.Identity is ProductIdentity prodIdent)
+            if (container.ProvidedMaterial is ProductReference && container.ProvidedMaterial.Identity is ProductIdentity prodIdent)
             {
                 var material = ProductManagement.LoadType(prodIdent);
                 container.SetMaterial(material);

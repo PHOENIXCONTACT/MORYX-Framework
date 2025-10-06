@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Castle.MicroKernel.Registration;
@@ -80,7 +80,7 @@ internal class SkillStorage : ISkillStorage, ILoggingComponent
                 Logger.LogError("Skill -Id: {SkillId}- is referencing a SkillType Id: {SkillTypeId}- that was not loaded into memory.", skillEntity.Id, skillEntity.SkillTypeId);
                 continue;
             }
-            if(operatorData is null)
+            if (operatorData is null)
             {
                 Logger.LogError("Skill -Id: {SkillId}- is referencing an Operator Identifier: {OperatorIdentifier}- that was not loaded into memory.", skillEntity.Id, skillEntity.OperatorIdentifier);
                 continue;
@@ -114,7 +114,7 @@ internal class SkillStorage : ISkillStorage, ILoggingComponent
 
         return new Skill(context.Type, context.Operator)
         {
-            Id=entity.Id,
+            Id = entity.Id,
             ObtainedOn = entity.ObtainedOn
         };
     }
@@ -218,7 +218,7 @@ internal class SkillStorage : ISkillStorage, ILoggingComponent
         var entity = repo.GetByKey(type.Id);
         repo.Remove(entity);
         uow.SaveChanges();
-    }    
+    }
 
     #endregion
 }

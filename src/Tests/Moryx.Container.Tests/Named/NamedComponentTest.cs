@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using NUnit.Framework;
@@ -20,7 +20,7 @@ namespace Moryx.Container.Tests
             _container.Register<IDependency, DependencyA>("DepA", LifeCycle.Singleton);
             _container.Register<IDependency, DependencyB>("DepB", LifeCycle.Singleton);
         }
-        
+
         [Test]
         public void UnnamedInjectsFirst()
         {

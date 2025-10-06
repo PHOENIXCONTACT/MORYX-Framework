@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -8,8 +8,6 @@ using Moq;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Recipes;
 using NUnit.Framework;
-using Moryx.Users;
-using NUnit.Framework.Constraints;
 
 namespace Moryx.Orders.Management.Tests
 {
@@ -90,7 +88,6 @@ namespace Moryx.Orders.Management.Tests
         [Test(Description = "Adjust an operation in state " + nameof(CompletedState) + "with an amount less than 0 is not allowed.")]
         public void Adjust_WithCompletedOperationAndNegativeAmount_Throws() =>
             Assert.That(() => GetCompletedOperation(10, false, 10, 10).Adjust(-1, User), Throws.InvalidOperationException);
-
 
         [Test(Description = "If an operation is running or interrupting the target " +
             "amount can be reduced. A new job with the residual amount should be dispatched.")]

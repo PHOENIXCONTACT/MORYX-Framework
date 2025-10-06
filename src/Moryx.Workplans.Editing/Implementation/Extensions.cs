@@ -1,8 +1,5 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.Workplans.Editing.Implementation
 {
@@ -22,7 +19,7 @@ namespace Moryx.Workplans.Editing.Implementation
 
         public static IEnumerable<IWorkplanStep> FilterAlreadyRepositionedSteps(this IEnumerable<IWorkplanStep> workplanSteps, IEnumerable<IWorkplanStep> repositionedSteps) =>
             workplanSteps.Where(s => repositionedSteps.All(rS => rS.Id != s.Id));
-        
+
         public static IEnumerable<IWorkplanStep> GetNextSteps(this Workplan workplan, IConnector from)
             => workplan.Steps.Where(s => s.Inputs.Any(i => i.Id == from.Id));
     }

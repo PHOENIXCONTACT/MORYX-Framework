@@ -1,7 +1,6 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Recipes;
 
@@ -30,7 +29,7 @@ namespace Moryx.ControlSystem.Cells
         /// </summary>
         public ActivityCompleted CreateResult()
         {
-            if(Activity.Result == null)
+            if (Activity.Result == null)
                 throw new InvalidOperationException("Can not create completed message for activity without result");
 
             return new ActivityCompleted(Activity, this);

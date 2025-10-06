@@ -1,12 +1,9 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
 using Moryx.Model;
 using Moryx.Products.Model;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -91,7 +88,7 @@ namespace Moryx.Products.Management
                     continue;
                 TypeInformation.Add(type.FullName, new ProductTypeInformation(type));
             }
-                
+
             foreach (var config in Config.TypeStrategies)
             {
                 var strategy = StrategyFactory.CreateTypeStrategy(config);
@@ -317,7 +314,8 @@ namespace Moryx.Products.Management
                     foreach (var propertyFilter in query.PropertyFilters)
                     {
                         var expression = ConvertPropertyFilter(targetType, propertyFilter);
-                        var columnExpression = (Expression<Func<IGenericColumns, bool>>)method.Invoke(typeSearch, new object[] { expression });
+                        var columnExpression = (Expression<Func<IGenericColumns, bool>>)method.Invoke(typeSearch,
+                            [expression]);
                         var versionExpression = AsVersionExpression(columnExpression);
                         productsQuery = productsQuery.Where(versionExpression);
                     }
@@ -436,7 +434,7 @@ namespace Moryx.Products.Management
                 // No query or no result => Nothing to do
                 List<ProductTypeEntity> entities;
                 if (query == null || (entities = query.ToList()).Count == 0)
-                    return new TType[0];
+                    return Array.Empty<TType>();
 
                 var loadedProducts = new Dictionary<long, IProductType>();
                 var instances = entities.Select(entity => Transform(uow, entity, false, loadedProducts)).OfType<TType>().ToArray();
@@ -580,8 +578,6 @@ namespace Moryx.Products.Management
                     item.Key.Id = item.Value.Id;
                 }
 
-
-
                 return entity.Id;
             }
         }
@@ -627,7 +623,7 @@ namespace Moryx.Products.Management
             var linkRepo = saverContext.GetRepository<IPartLinkRepository>();
             foreach (var partLinkInfo in TypeInformation[type.FullName].GetAllPartLinks(modifiedInstance))
             {
-                var linkStrategy = partLinkInfo.ProductLinkStrategy;             
+                var linkStrategy = partLinkInfo.ProductLinkStrategy;
                 if (partLinkInfo.Type == PartLinkType.single)
                 {
                     var link = (IProductPartLink)partLinkInfo.Value;
@@ -637,21 +633,21 @@ namespace Moryx.Products.Management
                         linkEntity = linkRepo.Create(linkStrategy.PropertyName);
                         saverContext.UnitOfWork.LinkEntityToBusinessObject(link, linkEntity);
                         linkEntity.Parent = typeEntity;
-                        linkStrategy.SavePartLink(link, linkEntity);                     
+                        linkStrategy.SavePartLink(link, linkEntity);
                         linkEntity.Child = GetPartEntity(saverContext, link);
                         saverContext.PersistentObjectCache.Add(link, linkEntity);
 
                     }
                     else if (linkEntity != null && link == null) // link was removed
                     {
-                        linkStrategy.DeletePartLink(new IGenericColumns[] { linkEntity });
+                        linkStrategy.DeletePartLink([linkEntity]);
                         linkRepo.Remove(linkEntity);
                     }
                     else if (linkEntity != null && link != null) // link was modified
                     {
                         linkStrategy.SavePartLink(link, linkEntity);
                         linkEntity.Child = GetPartEntity(saverContext, link);
-       //                 linkEntity.Id = linkEntity.Child.Id;
+                        //                 linkEntity.Id = linkEntity.Child.Id;
                     }
                     // else: link was null and is still null
 
@@ -696,7 +692,7 @@ namespace Moryx.Products.Management
         {
             if (saverContext.EntityCache.ContainsKey((ProductIdentity)link.Product.Identity))
             {
-                var part = saverContext.EntityCache[(ProductIdentity)link.Product.Identity];            
+                var part = saverContext.EntityCache[(ProductIdentity)link.Product.Identity];
                 saverContext.PersistentObjectCache.Add(link.Product, part);
                 return part;
             }
@@ -810,7 +806,7 @@ namespace Moryx.Products.Management
                 // No query or no result => Nothing to do
                 List<ProductInstanceEntity> entities;
                 if (query == null || (entities = query.ToList()).Count == 0)
-                    return new TInstance[0];
+                    return Array.Empty<TInstance>();
 
                 var instances = TransformInstances(uow, entities).OfType<TInstance>().ToArray();
                 // Final check against compiled expression
@@ -889,7 +885,7 @@ namespace Moryx.Products.Management
                         if (!partGroup.Value.Any())
                         {
                             Logger.LogWarning("No reconstruction of the property {1} possible. You have configured the {0} strategy, but the property was null." +
-                                "Please initialize the property in the Initialize method or select the {2} strategy.", 
+                                "Please initialize the property in the Initialize method or select the {2} strategy.",
                                 nameof(PartSourceStrategy.FromPartLink), partGroup.Key.Name, nameof(PartSourceStrategy.FromEntities));
                             continue;
                         }

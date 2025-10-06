@@ -1,4 +1,4 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
@@ -32,7 +32,7 @@ namespace Moryx.ControlSystem.VisualInstructions
         /// <inheritdoc />
         protected override void Populate(IProcess process, Parameters instance)
         {
-            var parameters = (VisualInstructionParameters) instance;
+            var parameters = (VisualInstructionParameters)instance;
 
             // No instructions, no binding!
             if (Instructions == null || Instructions.Length == 0)

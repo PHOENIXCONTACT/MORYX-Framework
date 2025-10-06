@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -16,7 +16,7 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 
         private TestFacade _facade;
 
-        public LifeCycleBoundFacadeTestModule(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) 
+        public LifeCycleBoundFacadeTestModule(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory)
             : base(containerFactory, configManager, loggerFactory)
         {
         }

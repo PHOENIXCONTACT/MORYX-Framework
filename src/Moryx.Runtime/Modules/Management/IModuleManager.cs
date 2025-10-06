@@ -1,8 +1,5 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
-using System.Collections.Generic;
 
 namespace Moryx.Runtime.Modules
 {
@@ -44,7 +41,7 @@ namespace Moryx.Runtime.Modules
         /// </summary>
         /// <param name="module"></param>
         void ReincarnateModule(IServerModule module);
-            
+
         /// <summary>
         /// All modules managed by the service manager
         /// </summary>
@@ -54,7 +51,7 @@ namespace Moryx.Runtime.Modules
         /// Event raised when one of the modules changed its state
         /// </summary>
         event EventHandler<ModuleStateChangedEventArgs> ModuleStateChanged;
-        
+
         /// <summary>
         /// All other modules this module depends on
         /// </summary>

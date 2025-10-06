@@ -1,8 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Moryx.Configuration;
@@ -27,14 +26,13 @@ namespace Moryx.Runtime.Kernel.Tests
         public void Setup()
         {
             _mockConfigManager = new Mock<IConfigManager>();
-            var moduleManagerConfig = new ModuleManagerConfig {ManagedModules = new List<ManagedModuleConfig>()};
+            var moduleManagerConfig = new ModuleManagerConfig { ManagedModules = [] };
             _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(ModuleManagerConfig), typeof(ModuleManagerConfig).FullName, false)).Returns(moduleManagerConfig);
             _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(RuntimeConfigManagerTestConfig2), typeof(RuntimeConfigManagerTestConfig2).FullName, false)).Returns(new RuntimeConfigManagerTestConfig2());
 
             _mockLogger = new Mock<IModuleLogger>();
             _mockLogger.Setup(ml => ml.GetChild(It.IsAny<string>(), It.IsAny<Type>())).Returns(_mockLogger.Object);
         }
-
 
         private ModuleManager CreateObjectUnderTest(IServerModule[] modules)
         {
@@ -50,73 +48,67 @@ namespace Moryx.Runtime.Kernel.Tests
         public void FacadeCollectionInjection()
         {
             // Arrange
-            var dependend = new ModuleC();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
+            var dependent = new ModuleC();
+            var moduleManager = CreateObjectUnderTest([
                 new ModuleB1(),
                 new ModuleB2(),
                 new ModuleB3(),
-                dependend
-            });
-
+                dependent
+            ]);
 
             // Act
             moduleManager.StartModules();
 
             // Assert
-            Assert.That(dependend.Facades, Is.Not.Null, "No facade injected");
-            Assert.That(dependend.Facades.Length, Is.EqualTo(3), "Faulty number of facades");
+            Assert.That(dependent.Facades, Is.Not.Null, "No facade injected");
+            Assert.That(dependent.Facades.Length, Is.EqualTo(3), "Faulty number of facades");
         }
 
         [Test]
         public void FacadeCollectionNoEntry()
         {
             // Arrange
-            var dependend = new ModuleC();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
-                dependend
-            });
+            var dependent = new ModuleC();
+            var moduleManager = CreateObjectUnderTest([
+                dependent
+            ]);
 
             // Act
             moduleManager.StartModules();
 
             // Assert
-            Assert.That(dependend.Facades, Is.Not.Null, "No facade injected");
-            Assert.That(dependend.Facades.Length, Is.EqualTo(0), "Faulty number of facades");
+            Assert.That(dependent.Facades, Is.Not.Null, "No facade injected");
+            Assert.That(dependent.Facades.Length, Is.EqualTo(0), "Faulty number of facades");
         }
 
         [Test]
         public void FacadeCollectionSingleEntry()
         {
             // Arrange
-            var dependend = new ModuleC();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
+            var dependent = new ModuleC();
+            var moduleManager = CreateObjectUnderTest([
                 new ModuleB1(),
-                dependend
-            });
+                dependent
+            ]);
 
             // Act
             moduleManager.StartModules();
 
             // Assert
-            Assert.That(dependend.Facades, Is.Not.Null, "No facade injected");
-            Assert.That(dependend.Facades.Length, Is.EqualTo(1), "Faulty number of facades");
+            Assert.That(dependent.Facades, Is.Not.Null, "No facade injected");
+            Assert.That(dependent.Facades.Length, Is.EqualTo(1), "Faulty number of facades");
         }
-
 
         [Test]
         public void FacadeInjection()
         {
             // Arrange
             var dependency = new ModuleA();
-            var depend = new ModuleADependend();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
+            var depend = new ModuleADependent();
+            var moduleManager = CreateObjectUnderTest([
                 dependency,
                 depend
-            });
+            ]);
 
             // Act
             moduleManager.StartModules();
@@ -126,16 +118,15 @@ namespace Moryx.Runtime.Kernel.Tests
         }
 
         [Test]
-        public void ShouldExcludeMissingFacadeAndItsDependends()
+        public void ShouldExcludeMissingFacadeAndItsDependents()
         {
             // Arrange
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
+            var moduleManager = CreateObjectUnderTest([
                 new ModuleB1(),
-                new ModuleCSingle(), 
-                new ModuleADependend(),
-                new ModuleADependendTransient()
-            });
+                new ModuleCSingle(),
+                new ModuleADependent(),
+                new ModuleADependentTransient()
+            ]);
 
             // Act
             moduleManager.StartModules();
@@ -143,7 +134,7 @@ namespace Moryx.Runtime.Kernel.Tests
             // Assert
             Assert.That(moduleManager.AllModules.Count(), Is.EqualTo(4));
             var available = moduleManager.DependencyTree.RootModules
-                .Flatten(md => md.Dependends).ToList();
+                .Flatten(md => md.Dependents).ToList();
             Assert.That(available.Count, Is.EqualTo(2));
         }
 
@@ -151,12 +142,11 @@ namespace Moryx.Runtime.Kernel.Tests
         public void ShouldExcludeWhenInCollection()
         {
             // Arrange
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
+            var moduleManager = CreateObjectUnderTest([
                 new ModuleB1(),
                 new ModuleBUsingA(),
                 new ModuleC()
-            });
+            ]);
 
             // Act
             moduleManager.StartModules();
@@ -164,7 +154,7 @@ namespace Moryx.Runtime.Kernel.Tests
             // Assert
             Assert.That(moduleManager.AllModules.Count(), Is.EqualTo(3));
             var available = moduleManager.DependencyTree.RootModules
-                .Flatten(md => md.Dependends).ToList();
+                .Flatten(md => md.Dependents).ToList();
             Assert.That(available.Count, Is.EqualTo(2));
         }
 
@@ -173,12 +163,11 @@ namespace Moryx.Runtime.Kernel.Tests
         {
             // Arrange
             var moduleBUsingA = new ModuleBUsingA();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
+            var moduleManager = CreateObjectUnderTest([
                 new ModuleB1(),
                 moduleBUsingA,
                 new ModuleC()
-            });
+            ]);
 
             // Act
             moduleManager.StartModules();
@@ -195,7 +184,7 @@ namespace Moryx.Runtime.Kernel.Tests
             // Arrange
             var mockModule = new Mock<IServerModule>();
 
-            var moduleManager = CreateObjectUnderTest(new[] {mockModule.Object});
+            var moduleManager = CreateObjectUnderTest([mockModule.Object]);
             //moduleManager.Initialize();
 
             // Act
@@ -212,11 +201,10 @@ namespace Moryx.Runtime.Kernel.Tests
             var mockModule1 = new Mock<IServerModule>();
             var mockModule2 = new Mock<IServerModule>();
 
-            var moduleManager = CreateObjectUnderTest(new[]
-            {
+            var moduleManager = CreateObjectUnderTest([
                 mockModule1.Object,
                 mockModule2.Object
-            });
+            ]);
 
             // Act
             moduleManager.StartModules();
@@ -237,7 +225,7 @@ namespace Moryx.Runtime.Kernel.Tests
             // Argange
             var mockModule = new Mock<IServerModule>();
 
-            var moduleManager = CreateObjectUnderTest(new[] { mockModule.Object });
+            var moduleManager = CreateObjectUnderTest([mockModule.Object]);
 
             // Act
             moduleManager.StartModule(mockModule.Object);
@@ -256,7 +244,7 @@ namespace Moryx.Runtime.Kernel.Tests
             var mockModule1 = new Mock<IServerModule>();
             var mockModule2 = new Mock<IServerModule>();
 
-            var moduleManager = CreateObjectUnderTest(new[] {mockModule1.Object, mockModule2.Object});
+            var moduleManager = CreateObjectUnderTest([mockModule1.Object, mockModule2.Object]);
             moduleManager.StartModules();
 
             // Act
@@ -274,7 +262,7 @@ namespace Moryx.Runtime.Kernel.Tests
             var mockModule = new Mock<IServerModule>();
             var eventFired = false;
 
-            var moduleManager = CreateObjectUnderTest(new[] { mockModule.Object });
+            var moduleManager = CreateObjectUnderTest([mockModule.Object]);
             moduleManager.ModuleStateChanged += (sender, args) => eventFired = true;
 
             // Act
@@ -289,7 +277,7 @@ namespace Moryx.Runtime.Kernel.Tests
         {
             // Argange
             var module = CreateLifeCycleBoundFacadeTestModuleUnderTest();
-            var moduleManager = CreateObjectUnderTest(new[] { module });
+            var moduleManager = CreateObjectUnderTest([module]);
 
             // Act
             moduleManager.StartModules();
@@ -305,7 +293,7 @@ namespace Moryx.Runtime.Kernel.Tests
         {
             // Argange
             var module = CreateLifeCycleBoundFacadeTestModuleUnderTest();
-            var moduleManager = CreateObjectUnderTest(new[] { module });
+            var moduleManager = CreateObjectUnderTest([module]);
 
             // Act
             moduleManager.StartModules();
@@ -320,7 +308,8 @@ namespace Moryx.Runtime.Kernel.Tests
             Assert.That(module.ActivatedCount, Is.EqualTo(1));
         }
 
-        private static void WaitForTimeboxed(Func<bool> condition, int maxSeconds = 10) {
+        private static void WaitForTimeboxed(Func<bool> condition, int maxSeconds = 10)
+        {
             var i = 0;
             while (!condition() && (i < maxSeconds))
             {

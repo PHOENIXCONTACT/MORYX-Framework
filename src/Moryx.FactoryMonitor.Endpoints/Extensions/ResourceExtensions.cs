@@ -1,12 +1,10 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
 using Moryx.Factory;
-using System;
-using System.Linq;
 
 namespace Moryx.FactoryMonitor.Endpoints.Extensions
 {
@@ -30,7 +28,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             if (location is null || machine is null) return null;
             return machineLocation;
         }
-        
+
         public static Resource GetFactory(this Resource resource)
         {
             var parent = resource.Parent;

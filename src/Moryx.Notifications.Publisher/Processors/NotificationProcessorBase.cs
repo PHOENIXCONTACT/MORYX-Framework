@@ -1,10 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Notifications.Model;
@@ -104,7 +100,7 @@ namespace Moryx.Notifications.Publisher
         /// <inheritdoc />
         public NotificationProcessorResult Process(Notification notification)
         {
-            var typedNotification = (TNotification) notification;
+            var typedNotification = (TNotification)notification;
             var type = GetOrCreateType(typedNotification);
 
             var processResult = OnProcess(typedNotification, type);
@@ -160,7 +156,7 @@ namespace Moryx.Notifications.Publisher
 
             using (var uow = UnitOfWorkFactory.Create())
             {
-                selectedType = CreateType(uow, notification);               
+                selectedType = CreateType(uow, notification);
             }
 
             _types.Add(selectedType);
@@ -306,7 +302,7 @@ namespace Moryx.Notifications.Publisher
             entity.Identifier = notification.Identifier;
             entity.Title = notification.Title;
             entity.Message = notification.Message;
-            if(notification.Created!=null)
+            if (notification.Created != null)
                 entity.Created = ConvertToUtc((DateTime)notification.Created);
             if (notification.Acknowledged != null)
                 entity.Acknowledged = ConvertToUtc((DateTime)notification.Acknowledged);
@@ -330,7 +326,7 @@ namespace Moryx.Notifications.Publisher
         /// </summary>
         private TNotification CopyFromEntityToNotification(NotificationEntity entity)
         {
-            TNotification notification = new TNotification();        
+            TNotification notification = new TNotification();
             notification.Identifier = entity.Identifier;
             notification.Title = entity.Title;
             notification.Message = entity.Message;
@@ -364,7 +360,7 @@ namespace Moryx.Notifications.Publisher
             var notificationRepo = uow.GetRepository<INotificationEntityRepository>();
             var timedFilteredNotifications =
                 notificationRepo.Linq.Where(n => n.Created >= start && n.Created <= end &&
-                                                 severity.Contains((Severity) n.Type.Severity) && n.Type.Type.Equals(typeName)).ToList();
+                                                 severity.Contains((Severity)n.Type.Severity) && n.Type.Type.Equals(typeName)).ToList();
 
             var result = new List<Notification>();
             foreach (var notificationEntity in timedFilteredNotifications)
@@ -382,10 +378,10 @@ namespace Moryx.Notifications.Publisher
             var notificationRepo = uow.GetRepository<INotificationEntityRepository>();
 
             var filter = from n in notificationRepo.Linq
-                where n.Created >= start && n.Created <= end &&
-                      n.Type.Severity == (int)severity &&
-                      n.Type.Type == typeof(TNotification).Name
-                select n;
+                         where n.Created >= start && n.Created <= end &&
+                               n.Type.Severity == (int)severity &&
+                               n.Type.Type == typeof(TNotification).Name
+                         select n;
 
             if (!string.IsNullOrEmpty(title))
                 filter = filter.Where(n => n.Title.Equals(title));

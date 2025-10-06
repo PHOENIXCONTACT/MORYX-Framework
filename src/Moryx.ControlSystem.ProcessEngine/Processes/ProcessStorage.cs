@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
@@ -196,7 +193,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             return completedActivities;
         }
 
-
         /// <inheritdoc />
         public void TryReloadRunningActivity(long processId, ActivityData activityData)
         {
@@ -365,7 +361,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             }
             else
             {
-                dbActivity = new() {
+                dbActivity = new()
+                {
                     Id = activity.Id,
                     TaskId = activityData.Task.Id,
                     ResourceId = activityData.Resource.Id,
@@ -435,7 +432,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
 
             public Func<Tracing> Constructor { get; }
 
-            public Func<object,bool> TypeCheck { get; }
+            public Func<object, bool> TypeCheck { get; }
 
             public TracingWrapper(Type type)
             {

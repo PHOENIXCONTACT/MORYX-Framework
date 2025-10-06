@@ -1,12 +1,9 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer;
 using Moryx.ControlSystem.Cells;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.StateMachines;
@@ -38,7 +35,7 @@ namespace Moryx.Resources.Benchmarking
         [ResourceReference(ResourceRelationType.Driver, ResourceReferenceRole.Source)]
         public AssemblyCell Cell { get; set; }
 
-        public IEnumerable<ICell> Usages => new[] { Cell };
+        public IEnumerable<ICell> Usages => [Cell];
 
         protected override void OnStart()
         {

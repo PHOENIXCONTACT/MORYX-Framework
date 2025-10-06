@@ -1,15 +1,13 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using Moryx.Workplans;
 
 namespace Moryx.Workplans.Editing.Implementation
 {
     internal struct InvolvedSteps
     {
         /// <summary>
-         /// Create instance with all involved entities
-         /// </summary>
+        /// Create instance with all involved entities
+        /// </summary>
         public InvolvedSteps(IWorkplanStep source, IWorkplanStep target, IConnector connector)
             : this()
         {

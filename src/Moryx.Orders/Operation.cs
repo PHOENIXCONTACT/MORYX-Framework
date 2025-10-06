@@ -1,8 +1,6 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
@@ -110,7 +108,7 @@ namespace Moryx.Orders
         /// </summary>
         public virtual OperationClassification State
         {
-            get => (OperationClassification)((int)FullState & 0xFF); 
+            get => (OperationClassification)((int)FullState & 0xFF);
             protected set => FullState = value;
         }
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Runtime.Kernel;
@@ -32,7 +32,7 @@ namespace Moryx.Runtime.Tests
         [Test]
         public void StoppedToReady()
         {
-            var casted = (IServerModule) _moduleUnderTest;
+            var casted = (IServerModule)_moduleUnderTest;
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Stopped), "Module not in stopped state!");
 
             // Call initialize
@@ -123,7 +123,7 @@ namespace Moryx.Runtime.Tests
         public void FailureInStopped()
         {
             var module = new DelayedExceptionModule(new ModuleContainerFactory(), _configManagerMock.Object, new TestLoggerMgmt());
-            var casted = (IServerModule) module;
+            var casted = (IServerModule)module;
 
             casted.Initialize();
             casted.Start();

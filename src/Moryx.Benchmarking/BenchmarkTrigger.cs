@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
@@ -6,7 +6,6 @@ using Moryx.Container;
 using Moryx.ControlSystem.Setups;
 using Moryx.Modules;
 using Moryx.Workplans;
-using System.Collections.Generic;
 
 namespace Moryx.Benchmarking
 {
@@ -28,8 +27,8 @@ namespace Moryx.Benchmarking
 
         public override IReadOnlyList<IWorkplanStep> CreateSteps(IProductRecipe recipe)
         {
-            return new[]
-            {
+            return
+            [
                 new BenchmarkStep
                 {
                     Parameters = new BenchmarkParameters
@@ -37,7 +36,7 @@ namespace Moryx.Benchmarking
                         Step = 42
                     }
                 }
-            };
+            ];
         }
     }
 }

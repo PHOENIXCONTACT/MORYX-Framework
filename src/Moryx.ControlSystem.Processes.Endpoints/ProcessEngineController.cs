@@ -1,11 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Channels;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -323,7 +319,7 @@ public class ProcessEngineController : ControllerBase
             var ungrouped = allPositions.GetUngroupedPostions();
             var groups = _resourceManagement.GetAllResources<IProcessHolderGroup>(x => true);
 
-            return new ApiResponse<ProcessHolderGroupModel[]>([..groups.ToDto(), ..ungrouped.ToDto()]);
+            return new ApiResponse<ProcessHolderGroupModel[]>([.. groups.ToDto(), .. ungrouped.ToDto()]);
         });
     }
 

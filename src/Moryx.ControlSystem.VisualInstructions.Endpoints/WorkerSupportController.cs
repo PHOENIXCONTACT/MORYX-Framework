@@ -1,13 +1,9 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Threading;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json.Serialization;
 using Moryx.Serialization;
@@ -153,10 +149,10 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
             var instructionResponse = new ActiveInstructionResponse
             {
                 Id = response.Id,
-                SelectedResult = new InstructionResult 
-                { 
-                    Key = response.SelectedResult?.Key ?? response.Result, 
-                    DisplayValue = response.SelectedResult?.DisplayValue 
+                SelectedResult = new InstructionResult
+                {
+                    Key = response.SelectedResult?.Key ?? response.Result,
+                    DisplayValue = response.SelectedResult?.DisplayValue
                 }
             };
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -57,7 +57,7 @@ namespace Moryx.Resources.Samples
         // Automatically detect relation name based
         public IVisualInstructor Instructor { get; set; }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart, AutoSave = true)]
+        [ResourceReference(ResourceRelationType.CurrentExchangeablePart, AutoSave = true)]
         public IReferences<IWpc> CurentWpcs { get; set; }
     }
 }

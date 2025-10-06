@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Products;
@@ -12,17 +12,17 @@ namespace Moryx.AbstractionLayer.Tests
     public class ProductConstraintTest
     {
         [TestCase("10101", 2, true, Description = "Constraint product id is the same as the process product id")]
-        [TestCase("9999", 2, false, Description = "Constraint product id is different as the process product id")]      
+        [TestCase("9999", 2, false, Description = "Constraint product id is different as the process product id")]
         public void CheckProductIdOfConstraintMatches(string identifier, short revision, bool expectedResult)
         {
             // Arrange
             var ident = new ProductIdentity(identifier, revision);
-            var constraint = ExpressionConstraint.Equals<IProcess>(p => ((IProductRecipe) p.Recipe).Product.Identity, ident);
+            var constraint = ExpressionConstraint.Equals<IProcess>(p => ((IProductRecipe)p.Recipe).Product.Identity, ident);
             // Act Assert
-            Assert.That(constraint.Check(CreateProcess()), Is.EqualTo(expectedResult));            
+            Assert.That(constraint.Check(CreateProcess()), Is.EqualTo(expectedResult));
         }
 
-       private static IProcess CreateProcess()
+        private static IProcess CreateProcess()
         {
             return new ProductionProcess
             {

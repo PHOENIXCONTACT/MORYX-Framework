@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
@@ -111,7 +109,7 @@ namespace Moryx.Orders.Management
                 reportEntity.SuccessCount = report.SuccessCount;
                 reportEntity.FailureCount = report.FailureCount;
                 reportEntity.Comment = report.Comment;
-                reportEntity.ReportedDate = report.ReportedDate.Kind == DateTimeKind.Utc ? 
+                reportEntity.ReportedDate = report.ReportedDate.Kind == DateTimeKind.Utc ?
                     report.ReportedDate : TimeZoneInfo.ConvertTimeToUtc(report.ReportedDate, TimeZoneInfo.Local);
                 reportEntity.ConfirmationType = (int)report.ConfirmationType;
                 reportEntity.UserIdentifier = report.User.Identifier;

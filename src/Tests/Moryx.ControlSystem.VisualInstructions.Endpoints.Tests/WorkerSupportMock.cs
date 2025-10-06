@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
@@ -20,9 +20,9 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
         {
             _instructions = new Dictionary<string, List<ActiveInstruction>>()
             {
-                ["Instructor"] = new List<ActiveInstruction> { new ActiveInstruction() },
-                ["Instructor with spaces"] = new List<ActiveInstruction> { new ActiveInstruction() },
-                ["Ümlaut"] = new List<ActiveInstruction> { new ActiveInstruction() },
+                ["Instructor"] = new List<ActiveInstruction> { new() },
+                ["Instructor with spaces"] = new List<ActiveInstruction> { new() },
+                ["Ümlaut"] = new List<ActiveInstruction> { new() },
             };
         }
 
@@ -54,7 +54,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
 
         public void CompleteInstruction(string identifier, ActiveInstructionResponse response)
         {
-            ClearInstruction(identifier,_instructions[identifier].FirstOrDefault(i => i.Id == response.Id));
+            ClearInstruction(identifier, _instructions[identifier].FirstOrDefault(i => i.Id == response.Id));
             CompleteResult = response.SelectedResult.Key;
         }
     }

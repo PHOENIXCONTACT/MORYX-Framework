@@ -1,10 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Orders.Advice;
@@ -234,7 +230,7 @@ namespace Moryx.Orders.Management
         }
 
         public ReportContext GetReportContext(Operation operation)
-        {         
+        {
             ValidateHealthState();
 
             var operationData = GetOperationDataSave(operation);
@@ -297,7 +293,7 @@ namespace Moryx.Orders.Management
         }
 
         public async Task<AdviceResult> TryAdvice(Operation operation, OperationAdvice advice)
-        {  
+        {
             ValidateHealthState();
 
             var operationData = OperationDataPool.Get(operation);

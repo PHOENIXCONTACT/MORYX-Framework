@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,7 +15,7 @@ namespace Moryx.Identity.AccessManagement
     /// </summary>
     public static class HostExtensions
     {
-        private static readonly string[] _permissions = {
+        private static readonly string[] _permissions = [
             "Moryx.Runtime.Database.CanView",
             "Moryx.Runtime.Database.CanSetAndTestConfig",
             "Moryx.Runtime.Database.CanCreate",
@@ -80,7 +77,7 @@ namespace Moryx.Identity.AccessManagement
             "Moryx.Skills.CanManage",
             "Moryx.Operators.CanView",
             "Moryx.Operators.CanManage"
-        };
+        ];
 
         /// <summary>
         /// Extension method to apply all migrations to the <see cref="MoryxIdentitiesDbContext"/> of the application.
@@ -161,7 +158,6 @@ namespace Moryx.Identity.AccessManagement
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
             };
-
 
             var user = await userManager.FindByNameAsync(defaultUser.UserName);
             if (user == null)

@@ -1,13 +1,8 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.IO;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Moryx.Serialization;
 
 namespace Moryx.Communication.Sockets
 {

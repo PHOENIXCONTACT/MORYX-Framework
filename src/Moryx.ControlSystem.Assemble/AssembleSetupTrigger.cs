@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Bindings;
@@ -31,7 +28,6 @@ namespace Moryx.ControlSystem.Assemble
 
         private IBindingResolver _sourceResolver;
         private IPropertyAccessor<ICapabilities, object> _descriptorAccessor;
-
 
         /// <inheritdoc />
         public override SetupExecution Execution => Config.Execution;
@@ -72,11 +68,11 @@ namespace Moryx.ControlSystem.Assemble
 
             // Only create resolve if config was valid
             if (!string.IsNullOrEmpty(Config.Instruction))
-                _instructionBinder = new VisualInstructionBinder(new[] {new VisualInstruction
+                _instructionBinder = new VisualInstructionBinder([new VisualInstruction
                 {
                     Type = InstructionContentType.Text,
                     Content = Config.Instruction
-                }}, RecipeResolverFactory);
+                }], RecipeResolverFactory);
         }
 
         /// <inheritdoc />
@@ -114,7 +110,7 @@ namespace Moryx.ControlSystem.Assemble
                 }
             };
 
-            return new[] { setupTask };
+            return [setupTask];
         }
     }
 }

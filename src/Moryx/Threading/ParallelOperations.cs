@@ -1,9 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 
 namespace Moryx.Threading
@@ -114,7 +111,7 @@ namespace Moryx.Threading
 
         #region Execute Periodically
         private int _lastTimerId;
-        private readonly Dictionary<int, Timer> _runningTimers = new Dictionary<int, Timer>();
+        private readonly Dictionary<int, Timer> _runningTimers = new();
 
         /// <summary>
         /// Execute non-critical operation periodically but non-stacking

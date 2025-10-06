@@ -1,12 +1,8 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace Moryx.Container
 {
@@ -20,7 +16,7 @@ namespace Moryx.Container
         /// </summary>
         public static void LoadFromAssembly(this IContainer container, Assembly assembly)
         {
-           container.LoadFromAssembly(assembly, t => true);
+            container.LoadFromAssembly(assembly, t => true);
         }
 
         /// <summary>
@@ -111,7 +107,7 @@ namespace Moryx.Container
 
             return true;
         }
-        
+
         private static void RegisterAdditionalDependencies(IContainer container, Type implementation)
         {
             var att = implementation.GetCustomAttribute<DependencyRegistrationAttribute>();
@@ -126,7 +122,7 @@ namespace Moryx.Container
             if (!typeof(ISubInitializer).IsAssignableFrom(att.Initializer))
                 throw new InvalidCastException($"SubInitializer {att.Initializer.Name} of component {implementation.Name} does not implement interface ISubInitializer");
 
-            container.Register(att.Initializer, new[] { typeof(ISubInitializer), att.Initializer }, null, LifeCycle.Singleton);
+            container.Register(att.Initializer, [typeof(ISubInitializer), att.Initializer], null, LifeCycle.Singleton);
         }
     }
 }

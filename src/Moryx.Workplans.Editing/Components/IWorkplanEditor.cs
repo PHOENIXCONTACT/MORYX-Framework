@@ -1,14 +1,11 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Modules;
-using Moryx.Workplans;
-using System;
-using System.Collections.Generic;
 
 namespace Moryx.Workplans.Editing.Components
 {
-    internal interface IWorkplanEditor: IPlugin
+    internal interface IWorkplanEditor : IPlugin
     {
         /// <summary>
         /// Available steps

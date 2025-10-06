@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
@@ -10,7 +10,8 @@ internal static class EntityExtensions
 {
     public static OperatorData ToData(this OperatorEntity entity, IResourceManagement resources)
     {
-        var data = new OperatorData(entity.Identifier) { 
+        var data = new OperatorData(entity.Identifier)
+        {
             Id = entity.Id,
             FirstName = entity.FirstName,
             LastName = entity.LastName,

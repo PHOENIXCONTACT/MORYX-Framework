@@ -1,9 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections.Concurrent;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 
 namespace Moryx.Threading
@@ -24,7 +22,7 @@ namespace Moryx.Threading
         /// <summary>
         /// Queue of unprocessed events
         /// </summary>
-        private readonly ConcurrentQueue<TElement> _eventQueue = new ConcurrentQueue<TElement>();
+        private readonly ConcurrentQueue<TElement> _eventQueue = new();
 
         /// <summary>
         /// Target callback for the event

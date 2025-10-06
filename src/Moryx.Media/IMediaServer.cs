@@ -1,10 +1,5 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Moryx.Media
 {
@@ -83,7 +78,7 @@ namespace Moryx.Media
         /// <exception cref="System.IO.PathTooLongException">Thrown when the specified path, file name, or both exceed the system-defined maximum length.</exception>
 
         bool RemoveVariant(Guid contentId, string variantName);
-    
+
         /// <summary>
         /// List of file types allowed to be uploaded
         /// </summary>

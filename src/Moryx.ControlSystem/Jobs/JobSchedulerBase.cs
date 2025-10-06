@@ -1,8 +1,5 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
-using System.Collections.Generic;
 
 namespace Moryx.ControlSystem.Jobs
 {
@@ -24,12 +21,12 @@ namespace Moryx.ControlSystem.Jobs
         /// <summary>
         /// Empty array for jobs without dependencies
         /// </summary>
-        private readonly Job[] EmptyDependencies = Array.Empty<Job>();
+        private readonly Job[] EmptyDependencies = [];
 
         /// <summary>
         /// Dependency map that can be helpful for job scheduling
         /// </summary>
-        private readonly Dictionary<Job, List<Job>> _dependencies = new Dictionary<Job, List<Job>>();
+        private readonly Dictionary<Job, List<Job>> _dependencies = new();
 
         /// <summary>
         /// Gets or sets the configuration of the scheduler
@@ -60,7 +57,7 @@ namespace Moryx.ControlSystem.Jobs
         protected IReadOnlyList<Job> Dependencies(Job target)
         {
             return _dependencies.ContainsKey(target)
-                ? (IReadOnlyList<Job>) _dependencies[target]
+                ? (IReadOnlyList<Job>)_dependencies[target]
                 : EmptyDependencies;
         }
 

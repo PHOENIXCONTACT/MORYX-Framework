@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Logging;
@@ -22,10 +22,10 @@ namespace Moryx.ProcessData.SpreadsheetsListener.Tests
     {
         private CsvStructure _csvStructure;
 
-        private CsvConfiguration _csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture);
+        private CsvConfiguration _csvConfig = new(CultureInfo.InvariantCulture);
         private SpreadsheetsListenerConfig _slConfig;
         private IModuleLogger _logger;
-        private Random _random = new Random();
+        private Random _random = new();
 
         private readonly string _path = Path.Combine(Path.GetTempPath(), nameof(CsvStructure));
         private string _randomFileName;

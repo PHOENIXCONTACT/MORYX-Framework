@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
@@ -57,8 +57,8 @@ namespace Moryx.ProcessData.Tests
 
         private static IEnumerable<MeasurementBinding> CreateBindingConfiguration()
         {
-            return new[]
-            {
+            return
+            [
                 new MeasurementBinding
                 {
                     Name = "propA",
@@ -71,7 +71,7 @@ namespace Moryx.ProcessData.Tests
                     Binding = BindingPropB,
                     ValueTarget = ValueTarget.Tag
                 }
-            };
+            ];
         }
     }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -34,7 +34,7 @@ namespace Moryx.Resources.Management
         public IDbContextManager DbContextManager { get; }
 
         /// <inheritdoc />
-        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager) 
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
             : base(containerFactory, configManager, loggerFactory)
         {
             DbContextManager = contextManager;
@@ -84,7 +84,7 @@ namespace Moryx.Resources.Management
             // Activate external facade to register events
             ActivateFacade(_resourceTypeTreeFacade);
             ActivateFacade(_resourceManagementFacade);
-  
+
         }
 
         /// <summary>
@@ -101,13 +101,13 @@ namespace Moryx.Resources.Management
             DeactivateFacade(_notificationSourceFacade);
         }
 
-        private readonly ResourceManagementFacade _resourceManagementFacade = new ResourceManagementFacade();
-        private readonly ResourceTypeTreeFacade _resourceTypeTreeFacade = new ResourceTypeTreeFacade();
+        private readonly ResourceManagementFacade _resourceManagementFacade = new();
+        private readonly ResourceTypeTreeFacade _resourceTypeTreeFacade = new();
         IResourceManagement IFacadeContainer<IResourceManagement>.Facade => _resourceManagementFacade;
 
         IResourceTypeTree IFacadeContainer<IResourceTypeTree>.Facade => _resourceTypeTreeFacade;
 
-        private readonly NotificationSourceFacade _notificationSourceFacade = new NotificationSourceFacade(ModuleName);
+        private readonly NotificationSourceFacade _notificationSourceFacade = new(ModuleName);
         INotificationSource IFacadeContainer<INotificationSource>.Facade => _notificationSourceFacade;
     }
 }

@@ -1,10 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using Moryx.Runtime.Kernel.Modules;
 using Moryx.Runtime.Modules;
@@ -36,12 +32,12 @@ namespace Moryx.Runtime.Kernel
         /// <inheritdoc />
         public void Start(IServerModule module)
         {
-            if(!AvailableModules.Contains(module))
+            if (!AvailableModules.Contains(module))
                 return; // Module not executable
 
             module.Initialize();
 
-            StartModule(module);   
+            StartModule(module);
         }
 
         /// <inheritdoc />
@@ -94,7 +90,7 @@ namespace Moryx.Runtime.Kernel
                 module.Initialize();
                 module.Start();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to start module {0}", module.Name);
             }
@@ -114,23 +110,23 @@ namespace Moryx.Runtime.Kernel
                 if (!WaitingModules.ContainsKey(module))
                     return;
 
-                // To increase boot speed we fork plugin start if more than one dependents was found
+                // To increase boot speed we fork plugin start if more than one dependent was found
                 foreach (var waitingModule in WaitingModules[module].ToArray())
                 {
                     WaitingModules[module].Remove(waitingModule);
                     StartModule(waitingModule);
                 }
-                // We remove this service for now after we started every dependend
+                // We remove this service for now after we started every dependent
                 WaitingModules.Remove(module);
             }
         }
 
         private void ConvertBranch(IModuleDependency branch)
         {
-            foreach (var dependend in branch.Dependends.Where(ShouldBeStarted))
+            foreach (var dependent in branch.Dependents.Where(ShouldBeStarted))
             {
-                AddWaitingService(branch.RepresentedModule, dependend.RepresentedModule);
-                ConvertBranch(dependend);
+                AddWaitingService(branch.RepresentedModule, dependent.RepresentedModule);
+                ConvertBranch(dependent);
             }
         }
 
@@ -146,7 +142,7 @@ namespace Moryx.Runtime.Kernel
         private bool ShouldBeStarted(IModuleDependency plugin)
         {
             var conf = _config.GetOrCreate(plugin.RepresentedModule.Name);
-            var result = conf.StartBehaviour == ModuleStartBehaviour.Auto || plugin.Dependends.Any(ShouldBeStarted);
+            var result = conf.StartBehaviour == ModuleStartBehaviour.Auto || plugin.Dependents.Any(ShouldBeStarted);
             return result;
         }
     }

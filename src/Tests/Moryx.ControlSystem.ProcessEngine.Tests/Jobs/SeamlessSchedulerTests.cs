@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
     {
         protected override IJobScheduler CreateScheduler()
         {
-            var scheduler =  new SeamlessScheduler
+            var scheduler = new SeamlessScheduler
             {
                 JobList = JobListMock.Object
             };
@@ -38,8 +38,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             // Assert
             Assert.That(slots.Length, Is.EqualTo(1), "There should be three slots");
         }
-
-
 
         [Test]
         public void StartNextJobOnCompleting()
@@ -70,11 +68,11 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
 
             // Act
             // The initial job is started and than completing BEFORE the other one is added
-            JobScheduler.SchedulableJobs(new[] { job, waiting });
-            JobScheduler.JobsReady(new[] { job, cleanup });
+            JobScheduler.SchedulableJobs([job, waiting]);
+            JobScheduler.JobsReady([job, cleanup]);
             job.Classification = JobClassification.Completing;
             JobScheduler.JobUpdated(job, JobClassification.Completing);
-            JobScheduler.JobsReady(new[] { waiting });
+            JobScheduler.JobsReady([waiting]);
 
             // Assert
             Assert.That(waiting, Is.EqualTo(ScheduledJob));
@@ -108,7 +106,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             {
                 Execution = SetupExecution.AfterProduction,
                 TargetRecipe = Recipe
-            }, 1){Classification = JobClassification.Waiting});
+            }, 1)
+            { Classification = JobClassification.Waiting });
 
             JobListMock.Setup(j => j.Previous(It.IsAny<Job>())).Returns<Job>(j =>
             {
@@ -120,7 +119,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
                 var index = jobs.IndexOf(j) + 1;
                 return jobs.Skip(index);
             });
-            
+
             Job scheduled = null;
             JobScheduler.Scheduled += (sender, args) => scheduled = args;
             var slotAvailable = false;
@@ -147,7 +146,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             {
                 Classification = JobClassification.Idle
             };
-            var schedulable = JobScheduler.SchedulableJobs(new[] {job});
+            var schedulable = JobScheduler.SchedulableJobs([job]);
             Assert.That(schedulable.Any());
         }
     }

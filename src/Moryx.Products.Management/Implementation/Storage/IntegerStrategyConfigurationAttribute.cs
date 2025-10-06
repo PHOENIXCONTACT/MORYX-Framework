@@ -1,7 +1,5 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
 
 namespace Moryx.Products.Management
 {
@@ -13,8 +11,8 @@ namespace Moryx.Products.Management
         public IntegerStrategyConfigurationAttribute()
         {
             ColumnType = typeof(long);
-            SupportedTypes = new[]
-            {
+            SupportedTypes =
+            [
                 typeof(short),
                 typeof(ushort),
                 typeof(int),
@@ -23,8 +21,8 @@ namespace Moryx.Products.Management
                 typeof(ulong),
                 typeof(Enum),
                 typeof(DateTime),
-                typeof(bool),
-            };
+                typeof(bool)
+            ];
         }
 
         public override int TypeCompliance(Type targetType)

@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -16,7 +16,7 @@ namespace Moryx.TestTools.UnitTest
         public static void Install(this IContainer container)
         {
             container.Register(typeof(EmptyInterceptor));
-            container.Register(typeof(NullLoggerFactory), new []{typeof(ILoggerFactory)});
+            container.Register(typeof(NullLoggerFactory), [typeof(ILoggerFactory)]);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Diagnostics;
@@ -155,7 +155,6 @@ namespace Moryx.ProcessData.InfluxDbListener.Tests
             Assert.That(GetWritesCount(), Is.EqualTo(0));
         }
 
-
         private void CreateInfluxDbV2Listener() => _listener = new InfluxDbListenerV2
         {
             ParallelOperations = _parallelOperations,
@@ -169,7 +168,7 @@ namespace Moryx.ProcessData.InfluxDbListener.Tests
             _moduleLogger = new Mock<IModuleLogger>();
             _moduleLogger.Setup(l => l.GetChild(It.IsAny<string>(), It.IsAny<Type>())).Returns(_moduleLogger.Object);
         }
-        
+
         private void CreateParrallelOps() => _parallelOperations = new NotSoParallelOps();
 
         private static InfluxDbListenerConfigV2 CreateListenerConfig() => new()
@@ -197,7 +196,7 @@ namespace Moryx.ProcessData.InfluxDbListener.Tests
 
         private static Measurement CreateMeasurement() => new(MeasurandName);
 
-        private int GetWritesCount() => _mockServer.FindLogEntries(Request.Create().WithPath("/api/v2/write")).Count();
+        private int GetWritesCount() => _mockServer.FindLogEntries(Request.Create().WithPath("/api/v2/write")).Count;
 
         private void AwaitParrallelOperations() => _parallelOperations.WaitForScheduledExecution(ReportInterval * 1000);
 

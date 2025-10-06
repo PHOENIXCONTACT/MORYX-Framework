@@ -1,8 +1,6 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Moryx.AbstractionLayer.Recipes;
 
@@ -35,7 +33,7 @@ namespace Moryx.ControlSystem.Jobs
         {
         }
 
-        private readonly List<JobTemplate> _templates = new List<JobTemplate>();
+        private readonly List<JobTemplate> _templates = new();
         /// <summary>
         /// Recipe for the job to produce
         /// </summary>

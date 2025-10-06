@@ -1,11 +1,9 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Moryx.Serialization
@@ -14,7 +12,7 @@ namespace Moryx.Serialization
     /// Base class for EntryCollections
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class EntryCollectionBase<T> : INotifyPropertyChanged, INotifyCollectionChanged, IEnumerable<T>, IEntryCollection 
+    public abstract class EntryCollectionBase<T> : INotifyPropertyChanged, INotifyCollectionChanged, IEnumerable<T>, IEntryCollection
         where T : class, new()
     {
         /// <summary>

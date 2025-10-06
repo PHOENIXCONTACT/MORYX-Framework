@@ -1,7 +1,5 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
 
 namespace Moryx.Configuration
 {
@@ -11,11 +9,11 @@ namespace Moryx.Configuration
     public static class ConfigManagerExtensions
     {
         /// <summary>
-         /// Get typed configuration. Will use cached object if available
-         /// </summary>
-         /// <typeparam name="T">Type of config object</typeparam>
-         /// <returns>Configuration object</returns>
-        public static T GetConfiguration<T>(this IConfigManager configManager) 
+        /// Get typed configuration. Will use cached object if available
+        /// </summary>
+        /// <typeparam name="T">Type of config object</typeparam>
+        /// <returns>Configuration object</returns>
+        public static T GetConfiguration<T>(this IConfigManager configManager)
             where T : class, IConfig, new()
         {
             var configType = typeof(T);

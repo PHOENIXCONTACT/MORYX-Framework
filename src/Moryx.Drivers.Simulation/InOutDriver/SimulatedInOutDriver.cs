@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer;
@@ -20,8 +20,7 @@ namespace Moryx.Drivers.Simulation.InOutDriver
         [ResourceReference(ResourceRelationType.Driver, ResourceReferenceRole.Source)]
         public Cell Cell { get; set; }
 
-        public IEnumerable<ICell> Usages => new[] { Cell };
-
+        public IEnumerable<ICell> Usages => [Cell];
 
         private SimulationState _simulatedState;
         [EntrySerialize]
@@ -54,7 +53,6 @@ namespace Moryx.Drivers.Simulation.InOutDriver
         /// Driver should publish the result for the currently executed activity
         /// </summary>
         public abstract void Result(SimulationResult result);
-
 
         protected SimulatedInput<TIn> SimulatedInput { get; } = new SimulatedInput<TIn>();
         [EntrySerialize]

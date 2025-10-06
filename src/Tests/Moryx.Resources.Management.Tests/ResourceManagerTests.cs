@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -43,17 +43,17 @@ namespace Moryx.Resources.Management.Tests
             _typeControllerMock = new Mock<IResourceTypeController>();
 
             _linkerMock = new Mock<IResourceLinker>();
-            _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(), 
-                It.IsAny<Dictionary<Resource,ResourceEntity>>()))
-                .Returns(new Resource[0]);
-
-            _initializerMock = new Mock<IResourceInitializer>();
-            _initializerMock.Setup(i => i.Execute(It.IsAny<IResourceGraph>())).Returns(new[] { _resourceMock });
-            _linkerMock.Setup(l => l.SaveRoots(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()))
-                .Returns(new[] { _resourceMock });
             _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(),
                 It.IsAny<Dictionary<Resource, ResourceEntity>>()))
-                .Returns(new Resource[0]);
+                .Returns(Array.Empty<Resource>());
+
+            _initializerMock = new Mock<IResourceInitializer>();
+            _initializerMock.Setup(i => i.Execute(It.IsAny<IResourceGraph>())).Returns([_resourceMock]);
+            _linkerMock.Setup(l => l.SaveRoots(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()))
+                .Returns([_resourceMock]);
+            _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(),
+                It.IsAny<Dictionary<Resource, ResourceEntity>>()))
+                .Returns(Array.Empty<Resource>());
 
             _graph = new ResourceGraph { TypeController = _typeControllerMock.Object };
             _resourceManager = new ResourceManager
@@ -140,7 +140,7 @@ namespace Moryx.Resources.Management.Tests
             // Arrange
             var collectionProperty = typeof(IReferenceResource).GetProperty(nameof(IReferenceResource.References));
             _linkerMock.Setup(l => l.SaveSingleCollection(It.IsAny<IUnitOfWork>(), _resourceMock, collectionProperty))
-                .Returns(() => new Resource[0]);
+                .Returns(() => Array.Empty<Resource>());
 
             var referenceCollectionMock = new ReferenceCollectionMock<IResource>();
             _resourceMock.References = referenceCollectionMock;

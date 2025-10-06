@@ -1,10 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 
 namespace Moryx.Tools
 {
@@ -41,10 +38,7 @@ namespace Moryx.Tools
         /// <returns>new string instance.</returns>
         public static string Append(this string s, string separator, string value)
         {
-            if (s == null)
-            {
-                throw new ArgumentNullException(nameof(s));
-            }
+            ArgumentNullException.ThrowIfNull(s);
 
             if (s.Length == 0)
             {
@@ -58,7 +52,6 @@ namespace Moryx.Tools
 
             return s;
         }
-
 
         /// <summary>
         /// Die Funktions stellt sicher, ob mindestens ein Zeichen in dem value eine Buchstabe oder eine Zahl ist

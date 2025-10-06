@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.ControlSystem.VisualInstructions;
@@ -46,9 +46,9 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
             processor.ProcessItem(item);
 
             // Assert
-            if(contentReplacement)
+            if (contentReplacement)
                 Assert.That(item.Content, Is.EqualTo(@"moryx://media/guid/35afe06d-8393-4559-b6d7-74d35ce131d8?v=Master"));
-            if(previewReplacement)
+            if (previewReplacement)
                 Assert.That(item.Preview, Is.EqualTo(@"http://moryx-server/media/preview/35afe06d-8393-4559-b6d7-74d35ce131d8"));
         }
     }

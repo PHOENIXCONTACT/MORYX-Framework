@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -50,7 +50,7 @@ namespace Moryx.Resources.Mqtt.Tests
                 .WithTcpServer(_driver.BrokerURL, _driver.Port)
                 .Build();
             _mockClient.Setup(m => m.ConnectAsync(It.IsAny<MqttClientOptions>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new MqttClientConnectResult(), TimeSpan.FromMilliseconds(100));            
+                .ReturnsAsync(new MqttClientConnectResult(), TimeSpan.FromMilliseconds(100));
         }
 
         [Test(Description = $"After stopping the driver it should be in the {nameof(DisconnectedState)}")]
@@ -75,7 +75,7 @@ namespace Moryx.Resources.Mqtt.Tests
             ((IPlugin)_driver).Start();
 
             //Act
-            ((IPlugin)_driver).Stop(); 
+            ((IPlugin)_driver).Stop();
             ((IPlugin)_driver).Start();
 
             //Assert I

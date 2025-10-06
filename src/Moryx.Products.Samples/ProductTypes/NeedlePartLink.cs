@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -21,7 +21,7 @@ namespace Moryx.Products.Samples
 
         public override ProductInstance Instantiate()
         {
-            var needle = (NeedleInstance) base.Instantiate();
+            var needle = (NeedleInstance)base.Instantiate();
             needle.Role = Role;
             return needle;
         }

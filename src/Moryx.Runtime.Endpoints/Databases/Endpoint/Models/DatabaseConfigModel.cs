@@ -1,7 +1,5 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System.Collections.Generic;
 
 namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Models
 {
@@ -18,6 +16,6 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Models
         /// <summary>
         /// Configuration of the database model.
         /// </summary>
-        public Dictionary<string, string> Entries { get;set; }
+        public Dictionary<string, string> Entries { get; set; }
     }
 }

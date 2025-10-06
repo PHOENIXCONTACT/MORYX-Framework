@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
@@ -47,7 +45,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// All processes that are currently created
         /// </summary>
-        private readonly List<ProcessData> _creatingProcesses = new List<ProcessData>();
+        private readonly List<ProcessData> _creatingProcesses = new();
 
         /// <inheritdoc />
         public int StartOrder => 20;
@@ -93,7 +91,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                     // Interrupted processes are saved synchronous for secure shutdown
                     ProcessStorage.SaveProcess(args.ProcessData);
                     // Save instances if existing and configured
-                    if(ModuleConfig.SaveInstancesOnInterrupt && (processData.Process as ProductionProcess)?.ProductInstance?.Id > 0)
+                    if (ModuleConfig.SaveInstancesOnInterrupt && (processData.Process as ProductionProcess)?.ProductInstance?.Id > 0)
                         ParallelOperations.ExecuteParallel(SaveInstance, processData);
                     break;
                 case ProcessState.Success:
@@ -206,7 +204,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             // Signal process ready for execution
             if (processData.State == ProcessState.Restored)
                 ActivityPool.UpdateProcess(processData, ProcessState.RestoredReady);
-            else if(processData.State == ProcessState.CleaningUp)
+            else if (processData.State == ProcessState.CleaningUp)
                 ActivityPool.UpdateProcess(processData, ProcessState.CleaningUpReady);
         }
 

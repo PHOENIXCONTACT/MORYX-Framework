@@ -1,9 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Logging;
@@ -120,9 +117,9 @@ namespace Moryx.AbstractionLayer.TestTools.Resources
         {
             var resourceType = instance.GetType();
             var properties = (from prop in resourceType.GetProperties()
-                let propType = prop.PropertyType
-                where propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(IReferences<>)
-                select prop).ToList();
+                              let propType = prop.PropertyType
+                              where propType.IsGenericType && propType.GetGenericTypeDefinition() == typeof(IReferences<>)
+                              select prop).ToList();
             foreach (var property in properties)
             {
                 var listType = typeof(ReferenceCollectionMock<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]);

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
@@ -38,14 +38,14 @@ namespace Moryx.ControlSystem.Jobs
         /// Checks if the <paramref name="job"/> holds an <see cref="ISetupRecipe"/> 
         /// that is set to be executed <see cref="SetupExecution.BeforeProduction"/>
         /// </summary>
-        public static bool IsPreparingSetup(this Job job) 
+        public static bool IsPreparingSetup(this Job job)
             => job.Recipe is ISetupRecipe setup && setup.Execution == SetupExecution.BeforeProduction;
 
         /// <summary>
         /// Checks if the <paramref name="job"/> holds an <see cref="ISetupRecipe"/> 
         /// that is set to be executed <see cref="SetupExecution.AfterProduction"/>
         /// </summary>
-        public static bool IsCleaningUpSetup(this Job job) 
+        public static bool IsCleaningUpSetup(this Job job)
             => job.Recipe is ISetupRecipe setup && setup.Execution == SetupExecution.AfterProduction;
     }
 }

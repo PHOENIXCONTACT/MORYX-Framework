@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 
 namespace Moryx.Tools
@@ -22,14 +19,14 @@ namespace Moryx.Tools
             var assemblies = Directory.GetFiles(parentDir, "*.dll", SearchOption.TopDirectoryOnly);
             foreach (var assemblyFile in assemblies)
             {
-                if(AppDomain.CurrentDomain.GetAssemblies().Any(loadedAssembly => NamesMatch(loadedAssembly, assemblyFile)))
+                if (AppDomain.CurrentDomain.GetAssemblies().Any(loadedAssembly => NamesMatch(loadedAssembly, assemblyFile)))
                     continue;
 
                 try
                 {
                     Assembly.LoadFrom(assemblyFile);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     var loadEx = new FileLoadException("Failed to load assembly file " + assemblyFile, ex);
                     Console.WriteLine(ExceptionPrinter.Print(loadEx));

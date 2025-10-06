@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel
@@ -28,7 +27,7 @@ namespace Moryx.Runtime.Kernel
         /// </summary>
         public IServerModule RepresentedModule { get; }
 
-        public List<IModuleDependency> Dependencies { get; set; } = new List<IModuleDependency>();
+        public List<IModuleDependency> Dependencies { get; set; } = [];
         /// <summary>
         /// All modules this module depends on
         /// </summary>
@@ -37,11 +36,11 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// All modules that depend on this module
         /// </summary>
-        public List<IModuleDependency> Dependends { get; set; } = new List<IModuleDependency>();
+        public List<IModuleDependency> Dependends { get; set; } = [];
         /// <summary>
         /// All modules that depend on this module
         /// </summary>
-        IReadOnlyList<IModuleDependency> IModuleDependency.Dependends => Dependends;
+        IReadOnlyList<IModuleDependency> IModuleDependency.Dependents => Dependends;
     }
 }
 

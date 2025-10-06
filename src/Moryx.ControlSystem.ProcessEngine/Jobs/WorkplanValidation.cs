@@ -1,9 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
 using Moryx.AbstractionLayer;
 using Moryx.ControlSystem.ProcessEngine.Properties;
@@ -28,7 +26,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             // Find any step, that has an empty output
             foreach (var step in workplan.Steps)
             {
-                if(step.Outputs.Any(o => o is null))
+                if (step.Outputs.Any(o => o is null))
                     errors.Add(string.Format(Strings.WorkplanValidation_OutputUnset, step.Name));
             }
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer;
@@ -52,7 +52,7 @@ namespace Moryx.ControlSystem.Cells
         /// </summary>
         /// <param name="activity">The activity.</param>
         public ActivityStart StartActivity(IActivity activity)
-        {           
+        {
             return new ActivityStart(this, activity) { Process = activity.Process };
         }
 

@@ -1,7 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-﻿using Moryx.Model.Sqlite;
+using Moryx.Model.Sqlite;
 using Moryx.Products.Model;
 using Moryx.Runtime.Kernel;
 using NUnit.Framework;
@@ -21,7 +21,7 @@ namespace Moryx.Model.Tests
         public void Setup()
         {
             string databaseName = "TestDatabase";
-            datasource = Path.Combine(".", "db", databaseName+".db");
+            datasource = Path.Combine(".", "db", databaseName + ".db");
             string connectionString = $@"Data Source={datasource};";
             dbConfig = new SqliteDatabaseConfig();
             dbConfig.ConnectionSettings = new DatabaseConnectionSettings { ConnectionString = connectionString, Database = databaseName };
@@ -43,7 +43,6 @@ namespace Moryx.Model.Tests
             //remove the database
             await configurator.DeleteDatabase(dbConfig);
         }
-
 
         [Test]
         public async Task SqliteDeleteDatabaseShouldWork()

@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2022, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Orders.Advice;
@@ -136,7 +133,7 @@ namespace Moryx.Orders
         /// Event which will be raised when the report context of the operation will be requested
         /// </summary>
         event EventHandler<OperationReportRequestEventArgs> OperationReportRequest;
-    
+
         /// <summary>
         /// Assigns or updates operation related information like the corresponding product or recipes on the existing operation instance.
         /// </summary>

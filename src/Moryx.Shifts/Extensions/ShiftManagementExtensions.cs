@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -14,11 +14,11 @@ namespace Moryx.Shifts.Extensions
         public static IEnumerable<Shift> GetShifts(this IShiftManagement source, DateOnly? earliestDate, DateOnly? latestDate)
         {
             IEnumerable<Shift> shifts = source.Shifts;
-            if(!earliestDate.HasValue && !latestDate.HasValue) return shifts;
+            if (!earliestDate.HasValue && !latestDate.HasValue) return shifts;
 
-            if(earliestDate.HasValue)
+            if (earliestDate.HasValue)
             {
-                shifts = shifts.Where(s => s.Date.AddDays(s.Type.Periode) >= earliestDate); 
+                shifts = shifts.Where(s => s.Date.AddDays(s.Type.Periode) >= earliestDate);
             }
             if (latestDate.HasValue)
             {

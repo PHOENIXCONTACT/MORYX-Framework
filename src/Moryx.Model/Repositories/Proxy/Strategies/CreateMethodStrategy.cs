@@ -1,9 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
@@ -14,7 +11,7 @@ namespace Moryx.Model.Repositories.Proxy
     {
         //TODO: Collection Properties
 
-        private static readonly Regex CreateRegex = new Regex(@"(?:Create)$");
+        private static readonly Regex CreateRegex = new(@"(?:Create)$");
 
         public override bool CanImplement(MethodInfo methodInfo)
         {

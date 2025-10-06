@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel
@@ -18,18 +17,18 @@ namespace Moryx.Runtime.Kernel
         /// </summary>
         public IDictionary<IServerModule, ICollection<IServerModule>> WaitingModules { get; set; }
 
-        protected void AddWaitingService(IServerModule dependency, IServerModule dependend)
+        protected void AddWaitingService(IServerModule dependency, IServerModule dependent)
         {
             lock (WaitingModules)
             {
                 if (WaitingModules.ContainsKey(dependency))
                 {
-                    if (!WaitingModules[dependency].Contains(dependend))
-                        WaitingModules[dependency].Add(dependend);
+                    if (!WaitingModules[dependency].Contains(dependent))
+                        WaitingModules[dependency].Add(dependent);
                 }
                 else
                 {
-                    WaitingModules[dependency] = new List<IServerModule> { dependend };
+                    WaitingModules[dependency] = new List<IServerModule> { dependent };
                 }
             }
         }

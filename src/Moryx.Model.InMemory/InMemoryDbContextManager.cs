@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
 
@@ -66,7 +64,7 @@ namespace Moryx.Model.InMemory
             var context = (TContext)Activator.CreateInstance(typeof(TContext), options);
             return context;
         }
-        
+
         /// <inheritdoc />
         public void UpdateConfig(Type dbContextType, Type configuratorType, IDatabaseConfig databaseConfig)
         {

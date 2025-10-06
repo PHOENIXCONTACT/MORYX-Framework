@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
@@ -148,7 +148,7 @@ namespace Moryx.Products.Model
 
             // Indexes
             modelBuilder.Entity<ProductTypeEntity>()
-                .HasIndex(p => new { p.Identifier, p.Revision});
+                .HasIndex(p => new { p.Identifier, p.Revision });
 
             modelBuilder.Entity<ProductTypeEntity>()
                 .HasIndex(p => new { p.Identifier, p.Revision });

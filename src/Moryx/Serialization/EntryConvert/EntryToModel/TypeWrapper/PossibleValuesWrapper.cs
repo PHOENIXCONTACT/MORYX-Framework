@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -15,7 +14,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Regex used to check for the naming conventing
         /// </summary>
-        private static readonly Regex PossibleValuesRegex = new Regex(@"Possible(?<key>\w+)s");
+        private static readonly Regex PossibleValuesRegex = new(@"Possible(?<key>\w+)s");
 
         /// <summary>
         /// Indicates that this reader can read this property

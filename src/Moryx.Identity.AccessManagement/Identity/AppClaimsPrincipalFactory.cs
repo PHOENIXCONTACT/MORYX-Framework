@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Moryx.Identity.AccessManagement.Data;
@@ -33,7 +32,7 @@ namespace Moryx.Identity.AccessManagement
         {
             var principal = await base.CreateAsync(user);
 
-            var claimIdentity = ((ClaimsIdentity) principal.Identity);
+            var claimIdentity = ((ClaimsIdentity)principal.Identity);
             if (claimIdentity == null)
                 return principal;
 

@@ -1,10 +1,8 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Workplans;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.AbstractionLayer.TestTools
 {
@@ -20,8 +18,8 @@ namespace Moryx.AbstractionLayer.TestTools
             if (toCompareWith == null)
                 return false;
 
-            return toCompareWith.Name == Name && toCompareWith.Revision == Revision 
-                && toCompareWith.State == State && toCompareWith.Classification == Classification 
+            return toCompareWith.Name == Name && toCompareWith.Revision == Revision
+                && toCompareWith.State == State && toCompareWith.Classification == Classification
                 && ((toCompareWith.Origin is null && Origin is null) || Origin.Equals(toCompareWith.Origin))
                 && ((toCompareWith.Product is null && Product is null) || Product.Equals(toCompareWith.Product))
                 && ((toCompareWith.Target is null && Target is null) || Target.Equals(toCompareWith.Target));
@@ -46,7 +44,7 @@ namespace Moryx.AbstractionLayer.TestTools
             if (toCompareWith == null)
                 return false;
 
-            return base.Equals(toCompareWith) 
+            return base.Equals(toCompareWith)
                 && ((toCompareWith.Workplan is null && Workplan is null) || Workplan.Equals(toCompareWith.Workplan))
                 && ((toCompareWith.DisabledSteps is null && DisabledSteps is null) || Enumerable.SequenceEqual<long>(DisabledSteps, toCompareWith.DisabledSteps));
         }

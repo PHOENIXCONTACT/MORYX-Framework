@@ -1,8 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 using Moryx.Runtime.Modules;
@@ -43,7 +41,7 @@ namespace Moryx.Runtime.Kernel
             var config = ManagedModules.FirstOrDefault(item => item.ModuleName == moduleName);
             if (config == null)
             {
-                config = new ManagedModuleConfig {ModuleName = moduleName};
+                config = new ManagedModuleConfig { ModuleName = moduleName };
                 ManagedModules.Add(config);
             }
             return config;

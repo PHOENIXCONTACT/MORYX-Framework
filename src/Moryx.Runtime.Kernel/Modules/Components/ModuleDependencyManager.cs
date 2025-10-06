@@ -1,14 +1,10 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Moryx.Runtime.Kernel.Modules;
 using Moryx.Runtime.Modules;
-using Moryx.Tools;
 
 namespace Moryx.Runtime.Kernel
 {
@@ -61,7 +57,7 @@ namespace Moryx.Runtime.Kernel
             // Fill facade dependencies
             var facadeProviders = BuildFacadeCache(allModules);
             var availableModules = FillDependencies(allModules, facadeProviders);
-            
+
             // Build dependency tree from available modules
             var dependencyBranches = Convert(availableModules, facadeProviders);
             _dependencyTree = new PluginDependencyTree(dependencyBranches.Where(c => c.Dependencies.Count == 0)
@@ -111,7 +107,7 @@ namespace Moryx.Runtime.Kernel
                     else
                         FillFacade(propType, importingProperty, module, facadeProviders);
                 }
-                 satisfiedModules.Add(module);
+                satisfiedModules.Add(module);
             }
 
             return satisfiedModules;
@@ -128,7 +124,6 @@ namespace Moryx.Runtime.Kernel
             }
             importingProperty.Property.SetValue(module, facadeArray);
         }
-
 
         private void FillFacade(Type propType, ImportingProperty importingProperty, IServerModule service, IDictionary<object, IServerModule> facadeProviders)
         {
@@ -197,8 +192,8 @@ namespace Moryx.Runtime.Kernel
                     // check for missing dependencies and add them to the dependencies list
                     // of the current module
                     var nullDependencies = dependencies.Where(d => d.GetType() == typeof(MissingServerModule)).ToList();
-                    if (nullDependencies != null && nullDependencies.Count() > 0)
-                        branch.Dependencies.AddRange(nullDependencies.Select( nd => new MissingModuleDependency((MissingServerModule)nd)));
+                    if (nullDependencies != null && nullDependencies.Count > 0)
+                        branch.Dependencies.AddRange(nullDependencies.Select(nd => new MissingModuleDependency((MissingServerModule)nd)));
 
                     remaining.Remove(module);
                 }
@@ -213,7 +208,7 @@ namespace Moryx.Runtime.Kernel
             var dependencyServices = new List<IServerModule>();
             foreach (var importingProperty in GetImportingProperties(module))
             {
-                if(!importingProperty.Attribute.IsStartDependency)
+                if (!importingProperty.Attribute.IsStartDependency)
                     continue;
 
                 var propType = importingProperty.Property.PropertyType;
@@ -225,7 +220,7 @@ namespace Moryx.Runtime.Kernel
 
                 // when there is no facade provider for the dependency,
                 // add a missing dependency for the property type
-                if(dependencyProviders.Count() == 0)
+                if (dependencyProviders.Count() == 0)
                     dependencyServices.Add(new MissingServerModule(propType, importingProperty.Attribute.IsOptional));
             }
 

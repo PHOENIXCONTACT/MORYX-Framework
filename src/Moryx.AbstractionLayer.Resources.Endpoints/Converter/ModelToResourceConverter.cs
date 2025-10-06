@@ -1,8 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.Serialization;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints
@@ -15,7 +13,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// <summary>
         /// Resource cache to avoid redundant conversions AND make use of WCFs "IsReference" feature
         /// </summary>
-        private readonly Dictionary<long, Resource> _resourceCache = new Dictionary<long, Resource>();
+        private readonly Dictionary<long, Resource> _resourceCache = new();
 
         private readonly IResourceGraph _resourceGraph;
         private readonly ICustomSerialization _serialization;

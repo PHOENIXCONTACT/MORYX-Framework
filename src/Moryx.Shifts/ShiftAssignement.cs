@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
@@ -20,7 +20,7 @@ namespace Moryx.Shifts
         /// The resource of the shift assignment.
         /// </summary>
         public IResource Resource { get; set; }
-        
+
         /// <summary>
         /// The operator of the shift assignment.
         /// </summary>
@@ -30,17 +30,17 @@ namespace Moryx.Shifts
         /// The shift of the shift assignment.
         /// </summary>
         public Shift Shift { get; set; }
-        
+
         /// <summary>
         /// The note of the shift assignment.
         /// </summary>
         public string? Note { get; set; }
-        
+
         /// <summary>
         /// The priority of the shift assignment.
         /// </summary>
         public int Priority { get; set; }
-        
+
         /// <summary>
         /// The assigned days of the shift assignment.
         /// </summary>

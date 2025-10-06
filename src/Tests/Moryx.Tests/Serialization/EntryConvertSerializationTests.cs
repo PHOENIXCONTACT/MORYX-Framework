@@ -1,21 +1,16 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Serialization;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moryx.Tests.Serialization
 {
     [TestFixture]
     public class EntryConvertSerializationTests
     {
-       
+
         [Test]
         public void ParameterWithNoDefaultValueShouldHaveValidation_IsRequired()
         {
@@ -61,7 +56,7 @@ namespace Moryx.Tests.Serialization
 
             //assert
             Assert.That(entry.SubEntries
-                .FirstOrDefault(x => x.DisplayName == nameof(DummyClass.Number)).Value.Current, 
+                .FirstOrDefault(x => x.DisplayName == nameof(DummyClass.Number)).Value.Current,
                 Is.EqualTo(myObject.Number.ToString()));
         }
     }

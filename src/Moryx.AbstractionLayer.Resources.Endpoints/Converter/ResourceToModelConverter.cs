@@ -1,10 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Moryx.Serialization;
@@ -20,7 +16,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// <summary>
         /// Type cache to avoid redundant conversions AND make use of WCFs "IsReference" feature
         /// </summary>
-        private static readonly Dictionary<string, ResourceTypeModel> TypeCache = new Dictionary<string, ResourceTypeModel>();
+        private static readonly Dictionary<string, ResourceTypeModel> TypeCache = new();
 
         /// <summary>
         /// Internal ref id sequence
@@ -30,7 +26,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// <summary>
         /// Resource cache to avoid redundant conversions AND make use of WCFs "IsReference" feature
         /// </summary>
-        private readonly Dictionary<Resource, ResourceModel> _resourceCache = new Dictionary<Resource, ResourceModel>();
+        private readonly Dictionary<Resource, ResourceModel> _resourceCache = new();
 
         protected ICustomSerialization Serialization { get; }
 
@@ -89,7 +85,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             else
             {
                 // Only generate reference ids and add to cache for non-partial instance
-                model.ReferenceId = --_refId; 
+                model.ReferenceId = --_refId;
                 _resourceCache.Add(current, model);
 
                 // Properties and methods are read from the descriptor
@@ -110,7 +106,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         {
             var name = current.GetType().FullName;
             var node = TypeController[name];
-       
+
             // Find all reference properties on the object
             var referenceProperties = node.References;
 
@@ -119,7 +115,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         }
 
         #region Convert References
-       
+
         /// <summary>
         /// Convert a property referencing another resource into a <see cref="ResourceReferenceModel"/>
         /// </summary>
@@ -137,7 +133,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 return referenceModel;
 
             // Convert referenced resource objects and possible instance types         
-            var referenceTargets = (value as IEnumerable<IResource>) ?? new[] { (IResource)value };
+            var referenceTargets = (value as IEnumerable<IResource>) ?? [(IResource)value];
             foreach (Resource resource in referenceTargets)
             {
                 // Load references partially UNLESS they are new, unsaved objects
@@ -164,12 +160,12 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         {
             // If there are no overrides the only limitation is the target type
             if (!referenceOverrides.ContainsKey(property.Name))
-                return new[] { targetType };
+                return [targetType];
 
             // Otherwise find all types that limit the reference type without redundancies. This means eliminating all types
             // represented by another type
             var myOverrides = referenceOverrides[property.Name];
-            return myOverrides.Concat(new[] { targetType })
+            return myOverrides.Concat([targetType])
                 .Where(type => !myOverrides.Any(over => over != type && type.IsAssignableFrom(over))).ToList();
         }
 

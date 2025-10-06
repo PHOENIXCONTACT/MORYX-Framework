@@ -1,9 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
@@ -133,7 +130,6 @@ namespace Moryx.Communication.Sockets
                     tcpTransmission.Disconnected += TransmissionDisconnected;
                     tcpTransmission.Received += InitialReceive;
                 }
-
 
                 // If we have listners without a connection keep accepting clients
                 if (_listeners.Count > 0)

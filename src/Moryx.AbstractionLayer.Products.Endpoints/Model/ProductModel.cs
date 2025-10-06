@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
@@ -28,7 +28,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         public string Type { get; set; }
 
         [DataMember]
-        public Entry Properties { get; set; }      
+        public Entry Properties { get; set; }
 
         [DataMember]
         public ProductFileModel[] Files { get; set; }

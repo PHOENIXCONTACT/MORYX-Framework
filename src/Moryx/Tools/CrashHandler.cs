@@ -1,9 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Diagnostics;
-using System.IO;
 
 namespace Moryx.Tools
 {
@@ -21,7 +19,7 @@ namespace Moryx.Tools
             string crashText;
             try
             {
-                crashText = ExceptionPrinter.Print((Exception) e.ExceptionObject);
+                crashText = ExceptionPrinter.Print((Exception)e.ExceptionObject);
             }
             catch
             {
@@ -62,12 +60,12 @@ namespace Moryx.Tools
             }
             catch
             {
-               // Kill corrupted directory
-               Directory.Delete(crashDir, true);
-               Directory.CreateDirectory(crashDir);
+                // Kill corrupted directory
+                Directory.Delete(crashDir, true);
+                Directory.CreateDirectory(crashDir);
 
-               // Now try again
-               File.WriteAllText(fileName, message);
+                // Now try again
+                File.WriteAllText(fileName, message);
             }
         }
     }

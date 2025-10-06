@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Authorization;
@@ -8,10 +8,6 @@ using Moryx.Asp.Extensions;
 using Moryx.Notifications.Endpoints.Properties;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Moryx.Notifications.Endpoints
 {
@@ -24,7 +20,6 @@ namespace Moryx.Notifications.Endpoints
     public class NotificationPublisherController : ControllerBase
     {
         private readonly INotificationPublisher _notificationPublisher;
-
 
         private static readonly JsonSerializerSettings _serializerSettings = CreateSerializerSettings();
 
@@ -54,7 +49,7 @@ namespace Moryx.Notifications.Endpoints
         {
             var notification = _notificationPublisher.Get(guid);
             if (notification == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.NOTIFICATION_NOT_FOUND});
+                return NotFound(new MoryxExceptionResponse { Title = Strings.NOTIFICATION_NOT_FOUND });
 
             return Converter.ToModel(notification);
         }
@@ -85,23 +80,23 @@ namespace Moryx.Notifications.Endpoints
                     var notifications = _notificationPublisher.GetAll()
                         .Select(Converter.ToModel).ToList();
                     var json = JsonConvert.SerializeObject(notifications, _serializerSettings);
-                    
+
                     await response.WriteAsync($"data: {json}\r\r", cancelToken);
 
                     // Await task completion
-                    await Task.WhenAny(_notificationTcs.Task , Task.Delay(30000, cancelToken));
+                    await Task.WhenAny(_notificationTcs.Task, Task.Delay(30000, cancelToken));
 
                     // Create new TCS
                     _notificationTcs = new TaskCompletionSource();
                 }
             }
-            catch(OperationCanceledException)
+            catch (OperationCanceledException)
             {
             }
             finally
             {
                 // Unregister handler from facade
-                _notificationPublisher.Published -= eventHandler; 
+                _notificationPublisher.Published -= eventHandler;
                 _notificationPublisher.Acknowledged -= eventHandler;
 
                 _notificationTcs.TrySetCanceled();

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
@@ -7,7 +7,6 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer.TestTools.Resources;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
-using Moryx.ControlSystem.Processes.Endpoints;
 using Moryx.Factory;
 using Moryx.FactoryMonitor.Endpoints.Model;
 using Moryx.FactoryMonitor.Endpoints.Models;
@@ -21,9 +20,9 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 {
     public abstract class BaseTest
     {
-        protected Mock<IResourceManagement> _resourceManagementMock = new Mock<IResourceManagement>();
-        protected Mock<IProcessControl> _processFacadeMock = new Mock<IProcessControl>();
-        protected Mock<IOrderManagement> _orderFacadeMock = new Mock<IOrderManagement>();
+        protected Mock<IResourceManagement> _resourceManagementMock = new();
+        protected Mock<IProcessControl> _processFacadeMock = new();
+        protected Mock<IOrderManagement> _orderFacadeMock = new();
         protected FactoryMonitorController _factoryMonitor;
         protected DummyCell _assemblyCell;
         protected DummyCell _solderingCell;
@@ -56,9 +55,9 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             _manufactoringFactory.Children.Add(_assemblyCellLocation);
             _manufactoringFactory.Children.Add(_solderingCellLocation);
             _resourceManagementMock.Setup(rm => rm.GetResources<IManufacturingFactory>())
-                        .Returns(new[] { _manufactoringFactory });
+                        .Returns([_manufactoringFactory]);
             _resourceManagementMock.Setup(rm => rm.GetResource(It.IsAny<Func<IManufacturingFactory, bool>>()))
-                        .Returns(_manufactoringFactory); 
+                        .Returns(_manufactoringFactory);
             //_assemblyCell
             _assemblyCell = _graph.Instantiate<DummyCell>();
             _assemblyCell.Id = _assemblyCellId;
@@ -96,7 +95,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 
             // resource management cells
             _resourceManagementMock.Setup(rm => rm.GetResources<ICell>())
-                .Returns(new[] { _assemblyCell, _solderingCell });
+                .Returns([_assemblyCell, _solderingCell]);
             _resourceManagementMock.Setup(rm => rm.GetResources<IMachineLocation>())
                 .Returns(GetLocations());
             _resourceManagementMock.Setup(rm => rm.GetResources(It.IsAny<Func<IMachineLocation, bool>>()))
@@ -117,7 +116,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             _processFacadeMock.SetupGet(pm => pm.RunningProcesses)
                 .Returns(Array.Empty<IProcess>());
             _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<IActivity>()))
-                .Returns<IActivity>(a => _activityTargets.ContainsKey(a) ? _activityTargets[a] : new ICell[0]);
+                .Returns<IActivity>(a => _activityTargets.ContainsKey(a) ? _activityTargets[a] : Array.Empty<ICell>());
 
             //orders
             _orderFacadeMock.Setup(o => o.GetOperations(It.IsAny<Func<Operation, bool>>()))
@@ -134,7 +133,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
                 Paths = new List<Position>
                 {
                     _solderingCellLocation.Position,
-                    new Position{ PositionX = 0.1, PositionY = 0.2},
+                    new() { PositionX = 0.1, PositionY = 0.2},
                     _assemblyCellLocation.Position
                 }
             };
@@ -142,9 +141,8 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 
         protected IMachineLocation[] GetLocations()
         {
-            return new[] { _assemblyCellLocation, _solderingCellLocation };
+            return [_assemblyCellLocation, _solderingCellLocation];
         }
-
 
     }
 }

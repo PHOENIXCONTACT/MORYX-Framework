@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
@@ -11,7 +10,6 @@ using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.Notifications;
 using Moryx.Runtime.Configuration;
 using Moryx.Serialization;
-
 
 namespace Moryx.ControlSystem.ProcessEngine
 {

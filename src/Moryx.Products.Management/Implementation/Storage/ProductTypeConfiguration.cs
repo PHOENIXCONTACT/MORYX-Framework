@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
@@ -12,7 +12,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// Common configuration interface for all strategy configs
     /// </summary>
-    public interface IProductStrategyConfiguration : IPluginConfig 
+    public interface IProductStrategyConfiguration : IPluginConfig
     {
         /// <summary>
         /// Target type of the strategy
@@ -29,7 +29,7 @@ namespace Moryx.Products.Management
     public class ProductTypeConfiguration : IProductStrategyConfiguration
     {
         /// <inheritdoc />
-        [DataMember, PossibleTypes(typeof(ProductType),UseFullname =true)]
+        [DataMember, PossibleTypes(typeof(ProductType), UseFullname = true)]
         public string TargetType { get; set; }
 
         /// <inheritdoc cref="IPluginConfig"/> />
@@ -47,7 +47,7 @@ namespace Moryx.Products.Management
     public class ProductInstanceConfiguration : IProductStrategyConfiguration
     {
         /// <inheritdoc />
-        [DataMember, PossibleTypes(typeof(ProductInstance), UseFullname =true)]
+        [DataMember, PossibleTypes(typeof(ProductInstance), UseFullname = true)]
         public string TargetType { get; set; }
 
         /// <inheritdoc cref="IPluginConfig"/> />

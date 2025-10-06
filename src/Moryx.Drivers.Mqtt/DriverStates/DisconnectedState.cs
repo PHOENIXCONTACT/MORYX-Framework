@@ -1,11 +1,11 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Drivers;
 
 namespace Moryx.Drivers.Mqtt.DriverStates
 {
-    internal class DisconnectedState: DriverMqttState
+    internal class DisconnectedState : DriverMqttState
     {
         public DisconnectedState(MqttDriver context, StateMap stateMap) : base(context, stateMap, StateClassification.Offline)
         {
@@ -17,7 +17,7 @@ namespace Moryx.Drivers.Mqtt.DriverStates
             NextState(StateConnecting);
 
             Context.Connect().Wait();
-            
+
         }
         public override void Disconnect()
         {

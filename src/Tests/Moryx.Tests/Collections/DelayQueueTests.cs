@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -22,8 +22,8 @@ namespace Moryx.Tests.Collections
         private const int Delay = 300;
 
         private DelayQueue<DummyMessage> _queue;
-        private readonly Stopwatch _stopwatch = new Stopwatch();
-        private readonly List<long> _times = new List<long>();
+        private readonly Stopwatch _stopwatch = new();
+        private readonly List<long> _times = [];
 
         [SetUp]
         public void CreateQueue()

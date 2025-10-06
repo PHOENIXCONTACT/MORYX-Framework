@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace Moryx.Tests.Configuration
     /// <summary>
     /// Test config
     /// </summary>
-    internal class TransformerTestConfig 
+    internal class TransformerTestConfig
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TransformerTestConfig"/> class.
@@ -39,7 +39,7 @@ namespace Moryx.Tests.Configuration
         public TransformerTestConfig()
         {
             SubConfig = new SubConfig();
-            SubConfigList = new List<SubConfig>();
+            SubConfigList = [];
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Moryx.Tests.Configuration
         /// String field display name
         /// </summary>
         public const string StringFieldDisplayName = "My string Field";
-        
+
         // no attributes: for some testcases
         /// <summary>
         /// Gets or sets a boolean value.
@@ -87,7 +87,7 @@ namespace Moryx.Tests.Configuration
         /// Gets or sets a string value.
         /// </summary>
         [DefaultValue(StringFieldDefault)]
-        [PrimitiveValues("String1", "String2", "String3")]     
+        [PrimitiveValues("String1", "String2", "String3")]
         [Description("StringField Test description")]
         [DisplayName(StringFieldDisplayName)]
         [Required, MinLength(3), MaxLength(10), Password]

@@ -1,8 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Runtime.Modules;
@@ -18,7 +16,7 @@ namespace Moryx.Resources.Management
         public IResourceGraph ResourceGraph { get; set; }
 
         public IResourceTypeController TypeController { get; set; }
-   
+
         #endregion
 
         #region IFacadeControl
@@ -110,7 +108,6 @@ namespace Moryx.Resources.Management
             return ResourceGraph.GetResources(predicate).Proxify(TypeController);
         }
 
-
         #endregion
 
         #region IResourceModification
@@ -172,7 +169,6 @@ namespace Moryx.Resources.Management
             return ResourceGraph.GetResources(predicate);
         }
         #endregion
-
 
         /// <inheritdoc />
         public event EventHandler<IResource> ResourceAdded;

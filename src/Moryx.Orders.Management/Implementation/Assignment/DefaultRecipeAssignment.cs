@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.ControlSystem.Recipes;
@@ -24,16 +21,16 @@ namespace Moryx.Orders.Management.Assignment
                 operation.CreationContext.RecipePreselection != 0)
             {
                 var recipe = ProductManagement.LoadRecipe(operation.CreationContext.RecipePreselection);
-                return new[] {(IProductRecipe) recipe};
+                return [(IProductRecipe)recipe];
             }
 
             if (operation.Recipes.Any() && operation.Recipes.First() is IRecipe template && template.TemplateId != 0)
             {
                 var recipe = ProductManagement.LoadRecipe(template.TemplateId);
-                return new[] {(IProductRecipe) recipe};
+                return [(IProductRecipe)recipe];
             }
 
-            return new[] {await LoadDefaultRecipe(operation.Product)};
+            return [await LoadDefaultRecipe(operation.Product)];
         }
 
         /// <inheritdoc />

@@ -1,7 +1,5 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System.Threading.Tasks;
 
 namespace Moryx.AbstractionLayer.Products
 {
@@ -36,7 +34,7 @@ namespace Moryx.AbstractionLayer.Products
         /// <param name="config">Config of this module plugin</param>
         public virtual void Initialize(ProductImporterConfig config)
         {
-            Config = (TConfig) config;
+            Config = (TConfig)config;
 
             Parameters = GenerateParameters();
         }
@@ -75,7 +73,7 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         object IProductImporter.Update(object currentParameters)
         {
-            return Update((TParameters) currentParameters);
+            return Update((TParameters)currentParameters);
         }
 
         /// <summary>
@@ -91,7 +89,7 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         Task<ProductImporterResult> IProductImporter.Import(ProductImportContext context, object parameters)
         {
-            var result = Import(context, (TParameters) parameters);
+            var result = Import(context, (TParameters)parameters);
             Parameters = GenerateParameters();
             return result;
         }

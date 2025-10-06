@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Identity;
@@ -19,7 +18,6 @@ using Moryx.Model;
 using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
 using Moryx.TestTools.UnitTest;
-using Moryx.Threading;
 using Moryx.Tools;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -43,7 +41,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
             // Prepare InMemory resource db
             _unitOfWorkFactory = new UnitOfWorkFactory<ProcessContext>(new InMemoryDbContextManager(Guid.NewGuid().ToString()));
-
 
             using (var uow = _unitOfWorkFactory.Create())
             {
@@ -134,7 +131,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Arrange
             var process = PrepareProcessData(ProcessTypes.ProductionProcessWithInstance, instanceId);
             DataPool.AddProcess(process);
-            ((ProductionProcess) process.Process).ProductInstance.Id = instanceId;
+            ((ProductionProcess)process.Process).ProductInstance.Id = instanceId;
 
             // Act
             DataPool.UpdateProcess(process, processState);

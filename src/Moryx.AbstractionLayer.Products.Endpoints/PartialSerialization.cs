@@ -1,9 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -22,7 +19,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         /// <summary>
         /// Properties that shall be excluded from the generic collection
         /// </summary>
-        private static readonly string[] FilteredProperties = typeof (T).GetProperties().Select(p => p.Name).ToArray();
+        private static readonly string[] FilteredProperties = typeof(T).GetProperties().Select(p => p.Name).ToArray();
 
         static PartialSerialization()
         {
@@ -42,7 +39,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         /// </summary>
         /// <param name="localContainer"></param>
         /// <param name="serviceProvider"></param>
-        public PartialSerialization(IContainer localContainer, IServiceProvider serviceProvider) 
+        public PartialSerialization(IContainer localContainer, IServiceProvider serviceProvider)
             : base(localContainer, serviceProvider, new EmptyValueProvider())
         {
         }
@@ -60,7 +57,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var type = prop.PropertyType;
             if (type == typeof(ProductFile) ||
                 typeof(IProductType).IsAssignableFrom(type) ||
-                typeof (IProductPartLink).IsAssignableFrom(type) ||
+                typeof(IProductPartLink).IsAssignableFrom(type) ||
                 typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(type))
                 return false;
 

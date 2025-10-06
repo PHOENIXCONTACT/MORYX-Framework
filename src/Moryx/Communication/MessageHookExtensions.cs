@@ -1,8 +1,5 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.Communication
 {
@@ -19,7 +16,7 @@ namespace Moryx.Communication
         {
             object message = payload;
             var result = hooks.Aggregate(true, (current, hook) => current & hook.SendingMessage(ref message));
-            payload = (T) message;
+            payload = (T)message;
             return result;
         }
 
@@ -49,7 +46,7 @@ namespace Moryx.Communication
         /// Iterate over all hooks and call <see cref="IBinaryMessageHook.PublishingMessage"/>
         /// </summary>
         public static bool PublishingMessage<T>(this IEnumerable<IBinaryMessageHook> hooks, ref T payload)
-            where T : class 
+            where T : class
         {
             object message = payload;
             var result = hooks.Aggregate(true, (current, hook) => current & hook.PublishingMessage(ref message));

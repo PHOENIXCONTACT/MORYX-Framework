@@ -1,14 +1,10 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
-using Moryx.Container;
 using Moryx.Model.Attributes;
 using Moryx.Model.Configuration;
 using Moryx.Tools;
@@ -31,7 +27,7 @@ namespace Moryx.Model
             _configManager = configManager;
 
             var dbContextTypes = ReflectionTool.GetPublicClasses(
-                typeof(DbContext), 
+                typeof(DbContext),
                 type => type != typeof(DbContext) && !type.GetCustomAttributes<DatabaseSpecificContextAttribute>().Any());
 
             _knownModels = dbContextTypes

@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Modules;
 
@@ -29,20 +28,18 @@ namespace Moryx.Resources.Samples.Initializer
             machine.Values = new List<int> { 1, 2, 3, 4 };
             machine.PossibleTechnicalStaffs = new List<TechnicalStaff>()
             {
-                new TechnicalStaff
-                {
+                new() {
                     FirstName = "Max",
                     LastName = "Mustermann",
                     StaffNumber = 0815
                 },
-                new TechnicalStaff
-                {
+                new() {
                     FirstName = "Flynn",
                     LastName = "Rider",
                     StaffNumber = 4711
                 }
             };
-           
+
             machine.MachineType = MachineType.halfAutomatic;
             machine.Power = 234.1;
 
@@ -58,7 +55,7 @@ namespace Moryx.Resources.Samples.Initializer
             anotherGate.Parent = machine;
             machine.Children.Add(anotherGate);
 
-            return new Resource[] { machine };
+            return [machine];
         }
     }
 }

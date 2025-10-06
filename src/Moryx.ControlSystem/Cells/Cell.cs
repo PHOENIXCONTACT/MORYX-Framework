@@ -1,8 +1,6 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Capabilities;
@@ -27,7 +25,7 @@ namespace Moryx.ControlSystem.Cells
 
         /// <inheritdoc />
         public virtual void ProcessAborting(IActivity affectedActivity) { }
-        
+
         /// <inheritdoc />
         public abstract void SequenceCompleted(SequenceCompleted completed);
         private ICapabilities _capabilities = NullCapabilities.Instance;

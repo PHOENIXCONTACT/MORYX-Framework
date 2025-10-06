@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -34,10 +34,10 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
         private Mock<IResourceManagement> _resourceManagerMock;
         private Mock<IJobDataFactory> _jobDataFactoryMock;
         private Mock<ISetupProvider> _providerMock;
-        private readonly List<Mock<ISetupJobData>> _setupJobs = new List<Mock<ISetupJobData>>();
+        private readonly List<Mock<ISetupJobData>> _setupJobs = new();
 
-        private readonly List<IJobData> _jobList = new List<IJobData>();
-        
+        private readonly List<IJobData> _jobList = new();
+
         /// <summary>
         /// Initialize the test-environment before every test
         /// </summary>
@@ -115,13 +115,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             _resourceManagerMock = new Mock<IResourceManagement>();
             _resourceManagerMock
                 .Setup(rmm => rmm.GetResources<ICell>(It.IsAny<ICapabilities>()))
-                .Returns(Enumerable.Empty<ICell>());
+                .Returns([]);
         }
 
         private ISetupRecipe ProvideSetup(SetupExecution execution, IProductionRecipe recipe, ISetupTarget target)
         {
-            var testRecipe = (ITestRecipe) recipe;
-            if (execution == SetupExecution.BeforeProduction && target.Cells(new TestSetupCapabilities{SetupState = testRecipe.SetupState}).Count == 0)
+            var testRecipe = (ITestRecipe)recipe;
+            if (execution == SetupExecution.BeforeProduction && target.Cells(new TestSetupCapabilities { SetupState = testRecipe.SetupState }).Count == 0)
             {
                 var workplan = new Workplan();
                 workplan.Add(new MountTask());
@@ -133,7 +133,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
                     Workplan = workplan
                 };
             }
-            if(execution == SetupExecution.AfterProduction && target.Cells(new TestSetupCapabilities { SetupState = testRecipe.SetupState }).Any())
+            if (execution == SetupExecution.AfterProduction && target.Cells(new TestSetupCapabilities { SetupState = testRecipe.SetupState }).Any())
             {
                 var workplan = new Workplan();
                 return new SetupRecipe
@@ -310,7 +310,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             AssertHelper(current, NodePosition.Last, SetupClassification.Unspecified, _setupJobs[3].Object);
         }
 
-
         [Test(Description = "There should be a prepare and a cleanup job before and after the second job, " +
             "even if the first job caused an exception.")]
         public void ContinueHandlingOfOtherJobsAfterException()
@@ -399,13 +398,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             manager.Handle(schedulableLinkedList);
 
             // Assert
-            Assert.That(schedulableLinkedList.Count, Is.EqualTo(0), 
+            Assert.That(schedulableLinkedList.Count, Is.EqualTo(0),
                 "The jobs for which no setup could be created should be removed");
-            productionJackJobDataMock.Verify(j => j.Interrupt(), Times.Once(), 
+            productionJackJobDataMock.Verify(j => j.Interrupt(), Times.Once(),
                 $"The job {nameof(productionJackJobData)} for which no setup could be created should be interrupted");
-            productionWilliamJobDataMock.Verify(j => j.Interrupt(), Times.Once(), 
+            productionWilliamJobDataMock.Verify(j => j.Interrupt(), Times.Once(),
                 $"The job {nameof(productionWilliamJobData)} for which no setup could be created should be interrupted");
-            _providerMock.Verify(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.IsAny<IProductionRecipe>(), It.IsAny<ISetupTarget>()), Times.Once, 
+            _providerMock.Verify(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.IsAny<IProductionRecipe>(), It.IsAny<ISetupTarget>()), Times.Once,
                 "After a job with a recipe caused an exception in the setup provider no other job of that recipe should be handled.");
         }
 
@@ -494,7 +493,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             // Act
             var state = new Mock<IJobState>();
             state.SetupGet(s => s.Classification).Returns(JobClassification.Running);
-            _jobListMock.Raise(r => r.StateChanged += null, this, 
+            _jobListMock.Raise(r => r.StateChanged += null, this,
                 new JobStateEventArgs(_setupJobs[0].Object, null, state.Object));
 
             // Assert
@@ -553,7 +552,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             setup.SetupGet(j => j.RecipeRequired).Returns(true);
             var state = new Mock<IJobState>();
             state.SetupGet(s => s.Classification).Returns(JobClassification.Running);
-            _jobListMock.Raise(r => r.StateChanged += null, this, 
+            _jobListMock.Raise(r => r.StateChanged += null, this,
                 new JobStateEventArgs(setup.Object, null, state.Object));
 
             // Assert
@@ -649,8 +648,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
                 {
                     var setupCapabilities = (TestSetupCapabilities)capabilities;
                     return setupCapabilities.SetupState == setupState
-                        ? new[] { new Mock<ICell>().Object }
-                        : Enumerable.Empty<ICell>();
+                        ? [new Mock<ICell>().Object]
+                        : [];
                 });
         }
 
@@ -715,7 +714,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
                 Assert.That(((ISetupRecipe)currentNode.Value.Recipe).SetupClassification, Is.EqualTo(setupClassification), $"The Recipe is not {setupClassification}.");
             }
             Assert.That(matchingJob, Is.EqualTo(currentNode.Value), "The Job at this position is not the one we thought it is.");
-
 
         }
 

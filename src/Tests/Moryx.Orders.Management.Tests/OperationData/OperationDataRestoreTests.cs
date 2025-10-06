@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -73,7 +73,7 @@ namespace Moryx.Orders.Management.Tests
             Assert.That(operationData.State.CanFinalReport);
             Assert.That(operationData.State.CanAdvice);
             Assert.That(operationData.State.CanInterrupt, Is.False);
-            if(operationData.Operation.Start != null)
+            if (operationData.Operation.Start != null)
                 Assert.That(operationData.Operation.Start?.Kind, Is.EqualTo(DateTimeKind.Utc));
             if (operationData.Operation.End != null)
                 Assert.That(operationData.Operation.End?.Kind, Is.EqualTo(DateTimeKind.Utc));
@@ -128,7 +128,6 @@ namespace Moryx.Orders.Management.Tests
             // Assert
             JobHandlerMock.Verify(d => d.Dispatch(It.IsAny<IOperationData>(), It.IsAny<IReadOnlyList<DispatchContext>>()), Times.Never);
         }
-
 
         [Test(Description = "Will restore an operation which is interrupting. " +
                             "After the restore, the operation should be interrupted.")]
@@ -256,12 +255,12 @@ namespace Moryx.Orders.Management.Tests
             var initialJob = operationData.Operation.Jobs.First();
 
             JobHandlerMock.Setup(d => d.Restore(It.IsAny<IEnumerable<long>>()))
-                .Returns(new Job[] { initialJob });
+                .Returns([initialJob]);
 
             // Simulate some running job
             initialJob.Classification = JobClassification.Running;
             initialJob.SuccessCount = 1;
-            ((TestJob) initialJob).SetRunning(2);
+            ((TestJob)initialJob).SetRunning(2);
 
             operationData.JobStateChanged(new JobStateChangedEventArgs(initialJob, JobClassification.Idle, JobClassification.Running));
 
@@ -271,7 +270,7 @@ namespace Moryx.Orders.Management.Tests
             // bring the job to the end
             initialJob.Classification = JobClassification.Completed;
             initialJob.SuccessCount = initialJob.Amount;
-            ((TestJob) initialJob).SetRunning(0);
+            ((TestJob)initialJob).SetRunning(0);
 
             return databaseId;
         }

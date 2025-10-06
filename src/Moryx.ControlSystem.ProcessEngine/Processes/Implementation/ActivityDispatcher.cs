@@ -1,10 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Resources;
@@ -102,7 +98,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 catch (Exception ex)
                 {
                     Logger.Log(LogLevel.Error, ex, "Failed to attach cell #{id} {name}.", cell.Id, cell.Name);
-                    sessions[index] = Array.Empty<ResourceAndSession>();
+                    sessions[index] = [];
                 }
             });
 
@@ -435,7 +431,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             var process = ActivityPool.GetProcess(message.Reference);
             // Use either the process related or general session cache
             var sessionCache = process?.ReportedSessions ?? _reportedSessions;
-
 
             ActivityData activity;
             lock (sessionCache)

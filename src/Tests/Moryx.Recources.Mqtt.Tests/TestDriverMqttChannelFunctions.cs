@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -157,7 +157,7 @@ namespace Moryx.Resources.Mqtt.Tests
             _mockClient.Setup(m => m.UnsubscribeAsync(It.IsAny<MqttClientUnsubscribeOptions>(), CancellationToken.None))
                 .ReturnsAsync(new MqttClientUnsubscribeResult(0, Array.Empty<MqttClientUnsubscribeResultItem>(), "", Array.Empty<MqttUserProperty>()))
                 .Callback<MqttClientUnsubscribeOptions, CancellationToken>((options, token) => CheckUnsubscribedTopic(options, oldTopic));
-            
+
             //Act
             _topicBoolMqtt.Identifier = newTopic;
 
@@ -202,7 +202,7 @@ namespace Moryx.Resources.Mqtt.Tests
         private void CheckUnsubscribedTopic(MqttClientUnsubscribeOptions options, string topic)
         {
             //Assert III
-            Assert.That(_driver.Identifier + topic, Is.EqualTo(options.TopicFilters.First()), 
+            Assert.That(_driver.Identifier + topic, Is.EqualTo(options.TopicFilters.First()),
                 "wrong topic was unsubscribed");
         }
 
@@ -211,7 +211,7 @@ namespace Moryx.Resources.Mqtt.Tests
         [TestCase("foo{sd}", nameof(BoolByteSerializableMessage), false)]
         [TestCase("+foo", nameof(BoolByteSerializableMessage), false)]
         [TestCase("foo/+sdf/{sd}/as", nameof(BoolByteSerializableMessage), false)]
-        [TestCase("foo/#", nameof(BoolMqttMessage), true )]
+        [TestCase("foo/#", nameof(BoolMqttMessage), true)]
         [TestCase("foo/+/sd/as", nameof(BoolMqttMessage), true)]
         [TestCase("{PcName}/{Value}/asd", nameof(MessageForPlaceholderMessages), true,
             "+/+/asd")]
@@ -249,12 +249,15 @@ namespace Moryx.Resources.Mqtt.Tests
         {
             //Arrange
             _topicPlaceholder.Identifier = "{ClassProperty.Test}/asd/{PcName}/{AdapterNumber}";
-            var msg = new MessageForPlaceholderMessages { Value = _placeholderMessages.Value, 
-                ClassProperty = new TestClass()};
+            var msg = new MessageForPlaceholderMessages
+            {
+                Value = _placeholderMessages.Value,
+                ClassProperty = new TestClass()
+            };
             var topic = _driver.Identifier + _topicPlaceholder.Identifier
                 .Replace("{PcName}", _placeholderMessages.PcName)
                 .Replace("{AdapterNumber}", _placeholderMessages.AdapterNumber.ToString())
-                .Replace("{ClassProperty.Test}",_placeholderMessages.ClassProperty.Test);
+                .Replace("{ClassProperty.Test}", _placeholderMessages.ClassProperty.Test);
             var wait = new AutoResetEvent(false);
             _topicPlaceholder.Received += (sender, eventArgs) => { wait.Set(); };
             _topicPlaceholder.Received += OnPlaceholderMessageReceived;
@@ -274,7 +277,7 @@ namespace Moryx.Resources.Mqtt.Tests
             Assert.That(_placeholderMessages.PcName, Is.EqualTo(msg.PcName), "placeholder for string was not matched");
             Assert.That(_placeholderMessages.AdapterNumber, Is.EqualTo(msg.AdapterNumber), "placeholder for int was not matched");
             Assert.That(_placeholderMessages.Value, Is.EqualTo(msg.Value), "value was not sent");
-            Assert.That(_placeholderMessages.ClassProperty.Test, Is.EqualTo(msg.ClassProperty.Test), 
+            Assert.That(_placeholderMessages.ClassProperty.Test, Is.EqualTo(msg.ClassProperty.Test),
                 "relative placeholder was not matched");
         }
 
@@ -304,9 +307,9 @@ namespace Moryx.Resources.Mqtt.Tests
         {
             var topic = _driver.Identifier + topicIdentifier.Replace("{PcName}", msg.PcName)
                 .Replace("{AdapterNumber}", msg.AdapterNumber.ToString())
-                .Replace("{Value}",msg.Value.ToString())
-                .Replace("{Identity.Revision}",msg.Identity.Revision.ToString())
-                .Replace("{Identity.Identifier}",msg.Identity.Identifier);
+                .Replace("{Value}", msg.Value.ToString())
+                .Replace("{Identity.Revision}", msg.Identity.Revision.ToString())
+                .Replace("{Identity.Identifier}", msg.Identity.Identifier);
             Assert.That(topic, Is.EqualTo(applicationMessage.Topic), "topic was wrongly built, placeholders weren't replaced with the right values");
         }
 
@@ -349,11 +352,11 @@ namespace Moryx.Resources.Mqtt.Tests
 
         private void CheckMessageSentWithWildcards(MqttApplicationMessage applicationMessage, string topicMsg)
         {
-            Assert.That(_driver.Identifier+topicMsg, Is.EqualTo(applicationMessage.Topic), "wrong topic was used");
+            Assert.That(_driver.Identifier + topicMsg, Is.EqualTo(applicationMessage.Topic), "wrong topic was used");
         }
 
         [Test]
-        [TestCase("sdf/+", "sdf/{s}" )]
+        [TestCase("sdf/+", "sdf/{s}")]
         [TestCase("sdf/+", "sdf/#")]
         [TestCase("sdf/+", "sdf/+")]
         [TestCase("sdf/+", "sdf/sdwe/sdfa")]
@@ -362,16 +365,16 @@ namespace Moryx.Resources.Mqtt.Tests
             string topicResource, string topicMsg)
         {
             //Arrange
-            var msg = new BoolMqttMessage {Identifier = topicMsg};
+            var msg = new BoolMqttMessage { Identifier = topicMsg };
             var mqttTopic = new MqttTopicIByteSerializable
             {
-                Identifier = topicResource, 
+                Identifier = topicResource,
                 MessageName = msg.GetType().Name,
             };
             SetupTopic(mqttTopic);
 
             //Act + Assert
-            Assert.Throws<ArgumentException>(()=>mqttTopic.Send(msg));
+            Assert.Throws<ArgumentException>(() => mqttTopic.Send(msg));
         }
 
         [Test]
@@ -411,11 +414,11 @@ namespace Moryx.Resources.Mqtt.Tests
         [Test]
         [TestCase(nameof(JsonMessageTest), false, "sdf/{foo}")]
         [TestCase(nameof(JsonMessageTest), true, "{Age}/sdf")]
-        [TestCase(nameof(MessageForPlaceholderMessages), true,"s/{PcName}/df/{AdapterNumber}/{Value}" )]
+        [TestCase(nameof(MessageForPlaceholderMessages), true, "s/{PcName}/df/{AdapterNumber}/{Value}")]
         public void MqttTopicMessageNameCanOnlyBeChangedIfItMatchesTopic(string messageName, bool shouldBeChanged, string topic)
         {
             //Arrange
-            var topicResource = new MqttTopicJson{Identifier = topic, Logger = new ModuleLogger("Dummy", new NullLoggerFactory()) };
+            var topicResource = new MqttTopicJson { Identifier = topic, Logger = new ModuleLogger("Dummy", new NullLoggerFactory()) };
 
             //Act
             topicResource.MessageName = messageName;
@@ -440,7 +443,7 @@ namespace Moryx.Resources.Mqtt.Tests
             mqttTopic.Received += (sender, eventArgs) => { wait.Set(); };
 
             //Act
-            _driver.Receive(_driver.Identifier+TOPIC,
+            _driver.Receive(_driver.Identifier + TOPIC,
                 Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(msg)));
 
             //Assert 1

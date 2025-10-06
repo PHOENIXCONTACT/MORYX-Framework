@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -7,7 +7,6 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.ControlSystem.Setups;
 using Moryx.Runtime.Modules;
-
 
 namespace Moryx.ControlSystem.SetupProvider
 {

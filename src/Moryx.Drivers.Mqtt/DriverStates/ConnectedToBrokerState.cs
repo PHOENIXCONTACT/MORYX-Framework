@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers;
 
@@ -28,7 +27,7 @@ namespace Moryx.Drivers.Mqtt.DriverStates
 
         internal override void ConnectionToBrokerLost()
         {
-            Context.Logger.Log(LogLevel.Information,"Connection to broker lost");
+            Context.Logger.Log(LogLevel.Information, "Connection to broker lost");
             NextState(StateConnecting);
             Context.ParallelOperations.ScheduleExecution(() => Context.Connect(true).Wait(), Context.ReconnectDelayMs, -1);
         }

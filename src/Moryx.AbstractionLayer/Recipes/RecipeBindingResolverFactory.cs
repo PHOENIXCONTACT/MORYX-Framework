@@ -1,8 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.Bindings;
@@ -32,7 +30,7 @@ namespace Moryx.AbstractionLayer.Recipes
             }
         }
 
-        private readonly Regex _wpOperationRegex = new Regex(@"^Step\[(?<name>\w)\]");
+        private readonly Regex _wpOperationRegex = new(@"^Step\[(?<name>\w)\]");
 
         /// <inheritdoc />
         protected override IBindingResolverChain AddToChain(IBindingResolverChain resolver, string property)

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Authorization;
@@ -7,11 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moryx.Asp.Extensions;
 using Moryx.Media.Endpoints.Model;
 using Moryx.Media.Endpoints.Properties;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace Moryx.Media.Endpoints
 {
@@ -58,7 +54,7 @@ namespace Moryx.Media.Endpoints
 
             var content = _mediaServer.Get(parsedGuid);
             if (content is null)
-                return NotFound(new MoryxExceptionResponse { Title =Strings.NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.NOT_FOUND });
 
             return MediaModelConverter.ConvertContent(content);
         }
@@ -110,7 +106,6 @@ namespace Moryx.Media.Endpoints
             var stream = _mediaServer.GetStream(usedDescriptor);
             if (stream is null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.NOT_FOUND });
-
 
             return new FileStreamResult(stream, usedDescriptor.MimeType)
             {

@@ -1,10 +1,8 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Configuration;
 using Moryx.Serialization;
-using System;
-using System.Linq;
 
 namespace Moryx.ControlSystem.VisualInstructions.Endpoints
 {
@@ -18,7 +16,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
             {
                 Id = instruction.Id,
                 Title = instruction.Sender,
-                Results = instruction.Results.Select(r => new InstructionResult() { Key = r.Key, DisplayValue = r.DisplayValue}).ToArray(),
+                Results = instruction.Results.Select(r => new InstructionResult() { Key = r.Key, DisplayValue = r.DisplayValue }).ToArray(),
                 Instructions = instruction.Items.Select(i =>
                     new VisualInstruction() { Type = i.ContentType, Content = i.Content, Preview = i.Preview }).ToArray()
             };
@@ -26,11 +24,11 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
 
         internal static InstructionModel ToModel(ActiveInstruction instruction)
         {
-            InstructionResultModel[] results = Array.Empty<InstructionResultModel>();
+            InstructionResultModel[] results = [];
             if (instruction.Results?.Count > 0)
                 results = instruction.Results.Select(i => new InstructionResultModel { Key = i.Key, DisplayValue = i.DisplayValue }).ToArray();
 
-            var model =  new InstructionModel
+            var model = new InstructionModel
             {
                 Id = instruction.Id,
                 Sender = instruction.Title,

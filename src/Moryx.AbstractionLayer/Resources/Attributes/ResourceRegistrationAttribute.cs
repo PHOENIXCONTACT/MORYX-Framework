@@ -1,8 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using Moryx.Container;
 
 namespace Moryx.AbstractionLayer.Resources
@@ -39,7 +37,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// Constructor of custom type with lifecycle <see cref="LifeCycle.Singleton"/>
         /// </summary>
         public ResourceRegistrationAttribute(Type customRegistration, params Type[] customRegistrations)
-            : base(LifeCycle.Singleton, customRegistrations.Union(new[] { typeof(IResource), customRegistration }).ToArray())
+            : base(LifeCycle.Singleton, customRegistrations.Union([typeof(IResource), customRegistration]).ToArray())
         {
         }
     }

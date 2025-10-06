@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.ControlSystem.VisualInstructions;
@@ -25,8 +25,8 @@ namespace Moryx.ControlSystem.Tests
             var possibleResults = EnumInstructionResult.PossibleInstructionResults(typeof(TestResults1));
 
             // Assert
-            Assert.That(instructionResult.Count(), Is.EqualTo(2), "There should be 2 results because all of the results are not decorated");
-            Assert.That(possibleResults.Count(), Is.EqualTo(2), "There should be 2 results because all of the results are not decorated");
+            Assert.That(instructionResult.Count, Is.EqualTo(2), "There should be 2 results because all of the results are not decorated");
+            Assert.That(possibleResults.Count, Is.EqualTo(2), "There should be 2 results because all of the results are not decorated");
         }
 
         private enum TestResults2
@@ -105,7 +105,6 @@ namespace Moryx.ControlSystem.Tests
             // Arrange
             var instructionResult = EnumInstructionResult.PossibleResults(typeof(TestResults1));
 
-
             // Act
             var enumValue = (TestResults1)EnumInstructionResult.ResultToEnumValue(typeof(TestResults1), instructionResult[1]);
             var directValue = EnumInstructionResult.ResultToGenericEnumValue<TestResults1>(instructionResult[1]);
@@ -135,7 +134,7 @@ namespace Moryx.ControlSystem.Tests
             var instructionResult = EnumInstructionResult.PossibleResults(typeof(TestResults6));
 
             // Assert
-            Assert.That(instructionResult.Count(), Is.EqualTo(1), "There should be two results, because one does not have the EnumInstruction attribute");
+            Assert.That(instructionResult.Count, Is.EqualTo(1), "There should be two results, because one does not have the EnumInstruction attribute");
             Assert.That(instructionResult[0].DisplayValue, Is.EqualTo("Value 1"));
         }
     }

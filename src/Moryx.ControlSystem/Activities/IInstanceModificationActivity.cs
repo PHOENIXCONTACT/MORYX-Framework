@@ -1,4 +1,4 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer;
@@ -20,6 +20,6 @@ namespace Moryx.ControlSystem.Activities
         /// <summary>
         /// Modification that was performed on the product instance depending on the activities result
         /// </summary>
-        InstanceModificationType  ModificationType { get; set; }
+        InstanceModificationType ModificationType { get; set; }
     }
 }

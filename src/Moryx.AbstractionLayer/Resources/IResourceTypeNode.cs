@@ -1,8 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace Moryx.AbstractionLayer.Resources
@@ -36,18 +34,17 @@ namespace Moryx.AbstractionLayer.Resources
         /// Base type this node is derived from
         /// </summary>
         IResourceTypeNode BaseType { get; }
-        
+
         /// <summary>
         /// Types derived from this node
         /// </summary>
         IEnumerable<IResourceTypeNode> DerivedTypes { get; }
 
-        IEnumerable<PropertyInfo> References { get;  }
+        IEnumerable<PropertyInfo> References { get; }
 
-        IEnumerable<PropertyInfo> PropertiesOfResourceType { get;  }
+        IEnumerable<PropertyInfo> PropertiesOfResourceType { get; }
 
-        Dictionary<string, List<Type>> ReferenceOverrides { get;  }
-
+        Dictionary<string, List<Type>> ReferenceOverrides { get; }
 
     }
 }

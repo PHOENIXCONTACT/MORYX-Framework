@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -68,159 +68,174 @@ namespace Moryx.Products.IntegrationTests
             };
             _storage.Config = new ModuleConfig
             {
-                TypeStrategies = new List<ProductTypeConfiguration>
-                {
+                TypeStrategies =
+                [
                     new ProductTypeConfiguration
                     {
                         TargetType = typeof(WatchType).FullName,
                         PluginName = nameof(WatchStrategy)
                     },
+
                     new GenericTypeConfiguration
                     {
                         TargetType = typeof(WatchFaceType).FullName,
-                        PropertyConfigs = new List<PropertyMapperConfig>
-                        {
+                        PropertyConfigs =
+                        [
                             new PropertyMapperConfig
                             {
                                 PropertyName = nameof(WatchFaceType.Brand),
                                 Column = nameof(IGenericColumns.Text1),
                                 PluginName = nameof(TextColumnMapper)
                             },
+
                             new PropertyMapperConfig
                             {
                                 PropertyName = nameof(WatchFaceType.IsDigital),
                                 Column = nameof(IGenericColumns.Integer1),
                                 PluginName = nameof(IntegerColumnMapper)
                             },
+
                             new PropertyMapperConfig
                             {
                                 PropertyName = nameof(WatchFaceType.Color),
                                 Column = string.Empty,
                                 PluginName = nameof(NullPropertyMapper)
                             }
-                        },
+                        ],
                         JsonColumn = nameof(IGenericColumns.Text8)
                     },
+
                     new GenericTypeConfiguration
                     {
                         TargetType = typeof(DisplayWatchFaceType).FullName,
-                        PropertyConfigs = new List<PropertyMapperConfig>
-                        {
+                        PropertyConfigs =
+                        [
                             new PropertyMapperConfig
                             {
                                 PropertyName = nameof(DisplayWatchFaceType.Resolution),
                                 Column = nameof(IGenericColumns.Integer1),
                                 PluginName = nameof(IntegerColumnMapper)
                             }
-                        },
+                        ],
                         JsonColumn = nameof(IGenericColumns.Text8)
                     },
+
                     new GenericTypeConfiguration
                     {
                         TargetType = typeof(NeedleType).FullName,
-                        PropertyConfigs = new List<PropertyMapperConfig>(),
+                        PropertyConfigs = [],
                         JsonColumn = nameof(IGenericColumns.Text8)
                     },
+
                     new GenericTypeConfiguration
                     {
                         TargetType = typeof(WatchPackageType).FullName,
                         JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs = new List<PropertyMapperConfig>()
+                        PropertyConfigs = []
                     }
-                },
-                InstanceStrategies = new List<ProductInstanceConfiguration>
-                {
+                ],
+                InstanceStrategies =
+                [
                     new GenericInstanceConfiguration
                     {
                         TargetType = typeof(WatchInstance).FullName,
                         JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs = new List<PropertyMapperConfig>
-                        {
+                        PropertyConfigs =
+                        [
                             new PropertyMapperConfig
                             {
                                 PropertyName = nameof(WatchInstance.DeliveryDate),
                                 Column = nameof(IGenericColumns.Integer1),
                                 PluginName = nameof(IntegerColumnMapper)
                             },
+
                             new PropertyMapperConfig
                             {
                                 PropertyName = nameof(WatchInstance.TimeSet),
                                 Column = nameof(IGenericColumns.Integer2),
                                 PluginName = nameof(IntegerColumnMapper)
                             },
+
                             new PropertyMapperConfig
                             {
                                 PropertyName = nameof(WatchInstance.Identity),
                                 Column = nameof(IGenericColumns.Text1),
                                 PluginName = nameof(TextColumnMapper)
                             }
-                        }
+                        ]
                     },
+
                     new GenericInstanceConfiguration
                     {
                         TargetType = typeof(WatchFaceInstance).FullName,
-                        PropertyConfigs = new List<PropertyMapperConfig>
-                        {
+                        PropertyConfigs =
+                        [
                             new PropertyMapperConfig
                             {
                                 PropertyName = nameof(WatchFaceInstance.Identifier),
                                 Column = nameof(IGenericColumns.Text1),
                                 PluginName = nameof(TextColumnMapper)
                             },
+
                             new PropertyMapperConfig
                             {
                                 PropertyName = nameof(WatchFaceInstance.Identity),
                                 Column = nameof(IGenericColumns.Text2),
                                 PluginName = nameof(TextColumnMapper)
                             }
-                        },
+                        ],
                         JsonColumn = nameof(IGenericColumns.Text8)
                     },
+
                     new ProductInstanceConfiguration()
                     {
                         TargetType = typeof(NeedleInstance).FullName,
                         PluginName = nameof(SkipInstancesStrategy)
-                    },
-                },
-                LinkStrategies = new List<ProductLinkConfiguration>
-                {
+                    }
+
+                ],
+                LinkStrategies =
+                [
                     new ProductLinkConfiguration()
                     {
                         TargetType = typeof(WatchType).FullName,
                         PartName = nameof(WatchType.WatchFace),
                         PluginName = nameof(SimpleLinkStrategy)
                     },
+
                     new GenericLinkConfiguration
                     {
                         TargetType = typeof(WatchType).FullName,
                         PartName = nameof(WatchType.Needles),
                         JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs = new List<PropertyMapperConfig>
-                        {
+                        PropertyConfigs =
+                        [
                             new PropertyMapperConfig
                             {
                                 PropertyName = nameof(NeedlePartLink.Role),
                                 PluginName = nameof(IntegerColumnMapper),
                                 Column = nameof(IGenericColumns.Integer1)
                             }
-                        }
+                        ]
                     },
+
                     new ProductLinkConfiguration()
                     {
                         TargetType = typeof(WatchPackageType).FullName,
                         PartName = nameof(WatchPackageType.PossibleWatches),
                         PluginName = nameof(SimpleLinkStrategy)
-                    },
-                },
-                RecipeStrategies = new List<ProductRecipeConfiguration>
-                {
+                    }
+
+                ],
+                RecipeStrategies =
+                [
                     new GenericRecipeConfiguration
                     {
                         TargetType = typeof(WatchProductRecipe).FullName,
                         JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs = new List<PropertyMapperConfig>()
+                        PropertyConfigs = []
                     }
-                }
+                ]
             };
 
             _storage.Start();
@@ -357,21 +372,18 @@ namespace Moryx.Products.IntegrationTests
             {
                 Name = "Black water resistant for " + watchName,
                 Identity = new ProductIdentity(identifierPrefix + "4711", revision),
-                Numbers = new[] { 3, 6, 9, 12 }
+                Numbers = [3, 6, 9, 12]
             };
 
             var needles = new List<NeedlePartLink>
             {
-                new NeedlePartLink
-                {
+                new() {
                     Product = new NeedleType { Name = "Hours needle", Identity = new ProductIdentity(identifierPrefix + "24", 1) }
                 },
-                new NeedlePartLink
-                {
+                new() {
                     Product = new NeedleType { Name = "Minutes needle", Identity = new ProductIdentity(identifierPrefix + "1440", 2) }
                 },
-                new NeedlePartLink
-                {
+                new() {
                     Product = new NeedleType { Name = "Seconds needle", Identity = new ProductIdentity(identifierPrefix + "B86400", 3) }
                 }
             };
@@ -391,13 +403,13 @@ namespace Moryx.Products.IntegrationTests
         [Test]
         public void PartLinksWithTheSameIdentifierAreOnlySavedOnce()
         {
-           //Arrange
+            //Arrange
             var watch = new WatchType
             {
                 Name = "watch",
-                Identity = new ProductIdentity("223",1),
-                Needles = new List<NeedlePartLink>
-                {
+                Identity = new ProductIdentity("223", 1),
+                Needles =
+                [
                     new NeedlePartLink
                     {
                         Role = NeedleRole.Minutes,
@@ -407,6 +419,7 @@ namespace Moryx.Products.IntegrationTests
                             Name = "name"
                         }
                     },
+
                     new NeedlePartLink
                     {
                         Role = NeedleRole.Seconds,
@@ -416,7 +429,7 @@ namespace Moryx.Products.IntegrationTests
                             Name = "name"
                         }
                     }
-                }
+                ]
             };
 
             //Act
@@ -521,7 +534,7 @@ namespace Moryx.Products.IntegrationTests
             {
                 Name = "Blubber",
                 Identity = new ProductIdentity("8899665", 1),
-                Numbers = new[] { 3, 6, 9, 12 },
+                Numbers = [3, 6, 9, 12],
                 Brand = null //That's important for this test
             };
 
@@ -588,7 +601,7 @@ namespace Moryx.Products.IntegrationTests
             {
                 Name = "Fasel",
                 Identity = new ProductIdentity("55889966", 1),
-                Numbers = new[] { 3, 6, 9, 12 },
+                Numbers = [3, 6, 9, 12],
                 Brand = "Unknown",
                 Color = 42  //That's important for this test
             };
@@ -686,8 +699,8 @@ namespace Moryx.Products.IntegrationTests
             var loaded3 = _storage.LoadTypes(new ProductQuery
             {
                 Type = typeof(DisplayWatchFaceType).FullName,
-                PropertyFilters = new List<PropertyFilter>
-                {
+                PropertyFilters =
+                [
                     new()
                     {
                         Operator = PropertyFilterOperator.Equals,
@@ -697,7 +710,7 @@ namespace Moryx.Products.IntegrationTests
                             Value = new EntryValue { Current = "180" }
                         }
                     }
-                }
+                ]
             });
 
             // Assert
@@ -851,14 +864,14 @@ namespace Moryx.Products.IntegrationTests
             var watch = SetupProduct("TestWatch", string.Empty);
             _storage.SaveType(watch);
             // Reload from storage for partlink ids if the object exists
-            watch = (WatchType) _storage.LoadType(watch.Id);
+            watch = (WatchType)_storage.LoadType(watch.Id);
 
             // Act
             var instance = (WatchInstance)watch.CreateInstance();
             instance.TimeSet = true;
             instance.DeliveryDate = DateTime.Now;
             instance.Identity = new BatchIdentity("12345");
-            _storage.SaveInstances(new[] { instance });
+            _storage.SaveInstances([instance]);
 
             // Assert
             using (var uow = _factory.Create())

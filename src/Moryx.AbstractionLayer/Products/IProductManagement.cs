@@ -1,10 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Workplans;
@@ -132,7 +129,7 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
 
-         /// <summary>
+        /// <summary>
         /// List of available product types
         /// </summary>
         IReadOnlyList<Type> ProductTypes { get; }

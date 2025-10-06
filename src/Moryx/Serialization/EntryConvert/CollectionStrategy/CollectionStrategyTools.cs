@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.Tools;
 
 namespace Moryx.Serialization
@@ -49,7 +47,7 @@ namespace Moryx.Serialization
         /// </summary>
         public static IEnumerable<string> GenerateKeys(int count)
         {
-            return count == 0 ? new string[0] : Enumerable.Range(0, count).Select(i => i.ToString("D"));
+            return count == 0 ? Array.Empty<string>() : Enumerable.Range(0, count).Select(i => i.ToString("D"));
         }
     }
 }

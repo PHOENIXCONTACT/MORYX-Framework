@@ -1,9 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Moryx.AbstractionLayer.Resources;
@@ -175,7 +172,8 @@ namespace Moryx.Resources.Management
 
             if (property.CanWrite)
             {
-                var setterBuilder = typeBuilder.DefineMethod($"set_{propertyName}", SpecialNameAttributes, null, new[] { property.PropertyType });
+                var setterBuilder = typeBuilder.DefineMethod($"set_{propertyName}", SpecialNameAttributes, null,
+                    [property.PropertyType]);
                 var generator = setterBuilder.GetILGenerator();
                 generator.Emit(OpCodes.Ldarg_0); // Load 'this onto the stack
                 generator.Emit(OpCodes.Call, targetGetter); // Call the 'Target' getter and load Target on stack
@@ -265,7 +263,6 @@ namespace Moryx.Resources.Management
         /// Create a unique name for each explicit member implementation
         /// </summary>
         private static string ExplicitMemberName(MemberInfo member) => $"{member.DeclaringType.Name}_{member.Name}";
-        
 
         /// <summary>
         /// Determine if the return type indicates a resource reference
@@ -315,7 +312,8 @@ namespace Moryx.Resources.Management
             var eventBuilder = typeBuilder.DefineEvent(eventInfo.Name, EventAttributes.None, eventInfo.EventHandlerType);
 
             // Step 3: Define the add
-            var addMethod = typeBuilder.DefineMethod($"add_{eventInfo.Name}", SpecialNameAttributes, typeof(void), new[] { eventInfo.EventHandlerType });
+            var addMethod = typeBuilder.DefineMethod($"add_{eventInfo.Name}", SpecialNameAttributes, typeof(void),
+                [eventInfo.EventHandlerType]);
             var generator = addMethod.GetILGenerator();
             // Combine current delegate with the new listener
             generator.Emit(OpCodes.Ldarg_0); // Load 'this' onto the stack
@@ -323,7 +321,7 @@ namespace Moryx.Resources.Management
             generator.Emit(OpCodes.Ldfld, field); // Load the event field
             generator.Emit(OpCodes.Ldarg_1); // Load the passed delegate
             // Call combine of field and new value
-            var combine = typeof(Delegate).GetMethod(nameof(Delegate.Combine), new[] { typeof(Delegate), typeof(Delegate) });
+            var combine = typeof(Delegate).GetMethod(nameof(Delegate.Combine), [typeof(Delegate), typeof(Delegate)]);
             generator.Emit(OpCodes.Call, combine);
             generator.Emit(OpCodes.Castclass, eventInfo.EventHandlerType); // Cast return value to our delegate type
             generator.Emit(OpCodes.Stfld, field); // Store updated delegate in the event field
@@ -332,7 +330,8 @@ namespace Moryx.Resources.Management
             typeBuilder.DefineMethodOverride(addMethod, eventInfo.AddMethod);
 
             // Step 4: Define the remove
-            var removeMethod = typeBuilder.DefineMethod($"remove_{eventInfo.Name}", SpecialNameAttributes, typeof(void), new[] { eventInfo.EventHandlerType });
+            var removeMethod = typeBuilder.DefineMethod($"remove_{eventInfo.Name}", SpecialNameAttributes, typeof(void),
+                [eventInfo.EventHandlerType]);
             generator = removeMethod.GetILGenerator();
             // Remove delegate from the invocation list
             generator.Emit(OpCodes.Ldarg_0); // Load 'this' onto the stack
@@ -340,7 +339,7 @@ namespace Moryx.Resources.Management
             generator.Emit(OpCodes.Ldfld, field); // Load the event field
             generator.Emit(OpCodes.Ldarg_1); // Load the delegate that shall be removed
             // Call remove of current field and the passed value
-            var remove = typeof(Delegate).GetMethod(nameof(Delegate.Remove), new[] { typeof(Delegate), typeof(Delegate) });
+            var remove = typeof(Delegate).GetMethod(nameof(Delegate.Remove), [typeof(Delegate), typeof(Delegate)]);
             generator.Emit(OpCodes.Call, remove);
             generator.Emit(OpCodes.Castclass, eventInfo.EventHandlerType);
             generator.Emit(OpCodes.Stfld, field); // Store updated delegate in the event field
@@ -352,7 +351,8 @@ namespace Moryx.Resources.Management
             var handlerType = eventInfo.EventHandlerType;
             var argument = handlerType == typeof(EventHandler) ? typeof(EventArgs) : handlerType.GetGenericArguments()[0];
             var methodAttributes = MethodAttributes.Final | MethodAttributes.Virtual | MethodAttributes.NewSlot;
-            var raiseMethod = typeBuilder.DefineMethod($"On{eventInfo.Name}", methodAttributes, typeof(void), new[] { typeof(object), argument });
+            var raiseMethod = typeBuilder.DefineMethod($"On{eventInfo.Name}", methodAttributes, typeof(void), [typeof(object), argument
+            ]);
             generator = raiseMethod.GetILGenerator();
             var returnLabel = generator.DefineLabel(); // Branch label if the field is null
             generator.DeclareLocal(eventInfo.EventHandlerType); // Local to store the handler for null comparison
@@ -404,7 +404,7 @@ namespace Moryx.Resources.Management
                 generator.Emit(OpCodes.Ldftn, eventHandler.Value); // Load pointer to 'On{Event}'
 
                 var eventInfo = eventHandler.Key;
-                var delegateConstructor = eventInfo.EventHandlerType.GetConstructor(new[] { typeof(object), typeof(IntPtr) });
+                var delegateConstructor = eventInfo.EventHandlerType.GetConstructor([typeof(object), typeof(IntPtr)]);
                 generator.Emit(OpCodes.Newobj, delegateConstructor); // Build delegate from this and method pointer in previous step
 
                 var eventOnTarget = targetType.GetEvent(eventInfo.Name);
@@ -433,7 +433,7 @@ namespace Moryx.Resources.Management
                 generator.Emit(OpCodes.Ldftn, eventHandler.Value); // Load pointer to 'On{Event}'
 
                 var eventInfo = eventHandler.Key;
-                var delegateConstructor = eventInfo.EventHandlerType.GetConstructor(new[] { typeof(object), typeof(IntPtr) });
+                var delegateConstructor = eventInfo.EventHandlerType.GetConstructor([typeof(object), typeof(IntPtr)]);
                 generator.Emit(OpCodes.Newobj, delegateConstructor); // Build delegate from this and method pointer in previous step
 
                 var eventOnTarget = targetType.GetEvent(eventInfo.Name);

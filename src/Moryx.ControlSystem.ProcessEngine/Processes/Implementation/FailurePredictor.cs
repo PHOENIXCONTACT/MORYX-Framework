@@ -1,9 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
@@ -80,7 +78,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         private void MonitorProcess(ProcessData processData)
         {
             // Only monitor production jobs
-            if(!(processData.Recipe is IProductRecipe))
+            if (!(processData.Recipe is IProductRecipe))
                 return;
 
             var recipe = (IWorkplanRecipe)processData.Recipe;

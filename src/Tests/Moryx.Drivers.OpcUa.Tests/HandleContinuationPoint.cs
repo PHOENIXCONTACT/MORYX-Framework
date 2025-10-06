@@ -1,4 +1,5 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
 
 using Moq;
 using Moryx.Tools;
@@ -22,7 +23,7 @@ public class HandleContinuationPoint : OpcUaTestBase
         _references = CreateNodes();
 
         _sessionMock = new Mock<ISession>();
-        var byteArray = new byte[0];
+        var byteArray = Array.Empty<byte>();
         _sessionMock.Setup(s => s.NamespaceUris).Returns(_namespaceTable);
         _sessionMock.Setup(s => s.AddSubscription(It.IsAny<Subscription>())).Returns(true);
 

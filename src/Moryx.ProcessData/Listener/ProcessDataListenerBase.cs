@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Linq;
 using Moryx.Logging;
 
 namespace Moryx.ProcessData.Listener
@@ -30,7 +29,7 @@ namespace Moryx.ProcessData.Listener
         /// <inheritdoc />
         public void Initialize(ProcessDataListenerConfig config)
         {
-            Config = (TConf) config;
+            Config = (TConf)config;
             Logger = Logger.GetChild(Config.PluginName, GetType());
         }
 

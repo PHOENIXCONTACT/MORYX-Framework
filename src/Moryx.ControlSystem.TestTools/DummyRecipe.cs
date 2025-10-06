@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
@@ -20,14 +20,12 @@ namespace Moryx.ControlSystem.TestTools
         {
         }
 
-
         /// <summary>
         /// Creates a new instances of the <see cref="DummyResult"/> forwarding the constructor to the base class
         /// </summary>
         protected DummyRecipe(DummyRecipe source) : base(source)
         {
         }
-
 
         /// <summary>
         /// Creates a <see cref="ProductionRecipe"/> and fills the properties with reasonable values

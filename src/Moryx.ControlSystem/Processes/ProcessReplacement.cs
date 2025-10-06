@@ -1,9 +1,6 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Recipes;
 
@@ -41,13 +38,13 @@ namespace Moryx.ControlSystem.Processes
         /// <inheritdoc />
         public IEnumerable<IActivity> GetActivities()
         {
-            return Enumerable.Empty<IActivity>();
+            return [];
         }
 
         /// <inheritdoc />
         public IEnumerable<IActivity> GetActivities(Func<IActivity, bool> predicate)
         {
-            return Enumerable.Empty<IActivity>();
+            return [];
         }
 
         /// <inheritdoc />

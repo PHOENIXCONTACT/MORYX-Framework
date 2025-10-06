@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Logging;
@@ -48,7 +45,7 @@ namespace Moryx.Media.Server.Previews
 
         public void Stop()
         {
-            lock(_jobLock)
+            lock (_jobLock)
                 _jobs.Clear();
         }
 

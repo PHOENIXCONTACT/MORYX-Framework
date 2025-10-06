@@ -1,15 +1,10 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using InfluxDB.LineProtocol.Client;
 using InfluxDB.LineProtocol.Payload;
 using Microsoft.Extensions.Logging;
 using Moryx.Container;
-using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.ProcessData.Listener;
 using Moryx.Threading;

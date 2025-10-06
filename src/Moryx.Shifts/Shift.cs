@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -19,7 +19,7 @@ namespace Moryx.Shifts
         /// The ID of the shift.
         /// </summary>
         public long Id { get; set; }
-        
+
         /// <summary>
         /// The type of the shift.
         /// </summary>

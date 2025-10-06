@@ -1,12 +1,8 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 
@@ -24,7 +20,7 @@ namespace Moryx.Resources.Management
         /// </summary>
         public IResourceTypeController TypeController { get; set; }
 
-        private readonly ReaderWriterLockSlim _graphLock = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim _graphLock = new();
 
         /// <summary>
         /// All resources of the graph
@@ -110,8 +106,10 @@ namespace Moryx.Resources.Management
         {
             IEnumerable<TResource> matches;
             _graphLock.EnterReadLock();
-                matches = from resource in _graph.Values let target = resource as TResource 
-                    where target != null && predicate(target) select target;
+            matches = from resource in _graph.Values
+                      let target = resource as TResource
+                      where target != null && predicate(target)
+                      select target;
             _graphLock.ExitReadLock();
 
             return matches;

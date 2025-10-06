@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
@@ -18,7 +18,7 @@ namespace Moryx.Shifts.Management
                 StartTime = entity.StartTime,
                 Endtime = entity.Endtime,
                 Periode = entity.Periode
-            }; 
+            };
         }
 
         public static void Update(this ShiftTypeEntity entity, ShiftType type)
@@ -78,7 +78,7 @@ namespace Moryx.Shifts.Management
             entity.AssignedDays = assignement.AssignedDays;
         }
 
-        public static ShiftAssignement ToAssignement(this ShiftAssignementEntity entity, IEnumerable<Shift> shifts, 
+        public static ShiftAssignement ToAssignement(this ShiftAssignementEntity entity, IEnumerable<Shift> shifts,
             IResourceManagement resources, IOperatorManagement operators)
         {
             var shift = shifts.SingleOrDefault(s => s.Id == entity.ShiftId) ??

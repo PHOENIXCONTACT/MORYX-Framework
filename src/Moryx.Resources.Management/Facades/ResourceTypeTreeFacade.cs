@@ -1,14 +1,12 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Runtime.Modules;
-using System;
-using System.Collections.Generic;
 
 namespace Moryx.Resources.Management.Facades
 {
-    internal class ResourceTypeTreeFacade: IResourceTypeTree, IFacadeControl
+    internal class ResourceTypeTreeFacade : IResourceTypeTree, IFacadeControl
     {
         #region Dependency Injection
 
@@ -33,14 +31,13 @@ namespace Moryx.Resources.Management.Facades
 
         public void Activate()
         {
-            
+
         }
 
         public void Deactivate()
         {
 
         }
-
 
         #endregion
     }

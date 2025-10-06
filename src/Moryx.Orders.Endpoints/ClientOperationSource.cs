@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations;
@@ -29,7 +29,7 @@ namespace Moryx.Orders.Endpoints
         /// <summary>
         /// Identifier of the client which has created the operation
         /// </summary>
-        [Display(Name = "Client ID", Description= "The ID of client that created the operation.")]
+        [Display(Name = "Client ID", Description = "The ID of client that created the operation.")]
         public string ClientId { get; set; }
     }
 }

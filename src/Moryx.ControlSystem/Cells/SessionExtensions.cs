@@ -1,11 +1,10 @@
-﻿// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.ControlSystem.Recipes;
-using System;
 using Moryx.ControlSystem.Processes;
 
 namespace Moryx.ControlSystem.Cells
@@ -102,7 +101,7 @@ namespace Moryx.ControlSystem.Cells
         /// The last <see cref="Activity"/> in the session, if the <paramref name="session"/> currently handles an 
         /// Activity of type <typeparamref name="TActivityType"/>; Otherwise returns null
         /// </returns>
-        public static TActivityType GetLastActivity<TActivityType>(this Session session) where TActivityType : Activity 
+        public static TActivityType GetLastActivity<TActivityType>(this Session session) where TActivityType : Activity
             => session.Process.LastActivity<TActivityType>() as TActivityType;
 
         /// <summary>
@@ -119,9 +118,9 @@ namespace Moryx.ControlSystem.Cells
             if (session.Process.Recipe is ISetupRecipe setupRecipe)
                 return setupRecipe.TargetRecipe.Target as TProductType;
 
-            if (session.Process.Recipe is IProductRecipe prodcutRecipe) 
+            if (session.Process.Recipe is IProductRecipe prodcutRecipe)
                 return prodcutRecipe.Target as TProductType;
-            
+
             return default;
         }
     }

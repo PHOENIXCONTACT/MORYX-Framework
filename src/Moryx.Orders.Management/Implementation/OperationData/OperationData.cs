@@ -1,10 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Moryx.ControlSystem.Jobs;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
@@ -123,7 +119,6 @@ namespace Moryx.Orders.Management
             }
         }
 
-
         /// <inheritdoc cref="IOperationData"/>
         // ReSharper disable once InconsistentlySynchronizedField
         public IOperationState State => _state;
@@ -166,7 +161,7 @@ namespace Moryx.Orders.Management
                 Unit = p.Unit,
                 StagingIndicator = p.StagingIndicator,
                 Classification = p.Classification
-            }).ToArray() ?? Array.Empty<ProductPart>();
+            }).ToArray() ?? [];
 
             Operation.Number = context.Number;
             Operation.TotalAmount = context.TotalAmount;

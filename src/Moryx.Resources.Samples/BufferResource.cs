@@ -1,9 +1,8 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
@@ -18,7 +17,7 @@ namespace Moryx.Resources.Samples
 
         [EntrySerialize, DisplayName("Add Value")]
         [Description("Add typed value to the buffer")]
-        public int AddValue([ResourceTypes(typeof(BufferValue))]string type, string name, string value)
+        public int AddValue([ResourceTypes(typeof(BufferValue))] string type, string name, string value)
         {
             var bufferValue = Graph.Instantiate<BufferValue>(type);
             bufferValue.Name = name;

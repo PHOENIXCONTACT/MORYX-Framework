@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Logging;
@@ -27,7 +27,7 @@ namespace Moryx.Media.Previews
         /// <param name="config"></param>
         public virtual void Initialize(PreviewCreatorConfig config)
         {
-            Config = (TConf) config;
+            Config = (TConf)config;
             Logger = Logger.GetChild(config.PluginName, GetType());
         }
 

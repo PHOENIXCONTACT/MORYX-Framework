@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.TestTools.UnitTest;
 using Moq;
 using Moq.Protected;
 using Moryx.ProcessData.Listener;
@@ -49,7 +48,7 @@ namespace Moryx.ProcessData.Tests
         {
             // Arrange
             const string testMeasurand = "HelloWorld";
-            _listenerConfig.MeasurandConfigs.Add(new MeasurandConfig {Name = testMeasurand, IsEnabled = true});
+            _listenerConfig.MeasurandConfigs.Add(new MeasurandConfig { Name = testMeasurand, IsEnabled = true });
 
             // Act
             _listenerMock.Object.MeasurementAdded(new Measurement(testMeasurand));

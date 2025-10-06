@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -38,13 +38,13 @@ namespace Moryx.Resources.Management.Tests
         [ResourceReference(ResourceRelationType.Extension)]
         public SimpleResource NotRequired { get; set; }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart, IsRequired = true)]
+        [ResourceReference(ResourceRelationType.CurrentExchangeablePart, IsRequired = true)]
         public SimpleResource Reference { get; set; }
 
         [ResourceReference(ResourceRelationType.TransportSystem)]
         public IReferences<SimpleResource> NotRequiredReferences { get; set; }
 
-        [ResourceReference(ResourceRelationType.PossibleExchangablePart, IsRequired = true)]
+        [ResourceReference(ResourceRelationType.PossibleExchangeablePart, IsRequired = true)]
         public IReferences<SimpleResource> References { get; set; }
     }
 
@@ -52,7 +52,7 @@ namespace Moryx.Resources.Management.Tests
     {
         private ISimpleResource _reference;
 
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart, nameof(Reference))]
+        [ResourceReference(ResourceRelationType.CurrentExchangeablePart, nameof(Reference))]
         public ISimpleResource Reference
         {
             get { return _reference; }
@@ -60,11 +60,11 @@ namespace Moryx.Resources.Management.Tests
             {
                 _reference = value;
                 ReferenceChanged?.Invoke(this, value);
-                SomeChanged?.Invoke(this, new[] { value });
+                SomeChanged?.Invoke(this, [value]);
             }
         }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
+        [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
         public DerivedResource Reference2 { get; set; }
 
         [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Target, nameof(TargetReference))]
@@ -73,7 +73,7 @@ namespace Moryx.Resources.Management.Tests
         [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Target, nameof(NewTargetReference))]
         public BidirectionalReferenceResource NewTargetReference { get; set; }
 
-        [ResourceReference(ResourceRelationType.PossibleExchangablePart)]
+        [ResourceReference(ResourceRelationType.PossibleExchangeablePart)]
         public IReferences<ISimpleResource> References { get; set; }
 
         [ReferenceOverride(nameof(Children), AutoSave = true)]

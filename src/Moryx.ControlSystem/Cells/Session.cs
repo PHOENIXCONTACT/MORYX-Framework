@@ -1,7 +1,6 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.ControlSystem.Activities;
@@ -16,7 +15,7 @@ namespace Moryx.ControlSystem.Cells
         /// <summary>
         /// Empty array of constraints
         /// </summary>
-        protected static readonly IConstraint[] EmptyConstraints = Array.Empty<IConstraint>();
+        protected static readonly IConstraint[] EmptyConstraints = [];
 
         /// <summary>
         /// Initialize a new resource request for a certain resource
@@ -125,7 +124,6 @@ namespace Moryx.ControlSystem.Cells
             return CreateSession(classification, type, ProcessReference.InstanceIdentity(identity), constraints);
         }
 
-
         /// <summary>
         /// Creates a new <see cref="Session"/> for the <paramref name="unknown"/> activity
         /// with a new session context and marks the activity as failed.
@@ -134,14 +132,13 @@ namespace Moryx.ControlSystem.Cells
         public static UnknownActivityAborted WrapUnknownActivity(IActivity unknown)
         {
             var wrapper = StartSession(ActivityClassification.Unknown, ReadyToWorkType.Unset, unknown.Process.Id)
-                .CompleteSequence(null, false, new long[] { });
+                .CompleteSequence(null, false, []);
             return new UnknownActivityAborted(unknown, wrapper);
         }
 
         private static ReadyToWork CreateSession(ActivityClassification classification, ReadyToWorkType type, ProcessReference reference, IConstraint[] constraints)
         {
-            if (constraints == null)
-                throw new ArgumentNullException(nameof(constraints));
+            ArgumentNullException.ThrowIfNull(constraints);
             return new ReadyToWork(classification, type, reference, constraints);
         }
 

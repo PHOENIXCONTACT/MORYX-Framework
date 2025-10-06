@@ -1,10 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Moryx.Model.Repositories
@@ -38,24 +34,24 @@ namespace Moryx.Model.Repositories
         /// <inheritdoc />
         public T GetRepository<T>() where T : class, IRepository
         {
-            return (T) GetRepository(typeof(T));
+            return (T)GetRepository(typeof(T));
         }
 
         private IRepository GetRepository(Type api)
         {
-            if(!_repositories.ContainsKey(api))
+            if (!_repositories.ContainsKey(api))
             {
                 throw new NotSupportedException($"Api {api} was not found.");
             }
 
-            var instance =  _repositories[api]();
+            var instance = _repositories[api]();
             instance.Initialize(this, DbContext);
 
             return instance;
         }
 
         /// <inheritdoc />
-        public void LinkEntityToBusinessObject (IPersistentObject businessObject, IEntity entity)
+        public void LinkEntityToBusinessObject(IPersistentObject businessObject, IEntity entity)
         {
             _entityBusinessObjectLinks[businessObject] = entity;
         }
@@ -75,7 +71,7 @@ namespace Moryx.Model.Repositories
                 throw;
             }
 
-            foreach(var link in _entityBusinessObjectLinks)
+            foreach (var link in _entityBusinessObjectLinks)
             {
                 link.Key.Id = link.Value.Id;
             }

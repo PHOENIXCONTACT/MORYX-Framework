@@ -1,16 +1,12 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing.Constraints;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Globalization;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moryx.Media.Endpoints.Tests
 {
@@ -72,7 +68,7 @@ namespace Moryx.Media.Endpoints.Tests
             using var stream = new MemoryStream();
             stream.SetLength(1024 * 1024 + 1);
             var file = FormFileBuilder.FromStream(stream, "exceeded.dat", MimeTypeString.ApplicationData);
-            
+
             // Act
             var result = UploadValidation.ValidateFormFile(file, _mediaServerMock.Object, out _errorMessage);
 
@@ -177,7 +173,7 @@ namespace Moryx.Media.Endpoints.Tests
     public static class MediaServerMock
     {
         public static void SetupFileSize(this Mock<IMediaServer> mediaServer, int sizeInMb)
-        { 
+        {
             mediaServer
                 .Setup(ms => ms.FileSizeLimitInMb())
                 .Returns(sizeInMb);

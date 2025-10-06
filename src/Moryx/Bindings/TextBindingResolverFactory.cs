@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Moryx.Bindings
@@ -109,7 +108,7 @@ namespace Moryx.Bindings
                 foreach (var resolver in _resolvers)
                 {
                     var resolvedReference = resolver.Value.Resolve(source);
-                    result = resolvedReference is null ? 
+                    result = resolvedReference is null ?
                              result : result.Replace(resolver.Key, resolvedReference.ToString());
                 }
                 return result;

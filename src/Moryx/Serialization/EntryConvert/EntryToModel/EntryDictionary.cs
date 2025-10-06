@@ -1,9 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 
 namespace Moryx.Serialization
 {
@@ -17,7 +15,7 @@ namespace Moryx.Serialization
         /// <summary>
         /// Internally we wrap an observable collection
         /// </summary>
-        private readonly Dictionary<string, ModelAndEntry> _internalCollection = new Dictionary<string, ModelAndEntry>();
+        private readonly Dictionary<string, ModelAndEntry> _internalCollection = new();
 
         /// <summary>
         /// Create a new instance of the collection

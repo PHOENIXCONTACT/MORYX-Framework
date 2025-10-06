@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Runtime.Modules;
@@ -25,14 +25,13 @@ namespace Moryx.Runtime.Tests
                 StrategyName = "Test"
             });
 
-
             _moduleUnderTest = new TestModule(null, configManagerMock.Object, new TestLoggerMgmt());
         }
 
         [Test]
         public void StrategiesInConfigFound()
         {
-            var casted = (IServerModule) _moduleUnderTest;
+            var casted = (IServerModule)_moduleUnderTest;
             casted.Initialize();
 
             var containerConfig = _moduleUnderTest.Strategies;

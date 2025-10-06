@@ -1,8 +1,7 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
-using System;
 
 namespace Moryx.ControlSystem.Recipes
 {
@@ -21,7 +20,7 @@ namespace Moryx.ControlSystem.Recipes
         public static string GetOrderOperationString(this IRecipe recipe, string seperator = "-")
         {
             var target = (recipe is ISetupRecipe setup ? setup.TargetRecipe : recipe) as IOrderBasedRecipe;
-            return $"{target?.OrderNumber}{(target is null ? "" : seperator)}{target?.OperationNumber}";            
+            return $"{target?.OrderNumber}{(target is null ? "" : seperator)}{target?.OperationNumber}";
         }
     }
 }

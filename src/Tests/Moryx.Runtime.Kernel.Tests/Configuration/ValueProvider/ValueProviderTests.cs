@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using Moryx.Configuration;
 using NUnit.Framework;
 
@@ -95,7 +94,7 @@ namespace Moryx.Tests.Configuration.ValueProvider
         public void EnumerableTest()
         {
             // Arrange
-            var config = new TestConfig3 { Configs = new List<TestConfig1> { new TestConfig1(), new TestConfig1(), new TestConfig1() } };
+            var config = new TestConfig3 { Configs = [new TestConfig1(), new TestConfig1(), new TestConfig1()] };
 
             // Act
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddDefaultValueProvider());
@@ -134,7 +133,7 @@ namespace Moryx.Tests.Configuration.ValueProvider
             // Arrange
             var config = new TestConfig5();
             var settings = new ValueProviderExecutorSettings().AddDefaultValueProvider();
-            
+
             // Act
             // Assert
             Assert.DoesNotThrow(() => ValueProviderExecutor.Execute(config, settings));

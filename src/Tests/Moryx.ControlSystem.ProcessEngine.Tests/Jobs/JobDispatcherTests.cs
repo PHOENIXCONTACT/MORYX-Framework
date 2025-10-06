@@ -1,11 +1,10 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Collections.Generic;
 using Moq;
 using Moryx.AbstractionLayer.Recipes;
-using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs.Production;
 using Moryx.ControlSystem.ProcessEngine.Processes;
@@ -64,7 +63,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
         public void Resume()
         {
             // Arrange
-            var runningProcesses = new List<ProcessData> { new ProcessData(_recipe.CreateProcess()) };
+            var runningProcesses = new List<ProcessData> { new(_recipe.CreateProcess()) };
             _processControllerMock.Setup(pc => pc.LoadProcesses(_jobDataMock.Object)).Returns(runningProcesses);
 
             // Act
@@ -175,7 +174,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
         {
             // Arrange
             var firstJob = new Mock<IJobData>();
-            var jobs = new List<IJobData>(new[] { firstJob.Object });
+            var jobs = new List<IJobData>([firstJob.Object]);
 
             _jobListMock.Setup(list => list.GetEnumerator()).Returns(jobs.GetEnumerator());
 

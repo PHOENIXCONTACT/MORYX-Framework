@@ -1,7 +1,5 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
 
 namespace Moryx.AbstractionLayer.Hardware
 {
@@ -11,115 +9,115 @@ namespace Moryx.AbstractionLayer.Hardware
     [Flags]
     public enum Axes : uint
     {
-		/// <summary>
+        /// <summary>
         /// Axis A of the system
         /// </summary>
         A = 1 << 0,
-		/// <summary>
+        /// <summary>
         /// Axis B of the system
         /// </summary>
         B = 1 << 1,
-		/// <summary>
+        /// <summary>
         /// Axis C of the system
         /// </summary>
         C = 1 << 2,
-		/// <summary>
+        /// <summary>
         /// Axis D of the system
         /// </summary>
         D = 1 << 3,
-		/// <summary>
+        /// <summary>
         /// Axis E of the system
         /// </summary>
         E = 1 << 4,
-		/// <summary>
+        /// <summary>
         /// Axis F of the system
         /// </summary>
         F = 1 << 5,
-		/// <summary>
+        /// <summary>
         /// Axis G of the system
         /// </summary>
         G = 1 << 6,
-		/// <summary>
+        /// <summary>
         /// Axis H of the system
         /// </summary>
         H = 1 << 7,
-		/// <summary>
+        /// <summary>
         /// Axis I of the system
         /// </summary>
         I = 1 << 8,
-		/// <summary>
+        /// <summary>
         /// Axis J of the system
         /// </summary>
         J = 1 << 9,
-		/// <summary>
+        /// <summary>
         /// Axis K of the system
         /// </summary>
         K = 1 << 10,
-		/// <summary>
+        /// <summary>
         /// Axis L of the system
         /// </summary>
         L = 1 << 11,
-		/// <summary>
+        /// <summary>
         /// Axis M of the system
         /// </summary>
         M = 1 << 12,
-		/// <summary>
+        /// <summary>
         /// Axis N of the system
         /// </summary>
         N = 1 << 13,
-		/// <summary>
+        /// <summary>
         /// Axis O of the system
         /// </summary>
         O = 1 << 14,
-		/// <summary>
+        /// <summary>
         /// Axis P of the system
         /// </summary>
         P = 1 << 15,
-		/// <summary>
+        /// <summary>
         /// Axis Q of the system
         /// </summary>
         Q = 1 << 16,
-		/// <summary>
+        /// <summary>
         /// Axis R of the system
         /// </summary>
         R = 1 << 17,
-		/// <summary>
+        /// <summary>
         /// Axis S of the system
         /// </summary>
         S = 1 << 18,
-		/// <summary>
+        /// <summary>
         /// Axis T of the system
         /// </summary>
         T = 1 << 19,
-		/// <summary>
+        /// <summary>
         /// Axis U of the system
         /// </summary>
         U = 1 << 20,
-		/// <summary>
+        /// <summary>
         /// Axis V of the system
         /// </summary>
         V = 1 << 21,
-		/// <summary>
+        /// <summary>
         /// Axis W of the system
         /// </summary>
         W = 1 << 22,
-		/// <summary>
+        /// <summary>
         /// Axis X of the system
         /// </summary>
         X = 1 << 23,
-		/// <summary>
+        /// <summary>
         /// Axis Y of the system
         /// </summary>
         Y = 1 << 24,
-		/// <summary>
+        /// <summary>
         /// Axis Z of the system
         /// </summary>
         Z = 1 << 25,
-		/// <summary>
+        /// <summary>
         /// Door is a specialized axis 
         /// </summary>
         Door = 1 << 26,
-		/// <summary>
+        /// <summary>
         /// Rotating plate is another specialized axis 
         /// </summary>
         RotationPlate = 1 << 27,

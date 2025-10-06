@@ -1,15 +1,10 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 using Moryx.Configuration;
 using Moryx.Tools;
 
@@ -46,7 +41,7 @@ namespace Moryx.Serialization
                 memberType = EntryConvert.ElementType(memberType);
             }
 
-            List<EntryPrototype> prototypes = new List<EntryPrototype>();
+            List<EntryPrototype> prototypes = [];
             if (memberType == typeof(string))
             {
                 prototypes.Add(new EntryPrototype(nameof(String), string.Empty));
@@ -81,7 +76,7 @@ namespace Moryx.Serialization
             // Enum names, member name or null
             return memberType.IsEnum
                 ? Enum.GetNames(memberType)
-                : isCollection ? new[] { memberType.Name } : null;
+                : isCollection ? [memberType.Name] : null;
         }
 
         /// <see cref="ICustomSerialization"/>
@@ -316,7 +311,6 @@ namespace Moryx.Serialization
                 // Reuse current object if available
                 return currentValue ?? Activator.CreateInstance(collectionType);
             }
-
 
             // Other collections are not supported
             return null;

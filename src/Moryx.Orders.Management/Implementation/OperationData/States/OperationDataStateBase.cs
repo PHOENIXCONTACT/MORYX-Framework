@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
 using Moryx.StateMachines;
@@ -85,8 +84,8 @@ namespace Moryx.Orders.Management
 
         public virtual void UpdateRecipes(IReadOnlyList<IProductRecipe> recipes) => InvalidState();
 
-        public virtual void ProgressChanged(Job job) 
-        { 
+        public virtual void ProgressChanged(Job job)
+        {
         }
 
         public OperationClassification GetFullClassification()
@@ -159,7 +158,7 @@ namespace Moryx.Orders.Management
         protected const int StateCompleted = CompletedKey;
 
         [StateDefinition(typeof(AbortedState))]
-        protected const int StateAborted = CompletedKey+1;
+        protected const int StateAborted = CompletedKey + 1;
 
     }
 }

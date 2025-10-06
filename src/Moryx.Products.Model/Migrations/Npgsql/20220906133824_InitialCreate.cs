@@ -1,8 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -508,7 +507,7 @@ namespace Moryx.Products.Model.Migrations.Npgsql
                 name: "IX_ProductTypes_Identifier_Revision",
                 schema: "public",
                 table: "ProductTypes",
-                columns: new[] { "Identifier", "Revision" });
+                columns: ["Identifier", "Revision"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkplanConnectorEntities_WorkplanId",

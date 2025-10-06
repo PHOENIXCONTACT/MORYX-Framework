@@ -1,12 +1,8 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Moryx.Tools;
@@ -132,8 +128,8 @@ namespace Moryx.Serialization
             else if (property.PropertyType.IsValueType)
             {
                 var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
-                entryValue.Default = underlyingType != null 
-                    ? Activator.CreateInstance(underlyingType).ToString() 
+                entryValue.Default = underlyingType != null
+                    ? Activator.CreateInstance(underlyingType).ToString()
                     : Activator.CreateInstance(property.PropertyType).ToString();
             }
             // Value types should have the default value as current value
@@ -585,7 +581,7 @@ namespace Moryx.Serialization
             {
                 var property = mapped.Property;
                 var propertyType = mapped.Property.PropertyType;
-                var doNotUpdateProperty = false; 
+                var doNotUpdateProperty = false;
 
                 // Do not operate on faulty properties or read-only properties
                 // For security reasons read the flag from the property again
@@ -711,8 +707,8 @@ namespace Moryx.Serialization
         /// <summary>
         /// Create strategy for collection
         /// </summary>
-        private static ICollectionStrategy CreateStrategy(object collection, object currentCollection, 
-            Type collectionType, ICustomSerialization serialization, ICustomAttributeProvider attributeProvider = null, 
+        private static ICollectionStrategy CreateStrategy(object collection, object currentCollection,
+            Type collectionType, ICustomSerialization serialization, ICustomAttributeProvider attributeProvider = null,
             object instance = null)
         {
             ICollectionStrategy strategy;
@@ -726,11 +722,12 @@ namespace Moryx.Serialization
             }
             else if (collection is IList)
             {
-                if(currentCollection is Array)
+                if (currentCollection is Array)
                 {
                     strategy = new ArrayIListStrategy(
                         (IList)collection, serialization, attributeProvider, instance);
-                }else
+                }
+                else
                     strategy = new ListStrategy((IList)collection, serialization);
             }
             else
@@ -756,7 +753,7 @@ namespace Moryx.Serialization
         {
             var method = target.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .FirstOrDefault(m => m.Name == methodEntry.Name && (m.IsPublic || m.IsAssembly) && ParametersProvided(m.GetParameters(), methodEntry));
-            if(method == null)
+            if (method == null)
             {
                 throw new MissingMethodException();
             }

@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -20,7 +20,7 @@ namespace Moryx.Resources.Management.Tests
     {
         private ResourceLinker _linker;
 
-        private readonly Dictionary<long, Resource> _graph = new Dictionary<long, Resource>();
+        private readonly Dictionary<long, Resource> _graph = new();
 
         [OneTimeSetUp]
         public void PrepareLinker()
@@ -95,11 +95,11 @@ namespace Moryx.Resources.Management.Tests
                 RelationAccessor(2), RelationAccessor(3), RelationAccessor(4), RelationAccessor(5),
                 RelationAccessor(6, ResourceRelationType.ParentChild, ResourceReferenceRole.Source),
                 // All PossibleExchangeablePart relations
-                RelationAccessor(2, ResourceRelationType.PossibleExchangablePart), RelationAccessor(3, ResourceRelationType.PossibleExchangablePart),
-                RelationAccessor(4, ResourceRelationType.PossibleExchangablePart),
+                RelationAccessor(2, ResourceRelationType.PossibleExchangeablePart), RelationAccessor(3, ResourceRelationType.PossibleExchangeablePart),
+                RelationAccessor(4, ResourceRelationType.PossibleExchangeablePart),
                 // The 2 CurrentExchangeablePart
-                RelationAccessor(2, ResourceRelationType.CurrentExchangablePart, ResourceReferenceRole.Target, nameof(ReferenceResource.Reference)),
-                RelationAccessor(4, ResourceRelationType.CurrentExchangablePart),
+                RelationAccessor(2, ResourceRelationType.CurrentExchangeablePart, ResourceReferenceRole.Target, nameof(ReferenceResource.Reference)),
+                RelationAccessor(4, ResourceRelationType.CurrentExchangeablePart),
             };
 
             // Act
@@ -225,10 +225,10 @@ namespace Moryx.Resources.Management.Tests
                 //Relation(6, ResourceRelationType.ParentChild, ResourceReferenceRole.Source), <-- Represents the missing bidirectional parent relationship created during this test
                 Relation(2, 1), Relation(3, 1), Relation(5, 1),
                 // Current exchangable part
-                Relation(2, 1, ResourceRelationType.CurrentExchangablePart, ResourceReferenceRole.Target, nameof(ReferenceResource.Reference)), // This is changed to ref2
+                Relation(2, 1, ResourceRelationType.CurrentExchangeablePart, ResourceReferenceRole.Target, nameof(ReferenceResource.Reference)), // This is changed to ref2
                 // Possible exchangable part
-                Relation(2, 1, ResourceRelationType.PossibleExchangablePart), // This remains untouched
-                Relation(3, 1, ResourceRelationType.PossibleExchangablePart) // This is removed
+                Relation(2, 1, ResourceRelationType.PossibleExchangeablePart), // This remains untouched
+                Relation(3, 1, ResourceRelationType.PossibleExchangeablePart) // This is removed
             };
             var mocks = SetupDbMocks(relations);
 
@@ -241,17 +241,17 @@ namespace Moryx.Resources.Management.Tests
             Assert.That(ref5.Children.Contains(instance), "Backlink sync failed for parent ref5");
 
             Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.Create(), Times.Once), "Linker did not detect the new resource");
-            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.PossibleExchangablePart), Times.Once), "Linker did not create relation for ref3 in References");
+            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.PossibleExchangeablePart), Times.Once), "Linker did not create relation for ref3 in References");
             Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.ParentChild), Times.Once), "Linker did not create relation for parent ref5");
             Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Once), "Linker did not remove relation 1-3");
 
             var parentChild = relations.Where(r => r.RelationType == (int)ResourceRelationType.ParentChild).ToArray();
             Assert.That(parentChild.Length, Is.EqualTo(4));
-            var currentPart = relations.Where(r => r.RelationType == (int)ResourceRelationType.CurrentExchangablePart).ToArray();
+            var currentPart = relations.Where(r => r.RelationType == (int)ResourceRelationType.CurrentExchangeablePart).ToArray();
             Assert.That(currentPart.Length, Is.EqualTo(2));
             Assert.That(currentPart.Count(r => r.Target.Id == 3), Is.EqualTo(1));
             Assert.That(currentPart.Count(r => r.Target.Id == 0), Is.EqualTo(1));
-            var possiblePart = relations.Where(r => r.RelationType == (int)ResourceRelationType.PossibleExchangablePart).ToArray();
+            var possiblePart = relations.Where(r => r.RelationType == (int)ResourceRelationType.PossibleExchangeablePart).ToArray();
             Assert.That(possiblePart.Length, Is.EqualTo(2));
             Assert.That(possiblePart.Count(r => r.Target.Id == 2), Is.EqualTo(1));
             Assert.That(possiblePart.Count(r => r.Target.Id == 0), Is.EqualTo(1));
@@ -281,9 +281,9 @@ namespace Moryx.Resources.Management.Tests
             var relations = new List<ResourceRelationEntity>
             {
                 // Current exchangable parts
-                Relation(2, 1, ResourceRelationType.CurrentExchangablePart),
-                Relation(3, 1, ResourceRelationType.CurrentExchangablePart),
-                Relation(4, 1, ResourceRelationType.CurrentExchangablePart),
+                Relation(2, 1, ResourceRelationType.CurrentExchangeablePart),
+                Relation(3, 1, ResourceRelationType.CurrentExchangeablePart),
+                Relation(4, 1, ResourceRelationType.CurrentExchangeablePart),
             };
             var mocks = SetupDbMocks(relations);
 
@@ -322,7 +322,7 @@ namespace Moryx.Resources.Management.Tests
             ResourceReferenceTools.InitializeCollections(parent);
             var child = new SimpleResource { Id = 2 };
             ResourceReferenceTools.InitializeCollections(child);
-            var mocks = SetupDbMocks(new List<ResourceRelationEntity>());
+            var mocks = SetupDbMocks([]);
             // Setup graph mock
             _graph[1] = parent;
             _graph[2] = child;
@@ -431,7 +431,7 @@ namespace Moryx.Resources.Management.Tests
             var reference = new SimpleResource();
             ResourceReferenceTools.InitializeCollections(instance);
             ResourceReferenceTools.InitializeCollections(reference);
-            var dbMocks = SetupDbMocks(new List<ResourceRelationEntity>());
+            var dbMocks = SetupDbMocks([]);
 
             // Act
             if (!isNull)

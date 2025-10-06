@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Authorization;
@@ -34,7 +34,7 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Policy = OperatorPermissions.CanManage)]
-    public ActionResult<string> Add(OperatorModel model) 
+    public ActionResult<string> Add(OperatorModel model)
         => Response(() => _operatorManagement.AddOperator(model.ToType()));
 
     [HttpPut]
@@ -54,7 +54,7 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Authorize(Policy = OperatorPermissions.CanManage)]
-    public ActionResult<string> DeleteOperator(string operatorIdentifier) 
+    public ActionResult<string> DeleteOperator(string operatorIdentifier)
         => Response(() => _operatorManagement.DeleteOperator(WebUtility.HtmlEncode(operatorIdentifier)));
 
     #endregion
@@ -63,7 +63,7 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
 
     [HttpGet]
     [Authorize(Policy = OperatorPermissions.CanView)]
-    public ActionResult<AssignableOperator[]> GetAll() 
+    public ActionResult<AssignableOperator[]> GetAll()
         => Response(() => _attendanceManagement.Operators.ToArray());
 
     [HttpGet]
@@ -72,7 +72,7 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Route("{identifier}")]
     [Authorize(Policy = OperatorPermissions.CanManage)]
-    public ActionResult<ExtendedOperatorModel> Get(string identifier) 
+    public ActionResult<ExtendedOperatorModel> Get(string identifier)
         => Response(() => RetrieveOperator(identifier).ToModel());
 
     [HttpGet]
@@ -108,12 +108,12 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
              // return all the resources
              if (string.IsNullOrEmpty(operatorIdentifier)) return attendableResources.Select(Converter.ToModel);
 
-            var @operator = RetrieveOperator(operatorIdentifier);
+             var @operator = RetrieveOperator(operatorIdentifier);
 
              return attendableResources
               .Where(attendableResource => attendableResource.RequiredSkills.ProvidedBy(_skillManagement.GetAcquiredCapabilities(@operator)))
               .Select(Converter.ToModel);
-        });
+         });
     }
 
     [HttpGet]
@@ -130,7 +130,7 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Route("default")]
     [Authorize(Policy = OperatorPermissions.CanManage)]
-    public ActionResult<ExtendedOperatorModel?> GetDefaultOperator() 
+    public ActionResult<ExtendedOperatorModel?> GetDefaultOperator()
         => Response(() => _attendanceManagement.DefaultOperator?.ToModel());
 
     [HttpPut]
@@ -140,12 +140,13 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
     [Route("signin")]
     [Authorize(Policy = OperatorPermissions.CanManage)]
     public ActionResult SignIn(string operatorIdentifier, long resourceId)
-    {            
-        return Response(() => {
+    {
+        return Response(() =>
+        {
             var @operator = RetrieveOperator(@operatorIdentifier);
             var resource = RetrieveResource(resourceId);
             _attendanceManagement.SignIn(@operator, resource);
-            NotifyResource(resource);            
+            NotifyResource(resource);
         });
     }
 

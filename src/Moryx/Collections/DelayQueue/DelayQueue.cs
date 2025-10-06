@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
 using System.Diagnostics;
 using Moryx.StateMachines;
@@ -33,7 +32,7 @@ namespace Moryx.Collections
         /// <summary>
         /// Lock object for this instance of the queue
         /// </summary>
-        private readonly object _stateLock = new object();
+        private readonly object _stateLock = new();
 
         /// <summary>
         /// Explicit implementation to use in state machine
@@ -70,7 +69,7 @@ namespace Moryx.Collections
         {
             // ReSharper disable once InconsistentlySynchronizedField
             // All state changes will be do in locked block
-            _state = (QueueStateBase) state;
+            _state = (QueueStateBase)state;
         }
 
         /// <inheritdoc />

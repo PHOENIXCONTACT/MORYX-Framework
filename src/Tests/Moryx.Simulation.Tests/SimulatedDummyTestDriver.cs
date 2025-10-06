@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Drivers.Message;
@@ -13,7 +13,7 @@ using Moryx.Resources.Benchmarking;
 
 namespace Moryx.Simulation.Tests
 {
-    public  class SimulatedDummyTestDriver : Driver, IMessageDriver<object>, ISimulationDriver
+    public class SimulatedDummyTestDriver : Driver, IMessageDriver<object>, ISimulationDriver
     {
         public bool HasChannels => false;
 
@@ -35,7 +35,7 @@ namespace Moryx.Simulation.Tests
         [ResourceReference(ResourceRelationType.Driver, ResourceReferenceRole.Source)]
         public virtual AssemblyTestCell Cell { get; set; }
 
-        public virtual IEnumerable<ICell> Usages => new[] { Cell };
+        public virtual IEnumerable<ICell> Usages => [Cell];
 
         protected override void OnStart()
         {

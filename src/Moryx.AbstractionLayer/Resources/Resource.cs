@@ -1,14 +1,13 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Serialization;
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Localizations;
 
 namespace Moryx.AbstractionLayer.Resources
@@ -148,7 +147,6 @@ namespace Moryx.AbstractionLayer.Resources
         {
             return $"{Id}:{Name} ({GetType().Name})";
         }
-
 
         /// <summary>
         /// Current capabilities of this resource

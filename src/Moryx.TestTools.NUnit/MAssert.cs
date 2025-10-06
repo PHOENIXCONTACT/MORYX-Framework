@@ -1,14 +1,10 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
-using System;
-using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
 
 namespace Moryx.TestTools.NUnit
 {
@@ -18,7 +14,7 @@ namespace Moryx.TestTools.NUnit
         {
             That(condition, Is.True, message, predicateExpression);
         }
-        public static void That(Func<bool> predicate, string? message = null, [CallerArgumentExpression(nameof(predicate))]string? predicateExpression = null)
+        public static void That(Func<bool> predicate, string? message = null, [CallerArgumentExpression(nameof(predicate))] string? predicateExpression = null)
         {
             That(predicate, Is.True, message, predicateExpression);
         }
@@ -47,7 +43,7 @@ namespace Moryx.TestTools.NUnit
                 message = predicateExpression;
             }
             int fails = TestExecutionContext.CurrentContext.CurrentResult.PendingFailures;
-            T value = default(T)!; 
+            T value = default(T)!;
             Assert.That<T>(() => value = actualExpression(), new ThrowsNothingConstraint(), $"{message}\nExpected {constraint.Description} and");
             if (TestExecutionContext.CurrentContext.CurrentResult.PendingFailures > fails) return; // TODO: Check if we there could be multithreading issues and whether or not we care
             Assert.That(value, constraint, message);

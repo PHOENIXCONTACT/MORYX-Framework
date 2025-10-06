@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Moryx.TestTools.NUnit;
@@ -33,8 +32,8 @@ namespace Moryx.Tests.Workplans
         public void Prepare()
         {
             // Inputs and outputs
-            _inputs = new IPlace[] { new Place { Id = 10 }, new Place { Id = 11 } };
-            _outputs = new IPlace[] { new Place { Id = 20 }, new Place { Id = 21 } };
+            _inputs = [new Place { Id = 10 }, new Place { Id = 11 }];
+            _outputs = [new Place { Id = 20 }, new Place { Id = 21 }];
             foreach (var output in _outputs)
             {
                 output.TokenAdded += (sender, token) => { };
@@ -51,14 +50,14 @@ namespace Moryx.Tests.Workplans
             var trans = new SplitTransition
             {
                 Id = 1,
-                Inputs = new[] { _inputs[0] },
+                Inputs = [_inputs[0]],
                 Outputs = _outputs
             };
 
             // Act
             trans.Initialize();
             _inputs[0].Add(_token);
-            
+
             // Assert
             Assert.Multiple(() =>
             {
@@ -77,7 +76,7 @@ namespace Moryx.Tests.Workplans
             {
                 Id = 1,
                 Inputs = _inputs,
-                Outputs = new[] { _outputs[0] }
+                Outputs = [_outputs[0]]
             };
             var split1 = new SplitToken(_token);
             var split2 = new SplitToken(_token);
@@ -104,7 +103,7 @@ namespace Moryx.Tests.Workplans
             {
                 Id = 1,
                 Inputs = _inputs,
-                Outputs = new[] { _outputs[0] }
+                Outputs = [_outputs[0]]
             };
             var split = new SplitToken(_token);
 
@@ -135,7 +134,7 @@ namespace Moryx.Tests.Workplans
             var trans = new SubworkplanTransition(WorkplanInstance.CreateEngine(workplan, new NullContext()), TransitionBase.CreateIndexResolver(outputs))
             {
                 Id = 1,
-                Inputs = new[] { _inputs[0] },
+                Inputs = [_inputs[0]],
                 Outputs = _outputs
             };
             var triggered = new List<ITransition>();
@@ -146,7 +145,8 @@ namespace Moryx.Tests.Workplans
             _inputs[0].Add(_token);
 
             // Assert
-            Assert.Multiple(() => { 
+            Assert.Multiple(() =>
+            {
                 MAssert.That(_inputs[0].Tokens, Is.Empty);
                 MAssert.That(_token, Is.EqualTo(_outputs[0].Tokens.First()));
                 MAssert.That(2, Is.EqualTo(triggered.Count));
@@ -167,7 +167,7 @@ namespace Moryx.Tests.Workplans
             var trans = new SubworkplanTransition(WorkplanInstance.CreateEngine(workplan, new NullContext()), TransitionBase.CreateIndexResolver(outputs))
             {
                 Id = 1,
-                Inputs = new[] { _inputs[0] },
+                Inputs = [_inputs[0]],
                 Outputs = _outputs
             };
             var triggered = new List<ITransition>();

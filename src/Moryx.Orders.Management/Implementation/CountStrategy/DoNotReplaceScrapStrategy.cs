@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
@@ -55,7 +52,7 @@ namespace Moryx.Orders.Management
         {
             var missingAmount = operation.TargetAmount - ReachableAmount(operation);
             return missingAmount > 0
-                ? new[] { new DispatchContext((IProductionRecipe)operation.Recipes.Single(), (uint)missingAmount) }
+                ? [new DispatchContext((IProductionRecipe)operation.Recipes.Single(), (uint)missingAmount)]
                 : Array.Empty<DispatchContext>();
         }
     }

@@ -1,8 +1,5 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Moryx.Container
 {
@@ -33,7 +30,7 @@ namespace Moryx.Container
         public DependencyRegistrationAttribute(InstallerMode mode)
         {
             InstallerMode = mode;
-            RequiredTypes = new Type[0];
+            RequiredTypes = [];
         }
 
         /// <summary>

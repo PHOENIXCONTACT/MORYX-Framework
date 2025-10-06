@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Cells;
@@ -161,7 +158,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                     return _activities.ToArray();
             }
         }
-        
+
         /// <summary>
         /// Sessions that were reported for this process from a cell
         /// </summary>

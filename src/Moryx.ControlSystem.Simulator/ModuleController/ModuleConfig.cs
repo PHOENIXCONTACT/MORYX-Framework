@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer;
@@ -39,13 +38,13 @@ namespace Moryx.ControlSystem.Simulator
         [DataMember]
         [DisplayName("Specific execution times")]
         [Description("Activity and cell specific simulation times overriding the default configuration.")]
-        public List<ExecutionTimeDefinition> SpecificExecutionTimeSettings { get; set; } = new List<ExecutionTimeDefinition>();   
+        public List<ExecutionTimeDefinition> SpecificExecutionTimeSettings { get; set; } = new List<ExecutionTimeDefinition>();
     }
 
     public class ExecutionTimeDefinition
     {
         [DataMember, EntrySerialize]
-        [PossibleTypes(typeof(Activity),UseFullname =true)]
+        [PossibleTypes(typeof(Activity), UseFullname = true)]
         public string Activity { get; set; }
 
         [DataMember, EntrySerialize]
@@ -60,7 +59,7 @@ namespace Moryx.ControlSystem.Simulator
         {
             var cellString = CellId == 0 ? "" : CellId.ToString() + ": ";
             var activityString = Activity.Split('.')[^1];
-            var timeString = ExecutionTime <= 0 ? "Instant" : ExecutionTime.ToString() +"ms";
+            var timeString = ExecutionTime <= 0 ? "Instant" : ExecutionTime.ToString() + "ms";
             return $"{cellString}{activityString} - {timeString}";
         }
     }

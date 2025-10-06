@@ -1,10 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer;
 using Moryx.Container;
@@ -35,17 +31,17 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// Processes currently managed by the pool
         /// </summary>
-        private readonly List<ProcessData> _runningProcesses = new List<ProcessData>();
+        private readonly List<ProcessData> _runningProcesses = new();
 
         /// <summary>
         /// List of non-completed activities for better scaling system
         /// </summary>
-        private readonly List<ActivityData> _openActivities = new List<ActivityData>();
+        private readonly List<ActivityData> _openActivities = new();
 
         /// <summary>
         /// Lock for the <see cref="_openActivities"/> collection
         /// </summary>
-        private readonly ReaderWriterLockSlim _activitiesLock = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim _activitiesLock = new();
 
         #endregion
 

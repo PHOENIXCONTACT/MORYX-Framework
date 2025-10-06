@@ -1,7 +1,5 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
 
 namespace Moryx.AbstractionLayer.Drivers.InOut
 {
@@ -20,7 +18,7 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
         /// Input and output is a single value with index or key
         /// </summary>
         Single = 1 << 8,
-        
+
         /// <summary>
         /// Driver supports indexed access to values
         /// </summary>
@@ -30,7 +28,6 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
         /// Driver supports access via keys
         /// </summary>
         Key = 1 << 10,
-
 
         /// <summary>
         /// Driver supports changed events for inputs

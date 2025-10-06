@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Identity;
 
@@ -57,17 +56,17 @@ namespace Moryx.ControlSystem.Cells
         /// <summary>
         /// Empty request without a process reference
         /// </summary>
-        public static ProcessReference Empty => new ProcessReference(EmptyId, null);
+        public static ProcessReference Empty => new(EmptyId, null);
 
         /// <summary>
         /// Reference a certain process by id
         /// </summary>
-        public static ProcessReference ProcessId(long id) => new ProcessReference(id, null);
+        public static ProcessReference ProcessId(long id) => new(id, null);
 
         /// <summary>
         /// Reference process by product instance identity
         /// </summary>
-        public static ProcessReference InstanceIdentity(IIdentity identity) => new ProcessReference(IrrelevantId, identity);
+        public static ProcessReference InstanceIdentity(IIdentity identity) => new(IrrelevantId, identity);
 
         /// <inheritdoc />
         public override string ToString()
@@ -93,7 +92,7 @@ namespace Moryx.ControlSystem.Cells
         {
             if (ReferenceEquals(null, obj))
                 return false;
-            return obj is ProcessReference && Equals((ProcessReference) obj);
+            return obj is ProcessReference && Equals((ProcessReference)obj);
         }
 
         /// <summary>

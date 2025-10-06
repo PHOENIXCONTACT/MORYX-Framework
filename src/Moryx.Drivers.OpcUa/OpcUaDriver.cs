@@ -1,12 +1,8 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Drivers.InOut;
@@ -40,7 +36,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// <summary>
     /// Current tate of the driver
     /// </summary>
-    
+
     [EntrySerialize]
     [Display(Name = nameof(Strings.DRIVER_STATE), ResourceType = typeof(Localizations.Strings))]
     public string StateName => CurrentState?.ToString() ?? "";
@@ -129,7 +125,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// Use encryption during communication
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.USE_ENCRYPTION), Description =nameof(Strings.USE_ENCRYPTION_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.USE_ENCRYPTION), Description = nameof(Strings.USE_ENCRYPTION_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
     public bool UseEncryption { get; set; }
 
     /// <summary>
@@ -941,7 +937,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
                 Value = payload
             }
         };
-
 
         _session.Write(null, [valueToBeWritten], out var results, out var diagnosticInfos);
 

@@ -1,11 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MimeTypes;
 using Moryx.Container;
@@ -25,11 +20,11 @@ namespace Moryx.Media.Server
         /// <summary>
         /// Collection for all iterating and index based accesses
         /// </summary>
-        private readonly List<ContentDescriptor> _descriptors = new List<ContentDescriptor>();
+        private readonly List<ContentDescriptor> _descriptors = new();
         /// <summary>
         /// Dictionary for all guid based accesses
         /// </summary>
-        private readonly Dictionary<Guid, ContentDescriptor> _descriptorMap = new Dictionary<Guid, ContentDescriptor>();
+        private readonly Dictionary<Guid, ContentDescriptor> _descriptorMap = new();
 
         private string _descriptorDirectory;
 
@@ -273,7 +268,7 @@ namespace Moryx.Media.Server
                 RemovePreview(variantDescriptor);
 
             contentDescriptor.Variants.Remove(variantDescriptor);
-            if(contentDescriptor.Variants.Count > 0)
+            if (contentDescriptor.Variants.Count > 0)
                 SaveDescriptorToFile(contentDescriptor);
             return true;
         }

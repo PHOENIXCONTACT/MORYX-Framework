@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
@@ -83,7 +80,6 @@ namespace Moryx.ControlSystem.WorkerSupport
         {
 
         }
-
 
         private void OnInstructionAdded(object sender, ActiveInstruction instruction)
         {

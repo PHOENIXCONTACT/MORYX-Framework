@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -129,7 +129,7 @@ namespace Moryx.Resources.Mqtt.Tests
             {
                 Assert.Fail("Message was not on any of the expected topics");
             }
-            
+
             Assert.That(msg.Name.Equals(MESSAGE_VALUE_NAME), "Property should be " + MESSAGE_VALUE_NAME + ", but is " + msg.Name);
             Assert.That(msg.Age == MESSAGE_VALUE_AGE, "Property should be " + MESSAGE_VALUE_AGE + ", but is " + msg.Age);
         }
@@ -146,9 +146,9 @@ namespace Moryx.Resources.Mqtt.Tests
             _mqttTopicCamel.Received += OnReceivedMessage;
 
             var message = new JsonMessageTest
-            { 
-                Age = MESSAGE_VALUE_AGE, 
-                Name = MESSAGE_VALUE_NAME 
+            {
+                Age = MESSAGE_VALUE_AGE,
+                Name = MESSAGE_VALUE_NAME
             };
             var pascalJson = JsonConvert.SerializeObject(message);
             var camelJson = JsonConvert.SerializeObject(message, new JsonSerializerSettings

@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
 using Moryx.Threading;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace Moryx.Tests.Threading
 {
@@ -49,7 +48,6 @@ namespace Moryx.Tests.Threading
             // Assert
             Assert.That(SimpleEventSource, Is.Null);
         }
-
 
         #region Event without Arguments
 
@@ -118,7 +116,7 @@ namespace Moryx.Tests.Threading
         {
             public Tuple<LogLevel, string, Exception> Message { get; set; }
 
-            public IModuleLogger Logger { get; set; } 
+            public IModuleLogger Logger { get; set; }
 
             public InvocationTarget()
             {
@@ -132,8 +130,8 @@ namespace Moryx.Tests.Threading
             }
         }
 
-       [TestCase(true, Description = "The handler raises throws an exception and is a logging component")]
-       [TestCase(false, Description = "The handler raises throws an exception and is a logging component")]
+        [TestCase(true, Description = "The handler raises throws an exception and is a logging component")]
+        [TestCase(false, Description = "The handler raises throws an exception and is a logging component")]
         public void ExceptionInHandler(bool targetHasLogger)
         {
             // Arrange
@@ -172,7 +170,7 @@ namespace Moryx.Tests.Threading
 
         private const int MaxIndex = 100;
 
-        private event EventHandler<int> IndexEvent; 
+        private event EventHandler<int> IndexEvent;
 
         [Test]
         public void WriteFromMultipleThreads()
@@ -221,7 +219,7 @@ namespace Moryx.Tests.Threading
             var newValue = value + index;
             Thread.Sleep(1);
             _total = newValue;
-            
+
             _count++;
         }
 

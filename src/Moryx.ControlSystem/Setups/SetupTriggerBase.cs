@@ -1,11 +1,10 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Bindings;
 using Moryx.Logging;
 using Moryx.Workplans;
-using System.Collections.Generic;
 
 namespace Moryx.ControlSystem.Setups
 {
@@ -43,7 +42,7 @@ namespace Moryx.ControlSystem.Setups
         /// <inheritdoc />
         public virtual void Initialize(SetupTriggerConfig config)
         {
-            Config = (TConfig) config;
+            Config = (TConfig)config;
             Logger = Logger?.GetChild(GetType().Name, GetType());
         }
 

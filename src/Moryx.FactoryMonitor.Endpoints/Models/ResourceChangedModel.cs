@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Moryx.FactoryMonitor.Endpoints.Model;
 
@@ -30,7 +29,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
 
         [DataMember]
         public Dictionary<string, CellPropertySettings> CellPropertySettings { get; set; }
-        
+
         [DataMember]
         public long FactoryId { get; internal set; }
     }

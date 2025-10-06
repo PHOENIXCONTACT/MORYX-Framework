@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
@@ -11,7 +11,6 @@ namespace Moryx.TestModule
     public class TestPlugin2 : ITestPlugin
     {
         public const string ComponentName = "TestPlugin2";
-
 
         public void Initialize(TestPluginConfig config)
         {

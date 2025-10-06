@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
@@ -81,7 +80,7 @@ namespace Moryx.ProcessData.InfluxDbListener
         /// <inheritdoc />
         public override string PluginName
         {
-            get =>  nameof(InfluxDbListenerV2);
+            get => nameof(InfluxDbListenerV2);
             set { }
         }
 
@@ -125,7 +124,7 @@ namespace Moryx.ProcessData.InfluxDbListener
         /// Number of retries after a failed attempt to write data
         /// </summary>
         [DataMember, DefaultValue(5)]
-        [DisplayName("Retries"),Description("Maximum number of retries after a failed attempt to write data")]
+        [DisplayName("Retries"), Description("Maximum number of retries after a failed attempt to write data")]
         public short MaxNumberOfRetries { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
@@ -8,7 +8,6 @@ using Moq;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Capabilities;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.ProcessEngine.Model;
@@ -47,10 +46,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         protected const long SerialCellId = 3;
         protected const long NewCellId = 4;
 
-
         protected const long ValidProcessId = 1;
         protected const long InvalidProcessId = 2;
-
 
         private static int IdSequence;
 
@@ -59,7 +56,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         protected void CreateList()
         {
             var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, s, e) => { });
-            DataPool = new ActivityPool { Logger =  logger };
+            DataPool = new ActivityPool { Logger = logger };
             DataPool.ProcessChanged += OnProcessChanged;
             DataPool.ActivityChanged += OnActivityChanged;
         }
@@ -92,7 +89,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             serialCellMock.SetupGet(r => r.Capabilities).Returns(() => new AssignIdentityCapabilities(IdentitySource.Pool));
 
             resourceManagementMock.Setup(rm => rm.GetResources<ICell>(It.IsAny<AssignIdentityCapabilities>()))
-                .Returns(() => new[] { serialCellMock.Object });
+                .Returns(() => [serialCellMock.Object]);
 
             resourceManagementMock.Setup(rm => rm.GetResource<ICell>(SerialCellId)).Returns(serialCellMock.Object);
 
@@ -106,7 +103,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             mountCellMock.SetupGet(r => r.Capabilities).Returns(new MountCapabilities(canMount, canUnmount));
 
             resourceManagementMock.Setup(rm => rm.GetResources<ICell>(It.Is<MountCapabilities>(c => c.CanMount == canMount && c.CanUnmount == canUnmount)))
-                .Returns(() => new[] { mountCellMock.Object });
+                .Returns(() => [mountCellMock.Object]);
 
             resourceManagementMock.Setup(rm => rm.GetResource<ICell>(MountCellId)).Returns(mountCellMock.Object);
 
@@ -151,7 +148,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             DataPool.AddProcess(processData);
             DataPool.AddActivity(processData, activityData);
 
-            activityData.Targets = new[] { cell };
+            activityData.Targets = [cell];
 
             DataPool.UpdateProcess(processData, ProcessState.EngineStarted);
 
@@ -173,7 +170,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 Resource = new CellReference(42),
                 Task = new TaskTransition<MountActivity>(null, null) { Id = taskId },
                 ProcessData = processData,
-                Result = new ActivityResult { Numeric = 0, Success = true},
+                Result = new ActivityResult { Numeric = 0, Success = true },
                 State = ActivityState.Completed,
             };
             processData.AddActivity(activityData);

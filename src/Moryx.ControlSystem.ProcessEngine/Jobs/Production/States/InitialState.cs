@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Processes;
@@ -18,7 +17,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
 
         public override bool IsStable => true;
 
-        public InitialState(JobDataBase context, StateMap stateMap) 
+        public InitialState(JobDataBase context, StateMap stateMap)
             : base(context, stateMap, JobClassification.Idle)
         {
         }
@@ -32,7 +31,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
         {
             NextState(StateWaiting);
         }
-        
+
         public override void Complete()
         {
             NextState(StateCompleted);

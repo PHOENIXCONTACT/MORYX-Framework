@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -7,7 +7,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.AbstractionLayer;
-using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs.Production;
 using Moryx.ControlSystem.ProcessEngine.Model;
@@ -28,7 +27,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
     public class ProcessStorageTests
     {
         private static int _index;
-        private readonly Dictionary<JobEntity, int> _jobEntities = new Dictionary<JobEntity, int>();
+        private readonly Dictionary<JobEntity, int> _jobEntities = new();
         private IUnitOfWorkFactory<ProcessContext> _unitOfWorkFactory;
         private ProcessStorage _storage;
 
@@ -96,7 +95,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 jobId = jobEntity.Id;
                 processData = CreateProcessData(jobId, processId);
 
-
                 // Create [activityCount] Activities
                 for (int i = 0; i <= activityCount; i++)
                 {
@@ -106,7 +104,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                     if (i > 0)
                         activityData.Task = task;
                     else // Append another completed activity where the task is missing later
-                        activityData.Task = new TaskTransition<UnmountActivity>(new MountingParameters(), null) {Id = 1337};
+                        activityData.Task = new TaskTransition<UnmountActivity>(new MountingParameters(), null) { Id = 1337 };
                     activityData.Resource = new CellReference(i * 100);
                     activityData.State = ActivityState.Running;
 

@@ -1,10 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using Moryx.Modules;
 
 namespace Moryx.Media.Server
@@ -16,7 +12,6 @@ namespace Moryx.Media.Server
         /// </summary>
         /// <returns></returns>
         IReadOnlyList<ContentDescriptor> GetDescriptors();
-
 
         /// <summary>
         /// Get all ContentDescriptors with index between "start"Index and  "start"Index plus the "offset".
@@ -32,7 +27,6 @@ namespace Moryx.Media.Server
         /// Get the VariantDescriptor with the "variantName" from the ContentDescriptor with the "contentId".
         /// </summary>
         VariantDescriptor GetVariant(Guid contentId, string variantName);
-
 
         /// <summary>
         /// Get the file stream from the file described by the fileDescriptor.

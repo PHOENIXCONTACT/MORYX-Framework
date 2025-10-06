@@ -14,3 +14,15 @@ To reduce the number of API packages and simplify the overall architecture, **Mo
 
 The simulator module has also been renamed, and its namespace and package id have changed accordingly to reflect its new location within Moryx.ControlSystem.
 
+
+## Renamings and Typo-Fixes
+
+- TcpClientConfig.IpAdress -> TcpClientConfig.IpAddress
+- TcpListenerConfig.IpAdress -> TcpListenerConfig.IpAddress
+- ResourceRelationType.CurrentExchangablePart -> ResourceRelationType.CurrentExchangeablePart
+- ResourceRelationType.PossibleExchangablePart -> ResourceRelationType.PossibleExchangeablePart
+
+
+## Removal of ProductFileEntity
+
+The `ProductFileEntity` was not used in the product-model. There was no api to access it in a simple way. With the implementation of the [`FileSystem`](https://github.com/PHOENIXCONTACT/MORYX-Framework/pull/517) it is also not required anymore.

@@ -1,8 +1,5 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
-using System.Collections.Generic;
 
 namespace Moryx.Collections
 {
@@ -15,7 +12,7 @@ namespace Moryx.Collections
         /// <summary>
         /// The actual collection of strongly-typed weak references.
         /// </summary>
-        private readonly List<WeakReference<T>> _list = new List<WeakReference<T>>();
+        private readonly List<WeakReference<T>> _list = [];
 
         /// <summary>
         /// Gets a list of live objects from this collection, causing a purge.
@@ -30,7 +27,7 @@ namespace Moryx.Collections
                 var weakReference = _list[readIndex];
                 T item;
 
-                if (!weakReference.TryGetTarget(out item)) 
+                if (!weakReference.TryGetTarget(out item))
                     continue;
 
                 ret.Add(item);
@@ -67,7 +64,7 @@ namespace Moryx.Collections
                 var weakReference = _list[i];
                 T entry;
 
-                if (!weakReference.TryGetTarget(out entry) || entry != item) 
+                if (!weakReference.TryGetTarget(out entry) || entry != item)
                     continue;
 
                 _list.RemoveAt(i);

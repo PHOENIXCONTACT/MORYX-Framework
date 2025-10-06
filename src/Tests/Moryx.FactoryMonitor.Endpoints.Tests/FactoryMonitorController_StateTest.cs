@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Http;
@@ -54,7 +54,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             //Assert
             Assert.That(endpointResult, Is.Not.Null);
             //number of cells in the factory
-            Assert.That(GetLocations().Length, Is.EqualTo(endpointResult.Value.ResourceChangedModels.Count()));
+            Assert.That(GetLocations().Length, Is.EqualTo(endpointResult.Value.ResourceChangedModels.Count));
 
             foreach (var endpointCell in endpointResult.Value.ResourceChangedModels)
                 //machine location matches
@@ -106,10 +106,9 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             _factoryMonitor.ControllerContext.HttpContext = new DefaultHttpContext();
             _factoryMonitor.ControllerContext.HttpContext.Response.Body = memoryStream;
 
-
             _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<IProcess>()))
                 .Returns<IProcess>(p => _activityTargets.Where(pair => pair.Key.Process == p).SelectMany(pair => pair.Value).ToList());
-            _processFacadeMock.SetupGet(pm => pm.RunningProcesses).Returns(new[] { process });
+            _processFacadeMock.SetupGet(pm => pm.RunningProcesses).Returns([process]);
             //Act
 
             Task.Run(async () =>
@@ -232,7 +231,6 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             _processFacadeMock.Raise(pm => pm.ActivityUpdated += null, new ActivityUpdatedEventArgs(activity, progress));
         }
 
-
         private void RaiseProcessUpdated(IProcess process, ProcessProgress progress)
         {
             _processFacadeMock.Raise(pm => pm.ProcessUpdated += null, new ProcessUpdatedEventArgs(process, progress));
@@ -244,7 +242,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             activity.Tracing.ResourceId = cell.Id;
             process.AddActivity(activity);
             // Assign resources AFTER creation
-            _activityTargets[activity] = new[] { cell };
+            _activityTargets[activity] = [cell];
             return activity;
         }
     }

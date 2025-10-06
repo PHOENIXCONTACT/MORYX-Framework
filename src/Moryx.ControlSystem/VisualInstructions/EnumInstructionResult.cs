@@ -1,10 +1,7 @@
-// Copyright (c) 2021, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.ControlSystem.VisualInstructions
 {
@@ -47,7 +44,7 @@ namespace Moryx.ControlSystem.VisualInstructions
         /// </summary>
         public static int ResultToEnumValue(Type resultEnum, ActiveInstructionResponse response)
         {
-            if(response.SelectedResult != null)
+            if (response.SelectedResult != null)
                 return ResultToEnumValue(resultEnum, response.SelectedResult);
 
             if (response.SelectedResult != null)

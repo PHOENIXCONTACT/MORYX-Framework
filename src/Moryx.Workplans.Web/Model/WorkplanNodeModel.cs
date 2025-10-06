@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
@@ -6,10 +6,10 @@ using Moryx.Serialization;
 
 namespace Moryx.Workplans.Endpoint
 {
-  /// <summary>
-  /// DTO representation of a <see cref="IWorkplanStep"/>
-  /// </summary>
-  public sealed class WorkplanNodeModel
+    /// <summary>
+    /// DTO representation of a <see cref="IWorkplanStep"/>
+    /// </summary>
+    public sealed class WorkplanNodeModel
     {
         /// <summary>
         /// Id of the represented step

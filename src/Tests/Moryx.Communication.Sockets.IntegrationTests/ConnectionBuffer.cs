@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
@@ -9,8 +9,8 @@ namespace Moryx.Communication.Sockets.IntegrationTests
     {
         public ConnectionBuffer()
         {
-            Received = new List<TMessage>();
-            LastStateChangeEvents = new List<BinaryConnectionState>();
+            Received = [];
+            LastStateChangeEvents = [];
         }
 
         public IBinaryConnection Connection { get; set; }

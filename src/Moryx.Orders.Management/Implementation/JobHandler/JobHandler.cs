@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
 using Moryx.Orders.Dispatcher;
@@ -101,7 +99,7 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc />
-        public IEnumerable<Job> Restore(IEnumerable<long> jobIds) 
+        public IEnumerable<Job> Restore(IEnumerable<long> jobIds)
             => jobIds.Select(id => JobManagement.Get(id));
     }
 }

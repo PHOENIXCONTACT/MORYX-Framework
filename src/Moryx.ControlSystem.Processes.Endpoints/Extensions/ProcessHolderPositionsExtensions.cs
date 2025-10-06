@@ -1,5 +1,6 @@
-using System.Collections.Generic;
-using System.Linq;
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Tools;
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
@@ -12,7 +13,7 @@ internal static class ProcessHolderPositionsExtensions
     public static Dictionary<Resource, IEnumerable<IProcessHolderPosition>> GetUngroupedPostions(
         this IEnumerable<IProcessHolderPosition> positions)
     {
-        var result = new Dictionary<Resource, IEnumerable<IProcessHolderPosition>>();        
+        var result = new Dictionary<Resource, IEnumerable<IProcessHolderPosition>>();
         foreach (var position in positions)
         {
             if (position is Resource resource && !(resource.ParentCategory() == Category.ProcessHolderGroup))

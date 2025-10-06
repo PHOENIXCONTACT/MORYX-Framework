@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -184,9 +184,9 @@ namespace Moryx.Tests.Extensions
                 NotRelevant = "None",
                 BaseRef1 = new BaseClass(),
                 ChildRef = new ChildClass2(),
-                Children1 = new List<ChildClass1>(),
+                Children1 = [],
                 Children2 = new List<ChildClass2>(),
-                EmptyArray = new GranChildClass1[0],
+                EmptyArray = [],
                 NullArray = null
             };
 
@@ -204,7 +204,7 @@ namespace Moryx.Tests.Extensions
             var target = new ReferenceClass
             {
                 ChildRef = new ChildClass2(),
-                Children2 = new List<ChildClass2> { new ChildClass2(), new ChildClass2() }
+                Children2 = new List<ChildClass2> { new(), new() }
             };
 
             // Act
@@ -224,7 +224,7 @@ namespace Moryx.Tests.Extensions
             var target = new ReferenceClass
             {
 
-                EmptyArray = new GranChildClass1[0],
+                EmptyArray = [],
                 NullArray = null
             };
 
@@ -252,9 +252,9 @@ namespace Moryx.Tests.Extensions
                 NotRelevant = "None",
                 BaseRef1 = new BaseClass(),
                 ChildRef = new ChildClass2(),
-                Children1 = new List<ChildClass1>(),
+                Children1 = [],
                 Children2 = new List<ChildClass2>(),
-                EmptyArray = new GranChildClass1[0],
+                EmptyArray = [],
                 NullArray = null
             };
 

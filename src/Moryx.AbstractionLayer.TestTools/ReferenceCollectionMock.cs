@@ -1,8 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.AbstractionLayer.TestTools
@@ -16,7 +14,6 @@ namespace Moryx.AbstractionLayer.TestTools
         /// <inheritdoc />
         public ICollection<IResource> UnderlyingCollection => new List<IResource>((IEnumerable<IResource>)this);
 
-
         /// <inheritdoc />
         public event EventHandler<ReferenceCollectionChangedEventArgs> CollectionChanged;
         /// <summary>
@@ -25,7 +22,7 @@ namespace Moryx.AbstractionLayer.TestTools
         /// <param name="eventArgs"></param>
         public void RaiseCollectionChanged(ReferenceCollectionChangedEventArgs eventArgs)
         {
-            CollectionChanged ?.Invoke(this, eventArgs);
+            CollectionChanged?.Invoke(this, eventArgs);
         }
     }
 }

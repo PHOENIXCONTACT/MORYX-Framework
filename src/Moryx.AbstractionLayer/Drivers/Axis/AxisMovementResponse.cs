@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 namespace Moryx.AbstractionLayer.Drivers.Axis
@@ -13,7 +13,7 @@ namespace Moryx.AbstractionLayer.Drivers.Axis
         /// </summary>
         public AxisMovementResponse() : base()
         {
-            
+
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace Moryx.AbstractionLayer.Drivers.Axis
         /// <param name="errorMessage">Occured error</param>
         public AxisMovementResponse(string errorMessage) : base(new TransmissionError(errorMessage))
         {
-            
+
         }
     }
 }

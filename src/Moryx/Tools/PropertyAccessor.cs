@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Reflection;
 
 namespace Moryx.Tools
@@ -48,7 +47,6 @@ namespace Moryx.Tools
         {
         }
 
-
         public TProperty ReadProperty(TConcrete instance)
         {
             return PropertyGetter(instance);
@@ -69,7 +67,6 @@ namespace Moryx.Tools
         public InstanceCastAccessor(PropertyInfo property) : base(property)
         {
         }
-
 
         public TProperty ReadProperty(TBase instance)
         {
@@ -93,7 +90,6 @@ namespace Moryx.Tools
         {
         }
 
-
         public TValue ReadProperty(TBase instance)
         {
             return PropertyGetter((TConcrete)instance);
@@ -116,7 +112,6 @@ namespace Moryx.Tools
         {
         }
 
-
         public TValue ReadProperty(TBase instance)
         {
             return (TValue)PropertyGetter((TConcrete)instance);
@@ -137,7 +132,6 @@ namespace Moryx.Tools
         public ConversionAccessor(PropertyInfo property) : base(property)
         {
         }
-
 
         public TValue ReadProperty(TBase instance)
         {

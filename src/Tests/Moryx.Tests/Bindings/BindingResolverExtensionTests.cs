@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Bindings;
@@ -130,7 +130,7 @@ namespace Moryx.Tests.Bindings
         [TestCase("This text used {Branch.Nmae} on data which was not found", Description = "Should return original string value")]
         public void ShouldReturnOriginalValue(string textToFormat)
         {
-            var data = new Foo { Branch = new Branch { Name = "Binded Text"} };
+            var data = new Foo { Branch = new Branch { Name = "Binded Text" } };
             var bindingResolverFactory = new BindingResolverFactory();
             var resolver = TextBindingResolverFactory.Create(textToFormat, bindingResolverFactory);
             var result = resolver.Resolve(data);

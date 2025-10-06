@@ -1,9 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Model;
@@ -99,7 +96,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// <summary>
         /// Lock object to lock state handling
         /// </summary>
-        protected readonly object StateLock = new object();
+        protected readonly object StateLock = new();
 
         /// <summary>
         /// General representation of the current state of the Job
@@ -283,7 +280,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         internal virtual void ProcessCompleted(ProcessData processData)
         {
             // Only raise progress changed while we have running processes
-            if(RunningProcesses.Count > 0)
+            if (RunningProcesses.Count > 0)
                 RaiseProgressChanged();
         }
 

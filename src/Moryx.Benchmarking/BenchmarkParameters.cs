@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer;
@@ -28,7 +28,7 @@ namespace Moryx.Benchmarking
         /// <inheritdoc />
         protected override void Populate(IProcess process, Parameters instance)
         {
-            var parameters = (BenchmarkParameters) instance;
+            var parameters = (BenchmarkParameters)instance;
             parameters.Step = Step;
             parameters.Instructions = [string.Format(Instructions[0].Content, Step).AsInstruction()];
         }

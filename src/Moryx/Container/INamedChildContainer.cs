@@ -1,7 +1,5 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
 
 namespace Moryx.Container
 {
@@ -25,9 +23,9 @@ namespace Moryx.Container
     /// <typeparam name="TParent"></typeparam>
     public interface IContainerChild<TParent> where TParent : INamedChildContainer<object>
     {
-       /// <summary>
-       /// Parent container of this child
-       /// </summary>
-       TParent Parent { get; set;  }
+        /// <summary>
+        /// Parent container of this child
+        /// </summary>
+        TParent Parent { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.ControlSystem.Jobs;
@@ -14,7 +14,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
         public DiscardingState(JobDataBase context, StateMap stateMap) : base(context, stateMap, JobClassification.Completing)
         {
         }
-
 
         public override void Load()
         {

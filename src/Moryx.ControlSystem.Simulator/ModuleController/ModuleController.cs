@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -35,7 +35,7 @@ namespace Moryx.ControlSystem.Simulator
         [RequiredModuleApi(IsStartDependency = true)]
         public IProcessControl ProcessControl { get; set; }
 
-        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) 
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory)
             : base(containerFactory, configManager, loggerFactory)
         {
         }

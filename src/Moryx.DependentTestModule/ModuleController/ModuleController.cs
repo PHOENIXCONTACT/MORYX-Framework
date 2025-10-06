@@ -1,8 +1,7 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -22,7 +21,7 @@ namespace Moryx.DependentTestModule
         [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
         public ITestModule TestModule { get; set; }
 
-        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) 
+        public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory)
             : base(containerFactory, configManager, loggerFactory)
         {
         }
@@ -62,7 +61,7 @@ namespace Moryx.DependentTestModule
         #endregion
 
         #region FacadeContainer
-        private readonly DependentTestModuleFacade _testModuleFacade = new DependentTestModuleFacade();
+        private readonly DependentTestModuleFacade _testModuleFacade = new();
 
         IDependentTestModule IFacadeContainer<IDependentTestModule>.Facade => _testModuleFacade;
 

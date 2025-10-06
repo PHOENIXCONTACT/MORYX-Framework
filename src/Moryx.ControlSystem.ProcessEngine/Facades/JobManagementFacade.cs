@@ -1,10 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer.Resources;
@@ -147,8 +144,8 @@ namespace Moryx.ControlSystem.ProcessEngine
         public Job Get(long jobId)
         {
             ValidateHealthState();
-            return JobList.Get(jobId)?.Job 
-                ?? History.Get(jobId) 
+            return JobList.Get(jobId)?.Job
+                ?? History.Get(jobId)
                 ?? throw new ArgumentException("Job does not refer to managed job", nameof(jobId));
         }
 
@@ -172,13 +169,12 @@ namespace Moryx.ControlSystem.ProcessEngine
         {
             ValidateHealthState();
 
-            if (recipe == null)
-                throw new ArgumentNullException(nameof(recipe));
+            ArgumentNullException.ThrowIfNull(recipe);
 
             if (recipe.Origin == null)
                 throw new ArgumentException("Origin must not be null on recipe", nameof(recipe));
 
-            var productionRecipe = recipe as IProductionRecipe 
+            var productionRecipe = recipe as IProductionRecipe
                 ?? throw new NotSupportedException("Process engine only supports 'IProductionRecipe'!");
 
             var errors = WorkplanValidation.Validate(productionRecipe.Workplan);
@@ -194,11 +190,10 @@ namespace Moryx.ControlSystem.ProcessEngine
         /// </summary>
         private IJobData ValidateAndGet(Job job)
         {
-            if (job == null)
-                throw new ArgumentNullException(nameof(job));
+            ArgumentNullException.ThrowIfNull(job);
 
             ValidateHealthState();
-            return JobList.Get(job.Id) 
+            return JobList.Get(job.Id)
                 ?? throw new ArgumentException("Job does not refer to managed job", nameof(job));
         }
 

@@ -1,10 +1,7 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
@@ -67,8 +64,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
                 var query = (from processEntity in processRepo.Linq
-                    where processEntity.ReferenceId == productInstance.Id
-                    select new {processEntity.Id, processEntity.Job.RecipeId}).ToList();
+                             where processEntity.ReferenceId == productInstance.Id
+                             select new { processEntity.Id, processEntity.Job.RecipeId }).ToList();
 
                 var processes = new List<IProcess>();
                 foreach (var match in query)

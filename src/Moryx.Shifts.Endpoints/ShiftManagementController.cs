@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Http;
@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators;
 using Moryx.Runtime.Modules;
-using Moryx.Shifts.Endpoints.Models;
 using Moryx.Shifts.Extensions;
 using System.ComponentModel.DataAnnotations;
 using Moryx.Shifts.Endpoints.Localizations;
@@ -53,7 +52,7 @@ namespace Moryx.Shifts.Endpoints
         }
 
         [HttpGet("filter")]
-        public ActionResult<IReadOnlyList<ShiftModel>> GetShifts([FromQuery, DataType(DataType.Time)] DateOnly? earliestDate, 
+        public ActionResult<IReadOnlyList<ShiftModel>> GetShifts([FromQuery, DataType(DataType.Time)] DateOnly? earliestDate,
             [FromQuery, DataType(DataType.Time)] DateOnly? latestDate)
         {
             try
@@ -236,7 +235,7 @@ namespace Moryx.Shifts.Endpoints
         }
 
         [HttpGet("assignements/filter")]
-        public ActionResult<IReadOnlyList<ShiftAssignementModel>> GetShiftAssignements([FromQuery, DataType(DataType.Time)] DateOnly? earliestDate, 
+        public ActionResult<IReadOnlyList<ShiftAssignementModel>> GetShiftAssignements([FromQuery, DataType(DataType.Time)] DateOnly? earliestDate,
             [FromQuery, DataType(DataType.Time)] DateOnly? latestDate)
         {
             try
@@ -320,7 +319,6 @@ namespace Moryx.Shifts.Endpoints
                 return StatusCode(500, ex.Message);
             }
         }
-
 
         [HttpDelete("assignements/{id}")]
         public ActionResult DeleteShiftAssignement(long id)

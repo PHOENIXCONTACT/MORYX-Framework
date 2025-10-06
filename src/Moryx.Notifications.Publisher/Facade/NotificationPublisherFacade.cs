@@ -1,8 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Notifications.Publisher
@@ -43,14 +41,13 @@ namespace Moryx.Notifications.Publisher
 
         private void OnAcknowledged(object sender, Notification e)
         {
-            Acknowledged?.Invoke(this, e);          
+            Acknowledged?.Invoke(this, e);
         }
 
         public event EventHandler<Notification> Published;
 
         public event EventHandler<Notification> Acknowledged;
 
-     
         public Notification Get(Guid id)
         {
             return GetAll().Single(n => n.Identifier == id) as Notification;

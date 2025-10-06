@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Workplans;
@@ -41,7 +41,7 @@ namespace Moryx.Tests.Workplans
             place.TokenAdded += (sender, token) => raised = token;
 
             // Act
-            place.Tokens = new IToken[] { dummy };
+            place.Tokens = [dummy];
             place.Resume();
 
             // Assert
@@ -62,7 +62,7 @@ namespace Moryx.Tests.Workplans
 
             // Act
             if (exisiting)
-                place.Tokens = new IToken[] { dummy };
+                place.Tokens = [dummy];
             place.Remove(dummy);
         }
     }

@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -10,10 +10,6 @@ using Moryx.Model.Repositories;
 using Moryx.Modules;
 using Moryx.Resources.Model;
 using Moryx.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using IResource = Moryx.AbstractionLayer.Resources.IResource;
 
 namespace Moryx.Resources.Management
@@ -101,7 +97,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Look-up of resources that failed during init or start and are excluded from certain calls
         /// </summary>
-        private List<Resource> _failedResources = new List<Resource>();
+        private List<Resource> _failedResources = [];
 
         #endregion
 
@@ -334,7 +330,7 @@ namespace Moryx.Resources.Management
                 {
                     uow.SaveChanges();
                     resource.Id = entity.Id;
-                    foreach(var instance in newResources)
+                    foreach (var instance in newResources)
                     {
                         if (!references.ContainsKey(instance))
                             continue;
@@ -444,7 +440,6 @@ namespace Moryx.Resources.Management
         #endregion
 
         #region IResourceManagement
-
 
         private void RaiseResourceAdded(IResource newResource)
         {

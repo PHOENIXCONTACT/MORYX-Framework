@@ -1,7 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Text.RegularExpressions;
 using Moryx.AbstractionLayer.Identity;
 
@@ -31,7 +30,7 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Creates a product identity that represents the latest revision of a given identifier
         /// </summary>
-        public static ProductIdentity AsLatestRevision(string identifier) => new ProductIdentity(identifier, LatestRevision);
+        public static ProductIdentity AsLatestRevision(string identifier) => new(identifier, LatestRevision);
 
         /// <summary>
         /// Create a product identity from a string. Counterpart to ToString() method
@@ -41,8 +40,8 @@ namespace Moryx.AbstractionLayer.Products
         public static ProductIdentity Parse(string identityString)
         {
             Regex rx = new Regex(@"(?<identifier>\w+)-(?<revision>\d+)");
-            if (!rx.IsMatch(identityString) )
-                throw new FormatException("identityString should consist of <identity>-<revision> instead of "+identityString);
+            if (!rx.IsMatch(identityString))
+                throw new FormatException("identityString should consist of <identity>-<revision> instead of " + identityString);
             var groups = rx.Match(identityString).Groups;
             return new ProductIdentity(groups["identifier"].Value, Convert.ToInt16(groups["revision"].Value));
         }
@@ -61,11 +60,11 @@ namespace Moryx.AbstractionLayer.Products
                 result = Parse(identityString);
                 return true;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 result = null;
                 return false;
-            } 
+            }
         }
 
         /// <summary>

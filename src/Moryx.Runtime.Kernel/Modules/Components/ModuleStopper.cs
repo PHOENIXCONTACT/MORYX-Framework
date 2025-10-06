@@ -1,8 +1,6 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Moryx.Runtime.Modules;
 
@@ -25,14 +23,14 @@ namespace Moryx.Runtime.Kernel
         /// <param name="module"></param>
         public void Stop(IServerModule module)
         {
-            if(!AvailableModules.Contains(module))
+            if (!AvailableModules.Contains(module))
                 return;
 
             // First we have to find all running modules that depend on this service
-            var dependingServices = _dependencyManager.GetDependencyBranch(module).Dependends.Select(item => item.RepresentedModule);
+            var dependingServices = _dependencyManager.GetDependencyBranch(module).Dependents.Select(item => item.RepresentedModule);
             // Now we will stop all of them recursivly
-            foreach (var dependingService in dependingServices.Where(dependend => dependend.State.HasFlag(ServerModuleState.Running)
-                                                                               || dependend.State == ServerModuleState.Starting))
+            foreach (var dependingService in dependingServices.Where(dependent => dependent.State.HasFlag(ServerModuleState.Running)
+                                                                               || dependent.State == ServerModuleState.Starting))
             {
                 // We will enque the service to make sure it is restarted later on
                 AddWaitingService(module, dependingService);

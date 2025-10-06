@@ -1,10 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
@@ -164,7 +160,7 @@ namespace Moryx.ControlSystem.SetupProvider
 
             // Wire it all together
             var input = start;
-            foreach(var stepGroup in stepGroups.OrderBy(sg => sg.Key))
+            foreach (var stepGroup in stepGroups.OrderBy(sg => sg.Key))
             {
                 var output = stepGroup.Key == stepGroups.Keys.Max() ? end : WorkplanInstance.CreateConnector("Intermediate" + (stepGroup.Key));
                 workplan.Add(output);

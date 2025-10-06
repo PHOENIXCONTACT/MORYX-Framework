@@ -1,9 +1,10 @@
 <Project>
-	<Import Project=".build\Common.props" Condition="'$(IsPackable)' == 'true'" />
-	
-	<PropertyGroup>
-		<LangVersion>latest</LangVersion>
-	</PropertyGroup>
+  <Import Project=".build\Common.props" Condition="'$(IsPackable)' == 'true'" />
+  
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
 
 	<PropertyGroup>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

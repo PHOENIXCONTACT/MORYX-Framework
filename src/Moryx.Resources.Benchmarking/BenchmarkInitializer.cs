@@ -1,10 +1,8 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Resources.AssemblyInstruction;
-
 
 namespace Moryx.Resources.Benchmarking
 {
@@ -31,7 +29,6 @@ namespace Moryx.Resources.Benchmarking
             // Reference to reporter
             reporter.VisualInstructor = instructor;
 
-
             // Create cells
             var instances = new BenchmarkResource[CellCount];
             for (var i = 0; i < CellCount; i++)
@@ -51,7 +48,7 @@ namespace Moryx.Resources.Benchmarking
                 reporter.Children.Add(instance);
             }
 
-            return new Resource[] {reporter};
+            return [reporter];
         }
     }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
@@ -29,7 +29,7 @@ namespace Moryx.Resources.Samples
 
             if (Setup == null)
             {
-                Setup = Graph.Instantiate<AssembleFoo>();              
+                Setup = Graph.Instantiate<AssembleFoo>();
                 RaiseResourceChanged();
             }
         }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -46,7 +46,7 @@ namespace Moryx.Resources.Mqtt.Tests
             _mqttTopicInt = new MqttTopicPrimitive()
             {
                 Identifier = "MessageInt",
-                MessageName = "System."+nameof(Int32),
+                MessageName = "System." + nameof(Int32),
                 MessageType = typeof(int)
             };
 
@@ -89,14 +89,13 @@ namespace Moryx.Resources.Mqtt.Tests
                         (o.ChannelOptions as MqttClientTcpOptions).Port == _driver.Port;
         }
 
-
         [Test(Description = "Publish int32 Message using the MqttTopicPrimitive")]
         public void SendInt_UsingMqttTopicPrimitive_Topic_QOS_Message()
         {
             //Arrange
             _mockClient.Setup(m => m.PublishAsync(
                     It.IsAny<MqttApplicationMessage>(), It.IsAny<CancellationToken>()))
-                .Callback<MqttApplicationMessage, CancellationToken>((sentMsg, token) 
+                .Callback<MqttApplicationMessage, CancellationToken>((sentMsg, token)
                     => SendMessagIntIConvertible(sentMsg, token));
 
             //Act
@@ -150,14 +149,13 @@ namespace Moryx.Resources.Mqtt.Tests
             Assert.That(msg.Equals(MESSAGE_VALUE_STRING), "Message should be " + MESSAGE_VALUE_STRING + ", but is " + msg);
         }
 
-       [Test(Description = "Receive a Int-Message via MqttTopicPrimitive")]
+        [Test(Description = "Receive a Int-Message via MqttTopicPrimitive")]
         public void ReceiveInt_SubscribedTopic_MqttTopicPrimitive_TopicRaisesReceiveEvent()
         {
             //Arrange
             var wait = new AutoResetEvent(false);
             _mqttTopicInt.Received += (sender, eventArgs) => { wait.Set(); };
             _mqttTopicInt.Received += OnReceivedIntMessage;
-
 
             //Act
             _driver.Receive(_driver.Identifier + _mqttTopicInt.Identifier,
@@ -170,8 +168,8 @@ namespace Moryx.Resources.Mqtt.Tests
         private void OnReceivedIntMessage(object sender, object e)
         {
             //Assert 2
-            var msg = (int)e ;
-            Assert.That(msg==MESSAGE_VALUE_INT, "Message should be " + MESSAGE_VALUE_INT + ", but is " + msg);
+            var msg = (int)e;
+            Assert.That(msg == MESSAGE_VALUE_INT, "Message should be " + MESSAGE_VALUE_INT + ", but is " + msg);
         }
 
         [Test(Description = "Receive a String-Message via MqttTopicPrimitive")]
@@ -181,7 +179,6 @@ namespace Moryx.Resources.Mqtt.Tests
             var wait = new AutoResetEvent(false);
             _mqttTopicString.Received += (sender, eventArgs) => { wait.Set(); };
             _mqttTopicString.Received += OnReceivedStringMessage;
-
 
             //Act
             _driver.Receive(_driver.Identifier + _mqttTopicString.Identifier,

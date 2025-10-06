@@ -1,8 +1,5 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
-using System.Collections.Generic;
 
 namespace Moryx.AbstractionLayer.Resources
 {
@@ -38,7 +35,6 @@ namespace Moryx.AbstractionLayer.Resources
             else
                 return GetFirstRelatedResource(methodToNavigate(resource), conditionToMatch, methodToNavigate);
         }
-
 
         /// <summary>
         /// Recursive method to return the first resource that matches the <paramref name="conditionToMatch"/> 

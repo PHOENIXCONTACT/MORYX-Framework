@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -42,7 +42,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
             // Arrange
             CreateAndStartServer(IPAddress.Any, TestPort, 0, new TestDelimiterValidator());
 
-            var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAdress), TestPort, 500, 0, new TestDelimiterValidator());
+            var clientIdx = CreateAndStartClient(IPAddress.Parse(TestIpAddress), TestPort, 500, 0, new TestDelimiterValidator());
 
             WaitForConnectionState(clientIdx, new TimeSpan(0, 0, 0, 5), BinaryConnectionState.Connected);
 
@@ -59,7 +59,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests.DelimiterProtocol
             // Assert
             Assert.That(_context.StartFound, Is.False);
             Assert.That(_context.CurrentIndex, Is.EqualTo(0));
-            
+
             Assert.That(published, Is.Not.Null);
 
             var expectedMsgLenth = TestDelimiterInterpreter.TestStartDelimiter.Length + payloadMultiplier * 4 +

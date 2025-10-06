@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
@@ -13,7 +13,7 @@ namespace Moryx.Orders.Endpoints.Models
     }
 
     [DataContract]
-    public class OperationStartedModel: OperationChangedModelBase
+    public class OperationStartedModel : OperationChangedModelBase
     {
         [DataMember]
         public string UserId { get; set; }

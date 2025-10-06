@@ -1,7 +1,5 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System;
 
 namespace Moryx.Container
 {
@@ -31,7 +29,7 @@ namespace Moryx.Container
         /// <param name="lifeStyle">Life style of component</param>
         /// <param name="services">Implemented service</param>
         public ComponentAttribute(LifeCycle lifeStyle, params Type[] services)
-        { 
+        {
             LifeStyle = lifeStyle;
             Services = services;
         }

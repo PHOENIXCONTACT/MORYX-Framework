@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -55,7 +55,7 @@ namespace Moryx.Orders.Management.Tests
 
             _operationDataPool = new OperationDataPool
             {
-               UnitOfWorkFactory = _orderModel
+                UnitOfWorkFactory = _orderModel
             };
 
             _jobManagementMock = new Mock<IJobManagement>();
@@ -173,22 +173,22 @@ namespace Moryx.Orders.Management.Tests
 
             // Prepare product management
             _productIdentity = new ProductIdentity("123456", 1);
-            _product = new DummyProductType {Id = 1, Identity = _productIdentity};
-            _recipe = new DummyRecipe {Id = 1};
+            _product = new DummyProductType { Id = 1, Identity = _productIdentity };
+            _recipe = new DummyRecipe { Id = 1 };
 
             _productManagementMock.Setup(p => p.LoadType(_productIdentity)).Returns(_product);
-            _productManagementMock.Setup(p => p.GetRecipes(_product, RecipeClassification.Default)).Returns(new [] { _recipe });
+            _productManagementMock.Setup(p => p.GetRecipes(_product, RecipeClassification.Default)).Returns([_recipe]);
 
             // Prepare jobs
             _jobManagementMock.Setup(j => j.Add(It.IsAny<JobCreationContext>()))
-                .Returns((JobCreationContext creationContext) => new []
-                {
+                .Returns((JobCreationContext creationContext) =>
+                [
                     new Job(_recipe, (int)creationContext.Templates.Single().Amount)
                     {
                         Id = ++_jobIdCounter,
                         Classification = JobClassification.Waiting
                     }
-                });
+                ]);
         }
 
         [Test(Description = "Runs a full production of a operation. At the end, a final report will be executed.")]
@@ -200,7 +200,7 @@ namespace Moryx.Orders.Management.Tests
             // Create the operation
             // Arrange
             var readyEvent = new ManualResetEvent(false);
-            var readyCallback = new EventHandler<OperationEventArgs>(delegate(object _, OperationEventArgs args)
+            var readyCallback = new EventHandler<OperationEventArgs>(delegate (object _, OperationEventArgs args)
             {
                 if (args.OperationData.State.Classification == OperationClassification.Ready)
                     readyEvent.Set();
@@ -297,7 +297,7 @@ namespace Moryx.Orders.Management.Tests
 
         private static OperationCreationContext CreateOperationContext(IProductType product)
         {
-            var productIdentity = (ProductIdentity) product.Identity;
+            var productIdentity = (ProductIdentity)product.Identity;
 
             var orderContext = new OrderCreationContext
             {
@@ -314,7 +314,7 @@ namespace Moryx.Orders.Management.Tests
                 UnderDeliveryAmount = 9,
                 ProductIdentifier = productIdentity.Identifier,
                 ProductRevision = productIdentity.Revision,
-                Parts = new PartCreationContext[0]
+                Parts = Array.Empty<PartCreationContext>()
             };
             orderContext.Operations.Add(operationContext);
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
@@ -36,7 +36,7 @@ namespace Moryx.Tests.Workplans
         /// </summary>
         public override void Pause()
         {
-            State = (MainToken) StoredTokens.First();
+            State = (MainToken)StoredTokens.First();
             base.Pause();
         }
 

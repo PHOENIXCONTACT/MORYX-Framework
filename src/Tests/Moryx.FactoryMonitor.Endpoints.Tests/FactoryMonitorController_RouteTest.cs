@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Mvc;
@@ -41,12 +41,12 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
         {
             long expectedId = 10;
             // Arrange
-            _solderingCellLocation.Destinations.AddRange(new[] { new TransportPath
+            _solderingCellLocation.Destinations.AddRange([ new TransportPath
                     {
                         Origin = _solderingCellLocation,
                         Destination = _assemblyCellLocation,
                         Id = expectedId
-                    } });
+                    } ]);
             //Act
             var endPointResult = _factoryMonitor.TraceRoute(_transportPathModel);
 
@@ -61,19 +61,19 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
         public void GetRoutes()
         {
             // Arange
-            _solderingCellLocation.Destinations.AddRange(new[] { new TransportPath
+            _solderingCellLocation.Destinations.AddRange([ new TransportPath
                     {
                         Destination = _solderingCellLocation,
                         Origin = _assemblyCellLocation,
                         Id = 10
-                    } });
+                    } ]);
 
-            _assemblyCellLocation.Destinations.AddRange(new[] { new TransportPath
+            _assemblyCellLocation.Destinations.AddRange([ new TransportPath
                     {
                         Destination = _assemblyCellLocation,
                         Origin = _solderingCellLocation,
                         Id = 11
-                    } });
+                    } ]);
 
             //Act
             var endPointResult = _factoryMonitor.GetRoutes();

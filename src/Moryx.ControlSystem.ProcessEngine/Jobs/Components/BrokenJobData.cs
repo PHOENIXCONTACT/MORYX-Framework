@@ -1,13 +1,10 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
-using Moryx.ControlSystem.ProcessEngine.Model;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.ControlSystem.Recipes;
-using System;
-using System.Collections.Generic;
 
 namespace Moryx.ControlSystem.ProcessEngine.Jobs.Components
 {
@@ -61,7 +58,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Components
         public bool CanComplete => throw new NotImplementedException();
 
         public bool CanAbort => throw new NotImplementedException();
-        
+
         public bool IsStable => throw new NotImplementedException();
 
         public int RunningCount => throw new NotImplementedException();

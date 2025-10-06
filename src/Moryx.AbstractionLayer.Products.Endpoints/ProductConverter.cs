@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
@@ -6,10 +6,7 @@ using Moryx.Container;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Moryx.Workplans;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
@@ -19,7 +16,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         private IProductManagement _productManagement;
 
         // Null object pattern for identity
-        private static readonly ProductIdentity EmptyIdentity = new ProductIdentity(string.Empty, 0);
+        private static readonly ProductIdentity EmptyIdentity = new(string.Empty, 0);
 
         private readonly ICustomSerialization _productSerialization;
         private readonly ICustomSerialization _recipeSerialization;
@@ -62,7 +59,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         }
         public ProductModel ConvertProduct(IProductType productType, bool flat)
         {
-            
+
             // Base object
             var identity = (ProductIdentity)productType.Identity ?? EmptyIdentity;
             var converted = new ProductModel
@@ -131,7 +128,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                         Name = property.Name,
                         DisplayName = displayName,
                         Type = FetchProductType(property.PropertyType),
-                        Parts = partModel is null ? new PartModel[0] : new[] { partModel },
+                        Parts = partModel is null ? [] : [partModel],
                         PropertyTemplates = EntryConvert.EncodeClass(property.PropertyType, _productSerialization)
                     };
                     connectors.Add(connector);
@@ -162,7 +159,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return prodType.FullName;
         }
 
-
         private PartModel ConvertPart(IProductPartLink link)
         {
             // No link, no DTO!
@@ -177,7 +173,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             };
             return part;
         }
-
 
         public IProductType ConvertProductBack(ProductModel source, ProductType converted)
         {
@@ -203,7 +198,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 recipes.Add(productRecipe);
             }
             if (recipes.Any())
-                foreach(var recipe in recipes)
+                foreach (var recipe in recipes)
                     _productManagement.SaveRecipe(recipe);
 
             // Product is flat
@@ -305,7 +300,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             EntryConvert.UpdateInstance(value, part.Properties);
             value.Product = part.Product is null ? null : _productManagement.LoadType(part.Product.Id);
         }
-
 
         private static void ConvertFilesBack(object converted, ProductModel product, PropertyInfo[] properties)
         {
@@ -419,7 +413,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return productRecipe;
         }
 
-
         public ProductInstanceModel ConvertProductInstance(ProductInstance instance)
         {
             var model = new ProductInstanceModel
@@ -431,7 +424,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             };
             return model;
         }
-
 
         public ProductInstance ConvertProductInstanceBack(ProductInstanceModel model, IProductType type)
         {
@@ -463,7 +455,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 State = model.State
             };
         }
-
 
     }
 }

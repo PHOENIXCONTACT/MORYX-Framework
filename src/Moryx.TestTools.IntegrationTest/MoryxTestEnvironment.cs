@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.DependencyInjection;
@@ -12,10 +12,7 @@ using Moryx.Runtime.Kernel;
 using Moryx.Runtime.Modules;
 using Moryx.TestTools.UnitTest;
 using Moryx.Threading;
-using System;
-using System.Linq;
 using Moryx.Tools;
-using System.Collections.Generic;
 
 namespace Moryx.TestTools.IntegrationTest
 {

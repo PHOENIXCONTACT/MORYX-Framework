@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using System.Diagnostics;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Recipes;
@@ -22,7 +21,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
         public List<IProcess> TotalProcesses { get; set; }
 
-        public EngineJob(IRecipe recipe, int amount):base(recipe, amount)
+        public EngineJob(IRecipe recipe, int amount) : base(recipe, amount)
         {
             // Prepare both process lists
             PredictedFailures = new ProcessList<IProcess>();

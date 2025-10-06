@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -209,7 +209,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
         {
             // Arrange
             var jobData = CreateJobMock();
-            var linkedList = new LinkedList<IJobData>(new[] { jobData });
+            var linkedList = new LinkedList<IJobData>([jobData]);
 
             // Act
             _jobList.Add(linkedList, JobPosition.Append, StorageCallback);
@@ -235,7 +235,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             // Arrange
             var addedJob = CreateJobMock(42);
             var otherJob = _jobList.Get(4);
-            var linkedList = new LinkedList<IJobData>(new[] { addedJob });
+            var linkedList = new LinkedList<IJobData>([addedJob]);
 
             // Act
             var position = new JobPosition(JobPositionType.AfterOther, otherJob.Id);
@@ -281,15 +281,15 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
         {
             // Arrange: Add follow-up to job 3
             var job3 = _jobList.Get(3);
-            var followUps = new LinkedList<IJobData>(new[]
-            {
+            var followUps = new LinkedList<IJobData>(
+            [
                 CreateJobMock(42, 3),
                 CreateJobMock(43, 3)
-            });
+            ]);
             _jobList.Add(followUps, new JobPosition(JobPositionType.AfterOther, 3), StorageCallback);
 
             // Act: Append to recipe
-            var appendRecipe = new LinkedList<IJobData>(new[] { CreateJobMock(100, 3) });
+            var appendRecipe = new LinkedList<IJobData>([CreateJobMock(100, 3)]);
             _jobList.Add(appendRecipe, new JobPosition(JobPositionType.AppendToRecipe, 3), StorageCallback);
 
             // Assert: Make sure the recipe was placed behind the last job of that recipe
@@ -343,7 +343,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             RaiseStateChanged(jobData, JobClassification.Completed);
             ModifiedJobsFragment fragment = null;
             _jobList.Remove(jobData, f => fragment = f);
-
 
             // Assert
             Assert.That(_recievedJobCompleted, Is.EqualTo(jobData));

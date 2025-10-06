@@ -1,7 +1,5 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
-using System.Collections.Generic;
 
 namespace Moryx.AbstractionLayer.Capabilities
 {
@@ -20,7 +18,7 @@ namespace Moryx.AbstractionLayer.Capabilities
 
         /// <inheritdoc />
         public IEnumerable<ICapabilities> GetAll() =>
-            new ICapabilities[] { this };
+            [this];
 
         /// <summary>
         /// Check if our required capabilities are provided by the given object

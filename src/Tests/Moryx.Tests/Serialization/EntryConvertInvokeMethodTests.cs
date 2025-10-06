@@ -1,4 +1,4 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Serialization;
@@ -14,7 +14,8 @@ namespace Moryx.Tests
     {
         private readonly EntrySerialize_Methods _sut;
 
-        public EntryConvertInvokeMethodTests() {
+        public EntryConvertInvokeMethodTests()
+        {
             _sut = new EntrySerialize_Methods();
             //_serialization = new EntrySerializeSerialization();
         }
@@ -24,7 +25,7 @@ namespace Moryx.Tests
         {
             // Act
             var entry = EntryConvert.InvokeMethod(_sut, NoParamsMethodEntry("InvocablePublic"));
-            
+
             // Assert
             Assert.That(entry, Is.Null);
         }
@@ -57,6 +58,6 @@ namespace Moryx.Tests
 
         private MethodEntry NoParamsMethodEntry(string name)
             => new()
-            { Name = name, Parameters = new(){ } };
+            { Name = name, Parameters = new() { } };
     }
 }

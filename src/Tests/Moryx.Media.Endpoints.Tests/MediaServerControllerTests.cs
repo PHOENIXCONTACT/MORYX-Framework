@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Http;
@@ -52,7 +52,7 @@ namespace Moryx.Media.Endpoints.Tests
                 Assert.That(actionResult.Value.Name, Is.EqualTo(returnedContent.Name));
                 Assert.That(actionResult.Value.Variants.Length, Is.EqualTo(returnedContent.Variants.Count));
             }
-                
+
             else
                 Assert.That(actionResult.Result.GetType().IsAssignableTo(resultType));
         }
@@ -91,7 +91,7 @@ namespace Moryx.Media.Endpoints.Tests
                 .Returns(returnedStream);
             _mediaServerMock.Setup(ms => ms.GetVariant(It.IsAny<Guid>(), "name")).Returns(fileDescriptor);
             // Act
-            var actionResult = _controller.GetVariantStream(guid.ToString(),fileDescriptor.Name, false);
+            var actionResult = _controller.GetVariantStream(guid.ToString(), fileDescriptor.Name, false);
 
             // Assert
             Assert.That(actionResult.Result.GetType().IsAssignableTo(resultType));
@@ -117,7 +117,7 @@ namespace Moryx.Media.Endpoints.Tests
                 Headers = new HeaderDictionary(),
                 ContentType = mimeType
             };
-           
+
             // Act
             var actionResult = await _controller.AddMaster(file);
 
@@ -127,7 +127,6 @@ namespace Moryx.Media.Endpoints.Tests
             Assert.That(okResult.StatusCode, Is.EqualTo(200));
             Assert.That(okResult.Value, Is.EqualTo(targetGuid));
         }
-
 
         [TestCase("test.jpg", "image/jpg")]
         public async Task ShouldNotAcceptUploadOfInvalidFileSignatureAsync(string fileName, string mimeType)
@@ -166,7 +165,7 @@ namespace Moryx.Media.Endpoints.Tests
                 .Returns(() => Task.FromResult(contentAddingInfo));
             _mediaServerMock
                 .Setup(ms => ms.GetSupportedFileTypes())
-                .Returns(new[] { ".png", ".jpeg" });
+                .Returns([".png", ".jpeg"]);
 
             using var stream = File.OpenRead(Path.Combine(_testContentPath, filename));
             var file = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name))
@@ -208,7 +207,6 @@ namespace Moryx.Media.Endpoints.Tests
 
         private FormFile CreateFormFile(string filename, string mimeType, string overwriteFilename = "")
             => FormFileBuilder.Load(Path.Combine(_testContentPath, filename), mimeType, overwriteFilename);
-
 
         [TestCase("test.jpg", "image/jpeg")]
         [TestCase("test.jpeg", "image/jpeg")]

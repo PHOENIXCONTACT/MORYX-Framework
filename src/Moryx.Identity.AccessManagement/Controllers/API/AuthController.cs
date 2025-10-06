@@ -1,11 +1,8 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -291,7 +288,6 @@ namespace Moryx.Identity.AccessManagement.Controllers
             {
                 await _roleManager.AddClaimAsync(newRole, new Claim("permission", "order.create"));
 
-
                 return Ok();
             }
 
@@ -386,7 +382,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
         [HttpPost("roles/{roleName}/permission")]
         public async Task<IActionResult> AddPermissionToRole(string roleName, [FromBody] string permission)
         {
-            var result = await _permissionManager.AddToRoleAsync(roleName, new[] { permission });
+            var result = await _permissionManager.AddToRoleAsync(roleName, [permission]);
 
             if (result.Succeeded)
                 return Ok();

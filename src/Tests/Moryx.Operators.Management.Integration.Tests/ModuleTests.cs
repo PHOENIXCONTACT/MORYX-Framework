@@ -1,7 +1,6 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moq;
 using Moryx.Operators.Skills;
 using Moryx.Runtime.Modules;
 
@@ -62,20 +61,20 @@ internal class ModuleTests : TestsBase
         var module = _env.StartTestModule();
 
         // Assert
-        Assert.Multiple(() => {
-            Assert.That(module.State, Is.EqualTo(ServerModuleState.Running), 
+        Assert.Multiple(() =>
+        {
+            Assert.That(module.State, Is.EqualTo(ServerModuleState.Running),
                 "Module is not in state running");
-            Assert.That(_operatorsFacade.Operators, Has.Count.EqualTo(2), 
+            Assert.That(_operatorsFacade.Operators, Has.Count.EqualTo(2),
                 "Operators do not match after restart");
-            Assert.DoesNotThrow(() => _attendingFacade.Operators.Single(o => o.AssignedResources.SingleOrDefault()?.Id == FirstResourceMock.Object.Id), 
+            Assert.DoesNotThrow(() => _attendingFacade.Operators.Single(o => o.AssignedResources.SingleOrDefault()?.Id == FirstResourceMock.Object.Id),
                 "Attended resources do not match after restart");
-            Assert.That(ObjectsAreEqual(_skillsFacade.SkillTypes.Single(), SkillType), 
+            Assert.That(ObjectsAreEqual(_skillsFacade.SkillTypes.Single(), SkillType),
                 "Skill types do not match after restart");
-            Assert.That(ObjectsAreEqual(_skillsFacade.Skills.Single(), Skill), 
+            Assert.That(ObjectsAreEqual(_skillsFacade.Skills.Single(), Skill),
                 "Skills do not match after restart");
         });
     }
-
 
     [Test]
     public void AnyMethod_WhenFacadeNotActivated_ThrowsHealthStateException()
