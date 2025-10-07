@@ -89,8 +89,8 @@ namespace Moryx.Configuration
                 try
                 {
                     var fileContent = File.ReadAllText(configPath);
-                
-                    config = (IConfig)JsonConvert.DeserializeObject(Decrypt(fileContent), confType, JsonSettings.ReadableReplace);
+
+                    config = (IConfig)JsonConvert.DeserializeObject(UseEncryption() ? Decrypt(fileContent) : fileContent, confType, JsonSettings.ReadableReplace);
                     ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddProviders(ValueProviders));
                 }
                 catch (Exception e)
@@ -192,7 +192,7 @@ namespace Moryx.Configuration
         protected void WriteToFile(object config, string name)
         {
             var text = JsonConvert.SerializeObject(config, JsonSettings.Readable);
-            File.WriteAllText(GetConfigPath(name), Encrypt(text));
+            File.WriteAllText(GetConfigPath(name), UseEncryption() ? Encrypt(text) : text);
         }
 
         private string GetConfigPath(string name)
@@ -233,6 +233,26 @@ namespace Moryx.Configuration
             {
                 var hash = algorithm.ComputeHash(byteList.ToArray());
                 return Convert.ToBase64String(hash.ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Set an Environment Variable to activate the encryption of files.
+        /// Variable = true, files are encrypted
+        /// Variable = false, files are not encrypted
+        /// default without variable, files are not encrypted
+        /// </summary>
+        /// <returns></returns>
+        private bool UseEncryption()
+        {
+            try
+            {
+                string result = Environment.GetEnvironmentVariable("MORYX-USEENCRIPTION", EnvironmentVariableTarget.Machine);
+                return bool.TryParse(result, out var useEncryption) && useEncryption;
+            }
+            catch (Exception e)
+            {
+                return false;
             }
         }
     }
