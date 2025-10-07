@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 using Moryx.Media.Previews;
@@ -21,21 +22,21 @@ namespace Moryx.Media.Server
         /// </summary>
         [DataMember]
         [Description("Storage path of the media")]
-        public string StoragePath { get; set; } = "Backups\\MediaServer";
+        public string StoragePath { get; set; }
 
         /// <summary>
         /// Maximum file size for media items in MB
         /// </summary>
         [DataMember]
         [Description("Maximum file size in MB")]
-        public int MaxFileSizeInMb { get; set; } = 10;
+        public int MaxFileSizeInMb { get; set; }
 
         /// <summary>
         /// List of allowed file types
         /// </summary>
         [DataMember]
         [Description("Allowed file types defined by extension")]
-        public string[] SupportedFileTypes { get; set; } = [".png", ".jpeg", ".jpg", ".gif", ".pdf", ".txt", ".csv"];
+        public string[] SupportedFileTypes { get; set; }
 
         /// <summary>
         /// Preview creator plugin configurations
@@ -48,6 +49,9 @@ namespace Moryx.Media.Server
         /// <inheritdoc />
         public override void Initialize()
         {
+            StoragePath = Path.Combine("Backups", "MediaServer");
+            MaxFileSizeInMb = 10;
+            SupportedFileTypes = [".png", ".jpeg", ".jpg", ".gif", ".pdf", ".txt", ".csv"];
             PreviewCreators =
             [
                 new ImagePreviewCreatorConfig()
