@@ -31,6 +31,15 @@ namespace Moryx.Model.Sqlite
     {
         private string _database;
 
+        /// <summary>
+        /// Default constructor of <see cref="SqliteDatabaseConnectionSettings"/>
+        /// </summary>
+        public SqliteDatabaseConnectionSettings()
+        {
+            var defaultDbPath = Path.Combine(".", "db", "<DatabaseName>.db");
+            ConnectionString = $"Data Source={defaultDbPath};Mode=ReadWrite;";
+        }
+
         /// <inheritdoc />
         [DataMember]
         public override string Database
@@ -45,7 +54,7 @@ namespace Moryx.Model.Sqlite
         }
 
         /// <inheritdoc />
-        [DataMember, Required, DefaultValue("Data Source=.\\db\\<DatabaseName>.db;Mode=ReadWrite;")]
+        [DataMember, Required]
         public override string ConnectionString { get; set; }
 
         /// <inheritdoc />

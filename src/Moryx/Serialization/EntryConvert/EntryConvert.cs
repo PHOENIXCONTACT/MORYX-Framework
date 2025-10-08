@@ -728,7 +728,9 @@ namespace Moryx.Serialization
                         (IList)collection, serialization, attributeProvider, instance);
                 }
                 else
+                {
                     strategy = new ListStrategy((IList)collection, serialization);
+                }
             }
             else
             {

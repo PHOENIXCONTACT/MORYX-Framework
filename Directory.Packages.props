@@ -6,7 +6,7 @@
     <RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">false</RestoreLockedMode>
     <CentralPackageFloatingVersionsEnabled>false</CentralPackageFloatingVersionsEnabled>
   </PropertyGroup>
-	
+
   <PropertyGroup>
     <dotnetVersion>8.0.1</dotnetVersion>
     <efCoreVersion>8.0.20</efCoreVersion>
@@ -27,13 +27,14 @@
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="$(dotnetVersion)" />
 	  <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(dotnetVersion)" />
-    
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="$(dotnetVersion)" />
+
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="$(AspNetCoreVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(AspNetCoreVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(AspNetCoreVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(AspNetCoreVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="$(AspNetCoreVersion)" />
-		
+
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(efCoreVersion)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(efCoreVersion)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(efCoreVersion)" />
@@ -41,18 +42,18 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="$(efCoreVersion)" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(efCoreVersion)" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
-	  
+
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
     <PackageVersion Include="Microsoft.Identity.Web" Version="3.14.1" />
     <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="3.14.1" />
 
 	  <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-	  
+
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="CommandLineParser" Version="2.9.1" />
     <PackageVersion Include="AutoMapper" Version="14.0.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.4" />		
-				
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.4" />
+
     <PackageVersion Include="Castle.Windsor" Version="6.0.0" />
 
     <!-- Dependencies for drivers and adapters -->
