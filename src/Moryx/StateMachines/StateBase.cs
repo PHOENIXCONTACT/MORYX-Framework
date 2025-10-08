@@ -95,10 +95,21 @@ namespace Moryx.StateMachines
             where TStateBase : StateBase
         {
             var stateBaseType = typeof(TStateBase);
+            Create(stateBaseType, context, initialKey);
+        }
 
+        /// <summary>
+        /// Create a state machine of the given base type and will set it on the given context
+        /// Will internally called by the <see cref="StateMachine"/> wrapper class
+        /// </summary>
+        internal static void Create(Type stateBaseType, IStateContext context, int? initialKey)
+        {
             // Check the base type
             if (!stateBaseType.IsAbstract)
                 throw new ArgumentException("The state base class must be abstract!");
+
+            if(!typeof(StateBase).IsAssignableFrom(stateBaseType))
+                throw new ArgumentException($"'{stateBaseType.Name}' class is not a valid 'StateBase'!");
 
             // Load all fields
             // 1. Get all fields which are static constant with the attribute
@@ -154,11 +165,11 @@ namespace Moryx.StateMachines
         /// </summary>
         internal static IEnumerable<FieldInfo> GetStateFields(Type stateBaseType)
         {
-            var stateFields = from field in stateBaseType.GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
-                              where field.IsLiteral && !field.IsInitOnly &&
-                                    field.FieldType.IsAssignableFrom(typeof(int)) &&
-                                    field.GetCustomAttribute<StateDefinitionAttribute>() != null
-                              select field;
+            var stateFields = from field in stateBaseType.GetFields(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+                where field.IsLiteral && !field.IsInitOnly &&
+                      field.FieldType.IsAssignableFrom(typeof(int)) &&
+                      field.GetCustomAttribute<StateDefinitionAttribute>() != null
+                select field;
             return stateFields;
         }
 
@@ -233,7 +244,7 @@ namespace Moryx.StateMachines
     }
 
     /// <summary>
-    /// Base class for state machine states 
+    /// Base class for state machine states
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
     public abstract class StateBase<TContext> : StateBase

@@ -1,3 +1,15 @@
+<p align="center">
+    <a href="https://github.com/PHOENIXCONTACT/MORYX-Framework/tree/future">
+        <img src="https://img.shields.io/badge/MORYX%2010-Fully%20Open%20Source-0098A1?style=for-the-badge" alt="MORYX 10 Fully Open Source" />
+    </a>
+</p>
+<p align="center">
+    <strong>
+        🚀 Switch to the <a href="https://github.com/PHOENIXCONTACT/MORYX-Core/tree/future">MORYX 10</a> branch for the fully open sourced release!
+    </strong>
+</p>
+
+# 
 
 <p align="center">
     <a href="https://github.com/PHOENIXCONTACT/MORYX-Framework/workflows">

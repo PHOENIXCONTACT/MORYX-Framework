@@ -840,6 +840,14 @@ namespace Moryx.Tests
             Assert.That(entry.SubEntries[0].Value.Current, Is.EqualTo("VGhpcyBpcyBhIHRlc3Q="));
         }
 
+        [Test(Description = "Testing nullable properties")]
+        public void NullableProperty()
+        {
+            var nullablePropertiesObject = new NullablePropertiesClass();
+
+            Assert.DoesNotThrow(() => EntryConvert.EncodeObject(nullablePropertiesObject));
+        }
+
         [Test(Description = "Decodes to a MemoryStream and creates a new stream")]
         public void MemoryStreamDecode()
         {
@@ -900,14 +908,6 @@ namespace Moryx.Tests
 
             Assert.That(stringValue, Is.EqualTo(testString));
             Assert.That(streamInstanceToCheck, Is.SameAs(targetStreamDummy.MemoryStream));
-        }
-
-        [Test(Description = "Testing nullable properties")]
-        public void NullableProperty()
-        {
-            var nullablePropertiesObject = new NullablePropertiesClass();
-
-            Assert.DoesNotThrow(() => EntryConvert.EncodeObject(nullablePropertiesObject));
         }
 
         [Test(Description = "Encodes a FileStream")]
