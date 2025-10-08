@@ -15,7 +15,7 @@ using NUnit.Framework;
 namespace Moryx.Resources.AssemblyInstruction.Tests
 {
     [TestFixture]
-    public class InstructorTests
+    public class VisualInstructorTests
     {
         private VisualInstructor _instructor;
 
@@ -25,7 +25,7 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
         [SetUp]
         public void Setup()
         {
-            var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, s, e) => { });
+            var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (_, _, _) => { });
             _instructor = new VisualInstructor
             {
                 Name = ClientId1,
@@ -39,7 +39,7 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
         {
             // Arrange
             var wasRaised = false;
-            _instructor.Added += (sender, args) => wasRaised = true;
+            _instructor.Added += (_, _) => wasRaised = true;
 
             // Act
             var id = _instructor.Display(new ActiveInstruction
@@ -65,7 +65,7 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
                 Instructions = GetTextInstruction()
             });
             var wasRaised = false;
-            _instructor.Cleared += (sender, args) => wasRaised = true;
+            _instructor.Cleared += (_, _) => wasRaised = true;
 
             // Act
             _instructor.Clear(instructionId);
@@ -83,8 +83,8 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
             // Arrange
             var addWasRaised = false;
             var clearWasRaised = false;
-            _instructor.Added += (sender, args) => addWasRaised = true;
-            _instructor.Cleared += (sender, args) => clearWasRaised = true;
+            _instructor.Added += (_, _) => addWasRaised = true;
+            _instructor.Cleared += (_, _) => clearWasRaised = true;
 
             // Act
             _instructor.Display(new ActiveInstruction
@@ -138,7 +138,7 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
             var callbackRaised = false;
             var callbackResult = 0;
             var eventRaised = false;
-            _instructor.Cleared += (sender, args) => eventRaised = true;
+            _instructor.Cleared += (_, _) => eventRaised = true;
 
             // Act
             var instructionId = _instructor.Execute(ResourceName, activityStart,
@@ -165,7 +165,7 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
             // Arrange
             var activityStart = CreateActivityStart();
             var wasRaised = false;
-            _instructor.Added += (sender, args) => wasRaised = true;
+            _instructor.Added += (_, _) => wasRaised = true;
 
             // Act
             var id = _instructor.Display(ResourceName, activityStart);
@@ -184,10 +184,10 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
                 Process = new Process { Id = 4711 },
                 Parameters = new MountingParameters
                 {
-                    Instructions = new[]
-                    {
+                    Instructions =
+                    [
                         new VisualInstruction {Content = "Hello World", Type = InstructionContentType.Text}
-                    }
+                    ]
                 }
             };
 
@@ -197,10 +197,10 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
 
         private static VisualInstruction[] GetTextInstruction()
         {
-            return new[]
-            {
+            return
+            [
                 new VisualInstruction {Content = "Hello World", Type = InstructionContentType.Text}
-            };
+            ];
         }
     }
 }

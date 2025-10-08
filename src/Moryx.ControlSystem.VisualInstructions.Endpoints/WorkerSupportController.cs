@@ -17,7 +17,7 @@ using Moryx.AbstractionLayer.Resources;
 namespace Moryx.ControlSystem.VisualInstructions.Endpoints
 {
     /// <summary>
-    /// Definition of a REST API on the <see cref="IWorkerSupport"/> facade.
+    /// Definition of a REST API for the <see cref="IVisualInstructionSource"/> resources.
     /// </summary>
     [ApiController]
     [Route("api/moryx/instructions/")]
@@ -123,7 +123,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
 
             var instructor = _resourceMgmt.GetResource<IVisualInstructionSource>(identifier);
             if (instructor == null)
-                return NotFound($"There is no resource with identifier {identifier}");
+                return NotFound($"There is no instructor with identifier {identifier}");
 
             return instructor.Instructions.Select(Converter.ToModel).ToArray();
         }
@@ -132,15 +132,15 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize(Policy = VisualInstructionPermissions.CanComplete)]
-        public void CompleteInstruction(string identifier, InstructionResponseModel response)
+        public ActionResult CompleteInstruction(string identifier, InstructionResponseModel response)
         {
             var instructor = _resourceMgmt.GetResource<IVisualInstructionSource>(identifier);
             if (instructor is null)
-                NotFound($"There is no resource with identifier {identifier}");
+                return NotFound($"There is no instructor with identifier {identifier}");
 
             var activeInstruction = instructor.Instructions.FirstOrDefault(ai => ai.Id == response.Id);
             if (activeInstruction is null)
-                NotFound($"There is no active instruction corresponding to response id {response.Id}");
+                return NotFound($"There is no active instruction corresponding to response id {response.Id}");
 
             var instructionResponse = new ActiveInstructionResponse
             {
@@ -160,6 +160,8 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
             }
 
             instructor.Completed(instructionResponse);
+
+            return Ok();
         }
 
         [HttpGet("instructors")]
@@ -172,4 +174,3 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
         }
     }
 }
-

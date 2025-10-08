@@ -199,7 +199,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.ControlSystem.SetupPr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.ControlSystem.VisualInstructions.Endpoints.Tests", "src\Tests\Moryx.ControlSystem.VisualInstructions.Endpoints.Tests\Moryx.ControlSystem.VisualInstructions.Endpoints.Tests.csproj", "{8446C13A-5CB2-4FE6-8FEF-3115E9B69471}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.ControlSystem.WorkerSupport.Tests", "src\Tests\Moryx.ControlSystem.WorkerSupport.Tests\Moryx.ControlSystem.WorkerSupport.Tests.csproj", "{CA399231-D9A2-486F-8DFD-A0C639CB7E1C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Resources.AssemblyInstruction.Tests", "src\Tests\Moryx.Resources.AssemblyInstruction.Tests\Moryx.Resources.AssemblyInstruction.Tests.csproj", "{CA399231-D9A2-486F-8DFD-A0C639CB7E1C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.ControlSystem.TestTools.Assemble", "src\Moryx.ControlSystem.Assemble\Moryx.ControlSystem.TestTools.Assemble.csproj", "{A5ECC27A-31AD-46E5-BD5F-8F6AD6789257}"
 EndProject
@@ -958,8 +958,8 @@ Global
 		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF} = {8517D209-5BC1-47BD-A7C7-9CF9ADD9F5B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		
+		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
 		RESX_TaskErrorCategory = Message
-		    RESX_ShowErrorsInErrorList = True
+						RESX_ShowErrorsInErrorList = True
 	EndGlobalSection
 EndGlobal

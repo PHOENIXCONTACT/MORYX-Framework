@@ -1,24 +1,51 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
 {
     [TestFixture]
     public class WorkerSupportControllerTests
     {
-        private WorkerSupportMock _workerSupportMock;
         private WorkerSupportController _controller;
+        private Mock<IResourceManagement> _resourceManagementMock;
+        private Dictionary<string, IVisualInstructionSource> _instructors;
+        private Mock<IVisualInstructionSource> _instructionSourceMock1;
 
         [SetUp]
         public void SetUp()
         {
+            _resourceManagementMock = new Mock<IResourceManagement>();
+            _controller = new WorkerSupportController(_resourceManagementMock.Object);
 
-            _workerSupportMock = new WorkerSupportMock();
-            _controller = new WorkerSupportController(_workerSupportMock);
+            _instructionSourceMock1 = new Mock<IVisualInstructionSource>();
+            _instructionSourceMock1.SetupGet(i => i.Instructions).Returns([new ActiveInstruction()]);
+
+            var instructionSourceMock2 = new Mock<IVisualInstructionSource>();
+            instructionSourceMock2.SetupGet(i => i.Instructions).Returns([new ActiveInstruction()]);
+
+            var instructionSourceMock3 = new Mock<IVisualInstructionSource>();
+            instructionSourceMock3.SetupGet(i => i.Instructions).Returns([new ActiveInstruction()]);
+
+            _instructors = new Dictionary<string, IVisualInstructionSource>
+            {
+                ["Instructor"] = _instructionSourceMock1.Object,
+                ["Instructor with spaces"] = instructionSourceMock2.Object,
+                ["Ümlaut"] = instructionSourceMock3.Object,
+            };
+
+            foreach (var instructorKvp in _instructors)
+            {
+                _resourceManagementMock.Setup(res => res.GetResource<IVisualInstructionSource>(instructorKvp.Key))
+                    .Returns(instructorKvp.Value);
+            }
         }
 
         [Test]
@@ -37,98 +64,43 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints.Tests
         [Test]
         public void ShouldReturnEmptyList()
         {
+            // Arrange
+            const string identifier = "NotExisting";
+            _resourceManagementMock.Setup(res => res.GetResource<IVisualInstructionSource>(identifier))
+                .Returns((IVisualInstructionSource)null);
+
             // Act
-            var result = _controller.GetAll("NotExisting");
+            var result = _controller.GetAll(identifier);
 
             // Assert
-            Assert.That(result.Value, Is.Empty);
+            Assert.That(result.Result, Is.TypeOf<NotFoundObjectResult>());
         }
 
         [Test]
-        [TestCase("Instructor")]
-        [TestCase("Ümlaut")]
-        [TestCase("Instructor with spaces")]
-        public void ShouldAddInstruction(string identifier)
+        public void ShouldCompleteInstruction()
         {
             // Arrange
-            var id = new Random().Next();
-            var instruction = EmptyInstruction(id);
+            const string identifier = "Instructor";
+            var instructionId = new Random().Next();
+            var instruction = new ActiveInstruction { Id = instructionId };
+            _instructionSourceMock1.SetupGet(i => i.Instructions).Returns([instruction]);
 
-            // Act
-            _controller.AddInstruction(identifier, instruction);
-
-            // Assert
-            var result = _controller.GetAll(identifier);
-            Assert.That(result.Value.Last().Id, Is.EqualTo(instruction.Id));
-        }
-
-        [Test]
-        [TestCase("Instructor")]
-        [TestCase("Ümlaut")]
-        [TestCase("Instructor with spaces")]
-        public void ShouldClearInstruction(string identifier)
-        {
-            // Arrange
-            var id = new Random().Next();
-            var instruction = EmptyInstruction(id);
-
-            // Act
-            _controller.AddInstruction(identifier, instruction);
-            _controller.ClearInstruction(identifier, instruction);
-
-            // Assert
-            var result = _controller.GetAll(identifier);
-            Assert.That(result.Value.Any(i => i.Id == instruction.Id), Is.False);
-        }
-
-        [Test]
-        [TestCase("Instructor")]
-        [TestCase("Ümlaut")]
-        [TestCase("Instructor with spaces")]
-        public void ShouldCompleteInstruction(string identifier)
-        {
-            // Arrange
-            var id = new Random().Next();
-            var instruction = EmptyInstruction(id);
-
-            // Act
-            _controller.AddInstruction(identifier, instruction);
-            _controller.CompleteInstruction(identifier, new InstructionResponseModel { Id = id, Result = identifier });
-
-            // Assert
-            var result = _controller.GetAll(identifier);
-            Assert.That(result.Value.Any(i => i.Id == instruction.Id), Is.False);
-            Assert.That(_workerSupportMock.CompleteResult, Is.EqualTo(identifier));
-        }
-
-        [Test]
-        [TestCase("Instructor")]
-        [TestCase("Ümlaut")]
-        [TestCase("Instructor with spaces")]
-        public void ShouldCompleteInstructionWithInputs(string identifier)
-        {
-            // Arrange
-            var id = new Random().Next();
-            var instruction = EmptyInstruction(id);
-
-            // Act
-            _controller.AddInstruction(identifier, instruction);
-            _controller.CompleteInstruction(identifier, new InstructionResponseModel { Id = id, Result = identifier });
-
-            // Assert
-            var result = _controller.GetAll(identifier);
-            Assert.That(result.Value.Any(i => i.Id == instruction.Id), Is.False);
-            Assert.That(_workerSupportMock.CompleteResult, Is.EqualTo(identifier));
-        }
-
-        private static InstructionModel EmptyInstruction(long id)
-        {
-            return new InstructionModel
+            ActiveInstructionResponse response = null;
+            _instructionSourceMock1.Setup(i => i.Completed(It.IsAny<ActiveInstructionResponse>())).Callback((ActiveInstructionResponse rsp) =>
             {
-                Id = id,
-                Items = Array.Empty<InstructionItemModel>(),
-            };
+                _instructionSourceMock1.SetupGet(i => i.Instructions).Returns([]);
+                response = rsp;
+            });
+
+            // Act
+            var completeResult = _controller.CompleteInstruction(identifier, new InstructionResponseModel { Id = instructionId, Result = identifier });
+
+            // Assert
+            Assert.That(completeResult, Is.Not.TypeOf<NotFoundObjectResult>());
+
+            var getAllResult = _controller.GetAll(identifier);
+            Assert.That(getAllResult.Value.Any(i => i.Id == instruction.Id), Is.False);
+            Assert.That(response.SelectedResult.Key, Is.EqualTo(identifier));
         }
     }
 }
-

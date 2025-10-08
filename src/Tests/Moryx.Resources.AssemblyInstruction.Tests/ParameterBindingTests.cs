@@ -25,8 +25,8 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
             var process = DummyProcess();
             var mountingParameters = new MountingParameters()
             {
-                Instructions = new[]
-                {
+                Instructions =
+                [
                     new VisualInstruction
                     {
                         Type = InstructionContentType.Text,
@@ -37,7 +37,7 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
                         Type = InstructionContentType.Text,
                         Content = "Article id {Article.Id} of product {Product.Id}"
                     }
-                }
+                ]
             };
 
             // Act
@@ -59,8 +59,8 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
             var process = DummyProcess();
             var mountingParameters = new MountingParameters()
             {
-                Instructions = new[]
-                {
+                Instructions =
+                [
                     new VisualInstruction
                     {
                         Type = InstructionContentType.Text,
@@ -71,7 +71,7 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
                         Type = InstructionContentType.Text,
                         Content = "ProductInstance with serial {ProductInstance.Identity} of product {Product.Name} in state: {ProductInstance.State}"
                     }
-                }
+                ]
             };
 
             // Act
@@ -93,14 +93,14 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
             var process = DummyProcess();
             var mountingParameters = new MountingParameters()
             {
-                Instructions = new[]
-                {
+                Instructions =
+                [
                     new VisualInstruction
                     {
                         Type = InstructionContentType.Media,
                         Content = "C:\\Images\\{Product.Identifier}.png"
-                    },
-                }
+                    }
+                ]
             };
 
             // Act
@@ -121,14 +121,14 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
             var process = DummyProcess();
             var mountingParameters = new MountingParameters()
             {
-                Instructions = new[]
-                {
+                Instructions =
+                [
                     new VisualInstruction
                     {
                         Type = InstructionContentType.Text,
                         Content = "Article blah is {Article.Blah} and a product Foo of {Product.Foo} for OrderNumber {Recipe.OrderNumber}!"
                     }
-                }
+                ]
             };
 
             // Act
@@ -155,14 +155,14 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
             var process = DummyProcess();
             var mountingParameters = new MountingParameters()
             {
-                Instructions = new[]
-                {
+                Instructions =
+                [
                     new VisualInstruction
                     {
                         Type = InstructionContentType.Text,
                         Content = input
                     }
-                }
+                ]
             };
 
             // Act
@@ -271,7 +271,7 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
                 Id = 42,
                 Name = "Bob",
                 Foo = 1337,
-                Bobs = new[] { 1, 3, 7, 42, 1337 },
+                Bobs = [1, 3, 7, 42, 1337],
                 Identity = new ProductIdentity("123456", 01),
                 Part = new ProductPartLink<DummyProduct>(2)
                 {
