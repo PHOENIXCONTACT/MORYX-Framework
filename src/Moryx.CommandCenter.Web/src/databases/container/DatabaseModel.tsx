@@ -25,6 +25,7 @@ import { toast } from "react-toastify";
 import kbToString from "../../common/converter/ByteConverter";
 import { updateShowWaitDialog } from "../../common/redux/CommonActions";
 import { ActionType } from "../../common/redux/Types";
+import { getEnumTypeValue } from "../../modules/converter/EnumTypeHelper";
 import DatabasesRestClient from "../api/DatabasesRestClient";
 import DatabaseConfigModel from "../models/DatabaseConfigModel";
 import DatabaseConfigOptionModel from "../models/DatabaseConfigOptionModel";
@@ -35,7 +36,6 @@ import { TestConnectionResult } from "../models/TestConnectionResult";
 import { updateDatabaseConfig } from "../redux/DatabaseActions";
 import { DatabaseSection } from "./DatabaseSection";
 import { ExecuterList } from "./ExecuterList";
-import { getEnumTypeValue } from "../../modules/converter/EnumTypeHelper";
 
 interface DatabaseModelPropsModel {
     RestClient: DatabasesRestClient;

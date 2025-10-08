@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0</TargetFrameworks>
+		<TargetFramework>net8.0</TargetFramework>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<Description>Digital Twin of a visual assembly instructor.</Description>
 		<IsPackable>true</IsPackable>
@@ -10,7 +10,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Moryx.ControlSystem.WorkerSupport\Moryx.ControlSystem.WorkerSupport.csproj" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<Compile Update="Properties\Strings.Designer.cs">
 			<DesignTime>True</DesignTime>
