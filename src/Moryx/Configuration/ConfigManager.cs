@@ -90,7 +90,7 @@ namespace Moryx.Configuration
                 {
                     var fileContent = File.ReadAllText(configPath);
 
-                    config = (IConfig)JsonConvert.DeserializeObject(UseEncryption() ? Decrypt(fileContent) : fileContent, confType, JsonSettings.ReadableReplace);
+                    config = (IConfig)JsonConvert.DeserializeObject(Decrypt(fileContent), confType, JsonSettings.ReadableReplace);
                     ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddProviders(ValueProviders));
                 }
                 catch (Exception e)
@@ -120,8 +120,14 @@ namespace Moryx.Configuration
                 {
                     return fileContent;
                 }
+                string passwd = GetPassword();
+                string salt = GetSalt();
+                if (string.IsNullOrEmpty(passwd) || string.IsNullOrEmpty(salt))
+                {
+                    return fileContent;
+                }
                 using var aes = Aes.Create();
-                var key = new Rfc2898DeriveBytes(CreateSaveKey("Mo"), Encoding.UTF8.GetBytes(CreateSaveKey("ryx")));
+                var key = new Rfc2898DeriveBytes(passwd, Encoding.UTF8.GetBytes(salt));
                 aes.Key = key.GetBytes(32);
                 aes.IV = key.GetBytes(16);
 
@@ -146,10 +152,16 @@ namespace Moryx.Configuration
         {
             try
             {
+                string passwd = GetPassword();
+                string salt = GetSalt();
+                if (string.IsNullOrEmpty(passwd) || string.IsNullOrEmpty(salt))
+                {
+                    return text;
+                }
                 // Encrypt the serialized json object with an AES encryption so that the config files are 
                 // not readable 
                 using var aes = Aes.Create();
-                var key = new Rfc2898DeriveBytes(CreateSaveKey("Mo"), Encoding.UTF8.GetBytes(CreateSaveKey("ryx")));
+                var key = new Rfc2898DeriveBytes(passwd, Encoding.UTF8.GetBytes(salt));
                 aes.Key = key.GetBytes(32);
                 aes.IV = key.GetBytes(16);
 
@@ -192,7 +204,7 @@ namespace Moryx.Configuration
         protected void WriteToFile(object config, string name)
         {
             var text = JsonConvert.SerializeObject(config, JsonSettings.Readable);
-            File.WriteAllText(GetConfigPath(name), UseEncryption() ? Encrypt(text) : text);
+            File.WriteAllText(GetConfigPath(name), Encrypt(text));
         }
 
         private string GetConfigPath(string name)
@@ -209,50 +221,37 @@ namespace Moryx.Configuration
         protected bool ConfigExists(string name)
         {
             return File.Exists(GetConfigPath(name));
-        }
-
+        } 
+        
         /// <summary>
-        /// Create a Save key
-        /// </summary>
-        /// <param name="addition">An addition to the key to make it unique</param>
-        /// <returns>Encrypted string in Base64String Format</returns>
-        private string CreateSaveKey(string addition)
-        {
-            var hashValue = new byte[]{ (byte)111, (byte)104,
-                (byte)108, (byte)111, (byte)110,
-                (byte)103, (byte)106, (byte)111,
-                (byte)104, (byte)110, (byte)115,
-                (byte)111, (byte)110 };
-            var additionTextBytes = System.Text.Encoding.UTF8.GetBytes(addition);
-
-            List<byte> byteList = new List<byte>();
-            byteList.AddRange(additionTextBytes);
-            byteList.AddRange(hashValue);
-
-            using (HashAlgorithm algorithm = SHA1.Create())
-            {
-                var hash = algorithm.ComputeHash(byteList.ToArray());
-                return Convert.ToBase64String(hash.ToArray());
-            }
-        }
-
-        /// <summary>
-        /// Set an Environment Variable to activate the encryption of files.
-        /// Variable = true, files are encrypted
-        /// Variable = false, files are not encrypted
-        /// default without variable, files are not encrypted
+        /// Get the password for the encryption.
         /// </summary>
         /// <returns></returns>
-        private bool UseEncryption()
+        private string GetPassword()
         {
             try
             {
-                string result = Environment.GetEnvironmentVariable("MORYX-USEENCRIPTION", EnvironmentVariableTarget.Machine);
-                return bool.TryParse(result, out var useEncryption) && useEncryption;
+                return Environment.GetEnvironmentVariable("ENCPW", EnvironmentVariableTarget.Machine);
             }
             catch (Exception e)
             {
-                return false;
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Get the salt for the encryption.
+        /// </summary>
+        /// <returns></returns>
+        private string GetSalt()
+        {
+            try
+            {
+                return Environment.GetEnvironmentVariable("ENCSAL", EnvironmentVariableTarget.Machine);
+            }
+            catch (Exception e)
+            {
+                return string.Empty;
             }
         }
     }
