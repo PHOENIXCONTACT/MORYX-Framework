@@ -103,11 +103,11 @@ namespace Moryx.Orders.Management
                 throw new InvalidOperationException("UserRequired configured but there is no UserManagement module available");
 
             Container.RegisterNotifications();
-            ActivateFacade(_notificationSourceFacade);
 
             Container.Resolve<ComponentOrchestration>().Start();
 
             ActivateFacade(_orderManagementFacade);
+            ActivateFacade(_notificationSourceFacade);
         }
 
         /// <inheritdoc />
