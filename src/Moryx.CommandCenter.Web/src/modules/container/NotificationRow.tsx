@@ -6,7 +6,7 @@
 import { mdiChevronDown, mdiChevronUp } from "@mdi/js";
 import Collapse from "@mui/material/Collapse";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import IconButton from "@mui/material/IconButton";
 import SvgIcon from "@mui/material/SvgIcon";
 import TableCell from "@mui/material/TableCell";
@@ -84,48 +84,48 @@ export class NotificationRow extends React.Component<NotificationRowPropModel, N
                 <TableCell colSpan={3} padding="none" >
                     <Collapse in={this.state.open} unmountOnExit={true}>
                         <Container disableGutters={true}>
-                            <Grid container={true} direction="row" rowSpacing={0.5} sx={{paddingBottom: 1}}>
-                                <Grid container={true} item={true}>
-                                    <Grid item={true} md={12}>
+                            <GridLegacy container={true} direction="row" rowSpacing={0.5} sx={{paddingBottom: 1}}>
+                                <GridLegacy container={true} item={true}>
+                                    <GridLegacy item={true} md={12}>
                                         <Typography variant="body2">{this.props.message.message}</Typography>
-                                    </Grid>
-                                </Grid>
-                                <Grid container={true} item={true}>
-                                    <Grid item={true} md={2}>
+                                    </GridLegacy>
+                                </GridLegacy>
+                                <GridLegacy container={true} item={true}>
+                                    <GridLegacy item={true} md={2}>
                                         <Typography variant="body2" sx={{ fontWeight: "bold"}}>Type</Typography>
-                                    </Grid>
-                                    <Grid item={true} md={10}>
+                                    </GridLegacy>
+                                    <GridLegacy item={true} md={10}>
                                         <Typography variant="body2" sx={{ fontFamily: "Monospace" }}>{this.props.message.exception?.exceptionTypeName}</Typography>
-                                    </Grid>
-                                </Grid>
-                                <Grid container={true} item={true}>
-                                    <Grid item={true} md={2}><Typography variant="body2" sx={{ fontWeight: "bold"}}>Message</Typography></Grid>
-                                    <Grid item={true} md={10}> <Typography variant="body2" sx={{ fontFamily: "Monospace" }}>{this.props.message.exception?.message}</Typography></Grid>
-                                </Grid>
-                                <Grid container={true} item={true}>
-                                    <Grid item={true} md={2}>
+                                    </GridLegacy>
+                                </GridLegacy>
+                                <GridLegacy container={true} item={true}>
+                                    <GridLegacy item={true} md={2}><Typography variant="body2" sx={{ fontWeight: "bold"}}>Message</Typography></GridLegacy>
+                                    <GridLegacy item={true} md={10}> <Typography variant="body2" sx={{ fontFamily: "Monospace" }}>{this.props.message.exception?.message}</Typography></GridLegacy>
+                                </GridLegacy>
+                                <GridLegacy container={true} item={true}>
+                                    <GridLegacy item={true} md={2}>
                                         <Typography variant="body2" sx={{ fontWeight: "bold"}}>Stack trace</Typography>
-                                    </Grid>
-                                    <Grid item={true} md={10}>
+                                    </GridLegacy>
+                                    <GridLegacy item={true} md={10}>
                                         <Typography variant="body2" sx={{ fontFamily: "Monospace" }}>{this.props.message.exception?.stackTrace}</Typography>
-                                    </Grid>
-                                </Grid>
-                                <Grid container={true} item={true}>
-                                    <Grid item={true} md={12}>
+                                    </GridLegacy>
+                                </GridLegacy>
+                                <GridLegacy container={true} item={true}>
+                                    <GridLegacy item={true} md={12}>
                                         {this.props.message.exception?.innerException == null ? (
                                             <Typography variant="body2">No inner exception found</Typography>
                                         ) : (
                                             <Typography variant="body2" sx={{ fontWeight: "bold"}}>Inner exception</Typography>
                                         )}
-                                    </Grid>
-                                </Grid>
+                                    </GridLegacy>
+                                </GridLegacy>
                                 {
                                     this.props.message.exception?.innerException != null &&
-                                    <Grid container={true} item={true}>
-                                        <Grid item={true} md={12}>{NotificationRow.preRenderInnerException(this.props.message.exception?.innerException)}</Grid>
-                                    </Grid>
+                                    <GridLegacy container={true} item={true}>
+                                        <GridLegacy item={true} md={12}>{NotificationRow.preRenderInnerException(this.props.message.exception?.innerException)}</GridLegacy>
+                                    </GridLegacy>
                                 }
-                            </Grid>
+                            </GridLegacy>
                         </Container>
                     </Collapse>
                 </TableCell >
@@ -137,23 +137,23 @@ export class NotificationRow extends React.Component<NotificationRowPropModel, N
 
     private static preRenderInnerException(exception: SerializableException): React.ReactNode {
         return (
-            <Grid container={true} sx={{ paddingLeft: 1, paddingRight: 0 }} rowSpacing={0.5}>
-                <Grid container={true} item={true}>
-                    <Grid item={true} md={2}>
+            <GridLegacy container={true} sx={{ paddingLeft: 1, paddingRight: 0 }} rowSpacing={0.5}>
+                <GridLegacy container={true} item={true}>
+                    <GridLegacy item={true} md={2}>
                         <Typography variant="body2" sx={{ fontWeight: "bold"}}>Type</Typography>
-                    </Grid>
-                    <Grid item={true} md={10}>
+                    </GridLegacy>
+                    <GridLegacy item={true} md={10}>
                         <Typography variant="body2" sx={{ fontFamily: "Monospace" }}>{exception.exceptionTypeName}</Typography>
-                    </Grid>
-                </Grid>
-                <Grid container={true} item={true}>
-                    <Grid item={true} md={2}><Typography variant="body2" sx={{ fontWeight: "bold"}}>Message</Typography></Grid>
-                    <Grid item={true} md={10}> <Typography variant="body2" sx={{ fontFamily: "Monospace" }}>{exception.message}</Typography></Grid>
-                </Grid>
+                    </GridLegacy>
+                </GridLegacy>
+                <GridLegacy container={true} item={true}>
+                    <GridLegacy item={true} md={2}><Typography variant="body2" sx={{ fontWeight: "bold"}}>Message</Typography></GridLegacy>
+                    <GridLegacy item={true} md={10}> <Typography variant="body2" sx={{ fontFamily: "Monospace" }}>{exception.message}</Typography></GridLegacy>
+                </GridLegacy>
                 {exception.innerException != null &&
                     NotificationRow.preRenderInnerException(exception.innerException)
                 }
-            </Grid>
+            </GridLegacy>
         );
     }
 }
