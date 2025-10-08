@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, viewChild, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal, viewChild, ViewChild } from '@angular/core';
 import { VariantDescriptor } from '../../api/models';
 import { ContentDescriptorModel } from '../../api/models/content-descriptor-model';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -31,22 +31,22 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
     selector: 'app-variant-overview',
     templateUrl: './variant-overview.component.html',
     styleUrls: ['./variant-overview.component.scss'],
-    imports: [
-      MatSidenavModule, 
-      MatToolbarModule, 
-      MatIconModule, 
-      RouterLink, 
-      MatMenuModule, 
-      MatListModule, 
+  imports: [
+    MatSidenavModule,
+    MatToolbarModule,
+    MatIconModule,
+    RouterLink,
+    MatMenuModule,
+    MatListModule,
       MatTooltip, MatButtonModule, 
-      NgxDocViewerModule, 
-      CommonModule, 
-      TranslateModule,
+    NgxDocViewerModule,
+    CommonModule,
+    TranslateModule,
       MatProgressSpinnerModule
     ]
 })
-export class VariantOverviewComponent implements OnInit {
-  mediaImage = signal(environment.assets + 'assets/media-toolbar.webp');
+export class VariantOverviewComponent implements OnInit, OnDestroy {
+  mediaImage = signal(environment.assets + "assets/media-toolbar.webp");
   content = signal<ContentDescriptorModel | undefined>(undefined);
   selectedVariant = signal<VariantDescriptor | undefined>(undefined);
   // 0: no picture loaded, 1: picture loading, 2: picture loaded
@@ -56,13 +56,14 @@ export class VariantOverviewComponent implements OnInit {
   previews = signal<Map<string, string | ArrayBuffer | null>>( new Map());
   bigPictureIsPdf = signal(false);
   defaultPictureUrl = signal(environment.assets + 'assets/no_preview.jpg');
-  
+
   downloadPictureUrl: string | null | ArrayBuffer = '';
   TranslationConstants = TranslationConstants;
   menuTopLeftPosition = signal<{ x: string, y: string }>({ x: '0', y: '0' });
   timeoutHandler: ReturnType<typeof setTimeout> | undefined;
   trigger = viewChild.required(MatMenuTrigger);
-
+  private pdfObjectUrl?: string;
+  private previewObjectUrls = new Map<string, string>();
 
   constructor(
     public dialog: MatDialog,
@@ -87,6 +88,15 @@ export class VariantOverviewComponent implements OnInit {
         });
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    if (this.pdfObjectUrl) {
+      URL.revokeObjectURL(this.pdfObjectUrl);
+      this.pdfObjectUrl = undefined;
+    }
+    this.previewObjectUrls.forEach((u) => URL.revokeObjectURL(u));
+    this.previewObjectUrls.clear();
   }
 
   onContext(event: MouseEvent, variant: VariantDescriptor) {
@@ -115,6 +125,9 @@ export class VariantOverviewComponent implements OnInit {
   }
 
   loadPreviews(): void {
+    this.previewObjectUrls.forEach((u) => URL.revokeObjectURL(u));
+    this.previewObjectUrls.clear();
+
     const content = this.content();
     if (
       content !== undefined &&
@@ -138,13 +151,13 @@ export class VariantOverviewComponent implements OnInit {
         .getPicture(variantName, contentId, true)
         .subscribe((data) => {
           if (data !== null) {
-            let downloadedFile = new Blob([data], { type: data.type });
-            const reader = new FileReader();
-            reader.readAsDataURL(downloadedFile);
-            reader.onload = (_event) => {
-              let url = reader.result;
-              this.setMapItem(variantName, url);
-            };
+            const blob = new Blob([data], { type: data.type });
+            const old = this.previewObjectUrls.get(variantName);
+            if (old) URL.revokeObjectURL(old);
+
+            const url = URL.createObjectURL(blob);
+            this.previewObjectUrls.set(variantName, url);
+            this.setMapItem(variantName, url);
           }
         });
     } else {
@@ -160,6 +173,12 @@ export class VariantOverviewComponent implements OnInit {
   }
 
   onSelect(variant: VariantDescriptor) {
+    if (this.pdfObjectUrl) {
+      URL.revokeObjectURL(this.pdfObjectUrl);
+      this.pdfObjectUrl = undefined;
+      this.pdfUrl.update((_) => undefined);
+    }
+
     if (this.selectedVariant()?.name !== variant.name) {
       this.selectedVariant.update(_ => variant);
       this.bigPictureLoadingState.update(_ => 1);
@@ -193,7 +212,11 @@ export class VariantOverviewComponent implements OnInit {
                 typeof variant.mimeType === 'string' &&
                 variant.mimeType.includes('application/pdf')
               ) {
-                this.pdfUrl.update(_ => this.downloadPictureUrl as string);
+                if (this.pdfObjectUrl) {
+                  URL.revokeObjectURL(this.pdfObjectUrl);
+                }
+                this.pdfObjectUrl = URL.createObjectURL(bigPicture);
+                this.pdfUrl.update((_) => this.pdfObjectUrl);
               } else {
                 this.bigPictureUrl.update(_ => this.defaultPictureUrl());
               }
@@ -351,9 +374,15 @@ export class VariantOverviewComponent implements OnInit {
                   this.previews.update(map =>{
                     map.delete(selectedVariant.name!);
                     return map;
-                  })
-                  this.bigPictureUrl.update(_ => '');
-                  this.bigPictureLoadingState.update(_ => 0);
+                  });
+                  this.bigPictureUrl.update((_) => "");
+                  this.bigPictureLoadingState.update((_) => 0);
+
+                  if (this.pdfObjectUrl) {
+                    URL.revokeObjectURL(this.pdfObjectUrl);
+                    this.pdfObjectUrl = undefined;
+                    this.pdfUrl.update((_) => undefined);
+                  }
                 }
               });
           }
