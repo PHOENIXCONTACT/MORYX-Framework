@@ -323,10 +323,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         private static DatabaseConfigOptionModel[] GetConfigurators()
         {
             var configuratorTypes = ReflectionTool
-                .GetPublicClasses(typeof(IModelConfigurator), delegate (Type type)
-                {
-                    return type != typeof(NullModelConfigurator);
-                }).ToList();
+                .GetPublicClasses(typeof(IModelConfigurator), type => type != typeof(NullModelConfigurator)).ToList();
 
             var result = configuratorTypes
                 .Select(type => new DatabaseConfigOptionModel

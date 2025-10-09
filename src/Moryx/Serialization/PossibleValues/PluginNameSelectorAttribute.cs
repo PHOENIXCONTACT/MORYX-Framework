@@ -36,7 +36,7 @@ namespace Moryx.Serialization
 
         private static string GetComponentName(Type component)
         {
-            var att = component.GetCustomAttribute<RegistrationAttribute>();
+            var att = component.GetCustomAttribute<ComponentAttribute>();
             return string.IsNullOrEmpty(att?.Name) ? component.FullName : att.Name;
         }
 

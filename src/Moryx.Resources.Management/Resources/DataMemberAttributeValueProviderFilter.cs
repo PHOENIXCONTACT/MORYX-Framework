@@ -18,6 +18,7 @@ namespace Moryx.Resources.Management
             _filterDataMembers = filterDataMembers;
         }
 
+        /// <inheritdoc />
         public bool CheckProperty(PropertyInfo propertyInfo)
         {
             if(_filterDataMembers)

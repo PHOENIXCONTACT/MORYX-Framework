@@ -129,11 +129,10 @@ namespace Moryx.Serialization
             else if (property.PropertyType.IsValueType)
             {
                 var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
-                entryValue.Default = underlyingType != null
-                    ? Activator.CreateInstance(underlyingType).ToString()
+                entryValue.Default = underlyingType != null 
+                    ? Activator.CreateInstance(underlyingType).ToString() 
                     : Activator.CreateInstance(property.PropertyType).ToString();
             }
-
             // Value types should have the default value as current value
             if (ValueOrStringType(property.PropertyType))
                 entryValue.Current = ConvertToString(entryValue.Default, customSerialization.FormatProvider);
