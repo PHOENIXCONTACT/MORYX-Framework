@@ -6,7 +6,7 @@
 import { mdiBriefcase, mdiComment, mdiDatabase } from "@mdi/js";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -102,8 +102,8 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
 
     public render(): React.ReactNode {
         return (
-            <Grid container={true} spacing={2}>
-                <Grid item={true} md={3}
+            <GridLegacy container={true} spacing={2}>
+                <GridLegacy item={true} md={3}
                     justifyContent={"center"}>
                     <Card className="mcc-menu-card">
                             <Tabs value="databases" role="navigation" centered={true}>
@@ -135,8 +135,8 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
                             <RoutingMenu Menu={this.state.MenuModel} />
                         )}
                     </Card>
-                </Grid>
-                <Grid item={true} md={9}>
+                </GridLegacy>
+                <GridLegacy item={true} md={9}>
                     <Routes>
                         <Route path="*" element={
                             <Card>
@@ -150,8 +150,8 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
                         />
                         {this.preRenderRoutesList()}
                     </Routes>
-                </Grid>
-            </Grid>
+                </GridLegacy>
+            </GridLegacy>
         );
     }
 }

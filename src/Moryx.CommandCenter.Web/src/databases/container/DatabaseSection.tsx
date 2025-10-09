@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 
@@ -21,18 +21,18 @@ export class DatabaseSection extends React.Component<React.PropsWithChildren<Dat
     public render(): React.ReactNode {
         const width = this.props.width ?? 12;
         return (
-            <Grid container={true} item={true} md={width}>
-                <Grid container={true} item={true} md={12}>
+            <GridLegacy container={true} item={true} md={width}>
+                <GridLegacy container={true} item={true} md={12}>
                     {(typeof this.props.title === "string")
                         ? <Typography variant="h5" gutterBottom={true}>{this.props.title}</Typography>
                         : this.props.title
                     }
 
-                </Grid>
-                <Grid container={true} item={true} md={12} spacing={1}>
+                </GridLegacy>
+                <GridLegacy container={true} item={true} md={12} spacing={1}>
                     {this.props.children}
-                </Grid>
-            </Grid>
+                </GridLegacy>
+            </GridLegacy>
         );
     }
 }

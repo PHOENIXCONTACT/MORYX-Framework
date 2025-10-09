@@ -5,7 +5,7 @@
 
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import * as React from "react";
 import Entry from "../models/Entry";
 import MethodEntry from "../models/MethodEntry";
@@ -28,24 +28,24 @@ function ConsoleMethodResult(props: ConsoleMethodResultPropModel) {
                 <span className="font-italic">There is no result.</span>
             ) : (
                 <Container>
-                    <Grid container={true}>
-                        <Grid item={true} md={3}><span className="font-bold">Name:</span></Grid>
-                        <Grid item={true} md={9}><span className="font-italic">{props.Method.displayName}</span></Grid>
-                        <Grid item={true} md={3}><span className="font-bold">Description:</span></Grid>
-                        <Grid item={true} md={9}><span className="font-italic">{props.Method.description}</span></Grid>
-                        <Grid item={true} md={12} className="up-space-lg">
+                    <GridLegacy container={true}>
+                        <GridLegacy item={true} md={3}><span className="font-bold">Name:</span></GridLegacy>
+                        <GridLegacy item={true} md={9}><span className="font-italic">{props.Method.displayName}</span></GridLegacy>
+                        <GridLegacy item={true} md={3}><span className="font-bold">Description:</span></GridLegacy>
+                        <GridLegacy item={true} md={9}><span className="font-italic">{props.Method.description}</span></GridLegacy>
+                        <GridLegacy item={true} md={12} className="up-space-lg">
                             <NavigableConfigEditor
                                 Entries={props.InvokeResult.subEntries}
                                 ParentEntry={null}
                                 Root={props.InvokeResult}
                                 IsReadOnly={true} />
-                        </Grid>
-                        <Grid container={true} item={true} md={12} direction="row" justifyContent="flex-end">
+                        </GridLegacy>
+                        <GridLegacy container={true} item={true} md={12} direction="row" justifyContent="flex-end">
                             <Button variant="contained" className="float-right" onClick={resetInvokeResult}>
                                 Reset result
                             </Button>
-                        </Grid>
-                    </Grid>
+                        </GridLegacy>
+                    </GridLegacy>
                 </Container>
             )}
         </div>

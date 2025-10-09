@@ -6,6 +6,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { HashRouter } from "react-router-dom";
 import { createStore } from "redux";
@@ -29,15 +30,14 @@ const theme = createTheme({
 
 const store = createStore<AppState, ActionType<{}>, any, any>(getAppReducer);
 
-ReactDOM.render(
+const container = document.getElementById("app");
+const root = createRoot(container);
+root.render(
     <Provider store={store}>
         <HashRouter>
             <ThemeProvider theme={theme}>
                 <App />
-
             </ThemeProvider>
         </HashRouter>
     </Provider>
-    ,
-    document.getElementById("app"),
 );

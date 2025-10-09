@@ -4,7 +4,7 @@
 */
 
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import queryString from "query-string";
@@ -96,11 +96,11 @@ function NavigableConfigEditor(props: NavigableConfigEditorPropModel) {
     };
 
     return (
-        <Grid container={true} spacing={1}>
-            <Grid container={true} item={true} md={12}>
+        <GridLegacy container={true} spacing={1}>
+            <GridLegacy container={true} item={true} md={12}>
                 {preRenderBreadcrumb()}
-            </Grid>
-            <Grid container={true} item={true} md={12}>
+            </GridLegacy>
+            <GridLegacy container={true} item={true} md={12}>
                 <ConfigEditor
                     ParentEntry={parentEntry}
                     Entries={entries}
@@ -108,8 +108,8 @@ function NavigableConfigEditor(props: NavigableConfigEditorPropModel) {
                     navigateToEntry={navigateToEntry}
                     IsReadOnly={props.IsReadOnly}
                 />
-            </Grid>
-    </Grid>
+            </GridLegacy>
+    </GridLegacy>
     );
 }
 
