@@ -78,9 +78,18 @@ namespace Moryx.Communication.Sockets
             var socket = _client.Client;
 
 #if HAVE_TCP_KEEPALIVE
+            // Total detection time ≈ KeepAliveTime + (KeepAliveInterval * KeepAliveRetryCount)
+            // Sample: 60 + (10 * 5) ≈ 110 seconds
+            
+            // SetSocketOption uses seconds instead of milliseconds
+            // TODO: Rename config values in next major when IOControlCode are not used anymore
+            // TODO: Add RetryCount in next major to configs
+            var intervalAsSeconds = (int)Math.Ceiling(interval / 1000.0);  // 500/1000 -> 1;
+            var timeoutAsSeconds = (int)Math.Ceiling(timeout / 1000.0);  // 500/1000 -> 1;
+            
             // Configure socket using net6 keep alive configuration
-            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, interval);
-            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, timeout);
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, intervalAsSeconds);
+            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, timeoutAsSeconds);
 
             try
             {
