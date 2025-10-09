@@ -35,7 +35,7 @@ namespace Moryx.ProcessData.Adapter.ProcessEngine
         /// Resource management dependency
         /// </summary>
         [RequiredModuleApi(IsOptional = false, IsStartDependency = true)]
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagement ResourceManagement { get; set; }
 
         /// <summary>
         /// ProcessDataMonitor facade dependency

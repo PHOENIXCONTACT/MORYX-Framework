@@ -19,13 +19,21 @@ namespace Moryx.Operators.Endpoints;
 [ApiController]
 [Route("api/moryx/operators/")]
 [Produces("application/json")]
-public class OperatorManagementController(IOperatorManagement operatorManagement,
-    IAttendanceManagement attendanceManagement, IResourceManagement resourceManagement, ISkillManagement skillManagement) : ControllerBase
+public class OperatorManagementController : ControllerBase
 {
-    private readonly IOperatorManagement _operatorManagement = operatorManagement;
-    private readonly IAttendanceManagement _attendanceManagement = attendanceManagement;
-    private readonly IResourceManagement _resourceManagement = resourceManagement;
-    private readonly ISkillManagement _skillManagement = skillManagement;
+    private readonly IOperatorManagement _operatorManagement;
+    private readonly IAttendanceManagement _attendanceManagement;
+    private readonly ResourceManagement _resourceManagement;
+    private readonly ISkillManagement _skillManagement;
+
+    public OperatorManagementController(IOperatorManagement operatorManagement,
+        IAttendanceManagement attendanceManagement, ResourceManagement resourceManagement, ISkillManagement skillManagement)
+    {
+        _operatorManagement = operatorManagement;
+        _attendanceManagement = attendanceManagement;
+        _resourceManagement = resourceManagement;
+        _skillManagement = skillManagement;
+    }
 
     #region IOperatorManagement
 

@@ -27,7 +27,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// Resource management to push activities to resources
         /// </summary>
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagement ResourceManagement { get; set; }
 
         /// <summary>
         /// Internal thread pool to decouple from resource manager events
@@ -623,7 +623,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         }
 
         /// <summary>
-        /// Takes an <paramref name="actionToDispatch"/> that should be executed on the 
+        /// Takes an <paramref name="actionToDispatch"/> that should be executed on the
         /// <paramref name="actionTarget"/> without exceptions feeding back into the process engine.
         /// </summary>
         private void Decouple(Action actionToDispatch, string actionName, ICell actionTarget)
@@ -631,7 +631,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             // This makes sure, that exceptions from the cell can not discrupt the process engine. However, deadlocks or
             // very long running operations will still prevent e.g. process changes to complete. IMPORTANT: Pushing it to
             // a different thread without awaiting completion is not possible, as this will cause race conditions when
-            // completing/removing activities. 
+            // completing/removing activities.
             // ToDo: Apply timout already used when shutting down the process engine
             try
             {

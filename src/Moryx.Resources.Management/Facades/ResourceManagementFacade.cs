@@ -4,11 +4,10 @@
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Modules;
-using Moryx.Runtime.Modules;
 
 namespace Moryx.Resources.Management
 {
-    internal class ResourceManagementFacade : FacadeBase, IResourceManagement
+    internal class ResourceManagementFacade : ResourceManagement
     {
         #region Dependency Injection
 
@@ -23,7 +22,7 @@ namespace Moryx.Resources.Management
         #region IFacadeControl
 
         /// <seealso cref="IFacadeControl"/>
-        public override void Activate()
+        public override void Activated()
         {
             Manager.ResourceAdded += OnResourceAdded;
             Manager.CapabilitiesChanged += OnCapabilitiesChanged;
@@ -38,81 +37,72 @@ namespace Moryx.Resources.Management
             Manager.ResourceRemoved -= OnResourceRemoved;
         }
 
+        #endregion
+
         private void OnCapabilitiesChanged(object sender, ICapabilities args)
         {
-            CapabilitiesChanged?.Invoke(((IResource)sender).Proxify(TypeController), args);
+            RaiseCapabilitiesChanged(((IResource)sender).Proxify(TypeController), args);
         }
 
         private void OnResourceAdded(object sender, IResource publicResource)
         {
-            ResourceAdded?.Invoke(this, publicResource.Proxify(TypeController));
+            RaiseResourceAdded(this, publicResource.Proxify(TypeController));
         }
 
         private void OnResourceRemoved(object sender, IResource publicResource)
         {
-            ResourceRemoved?.Invoke(this, publicResource.Proxify(TypeController));
+            RaiseResourceRemoved(this, publicResource.Proxify(TypeController));
         }
-        #endregion
 
-        #region IResourceManagement
-        public TResource GetResource<TResource>() where TResource : class, IResource
+        public override TResource GetResource<TResource>()
         {
             ValidateHealthState();
             return ResourceGraph.GetResource<TResource>()?.Proxify(TypeController);
         }
 
-        public TResource GetResource<TResource>(long id)
-            where TResource : class, IResource
+        public override TResource GetResource<TResource>(long id)
         {
             ValidateHealthState();
             return ResourceGraph.GetResource<TResource>(id)?.Proxify(TypeController);
         }
 
-        public TResource GetResource<TResource>(string name)
-            where TResource : class, IResource
+        public override TResource GetResource<TResource>(string name)
         {
             ValidateHealthState();
             return ResourceGraph.GetResource<TResource>(name)?.Proxify(TypeController);
         }
 
-        public TResource GetResource<TResource>(ICapabilities requiredCapabilities)
-            where TResource : class, IResource
+        public override TResource GetResource<TResource>(ICapabilities requiredCapabilities)
         {
             ValidateHealthState();
             return ResourceGraph.GetResource<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities))?.Proxify(TypeController);
         }
 
-        public TResource GetResource<TResource>(Func<TResource, bool> predicate)
-            where TResource : class, IResource
+        public override TResource GetResource<TResource>(Func<TResource, bool> predicate)
         {
             ValidateHealthState();
             return ResourceGraph.GetResource(predicate)?.Proxify(TypeController);
         }
 
-        public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IResource
+        public override IEnumerable<TResource> GetResources<TResource>()
         {
             ValidateHealthState();
             return ResourceGraph.GetResources<TResource>().Proxify(TypeController);
         }
 
-        public IEnumerable<TResource> GetResources<TResource>(ICapabilities requiredCapabilities)
-            where TResource : class, IResource
+        public override IEnumerable<TResource> GetResources<TResource>(ICapabilities requiredCapabilities)
         {
             ValidateHealthState();
             return ResourceGraph.GetResources<TResource>(r => requiredCapabilities.ProvidedBy(r.Capabilities)).Proxify(TypeController);
         }
 
-        public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate)
-            where TResource : class, IResource
+        public override IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate)
         {
             ValidateHealthState();
             return ResourceGraph.GetResources(predicate).Proxify(TypeController);
         }
 
-        #endregion
-
-        #region IResourceModification
-        public long Create(Type resourceType, Action<Resource> initializer)
+        public override long Create(Type resourceType, Action<Resource> initializer)
         {
             ValidateHealthState();
 
@@ -123,13 +113,13 @@ namespace Moryx.Resources.Management
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="id"></param>
         /// <param name="accessor"></param>
         /// <returns>null, when a resource with this id doesn't exist</returns>
-        public TResult Read<TResult>(long id, Func<Resource, TResult> accessor)
+        public override TResult Read<TResult>(long id, Func<Resource, TResult> accessor)
         {
             ValidateHealthState();
 
@@ -139,7 +129,7 @@ namespace Moryx.Resources.Management
             return result;
         }
 
-        public void Modify(long id, Func<Resource, bool> modifier)
+        public override void Modify(long id, Func<Resource, bool> modifier)
         {
             ValidateHealthState();
 
@@ -152,7 +142,7 @@ namespace Moryx.Resources.Management
                 ResourceGraph.Save(resource);
         }
 
-        public bool Delete(long id)
+        public override bool Delete(long id)
         {
             ValidateHealthState();
 
@@ -163,22 +153,10 @@ namespace Moryx.Resources.Management
             return ResourceGraph.Destroy(resource);
         }
 
-        public IEnumerable<TResource> GetAllResources<TResource>(Func<TResource, bool> predicate)
-             where TResource : class, IResource
+        public override IEnumerable<TResource> GetAllResources<TResource>(Func<TResource, bool> predicate)
         {
             ValidateHealthState();
             return ResourceGraph.GetResources(predicate);
         }
-        #endregion
-
-        /// <inheritdoc />
-        public event EventHandler<IResource> ResourceAdded;
-
-        /// <inheritdoc />
-        public event EventHandler<IResource> ResourceRemoved;
-
-        /// <inheritdoc />
-        public event EventHandler<ICapabilities> CapabilitiesChanged;
     }
-
 }

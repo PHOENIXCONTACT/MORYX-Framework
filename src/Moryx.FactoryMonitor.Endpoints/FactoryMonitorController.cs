@@ -37,7 +37,7 @@ namespace Moryx.FactoryMonitor.Endpoints
     {
         private readonly string[] _colorPalette = ["#97bf0d", "#0098a0", "#ffa906", "#03ad3b", "#d60f4e", "#4A4033", "#6EC1C5", "#93E0B0", "#BC9989", "#EE60EA", "#D7F7C3", "#CE9250", "#AF7E81", "#61666C", "#04629A", "#E39332", "#90A39E", "#98199E", "#DB97C9"];
 
-        private readonly IResourceManagement _resourceManager;
+        private readonly ResourceManagement _resourceManager;
         private readonly IProcessControl _processControl;
         private readonly IOrderManagement _orderManager;
         private readonly CellSerialization _serialization;
@@ -46,7 +46,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         private Timer resourceChangedTimer;
         private readonly ILogger<FactoryMonitorController> _logger;
 
-        public FactoryMonitorController(IResourceManagement resourceManager, IProcessControl processControl, IOrderManagement orderManagement, ILogger<FactoryMonitorController> logger = null)
+        public FactoryMonitorController(ResourceManagement resourceManager, IProcessControl processControl, IOrderManagement orderManagement, ILogger<FactoryMonitorController> logger = null)
         {
             _resourceManager = resourceManager;
             _processControl = processControl;
@@ -56,7 +56,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         }
 
         /// <summary>
-        /// Return the initial data/state of the factory  
+        /// Return the initial data/state of the factory
         /// </summary>
         /// <returns><see cref="FactoryStateModel"/></returns>
         [HttpGet("state")]
@@ -256,7 +256,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             }
             finally
             {
-                // Unregister handler 
+                // Unregister handler
                 foreach (var cell in _cells)
                 {
                     cell.CapabilitiesChanged -= capabilitiesEventHandler;
@@ -273,7 +273,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         }
 
         /// <summary>
-        /// Return the location of the cell in the factory  
+        /// Return the location of the cell in the factory
         /// </summary>
         /// <returns><see cref="CellLocationModel"/></returns>
         [HttpPost("move-cell")]
@@ -291,7 +291,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         }
 
         /// <summary>
-        /// Changes the background of the factory  
+        /// Changes the background of the factory
         /// </summary>
         [HttpPost("backgroundurl")]
         [Obsolete("Use background endpoint instead")]
@@ -302,7 +302,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         }
 
         /// <summary>
-        /// Changes the background of the factory  
+        /// Changes the background of the factory
         /// </summary>
         [HttpPost("background")]
         [ProducesResponseType(StatusCodes.Status200OK)]

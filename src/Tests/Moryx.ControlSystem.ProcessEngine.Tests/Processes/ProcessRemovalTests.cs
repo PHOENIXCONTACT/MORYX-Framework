@@ -23,7 +23,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
     {
         private ProcessRemoval _removal;
 
-        private Mock<IResourceManagement> _resourceManagementMock;
+        private Mock<ResourceManagement> _resourceManagementMock;
         private Mock<IProcessReporter> _removalResourceMock;
         private Mock<ICell> _productionCellMock;
 
@@ -32,7 +32,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         {
             CreateList();
 
-            _resourceManagementMock = new Mock<IResourceManagement>();
+            _resourceManagementMock = new Mock<ResourceManagement>();
             _removalResourceMock = new Mock<IProcessReporter>();
             _productionCellMock = CreateProductionCell(_resourceManagementMock);
 

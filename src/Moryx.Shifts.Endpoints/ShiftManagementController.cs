@@ -21,10 +21,10 @@ namespace Moryx.Shifts.Endpoints
     public class ShiftManagementController : ControllerBase
     {
         private readonly IShiftManagement _shiftManagement;
-        private readonly IResourceManagement _resourceManagement;
+        private readonly ResourceManagement _resourceManagement;
         private readonly IOperatorManagement _operatorManagement;
 
-        public ShiftManagementController(IShiftManagement shiftManagement, IResourceManagement resourceManagement, IOperatorManagement operatorManagement)
+        public ShiftManagementController(IShiftManagement shiftManagement, ResourceManagement resourceManagement, IOperatorManagement operatorManagement)
         {
             _shiftManagement = shiftManagement;
             _resourceManagement = resourceManagement;

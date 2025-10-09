@@ -79,7 +79,7 @@ namespace Moryx.Shifts.Management
         }
 
         public static ShiftAssignement ToAssignement(this ShiftAssignementEntity entity, IEnumerable<Shift> shifts,
-            IResourceManagement resources, IOperatorManagement operators)
+            ResourceManagement resources, IOperatorManagement operators)
         {
             var shift = shifts.SingleOrDefault(s => s.Id == entity.ShiftId) ??
                 throw new KeyNotFoundException($"{nameof(ShiftAssignementEntity)} -Id: {entity.Id}- is referencing " +
@@ -87,7 +87,7 @@ namespace Moryx.Shifts.Management
 
             var resource = resources.GetResource<IResource>(entity.ResourceId) ??
                 throw new KeyNotFoundException($"{nameof(ShiftAssignementEntity)} -Id: {entity.Id}- is referencing " +
-                $"a {nameof(Resource)} -Id: {entity.ResourceId}- that was not available in the {nameof(IResourceManagement)}. " +
+                $"a {nameof(Resource)} -Id: {entity.ResourceId}- that was not available in the {nameof(ResourceManagement)}. " +
                 $"This might happen when the resource database was reset while the shifts database was not.");
 
             var @operator = operators.Operators.FirstOrDefault(x => x.Identifier == entity.OperatorIdentifier) ??

@@ -15,7 +15,7 @@ namespace Moryx.ControlSystem.Processes.Endpoints.StreamServices;
 /// <param name="resourceManagement"></param>
 /// <param name="_serializerSettings"></param>
 internal class ProcessHolderGroupStream(
-    IResourceManagement resourceManagement,
+    ResourceManagement resourceManagement,
     JsonSerializerSettings _serializerSettings)
 {
     /// <summary>

@@ -22,7 +22,7 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
     public class SetupManagerTests
     {
         private Mock<ISetupTriggerFactory> _triggerFactoryMock;
-        private Mock<IResourceManagement> _resourceManagerMock;
+        private Mock<ResourceManagement> _resourceManagerMock;
         private ModuleConfig _setupManagerConfig;
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
                 }
             };
 
-            _resourceManagerMock = new Mock<IResourceManagement>();
+            _resourceManagerMock = new Mock<ResourceManagement>();
             _resourceManagerMock
                 .Setup(rmm => rmm.GetResources<ICell>(It.IsAny<ICapabilities>()))
                 .Returns([]);

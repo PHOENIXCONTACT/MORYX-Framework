@@ -21,7 +21,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
     public class ActivityDispatcherTests : ProcessTestsBase
     {
         private ActivityDispatcher _dispatcher;
-        private Mock<IResourceManagement> _resourceManagementMock;
+        private Mock<ResourceManagement> _resourceManagementMock;
         private Mock<ICell> _productionCellMock;
         private Mock<ICell> _mountCellMock;
         private Mock<ICell> _serialCellMock;
@@ -31,7 +31,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         {
             CreateList();
 
-            _resourceManagementMock = new Mock<IResourceManagement>();
+            _resourceManagementMock = new Mock<ResourceManagement>();
             _productionCellMock = CreateProductionCell(_resourceManagementMock);
             _mountCellMock = CreateMountCell(_resourceManagementMock, true, false);
             _serialCellMock = CreateSerialCell(_resourceManagementMock);

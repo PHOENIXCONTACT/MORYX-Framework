@@ -19,6 +19,7 @@ using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Model;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.ControlSystem.TestTools.Activities;
+using Moryx.ControlSystem.TestTools.Capabilities;
 using Moryx.ControlSystem.TestTools.Tasks;
 using Moryx.Logging;
 using Moryx.Model.InMemory;
@@ -41,7 +42,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         private IUnitOfWorkFactory<ProcessContext> _unitOfWorkFactory;
 
         private Mock<IProductManagement> _productManagementMock;
-        private Mock<IResourceManagement> _resourceManagementMock;
+        private Mock<ResourceManagement> _resourceManagementMock;
         private Mock<IJobData> _jobDataMock;
         private Mock<ICell> _mountResourceMock;
         private Mock<ICell> _assignIdentityResourceMock;
@@ -94,7 +95,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             _unmountResourceMock.SetupGet(r => r.Id).Returns(() => 3);
 
             // Prepare ResourceManagement mock
-            _resourceManagementMock = new Mock<IResourceManagement>();
+            _resourceManagementMock = new Mock<ResourceManagement>();
             _resourceManagementMock.Setup(rm => rm.GetResources<ICell>()).Returns(() =>
             [
                 _mountResourceMock.Object,

@@ -10,9 +10,9 @@ namespace Moryx.ProcessData.Adapter.ProcessEngine
 {
     internal class ResourceActivityBindingResolverFactory : ActivityBindingResolverFactory
     {
-        private readonly IResourceManagement _resourceManagement;
+        private readonly ResourceManagement _resourceManagement;
 
-        public ResourceActivityBindingResolverFactory(IResourceManagement resourceManagement)
+        public ResourceActivityBindingResolverFactory(ResourceManagement resourceManagement)
         {
             _resourceManagement = resourceManagement;
         }
@@ -29,9 +29,9 @@ namespace Moryx.ProcessData.Adapter.ProcessEngine
 
     internal class TracingResourceResolver : BindingResolverBase
     {
-        private readonly IResourceManagement _resourceManagement;
+        private readonly ResourceManagement _resourceManagement;
 
-        public TracingResourceResolver(IResourceManagement resourceManagement)
+        public TracingResourceResolver(ResourceManagement resourceManagement)
         {
             _resourceManagement = resourceManagement;
         }

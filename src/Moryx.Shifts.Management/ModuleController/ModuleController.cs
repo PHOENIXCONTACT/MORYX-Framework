@@ -35,7 +35,7 @@ namespace Moryx.Shifts.Management
         }
 
         [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagement ResourceManagement { get; set; }
 
         [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
         public IOperatorManagement OperatorManagement { get; set; }

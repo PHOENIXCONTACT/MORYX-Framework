@@ -3,6 +3,7 @@
 
 using Moryx.AbstractionLayer;
 using Moryx.ControlSystem.Capabilities;
+using Moryx.ControlSystem.TestTools.Capabilities;
 
 namespace Moryx.ControlSystem.TestTools.Activities
 {

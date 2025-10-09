@@ -2,10 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
-using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Runtime.Modules;
+using ResourceManagementFacade = Moryx.AbstractionLayer.Resources.ResourceManagement;
 
 namespace Moryx.ProcessData.Adapter.ResourceManagement
 {
@@ -21,7 +21,7 @@ namespace Moryx.ProcessData.Adapter.ResourceManagement
         /// ResourceManagement facade dependency
         /// </summary>
         [RequiredModuleApi(IsOptional = false, IsStartDependency = true)]
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagementFacade ResourceManagement { get; set; }
 
         /// <summary>
         /// ProcessDataMonitor facade dependency

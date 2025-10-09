@@ -14,7 +14,7 @@ namespace Moryx.ControlSystem.MaterialManager
         /// <summary>
         /// Access material containers
         /// </summary>
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagement ResourceManagement { get; set; }
 
         /// <summary>
         /// Load the products of each container

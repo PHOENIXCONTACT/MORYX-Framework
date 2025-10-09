@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using Moryx.AbstractionLayer;
 using Moryx.Bindings;
 using Moryx.ControlSystem.Capabilities;
+using Moryx.ControlSystem.TestTools.Capabilities;
 using Moryx.Serialization;
 
 namespace Moryx.ControlSystem.TestTools.Activities

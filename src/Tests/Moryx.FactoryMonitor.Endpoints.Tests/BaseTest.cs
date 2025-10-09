@@ -20,7 +20,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 {
     public abstract class BaseTest
     {
-        protected Mock<IResourceManagement> _resourceManagementMock = new();
+        protected Mock<ResourceManagement> _resourceManagementMock = new();
         protected Mock<IProcessControl> _processFacadeMock = new();
         protected Mock<IOrderManagement> _orderFacadeMock = new();
         protected FactoryMonitorController _factoryMonitor;
@@ -70,7 +70,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             _resourceManagementMock.Setup(rm => rm.GetResource<ICell>(_solderingCellId))
                 .Returns(_solderingCell);
 
-            //_assemblyCell location 
+            //_assemblyCell location
             _assemblyCellLocation = _graph.Instantiate<MachineLocation>();
             _assemblyCellLocation.Children.Add(_assemblyCell);
             _assemblyCellLocation.Id = 4;
@@ -81,7 +81,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
                 .Returns(_assemblyCellLocation);
             _resourceManagementMock.Setup(rm => rm.Read(_assemblyCellLocation.Id, It.IsAny<Func<Resource, MachineLocation>>()))
                 .Returns(_assemblyCellLocation);
-            //_solderingCell location 
+            //_solderingCell location
             _solderingCellLocation = _graph.Instantiate<MachineLocation>();
             _solderingCellLocation.Children.Add(_solderingCell);
             _solderingCellLocation.Id = 5;

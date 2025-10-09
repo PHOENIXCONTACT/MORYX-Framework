@@ -19,7 +19,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
         public static ResourceChangedModel GetResourceChangedModel(
            this ICell cell,
            Converter converter,
-           IResourceManagement resourceManager,
+           ResourceManagement resourceManager,
            Func<IMachineLocation, bool> cellFilter)
         {
 
@@ -36,7 +36,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             return resourceChangedCellModel;
         }
 
-        public static long GetFactoryId(this ICell cell, IResourceManagement resourceManagement)
+        public static long GetFactoryId(this ICell cell, ResourceManagement resourceManagement)
         {
             var resource = resourceManagement.Read(cell, x => x.GetFactory());
             return resource?.Id ?? -1;

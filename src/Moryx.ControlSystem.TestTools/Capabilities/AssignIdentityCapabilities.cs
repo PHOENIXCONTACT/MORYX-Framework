@@ -4,7 +4,7 @@
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Capabilities;
 
-namespace Moryx.ControlSystem.Capabilities
+namespace Moryx.ControlSystem.TestTools.Capabilities
 {
     /// <summary>
     /// Capabilities needed for AssignActivity

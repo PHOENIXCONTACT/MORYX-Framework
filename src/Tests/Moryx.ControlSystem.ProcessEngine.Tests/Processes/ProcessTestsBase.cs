@@ -14,6 +14,7 @@ using Moryx.ControlSystem.ProcessEngine.Model;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.ControlSystem.TestTools;
 using Moryx.ControlSystem.TestTools.Activities;
+using Moryx.ControlSystem.TestTools.Capabilities;
 using Moryx.ControlSystem.TestTools.Tasks;
 using Moryx.Logging;
 using Moryx.Model.Repositories;
@@ -81,7 +82,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             DataPool = null;
         }
 
-        protected Mock<ICell> CreateSerialCell(Mock<IResourceManagement> resourceManagementMock)
+        protected Mock<ICell> CreateSerialCell(Mock<ResourceManagement> resourceManagementMock)
         {
             var serialCellMock = new Mock<ICell>();
 
@@ -96,7 +97,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             return serialCellMock;
         }
 
-        protected Mock<ICell> CreateMountCell(Mock<IResourceManagement> resourceManagementMock, bool canMount, bool canUnmount)
+        protected Mock<ICell> CreateMountCell(Mock<ResourceManagement> resourceManagementMock, bool canMount, bool canUnmount)
         {
             var mountCellMock = new Mock<ICell>();
             mountCellMock.SetupGet(r => r.Id).Returns(MountCellId);
@@ -110,7 +111,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             return mountCellMock;
         }
 
-        protected Mock<ICell> CreateProductionCell(Mock<IResourceManagement> resourceManagementMock)
+        protected Mock<ICell> CreateProductionCell(Mock<ResourceManagement> resourceManagementMock)
         {
             var productionCellMock = new Mock<ICell>();
             productionCellMock.SetupGet(r => r.Id).Returns(ProductionCellId);

@@ -6,6 +6,7 @@ using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Capabilities;
+using Moryx.ControlSystem.TestTools.Capabilities;
 
 namespace Moryx.ControlSystem.TestTools.Activities
 {

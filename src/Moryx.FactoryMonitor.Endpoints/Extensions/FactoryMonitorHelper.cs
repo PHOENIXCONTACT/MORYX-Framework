@@ -71,7 +71,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
         public static async Task ResourceUpdated(
             JsonSerializerSettings serializerSettings,
             Channel<Tuple<string, string>> _factoryChannel,
-            IResourceManagement resourceManager,
+            ResourceManagement resourceManager,
             Func<IMachineLocation, bool> cellFilter,
             Converter converter,
             CancellationToken cancelToken)

@@ -27,7 +27,7 @@ namespace Moryx.ControlSystem.Simulator
         /// Resource management to access machines
         /// </summary>
         [RequiredModuleApi(IsStartDependency = true)]
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagement ResourceManagement { get; set; }
 
         /// <summary>
         /// Resource management to access machines

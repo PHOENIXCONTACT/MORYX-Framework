@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.ControlSystem.Capabilities;
 using Moryx.ControlSystem.Setups;
+using Moryx.ControlSystem.TestTools.Capabilities;
 using Moryx.Serialization;
 
 namespace Moryx.ControlSystem.Assemble

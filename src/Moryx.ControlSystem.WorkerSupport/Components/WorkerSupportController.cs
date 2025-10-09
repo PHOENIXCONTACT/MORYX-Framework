@@ -19,7 +19,7 @@ namespace Moryx.ControlSystem.WorkerSupport
 
         public ModuleConfig Config { get; set; }
 
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagement ResourceManagement { get; set; }
 
         public IModuleLogger Logger { get; set; }
 

@@ -4,6 +4,7 @@
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.Modules;
+using ResourceManagementFacade = Moryx.AbstractionLayer.Resources.ResourceManagement;
 
 namespace Moryx.ProcessData.Adapter.ResourceManagement
 {
@@ -16,7 +17,7 @@ namespace Moryx.ProcessData.Adapter.ResourceManagement
 
         #region Dependencies
 
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagementFacade ResourceManagement { get; set; }
 
         public IProcessDataMonitor ProcessDataMonitor { get; set; }
 

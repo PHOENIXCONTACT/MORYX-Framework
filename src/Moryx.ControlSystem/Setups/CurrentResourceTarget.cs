@@ -12,12 +12,12 @@ namespace Moryx.ControlSystem.Setups
     /// </summary>
     public class CurrentResourceTarget : ISetupTarget
     {
-        private readonly IResourceManagement _resourceManagement;
+        private readonly ResourceManagement _resourceManagement;
 
         /// <summary>
         /// Instantiate resource target
         /// </summary>
-        public CurrentResourceTarget(IResourceManagement resourceManagement)
+        public CurrentResourceTarget(ResourceManagement resourceManagement)
         {
             _resourceManagement = resourceManagement;
         }

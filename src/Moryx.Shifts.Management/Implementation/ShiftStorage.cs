@@ -22,7 +22,7 @@ namespace Moryx.Shifts.Management
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public IModuleLogger Logger { get; set; }
 
-        public IResourceManagement Resources { get; set; }
+        public ResourceManagement Resources { get; set; }
 
         public IOperatorManagement Operators { get; set; }
 

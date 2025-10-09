@@ -50,7 +50,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
             return graph;
         }
 
-        public VisualizableItemModel ToVisualItemModel(IResourceManagement resourceManager,
+        public VisualizableItemModel ToVisualItemModel(ResourceManagement resourceManager,
             ILogger<FactoryMonitorController> logger,
             Converter converter,
             Func<IMachineLocation, bool> filter)

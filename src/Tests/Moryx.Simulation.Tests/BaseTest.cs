@@ -20,7 +20,7 @@ namespace Moryx.Simulation.Tests
         protected ModuleConfig _moduleConfig;
         protected Mock<IModuleLogger> _simulationLoggerMock;
         protected Mock<IProcessControl> _processControlMock;
-        protected Mock<IResourceManagement> _resourceManagementMock;
+        protected Mock<ResourceManagement> _resourceManagementMock;
         protected AssemblyTestCell _assemblyCell;
         protected AssemblyTestCell _anotherAssemblyCell;
         protected SimulatedDummyTestDriver _assemblyCellDriver;
@@ -60,7 +60,7 @@ namespace Moryx.Simulation.Tests
             _processControlMock.Setup(pc => pc.RunningProcesses).Returns([]);
 
             //resource management
-            _resourceManagementMock = new Mock<IResourceManagement>();
+            _resourceManagementMock = new Mock<ResourceManagement>();
             _resourceManagementMock.Setup(rm => rm.GetAllResources<ISimulationDriver>(It.IsAny<Func<ISimulationDriver, bool>>()))
                 .Returns([_assemblyCellDriver, _anotherAssemblyCellDriver]);
 

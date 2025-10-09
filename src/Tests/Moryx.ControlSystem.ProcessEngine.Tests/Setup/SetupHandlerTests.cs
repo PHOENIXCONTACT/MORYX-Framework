@@ -31,7 +31,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
     public class SetupManagerTests
     {
         private Mock<IJobDataList> _jobListMock;
-        private Mock<IResourceManagement> _resourceManagerMock;
+        private Mock<ResourceManagement> _resourceManagerMock;
         private Mock<IJobDataFactory> _jobDataFactoryMock;
         private Mock<ISetupProvider> _providerMock;
         private readonly List<Mock<ISetupJobData>> _setupJobs = new();
@@ -112,7 +112,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             _providerMock.Setup(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.IsAny<IProductionRecipe>(), It.IsAny<ISetupTarget>()))
                 .Returns<SetupExecution, IProductionRecipe, ISetupTarget>(ProvideSetup);
 
-            _resourceManagerMock = new Mock<IResourceManagement>();
+            _resourceManagerMock = new Mock<ResourceManagement>();
             _resourceManagerMock
                 .Setup(rmm => rmm.GetResources<ICell>(It.IsAny<ICapabilities>()))
                 .Returns([]);
@@ -340,7 +340,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             // Joe Dalton
             productionJoeJobDataMock.Verify(j => j.Interrupt(), Times.Once(), "The job for which no setup could be created should be interrupted");
 
-            // Averell Dalton 
+            // Averell Dalton
             Assert.That(schedulableLinkedList.Count, Is.EqualTo(3), "The job for which no clean up could be created should be removed and for " +
                 "the other clean up and prepare should be created");
             // Prepare Setup Job.

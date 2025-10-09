@@ -14,14 +14,14 @@ namespace Moryx.Operators.Management.Tests;
 internal abstract class TestsBase
 {
     protected ModuleConfig _config = new();
-    protected Mock<IResourceManagement> _resourceManagementMock;
+    protected Mock<ResourceManagement> _resourceManagementMock;
     protected MoryxTestEnvironment _env;
 
     [SetUp]
     public virtual void SetUp()
     {
         ReflectionTool.TestMode = true;
-        _resourceManagementMock = MoryxTestEnvironment.CreateModuleMock<IResourceManagement>();
+        _resourceManagementMock = MoryxTestEnvironment.CreateModuleMock<ResourceManagement>();
         _resourceManagementMock.Setup(r => r.GetResources<IOperatorAssignable>()).Returns([FirstResourceMock.Object, SecondResourceMock.Object]);
         _env = new MoryxTestEnvironment(typeof(ModuleController), [_resourceManagementMock], _config);
         _env.StartTestModule();

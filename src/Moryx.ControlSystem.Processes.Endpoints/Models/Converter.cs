@@ -14,7 +14,7 @@ namespace Moryx.ControlSystem.Processes.Endpoints
     /// </summary>
     public static class Converter
     {
-        internal static JobProcessModel ConvertProcess(IProcess process, IProcessControl processControl, IResourceManagement resourceManagement)
+        internal static JobProcessModel ConvertProcess(IProcess process, IProcessControl processControl, ResourceManagement resourceManagement)
         {
             var activities = process.GetActivities().ToList();
             return new()
@@ -50,7 +50,7 @@ namespace Moryx.ControlSystem.Processes.Endpoints
         /// <param name="processControl"></param>
         /// <param name="resourceManagement"></param>
         /// <returns></returns>
-        public static ProcessActivityModel ConvertActivity(IActivity activity, IProcessControl processControl, IResourceManagement resourceManagement) => new()
+        public static ProcessActivityModel ConvertActivity(IActivity activity, IProcessControl processControl, ResourceManagement resourceManagement) => new()
         {
             Id = activity.Id,
             Type = activity.GetType().Name,
@@ -70,7 +70,7 @@ namespace Moryx.ControlSystem.Processes.Endpoints
             }).ToArray()
         };
 
-        private static ActivityResourceModel ConvertResource(IActivity activity, IResourceManagement resourceManagement)
+        private static ActivityResourceModel ConvertResource(IActivity activity, ResourceManagement resourceManagement)
         {
             var resourceId = activity.Tracing?.ResourceId ?? -1;
             var resource = resourceManagement.GetResource<IResource>(resourceId);

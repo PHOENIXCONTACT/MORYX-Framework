@@ -55,7 +55,7 @@ namespace Moryx.ControlSystem.ProcessEngine
         /// the machine
         /// </summary>
         [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagement ResourceManagement { get; set; }
 
         /// <summary>
         /// Found recipe providers used to restore recipes links of jobs and processes

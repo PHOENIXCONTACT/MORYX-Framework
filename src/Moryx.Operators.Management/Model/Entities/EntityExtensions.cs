@@ -8,7 +8,7 @@ namespace Moryx.Operators.Management;
 
 internal static class EntityExtensions
 {
-    public static OperatorData ToData(this OperatorEntity entity, IResourceManagement resources)
+    public static OperatorData ToData(this OperatorEntity entity, ResourceManagement resources)
     {
         var data = new OperatorData(entity.Identifier)
         {

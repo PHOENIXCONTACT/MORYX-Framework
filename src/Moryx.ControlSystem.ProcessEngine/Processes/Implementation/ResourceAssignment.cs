@@ -42,7 +42,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// Resource management to determine the correct resource
         /// </summary>
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagement ResourceManagement { get; set; }
 
         /// <summary>
         /// Used to handle notifications

@@ -35,10 +35,10 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
     public override string Name => ModuleName;
 
     /// <summary>
-    /// Reference to the IResourceManagement managing the IAttendableResources
+    /// Reference to the ResourceManagement managing the IAttendableResources
     /// </summary>
     [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
-    public IResourceManagement ResourceManagement { get; set; }
+    public ResourceManagement ResourceManagement { get; set; }
 
     /// <summary>
     /// Generic component to manage database contexts

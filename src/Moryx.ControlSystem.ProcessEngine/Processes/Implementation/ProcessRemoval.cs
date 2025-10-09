@@ -26,7 +26,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// Resource management to observer process changes
         /// </summary>
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagement ResourceManagement { get; set; }
 
         /// <summary>
         /// Logger of this component

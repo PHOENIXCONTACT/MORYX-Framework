@@ -20,7 +20,7 @@ namespace Moryx.ControlSystem.WorkerSupport.Tests
         [SetUp]
         public void PrepareSystem()
         {
-            var resourceManagement = new Mock<IResourceManagement>();
+            var resourceManagement = new Mock<ResourceManagement>();
 
             _instructor = new Mock<IVisualInstructionSource>();
             _instructor.SetupGet(i => i.Identifier).Returns("Foo");

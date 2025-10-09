@@ -5,12 +5,12 @@ using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.Operators.Extensions;
 
-public static class IResourceManagementExtensions
+public static class ResourceManagementExtensions
 {
-    public static IEnumerable<IOperatorAssignable> GetAssignableResources(this IResourceManagement source) =>
+    public static IEnumerable<IOperatorAssignable> GetAssignableResources(this ResourceManagement source) =>
         source.GetResources<IOperatorAssignable>();
 
-    public static IOperatorAssignable GetAssignableResource(this IResourceManagement source, long resourceId) =>
+    public static IOperatorAssignable GetAssignableResource(this ResourceManagement source, long resourceId) =>
         source.GetResource<IOperatorAssignable>(resourceId);
 }
 

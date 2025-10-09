@@ -8,7 +8,7 @@ using Moryx.ControlSystem.Cells;
 namespace Moryx.ControlSystem.Setups
 {
     /// <summary>
-    /// Interface to decouple setup evaluation from the current state of the <see cref="IResourceManagement"/>
+    /// Interface to decouple setup evaluation from the current state of the <see cref="ResourceManagement"/>
     /// </summary>
     public interface ISetupTarget
     {

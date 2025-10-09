@@ -29,7 +29,7 @@ public class ProcessEngineController : ControllerBase
 {
     private readonly IProcessControl _processControl;
     private readonly IProductManagement _productManagement;
-    private readonly IResourceManagement _resourceManagement;
+    private readonly ResourceManagement _resourceManagement;
     private readonly IJobManagement _jobManagement;
 
     private static readonly JsonSerializerSettings _serializerSettings = CreateSerializerSettings();
@@ -43,7 +43,7 @@ public class ProcessEngineController : ControllerBase
     }
 
     public ProcessEngineController(IProcessControl processControl, IProductManagement productManagement,
-        IResourceManagement resourceManagement, IJobManagement jobManagement)
+        ResourceManagement resourceManagement, IJobManagement jobManagement)
     {
         _processControl = processControl;
         _productManagement = productManagement;

@@ -13,6 +13,7 @@ using Moryx.ControlSystem.Capabilities;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.ControlSystem.TestTools.Activities;
+using Moryx.ControlSystem.TestTools.Capabilities;
 using Moryx.Logging;
 using Moryx.Notifications;
 using NUnit.Framework;
@@ -22,7 +23,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
     [TestFixture]
     public class ResourceAssignmentTests : ProcessTestsBase
     {
-        private Mock<IResourceManagement> _resourceManagementMock;
+        private Mock<ResourceManagement> _resourceManagementMock;
         private Mock<ICell> _productionCellMock;
         private Mock<ICell> _mountCellMock;
         private Mock<ICellSelector> _selectorMock;
@@ -34,7 +35,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         {
             CreateList();
 
-            _resourceManagementMock = new Mock<IResourceManagement>();
+            _resourceManagementMock = new Mock<ResourceManagement>();
             _notificationAdapterMock = new Mock<INotificationAdapter>();
 
             _productionCellMock = CreateProductionCell(_resourceManagementMock);

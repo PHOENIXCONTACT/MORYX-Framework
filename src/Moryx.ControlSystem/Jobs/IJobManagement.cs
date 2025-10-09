@@ -24,7 +24,7 @@ namespace Moryx.ControlSystem.Jobs
         /// given ResourceManagement. This estimation may change. Capabilities are
         /// changed to their state after setup
         /// </summary>
-        JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement);
+        JobEvaluation Evaluate(IProductRecipe recipe, int amount, ResourceManagement resourceManagement);
 
         /// <summary>
         /// Creates multiple jobs at once

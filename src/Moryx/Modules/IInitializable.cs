@@ -5,7 +5,7 @@ namespace Moryx.Modules
 {
     /// <summary>
     /// Because most parts of Moryx are constructed by a DI-Container we do not have control over the time and context
-    /// of object creation. Furthermore all major components must only be referenced using their interface so we can not
+    /// of object creation. Furthermore, all major components must only be referenced using their interface so we can not
     /// access their constructor.
     /// To restore the possibility to initialize a component before it is used this base interface should be used.
     /// Code normally executed on construction is therefor moved to Initialize().

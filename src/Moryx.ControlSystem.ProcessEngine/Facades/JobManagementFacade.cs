@@ -115,7 +115,7 @@ namespace Moryx.ControlSystem.ProcessEngine
             };
         }
 
-        public JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement) => Evaluate(recipe, amount);
+        public JobEvaluation Evaluate(IProductRecipe recipe, int amount, ResourceManagement resourceManagement) => Evaluate(recipe, amount);
 
         private void HandleCapabilitiesChanged(object sender, ICapabilities e)
         {

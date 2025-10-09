@@ -125,7 +125,7 @@ namespace Moryx.Resources.Management
         }
 
         /// <summary>
-        /// Handles the initialization of the resource 
+        /// Handles the initialization of the resource
         /// </summary>
         /// <param name="resource"></param>
         private void InitializeResource(Resource resource)
@@ -439,7 +439,7 @@ namespace Moryx.Resources.Management
 
         #endregion
 
-        #region IResourceManagement
+        #region ResourceManagement
 
         private void RaiseResourceAdded(IResource newResource)
         {

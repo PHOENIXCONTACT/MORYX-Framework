@@ -20,25 +20,25 @@ using Moryx.Modules;
 namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
     /// <summary>
-    /// Definition of a REST API on the <see cref="IResourceManagement"/> facade.
+    /// Definition of a REST API on the <see cref="ResourceManagement"/> facade.
     /// </summary>
     [ApiController]
     [Route("api/moryx/resources/")]
     [Produces("application/json")]
     public class ResourceModificationController : ControllerBase
     {
-        private readonly IResourceManagement _resourceManagement;
+        private readonly ResourceManagement _resourceManagement;
         private readonly IResourceTypeTree _resourceTypeTree;
         private readonly ResourceSerialization _serialization;
 
-        public ResourceModificationController(IResourceManagement resourceManagement,
+        public ResourceModificationController(ResourceManagement resourceManagement,
             IResourceTypeTree resourceTypeTree,
             IModuleManager moduleManager,
             IServiceProvider serviceProvider)
         {
             _resourceManagement = resourceManagement ?? throw new ArgumentNullException(nameof(resourceManagement));
             _resourceTypeTree = resourceTypeTree ?? throw new ArgumentNullException(nameof(resourceTypeTree));
-            var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IResourceManagement>);
+            var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<ResourceManagement>);
             _serialization = new ResourceSerialization(module.Container, serviceProvider);
         }
 
@@ -399,7 +399,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
 
             public bool Match(Resource instance)
             {
-                // Check type of instance, if filter is set            
+                // Check type of instance, if filter is set
                 if (_typeNodes != null && _typeNodes.All(tn => !tn.ResourceType.IsInstanceOfType(instance)))
                     return false;
 

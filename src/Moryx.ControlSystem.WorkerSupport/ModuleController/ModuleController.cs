@@ -40,7 +40,7 @@ namespace Moryx.ControlSystem.WorkerSupport
         /// the machine
         /// </summary>
         [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagement ResourceManagement { get; set; }
 
         #endregion
 

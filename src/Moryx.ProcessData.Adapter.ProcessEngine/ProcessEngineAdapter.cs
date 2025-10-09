@@ -30,7 +30,7 @@ namespace Moryx.ProcessData.Adapter.ProcessEngine
 
         public IJobManagement JobManagement { get; set; }
 
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagement ResourceManagement { get; set; }
 
         public IProcessDataMonitor ProcessDataMonitor { get; set; }
 

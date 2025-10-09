@@ -18,8 +18,8 @@ namespace Moryx.Resources.Management
     /// The main controller of all resource modules.
     /// </summary>
     public class ModuleController : ServerModuleBase<ModuleConfig>,
-        IFacadeContainer<IResourceManagement>,
         IFacadeContainer<IResourceTypeTree>,
+        IFacadeContainer<ResourceManagement>,
         IFacadeContainer<INotificationSource>
     {
         internal const string ModuleName = "ResourceManager";
@@ -85,7 +85,6 @@ namespace Moryx.Resources.Management
             // Activate external facade to register events
             ActivateFacade(_resourceTypeTreeFacade);
             ActivateFacade(_resourceManagementFacade);
-
         }
 
         /// <summary>
@@ -104,7 +103,7 @@ namespace Moryx.Resources.Management
 
         private readonly ResourceManagementFacade _resourceManagementFacade = new();
         private readonly ResourceTypeTreeFacade _resourceTypeTreeFacade = new();
-        IResourceManagement IFacadeContainer<IResourceManagement>.Facade => _resourceManagementFacade;
+        ResourceManagement IFacadeContainer<ResourceManagement>.Facade => _resourceManagementFacade;
 
         IResourceTypeTree IFacadeContainer<IResourceTypeTree>.Facade => _resourceTypeTreeFacade;
 

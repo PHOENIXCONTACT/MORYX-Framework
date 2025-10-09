@@ -14,7 +14,7 @@ namespace Moryx.Shifts.Management.IntegrationTests
     internal abstract class TestBase
     {
         protected IShiftManagement _facade;
-        protected static Mock<IResourceManagement> _resourceManagementMock;
+        protected static Mock<ResourceManagement> _resourceManagementMock;
         protected static Mock<IOperatorManagement> _operatorManagementMock;
         protected MoryxTestEnvironment _env;
 
@@ -22,7 +22,7 @@ namespace Moryx.Shifts.Management.IntegrationTests
         {
             ReflectionTool.TestMode = true;
             var config = new ModuleConfig();
-            _resourceManagementMock = MoryxTestEnvironment.CreateModuleMock<IResourceManagement>();
+            _resourceManagementMock = MoryxTestEnvironment.CreateModuleMock<ResourceManagement>();
             _operatorManagementMock = MoryxTestEnvironment.CreateModuleMock<IOperatorManagement>();
             _env = new MoryxTestEnvironment(typeof(ModuleController),
                 [_resourceManagementMock, _operatorManagementMock], config);
@@ -34,7 +34,7 @@ namespace Moryx.Shifts.Management.IntegrationTests
             _env.StopTestModule();
         }
 
-        #region Test tools 
+        #region Test tools
 
         protected readonly ShiftTypeCreationContext TypeContext = new("testType") { StartTime = new TimeOnly(6, 0), EndTime = new TimeOnly(14, 0), Periode = 5 };
         protected readonly Mock<IResource> ResourceMock = CreateResourceMock();

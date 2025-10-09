@@ -49,7 +49,7 @@ internal static class OperatorStorage
         entity.AssignedResources.AddRange(toBeAdded);
     }
 
-    public static OperatorData Load(OperatorEntity entity, IResourceManagement resources)
+    public static OperatorData Load(OperatorEntity entity, ResourceManagement resources)
     {
         var operatorData = entity.ToData(resources);
         return operatorData;

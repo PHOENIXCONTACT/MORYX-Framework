@@ -25,7 +25,7 @@ namespace Moryx.ControlSystem.Simulator
 
         public IProcessControl ProcessControl { get; set; }
 
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagement ResourceManagement { get; set; }
 
         [UseChild(nameof(ProcessSimulator))]
         public IModuleLogger Logger { get; set; }
@@ -84,7 +84,7 @@ namespace Moryx.ControlSystem.Simulator
             lock (_movements)
             {
                 nextActivity = ProcessControl.RunningProcesses
-                    .Where(p => _movements.All(m => m.Process.Id != p.Id)) // No processes in transit                                 
+                    .Where(p => _movements.All(m => m.Process.Id != p.Id)) // No processes in transit
                     .Select(p => new
                     {
                         Activity = p.NextActivity(),

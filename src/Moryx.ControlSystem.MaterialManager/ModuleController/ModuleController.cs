@@ -39,7 +39,7 @@ namespace Moryx.ControlSystem.MaterialManager
         /// the machine
         /// </summary>
         [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
-        public IResourceManagement ResourceManagement { get; set; }
+        public ResourceManagement ResourceManagement { get; set; }
 
         /// <summary>
         /// Product management to load and save articles instances and products

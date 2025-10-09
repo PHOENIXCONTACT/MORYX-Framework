@@ -10,7 +10,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
 {
     internal static class ResourceManagementExtensions
     {
-        public static IManufacturingFactory GetRootFactory(this IResourceManagement resourceManagement)
+        public static IManufacturingFactory GetRootFactory(this ResourceManagement resourceManagement)
         {
             var rootFactory = resourceManagement.GetResource<IManufacturingFactory>(x => (x as ManufacturingFactory).Parent is null);
 
