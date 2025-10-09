@@ -4,7 +4,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using Moryx.AbstractionLayer.Recipes;
-using Moryx.ControlSystem.Properties;
+using Moryx.ControlSystem.Localizations;
 
 namespace Moryx.ControlSystem.Recipes
 {
