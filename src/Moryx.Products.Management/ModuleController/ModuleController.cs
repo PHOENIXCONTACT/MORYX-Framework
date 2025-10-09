@@ -6,6 +6,7 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.Workplans;
 

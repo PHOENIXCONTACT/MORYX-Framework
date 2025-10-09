@@ -12,6 +12,7 @@ using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.Processes;
 using Moryx.ControlSystem.Setups;
 using Moryx.Model;
+using Moryx.Modules;
 using Moryx.Notifications;
 using Moryx.Runtime.Modules;
 

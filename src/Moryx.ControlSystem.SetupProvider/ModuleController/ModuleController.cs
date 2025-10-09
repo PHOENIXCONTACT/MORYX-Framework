@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.ControlSystem.Setups;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.ControlSystem.SetupProvider

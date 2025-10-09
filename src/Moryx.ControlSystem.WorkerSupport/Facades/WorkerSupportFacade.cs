@@ -3,6 +3,7 @@
 
 using Moryx.ControlSystem.VisualInstructions;
 using Moryx.Logging;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
 

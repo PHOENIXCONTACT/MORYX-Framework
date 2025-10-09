@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Diagnostics;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Notifications

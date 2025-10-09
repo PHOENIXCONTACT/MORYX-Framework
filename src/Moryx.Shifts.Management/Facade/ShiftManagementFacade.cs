@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Moryx.Modules;
 using Moryx.Shifts.Management.Localizations;
 
 [assembly: InternalsVisibleTo("Moryx.Shifts.Management.IntegrationTests")]

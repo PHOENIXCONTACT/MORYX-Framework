@@ -3,6 +3,7 @@
 
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.Modules;
 using Moryx.Orders.Advice;
 using Moryx.Orders.Assignment;
 using Moryx.Orders.Management.Advice;

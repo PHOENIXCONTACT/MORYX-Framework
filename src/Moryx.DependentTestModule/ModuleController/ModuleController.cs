@@ -5,6 +5,7 @@ using System.ComponentModel;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.TestModule;
 

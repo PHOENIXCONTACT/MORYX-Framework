@@ -7,6 +7,7 @@ using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Logging;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.Workplans;
 

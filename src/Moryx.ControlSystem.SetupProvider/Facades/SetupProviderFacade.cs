@@ -4,6 +4,7 @@
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Setups;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.ControlSystem.SetupProvider

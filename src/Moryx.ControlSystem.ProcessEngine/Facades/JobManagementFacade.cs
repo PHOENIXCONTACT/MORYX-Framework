@@ -10,6 +10,7 @@ using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs.Setup;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.Logging;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
 using Moryx.Tools;

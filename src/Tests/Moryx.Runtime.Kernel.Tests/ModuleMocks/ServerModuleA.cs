@@ -7,6 +7,7 @@ using Moryx.Container;
 using Moryx.Runtime.Kernel.Tests.Dummys;
 using Moryx.Runtime.Modules;
 using System;
+using Moryx.Modules;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 {

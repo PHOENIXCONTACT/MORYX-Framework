@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Media.Server.Endpoint;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Media.Server.Facades

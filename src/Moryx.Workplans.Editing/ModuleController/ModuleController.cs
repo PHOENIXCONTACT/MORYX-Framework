@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.Workplans.Editing.Components;
 using Moryx.Workplans.Editing.Facade;

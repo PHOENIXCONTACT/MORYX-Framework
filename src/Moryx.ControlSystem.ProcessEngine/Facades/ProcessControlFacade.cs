@@ -7,6 +7,7 @@ using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.ControlSystem.Processes;
 using Moryx.Logging;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
 

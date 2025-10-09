@@ -8,6 +8,7 @@ using Moryx.Container;
 using Moryx.Media.Previews;
 using Moryx.Media.Server.Facades;
 using Moryx.Media.Server.Previews;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Media.Server

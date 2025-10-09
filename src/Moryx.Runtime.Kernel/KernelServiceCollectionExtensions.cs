@@ -4,6 +4,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Moryx.Configuration;
 using Moryx.Container;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
 

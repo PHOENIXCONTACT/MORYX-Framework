@@ -4,6 +4,7 @@
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
+using Moryx.Modules;
 using Moryx.ProcessData.Listener;
 using Moryx.Runtime.Modules;
 

@@ -14,6 +14,7 @@ using Moryx.Users;
 using Moryx.Container;
 using Moryx.Configuration;
 using Microsoft.Extensions.Logging;
+using Moryx.Modules;
 
 namespace Moryx.Orders.Management
 {

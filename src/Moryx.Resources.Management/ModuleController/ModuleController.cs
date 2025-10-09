@@ -7,6 +7,7 @@ using Moryx.Communication;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
+using Moryx.Modules;
 using Moryx.Notifications;
 using Moryx.Resources.Management.Facades;
 using Moryx.Runtime.Modules;

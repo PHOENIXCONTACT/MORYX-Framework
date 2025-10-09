@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Moryx.Configuration;
 using Moryx.Asp.Extensions;
 using Moryx.AbstractionLayer.Properties;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints

@@ -15,6 +15,7 @@ using Moryx.Runtime.Modules;
 using Moryx.Configuration;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
+using Moryx.Modules;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints
 {

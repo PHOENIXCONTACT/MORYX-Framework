@@ -3,6 +3,7 @@
 
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Resources.Management

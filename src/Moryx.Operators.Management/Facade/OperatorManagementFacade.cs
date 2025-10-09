@@ -3,6 +3,7 @@
 
 using System.Collections.Immutable;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Modules;
 using Moryx.Operators.Skills;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;

@@ -1,7 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Runtime.Modules
+namespace Moryx.Modules
 {
     /// <summary>
     /// Interface for all facades used by ServerModuleBase

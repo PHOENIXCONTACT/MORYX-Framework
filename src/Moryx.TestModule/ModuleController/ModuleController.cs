@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.TestModule

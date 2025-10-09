@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Logging;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 using Moryx.Workplans.Editing.Components;
 namespace Moryx.Workplans.Editing.Facade

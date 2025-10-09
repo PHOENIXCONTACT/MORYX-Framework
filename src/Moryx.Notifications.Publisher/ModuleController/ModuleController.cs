@@ -7,6 +7,7 @@ using Moryx.Container;
 using Moryx.Model;
 using Moryx.Runtime.Modules;
 using System.ComponentModel;
+using Moryx.Modules;
 
 namespace Moryx.Notifications.Publisher
 {

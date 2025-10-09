@@ -7,6 +7,7 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.ControlSystem.VisualInstructions;
+using Moryx.Modules;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.ControlSystem.WorkerSupport

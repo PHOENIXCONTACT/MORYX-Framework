@@ -8,6 +8,7 @@ using Moq;
 using Moryx.Configuration;
 using Moryx.Model.InMemory;
 using Moryx.Model;
+using Moryx.Modules;
 using Moryx.Runtime.Kernel;
 using Moryx.Runtime.Modules;
 using Moryx.TestTools.UnitTest;

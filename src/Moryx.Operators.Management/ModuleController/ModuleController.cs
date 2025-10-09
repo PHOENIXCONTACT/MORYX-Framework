@@ -9,6 +9,7 @@ using Moryx.Model;
 using Moryx.Runtime.Modules;
 using Moryx.Operators.Management.Facade;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Modules;
 using Moryx.Operators.Skills;
 
 namespace Moryx.Operators.Management;
