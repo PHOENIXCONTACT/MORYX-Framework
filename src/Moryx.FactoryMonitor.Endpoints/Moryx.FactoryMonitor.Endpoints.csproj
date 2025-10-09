@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFramework>net8.0</TargetFramework>
     <Description>Endpoint to get the data in order to visualize the production</Description>
     <IsPackable>true</IsPackable>
     <PackageTags>MORYX;IoT;Manufacturing</PackageTags>
@@ -8,7 +8,7 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
-  
+
 	<ItemGroup>
 	  <Compile Update="Localizations\Strings.Designer.cs">
 	    <DesignTime>True</DesignTime>
@@ -26,7 +26,7 @@
 	    <LastGenOutput>Strings.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	</ItemGroup>
-	
+
 	<ItemGroup>
 	  <ProjectReference Include="..\Moryx.ControlSystem.Processes.Endpoints\Moryx.ControlSystem.Processes.Endpoints.csproj" />
 	  <ProjectReference Include="..\Moryx.Factory\Moryx.Factory.csproj" />
