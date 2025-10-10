@@ -59,7 +59,7 @@ namespace Moryx.Communication.Sockets
             if (Disconnected == null)
                 _logger.Log(LogLevel.Warning, "Client disconnected, but listener already removed!");
             else
-                Disconnected(this, new EventArgs());
+                Disconnected(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -68,32 +68,36 @@ namespace Moryx.Communication.Sockets
         /// https://stackoverflow.com/a/69497010/6082960
         /// http://tldp.org/HOWTO/TCP-Keepalive-HOWTO/overview.html
         /// </summary>
-        public void ConfigureKeepAlive(int interval, int timeout)
+        public void ConfigureKeepAlive(TcpKeepAliveConfig config)
         {
+            if (!config.UseKeepAlive)
+                return;
+
             var socket = _client.Client;
 
-            // Total detection time ≈ KeepAliveTime + (KeepAliveInterval * KeepAliveRetryCount)
-            // Sample: 60 + (10 * 5) ≈ 110 seconds
-
-            // SetSocketOption uses seconds instead of milliseconds
-            // TODO: Rename config values in next major when IOControlCode are not used anymore
-            // TODO: Add RetryCount in next major to configs
-            var intervalAsSeconds = (int)Math.Ceiling(interval / 1000.0);  // 500/1000 -> 1;
-            var timeoutAsSeconds = (int)Math.Ceiling(timeout / 1000.0);  // 500/1000 -> 1;
-
-            // Configure socket using net6 keep alive configuration
-            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, intervalAsSeconds);
-            socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, timeoutAsSeconds);
-
-            try
+            // If keep alive is enabled but OS defaults should not be overriden, the following keep alive values are used
+            // | Platform    | KeepAliveTime      | KeepAliveInterval | KeepAliveRetryCount | Total Time Until Disconnect                 |
+            // | ----------- | ------------------ | ----------------- | ------------------- | ------------------------------------------- |
+            // | Windows     | 7 200 s (2 hours)  | 1 s               | 10                  | ≈ 7 209 s (≈ 2 hours 9 seconds)             |
+            // | Linux**     | 7 200 s (2 hours)  | 75 s              | 9                   | ≈ 7 875 s (≈ 2 hours 11 minutes 15 seconds) |
+            // | macOS / BSD | 7 200 s (2 hours)  | 75 s              | 8                   | ≈ 7 800 s (≈ 2 hours 10 minutes)            |
+            if (config.OverrideOsDefaults)
             {
-                // Try to set the TcpKeeepAliveRetryCount, it is not supported on all windows systems
-                // https://learn.microsoft.com/en-us/windows/win32/winsock/ipproto-tcp-socket-options#windows-support-for-ipproto_tcp-options
-                socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 2);
-            }
-            catch (Exception ex)
-            {
-                _logger.Log(LogLevel.Warning, ex, "TcpKeepAliveRetryCount could not be applied!");
+                // Total detection time ≈ KeepAliveTime + (KeepAliveInterval * KeepAliveRetryCount)
+                // Configure socket using net6 keep alive configuration
+                socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, config.KeepAliveInterval);
+                socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, config.KeepAliveTime);
+
+                try
+                {
+                    // Try to set the TcpKeepAliveRetryCount, it is not supported on all windows systems
+                    // https://learn.microsoft.com/en-us/windows/win32/winsock/ipproto-tcp-socket-options#windows-support-for-ipproto_tcp-options
+                    socket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, config.KeepAliveRetryCount);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Log(LogLevel.Warning, ex, "TcpKeepAliveRetryCount could not be applied!");
+                }
             }
 
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
@@ -216,8 +220,7 @@ namespace Moryx.Communication.Sockets
             // Error in stream - send last will and close transmission
             if (result == ByteReadResult.Failure)
             {
-                byte[] lastWill;
-                if (_interpreter.ErrorResponse(transmission, out lastWill))
+                if (_interpreter.ErrorResponse(transmission, out var lastWill))
                     _stream.Write(lastWill, 0, lastWill.Length);
 
                 Disconnect(new InvalidHeaderException("Header invalid or no matching validator found!"));
@@ -235,7 +238,6 @@ namespace Moryx.Communication.Sockets
                 Received.Invoke(this, message);
         }
 
-        ///
         public event EventHandler<BinaryMessage> Received;
 
         #endregion
@@ -260,7 +262,6 @@ namespace Moryx.Communication.Sockets
             RaiseDisconnected();
         }
 
-        ///
         public void Dispose()
         {
             Disconnect();

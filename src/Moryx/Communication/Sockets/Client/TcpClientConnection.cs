@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
 using Moryx.Container;
-using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.StateMachines;
 
@@ -16,15 +15,15 @@ namespace Moryx.Communication.Sockets
     /// </summary>
     [ExpectedConfig(typeof(TcpClientConfig))]
     [Plugin(LifeCycle.Transient, typeof(IBinaryConnection), Name = nameof(TcpClientConnection))]
-    public class TcpClientConnection : IBinaryConnection, IStateContext, ILoggingComponent
+    public class TcpClientConnection : IBinaryConnection, IStateContext
     {
         #region Dependencies
 
         /// <summary>
-        /// The Logger
+        /// Logger for this instance
         /// </summary>
-        [UseChild(nameof(TcpClientConnection))]
-        public IModuleLogger Logger { get; set; }
+        [UseChild(nameof(TcpListenerConnection))]
+        public ILogger Logger { get; set; }
 
         #endregion
 
@@ -65,7 +64,7 @@ namespace Moryx.Communication.Sockets
         public BinaryConnectionState CurrentState => _state.Current;
 
         /// <summary>
-        /// Create a new instance of the 
+        /// Create a new instance of the
         /// </summary>
         /// <param name="validator"></param>
         public TcpClientConnection(IMessageValidator validator)
@@ -83,7 +82,7 @@ namespace Moryx.Communication.Sockets
 
             StateMachine.Initialize(this).With<ClientStateBase>();
 
-            Endpoint = GetIpEndpointFromHost(Config.IpAddress, Config.Port);
+            _endpoint = GetIpEndpointFromHost(Config.IpAddress, Config.Port);
         }
 
         /// <summary>
@@ -121,7 +120,7 @@ namespace Moryx.Communication.Sockets
             }
             catch (Exception ex)
             {
-                Logger.Log(LogLevel.Critical, ex, "StateChanged event to {0} ran into an exception!", _state);
+                Logger.Log(LogLevel.Critical, ex, "StateChanged event to {state} ran into an exception!", _state);
             }
             // ReSharper enable InconsistentlySynchronizedField
         }
@@ -153,14 +152,13 @@ namespace Moryx.Communication.Sockets
 
         #region Connection and transmission
 
-        internal IPEndPoint Endpoint { get; set; }
-
+        private IPEndPoint _endpoint;
         private TcpTransmission _transmission;
 
         internal void Connect()
         {
             _tcpClient = new TcpClient();
-            _tcpClient.BeginConnect(Endpoint.Address, Endpoint.Port, ConnectionCallback, null);
+            _tcpClient.BeginConnect(_endpoint.Address, _endpoint.Port, ConnectionCallback, null);
         }
 
         private void ConnectionCallback(IAsyncResult ar)
@@ -171,15 +169,13 @@ namespace Moryx.Communication.Sockets
 
         internal void Connected()
         {
-            _transmission = new TcpTransmission(_tcpClient, _validator.Interpreter, Logger.GetChild(string.Empty, typeof(TcpTransmission)));
+            _transmission = new TcpTransmission(_tcpClient, _validator.Interpreter, Logger);
             _transmission.Disconnected += ConnectionClosed;
             _transmission.ExceptionOccurred += OnTransmissionException;
             _transmission.Received += MessageReceived;
             _transmission.StartReading();
 
-            // Configure TCP keep alive
-            if (Config.MonitoringIntervalMs > 0)
-                _transmission.ConfigureKeepAlive(Config.MonitoringIntervalMs, Config.MonitoringTimeoutMs);
+            _transmission.ConfigureKeepAlive(Config.KeepAliveConfig);
         }
 
         private void OnTransmissionException(object sender, Exception e)

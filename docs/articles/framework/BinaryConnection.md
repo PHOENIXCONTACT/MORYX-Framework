@@ -109,8 +109,28 @@ Finally all you have to do is create a connection instance with the IBinaryConne
 
 ### Configuration
 
-- To open a server-socket and start listening on incoming connections the user has to use the TcpListenerConfig
-- To start a client-connection the user has to use the TcpClientConfig
+- To open a server-socket and start listening on incoming connections the user has to use the `TcpListenerConfig`
+- To start a client-connection the user has to use the `TcpClientConfig`
+
+### KeepAlive
+
+TCP Keep-Alive is a mechanism that allows a TCP connection to detect whether the remote peer is still reachable, even when no application data is being exchanged.
+When enabled, the TCP stack periodically sends small “keepalive” probe packets on otherwise idle connections. If the remote side fails to acknowledge a configured number of probes, the connection is considered dead and will be closed by the operating system.
+The keepalive mechanism uses three parameters:
+
+| Parameter | Description |
+|------------|-------------|
+| **KeepAliveTime** | The idle time (in seconds) before the first keepalive probe is sent. If no data is transmitted for this duration, the first probe is sent to verify that the peer is still reachable. |
+| **KeepAliveInterval** | The delay (in seconds) between subsequent keepalive probes when no acknowledgment is received. This determines how often probes are retried after the initial one. |
+| **KeepAliveRetryCount** | The number of unanswered keepalive probes before the connection is considered lost and automatically closed by the TCP stack. |
+
+Default values vary by platform (typically around 2 hours idle, 75 s interval, and 8–10 probes).
+
+| Platform    | KeepAliveTime      | KeepAliveInterval | KeepAliveRetryCount | Total Time Until Disconnect                 |
+| ----------- | ------------------ | ----------------- | ------------------- | ------------------------------------------- |
+| Windows     | 7 200 s (2 hours)  | 1 s               | 10                  | ≈ 7 209 s (≈ 2 hours 9 seconds)             |
+| Linux**     | 7 200 s (2 hours)  | 75 s              | 9                   | ≈ 7 875 s (≈ 2 hours 11 minutes 15 seconds) |
+| macOS / BSD | 7 200 s (2 hours)  | 75 s              | 8                   | ≈ 7 800 s (≈ 2 hours 10 minutes)            |
 
 ### Server Mode
 
@@ -169,10 +189,6 @@ The following table illustrates differences between Little-Endian and Big-Endian
 
 ### .NET Conversion-Methods
 
-<<<<<<< HEAD:docs/articles/Core/BinaryConnection.md
-The .Net-Framework offers serveral Helper Methods and Classes and should be used for the conversion of data before sending it via network. To make sure, that multibyte values have the right byte order before being converted in to a byte-stream use [.HostToNetworkOrder](https://msdn.microsoft.com/de-de/library/653kcke1%28v=vs.110%29.aspx) For incoming data [IpAddress.NetworkToHostOrder](https://msdn.microsoft.com/de-de/library/system.net.ipaddress.networktohostorder%28v=vs.100%29.aspx) maybe used.
-=======
-The .Net-Framework offers several Helper Methods and Classes and should be used for the conversion of data before sending it via network. To make sure, that multi byte values have the right byte order before being converted in to a byte-stream use [Ipaddress.HostToNetworkOrder](https://msdn.microsoft.com/de-de/library/653kcke1%28v=vs.110%29.aspx) For incoming data [IpAddress.NetworkToHostOrder](https://msdn.microsoft.com/de-de/library/system.net.ipaddress.networktohostorder%28v=vs.100%29.aspx) maybe used.
->>>>>>> origin/future:docs/articles/framework/BinaryConnection.md
+The .NET offers several Helper Methods and Classes and should be used for the conversion of data before sending it via network. To make sure, that multi byte values have the right byte order before being converted in to a byte-stream use [Ipaddress.HostToNetworkOrder](https://msdn.microsoft.com/de-de/library/653kcke1%28v=vs.110%29.aspx) For incoming data [IpAddress.NetworkToHostOrder](https://msdn.microsoft.com/de-de/library/system.net.ipaddress.networktohostorder%28v=vs.100%29.aspx) maybe used.
 
 To create Byte-Arrays the .Net-class [BitConverter](https://msdn.microsoft.com/en-us/library/vstudio/system.bitconverter%28v=vs.100%29.aspx) may be used after the multi byte values have been converted into the right order.

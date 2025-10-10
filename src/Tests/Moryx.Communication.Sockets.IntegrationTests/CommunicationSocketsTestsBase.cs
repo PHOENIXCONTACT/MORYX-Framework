@@ -90,7 +90,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
                     return;
 
                 c.Connection.Dispose();
-                // Client should be disconnected 
+                // Client should be disconnected
                 WaitForConnectionState(_clients.IndexOf(c), new TimeSpan(0, 0, 0, 10), BinaryConnectionState.Disconnected);
                 c.Connection = null;
             }
@@ -142,7 +142,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
 
             server.Connection.Start();
 
-            // Server should be listening 
+            // Server should be listening
             Assert.That(server.Connection.CurrentState, Is.EqualTo(BinaryConnectionState.AttemptingConnection),
                 $"server is not in the state '{BinaryConnectionState.AttemptingConnection:G}'. CurrentState: {server.Connection.CurrentState:G}");
 
@@ -182,7 +182,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
 
             _clients[clientIdx].Connection.Start();
 
-            // In some tests the client shall be connected at this point and in some tests it shall not be connected, 
+            // In some tests the client shall be connected at this point and in some tests it shall not be connected,
             // so check the connection-state somewhere else...
 
             return clientIdx;
@@ -265,7 +265,7 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         /// <param name="counter">How often the element array shall be copied</param>
         /// <param name="element">The source payload</param>
         /// <returns>The created payload</returns>
-        protected static byte[] CreatePayload(int counter, byte[] element)
+        private static byte[] CreatePayload(int counter, byte[] element)
         {
             var result = new byte[element.Length * counter];
             for (var i = 0; i < counter; i++)
@@ -310,15 +310,21 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         /// <param name="port">The port.</param>
         /// <param name="connectRetryWaitMs">The connect retry wait ms.</param>
         /// <returns>The client configuration</returns>
-        protected static TcpClientConfig CreateClientConfig(IPAddress adress, int port, int connectRetryWaitMs)
+        private static TcpClientConfig CreateClientConfig(IPAddress adress, int port, int connectRetryWaitMs)
         {
             return new TcpClientConfig
             {
                 IpAddress = adress.ToString(),
                 Port = port,
                 RetryWaitMs = connectRetryWaitMs,
-                MonitoringIntervalMs = 100,
-                MonitoringTimeoutMs = 500
+                KeepAliveConfig = new TcpKeepAliveConfig
+                {
+                    UseKeepAlive = true,
+                    OverrideOsDefaults = true,
+                    KeepAliveInterval = 1,
+                    KeepAliveTime = 1,
+                    KeepAliveRetryCount = 2
+                }
             };
         }
 
@@ -328,14 +334,20 @@ namespace Moryx.Communication.Sockets.IntegrationTests
         /// <param name="adress">The adress.</param>
         /// <param name="port">The port.</param>
         /// <returns>The listener configuration</returns>
-        protected static TcpListenerConfig CreateServerConfig(IPAddress adress, int port)
+        private static TcpListenerConfig CreateServerConfig(IPAddress adress, int port)
         {
             return new TcpListenerConfig
             {
                 IpAddress = adress.ToString(),
                 Port = port,
-                MonitoringIntervalMs = 100,
-                MonitoringTimeoutMs = 500
+                KeepAliveConfig = new TcpKeepAliveConfig
+                {
+                    UseKeepAlive = true,
+                    OverrideOsDefaults = true,
+                    KeepAliveInterval = 1,
+                    KeepAliveTime = 1,
+                    KeepAliveRetryCount = 2
+                }
             };
         }
     }
