@@ -1,0 +1,56 @@
+﻿@using System.Reflection;
+@using Moryx.Launcher.Properties;
+@using System.Windows;
+@using System.Runtime.Versioning
+
+<script>
+	function copyVersion() {
+		navigator.clipboard.writeText("@AssemblyInfoHelper.Version");
+
+		const checkmarkDuration = 500;
+		const icon = document.querySelector('.material-symbols-outlined');
+		icon.textContent = 'check';
+
+		setTimeout(() => {
+			icon.textContent = 'content_copy';
+		}, checkmarkDuration);
+	}
+</script>
+
+<div id="aboutModal" style="display:none;" class="tw-fixed tw-inset-0 tw-z-[9999] tw-flex tw-items-start tw-justify-center tw-pt-20 tw-bg-black tw-bg-opacity-50 tw-transition-opacity tw-duration-300">
+  <div class="tw-relative tw-bg-white tw-shadow-lg tw-p-6 tw-max-w-2xl tw-w-[90%] tw-rounded tw-overflow-auto">
+    <button onclick="document.getElementById('aboutModal').style.display='none'" class="tw-absolute tw-top-2 tw-px-2 tw-right-2 tw-text-gray-500 tw-hover:text-gray-700 tw-text-2xl">&times;</button>
+    
+    <h1 class="tw-text-lg tw-font-bold tw-mb-2">@Strings.ABOUT</h1>
+    
+    <div class="tw-relative tw-flex tw-items-center tw-gap-2">
+	  <p class="tw-text-gray-600">@Strings.VERSION @AssemblyInfoHelper.Version</p>
+	  <span itemid="copyIcon" onclick="copyVersion()" class="tw-cursor-pointer material-symbols-outlined">content_copy</span>
+	</div>
+
+	<div class="tw-mt-4">
+      <h3 class="tw-text-base tw-font-bold tw-mb-2">Misc</h3>
+      <p class="tw-text-gray-600"> @Strings.COMPANY: @AssemblyInfoHelper.CompanyName </p>
+	  <p class="tw-text-gray-600"> @Strings.PRODUCT: @AssemblyInfoHelper.ProductName </p>
+	  <p class="tw-text-gray-600"> @Strings.TITLE: @AssemblyInfoHelper.Title </p>
+	  <p class="tw-text-gray-600"> @Strings.DESCRIPTION: @AssemblyInfoHelper.Description </p>
+	  <p class="tw-text-gray-600"> @Strings.CONFIG: @AssemblyInfoHelper.Configuration </p>
+	  <p class="tw-text-gray-600"> @Strings.TARGET_FRAMEWORK: @AssemblyInfoHelper.TargetFramework </p>
+    </div>
+	
+	@if (AssemblyInfoHelper.Copyright != null)
+	{
+		<div class="tw-mt-4">
+		  <h3 class="tw-text-base tw-font-bold tw-mb-2">@Strings.COPYRIGHT</h3>
+		  <p class="tw-text-gray-600 tw-whitespace-pre-line tw-break-normal">@AssemblyInfoHelper.Copyright</p>
+		</div>
+	}
+	@if (AssemblyInfoHelper.Trademark != null)
+	{
+		<div class="tw-mt-4">
+		  <h3 class="tw-text-base tw-font-bold tw-mb-2">Trademark</h3>
+		  <p class="tw-text-gray-600 tw-whitespace-pre-line tw-break-all">@AssemblyInfoHelper.Trademark</p>
+		</div>
+	}
+  </div>
+</div>

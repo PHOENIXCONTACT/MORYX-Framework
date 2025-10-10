@@ -1,0 +1,36 @@
+using System;
+using System.Reflection;
+using System.Runtime.Versioning;
+
+
+public static class AssemblyInfoHelper
+{
+    private static readonly Assembly _entryAssembly = Assembly.GetEntryAssembly();
+    public static string CompanyName =>
+        _entryAssembly?.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company ?? "N/A";
+
+    public static string ProductName =>
+        _entryAssembly?.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? "N/A";
+
+    public static string Title =>
+        _entryAssembly?.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? "N/A";
+
+    public static string Description =>
+        _entryAssembly?.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "N/A";
+
+    public static string Version =>
+        _entryAssembly?.GetName()?.Version?.ToString() ?? "N/A";
+        
+    public static string Configuration =>
+        _entryAssembly?.GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration ?? "N/A";
+
+    public static string TargetFramework =>
+        _entryAssembly?.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName ?? "N/A";
+
+    public static string Copyright =>
+        _entryAssembly?.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? "N/A";
+
+    public static string Trademark =>
+        _entryAssembly?.GetCustomAttribute<AssemblyTrademarkAttribute>()?.Trademark ?? "N/A";
+}
+
