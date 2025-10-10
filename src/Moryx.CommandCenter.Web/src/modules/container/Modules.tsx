@@ -6,7 +6,7 @@
 import { mdiCogs, mdiConsoleLine, mdiHexagon, mdiHexagonMultiple } from "@mdi/js";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import * as React from "react";
@@ -133,8 +133,8 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
 
     public render(): React.ReactNode {
         return (
-            <Grid container={true} spacing={2}>
-                <Grid item={true} md={3}>
+            <GridLegacy container={true} spacing={2}>
+                <GridLegacy item={true} md={3}>
                     <Card className="mcc-menu-card">
                         <Tabs value="modules" role="navigation" centered={true}>
                             <Tab label="Modules" value="modules" component={Link} to="/modules" />
@@ -142,8 +142,8 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
                         </Tabs>
                         <RoutingMenu Menu={this.state.MenuModel} />
                     </Card>
-                </Grid>
-                <Grid item={true} md={9}>
+                </GridLegacy>
+                <GridLegacy item={true} md={9}>
                     <Routes>
                         <Route path="*" element={
                             <Card>
@@ -156,8 +156,8 @@ class Modules extends React.Component<ModulesPropModel & ModulesDispatchPropMode
                             </Card>} />
                         {this.preRenderRoutesList()}
                     </Routes>
-                </Grid>
-            </Grid>
+                </GridLegacy>
+            </GridLegacy>
         );
     }
 }

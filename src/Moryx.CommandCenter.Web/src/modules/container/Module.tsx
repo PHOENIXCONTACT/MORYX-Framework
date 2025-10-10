@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -133,22 +133,22 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
             <Card>
                 <ModuleHeader ModuleName={this.props.Module.name} selectedTab="module" />
                 <CardContent>
-                    <Grid container={true} spacing={2} direction="row" alignItems="stretch">
+                    <GridLegacy container={true} spacing={2} direction="row" alignItems="stretch">
                         <ModuleInfoTile
                             title={this.props.Module.name}
                         >
-                            <Grid item={true}>
+                            <GridLegacy item={true}>
                                 <ButtonGroup variant="contained" sx={{flex: "none"}} fullWidth={false}>
                                     <Button onClick={this.startModule.bind(this)} startIcon={svgIcon(mdiPlay)}>Start</Button>
                                     <Button onClick={this.stopModule.bind(this)} startIcon={svgIcon(mdiStop)}>Stop</Button>
                                     <Button onClick={this.reincarnateModule.bind(this)} startIcon={svgIcon(mdiRestart)}>Reincarnate</Button>
                                 </ButtonGroup>
-                            </Grid>
+                            </GridLegacy>
                         </ModuleInfoTile>
                         <ModuleInfoTile
                             title="Error Handling"
                         >
-                            <Grid item={true} justifyContent="center">
+                            <GridLegacy item={true} justifyContent="center">
                                 {this.state.HasWarningsOrErrors ? (
                                     <Button
                                         variant="outlined"
@@ -161,13 +161,13 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                                 ) : (
                                     <Typography variant="body2" gutterBottom={true}>No warnings or errors.</Typography>
                                 )}
-                            </Grid>
+                            </GridLegacy>
                         </ModuleInfoTile>
                         <ModuleInfoTile
                             title="General Information"
                             spacing={1}
                         >
-                            <Grid item={true}>
+                            <GridLegacy item={true}>
                                 <List dense={true} disablePadding={true}>
                                     <ListItem  disablePadding={true}>
                                         <ListItemText primary={<HealthStateBadge HealthState={this.props.Module.healthState} />} />
@@ -179,13 +179,13 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                                         <ListItemText primary={this.props.Module.assembly.fileVersion} secondary="Version" />
                                     </ListItem>
                                 </List>
-                            </Grid>
+                            </GridLegacy>
                         </ModuleInfoTile>
 
                         <ModuleInfoTile
                             title="Dependencies"
                         >
-                            <Grid>
+                            <GridLegacy>
                                 {
                                 this.props.Module.dependencies.length === 0 ? (
                                     <span>This module has no dependencies.</span>
@@ -193,12 +193,12 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                                     Module.dependenciesList(this.props.Module)
                                 )
                                 }
-                            </Grid>
+                            </GridLegacy>
                         </ModuleInfoTile>
                         <ModuleInfoTile
                             title="Start &amp; Failure behaviour"
                         >
-                            <Grid item={true} md={12}>
+                            <GridLegacy item={true} md={12}>
                                 <TextField
                                     select={true}
                                     label="Start behaviour"
@@ -211,9 +211,9 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                                     <MenuItem value={ModuleStartBehaviour.Manual}>Manual</MenuItem>
                                     <MenuItem value={ModuleStartBehaviour.OnDependency}>On dependency</MenuItem>
                                 </TextField>
-                            </Grid>
+                            </GridLegacy>
 
-                            <Grid item={true} md={12}>
+                            <GridLegacy item={true} md={12}>
                                 <TextField
                                     select={true}
                                     label="Failure behaviour"
@@ -226,7 +226,7 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                                     <MenuItem value={FailureBehaviour.Stop}>Stop</MenuItem>
                                     <MenuItem value={FailureBehaviour.StopAndNotify}>Stop and notify</MenuItem>
                                 </TextField>
-                            </Grid>
+                            </GridLegacy>
                         </ModuleInfoTile>
                         <ModuleInfoTile
                                 title="Notifications"
@@ -235,7 +235,7 @@ class Module extends React.Component<ModulePropModel & ModuleDispatchPropModel, 
                                 <Notifications messages={this.props.Module.notifications}/>
 
                         </ModuleInfoTile>
-                    </Grid>
+                    </GridLegacy>
                 </CardContent>
             </Card>
         );

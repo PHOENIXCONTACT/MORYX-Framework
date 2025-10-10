@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Microsoft.Data.Sqlite;
 using System;
+using System.IO;
 
 namespace Moryx.Model.Sqlite
 {
@@ -24,14 +25,22 @@ namespace Moryx.Model.Sqlite
             ConfiguratorTypename = typeof(SqliteModelConfigurator).AssemblyQualifiedName;
         }
     }
-
-
+    
     /// <summary>
     /// Database connection settings for the Sqlite databases
     /// </summary>
     public class SqliteDatabaseConnectionSettings : DatabaseConnectionSettings
     {
         private string _database;
+
+        /// <summary>
+        /// Default constructor of <see cref="SqliteDatabaseConnectionSettings"/>
+        /// </summary>
+        public SqliteDatabaseConnectionSettings()
+        {
+            var defaultDbPath = Path.Combine(".", "db", "<DatabaseName>.db");
+            ConnectionString = $"Data Source={defaultDbPath};Mode=ReadWrite;";
+        }
 
         /// <inheritdoc />
         [DataMember]
@@ -47,7 +56,7 @@ namespace Moryx.Model.Sqlite
         }
 
         /// <inheritdoc />
-        [DataMember, Required, DefaultValue("Data Source=.\\db\\<DatabaseName>.db;Mode=ReadWrite;")]
+        [DataMember, Required]
         public override string ConnectionString { get; set; }
 
         /// <inheritdoc />

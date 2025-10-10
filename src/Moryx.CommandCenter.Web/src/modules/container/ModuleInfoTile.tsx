@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 
@@ -22,20 +22,20 @@ export class ModuleInfoTile extends React.Component<React.PropsWithChildren<Modu
 
     public render() {
         return (
-            <Grid item={true} md={this.props.md ?? 6}>
-                <Grid item={true} md={12}>
+            <GridLegacy item={true} md={this.props.md ?? 6}>
+                <GridLegacy item={true} md={12}>
                     <Typography variant="h5" gutterBottom={true}>{this.props.title}</Typography>
-                </Grid>
+                </GridLegacy>
 
-                <Grid container={true} item={true} md={12}
+                <GridLegacy container={true} item={true} md={12}
                         direction="column"
                         justifyContent="flex-start"
                         alignItems="stretch"
                         spacing={ this.props.spacing != null ? this.props.spacing : 0 }
                 >
                     {this.props.children}
-                </Grid>
-            </Grid>
+                </GridLegacy>
+            </GridLegacy>
         );
     }
 }
