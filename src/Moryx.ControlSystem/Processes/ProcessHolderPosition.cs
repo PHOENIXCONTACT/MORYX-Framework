@@ -2,18 +2,22 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
 using Moryx.Serialization;
+using Moryx.ControlSystem.Localizations;
 
 namespace Moryx.ControlSystem.Processes
 {
     /// <summary>
     /// Implementation of <see cref="IProcessHolderPosition"/>
     /// </summary>
+    [ResourceRegistration]
+    [Display(Name = nameof(Strings.PROCESS_HOLDER_POSITION), Description = nameof(Strings.PROCESS_HOLDER_POSITION_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
     public class ProcessHolderPosition : Resource, IProcessHolderPosition
     {
         [DataMember]
@@ -27,19 +31,20 @@ namespace Moryx.ControlSystem.Processes
         /// Gets the current process id for the ui.
         /// </summary>
         [EntrySerialize]
-        [Description("Id of the carried process")]
+        [Display(Name = nameof(Strings.CURRENT_PROCESS), ResourceType = typeof(Localizations.Strings))]
         public long CurrentProcess => _processId;
 
         /// <summary>
         /// Gets the running activity.
         /// </summary>
         [EntrySerialize]
-        [Description("Information about the current activity of the current process.")]
+        [Display(Name = nameof(Strings.CURRENT_ACTIVITY), ResourceType = typeof(Localizations.Strings))]
         public string CurrentActivity => Process?.CurrentActivity() == null
             ? string.Empty : $"{Process.CurrentActivity().Id} - {Process.CurrentActivity().GetType().Name}";
 
         /// <inheritdoc />
         [EntrySerialize, DataMember]
+        [Display(Name = nameof(Strings.ID), ResourceType = typeof(Localizations.Strings))]
         public string Identifier { get; set; }
 
         #endregion

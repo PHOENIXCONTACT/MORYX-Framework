@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Moryx.ControlSystem.Properties {
+namespace Moryx.ControlSystem.Localizations {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Moryx.ControlSystem.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Moryx.ControlSystem.Properties.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Moryx.ControlSystem.Localizations.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,33 @@ namespace Moryx.ControlSystem.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Information about the current activity of the current process.
+        /// </summary>
+        public static string CURRENT_ACTIVITY {
+            get {
+                return ResourceManager.GetString("CURRENT_ACTIVITY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ID of the carried process.
+        /// </summary>
+        public static string CURRENT_PROCESS {
+            get {
+                return ResourceManager.GetString("CURRENT_PROCESS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unique Identifier.
+        /// </summary>
+        public static string ID {
+            get {
+                return ResourceManager.GetString("ID", resourceCulture);
             }
         }
         
@@ -93,6 +120,42 @@ namespace Moryx.ControlSystem.Properties {
         public static string OrderBasedRecipe_OrderNumber_Description {
             get {
                 return ResourceManager.GetString("OrderBasedRecipe_OrderNumber_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Process holder group.
+        /// </summary>
+        public static string PROCESS_HOLDER_GROUP {
+            get {
+                return ResourceManager.GetString("PROCESS_HOLDER_GROUP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A virtual group instance to hold information about the process.
+        /// </summary>
+        public static string PROCESS_HOLDER_GROUP_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("PROCESS_HOLDER_GROUP_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Process holder position.
+        /// </summary>
+        public static string PROCESS_HOLDER_POSITION {
+            get {
+                return ResourceManager.GetString("PROCESS_HOLDER_POSITION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A virtual instance to hold information about the position of a process.
+        /// </summary>
+        public static string PROCESS_HOLDER_POSITION_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("PROCESS_HOLDER_POSITION_DESCRIPTION", resourceCulture);
             }
         }
         

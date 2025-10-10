@@ -3,7 +3,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using Moryx.ControlSystem.Properties;
+using Moryx.ControlSystem.Localizations;
 using Moryx.Modules;
 using Moryx.Serialization;
 

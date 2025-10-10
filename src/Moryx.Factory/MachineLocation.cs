@@ -6,32 +6,41 @@ using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
 using Moryx.Serialization;
+using Moryx.Factory.Localizations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Moryx.Factory
 {
     /// <summary>
     /// Class for MachineLocation in the factory
     /// </summary>
+    [ResourceRegistration]
+    // TODO: ADD value
+    [Display(Name = nameof(Strings.MACHINE_LOCATION), ResourceType = typeof(Localizations.Strings))]
     public class MachineLocation : Resource, IMachineLocation
     {
         public IResource Machine => Children.OfType<ICell>().FirstOrDefault();
 
         [DataMember, EntrySerialize]
+        [Display(Name = nameof(Strings.SPECIFIC_ICON), ResourceType = typeof(Localizations.Strings))]
         public string SpecificIcon { get; set; }
 
         [DataMember, EntrySerialize]
+        [Display(Name = nameof(Strings.IMAGE), ResourceType = typeof(Localizations.Strings))]
         public string Image { get; set; }
 
         /// <summary>
         /// X position of the location
         /// </summary>
-        [DataMember, EntrySerialize, DefaultValue(10)]
+        [DataMember, EntrySerialize, DefaultValue(0.5)]
+        [Display(Name = nameof(Strings.POSITION_X), ResourceType = typeof(Localizations.Strings))]
         public double PositionX { get; set; }
 
         /// <summary>
         /// Y position of the location
         /// </summary>
-        [DataMember, EntrySerialize, DefaultValue(10)]
+        [DataMember, EntrySerialize, DefaultValue(0.5)]
+        [Display(Name = nameof(Strings.POSITION_Y), ResourceType = typeof(Localizations.Strings))]
         public double PositionY { get; set; }
 
         public Position Position
