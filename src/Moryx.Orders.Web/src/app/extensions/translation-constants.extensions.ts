@@ -3,6 +3,7 @@ export class TranslationConstants {
     EN: 'en',
     DE: 'de',
     IT: 'it',
+    ZH: 'zh',
   };
 
   public static readonly APP = {
@@ -105,6 +106,7 @@ export class TranslationConstants {
     CANCEL: 'CREATE_DIALOG.CANCEL',
     CLEAR: 'CREATE_DIALOG.CLEAR',
     CREATE: 'CREATE_DIALOG.CREATE',
+    ADD: 'CREATE_DIALOG.ADD',
     OPERATION_NUMBER_INVALID: 'CREATE_DIALOG.OPERATION_NUMBER_INVALID',
     HINT: 'CREATE_DIALOG.HINT',
   };

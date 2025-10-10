@@ -35,6 +35,13 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatListModule } from "@angular/material/list";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatInputModule } from "@angular/material/input";
+import { MatMenu, MatMenuModule } from "@angular/material/menu";
+import { MatTooltipModule } from "@angular/material/tooltip";
+
+enum Action {
+  AddCreate,
+  AddOnly
+}
 
 @Component({
   selector: "app-create-dialog",
@@ -54,7 +61,9 @@ import { MatInputModule } from "@angular/material/input";
     MatIconModule,
     MatListModule,
     MatProgressBarModule,
-    MatInputModule
+    MatInputModule,
+    MatMenuModule,
+    MatTooltipModule
   ],
   providers: [],
 })
@@ -76,6 +85,20 @@ export class CreateDialogComponent implements OnInit {
       this.amount() > 0 &&
       this.operationNumberFormControl.valid
   );
+  primaryAction = signal<Action>(Action.AddCreate);
+  Action = Action;
+
+  primaryActionLabel = computed(() => {
+    return this.primaryAction() === Action.AddCreate
+      ? this.translate.instant(TranslationConstants.CREATE_DIALOG.CREATE)
+      : this.translate.instant(TranslationConstants.CREATE_DIALOG.ADD);
+  });
+
+  canAdd = computed(() => !this.isLoading() && this.canAddOperation());
+  
+  canCreate = computed(() => !this.isLoading() && (this.operations().length > 0 || this.canAddOperation()));
+
+  dropdownDisabled = computed(() => !this.canRun(Action.AddCreate) && !this.canRun(Action.AddOnly));
 
   TranslationConstants = TranslationConstants;
   //Form Controls
@@ -144,7 +167,7 @@ export class CreateDialogComponent implements OnInit {
   }
 
   detailsInputchanged(event: Event | KeyboardEvent) {
-    if (this.operations.length > 0) {
+    if (this.operations().length > 0) {
       this.addValidationToOperationNumber();
     }
   }
@@ -170,7 +193,7 @@ export class CreateDialogComponent implements OnInit {
       items.splice(index, 1);
       return items;
     });
-    if (this.operations.length === 0) this.addValidationToOperationNumber();
+    if (this.operations().length === 0) this.addValidationToOperationNumber();
   }
 
   addValidationToOperationNumber() {
@@ -217,8 +240,10 @@ export class CreateDialogComponent implements OnInit {
         onlySelf: true,
       });
     }
-  }
 
+    this.operationNumberFormControl.reset('');
+  }
+  
   async create(): Promise<void> {
     let failed = false;
     for (const operation of this.operations()) {
@@ -236,5 +261,27 @@ export class CreateDialogComponent implements OnInit {
         });
     }
     if (!failed) this.dialog.close();
+  }
+
+  canRun = (a: Action) => (a === Action.AddCreate ? this.canCreate() : this.canAdd());
+
+  onPrimaryClick = async () => { await this.performAction(this.primaryAction()); };
+
+  onSelectAction = (a: Action) => { this.primaryAction.set(a); };
+
+  isSelected     = (a: Action) => this.primaryAction() === a;
+
+  private async performAction(a: Action): Promise<void> {
+    const canAdd = this.canAddOperation();
+
+    if (a === Action.AddCreate) {
+      if (canAdd) this.addOperation();
+
+      if (this.operations().length > 0) {
+        await this.create();
+      }
+    } else if (canAdd) {
+      this.addOperation();
+    }
   }
 }

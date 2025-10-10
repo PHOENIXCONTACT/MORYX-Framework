@@ -94,6 +94,7 @@
     "CANCEL": "取消",
     "CLEAR": "清除",
     "CREATE": "创建",
+    "ADD": "添加",
     "OPERATION_NUMBER_INVALID": "操作编号必须为4位数字",
     "HINT": "只能选择具有配方的产品。"
   },
