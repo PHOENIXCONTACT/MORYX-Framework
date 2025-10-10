@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <dotnetVersion>8.0.1</dotnetVersion>
-    <efCoreVersion>8.0.20</efCoreVersion>
+    <dotnetVersion>10.0.0-rc.1.25451.107</dotnetVersion>
+    <efCoreVersion>10.0.0-rc.1.25451.107</efCoreVersion>
 
-    <AspNetCoreVersion>8.0.20</AspNetCoreVersion>
+    <AspNetCoreVersion>10.0.0-rc.1.25451.107</AspNetCoreVersion>
   </PropertyGroup>
 
   <ItemGroup>

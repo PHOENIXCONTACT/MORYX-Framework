@@ -45,7 +45,17 @@ namespace Moryx.Runtime.Kernel
             // Find all module types in the app domain
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(p => !p.IsDynamic);
             var modules = loadedAssemblies
-                .SelectMany(assembly => assembly.GetExportedTypes())
+                .SelectMany(assembly =>
+                {
+                    try
+                    {
+                        return assembly.GetExportedTypes();
+                    }
+                    catch (Exception)
+                    {
+                        return [];
+                    }
+                })
                 .Where(type => !type.IsInterface & !type.IsAbstract & typeof(IServerModule).IsAssignableFrom(type))
                 .ToList();
             foreach (var module in modules)

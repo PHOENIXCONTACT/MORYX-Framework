@@ -6,9 +6,9 @@
    <Exec WorkingDirectory="./" Command="npm run build --force" />
    <Exec WorkingDirectory="./" Command="npm config set strict-ssl true" />
   </Target>
-	
+
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
   </PropertyGroup>
 
