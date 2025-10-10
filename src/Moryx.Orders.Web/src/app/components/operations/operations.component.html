@@ -137,9 +137,35 @@
                     {{ TranslationConstants.OPERATIONS.AMOUNT | translate }}:
                     {{ operation.model.totalAmount }}
                   </div>
-                  <div>
-                    {{ TranslationConstants.OPERATIONS.SUCCESS | translate }}:
-                    {{ operation.model.successCount }}
+
+                  <div class="flex-row-center operation-progress">
+                    <div class="multi-progress-container">
+                      <div
+                        class="bar success"
+                        [style.flex-basis.%]="operation.progressSuccessPercent"
+                        matTooltip="{{ TranslationConstants.OPERATIONS.SUCCESS | translate }}: {{ operation.progressSuccessPercent | number: '1.1-1' }}%">
+                      </div>
+                      <div
+                        class="bar scrap"
+                        [style.flex-basis.%]="operation.progressScrapPercent"
+                        matTooltip="{{ TranslationConstants.OPERATIONS.SCRAP | translate }}: {{ operation.progressScrapPercent | number: '1.1-1' }}%">
+                      </div>
+                      <div
+                        class="bar running"
+                        [style.flex-basis.%]="operation.progressRunningPercent"
+                        matTooltip="{{ TranslationConstants.OPERATIONS.RUNNING | translate }}: {{ operation.progressRunningPercent | number: '1.1-1' }}%">
+                      </div>
+                      <div
+                        class="bar pending"
+                        [style.flex-basis.%]="operation.progressPendingPercent"
+                        matTooltip="{{ TranslationConstants.OPERATIONS.PENDING | translate }}: {{ operation.progressPendingPercent | number: '1.1-1' }}%">
+                      </div>
+                      <div
+                        class="bar residual"
+                        [style.flex-basis.%]="operation.progressResidualPercent"
+                        matTooltip="{{ TranslationConstants.OPERATIONS.RESIDUAL | translate }}: {{ operation.progressResidualPercent | number: '1.1-1' }}%">
+                      </div>
+                  </div>
                   </div>
                   <div>
                     {{ TranslationConstants.OPERATIONS.RUNNING | translate }}:

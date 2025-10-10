@@ -32,7 +32,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-operations',
@@ -53,8 +52,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     EmptyStateComponent,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    MatSidenavModule,
-    MatTooltip
+    MatSidenavModule
   ],
   standalone:true
 })
