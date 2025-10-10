@@ -36,9 +36,9 @@ namespace Moryx.Notifications
         public INotificationSourceAdapter NotificationAdapter { get; set; }
 
         /// <inheritdoc />
-        public override void Activate()
+        public override void Activated()
         {
-            base.Activate();
+            base.Activated();
 
             NotificationAdapter.Published += OnNotificationPublished;
             NotificationAdapter.Acknowledged += OnNotificationAcknowledged;
@@ -70,21 +70,21 @@ namespace Moryx.Notifications
         /// <inheritdoc />
         public void Acknowledge(Notification notification)
         {
-            // No ValidateHealthState: Source published the notification; it must be able to handle a response, too!
+            ValidateHealthState();
             NotificationAdapter.Acknowledge(notification);
         }
 
         /// <inheritdoc />
         public void PublishProcessed(Notification notification)
         {
-            // No ValidateHealthState: Source published the notification; it must be able to handle a response, too!
+            ValidateHealthState();
             NotificationAdapter.PublishProcessed(notification);
         }
 
         /// <inheritdoc />
         public void AcknowledgeProcessed(Notification notification)
         {
-            // No ValidateHealthState: Source acknowledge the notification; it must be able to handle a response, too!
+            ValidateHealthState();
             NotificationAdapter.AcknowledgeProcessed(notification);
         }
 

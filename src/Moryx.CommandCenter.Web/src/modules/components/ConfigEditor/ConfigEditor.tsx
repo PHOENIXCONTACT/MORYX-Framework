@@ -5,7 +5,7 @@
 
 import { mdiChevronDown, mdiChevronRight } from "@mdi/js";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import SvgIcon from "@mui/material/SvgIcon";
@@ -174,36 +174,36 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
     public preRenderEntries(entries: Entry[]): React.ReactNode {
         return entries.map((subEntry) =>
         (
-            <Grid container={true} sx={{ marginTop: 0.5 }} key={subEntry.identifier}>
-                <Grid container={true} item={true} md={12} direction="column" alignItems="stretch">
+            <GridLegacy container={true} sx={{ marginTop: 0.5 }} key={subEntry.identifier}>
+                <GridLegacy container={true} item={true} md={12} direction="column" alignItems="stretch">
                 {
                     this.selectPropertyByType(subEntry)
                 }
-                </Grid>
+                </GridLegacy>
 
                 { subEntry.value.type === EntryValueType.Collection &&
                     (
-                        <Grid container={true} item={true} md={12} direction="column" alignItems="stretch">
+                        <GridLegacy container={true} item={true} md={12} direction="column" alignItems="stretch">
                             <CollectionEditor Entry={subEntry}
                                                 IsExpanded={this.isExpanded(subEntry.uniqueIdentifier ?? subEntry.identifier)}
                                                 Root={this.props.Root}
                                                 navigateToEntry={this.props.navigateToEntry}
                                                 IsReadOnly={this.props.IsReadOnly} />
-                        </Grid>
+                        </GridLegacy>
                     )
                 }
                 { subEntry.value.type === EntryValueType.Class &&
                     (
-                        <Grid item={true} md={12} direction="column" alignItems="stretch">
+                        <GridLegacy item={true} md={12} direction="column" alignItems="stretch">
                             <ClassEditor Entry={subEntry}
                                             IsExpanded={this.isExpanded(subEntry.uniqueIdentifier ?? subEntry.identifier)}
                                             Root={this.props.Root}
                                             navigateToEntry={this.props.navigateToEntry}
                                             IsReadOnly={this.props.IsReadOnly} />
-                        </Grid>
+                        </GridLegacy>
                     )
                 }
-            </Grid>
+            </GridLegacy>
         ));
     }
 
@@ -211,26 +211,26 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
         let entries: any;
         if (this.props.ParentEntry != null && this.props.ParentEntry.value.type === EntryValueType.Collection) {
             entries = (
-                <Grid container={true}>
-                    <Grid container={true} item={true} md={12} direction="column" alignItems="stretch">
+                <GridLegacy container={true}>
+                    <GridLegacy container={true} item={true} md={12} direction="column" alignItems="stretch">
                         <CollectionEditor Entry={this.props.ParentEntry}
                                           IsExpanded={true}
                                           Root={this.props.Root}
                                           navigateToEntry={this.props.navigateToEntry}
                                           IsReadOnly={this.props.IsReadOnly} />
-                    </Grid>
-                </Grid>
+                    </GridLegacy>
+                </GridLegacy>
             );
         } else {
             entries = this.preRenderEntries(this.props.Entries);
         }
 
         return (
-            <Grid container={true} item={true} md={12}>
+            <GridLegacy container={true} item={true} md={12}>
                 {entries}
                 { ConfigEditor.isEntryTypeSettable(this.props.ParentEntry) &&
-                    <Grid container={true}>
-                        <Grid container={true} item={true} md={12}>
+                    <GridLegacy container={true}>
+                        <GridLegacy container={true} item={true} md={12}>
                             <TextField
                                 select={true}
                                 value={this.state.SelectedEntryType}
@@ -250,10 +250,10 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                                     onClick={() => this.onPatchToSelectedEntryType()}>
                                 Set entry type
                             </Button>
-                        </Grid>
-                    </Grid>
+                        </GridLegacy>
+                    </GridLegacy>
                 }
-            </Grid>
+            </GridLegacy>
         );
     }
 }
