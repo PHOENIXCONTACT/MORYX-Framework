@@ -6,7 +6,7 @@
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CircularProgress from "@mui/material/CircularProgress";
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
@@ -180,14 +180,14 @@ class ModuleConsole extends React.Component<ModuleConsolePropModel & ModuleConso
             }
 
             content = (
-                <Grid container={true} spacing={2}>
-                    <Grid item={true} md={4}>
+                <GridLegacy container={true} spacing={2}>
+                    <GridLegacy item={true} md={4}>
                         {this.preRenderFunctions()}
-                    </Grid>
-                    <Grid item={true}  md={8}>
+                    </GridLegacy>
+                    <GridLegacy item={true}  md={8}>
                         {view}
-                    </Grid>
-                </Grid>
+                    </GridLegacy>
+                </GridLegacy>
             );
         }
 

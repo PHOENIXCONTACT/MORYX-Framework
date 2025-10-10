@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
@@ -20,21 +20,21 @@ export class SectionInfo extends React.Component<SectionInfoPropModel> {
 
     public render(): React.ReactNode {
         return (
-            <Grid container={true}
+            <GridLegacy container={true}
                 direction="row"
                 justifyContent="center"
                 alignItems="center"
                 spacing={1}
             >
-                <Grid item={true}>
+                <GridLegacy item={true}>
                     <SvgIcon>
                         <path d={this.props.icon} />
                     </SvgIcon>
-                </Grid>
-                <Grid item={true}>
+                </GridLegacy>
+                <GridLegacy item={true}>
                     <Typography variant="body2">{this.props.description}</Typography>
-                </Grid>
-            </Grid>
+                </GridLegacy>
+            </GridLegacy>
         );
     }
 }

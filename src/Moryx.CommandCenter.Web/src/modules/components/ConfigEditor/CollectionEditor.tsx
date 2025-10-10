@@ -7,7 +7,7 @@ import { mdiChevronDown, mdiChevronRight, mdiPlus, mdiTrashCanOutline } from "@m
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import SvgIcon from "@mui/material/SvgIcon";
@@ -131,13 +131,13 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
     public render(): React.ReactNode {
         return (
             <Collapse in={this.props.IsExpanded}>
-                <Grid container={true} item={true} sx={{paddingLeft: 3, paddingRight: 0}}>
+                <GridLegacy container={true} item={true} sx={{paddingLeft: 3, paddingRight: 0}}>
                     {   this.props.IsExpanded &&
                         this.props.Entry.subEntries.map((entry, idx) => {
                             if (Entry.isClassOrCollection(entry)) {
                                 return (
-                                    <Grid container={true} key={idx}>
-                                        <Grid item={true} md={11} paddingTop={0.5} paddingRight={0}>
+                                    <GridLegacy container={true} key={idx}>
+                                        <GridLegacy item={true} md={11} paddingTop={0.5} paddingRight={0}>
                                             <IconButton
                                                 sx={{padding: 0}}
                                                 onClick={() => this.toggleCollapsible(entry.uniqueIdentifier ?? entry.identifier)}>
@@ -150,43 +150,43 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                                                     {entry.displayName}
                                                 </Button>
                                             </Tooltip>
-                                        </Grid>
-                                        <Grid container={true} item={true} md={1} justifyContent="flex-end">
+                                        </GridLegacy>
+                                        <GridLegacy container={true} item={true} md={1} justifyContent="flex-end">
                                             <IconButton
                                                 onClick={() => this.removeEntry(entry)}
                                                 disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}
                                             >
                                                 <SvgIcon><path d={mdiTrashCanOutline} /></SvgIcon>
                                             </IconButton>
-                                        </Grid>
-                                        <Grid container={true} item={true}  direction="column" alignItems="stretch">
+                                        </GridLegacy>
+                                        <GridLegacy container={true} item={true}  direction="column" alignItems="stretch">
                                             <Collapse in={this.isExpanded(entry.uniqueIdentifier)}>
-                                                <Grid item={true} sx={{paddingLeft: 3, paddingRight: 0}} md={12}>
+                                                <GridLegacy item={true} sx={{paddingLeft: 3, paddingRight: 0}} md={12}>
                                                 {this.preRenderConfigEditor(entry)}
-                                                </Grid>
+                                                </GridLegacy>
                                             </Collapse>
-                                        </Grid>
-                                    </Grid >
+                                        </GridLegacy>
+                                    </GridLegacy >
                                 );
                             } else {
                                 return (
-                                    <Grid container={true}>
-                                        <Grid item={true} md={11}>{this.preRenderConfigEditor(entry)}</Grid>
-                                        <Grid container={true} item={true} md={1} justifyContent="flex-end" alignContent="center">
+                                    <GridLegacy container={true}>
+                                        <GridLegacy item={true} md={11}>{this.preRenderConfigEditor(entry)}</GridLegacy>
+                                        <GridLegacy container={true} item={true} md={1} justifyContent="flex-end" alignContent="center">
                                             <IconButton
                                                 onClick={() => this.removeEntry(entry)}
                                                 disabled={this.props.Entry.value.isReadOnly || this.props.IsReadOnly}
                                             >
                                                 <SvgIcon><path d={mdiTrashCanOutline} /></SvgIcon>
                                             </IconButton>
-                                        </Grid>
-                                    </Grid>
+                                        </GridLegacy>
+                                    </GridLegacy>
                                 );
                             }
                         })
                     }
-                    <Grid container={true} sx={{paddingTop: 1, paddingBottom: 1}}>
-                        <Grid item={true} md={11}>
+                    <GridLegacy container={true} sx={{paddingTop: 1, paddingBottom: 1}}>
+                        <GridLegacy item={true} md={11}>
                             <TextField
                                 select={true}
                                 label="Type"
@@ -198,8 +198,8 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                             >
                                 {this.preRenderOptions()}
                             </TextField>
-                        </Grid>
-                        <Grid container={true} item={true} md={1} justifyContent="flex-end">
+                        </GridLegacy>
+                        <GridLegacy container={true} item={true} md={1} justifyContent="flex-end">
                             <IconButton
                                 color="primary"
                                 onClick={() => this.addEntry()}
@@ -207,9 +207,9 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
                             >
                                 <SvgIcon><path d={mdiPlus} /></SvgIcon>
                             </IconButton>
-                        </Grid>
-                    </Grid>
-                </Grid>
+                        </GridLegacy>
+                    </GridLegacy>
+                </GridLegacy>
             </Collapse>
         );
     }

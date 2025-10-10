@@ -4,7 +4,7 @@
 */
 
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import MethodEntry from "../models/MethodEntry";
@@ -22,23 +22,23 @@ function ConsoleMethodConfigurator(props: ConsoleMethodConfiguratorPropModel) {
     };
 
     return (
-        <Grid container={true} spacing={1}>
+        <GridLegacy container={true} spacing={1}>
             {props.Method == null ? (
-                <Grid item={true} md={12}>
+                <GridLegacy item={true} md={12}>
                     <Typography variant="body2">Please select a method.</Typography>
-                </Grid>
+                </GridLegacy>
             ) : [
 
-                <Grid container={true} item={true}>
-                    <Grid item={true} md={3}><Typography variant="body2" fontWeight="bold">Name:</Typography></Grid>
-                    <Grid item={true} md={9}><Typography variant="body2">{props.Method.displayName}</Typography></Grid>
-                </Grid>,
-                <Grid container={true} item={true}>
-                    <Grid item={true} md={3}><Typography variant="body2" fontWeight="bold">Description:</Typography></Grid>
-                    <Grid item={true} md={9}><Typography variant="body2">{props.Method.description}</Typography></Grid>
-                </Grid>,
-                <Grid container={true} item={true}>
-                    <Grid item={true} md={12}>
+                <GridLegacy container={true} item={true}>
+                    <GridLegacy item={true} md={3}><Typography variant="body2" fontWeight="bold">Name:</Typography></GridLegacy>
+                    <GridLegacy item={true} md={9}><Typography variant="body2">{props.Method.displayName}</Typography></GridLegacy>
+                </GridLegacy>,
+                <GridLegacy container={true} item={true}>
+                    <GridLegacy item={true} md={3}><Typography variant="body2" fontWeight="bold">Description:</Typography></GridLegacy>
+                    <GridLegacy item={true} md={9}><Typography variant="body2">{props.Method.description}</Typography></GridLegacy>
+                </GridLegacy>,
+                <GridLegacy container={true} item={true}>
+                    <GridLegacy item={true} md={12}>
                         {props.Method.parameters.subEntries.length === 0 ? (
                             <Typography variant="body2">This method is parameterless.</Typography>
                         ) : (
@@ -49,17 +49,17 @@ function ConsoleMethodConfigurator(props: ConsoleMethodConfiguratorPropModel) {
                                 IsReadOnly={false}
                             />
                         )}
-                    </Grid>
-                </Grid>,
-                <Grid container={true} item={true}>
-                    <Grid container={true} item={true} md={12} direction="row" justifyContent="flex-end">
+                    </GridLegacy>
+                </GridLegacy>,
+                <GridLegacy container={true} item={true}>
+                    <GridLegacy container={true} item={true} md={12} direction="row" justifyContent="flex-end">
                         <Button variant="contained" onClick={invokeSelectedMethod}>
                             Invoke
                         </Button>
-                    </Grid>
-                </Grid>
+                    </GridLegacy>
+                </GridLegacy>
             ]}
-        </Grid>
+        </GridLegacy>
     );
 }
 

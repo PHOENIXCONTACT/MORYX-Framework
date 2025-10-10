@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CircularProgress from "@mui/material/CircularProgress";
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import SvgIcon from "@mui/material/SvgIcon";
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
@@ -96,14 +96,14 @@ function ModuleConfiguration(props: ModuleConfigurationPropModel) {
                 {moduleConfig.ConfigIsLoading &&
                     <CircularProgress />
                 }
-                <Grid container={true} spacing={1}>
-                    <Grid item={true} md={12}>
+                <GridLegacy container={true} spacing={1}>
+                    <GridLegacy item={true} md={12}>
                     <NavigableConfigEditor ParentEntry={moduleConfig.ParentEntry}
                         Entries={moduleConfig.CurrentSubEntries}
                         Root={moduleConfig.ModuleConfig.root}
                         IsReadOnly={false} />
-                        </Grid>
-                    <Grid item={true} md={12}>
+                        </GridLegacy>
+                    <GridLegacy item={true} md={12}>
                         <DropDownButton Buttons={[
                             {Label: "Save + Restart", onClick: onApply},
                             {Label: "Save", onClick: onSave},
@@ -111,8 +111,8 @@ function ModuleConfiguration(props: ModuleConfigurationPropModel) {
                         <Button sx={{marginLeft: 1}} color="secondary" variant="outlined" onClick={() => onRevert()} startIcon={svgIcon(mdiUndo)}>
                             Revert
                         </Button>
-                    </Grid>
-                </Grid>
+                    </GridLegacy>
+                </GridLegacy>
             </CardContent>
         </Card>
     );
