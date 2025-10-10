@@ -32,11 +32,6 @@ namespace Moryx.Communication.Sockets
         public int Port { get; }
 
         /// <summary>
-        /// Number of connected listeners on port
-        /// </summary>
-        public int ConnectionCount => _listeners.Count;
-
-        /// <summary>
         /// Protocol used on this port
         /// </summary>
         private IMessageInterpreter _protocolInterpreter;
@@ -61,16 +56,13 @@ namespace Moryx.Communication.Sockets
         /// </summary>
         private bool _listening;
 
-        ///
         public void Register(TcpListenerConnection listener)
         {
             lock (_listeners)
             {
                 // Steal objects from the first listener
-                if (_protocolInterpreter == null)
-                    _protocolInterpreter = listener.Validator.Interpreter;
-                if (_logger == null)
-                    _logger = listener.Logger;
+                _protocolInterpreter ??= listener.Validator.Interpreter;
+                _logger ??= listener.Logger;
 
                 _listeners.Add(listener);
 
@@ -78,7 +70,6 @@ namespace Moryx.Communication.Sockets
             }
         }
 
-        /// 
         public bool TryUnregister(TcpListenerConnection listener)
         {
             lock (_listeners)
@@ -87,15 +78,13 @@ namespace Moryx.Communication.Sockets
             }
         }
 
-        /// 
         private void StartListening()
         {
             if (_listening)
                 return;
 
             // Start tcp listener and accept clients
-            if (_tcpListener == null)
-                _tcpListener = new TcpListener(new IPEndPoint(Address, Port));
+            _tcpListener ??= new TcpListener(new IPEndPoint(Address, Port));
             _tcpListener.Start();
             _tcpListener.BeginAcceptTcpClient(ClientConnected, null);
             _listening = true;
