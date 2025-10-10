@@ -71,8 +71,8 @@ const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): AppDispat
 };
 
 function App(props: AppPropModel & AppDispatchPropModel) {
-  const updateClockTimerRef = React.useRef<NodeJS.Timeout>();
-  const updateLoadAndModulesTimerRef = React.useRef<NodeJS.Timeout>();
+  const updateClockTimerRef = React.useRef<NodeJS.Timeout>(null);
+  const updateLoadAndModulesTimerRef = React.useRef<NodeJS.Timeout>(null);
 
   React.useEffect(() => {
     updateLoadAndModulesTimerRef.current = setInterval(loadAndModulesUpdater, 5000);

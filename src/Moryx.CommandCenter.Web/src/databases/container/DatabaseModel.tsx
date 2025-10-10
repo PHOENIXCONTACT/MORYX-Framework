@@ -9,7 +9,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CircularProgress from "@mui/material/CircularProgress";
-import Grid from "@mui/material/Grid";
+import GridLegacy from "@mui/material/GridLegacy";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import SvgIcon from "@mui/material/SvgIcon";
@@ -347,7 +347,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         return (
             <Card>
                 <CardContent>
-                    <Grid container={true} direction="column" spacing={1}>
+                    <GridLegacy container={true} direction="column" spacing={1}>
                         <DatabaseSection title={(
                             <Typography
                                 variant="h5"
@@ -359,7 +359,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                             </Typography>
                             )}
                         >
-                            <Grid item={true} md={12}>
+                            <GridLegacy item={true} md={12}>
                                 <Stack spacing={1}>
                                     <TextField
                                         label="Configurator"
@@ -375,13 +375,13 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                     </TextField>
                                     {this.state.config.configuratorTypename && this.createEntriesInput()}
                                 </Stack>
-                            </Grid>
-                            <Grid item={true} md={12}>
+                            </GridLegacy>
+                            <GridLegacy item={true} md={12}>
                                 <Button color="primary" onClick={() => this.onSave()}>Save</Button>
-                            </Grid>
+                            </GridLegacy>
                         </DatabaseSection>
                         <DatabaseSection title="Backup &amp; Restore">
-                            <Grid item={true} md={12}>
+                            <GridLegacy item={true} md={12}>
                                 <Stack>
                                     <TextField
                                         label="Backup"
@@ -398,8 +398,8 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                         }
                                     </TextField>
                                 </Stack>
-                            </Grid>
-                            <Grid item={true} md={12}>
+                            </GridLegacy>
+                            <GridLegacy item={true} md={12}>
                                 <ButtonGroup>
                                     <Button color="primary"
                                         disabled={this.state.testConnectionResult !== TestConnectionResult.Success && this.state.testConnectionResult !== TestConnectionResult.PendingMigrations}
@@ -412,10 +412,10 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                         Restore selected backup
                                     </Button>
                                 </ButtonGroup>
-                            </Grid>
+                            </GridLegacy>
                         </DatabaseSection>
                         <DatabaseSection title="Database">
-                            <Grid item={true} md={12}>
+                            <GridLegacy item={true} md={12}>
                                 <ButtonGroup>
                                     <Button color="primary"
                                         onClick={() => this.onCreateDatabase()}
@@ -428,25 +428,25 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                         Erase database
                                     </Button>
                                 </ButtonGroup>
-                            </Grid>
-                            <Grid container={true} item={true}
+                            </GridLegacy>
+                            <GridLegacy container={true} item={true}
                                 md={12} spacing={1}
                                 direction="row"
 
                             >
-                                <Grid item={true} md={12}>
+                                <GridLegacy item={true} md={12}>
                                     <Tabs value={this.state.activeTab} onChange={this.activeTab}>
                                         <Tab label="Migrations" value={1} />
                                         <Tab label="Setups" value={2} />
                                     </Tabs>
-                                </Grid>
+                                </GridLegacy>
 
-                                <Grid container={true} item={true} md={12}
+                                <GridLegacy container={true} item={true} md={12}
                                     direction="column"
                                     justifyContent="flex-start"
                                     alignItems="stretch"
                                 >
-                                    <Grid item={true}>
+                                    <GridLegacy item={true}>
                                         <div hidden={this.state.activeTab !== 1}>
                                             {this.props.DataModel.availableMigrations.length !== 0
                                                 ? (<ExecuterList items={
@@ -486,11 +486,11 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                             )
                                             : (<Typography variant="body2">No setup found.</Typography>)}
                                         </div>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
+                                    </GridLegacy>
+                                </GridLegacy>
+                            </GridLegacy>
                         </DatabaseSection>
-                    </Grid>
+                    </GridLegacy>
                 </CardContent >
             </Card >
         );
