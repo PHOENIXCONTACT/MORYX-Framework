@@ -274,7 +274,7 @@ namespace Moryx.Model.Configuration
                 await conn.OpenAsync();
                 return true;
             }
-            catch(Exception)
+            catch(Exception e)
             {
                 return false;
             }

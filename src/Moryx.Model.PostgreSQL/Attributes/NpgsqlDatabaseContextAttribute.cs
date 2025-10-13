@@ -10,5 +10,8 @@ namespace Moryx.Model.PostgreSQL.Attributes
     /// Attribute to identify Npgsql specific contexts
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class NpgsqlDatabaseContextAttribute : DatabaseSpecificContextAttribute { }
+    public class NpgsqlDatabaseContextAttribute : DatabaseSpecificContextAttribute
+    {
+        
+    }
 }

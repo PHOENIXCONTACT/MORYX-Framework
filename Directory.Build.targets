@@ -43,6 +43,7 @@
     <PackageReference Update="Microsoft.EntityFrameworkCore.Relational" Version="$(efCoreVersion)" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.InMemory" Version="$(efCoreVersion)" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.Sqlite" Version="$(efCoreVersion)" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="$(dotnetVersion)" />
     <PackageReference Update="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(efCoreVersion)" />
 
     <PackageReference Update="System.IO.Ports" Version="$(dotnetVersion)" />

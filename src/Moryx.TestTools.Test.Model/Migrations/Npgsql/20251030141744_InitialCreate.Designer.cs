@@ -2,40 +2,51 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moryx.TestTools.Test.Model;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Moryx.TestTools.Test.Model.Migrations
+#nullable disable
+
+namespace Moryx.TestTools.Test.Model.Migrations.Npgsql
 {
-    [DbContext(typeof(TestModelContext))]
-    partial class TestModelContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(NpgsqlTestModelContext))]
+    [Migration("20251030141744_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.0")
+                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Moryx.TestTools.Test.Model.CarEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("Deleted")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(21)
+                        .HasColumnType("character varying(21)");
 
                     b.Property<byte[]>("Image")
                         .HasColumnType("bytea");
@@ -46,28 +57,37 @@ namespace Moryx.TestTools.Test.Model.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("ReleaseDateLocal")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ReleaseDateUtc")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("Updated")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cars");
+                    b.ToTable("Cars", "public");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("CarEntity");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Moryx.TestTools.Test.Model.HouseEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("Deleted")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsBurnedDown")
                         .HasColumnType("boolean");
@@ -85,19 +105,20 @@ namespace Moryx.TestTools.Test.Model.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<DateTime>("Updated")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Houses");
+                    b.ToTable("Houses", "public");
                 });
 
             modelBuilder.Entity("Moryx.TestTools.Test.Model.HugePocoEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<double>("Float1")
                         .HasColumnType("double precision");
@@ -146,30 +167,32 @@ namespace Moryx.TestTools.Test.Model.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("HugePocos");
+                    b.ToTable("HugePocos", "public");
                 });
 
             modelBuilder.Entity("Moryx.TestTools.Test.Model.JsonEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("JsonData")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Jsons");
+                    b.ToTable("Jsons", "public");
                 });
 
             modelBuilder.Entity("Moryx.TestTools.Test.Model.WheelEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<long?>("CarId")
                         .HasColumnType("bigint");
@@ -181,7 +204,7 @@ namespace Moryx.TestTools.Test.Model.Migrations
 
                     b.HasIndex("CarId");
 
-                    b.ToTable("Wheels");
+                    b.ToTable("Wheels", "public");
                 });
 
             modelBuilder.Entity("Moryx.TestTools.Test.Model.SportCarEntity", b =>
@@ -199,6 +222,13 @@ namespace Moryx.TestTools.Test.Model.Migrations
                     b.HasOne("Moryx.TestTools.Test.Model.CarEntity", "Car")
                         .WithMany("Wheels")
                         .HasForeignKey("CarId");
+
+                    b.Navigation("Car");
+                });
+
+            modelBuilder.Entity("Moryx.TestTools.Test.Model.CarEntity", b =>
+                {
+                    b.Navigation("Wheels");
                 });
 #pragma warning restore 612, 618
         }
