@@ -1,0 +1,12 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+.remove-resource {
+    flex: 1 1;
+    display: flex;
+    height: fit-content;
+    max-height: 100%;
+    width: 100%;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    overflow: hidden;
+}

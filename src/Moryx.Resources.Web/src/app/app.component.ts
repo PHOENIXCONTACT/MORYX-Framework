@@ -41,6 +41,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { DialogRemoveResourceComponent } from "./dialogs/dialog-remove-resource/dialog-remove-resource.component";
 
 @Component({
   selector: 'app-root',
@@ -288,16 +289,26 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onDelete(resourceId: number | undefined) {
-    const deletedResource = this.resourcesFlat?.find(r => r.id === resourceId);
-    if (!deletedResource?.id) return;
+    if (!resourceId) return;
 
-    this.modificationService
-      .remove$Response({ id: deletedResource.id })
-      .toAsync()
-      .then(async () => this.removeResource(deletedResource))
-      .catch(async error => await this.moryxSnackbar.handleError(error));
+    const resource = this.resourcesFlat?.find(r => r.id === resourceId);
+    if (!resource) return;
+
+    const dialogRef = this.dialog.open(DialogRemoveResourceComponent, {
+        data: resource,
+    });
+
+    dialogRef.afterClosed().subscribe(async (resourceToBeDeleted) => {
+      if (!resourceToBeDeleted) return;
+
+      const actualResource = resourceToBeDeleted;
+      this.modificationService
+        .remove$Response({ id: actualResource.id })
+        .toAsync()
+        .then(async () => this.removeResource(actualResource))
+        .catch(async error => await this.moryxSnackbar.handleError(error));
+    });
   }
-
   private removeResource(deletedResource: ResourceModel) {
     this.cacheService.removeResource(deletedResource);
     if (this.selected?.id === deletedResource.id) this.editService.removeResource();
