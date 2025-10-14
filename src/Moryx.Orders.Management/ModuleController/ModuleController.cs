@@ -78,6 +78,7 @@ namespace Moryx.Orders.Management
         /// </summary>
         protected override void OnInitialize()
         {
+            Container.RegisterNotifications();
             Container.ActivateDbContexts(DbContextManager);
 
             Container.SetInstance(ProductManagement)
@@ -102,12 +103,10 @@ namespace Moryx.Orders.Management
             if (Config.Users.UserRequired && UserManagement is NullUserManagement)
                 throw new InvalidOperationException("UserRequired configured but there is no UserManagement module available");
 
-            Container.RegisterNotifications();
-            ActivateFacade(_notificationSourceFacade);
-
             Container.Resolve<ComponentOrchestration>().Start();
 
             ActivateFacade(_orderManagementFacade);
+            ActivateFacade(_notificationSourceFacade);
         }
 
         /// <inheritdoc />
