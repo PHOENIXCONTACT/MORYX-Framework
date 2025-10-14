@@ -199,9 +199,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     private readonly object _lock = new();
     private readonly object _stateLock = new();
 
-    private string _applicationName = "MORYX OpcUa Client ";
-
     private Subscription _subscription = null;
+
+    public ApplicationConfigurationFactory ApplicationConfigurationFactory { get; set; } = new ApplicationConfigurationFactory();
 
     /// <inheritdoc/>
     public event EventHandler<object> Received;
@@ -272,7 +272,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     protected override void OnStart()
     {
         base.OnStart();
-        _applicationName += " " + Identifier;
+        ApplicationConfigurationFactory.ApplicationName += " " + Identifier;
         Connect();
     }
 
@@ -296,7 +296,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// Try to connect to the Opc Ua server
     /// </summary>
     /// <exception cref="Exception"></exception>
-    internal async void TryConnect(bool firstTry)
+    internal async Task TryConnect(bool firstTry)
     {
         if (_session == null)
         {
@@ -317,16 +317,17 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
 
     private async Task<bool> CreateSession(bool firstTry)
     {
-        var config = await CreateConfig();
+        var config = await ApplicationConfigurationFactory.Create(Logger, FilePathClientConfig);
         if (config == null)
         {
             return false;
         }
 
-        var builder = new UriBuilder(OpcUaServerUrl);
+        UriBuilder builder = null;
         EndpointDescription selectedEndpoint;
         try
         {
+            builder = new UriBuilder(OpcUaServerUrl);
             builder.Scheme = BuildScheme(builder);
             builder.Port = BuildPort(builder);
 
@@ -337,10 +338,10 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         {
             if (firstTry)
             {
-                Logger.Log(LogLevel.Error, "Failed to connect {Uri} ({Message})", builder.Uri, e.Message);
+                Logger.Log(LogLevel.Error, "Failed to connect {Uri} ({Message})", builder?.Uri.ToString() ?? OpcUaServerUrl, e.Message);
             }
 
-            ParallelOperations.ScheduleExecution(TryToConnectAgaion, ReconnectionPeriod, -1);
+            ParallelOperations?.ScheduleExecution(TryToConnectAgain, ReconnectionPeriod, -1);
             return false;
         }
         var endpointConfiguration = EndpointConfiguration.Create(config);
@@ -354,7 +355,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
 
         try
         {
-            _session = await Session.Create(config, endpoint, false, false, _applicationName, 60000, userIdentity, null);
+            _session = await Session.Create(config, endpoint, false, false, ApplicationConfigurationFactory.ApplicationName, 60000, userIdentity, null);
         }
         catch (Exception ex)
         {
@@ -363,7 +364,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
                 Logger.Log(LogLevel.Error, "{Message}", ex.Message);
             }
 
-            ParallelOperations.ScheduleExecution(TryToConnectAgaion, ReconnectionPeriod, -1);
+            ParallelOperations.ScheduleExecution(TryToConnectAgain, ReconnectionPeriod, -1);
             return false;
         }
         return true;
@@ -392,68 +393,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         return scheme.Contains("tcp") ? DefaultPortTcp : DefaultPortHttps;
     }
 
-    private async Task<ApplicationConfiguration> CreateConfig()
-    {
-        var application = new ApplicationInstance
-        {
-            ApplicationName = _applicationName,
-            ApplicationType = ApplicationType.Client,
-            ConfigSectionName = "Moryx.OpcUa.Client",
-        };
-
-        ApplicationConfiguration config;
-        var defaultPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "Config\\Opc.Ua.Default.Config.xml"));
-        var filePath = string.IsNullOrEmpty(FilePathClientConfig) ? defaultPath : FilePathClientConfig;
-        try
-        {
-            config = await application.LoadApplicationConfiguration(filePath, false);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError("{Message}", ex.Message);
-            return null;
-        }
-
-        _applicationName = config.ApplicationName;
-        // check the application certificate
-        var haveAppCertificate = await application.CheckApplicationInstanceCertificate(false, 0);
-        if (!haveAppCertificate)
-        {
-            throw new Exception("Application instance certificate invalid!");
-        }
-        else
-        {
-            config.ApplicationUri = X509Utils.GetApplicationUriFromCertificate(config.SecurityConfiguration.ApplicationCertificate.Certificate);
-            config.CertificateValidator.CertificateValidation += CertificateValidatorCertificateValidation;
-        }
-        return config;
-    }
-
-    private void TryToConnectAgaion()
+    private void TryToConnectAgain()
     {
         State.OnConnectingCompleted(false);
-    }
-
-    private void CertificateValidatorCertificateValidation(CertificateValidator validator, CertificateValidationEventArgs e)
-    {
-        Logger.Log(LogLevel.Error, "{StatusCode}", e.Error.StatusCode);
-        if (e.Error.StatusCode == StatusCodes.BadCertificateUntrusted)
-        {
-            if (validator.AutoAcceptUntrustedCertificates)
-            {
-                e.Accept = true;
-                if (validator.AutoAcceptUntrustedCertificates)
-                {
-                    Logger.Log(LogLevel.Information, "Accepted Certificate: {Subject}",
-                    e.Certificate.Subject);
-                }
-                else
-                {
-                    Logger.Log(LogLevel.Information, "Rejected Certificate: {Subject}",
-                    e.Certificate.Subject);
-                }
-            }
-        }
     }
 
     private void ClientKeepAlive(ISession session, KeepAliveEventArgs e)
