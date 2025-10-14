@@ -79,19 +79,38 @@ namespace Moryx.ControlSystem.SetupProvider
 
                 triggers.Add(trigger);
             }
+
+            Logger.LogDebug("Evaluated {totalNumber} setup trigger for execution '{executionType}'. Creating workplan steps for {positiveNumber} of them...",
+                _triggers.Count(t => t.Execution == execution), execution, triggers.Count);
+
             // Create all necessary setup steps
             var stepGroups = new Dictionary<int, List<IWorkplanStep>>();
             foreach (var trigger in triggers.OrderBy(t => t.SortOrder))
             {
+                var index = trigger.SortOrder;
                 // Create step collection for first entry of a sort order
-                if (!stepGroups.ContainsKey(trigger.SortOrder))
-                    stepGroups[trigger.SortOrder] = new List<IWorkplanStep>();
+                if (!stepGroups.TryGetValue(index, out var value))
+                {
+                    value = new List<IWorkplanStep>();
+                    stepGroups[index] = value;
+                }
 
-                // Check if extended interface is implemented
-                stepGroups[trigger.SortOrder].AddRange(TryCreateSteps(trigger, recipe));
+                value.AddRange(TryCreateSteps(trigger, recipe));
+
+                if (value.Count == 0)
+                {
+                    Logger.LogWarning("{Trigger} with sort index {sortOrder} found the system to require a setup {executionType}, but did not create workplan steps.",
+                        nameof(trigger), index, trigger.Execution);
+                    stepGroups.Remove(index);
+                }
             }
             if (stepGroups.Count == 0) // No setup necessary for this recipe
+            {
                 return null;
+            }
+
+            Logger.LogDebug("Created {totalSteps} workplan steps in {totalGroups}. Wiring workplan...",
+                stepGroups.Values.Sum(g => g.Count), stepGroups.Count);
 
             // Add steps to the workplan
             var workplan = new Workplan
@@ -205,3 +224,4 @@ namespace Moryx.ControlSystem.SetupProvider
         }
     }
 }
+
