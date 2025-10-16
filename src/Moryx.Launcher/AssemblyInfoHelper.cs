@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Runtime.Versioning;
 
 
-public static class AssemblyInfoHelper
+internal static class AssemblyInfoHelper
 {
     private static readonly Assembly _entryAssembly = Assembly.GetEntryAssembly();
     public static string CompanyName =>
