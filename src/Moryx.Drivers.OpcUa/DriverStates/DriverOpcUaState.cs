@@ -1,8 +1,10 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.StateMachines;
+using Moryx.Tools.FunctionResult;
 using Opc.Ua;
 using Opc.Ua.Client;
 
@@ -58,7 +60,7 @@ internal abstract class DriverOpcUaState(OpcUaDriver context, StateBase.StateMap
         Context.SaveSubscriptionToBeAdded(node);
     }
 
-    internal virtual DataValue ReadValue(string identifier)
+    internal virtual DataValueResult ReadValue(string identifier)
     {
         throw new InvalidOperationException();
     }
