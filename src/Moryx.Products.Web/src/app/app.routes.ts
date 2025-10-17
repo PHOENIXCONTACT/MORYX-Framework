@@ -9,11 +9,15 @@ import { ProductsDetailsViewComponent } from "./components/products-details-view
 import { ProductsImporterComponent } from "./components/products-importer/products-importer.component";
 import { SearchResultComponent } from "./components/search-result/search-result.component";
 import { ImporterGuard } from "./guards/importer.guard";
+import { ProductsDetailsViewResolver } from "./components/products-details-view/products-details-view-resolver";
 
 export const routes: Routes = [
   {
     path: 'details/:id',
     component: ProductsDetailsViewComponent,
+    resolve: {
+      product: ProductsDetailsViewResolver
+    },
     children: [
       { path: '', redirectTo: 'properties', pathMatch: 'full' },
       { path: 'properties', component: ProductPropertiesComponent },
