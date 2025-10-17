@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <dotnetVersion>8.0.1</dotnetVersion>
-    <efCoreVersion>8.0.20</efCoreVersion>
+    <efCoreVersion>8.0.21</efCoreVersion>
 
     <AspNetCoreVersion>8.0.20</AspNetCoreVersion>
   </PropertyGroup>
