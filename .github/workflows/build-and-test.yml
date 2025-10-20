@@ -6,12 +6,14 @@ on:
     branches: 
       - dev
       - future
+      - pre-release
     tags:
       - v[0-9]+.[0-9]+.[0-9]+ # Matches all semantic versioning tags with major, minor, patch
   pull_request:
     branches: 
       - dev
       - future
+      - pre-release
 
 env:
   dotnet_sdk_version: '8.0.100'
@@ -74,25 +76,30 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-  # currently not working
-  # Documentation:
-  #   needs: [EnvVar, UnitTests]
-  #   uses: phoenixcontact/tools/.github/workflows/documentation-tool.yml@main
-  #   with:
-  #     REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
-
   Publish:
-    needs: [EnvVar, UnitTests]
-    uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@main
-    with:
-      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
-      MORYX_PACKAGE_TARGET_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_DEV }}
-      MORYX_PACKAGE_TARGET_V3_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_DEV }}
-      MORYX_PACKAGE_TARGET_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_FUTURE }}
-      MORYX_PACKAGE_TARGET_V3_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_FUTURE }}
-      MORYX_PACKAGE_TARGET_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_RELEASE }}
-      MORYX_PACKAGE_TARGET_V3_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_RELEASE }}
-    secrets: 
-      MYGET_TOKEN: ${{secrets.MYGET_TOKEN}}
-      NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}
+      if: ${{ github.ref == 'refs/heads/pre-release' }}
+      needs: [EnvVar, UnitTests]
+      runs-on: ubuntu-latest
+      env:
+        MORYX_NUGET_APIKEY: ${{ secrets.MYGET_TOKEN }}
+        MORYX_PACKAGE_TARGET: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_DEV }}
+        MORYX_PACKAGE_TARGET_V3: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_DEV }}
+      steps:
+        - uses: actions/checkout@v2
+
+        - name: Setup .NET SDK
+          uses: actions/setup-dotnet@v1
+          with:
+            dotnet-version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+
+        - name: Setup NuGet
+          uses: NuGet/setup-nuget@v1
+
+        - name: Download package artifacts
+          uses: actions/download-artifact@v4
+          with:
+            name: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}-packages
+            path: artifacts/packages/
+            
+        - name: Publish on MyGet-CI
+          run: dotnet nuget push artifacts/packages/*.nupkg --api-key $MORYX_NUGET_APIKEY --source $MORYX_PACKAGE_TARGET --skip-duplicate --symbol-api-key $MORYX_NUGET_APIKEY --symbol-source $MORYX_PACKAGE_TARGET_V3
