@@ -4,6 +4,7 @@
 @using Microsoft.Extensions.Options;
 @using Moryx.Asp.Integration;
 @using Moryx.Identity;
+@using System.Reflection;
 @using Moryx.Launcher
 @using Moryx.Launcher.Properties
 @inject IShellNavigator _navigator
@@ -114,6 +115,13 @@
                                     }
                                 }
                             }
+
+                            <moryx-dropdown-item class="tw-p-1 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200 tw-border-t tw-border-gray-200">
+                                <a class="tw-flex tw-items-center tw-w-full tw-h-full" onclick="document.getElementById('aboutModal').style.display='flex'">
+									<span class="material-symbols-outlined">info</span>
+                                    <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.ABOUT</span>
+                                </a>
+                            </moryx-dropdown-item>
                         </moryx-dropdown-container>
                     </moryx-dropdown-menu>
 
@@ -169,6 +177,8 @@
             }
         }
         <div class="tw-flex-1 tw-flex tw-flex-col tw-overflow-auto tw-h-full tw-w-full tw-box-border" main>
+			@Html.Partial("AboutModal")
+
             @if (Url.RouteUrl(ViewContext.RouteData.Values).Split('/').Length > 1 && 
             !Url.RouteUrl(ViewContext.RouteData.Values).Split('/')[1].Contains("Notifications"))
             {
@@ -294,6 +304,13 @@
                                     }
                                 }
                             }
+
+							<moryx-dropdown-item class="tw-p-3 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200">
+                                <a class="tw-flex tw-items-center tw-w-full tw-h-full" onclick="document.getElementById('aboutModal').style.display='flex'">
+									<span class="material-symbols-outlined">info</span>
+									<span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.ABOUT</span>
+								</a>
+                            </moryx-dropdown-item>
                         </moryx-dropdown-container>
                     </moryx-dropdown-menu>
                 </moryx-nav-button>

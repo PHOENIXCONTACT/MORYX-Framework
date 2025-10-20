@@ -34,9 +34,9 @@ namespace StartProject.Asp
             {
                 var supportedCultures = new[]
                 {
-                    new CultureInfo("de-DE"),
+                    new CultureInfo("de-De"),
                     new CultureInfo("en-US"),
-                    new CultureInfo("it-it"),
+                    new CultureInfo("it-It"),
                     new CultureInfo("zh-Hans"),
                     new CultureInfo("pl-PL")
                 };
