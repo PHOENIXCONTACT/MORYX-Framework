@@ -6,12 +6,14 @@ on:
     branches: 
       - dev
       - future
+      - pre-release
     tags:
       - v[0-9]+.[0-9]+.[0-9]+ # Matches all semantic versioning tags with major, minor, patch
   pull_request:
     branches: 
       - dev
       - future
+      - pre-release
 
 env:
   dotnet_sdk_version: '8.0.100'
@@ -82,17 +84,31 @@ jobs:
   #     REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   Publish:
-    needs: [EnvVar, UnitTests]
-    uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@main
-    with:
-      dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
-      MORYX_PACKAGE_TARGET_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_DEV }}
-      MORYX_PACKAGE_TARGET_V3_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_DEV }}
-      MORYX_PACKAGE_TARGET_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_FUTURE }}
-      MORYX_PACKAGE_TARGET_V3_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_FUTURE }}
-      MORYX_PACKAGE_TARGET_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_RELEASE }}
-      MORYX_PACKAGE_TARGET_V3_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_RELEASE }}
-    secrets: 
-      MYGET_TOKEN: ${{secrets.MYGET_TOKEN}}
-      NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}
+    # Use if pre-release branch 
+    - name: Publish on MyGet-CI
+      if: ${{ github.ref == 'refs/heads/pre-release' }} # pre-release branch is published to myget moryx
+      needs: [UnitTests]
+      env:
+        MORYX_NUGET_APIKEY: ${{secrets.MYGET_TOKEN}}
+        MORYX_PACKAGE_TARGET: ${{ env.MORYX_PACKAGE_TARGET_DEV }}
+        MORYX_PACKAGE_TARGET_V3: ${{ env.MORYX_PACKAGE_TARGET_V3_DEV }}
+      run: dotnet nuget push "artifacts/packages/" --api-key $MORYX_NUGET_APIKEY --source $MORYX_PACKAGE_TARGET --skip-duplicate --symbol-api-key $MORYX_NUGET_APIKEY --symbol-source $MORYX_PACKAGE_TARGET_V3
+      secrets: 
+        MYGET_TOKEN: ${{secrets.MYGET_TOKEN}}
+        NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}
+
+  # Publish:
+  #   needs: [EnvVar, UnitTests]
+  #   uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@main
+  #   with:
+  #     dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+  #     REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
+  #     MORYX_PACKAGE_TARGET_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_DEV }}
+  #     MORYX_PACKAGE_TARGET_V3_DEV: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_DEV }}
+  #     MORYX_PACKAGE_TARGET_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_FUTURE }}
+  #     MORYX_PACKAGE_TARGET_V3_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_FUTURE }}
+  #     MORYX_PACKAGE_TARGET_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_RELEASE }}
+  #     MORYX_PACKAGE_TARGET_V3_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_RELEASE }}
+  #   secrets: 
+  #     MYGET_TOKEN: ${{secrets.MYGET_TOKEN}}
+  #     NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}
