@@ -47,6 +47,57 @@ jobs:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
+
+  UploadPackages:
+    needs: [EnvVar, Build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node version
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
+
+      - name: Clean
+        run: dotnet clean && dotnet nuget locals all --clear
+
+      - name: Execute dotnet restore
+        run: dotnet restore
+
+      - name: Execute dotnet build
+        run: |
+          ASSEMBLY_VERSION="$(cat VERSION)"
+          ASSEMBLY_VERSION="${ASSEMBLY_VERSION%%.*}".0.0.0
+          echo "ASSEMBLY_VERSION = ${ASSEMBLY_VERSION}"
+          FILE_VERSION="$(cat VERSION)"."${{github.run_number}}"
+          echo "FILE_VERSION = ${FILE_VERSION}"
+          INFORMATIONAL_VERSION="$(cat VERSION)"-"${{github.ref_name}}"."${{github.run_number}}"
+          echo "INFORMATIONAL_VERSION = ${INFORMATIONAL_VERSION}"
+          dotnet build --configuration Release --no-restore -p:AssemblyVersion=$ASSEMBLY_VERSION -p:FileVersion=$FILE_VERSION -p:InformationalVersion=$INFORMATIONAL_VERSION
+        
+      - name: Execute dotnet pack with production version dev, future, pre-release
+        run: |
+          PRODUCTION_VERSION="$(cat VERSION)"-"${{github.ref_name}}"."${{github.run_number}}"
+          echo "PRODUCTION_VERSION = ${PRODUCTION_VERSION}"
+          dotnet pack --configuration Release --no-build --no-restore --output artifacts/packages -p:PackageVersion=$PRODUCTION_VERSION
+
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}-packages
+          path: artifacts/packages/*.nupkg
+          retention-days: 1
+
+      - name: List downloaded packages
+        run: ls -la artifacts/packages/
+
+
   UnitTests:
     needs: [EnvVar, Build]
     uses: phoenixcontact/tools/.github/workflows/unittest-tool.yml@main
@@ -77,8 +128,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   Publish:
-      if: ${{ github.ref == 'refs/heads/pre-release' }}
-      needs: [EnvVar, UnitTests]
+      needs: [EnvVar, UnitTests, UploadPackages]
       runs-on: ubuntu-latest
       env:
         MORYX_NUGET_APIKEY: ${{ secrets.MYGET_TOKEN }}
