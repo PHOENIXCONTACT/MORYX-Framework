@@ -81,11 +81,21 @@ jobs:
           echo "INFORMATIONAL_VERSION = ${INFORMATIONAL_VERSION}"
           dotnet build --configuration Release --no-restore -p:AssemblyVersion=$ASSEMBLY_VERSION -p:FileVersion=$FILE_VERSION -p:InformationalVersion=$INFORMATIONAL_VERSION
         
-      - name: Execute dotnet pack with production version dev, future, pre-release
+      - name: Execute dotnet pack with production version pre-release
+        if: ${{ github.ref_name == 'pre-release' }}
         run: |
           PRODUCTION_VERSION="$(cat VERSION)"-"${{github.ref_name}}"."${{github.run_number}}"
           echo "PRODUCTION_VERSION = ${PRODUCTION_VERSION}"
           dotnet pack --configuration Release --no-build --no-restore --output artifacts/packages -p:PackageVersion=$PRODUCTION_VERSION
+      
+      - name: Execute dotnet pack with production version pre-release Pull requests
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          PRODUCTION_VERSION="$(cat VERSION)"-"${SHORT_SHA}".merge."${{github.run_number}}"
+          echo "PRODUCTION_VERSION = ${PRODUCTION_VERSION}"
+          dotnet pack --configuration Release --no-build --no-restore --output artifacts/packages -p:PackageVersion=$PRODUCTION_VERSION
+
 
       - name: Upload package artifacts
         uses: actions/upload-artifact@v4
