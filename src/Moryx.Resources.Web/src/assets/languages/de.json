@@ -47,5 +47,11 @@
       "REPEAT": "WIEDERHOLEN",
       "CLEAR": "LEEREN"
     }
+  },
+  "REMOVE_RESOURCE_DIALOG": {
+    "TITLE": "Resource entfernen",
+    "SUB_TITLE": "Die Resource wird unwiderruflich entfernt:",
+    "CANCEL": "ABBRECHEN",
+    "REMOVE": "ENTFERNEN"
   }
 }
