@@ -60,21 +60,46 @@ public class MqttDriver : Driver, IMessageDriver
     /// </summary>
     [EntrySerialize, DataMember, DefaultValue("root/")]
     [Display(Name = nameof(Strings.MqttDriver_Identifier), ResourceType = typeof(Strings))]
-    public string Identifier { get; set; }
+    public string Identifier { get => _identifier; set => ConfigChange(ref _identifier, value); }
 
     /// <summary>
     /// URL or IP-Address of the MQTT Broker
     /// </summary>
     [EntrySerialize, DataMember, DefaultValue("127.0.0.1")]
     [Display(Name = nameof(Strings.MqttDriver_BrokerUrl), Description = nameof(Strings.MqttDriver_BrokerUrl_Description), ResourceType = typeof(Strings))]
-    public string BrokerUrl { get; set; }
+    public string BrokerURL
+    {
+        get => _brokerURL; set
+        {
+            ConfigChange(ref _brokerURL, value);
+        }
+    }
+    
+    private void ConfigChange<T>(ref T field, T value) where T: IEquatable<T>
+    {
+        if (field?.Equals(value) ?? value == null)
+        {
+            return;
+        }
+        field = value;
+        Reconnect();
+    }
+    [EntrySerialize]
+    [Description("Executes reconnect. Maybe helpful for troubleshooting")] // TODO: Localize
+    public void Reconnect()
+    {
+        if (State is null || State.Classification != StateClassification.Running) return;
+        
+        State.Disconnect();
+        State.Connect();
+    }
 
     /// <summary>
     /// Port of the MQTT Broker
     /// </summary>
     [EntrySerialize, DataMember, DefaultValue(1883)]
     [Display(Description = nameof(Strings.MqttDriver_Port_Description), ResourceType = typeof(Strings))]
-    public int Port { get; set; }
+    public int Port { get => _port; set => ConfigChange(ref _port, value); }
 
     /// <summary>
     /// Port of the MQTT Broker
@@ -143,6 +168,9 @@ public class MqttDriver : Driver, IMessageDriver
     public bool HasChannels => Channels.Count > 0;
     internal DriverMqttState State => (DriverMqttState)CurrentState;
     private IMqttClient _mqttClient;
+    private string _brokerURL;
+    private string _identifier;
+    private int _port;
 
     #endregion
 
