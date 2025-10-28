@@ -24,6 +24,12 @@ namespace Moryx.Model
         private ModelWrapper[] _knownModels;
         private readonly ILoggerFactory _loggerFactory;
         private readonly IConfigManager _configManager;
+        private static readonly Type[] AllDbContextTypes;
+        static DbContextManager()
+        {
+            AllDbContextTypes = ReflectionTool.GetPublicClasses(typeof(DbContext))
+                .Where(type => type != typeof(DbContext) && typeof(DbContext).IsAssignableFrom(type)).ToArray();
+        }
 
         /// <inheritdoc />
         public DbContextManager(IConfigManager configManager, ILoggerFactory loggerFactory)
@@ -31,32 +37,27 @@ namespace Moryx.Model
             _loggerFactory = loggerFactory;
             _configManager = configManager;
 
-            var dbContextTypes = ReflectionTool.GetPublicClasses(
-                typeof(DbContext), 
-                type => type != typeof(DbContext) && !type.GetCustomAttributes<DatabaseSpecificContextAttribute>().Any());
-
-            _knownModels = dbContextTypes
+            var baseDbContextTypes = AllDbContextTypes
+                .Where(type => !type.GetCustomAttributes<DatabaseSpecificContextAttribute>().Any());
+            
+            _knownModels = baseDbContextTypes
                 .Select(dbContextType =>
                 {
                     var config = configManager.GetConfiguration<DatabaseConfig<DatabaseConnectionSettings>>(ConfigFilename(dbContextType));
-
                     var configuratorType = !string.IsNullOrEmpty(config.ConfiguratorTypename)
                         ? Type.GetType(config.ConfiguratorTypename)
                         : DefaultConfigurator();
 
-                    return new
+                    // Try to find specific DbContext for the configurator
+                    // If no specific context found, use the base one
+                    var specificDbContext = GetSpecificDbContext(dbContextType, configuratorType);
+
+                    return new ModelWrapper
                     {
                         DbContextType = dbContextType,
-                        ConfiguratorType = configuratorType,
+                        SpecificDbContext = specificDbContext,
+                        Configurator = (IModelConfigurator)Activator.CreateInstance(configuratorType)
                     };
-                }).Select(t =>
-                {
-                    var wrapper = new ModelWrapper
-                    {
-                        DbContextType = t.DbContextType,
-                        Configurator = (IModelConfigurator)Activator.CreateInstance(t.ConfiguratorType)
-                    };
-                    return wrapper;
                 }).ToArray();
 
             foreach (var wrapper in _knownModels)
@@ -65,6 +66,7 @@ namespace Moryx.Model
             }
         }
 
+        // TODO: Reference to an assembly which might not be referencesd in certain setups
         private Type DefaultConfigurator()
         {
             var sqliteModelConfigurator = ReflectionTool.GetAssemblies()
@@ -82,15 +84,31 @@ namespace Moryx.Model
 
             var modelWrapper = _knownModels.First(w => w.DbContextType == dbContextType);
             modelWrapper.Configurator = (IModelConfigurator)Activator.CreateInstance(configuratorType);
-
+            modelWrapper.SpecificDbContext = GetSpecificDbContext(dbContextType, configuratorType);
+            
             InitializeConfigurator(modelWrapper);
+        }
+
+        private static Type GetSpecificDbContext(Type dbContextType, Type configuratorType)
+        {
+            return AllDbContextTypes.FirstOrDefault(type =>
+            {
+                if (!dbContextType.IsAssignableFrom(type))
+                    return false;
+                
+                var modelConfiguratorAttr = type.GetCustomAttribute<ModelConfiguratorAttribute>();
+                if (modelConfiguratorAttr == null)
+                    return false;
+                
+                return modelConfiguratorAttr.ConfiguratorType == configuratorType;
+            }) ?? dbContextType;
         }
 
         private void InitializeConfigurator(ModelWrapper modelWrapper)
         {
             var configuratorType = modelWrapper.Configurator.GetType();
             var logger = _loggerFactory.CreateLogger(configuratorType);
-            modelWrapper.Configurator.Initialize(modelWrapper.DbContextType, _configManager, logger);
+            modelWrapper.Configurator.Initialize(modelWrapper.SpecificDbContext, _configManager, logger);
         }
 
         private string ConfigFilename(Type dbContextType)
@@ -132,6 +150,8 @@ namespace Moryx.Model
             public Type DbContextType { get; set; }
 
             public IModelConfigurator Configurator { get; set; }
+            
+            public Type SpecificDbContext { get; set; }
         }
     }
 }
