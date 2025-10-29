@@ -4,6 +4,8 @@
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Moryx.Model.Attributes;
+using Moryx.Model.PostgreSQL;
 using Moryx.Model.PostgreSQL.Attributes;
 
 // ReSharper disable once CheckNamespace
@@ -13,6 +15,7 @@ namespace Moryx.Resources.Model
     /// Npgsql specific implementation of <see cref="ResourcesContext"/>
     /// </summary>
     [NpgsqlDatabaseContext]
+    [ModelConfigurator(typeof(NpgsqlModelConfigurator))]
     public class NpgsqlResourcesContext : ResourcesContext
     {
         /// <inheritdoc />

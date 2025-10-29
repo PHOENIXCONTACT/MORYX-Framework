@@ -4,6 +4,8 @@
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Moryx.Model.Attributes;
+using Moryx.Model.PostgreSQL;
 using Moryx.Model.PostgreSQL.Attributes;
 
 namespace Moryx.Products.Model
@@ -12,6 +14,7 @@ namespace Moryx.Products.Model
     /// Npgsql specific implementation of <see cref="ProductsContext"/>
     /// </summary>
     [NpgsqlDatabaseContext]
+    [ModelConfigurator(typeof(NpgsqlModelConfigurator))]
     public class NpgsqlProductsContext : ProductsContext
     {
         /// <inheritdoc />
