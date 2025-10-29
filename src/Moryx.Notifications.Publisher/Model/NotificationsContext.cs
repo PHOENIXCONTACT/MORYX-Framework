@@ -9,15 +9,15 @@ namespace Moryx.Notifications.Model
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
-    public class NotificationsContext : MoryxDbContext
+    public abstract class NotificationsContext : MoryxDbContext
     {
         /// <inheritdoc />
-        public NotificationsContext()
+        protected NotificationsContext()
         {
         }
 
         /// <inheritdoc />
-        public NotificationsContext(DbContextOptions options) : base(options)
+        protected NotificationsContext(DbContextOptions options) : base(options)
         {
         }
 

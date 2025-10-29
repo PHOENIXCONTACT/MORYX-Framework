@@ -3,14 +3,14 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Moryx.Model.PostgreSQL.Attributes;
+using Moryx.Model.PostgreSQL;
 
 namespace Moryx.Orders.Management.Model
 {
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
-    [NpgsqlDatabaseContext]
+    [NpgsqlDbContext(typeof(OrdersContext))]
     public class NpgsqlOrdersContext : OrdersContext
     {
         /// <inheritdoc />

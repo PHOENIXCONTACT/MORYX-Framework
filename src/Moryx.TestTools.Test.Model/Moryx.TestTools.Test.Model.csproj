@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
     <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
     <ProjectReference Include="..\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj" />

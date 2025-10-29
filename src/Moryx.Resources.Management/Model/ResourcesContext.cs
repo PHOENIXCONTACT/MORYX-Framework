@@ -3,22 +3,23 @@
 
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
-
+// ReSharper disable VirtualMemberNeverOverridden.Global
 // ReSharper disable once CheckNamespace
+
 namespace Moryx.Resources.Model
 {
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
-    public class ResourcesContext : MoryxDbContext
+    public abstract class ResourcesContext : MoryxDbContext
     {
         /// <inheritdoc />
-        public ResourcesContext()
+        protected ResourcesContext()
         {
         }
 
         /// <inheritdoc />
-        public ResourcesContext(DbContextOptions options) : base(options)
+        protected ResourcesContext(DbContextOptions options) : base(options)
         {
         }
 

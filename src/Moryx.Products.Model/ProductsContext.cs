@@ -3,21 +3,22 @@
 
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
+// ReSharper disable VirtualMemberNeverOverridden.Global
 
 namespace Moryx.Products.Model
 {
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
-    public class ProductsContext : MoryxDbContext
+    public abstract class ProductsContext : MoryxDbContext
     {
         /// <inheritdoc />
-        public ProductsContext()
+        protected ProductsContext()
         {
         }
 
         /// <inheritdoc />
-        public ProductsContext(DbContextOptions options) : base(options)
+        protected ProductsContext(DbContextOptions options) : base(options)
         {
         }
 

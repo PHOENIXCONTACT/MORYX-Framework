@@ -9,15 +9,15 @@ namespace Moryx.Orders.Management.Model
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
-    public class OrdersContext : MoryxDbContext
+    public abstract class OrdersContext : MoryxDbContext
     {
         /// <inheritdoc />
-        public OrdersContext()
+        protected OrdersContext()
         {
         }
 
         /// <inheritdoc />
-        public OrdersContext(DbContextOptions options) : base(options)
+        protected OrdersContext(DbContextOptions options) : base(options)
         {
         }
 

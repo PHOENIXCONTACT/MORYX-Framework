@@ -3,12 +3,12 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Moryx.Model.Sqlite.Attributes;
+using Moryx.Model.Sqlite;
 
 namespace Moryx.Operators.Management.Model;
 
 /// <inheritdoc />
-[SqliteContext]
+[SqliteDbContext(typeof(OperatorsContext))]
 public class SqliteOperatorsContext : OperatorsContext
 {
     /// <inheritdoc />

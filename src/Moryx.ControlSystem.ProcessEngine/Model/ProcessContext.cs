@@ -9,15 +9,15 @@ namespace Moryx.ControlSystem.ProcessEngine.Model
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
-    public class ProcessContext : MoryxDbContext
+    public abstract class ProcessContext : MoryxDbContext
     {
         /// <inheritdoc />
-        public ProcessContext()
+        protected ProcessContext()
         {
         }
 
         /// <inheritdoc />
-        public ProcessContext(DbContextOptions options) : base(options)
+        protected ProcessContext(DbContextOptions options) : base(options)
         {
         }
 

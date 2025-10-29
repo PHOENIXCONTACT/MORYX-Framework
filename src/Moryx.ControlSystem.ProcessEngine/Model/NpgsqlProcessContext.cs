@@ -3,14 +3,14 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Moryx.Model.PostgreSQL.Attributes;
+using Moryx.Model.PostgreSQL;
 
 namespace Moryx.ControlSystem.ProcessEngine.Model
 {
     /// <summary>
     /// The Npgsql DbContext of this database model.
     /// </summary>
-    [NpgsqlDatabaseContext]
+    [NpgsqlDbContext(typeof(ProcessContext))]
     public class NpgsqlProcessContext : ProcessContext
     {
         /// <inheritdoc />

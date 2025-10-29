@@ -3,12 +3,12 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Moryx.Model.PostgreSQL.Attributes;
+using Moryx.Model.PostgreSQL;
 
 namespace Moryx.Operators.Management.Model;
 
 /// <inheritdoc />
-[NpgsqlDatabaseContext]
+[NpgsqlDbContext(typeof(OperatorsContext))]
 public class NpgsqlOperatorsContext : OperatorsContext
 {
     /// <inheritdoc />

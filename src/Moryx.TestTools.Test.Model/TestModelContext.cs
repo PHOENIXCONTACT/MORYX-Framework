@@ -4,12 +4,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moryx.Model;
+using Moryx.Model.PostgreSQL;
+using Moryx.Model.Sqlite;
 
 namespace Moryx.TestTools.Test.Model
 {
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
+    [NpgsqlDbContext]
+    [SqliteDbContext]
     public class TestModelContext : MoryxDbContext
     {
         public TestModelContext()

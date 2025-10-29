@@ -13,7 +13,7 @@ namespace Moryx.Model.Sqlite
     /// </summary>
     public sealed class SqliteDbContextManager : IDbContextManager
     {
-        private Dictionary<Type, IModelConfigurator> _configurators;
+        private readonly Dictionary<Type, IModelConfigurator> _configurators;
         private readonly string _connectionString;
         private readonly SqliteConnection _sqliteConnection;
 
@@ -44,6 +44,11 @@ namespace Moryx.Model.Sqlite
         public IModelConfigurator GetConfigurator(Type contextType)
         {
             return _configurators[contextType];
+        }
+
+        public Type[] GetConfigurators(Type contextType)
+        {
+            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
@@ -80,7 +85,7 @@ namespace Moryx.Model.Sqlite
 
             // Create instance of context
             var configurator = new SqliteModelConfigurator();
-            configurator.Initialize(typeof(TContext), CreateConfigManager(), null);
+            configurator.Initialize(typeof(TContext), null, null);
             var context = (TContext)configurator.CreateContext(typeof(TContext), options);
             _configurators.TryAdd(context.GetType(), configurator);
             return context;

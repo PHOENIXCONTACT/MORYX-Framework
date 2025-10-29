@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
-using Moryx.Model.Sqlite.Attributes;
+using Moryx.Model.Sqlite;
 
 namespace Moryx.Notifications.Model
 {
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
-    [SqliteContext]
+    [SqliteDbContext(typeof(NotificationsContext))]
     public class SqliteNotificationsContext : NotificationsContext
     {
         /// <inheritdoc />

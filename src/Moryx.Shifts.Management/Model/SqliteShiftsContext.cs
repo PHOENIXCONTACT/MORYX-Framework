@@ -3,12 +3,12 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Moryx.Model.Sqlite.Attributes;
 using System.IO;
+using Moryx.Model.Sqlite;
 
 namespace Moryx.Shifts.Management.Model
 {
-    [SqliteContext]
+    [SqliteDbContext(typeof(ShiftsContext))]
     public class SqliteShiftsContext : ShiftsContext
     {
         public SqliteShiftsContext()

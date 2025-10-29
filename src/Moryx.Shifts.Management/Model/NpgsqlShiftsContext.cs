@@ -3,12 +3,12 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Moryx.Model.PostgreSQL.Attributes;
 using System.IO;
+using Moryx.Model.PostgreSQL;
 
 namespace Moryx.Shifts.Management.Model
 {
-    [NpgsqlDatabaseContext]
+    [NpgsqlDbContext(typeof(ShiftsContext))]
     public class NpgsqlShiftsContext : ShiftsContext
     {
         public NpgsqlShiftsContext()

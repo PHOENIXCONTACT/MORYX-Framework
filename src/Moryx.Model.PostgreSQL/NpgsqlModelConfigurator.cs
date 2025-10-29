@@ -7,7 +7,6 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moryx.Model.Configuration;
-using Moryx.Model.PostgreSQL.Attributes;
 using Npgsql;
 
 namespace Moryx.Model.PostgreSQL
@@ -214,7 +213,7 @@ namespace Moryx.Model.PostgreSQL
         /// <inheritdoc />
         protected override DbContext CreateMigrationContext(IDatabaseConfig config)
         {
-            var migrationAssemblyType = FindMigrationAssemblyType(typeof(NpgsqlDatabaseContextAttribute));
+            var migrationAssemblyType = FindMigrationAssemblyType(typeof(NpgsqlDbContextAttribute));
 
             var builder = new DbContextOptionsBuilder();
             builder.UseNpgsql(

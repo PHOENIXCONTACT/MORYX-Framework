@@ -16,13 +16,12 @@ namespace Moryx.Model.Configuration
     public abstract class ModelConfiguratorBase<TConfig> : IModelConfigurator
         where TConfig : class, IDatabaseConfig, new()
     {
-        private IConfigManager _configManager;
         private string _configName;
 
         /// <summary>
         /// The underlying context's type
         /// </summary>
-        protected Type _contextType;
+        protected Type ContextType {get; private set;}
 
         /// <summary>
         /// Logger for this model configurator
@@ -33,25 +32,16 @@ namespace Moryx.Model.Configuration
         public IDatabaseConfig Config { get; private set; }
 
         /// <inheritdoc />
-        public void Initialize(Type contextType, IConfigManager configManager, ILogger logger)
+        public void Initialize(Type contextType, IDatabaseConfig config, ILogger logger)
         {
-            _contextType = contextType;
-            _configManager = configManager;
+            ContextType = contextType;
 
             // Add logger
             Logger = logger;
 
-            // Load Config
-            // TODO: Config name should be the name of the base type of the generic DbContext e.g. FooDbContext instead of SqliteFooDbContext. Rework in future version and use base context-type or config wrapper directly.
-            var modelConfiguratorAttr = contextType.GetCustomAttribute<ModelConfiguratorAttribute>();
-            var contextBaseType = modelConfiguratorAttr != null ? contextType.BaseType : contextType;
-            
-            _configName = contextBaseType!.FullName + ".DbConfig";
-            Config = _configManager.GetConfiguration<TConfig>(_configName);
-
-            // If database is empty, fill with TargetModel name
-            if (string.IsNullOrWhiteSpace(Config.ConnectionSettings.Database))
-                Config.ConnectionSettings.Database = contextBaseType.Name;
+            Config = config as TConfig;
+            if (Config == null)
+                throw new InvalidOperationException($"Configuration for model '{contextType.FullName}' is not of expected type '{typeof(TConfig).FullName}'");
         }
 
         /// <inheritdoc />
@@ -63,7 +53,7 @@ namespace Moryx.Model.Configuration
         /// <inheritdoc />
         public DbContext CreateContext(IDatabaseConfig config)
         {
-            return CreateContext(_contextType, BuildDbContextOptions(config));
+            return CreateContext(ContextType, BuildDbContextOptions(config));
         }
 
         /// <inheritdoc />
@@ -73,11 +63,6 @@ namespace Moryx.Model.Configuration
             return context;
         }
 
-        /// <inheritdoc />
-        public void UpdateConfig()
-        {
-            _configManager.SaveConfiguration(Config, _configName);
-        }
 
         /// <inheritdoc />
         public virtual async Task<TestConnectionResult> TestConnection(IDatabaseConfig config)
@@ -290,7 +275,7 @@ namespace Moryx.Model.Configuration
         protected Type FindMigrationAssemblyType(Type attributeType)
         {
             var contextTypes =
-                ReflectionTool.GetPublicClasses(_contextType);
+                ReflectionTool.GetPublicClasses(ContextType);
 
             var fileteredAssembly = contextTypes.FirstOrDefault(t => t.CustomAttributes.Any(a => a.AttributeType == attributeType));
 
@@ -298,7 +283,7 @@ namespace Moryx.Model.Configuration
         }
 
         /// <summary>
-        /// Creates a context for migration purposes based on a config 
+        /// Creates a context for migration purposes based on a config
         /// </summary>
         protected virtual DbContext CreateMigrationContext(IDatabaseConfig config)
         {

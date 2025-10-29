@@ -8,13 +8,13 @@ using Moryx.Model;
 
 namespace Moryx.Operators.Management.Model;
 
-public class OperatorsContext : MoryxDbContext
+public abstract class OperatorsContext : MoryxDbContext
 {
-    public OperatorsContext()
+    protected OperatorsContext()
     {
     }
 
-    public OperatorsContext(DbContextOptions options) : base(options)
+    protected OperatorsContext(DbContextOptions options) : base(options)
     {
     }
 
