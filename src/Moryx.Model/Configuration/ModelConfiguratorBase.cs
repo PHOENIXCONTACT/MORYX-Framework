@@ -5,6 +5,7 @@ using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
+using Moryx.Model.Attributes;
 using Moryx.Tools;
 
 namespace Moryx.Model.Configuration
@@ -41,12 +42,16 @@ namespace Moryx.Model.Configuration
             Logger = logger;
 
             // Load Config
-            _configName = contextType.FullName + ".DbConfig";
+            // TODO: Config name should be the name of the base type of the generic DbContext e.g. FooDbContext instead of SqliteFooDbContext. Rework in future version and use base context-type or config wrapper directly.
+            var modelConfiguratorAttr = contextType.GetCustomAttribute<ModelConfiguratorAttribute>();
+            var contextBaseType = modelConfiguratorAttr != null ? contextType.BaseType : contextType;
+            
+            _configName = contextBaseType!.FullName + ".DbConfig";
             Config = _configManager.GetConfiguration<TConfig>(_configName);
 
             // If database is empty, fill with TargetModel name
             if (string.IsNullOrWhiteSpace(Config.ConnectionSettings.Database))
-                Config.ConnectionSettings.Database = contextType.Name;
+                Config.ConnectionSettings.Database = contextBaseType.Name;
         }
 
         /// <inheritdoc />
