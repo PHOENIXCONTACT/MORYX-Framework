@@ -3,6 +3,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Sqlite;
+// ReSharper disable VirtualMemberNeverOverridden.Global
 
 namespace Moryx.Notifications.Model
 {
@@ -20,12 +21,6 @@ namespace Moryx.Notifications.Model
         /// <inheritdoc />
         public SqliteNotificationsContext(DbContextOptions options) : base(options)
         {
-        }
-
-        /// <inheritdoc />
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
         }
     }
 }

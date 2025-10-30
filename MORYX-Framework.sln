@@ -965,8 +965,8 @@ Global
 		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF} = {8517D209-5BC1-47BD-A7C7-9CF9ADD9F5B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		
+		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
 		RESX_TaskErrorCategory = Message
-		    RESX_ShowErrorsInErrorList = True
+		RESX_ShowErrorsInErrorList = True
 	EndGlobalSection
 EndGlobal

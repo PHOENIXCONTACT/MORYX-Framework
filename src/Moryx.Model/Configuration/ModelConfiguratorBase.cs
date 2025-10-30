@@ -136,8 +136,7 @@ namespace Moryx.Model.Configuration
             {
                 result.Result = MigrationResult.NoMigrationsAvailable;
                 result.ExecutedMigrations = [];
-                Logger.Log(LogLevel.Warning,
-                    "Database migration for database '{0}' was failed. There are no migrations available!",
+                Logger.Log(LogLevel.Warning, "Database migration for database '{0}' was failed. There are no migrations available!",
                     config.ConnectionSettings.Database);
 
                 return result;
@@ -148,15 +147,13 @@ namespace Moryx.Model.Configuration
                 await context.Database.MigrateAsync();
                 result.Result = MigrationResult.Migrated;
                 result.ExecutedMigrations = pendingMigrations;
-                Logger.Log(LogLevel.Information,
-                    "Database migration for database '{0}' was successful. Executed migrations: {1}",
+                Logger.Log(LogLevel.Information, "Database migration for database '{0}' was successful. Executed migrations: {1}",
                     config.ConnectionSettings.Database, string.Join(", ", pendingMigrations));
             }
             catch (Exception e)
             {
                 result.Result = MigrationResult.Error;
-                Logger.Log(LogLevel.Error, e, "Database migration for database '{0}' was failed!",
-                    config.ConnectionSettings.Database);
+                Logger.Log(LogLevel.Error, e, "Database migration for database '{0}' was failed!", config.ConnectionSettings.Database);
             }
 
             return result;
@@ -278,8 +275,7 @@ namespace Moryx.Model.Configuration
             var contextTypes =
                 ReflectionTool.GetPublicClasses(ContextType);
 
-            var fileteredAssembly =
-                contextTypes.FirstOrDefault(t => t.CustomAttributes.Any(a => a.AttributeType == attributeType));
+            var fileteredAssembly = contextTypes.FirstOrDefault(t => t.CustomAttributes.Any(a => a.AttributeType == attributeType));
 
             return fileteredAssembly ?? contextTypes.First();
         }

@@ -1,9 +1,5 @@
-﻿## Migration calls
+﻿dotnet ef migrations add InitialCreate -s ../StartProject.Asp/StartProject.Asp.csproj -o ./Migrations/Npgsql/ -c NpgsqlShiftsContext -- --connection "Host=localhost;Database=ShiftsContext;Username=postgres;Password=postgres"
+dotnet ef database update InitialCreate -s ../StartProject.Asp/StartProject.Asp.csproj -c NpgsqlShiftsContext -- --connection "Host=localhost;Database=ShiftsContext;Username=postgres;Password=postgres"
 
-## Second Migration NpgSql
-dotnet ef migrations add InitialCreate --startup-project ..\..\src\StartProject\StartProject.csproj --output-dir .\Model\Migrations\Npgsql\ --context NpgsqlShiftsContext
-dotnet ef database update InitialCreate --startup-project ..\..\src\StartProject\StartProject.csproj --context NpgsqlShiftsContext
-
-## Second Migration SqLite
-dotnet ef migrations add InitialCreate --startup-project ..\..\src\StartProject\StartProject.csproj --output-dir .\Model\Migrations\Sqlite\ --context SqliteIdentifierContext
-dotnet ef database update InitialCreate --startup-project ..\..\src\StartProject\StartProject.csproj --context SqliteIdentifierContext
+dotnet ef migrations add InitialCreate -s ../StartProject.Asp/StartProject.Asp.csproj -o ./Migrations/Sqlite/ -c SqliteShiftsContext -- --connection "Data Source=ShiftsContext.db"
+dotnet ef database update InitialCreate -s ../StartProject.Asp/StartProject.Asp.csproj -c SqliteShiftsContext -- --connection "Data Source=ShiftsContext.db"

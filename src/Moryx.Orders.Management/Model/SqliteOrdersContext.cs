@@ -21,12 +21,6 @@ namespace Moryx.Orders.Management.Model
         public SqliteOrdersContext(DbContextOptions options) : base(options)
         {
         }
-
-        /// <inheritdoc />
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-        }
     }
 }
 

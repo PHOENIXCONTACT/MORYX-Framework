@@ -18,21 +18,6 @@ namespace Moryx.Shifts.Management.Model
         public NpgsqlShiftsContext(DbContextOptions options) : base(options)
         {
         }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-
-            if (!optionsBuilder.IsConfigured)
-            {
-                var configuration = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json")
-                    .Build();
-                var connectionString = configuration.GetConnectionString("Moryx.Shifts.Management.Model.Npgsql");
-                optionsBuilder.UseNpgsql(connectionString);
-            }
-        }
     }
 }
 

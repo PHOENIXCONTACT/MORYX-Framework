@@ -22,11 +22,5 @@ namespace Moryx.Resources.Model
         public SqliteResourcesContext(DbContextOptions options) : base(options)
         {
         }
-
-        /// <inheritdoc />
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-        }
     }
 }
