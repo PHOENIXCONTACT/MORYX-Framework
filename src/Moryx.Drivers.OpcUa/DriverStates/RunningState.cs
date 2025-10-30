@@ -20,7 +20,7 @@ internal class RunningState(OpcUaDriver context, StateMachines.StateBase.StateMa
         return Context.GetNode(identifier);
     }
 
-    internal override DataValue ReadValue(string identifier)
+    internal override DataValueResult ReadValue(string identifier)
     {
         return Context.OnReadValueOfNode(identifier);
     }

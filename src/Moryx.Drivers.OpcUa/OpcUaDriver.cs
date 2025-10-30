@@ -36,7 +36,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// <summary>
     /// Current tate of the driver
     /// </summary>
-
     [EntrySerialize]
     [Display(Name = nameof(Strings.DRIVER_STATE), ResourceType = typeof(Localizations.Strings))]
     public string StateName => CurrentState?.ToString() ?? "";
@@ -684,12 +683,20 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
             AttributeId = Attributes.Value,
             DisplayName = node.DisplayName,
             SamplingInterval = SamplingInterval,
-            QueueSize = (uint)(PublishingInterval / SamplingInterval + 10),
+            QueueSize = ComputeQueueSize(PublishingInterval, SamplingInterval),
             DiscardOldest = true
         };
         monitoredItem.Notification += OnMonitoredItemNotification;
         node.MonitoredItem = monitoredItem;
         return monitoredItem;
+    }
+
+    private uint ComputeQueueSize(int publishingInterval, int samplingInterval)
+    {
+        samplingInterval = samplingInterval > 0
+            ? SamplingInterval
+            : 1;
+        return (uint)(publishingInterval / samplingInterval + 10);
     }
 
     private void OnMonitoredItemNotification(MonitoredItem monitoredItem, MonitoredItemNotificationEventArgs e)
@@ -893,40 +900,43 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// <inheritdoc/>
     public object ReadNode(string NodeId)
     {
-
-        var value = State.ReadValue(NodeId);
-        if (value == null)
-        {
-            Logger.Log(LogLevel.Error, "There was an error, when trying to read the value of the node. Please look into the log for further information");
-            return null;
-        }
-        return value.Value;
+        return ReadNodeDataValue(NodeId).Result.Value;
     }
 
-    internal DataValue OnReadValueOfNode(string identifier)
+    private DataValueResult ReadNodeDataValue(string nodeId)
+    {
+        var value = State.ReadValue(nodeId);
+        if (!value.Success)
+        {
+            if (value.Error?.Exception != null)
+            {
+                Logger.Log(LogLevel.Error, value.Error.Exception, value.Error?.Message);
+                return null;
+            }
+        }
+        return value;
+    }
+
+    internal DataValueResult OnReadValueOfNode(string identifier)
     {
         var node = State.GetNode(identifier);
-        var errormsg = "When trying to read the value of the node, ";
         if (node == null)
         {
-            Logger.Log(LogLevel.Error, "{errormsg} the node with the id {identifier} was not found", errormsg, identifier);
-            return null;
+            return DataValueResult.WithError($"The node \"{identifier}\" was not found");
         }
         if (node.NodeClass != NodeClass.Variable)
         {
-            Logger.Log(LogLevel.Error, "{errormsg} the node with the id {identifier} was no variable node", errormsg, identifier);
-            return null;
+            return DataValueResult.WithError($"The node \"{identifier}\" was not of type 'variable'");
         }
 
         var nodeId = ExpandedNodeId.ToNodeId(node.NodeId, _session.NamespaceUris);
         var value = _session.ReadValue(nodeId);
         if (StatusCode.IsGood(value.StatusCode))
         {
-            return value;
+            return new DataValueResult(value);
         }
 
-        Logger.Log(LogLevel.Error, "{errormsg} the status was {StatusCode}", errormsg, value.StatusCode);
-        return null;
+        return DataValueResult.WithError($"The node \"{identifier}\" was not of type 'variable'");
     }
 
     /// <summary>
@@ -992,7 +1002,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     [EntrySerialize]
     public string ReadNodeAsString(string NodeId)
     {
-        var value = ReadNode(NodeId);
+        var value = ReadNodeDataValue(NodeId);
         if (value == null)
         {
             return "There was an error, when trying to read the value of the node. Please look into the log for further information";
@@ -1161,5 +1171,4 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     {
         throw new NotImplementedException();
     }
-
 }
