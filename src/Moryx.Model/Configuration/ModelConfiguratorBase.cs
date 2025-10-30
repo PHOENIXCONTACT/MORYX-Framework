@@ -16,12 +16,10 @@ namespace Moryx.Model.Configuration
     public abstract class ModelConfiguratorBase<TConfig> : IModelConfigurator
         where TConfig : class, IDatabaseConfig, new()
     {
-        private string _configName;
-
         /// <summary>
         /// The underlying context's type
         /// </summary>
-        protected Type ContextType {get; private set;}
+        protected Type ContextType { get; private set; }
 
         /// <summary>
         /// Logger for this model configurator
@@ -41,7 +39,8 @@ namespace Moryx.Model.Configuration
 
             Config = config as TConfig;
             if (Config == null)
-                throw new InvalidOperationException($"Configuration for model '{contextType.FullName}' is not of expected type '{typeof(TConfig).FullName}'");
+                throw new InvalidOperationException(
+                    $"Configuration for model '{contextType.FullName}' is not of expected type '{typeof(TConfig).FullName}'");
         }
 
         /// <inheritdoc />
@@ -62,7 +61,6 @@ namespace Moryx.Model.Configuration
             var context = (DbContext)Activator.CreateInstance(contextType, dbContextOptions);
             return context;
         }
-
 
         /// <inheritdoc />
         public virtual async Task<TestConnectionResult> TestConnection(IDatabaseConfig config)
@@ -121,7 +119,7 @@ namespace Moryx.Model.Configuration
             await connection.OpenAsync();
 
             // Creation done -> close connection
-            connection.Close();
+            await connection.CloseAsync();
 
             return true;
         }
@@ -138,7 +136,9 @@ namespace Moryx.Model.Configuration
             {
                 result.Result = MigrationResult.NoMigrationsAvailable;
                 result.ExecutedMigrations = [];
-                Logger.Log(LogLevel.Warning, "Database migration for database '{0}' was failed. There are no migrations available!", config.ConnectionSettings.Database);
+                Logger.Log(LogLevel.Warning,
+                    "Database migration for database '{0}' was failed. There are no migrations available!",
+                    config.ConnectionSettings.Database);
 
                 return result;
             }
@@ -148,14 +148,15 @@ namespace Moryx.Model.Configuration
                 await context.Database.MigrateAsync();
                 result.Result = MigrationResult.Migrated;
                 result.ExecutedMigrations = pendingMigrations;
-                Logger.Log(LogLevel.Information, "Database migration for database '{0}' was successful. Executed migrations: {1}",
+                Logger.Log(LogLevel.Information,
+                    "Database migration for database '{0}' was successful. Executed migrations: {1}",
                     config.ConnectionSettings.Database, string.Join(", ", pendingMigrations));
-
             }
             catch (Exception e)
             {
                 result.Result = MigrationResult.Error;
-                Logger.Log(LogLevel.Error, e, "Database migration for database '{0}' was failed!", config.ConnectionSettings.Database);
+                Logger.Log(LogLevel.Error, e, "Database migration for database '{0}' was failed!",
+                    config.ConnectionSettings.Database);
             }
 
             return result;
@@ -266,7 +267,7 @@ namespace Moryx.Model.Configuration
         protected static bool CheckDatabaseConfig(IDatabaseConfig config)
         {
             return (!(string.IsNullOrEmpty(config.ConfiguratorTypename) ||
-                     string.IsNullOrEmpty(config.ConnectionSettings.ConnectionString)));
+                      string.IsNullOrEmpty(config.ConnectionSettings.ConnectionString)));
         }
 
         /// <summary>
@@ -277,7 +278,8 @@ namespace Moryx.Model.Configuration
             var contextTypes =
                 ReflectionTool.GetPublicClasses(ContextType);
 
-            var fileteredAssembly = contextTypes.FirstOrDefault(t => t.CustomAttributes.Any(a => a.AttributeType == attributeType));
+            var fileteredAssembly =
+                contextTypes.FirstOrDefault(t => t.CustomAttributes.Any(a => a.AttributeType == attributeType));
 
             return fileteredAssembly ?? contextTypes.First();
         }

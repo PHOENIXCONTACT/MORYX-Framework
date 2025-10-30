@@ -16,20 +16,17 @@ namespace Moryx.Model
     /// </summary>
     public class DbContextManager : IDbContextManager
     {
-        private readonly ConfiguredModelWrapper[] _configuredModels;
         private readonly ILoggerFactory _loggerFactory;
         private readonly IConfigManager _configManager;
 
-        private class PossibleModelWrapper
-        {
-            public Type DbContext { get; set; }
+        private readonly ConfiguredModelWrapper[] _configuredModels;
+        private readonly PossibleModelWrapper[] _possibleModels;
 
-            public Dictionary<Type, Type> ModelConfiguratorMap { get; set; }
-        }
-
-        private PossibleModelWrapper[] _possibleModels;
-
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbContextManager"/> class.
+        /// </summary>
+        /// <param name="configManager">Dependency to load model related configurations</param>
+        /// <param name="loggerFactory">Logger factory to provide the <see cref="IModelConfigurator"/> a logger</param>
         public DbContextManager(IConfigManager configManager, ILoggerFactory loggerFactory)
         {
             _loggerFactory = loggerFactory;
@@ -115,8 +112,6 @@ namespace Moryx.Model
             Type specificDbContextType = null;
             _possibleModels.FirstOrDefault(pm => pm.DbContext == dbContextType)?.ModelConfiguratorMap.TryGetValue(configuratorType, out specificDbContextType);
             modelWrapper.SpecificDbContextType = specificDbContextType;
-
-
             modelWrapper.Configurator = (IModelConfigurator)Activator.CreateInstance(configuratorType);
             modelWrapper.DatabaseConfig = databaseConfig;
 
@@ -186,6 +181,13 @@ namespace Moryx.Model
             public IModelConfigurator Configurator { get; set; }
 
             public IDatabaseConfig DatabaseConfig { get; set; }
+        }
+
+        private class PossibleModelWrapper
+        {
+            public Type DbContext { get; set; }
+
+            public Dictionary<Type, Type> ModelConfiguratorMap { get; set; }
         }
     }
 }
