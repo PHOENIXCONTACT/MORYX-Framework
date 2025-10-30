@@ -46,6 +46,7 @@ namespace Moryx.Model.Sqlite
             return _configurators[contextType];
         }
 
+        /// <inheritdoc />
         public Type[] GetConfigurators(Type contextType)
         {
             throw new NotImplementedException();
@@ -83,9 +84,11 @@ namespace Moryx.Model.Sqlite
                     .Options;
             }
 
+            config ??= new SqliteDatabaseConfig();
+
             // Create instance of context
             var configurator = new SqliteModelConfigurator();
-            configurator.Initialize(typeof(TContext), null, null);
+            configurator.Initialize(typeof(TContext), config, null);
             var context = (TContext)configurator.CreateContext(typeof(TContext), options);
             _configurators.TryAdd(context.GetType(), configurator);
             return context;
@@ -95,15 +98,6 @@ namespace Moryx.Model.Sqlite
         public void UpdateConfig(Type dbContextType, Type configuratorType, IDatabaseConfig databaseConfig)
         {
             throw new NotImplementedException();
-        }
-
-        private static ConfigManager CreateConfigManager()
-        {
-            var configManager = new ConfigManager
-            {
-                ConfigDirectory = ""
-            };
-            return configManager;
         }
     }
 }

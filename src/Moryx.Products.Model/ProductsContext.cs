@@ -10,15 +10,15 @@ namespace Moryx.Products.Model
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
-    public abstract class ProductsContext : MoryxDbContext
+    public class ProductsContext : MoryxDbContext
     {
         /// <inheritdoc />
-        protected ProductsContext()
+        public ProductsContext()
         {
         }
 
         /// <inheritdoc />
-        protected ProductsContext(DbContextOptions options) : base(options)
+        public ProductsContext(DbContextOptions options) : base(options)
         {
         }
 

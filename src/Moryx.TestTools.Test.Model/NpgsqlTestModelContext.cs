@@ -6,7 +6,7 @@ using Moryx.Model.PostgreSQL;
 
 namespace Moryx.TestTools.Test.Model;
 
-[NpgsqlDbContext]
+[NpgsqlDbContext(typeof(TestModelContext))]
 public class NpgsqlTestModelContext : TestModelContext
 {
     public NpgsqlTestModelContext()

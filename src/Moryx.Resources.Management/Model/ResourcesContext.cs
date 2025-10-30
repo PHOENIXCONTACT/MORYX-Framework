@@ -11,15 +11,15 @@ namespace Moryx.Resources.Model
     /// <summary>
     /// The DBContext of this database model.
     /// </summary>
-    public abstract class ResourcesContext : MoryxDbContext
+    public class ResourcesContext : MoryxDbContext
     {
         /// <inheritdoc />
-        protected ResourcesContext()
+        public ResourcesContext()
         {
         }
 
         /// <inheritdoc />
-        protected ResourcesContext(DbContextOptions options) : base(options)
+        public ResourcesContext(DbContextOptions options) : base(options)
         {
         }
 

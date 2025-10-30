@@ -9,13 +9,14 @@ using Moryx.Runtime.Endpoints.Databases.Endpoint;
 using Moryx.AbstractionLayer.TestTools;
 using System;
 using System.Collections.Generic;
+using Moryx.Runtime.Endpoints.Databases.Endpoint.Models;
 
 namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
 {
     internal class ModelSetupTests
     {
         private IDbContextManager? _dbContextManager;
-        private DatabaseController _databaseController;
+        private DatabaseController? _databaseController;
         private readonly List<Exception> _exceptions = [];
 
         [SetUp]
@@ -42,17 +43,17 @@ namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
                 _exceptions.Add(e.Exception);
             };
 
-            var result = await _databaseController!.ExecuteSetup("Moryx.TestTools.Test.Model.TestModelContext", new()
+            var result = await _databaseController!.ExecuteSetup(typeof(TestModelContext).FullName, new()
             {
                 Config = new()
                 {
                     ConfiguratorTypename = "1",
                     Entries = new() { { "ConnectionString", "DataSource=:memory:" } }
                 },
-                Setup = new Endpoints.Databases.Endpoint.Models.SetupModel { Fullname = "Moryx.TestTools.Test.Model.DisposedObjectSetup" }
+                Setup = new SetupModel { Fullname = typeof(DisposedObjectSetup).FullName }
             });
 
-            // ExecuteSetup lead to unobserved task exceptions. We give them 
+            // ExecuteSetup lead to unobserved task exceptions. We give them
             // some time to be thrown.
             Task.Delay(100).Wait();
             GC.Collect();

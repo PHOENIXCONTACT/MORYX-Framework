@@ -6,7 +6,7 @@ using Moryx.Model.Sqlite;
 
 namespace Moryx.TestTools.Test.Model;
 
-[SqliteDbContext]
+[SqliteDbContext(typeof(TestModelContext))]
 public class SqliteTestModelContext : TestModelContext
 {
     public SqliteTestModelContext()

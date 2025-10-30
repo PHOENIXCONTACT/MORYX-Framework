@@ -8,13 +8,13 @@ using Moryx.Model;
 
 namespace Moryx.Shifts.Management.Model
 {
-    public abstract class ShiftsContext : MoryxDbContext
+    public class ShiftsContext : MoryxDbContext
     {
-        protected ShiftsContext()
+        public ShiftsContext()
         {
         }
 
-        protected ShiftsContext(DbContextOptions options) : base(options)
+        public ShiftsContext(DbContextOptions options) : base(options)
         {
         }
 

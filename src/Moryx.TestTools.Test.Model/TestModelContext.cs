@@ -7,13 +7,13 @@ using Moryx.Model;
 
 namespace Moryx.TestTools.Test.Model;
 
-public abstract class TestModelContext : MoryxDbContext
+public class TestModelContext : MoryxDbContext
 {
-    protected TestModelContext()
+    public TestModelContext()
     {
     }
 
-    protected TestModelContext(DbContextOptions options) : base(options)
+    public TestModelContext(DbContextOptions options) : base(options)
     {
     }
 
@@ -22,6 +22,7 @@ public abstract class TestModelContext : MoryxDbContext
         base.OnConfiguring(optionsBuilder);
         optionsBuilder.UseLazyLoadingProxies();
     }
+
     public virtual DbSet<CarEntity> Cars { get; set; }
 
     public virtual DbSet<WheelEntity> Wheels { get; set; }
