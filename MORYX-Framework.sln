@@ -366,6 +366,6 @@ Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
 		RESX_TaskErrorCategory = Message
-						RESX_ShowErrorsInErrorList = True
+		RESX_ShowErrorsInErrorList = True
 	EndGlobalSection
 EndGlobal
