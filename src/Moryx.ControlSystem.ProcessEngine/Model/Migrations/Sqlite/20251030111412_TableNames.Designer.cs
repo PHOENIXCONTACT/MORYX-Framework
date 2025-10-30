@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moryx.ControlSystem.ProcessEngine.Model;
 
@@ -10,9 +11,11 @@ using Moryx.ControlSystem.ProcessEngine.Model;
 namespace Moryx.ControlSystem.ProcessEngine.Model.Migrations.Sqlite
 {
     [DbContext(typeof(SqliteProcessContext))]
-    partial class SqliteProcessContextModelSnapshot : ModelSnapshot
+    [Migration("20251030111412_TableNames")]
+    partial class TableNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

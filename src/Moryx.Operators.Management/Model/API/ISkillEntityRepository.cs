@@ -6,7 +6,6 @@ using Moryx.Model.Repositories;
 
 namespace Moryx.Operators.Management.Model;
 
-public interface ISkillRepository : IRepository<SkillEntity>
+public interface ISkillEntityRepository : IRepository<SkillEntity>
 {
 }
-
