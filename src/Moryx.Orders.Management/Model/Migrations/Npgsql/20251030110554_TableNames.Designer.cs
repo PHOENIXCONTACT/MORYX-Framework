@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moryx.Orders.Management.Model;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Moryx.Orders.Management.Model.Migrations
+namespace Moryx.Orders.Management.Model.Migrations.Npgsql
 {
     [DbContext(typeof(NpgsqlOrdersContext))]
-    partial class OrdersContextModelSnapshot : ModelSnapshot
+    [Migration("20251030110554_TableNames")]
+    partial class TableNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

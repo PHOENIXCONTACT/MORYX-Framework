@@ -287,20 +287,17 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             }
             else
             {
-                entity = uow.DbContext.ProcessEntities.Add(new ProcessEntity
-                {
-                    Id = processData.Id,
-                    TypeName = processData.Process.GetType().Name,
-                    State = (int)processData.State,
-                    JobId = processData.Job.Id,
-                }).Entity;
+                entity = processRepository.Create();
+                entity.Id = processData.Id;
+                entity.TypeName = processData.Process.GetType().Name;
+                entity.State = (int)processData.State;
+                entity.JobId = processData.Job.Id;
             }
             entity.State = (int)processData.State;
             entity.Rework = processData.Rework;
             entity.ReferenceId = processData.ReferenceId;
 
             // Save unsaved activities
-            var activityRepo = uow.GetRepository<IActivityEntityRepository>();
             // Only save activities that were delivered to a cell AND not saved yet
             var unsavedActivities = processData.Activities
                 .Where(a => a.State >= ActivityState.Running).ToList();
@@ -326,7 +323,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 // If the process does not exist yet, create it
                 if (!processData.EntityCreated)
                 {
-                    uow.DbContext.ProcessEntities.Add(new ProcessEntity
+                    uow.DbContext.Processes.Add(new ProcessEntity
                     {
                         Id = processData.Id,
                         TypeName = processData.Process.GetType().Name,
@@ -353,22 +350,21 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// </summary>
         private void SaveActivity(IUnitOfWork<ProcessContext> uow, ActivityData activityData)
         {
-            ActivityEntity dbActivity;
             var activity = activityData.Activity;
+            var activityRepo = uow.GetRepository<IActivityEntityRepository>();
+
+            ActivityEntity dbActivity;
             if (activityData.EntityCreated)
             {
-                dbActivity = uow.DbContext.ActivityEntities.GetByKey(activity.Id);
+                dbActivity = activityRepo.GetByKey(activity.Id);
             }
             else
             {
-                dbActivity = new()
-                {
-                    Id = activity.Id,
-                    TaskId = activityData.Task.Id,
-                    ResourceId = activityData.Resource.Id,
-                    ProcessId = activityData.ProcessData.Id,
-                };
-                uow.DbContext.ActivityEntities.Add(dbActivity);
+                dbActivity = activityRepo.Create();
+                dbActivity.Id = activity.Id;
+                dbActivity.TaskId = activityData.Task.Id;
+                dbActivity.ResourceId = activityData.Resource.Id;
+                dbActivity.ProcessId = activityData.ProcessData.Id;
             }
 
             // UpdateList tracing info

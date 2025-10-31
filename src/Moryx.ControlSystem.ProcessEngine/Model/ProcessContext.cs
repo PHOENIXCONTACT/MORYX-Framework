@@ -3,6 +3,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
+// ReSharper disable VirtualMemberNeverOverridden.Global
 
 namespace Moryx.ControlSystem.ProcessEngine.Model
 {
@@ -21,29 +22,14 @@ namespace Moryx.ControlSystem.ProcessEngine.Model
         {
         }
 
-        /// <summary>
-        /// There are no comments for <see cref="ProcessEntities"/> in the schema.
-        /// </summary>
-        public virtual DbSet<ProcessEntity> ProcessEntities { get; set; }
+        public virtual DbSet<ProcessEntity> Processes { get; set; }
 
-        /// <summary>
-        /// There are no comments for <see cref="ActivityEntities"/> in the schema.
-        /// </summary>
-        public virtual DbSet<ActivityEntity> ActivityEntities { get; set; }
+        public virtual DbSet<ActivityEntity> Activities { get; set; }
 
-        /// <summary>
-        /// There are no comments for <see cref="TokenHolderEntities"/> in the schema.
-        /// </summary>
-        public virtual DbSet<TokenHolderEntity> TokenHolderEntities { get; set; }
+        public virtual DbSet<TokenHolderEntity> TokenHolders { get; set; }
 
-        /// <summary>
-        /// There are no comments for <see cref="JobEntities"/> in the schema.
-        /// </summary>
-        public virtual DbSet<JobEntity> JobEntities { get; set; }
+        public virtual DbSet<JobEntity> Jobs { get; set; }
 
-        /// <summary>
-        /// There are no comments for <see cref="TracingTypes"/> in the schema.
-        /// </summary>
         public virtual DbSet<TracingType> TracingTypes { get; set; }
 
         /// <inheritdoc />

@@ -18,13 +18,13 @@ public class OperatorsContext : MoryxDbContext
     {
     }
 
-    public virtual DbSet<OperatorEntity> OperatorEntities { get; set; }
+    public virtual DbSet<OperatorEntity> Operators { get; set; }
 
-    public virtual DbSet<ResourceLinkEntity> ResourceLinkEntities { get; set; }
+    public virtual DbSet<ResourceLinkEntity> ResourceLinks { get; set; }
 
-    public virtual DbSet<SkillEntity> SkillEntities { get; set; }
+    public virtual DbSet<SkillEntity> Skills { get; set; }
 
-    public virtual DbSet<SkillTypeEntity> SkillTypeEntities { get; set; }
+    public virtual DbSet<SkillTypeEntity> SkillTypes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

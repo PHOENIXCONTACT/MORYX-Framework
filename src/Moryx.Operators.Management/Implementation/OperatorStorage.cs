@@ -10,43 +10,48 @@ namespace Moryx.Operators.Management;
 
 internal static class OperatorStorage
 {
-    public static OperatorEntity Save(IUnitOfWork uow, OperatorData operatorData)
+    public static OperatorEntity Save(IUnitOfWork<OperatorsContext> uow, OperatorData operatorData)
     {
-        using var context = (OperatorsContext)uow.DbContext;
+        var operatorsRepo = uow.GetRepository<IOperatorEntityRepository>();
 
-        var entity = context.OperatorEntities.Find(operatorData.Id);
-        entity ??= context.OperatorEntities.Add(new OperatorEntity()).Entity;
+        var entity = operatorsRepo.GetByKey(operatorData.Id)
+                     ?? operatorsRepo.Create();
 
         entity.Identifier = operatorData.Identifier;
         entity.FirstName = operatorData.FirstName;
         entity.LastName = operatorData.LastName;
         entity.Pseudonym = operatorData.Pseudonym;
 
-        if (AttandancesChanged(operatorData, entity))
-            SaveAttandances(operatorData, context, entity);
+        if (AttendancesChanged(operatorData, entity))
+            SaveAttendances(operatorData, uow, entity);
 
         uow.SaveChanges();
         return entity;
     }
 
-    private static bool AttandancesChanged(OperatorData operatorData, OperatorEntity entity) =>
+    private static bool AttendancesChanged(OperatorData operatorData, OperatorEntity entity) =>
         !((operatorData.AssignedResources.Count == entity.AssignedResources.Count) &&
-        operatorData.AssignedResources.All(r => entity.AssignedResources.Any(e => e.ResourceId == r.Id)));
+          operatorData.AssignedResources.All(r => entity.AssignedResources.Any(e => e.ResourceId == r.Id)));
 
-    private static void SaveAttandances(OperatorData operatorData, OperatorsContext context, OperatorEntity entity)
+    private static void SaveAttendances(OperatorData operatorData, IUnitOfWork<OperatorsContext> uow, OperatorEntity entity)
     {
+        var resourceLinksRepo = uow.GetRepository<IResourceLinkEntityRepository>();
+
         var toBeAdded = operatorData.AssignedResources
-                        .Where(r => !entity.AssignedResources.Any(e => e.ResourceId == r.Id))
-                        .Select(r => new ResourceLinkEntity() { ResourceId = r.Id });
-        context.ResourceLinkEntities.AddRange(toBeAdded);
+            .Where(r => entity.AssignedResources.All(e => e.ResourceId != r.Id)).ToArray();
+
+        foreach (var assignedResources in toBeAdded)
+        {
+            var resourceLinkEntity = resourceLinksRepo.Create();
+            resourceLinkEntity.ResourceId = assignedResources.Id;
+            entity.AssignedResources.Add(resourceLinkEntity);
+        }
 
         var toBeRemoved = entity.AssignedResources
-            .Where(e => !operatorData.AssignedResources.Any(r => r.Id == e.ResourceId));
-        context.ResourceLinkEntities.RemoveRange(toBeRemoved);
+            .Where(e => operatorData.AssignedResources.All(r => r.Id != e.ResourceId)).ToArray();
 
-        entity.AssignedResources ??= [];
+        resourceLinksRepo.RemoveRange(toBeRemoved);
         entity.AssignedResources.RemoveRange(toBeRemoved);
-        entity.AssignedResources.AddRange(toBeAdded);
     }
 
     public static OperatorData Load(OperatorEntity entity, IResourceManagement resources)
@@ -57,10 +62,10 @@ internal static class OperatorStorage
 
     internal static void Delete(IUnitOfWork<OperatorsContext> uow, OperatorData operatorData)
     {
-        using var context = uow.DbContext;
+        var operatorRepo = uow.GetRepository<IOperatorEntityRepository>();
 
-        var entity = context.OperatorEntities.First(o => o.Id == operatorData.Id);
-        context.Remove(entity);
+        var entity = operatorRepo.GetByKey(operatorData.Id);
+        operatorRepo.Remove(entity);
 
         uow.SaveChanges();
     }

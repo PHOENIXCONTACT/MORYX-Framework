@@ -18,9 +18,11 @@ namespace Moryx.Shifts.Management.Model
         {
         }
 
-        public virtual DbSet<ShiftEntity> ShiftEntities { get; set; }
-        public virtual DbSet<ShiftTypeEntity> ShiftTypeEntities { get; set; }
-        public virtual DbSet<ShiftAssignementEntity> ShiftAssignementEntities { get; set; }
+        public virtual DbSet<ShiftEntity> Shifts { get; set; }
+
+        public virtual DbSet<ShiftTypeEntity> ShiftTypes { get; set; }
+
+        public virtual DbSet<ShiftAssignementEntity> ShiftAssignements { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

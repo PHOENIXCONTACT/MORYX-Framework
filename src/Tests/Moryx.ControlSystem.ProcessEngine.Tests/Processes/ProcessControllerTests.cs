@@ -34,12 +34,12 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         private ProcessData _processData;
         private IRecipeProvider _recipeProvider;
         private ProcessStorage _storage;
-        internal Mock<INotificationAdapter> NotificationAdapterMock { get; private set; }
+        private Mock<INotificationAdapter> _notificationAdapterMock;
 
         /// <summary>
         /// Instance from <see cref="ProcessController.ProcessChanged"/> is written to this field
         /// </summary>
-        internal ProcessData UpdatedProcess { get; private set; }
+        private ProcessData _updatedProcess;
 
         [SetUp]
         public void GlobalSetup()
@@ -60,7 +60,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         public void Create()
         {
             CreateList();
-            NotificationAdapterMock = new Mock<INotificationAdapter>();
+            _notificationAdapterMock = new Mock<INotificationAdapter>();
 
             _storage = new ProcessStorage { UnitOfWorkFactory = _unitOfWorkFactory };
             _storage.Start();
@@ -78,7 +78,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         /// Updates the variable when the event occurred.
         private void OnProcessChanged(object sender, ProcessEventArgs args)
         {
-            UpdatedProcess = args.ProcessData;
+            _updatedProcess = args.ProcessData;
         }
 
         [TearDown]
@@ -86,27 +86,25 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         {
             _processController.ProcessChanged -= OnProcessChanged;
             DestroyList();
-            UpdatedProcess = null;
+            _updatedProcess = null;
             _processData = null;
             _processEntity = null;
             _notSoParallelOps.WaitForScheduledExecution(1000);
 
-            using (var uow = _unitOfWorkFactory.Create())
-            {
-                _processController.Stop();
-                _processController.Dispose();
+            using var uow = _unitOfWorkFactory.Create();
+            _processController.Stop();
+            _processController.Dispose();
 
-                var jobRepo = uow.GetRepository<IJobEntityRepository>();
-                var processRepo = uow.GetRepository<IProcessEntityRepository>();
+            var jobRepo = uow.GetRepository<IJobEntityRepository>();
+            var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
-                var processes = processRepo.Linq.Active().ToArray();
-                processRepo.RemoveRange(processes);
+            var processes = processRepo.Linq.Active().ToArray();
+            processRepo.RemoveRange(processes);
 
-                var jobs = jobRepo.Linq.Active().ToArray();
-                jobRepo.RemoveRange(jobs);
+            var jobs = jobRepo.Linq.Active().ToArray();
+            jobRepo.RemoveRange(jobs);
 
-                uow.SaveChanges();
-            }
+            uow.SaveChanges();
         }
 
         [TestCase(3, 1, 1, 1, Description = "Create three jobs and take one which is assigned to the process.")]
@@ -225,8 +223,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             _processController.ActivityPool.UpdateProcess(_processData, ProcessState.Running);
 
             // Assert
-            Assert.That(UpdatedProcess, Is.Not.Null, "The wanted process was not updated.");
-            Assert.That(UpdatedProcess.Id, Is.EqualTo(_processData.Id), "The updated process was not the wanted one.");
+            Assert.That(_updatedProcess, Is.Not.Null, "The wanted process was not updated.");
+            Assert.That(_updatedProcess.Id, Is.EqualTo(_processData.Id), "The updated process was not the wanted one.");
         }
 
         private IJobData CreateJobDataAndSave(RecipeType recipeType)
@@ -239,7 +237,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
             var job = recipeType == RecipeType.Production
                 ? (IJobData)new ProductionJobData((IProductionRecipe)recipe, 10)
-                : new SetupJobData(recipe) { NotificationAdapter = NotificationAdapterMock.Object };
+                : new SetupJobData(recipe) { NotificationAdapter = _notificationAdapterMock.Object };
 
             job.ProgressChanged += delegate { };
 
@@ -262,29 +260,26 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 State = ProcessState.Ready,
             };
 
-            using (var uow = _unitOfWorkFactory.Create())
-            {
-                _processEntity = uow.DbContext.ProcessEntities.Add(new()
-                {
-                    Id = IdShiftGenerator.Generate(jobId, NextId),
-                    TypeName = "testProcess",
-                    State = (int)_processData.State,
-                    JobId = jobId,
-                }).Entity;
+            using var uow = _unitOfWorkFactory.Create();
 
-                uow.DbContext.ActivityEntities.Add(new()
-                {
-                    Id = IdShiftGenerator.Generate(_processEntity.Id << 14, NextId),
-                    TaskId = 1,
-                    ResourceId = 1,
-                    ProcessId = 1,
-                });
+            var processRepo = uow.GetRepository<IProcessEntityRepository>();
+            _processEntity = processRepo.Create();
+            _processEntity.Id = IdShiftGenerator.Generate(jobId, NextId);
+            _processEntity.TypeName = "testProcess";
+            _processEntity.State = (int)_processData.State;
+            _processEntity.JobId = jobId;
 
-                // Save
-                uow.SaveChanges();
+            var activityRepo = uow.GetRepository<IActivityEntityRepository>();
+            var activityEntity = activityRepo.Create();
+            activityEntity.Id = IdShiftGenerator.Generate(_processEntity.Id << 14, NextId);
+            activityEntity.TaskId = 1;
+            activityEntity.ResourceId = 1;
+            activityEntity.ProcessId = 1;
 
-                _processData.Process.Id = _processEntity.Id;
-            }
+            // Save
+            uow.SaveChanges();
+
+            _processData.Process.Id = _processEntity.Id;
         }
 
         public enum RecipeType

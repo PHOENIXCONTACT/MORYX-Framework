@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moryx.Shifts.Management.Model;
 
@@ -10,9 +11,11 @@ using Moryx.Shifts.Management.Model;
 namespace Moryx.Shifts.Management.Model.Migrations.Sqlite
 {
     [DbContext(typeof(SqliteShiftsContext))]
-    partial class SqliteShiftsContextModelSnapshot : ModelSnapshot
+    [Migration("20251030111012_TableNames")]
+    partial class TableNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

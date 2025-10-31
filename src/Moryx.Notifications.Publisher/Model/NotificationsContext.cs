@@ -3,6 +3,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
+// ReSharper disable VirtualMemberNeverOverridden.Global
 
 namespace Moryx.Notifications.Model
 {
@@ -44,12 +45,12 @@ namespace Moryx.Notifications.Model
         /// <summary>
         /// There are no comments for NotificationEntity in the schema.
         /// </summary>
-        public virtual DbSet<NotificationEntity> NotificationEntities { get; set; }
+        public virtual DbSet<NotificationEntity> Notifications { get; set; }
 
         /// <summary>
         /// There are no comments for NotificationTypeEntity in the schema.
         /// </summary>
-        public virtual DbSet<NotificationTypeEntity> NotificationTypeEntities { get; set; }
+        public virtual DbSet<NotificationTypeEntity> NotificationTypes { get; set; }
     }
 }
 

@@ -22,40 +22,19 @@ namespace Moryx.Orders.Management.Model
         {
         }
 
-        /// <summary>
-        /// There are no comments for <see cref="OrderEntities"/> in the schema.
-        /// </summary>
-        public virtual DbSet<OrderEntity> OrderEntities { get; set; }
+        public virtual DbSet<OrderEntity> Orders { get; set; }
 
-        /// <summary>
-        /// There are no comments for <see cref="OperationEntities"/> in the schema.
-        /// </summary>
-        public virtual DbSet<OperationEntity> OperationEntities { get; set; }
+        public virtual DbSet<OperationEntity> Operations { get; set; }
 
-        /// <summary>
-        /// There are no comments for <see cref="OperationJobReferenceEntities"/> in the schema.
-        /// </summary>
-        public virtual DbSet<OperationJobReferenceEntity> OperationJobReferenceEntities { get; set; }
+        public virtual DbSet<OperationJobReferenceEntity> OperationJobReferences { get; set; }
 
-        /// <summary>
-        /// There are no comments for <see cref="OperationReportEntities"/> in the schema.
-        /// </summary>
-        public virtual DbSet<OperationReportEntity> OperationReportEntities { get; set; }
+        public virtual DbSet<OperationReportEntity> OperationReports { get; set; }
 
-        /// <summary>
-        /// There are no comments for <see cref="OperationRecipeReferenceEntities"/> in the schema.
-        /// </summary>
-        public virtual DbSet<OperationRecipeReferenceEntity> OperationRecipeReferenceEntities { get; set; }
+        public virtual DbSet<OperationRecipeReferenceEntity> OperationRecipeReferences { get; set; }
 
-        /// <summary>
-        /// There are no comments for <see cref="ProductPartEntities"/> in the schema.
-        /// </summary>
-        public virtual DbSet<ProductPartEntity> ProductPartEntities { get; set; }
+        public virtual DbSet<ProductPartEntity> ProductParts { get; set; }
 
-        /// <summary>
-        /// There are no comments for <see cref="OperationAdviceEntities"/> in the schema.
-        /// </summary>
-        public virtual DbSet<OperationAdviceEntity> OperationAdviceEntities { get; set; }
+        public virtual DbSet<OperationAdviceEntity> OperationAdvices { get; set; }
 
         /// <inheritdoc />
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
