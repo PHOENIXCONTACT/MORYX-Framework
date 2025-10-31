@@ -129,9 +129,9 @@ namespace Moryx.Resources.Management
             return instance;
         }
 
-        public TResource Instantiate<TResource>() where TResource : Resource
+        public TResource Instantiate<TResource>() where TResource : class, IResource
         {
-            return (TResource)Instantiate(typeof(TResource).ResourceType());
+            return Instantiate(typeof(TResource).ResourceType()) as TResource;
         }
 
         public TResource Instantiate<TResource>(string type) where TResource : class, IResource

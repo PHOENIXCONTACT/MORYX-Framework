@@ -59,7 +59,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// Instantiate a typed resource
         /// </summary>
         TResource Instantiate<TResource>()
-            where TResource : Resource;
+            where TResource : class, IResource;
 
         /// <summary>
         /// Instantiate a typed resource
