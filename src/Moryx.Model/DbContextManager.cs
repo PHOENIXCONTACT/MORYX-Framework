@@ -32,7 +32,21 @@ namespace Moryx.Model
             _loggerFactory = loggerFactory;
             _configManager = configManager;
 
-            _possibleModels = ReflectionTool.GetPublicClasses(typeof(DbContext))
+            _possibleModels = GetPossibleModels();
+            _configuredModels = GetConfiguredModels();
+
+            foreach (var wrapper in _configuredModels)
+            {
+                InitializeConfigurator(wrapper);
+            }
+        }
+
+        /// <summary>
+        /// This method uses reflection to find all possible models in the current AppDomain
+        /// </summary>
+        private static PossibleModelWrapper[] GetPossibleModels()
+        {
+            var possibleModels = ReflectionTool.GetPublicClasses(typeof(DbContext))
                 .Where(type => type != typeof(DbContext) && typeof(DbContext).IsAssignableFrom(type) &&
                                !type.IsAbstract &&
                                type.GetCustomAttributes<DatabaseTypeSpecificDbContextAttribute>().Any())
@@ -41,9 +55,7 @@ namespace Moryx.Model
                     var dbTypeAttributes = type.GetCustomAttributes<DatabaseTypeSpecificDbContextAttribute>()!;
                     return dbTypeAttributes.Select(attr => new
                     {
-                        DbContextType = type,
-                        BaseDbContextType = attr.BaseDbContextType ?? type,
-                        ModelConfiguratorType = attr.ModelConfiguratorType
+                        DbContextType = type, BaseDbContextType = attr.BaseDbContextType ?? type, ModelConfiguratorType = attr.ModelConfiguratorType
                     });
                 }).GroupBy(pc => pc.BaseDbContextType).Select(g =>
                 {
@@ -51,55 +63,64 @@ namespace Moryx.Model
                     return new PossibleModelWrapper { DbContext = g.Key, ModelConfiguratorMap = modelConfiguratorMap };
                 }).ToArray();
 
-            _configuredModels = _possibleModels
-                .Select(possibleModel =>
-                {
-                    var config = configManager.GetConfiguration<DatabaseConfig<DatabaseConnectionSettings>>(ConfigFilename(possibleModel.DbContext));
-                    Type configuratorType = null;
-                    Type specificDbContextType = null;
-                    if (!string.IsNullOrEmpty(config.ConfiguratorTypename))
-                    {
-                        var configuredConfiguratorType = Type.GetType(config.ConfiguratorTypename);
-                        if (configuredConfiguratorType != null && possibleModel.ModelConfiguratorMap.TryGetValue(configuredConfiguratorType, out specificDbContextType))
-                        {
-                            configuratorType = configuredConfiguratorType;
-                        }
-                    }
-                    else
-                    {
-                        var firstOrDefault = possibleModel.ModelConfiguratorMap.FirstOrDefault();
-                        if (!firstOrDefault.Equals(default(KeyValuePair<Type, Type>)))
-                        {
-                            configuratorType = firstOrDefault.Key;
-                            specificDbContextType = firstOrDefault.Value;
-                        }
-                    }
+            return possibleModels;
+        }
 
-                    if (configuratorType == null || specificDbContextType == null)
-                        throw new InvalidOperationException($"No valid configurator found for DbContext '{possibleModel.DbContext.FullName}'");
-
-                    var configType = configuratorType.BaseType.GenericTypeArguments.First();
-
-                    var typedConfig = (IDatabaseConfig)configManager.GetConfiguration(configType,
-                            ConfigFilename(possibleModel.DbContext), true);
-
-                    // If database is empty, fill with TargetModel name
-                    if (string.IsNullOrWhiteSpace(typedConfig.ConnectionSettings.Database))
-                        typedConfig.ConnectionSettings.Database = possibleModel.DbContext.Name;
-
-                    return new ConfiguredModelWrapper
-                    {
-                        BaseDbContextType = possibleModel.DbContext,
-                        SpecificDbContextType = specificDbContextType,
-                        DatabaseConfig = typedConfig,
-                        Configurator = (IModelConfigurator)Activator.CreateInstance(configuratorType)
-                    };
-                }).ToArray();
-
-            foreach (var wrapper in _configuredModels)
+        /// <summary>
+        /// This method loads all configured models with support of the <see cref="IConfigManager"/>
+        /// It matches the configured models with the possible models and creates them
+        /// </summary>
+        private ConfiguredModelWrapper[] GetConfiguredModels()
+        {
+            var configuredModels = new List<ConfiguredModelWrapper>();
+            foreach (var possibleModel in _possibleModels)
             {
-                InitializeConfigurator(wrapper);
+                var config = _configManager.GetConfiguration<DatabaseConfig<DatabaseConnectionSettings>>(ConfigFilename(possibleModel.DbContext));
+                Type configuratorType = null;
+                Type specificDbContextType = null;
+                if (!string.IsNullOrEmpty(config.ConfiguratorTypename))
+                {
+                    var configuredConfiguratorType = Type.GetType(config.ConfiguratorTypename);
+                    if (configuredConfiguratorType != null &&
+                        possibleModel.ModelConfiguratorMap.TryGetValue(configuredConfiguratorType, out specificDbContextType))
+                    {
+                        configuratorType = configuredConfiguratorType;
+                    }
+                }
+                else
+                {
+                    var defaultMatch = possibleModel.ModelConfiguratorMap.FirstOrDefault();
+                    if (!defaultMatch.Equals(default(KeyValuePair<Type, Type>)))
+                    {
+                        configuratorType = defaultMatch.Key;
+                        specificDbContextType = defaultMatch.Value;
+                    }
+                }
+
+                if (configuratorType == null || specificDbContextType == null)
+                    throw new InvalidOperationException($"No valid configurator found for DbContext '{possibleModel.DbContext.FullName}'");
+
+                var configType = configuratorType.BaseType.GenericTypeArguments.First();
+
+                var typedConfig = (IDatabaseConfig)_configManager.GetConfiguration(configType,
+                    ConfigFilename(possibleModel.DbContext), true);
+
+                // If database is empty, fill with TargetModel name
+                if (string.IsNullOrWhiteSpace(typedConfig.ConnectionSettings.Database))
+                {
+                    typedConfig.ConnectionSettings.Database = possibleModel.DbContext.Name;
+                }
+
+                configuredModels.Add(new ConfiguredModelWrapper
+                {
+                    BaseDbContextType = possibleModel.DbContext,
+                    SpecificDbContextType = specificDbContextType,
+                    DatabaseConfig = typedConfig,
+                    Configurator = (IModelConfigurator)Activator.CreateInstance(configuratorType)
+                });
             }
+
+            return configuredModels.ToArray();
         }
 
         /// <inheritdoc />
