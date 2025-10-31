@@ -3,6 +3,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
+// ReSharper disable VirtualMemberNeverOverridden.Global
 
 namespace Moryx.Products.Model
 {

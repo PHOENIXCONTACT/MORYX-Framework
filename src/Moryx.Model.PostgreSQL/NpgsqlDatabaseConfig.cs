@@ -28,7 +28,6 @@ namespace Moryx.Model.PostgreSQL
     /// </summary>
     public class NpgsqlDatabaseConnectionSettings : DatabaseConnectionSettings
     {
-
         /// <inheritdoc/>
         [DataMember, Required]
         public override string Database { get; set; }

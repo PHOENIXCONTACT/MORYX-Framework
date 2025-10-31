@@ -2,10 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Moryx.Model.Attributes;
 using Moryx.Model.PostgreSQL;
-using Moryx.Model.PostgreSQL.Attributes;
 
 // ReSharper disable once CheckNamespace
 namespace Moryx.Resources.Model
@@ -13,8 +10,7 @@ namespace Moryx.Resources.Model
     /// <summary>
     /// Npgsql specific implementation of <see cref="ResourcesContext"/>
     /// </summary>
-    [NpgsqlDatabaseContext]
-    [ModelConfigurator(typeof(NpgsqlModelConfigurator))]
+    [NpgsqlDbContext(typeof(ResourcesContext))]
     public class NpgsqlResourcesContext : ResourcesContext
     {
         /// <inheritdoc />
@@ -25,22 +21,6 @@ namespace Moryx.Resources.Model
         /// <inheritdoc />
         public NpgsqlResourcesContext(DbContextOptions options) : base(options)
         {
-        }
-
-        /// <inheritdoc />
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-
-            if (!optionsBuilder.IsConfigured)
-            {
-                var configuration = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json")
-                    .Build();
-                var connectionString = configuration.GetConnectionString("Moryx.Resources.Model");
-                optionsBuilder.UseNpgsql(connectionString);
-            }
         }
     }
 }

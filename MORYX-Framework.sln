@@ -315,7 +315,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Shifts.Management", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Shifts.Web", "src\Moryx.Shifts.Web\Moryx.Shifts.Web.csproj", "{22358E04-0AE4-4ADA-9018-56C881E313F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Shifts.Management.Integration.Tests", "src\Tests\Moryx.Shifts.Management.Integration.Tests\Moryx.Shifts.Management.Integration.Tests.csproj", "{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Shifts.Management.IntegrationTests", "src\Tests\Moryx.Shifts.Management.IntegrationTests\Moryx.Shifts.Management.IntegrationTests.csproj", "{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -965,8 +965,8 @@ Global
 		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF} = {8517D209-5BC1-47BD-A7C7-9CF9ADD9F5B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}		
+		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
 		RESX_TaskErrorCategory = Message
-		    RESX_ShowErrorsInErrorList = True
+		RESX_ShowErrorsInErrorList = True
 	EndGlobalSection
 EndGlobal

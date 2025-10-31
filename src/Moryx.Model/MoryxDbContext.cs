@@ -9,7 +9,7 @@ using Moryx.Model.Attributes;
 namespace Moryx.Model
 {
     /// <summary>
-    /// Moryx related implementation of <see cref="T:System.Data.Entity.DbContext" />
+    /// Moryx related implementation of <see cref="T:Microsoft.EntityFrameworkCore.DbContext" />
     /// </summary>
     public abstract class MoryxDbContext : DbContext
     {

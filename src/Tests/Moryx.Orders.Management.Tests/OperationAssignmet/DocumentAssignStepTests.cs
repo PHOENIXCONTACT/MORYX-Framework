@@ -115,7 +115,7 @@ namespace Moryx.Orders.Management.Tests
             {
                 Assert.That(files, Does.Contain("29025550-00.txt"));
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 Assert.That(files, Does.Contain("29025550-00"));
             }

@@ -22,7 +22,13 @@ The simulator module has also been renamed, and its namespace and package id hav
 - ResourceRelationType.CurrentExchangablePart -> ResourceRelationType.CurrentExchangeablePart
 - ResourceRelationType.PossibleExchangablePart -> ResourceRelationType.PossibleExchangeablePart
 
+## Data Model Changes
 
-## Removal of ProductFileEntity
+With MORYX 10, several changes have been made to the data model to improve performance and maintainability. Notable changes include:
 
-The `ProductFileEntity` was not used in the product-model. There was no api to access it in a simple way. With the implementation of the [`FileSystem`](https://github.com/PHOENIXCONTACT/MORYX-Framework/pull/517) it is also not required anymore.
+- Harmonized Naming Conventions: Naming conventions across the data model have been standardized to ensure consistency and clarity.
+- Derived data models are now fully supported. This needs some changes how the model is defined in code first scenarios. Please refer to the [Data Model Tutorial](/docs/tutorials/data-model/CodeFirst.md) for more information.
+
+### Removal of ProductFileEntity
+
+The `ProductFileEntity` has been removed from the data model as it was not utilized effectively. This change helps streamline the data structure and reduce unnecessary complexity.

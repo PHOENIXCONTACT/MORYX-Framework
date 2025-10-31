@@ -14,7 +14,7 @@ using Moryx.Runtime.Endpoints.Databases.Endpoint.Exceptions;
 
 namespace Moryx.Runtime.Endpoints.Tests.Databases
 {
-    internal class UpdateConfigSqliteTests
+    internal class UpdateConfigTests
     {
         private DbContextManager _dbContextManager;
         private DatabaseConfigUpdateService _databaseConfigUpdateService;
@@ -24,7 +24,6 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
         [SetUp]
         public void Setup()
         {
-
             _dbContextManager = new DbContextManager(CreateConfigManager(), new LoggerFactory());
             _databaseConfigUpdateService = new DatabaseConfigUpdateService(_dbContextManager);
             _targetModelTypename = typeof(TestModelContext).FullName;

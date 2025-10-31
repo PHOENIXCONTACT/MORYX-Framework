@@ -24,7 +24,7 @@ namespace Moryx.Products.IntegrationTests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            _factory = BuildUnitOfWorkFactory();
+            _factory = new UnitOfWorkFactory<SqliteProductsContext>(new InMemoryDbContextManager("RecipeStorageTests"));
 
             var storageMock = new Mock<IProductStorage>();
             storageMock.Setup(sm => sm.LoadRecipe(It.IsAny<long>())).Returns(new ProductionRecipe());
@@ -34,11 +34,6 @@ namespace Moryx.Products.IntegrationTests
                 ModelFactory = _factory,
                 Storage = storageMock.Object
             };
-        }
-
-        protected virtual UnitOfWorkFactory<ProductsContext> BuildUnitOfWorkFactory()
-        {
-            return new UnitOfWorkFactory<ProductsContext>(new InMemoryDbContextManager("RecipeStorageTests"));
         }
 
         [Test]

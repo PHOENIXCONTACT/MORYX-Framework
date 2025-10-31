@@ -22,6 +22,11 @@ namespace Moryx.Model
         IModelConfigurator GetConfigurator(Type contextType);
 
         /// <summary>
+        /// Get possible configurators for the given context type
+        /// </summary>
+        Type[] GetConfigurators(Type contextType);
+
+        /// <summary>
         /// Get setup executor for a model
         /// </summary>
         IModelSetupExecutor GetSetupExecutor(Type contextType);

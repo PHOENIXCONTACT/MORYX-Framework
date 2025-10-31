@@ -16,61 +16,111 @@ namespace Moryx.Model
     /// </summary>
     public class DbContextManager : IDbContextManager
     {
-        private ModelWrapper[] _knownModels;
         private readonly ILoggerFactory _loggerFactory;
         private readonly IConfigManager _configManager;
-        private static readonly Type[] _allDbContextTypes;
 
-        static DbContextManager()
-        {
-            _allDbContextTypes = ReflectionTool.GetPublicClasses(typeof(DbContext))
-                .Where(type => type != typeof(DbContext) && typeof(DbContext).IsAssignableFrom(type)).ToArray();
-        }
+        private readonly ConfiguredModelWrapper[] _configuredModels;
+        private readonly PossibleModelWrapper[] _possibleModels;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DbContextManager"/> class.
+        /// </summary>
+        /// <param name="configManager">Dependency to load model related configurations</param>
+        /// <param name="loggerFactory">Logger factory to provide the <see cref="IModelConfigurator"/> a logger</param>
         public DbContextManager(IConfigManager configManager, ILoggerFactory loggerFactory)
         {
             _loggerFactory = loggerFactory;
             _configManager = configManager;
 
-            var baseDbContextTypes = _allDbContextTypes
-                .Where(type => !type.GetCustomAttributes<DatabaseSpecificContextAttribute>().Any());
+            _possibleModels = GetPossibleModels();
+            _configuredModels = GetConfiguredModels();
 
-            _knownModels = baseDbContextTypes
-                .Select(dbContextType =>
-                {
-                    var config = configManager.GetConfiguration<DatabaseConfig<DatabaseConnectionSettings>>(ConfigFilename(dbContextType));
-                    var configuratorType = !string.IsNullOrEmpty(config.ConfiguratorTypename)
-                        ? Type.GetType(config.ConfiguratorTypename)
-                        : DefaultConfigurator();
-
-                    // Try to find specific DbContext for the configurator
-                    // If no specific context found, use the base one
-                    var specificDbContext = GetSpecificDbContext(dbContextType, configuratorType);
-
-                    return new ModelWrapper
-                    {
-                        DbContextType = dbContextType,
-                        SpecificDbContext = specificDbContext,
-                        Configurator = (IModelConfigurator)Activator.CreateInstance(configuratorType)
-                    };
-                }).ToArray();
-
-            foreach (var wrapper in _knownModels)
+            foreach (var wrapper in _configuredModels)
             {
                 InitializeConfigurator(wrapper);
             }
         }
 
-        // TODO: Reference to an assembly which might not be referencesd in certain setups
-        private Type DefaultConfigurator()
+        /// <summary>
+        /// This method uses reflection to find all possible models in the current AppDomain
+        /// </summary>
+        private static PossibleModelWrapper[] GetPossibleModels()
         {
-            var sqliteModelConfigurator = ReflectionTool.GetAssemblies()
-                .FirstOrDefault(x => x.GetName().Name.Contains("Moryx.Model.Sqlite"))
-                ?.GetTypes()
-                .FirstOrDefault(x => x.Name == "SqliteModelConfigurator");
+            var possibleModels = ReflectionTool.GetPublicClasses(typeof(DbContext))
+                .Where(type => type != typeof(DbContext) && typeof(DbContext).IsAssignableFrom(type) &&
+                               !type.IsAbstract &&
+                               type.GetCustomAttributes<DatabaseTypeSpecificDbContextAttribute>().Any())
+                .SelectMany(type =>
+                {
+                    var dbTypeAttributes = type.GetCustomAttributes<DatabaseTypeSpecificDbContextAttribute>()!;
+                    return dbTypeAttributes.Select(attr => new
+                    {
+                        DbContextType = type, BaseDbContextType = attr.BaseDbContextType ?? type, ModelConfiguratorType = attr.ModelConfiguratorType
+                    });
+                }).GroupBy(pc => pc.BaseDbContextType).Select(g =>
+                {
+                    var modelConfiguratorMap = g.ToDictionary(x => x.ModelConfiguratorType, x => x.DbContextType);
+                    return new PossibleModelWrapper { DbContext = g.Key, ModelConfiguratorMap = modelConfiguratorMap };
+                }).ToArray();
 
-            return sqliteModelConfigurator ?? typeof(NullModelConfigurator);
+            return possibleModels;
+        }
+
+        /// <summary>
+        /// This method loads all configured models with support of the <see cref="IConfigManager"/>
+        /// It matches the configured models with the possible models and creates them
+        /// </summary>
+        private ConfiguredModelWrapper[] GetConfiguredModels()
+        {
+            var configuredModels = new List<ConfiguredModelWrapper>();
+            foreach (var possibleModel in _possibleModels)
+            {
+                var config = _configManager.GetConfiguration<DatabaseConfig<DatabaseConnectionSettings>>(ConfigFilename(possibleModel.DbContext));
+                Type configuratorType = null;
+                Type specificDbContextType = null;
+                if (!string.IsNullOrEmpty(config.ConfiguratorTypename))
+                {
+                    var configuredConfiguratorType = Type.GetType(config.ConfiguratorTypename);
+                    if (configuredConfiguratorType != null &&
+                        possibleModel.ModelConfiguratorMap.TryGetValue(configuredConfiguratorType, out specificDbContextType))
+                    {
+                        configuratorType = configuredConfiguratorType;
+                    }
+                }
+                else
+                {
+                    var defaultMatch = possibleModel.ModelConfiguratorMap.FirstOrDefault();
+                    if (!defaultMatch.Equals(default(KeyValuePair<Type, Type>)))
+                    {
+                        configuratorType = defaultMatch.Key;
+                        specificDbContextType = defaultMatch.Value;
+                    }
+                }
+
+                if (configuratorType == null || specificDbContextType == null)
+                    throw new InvalidOperationException($"No valid configurator found for DbContext '{possibleModel.DbContext.FullName}'");
+
+                var configType = configuratorType.BaseType.GenericTypeArguments.First();
+
+                var typedConfig = (IDatabaseConfig)_configManager.GetConfiguration(configType,
+                    ConfigFilename(possibleModel.DbContext), true);
+
+                // If database is empty, fill with TargetModel name
+                if (string.IsNullOrWhiteSpace(typedConfig.ConnectionSettings.Database))
+                {
+                    typedConfig.ConnectionSettings.Database = possibleModel.DbContext.Name;
+                }
+
+                configuredModels.Add(new ConfiguredModelWrapper
+                {
+                    BaseDbContextType = possibleModel.DbContext,
+                    SpecificDbContextType = specificDbContextType,
+                    DatabaseConfig = typedConfig,
+                    Configurator = (IModelConfigurator)Activator.CreateInstance(configuratorType)
+                });
+            }
+
+            return configuredModels.ToArray();
         }
 
         /// <inheritdoc />
@@ -78,48 +128,50 @@ namespace Moryx.Model
         {
             _configManager.SaveConfiguration(databaseConfig, ConfigFilename(dbContextType));
 
-            var modelWrapper = _knownModels.First(w => w.DbContextType == dbContextType);
+            var modelWrapper = _configuredModels.First(w => w.BaseDbContextType == dbContextType);
+
+            Type specificDbContextType = null;
+            _possibleModels.FirstOrDefault(pm => pm.DbContext == dbContextType)?.ModelConfiguratorMap.TryGetValue(configuratorType, out specificDbContextType);
+            modelWrapper.SpecificDbContextType = specificDbContextType;
             modelWrapper.Configurator = (IModelConfigurator)Activator.CreateInstance(configuratorType);
-            modelWrapper.SpecificDbContext = GetSpecificDbContext(dbContextType, configuratorType);
+            modelWrapper.DatabaseConfig = databaseConfig;
 
             InitializeConfigurator(modelWrapper);
         }
 
-        private static Type GetSpecificDbContext(Type dbContextType, Type configuratorType)
+        private void InitializeConfigurator(ConfiguredModelWrapper configuredModelWrapper)
         {
-            return _allDbContextTypes.FirstOrDefault(type =>
-            {
-                if (!dbContextType.IsAssignableFrom(type))
-                    return false;
-
-                var modelConfiguratorAttr = type.GetCustomAttribute<ModelConfiguratorAttribute>();
-                if (modelConfiguratorAttr == null)
-                    return false;
-
-                return modelConfiguratorAttr.ConfiguratorType == configuratorType;
-            }) ?? dbContextType;
-        }
-
-        private void InitializeConfigurator(ModelWrapper modelWrapper)
-        {
-            var configuratorType = modelWrapper.Configurator.GetType();
+            var configuratorType = configuredModelWrapper.Configurator.GetType();
             var logger = _loggerFactory.CreateLogger(configuratorType);
-            modelWrapper.Configurator.Initialize(modelWrapper.SpecificDbContext, _configManager, logger);
+            configuredModelWrapper.Configurator.Initialize(configuredModelWrapper.SpecificDbContextType, configuredModelWrapper.DatabaseConfig, logger);
         }
 
-        private string ConfigFilename(Type dbContextType)
+        private static string ConfigFilename(Type dbContextType)
             => dbContextType.FullName + ".DbConfig";
 
         /// <inheritdoc />
-        public IReadOnlyCollection<Type> Contexts => _knownModels.Select(km => km.DbContextType).ToArray();
+        public IReadOnlyCollection<Type> Contexts => _configuredModels.Select(km => km.BaseDbContextType).ToArray();
 
         /// <inheritdoc />
-        public IModelConfigurator GetConfigurator(Type contextType) => _knownModels.First(km => km.DbContextType == contextType).Configurator;
+        public IModelConfigurator GetConfigurator(Type contextType) =>
+            _configuredModels.First(km => km.BaseDbContextType == contextType).Configurator;
+
+        /// <inheritdoc />
+        public Type[] GetConfigurators(Type contextType)
+        {
+            return _possibleModels.FirstOrDefault(pm => pm.DbContext == contextType)?.ModelConfiguratorMap.Keys.ToArray();
+        }
 
         /// <inheritdoc />
         public IModelSetupExecutor GetSetupExecutor(Type contextType)
         {
-            var setupExecutorType = typeof(ModelSetupExecutor<>).MakeGenericType(contextType);
+            var configuredContext = _configuredModels.FirstOrDefault(m => m.BaseDbContextType == contextType);
+            if (configuredContext == null)
+                throw new InvalidOperationException($"Context {contextType.FullName} not configured!");
+
+            var specificContextType = configuredContext.SpecificDbContextType;
+
+            var setupExecutorType = typeof(ModelSetupExecutor<>).MakeGenericType(specificContextType);
             return (IModelSetupExecutor)Activator.CreateInstance(setupExecutorType, this);
         }
 
@@ -130,7 +182,7 @@ namespace Moryx.Model
         /// <inheritdoc />
         public TContext Create<TContext>(IDatabaseConfig config) where TContext : DbContext
         {
-            var wrapper = _knownModels.FirstOrDefault(k => k.DbContextType == typeof(TContext));
+            var wrapper = _configuredModels.FirstOrDefault(k => k.BaseDbContextType == typeof(TContext));
             if (wrapper == null)
                 throw new InvalidOperationException("Unknown model");
 
@@ -141,13 +193,22 @@ namespace Moryx.Model
                 : (TContext)configurator.CreateContext();
         }
 
-        private class ModelWrapper
+        private class ConfiguredModelWrapper
         {
-            public Type DbContextType { get; set; }
+            public Type BaseDbContextType { get; set; }
+
+            public Type SpecificDbContextType { get; set; }
 
             public IModelConfigurator Configurator { get; set; }
 
-            public Type SpecificDbContext { get; set; }
+            public IDatabaseConfig DatabaseConfig { get; set; }
+        }
+
+        private class PossibleModelWrapper
+        {
+            public Type DbContext { get; set; }
+
+            public Dictionary<Type, Type> ModelConfiguratorMap { get; set; }
         }
     }
 }

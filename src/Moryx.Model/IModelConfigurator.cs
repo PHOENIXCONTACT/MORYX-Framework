@@ -52,7 +52,7 @@ namespace Moryx.Model
         /// <summary>
         /// Initializes the model configurator
         /// </summary>
-        void Initialize(Type contextType, IConfigManager configManager, ILogger logger);
+        void Initialize(Type contextType, IDatabaseConfig config, ILogger logger);
 
         /// <summary>
         /// Creates a context with internal configuration
@@ -68,11 +68,6 @@ namespace Moryx.Model
         /// Creates a context based on `DbContextOptions`
         /// </summary>
         DbContext CreateContext(Type contextType, DbContextOptions dbContextOptions);
-
-        /// <summary>
-        /// Updates the configuration of the underlying model
-        /// </summary>
-        void UpdateConfig();
 
         /// <summary>
         /// Test connection for config

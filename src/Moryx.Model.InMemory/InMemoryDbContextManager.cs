@@ -40,6 +40,12 @@ namespace Moryx.Model.InMemory
         }
 
         /// <inheritdoc />
+        public Type[] GetConfigurators(Type contextType)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
         public IModelSetupExecutor GetSetupExecutor(Type contextType)
         {
             throw new NotImplementedException();

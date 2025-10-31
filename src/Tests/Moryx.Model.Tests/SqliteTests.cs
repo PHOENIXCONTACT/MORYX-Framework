@@ -2,76 +2,71 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Model.Sqlite;
-using Moryx.Products.Model;
-using Moryx.Runtime.Kernel;
 using NUnit.Framework;
 using System.IO;
 using System.Threading.Tasks;
+using Moryx.TestTools.Test.Model;
 
 namespace Moryx.Model.Tests
 {
     [TestFixture]
     public class SqliteTests
     {
-        private SqliteDatabaseConfig dbConfig;
-        private SqliteModelConfigurator configurator;
-        private string datasource;
+        private SqliteDatabaseConfig _dbConfig;
+        private SqliteModelConfigurator _configurator;
+        private string _dataSource;
 
         [SetUp]
         public void Setup()
         {
-            string databaseName = "TestDatabase";
-            datasource = Path.Combine(".", "db", databaseName + ".db");
-            string connectionString = $@"Data Source={datasource};";
-            dbConfig = new SqliteDatabaseConfig();
-            dbConfig.ConnectionSettings = new DatabaseConnectionSettings { ConnectionString = connectionString, Database = databaseName };
-            configurator = new SqliteModelConfigurator();
-            configurator.Initialize(typeof(ProductsContext), CreateConfigManager(), null);
+            var databaseName = "TestDatabase";
+            _dataSource = Path.Combine(".", "db", databaseName + ".db");
+            var connectionString = $@"Data Source={_dataSource};";
+            _dbConfig = new SqliteDatabaseConfig
+            {
+                ConnectionSettings = new DatabaseConnectionSettings
+                {
+                    ConnectionString = connectionString,
+                    Database = databaseName
+                }
+            };
+            _configurator = new SqliteModelConfigurator();
+            _configurator.Initialize(typeof(SqliteTestModelContext), _dbConfig, null);
         }
 
         [Test]
         public async Task SqliteCreateDatabaseShouldWork()
         {
-            var result = await configurator.TestConnection(dbConfig);
+            var result = await _configurator.TestConnection(_dbConfig);
             Assert.That(result, Is.EqualTo(TestConnectionResult.ConnectionOkDbDoesNotExist));
 
-            bool isCreated = await configurator.CreateDatabase(dbConfig);
+            var isCreated = await _configurator.CreateDatabase(_dbConfig);
 
             Assert.That(isCreated);
-            Assert.That(File.Exists(datasource));
+            Assert.That(File.Exists(_dataSource));
 
             //remove the database
-            await configurator.DeleteDatabase(dbConfig);
+            await _configurator.DeleteDatabase(_dbConfig);
         }
 
         [Test]
         public async Task SqliteDeleteDatabaseShouldWork()
         {
-            var connectionResult = await configurator.TestConnection(dbConfig);
+            var connectionResult = await _configurator.TestConnection(_dbConfig);
             Assert.That(connectionResult, Is.EqualTo(TestConnectionResult.ConnectionOkDbDoesNotExist));
 
-            bool isCreated = await configurator.CreateDatabase(dbConfig);
+            var isCreated = await _configurator.CreateDatabase(_dbConfig);
             Assert.That(isCreated);
 
-            await configurator.DeleteDatabase(dbConfig);
-            Assert.That(!File.Exists(datasource));
+            await _configurator.DeleteDatabase(_dbConfig);
+            Assert.That(!File.Exists(_dataSource));
         }
-
-        private static ConfigManager CreateConfigManager()
-        {
-            var configManager = new ConfigManager
-            {
-                ConfigDirectory = ""
-            };
-            return configManager;
-        }
-
         [TearDown]
         public void Destroy()
         {
-            if (File.Exists(datasource))
+            if (File.Exists(_dataSource))
                 //remove the database
-                configurator.DeleteDatabase(dbConfig).Wait();
+                _configurator.DeleteDatabase(_dbConfig).Wait();
         }
     }
 }

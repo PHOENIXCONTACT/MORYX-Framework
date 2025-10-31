@@ -16,7 +16,7 @@ using Moryx.Tools;
 using Moryx.Workplans;
 using Moq;
 using Moryx.AbstractionLayer.Identity;
-using Moryx.Model.InMemory;
+using Moryx.AbstractionLayer.TestTools;
 using Moryx.Model.Repositories;
 using Moryx.Serialization;
 using NUnit.Framework;
@@ -241,9 +241,13 @@ namespace Moryx.Products.IntegrationTests
             _storage.Start();
         }
 
-        protected virtual UnitOfWorkFactory<ProductsContext> BuildUnitOfWorkFactory()
+        protected virtual UnitOfWorkFactory<SqliteProductsContext> BuildUnitOfWorkFactory()
         {
-            return new UnitOfWorkFactory<ProductsContext>(new InMemoryDbContextManager("ProductStorageTest"));
+            var uowFactory = InMemoryUnitOfWorkFactoryBuilder
+                .Sqlite<SqliteProductsContext>();
+            uowFactory.EnsureDbIsCreated();
+
+            return uowFactory;
         }
 
         private Mock<IStorageStrategyFactory> CreateStrategyFactory()

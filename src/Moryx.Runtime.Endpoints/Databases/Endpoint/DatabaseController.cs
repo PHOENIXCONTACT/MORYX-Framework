@@ -294,7 +294,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             {
                 TargetModel = TargetModelName(contextType),
                 Config = SerializeConfig(dbConfig),
-                PossibleConfigurators = GetConfigurators(),
+                PossibleConfigurators = GetConfigurators(contextType),
                 Setups = GetAllSetups(contextType).ToArray(),
                 Backups = GetAllBackups(contextType).ToArray(),
                 AvailableMigrations = await GetAvailableUpdates(dbConfig, configurator),
@@ -312,10 +312,9 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             };
         }
 
-        private static DatabaseConfigOptionModel[] GetConfigurators()
+        private DatabaseConfigOptionModel[] GetConfigurators(Type contextType)
         {
-            var configuratorTypes = ReflectionTool
-                .GetPublicClasses(typeof(IModelConfigurator), type => type != typeof(NullModelConfigurator)).ToList();
+            var configuratorTypes = _dbContextManager.GetConfigurators(contextType);
 
             var result = configuratorTypes
                 .Select(type => new DatabaseConfigOptionModel
