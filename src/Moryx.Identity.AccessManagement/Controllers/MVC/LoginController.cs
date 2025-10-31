@@ -2,11 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Moryx.Identity.AccessManagement.Data;
 using Moryx.Identity.AccessManagement.Identity;
 using Moryx.Identity.AccessManagement.Models;
 
@@ -16,16 +13,14 @@ namespace Moryx.Identity.AccessManagement.Controllers
     {
         private readonly MoryxUserManager _userManager;
         private readonly ITokenService _tokenService;
-        private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
         private readonly IPasswordResetService _pwResetService;
 
         public LoginController(MoryxUserManager userManager,
-            ITokenService tokenService, IMapper mapper, IConfiguration configuration, IPasswordResetService passwordResetService)
+            ITokenService tokenService, IConfiguration configuration, IPasswordResetService passwordResetService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
-            _mapper = mapper;
             _configuration = configuration;
             _pwResetService = passwordResetService;
         }
@@ -80,7 +75,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
 
         public async Task<IActionResult> RegisterExecute(MoryxUserRegisterModel userModel)
         {
-            var user = _mapper.Map<MoryxUserRegisterModel, MoryxUser>(userModel);
+            var user = ModelConverter.GetUserFromUserRegisterModel(userModel);;
 
             var userCreateResult = await _userManager.CreateAsync(user, userModel.Password);
             if (userCreateResult.Succeeded)

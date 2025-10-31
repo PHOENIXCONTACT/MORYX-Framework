@@ -1,23 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-	    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-	    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	    <Description>MORYX Identity and Access Management (IAM) Module</Description>
-	    <IsPackable>true</IsPackable>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>MORYX Identity and Access Management (IAM) Module</Description>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
+
   <ItemGroup>
     <!-- Asp.Net Core dependencies -->
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
-    <PackageReference Include="Microsoft.Identity.Web" />
-    <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" />
-    <PackageReference Include="AutoMapper" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
+    <PackageReference Include="Microsoft.Identity.Web"/>
+    <PackageReference Include="Microsoft.Identity.Web.DownstreamApi"/>
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Moryx.Identity\Moryx.Identity.csproj" />
+    <ProjectReference Include="..\Moryx.Identity\Moryx.Identity.csproj"/>
   </ItemGroup>
 </Project>
