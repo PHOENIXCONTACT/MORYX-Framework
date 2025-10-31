@@ -11,7 +11,7 @@
     <dotnetVersion>8.0.1</dotnetVersion>
     <efCoreVersion>8.0.21</efCoreVersion>
 
-    <AspNetCoreVersion>8.0.20</AspNetCoreVersion>
+    <AspNetCoreVersion>8.0.21</AspNetCoreVersion>
   </PropertyGroup>
 
   <ItemGroup>
