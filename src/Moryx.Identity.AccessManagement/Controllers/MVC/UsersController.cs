@@ -2,28 +2,25 @@
 // Licensed under the Apache License, Version 2.0
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Moryx.Identity.AccessManagement.Data;
 using Moryx.Identity.AccessManagement.Identity;
 using Moryx.Identity.AccessManagement.Models;
 
 namespace Moryx.Identity.AccessManagement.Controllers
 {
-
     [Authorize(Roles = Roles.SuperAdmin)]
     public class UsersController : Controller
     {
-        private readonly IMapper _mapper;
         private readonly MoryxUserManager _userManager;
         private readonly IConfiguration _configuration;
         private readonly IPasswordResetService _pwResetService;
 
-        public UsersController(IMapper mapper, MoryxUserManager userManager, IConfiguration configuration, IPasswordResetService passwordResetService)
+        public UsersController(MoryxUserManager userManager, IConfiguration configuration, IPasswordResetService passwordResetService)
         {
-            _mapper = mapper;
             _userManager = userManager;
             _configuration = configuration;
             _pwResetService = passwordResetService;
@@ -38,7 +35,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
         public async Task<IActionResult> Edit(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-            var userModel = _mapper.Map<MoryxUserUpdateModel>(user);
+            var userModel = ModelConverter.GetUserUpdateModelFromUser(user);
             var pwReset = await _pwResetService.GetPasswordReset(userId);
             if (pwReset != null)
                 userModel.PasswordResetToken = pwReset.ResetToken;
