@@ -22,7 +22,7 @@ More extended, additional repositories can be created for the [UnitOfWork Reposi
 Create your own database context by deriving from `DbContext` or for more comfortability from [MoryxDbContext](/src/Moryx.Model/MoryxDbContext.cs) and add the two constructor overloads as shown below.
 
 ````cs
-public abstract class SolarSystemContext : MoryxDbContext
+public class SolarSystemContext : MoryxDbContext
 {
     public SolarSystemContext()
     {
@@ -48,7 +48,7 @@ public abstract class SolarSystemContext : MoryxDbContext
 }
 ````
 
-If you want to provide database provider specific implementations you can derive from this context. The base context must be abstract then. The database specific attribute provides an argument for the base context. This is important to use the base context in a generic way, without knowledge about the specific database providers. For example for PostgreSQL:
+If you want to provide database provider specific implementations you can derive from this context. The database specific attribute provides an argument for the base context. This is important to use the base context in a generic way, without knowledge about the specific database providers. For example for PostgreSQL:
 
 ````cs
 [NpgsqlDbContext(typeof(SolarSystemContext))]
@@ -314,7 +314,7 @@ We use the default StartProject of an application to create the migration. Keep 
 
 For both options we need implementations of the `IDesignTimeDbContextFactory<TContext>` interface for every `DbContext` you want to migrate ([Microsoft Docs](https://learn.microsoft.com/en-us/ef/core/cli/dbcontext-creation?tabs=dotnet-core-cli#from-a-design-time-factory)). This factory is used by the migration tool to create an instance of your context during design time. MORYX provides a base implementation for you to make your life easier and avoid code duplication. Each database specific implementation provides a base class for you to derive from. For PostgreSQL it is the `NpgsqlDesignTimeDbContextFactory<TContext>` located in the `Moryx.Model.PostgreSQL` package. For Sqlite it is the `SqliteDesignTimeDbContextFactory<TContext>` located in the `Moryx.Model.Sqlite` package.
 
-Samples for the SolarSystemContext could be look as follows. There is no additional code necessary within the classes.
+Samples for the SolarSystemContext could look as follows. There is no additional code necessary within the classes.
 
 ````cs
 // Npgsql
