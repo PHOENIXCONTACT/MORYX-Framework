@@ -27,4 +27,8 @@
 	  <ProjectReference Include="..\Moryx.Resources.Samples\Moryx.Resources.Samples.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
+  </ItemGroup>
+
 </Project>

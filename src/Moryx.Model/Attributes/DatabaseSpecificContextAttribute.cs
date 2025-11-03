@@ -9,5 +9,8 @@ namespace Moryx.Model.Attributes
     /// Attribute to identify database specific contexts
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class DatabaseSpecificContextAttribute : Attribute { }
+    public class DatabaseSpecificContextAttribute : Attribute
+    {
+        
+    }
 }
