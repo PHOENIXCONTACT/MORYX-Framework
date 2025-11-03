@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
-using Moryx.Products.Model;
+using Moryx.Products.Management.Model;
 using Moryx.Serialization;
 
 namespace Moryx.Products.Management

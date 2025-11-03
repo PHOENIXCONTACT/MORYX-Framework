@@ -3,7 +3,6 @@
 
 using System.Collections;
 using Moryx.Model;
-using Moryx.Products.Model;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -17,6 +16,7 @@ using static Moryx.Products.Management.ProductExpressionHelpers;
 using Moryx.Logging;
 using Moryx.Products.Management.Implementation.Storage;
 using Microsoft.Extensions.Logging;
+using Moryx.Products.Management.Model;
 
 namespace Moryx.Products.Management
 {

@@ -9,7 +9,6 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Products.Management;
 using Moryx.Products.Management.NullStrategies;
-using Moryx.Products.Model;
 using Moryx.Products.Samples;
 using Moryx.Products.Samples.Recipe;
 using Moryx.Tools;
@@ -18,6 +17,7 @@ using Moq;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.TestTools;
 using Moryx.Model.Repositories;
+using Moryx.Products.Management.Model;
 using Moryx.Serialization;
 using NUnit.Framework;
 

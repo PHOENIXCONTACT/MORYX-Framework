@@ -3,8 +3,8 @@
 
 using Moryx.AbstractionLayer.Products;
 using Moryx.Modules;
-using Moryx.Products.Model;
 using System.Reflection;
+using Moryx.Products.Management.Model;
 
 namespace Moryx.Products.Management.Implementation.Storage
 {
