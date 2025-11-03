@@ -7,7 +7,7 @@ using Moryx.Model.Sqlite;
 namespace Moryx.ControlSystem.ProcessEngine.Model
 {
     /// <summary>
-    /// The Sqlite DbContext of this database model.
+    /// Sqlite specific implementation of <see cref="ProcessContext"/>
     /// </summary>
     [SqliteDbContext(typeof(ProcessContext))]
     public class SqliteProcessContext : ProcessContext
