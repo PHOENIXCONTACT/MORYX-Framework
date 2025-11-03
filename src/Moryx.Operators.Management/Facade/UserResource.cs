@@ -4,7 +4,7 @@
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Operators.Management.Facade;
+namespace Moryx.Operators.Management;
 
 internal class UserResource : Resource, IOperatorAssignable
 {

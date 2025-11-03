@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Users;
+
 namespace Moryx.Operators.Management;
 
 internal class OperatingUser(IReadOnlyList<IOperatorAssignable> assignedResources) : User

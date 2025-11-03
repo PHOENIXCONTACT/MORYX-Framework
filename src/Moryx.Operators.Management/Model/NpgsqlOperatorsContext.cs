@@ -6,7 +6,9 @@ using Moryx.Model.PostgreSQL;
 
 namespace Moryx.Operators.Management.Model;
 
-/// <inheritdoc />
+/// <summary>
+/// Npgsql specific implementation of <see cref="OperatorsContext"/>
+/// </summary>
 [NpgsqlDbContext(typeof(OperatorsContext))]
 public class NpgsqlOperatorsContext : OperatorsContext
 {
