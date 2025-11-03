@@ -7,7 +7,7 @@ using Moryx.Model.PostgreSQL;
 namespace Moryx.Orders.Management.Model
 {
     /// <summary>
-    /// The DBContext of this database model.
+    /// Npgsql specific implementation of <see cref="OrdersContext"/>
     /// </summary>
     [NpgsqlDbContext(typeof(OrdersContext))]
     public class NpgsqlOrdersContext : OrdersContext

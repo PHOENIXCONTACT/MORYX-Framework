@@ -7,7 +7,7 @@ using Moryx.Model.Sqlite;
 namespace Moryx.Orders.Management.Model
 {
     /// <summary>
-    /// The DBContext of this database model.
+    /// Sqlite specific implementation of <see cref="OrdersContext"/>
     /// </summary>
     [SqliteDbContext(typeof(OrdersContext))]
     public class SqliteOrdersContext : OrdersContext
