@@ -4,8 +4,6 @@
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Moryx.Configuration;
-using Moryx.Model.Attributes;
 using Moryx.Tools;
 
 namespace Moryx.Model.Configuration
@@ -252,7 +250,7 @@ namespace Moryx.Model.Configuration
                 await conn.OpenAsync();
                 return true;
             }
-            catch (Exception)
+            catch(Exception e)
             {
                 return false;
             }

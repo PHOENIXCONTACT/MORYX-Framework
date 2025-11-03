@@ -64,7 +64,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moryx.Model.InMemory", "src
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DFC092A6-B935-4D19-A564-9AEDEEF999B9}"
 	ProjectSection(SolutionItems) = preProject
-		Build.ps1 = Build.ps1
 		.build\Common.props = .build\Common.props
 		Directory.build.props = Directory.build.props
 		Directory.Build.targets = Directory.Build.targets
@@ -316,6 +315,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Shifts.Web", "src\Moryx.Shifts.Web\Moryx.Shifts.Web.csproj", "{22358E04-0AE4-4ADA-9018-56C881E313F1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Shifts.Management.IntegrationTests", "src\Tests\Moryx.Shifts.Management.IntegrationTests\Moryx.Shifts.Management.IntegrationTests.csproj", "{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moryx.Model.SqlServer", "src\Moryx.Model.SqlServer\Moryx.Model.SqlServer.csproj", "{4402EF2E-CBA8-4EEF-B8A6-EC8364960306}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -835,6 +836,10 @@ Global
 		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4402EF2E-CBA8-4EEF-B8A6-EC8364960306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4402EF2E-CBA8-4EEF-B8A6-EC8364960306}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4402EF2E-CBA8-4EEF-B8A6-EC8364960306}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4402EF2E-CBA8-4EEF-B8A6-EC8364960306}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -963,6 +968,7 @@ Global
 		{D27EC875-D22E-4AB0-8E91-C4B7ED0DB91E} = {8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}
 		{22358E04-0AE4-4ADA-9018-56C881E313F1} = {8DF13E64-63FC-44A9-A54C-ADEFC356CDE8}
 		{5E02B439-B91F-4297-9AE4-7B92F2AA2AFF} = {8517D209-5BC1-47BD-A7C7-9CF9ADD9F5B6}
+		{4402EF2E-CBA8-4EEF-B8A6-EC8364960306} = {74112169-6672-4907-A187-F055111940A9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}

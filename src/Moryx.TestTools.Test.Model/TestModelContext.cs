@@ -3,10 +3,12 @@
 
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
-// ReSharper disable VirtualMemberNeverOverridden.Global
 
 namespace Moryx.TestTools.Test.Model;
 
+/// <summary>
+/// The DBContext of this database model.
+/// </summary>
 public class TestModelContext : MoryxDbContext
 {
     public TestModelContext()
@@ -20,6 +22,7 @@ public class TestModelContext : MoryxDbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
+
         optionsBuilder.UseLazyLoadingProxies();
     }
 
