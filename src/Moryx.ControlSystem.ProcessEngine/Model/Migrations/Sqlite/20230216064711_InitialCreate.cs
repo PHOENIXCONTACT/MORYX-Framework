@@ -1,15 +1,16 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Moryx.ControlSystem.ProcessEngine.Model.Migrations.Sqlite
 {
+    /// <inheritdoc />
     public partial class InitialCreate : Migration
     {
+    /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
@@ -188,6 +189,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Model.Migrations.Sqlite
                 column: "ProcessId");
         }
 
+    /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
