@@ -3,12 +3,11 @@
 
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Sqlite;
-// ReSharper disable VirtualMemberNeverOverridden.Global
 
-namespace Moryx.Notifications.Model
+namespace Moryx.Notifications.Publisher.Model
 {
     /// <summary>
-    /// The DBContext of this database model.
+    /// Sqlite specific implementation of <see cref="NotificationsContext"/>
     /// </summary>
     [SqliteDbContext(typeof(NotificationsContext))]
     public class SqliteNotificationsContext : NotificationsContext

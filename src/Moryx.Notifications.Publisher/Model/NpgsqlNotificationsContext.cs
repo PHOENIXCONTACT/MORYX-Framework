@@ -4,10 +4,10 @@
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.PostgreSQL;
 
-namespace Moryx.Notifications.Model
+namespace Moryx.Notifications.Publisher.Model
 {
     /// <summary>
-    /// The DBContext of this database model.
+    /// Npgsql specific implementation of <see cref="NotificationsContext"/>
     /// </summary>
     [NpgsqlDbContext(typeof(NotificationsContext))]
     public class NpgsqlNotificationsContext : NotificationsContext

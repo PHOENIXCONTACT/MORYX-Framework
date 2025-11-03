@@ -3,7 +3,7 @@
 
 using Moryx.Model.Sqlite;
 
-namespace Moryx.Notifications.Model;
+namespace Moryx.Notifications.Publisher.Model;
 
 /// <summary>
 /// Design time factory for the <see cref="SqliteNotificationsContext"/>

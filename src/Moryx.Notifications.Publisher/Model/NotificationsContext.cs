@@ -3,9 +3,12 @@
 
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
-// ReSharper disable VirtualMemberNeverOverridden.Global
 
-namespace Moryx.Notifications.Model
+// ReSharper disable UnusedMember.Global
+// ReSharper disable VirtualMemberNeverOverridden.Global
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+namespace Moryx.Notifications.Publisher.Model
 {
     /// <summary>
     /// The DBContext of this database model.
@@ -53,4 +56,3 @@ namespace Moryx.Notifications.Model
         public virtual DbSet<NotificationTypeEntity> NotificationTypes { get; set; }
     }
 }
-
