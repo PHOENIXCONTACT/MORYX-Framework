@@ -3,10 +3,8 @@
 
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Moryx.Shifts.Management
+namespace Moryx.Shifts.Management.Model
 {
     internal static class EntityExtensions
     {
