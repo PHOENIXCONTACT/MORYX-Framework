@@ -19,10 +19,10 @@ namespace Moryx.Drivers.Camera.Interfaces
         /// Capture a single image from the camera
         /// </summary>
         /// <returns>
-        ///     The image that was captured or null in case no image 
+        ///     The image that was captured or null in case no image
         ///     could be retrieved
         /// </returns>
-        Task<TImage?> CaptureImage();
+        Task<TImage> CaptureImage();
     }
 }
 

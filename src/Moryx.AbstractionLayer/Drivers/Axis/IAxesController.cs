@@ -15,15 +15,13 @@ namespace Moryx.AbstractionLayer.Drivers.Axis
         /// </summary>
         /// <param name="axis">The axis which should be moved</param>
         /// <param name="targetPosition">The target position of the axis</param>
-        /// <param name="callback">The callback which will be executed after the axis movement</param>
-        void MoveAxis(Axes axis, double targetPosition, DriverResponse<AxisMovementResponse> callback);
+        Task<AxisMovementResponse> MoveAxis(Axes axis, double targetPosition);
 
         /// <summary>
         /// Will move the axis of the laser to the given position
         /// </summary>
         /// <param name="axis">The axis which should be moved</param>
         /// <param name="targetPosition">The target position of the axis</param>
-        /// <param name="callback">The callback which will be executed after the axis movement</param>
-        void MoveAxis(Axes axis, AxisPosition targetPosition, DriverResponse<AxisMovementResponse> callback);
+        Task<AxisMovementResponse> MoveAxis(Axes axis, AxisPosition targetPosition);
     }
 }
