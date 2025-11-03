@@ -11,7 +11,7 @@ namespace Moryx.AbstractionLayer.Drivers.Scales
         /// <summary>
         /// Requests the weight from the scale.
         /// </summary>
-        void GetCurrentWeight(DriverResponse<WeightResult> callback);
+        Task<WeightResult> GetCurrentWeight();
 
         /// <summary>
         /// Occurs when the weight scale weight was read.
