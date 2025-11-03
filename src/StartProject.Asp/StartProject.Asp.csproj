@@ -63,8 +63,4 @@
     <ProjectReference Include="..\Moryx.Workplans.Web\Moryx.Workplans.Web.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
-  </ItemGroup>
-
 </Project>

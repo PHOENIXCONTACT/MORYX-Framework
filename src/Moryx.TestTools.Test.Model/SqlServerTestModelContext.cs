@@ -4,10 +4,8 @@
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Attributes;
 using Moryx.Model.SqlServer;
-using Moryx.TestTools.Test.Model;
 
-// ReSharper disable once CheckNamespace
-namespace Moryx.Resources.Model;
+namespace Moryx.TestTools.Test.Model;
 
 /// <summary>
 /// SqlServer specific implementation of <see cref="TestModelContext"/>
