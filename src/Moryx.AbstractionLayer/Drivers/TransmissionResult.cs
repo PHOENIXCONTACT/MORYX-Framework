@@ -4,12 +4,7 @@
 namespace Moryx.AbstractionLayer.Drivers
 {
     /// <summary>
-    /// Generic base delegate for driver APIs with callback
-    /// </summary>
-    public delegate void DriverResponse<in TResult>(IDriver sender, TResult result) where TResult : TransmissionResult;
-
-    /// <summary>
-    /// Base result object for transissions
+    /// Base result object for transmissions
     /// </summary>
     public abstract class TransmissionResult
     {

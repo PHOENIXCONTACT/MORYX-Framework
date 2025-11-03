@@ -11,12 +11,12 @@ namespace Moryx.AbstractionLayer.Drivers.PickByLight
         /// <summary>
         /// Activate instruction for this address
         /// </summary>
-        void ActivateInstruction(string address, LightInstructions instruction);
+        Task ActivateInstruction(string address, LightInstructions instruction);
 
         /// <summary>
         /// Deactivate an instruction
         /// </summary>
-        void DeactivateInstruction(string address);
+        Task DeactivateInstruction(string address);
 
         /// <summary>
         /// Instruction was confirmed
