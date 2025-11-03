@@ -230,12 +230,6 @@ namespace Moryx.Model.Configuration
         /// <inheritdoc />
         public abstract Task DeleteDatabase(IDatabaseConfig config);
 
-        /// <inheritdoc />
-        public abstract Task DumpDatabase(IDatabaseConfig config, string targetPath);
-
-        /// <inheritdoc />
-        public abstract Task RestoreDatabase(IDatabaseConfig config, string filePath);
-
         /// <summary>
         /// Generally tests the connection to the database
         /// </summary>

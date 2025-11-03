@@ -69,18 +69,6 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public Task DumpDatabase(IDatabaseConfig config, string targetPath)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public Task RestoreDatabase(IDatabaseConfig config, string filePath)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
         public DbContext CreateContext(Type contextType, DbContextOptions dbContextOptions)
         {
             throw new NotImplementedException();
