@@ -29,7 +29,7 @@ namespace Moryx.Container
         }
 
         /// <summary>
-        /// Calls build on base class and than forwards config via initialize to newly created component
+        /// Calls build on base class and then forwards config via initialize to newly created component
         /// </summary>
         /// <param name="method">Invoked factory method - e.g. Create</param>
         /// <param name="componentName">Name of component being constructed</param>

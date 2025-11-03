@@ -18,7 +18,6 @@ namespace Moryx.Container
     /// </summary>
     public class CastleContainer : IContainer
     {
-
         #region Constructors
 
         private readonly IWindsorContainer _container;
