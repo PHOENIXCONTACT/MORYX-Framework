@@ -4,8 +4,7 @@
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 using Moryx.Model;
 
-// ReSharper disable once CheckNamespace
-namespace Moryx.Resources.Model
+namespace Moryx.Resources.Management.Model
 {
     public class ResourceEntity : ModificationTrackedEntityBase
     {

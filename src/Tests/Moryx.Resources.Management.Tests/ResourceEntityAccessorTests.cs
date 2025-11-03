@@ -3,13 +3,13 @@
 
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Resources.Model;
 using Moryx.Serialization;
 using Moq;
 using Moryx.Model.Repositories;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System.ComponentModel;
+using Moryx.Resources.Management.Model;
 
 namespace Moryx.Resources.Management.Tests
 {

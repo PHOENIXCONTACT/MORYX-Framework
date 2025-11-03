@@ -3,8 +3,7 @@
 
 using Moryx.Model.PostgreSQL;
 
-// ReSharper disable once CheckNamespace
-namespace Moryx.Resources.Model;
+namespace Moryx.Resources.Management.Model;
 
 /// <summary>
 /// Design time factory for the <see cref="NpgsqlResourcesContext"/>

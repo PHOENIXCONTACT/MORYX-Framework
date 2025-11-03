@@ -4,8 +4,7 @@
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.PostgreSQL;
 
-// ReSharper disable once CheckNamespace
-namespace Moryx.Resources.Model
+namespace Moryx.Resources.Management.Model
 {
     /// <summary>
     /// Npgsql specific implementation of <see cref="ResourcesContext"/>

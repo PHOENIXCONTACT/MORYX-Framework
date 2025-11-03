@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Resources.Model;
 using Moq;
 using Moryx.Model.Repositories;
 using NUnit.Framework;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
+using Moryx.Resources.Management.Model;
 
 namespace Moryx.Resources.Management.Tests
 {

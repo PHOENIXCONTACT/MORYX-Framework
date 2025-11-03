@@ -3,8 +3,7 @@
 
 using Moryx.Model.Sqlite;
 
-// ReSharper disable once CheckNamespace
-namespace Moryx.Resources.Model;
+namespace Moryx.Resources.Management.Model;
 
 /// <summary>
 /// Design time factory for the <see cref="SqliteResourcesContext"/>

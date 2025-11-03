@@ -10,7 +10,7 @@ using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model;
 using Moryx.Model.Repositories;
-using Moryx.Resources.Model;
+using Moryx.Resources.Management.Model;
 using static Moryx.Resources.Management.ResourceReferenceTools;
 
 namespace Moryx.Resources.Management
