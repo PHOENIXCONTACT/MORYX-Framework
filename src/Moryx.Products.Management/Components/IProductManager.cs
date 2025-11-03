@@ -20,7 +20,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Returns all products on this machine
         /// </summary>
-        IReadOnlyList<IProductType> LoadTypes(ProductQuery query);
+        IReadOnlyList<ProductType> LoadTypes(ProductQuery query);
 
         /// <summary>
         /// Load types using filter expression
@@ -30,32 +30,32 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Load product instance by id
         /// </summary>
-        IProductType LoadType(long id);
+        ProductType LoadType(long id);
 
         /// <summary>
         /// Load product by identity
         /// </summary>
-        IProductType LoadType(ProductIdentity identity);
+        ProductType LoadType(ProductIdentity identity);
 
         /// <summary>
         /// Create a new product for the given group type
         /// </summary>
-        IProductType CreateType(string type);
+        ProductType CreateType(string type);
 
         /// <summary>
         /// Event raised when a product changed
         /// </summary>
-        event EventHandler<IProductType> TypeChanged;
+        event EventHandler<ProductType> TypeChanged;
 
         /// <summary>
         /// Save a product to the database
         /// </summary>
-        long SaveType(IProductType modifiedInstance);
+        long SaveType(ProductType modifiedInstance);
 
         /// <summary>
         /// Create revision of this product with provided revision number
         /// </summary>
-        IProductType Duplicate(ProductType source, ProductIdentity identity);
+        ProductType Duplicate(ProductType source, ProductIdentity identity);
 
         /// <summary>
         /// Import the given file as a product to the database
@@ -87,7 +87,7 @@ namespace Moryx.Products.Management
         /// <param name="productType">Product to instantiate</param>
         /// <param name="save">Flag if new instance should already be saved</param>
         /// <returns>New instance</returns>
-        ProductInstance CreateInstance(IProductType productType, bool save);
+        ProductInstance CreateInstance(ProductType productType, bool save);
 
         /// <summary>
         /// Updates the database from the instance

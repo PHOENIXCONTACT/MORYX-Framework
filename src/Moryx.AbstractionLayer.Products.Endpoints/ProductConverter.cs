@@ -57,7 +57,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 HasWorkplans = typeof(IWorkplanRecipe).IsAssignableFrom(recipeType)
             };
         }
-        public ProductModel ConvertProduct(IProductType productType, bool flat)
+        public ProductModel ConvertProduct(ProductType productType, bool flat)
         {
 
             // Base object
@@ -80,7 +80,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var properties = typeWrapper != null ? typeWrapper.Properties.ToArray() : productType.GetType().GetProperties();
             converted.Properties = EntryConvert.EncodeObject(productType, _productSerialization);
 
-            // Files         
+            // Files
             converted.Files = ConvertFiles(productType, properties);
 
             // Recipes
@@ -93,7 +93,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return converted;
         }
 
-        private ProductFileModel[] ConvertFiles(IProductType productType, IEnumerable<PropertyInfo> properties)
+        private ProductFileModel[] ConvertFiles(ProductType productType, IEnumerable<PropertyInfo> properties)
         {
             var productFileProperties = properties.Where(p => p.PropertyType == typeof(ProductFile)).ToArray();
             var fileModels = new ProductFileModel[productFileProperties.Length];
@@ -112,7 +112,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return fileModels;
         }
 
-        private void ConvertParts(IProductType productType, IEnumerable<PropertyInfo> properties, ProductModel converted)
+        private void ConvertParts(ProductType productType, IEnumerable<PropertyInfo> properties, ProductModel converted)
         {
             var connectors = new List<PartConnector>();
             foreach (var property in properties)
@@ -174,7 +174,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return part;
         }
 
-        public IProductType ConvertProductBack(ProductModel source, ProductType converted)
+        public ProductType ConvertProductBack(ProductModel source, ProductType converted)
         {
             // Copy base values
             converted.Identity = new ProductIdentity(source.Identifier, source.Revision);
@@ -368,7 +368,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return converted;
         }
 
-        public IProductRecipe ConvertRecipeBack(RecipeModel recipe, IProductRecipe productRecipe, IProductType productType)
+        public IProductRecipe ConvertRecipeBack(RecipeModel recipe, IProductRecipe productRecipe, ProductType productType)
         {
             productRecipe.Name = recipe.Name;
             productRecipe.Revision = recipe.Revision;
@@ -425,7 +425,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return model;
         }
 
-        public ProductInstance ConvertProductInstanceBack(ProductInstanceModel model, IProductType type)
+        public ProductInstance ConvertProductInstanceBack(ProductInstanceModel model, ProductType type)
         {
             var productInstance = type.CreateInstance();
             productInstance.Id = model.Id;

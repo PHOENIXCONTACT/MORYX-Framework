@@ -10,7 +10,7 @@ using Moryx.Bindings;
 namespace Moryx.AbstractionLayer
 {
     /// <summary>
-    /// Default factory that can create resolvers for <see cref="IProductType"/>, <see cref="ProductInstance"/>, <see cref="Process"/>
+    /// Default factory that can create resolvers for <see cref="ProductType"/>, <see cref="ProductInstance"/>, <see cref="Process"/>
     /// and <see cref="IRecipe"/>. It also creates a resolver for unknown keys.
     /// </summary>
     public class ProcessBindingResolverFactory : BindingResolverFactory

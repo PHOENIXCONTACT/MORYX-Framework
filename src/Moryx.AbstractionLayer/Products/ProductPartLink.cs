@@ -32,12 +32,12 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Parent product for this part link
         /// </summary>
-        public IProductType Parent { get; set; }
+        public ProductType Parent { get; set; }
 
         /// <summary>
         /// Generic product reference of this link
         /// </summary>
-        public IProductType Product { get; set; }
+        public ProductType Product { get; set; }
 
         /// <summary>
         /// Create single instance for this part
@@ -54,7 +54,7 @@ namespace Moryx.AbstractionLayer.Products
     /// Class to create generic part structure
     /// </summary>
     public class ProductPartLink<TProduct> : ProductPartLink, IProductPartLink<TProduct>
-        where TProduct : class, IProductType
+        where TProduct : ProductType
     {
         /// <summary>
         /// Default constructor for a new part link

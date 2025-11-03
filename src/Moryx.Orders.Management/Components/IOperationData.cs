@@ -51,7 +51,7 @@ namespace Moryx.Orders.Management
         /// <see cref="Orders.Operation.Product"/>
         /// Routed property from <see cref="Operation"/>
         /// </summary>
-        IProductType Product { get; }
+        ProductType Product { get; }
 
         /// <summary>
         /// Module internal representation of the state
@@ -165,7 +165,7 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Updates the product which should be produced within this operation
         /// </summary>
-        void AssignProduct(IProductType productType);
+        void AssignProduct(ProductType productType);
 
         /// <summary>
         /// Updates the whole list of recipes with the given list

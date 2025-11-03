@@ -36,7 +36,7 @@ namespace Moryx.Orders.Management.Tests
         private OperationDataPool _operationDataPool;
         private Mock<IJobManagement> _jobManagementMock;
         private Mock<IProductManagement> _productManagementMock;
-        private IProductType _product;
+        private ProductType _product;
         private IProductRecipe _recipe;
         private ProductIdentity _productIdentity;
         private User _user;
@@ -295,7 +295,7 @@ namespace Moryx.Orders.Management.Tests
             _jobManagementMock.Raise(j => j.StateChanged += null, _jobManagementMock.Object, new JobStateChangedEventArgs(job, JobClassification.Idle, job.Classification));
         }
 
-        private static OperationCreationContext CreateOperationContext(IProductType product)
+        private static OperationCreationContext CreateOperationContext(ProductType product)
         {
             var productIdentity = (ProductIdentity)product.Identity;
 

@@ -356,7 +356,7 @@ namespace Moryx.Products.IntegrationTests
                 {
                     IProductRecipeStrategy strategy = new GenericRecipeStrategy
                     {
-                        EntityMapper = new GenericEntityMapper<ProductionRecipe, IProductType>
+                        EntityMapper = new GenericEntityMapper<ProductionRecipe, ProductType>
                         {
                             MapperFactory = mapperFactory.Object
                         }

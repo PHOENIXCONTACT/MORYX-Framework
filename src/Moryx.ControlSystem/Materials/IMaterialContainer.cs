@@ -30,12 +30,12 @@ namespace Moryx.ControlSystem.Materials
         /// <summary>
         /// Identifier of the material currently in this container
         /// </summary>
-        IProductType ProvidedMaterial { get; }
+        ProductType ProvidedMaterial { get; }
 
         /// <summary>
         /// Replace the currently <see cref="ProvidedMaterial"/> or simply update the object reference
         /// </summary>
-        void SetMaterial(IProductType material);
+        void SetMaterial(ProductType material);
 
         /// <summary>
         /// Event raised when the material

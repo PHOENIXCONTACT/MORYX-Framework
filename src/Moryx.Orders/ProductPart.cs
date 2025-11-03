@@ -9,38 +9,19 @@ namespace Moryx.Orders
     /// <summary>
     /// Business object for the product parts of an operation
     /// </summary>
-    public class ProductPart : IProductType
+    public class ProductPart : ProductType
     {
         /// <summary>
-        /// Id of this part
+        /// Identity of the product part of type <see cref="ProductIdentity"/>
         /// </summary>
-        public long Id { get; set; }
-
-        /// <summary>
-        /// Typed product identity
-        /// </summary>
-        public ProductIdentity Identity { get; set; }
-
-        /// <inheritdoc />
-        IIdentity IIdentifiableObject.Identity
+        public new ProductIdentity Identity
         {
-            get => Identity;
+            get => (ProductIdentity)base.Identity;
             set
             {
-                if (value is ProductIdentity prodIdentity)
-                    Identity = prodIdentity;
+                base.Identity = value;
             }
         }
-
-        /// <summary>
-        /// Name of the part like the product name
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// State of the product
-        /// </summary>
-        public ProductState State { get; set; }
 
         /// <summary>
         /// Quantity of this part which are necessary to produce one product
@@ -63,7 +44,7 @@ namespace Moryx.Orders
         public PartClassification Classification { get; set; }
 
         /// <inheritdoc />
-        public ProductInstance CreateInstance()
+        protected override ProductInstance Instantiate()
         {
             throw new NotSupportedException("Creating an instance of this product is not supported.");
         }

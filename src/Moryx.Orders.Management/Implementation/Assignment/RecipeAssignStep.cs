@@ -141,7 +141,7 @@ namespace Moryx.Orders.Management.Assignment
                 operationData.RecipeChanged(productRecipe);
         }
 
-        private void OnTypeChanged(object sender, IProductType productType)
+        private void OnTypeChanged(object sender, ProductType productType)
         {
             // Update not initial operations
             var operations = OperationDataPool.GetAll(o =>

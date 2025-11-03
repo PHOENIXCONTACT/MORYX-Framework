@@ -85,7 +85,7 @@ namespace Moryx.Orders.Management
         public int TargetAmount => Operation.TargetAmount;
 
         /// <inheritdoc cref="IOperationData"/>
-        public IProductType Product => Operation.Product;
+        public ProductType Product => Operation.Product;
 
         private int _sortOrder;
         /// <inheritdoc cref="IOperationData"/>
@@ -622,7 +622,7 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc cref="IOperationData"/>
-        public void AssignProduct(IProductType productType)
+        public void AssignProduct(ProductType productType)
         {
             Operation.Product = productType;
         }

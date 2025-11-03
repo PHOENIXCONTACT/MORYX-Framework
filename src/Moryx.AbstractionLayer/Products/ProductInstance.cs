@@ -9,7 +9,7 @@ namespace Moryx.AbstractionLayer.Products
     /// Base class for all product instances.
     /// </summary>
     [DataContract]
-    public abstract class ProductInstance : IProductInstance, IPersistentObject
+    public abstract class ProductInstance : IPersistentObject
     {
         /// <summary>
         /// The Id of this instance
@@ -19,7 +19,7 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// The product type of this instance
         /// </summary>
-        public IProductType Type { get; set; }
+        public ProductType Type { get; set; }
 
         /// <summary>
         /// The current state of the instance
@@ -36,7 +36,7 @@ namespace Moryx.AbstractionLayer.Products
     /// Generic base class for product type access
     /// </summary>
     public abstract class ProductInstance<TProduct> : ProductInstance
-        where TProduct : IProductType
+        where TProduct : ProductType
     {
         /// <summary>
         /// Typed property for product access

@@ -21,17 +21,17 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Detect changes between business object and current state of the database
         /// </summary>
-        bool HasChanged(IProductType current, IGenericColumns dbProperties);
+        bool HasChanged(ProductType current, IGenericColumns dbProperties);
 
         /// <summary>
         /// Write product properties to database generic columns
         /// </summary>
-        void SaveType(IProductType source, IGenericColumns target);
+        void SaveType(ProductType source, IGenericColumns target);
 
         /// <summary>
         /// Load product from database information
         /// </summary>
-        void LoadType(IGenericColumns source, IProductType target);
+        void LoadType(IGenericColumns source, ProductType target);
 
         /// <summary>
         /// Transform a product class selector to a database compatible expression

@@ -54,6 +54,6 @@ namespace Moryx.Orders.Assignment
         /// Will be called while creating an operation to load the product for the new operation
         /// The origin of the product MUST be the <see cref="ProductManagement"/>
         /// </summary>
-        public abstract Task<IProductType> SelectProduct(Operation operation, IOperationLogger operationLogger);
+        public abstract Task<ProductType> SelectProduct(Operation operation, IOperationLogger operationLogger);
     }
 }

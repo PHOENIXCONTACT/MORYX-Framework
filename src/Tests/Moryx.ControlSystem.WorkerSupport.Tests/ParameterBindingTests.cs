@@ -252,7 +252,7 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
 
             public string Part { get; set; }  // e.g. Product.Part.Product
 
-            public IProductType Target { get; set; }
+            public ProductType Target { get; set; }
 
             protected override void Populate(IProcess process, Parameters instance)
             {
@@ -260,7 +260,7 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
                     _resolver = ResolverFactory.Create(Part);
 
                 var parameters = (InsertPartParameters)instance;
-                parameters.Target = (IProductType)_resolver.Resolve(process);
+                parameters.Target = (ProductType)_resolver.Resolve(process);
             }
         }
 

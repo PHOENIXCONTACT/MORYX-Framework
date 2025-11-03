@@ -14,13 +14,13 @@ namespace Moryx.AbstractionLayer.Recipes
         /// The product that defines this recipe and is the final
         /// product.
         /// </summary>
-        IProductType Product { get; set; }
+        ProductType Product { get; set; }
 
         /// <summary>
         /// The target product that should be produced with this recipe.
         /// In most cases this equals <see cref="Product"/>, but it does
         /// not have to.
         /// </summary>
-        IProductType Target { get; }
+        ProductType Target { get; }
     }
 }

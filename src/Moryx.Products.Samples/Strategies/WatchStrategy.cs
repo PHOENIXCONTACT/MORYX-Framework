@@ -14,7 +14,7 @@ namespace Moryx.Products.Samples
     public class WatchStrategy : TypeStrategyBase
     {
         /// <inheritdoc />
-        public override bool HasChanged(IProductType current, IGenericColumns dbProperties)
+        public override bool HasChanged(ProductType current, IGenericColumns dbProperties)
         {
             var watch = (WatchType)current;
             return Math.Abs(watch.Weight - dbProperties.Float1) > 0.01
@@ -22,7 +22,7 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override void SaveType(IProductType source, IGenericColumns target)
+        public override void SaveType(ProductType source, IGenericColumns target)
         {
             var watch = (WatchType)source;
             target.Float1 = watch.Weight;
@@ -30,7 +30,7 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override void LoadType(IGenericColumns source, IProductType target)
+        public override void LoadType(IGenericColumns source, ProductType target)
         {
             var watch = (WatchType)target;
             watch.Weight = source.Float1;
