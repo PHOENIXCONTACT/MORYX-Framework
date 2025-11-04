@@ -11,7 +11,7 @@
     ViewData["BaseRef"] = "Identity/Login";
     Layout = "_Layout";
 }
-@attribute [WebModule("Identity", "person", Category = ModuleCategory.SignIn),
+@attribute [WebModule("Identity", "person"),
   Display(ResourceType = typeof(Strings), Name = nameof(Strings.Module_Title), Description = nameof(Strings.Module_Description))]
 <!DOCTYPE html>
 <html lang="en">
@@ -62,6 +62,6 @@
 </html>
 
 @section Scripts
-    {
+{
     <script src="/_content/Moryx.Identity.Web/js/signin.js"></script>
 }

@@ -103,12 +103,6 @@ namespace Moryx.AbstractionLayer.TestTools.Resources
         }
 
         /// <inheritdoc />
-        public bool Destroy(IResource resource, bool permanent)
-        {
-            return Destroy(resource);
-        }
-
-        /// <inheritdoc />
         public void Save(IResource resource)
         {
         }

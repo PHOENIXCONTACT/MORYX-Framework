@@ -27,11 +27,5 @@ namespace Moryx.Asp.Integration
         /// Module offers support and help
         /// </summary>
         Help = 30,
-
-        /// <summary>
-        /// Module represents a sign-in screen 
-        /// </summary>
-        [Obsolete]
-        SignIn = 40,
     }
 }
