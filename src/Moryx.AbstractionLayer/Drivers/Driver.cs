@@ -11,7 +11,7 @@ namespace Moryx.AbstractionLayer.Drivers
     /// </summary>
     public abstract class Driver : Resource, IDriver, IStateContext
     {
-        /// <see cref="IDriver"/>
+        /// <inheritdoc />
         public IDriverState CurrentState { get; private set; }
 
         void IStateContext.SetState(IState state)
@@ -20,7 +20,7 @@ namespace Moryx.AbstractionLayer.Drivers
             StateChanged?.Invoke(this, CurrentState);
         }
 
-        /// <seealso cref="IDriver"/>
+        /// <inheritdoc />
         public event EventHandler<IDriverState> StateChanged;
     }
 }
