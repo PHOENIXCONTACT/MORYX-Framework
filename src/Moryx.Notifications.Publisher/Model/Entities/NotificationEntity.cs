@@ -5,7 +5,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Moryx.Model;
 
-namespace Moryx.Notifications.Model
+namespace Moryx.Notifications.Publisher.Model
 {
     public class NotificationEntity : EntityBase
     {

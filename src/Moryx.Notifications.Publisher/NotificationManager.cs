@@ -4,10 +4,10 @@
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model.Repositories;
-using Moryx.Notifications.Model;
 using Moryx.Threading;
 using Moryx.Tools;
 using Microsoft.Extensions.Logging;
+using Moryx.Notifications.Publisher.Model;
 
 namespace Moryx.Notifications.Publisher
 {

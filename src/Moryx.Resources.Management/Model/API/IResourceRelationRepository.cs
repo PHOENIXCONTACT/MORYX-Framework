@@ -3,8 +3,7 @@
 
 using Moryx.Model.Repositories;
 
-// ReSharper disable once CheckNamespace
-namespace Moryx.Resources.Model
+namespace Moryx.Resources.Management.Model
 {
     /// <summary>
     /// The public API of the ResourceRelation repository.

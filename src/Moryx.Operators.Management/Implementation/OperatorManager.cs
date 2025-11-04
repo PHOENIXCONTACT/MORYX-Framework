@@ -8,8 +8,6 @@ using System.Runtime.CompilerServices;
 using System.ComponentModel;
 using Moryx.AbstractionLayer.Resources;
 
-[assembly: InternalsVisibleTo("Moryx.Operators.Management.IntegrationTests")]
-
 namespace Moryx.Operators.Management;
 
 [Component(LifeCycle.Singleton, typeof(IOperatorManager))]

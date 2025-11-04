@@ -8,8 +8,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Moryx.Operators.Management.Model.Migrations.Sqlite;
 
+/// <inheritdoc />
 public partial class InitialCreate : Migration
 {
+    /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.EnsureSchema(
@@ -116,6 +118,7 @@ public partial class InitialCreate : Migration
             column: "SkillTypeId");
     }
 
+    /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.DropTable(

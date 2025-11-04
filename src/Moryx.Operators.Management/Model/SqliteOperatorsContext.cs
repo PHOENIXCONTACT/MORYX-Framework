@@ -6,7 +6,9 @@ using Moryx.Model.Sqlite;
 
 namespace Moryx.Operators.Management.Model;
 
-/// <inheritdoc />
+/// <summary>
+/// Sqlite specific implementation of <see cref="OperatorsContext"/>
+/// </summary>
 [SqliteDbContext(typeof(OperatorsContext))]
 public class SqliteOperatorsContext : OperatorsContext
 {

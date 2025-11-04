@@ -8,6 +8,9 @@ using Moryx.Model.PostgreSQL;
 
 namespace Moryx.Shifts.Management.Model
 {
+    /// <summary>
+    /// Npgsql specific implementation of <see cref="ShiftsContext"/>
+    /// </summary>
     [NpgsqlDbContext(typeof(ShiftsContext))]
     public class NpgsqlShiftsContext : ShiftsContext
     {

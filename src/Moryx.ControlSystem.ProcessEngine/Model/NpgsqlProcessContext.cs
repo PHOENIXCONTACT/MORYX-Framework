@@ -7,7 +7,7 @@ using Moryx.Model.PostgreSQL;
 namespace Moryx.ControlSystem.ProcessEngine.Model
 {
     /// <summary>
-    /// The Npgsql DbContext of this database model.
+    /// Npgsql specific implementation of <see cref="ProcessContext"/>
     /// </summary>
     [NpgsqlDbContext(typeof(ProcessContext))]
     public class NpgsqlProcessContext : ProcessContext

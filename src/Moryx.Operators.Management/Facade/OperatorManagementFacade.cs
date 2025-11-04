@@ -3,14 +3,14 @@
 
 using System.Collections.Immutable;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Operators.Exceptions;
+using Moryx.Operators.Management.Localizations;
 using Moryx.Operators.Skills;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
-using Moryx.Operators.Management.Localizations;
-using Moryx.Operators.Exceptions;
 using Moryx.Users;
 
-namespace Moryx.Operators.Management.Facade;
+namespace Moryx.Operators.Management;
 
 internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAttendanceManagement, ISkillManagement, IUserManagement
 {

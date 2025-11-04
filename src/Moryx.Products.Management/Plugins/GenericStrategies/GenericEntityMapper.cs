@@ -3,7 +3,7 @@
 
 using System.Linq.Expressions;
 using Moryx.Container;
-using Moryx.Products.Model;
+using Moryx.Products.Management.Model;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Newtonsoft.Json;

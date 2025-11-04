@@ -4,7 +4,7 @@
 using System.Reflection;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Model.Repositories;
-using Moryx.Resources.Model;
+using Moryx.Resources.Management.Model;
 
 namespace Moryx.Resources.Management
 {

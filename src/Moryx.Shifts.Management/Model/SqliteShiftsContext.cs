@@ -6,6 +6,9 @@ using Moryx.Model.Sqlite;
 
 namespace Moryx.Shifts.Management.Model
 {
+    /// <summary>
+    /// Sqlite specific implementation of <see cref="ShiftsContext"/>
+    /// </summary>
     [SqliteDbContext(typeof(ShiftsContext))]
     public class SqliteShiftsContext : ShiftsContext
     {

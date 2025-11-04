@@ -3,7 +3,7 @@
 
 using Moryx.Model;
 using Moryx.Model.Repositories;
-using Moryx.Notifications.Model;
+using Moryx.Notifications.Publisher.Model;
 using Moryx.Serialization;
 using Newtonsoft.Json;
 
