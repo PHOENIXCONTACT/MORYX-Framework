@@ -13,11 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Localizations\Strings.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Strings.resx</DependentUpon>
-    </Compile>
     <Compile Update="Properties\Strings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -26,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Localizations\Strings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Strings.it.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
