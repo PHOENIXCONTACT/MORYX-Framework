@@ -37,7 +37,7 @@ namespace Moryx.Products.Management
         public override bool UpdateFromPredecessor => false;
 
         /// <inheritdoc />
-        public override IEnumerable<string> GetValues(IContainer container)
+        public override IEnumerable<string> GetValues(IContainer container, IServiceProvider serviceProvider)
         {
             return typeof(IGenericColumns).GetProperties()
                 .Where(p => _columnType == null || _columnType == p.PropertyType)

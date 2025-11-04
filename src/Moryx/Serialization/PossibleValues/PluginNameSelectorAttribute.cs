@@ -22,7 +22,7 @@ namespace Moryx.Serialization
         }
 
         /// <inheritdoc />
-        public override IEnumerable<string> GetValues(IContainer container)
+        public override IEnumerable<string> GetValues(IContainer container, IServiceProvider serviceProvider)
         {
             return (container == null
                     ? AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes())

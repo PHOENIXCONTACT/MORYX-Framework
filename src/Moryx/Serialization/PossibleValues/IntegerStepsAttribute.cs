@@ -43,7 +43,7 @@ namespace Moryx.Serialization
         }
 
         /// <inheritdoc />
-        public override IEnumerable<string> GetValues(IContainer container)
+        public override IEnumerable<string> GetValues(IContainer container, IServiceProvider serviceProvider)
         {
             var modeCalculation = (Func<int, int>)(possibleValue => _mode == StepMode.Addition
                                                                    ? possibleValue + _step

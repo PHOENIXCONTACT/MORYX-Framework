@@ -24,7 +24,7 @@ namespace Moryx.Serialization
         }
 
         /// <inheritdoc />
-        public override IEnumerable<string> GetValues(IContainer container)
+        public override IEnumerable<string> GetValues(IContainer container, IServiceProvider serviceProvider)
         {
             return GetFields().Select(f => f.Name);
         }

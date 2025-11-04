@@ -447,7 +447,7 @@ internal class MqttQoSAttribute : PossibleValuesAttribute
     /// <inheritdoc />
     public override bool UpdateFromPredecessor => false;
 
-    public override IEnumerable<string> GetValues(Container.IContainer container)
+    public override IEnumerable<string> GetValues(Container.IContainer container, IServiceProvider serviceProvider)
     {
         return Enum.GetNames(typeof(MqttQualityOfServiceLevel));
     }

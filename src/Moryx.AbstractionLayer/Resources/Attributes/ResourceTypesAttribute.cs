@@ -39,7 +39,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// <summary>
         /// Resolve all resource type names for a resource type
         /// </summary>
-        public override IEnumerable<string> GetValues(IContainer pluginContainer)
+        public override IEnumerable<string> GetValues(IContainer pluginContainer, IServiceProvider serviceProvider)
         {
             var typeController = pluginContainer.Resolve<IResourceTypeTree>();
             return SelectTypeNames(typeController.SupportedTypes(TypeConstraint), new List<string>());

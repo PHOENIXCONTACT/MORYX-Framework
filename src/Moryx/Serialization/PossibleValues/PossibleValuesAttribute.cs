@@ -22,23 +22,9 @@ namespace Moryx.Serialization
         public abstract bool UpdateFromPredecessor { get; }
 
         /// <summary>
-        /// All possible values for this member represented as strings. The given container might be null
-        /// and can be used to resolve possible values
-        /// </summary>
-        [Obsolete("Replaced by PossibleValues with access to global service registration")]
-        public virtual IEnumerable<string> GetValues(IContainer container)
-        {
-            return Array.Empty<string>();
-        }
-
-        /// <summary>
         /// Extract possible values from local or global DI registration
         /// </summary>
-        // TODO: Make abstract in MORYX 10
-        public virtual IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)
-        {
-            return GetValues(localContainer);
-        }
+        public abstract IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider);
 
         /// <summary>
         /// Parse value from string using local or global DI container

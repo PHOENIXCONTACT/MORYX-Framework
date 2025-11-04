@@ -137,7 +137,7 @@ namespace Moryx.Resources.Samples
 
         public override bool UpdateFromPredecessor => false;
 
-        public override IEnumerable<string> GetValues(Container.IContainer container)
+        public override IEnumerable<string> GetValues(Container.IContainer container, IServiceProvider serviceProvider)
         {
             return [nameof(TechnicalStaff), nameof(ExpertStaff)];
         }

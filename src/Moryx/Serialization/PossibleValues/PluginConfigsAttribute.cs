@@ -43,7 +43,7 @@ namespace Moryx.Serialization
         /// All possible values for this member represented as strings. The given container might be null
         /// and can be used to resolve possible values
         /// </summary>
-        public override IEnumerable<string> GetValues(IContainer container)
+        public override IEnumerable<string> GetValues(IContainer container, IServiceProvider serviceProvider)
         {
             var possibleValues = GetPossibleTypes(container);
             return possibleValues.Select(configType => configType.Name);
