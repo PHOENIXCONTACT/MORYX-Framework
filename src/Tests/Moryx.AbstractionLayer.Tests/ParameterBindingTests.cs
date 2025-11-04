@@ -85,7 +85,7 @@ namespace Moryx.AbstractionLayer.Tests
         {
             public string Part { get; set; }  // e.g. Product.Part.Product
 
-            public IProductType Target { get; set; }
+            public ProductType Target { get; set; }
 
             private IBindingResolver _resolver;
 
@@ -96,7 +96,7 @@ namespace Moryx.AbstractionLayer.Tests
                 if (_resolver == null)
                     _resolver = ResolverFactory.Create(Part);
 
-                parameters.Target = (IProductType)_resolver.Resolve(process);
+                parameters.Target = (ProductType)_resolver.Resolve(process);
             }
         }
 

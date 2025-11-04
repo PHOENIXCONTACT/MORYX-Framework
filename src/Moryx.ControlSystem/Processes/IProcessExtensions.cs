@@ -13,7 +13,7 @@ namespace Moryx.ControlSystem.Processes
     public static class IProcessExtensions
     {
         /// <summary>
-        /// Modifies the <see cref="IProductInstance"/> of type <typeparamref name="TInstance"/> 
+        /// Modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
         /// on the <see cref="IProcess"/> using the given <paramref name="setter"/>.
         /// </summary>
         /// <typeparam name="TInstance">The expected type of the product instance</typeparam>
@@ -26,15 +26,15 @@ namespace Moryx.ControlSystem.Processes
         /// ]]>
         /// </code>
         /// </example>
-        /// <exception cref="InvalidCastException">Thrown if the given <paramref name="process"/> does 
+        /// <exception cref="InvalidCastException">Thrown if the given <paramref name="process"/> does
         /// not hold a product instance of type <typeparamref name="TInstance"/></exception>
         /// <exception cref="InvalidOperationException">Thrown if the given <paramref name="process"/>
         /// is no <see cref="ProductionProcess"/></exception>
         public static TInstance ModifyProductInstance<TInstance>(this IProcess process, Action<TInstance> setter)
-            where TInstance : IProductInstance
+            where TInstance : ProductInstance
         {
             if (process is not ProductionProcess productionProcess)
-                throw new InvalidOperationException($"Cannot modify an {nameof(IProductInstance)} on a process of type {process.GetType()}");
+                throw new InvalidOperationException($"Cannot modify an {nameof(ProductInstance)} on a process of type {process.GetType()}");
             if (productionProcess.ProductInstance is not TInstance instance)
                 throw new InvalidCastException($"Cannot cast {nameof(ProductionProcess.ProductInstance)} of type " +
                     $"{productionProcess?.ProductInstance?.GetType()} to {typeof(TInstance)}");
@@ -43,8 +43,8 @@ namespace Moryx.ControlSystem.Processes
         }
 
         /// <summary>
-        /// Tries to modifies the <see cref="IProductInstance"/> of type <typeparamref name="TInstance"/> 
-        /// on the <see cref="IProcess"/> using the given <paramref name="setter"/>. Returns false, if the 
+        /// Tries to modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
+        /// on the <see cref="IProcess"/> using the given <paramref name="setter"/>. Returns false, if the
         /// operation could not be executed.
         /// </summary>
         /// <typeparam name="TInstance">The expected type of the product instance</typeparam>
@@ -58,7 +58,7 @@ namespace Moryx.ControlSystem.Processes
         /// </code>
         /// </example>
         public static bool TryModifyProductInstance<TInstance>(this IProcess process, Action<TInstance> setter)
-            where TInstance : IProductInstance
+            where TInstance : ProductInstance
         {
             if (process is not ProductionProcess productionProcess)
                 return false;
@@ -67,9 +67,9 @@ namespace Moryx.ControlSystem.Processes
             setter.Invoke(instance);
             return true;
         }
-        
+
         /// <summary>
-        /// Returns <see cref="IOrderBasedRecipe.OrderNumber"/> on the <see cref="IProcess"/> using the given <paramref name="process"/>. 
+        /// Returns <see cref="IOrderBasedRecipe.OrderNumber"/> on the <see cref="IProcess"/> using the given <paramref name="process"/>.
         /// </summary>
         /// <param name="process">The process holding the order number</param>
         /// <example>
@@ -85,7 +85,7 @@ namespace Moryx.ControlSystem.Processes
         }
 
         /// <summary>
-        /// Returns <see cref="IOrderBasedRecipe.OperationNumber"/> on the <see cref="IProcess"/> using the given <paramref name="process"/>. 
+        /// Returns <see cref="IOrderBasedRecipe.OperationNumber"/> on the <see cref="IProcess"/> using the given <paramref name="process"/>.
         /// </summary>
         /// <param name="process">The process holding the operation number</param>
         /// <example>

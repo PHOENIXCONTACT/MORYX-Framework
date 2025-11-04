@@ -27,10 +27,10 @@ namespace Moryx.AbstractionLayer.Recipes
         }
 
         /// <inheritdoc />
-        public IProductType Product { get; set; }
+        public ProductType Product { get; set; }
 
         /// <inheritdoc />
-        public virtual IProductType Target => Product;
+        public virtual ProductType Target => Product;
 
         /// <inheritdoc />
         public override IRecipe Clone()

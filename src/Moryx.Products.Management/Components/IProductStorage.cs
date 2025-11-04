@@ -16,22 +16,22 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Get products by query
         /// </summary>
-        IReadOnlyList<IProductType> LoadTypes(ProductQuery query);
+        IReadOnlyList<ProductType> LoadTypes(ProductQuery query);
 
         /// <summary>
         /// Load product instance by id
         /// </summary>
-        IProductType LoadType(long id);
+        ProductType LoadType(long id);
 
         /// <summary>
         /// Load product by identity. This method supports loading a products latest revision
         /// </summary>
-        IProductType LoadType(ProductIdentity identity);
+        ProductType LoadType(ProductIdentity identity);
 
         /// <summary>
         /// Save a type to the storage
         /// </summary>
-        long SaveType(IProductType modifiedInstance);
+        long SaveType(ProductType modifiedInstance);
 
         /// <summary>
         /// Get instances by id
@@ -80,7 +80,7 @@ namespace Moryx.Products.Management
         void RemoveRecipe(long recipeId);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="typeName"></param>
         /// <returns></returns>

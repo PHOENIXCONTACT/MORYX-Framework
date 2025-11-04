@@ -31,12 +31,12 @@ namespace Moryx.Products.Management
             return recipe;
         }
 
-        public IReadOnlyList<IProductRecipe> GetAllByProduct(IProductType productType)
+        public IReadOnlyList<IProductRecipe> GetAllByProduct(ProductType productType)
         {
             return Storage.LoadRecipes(productType.Id, RecipeClassification.CloneFilter);
         }
 
-        public IReadOnlyList<IProductRecipe> GetRecipes(IProductType productType, RecipeClassification classification)
+        public IReadOnlyList<IProductRecipe> GetRecipes(ProductType productType, RecipeClassification classification)
         {
             return Storage.LoadRecipes(productType.Id, classification);
         }

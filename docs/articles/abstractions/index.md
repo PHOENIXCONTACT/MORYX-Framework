@@ -41,7 +41,7 @@ A [Process](processing/Processes.md) consists of a series of activities and outs
 
 ## Products
 
-A [ProductType](/src/Moryx.AbstractionLayer/Products/IProductType.cs) or better a *product description* is used by a [ProductRecipe](/src/Moryx.AbstractionLayer/Recipes/ProductRecipe.cs) to provide a basic structure to produce a [ProductInstance](/src/Moryx.AbstractionLayer/Products/ProductInstance.cs)
+A [ProductType](/src/Moryx.AbstractionLayer/Products/ProductType.cs) or better a *product description* is used by a [ProductRecipe](/src/Moryx.AbstractionLayer/Recipes/ProductRecipe.cs) to provide a basic structure to produce a [ProductInstance](/src/Moryx.AbstractionLayer/Products/ProductInstance.cs)
 
 ## Recipes
 

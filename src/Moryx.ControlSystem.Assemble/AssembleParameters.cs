@@ -16,7 +16,7 @@ namespace Moryx.ControlSystem.Assemble
         /// <summary>
         /// Product that may provide additional Parameters
         /// </summary>
-        public IProductType Product { get; set; }
+        public ProductType Product { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="AssembleParameters"/>

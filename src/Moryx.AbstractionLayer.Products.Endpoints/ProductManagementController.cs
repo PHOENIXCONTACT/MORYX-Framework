@@ -175,7 +175,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             if (id == 0)
                 return BadRequest($"Id was 0");
-            IProductType productType = null;
+            ProductType productType = null;
             try
             {
                 productType = _productManagement.LoadType(id);
@@ -233,7 +233,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             if (identityArray.Length != 2)
                 return BadRequest($"Identity has wrong format. Must be identifier-revision");
             var identity = new ProductIdentity(identityArray[0], Convert.ToInt16(identityArray[1]));
-            IProductType newProductType;
+            ProductType newProductType;
             try
             {
                 newProductType = _productManagement.Duplicate(template, identity);
@@ -318,11 +318,11 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             if (instanceModel == null)
                 return BadRequest($"Instance model was empty");
-            var type = ReflectionTool.GetPublicClasses<IProductType>(t => t.Name == instanceModel.Type)
+            var type = ReflectionTool.GetPublicClasses<ProductType>(t => t.Name == instanceModel.Type)
                     .FirstOrDefault();
             if (type == null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductNotFoundException_Message, "null") });
-            var productType = (IProductType)Activator.CreateInstance(type);
+            var productType = (ProductType)Activator.CreateInstance(type);
             var productInstance = _productConverter.ConvertProductInstanceBack(instanceModel, productType);
             _productManagement.SaveInstance(productInstance);
             return Ok();

@@ -19,12 +19,12 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Will load all recipes by the given product
         /// </summary>
-        IReadOnlyList<IProductRecipe> GetAllByProduct(IProductType productType);
+        IReadOnlyList<IProductRecipe> GetAllByProduct(ProductType productType);
 
         /// <summary>
         /// Retrieves a recipe for the product
         /// </summary>
-        IReadOnlyList<IProductRecipe> GetRecipes(IProductType productType, RecipeClassification classifications);
+        IReadOnlyList<IProductRecipe> GetRecipes(ProductType productType, RecipeClassification classifications);
 
         /// <summary>
         /// A recipe was changed, give users the chance to update their reference

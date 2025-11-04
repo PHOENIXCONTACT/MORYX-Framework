@@ -81,7 +81,7 @@ namespace Moryx.Products.Management
         public void Start()
         {
             // Create type strategies
-            var types = ReflectionTool.GetPublicClasses<IProductType>();
+            var types = ReflectionTool.GetPublicClasses<ProductType>();
             foreach (var type in types)
             {
                 if (TypeInformation.ContainsKey(type.FullName))
@@ -260,7 +260,7 @@ namespace Moryx.Products.Management
         {
             using (var uow = Factory.Create())
             {
-                // Prepare required repos   
+                // Prepare required repos
                 var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
 
                 var deletedRecipe = recipeRepo.GetByKey(recipeId);
@@ -274,7 +274,7 @@ namespace Moryx.Products.Management
 
         #region Load product
 
-        public IReadOnlyList<IProductType> LoadTypes(ProductQuery query)
+        public IReadOnlyList<ProductType> LoadTypes(ProductQuery query)
         {
             using var uow = Factory.Create();
             var baseSet = uow.GetRepository<IProductTypeRepository>().Linq;
@@ -436,7 +436,7 @@ namespace Moryx.Products.Management
                 if (query == null || (entities = query.ToList()).Count == 0)
                     return Array.Empty<TType>();
 
-                var loadedProducts = new Dictionary<long, IProductType>();
+                var loadedProducts = new Dictionary<long, ProductType>();
                 var instances = entities.Select(entity => Transform(uow, entity, false, loadedProducts)).OfType<TType>().ToArray();
                 // Final check against compiled expression
                 var compiledSelector = selector.Compile();
@@ -446,20 +446,20 @@ namespace Moryx.Products.Management
         }
 
         /// <inheritdoc />
-        public IProductType LoadType(long id)
+        public ProductType LoadType(long id)
         {
             using var uow = Factory.Create();
             return LoadType(uow, id);
         }
 
-        private IProductType LoadType(IUnitOfWork uow, long id)
+        private ProductType LoadType(IUnitOfWork uow, long id)
         {
             var product = uow.GetRepository<IProductTypeRepository>().GetByKey(id);
             return product != null ? Transform(uow, product, true) : null;
         }
 
         /// <inheritdoc />
-        public IProductType LoadType(ProductIdentity identity)
+        public ProductType LoadType(ProductIdentity identity)
         {
             using var uow = Factory.Create();
             var productRepo = uow.GetRepository<IProductTypeRepository>();
@@ -483,11 +483,11 @@ namespace Moryx.Products.Management
             return product != null ? Transform(uow, product, true) : null;
         }
 
-        private IProductType Transform(IUnitOfWork uow, ProductTypeEntity typeEntity, bool full, IDictionary<long, IProductType> loadedProducts = null, IProductPartLink parentLink = null)
+        private ProductType Transform(IUnitOfWork uow, ProductTypeEntity typeEntity, bool full, IDictionary<long, ProductType> loadedProducts = null, IProductPartLink parentLink = null)
         {
             // Build cache if this wasn't done before
             if (loadedProducts == null)
-                loadedProducts = new Dictionary<long, IProductType>();
+                loadedProducts = new Dictionary<long, ProductType>();
 
             // Take converted product from dictionary if we already transformed it
             if (loadedProducts.ContainsKey(typeEntity.Id))
@@ -517,7 +517,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Load all parts of the product
         /// </summary>
-        private void LoadParts(IUnitOfWork uow, ProductTypeEntity typeEntity, IProductType productType, IDictionary<long, IProductType> loadedProducts)
+        private void LoadParts(IUnitOfWork uow, ProductTypeEntity typeEntity, ProductType productType, IDictionary<long, ProductType> loadedProducts)
         {
             // Let's get nasty!
             // Load children
@@ -564,7 +564,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Save a product to the database
         /// </summary>
-        public long SaveType(IProductType modifiedInstance)
+        public long SaveType(ProductType modifiedInstance)
         {
             using (var uow = Factory.Create())
             {
@@ -582,7 +582,7 @@ namespace Moryx.Products.Management
             }
         }
 
-        private ProductTypeEntity SaveProduct(ProductPartsSaverContext saverContext, IProductType modifiedInstance)
+        private ProductTypeEntity SaveProduct(ProductPartsSaverContext saverContext, ProductType modifiedInstance)
         {
             var strategy = TypeInformation[modifiedInstance.GetType().FullName].Strategy;
             //TODO use uow directly instead of repo if that is possible
@@ -755,17 +755,17 @@ namespace Moryx.Products.Management
             {
                 Expression<Func<ProductInstanceEntity, bool>> instanceSelector;
                 // Select by type or type id
-                if (typeProperty == null || typeProperty.Name == nameof(IProductType.Id))
+                if (typeProperty == null || typeProperty.Name == nameof(ProductType.Id))
                 {
-                    var productTypeId = (value as IProductType)?.Id ?? (long)value;
+                    var productTypeId = (value as ProductType)?.Id ?? (long)value;
                     instanceSelector = i => i.ProductId == productTypeId;
                 }
-                else if (typeProperty.Name == nameof(IProductType.Name))
+                else if (typeProperty.Name == nameof(ProductType.Name))
                 {
                     var productName = (string)value;
                     instanceSelector = i => i.Product.Name == productName;
                 }
-                else if (typeProperty.Name == nameof(IProductType.Identity))
+                else if (typeProperty.Name == nameof(ProductType.Identity))
                 {
                     var productIdentity = (ProductIdentity)value;
                     instanceSelector = i => i.Product.Identifier == productIdentity.Identifier && i.Product.Revision == productIdentity.Revision;
@@ -824,7 +824,7 @@ namespace Moryx.Products.Management
             var results = new ProductInstance[entities.Count];
 
             // Fetch all products we need to load product instances
-            var productMap = new Dictionary<long, IProductType>();
+            var productMap = new Dictionary<long, ProductType>();
             var requiredProducts = entities.Select(e => e.ProductId).Distinct();
             foreach (var productId in requiredProducts)
             {

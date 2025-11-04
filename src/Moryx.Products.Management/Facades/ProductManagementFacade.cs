@@ -75,7 +75,7 @@ namespace Moryx.Products.Management
             }
         }
 
-        public IReadOnlyList<IProductType> LoadTypes(ProductQuery query)
+        public IReadOnlyList<ProductType> LoadTypes(ProductQuery query)
         {
             ValidateHealthState();
             return ProductManager.LoadTypes(query);
@@ -87,7 +87,7 @@ namespace Moryx.Products.Management
             return ProductManager.LoadTypes(selector);
         }
 
-        public IProductType LoadType(long id)
+        public ProductType LoadType(long id)
         {
             ValidateHealthState();
             var type = ProductManager.LoadType(id);
@@ -96,25 +96,25 @@ namespace Moryx.Products.Management
             return type;
         }
 
-        public IProductType LoadType(ProductIdentity identity)
+        public ProductType LoadType(ProductIdentity identity)
         {
             ValidateHealthState();
             return ProductManager.LoadType(identity);
         }
 
-        private void OnTypeChanged(object sender, IProductType productType)
+        private void OnTypeChanged(object sender, ProductType productType)
         {
             TypeChanged?.Invoke(this, productType);
         }
-        public event EventHandler<IProductType> TypeChanged;
+        public event EventHandler<ProductType> TypeChanged;
 
-        public IProductType Duplicate(IProductType template, ProductIdentity newIdentity)
+        public ProductType Duplicate(ProductType template, ProductIdentity newIdentity)
         {
             ValidateHealthState();
             return ProductManager.Duplicate((ProductType)template, newIdentity);
         }
 
-        public long SaveType(IProductType modifiedInstance)
+        public long SaveType(ProductType modifiedInstance)
         {
             ValidateHealthState();
             return ProductManager.SaveType(modifiedInstance);
@@ -136,7 +136,7 @@ namespace Moryx.Products.Management
             return ReplaceOrigin(recipe);
         }
 
-        public IReadOnlyList<IProductRecipe> GetRecipes(IProductType productType, RecipeClassification classification)
+        public IReadOnlyList<IProductRecipe> GetRecipes(ProductType productType, RecipeClassification classification)
         {
             ValidateHealthState();
             var recipes = RecipeManagement.GetRecipes(productType, classification);
@@ -194,13 +194,13 @@ namespace Moryx.Products.Management
             return Workplans.SaveWorkplan(workplan);
         }
 
-        public ProductInstance CreateInstance(IProductType productType)
+        public ProductInstance CreateInstance(ProductType productType)
         {
             ValidateHealthState();
             return ProductManager.CreateInstance(productType, false);
         }
 
-        public ProductInstance CreateInstance(IProductType productType, bool save)
+        public ProductInstance CreateInstance(ProductType productType, bool save)
         {
             ValidateHealthState();
             return ProductManager.CreateInstance(productType, save);
@@ -231,7 +231,7 @@ namespace Moryx.Products.Management
         }
 
         public TInstance GetInstance<TInstance>(Expression<Func<TInstance, bool>> selector)
-            where TInstance : IProductInstance
+            where TInstance : ProductInstance
         {
             ValidateHealthState();
 
@@ -262,7 +262,7 @@ namespace Moryx.Products.Management
         }
 
         public IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
-            where TInstance : IProductInstance
+            where TInstance : ProductInstance
         {
             ValidateHealthState();
 

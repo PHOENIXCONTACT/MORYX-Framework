@@ -11,7 +11,7 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Generic access to the product of this part link
         /// </summary>
-        IProductType Product { get; set; }
+        ProductType Product { get; set; }
 
         /// <summary>
         /// Create single product instance for this part
@@ -24,7 +24,7 @@ namespace Moryx.AbstractionLayer.Products
     /// </summary>
     /// <typeparam name="TProduct"></typeparam>
     public interface IProductPartLink<TProduct> : IProductPartLink
-        where TProduct : IProductType
+        where TProduct : ProductType
     {
         /// <summary>
         /// Typed product of this part

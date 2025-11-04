@@ -2,7 +2,7 @@
 interface IRecipe
 interface IWorkplan
 interface IProcess
-interface IProductType
+interface ProductType
 
 abstract class Recipe
 class ProductRecipe
@@ -14,11 +14,11 @@ abstract class ProductInstance
 IProcess <|-- Process
 Process <|- ProductionProcess
 ProductionProcess o-- ProductInstance
-ProductInstance o-- IProductType
+ProductInstance o-- ProductType
 
 IRecipe <|-- Recipe
 Recipe <|- ProductRecipe
-ProductRecipe o-- IProductType
+ProductRecipe o-- ProductType
 Recipe <|- WorkplanRecipe
 WorkplanRecipe o-- IWorkplan
 @enduml

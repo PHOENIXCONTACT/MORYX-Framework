@@ -96,7 +96,7 @@ namespace Moryx.Orders
         /// <summary>
         /// Product to produce
         /// </summary>
-        public virtual IProductType Product { get; protected set; }
+        public virtual ProductType Product { get; protected set; }
 
         /// <summary>
         /// Represents the progress of this operation

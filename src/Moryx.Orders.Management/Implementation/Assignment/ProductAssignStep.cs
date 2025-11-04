@@ -44,7 +44,7 @@ namespace Moryx.Orders.Management.Assignment
 
             var productId = operationData.Product.Id;
 
-            IProductType product = null;
+            ProductType product = null;
             if (productId != 0)
                 product = ProductManagement.LoadType(operationData.Product.Id);
 

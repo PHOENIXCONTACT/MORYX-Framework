@@ -9,7 +9,7 @@ namespace Moryx.AbstractionLayer
 {
     /// <summary>
     /// Default factory that can create resolvers based on activities for
-    /// <see cref="IActivity"/>, <see cref="IProductType"/>, <see cref="ProductInstance"/>, <see cref="Process"/> and <see cref="IRecipe"/>.
+    /// <see cref="IActivity"/>, <see cref="ProductType"/>, <see cref="ProductInstance"/>, <see cref="Process"/> and <see cref="IRecipe"/>.
     /// It also creates a resolver for unknown keys.
     /// </summary>
     public class ActivityBindingResolverFactory : ProcessBindingResolverFactory

@@ -22,6 +22,13 @@ The simulator module has also been renamed, and its namespace and package id hav
 - ResourceRelationType.CurrentExchangablePart -> ResourceRelationType.CurrentExchangeablePart
 - ResourceRelationType.PossibleExchangablePart -> ResourceRelationType.PossibleExchangeablePart
 
+## Reduction of interfaces
+
+Several interfaces have been removed to streamline the codebase and reduce complexity. The following interfaces are no longer available:
+
+- `IProductType`: Replaced with base-class `ProductType`
+- `IProductInstance`: Replaced with base-class `ProductInstance`
+
 ## Data Model Changes
 
 With MORYX 10, several changes have been made to the data model to improve performance and maintainability. Notable changes include:

@@ -35,8 +35,8 @@ namespace Moryx.Orders.Management.Assignment
         }
 
         /// <summary>
-        /// Will be called while creating an operation to load the part list for 
-        /// the new operation from the <see cref="IProductType"/> itself.
+        /// Will be called while creating an operation to load the part list for
+        /// the new operation from the <see cref="ProductType"/> itself.
         /// </summary>
         public Task<IEnumerable<ProductPart>> LoadParts(Operation operation, IOperationLogger operationLogger)
         {
@@ -45,7 +45,7 @@ namespace Moryx.Orders.Management.Assignment
                 return Task.FromResult(Enumerable.Empty<ProductPart>());
             }
 
-            var countedParts = new Dictionary<IProductType, uint>();
+            var countedParts = new Dictionary<ProductType, uint>();
             IterateProductParts(operation.Product, countedParts);
             var result = countedParts.Select(pt => new ProductPart()
             {
@@ -60,14 +60,14 @@ namespace Moryx.Orders.Management.Assignment
             return Task.FromResult(result);
         }
 
-        private static void IterateProductParts(IProductType product, Dictionary<IProductType, uint> countedParts)
+        private static void IterateProductParts(ProductType product, Dictionary<ProductType, uint> countedParts)
         {
             var productType = product.GetType();
             IteratePartLinks(product, countedParts, productType);
             IteratePartLinkCollections(product, countedParts, productType);
         }
 
-        private static void IteratePartLinks(IProductType product, Dictionary<IProductType, uint> countedParts, Type productType)
+        private static void IteratePartLinks(ProductType product, Dictionary<ProductType, uint> countedParts, Type productType)
         {
             var properties = productType.GetProperties()
                             .Where(p => p.PropertyType.IsAssignableTo(typeof(IProductPartLink)));
@@ -92,7 +92,7 @@ namespace Moryx.Orders.Management.Assignment
             }
         }
 
-        private static void IteratePartLinkCollections(IProductType product, Dictionary<IProductType, uint> countedParts, Type productType)
+        private static void IteratePartLinkCollections(ProductType product, Dictionary<ProductType, uint> countedParts, Type productType)
         {
             var properties = productType.GetProperties().Where(p =>
                 p.PropertyType.IsGenericType &&
