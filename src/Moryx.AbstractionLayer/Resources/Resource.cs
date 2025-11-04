@@ -8,7 +8,7 @@ using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Serialization;
 using System.ComponentModel.DataAnnotations;
-using Moryx.AbstractionLayer.Localizations;
+using Moryx.AbstractionLayer.Properties;
 
 namespace Moryx.AbstractionLayer.Resources
 {
@@ -44,7 +44,7 @@ namespace Moryx.AbstractionLayer.Resources
         public string Description { get; set; }
 
         /// <summary>
-        /// Descriptor to provide access to this resource. Either the descriptor or 
+        /// Descriptor to provide access to this resource. Either the descriptor or
         /// its properties and methods need to flagged with <see cref="EntrySerializeAttribute"/>
         /// </summary>
         public virtual object Descriptor => this;
@@ -53,14 +53,14 @@ namespace Moryx.AbstractionLayer.Resources
         /// Parent resource of this resource
         /// </summary>
         [ResourceReference(ResourceRelationType.ParentChild, ResourceReferenceRole.Source)]
-        [Display(Name = nameof(Strings.PARENT), ResourceType = typeof(Localizations.Strings))]
+        [Display(Name = nameof(Strings.Resource_Parent), ResourceType = typeof(Strings))]
         public Resource Parent { get; set; }
 
         /// <summary>
         /// All children of this resource
         /// </summary>
         [ResourceReference(ResourceRelationType.ParentChild, ResourceReferenceRole.Target)]
-        [Display(Name = nameof(Strings.CHILDREN), ResourceType = typeof(Localizations.Strings))]
+        [Display(Name = nameof(Strings.Resource_Children), ResourceType = typeof(Strings))]
         public IReferences<Resource> Children { get; set; }
 
         /// <inheritdoc />
@@ -130,7 +130,7 @@ namespace Moryx.AbstractionLayer.Resources
         }
 
         /// <summary>
-        /// Inform the resource management, that this instance was modified 
+        /// Inform the resource management, that this instance was modified
         /// and trigger saving the current state to storage
         /// </summary>
         protected void RaiseResourceChanged()

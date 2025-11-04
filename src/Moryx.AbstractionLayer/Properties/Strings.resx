@@ -153,4 +153,10 @@
   <data name="WORKPLAN_NOT_FOUND" xml:space="preserve">
     <value>Workplan not found for id: {0}</value>
   </data>
+  <data name="Resource_Parent" xml:space="preserve">
+    <value>Parent</value>
+  </data>
+  <data name="Resource_Children" xml:space="preserve">
+    <value>Children</value>
+  </data>
 </root>
