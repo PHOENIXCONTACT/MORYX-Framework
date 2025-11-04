@@ -279,8 +279,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [Obsolete("Use ConvertRecipe on instance")]
         public static RecipeModel ConvertRecipe(IRecipe recipe) => ConvertRecipe(recipe, new PartialSerialization<ProductionRecipe>(null, null));
 
-        public RecipeModel ConvertRecipeV2(IRecipe recipe) => ConvertRecipe(recipe, _recipeSerialization);
-
         private static RecipeModel ConvertRecipe(IRecipe recipe, ICustomSerialization serialization)
         {
             // Transform to DTO and transmit
@@ -317,7 +315,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var wpRecipe = recipe as IWorkplanRecipe;
             if (wpRecipe?.Workplan != null)
             {
-                converted.WorkplanId = wpRecipe.Workplan.Id;
                 converted.WorkplanModel = ConvertWorkplan(wpRecipe.Workplan);
             }
 

@@ -30,7 +30,7 @@ namespace Moryx.Serialization
         }
 
         /// <inheritdoc />
-        public override object Parse(IContainer container, string value)
+        public override object Parse(IContainer container, IServiceProvider serviceProvider, string value)
         {
             return GetFields().Single(f => f.Name == value).GetValue(null);
         }

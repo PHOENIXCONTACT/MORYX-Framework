@@ -142,7 +142,7 @@ namespace Moryx.Resources.Samples
             return [nameof(TechnicalStaff), nameof(ExpertStaff)];
         }
 
-        public override object Parse(Container.IContainer container, string value)
+        public override object Parse(Container.IContainer container, IServiceProvider serviceProvider, string value)
         {
             switch (value)
             {

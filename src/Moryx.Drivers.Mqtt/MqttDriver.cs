@@ -332,16 +332,6 @@ public class MqttDriver : Driver, IMessageDriver<object>
     }
 
     /// <summary>
-    /// Method to be called if a message should be published on a topic
-    /// </summary>
-    /// <param name="topic">The topic to publish on</param>
-    /// <param name="message">The message to be published</param>
-    /// <returns></returns>
-    [Obsolete("This method is obsolete, use OnSend( MqttMessageTopic, byte[]) instead")]
-    public Task OnSend(string topic, byte[] message)
-        => OnSend(new MqttMessageTopic(null, topic), message);
-
-    /// <summary>
     /// Method to be called if a message should be published on a topic.
     /// </summary>
     /// <param name="messageTopic">The topic to publish on</param>

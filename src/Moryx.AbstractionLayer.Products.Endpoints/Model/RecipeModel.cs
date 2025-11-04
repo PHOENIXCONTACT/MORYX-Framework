@@ -50,13 +50,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         public Entry Properties { get; set; }
 
         /// <summary>
-        /// The id of the currently referenced workplan
-        /// </summary>
-        [Obsolete("Use WorkplanModel instead")]
-        [DataMember]
-        public long WorkplanId { get; set; }
-
-        /// <summary>
         /// A model of the currently referenced workplan
         /// </summary>
         [DataMember]

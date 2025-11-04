@@ -223,7 +223,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
                 targetDummyRecipe.Classification = originalRecipe.Classification;
 
             // Act
-            var convertedModel = _productConverter.ConvertRecipeV2(originalRecipe);
+            var convertedModel = _productConverter.ConvertRecipe(originalRecipe);
             var recoveredOriginal = _productConverter.ConvertRecipeBack(convertedModel, targetDummyRecipe, backupProductType);
 
             // Assert

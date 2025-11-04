@@ -32,7 +32,7 @@ namespace Moryx.Resources.Samples
         {
             var value = Values.FirstOrDefault(v => v.Name == name);
             if (value != null)
-                Graph.Destroy(value, true);
+                Graph.Destroy(value);
             return Values.Count;
         }
     }

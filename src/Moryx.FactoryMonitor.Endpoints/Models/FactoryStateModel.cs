@@ -17,10 +17,6 @@ namespace Moryx.FactoryMonitor.Endpoints.Model
         public virtual string BackgroundURL { get; set; }
 
         [DataMember]
-        [Obsolete]
-        public virtual List<CellModel> Cells { get; set; }
-
-        [DataMember]
         public virtual bool HasManufacturingFactory { get; set; }
 
         [DataMember]

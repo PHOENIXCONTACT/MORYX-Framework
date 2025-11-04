@@ -13,7 +13,7 @@ namespace Moryx.Workplans.Endpoint
     /// </summary>
     internal class WorkplanStepSerialization : PossibleValuesSerialization
     {
-        public WorkplanStepSerialization() : base(null, new EmptyValueProvider())
+        public WorkplanStepSerialization() : base(null, null, new EmptyValueProvider())
         {
         }
 

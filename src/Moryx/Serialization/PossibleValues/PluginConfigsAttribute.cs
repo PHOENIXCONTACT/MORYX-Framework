@@ -56,7 +56,7 @@ namespace Moryx.Serialization
         public override bool UpdateFromPredecessor => true;
 
         /// <inheritdoc />
-        public override object Parse(IContainer container, string value)
+        public override object Parse(IContainer container, IServiceProvider serviceProvider, string value)
         {
             var possibleTypes = GetPossibleTypes(container);
             return Activator.CreateInstance(possibleTypes.First(type => type.Name == value));

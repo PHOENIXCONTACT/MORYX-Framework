@@ -15,7 +15,7 @@ namespace Moryx.FactoryMonitor.Endpoints
     /// </summary>
     internal class CellSerialization : PossibleValuesSerialization
     {
-        public CellSerialization() : base(new ContainerMock(), new ValueProviderExecutor(new ValueProviderExecutorSettings()))
+        public CellSerialization() : base(new ContainerMock(), null, new ValueProviderExecutor(new ValueProviderExecutorSettings()))
         {
         }
 

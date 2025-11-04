@@ -41,15 +41,6 @@ namespace Moryx.Serialization
         }
 
         /// <summary>
-        /// String to value conversion
-        /// </summary>
-        [Obsolete("Replaced by Parse with ServiceProvider reference")]
-        public virtual object Parse(IContainer container, string value)
-        {
-            return value;
-        }
-
-        /// <summary>
         /// Parse value from string using local or global DI container
         /// </summary>
         /// <param name="container">Module local DI container</param>
@@ -57,7 +48,7 @@ namespace Moryx.Serialization
         /// <param name="value">Value to parse</param>
         public virtual object Parse(IContainer container, IServiceProvider serviceProvider, string value)
         {
-            return Parse(container, value);
+            return value;
         }
     }
 }
