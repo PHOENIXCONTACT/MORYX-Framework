@@ -6,7 +6,7 @@ namespace Moryx.AbstractionLayer.Drivers.Marking
     /// <summary>
     /// Response of the marking file setup
     /// </summary>
-    public class MarkingFileResponse : TransmissionResult
+    public class MarkingFileResponse : DriverResponse
     {
         /// <summary>
         /// Successful marking file setup
@@ -19,7 +19,7 @@ namespace Moryx.AbstractionLayer.Drivers.Marking
         /// Faulty marking file setup
         /// </summary>
         /// <param name="errorMessage">Occured error</param>
-        public MarkingFileResponse(string errorMessage) : base(new TransmissionError(errorMessage))
+        public MarkingFileResponse(string errorMessage) : base(errorMessage)
         {
         }
     }

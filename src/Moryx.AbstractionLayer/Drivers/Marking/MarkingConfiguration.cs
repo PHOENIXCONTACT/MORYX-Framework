@@ -52,15 +52,15 @@ namespace Moryx.AbstractionLayer.Drivers.Marking
         /// </summary>
         /// <param name="resizingFactor">The factor for resizing the marking file. 1 is original size.</param>
         /// <param name="angle">The angle of rotation in ° clockwise around the mid point of the image field. 0 is no rotation.</param>
-        /// <param name="xaxis">Displacement along the X-axis in mm.</param>
-        /// <param name="yaxis">Displacement along the Y-axis in mm.</param>
+        /// <param name="xAxis">Displacement along the X-axis in mm.</param>
+        /// <param name="yAxis">Displacement along the Y-axis in mm.</param>
         /// <returns>This object.</returns>
-        public MarkingConfiguration SetTransformation(double resizingFactor, double angle, double xaxis, double yaxis)
+        public MarkingConfiguration SetTransformation(double resizingFactor, double angle, double xAxis, double yAxis)
         {
             ResizingFactor = resizingFactor;
             Angle = angle;
-            XAxis = xaxis;
-            YAxis = yaxis;
+            XAxis = xAxis;
+            YAxis = yAxis;
             return this;
         }
     }

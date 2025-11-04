@@ -18,15 +18,5 @@ namespace Moryx.AbstractionLayer.Drivers.Marking
         /// </summary>
         /// <param name="config">The configuration for the marking process.</param>
         Task<MarkingResponse> MarkAsync(MarkingConfiguration config);
-
-        /// <summary>
-        /// Will be fired if an error occured
-        /// </summary>
-        event EventHandler<NotificationResponse> ErrorOccured;
-
-        /// <summary>
-        /// Will be fired of a warning occured
-        /// </summary>
-        event EventHandler<NotificationResponse> WarningOccured;
     }
 }
