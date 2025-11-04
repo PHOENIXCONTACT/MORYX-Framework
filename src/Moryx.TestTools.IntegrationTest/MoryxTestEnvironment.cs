@@ -17,8 +17,8 @@ using Moryx.Tools;
 namespace Moryx.TestTools.IntegrationTest
 {
     /// <summary>
-    /// A test environment for MORYX modules to test the module lifecycle as well as its 
-    /// facade and component orchestration. The environment must be filled with mocked 
+    /// A test environment for MORYX modules to test the module lifecycle as well as its
+    /// facade and component orchestration. The environment must be filled with mocked
     /// dependencies.
     /// </summary>
     /// <typeparam name="T">Type of the facade to be tested.</typeparam>
@@ -29,13 +29,13 @@ namespace Moryx.TestTools.IntegrationTest
         public IServiceProvider Services { get; private set; }
 
         /// <summary>
-        /// Creates an <see cref="IServiceProvider"/> for integration tests of moryx. We prepare the 
-        /// service collection to hold all kernel components (a mocked IConfigManager providing only the <paramref name="config"/>, 
-        /// <see cref="NotSoParallelOps"/>, an <see cref="InMemoryDbContextManager"/>, a <see cref="NullLoggerFactory"/> and the 
+        /// Creates an <see cref="IServiceProvider"/> for integration tests of moryx. We prepare the
+        /// service collection to hold all kernel components (a mocked IConfigManager providing only the <paramref name="config"/>,
+        /// <see cref="NotSoParallelOps"/>, an <see cref="InMemoryDbContextManager"/>, a <see cref="NullLoggerFactory"/> and the
         /// <see cref="ModuleManager"/>). Additionally all provided mocks are registered as moryx modules.
         /// </summary>
         /// <param name="serverModuleType">Type of the ModuleController of the module to be tested</param>
-        /// <param name="dependencyMocks">An enumeration of mocks for all dependencies of the module to be tested. 
+        /// <param name="dependencyMocks">An enumeration of mocks for all dependencies of the module to be tested.
         /// We recommend using the <see cref="CreateModuleMock{T}"/> method to properly create the mocks.</param>
         /// <param name="config">The config for the module to be tested.</param>
         /// <exception cref="ArgumentException">Throw if <paramref name="serverModuleType"/> is not a server module</exception>
@@ -80,21 +80,20 @@ namespace Moryx.TestTools.IntegrationTest
         /// Creates a mock of a server module with a facade interface of type <typeparamref name="T"/>.
         /// The mock can be used in setting up a service collection for test purposes.
         /// </summary>
-        /// <typeparam name="T">Type of the facade interface</typeparam>
-        /// <returns>The mock of the <typeparamref name="FacadeType"/></returns>
-        public static Mock<FacadeType> CreateModuleMock<FacadeType>() where FacadeType : class
+        /// <typeparam name="TFacadeType">Type of the facade interface</typeparam>
+        /// <returns>The mock of the <typeparamref name="TFacadeType"/></returns>
+        public static Mock<TFacadeType> CreateModuleMock<TFacadeType>() where TFacadeType : class
         {
-            var mock = new Mock<FacadeType>();
+            var mock = new Mock<TFacadeType>();
             var moduleMock = mock.As<IServerModule>();
             moduleMock.SetupGet(m => m.State).Returns(ServerModuleState.Running);
-            var containerMock = moduleMock.As<IFacadeContainer<FacadeType>>();
+            var containerMock = moduleMock.As<IFacadeContainer<TFacadeType>>();
             containerMock.SetupGet(x => x.Facade).Returns(mock.Object);
             return mock;
         }
 
         /// <summary>
         /// Initializes and starts the module with the facade interface of type
-        /// <typeparamref name="T"/>.
         /// </summary>
         /// <returns>The started module.</returns>
         public IServerModule StartTestModule()
