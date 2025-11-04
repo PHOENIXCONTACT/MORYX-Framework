@@ -1,8 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Hardware;
-
 namespace Moryx.AbstractionLayer.Drivers.Axis
 {
     /// <summary>
@@ -11,17 +9,9 @@ namespace Moryx.AbstractionLayer.Drivers.Axis
     public interface IAxesController : IDriver
     {
         /// <summary>
-        /// Will move the axis of the laser to the given position
+        /// Will move the axes of the system to the given position
         /// </summary>
-        /// <param name="axis">The axis which should be moved</param>
-        /// <param name="targetPosition">The target position of the axis</param>
-        Task<AxisMovementResponse> MoveAxis(Axes axis, double targetPosition);
-
-        /// <summary>
-        /// Will move the axis of the laser to the given position
-        /// </summary>
-        /// <param name="axis">The axis which should be moved</param>
-        /// <param name="targetPosition">The target position of the axis</param>
-        Task<AxisMovementResponse> MoveAxis(Axes axis, AxisPosition targetPosition);
+        /// <param name="movement">Array of axes which should be moved</param>
+        Task<AxisMovementResponse> MoveAxes(params AxisMovement[] movement);
     }
 }
