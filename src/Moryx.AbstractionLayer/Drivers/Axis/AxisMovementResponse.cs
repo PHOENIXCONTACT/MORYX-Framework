@@ -6,7 +6,7 @@ namespace Moryx.AbstractionLayer.Drivers.Axis
     /// <summary>
     /// Response of the marking file setup
     /// </summary>
-    public class AxisMovementResponse : TransmissionResult
+    public class AxisMovementResponse : DriverResponse
     {
         /// <summary>
         /// Successfull movement of the axis
@@ -20,7 +20,7 @@ namespace Moryx.AbstractionLayer.Drivers.Axis
         /// Faulty movement of the axis
         /// </summary>
         /// <param name="errorMessage">Occured error</param>
-        public AxisMovementResponse(string errorMessage) : base(new TransmissionError(errorMessage))
+        public AxisMovementResponse(string errorMessage) : base(errorMessage)
         {
 
         }
