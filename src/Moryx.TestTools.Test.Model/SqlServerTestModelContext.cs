@@ -10,7 +10,7 @@ namespace Moryx.TestTools.Test.Model;
 /// <summary>
 /// SqlServer specific implementation of <see cref="TestModelContext"/>
 /// </summary>
-[SqlServerDbContext]
+[SqlServerDbContext(typeof(TestModelContext))]
 [DefaultSchema("testmodel")]
 public class SqlServerTestModelContext : TestModelContext
 {

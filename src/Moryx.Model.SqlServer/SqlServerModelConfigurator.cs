@@ -53,28 +53,6 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
         await command.ExecuteNonQueryAsync();
     }
 
-    /// <inheritdoc />
-    public override async Task DumpDatabase(IDatabaseConfig config, string targetPath)
-    {
-        if (!IsValidBackupFilePath(targetPath))
-            throw new ArgumentException("Invalid backup file path.");
-
-        var connectionString = CreateConnectionStringBuilder(config);
-
-        var dumpName = $"{DateTime.Now:dd-MM-yyyy-hh-mm-ss}_{connectionString.InitialCatalog}.bak";
-        var fileName = Path.Combine(targetPath, dumpName);
-
-        await using var connection = new SqlConnection(BuildConnectionString(config, false));
-        await using var command =
-            CreateCommand($"BACKUP DATABASE [{connectionString.InitialCatalog}] TO DISK = N'{fileName}' WITH INIT",
-                connection);
-
-        Logger.Log(LogLevel.Debug, "Starting to dump database with 'BACKUP DATABASE' to: {fileName}", fileName);
-
-        await connection.OpenAsync();
-        await command.ExecuteNonQueryAsync();
-    }
-
     private static SqlConnectionStringBuilder CreateConnectionStringBuilder(IDatabaseConfig config, bool includeModel = true)
     {
         var builder = new SqlConnectionStringBuilder(config.ConnectionSettings.ConnectionString)
@@ -83,24 +61,6 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
         };
 
         return builder;
-    }
-
-    /// <inheritdoc />
-    public override async Task RestoreDatabase(IDatabaseConfig config, string filePath)
-    {
-        if (!IsValidBackupFilePath(filePath))
-            throw new ArgumentException("Invalid backup file path.");
-
-        var connectionString = CreateConnectionStringBuilder(config);
-
-        await using var connection = new SqlConnection(BuildConnectionString(config, false));
-        await using var command = CreateCommand($"RESTORE DATABASE [{connectionString.InitialCatalog}] FROM DISK = N'{filePath}' WITH REPLACE",
-                connection);
-
-        Logger.Log(LogLevel.Debug, "Starting to restore database with 'RESTORE DATABASE' from: {filePath}", filePath);
-
-        await connection.OpenAsync();
-        await command.ExecuteNonQueryAsync();
     }
 
     /// <inheritdoc />
@@ -144,12 +104,5 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
 
         // Only allow letters, numbers, and underscores
         return Regex.IsMatch(dbName, @"^[A-Za-z0-9_]+$");
-    }
-
-    private static bool IsValidBackupFilePath(string filePath)
-    {
-        // Disallow dangerous characters
-        var invalidStrings = new[] { ";", "'", "\"", "--" };
-        return invalidStrings.All(s => !filePath.Contains(s));
     }
 }

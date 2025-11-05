@@ -46,18 +46,6 @@ namespace Moryx.Model.Sqlite
         }
 
         /// <inheritdoc />
-        public override Task DumpDatabase(IDatabaseConfig config, string targetPath)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public override Task RestoreDatabase(IDatabaseConfig config, string filePath)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
         public override DbContextOptions BuildDbContextOptions(IDatabaseConfig config)
         {
             var builder = new DbContextOptionsBuilder();

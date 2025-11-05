@@ -29,11 +29,6 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Models
         public SetupModel[] Setups { get; set; }
 
         /// <summary>
-        /// An amount of backups of this model.
-        /// </summary>
-        public BackupModel[] Backups { get; set; }
-
-        /// <summary>
         /// Available migrations for this context
         /// </summary>
         public DbMigrationsModel[] AvailableMigrations { get; set; }

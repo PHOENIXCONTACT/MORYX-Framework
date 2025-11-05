@@ -170,45 +170,6 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             }
         }
 
-        [HttpPost("{targetModel}/dump")]
-        [Authorize(Policy = RuntimePermissions.DatabaseCanDumpAndRestore)]
-        public ActionResult<InvocationResponse> DumpDatabase(string targetModel, DatabaseConfigModel config)
-        {
-            var targetConfigurator = GetTargetConfigurator(targetModel);
-            if (targetConfigurator == null)
-                return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
-
-            var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
-            if (!IsConfigValid(updatedConfig))
-                return BadConfigValues();
-
-            var targetPath = Path.Combine(DataDirectory, targetModel);
-            if (!Directory.Exists(targetPath))
-                Directory.CreateDirectory(targetPath);
-
-            targetConfigurator.DumpDatabase(updatedConfig, targetPath);
-
-            return new InvocationResponse();
-        }
-
-        [HttpPost("{targetModel}/restore")]
-        [Authorize(Policy = RuntimePermissions.DatabaseCanDumpAndRestore)]
-        public ActionResult<InvocationResponse> RestoreDatabase(string targetModel, RestoreDatabaseRequest request)
-        {
-            var targetConfigurator = GetTargetConfigurator(targetModel);
-            if (targetConfigurator == null)
-                return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
-
-            var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
-            if (!IsConfigValid(updatedConfig))
-                return BadConfigValues();
-
-            var filePath = Path.Combine(DataDirectory, targetModel, request.BackupFileName);
-            targetConfigurator.RestoreDatabase(updatedConfig, filePath);
-
-            return new InvocationResponse();
-        }
-
         [HttpPost("{targetModel}/migrate")]
         [Authorize(Policy = RuntimePermissions.DatabaseCanMigrateModel)]
         public async Task<ActionResult<DatabaseMigrationSummary>> MigrateDatabaseModel(string targetModel, DatabaseConfigModel configModel)
@@ -296,7 +257,6 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 Config = SerializeConfig(dbConfig),
                 PossibleConfigurators = GetConfigurators(contextType),
                 Setups = GetAllSetups(contextType).ToArray(),
-                Backups = GetAllBackups(contextType).ToArray(),
                 AvailableMigrations = await GetAvailableUpdates(dbConfig, configurator),
                 AppliedMigrations = await GetInstalledUpdates(dbConfig, configurator)
             };
@@ -361,28 +321,6 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
                 setups.AddRange(matchingFiles.Select(setup.CopyWithFile));
             }
             return setups.OrderBy(setup => setup.SortOrder);
-        }
-
-        private IEnumerable<BackupModel> GetAllBackups(Type contextType)
-        {
-            var targetModel = TargetModelName(contextType);
-            var backupFolder = Path.Combine(DataDirectory, targetModel);
-
-            if (!Directory.Exists(backupFolder))
-                return Array.Empty<BackupModel>();
-
-            var allBackups = Directory.EnumerateFiles(backupFolder, "*.backup").ToList();
-            var backups = from backup in allBackups
-                          let fileName = Path.GetFileName(backup)
-                          let fileInfo = new FileInfo(backup)
-                          select new BackupModel
-                          {
-                              FileName = fileName,
-                              Size = (int)fileInfo.Length / 1024,
-                              CreationDate = fileInfo.CreationTime
-                          };
-
-            return backups;
         }
 
         private static async Task<DbMigrationsModel[]> GetAvailableUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
