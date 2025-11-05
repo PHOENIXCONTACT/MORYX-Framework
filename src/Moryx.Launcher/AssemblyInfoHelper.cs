@@ -1,7 +1,10 @@
-using System;
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
 using System.Reflection;
 using System.Runtime.Versioning;
 
+namespace Moryx.Launcher;
 
 internal static class AssemblyInfoHelper
 {
@@ -33,4 +36,3 @@ internal static class AssemblyInfoHelper
     public static string Trademark =>
         _entryAssembly?.GetCustomAttribute<AssemblyTrademarkAttribute>()?.Trademark ?? "N/A";
 }
-

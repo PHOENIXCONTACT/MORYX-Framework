@@ -1,0 +1,40 @@
+﻿@page "{*_}"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Configuration
+@using Moryx.Launcher
+@using Moryx.Launcher.Config
+@inject IConfiguration _configuration
+@{
+    ViewData["Title"] = "External";
+    ViewData["BaseRef"] = "external";
+
+    Layout = "_Layout";
+}
+@attribute [Authorize(Policy = LauncherPermissions.CanViewExternalModules),
+            AllowAnonymous]
+@{
+    var routeValues = ViewContext.RouteData.Values;
+    var externalRouteName = string.Empty;
+    if (routeValues.Count > 1)
+        externalRouteName = routeValues["_"]?.ToString();
+
+    var externalModuleConfigs = _configuration.GetSection("Shell:ExternalModules").Get<ExternalModuleConfig[]>();
+
+    var config = externalModuleConfigs.FirstOrDefault(c => c.Route.Equals(externalRouteName));
+
+    if (config != null)
+    {
+        ViewData["Title"] += $": {config.Title}";
+    }
+}
+
+@{
+    if (config == null)
+    {
+        <h1>Not found!</h1>
+    }
+    else
+    {
+        <embed src="@config?.Url" width="100%" height="100%">
+    }
+}
