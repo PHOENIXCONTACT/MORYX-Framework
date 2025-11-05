@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
-using Moryx.Communication.Endpoints;
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
@@ -39,8 +38,6 @@ namespace Moryx.ControlSystem.ProcessEngine
         public IActivityPoolListener[] PoolListeners { get; set; }
 
         public ISetupJobHandler SetupManager { get; set; }
-
-        public IEndpointHostFactory HostFactory { get; set; }
 
         public IModuleLogger Logger { get; set; }
 

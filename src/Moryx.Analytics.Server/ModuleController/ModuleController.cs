@@ -3,7 +3,6 @@
 
 using System.ComponentModel;
 using Microsoft.Extensions.Logging;
-using Moryx.Communication.Endpoints;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Runtime.Modules;
@@ -16,8 +15,6 @@ namespace Moryx.Analytics.Server.ModuleController
     [Description("Modul to analyze data and visualize in Dashboards")]
     public class ModuleController : ServerModuleBase<ModuleConfig>
     {
-        private IEndpointHost _host;
-
         /// <summary>
         /// The module's name.
         /// </summary>
@@ -51,8 +48,6 @@ namespace Moryx.Analytics.Server.ModuleController
         /// </summary>
         protected override void OnStop()
         {
-            _host.Stop();
-            _host = null;
         }
 
         #endregion

@@ -28,9 +28,6 @@ namespace Moryx.TestModule
     [DataContract]
     public class ModuleConfig : ConfigBase
     {
-        [SharedConfig(false)]
-        public PortConfig Config { get; set; }
-
         [DataMember]
         [DefaultValue(0x2)]
         public byte ByteValue { get; set; }

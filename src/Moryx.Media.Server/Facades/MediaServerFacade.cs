@@ -1,47 +1,17 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Media.Server.Endpoint;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Media.Server.Facades
 {
-    internal class MediaServerFacade : IFacadeControl, IMediaServer
+    internal class MediaServerFacade : FacadeBase, IMediaServer
     {
         #region Dependencies
 
         public IContentManager ContentManager { get; set; }
 
-        public ModelConverter ModelConverter { get; set; }
-
         #endregion
-
-        #region IFacadeControl
-
-        public void Activate()
-        {
-        }
-
-        public void Deactivate()
-        {
-        }
-
-        public Action ValidateHealthState { get; set; }
-
-        #endregion
-
-        #region IMediaServer
-        public IReadOnlyList<ContentDescriptor> GetDescriptors()
-        {
-            ValidateHealthState();
-            return ContentManager.GetDescriptors();
-        }
-
-        public ContentDescriptor GetDescriptor(Guid contentId)
-        {
-            ValidateHealthState();
-            return ContentManager.GetDescriptor(contentId);
-        }
 
         public VariantDescriptor GetVariant(Guid contentId, string variantName)
         {
@@ -65,22 +35,6 @@ namespace Moryx.Media.Server.Facades
         {
             ValidateHealthState();
             return ContentManager.AddVariant(contentId, variantName, fileName, contentStream);
-        }
-
-        public bool RemoveContent(Guid contentId, string variantName)
-        {
-            ValidateHealthState();
-            return ContentManager.RemoveContent(contentId, variantName);
-        }
-
-        public string GetFileUrl(ContentDescriptor content, VariantDescriptor variant)
-        {
-            return ModelConverter.GetUrl(InternalConstants.FileUriTemplate, content.Id, variant.Name);
-        }
-
-        public string GetPreviewUrl(ContentDescriptor content, VariantDescriptor variant)
-        {
-            return ModelConverter.GetUrl(InternalConstants.FileUriTemplate, content.Id, variant.Name);
         }
 
         /// <inheritdoc />
@@ -131,8 +85,6 @@ namespace Moryx.Media.Server.Facades
             ValidateHealthState();
             return ContentManager.FileSizeLimitInMb();
         }
-
-        #endregion
     }
 }
 
