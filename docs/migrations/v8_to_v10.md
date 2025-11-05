@@ -42,6 +42,27 @@ With MORYX 10, several changes have been made to the data model to improve perfo
 
 The `ProductFileEntity` has been removed from the data model as it was not utilized effectively. This change helps streamline the data structure and reduce unnecessary complexity.
 
+## Removal of Modules-Analytics
+
+The analytics module was doing nothing and the web module was replaced by supporting external modules in `Launcher`. Its now supported to embed external web-pages into the shell.
+Extend your `appsettings.json` by the following:
+
+````json
+"Shell": {
+  "SortIndex": {
+    ...
+  },
+  "ExternalModules": [
+    {
+      "Route": "example",
+      "Title": "Example",
+      "Url": "http://www.example.com",
+      "Icon": "globe"
+    }
+  ]
+}
+````
+
 ## Rarely used features removed
 
 These feature were infrequently used and has been removed to simplify the codebase.
