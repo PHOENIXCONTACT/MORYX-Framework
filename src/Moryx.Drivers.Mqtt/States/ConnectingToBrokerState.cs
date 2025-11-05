@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers;
 
 namespace Moryx.Drivers.Mqtt.States
