@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
-using Moryx.Drivers.Mqtt.Localizations;
+using Moryx.Drivers.Mqtt.Properties;
 
 namespace Moryx.Drivers.Mqtt.MqttTopics
 {
@@ -15,13 +15,13 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
     /// MQTT Topic, where primitive types are published
     /// </summary>
     [ResourceRegistration]
-    [Display(Name = nameof(Strings.MQTT_TOPIC_PRIMITIVE), Description = nameof(Strings.MQTT_TOPIC_PRIMITIVE_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.MqttTopicPrimitive_DisplayName), Description = nameof(Strings.MqttTopicPrimitive_Description), ResourceType = typeof(Strings))]
     public class MqttTopicPrimitive : MqttTopic<IConvertible>
     {
         #region Properties
 
         /// <summary>
-        /// This enum is used, to have a dropdown menu on the client ui including all primitive types for the MessageType 
+        /// This enum is used, to have a dropdown menu on the client ui including all primitive types for the MessageType
         /// </summary>
         [EntrySerialize]
         [DataMember]

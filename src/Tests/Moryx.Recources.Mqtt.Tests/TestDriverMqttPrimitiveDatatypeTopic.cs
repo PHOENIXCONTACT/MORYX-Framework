@@ -85,7 +85,7 @@ namespace Moryx.Resources.Mqtt.Tests
         private Expression<Func<MqttClientOptions, bool>> CorrectClientOptions()
         {
             return o => o.ProtocolVersion == _driver.MqttVersion && o.CleanSession == !_driver.ReconnectWithoutCleanSession
-                        && o.ClientId == $"{System.Net.Dns.GetHostName()}-{_driver.Id}-{_driver.Name}" && (o.ChannelOptions as MqttClientTcpOptions).Server == _driver.BrokerURL &&
+                        && o.ClientId == $"{System.Net.Dns.GetHostName()}-{_driver.Id}-{_driver.Name}" && (o.ChannelOptions as MqttClientTcpOptions).Server == _driver.BrokerUrl &&
                         (o.ChannelOptions as MqttClientTcpOptions).Port == _driver.Port;
         }
 

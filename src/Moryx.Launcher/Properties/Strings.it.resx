@@ -117,70 +117,70 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ABOUT" xml:space="preserve">
+  <data name="Layout_About" xml:space="preserve">
     <value>Informazioni</value>
   </data>
-  <data name="COMPANY" xml:space="preserve">
+  <data name="AboutModal_Misc_Company" xml:space="preserve">
     <value>Azienda</value>
   </data>
-  <data name="CONFIG" xml:space="preserve">
+  <data name="AboutModal_Misc_Configuration" xml:space="preserve">
     <value>Configurazione</value>
   </data>
-  <data name="COPYRIGHT" xml:space="preserve">
+  <data name="AboutModal_Copyright" xml:space="preserve">
     <value>Copyright</value>
   </data>
-  <data name="DESCRIPTION" xml:space="preserve">
+  <data name="AboutModal_Misc_Description" xml:space="preserve">
     <value>Descrizione</value>
   </data>
-  <data name="DETAILS" xml:space="preserve">
+  <data name="Layout_Details" xml:space="preserve">
     <value>DETTAGLI</value>
   </data>
-  <data name="EXIT_FULLSCREEN" xml:space="preserve">
+  <data name="Layout_ExitFullscreen" xml:space="preserve">
     <value>Esci a schermo intero</value>
   </data>
-  <data name="FULLSCREEN_MODE" xml:space="preserve">
+  <data name="Layout_FullscreenMode" xml:space="preserve">
     <value>Modalità a schermo intero</value>
   </data>
   <data name="HELP" xml:space="preserve">
     <value>Aiuto</value>
   </data>
-  <data name="LANGUAGE" xml:space="preserve">
+  <data name="Layout_Language" xml:space="preserve">
     <value>Lingua</value>
   </data>
-  <data name="MODULES" xml:space="preserve">
+  <data name="Layout_Modules" xml:space="preserve">
     <value>Moduli</value>
   </data>
-  <data name="MORE" xml:space="preserve">
+  <data name="Layout_More" xml:space="preserve">
     <value>Di più</value>
   </data>
-  <data name="OPERATOR_MODE" xml:space="preserve">
+  <data name="Layout_OperatorMode" xml:space="preserve">
     <value>Modalità operatore</value>
   </data>
-  <data name="PRODUCT" xml:space="preserve">
+  <data name="AboutModal_Misc_Product" xml:space="preserve">
     <value>Prodotto</value>
   </data>
-  <data name="SEARCH" xml:space="preserve">
+  <data name="Layout_Search" xml:space="preserve">
     <value>Cerca</value>
   </data>
   <data name="SETTING_LANGUAGE" xml:space="preserve">
     <value>Lingua</value>
   </data>
-  <data name="SIGN_IN" xml:space="preserve">
+  <data name="Layout_SignIn" xml:space="preserve">
     <value>Accedi</value>
   </data>
-  <data name="TARGET_FRAMEWORK" xml:space="preserve">
+  <data name="AboutModal_Misc_TargetFramework" xml:space="preserve">
     <value>Framework di destinazione</value>
   </data>
-  <data name="TITLE" xml:space="preserve">
+  <data name="AboutModal_Misc_Title" xml:space="preserve">
     <value>Titolo</value>
   </data>
   <data name="TRADEMARK" xml:space="preserve">
     <value>Marchio registrato</value>
   </data>
-  <data name="VERSION" xml:space="preserve">
+  <data name="AboutModal_Version" xml:space="preserve">
     <value>Versione</value>
   </data>
-  <data name="VIEWS" xml:space="preserve">
+  <data name="Layout_Views" xml:space="preserve">
     <value>Visualizzazioni</value>
   </data>
 </root>

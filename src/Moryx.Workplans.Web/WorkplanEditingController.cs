@@ -58,7 +58,7 @@ namespace Moryx.Workplans.Endpoint
                 ? _workplans.LoadWorkplan(openSession.WorkplanId)
                 : CreateNew();
             if (workplan == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.SESSION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.WorkplanEditingController_SessionNotFound });
 
             var session = _workplanEditing.EditWorkplan(workplan, openSession.Duplicate);
             return ModelConverter.ConvertSession(session);
@@ -79,7 +79,7 @@ namespace Moryx.Workplans.Endpoint
         {
             var session = _workplanEditing.OpenSession(sessionId);
             if (session == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.SESSION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.WorkplanEditingController_SessionNotFound });
             return ModelConverter.ConvertSession(session);
         }
 
@@ -89,7 +89,7 @@ namespace Moryx.Workplans.Endpoint
         {
             var session = _workplanEditing.OpenSession(sessionId);
             if (session == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.SESSION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.WorkplanEditingController_SessionNotFound });
 
             _workplanEditing.AutoLayout(sessionId);
             return ModelConverter.ConvertSession(session);

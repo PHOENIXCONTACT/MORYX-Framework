@@ -4,7 +4,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.Serialization;
-using Moryx.ControlSystem.Localizations;
+using Moryx.ControlSystem.Properties;
 
 namespace Moryx.ControlSystem.VisualInstructions
 {

@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SAME_SUBWORKPLAN" xml:space="preserve">
+  <data name="WorkplanEditingSession_SameWorkplanReference" xml:space="preserve">
     <value>工作计划不能包含自身的子工作计划</value>
   </data>
 </root>

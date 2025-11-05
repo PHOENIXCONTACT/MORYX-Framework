@@ -5,3 +5,4 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 [assembly: InternalsVisibleTo("Moryx.Shifts.Management.Tests")]
+[assembly: InternalsVisibleTo("Moryx.Shifts.Management.IntegrationTests")]

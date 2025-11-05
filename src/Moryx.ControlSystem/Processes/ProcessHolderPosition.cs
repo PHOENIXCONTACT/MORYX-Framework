@@ -9,7 +9,7 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
 using Moryx.Serialization;
-using Moryx.ControlSystem.Localizations;
+using Moryx.ControlSystem.Properties;
 
 namespace Moryx.ControlSystem.Processes
 {
@@ -17,7 +17,7 @@ namespace Moryx.ControlSystem.Processes
     /// Implementation of <see cref="IProcessHolderPosition"/>
     /// </summary>
     [ResourceRegistration]
-    [Display(Name = nameof(Strings.PROCESS_HOLDER_POSITION), Description = nameof(Strings.PROCESS_HOLDER_POSITION_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.ProcessHolderPosition_DisplayName), Description = nameof(Strings.ProcessHolderPosition_Description), ResourceType = typeof(Strings))]
     public class ProcessHolderPosition : Resource, IProcessHolderPosition
     {
         [DataMember]
@@ -31,20 +31,20 @@ namespace Moryx.ControlSystem.Processes
         /// Gets the current process id for the ui.
         /// </summary>
         [EntrySerialize]
-        [Display(Name = nameof(Strings.CURRENT_PROCESS), ResourceType = typeof(Localizations.Strings))]
+        [Display(Name = nameof(Strings.ProcessHolderPosition_CurrentProcess), ResourceType = typeof(Strings))]
         public long CurrentProcess => _processId;
 
         /// <summary>
         /// Gets the running activity.
         /// </summary>
         [EntrySerialize]
-        [Display(Name = nameof(Strings.CURRENT_ACTIVITY), ResourceType = typeof(Localizations.Strings))]
+        [Display(Name = nameof(Strings.ProcessHolderPosition_CurrentActivity), ResourceType = typeof(Strings))]
         public string CurrentActivity => Process?.CurrentActivity() == null
             ? string.Empty : $"{Process.CurrentActivity().Id} - {Process.CurrentActivity().GetType().Name}";
 
         /// <inheritdoc />
         [EntrySerialize, DataMember]
-        [Display(Name = nameof(Strings.ID), ResourceType = typeof(Localizations.Strings))]
+        [Display(Name = nameof(Strings.ProcessHolderPosition_Identifier), ResourceType = typeof(Strings))]
         public string Identifier { get; set; }
 
         #endregion

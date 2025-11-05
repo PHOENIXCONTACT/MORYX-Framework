@@ -4,7 +4,7 @@
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
-using Moryx.Factory.Localizations;
+using Moryx.Factory.Properties;
 using System.ComponentModel.DataAnnotations;
 
 namespace Moryx.Factory
@@ -12,16 +12,16 @@ namespace Moryx.Factory
     /// <summary>
     /// Point where the direction changes in a transport path.
     /// </summary>
-    [Display(Name = nameof(Strings.SWITCH_POINT), Description = nameof(Strings.SWITCH_POINT_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.SwitchPoint_DisplayName), Description = nameof(Strings.SwitchPoint_Description), ResourceType = typeof(Strings))]
     public class SwitchPoint : Resource, ILocation
     {
 
         [DataMember, EntrySerialize]
-        [Display(Name = nameof(Strings.POSITION_X), ResourceType = typeof(Localizations.Strings))]
+        [Display(Name = nameof(Strings.MachineLocation_PositionX), ResourceType = typeof(Strings))]
         public double PositionX { get; set; }
 
         [DataMember, EntrySerialize]
-        [Display(Name = nameof(Strings.POSITION_Y), ResourceType = typeof(Localizations.Strings))]
+        [Display(Name = nameof(Strings.MachineLocation_PositionY), ResourceType = typeof(Strings))]
         public double PositionY { get; set; }
 
         public Position Position

@@ -4,7 +4,7 @@
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Factory;
 using Moryx.FactoryMonitor.Endpoints.Exceptions;
-using Moryx.FactoryMonitor.Endpoints.Localizations;
+using Moryx.FactoryMonitor.Endpoints.Properties;
 
 namespace Moryx.FactoryMonitor.Endpoints.Extensions
 {
@@ -14,7 +14,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
         {
             var rootFactory = resourceManagement.GetResource<IManufacturingFactory>(x => (x as ManufacturingFactory).Parent is null);
 
-            return rootFactory is null ? throw new NoRootFactoryException(Strings.NO_ROOT_FACTORY_EXCEPTION) : rootFactory;
+            return rootFactory is null ? throw new NoRootFactoryException(Strings.ResourceManagementExtensions_NoRootFactoryException) : rootFactory;
         }
     }
 }

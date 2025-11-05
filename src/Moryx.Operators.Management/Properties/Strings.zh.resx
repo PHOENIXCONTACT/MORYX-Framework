@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="NOT_NULL" xml:space="preserve">
+  <data name="OperatorManagementFacade_NotNullExceptionMessage" xml:space="preserve">
     <value>{0} 不能为空。</value>
   </data>
-  <data name="REFERENCE_NOT_FOUND" xml:space="preserve">
+  <data name="OperatorManagementFacade_ReferenceNotFoundExceptionMessage" xml:space="preserve">
     <value>不存在与引用 ID {1} 对应的 {0}</value>
   </data>
 </root>

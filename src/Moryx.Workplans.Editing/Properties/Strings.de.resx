@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SAME_SUBWORKPLAN" xml:space="preserve">
+  <data name="WorkplanEditingSession_SameWorkplanReference" xml:space="preserve">
     <value>Der Arbeitsplan kann keinen eigenen Unterarbeitsplan haben</value>
   </data>
 </root>

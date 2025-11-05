@@ -47,7 +47,7 @@ namespace Moryx.Resources.Mqtt.Tests
             _mockClient = new Mock<IMqttClient>();
             var options = new MqttClientOptionsBuilder()
                 .WithClientId(_driver.Id.ToString())
-                .WithTcpServer(_driver.BrokerURL, _driver.Port)
+                .WithTcpServer(_driver.BrokerUrl, _driver.Port)
                 .Build();
             _mockClient.Setup(m => m.ConnectAsync(It.IsAny<MqttClientOptions>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new MqttClientConnectResult(), TimeSpan.FromMilliseconds(100));

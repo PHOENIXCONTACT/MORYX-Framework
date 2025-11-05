@@ -8,7 +8,7 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Moryx.Drivers.Mqtt.Localizations;
+using Moryx.Drivers.Mqtt.Properties;
 
 namespace Moryx.Drivers.Mqtt.MqttTopics
 {
@@ -16,13 +16,13 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
     /// MQTT Topic, where the published messages are in a JSON format
     /// </summary>
     [ResourceRegistration]
-    [Display(Name = nameof(Strings.MQTT_TOPIC_JSON), Description = nameof(Strings.MQTT_TOPIC_JSON_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.MqttTopicJson_DisplayName), Description = nameof(Strings.MqttTopicJson_Description), ResourceType = typeof(Strings))]
     public class MqttTopicJson : MqttTopic<object>
     {
         /// <inheritdoc />
         [EntrySerialize]
         [DataMember]
-        [Display(Name = nameof(Strings.MESSAGE_NAME), ResourceType = typeof(Localizations.Strings))]
+        [Display(Name = nameof(Strings.MqttTopicIByteSerializable_MessageName), ResourceType = typeof(Strings))]
         public override string MessageName
         {
             get => base.MessageName;
@@ -33,7 +33,7 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         /// Format to use for the JSON of this topic
         /// </summary>
         [EntrySerialize, DataMember]
-        [Display(Name = nameof(Strings.FORMAT), ResourceType = typeof(Localizations.Strings))]
+        [Display(Name = nameof(Strings.MqttTopicJson_Format), ResourceType = typeof(Strings))]
         public JsonFormat Format { get; set; }
 
         /// <inheritdoc />

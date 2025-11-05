@@ -18,8 +18,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\Migrations\Npgsql\" />
-    <Folder Include="Model\Migrations\Sqlite\" />
+    <EmbeddedResource Update="Properties\Strings.resx">
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <Compile Update="Properties\Strings.Designer.cs">
+      <DependentUpon>Strings.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
 </Project>

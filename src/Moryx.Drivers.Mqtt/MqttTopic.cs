@@ -12,7 +12,7 @@ using Moryx.Bindings;
 using Moryx.Serialization;
 using Moryx.Threading;
 using Moryx.Tools;
-using Moryx.Drivers.Mqtt.Localizations;
+using Moryx.Drivers.Mqtt.Properties;
 using System.ComponentModel.DataAnnotations;
 
 namespace Moryx.Drivers.Mqtt
@@ -35,7 +35,7 @@ namespace Moryx.Drivers.Mqtt
         /// Name of the MQTT Topic
         /// </summary>
         [DataMember, EntrySerialize]
-        [Display(Name = nameof(Strings.IDENTIFIER), Description = nameof(Strings.IDENTIFIER_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+        [Display(Name = nameof(Strings.MqttTopic_Identifier), Description = nameof(Strings.MqttTopic_Identifier_Description), ResourceType = typeof(Strings))]
         public string Identifier
         {
             get => _topicName;
@@ -69,7 +69,7 @@ namespace Moryx.Drivers.Mqtt
                         }
                         break;
                     case TopicValidationResult.Invalid:
-                        // TODO: Discuss if failing silently is a good idea 
+                        // TODO: Discuss if failing silently is a good idea
                         Logger.LogWarning("Invalid Identifier specified. Not overwriting the _topicName. Reason: {errorMessage}", errorMessage);
                         break;
                     case TopicValidationResult.Uninitialized:
@@ -116,7 +116,7 @@ namespace Moryx.Drivers.Mqtt
         /// <remarks>Only available for MQTT v5+</remarks>
         /// </summary>
         [EntrySerialize, DataMember, DefaultValue("")]
-        [Display(Name = nameof(Strings.RESPONSE_TOPIC), Description = nameof(Strings.RESPONSE_TOPIC_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+        [Display(Name = nameof(Strings.MqttTopic_ResponseTopic), Description = nameof(Strings.MqttTopic_ResponseTopic_Description), ResourceType = typeof(Strings))]
         public string ResponseTopic { get; set; }
 
         private void ReportToDriverThatTopicChanged(TopicChanged args)
@@ -185,7 +185,7 @@ namespace Moryx.Drivers.Mqtt
         internal abstract void OnReceived(string receivedTopic, byte[] messageAsBytes);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="msg"></param>
         protected void RaiseReceived(object msg)

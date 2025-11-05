@@ -5,31 +5,30 @@
     <Description>Moryx.Operators.Management</Description>
     <IsPackable>true</IsPackable>
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
-	<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json"/>
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
-    <ProjectReference Include="..\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj" />
-    <ProjectReference Include="..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
-    <ProjectReference Include="..\Moryx.Operators\Moryx.Operators.csproj" />
-    <ProjectReference Include="..\Moryx.Users\Moryx.Users.csproj" />
+    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj"/>
+    <ProjectReference Include="..\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj"/>
+    <ProjectReference Include="..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj"/>
+    <ProjectReference Include="..\Moryx.Operators\Moryx.Operators.csproj"/>
+    <ProjectReference Include="..\Moryx.Users\Moryx.Users.csproj"/>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\Migrations\Npgsql\" />
-    <Folder Include="Model\Migrations\Sqlite\" />
-  </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Update="Properties\Strings.resx">
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
+
   <ItemGroup>
     <Compile Update="Properties\Strings.Designer.cs">
       <DependentUpon>Strings.resx</DependentUpon>
@@ -37,4 +36,5 @@
       <AutoGen>True</AutoGen>
     </Compile>
   </ItemGroup>
+
 </Project>

@@ -22,7 +22,7 @@ public class OperatorNotFoundException : Exception
     /// Creates an exception that includes the operators ID in the exception message
     /// </summary>
     /// <param name="operatorIdentifier">Operator's ID</param>
-    public OperatorNotFoundException(string operatorIdentifier) : base(string.Format(Strings.OPERATOR_NOTFOUND, operatorIdentifier))
+    public OperatorNotFoundException(string operatorIdentifier) : base(string.Format(Strings.OperatorNotFoundException_Message, operatorIdentifier))
     {
     }
 }

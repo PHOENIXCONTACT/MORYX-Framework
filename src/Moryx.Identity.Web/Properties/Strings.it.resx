@@ -123,16 +123,16 @@
   <data name="Module_Title" xml:space="preserve">
     <value>Utenti</value>
   </data>
-  <data name="PASSWORD" xml:space="preserve">
+  <data name="Login_Password" xml:space="preserve">
     <value>Password</value>
   </data>
-  <data name="SIGN_IN" xml:space="preserve">
+  <data name="Login_SignIn" xml:space="preserve">
     <value>Accedi</value>
   </data>
-  <data name="USERNAME" xml:space="preserve">
+  <data name="Login_Username" xml:space="preserve">
     <value>Nome utente</value>
   </data>
-  <data name="VALIDATION_MESSAGE" xml:space="preserve">
+  <data name="Login_UsernamePasswordWrong" xml:space="preserve">
     <value>Il nome utente e/o la password sono errati</value>
   </data>
 </root>

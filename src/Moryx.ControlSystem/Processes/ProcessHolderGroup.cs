@@ -3,7 +3,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.ControlSystem.Localizations;
+using Moryx.ControlSystem.Properties;
 
 namespace Moryx.ControlSystem.Processes
 {
@@ -11,7 +11,7 @@ namespace Moryx.ControlSystem.Processes
     /// Default implementation for <see cref="IProcessHolderGroup{IProcessHolderPosition}"/>
     /// </summary>
     [ResourceRegistration]
-    [Display(Name = nameof(Strings.PROCESS_HOLDER_GROUP), Description = nameof(Strings.PROCESS_HOLDER_GROUP_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.ProcessHolderGroup_DisplayName), Description = nameof(Strings.ProcessHolderGroup_Description), ResourceType = typeof(Strings))]
     public class ProcessHolderGroup : Resource, IProcessHolderGroup
     {
         /// <summary>

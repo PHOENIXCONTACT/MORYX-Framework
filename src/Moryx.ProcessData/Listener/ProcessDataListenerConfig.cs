@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.Modules;
-using Moryx.ProcessData.Localization;
+using Moryx.ProcessData.Properties;
 using Moryx.Serialization;
 
 namespace Moryx.ProcessData.Listener
@@ -32,14 +32,14 @@ namespace Moryx.ProcessData.Listener
         /// Unique Name of the Listener
         /// </summary>
         [DataMember]
-        [Display(Name = nameof(Strings.LISTENERNAME), Description = nameof(Strings.LISTENERNAME_DESCRIPTION), ResourceType = typeof(Strings))]
+        [Display(Name = nameof(Strings.ProcessDataListenerConfig_ListenerName), Description = nameof(Strings.ProcessDataListenerConfig_ListenerName_Description), ResourceType = typeof(Strings))]
         public string ListenerName { get; set; }
 
         /// <summary>
         /// Configuration for the occurred measurand. They can be enabled or disabled.
         /// </summary>
         [DataMember]
-        [Display(Name = nameof(Strings.MEASURAND_CONFIG), ResourceType = typeof(Strings))]
+        [Display(Name = nameof(Strings.ProcessDataListenerConfig_MeasurandConfigs), ResourceType = typeof(Strings))]
         public List<MeasurandConfig> MeasurandConfigs { get; set; }
     }
 
@@ -53,14 +53,14 @@ namespace Moryx.ProcessData.Listener
         /// Name of the measurand
         /// </summary>
         [DataMember]
-        [Display(Name = nameof(Strings.MEASURAND_NAME), Description = nameof(Strings.MEASURAND_NAME_DESCRIPTION), ResourceType = typeof(Strings))]
+        [Display(Name = nameof(Strings.MeasurandConfig_Name), Description = nameof(Strings.MeasurandConfig_Name_Description), ResourceType = typeof(Strings))]
         public string Name { get; set; }
 
         /// <summary>
         /// Indicator if measurand processing is enabled
         /// </summary>
         [DataMember]
-        [Display(Name = nameof(Strings.IS_ENABLED), Description = nameof(Strings.IS_ENABLED_DESCRIPTION), ResourceType = typeof(Strings))]
+        [Display(Name = nameof(Strings.MeasurandConfig_IsEnabled), Description = nameof(Strings.MeasurandConfig_IsEnabled_Description), ResourceType = typeof(Strings))]
         public bool IsEnabled { get; set; }
 
         /// <inheritdoc />
