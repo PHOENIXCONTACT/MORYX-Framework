@@ -39,7 +39,11 @@ namespace Moryx.Drivers.Mqtt.States
 
         internal override void TriedConnecting(bool successful)
         {
-            if (successful) return;
+            if (successful)
+            {
+                return;
+            }
+
             base.TriedConnecting(successful);
         }
     }

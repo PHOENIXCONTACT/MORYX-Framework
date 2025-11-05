@@ -250,7 +250,7 @@ namespace Moryx.Drivers.Mqtt.Properties {
                 return ResourceManager.GetString("RETAIN", resourceCulture);
             }
         }
-        
+
         public static string RETAIN_DESCRIPTION
         {
             get
@@ -258,5 +258,95 @@ namespace Moryx.Drivers.Mqtt.Properties {
                 return ResourceManager.GetString("RETAIN_DESCRIPTION", resourceCulture);
             }
         }
+
+        public static string MqttDriver_HasLastWill {
+            get {
+                return ResourceManager.GetString("MqttDriver_HasLastWill", resourceCulture);
+            }
+        }
+        
+        public static string MqttDriver_HasLastWill_Description {
+            get {
+                return ResourceManager.GetString("MqttDriver_HasLastWill_Description", resourceCulture);
+            }
+        }
+
+        public static string MqttDriver_LastWillTopic {
+            get {
+                return ResourceManager.GetString("MqttDriver_LastWillTopic", resourceCulture);
+            }
+        }
+        
+        public static string MqttDriver_LastWillTopic_Description {
+            get {
+                return ResourceManager.GetString("MqttDriver_LastWillTopic_Description", resourceCulture);
+            }
+        }
+        
+        public static string MqttDriver_Reconnect_Description {
+            get {
+                return ResourceManager.GetString("MqttDriver_Reconnect_Description", resourceCulture);
+            }
+        }
+        
+        public static string MqttDriver_Reconnect_Name {
+            get {
+                return ResourceManager.GetString("MqttDriver_Reconnect_Name", resourceCulture);
+            }
+        }
+        
+        public static string MqttDriver_TraceMessageContent_Description {
+            get {
+                return ResourceManager.GetString("MqttDriver_TraceMessageContent_Description", resourceCulture);
+            }
+        }
+        
+        public static string MqttDriver_TraceMessageContent_Name {
+            get {
+                return ResourceManager.GetString("MqttDriver_TraceMessageContent_Name", resourceCulture);
+            }
+        }
+        
+        public static string MqttTopic_TopicType {
+            get {
+                return ResourceManager.GetString("MqttTopic_TopicType", resourceCulture);
+            }
+        }
+        
+        public static string MqttTopic_TopicType_Description {
+            get {
+                return ResourceManager.GetString("MqttTopic_TopicType_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Enums as string ähnelt.
+        /// </summary>
+        public static string MqttTopicJson_EnumsAsStrings {
+            get {
+                return ResourceManager.GetString("MqttTopicJson_EnumsAsStrings", resourceCulture);
+            }
+        }
+        
+        public static string MqttTopicJson_EnumsAsStrings_Description {
+            get {
+                return ResourceManager.GetString("MqttTopicJson_EnumsAsStrings_Description", resourceCulture);
+            }
+        }
+        
+        public static string MqttTopicJson_Serializer {
+            get {
+                return ResourceManager.GetString("MqttTopicJson_Serializer", resourceCulture);
+            }
+        }
+        
+        public static string MqttTopicJson_Serializer_Description {
+            get {
+                return ResourceManager.GetString("MqttTopicJson_Serializer_Description", resourceCulture);
+            }
+        }
+        
     }
+
+    
 }

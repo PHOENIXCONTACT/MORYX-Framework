@@ -222,4 +222,46 @@
   <data name="RETAIN_DESCRIPTION" xml:space="preserve">
     <value>Send Messages should be marked as retain</value>
   </data>
+  <data name="MqttDriver_Reconnect_Description" xml:space="preserve">
+    <value>Executes reconnect</value>
+  </data>
+  <data name="MqttDriver_Reconnect_Name" xml:space="preserve">
+    <value>Reconnect</value>
+  </data>
+  <data name="MqttDriver_TraceMessageContent_Name" xml:space="preserve">
+    <value>Trace message content</value>
+  </data>
+  <data name="MqttDriver_TraceMessageContent_Description" xml:space="preserve">
+    <value>Decides if the entire message content should be saved for debugging</value>
+  </data>
+  <data name="MqttDriver_HasLastWill" xml:space="preserve">
+    <value>Has last will</value>
+  </data>
+  <data name="MqttDriver_HasLastWill_Description" xml:space="preserve">
+    <value>Decides if a last will message should be registered on the broker</value>
+  </data>
+  <data name="MqttDriver_LastWillTopic" xml:space="preserve">
+    <value>Last will topic</value>
+  </data>
+  <data name="MqttDriver_LastWillTopic_Description" xml:space="preserve">
+    <value>The topic the last will message should be published to. Has no effect if HasLastWill is not set</value>
+  </data>
+  <data name="MqttTopic_TopicType_Description" xml:space="preserve">
+    <value>Message flow direction</value>
+  </data>
+  <data name="MqttTopic_TopicType" xml:space="preserve">
+    <value>Topic type</value>
+  </data>
+  <data name="MqttTopicJson_Serializer" xml:space="preserve">
+    <value>Serializer</value>
+  </data>
+  <data name="MqttTopicJson_Serializer_Description" xml:space="preserve">
+    <value>Controls which serializer library to use</value>
+  </data>
+  <data name="MqttTopicJson_EnumsAsStrings" xml:space="preserve">
+    <value>Enums as string</value>
+  </data>
+  <data name="MqttTopicJson_EnumsAsStrings_Description" xml:space="preserve">
+    <value>Controls enums are encoded as their string names or as numbers</value>
+  </data>
 </root>

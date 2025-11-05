@@ -14,12 +14,6 @@ using System.Text.Json;
 
 namespace Moryx.Drivers.Mqtt.MqttTopics
 {
-
-    public enum SerializerSelection
-    {
-        NewtonsoftJson,
-        SystemTextJson
-    }
     /// <summary>
     /// MQTT Topic, where the published messages are in a JSON format
     /// </summary>
@@ -44,11 +38,27 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         [Display(Name = nameof(Strings.MqttTopicJson_Format), ResourceType = typeof(Strings))]
         public JsonFormat Format { get; set; }
 
+        /// <summary>
+        /// Controls serializer library to use
+        /// <see cref="SerializerSelection"/>
+        /// </summary>
         [DataMember, EntrySerialize]
-        // TODO: Add localized display attribute
+        [Display(
+            Name = nameof(Strings.MqttTopicJson_Serializer),
+            Description = nameof(Strings.MqttTopicJson_Serializer_Description),
+            ResourceType = typeof(Strings)
+        )]
         public SerializerSelection Serializer { get; set; }
 
+        /// <summary>
+        /// Controls if enums should be serialized as strings or as ints
+        /// </summary>
         [DataMember, EntrySerialize]
+        [Display(
+            Name = nameof(Strings.MqttTopicJson_EnumsAsStrings),
+            Description = nameof(Strings.MqttTopicJson_EnumsAsStrings_Description),
+            ResourceType = typeof(Strings)
+        )]
         public bool EnumsAsStrings { get; set; }
 
         /// <inheritdoc />
@@ -87,7 +97,10 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
             };
             options.Converters.Clear();
             if (EnumsAsStrings)
+            {
                 options.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+            }
+
             return options;
         }
 
@@ -98,22 +111,18 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
                 NullValueHandling = NullValueHandling.Ignore,
             };
             if (EnumsAsStrings)
+            {
                 settings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+            }
+
             if (Format == JsonFormat.camelCase)
+            {
                 settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            }
 
             return settings;
         }
 
-    }
-
-    /// <summary>
-    /// Configuration value for the JSON format
-    /// </summary>
-    public enum JsonFormat
-    {
-        PascalCase = 0,
-        camelCase = 1
     }
 }
 

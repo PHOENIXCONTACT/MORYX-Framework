@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Drivers;
 using MQTTnet;
 using System.ComponentModel;
-using System.Text.RegularExpressions;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
@@ -69,12 +68,10 @@ public class MqttDriver : Driver, IMessageDriver
     [Display(Name = nameof(Strings.MqttDriver_BrokerUrl), Description = nameof(Strings.MqttDriver_BrokerUrl_Description), ResourceType = typeof(Strings))]
     public string BrokerURL
     {
-        get => _brokerURL; set
-        {
-            ConfigChange(ref _brokerURL, value);
-        }
+        get => _brokerURL;
+        set => ConfigChange(ref _brokerURL, value);
     }
-    
+
     private void ConfigChange<T>(ref T field, T value) where T: IEquatable<T>
     {
         if (field?.Equals(value) ?? value == null)
@@ -84,12 +81,22 @@ public class MqttDriver : Driver, IMessageDriver
         field = value;
         Reconnect();
     }
+
+    /// <summary>
+    /// Function to trigger a reconnect to the broker. Can be necesseray if the configuration was changed or as a debugging tool.
+    /// </summary>
     [EntrySerialize]
-    [Description("Executes reconnect. Maybe helpful for troubleshooting")] // TODO: Localize
+    [Display(
+        Name = nameof(Strings.MqttDriver_Reconnect_Name),
+        Description = nameof(Strings.MqttDriver_Reconnect_Description),
+        ResourceType = typeof(Strings))]
     public void Reconnect()
     {
-        if (State is null || State.Classification != StateClassification.Running) return;
-        
+        if (State is null || State.Classification != StateClassification.Running)
+        {
+            return;
+        }
+
         State.Disconnect();
         State.Connect();
     }
@@ -143,7 +150,15 @@ public class MqttDriver : Driver, IMessageDriver
     [Display(Name = nameof(Strings.MqttDriver_ReconnectWithoutCleanSession), Description = nameof(Strings.MqttDriver_ReconnectWithoutCleanSession_Description), ResourceType = typeof(Strings))]
     public bool ReconnectWithoutCleanSession { get; set; }
 
+    /// <summary>
+    /// Configuration to record the entire message content of a received or published to the corresponding System.Diagnostics.Activity
+    /// </summary>
     [DataMember, EntrySerialize]
+    [Display(
+        Name = nameof(Strings.MqttDriver_TraceMessageContent_Name),
+        Description = nameof(Strings.MqttDriver_TraceMessageContent_Description),
+        ResourceType = typeof(Strings)
+    )]
     public bool TraceMessageContent { get; set; }
 
     /// <summary>
@@ -159,7 +174,7 @@ public class MqttDriver : Driver, IMessageDriver
     [Display(Name = nameof(Strings.MqttDriver_ReconnectDelayMs), Description = nameof(Strings.MqttDriver_ReconnectDelayMs_Description), ResourceType = typeof(Strings))]
     public int ReconnectDelayMs { get; set; }
 
-     public static readonly System.Diagnostics.ActivitySource activitySource = new System.Diagnostics.ActivitySource("Moryx.Drivers.Mqtt.MqttDriver");
+    internal static readonly System.Diagnostics.ActivitySource _activitySource = new System.Diagnostics.ActivitySource("Moryx.Drivers.Mqtt.MqttDriver");
 
     #endregion
 
@@ -243,27 +258,59 @@ public class MqttDriver : Driver, IMessageDriver
         {
             var result = await _mqttClient.ConnectAsync(options, CancellationToken.None);
             if (result.ReasonString != null)
+            {
                 Logger.Log(LogLevel.Information, "Server returned {reason} on connection attemt", result.ReasonString);
+            }
             else
+            {
                 Logger.Log(LogLevel.Information, "Connection attempt to mqtt broker");
-
+            }
         }
         catch (Exception e)
         {
             // This only throws an exceptions if the server is not available, other cases could still mean we are not connected
             if (firstConnect)
+            {
                 Logger.Log(LogLevel.Warning, "Error while connecting to Broker: {message}", e.Message);
+            }
+
             State.TriedConnecting(false);
         }
     }
 
+    /// <summary>
+    /// Decides if a last will message should be registered on the broker.
+    /// A last will message is then automatically published by the broker to
+    /// let other clients know that this client was disconnected
+    /// </summary>
     [EntrySerialize, DataMember]
+    [Display(
+        Name=nameof(Strings.MqttDriver_HasLastWill),
+        Description = nameof(Strings.MqttDriver_HasLastWill_Description),
+        ResourceType=typeof(Strings)
+    )]
     public bool HasLastWill { get; set; }
 
+    /// <summary>
+    /// The topic the last will message should be published to. Has no effect if HasLastWill is not set
+    /// </summary>
     [EntrySerialize, DataMember]
+    [Display(
+        Name = nameof(Strings.MqttDriver_LastWillTopic),
+        Description = nameof(Strings.MqttDriver_LastWillTopic_Description),
+        ResourceType = typeof(Strings)
+    )]
     public string LastWillTopic { get; set; }
 
+    /// <summary>
+    /// Content of the last will message. Has no effect if HasLastWill is not set
+    /// </summary>
     [EntrySerialize, DataMember]
+    [Display(
+        Name = "Last will content",
+        Description = "Content of the last will message. Has no effect if HasLastWill is not set",
+        ResourceType = typeof(Strings)
+    )]
     public string LastWillContent { get; set; }
 
     private MqttClientOptionsBuilder ConfigureMqttClient()
@@ -284,12 +331,18 @@ public class MqttDriver : Driver, IMessageDriver
         }
 
         if (!string.IsNullOrEmpty(Username))
+        {
             optionsBuilder.WithCredentials(Username, Password);
+        }
 
         if (MqttVersion != MqttProtocolVersion.Unknown)
+        {
             optionsBuilder = optionsBuilder.WithProtocolVersion(MqttVersion);
+        }
         else
+        {
             optionsBuilder = optionsBuilder.WithProtocolVersion(MqttProtocolVersion.V310);
+        }
 
         return optionsBuilder;
     }
@@ -308,7 +361,9 @@ public class MqttDriver : Driver, IMessageDriver
     private Task OnDisconnected(MqttClientDisconnectedEventArgs args)
     {
         if (args.ClientWasConnected) // Only log info if we were connected before
+        {
             Logger.Log(LogLevel.Information, "Driver {id} disconnected from MqttBroker. Reason: {reason}", _mqttClient.Options.ClientId, args.ReasonString);
+        }
 
         State.ConnectionToBrokerLost();
 
@@ -360,10 +415,13 @@ public class MqttDriver : Driver, IMessageDriver
         {
             // Search by identifier if set
             if (message is IIdentifierMessage identifierMessage && !string.IsNullOrEmpty(identifierMessage.Identifier))
+            {
                 topics = Channels.Where(t => t.TopicType != TopicType.SubscribeOnly && t.Matches(identifierMessage.Identifier)).ToList();
+            }
             else
+            {
                 topics = Channels.Where(t => t.TopicType != TopicType.SubscribeOnly && (t.MessageType?.IsInstanceOfType(message) ?? false)).ToList();
-
+            }
         }
         catch (Exception ex)
         {
@@ -374,7 +432,9 @@ public class MqttDriver : Driver, IMessageDriver
         if (topics.Count == 1)
             await State.SendAsync(topics[0], message, cancellationToken);
         else
+        {
             Logger.Log(LogLevel.Warning, "Corresponding topic for message {message} not found.", message);
+        }
     }
 
     /// <summary>
@@ -386,11 +446,10 @@ public class MqttDriver : Driver, IMessageDriver
     /// <returns></returns>
     public async Task OnSend(MqttMessageTopic messageTopic, byte[] message, CancellationToken cancellationToken)
     {
-        using(var span = activitySource.StartActivity("Send", ActivityKind.Producer, parentContext: default, tags: new Dictionary<string, object>() {
+        using(var span = _activitySource.StartActivity("Send", ActivityKind.Producer, parentContext: default, tags: new Dictionary<string, object>() {
             {"message.topic", messageTopic.Topic},
             {"message.retain", messageTopic.retain},
             {"message.length", message.Length},
-            
         })) {
             if(span is not null && TraceMessageContent) {
                 span.AddTag("message.content", System.Text.Encoding.UTF8.GetString(message));
@@ -430,7 +489,7 @@ public class MqttDriver : Driver, IMessageDriver
     {
         var topicName = appMessage.Topic;
         var message = appMessage.Payload;
-        using (var span = activitySource.StartActivity("Receive", System.Diagnostics.ActivityKind.Consumer, parentContext: default, tags: new Dictionary<string, object>{
+        using (var span = _activitySource.StartActivity("Receive", System.Diagnostics.ActivityKind.Consumer, parentContext: default, tags: new Dictionary<string, object>{
             { "driver.id", Id },
             { "driver.name", Name },
             { "message.topic", topicName },
@@ -442,7 +501,6 @@ public class MqttDriver : Driver, IMessageDriver
             {
                 span.AddTag("message.content", appMessage.ConvertPayloadToString());
             }
-
 
             var topic = topicName;
             if (!string.IsNullOrEmpty(Identifier) && topicName.StartsWith(Identifier))
@@ -512,20 +570,26 @@ public class MqttDriver : Driver, IMessageDriver
             .WithQualityOfServiceLevel(ConvertStringToQoS(QualityOfService))
             .Build();
         if (MqttVersion == MqttProtocolVersion.V500)
+        {
             topicFilter.NoLocal = true;
+        }
 
         Logger.LogInformation("Subscribing to topic {topic}", topicName);
         
         var result = await _mqttClient.SubscribeAsync(topicFilter);
         
         if (MqttVersion == MqttProtocolVersion.V500 && !string.IsNullOrEmpty(result.ReasonString))
+        {
             Logger.LogError("Failed to subscribe to topic: {reason}", result.ReasonString);
+        }
     }
 
     private static MqttQualityOfServiceLevel ConvertStringToQoS(string qos)
     {
         if (qos == null || qos.Equals(String.Empty))
+            {
             return MqttQualityOfServiceLevel.ExactlyOnce;
+        }
         return (MqttQualityOfServiceLevel)Enum.Parse(typeof(MqttQualityOfServiceLevel), qos);
     }
 
@@ -547,6 +611,17 @@ public class MqttDriver : Driver, IMessageDriver
             Logger.LogError(ex, "Failed to unsubscribe from topic {topic}", subscribedTopic);
         }
     }
+
+    internal void DelayedConnectionAttempt()
+    {
+        ParallelOperations.ScheduleExecution(() => Connect(false).ContinueWith(t =>
+        {
+            if (t.IsFaulted)
+            {
+                Logger?.LogWarning(t.Exception, "Failed to connect to broker");
+            }
+        }, scheduler: TaskScheduler.Current), ReconnectDelayMs, -1);
+    }
 }
 
 internal class MqttQoSAttribute : PossibleValuesAttribute
@@ -563,4 +638,10 @@ internal class MqttQoSAttribute : PossibleValuesAttribute
     }
 }
 
+/// <summary>
+/// Describes metadata for a message that should be published
+/// </summary>
+/// <param name="ResponseTopic">MQTT 5 Response topic for the message</param>
+/// <param name="Topic">The topic the message should be published on</param>
+/// <param name="retain">If the published message should be marked as retain</param>
 public record MqttMessageTopic(string ResponseTopic, string Topic, bool retain = false);

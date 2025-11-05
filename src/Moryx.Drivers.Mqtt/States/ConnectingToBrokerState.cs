@@ -1,7 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers;
 
 namespace Moryx.Drivers.Mqtt.States
@@ -16,15 +15,13 @@ namespace Moryx.Drivers.Mqtt.States
         internal override void TriedConnecting(bool successful)
         {
             if (successful)
+            {
                 NextState(StateConnected);
+            }
             else
-                Context.ParallelOperations.ScheduleExecution(() => Context.Connect(false).ContinueWith(t =>
-                {
-                    if (t.IsFaulted)
-                    {
-                        Context.Logger?.LogWarning(t.Exception, "Failed to connect to broker");
-                    }
-                }, scheduler: TaskScheduler.Current), Context.ReconnectDelayMs, -1);
+            {
+                Context.DelayedConnectionAttempt();
+            }
         }
 
         public override void Disconnect()
