@@ -169,9 +169,7 @@ namespace Moryx.Model
             if (configuredContext == null)
                 throw new InvalidOperationException($"Context {contextType.FullName} not configured!");
 
-            var specificContextType = configuredContext.SpecificDbContextType;
-
-            var setupExecutorType = typeof(ModelSetupExecutor<>).MakeGenericType(specificContextType);
+            var setupExecutorType = typeof(ModelSetupExecutor<>).MakeGenericType(configuredContext.BaseDbContextType);
             return (IModelSetupExecutor)Activator.CreateInstance(setupExecutorType, this);
         }
 
