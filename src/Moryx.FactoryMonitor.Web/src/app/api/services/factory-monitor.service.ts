@@ -618,63 +618,6 @@ export class FactoryMonitorService extends BaseService {
   }
 
   /**
-   * Path part for operation changeBackground
-   */
-  static readonly ChangeBackgroundPath = '/api/moryx/factory-monitor/backgroundurl';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `changeBackground()` instead.
-   *
-   * This method doesn't expect any request body.
-   *
-   * @deprecated
-   */
-  changeBackground$Response(params?: {
-    url?: string;
-  },
-  context?: HttpContext
-
-): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, FactoryMonitorService.ChangeBackgroundPath, 'post');
-    if (params) {
-      rb.query('url', params.url, {});
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*',
-      context: context
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `changeBackground$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   *
-   * @deprecated
-   */
-  changeBackground(params?: {
-    url?: string;
-  },
-  context?: HttpContext
-
-): Observable<void> {
-
-    return this.changeBackground$Response(params,context).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
-  }
-
-  /**
    * Path part for operation changeBackground_1
    */
   static readonly ChangeBackground_1Path = '/api/moryx/factory-monitor/background';

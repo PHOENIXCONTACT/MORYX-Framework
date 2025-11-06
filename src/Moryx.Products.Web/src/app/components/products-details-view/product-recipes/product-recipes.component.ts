@@ -47,7 +47,7 @@ export class ProductRecipesComponent implements OnInit {
     private managementService: ProductManagementService,
     public translate: TranslateService,
     private moryxSnackbar: MoryxSnackbarService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const productId = this.route.parent?.snapshot.paramMap.get("id");
@@ -93,7 +93,6 @@ export class ProductRecipesComponent implements OnInit {
           next: (recipe) => {
             recipe.name = result.recipeName;
             recipe.workplanModel = result.workplanModel;
-            recipe.workplanId = result.workplanModel?.id;
             this.editService.currentRecipeNumber++;
             recipe.id = this.editService.currentRecipeNumber;
             this.editService.addRecipe(recipe);
