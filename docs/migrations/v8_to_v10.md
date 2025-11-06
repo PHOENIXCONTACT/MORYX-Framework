@@ -40,3 +40,19 @@ With MORYX 10, several changes have been made to the data model to improve perfo
 ### Removal of ProductFileEntity
 
 The `ProductFileEntity` has been removed from the data model as it was not utilized effectively. This change helps streamline the data structure and reduce unnecessary complexity.
+
+## Rarely used features removed
+
+These feature were infrequently used and has been removed to simplify the codebase.
+
+- ExceptionPrinter: Used to print exceptions to different outputs. Use Exception.ToString() instead.
+- CrashHandler: Used to handle application crashes. This feature was used were the runtime was a console application.
+- Caller: Used to get information about the calling method. Use System.Diagnostics.StackTrace instead.
+- Moryx.Endpoints: This namespace contained all base classes for the time when an endpoint was hosted inside a module. Since we use controllers it is deprecated.
+- Moryx.Identity: This namespace contained base classes and services for the old WPF client to provide the authorization context. Since MORYX support web uis, this is deprecated
+- PortConfig: Used for old wcf services. Deprecated since ASP.NET Core.
+- ProxyConfig.Port: Use the full address instead. It contains also http/https, domain and port
+
+## Moved classes and namespaces
+
+- Moryx.Tools.FunctionResult: Moved to Moryx.Tools
