@@ -3,7 +3,7 @@
 
 using Moryx.Workplans;
 
-namespace Moryx.AbstractionLayer
+namespace Moryx.AbstractionLayer.Activities
 {
     /// <summary>
     /// Indicates that an result is a failure

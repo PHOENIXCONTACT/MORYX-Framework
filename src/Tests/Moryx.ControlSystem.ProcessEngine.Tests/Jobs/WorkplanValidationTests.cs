@@ -3,6 +3,8 @@
 
 using System.Linq;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.TestTools;
 using Moryx.ControlSystem.TestTools.Activities;

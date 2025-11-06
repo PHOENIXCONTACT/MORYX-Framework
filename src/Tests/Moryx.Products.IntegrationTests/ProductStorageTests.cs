@@ -16,6 +16,7 @@ using Moryx.Workplans;
 using Moq;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.TestTools;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.Model.Repositories;
 using Moryx.Products.Management.Model;
 using Moryx.Serialization;

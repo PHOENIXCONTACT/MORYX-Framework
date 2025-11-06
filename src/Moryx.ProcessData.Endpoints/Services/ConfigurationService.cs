@@ -10,6 +10,8 @@ using Moryx.ProcessData.Endpoints.Models;
 using Moryx.Runtime.Modules;
 using Moryx.Tools;
 using System.Reflection;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.ProcessData.Endpoints.Services
 {

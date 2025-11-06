@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.ControlSystem.TestTools.Activities;
 
 namespace Moryx.ControlSystem.TestTools.Tasks

@@ -3,6 +3,7 @@
 
 using Moq;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.ControlSystem.Processes;
 using Moryx.ControlSystem.Simulation;
 using Moryx.Resources.Benchmarking.Messages;

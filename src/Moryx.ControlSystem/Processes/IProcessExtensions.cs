@@ -3,6 +3,7 @@
 
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Recipes;
 
 namespace Moryx.ControlSystem.Processes

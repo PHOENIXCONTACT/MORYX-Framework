@@ -3,8 +3,10 @@
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Identity;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Activities;
 
 namespace Moryx.ControlSystem.TestTools

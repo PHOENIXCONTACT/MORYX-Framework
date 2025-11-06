@@ -2,7 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Identity;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.TestTools;
 using Moryx.ControlSystem.TestTools;

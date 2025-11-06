@@ -3,7 +3,9 @@
 
 using System.Collections.Concurrent;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.Container;
 using Moryx.Workplans;
 

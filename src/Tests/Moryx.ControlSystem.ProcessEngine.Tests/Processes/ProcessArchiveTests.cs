@@ -7,6 +7,8 @@ using System.Globalization;
 using System.Linq;
 using Moq;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer.TestTools;

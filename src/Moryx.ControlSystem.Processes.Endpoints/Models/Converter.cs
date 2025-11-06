@@ -6,6 +6,8 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Activities;
 using Moryx.Serialization;
 using System.Reflection;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.ControlSystem.Processes.Endpoints
 {

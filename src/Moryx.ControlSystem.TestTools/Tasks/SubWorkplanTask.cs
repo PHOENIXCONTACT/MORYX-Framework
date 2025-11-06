@@ -3,6 +3,7 @@
 
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.ControlSystem.TestTools.Activities;
 using Moryx.Workplans;
 using Moryx.Workplans.Transitions;

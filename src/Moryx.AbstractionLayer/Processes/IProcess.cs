@@ -1,9 +1,11 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Constraints;
 using Moryx.AbstractionLayer.Recipes;
 
-namespace Moryx.AbstractionLayer
+namespace Moryx.AbstractionLayer.Processes
 {
     /// <summary>
     /// Defines how activities should be loaded from a <see cref="IProcess"/>

@@ -3,6 +3,8 @@
 
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.Serialization;
 
 namespace Moryx.ControlSystem.VisualInstructions

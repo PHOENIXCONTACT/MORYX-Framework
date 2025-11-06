@@ -8,6 +8,7 @@ using Moryx.ControlSystem.Cells;
 using Moryx.Factory;
 using System;
 using System.Collections.Generic;
+using Moryx.AbstractionLayer.Activities;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests.Resources
 {

@@ -4,6 +4,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.ControlSystem.ProcessEngine.Properties;
 using Moryx.Tools;
 using Moryx.Workplans;

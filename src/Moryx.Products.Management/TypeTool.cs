@@ -3,9 +3,9 @@
 
 using Moryx.Tools;
 
-namespace Moryx.AbstractionLayer
+namespace Moryx.Products.Management
 {
-    public static class TypeTool
+    internal static class TypeTool
     {
         public static object CreateInstance<TTpye>(string typeName)
         {

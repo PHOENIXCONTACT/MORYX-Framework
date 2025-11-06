@@ -3,13 +3,14 @@
 
 using System.Reflection;
 using System.Runtime.Serialization;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Moryx.Workplans;
 using Moryx.Workplans.Transitions;
 using Moryx.Workplans.WorkplanSteps;
 
-namespace Moryx.AbstractionLayer
+namespace Moryx.AbstractionLayer.Workplans
 {
     /// <summary>
     /// Abstract base class of all Tasks

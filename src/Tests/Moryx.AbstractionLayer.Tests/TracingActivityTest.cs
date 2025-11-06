@@ -3,6 +3,7 @@
 
 using System;
 using Moq;
+using Moryx.AbstractionLayer.Activities;
 using NUnit.Framework;
 
 namespace Moryx.AbstractionLayer.Tests

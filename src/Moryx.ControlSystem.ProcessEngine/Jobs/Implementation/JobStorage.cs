@@ -14,6 +14,7 @@ using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.ControlSystem.Setups;
 using ProcessContext = Moryx.ControlSystem.ProcessEngine.Model.ProcessContext;
 using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.Logging;
 using Moryx.ControlSystem.ProcessEngine.Jobs.Components;
 using Moryx.Threading;

@@ -2,7 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Capabilities;
+using Moryx.AbstractionLayer.Processes;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.Serialization;
 
 namespace Moryx.Products.IntegrationTests

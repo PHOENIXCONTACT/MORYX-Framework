@@ -11,6 +11,7 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer.TestTools;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.Container;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Capabilities;

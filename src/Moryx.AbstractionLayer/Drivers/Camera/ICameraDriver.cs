@@ -1,9 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Drivers;
-
-namespace Moryx.Drivers.Camera.Interfaces
+namespace Moryx.AbstractionLayer.Drivers.Camera
 {
     /// <summary>
     /// Interface for camera devices, that provide image data
@@ -19,7 +17,7 @@ namespace Moryx.Drivers.Camera.Interfaces
         /// Capture a single image from the camera
         /// </summary>
         /// <returns>
-        ///     The image that was captured or null in case no image 
+        ///     The image that was captured or null in case no image
         ///     could be retrieved
         /// </returns>
         Task<TImage?> CaptureImage();

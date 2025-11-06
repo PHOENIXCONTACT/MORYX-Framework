@@ -3,7 +3,10 @@
 
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.Container;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Processes;

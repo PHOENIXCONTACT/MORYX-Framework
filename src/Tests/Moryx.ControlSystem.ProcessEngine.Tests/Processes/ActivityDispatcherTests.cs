@@ -14,6 +14,9 @@ using Moryx.Logging;
 using Moryx.TestTools.UnitTest;
 using NUnit.Framework;
 using System.Collections.Generic;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Constraints;
+using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 {

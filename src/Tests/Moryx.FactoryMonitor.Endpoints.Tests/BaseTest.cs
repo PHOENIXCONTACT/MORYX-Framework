@@ -15,6 +15,8 @@ using Moryx.Orders;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests
 {

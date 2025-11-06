@@ -3,6 +3,7 @@
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.Resources.Samples

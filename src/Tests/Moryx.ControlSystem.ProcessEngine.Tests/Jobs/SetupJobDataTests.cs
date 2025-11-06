@@ -12,6 +12,7 @@ using Moryx.Notifications;
 using Moryx.Workplans;
 using NUnit.Framework;
 using System.Linq;
+using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
 {

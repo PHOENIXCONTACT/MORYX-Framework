@@ -15,6 +15,7 @@ using Moryx.Orders.Management.Assignment;
 using Moryx.Users;
 using NUnit.Framework;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.Orders.Management.Tests
 {

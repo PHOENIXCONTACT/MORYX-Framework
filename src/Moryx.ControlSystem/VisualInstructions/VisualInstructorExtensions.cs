@@ -3,6 +3,7 @@
 
 using System.Reflection;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.ControlSystem.Cells;
 
 namespace Moryx.ControlSystem.VisualInstructions

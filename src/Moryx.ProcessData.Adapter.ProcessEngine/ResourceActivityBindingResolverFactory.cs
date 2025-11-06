@@ -3,6 +3,7 @@
 
 using System.Reflection;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Bindings;
 

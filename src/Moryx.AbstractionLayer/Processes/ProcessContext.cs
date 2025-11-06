@@ -4,7 +4,7 @@
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Workplans;
 
-namespace Moryx.AbstractionLayer
+namespace Moryx.AbstractionLayer.Processes
 {
     /// <summary>
     /// Context for workplans that execute a process

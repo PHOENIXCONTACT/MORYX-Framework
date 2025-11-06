@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Processes;
 using Moryx.ControlSystem.Simulation;
 using Moryx.Resources.Benchmarking.Messages;
@@ -22,7 +23,7 @@ namespace Moryx.Simulation.Tests
         {
             //Arrange
             var message = new ReleaseWorkpieceMessage();
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([new AbstractionLayer.Process { }]);
+            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([new Process { }]);
 
             //Act
             _assemblyCell.Driver.Send(message);

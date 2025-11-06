@@ -3,6 +3,7 @@
 
 using Moryx.AbstractionLayer;
 using System.ComponentModel.DataAnnotations;
+using Moryx.AbstractionLayer.Workplans;
 
 namespace Moryx.Workplans.Samples.Activities
 {

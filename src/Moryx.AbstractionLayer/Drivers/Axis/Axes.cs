@@ -1,7 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Hardware
+namespace Moryx.AbstractionLayer.Drivers.Axis
 {
     /// <summary>
     /// Enum which contains hardware specific axes
@@ -114,11 +114,11 @@ namespace Moryx.AbstractionLayer.Hardware
         /// </summary>
         Z = 1 << 25,
         /// <summary>
-        /// Door is a specialized axis 
+        /// Door is a specialized axis
         /// </summary>
         Door = 1 << 26,
         /// <summary>
-        /// Rotating plate is another specialized axis 
+        /// Rotating plate is another specialized axis
         /// </summary>
         RotationPlate = 1 << 27,
         /// <summary>

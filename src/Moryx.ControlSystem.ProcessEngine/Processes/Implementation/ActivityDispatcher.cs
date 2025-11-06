@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.ControlSystem.Cells;

@@ -3,6 +3,7 @@
 
 using System.Diagnostics;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
 using Moryx.Tools;

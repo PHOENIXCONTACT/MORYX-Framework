@@ -3,6 +3,7 @@
 
 using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Identity;
+using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.ControlSystem.Cells
 {

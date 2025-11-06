@@ -4,6 +4,7 @@
 using System.Globalization;
 using System.Reflection;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Recipes;
 using Moryx.Factory;
@@ -32,7 +33,7 @@ internal static class ProcessHolderMappers
         this IProcessHolderPosition position, int index, long groupId)
     {
         var process = (position as ProcessHolderPosition)?.Process;
-        var CurrentActivity = process?.CurrentActivity() == null
+        var currentActivity = process?.CurrentActivity() == null
             ? string.Empty
             : $"{process?.CurrentActivity().Id} - {process?.CurrentActivity().GetType().GetDisplayName() ?? process?.CurrentActivity().GetType().Name}";
         return new ProcessHolderPositionModel
@@ -42,7 +43,7 @@ internal static class ProcessHolderMappers
             GroupId = groupId,
             Name = position.Name,
             IsEmpty = position.IsEmpty(),
-            Activity = string.IsNullOrEmpty(CurrentActivity) ? "-" : CurrentActivity,
+            Activity = string.IsNullOrEmpty(currentActivity) ? "-" : currentActivity,
             Process = position is ProcessHolderPosition pos && pos.CurrentProcess > 0
                 ? (position as ProcessHolderPosition)?.CurrentProcess.ToString(CultureInfo.InvariantCulture)
                 : "-",

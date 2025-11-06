@@ -3,8 +3,10 @@
 
 using System.Drawing;
 using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Products.Management.Model;

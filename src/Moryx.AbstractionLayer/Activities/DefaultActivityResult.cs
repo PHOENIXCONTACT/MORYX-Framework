@@ -3,7 +3,7 @@
 
 using Moryx.Workplans;
 
-namespace Moryx.AbstractionLayer
+namespace Moryx.AbstractionLayer.Activities
 {
     /// <summary>
     /// Default results for activities. 
