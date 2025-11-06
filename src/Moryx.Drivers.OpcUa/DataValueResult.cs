@@ -1,8 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 
-using System;
+using Moryx.Tools;
 using Opc.Ua;
-using Moryx.Tools.FunctionResult;
 
 namespace Moryx.Drivers.OpcUa;
 

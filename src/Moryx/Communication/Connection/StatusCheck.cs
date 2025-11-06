@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
-using Moryx.Tools.FunctionResult;
+using Moryx.Tools;
 
-namespace Moryx.Communication.Connection
+namespace Moryx.Communication
 {
     /// <summary>
     /// Specialized interface of <see cref="IDeviceCommunication"/>
