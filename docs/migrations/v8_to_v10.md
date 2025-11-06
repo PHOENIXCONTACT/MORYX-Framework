@@ -45,6 +45,10 @@ With MORYX 10, several changes have been made to the data model to improve perfo
 - The `ProductFile` was removed completly.
 
 
+## Removal of Modules-Analytics
+
+The analytics module was doing nothing and the web module was replaced by supporting external modules in `Launcher`. Its now supported to embed external web-pages into the shell. Refer to the [Launcher](/docs/articles/launcher/Launcher.md) documentation for more information.
+
 ## Rarely used features removed
 
 These feature were infrequently used and has been removed to simplify the codebase.

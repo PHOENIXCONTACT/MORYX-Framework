@@ -21,7 +21,7 @@
         Context.Response.Cookies.Append(".AspNetCore.Culture", "c=en-US|uic=en-US");
     }
 
-    var modules = (await _navigator.GetWebModuleItems(Context)).OrderBy(wmi => wmi.SortIndex);
+    var modules = (await _navigator.GetModuleItems(Context)).OrderBy(wmi => wmi.SortIndex);
 }
 
 <!DOCTYPE html>
@@ -160,9 +160,9 @@
                                                             hover:tw-text-primary-600
                                                                         tw-border-l-4 hover:tw-rounded tw-p-1 @(activeClass) ">
                                 <a class="tw-flex tw-flex-row tw-items-center 2xl:tw-justify-start tw-p-1 tw-w-full" href="@(route)">
-                                    @if (!isActive & !string.IsNullOrEmpty(item.EventStream))
+                                    @if (item is WebModuleItem webModuleItem && !isActive && !string.IsNullOrEmpty(webModuleItem.EventStream))
                                     {
-                                        <moryx-notification-badge eventstream="@item.EventStream"></moryx-notification-badge>
+                                        <moryx-notification-badge eventstream="@webModuleItem.EventStream"></moryx-notification-badge>
                                     }
                                     <span id="@item.Route" class="@(activeClass)  material-symbols-outlined tw-mr-[3px]">@item.Icon</span>
                                     <span class="tw-font-semibold tw-hidden 2xl:tw-block">@item.Title</span>
@@ -184,6 +184,7 @@
             {
                 <moryx-notifications-bar>@Strings.Layout_Details</moryx-notifications-bar>
             }
+
             <div class="tw-overflow-hidden tw-h-screen tw-w-full tw-box-border">
                 @RenderBody()
             </div>
@@ -230,9 +231,9 @@
                         var route = cookie == null || isActive ? $"/{item.Route}" : cookie;
                         <moryx-nav-button class="tw-relative tw-w-full tw-h-full tw-flex tw-items-center tw-justify-center tw-group ">
                             <a class="tw-h-full tw-w-full tw-flex tw-flex-col tw-flex tw-items-center tw-justify-center @(activeClass)" href="@(route)">
-                                @if (!isActive & !string.IsNullOrEmpty(item.EventStream))
+                                @if (item is WebModuleItem webModuleItem && !isActive && !string.IsNullOrEmpty(webModuleItem.EventStream))
                                 {
-                                    <moryx-notification-badge eventstream="@item.EventStream" class="tw-absolute tw-right-1/2 -tw-top-2"></moryx-notification-badge>
+                                    <moryx-notification-badge eventstream="@webModuleItem.EventStream" class="tw-absolute tw-right-1/2 -tw-top-2"></moryx-notification-badge>
                                 }
                                 <span id="@item.Route" class="material-symbols-outlined">@item.Icon</span>
                                 <span class="tw-truncate tw-w-30 tw-font-bold">@item.Title</span>

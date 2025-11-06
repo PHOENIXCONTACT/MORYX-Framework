@@ -13,7 +13,6 @@ namespace Moryx.Launcher
         /// <summary>
         /// Gathers the available Web Modules to display in the shell
         /// </summary>
-        Task<IReadOnlyList<WebModuleItem>> GetWebModuleItems(HttpContext context);
+        Task<IReadOnlyList<ModuleItem>> GetModuleItems(HttpContext context);
     }
-
 }

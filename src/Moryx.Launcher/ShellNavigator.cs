@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moryx.Asp.Integration;
 using Moryx.Identity;
+using Moryx.Launcher.Config;
 using Moryx.Tools;
 
 namespace Moryx.Launcher
@@ -22,6 +23,7 @@ namespace Moryx.Launcher
         private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
         private readonly MoryxAccessManagementClient _client;
+        private readonly IReadOnlyList<ExternalModuleItem> _externalModules;
 
         public EndpointDataSource EndpointsDataSource { get; }
         public PageLoader PageLoader { get; }
@@ -46,10 +48,12 @@ namespace Moryx.Launcher
                     logger.CreateLogger($"{nameof(ShellNavigator)}:{nameof(MoryxAccessManagementClient)}")
                 );
             }
+
+            _externalModules = LoadExternalModules();
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyList<WebModuleItem>> GetWebModuleItems(HttpContext context)
+        public async Task<IReadOnlyList<ModuleItem>> GetModuleItems(HttpContext context)
         {
             // Filter pages
             var pageActionDescriptors = EndpointsDataSource.Endpoints.SelectMany(endpoint => endpoint.Metadata)
@@ -72,32 +76,51 @@ namespace Moryx.Launcher
                 }).ToArray();
             }
 
-            var webModules = compiledPageActionDescriptors.Select(cpad => CreateWebModuleItem(cpad))
-                .OfType<WebModuleItem>().ToList();
+            // Load modules
+            var modules = compiledPageActionDescriptors.Select(CreateWebModuleItem)
+                .Where(m => m != null).ToList<ModuleItem>();
 
-            var index = 0;
+            modules.AddRange(_externalModules);
+
             // Rudimentary sorting
-            foreach (var webModule in webModules.OrderBy(wmi => wmi.Route))
+            var index = 0;
+            foreach (var module in modules.OrderBy(m => m.Title))
             {
-                // See if custom index was configured for the module
-                var sortIndex = _configuration[$"Shell:SortIndex:{webModule.Route}"];
-                if (int.TryParse(sortIndex, out var customIndex))
-                    webModule.SortIndex = customIndex;
-                else
-                    webModule.SortIndex = index++;
+                var route = module is ExternalModuleItem ? module.Route.Replace("external/", "") : module.Route;
+                var sortIndex = _configuration[$"Shell:SortIndex:{route}"];
+                module.SortIndex = int.TryParse(sortIndex, out var customIndex) ? customIndex : index++;
             }
 
-            return webModules;
+            return modules;
         }
 
-        private WebModuleItem CreateWebModuleItem(CompiledPageActionDescriptor pageActionDescriptor)
+        private ExternalModuleItem[] LoadExternalModules()
+        {
+            var externalModuleConfigs = _configuration.GetSection("Shell:ExternalModules").Get<ExternalModuleConfig[]>();
+            return externalModuleConfigs?.Select(CreateExternalModuleItem).ToArray() ?? [];
+        }
+
+        private static ExternalModuleItem CreateExternalModuleItem(ExternalModuleConfig externalModuleConfig)
+        {
+            return new ExternalModuleItem
+            {
+                Title = externalModuleConfig.Title,
+                Description = externalModuleConfig.Description,
+                Url = externalModuleConfig.Url,
+                Icon = externalModuleConfig.Icon,
+                Category = ModuleCategory.User,
+                Route = $"external/{externalModuleConfig.Route}"
+            };
+        }
+
+        private static WebModuleItem CreateWebModuleItem(CompiledPageActionDescriptor pageActionDescriptor)
         {
             var webModuleAttribute = pageActionDescriptor.EndpointMetadata.SingleOrDefault(a => a is WebModuleAttribute) as WebModuleAttribute;
             if (webModuleAttribute is null)
                 return null;
 
             var streamAttribute = pageActionDescriptor.EndpointMetadata.SingleOrDefault(a => a is ModuleEventStreamAttribute) as ModuleEventStreamAttribute;
-            return new WebModuleItem()
+            return new WebModuleItem
             {
                 Title = pageActionDescriptor.PageTypeInfo.GetDisplayName() ?? webModuleAttribute.Route,
                 Route = webModuleAttribute.Route,
@@ -109,4 +132,3 @@ namespace Moryx.Launcher
         }
     }
 }
-
