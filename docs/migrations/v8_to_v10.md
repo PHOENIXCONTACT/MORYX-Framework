@@ -21,6 +21,7 @@ The simulator module has also been renamed, and its namespace and package id hav
 - TcpListenerConfig.IpAdress -> TcpListenerConfig.IpAddress
 - ResourceRelationType.CurrentExchangablePart -> ResourceRelationType.CurrentExchangeablePart
 - ResourceRelationType.PossibleExchangablePart -> ResourceRelationType.PossibleExchangeablePart
+- MqttDriver.BrokerURL -> MqttDriver.BrokerUrl
 
 ## Reduction of interfaces
 
