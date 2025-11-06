@@ -63,3 +63,4 @@ These feature were infrequently used and has been removed to simplify the codeba
 ## Moved classes and namespaces
 
 - Moryx.Tools.FunctionResult: Moved to Moryx.Tools
+- Moryx.AbstractionLayer namespace: All classes have been moved to more specific domain namespaces e.g. Moryx.AbstractionLayer.Resources, Moryx.AbstractionLayer.Products, Moryx.AbstractionLayer.Processes etc.
