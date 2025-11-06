@@ -55,8 +55,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             // Skip reference or domain model properties
             var type = prop.PropertyType;
-            if (type == typeof(ProductFile) ||
-                typeof(ProductType).IsAssignableFrom(type) ||
+            if (typeof(ProductType).IsAssignableFrom(type) ||
                 typeof(IProductPartLink).IsAssignableFrom(type) ||
                 typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(type))
                 return false;

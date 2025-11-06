@@ -45,9 +45,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
                 {
                     ProductPartLink = new DummyProductPartLink() { Id=1, Product = new DummyProductType() { Id = 2022 } },
                     ProductPartLinkEnumerable = new List<DummyProductPartLink>(){ new() { Id=2, Product = new DummyProductType() { Id = 2023 } } }
-                },
-                new DummyProductTypeWithFiles(),
-                new DummyProductTypeWithFiles() { FirstProductFile = new ProductFile() { Name="FirstFile" }, SecondProductFile = new ProductFile() { Name="SecondFile" }}
+                }
             };
             // Create Recipe objects for test cases
             var dummyRecipeLists = new List<List<IProductRecipe>>()
