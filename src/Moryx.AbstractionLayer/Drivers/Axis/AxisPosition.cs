@@ -1,7 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Hardware
+namespace Moryx.AbstractionLayer.Drivers.Axis
 {
     /// <summary>
     /// Different positions an axes can be set to

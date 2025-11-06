@@ -5,7 +5,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 using System;
 
-namespace Moryx.AbstractionLayer.Hardware
+namespace Moryx.AbstractionLayer.Drivers.Axis
 {
     /// <summary>
     /// Enum which contains hardware specific axes
@@ -27,11 +27,11 @@ namespace Moryx.AbstractionLayer.Hardware
 	}
 #>
 		/// <summary>
-        /// Door is a specialized axis 
+        /// Door is a specialized axis
         /// </summary>
         Door = 1 << <#= ++index #>,
 		/// <summary>
-        /// Rotating plate is another specialized axis 
+        /// Rotating plate is another specialized axis
         /// </summary>
         RotationPlate = 1 << <#= ++index #>,
         /// <summary>

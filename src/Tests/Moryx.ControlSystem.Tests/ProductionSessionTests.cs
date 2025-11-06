@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
 using NUnit.Framework;

@@ -4,7 +4,7 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Benchmarking;
 using Moryx.ControlSystem.Activities;

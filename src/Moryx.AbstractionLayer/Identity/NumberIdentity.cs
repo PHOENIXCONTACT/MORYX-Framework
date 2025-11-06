@@ -80,7 +80,7 @@ namespace Moryx.AbstractionLayer.Identity
         public static bool operator ==(NumberIdentity id1, NumberIdentity id2)
         {
             if (((object)id1) == null || ((object)id2) == null)
-                return Object.Equals(id1, id2);
+                return Equals(id1, id2);
 
             return id1.Equals(id2);
         }
@@ -94,7 +94,7 @@ namespace Moryx.AbstractionLayer.Identity
         public static bool operator !=(NumberIdentity id1, NumberIdentity id2)
         {
             if (((object)id1) == null || ((object)id2) == null)
-                return !Object.Equals(id1, id2);
+                return !Equals(id1, id2);
 
             return !(id1.Equals(id2));
         }

@@ -1,9 +1,10 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Recipes;
 
-namespace Moryx.AbstractionLayer
+namespace Moryx.AbstractionLayer.Processes
 {
     /// <summary>
     /// Base implementation of <see cref="IProcess"/>

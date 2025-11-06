@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 using Moryx.Media.Previews;

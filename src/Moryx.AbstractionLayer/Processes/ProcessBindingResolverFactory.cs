@@ -2,12 +2,13 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Text.RegularExpressions;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Bindings;
 
-namespace Moryx.AbstractionLayer
+namespace Moryx.AbstractionLayer.Processes
 {
     /// <summary>
     /// Default factory that can create resolvers for <see cref="ProductType"/>, <see cref="ProductInstance"/>, <see cref="Process"/>
@@ -90,7 +91,7 @@ namespace Moryx.AbstractionLayer
                 throw new InvalidOperationException("Binding value inconclusive on part link and product!");
             }
 
-            return linkResult != null ? (object)partLink : partLink.Product;
+            return linkResult != null ? partLink : partLink.Product;
         }
 
         /// <inheritdoc />
@@ -138,21 +139,20 @@ namespace Moryx.AbstractionLayer
         /// <inheritdoc />
         protected sealed override object Resolve(object source)
         {
-            if (source is IProcess process)
+            switch (source)
             {
-                var product = (process.Recipe as IProductRecipe)?.Product;
-                return product;
-            }
-
-            if (source is IActivity activity)
-            {
-                var product = (activity.Process.Recipe as IProductRecipe)?.Product;
-                return product;
-            }
-
-            if (source is ProductInstance instance)
-            {
-                return instance.Type;
+                case IProcess process:
+                {
+                    var product = (process.Recipe as IProductRecipe)?.Product;
+                    return product;
+                }
+                case IActivity activity:
+                {
+                    var product = (activity.Process.Recipe as IProductRecipe)?.Product;
+                    return product;
+                }
+                case ProductInstance instance:
+                    return instance.Type;
             }
 
             // If our shortcuts do not work, use ReflectionResolver instead

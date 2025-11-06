@@ -1,7 +1,9 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer
+using Moryx.AbstractionLayer.Activities;
+
+namespace Moryx.AbstractionLayer.Processes
 {
     /// <summary>
     /// Extensions for <see cref="IProcess"/>
@@ -28,7 +30,7 @@ namespace Moryx.AbstractionLayer
         }
 
         /// <summary>
-        /// Get one of the current running activities of the process. 
+        /// Get one of the current running activities of the process.
         /// Mention that, in case of parallel path in a workplan, a process could have multiple running activities!
         /// See also: <seealso cref="CurrentActivities"/>
         /// </summary>

@@ -2,10 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.Workplans;
 using Moryx.Workplans.Validation;
 
-namespace Moryx.AbstractionLayer
+namespace Moryx.AbstractionLayer.Workplans
 {
     /// <summary>
     /// Extensions for workplan objects

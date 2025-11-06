@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Processes;

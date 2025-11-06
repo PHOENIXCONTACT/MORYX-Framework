@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Drivers;
-using Opc.Ua;
 
 namespace Moryx.Drivers.OpcUa.DriverStates;
 

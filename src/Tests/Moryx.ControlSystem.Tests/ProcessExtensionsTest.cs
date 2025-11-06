@@ -1,6 +1,6 @@
 ﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
 
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Processes;
 using Moryx.ControlSystem.Tests.Mocks;
 using NUnit.Framework;

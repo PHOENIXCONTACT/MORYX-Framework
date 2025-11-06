@@ -2,12 +2,8 @@
 
 using Microsoft.Extensions.Logging;
 using Moq;
-using Moryx.AbstractionLayer.Drivers.Message;
-using Moryx.Drivers.OpcUa.DriverStates;
-using Moryx.Modules;
 using NUnit.Framework;
 using Opc.Ua;
-using Opc.Ua.Client;
 
 namespace Moryx.Drivers.OpcUa.Tests;
 

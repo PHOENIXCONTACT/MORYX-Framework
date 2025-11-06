@@ -4,7 +4,7 @@
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Workplans;
 
-namespace Moryx.AbstractionLayer
+namespace Moryx.AbstractionLayer.Activities
 {
     /// <summary>
     /// Extensions for <see cref="Activity"/>

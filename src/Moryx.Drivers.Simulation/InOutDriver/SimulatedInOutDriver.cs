@@ -1,7 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Drivers.InOut;
 using Moryx.AbstractionLayer.Resources;
@@ -9,6 +8,7 @@ using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Simulation;
 using Moryx.Serialization;
 using System.ComponentModel;
+using Moryx.AbstractionLayer.Activities;
 
 namespace Moryx.Drivers.Simulation.InOutDriver
 {

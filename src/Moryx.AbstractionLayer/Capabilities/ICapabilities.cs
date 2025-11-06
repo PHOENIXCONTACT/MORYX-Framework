@@ -17,7 +17,7 @@ namespace Moryx.AbstractionLayer.Capabilities
         /// Checks whether this capability are fully provided by the other object object complies to the given one.
         /// </summary>
         /// <param name="provided">The candidate of provided capabilities</param>
-        /// <returns><c>true</c> if this capabilities are provided by the given ones or <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c> if these capabilities are provided by the given ones or <c>false</c> otherwise.</returns>
         bool ProvidedBy(ICapabilities provided);
 
         /// <summary>

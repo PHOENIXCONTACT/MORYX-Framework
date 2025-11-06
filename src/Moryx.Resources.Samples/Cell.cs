@@ -4,8 +4,8 @@
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using Moryx.AbstractionLayer.Drivers.Axis;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.AbstractionLayer.Hardware;
 using Moryx.Serialization;
 
 namespace Moryx.Resources.Samples

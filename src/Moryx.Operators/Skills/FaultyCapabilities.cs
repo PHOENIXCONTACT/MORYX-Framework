@@ -5,7 +5,6 @@ using Moryx.AbstractionLayer.Capabilities;
 using Moryx.Operators.Localizations;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Moryx.Operators.Localizations;
 
 namespace Moryx.Operators.Skills;
 

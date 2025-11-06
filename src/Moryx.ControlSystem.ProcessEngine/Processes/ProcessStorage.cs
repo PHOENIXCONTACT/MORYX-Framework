@@ -2,15 +2,16 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.Container;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Model;
 using Moryx.ControlSystem.Processes;
 using Moryx.Logging;
-using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Serialization;
 using Moryx.Tools;
@@ -147,7 +148,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 }
 
                 // Restore activities from workflow
-                var context = new AbstractionLayer.ProcessContext(process);
+                var context = new AbstractionLayer.Processes.ProcessContext(process);
                 var taskMap = recipe.Workplan.Steps
                     .Select(step => step.CreateInstance(context))
                     .OfType<ITask>().ToDictionary(task => task.Id, task => task);

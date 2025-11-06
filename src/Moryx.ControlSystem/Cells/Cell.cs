@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 

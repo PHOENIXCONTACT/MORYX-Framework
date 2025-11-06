@@ -3,7 +3,6 @@
 
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Moryx.Model.Configuration;
 using System.ComponentModel;
 using System.Data.Common;

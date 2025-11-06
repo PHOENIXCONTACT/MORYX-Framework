@@ -42,8 +42,7 @@ With MORYX 10, several changes have been made to the data model to improve perfo
 
 - The `ProductFileEntity` has been removed from the data model as it was not utilized effectively. This change helps streamline the data structure and reduce unnecessary complexity.
 - If you were using `ProductFileEntity`, consider using alternative storage solutions such as file systems or dedicated file storage services to manage product-related files.
-- The `ProductFile` was removed completly.
-
+- The `ProductFile` was removed completely.
 
 ## Removal of Modules-Analytics
 
@@ -64,3 +63,4 @@ These feature were infrequently used and has been removed to simplify the codeba
 ## Moved classes and namespaces
 
 - Moryx.Tools.FunctionResult: Moved to Moryx.Tools
+- Moryx.AbstractionLayer namespace: All classes have been moved to more specific domain namespaces e.g. Moryx.AbstractionLayer.Resources, Moryx.AbstractionLayer.Products, Moryx.AbstractionLayer.Processes etc.

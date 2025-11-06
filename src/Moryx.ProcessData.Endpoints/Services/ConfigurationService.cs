@@ -1,7 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer;
 using Moryx.Configuration;
 using Moryx.Modules;
 using Moryx.Notifications;
@@ -10,6 +9,8 @@ using Moryx.ProcessData.Endpoints.Models;
 using Moryx.Runtime.Modules;
 using Moryx.Tools;
 using System.Reflection;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.ProcessData.Endpoints.Services
 {

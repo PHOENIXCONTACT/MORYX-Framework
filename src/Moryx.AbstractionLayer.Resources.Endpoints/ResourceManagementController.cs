@@ -15,7 +15,6 @@ using Moryx.Configuration;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Moryx.AbstractionLayer.Resources.Endpoints.Properties;
-using Moryx.AbstractionLayer.Resources.Endpoints.Properties;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints
 {

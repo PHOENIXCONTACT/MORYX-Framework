@@ -4,7 +4,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
@@ -18,6 +17,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests
 {

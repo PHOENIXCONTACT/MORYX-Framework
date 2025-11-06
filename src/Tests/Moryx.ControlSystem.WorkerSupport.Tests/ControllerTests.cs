@@ -6,7 +6,6 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.VisualInstructions;
 using Moryx.Logging;
 using NUnit.Framework;
-using System;
 
 namespace Moryx.ControlSystem.WorkerSupport.Tests
 {

@@ -9,7 +9,6 @@ using Moryx.Serialization;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Moryx.AbstractionLayer.Products.Endpoints.Properties;
-using Moryx.AbstractionLayer.Products.Endpoints.Properties;
 using Moryx.Configuration;
 using Moryx.Asp.Extensions;
 using Moryx.Runtime.Modules;
@@ -393,7 +392,8 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             var recipe = _productManagement.CreateRecipe(recipeType);
             if (recipe == null)
-                recipe = (IProductRecipe)TypeTool.CreateInstance<IProductRecipe>(recipeType);
+                return BadRequest($"Recipe of type {recipeType} could not created");
+
             return _productConverter.ConvertRecipeV2(recipe);
         }
         #endregion

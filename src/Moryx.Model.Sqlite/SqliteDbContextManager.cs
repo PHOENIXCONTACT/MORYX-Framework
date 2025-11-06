@@ -4,7 +4,6 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
-using Moryx.Runtime.Kernel;
 
 namespace Moryx.Model.Sqlite
 {

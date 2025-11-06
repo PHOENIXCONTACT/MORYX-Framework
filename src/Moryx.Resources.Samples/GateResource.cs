@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
-using Moryx.AbstractionLayer.Hardware;
+using Moryx.AbstractionLayer.Drivers.Axis;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 

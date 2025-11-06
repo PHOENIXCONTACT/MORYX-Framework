@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
-using Moryx.AbstractionLayer;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
 using Moryx.ControlSystem.Simulator;
 using Moq;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 using NUnit.Framework;
 using Moryx.Logging;
 using Moryx.TestTools.UnitTest;

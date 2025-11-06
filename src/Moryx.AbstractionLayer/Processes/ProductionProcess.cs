@@ -3,7 +3,7 @@
 
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.AbstractionLayer
+namespace Moryx.AbstractionLayer.Processes
 {
     /// <summary>
     /// Concrete process of producing a single product instance

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.ControlSystem.Cells;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Drivers;

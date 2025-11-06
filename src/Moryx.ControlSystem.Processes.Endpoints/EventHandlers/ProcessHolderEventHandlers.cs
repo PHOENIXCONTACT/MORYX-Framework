@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Threading.Channels;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Processes.Endpoints.Extensions;
 

@@ -1,9 +1,10 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.AbstractionLayer.Activities;
 using Moryx.Workplans;
 
-namespace Moryx.AbstractionLayer
+namespace Moryx.AbstractionLayer.Workplans
 {
     /// <summary>
     /// Interface for the different generic derived types of <see cref="TaskStep{TActivity,TProcParam,TParam}"/>
