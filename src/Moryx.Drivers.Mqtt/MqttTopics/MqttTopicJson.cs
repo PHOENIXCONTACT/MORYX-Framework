@@ -84,7 +84,7 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
             }
 
             var msg = Constructor();
-            var json = Encoding.UTF8.GetString(messageAsBytes.AsSpan()); // TODO: consider moving to system.text.json. This would make creating a temporary string unnecessary
+            var json = Encoding.UTF8.GetString(messageAsBytes.AsSpan());
             JsonConvert.PopulateObject(json, msg, GetSettings());
             return msg;
         }

@@ -426,7 +426,7 @@ public class MqttDriver : Driver, IMessageDriver
         }
         catch (Exception ex)
         {
-            Logger?.LogError(ex, "Failed to find matching topic, because of an error");
+            Logger.LogError(ex, "Failed to find matching topic, because of an error");
             throw;
         }
 
@@ -458,10 +458,10 @@ public class MqttDriver : Driver, IMessageDriver
         }
 
         var messageMqttBuilder = new MqttApplicationMessageBuilder()
-        .WithTopic(messageTopic.Topic)
-        .WithPayload(message)
-        .WithRetainFlag(messageTopic.retain)
-        .WithQualityOfServiceLevel(ConvertStringToQoS(QualityOfService));
+            .WithTopic(messageTopic.Topic)
+            .WithPayload(message)
+            .WithRetainFlag(messageTopic.retain)
+            .WithQualityOfServiceLevel(ConvertStringToQoS(QualityOfService));
 
         if (MqttVersion >= MqttProtocolVersion.V500
             && !string.IsNullOrEmpty(messageTopic.ResponseTopic))
@@ -515,7 +515,12 @@ public class MqttDriver : Driver, IMessageDriver
         {
             foreach (var topicResource in topicList)
             {
-                topicResource.OnReceived(topic, message, MqttVersion == MqttProtocolVersion.V500 ? appMessage.ResponseTopic : null, appMessage.Retain);
+                var responseTopic = MqttVersion switch
+                {
+                    MqttProtocolVersion.V500 => appMessage.ResponseTopic,
+                    _ => null
+                };
+                topicResource.OnReceived(topic, message, responseTopic, appMessage.Retain);
             }
         }
         else
@@ -617,7 +622,7 @@ public class MqttDriver : Driver, IMessageDriver
         {
             if (t.IsFaulted)
             {
-                Logger?.LogWarning(t.Exception, "Failed to connect to broker");
+                Logger.LogWarning(t.Exception, "Failed to connect to broker");
             }
         }, scheduler: TaskScheduler.Current), ReconnectDelayMs, -1);
     }
