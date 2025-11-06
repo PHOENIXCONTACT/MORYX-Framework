@@ -12,7 +12,7 @@ namespace Moryx.Workplans.WorkplanSteps
     /// Step that creates a <see cref="SubworkplanTransition"/> with the given workplan
     /// </summary>
     [DataContract]
-    [Display(ResourceType = typeof(Strings), Name = "SubworkplanStep_Name", Description = "SubworkplanStep_Description")]
+    [Display(ResourceType = typeof(Strings), Name = nameof(Strings.SubworkplanStep_DisplayName), Description = nameof(Strings.SubworkplanStep_Description))]
     public class SubworkplanStep : SubWorkplanStepBase
     {
         private SubworkplanStep()
