@@ -421,11 +421,12 @@ namespace Moryx.Drivers.Mqtt
                 }
             }
 
-            using(var span = ActivitySource.StartActivity("PublishReceived", ActivityKind.Internal, parentContext: default, tags: new Dictionary<string, object>{
+            using (var span = ActivitySource.StartActivity("PublishReceived", ActivityKind.Internal, parentContext: default, tags: new Dictionary<string, object>{
                 { "topic.name", Name },
                 { "topic.id", Id },
                 { "topic.type", MessageName }
-            })) {
+            }))
+            {
                 RaiseReceived(msg);
                 MqttDriver.OnReceived(msg);
             }

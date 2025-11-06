@@ -72,7 +72,7 @@ public class MqttDriver : Driver, IMessageDriver
         set => ConfigChange(ref _brokerURL, value);
     }
 
-    private void ConfigChange<T>(ref T field, T value) where T: IEquatable<T>
+    private void ConfigChange<T>(ref T field, T value) where T : IEquatable<T>
     {
         if (field?.Equals(value) ?? value == null)
         {
@@ -285,9 +285,9 @@ public class MqttDriver : Driver, IMessageDriver
     /// </summary>
     [EntrySerialize, DataMember]
     [Display(
-        Name=nameof(Strings.MqttDriver_HasLastWill),
+        Name = nameof(Strings.MqttDriver_HasLastWill),
         Description = nameof(Strings.MqttDriver_HasLastWill_Description),
-        ResourceType=typeof(Strings)
+        ResourceType = typeof(Strings)
     )]
     public bool HasLastWill { get; set; }
 
@@ -318,7 +318,7 @@ public class MqttDriver : Driver, IMessageDriver
         _clientId = $"{System.Net.Dns.GetHostName()}-{Id}-{Name}";
         var optionsBuilder = new MqttClientOptionsBuilder()
                             .WithClientId(_clientId)
-                            .WithTcpServer(BrokerUrl, Port)
+                            .WithTcpServer(BrokerURL, Port)
                             .WithTlsOptions(new MqttClientTlsOptions() { UseTls = UseTls })
                             .WithCleanSession(!ReconnectWithoutCleanSession);
         
@@ -374,7 +374,8 @@ public class MqttDriver : Driver, IMessageDriver
     {
         if (_mqttClient.IsConnected)
         {
-            await _mqttClient.DisconnectAsync(new MqttClientDisconnectOptions {
+            await _mqttClient.DisconnectAsync(new MqttClientDisconnectOptions
+            {
                 Reason = HasLastWill
                     ? MqttClientDisconnectOptionsReason.DisconnectWithWillMessage
                     : MqttClientDisconnectOptionsReason.NormalDisconnection
@@ -410,7 +411,7 @@ public class MqttDriver : Driver, IMessageDriver
     /// <inheritdoc />
     public async Task SendAsync(object message, CancellationToken cancellationToken = default)
     {
-        IReadOnlyList<MqttTopic> topics;
+        List<MqttTopic> topics;
         try
         {
             // Search by identifier if set
@@ -446,32 +447,32 @@ public class MqttDriver : Driver, IMessageDriver
     /// <returns></returns>
     public async Task OnSend(MqttMessageTopic messageTopic, byte[] message, CancellationToken cancellationToken)
     {
-        using(var span = _activitySource.StartActivity("Send", ActivityKind.Producer, parentContext: default, tags: new Dictionary<string, object>() {
+        using var span = _activitySource.StartActivity("Send", ActivityKind.Producer, parentContext: default, tags: new Dictionary<string, object>() {
             {"message.topic", messageTopic.Topic},
             {"message.retain", messageTopic.retain},
             {"message.length", message.Length},
-        })) {
-            if(span is not null && TraceMessageContent) {
-                span.AddTag("message.content", System.Text.Encoding.UTF8.GetString(message));
-            }
-
-            var messageMqttBuilder = new MqttApplicationMessageBuilder()
-            .WithTopic(messageTopic.Topic)
-            .WithPayload(message)
-            .WithRetainFlag(messageTopic.retain)
-            .WithQualityOfServiceLevel(ConvertStringToQoS(QualityOfService));
-
-            if (MqttVersion >= MqttProtocolVersion.V500
-                && !string.IsNullOrEmpty(messageTopic.ResponseTopic))
-            {
-                messageMqttBuilder
-                    .WithResponseTopic(messageTopic.ResponseTopic)
-                    .WithUserProperty(ClaimTypes.Sid, _clientId);
-            }
-
-            var messageMqtt = messageMqttBuilder.Build();
-            await _mqttClient.PublishAsync(messageMqtt, cancellationToken);
+        });
+        if (span is not null && TraceMessageContent)
+        {
+            span.AddTag("message.content", System.Text.Encoding.UTF8.GetString(message));
         }
+
+        var messageMqttBuilder = new MqttApplicationMessageBuilder()
+        .WithTopic(messageTopic.Topic)
+        .WithPayload(message)
+        .WithRetainFlag(messageTopic.retain)
+        .WithQualityOfServiceLevel(ConvertStringToQoS(QualityOfService));
+
+        if (MqttVersion >= MqttProtocolVersion.V500
+            && !string.IsNullOrEmpty(messageTopic.ResponseTopic))
+        {
+            messageMqttBuilder
+                .WithResponseTopic(messageTopic.ResponseTopic)
+                .WithUserProperty(ClaimTypes.Sid, _clientId);
+        }
+
+        var messageMqtt = messageMqttBuilder.Build();
+        await _mqttClient.PublishAsync(messageMqtt, CancellationToken.None);
     }
 
     private Task OnReceived(MqttApplicationMessageReceivedEventArgs args)
@@ -489,40 +490,38 @@ public class MqttDriver : Driver, IMessageDriver
     {
         var topicName = appMessage.Topic;
         var message = appMessage.Payload;
-        using (var span = _activitySource.StartActivity("Receive", System.Diagnostics.ActivityKind.Consumer, parentContext: default, tags: new Dictionary<string, object>{
+        using var span = _activitySource.StartActivity("Receive", System.Diagnostics.ActivityKind.Consumer, parentContext: default, tags: new Dictionary<string, object>{
             { "driver.id", Id },
             { "driver.name", Name },
             { "message.topic", topicName },
             { "message.length", message.Length }
-        }))
+        });
+
+        if (TraceMessageContent && span is not null)
         {
+            span.AddTag("message.content", appMessage.ConvertPayloadToString());
+        }
 
-            if (TraceMessageContent && span is not null)
+        var topic = topicName;
+        if (!string.IsNullOrEmpty(Identifier) && topicName.StartsWith(Identifier))
+        {
+            topic = topicName.Substring(Identifier.Length);
+        }
+        var topicList =
+            Channels
+                .Where(t => t.TopicType != TopicType.PublishOnly && t.Matches(topic))
+                .ToList();
+        if (topicList.Count >= 1)
+        {
+            foreach (var topicResource in topicList)
             {
-                span.AddTag("message.content", appMessage.ConvertPayloadToString());
+                topicResource.OnReceived(topic, message, MqttVersion == MqttProtocolVersion.V500 ? appMessage.ResponseTopic : null, appMessage.Retain);
             }
-
-            var topic = topicName;
-            if (!string.IsNullOrEmpty(Identifier) && topicName.StartsWith(Identifier))
-            {
-                topic = topicName.Substring(Identifier.Length);
-            }
-            var topicList =
-                Channels
-                    .Where(t => t.TopicType != TopicType.PublishOnly && t.Matches(topic))
-                    .ToList();
-            if (topicList.Count >= 1)
-            {
-                foreach (var topicResource in topicList)
-                {
-                    topicResource.OnReceived(topic, message, MqttVersion == MqttProtocolVersion.V500 ? appMessage.ResponseTopic : null, appMessage.Retain);
-                }
-            }
-            else
-            {
-                Logger.Log(LogLevel.Warning, "Message on topic {topicName} received, but no corresponding Topic Resource found", topicName);
-                span?.SetStatus(ActivityStatusCode.Error, "No receiver found");
-            }
+        }
+        else
+        {
+            Logger.Log(LogLevel.Warning, "Message on topic {topicName} received, but no corresponding Topic Resource found", topicName);
+            span?.SetStatus(ActivityStatusCode.Error, "No receiver found");
         }
     }
 
@@ -557,7 +556,7 @@ public class MqttDriver : Driver, IMessageDriver
         {
             Logger.LogError("Failed to unsubscribe from topic '{topic}': {reason}", combinedOldTopic, result.ReasonString);
         }
-        
+
         SubscribeTopicAsync(newTopic).Wait();
 
     }
@@ -575,9 +574,9 @@ public class MqttDriver : Driver, IMessageDriver
         }
 
         Logger.LogInformation("Subscribing to topic {topic}", topicName);
-        
+
         var result = await _mqttClient.SubscribeAsync(topicFilter);
-        
+
         if (MqttVersion == MqttProtocolVersion.V500 && !string.IsNullOrEmpty(result.ReasonString))
         {
             Logger.LogError("Failed to subscribe to topic: {reason}", result.ReasonString);
@@ -587,7 +586,7 @@ public class MqttDriver : Driver, IMessageDriver
     private static MqttQualityOfServiceLevel ConvertStringToQoS(string qos)
     {
         if (qos == null || qos.Equals(String.Empty))
-            {
+        {
             return MqttQualityOfServiceLevel.ExactlyOnce;
         }
         return (MqttQualityOfServiceLevel)Enum.Parse(typeof(MqttQualityOfServiceLevel), qos);
@@ -597,14 +596,14 @@ public class MqttDriver : Driver, IMessageDriver
     {
         try
         {
-            if(!_mqttClient.IsConnected)
+            if (!_mqttClient.IsConnected)
             {
                 return;
             }
             var result = _mqttClient.UnsubscribeAsync(Identifier + subscribedTopic).Result;
         }
         // Ignore exceptions that can occure during shutdown
-        catch (ObjectDisposedException) { } 
+        catch (ObjectDisposedException) { }
         catch (MqttClientDisconnectedException) { }
         catch (Exception ex)
         {
