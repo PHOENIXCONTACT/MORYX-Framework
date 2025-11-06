@@ -8,7 +8,7 @@ namespace Moryx.Tools
     /// <summary>
     /// Static helper to attach to the unhandled exception event
     /// </summary>
-    public static class CrashHandler
+    internal static class CrashHandler
     {
         /// <summary>
         /// Write an exception message to a file in the CrashLogs directory
