@@ -23,6 +23,7 @@ namespace Moryx.Launcher
         private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
         private readonly MoryxAccessManagementClient _client;
+        private readonly IReadOnlyList<ExternalModuleItem> _externalModules;
 
         public EndpointDataSource EndpointsDataSource { get; }
         public PageLoader PageLoader { get; }
@@ -47,6 +48,8 @@ namespace Moryx.Launcher
                     logger.CreateLogger($"{nameof(ShellNavigator)}:{nameof(MoryxAccessManagementClient)}")
                 );
             }
+
+            _externalModules = LoadExternalModules();
         }
 
         /// <inheritdoc />
@@ -77,13 +80,7 @@ namespace Moryx.Launcher
             var modules = compiledPageActionDescriptors.Select(CreateWebModuleItem)
                 .Where(m => m != null).ToList<ModuleItem>();
 
-            // Load external modules
-            var externalModuleConfigs = _configuration.GetSection("Shell:ExternalModules").Get<ExternalModuleConfig[]>();
-            if (externalModuleConfigs != null)
-            {
-                var externalModules = externalModuleConfigs.Select(CreateExternalModuleItem).ToList();
-                modules.AddRange(externalModules);
-            }
+            modules.AddRange(_externalModules);
 
             // Rudimentary sorting
             var index = 0;
@@ -95,6 +92,12 @@ namespace Moryx.Launcher
             }
 
             return modules;
+        }
+
+        private ExternalModuleItem[] LoadExternalModules()
+        {
+            var externalModuleConfigs = _configuration.GetSection("Shell:ExternalModules").Get<ExternalModuleConfig[]>();
+            return externalModuleConfigs?.Select(CreateExternalModuleItem).ToArray() ?? [];
         }
 
         private static ExternalModuleItem CreateExternalModuleItem(ExternalModuleConfig externalModuleConfig)

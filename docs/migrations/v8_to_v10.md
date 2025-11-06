@@ -44,24 +44,7 @@ The `ProductFileEntity` has been removed from the data model as it was not utili
 
 ## Removal of Modules-Analytics
 
-The analytics module was doing nothing and the web module was replaced by supporting external modules in `Launcher`. Its now supported to embed external web-pages into the shell.
-Extend your `appsettings.json` by the following:
-
-````json
-"Shell": {
-  "SortIndex": {
-    ...
-  },
-  "ExternalModules": [
-    {
-      "Route": "example",
-      "Title": "Example",
-      "Url": "http://www.example.com",
-      "Icon": "globe"
-    }
-  ]
-}
-````
+The analytics module was doing nothing and the web module was replaced by supporting external modules in `Launcher`. Its now supported to embed external web-pages into the shell. Refer to the [Launcher](/docs/articles/launcher/Launcher.md) documentation for more information.
 
 ## Rarely used features removed
 
