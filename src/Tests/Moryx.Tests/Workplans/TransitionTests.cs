@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Moryx.TestTools.NUnit;
 using Moryx.Workplans;
 using Moryx.Workplans.Transitions;
 using NUnit.Framework;
@@ -61,10 +60,10 @@ namespace Moryx.Tests.Workplans
             // Assert
             Assert.Multiple(() =>
             {
-                MAssert.That(_inputs[0].Tokens, Is.Empty);
-                MAssert.That(_outputs.Select(o => o.Tokens), Has.All.Count.EqualTo(1));
-                MAssert.That(_token, Is.EqualTo(((SplitToken)_outputs[0].Tokens.First()).Original));
-                MAssert.That(_token, Is.EqualTo(((SplitToken)_outputs[1].Tokens.First()).Original));
+                Assert.That(_inputs[0].Tokens, Is.Empty);
+                Assert.That(_outputs.Select(o => o.Tokens), Has.All.Count.EqualTo(1));
+                Assert.That(_token, Is.EqualTo(((SplitToken)_outputs[0].Tokens.First()).Original));
+                Assert.That(_token, Is.EqualTo(((SplitToken)_outputs[1].Tokens.First()).Original));
             });
         }
 
@@ -88,9 +87,9 @@ namespace Moryx.Tests.Workplans
             // Assert
             Assert.Multiple(() =>
             {
-                MAssert.That(_inputs.All(i => !i.Tokens.Any()));
-                MAssert.That(_outputs[0].Tokens.Count(), Is.EqualTo(1), "The split token should be joined into one");
-                MAssert.That(_token, Is.EqualTo(_outputs[0].Tokens.First()));
+                Assert.That(_inputs.All(i => !i.Tokens.Any()));
+                Assert.That(_outputs[0].Tokens.Count(), Is.EqualTo(1), "The split token should be joined into one");
+                Assert.That(_token, Is.EqualTo(_outputs[0].Tokens.First()));
             });
         }
 
@@ -114,9 +113,9 @@ namespace Moryx.Tests.Workplans
             // Assert
             Assert.Multiple(() =>
             {
-                MAssert.That(_inputs[index].Tokens, Has.Count.EqualTo(1));
-                MAssert.That(_inputs[(index + 1) % 2].Tokens, Is.Empty);
-                MAssert.That(_outputs[0].Tokens, Is.Empty);
+                Assert.That(_inputs[index].Tokens, Has.Count.EqualTo(1));
+                Assert.That(_inputs[(index + 1) % 2].Tokens, Is.Empty);
+                Assert.That(_outputs[0].Tokens, Is.Empty);
             });
         }
 
@@ -147,10 +146,10 @@ namespace Moryx.Tests.Workplans
             // Assert
             Assert.Multiple(() =>
             {
-                MAssert.That(_inputs[0].Tokens, Is.Empty);
-                MAssert.That(_token, Is.EqualTo(_outputs[0].Tokens.First()));
-                MAssert.That(2, Is.EqualTo(triggered.Count));
-                MAssert.That(triggered, Has.All.InstanceOf<DummyTransition>());
+                Assert.That(_inputs[0].Tokens, Is.Empty);
+                Assert.That(_token, Is.EqualTo(_outputs[0].Tokens.First()));
+                Assert.That(2, Is.EqualTo(triggered.Count));
+                Assert.That(triggered, Has.All.InstanceOf<DummyTransition>());
             });
         }
 
@@ -183,14 +182,14 @@ namespace Moryx.Tests.Workplans
             // Assert
             Assert.Multiple(() =>
             {
-                MAssert.That(_inputs[0].Tokens, Is.Empty);
-                MAssert.That(_token, Is.EqualTo(_outputs[0].Tokens.First()));
-                MAssert.That(triggered, Has.Count.EqualTo(1));
-                MAssert.That(state, Is.InstanceOf<WorkplanSnapshot>());
+                Assert.That(_inputs[0].Tokens, Is.Empty);
+                Assert.That(_token, Is.EqualTo(_outputs[0].Tokens.First()));
+                Assert.That(triggered, Has.Count.EqualTo(1));
+                Assert.That(state, Is.InstanceOf<WorkplanSnapshot>());
                 var snapshot = (WorkplanSnapshot)state;
-                MAssert.That(snapshot.Holders, Has.Length.EqualTo(1));
+                Assert.That(snapshot.Holders, Has.Length.EqualTo(1));
                 var stepId = workplan.Steps.First(s => s is PausableStep).Id;
-                MAssert.That(stepId, Is.EqualTo(snapshot.Holders[0].HolderId));
+                Assert.That(stepId, Is.EqualTo(snapshot.Holders[0].HolderId));
             });
         }
     }
