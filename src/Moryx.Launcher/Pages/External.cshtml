@@ -1,9 +1,9 @@
 ﻿@page "{*_}"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Configuration
+@using Moryx.Configuration
 @using Moryx.Launcher
-@using Moryx.Launcher.Config
-@inject IConfiguration _configuration
+@inject IConfigManager _configManager
 @{
     ViewData["Title"] = "External";
     ViewData["BaseRef"] = "external";
@@ -18,8 +18,7 @@
     if (routeValues.Count > 1)
         externalRouteName = routeValues["_"]?.ToString();
 
-    var externalModuleConfigs = _configuration.GetSection("Shell:ExternalModules").Get<ExternalModuleConfig[]>();
-
+    var externalModuleConfigs = _configManager.GetConfiguration<LauncherConfig>().ExternalModules;
     var config = externalModuleConfigs.FirstOrDefault(c => c.Route.Equals(externalRouteName));
 
     if (config != null)

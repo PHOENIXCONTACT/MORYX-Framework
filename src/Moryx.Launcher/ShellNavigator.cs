@@ -7,12 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moryx.Asp.Integration;
+using Moryx.Configuration;
 using Moryx.Identity;
-using Moryx.Launcher.Config;
 using Moryx.Tools;
 
 namespace Moryx.Launcher
@@ -20,25 +19,24 @@ namespace Moryx.Launcher
     /// <inheritdoc />
     public class ShellNavigator : IShellNavigator
     {
-        private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
         private readonly MoryxAccessManagementClient _client;
         private readonly IReadOnlyList<ExternalModuleItem> _externalModules;
+        private readonly LauncherConfig _launcherConfig;
 
-        public EndpointDataSource EndpointsDataSource { get; }
-        public PageLoader PageLoader { get; }
+        private readonly EndpointDataSource _endpointsDataSource;
+        private readonly PageLoader _pageLoader;
 
         public ShellNavigator(
             EndpointDataSource endpointsDataSource,
             PageLoader pageLoader,
-            IConfiguration configuration,
+            IConfigManager configManager,
             IOptionsMonitor<MoryxIdentityOptions> options,
             IMemoryCache memoryCache,
             ILoggerFactory logger)
         {
-            EndpointsDataSource = endpointsDataSource;
-            PageLoader = pageLoader;
-            _configuration = configuration;
+            _endpointsDataSource = endpointsDataSource;
+            _pageLoader = pageLoader;
             _logger = logger.CreateLogger(nameof(ShellNavigator));
             if (options?.CurrentValue?.BaseAddress is not null)
             {
@@ -49,6 +47,7 @@ namespace Moryx.Launcher
                 );
             }
 
+            _launcherConfig = GetConfiguration(configManager);
             _externalModules = LoadExternalModules();
         }
 
@@ -56,11 +55,11 @@ namespace Moryx.Launcher
         public async Task<IReadOnlyList<ModuleItem>> GetModuleItems(HttpContext context)
         {
             // Filter pages
-            var pageActionDescriptors = EndpointsDataSource.Endpoints.SelectMany(endpoint => endpoint.Metadata)
+            var pageActionDescriptors = _endpointsDataSource.Endpoints.SelectMany(endpoint => endpoint.Metadata)
                 .OfType<PageActionDescriptor>()
                 .Where(pad => !pad.ViewEnginePath.Contains("Index"));
             // Retrieve all Metadata
-            var compiledPageActionDescriptors = await Task.WhenAll(pageActionDescriptors.Select(async pad => await PageLoader.LoadAsync(pad, EndpointMetadataCollection.Empty)));
+            var compiledPageActionDescriptors = await Task.WhenAll(pageActionDescriptors.Select(async pad => await _pageLoader.LoadAsync(pad, EndpointMetadataCollection.Empty)));
 
             // Filter permission
             if (context is not null && _client is not null)
@@ -87,8 +86,14 @@ namespace Moryx.Launcher
             foreach (var module in modules.OrderBy(m => m.Title))
             {
                 var route = module is ExternalModuleItem ? module.Route.Replace("external/", "") : module.Route;
-                var sortIndex = _configuration[$"Shell:SortIndex:{route}"];
-                module.SortIndex = int.TryParse(sortIndex, out var customIndex) ? customIndex : index++;
+                var indexConfig = _launcherConfig.ModuleSortIndices.FirstOrDefault(m => m.Route == route);
+                if (indexConfig != null)
+                {
+                    module.SortIndex = indexConfig.SortIndex;
+                    continue;
+                }
+
+                module.SortIndex = index++;
             }
 
             return modules;
@@ -96,7 +101,7 @@ namespace Moryx.Launcher
 
         private ExternalModuleItem[] LoadExternalModules()
         {
-            var externalModuleConfigs = _configuration.GetSection("Shell:ExternalModules").Get<ExternalModuleConfig[]>();
+            var externalModuleConfigs = _launcherConfig.ExternalModules;
             return externalModuleConfigs?.Select(CreateExternalModuleItem).ToArray() ?? [];
         }
 
@@ -127,8 +132,22 @@ namespace Moryx.Launcher
                 Icon = webModuleAttribute.Icon,
                 Description = pageActionDescriptor.PageTypeInfo.GetDescription() ?? "",
                 Category = webModuleAttribute.Category,
-                EventStream = streamAttribute?.EventStreamUrl ?? null
+                EventStream = streamAttribute?.EventStreamUrl
             };
+        }
+
+        private LauncherConfig GetConfiguration(IConfigManager configManager)
+        {
+            var launcherConfig = configManager.GetConfiguration<LauncherConfig>();
+
+            // If configuration is generated, save it back to persist defaults
+            if (launcherConfig.ConfigState == ConfigState.Generated)
+            {
+                launcherConfig.ConfigState = ConfigState.Valid;
+                configManager.SaveConfiguration(_launcherConfig);
+            }
+
+            return launcherConfig;
         }
     }
 }

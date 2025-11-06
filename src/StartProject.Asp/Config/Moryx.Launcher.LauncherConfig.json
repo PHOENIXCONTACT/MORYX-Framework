@@ -1,0 +1,26 @@
+{
+  "ModuleSortIndices": [
+    {
+      "Route": "Orders",
+      "SortIndex": 1
+    },
+    {
+      "Route": "WorkerSupport",
+      "SortIndex": 10
+    },
+    {
+      "Route": "example",
+      "SortIndex": 100
+    }
+  ],
+  "ExternalModules": [
+    {
+      "Title": "Example",
+      "Url": "http://www.example.com",
+      "Icon": "globe",
+      "Description": "Example description of the external module.",
+      "Route": "example"
+    }
+  ],
+  "ConfigState": "Valid"
+}

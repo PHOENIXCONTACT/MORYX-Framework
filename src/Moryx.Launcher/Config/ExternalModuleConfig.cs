@@ -1,7 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Launcher.Config;
+namespace Moryx.Launcher;
 
 /// <summary>
 /// Configuration for an external module

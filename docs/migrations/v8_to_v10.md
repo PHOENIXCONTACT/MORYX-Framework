@@ -44,6 +44,10 @@ With MORYX 10, several changes have been made to the data model to improve perfo
 - If you were using `ProductFileEntity`, consider using alternative storage solutions such as file systems or dedicated file storage services to manage product-related files.
 - The `ProductFile` was removed completely.
 
+## Launcher
+
+- The `SortIndex` configuration was moved to the `Moryx.Launcher.LauncherConfig.json` configuration file. Refer to the [Launcher](/docs/articles/launcher/Launcher.md) documentation for more information.
+
 ## Removal of Modules-Analytics
 
 The analytics module was doing nothing and the web module was replaced by supporting external modules in `Launcher`. Its now supported to embed external web-pages into the shell. Refer to the [Launcher](/docs/articles/launcher/Launcher.md) documentation for more information.
