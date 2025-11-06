@@ -30,6 +30,10 @@ Several interfaces have been removed to streamline the codebase and reduce compl
 - `IProductType`: Replaced with base-class `ProductType`
 - `IProductInstance`: Replaced with base-class `ProductInstance`
 
+## Method Signature Changes
+
+- `PossibleValuesAttribute`: `virtual IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)` -> `abstract IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)`
+
 ## Data Model Changes
 
 With MORYX 10, several changes have been made to the data model to improve performance and maintainability. Notable changes include:
