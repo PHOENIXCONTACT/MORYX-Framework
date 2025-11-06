@@ -16,18 +16,17 @@ using Moryx.StateMachines;
 using Moryx.Threading;
 using Opc.Ua;
 using Opc.Ua.Client;
-using Opc.Ua.Configuration;
 using System.ComponentModel.DataAnnotations;
-using Moryx.Drivers.OpcUa.Localizations;
+using Moryx.Drivers.OpcUa.Properties;
 
 namespace Moryx.Drivers.OpcUa;
 
 /// <summary>
-/// Driver to communicate via Opc Ua . It is able to write and read nodes 
+/// Driver to communicate via Opc Ua . It is able to write and read nodes
 /// and subscribe to value changes of nodes in a session
 /// </summary>
 [ResourceRegistration]
-[Display(Name = nameof(Strings.OPCUA_DRIVER), Description = nameof(Strings.OPCUA_DRIVER_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+[Display(Name = nameof(Strings.OpcUaDriver_DisplayName), Description = nameof(Strings.OpcUaDriver_Description), ResourceType = typeof(Strings))]
 public class OpcUaDriver : Driver, IOpcUaDriver2
 {
     //TODO 6.1 Invoke Methods
@@ -37,15 +36,15 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// Current tate of the driver
     /// </summary>
     [EntrySerialize]
-    [Display(Name = nameof(Strings.DRIVER_STATE), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_StateName), ResourceType = typeof(Strings))]
     public string StateName => CurrentState?.ToString() ?? "";
 
     [EntrySerialize, ReadOnly(true)]
-    [Display(Name = nameof(Strings.SERVER_STATUS), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_ServerStatus), ResourceType = typeof(Strings))]
     public ServerState ServerStatus { get; private set; }
 
     [EntrySerialize, ReadOnly(true)]
-    [Display(Name = nameof(Strings.DEVICE_SET), Description = nameof(Strings.DEVICE_SET_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_DeviceSet), Description = nameof(Strings.OpcUaDriver_DeviceSet_Description), ResourceType = typeof(Strings))]
     public List<DeviceType> DeviceSet { get; set; } = [];
 
     #region Configuration
@@ -53,14 +52,14 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// List of default subscriptions
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.DEFAULT_SUBSCRIPTIONS), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_DefaultSubscriptions), ResourceType = typeof(Strings))]
     public List<string> DefaultSubscriptions { get; set; } = [];
 
     [DataMember]
     public Dictionary<string, string> NodeIdAliasDictionary;
 
     [EntrySerialize]
-    [Display(Name = nameof(Strings.NODE_ID_ALIAS), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_NodeIdAlias), ResourceType = typeof(Strings))]
     internal List<NodeIdAlias> NodeIdAlias
     {
         get
@@ -88,14 +87,14 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// Identifier of the driver
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.IDENTIFIER), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_Identifier), ResourceType = typeof(Strings))]
     public string Identifier { get; set; }
 
     /// <summary>
     /// Url of the OPC UA Server
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.OPCUA_SERVER_URL), Description = nameof(Strings.OPCUA_SERVER_URL_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_OpcUaServerUrl), Description = nameof(Strings.OpcUaDriver_OpcUaServerUrl_Description), ResourceType = typeof(Strings))]
     public string OpcUaServerUrl { get; set; }
 
     /// <summary>
@@ -103,42 +102,42 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// </summary>
     [EntrySerialize, DataMember]
     [Obsolete("This property will be removed in a future version. It's recommended to include the port into the URL")]
-    [Display(Name = nameof(Strings.OPCUA_SERVER_PORT), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_OpcUaServerPort), ResourceType = typeof(Strings))]
     public int OpcUaServerPort { get; set; }
 
     /// <summary>
     /// Username needed to authenticate on the server
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.USERNAME), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_Username), ResourceType = typeof(Strings))]
     public string Username { get; set; }
 
     /// <summary>
     /// Password needed to authenticate on the server
     /// </summary>
     [EntrySerialize, DataMember, Password]
-    [Display(Name = nameof(Strings.PASSWORD), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_Password), ResourceType = typeof(Strings))]
     public string Password { get; set; }
 
     /// <summary>
     /// Use encryption during communication
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.USE_ENCRYPTION), Description = nameof(Strings.USE_ENCRYPTION_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_UseEncryption), Description = nameof(Strings.OpcUaDriver_UseEncryption_Description), ResourceType = typeof(Strings))]
     public bool UseEncryption { get; set; }
 
     /// <summary>
     /// Path of the config file
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.FILE_PATH_CLIENT), Description = nameof(Strings.FILE_PATH_CLIENT_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_FilePathClientConfig), Description = nameof(Strings.OpcUaDriver_FilePathClientConfig_Description), ResourceType = typeof(Strings))]
     public string FilePathClientConfig { get; set; }
 
     /// <summary>
     /// Reconnection Period
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.RECONNECTION_PERIOD), Description = nameof(Strings.RECONNECTION_PERIOD_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_ReconnectionPeriod), Description = nameof(Strings.OpcUaDriver_ReconnectionPeriod_Description), ResourceType = typeof(Strings))]
     public int ReconnectionPeriod { get; set; }
 
     /// <summary>
@@ -146,14 +145,14 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// </summary>
     //TODO 6.2 Update Publishing- and SamplingInterval whithout restarting the driver
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.PUBLISH_INTERVALL), Description = nameof(Strings.PUBLISH_INTERVALL_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_PublishingInterval), Description = nameof(Strings.OpcUaDriver_PublishingInterval_Description), ResourceType = typeof(Strings))]
     public int PublishingInterval { get; set; }
 
     /// <summary>
     /// Interval on which the changes of the monitored values are checked
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.USE_ENCRYPTION), Description = nameof(Strings.USE_ENCRYPTION_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_SamplingInterval), Description = nameof(Strings.OpcUaDriver_SamplingInterval_Description), ResourceType = typeof(Strings))]
     public int SamplingInterval { get; set; }
 
     //TODO 6.1 Use selfsigned certificates for communication
@@ -161,10 +160,10 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     #endregion
 
     /// <summary>
-    /// All nodes found on the Opc Ua server 
+    /// All nodes found on the Opc Ua server
     /// </summary>
     [EntrySerialize, ReadOnly(true)]
-    [Display(Name = nameof(Strings.DISPLAY_NODE), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_Nodes), ResourceType = typeof(Strings))]
     public List<OpcUaDisplayNode> Nodes { get; private set; } = [];
     /// <summary>
     /// The number of nodes under the driver
@@ -401,7 +400,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     {
 
         // check for events from discarded sessions.
-        if (!Object.ReferenceEquals(session, _session))
+        if (!ReferenceEquals(session, _session))
         {
             return;
         }
@@ -444,7 +443,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     private void ReconnectComplete(object sender, EventArgs e)
     {
         // ignore callbacks from discarded objects.
-        if (!Object.ReferenceEquals(sender, _reconnectHandler))
+        if (!ReferenceEquals(sender, _reconnectHandler))
         {
             return;
         }
@@ -740,7 +739,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         var namespaceUris = _session.NamespaceUris;
         var nodes = new List<OpcUaNode>();
 
-        BrowseNodes(Opc.Ua.ObjectIds.RootFolder, namespaceUris, nodes, 0);
+        BrowseNodes(ObjectIds.RootFolder, namespaceUris, nodes, 0);
         _nodes = nodes;
 
         _savedIds.Clear();
@@ -1012,7 +1011,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     }
 
     /// <summary>
-    /// Method to write values to a node over the UI for testing 
+    /// Method to write values to a node over the UI for testing
     /// </summary>
     /// <param name="identifier"></param>
     /// <param name="valueString"></param>

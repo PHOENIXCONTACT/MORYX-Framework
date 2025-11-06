@@ -117,13 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DOCUMENT_NOT_FOUND" xml:space="preserve">
+  <data name="OrderManagementController_GetDocuments_DocumentNotFound" xml:space="preserve">
     <value>Documento non trovato!</value>
   </data>
-  <data name="OPERATION_NOT_FOUND" xml:space="preserve">
+  <data name="OrderManagementController_OperationNotFound" xml:space="preserve">
     <value>Operazione non trovata!</value>
   </data>
-  <data name="PRODUCTPARTS_NOT_FOUND" xml:space="preserve">
+  <data name="OrderManagementController_GetProductParts_ProductPartsNotFound" xml:space="preserve">
     <value>Parti del prodotto non trovate!</value>
   </data>
 </root>

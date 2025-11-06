@@ -44,7 +44,7 @@ namespace Moryx.ControlSystem.Jobs.Endpoints
         {
             var job = _jobManagement.Get(jobId);
             if (job == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.JOB_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.JobManagementController_JobNotFound });
 
             return Converter.ToModel(job);
         }
@@ -63,7 +63,7 @@ namespace Moryx.ControlSystem.Jobs.Endpoints
         {
             var job = _jobManagement.Get(jobId);
             if (job == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.JOB_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.JobManagementController_JobNotFound });
 
             _jobManagement.Complete(job);
             return Ok();
@@ -76,7 +76,7 @@ namespace Moryx.ControlSystem.Jobs.Endpoints
         {
             var job = _jobManagement.Get(jobId);
             if (job == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.JOB_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.JobManagementController_JobNotFound });
 
             _jobManagement.Abort(job);
             return Ok();

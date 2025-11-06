@@ -12,7 +12,7 @@
     Layout = "_Layout";
 }
 @attribute [WebModule("Identity", "person", Category = ModuleCategory.SignIn),
-  Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description")]
+  Display(ResourceType = typeof(Strings), Name = nameof(Strings.Module_Title), Description = nameof(Strings.Module_Description))]
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +26,7 @@
                 <div class="column is-5-tablet is-4-desktop is-3-widescreen">
                     <div class="box">
                         <div class="field">
-                            <label for="" class="label">@Strings.USERNAME</label>
+                            <label for="" class="label">@Strings.Login_Username</label>
                             <div class="control has-icons-left">
                                 <input type="text" placeholder="e.g. MORYX" class="input" id="username" required>
                                 <span class="icon is-small is-left">
@@ -37,7 +37,7 @@
                             </div>
                         </div>
                         <div class="field">
-                            <label for="" class="label">@Strings.PASSWORD</label>
+                            <label for="" class="label">@Strings.Login_Password</label>
                             <div class="control has-icons-left">
                                 <input type="password" placeholder="*******" class="input" id="password" required>
                                 <span class="icon is-small is-left">
@@ -47,10 +47,10 @@
                                 </span>
                             </div>
                         </div>
-                        <div id="login-validation" class="login-validation hide">@Strings.VALIDATION_MESSAGE</div>
+                        <div id="login-validation" class="login-validation hide">@Strings.Login_UsernamePasswordWrong</div>
                         <div class="field">
                             <button onclick="signIn('@(configuration["IdentityUrl"])')" class="button sign-in">
-                                @Strings.SIGN_IN
+                                @Strings.Login_SignIn
                             </button>
                         </div>
                     </div>

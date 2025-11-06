@@ -42,7 +42,7 @@
     <moryx-layout fullscreenButton="fullscreen" operatorMode="operator-mode" class="tw-relative">
         <div style="z-index:1000;" class="tw-w-full tw-h-full tw-bg-white tw-absolute" overlay></div>
         <span style="z-index:999;" class="tw-px-4 tw-py-1 tw-rounded-full tw-shadow tw-border tw-border-gray-200 tw-bg-primary-600 tw-text-white" floatingbar>
-            @Strings.EXIT_FULLSCREEN
+            @Strings.Layout_ExitFullscreen
         </span>
         <header class="tw-relative tw-flex tw-flex-col tw-w-full tw-border-b tw-border-gray-100 tw-z-100 tw-bg-white" role="navigation" aria-label="main navigation" topbar>
             <div class="tw-relative tw-flex tw-items-center tw-shadow tw-justify-between tw-gap-2 tw-px-2">
@@ -51,7 +51,7 @@
                         <img class="moryx-logo" src="/_content/Moryx.Launcher/assets/moryx-banner-small.webp" alt="Moryx Home Logo">
                     </a>
                 </div>
-                <moryx-searchbox placeholder="@Strings.SEARCH ..."></moryx-searchbox>
+                <moryx-searchbox placeholder="@Strings.Layout_Search ..."></moryx-searchbox>
 
                 <div class="tw-flex tw-gap-x-2 tw-flew-row tw-justify-between tw-items-center tw-relative">
                     <moryx-dropdown-menu>
@@ -63,7 +63,7 @@
                                 <div class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-between" button>
                                     <div class="tw-flex tw-items-center">
                                         <span class="material-symbols-outlined">translate</span>
-                                        <span class="tw-pl-3">@Strings.LANGUAGE</span>
+                                        <span class="tw-pl-3">@Strings.Layout_Language</span>
                                     </div>
                                     <span class="material-symbols-outlined">arrow_right</span>
                                 </div>
@@ -83,18 +83,18 @@
                                 <div class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-between" button>
                                     <div class="tw-flex tw-items-center">
                                         <span class="material-symbols-outlined">dashboard</span>
-                                        <span class="tw-pl-3">@Strings.VIEWS</span>
+                                        <span class="tw-pl-3">@Strings.Layout_Views</span>
                                     </div>
                                     <span class="material-symbols-outlined">arrow_right</span>
                                 </div>
                                 <moryx-dropdown-container class="tw-absolute tw-w-60 tw-shadow-md tw-rounded tw-flex tw-flex-col tw-gap-2 tw-bg-white">
                                     <moryx-dropdown-item class="tw-p-1 tw-flex tw-items-center tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200" name="fullscreen">
                                         <span class="material-symbols-outlined">fullscreen</span>
-                                        <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.FULLSCREEN_MODE</span>
+                                        <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.Layout_FullscreenMode</span>
                                     </moryx-dropdown-item>
                                     <moryx-dropdown-item class="tw-p-1 tw-flex tw-items-center tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200" name="operator-mode">
                                         <span class="material-symbols-outlined">engineering</span>
-                                        <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.OPERATOR_MODE</span>
+                                        <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.Layout_OperatorMode</span>
                                     </moryx-dropdown-item>
                                 </moryx-dropdown-container>
                             </moryx-dropdown-subitem>
@@ -119,7 +119,7 @@
                             <moryx-dropdown-item class="tw-p-1 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200 tw-border-t tw-border-gray-200">
                                 <a class="tw-flex tw-items-center tw-w-full tw-h-full" onclick="document.getElementById('aboutModal').style.display='flex'">
 									<span class="material-symbols-outlined">info</span>
-                                    <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.ABOUT</span>
+                                    <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.Layout_About</span>
                                 </a>
                             </moryx-dropdown-item>
                         </moryx-dropdown-container>
@@ -134,7 +134,7 @@
                             signInRedirectUrl = signInModule.Route;
 
                         <moryx-auth-buttons authUrl="@signInRedirectUrl">
-                            <span sign-in>@Strings.SIGN_IN</span>
+                            <span sign-in>@Strings.Layout_SignIn</span>
                         </moryx-auth-buttons>
                     }
                 </div>
@@ -179,10 +179,10 @@
         <div class="tw-flex-1 tw-flex tw-flex-col tw-overflow-auto tw-h-full tw-w-full tw-box-border" main>
 			@Html.Partial("AboutModal")
 
-            @if (Url.RouteUrl(ViewContext.RouteData.Values).Split('/').Length > 1 && 
+            @if (Url.RouteUrl(ViewContext.RouteData.Values).Split('/').Length > 1 &&
             !Url.RouteUrl(ViewContext.RouteData.Values).Split('/')[1].Contains("Notifications"))
             {
-                <moryx-notifications-bar>@Strings.DETAILS</moryx-notifications-bar>
+                <moryx-notifications-bar>@Strings.Layout_Details</moryx-notifications-bar>
             }
             <div class="tw-overflow-hidden tw-h-screen tw-w-full tw-box-border">
                 @RenderBody()
@@ -190,14 +190,14 @@
         </div>
         <div class="tw-w-full tw-h-14 tw-shadow-md tw-bg-white tw-drop-shadow" id="launcher-bottom-nav-bar" bottombar>
             <div class="tw-relative tw-flex tw-items-center tw-justify-around">
-            
+
                 <moryx-nav-button position="fixed" class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-center ">
                     <moryx-dropdown-menu position="top" align="left">
                         <button class="tw-h-full tw-w-full tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-2" button>
                             <span class="material-symbols-outlined">view_module</span>
-                            <span class="tw-font-bold tw-truncate tw-text-wrap">@Strings.MODULES</span>
+                            <span class="tw-font-bold tw-truncate tw-text-wrap">@Strings.Layout_Modules</span>
                         </button>
-                        <moryx-dropdown-container style="left: -100000px; z-index: 999;" 
+                        <moryx-dropdown-container style="left: -100000px; z-index: 999;"
                         class="tw-absolute tw-bg-white tw-rounded tw-w-72 tw-flex tw-flex-col tw-shadow">
                             <moryx-dropdown-item closeOnClick="false" class="tw-max-h-80 tw-overflow-auto tw-flex tw-flex-col tw-p-2 tw-border-y tw-border-gray-200 tw-rounded">
                                 <div class="tw-grid tw-grid-cols-2 tw-auto-rows-auto tw-gap-2  tw-p-2 tw-mb-2">
@@ -240,20 +240,20 @@
                         </moryx-nav-button>
                     }
                 }
-                
+
                 <moryx-nav-button position="fixed" class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-center tw-group">
                     <moryx-dropdown-menu position="top">
                         <button class="tw-h-full tw-w-full tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-2" button>
                             <span class="material-symbols-outlined">more_horiz</span>
-                            <span class="tw-font-bold tw-truncate tw-text-wrap">@Strings.MORE</span>
+                            <span class="tw-font-bold tw-truncate tw-text-wrap">@Strings.Layout_More</span>
                         </button>
-                        <moryx-dropdown-container style="left: -100000px; z-index: 999;" 
+                        <moryx-dropdown-container style="left: -100000px; z-index: 999;"
                         class="tw-absolute tw-bg-white tw-rounded tw-w-60 tw-flex tw-flex-col tw-shadow">
                             <moryx-dropdown-subitem class="tw-w-full tw-h-full hover:tw-bg-primary-200 hover:tw-cursor-pointer tw-p-3 tw-text-nowrap ">
                                 <div class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-between" button>
                                     <div class="tw-flex tw-items-center">
                                         <span class="material-symbols-outlined">translate</span>
-                                        <span class="tw-pl-3">@Strings.LANGUAGE</span>
+                                        <span class="tw-pl-3">@Strings.Layout_Language</span>
                                     </div>
                                     <span class="material-symbols-outlined">arrow_right</span>
                                 </div>
@@ -273,18 +273,18 @@
                                 <div class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-between" button>
                                     <div class="tw-flex tw-items-center">
                                         <span class="material-symbols-outlined">dashboard</span>
-                                        <span class="tw-pl-3">@Strings.VIEWS</span>
+                                        <span class="tw-pl-3">@Strings.Layout_Views</span>
                                     </div>
                                     <span class="material-symbols-outlined">arrow_right</span>
                                 </div>
                                 <moryx-dropdown-container class="tw-absolute tw-w-60 tw-shadow-md tw-rounded tw-flex tw-flex-col tw-gap-2 tw-bg-white">
                                     <moryx-dropdown-item class="tw-p-3 tw-flex tw-items-center tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200" name="fullscreen">
                                         <span class="material-symbols-outlined">fullscreen</span>
-                                        <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.FULLSCREEN_MODE</span>
+                                        <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.Layout_FullscreenMode</span>
                                     </moryx-dropdown-item>
                                     <moryx-dropdown-item class="tw-p-3 tw-flex tw-items-center tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200" name="operator-mode">
                                         <span class="material-symbols-outlined">engineering</span>
-                                        <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.OPERATOR_MODE</span>
+                                        <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.Layout_OperatorMode</span>
                                     </moryx-dropdown-item>
                                 </moryx-dropdown-container>
                             </moryx-dropdown-subitem>
@@ -308,7 +308,7 @@
 							<moryx-dropdown-item class="tw-p-3 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200">
                                 <a class="tw-flex tw-items-center tw-w-full tw-h-full" onclick="document.getElementById('aboutModal').style.display='flex'">
 									<span class="material-symbols-outlined">info</span>
-									<span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.ABOUT</span>
+									<span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.Layout_About</span>
 								</a>
                             </moryx-dropdown-item>
                         </moryx-dropdown-container>
@@ -320,7 +320,7 @@
 
     <script src="/_content/Moryx.Launcher/js/shell.js"></script>
     <script src="/_content/Moryx.Launcher/js/dist/polyfills.js" type="module"></script>
-    <script src="/_content/Moryx.Launcher/js/dist/main.js" type="module"></script>    
+    <script src="/_content/Moryx.Launcher/js/dist/main.js" type="module"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

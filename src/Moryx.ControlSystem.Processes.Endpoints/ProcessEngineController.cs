@@ -128,7 +128,7 @@ public class ProcessEngineController : ControllerBase
         var process = _processControl.RunningProcesses.Where(p => p.Id == id).FirstOrDefault();
         if (process == null)
         {
-            return NotFound(new MoryxExceptionResponse { Title = Strings.PROCESS_NOT_FOUND });
+            return NotFound(new MoryxExceptionResponse { Title = Strings.ProcessEngineController_ProcessNotFoundExceptionMessage });
         }
 
         return Converter.ConvertProcess(process, _processControl, _resourceManagement);
@@ -144,7 +144,7 @@ public class ProcessEngineController : ControllerBase
         var process = _processControl.RunningProcesses.Where(p => p.Id == id).FirstOrDefault();
         if (process == null)
         {
-            return NotFound(new MoryxExceptionResponse { Title = Strings.PROCESS_NOT_FOUND });
+            return NotFound(new MoryxExceptionResponse { Title = Strings.ProcessEngineController_ProcessNotFoundExceptionMessage });
         }
 
         var activities = process.GetActivities();
@@ -167,7 +167,7 @@ public class ProcessEngineController : ControllerBase
         var process = _processControl.RunningProcesses.Where(p => p.Id == id).FirstOrDefault();
         if (process == null)
         {
-            return NotFound(new MoryxExceptionResponse { Title = Strings.PROCESS_NOT_FOUND });
+            return NotFound(new MoryxExceptionResponse { Title = Strings.ProcessEngineController_ProcessNotFoundExceptionMessage });
         }
 
         var targetList = new List<ActivityResourceModel>();
@@ -189,13 +189,13 @@ public class ProcessEngineController : ControllerBase
         var process = _processControl.RunningProcesses.Where(p => p.Id == id).FirstOrDefault();
         if (process == null)
         {
-            return NotFound(new MoryxExceptionResponse { Title = Strings.PROCESS_NOT_FOUND });
+            return NotFound(new MoryxExceptionResponse { Title = Strings.ProcessEngineController_ProcessNotFoundExceptionMessage });
         }
 
         var activity = process.GetActivities().Where(a => a.Id == activityId).FirstOrDefault();
         if (activity == null)
         {
-            return NotFound(new MoryxExceptionResponse { Title = Strings.ACTIVITY_NOT_FOUND });
+            return NotFound(new MoryxExceptionResponse { Title = Strings.ProcessEngineController_ActivityNotFoundExceptionMessage });
         }
 
         var targetList = new List<ActivityResourceModel>();

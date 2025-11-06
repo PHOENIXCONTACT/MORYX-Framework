@@ -29,7 +29,7 @@ namespace Moryx.Workplans.Editing.Implementation
         public void AddStep(IWorkplanStep step)
         {
             if (step is ISubworkplanStep stepSubWorkplan && _workplan.Id == stepSubWorkplan.Workplan.Id)
-                throw new ArgumentException(Strings.SAME_SUBWORKPLAN);
+                throw new ArgumentException(Strings.WorkplanEditingSession_SameWorkplanReference);
 
             _workplan.Add(step);
         }
@@ -302,7 +302,7 @@ namespace Moryx.Workplans.Editing.Implementation
 
         // All values depend on the UI unfortunately, this is bad software design
         // but not worse then the independent magic numbers we had before
-        private const int initialY = 0; // Since we create a stair-like structure 
+        private const int initialY = 0; // Since we create a stair-like structure
         private const int initialX = 1120; //in the auto layout, start in the top right
         private const int nextYOffset = 70; // Height of a single step in the UI
         private const int extraYOffset = 14; // More outputs require more space for routing

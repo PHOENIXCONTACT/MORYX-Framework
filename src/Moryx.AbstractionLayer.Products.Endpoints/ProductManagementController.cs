@@ -8,9 +8,10 @@ using Moryx.Tools;
 using Moryx.Serialization;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using Moryx.AbstractionLayer.Products.Endpoints.Properties;
+using Moryx.AbstractionLayer.Products.Endpoints.Properties;
 using Moryx.Configuration;
 using Moryx.Asp.Extensions;
-using Moryx.AbstractionLayer.Properties;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
@@ -117,7 +118,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var type = ReflectionTool.GetPublicClasses<ProductType>(t => t.Name == newTypeModel.Type)
                    .FirstOrDefault();
             if (type == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.TYPE_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.ProductManagementController_TypeNotFound });
             var productType = (ProductType)Activator.CreateInstance(type);
             var newType = _productConverter.ConvertProductBack(newTypeModel, productType);
             return _productManagement.SaveType(newType);
@@ -147,7 +148,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var productIdentity = new ProductIdentity(identityArray[0], Convert.ToInt16(identityArray[1]));
             var productType = _productManagement.LoadType(productIdentity);
             if (productType == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.TYPE_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.ProductManagementController_TypeNotFound });
             return new ProductModel[] { _productConverter.ConvertProduct(productType, false) };
         }
 
@@ -184,7 +185,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             {
             }
             if (productType == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.TYPE_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.ProductManagementController_TypeNotFound });
             return _productConverter.ConvertProduct(productType, false);
         }
 
@@ -197,7 +198,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             var result = _productManagement.DeleteProduct(id);
             if (!result)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.TYPE_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.ProductManagementController_TypeNotFound });
             return result;
         }
 
@@ -278,7 +279,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 return BadRequest($"Id was 0");
             var productInstance = _productManagement.GetInstance(id);
             if (productInstance == null)
-                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductNotFoundException_Message, id) });
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductManagementController_InstanceNotFound, id) });
             return _productConverter.ConvertProductInstance(productInstance);
         }
 
@@ -321,7 +322,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var type = ReflectionTool.GetPublicClasses<ProductType>(t => t.Name == instanceModel.Type)
                     .FirstOrDefault();
             if (type == null)
-                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductNotFoundException_Message, "null") });
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductManagementController_InstanceNotFound, "null") });
             var productType = (ProductType)Activator.CreateInstance(type);
             var productInstance = _productConverter.ConvertProductInstanceBack(instanceModel, productType);
             _productManagement.SaveInstance(productInstance);
@@ -342,7 +343,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 return BadRequest($"Id was 0");
             var recipe = _productManagement.LoadRecipe(id);
             if (recipe == null)
-                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.RecipeNotFoundException_Message, id) });
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductManagementController_RecipeNotFound, id) });
             return _productConverter.ConvertRecipeV2(recipe);
         }
 
@@ -359,7 +360,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var type = ReflectionTool.GetPublicClasses<IProductRecipe>(t => t.Name == recipe.Type)
                     .FirstOrDefault();
             if (type == null)
-                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.RecipeNotFoundException_Message, "null") });
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductManagementController_RecipeNotFound, "null") });
             var productRecipe = (IProductRecipe)Activator.CreateInstance(type);
             return _productManagement.SaveRecipe(_productConverter.ConvertRecipeBack(recipe, productRecipe, null));
         }

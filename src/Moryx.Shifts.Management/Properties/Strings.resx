@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ID_NOT_FOUND" xml:space="preserve">
+  <data name="ShiftManagementFacade_IdNotFoundExceptionMessage" xml:space="preserve">
     <value>There is no {0} that corresponds to the given id {1}</value>
   </data>
 </root>

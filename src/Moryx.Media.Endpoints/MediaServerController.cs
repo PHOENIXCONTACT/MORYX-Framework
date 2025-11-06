@@ -12,11 +12,11 @@ using System.Net;
 namespace Moryx.Media.Endpoints
 {
     /// <summary>
-    /// Definition of a REST API on the <see cref="INotificationPublisher"/> facade.
+    /// Definition of a REST API on the <see cref="IMediaServer"/> facade.
     /// </summary>
     [ApiController]
     [Route("api/moryx/media/")]
-    public partial class MediaServerController : ControllerBase
+    public class MediaServerController : ControllerBase
     {
         private readonly IMediaServer _mediaServer;
 
@@ -54,7 +54,7 @@ namespace Moryx.Media.Endpoints
 
             var content = _mediaServer.Get(parsedGuid);
             if (content is null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
 
             return MediaModelConverter.ConvertContent(content);
         }
@@ -73,7 +73,7 @@ namespace Moryx.Media.Endpoints
 
             var variant = _mediaServer.GetVariant(parsedGuid, variantName);
             if (variant is null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
 
             return variant;
         }
@@ -92,7 +92,7 @@ namespace Moryx.Media.Endpoints
 
             var variant = _mediaServer.GetVariant(parsedGuid, variantName);
             if (variant is null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
 
             if (string.IsNullOrEmpty(variant.FileHash) || string.IsNullOrEmpty(variant.MimeType))
                 return BadRequest();
@@ -105,7 +105,7 @@ namespace Moryx.Media.Endpoints
 
             var stream = _mediaServer.GetStream(usedDescriptor);
             if (stream is null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
 
             return new FileStreamResult(stream, usedDescriptor.MimeType)
             {
@@ -160,7 +160,7 @@ namespace Moryx.Media.Endpoints
                 return BadRequest($"Invalid guid {contentId}");
 
             if (_mediaServer.Get(parsedGuid) is null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
 
             if (formFile.Length > 0)
             {
@@ -197,7 +197,7 @@ namespace Moryx.Media.Endpoints
                 return BadRequest();
 
             if (!_mediaServer.RemoveContent(parsedGuid))
-                return NotFound(new MoryxExceptionResponse { Title = Strings.NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
 
             return Ok();
         }
@@ -214,7 +214,7 @@ namespace Moryx.Media.Endpoints
                 return BadRequest();
 
             if (!_mediaServer.RemoveVariant(parsedGuid, variantName))
-                return NotFound(new MoryxExceptionResponse { Title = Strings.NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
 
             return Ok();
         }

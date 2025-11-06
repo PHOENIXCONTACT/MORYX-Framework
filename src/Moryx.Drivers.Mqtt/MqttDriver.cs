@@ -18,7 +18,7 @@ using Microsoft.Extensions.Logging;
 using MQTTnet.Protocol;
 using Moryx.Configuration;
 using System.Security.Claims;
-using Moryx.Drivers.Mqtt.Localizations;
+using Moryx.Drivers.Mqtt.Properties;
 using System.ComponentModel.DataAnnotations;
 
 namespace Moryx.Drivers.Mqtt;
@@ -27,7 +27,7 @@ namespace Moryx.Drivers.Mqtt;
 /// Driver, which is able to subscribe several MQTT Topics referenced as Channels
 /// </summary>
 [ResourceRegistration]
-[Display(Name = nameof(Strings.MQTT_DRIVER), Description = nameof(Strings.MQTT_DRIVER_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+[Display(Name = nameof(Strings.MqttDriver_DisplayName), Description = nameof(Strings.MqttDriver_Description), ResourceType = typeof(Strings))]
 public class MqttDriver : Driver, IMessageDriver<object>
 {
     private string _clientId;
@@ -45,7 +45,7 @@ public class MqttDriver : Driver, IMessageDriver<object>
     /// String representation of <see cref="Driver.CurrentState"/>
     /// </summary>
     [EntrySerialize]
-    [Display(Name = nameof(Strings.DRIVER_STATE), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.MqttDriver_DriverState), ResourceType = typeof(Strings))]
     public string DriverState => CurrentState?.ToString() ?? string.Empty;
 
     /// <summary>
@@ -57,63 +57,63 @@ public class MqttDriver : Driver, IMessageDriver<object>
     /// Name of the Root Topic
     /// </summary>
     [EntrySerialize, DataMember, DefaultValue("root/")]
-    [Display(Name = nameof(Strings.ROOT_TOPIC), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.MqttDriver_Identifier), ResourceType = typeof(Strings))]
     public string Identifier { get; set; }
 
     /// <summary>
     /// URL or IP-Address of the MQTT Broker
     /// </summary>
     [EntrySerialize, DataMember, DefaultValue("127.0.0.1")]
-    [Display(Name = nameof(Strings.HOST_ADDRESS), Description = nameof(Strings.BROOKER_URL_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
-    public string BrokerURL { get; set; }
+    [Display(Name = nameof(Strings.MqttDriver_BrokerUrl), Description = nameof(Strings.MqttDriver_BrokerUrl_Description), ResourceType = typeof(Strings))]
+    public string BrokerUrl { get; set; }
 
     /// <summary>
     /// Port of the MQTT Broker
     /// </summary>
     [EntrySerialize, DataMember, DefaultValue(1883)]
-    [Display(Description = nameof(Strings.PORT_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Description = nameof(Strings.MqttDriver_Port_Description), ResourceType = typeof(Strings))]
     public int Port { get; set; }
 
     /// <summary>
     /// Port of the MQTT Broker
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.USE_TLS), Description = nameof(Strings.USE_TLS_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.MqttDriver_UseTls), Description = nameof(Strings.MqttDriver_UseTls_Description), ResourceType = typeof(Strings))]
     public bool UseTls { get; set; }
 
     /// <summary>
     /// Port of the MQTT Broker
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.USERNAME), Description = nameof(Strings.USERNAME_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.MqttDriver_Username), Description = nameof(Strings.MqttDriver_Username_Description), ResourceType = typeof(Strings))]
     public string Username { get; set; }
 
     /// <summary>
     /// Port of the MQTT Broker
     /// </summary>
     [EntrySerialize, DataMember, Password]
-    [Display(Name = nameof(Strings.PASSWORD), Description = nameof(Strings.PASSWORD_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.MqttDriver_Password), Description = nameof(Strings.MqttDriver_Password_Description), ResourceType = typeof(Strings))]
     public string Password { get; set; }
 
     /// <summary>
     /// Version of the MQTT-Protocol
     /// </summary>
     [EntrySerialize, DataMember, DefaultValue(MqttProtocolVersion.V311)]
-    [Display(Name = nameof(Strings.MQTT_VERSION), Description = nameof(Strings.MQTT_VERSION_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.MqttDriver_MqttVersion), Description = nameof(Strings.MqttDriver_MqttVersion_Description), ResourceType = typeof(Strings))]
     public MqttProtocolVersion MqttVersion { get; set; }
 
     /// <summary>
     /// MQTT Quality of service for sent messages
     /// </summary>
     [EntrySerialize, DataMember, DefaultValue(nameof(MqttQualityOfServiceLevel.ExactlyOnce)), MqttQoS]
-    [Display(Name = nameof(Strings.QUALITY_OF_SERVICE), Description = nameof(Strings.QUALITY_OF_SERVICE_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.MqttDriver_QualityOfService), Description = nameof(Strings.MqttDriver_QualityOfService_Description), ResourceType = typeof(Strings))]
     public string QualityOfService { get; set; }
 
     /// <summary>
     /// Configure whether we reconnect with clean session
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.RECONNECT_CLEAN_SESSION), Description = nameof(Strings.RECONNECT_CLEAN_SESSION_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.MqttDriver_ReconnectWithoutCleanSession), Description = nameof(Strings.MqttDriver_ReconnectWithoutCleanSession_Description), ResourceType = typeof(Strings))]
     public bool ReconnectWithoutCleanSession { get; set; }
 
     /// <summary>
@@ -126,7 +126,7 @@ public class MqttDriver : Driver, IMessageDriver<object>
     /// Delay for opening a new connection after error induced reconnect
     /// </summary>
     [EntrySerialize, DataMember, DefaultValue(100)]
-    [Display(Name = nameof(Strings.RECONNECT_DELAY_MS), Description = nameof(Strings.RECONNECT_DELAY_MS_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.MqttDriver_ReconnectDelayMs), Description = nameof(Strings.MqttDriver_ReconnectDelayMs_Description), ResourceType = typeof(Strings))]
     public int ReconnectDelayMs { get; set; }
 
     #endregion
@@ -227,7 +227,7 @@ public class MqttDriver : Driver, IMessageDriver<object>
         _clientId = $"{System.Net.Dns.GetHostName()}-{Id}-{Name}";
         var optionsBuilder = new MqttClientOptionsBuilder()
                             .WithClientId(_clientId)
-                            .WithTcpServer(BrokerURL, Port)
+                            .WithTcpServer(BrokerUrl, Port)
                             .WithTlsOptions(new MqttClientTlsOptions() { UseTls = UseTls })
                             .WithCleanSession(!ReconnectWithoutCleanSession);
 

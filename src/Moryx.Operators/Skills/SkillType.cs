@@ -35,7 +35,7 @@ public class SkillType(string name, ICapabilities acquiredCapabilities) : IPersi
     /// <summary>
     /// Capabilities acquired with this skill type.
     /// </summary>
-    [Display(Name = nameof(Strings.ACQUIRES_CAPABILITIES), ResourceType = typeof(Strings))]
+    [Display(Name = nameof(Strings.SkillType_AcquiresCapabilities), ResourceType = typeof(Strings))]
     public ICapabilities AcquiredCapabilities { get; set; } = acquiredCapabilities;
 }
 

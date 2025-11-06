@@ -10,13 +10,14 @@ using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+using Moryx.Operators.Localizations;
 
 namespace Moryx.Operators.Skills;
 
 /// <summary>
 /// The simplest possible resource to be used for operator assignements implementing the <see cref="IOperatorAssignable"/> interface.
 /// </summary>
-[Display(Name = nameof(Strings.ATTENDABLE_RESOURCE_TITLE), Description = nameof(Strings.ATTENDABLE_RESOURCE_DESCRIPTION), ResourceType = typeof(Strings))]
+[Display(Name = nameof(Strings.AttendableResource_DisplayName), Description = nameof(Strings.AttendableResource_Description), ResourceType = typeof(Strings))]
 public class AttendableResource : Resource, IOperatorAssignable
 {
     private static readonly IReadOnlyCollection<Type> _capabilityTypes = ReflectionTool.GetPublicClasses<ICapabilities>()
@@ -39,7 +40,7 @@ public class AttendableResource : Resource, IOperatorAssignable
     /// <summary>
     /// Entry serialized property to configure the required skill for this resource
     /// </summary>
-    [Display(Name = nameof(Strings.SKILLNAME), Description = nameof(Strings.SKILLNAME_DESCRIPTION), ResourceType = typeof(Strings))]
+    [Display(Name = nameof(Strings.AttendableResource_ConfiguredRequiredSkill_DisplayName), Description = nameof(Strings.AttendableResource_ConfiguredRequiredSkill_Description), ResourceType = typeof(Strings))]
     [EntrySerialize, DataMember, PossibleTypes(typeof(ICapabilities))]
     public string ConfiguredRequiredSkill
     {

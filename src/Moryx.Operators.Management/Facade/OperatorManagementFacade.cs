@@ -48,7 +48,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     {
         ArgumentNullException.ThrowIfNull(@operator);
         if (string.IsNullOrEmpty(@operator.Identifier))
-            throw new ArgumentException(string.Format(Strings.NOT_NULL, nameof(Operator.Identifier)));
+            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_NotNullExceptionMessage, nameof(Operator.Identifier)));
         if (Operators.Any(o => o.Identifier == @operator.Identifier))
             throw new AlreadyExistsException(@operator.Identifier);
         return @operator;
@@ -62,9 +62,9 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     private string VerifiedExisting(string identifier)
     {
         if (string.IsNullOrEmpty(identifier))
-            throw new ArgumentException(string.Format(Strings.NOT_NULL, nameof(Operator.Identifier)));
+            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_NotNullExceptionMessage, nameof(Operator.Identifier)));
         if (!Operators.Any(o => o.Identifier == identifier))
-            throw new ArgumentException(string.Format(Strings.REFERENCE_NOT_FOUND, nameof(Operator), identifier));
+            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), identifier));
         return identifier;
     }
 
@@ -72,7 +72,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         => OperatorManager.Update(VerifiedKnown(@operator));
 
     private Operator VerifiedKnown(Operator @operator) => Operators.Any(o => o.Identifier == @operator.Identifier) ? @operator :
-            throw new ArgumentException(string.Format(Strings.REFERENCE_NOT_FOUND, nameof(Operator), @operator.Identifier));
+            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), @operator.Identifier));
 
     public event EventHandler<OperatorChangedEventArgs>? OperatorChanged;
 
@@ -108,7 +108,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
 
     private OperatorData VerifiedExisting(AssignableOperator @operator)
         => OperatorManager.Operators.SingleOrDefault(o => o.Identifier == @operator.Identifier) ??
-            throw new ArgumentException(string.Format(Strings.REFERENCE_NOT_FOUND, nameof(Operator), @operator.Identifier));
+            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), @operator.Identifier));
 
     public void SignOut(AssignableOperator @operator, IOperatorAssignable resource)
     {
@@ -152,7 +152,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     private SkillCreationContext Verified(SkillCreationContext context)
     {
         context.Type = SkillTypes.SingleOrDefault(t => t.Id == context.Type?.Id) ??
-            throw new ArgumentException(string.Format(Strings.REFERENCE_NOT_FOUND, nameof(SkillType), context.Type.Id));
+            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), context.Type.Id));
         return context;
     }
 
@@ -163,7 +163,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     }
 
     private Skill VerifiedSkill(long id) => SkillManager.Skills.SingleOrDefault(s => s.Id == id) ??
-            throw new ArgumentException(string.Format(Strings.REFERENCE_NOT_FOUND, nameof(Skill), id));
+            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Skill), id));
 
     public SkillType CreateSkillType(SkillTypeCreationContext context)
     {
@@ -182,7 +182,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     private SkillType Verified(SkillType type)
     {
         if (SkillTypes.SingleOrDefault(t => t.Id == type.Id) is null)
-            throw new ArgumentException(string.Format(Strings.REFERENCE_NOT_FOUND, nameof(SkillType), type.Id));
+            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), type.Id));
         return type;
     }
 
@@ -193,7 +193,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
     }
 
     private SkillType VerifiedType(long id) => SkillManager.SkillTypes.SingleOrDefault(t => t.Id == id) ??
-            throw new ArgumentException(string.Format(Strings.REFERENCE_NOT_FOUND, nameof(SkillType), id));
+            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(SkillType), id));
 
     public event EventHandler<SkillChangedEventArgs>? SkillChanged;
 
@@ -232,7 +232,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
 
     private OperatorData VerifiedExisting(User user)
         => OperatorManager.Operators.SingleOrDefault(o => o.Identifier == user.Identifier) ??
-            throw new ArgumentException(string.Format(Strings.REFERENCE_NOT_FOUND, nameof(Operator), user.Identifier));
+            throw new ArgumentException(string.Format(Strings.OperatorManagementFacade_ReferenceNotFoundExceptionMessage, nameof(Operator), user.Identifier));
 
     /// <inheritdoc/>
     public void SignOut(User user)

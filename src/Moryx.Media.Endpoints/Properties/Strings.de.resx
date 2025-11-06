@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="NOT_FOUND" xml:space="preserve">
+  <data name="MediaServerController_MediaNotFound" xml:space="preserve">
     <value>Die Mediendatei konnte nicht gefunden werden</value>
   </data>
 </root>
