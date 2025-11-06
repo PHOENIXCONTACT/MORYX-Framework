@@ -66,9 +66,9 @@ namespace Moryx.Orders.Management
             OperationStarted?.Invoke(this, new OperationStartedEventArgs(e.OperationData.Operation, e.User));
         }
 
-        private void OnOperationInterrupted(object sender, ReportEventArgs e)
+        private void OnOperationInterrupted(object sender, OperationEventArgs e)
         {
-            OperationInterrupted?.Invoke(this, new OperationReportEventArgs(e.OperationData.Operation, e.Report));
+            OperationInterrupted?.Invoke(this, new OperationChangedEventArgs(e.OperationData.Operation));
         }
 
         private void OnOperationCompleted(object sender, ReportEventArgs e)
@@ -257,15 +257,17 @@ namespace Moryx.Orders.Management
             return OperationManager.GetInterruptContext(operationData);
         }
 
-        public void InterruptOperation(Operation operation, OperationReport report)
+        public void InterruptOperation(Operation operation)
+        {
+            InterruptOperation(operation, UserManagement.DefaultUser);
+        }
+
+        public void InterruptOperation(Operation operation, User user)
         {
             ValidateHealthState();
 
-            // Get default user if there is no in the report
-            report.User ??= UserManagement.DefaultUser;
-
             var operationData = GetOperationDataSave(operation);
-            OperationManager.Interrupt(operationData, report);
+            OperationManager.Interrupt(operationData, user);
         }
 
         private IOperationData GetOperationDataSave(Operation operation)
@@ -332,7 +334,7 @@ namespace Moryx.Orders.Management
 
         public event EventHandler<OperationReportEventArgs> OperationCompleted;
 
-        public event EventHandler<OperationReportEventArgs> OperationInterrupted;
+        public event EventHandler<OperationChangedEventArgs> OperationInterrupted;
 
         public event EventHandler<OperationReportEventArgs> OperationPartialReport;
 

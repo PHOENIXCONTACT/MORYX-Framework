@@ -68,7 +68,7 @@ namespace Moryx.Orders.Endpoints
             var updateEventHandler = new EventHandler<OperationChangedEventArgs>((_, eventArgs) =>
             {
                 var json = JsonConvert.SerializeObject(Converter.ToModel(eventArgs.Operation), _serializerSettings);
-                operationsChannel.Writer.TryWrite(new Tuple<string, string>(OperationTypes.Update.ToString(), json));
+                operationsChannel.Writer.TryWrite(new Tuple<string, string>(nameof(OperationTypes.Update), json));
             });
             _orderManagement.OperationUpdated += updateEventHandler;
 
@@ -80,7 +80,7 @@ namespace Moryx.Orders.Endpoints
                     Advice = Converter.ToModel(eventArgs.Advice)
                 };
                 var json = JsonConvert.SerializeObject(advicedOperation, _serializerSettings);
-                operationsChannel.Writer.TryWrite(new Tuple<string, string>(OperationTypes.Advice.ToString(), json));
+                operationsChannel.Writer.TryWrite(new Tuple<string, string>(nameof(OperationTypes.Advice), json));
             });
             _orderManagement.OperationAdviced += adviceEventHandler;
 
@@ -92,19 +92,14 @@ namespace Moryx.Orders.Endpoints
                     Report = Converter.ToModel(eventArgs.Report)
                 };
                 var json = JsonConvert.SerializeObject(reportedOperation, _serializerSettings);
-                operationsChannel.Writer.TryWrite(new Tuple<string, string>(OperationTypes.Report.ToString(), json));
+                operationsChannel.Writer.TryWrite(new Tuple<string, string>(nameof(OperationTypes.Report), json));
             });
             _orderManagement.OperationPartialReport += reportEventHandler;
 
-            var interruptedEventHandler = new EventHandler<OperationReportEventArgs>((_, eventArgs) =>
+            var interruptedEventHandler = new EventHandler<OperationChangedEventArgs>((_, eventArgs) =>
             {
-                var interruptedOperation = new OperationReportedModel
-                {
-                    OperationModel = Converter.ToModel(eventArgs.Operation),
-                    Report = Converter.ToModel(eventArgs.Report)
-                };
-                var json = JsonConvert.SerializeObject(interruptedOperation, _serializerSettings);
-                operationsChannel.Writer.TryWrite(new Tuple<string, string>(OperationTypes.Interrupted.ToString(), json));
+                var json = JsonConvert.SerializeObject(Converter.ToModel(eventArgs.Operation), _serializerSettings);
+                operationsChannel.Writer.TryWrite(new Tuple<string, string>(nameof(OperationTypes.Interrupted), json));
             });
             _orderManagement.OperationInterrupted += interruptedEventHandler;
 
@@ -116,7 +111,7 @@ namespace Moryx.Orders.Endpoints
                     Report = Converter.ToModel(eventArgs.Report)
                 };
                 var json = JsonConvert.SerializeObject(completedOperation, _serializerSettings);
-                operationsChannel.Writer.TryWrite(new Tuple<string, string>(OperationTypes.Completed.ToString(), json));
+                operationsChannel.Writer.TryWrite(new Tuple<string, string>(nameof(OperationTypes.Completed), json));
             });
             _orderManagement.OperationCompleted += completedEventHandler;
 
@@ -128,14 +123,14 @@ namespace Moryx.Orders.Endpoints
                     UserId = eventArgs.User.Identifier
                 };
                 var json = JsonConvert.SerializeObject(startedOperation, _serializerSettings);
-                operationsChannel.Writer.TryWrite(new Tuple<string, string>(OperationTypes.Start.ToString(), json));
+                operationsChannel.Writer.TryWrite(new Tuple<string, string>(nameof(OperationTypes.Start), json));
             });
             _orderManagement.OperationStarted += startedEventHandler;
 
             var changedEventHandler = new EventHandler<OperationChangedEventArgs>((_, eventArgs) =>
             {
                 var json = JsonConvert.SerializeObject(Converter.ToModel(eventArgs.Operation), _serializerSettings);
-                operationsChannel.Writer.TryWrite(new Tuple<string, string>(OperationTypes.Progress.ToString(), json));
+                operationsChannel.Writer.TryWrite(new Tuple<string, string>(nameof(OperationTypes.Progress), json));
             });
             _orderManagement.OperationProgressChanged += changedEventHandler;
 
@@ -424,13 +419,15 @@ namespace Moryx.Orders.Endpoints
         [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
         [Route("{guid}/interrupt")]
         [Authorize(Policy = OrderPermissions.CanInterrupt)]
-        public ActionResult InterruptOperation(Guid guid, ReportModel report)
+        public ActionResult InterruptOperation(Guid guid, string userIdentifier)
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
-            _orderManagement.InterruptOperation(operation, Converter.FromModel(report, _userManagement));
+            var user = _userManagement?.GetUser(userIdentifier);
+
+            _orderManagement.InterruptOperation(operation, user);
             return Ok();
         }
 

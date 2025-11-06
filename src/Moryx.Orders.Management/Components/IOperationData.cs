@@ -139,7 +139,8 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Disables an operation which leads to complete all jobs
         /// </summary>
-        void Interrupt(OperationReport report);
+        /// <param name="user"></param>
+        void Interrupt(User user);
 
         /// <summary>
         /// Will do a report for the operation.
@@ -195,7 +196,7 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Raised if the operation was interrupted
         /// </summary>
-        event EventHandler<ReportEventArgs> Interrupted;
+        event EventHandler<OperationEventArgs> Interrupted;
 
         /// <summary>
         /// Raised if the operation was completed

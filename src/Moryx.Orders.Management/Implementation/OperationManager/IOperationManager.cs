@@ -45,7 +45,7 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Interrupts the given operation
         /// </summary>
-        void Interrupt(IOperationData operationData, OperationReport report);
+        void Interrupt(IOperationData operationData, User user);
 
         /// <summary>
         /// Aborts the given operation

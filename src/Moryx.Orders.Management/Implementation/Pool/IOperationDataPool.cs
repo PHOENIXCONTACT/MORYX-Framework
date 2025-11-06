@@ -68,7 +68,7 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Raised if an operation was interrupted
         /// </summary>
-        event EventHandler<ReportEventArgs> OperationInterrupted;
+        event EventHandler<OperationEventArgs> OperationInterrupted;
 
         /// <summary>
         /// Raised if an operation was partially reported

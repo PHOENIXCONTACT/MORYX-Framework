@@ -426,18 +426,12 @@ namespace Moryx.Orders.Management.Tests
             // Arrange
             var operationData = GetRunningOperation(10, false, 10, 10);
 
-            var partialReportRaised = false;
-            operationData.PartialReport += (_, _) => partialReportRaised = true;
-
-            var report = new OperationReport(ConfirmationType.Partial, 0, 0, User);
-
             // Act
-            operationData.Interrupt(report);
+            operationData.Interrupt();
 
             // Assert
             // We should now be interrupting
             JobHandlerMock.Verify(d => d.Complete(operationData), Times.Once);
-            Assert.That(partialReportRaised);
             Assert.That(operationData.State.CanBegin);
             Assert.That(operationData.State.CanPartialReport);
             Assert.That(operationData.State.CanFinalReport, Is.False);
@@ -451,7 +445,6 @@ namespace Moryx.Orders.Management.Tests
             // Arrange
             var operationData = GetInterruptingOperation(10, false, 10, 10);
             var initialJob = operationData.Operation.Jobs.First();
-            var report = new OperationReport(ConfirmationType.Partial, 0, 0, User);
 
             // Act
             initialJob.SuccessCount = initialJob.Amount;
@@ -461,7 +454,7 @@ namespace Moryx.Orders.Management.Tests
 
             // Assert
             Assert.That(operationData.State.CanInterrupt, Is.False);
-            Assert.Throws<InvalidOperationException>(() => operationData.Interrupt(report));
+            Assert.Throws<InvalidOperationException>(() => operationData.Interrupt());
         }
     }
 }

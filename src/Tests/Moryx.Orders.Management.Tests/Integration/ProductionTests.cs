@@ -192,7 +192,7 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Runs a full production of a operation. At the end, a final report will be executed.")]
-        [Ignore("This test takes very long and should be moved into an integration test.")]
+        [Ignore("This test takes very long should be fixed!")]
         public void SimpleCompletedProduction()
         {
             const int amount = 10;

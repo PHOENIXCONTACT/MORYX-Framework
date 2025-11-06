@@ -124,7 +124,7 @@ namespace Moryx.Orders.Management.Tests
                 ModuleConfig = new ModuleConfig()
                 //Order and Operation must be set automatically during OperationData.Initialize!
                 //Removed for OperationDataRestoreTests.RestoreAmountReached()
-                //OrderData = orderdata, 
+                //OrderData = orderdata,
                 //Operation = { Number = "0010" }
             };
         }
@@ -149,9 +149,8 @@ namespace Moryx.Orders.Management.Tests
         internal IOperationData GetInterruptingOperation(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
         {
             var operationData = GetRunningOperation(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
-            var report = new OperationReport(ConfirmationType.Partial, 0, 0, User);
 
-            operationData.Interrupt(report);
+            operationData.Interrupt();
 
             return operationData;
         }
@@ -174,8 +173,7 @@ namespace Moryx.Orders.Management.Tests
             var operationData = GetAmountReachedOperation(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
 
             // Interrupt
-            var report = new OperationReport(ConfirmationType.Partial, 5, 5, User);
-            operationData.Interrupt(report);
+            operationData.Interrupt();
 
             return operationData;
         }

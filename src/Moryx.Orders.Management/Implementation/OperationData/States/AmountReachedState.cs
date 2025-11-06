@@ -54,21 +54,10 @@ namespace Moryx.Orders.Management
             Context.HandleIncreaseTargetBy(amount);
         }
 
-        public override void Interrupt(OperationReport report)
+        public override void Interrupt(User user)
         {
-            switch (report.ConfirmationType)
-            {
-                case ConfirmationType.Final:
-                    NextState(StateCompleted);
-                    Context.HandleCompleted(report);
-                    break;
-                case ConfirmationType.Partial:
-                    NextState(StateInterrupted);
-                    Context.HandleManualInterrupted(report);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(report.ConfirmationType), report.ConfirmationType, null);
-            }
+            NextState(StateInterrupted);
+            Context.HandleManualInterrupted();
         }
 
         public override ReportContext GetReportContext()
