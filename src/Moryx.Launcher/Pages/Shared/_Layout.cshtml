@@ -154,8 +154,8 @@
                             var activeClass = isActive ? "active tw-border-primary-600" : "tw-border-transparent";
                             var route = cookie == null || isActive ? $"/{item.Route}" : cookie;
                             <li class="tw-group tw-relative tw-w-full hover:tw-cursor-pointer hover:tw-bg-primary-200
-                                                                    hover:tw-text-primary-600
-                                                                                tw-border-l-4 hover:tw-rounded tw-p-1 @(activeClass) ">
+                                                                        hover:tw-text-primary-600
+                                                                                    tw-border-l-4 hover:tw-rounded tw-p-1 @(activeClass) ">
                                 <a class="tw-flex tw-flex-row tw-items-center 2xl:tw-justify-start tw-p-1 tw-w-full" href="@(route)">
                                     @if (item is WebModuleItem webModuleItem && !isActive && !string.IsNullOrEmpty(webModuleItem.EventStream))
                                     {
@@ -165,7 +165,7 @@
                                     <span class="tw-font-semibold tw-hidden 2xl:tw-block">@item.Title</span>
                                 </a>
                                 <p class="tw-align-middle tw-hidden 2xl:group-hover:tw-hidden tw-absolute group-hover:tw-block tw-bg-primary-600  tw-min-w-full tw-p-2 tw-text-white tw-text-nowrap tw-z-100
-                                                                            tw-top-0 tw-left-full tw-ml-2 tw-pl-3 tw-rounded-md tw-truncate">@item.Title</p>
+                                                                                tw-top-0 tw-left-full tw-ml-2 tw-pl-3 tw-rounded-md tw-truncate">@item.Title</p>
                             </li>
                         }
                         <li class="tw-invisible tw-h-6 tw-pt-10 tw-text-sm tw-font-thin"></li>

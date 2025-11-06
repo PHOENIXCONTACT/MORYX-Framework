@@ -276,8 +276,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             value.Product = part.Product is null ? null : _productManagement.LoadType(part.Product.Id);
         }
 
-        [Obsolete("Use ConvertRecipe on instance")]
-        public static RecipeModel ConvertRecipe(IRecipe recipe) => ConvertRecipe(recipe, new PartialSerialization<ProductionRecipe>(null, null));
+        public RecipeModel ConvertRecipe(IRecipe recipe) => ConvertRecipe(recipe, _recipeSerialization);
 
         private static RecipeModel ConvertRecipe(IRecipe recipe, ICustomSerialization serialization)
         {
