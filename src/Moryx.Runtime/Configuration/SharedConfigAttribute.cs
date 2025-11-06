@@ -23,10 +23,6 @@ namespace Moryx.Runtime.Configuration
         /// <summary>
         /// Flag if the injected object shall be a copy
         /// </summary>
-        public bool UseCopy
-        {
-            get;
-            private set;
-        }
+        public bool UseCopy { get; private set; }
     }
 }

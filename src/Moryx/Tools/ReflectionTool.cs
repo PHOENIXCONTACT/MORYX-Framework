@@ -16,7 +16,7 @@ namespace Moryx.Tools
         /// </summary>
         public static bool TestMode { get; set; }
 
-        private static readonly Lazy<Assembly[]> RelevantAssemblies = new(LoadAssemblies, LazyThreadSafetyMode.ExecutionAndPublication);
+        private static readonly Lazy<Assembly[]> _relevantAssemblies = new(LoadAssemblies, LazyThreadSafetyMode.ExecutionAndPublication);
         /// <summary>
         /// Load assemblies
         /// </summary>
@@ -39,18 +39,18 @@ namespace Moryx.Tools
         /// </summary>
         public static Assembly[] GetAssemblies()
         {
-            return RelevantAssemblies.Value;
+            return _relevantAssemblies.Value;
         }
 
-        private static readonly Lazy<Type[]> PublicClasses = new(LoadPublicClasses, LazyThreadSafetyMode.ExecutionAndPublication);
+        private static readonly Lazy<Type[]> _publicClasses = new(LoadPublicClasses, LazyThreadSafetyMode.ExecutionAndPublication);
         /// <summary>
         /// Load all public classes
         /// </summary>
         private static Type[] LoadPublicClasses()
         {
             // Assume 30 exports per assembly for initial size
-            var publicClasses = new List<Type>(RelevantAssemblies.Value.Length * 30);
-            foreach (var assembly in RelevantAssemblies.Value)
+            var publicClasses = new List<Type>(_relevantAssemblies.Value.Length * 30);
+            foreach (var assembly in _relevantAssemblies.Value)
             {
                 try
                 {
@@ -97,7 +97,7 @@ namespace Moryx.Tools
         /// </summary>
         public static Type[] GetPublicClasses(Type baseType, Predicate<Type> filter)
         {
-            return (from publicClass in PublicClasses.Value
+            return (from publicClass in _publicClasses.Value
                     where baseType.IsAssignableFrom(publicClass) && filter(publicClass)
                     select publicClass).ToArray();
         }

@@ -16,9 +16,9 @@ namespace Moryx.Runtime.Kernel;
 /// </summary>
 public class MoryxHost : BackgroundService
 {
-    private readonly IModuleManager moduleManager;
-    private readonly IHost lifeTime;
-    private readonly ILogger<MoryxHost> logger;
+    private readonly IModuleManager _moduleManager;
+    private readonly IHost _lifeTime;
+    private readonly ILogger<MoryxHost> _logger;
 
     /// <summary>
     /// Console shutdown handling according to https://stackoverflow.com/questions/21751545/how-to-make-a-console-app-exit-gracefully-when-it-is-closed
@@ -30,7 +30,7 @@ public class MoryxHost : BackgroundService
     public static extern bool SetConsoleCtrlHandler(HandlerRoutine Handler, bool Add);
 
     /// <summary>
-    /// A delegate type to be used as the handler routine 
+    /// A delegate type to be used as the handler routine
     /// for SetConsoleCtrlHandler.
     /// </summary>
     /// <param name="CtrlType"></param>
@@ -58,11 +58,11 @@ public class MoryxHost : BackgroundService
     private bool ConsoleCtrlCheck(CtrlTypes ctrlType)
     {
         // Stop the host and await shutdown.
-        lifeTime.StopAsync(TimeSpan.FromSeconds(100)).ContinueWith(task =>
+        _lifeTime.StopAsync(TimeSpan.FromSeconds(100)).ContinueWith(task =>
         {
             if (task.IsFaulted)
             {
-                logger.LogError(task.Exception, "Received failure on shutdown.");
+                _logger.LogError(task.Exception, "Received failure on shutdown.");
             }
         }).Wait();
         return true;
@@ -76,13 +76,13 @@ public class MoryxHost : BackgroundService
     /// <param name="logger">Logger for diagnostic messages</param>
     public MoryxHost(IModuleManager moduleManager, IHost lifeTime, ILogger<MoryxHost> logger)
     {
-        this.moduleManager = moduleManager;
-        this.lifeTime = lifeTime;
-        this.logger = logger;
+        this._moduleManager = moduleManager;
+        this._lifeTime = lifeTime;
+        this._logger = logger;
     }
 
     /// <summary>
-    /// State of the MoryxHost 
+    /// State of the MoryxHost
     /// </summary>
     public MoryxHostState State { get; private set; }
 
@@ -102,7 +102,7 @@ public class MoryxHost : BackgroundService
         {
             SetConsoleCtrlHandler(ConsoleCtrlCheck, true);
         }
-        moduleManager.StartModules();
+        _moduleManager.StartModules();
 
         await base.StartAsync(cancellationToken);
 
@@ -123,7 +123,7 @@ public class MoryxHost : BackgroundService
         State = MoryxHostState.Stopping;
         StateChanged?.Invoke(this, State);
 
-        moduleManager.StopModules();
+        _moduleManager.StopModules();
 
         await base.StopAsync(cancellationToken);
 
