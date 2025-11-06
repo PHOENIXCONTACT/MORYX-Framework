@@ -8,40 +8,8 @@ namespace Moryx.Tools
     /// <summary>
     /// Static helper to attach to the unhandled exception event
     /// </summary>
-    public static class CrashHandler
+    internal static class CrashHandler
     {
-        /// <summary>
-        /// Handle an uncaught app domain exception by writing a last crash report
-        /// </summary>
-        public static void HandleCrash(object sender, UnhandledExceptionEventArgs e)
-        {
-            // Build crash Text
-            string crashText;
-            try
-            {
-                crashText = ExceptionPrinter.Print((Exception)e.ExceptionObject);
-            }
-            catch
-            {
-                var ex = e.ExceptionObject as Exception;
-                crashText = "Someone actually threw an exception in the exception: \n" +
-                            $"  Type of trojan exception: {e.ExceptionObject.GetType()}\n" +
-                            $"  Original stack trace: \n{(ex == null ? "Exception does not inherit System.Exception" : ex.StackTrace)}";
-            }
-
-            // First dump to console
-            Console.WriteLine(crashText);
-
-            // Dump to file
-            WriteErrorToFile(crashText);
-
-            if (e.IsTerminating && !Debugger.IsAttached)
-            {
-                Console.ReadLine();
-                Environment.Exit(2);
-            }
-        }
-
         /// <summary>
         /// Write an exception message to a file in the CrashLogs directory
         /// </summary>

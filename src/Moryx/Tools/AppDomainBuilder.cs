@@ -29,7 +29,7 @@ namespace Moryx.Tools
                 catch (Exception ex)
                 {
                     var loadEx = new FileLoadException("Failed to load assembly file " + assemblyFile, ex);
-                    Console.WriteLine(ExceptionPrinter.Print(loadEx));
+                    Console.WriteLine(loadEx.ToString());
                 }
             }
         }

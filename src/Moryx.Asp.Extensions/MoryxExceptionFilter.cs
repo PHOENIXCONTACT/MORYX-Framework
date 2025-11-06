@@ -12,7 +12,7 @@ namespace Moryx.Asp.Extensions
         public void OnException(ExceptionContext context)
         {
             context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            string headers = string.Join(" \r\n ", context.HttpContext.Request.Headers.Select(h => $"{h.Key}: {h.Value}"));
+            var headers = string.Join(" \r\n ", context.HttpContext.Request.Headers.Select(h => $"{h.Key}: {h.Value}"));
             context.Result = new ObjectResult(new MoryxExceptionResponse
             {
                 Title = "500 - Internal Server Error",
