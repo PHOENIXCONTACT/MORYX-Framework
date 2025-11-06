@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Resources;
@@ -86,7 +85,7 @@ namespace Moryx.ControlSystem.Simulator
             lock (_movements)
             {
                 nextActivity = ProcessControl.RunningProcesses
-                    .Where(p => _movements.All(m => m.Process.Id != p.Id)) // No processes in transit                                 
+                    .Where(p => _movements.All(m => m.Process.Id != p.Id)) // No processes in transit
                     .Select(p => new
                     {
                         Activity = p.NextActivity(),

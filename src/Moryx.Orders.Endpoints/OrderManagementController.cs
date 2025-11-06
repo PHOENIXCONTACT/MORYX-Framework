@@ -13,7 +13,6 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Threading.Channels;
 using Moryx.Orders.Endpoints.Models;
-using Moryx.Orders.Endpoints.Properties;
 
 namespace Moryx.Orders.Endpoints
 {

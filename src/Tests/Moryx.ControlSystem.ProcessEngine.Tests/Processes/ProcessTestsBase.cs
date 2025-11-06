@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Processes;

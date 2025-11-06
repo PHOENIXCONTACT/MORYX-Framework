@@ -3,9 +3,7 @@
 
 using System.ComponentModel;
 using System.Data.Common;
-using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Moryx.Model.Configuration;
 using Npgsql;
 

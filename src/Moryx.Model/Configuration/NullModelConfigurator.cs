@@ -3,7 +3,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Moryx.Configuration;
 
 namespace Moryx.Model.Configuration
 {

@@ -4,7 +4,6 @@
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.ControlSystem.Cells;
 using Moryx.StateMachines;

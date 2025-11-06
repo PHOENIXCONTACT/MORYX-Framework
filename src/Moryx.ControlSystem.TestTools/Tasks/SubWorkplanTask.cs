@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Workplans;
 using Moryx.ControlSystem.TestTools.Activities;
 using Moryx.Workplans;

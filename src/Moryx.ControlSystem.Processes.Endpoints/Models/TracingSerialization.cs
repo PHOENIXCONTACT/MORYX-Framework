@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Reflection;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.Serialization;
 

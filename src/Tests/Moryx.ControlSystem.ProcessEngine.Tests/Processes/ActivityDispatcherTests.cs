@@ -3,7 +3,6 @@
 
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;

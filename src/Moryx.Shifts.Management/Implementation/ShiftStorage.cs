@@ -1,7 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Castle.MicroKernel.Registration;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
@@ -10,8 +9,6 @@ using Moryx.Model.Repositories;
 using Moryx.Operators;
 using Moryx.Shifts.Management.Model;
 using Moryx.Tools;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Moryx.Shifts.Management
 {

@@ -1,7 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Castle.MicroKernel.Registration;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.Container;
@@ -65,7 +64,7 @@ internal class SkillStorage : ISkillStorage, ILoggingComponent
         using var uow = UnitOfWorkFactory.Create();
         var repo = uow.GetRepository<ISkillEntityRepository>();
         var skillEntities = repo.Linq.Active()
-            .AsEnumerable() //because of query translation error 
+            .AsEnumerable() //because of query translation error
             .Where(se => se.Expiration >= DateOnly.FromDateTime(DateTime.UtcNow))
             .ToList();
 

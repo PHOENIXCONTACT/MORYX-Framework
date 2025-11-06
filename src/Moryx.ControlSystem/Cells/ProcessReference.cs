@@ -1,7 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Processes;
 
@@ -32,12 +31,12 @@ namespace Moryx.ControlSystem.Cells
         public bool IsEmpty => _processId == EmptyId && _identity == null;
 
         /// <summary>
-        /// Check if the process reference 
+        /// Check if the process reference
         /// </summary>
         public bool HasReference => _processId != EmptyId | _identity != null;
 
         /// <summary>
-        /// Check if a process 
+        /// Check if a process
         /// </summary>
         /// <param name="process"></param>
         /// <returns></returns>

@@ -23,7 +23,7 @@ internal static class AssemblyInfoHelper
 
     public static string Version =>
         _entryAssembly?.GetName()?.Version?.ToString() ?? "N/A";
-        
+
     public static string Configuration =>
         _entryAssembly?.GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration ?? "N/A";
 

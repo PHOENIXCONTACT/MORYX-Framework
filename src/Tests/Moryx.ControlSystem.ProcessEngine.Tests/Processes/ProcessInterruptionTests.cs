@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.ProcessEngine.Model;
 using Moryx.ControlSystem.ProcessEngine.Processes;

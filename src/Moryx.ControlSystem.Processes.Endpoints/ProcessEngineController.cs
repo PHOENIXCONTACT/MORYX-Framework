@@ -5,7 +5,6 @@ using System.Threading.Channels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Resources;

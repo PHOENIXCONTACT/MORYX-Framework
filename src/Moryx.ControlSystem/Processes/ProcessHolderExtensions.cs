@@ -1,7 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Cells;
@@ -90,7 +89,7 @@ namespace Moryx.ControlSystem.Processes
         /// Tries to get an empty <see cref="IProcessHolderPosition"/> from the <paramref name="group"/>
         /// </summary>
         /// <param name="group">The group to search</param>
-        /// <param name="position">When this method returns, contains the first empty 
+        /// <param name="position">When this method returns, contains the first empty
         /// <see cref="IProcessHolderPosition"/>, if any is found; otherwise <c>null</c></param>
         /// <returns>
         /// <c>true</c> if an empty <see cref="IProcessHolderPosition"/> was found; otherwise, <c>false</c>.
@@ -134,14 +133,14 @@ namespace Moryx.ControlSystem.Processes
         }
 
         /// <summary>
-        /// Get or create sessions for all <paramref name="positions"/> that have a process. 
+        /// Get or create sessions for all <paramref name="positions"/> that have a process.
         /// This is usually used when attaching to the control system.
         /// </summary>
         public static IEnumerable<Session> Attach(this IEnumerable<ProcessHolderPosition> positions)
             => positions.SelectMany(p => p.Attach());
 
         /// <summary>
-        /// Get or create sessions for all <see cref="IProcessHolderGroup.Positions"/> that have a process. 
+        /// Get or create sessions for all <see cref="IProcessHolderGroup.Positions"/> that have a process.
         /// This is usually used when attaching to the control system.
         /// </summary>
         public static IEnumerable<Session> Attach(this IProcessHolderGroup group)
@@ -165,21 +164,21 @@ namespace Moryx.ControlSystem.Processes
         }
 
         /// <summary>
-        /// Get a session if <paramref name="position"/> has one. Otherwise returns an empty enumerable. 
+        /// Get a session if <paramref name="position"/> has one. Otherwise returns an empty enumerable.
         /// This is usually used when detaching from the control system.
         /// </summary>
         public static IEnumerable<Session> Detach(this ProcessHolderPosition position)
             => position.Session != null ? [position.Session] : [];
 
         /// <summary>
-        /// Gets the session from each <see cref="ProcessHolderPosition"/> in the <paramref name="positions"/> 
+        /// Gets the session from each <see cref="ProcessHolderPosition"/> in the <paramref name="positions"/>
         /// that holds one. This is usually used when detaching from the control system.
         /// </summary>
         public static IEnumerable<Session> Detach(this IEnumerable<ProcessHolderPosition> positions)
             => positions.Where(p => p.Session != null).Select(p => p.Session);
 
         /// <summary>
-        /// Gets the session from each <see cref="IProcessHolderPosition"/> in the <paramref name="group"/> 
+        /// Gets the session from each <see cref="IProcessHolderPosition"/> in the <paramref name="group"/>
         /// that holds one. This is usually used when detaching from the control system.
         /// </summary>
         public static IEnumerable<Session> Detach(this IProcessHolderGroup group)
@@ -224,7 +223,7 @@ namespace Moryx.ControlSystem.Processes
             => group.Positions.All(position => position.IsEmpty());
 
         /// <summary>
-        /// True if the <paramref name="position"/> has neither a <see cref="IProcessHolderPosition.Process"/> nor a 
+        /// True if the <paramref name="position"/> has neither a <see cref="IProcessHolderPosition.Process"/> nor a
         /// <see cref="IProcessHolderPosition.Session"/>; false otherwise.
         /// </summary>
         public static bool IsEmpty(this IProcessHolderPosition position)
@@ -251,13 +250,13 @@ namespace Moryx.ControlSystem.Processes
             where TTracing : Tracing, new() => (position.Session as ActivityStart)?.Activity?.TransformTracing<TTracing>();
 
         /// <summary>
-        /// Updates <see cref="IProcessHolderPosition.Session"/> and <see cref="IProcessHolderPosition.Process"/> by resetting the 
-        /// <paramref name="position"/> and remounting the <paramref name="session"/>. For <see cref="ProcessHolderPosition"/>s 
+        /// Updates <see cref="IProcessHolderPosition.Session"/> and <see cref="IProcessHolderPosition.Process"/> by resetting the
+        /// <paramref name="position"/> and remounting the <paramref name="session"/>. For <see cref="ProcessHolderPosition"/>s
         /// a direct update of the session and process is done on the object.
         /// </summary>
         /// <param name="position">The position to update</param>
         /// <param name="session">The updated session on the position</param>
-        /// <exception cref="InvalidOperationException">Thrown if the given <paramref name="session"/> does not match 
+        /// <exception cref="InvalidOperationException">Thrown if the given <paramref name="session"/> does not match
         /// the session on the <paramref name="position"/></exception>
         public static void Update(this IProcessHolderPosition position, Session session)
         {

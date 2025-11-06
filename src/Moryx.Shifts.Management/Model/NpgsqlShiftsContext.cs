@@ -2,8 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.IO;
 using Moryx.Model.PostgreSQL;
 
 namespace Moryx.Shifts.Management.Model

@@ -4,7 +4,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Moq;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.ProcessEngine.Jobs;

@@ -3,7 +3,6 @@
 
 using System;
 using Moq;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
@@ -22,7 +21,6 @@ using Moryx.Model.Repositories;
 using Moryx.TestTools.UnitTest;
 using Moryx.Tools;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using ProcessContext = Moryx.ControlSystem.ProcessEngine.Model.ProcessContext;
 
 namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes

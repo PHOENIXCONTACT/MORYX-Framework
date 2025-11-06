@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
@@ -13,7 +12,6 @@ using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Model;
 using Moryx.ControlSystem.Processes;
 using Moryx.Logging;
-using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Serialization;
 using Moryx.Tools;

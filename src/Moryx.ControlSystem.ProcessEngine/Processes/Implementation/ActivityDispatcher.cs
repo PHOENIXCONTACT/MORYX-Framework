@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
@@ -624,7 +623,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         }
 
         /// <summary>
-        /// Takes an <paramref name="actionToDispatch"/> that should be executed on the 
+        /// Takes an <paramref name="actionToDispatch"/> that should be executed on the
         /// <paramref name="actionTarget"/> without exceptions feeding back into the process engine.
         /// </summary>
         private void Decouple(Action actionToDispatch, string actionName, ICell actionTarget)
@@ -632,7 +631,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             // This makes sure, that exceptions from the cell can not discrupt the process engine. However, deadlocks or
             // very long running operations will still prevent e.g. process changes to complete. IMPORTANT: Pushing it to
             // a different thread without awaiting completion is not possible, as this will cause race conditions when
-            // completing/removing activities. 
+            // completing/removing activities.
             // ToDo: Apply timout already used when shutting down the process engine
             try
             {

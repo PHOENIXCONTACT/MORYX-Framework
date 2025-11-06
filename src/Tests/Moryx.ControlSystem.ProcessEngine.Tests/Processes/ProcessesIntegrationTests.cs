@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer.Resources;

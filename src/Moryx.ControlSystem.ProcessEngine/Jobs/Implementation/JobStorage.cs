@@ -3,7 +3,6 @@
 
 using Moryx.Model;
 using Moryx.Model.Repositories;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;

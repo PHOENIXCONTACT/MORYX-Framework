@@ -10,7 +10,6 @@ using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
-using Moryx.Operators.Localizations;
 
 namespace Moryx.Operators.Skills;
 

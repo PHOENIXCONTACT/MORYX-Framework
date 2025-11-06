@@ -9,7 +9,6 @@ using Moryx.Runtime.Modules;
 using Moryx.Shifts.Extensions;
 using System.ComponentModel.DataAnnotations;
 using Moryx.Shifts.Endpoints.Localizations;
-using Moryx.Shifts.Endpoints.Localizations;
 
 namespace Moryx.Shifts.Endpoints
 {

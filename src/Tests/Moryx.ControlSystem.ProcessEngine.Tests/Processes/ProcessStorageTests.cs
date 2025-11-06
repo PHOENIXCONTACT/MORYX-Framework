@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging.Abstractions;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.TestTools;

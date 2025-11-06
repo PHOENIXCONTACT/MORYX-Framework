@@ -4,7 +4,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;

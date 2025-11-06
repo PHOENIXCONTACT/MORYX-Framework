@@ -3,7 +3,6 @@
 
 using System.Globalization;
 using System.Reflection;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Recipes;

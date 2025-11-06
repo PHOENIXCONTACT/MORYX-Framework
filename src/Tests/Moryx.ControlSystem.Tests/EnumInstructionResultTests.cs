@@ -4,7 +4,6 @@
 using Moryx.ControlSystem.VisualInstructions;
 using NUnit.Framework;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace Moryx.ControlSystem.Tests
 {

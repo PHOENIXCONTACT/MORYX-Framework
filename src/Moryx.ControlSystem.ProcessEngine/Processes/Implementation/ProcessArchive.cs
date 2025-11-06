@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;

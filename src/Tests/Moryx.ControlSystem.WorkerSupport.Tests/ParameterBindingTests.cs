@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Processes;

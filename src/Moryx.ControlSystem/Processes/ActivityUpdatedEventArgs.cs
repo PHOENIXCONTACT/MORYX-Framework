@@ -1,13 +1,12 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Activities;
 
 namespace Moryx.ControlSystem.Processes
 {
     /// <summary>
-    /// Three stages of an activity within the kernel 
+    /// Three stages of an activity within the kernel
     /// </summary>
     public enum ActivityProgress
     {

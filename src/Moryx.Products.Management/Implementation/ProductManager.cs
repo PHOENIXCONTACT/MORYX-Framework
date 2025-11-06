@@ -3,7 +3,6 @@
 
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
