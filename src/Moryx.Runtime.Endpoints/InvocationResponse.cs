@@ -25,7 +25,7 @@ namespace Moryx.Runtime.Endpoints
         {
             Success = false;
             ExceptionType = e.GetType().ToString();
-            ErrorMessage = ExceptionPrinter.Print(e);
+            ErrorMessage = e.ToString();
         }
 
         /// <summary>

@@ -316,11 +316,10 @@ namespace Moryx.Serialization
                         convertedProperty.SubEntries = subEntry.SubEntries;
                         break;
                     case EntryValueType.Exception:
-                        convertedProperty.Value.Current = ExceptionPrinter.Print((Exception)value);
+                        convertedProperty.Value.Current = (value as Exception)?.ToString() ?? string.Empty;
                         break;
                     case EntryValueType.Stream:
-                        var stream = value as Stream;
-                        if (stream != null)
+                        if (value is Stream stream)
                         {
                             if (stream.CanSeek)
                                 stream.Seek(0, SeekOrigin.Begin);

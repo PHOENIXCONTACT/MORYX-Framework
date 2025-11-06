@@ -85,9 +85,7 @@ namespace Moryx.Orders.Endpoints
             {
                 LogLevel = message.LogLevel,
                 Message = message.Message,
-                Exception = message.Exception != null
-                    ? ExceptionPrinter.Print(message.Exception)
-                    : string.Empty,
+                Exception = message.Exception?.ToString() ?? string.Empty,
                 TimeStamp = message.Timestamp
             };
         }
