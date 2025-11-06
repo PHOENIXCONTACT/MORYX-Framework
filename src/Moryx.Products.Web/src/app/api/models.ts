@@ -3,7 +3,6 @@ export { PartModel } from './models/part-model';
 export { ProblemDetails } from './models/problem-details';
 export { ProductCustomization } from './models/product-customization';
 export { ProductDefinitionModel } from './models/product-definition-model';
-export { ProductFileModel } from './models/product-file-model';
 export { ProductImporter } from './models/product-importer';
 export { ProductInstanceModel } from './models/product-instance-model';
 export { ProductInstanceState } from './models/product-instance-state';
