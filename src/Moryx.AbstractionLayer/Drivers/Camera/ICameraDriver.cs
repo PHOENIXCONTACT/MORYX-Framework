@@ -20,7 +20,7 @@ namespace Moryx.AbstractionLayer.Drivers.Camera
         ///     The image that was captured or null in case no image
         ///     could be retrieved
         /// </returns>
-        Task<TImage> CaptureImage();
+        Task<TImage> CaptureImageAsync();
     }
 }
 

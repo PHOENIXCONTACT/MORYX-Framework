@@ -12,6 +12,7 @@ namespace Moryx.AbstractionLayer.Drivers.Axis
         /// Axis
         /// </summary>
         public Axes Axis { get; }
+
         /// <summary>
         /// Number
         /// </summary>

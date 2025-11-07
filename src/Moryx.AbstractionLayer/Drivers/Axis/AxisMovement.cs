@@ -1,8 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Hardware;
-
 namespace Moryx.AbstractionLayer.Drivers.Axis;
 
 /// <summary>
@@ -23,7 +21,7 @@ public class AxisMovement
     /// <summary>
     /// Predefined position of the axis to move to
     /// </summary>
-    public AxisPosition? PredefinedPosition { get; set; }
+    public AxisPosition? PredefinedPosition { get; }
 
     /// <summary>
     /// Creates a new instance of <see cref="AxisMovement"/> with a target position

@@ -1,16 +1,14 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Drivers.Rfid
+using Moryx.AbstractionLayer.Drivers.InOut;
+
+namespace Moryx.AbstractionLayer.Drivers.Rfid;
+
+/// <summary>
+/// Driver API of the RFID driver
+/// </summary>
+public interface IRfidDriver : IInputDriver<RfidTag>
 {
-    /// <summary>
-    /// Driver API of the RFID driver
-    /// </summary>
-    public interface IRfidDriver : IDriver
-    {
-        /// <summary>
-        /// Event raised when tags are read by the antenna
-        /// </summary>
-        event EventHandler<RfidTag[]> TagsRead;
-    }
+
 }
