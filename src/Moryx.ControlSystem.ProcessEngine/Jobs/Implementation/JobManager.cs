@@ -77,6 +77,11 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         public void Stop()
         {
             _running = false;
+            // wait until all events are processed 
+            while (_taskQueue.PendingElements > 0)
+            {
+                Thread.Sleep(1);
+            }
         }
 
         /// <inheritdoc />
