@@ -68,7 +68,7 @@
     <PackageVersion Include="CsvHelper" Version="33.1.0" />
 
     <PackageVersion Include="MimeTypeMapOfficial" Version="1.0.17" />
-    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.11" />
+    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.12" />
 
   </ItemGroup>
 </Project>
