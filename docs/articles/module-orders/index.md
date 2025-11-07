@@ -38,7 +38,7 @@ This modules exports the `IOrderManagement` facade.
 
 ## Structure
 
-![Components](images\OrderManagementComponents.png)
+![Components](images/OrderManagementComponents.png)
 
 The internal structure of the OrderManagement is shown in the component diagram. On the top is the OrderWcf which uses the OperationPool to get any update of each `OperationData` or perform some operations on each one. The `OperationPool` is an implementation of the Object Pooling Pattern which holds all known OperationData. The `OperationData` is the main component which handles all operation related functionalities. There is the `OperationAssignment` to assign all needed Information to a new or reloaded OperationData to make it producible. The `JobHandler` will be used to communicate with the `JobManagement` of the ProcessEngine to dispatch Jobs for the production.
 
@@ -62,7 +62,7 @@ The [IOperationPool](xref:Moryx.Orders.IOperationPool) is used for all module pl
 
 ### State Machine
 
-![OperationData State Machine](images\OperationsStates.png)
+![OperationData State Machine](images/OperationsStates.png)
 
 #### Initial
 
@@ -86,7 +86,7 @@ The OperationData is still running in this state until the User decides to start
 
 #### Interrupted
 
-The OperationData can be Interrupted if the it is in the RunningState or AmountReachedState (both of the states have the state classification [Running](xref:Moryx.Orders.OperationClassification)). In both case all jobs will be completed and the worker can add some report information which is a partial report. The OperationData switches from the RunningState to the InterruptingState first to wait until all jobs are completed. After all jobs are completed the state switches to the InterruptedState which leads to a Interrupted event with the user from the last partial report. In the AmountReachedState all jobs are already completed so there is no reason to wait for some jobs.
+The OperationData can be Interrupted if the it is in the RunningState or AmountReachedState (both of the states have the state classification [Running](xref:Moryx.Orders.OperationClassification)). In both case all jobs will be completed. The OperationData switches from the RunningState to the InterruptingState first to wait until all jobs are completed. After all jobs are completed the state switches to the InterruptedState which leads to a Interrupted event. In the AmountReachedState all jobs are already completed so there is no reason to wait for some jobs.
 
 #### Completed
 
@@ -134,7 +134,7 @@ In all cases a reporting will be performed. The reporting information are encaps
 - Comment: Optional information
 - UserId: The id of the user which was selected to document who has done the report
 
-Each report is depending to the machine state and only possible if the state has the classification `Production`. It is possible that there is are no states or no production state. In this case the reports are independent to the machine state. A state change to the production state will lead to a state change task followed by a report task if there is something to report. If the state switches from the production state to a non production state then this will lead to a report task followed by a state change task to ensure that everything will be reported in the production state. 
+Each report is depending to the machine state and only possible if the state has the classification `Production`. It is possible that there is are no states or no production state. In this case the reports are independent to the machine state. A state change to the production state will lead to a state change task followed by a report task if there is something to report. If the state switches from the production state to a non production state then this will lead to a report task followed by a state change task to ensure that everything will be reported in the production state.
 
 ### Advice PickParts/Order
 
@@ -196,8 +196,6 @@ For example there are two failure parts and 5 reworked. So the user spends only 
 #### Interrupt Behavior
 
 An interrupt can be performed in the `AmountReachedState` and in the `RunningState`. The main difference is that in the `RunningState` there are running jobs which are still producing.
-So if the worker decides to interrupt the OperationData during the `RunningState` then he only gets the current `SuccessCount` and `ScrapCount`. The parts which are not done are not taken into account for the possible reporting and will be finished afterwards and can be reported later.
-An interrupt is predefined with the `ConfirmationType` [Partial](@ref Moryx.Orders.ConfirmationType). So only a partial report is possible.
 
 #### Restore Behavior
 
@@ -290,7 +288,7 @@ If the OrderManagement will be restarted, it is necessary to reload the jobs whi
 The ui of the order management will be used to show all orders to produce on the current machine. It is also possible to create order without an external system like HYDRA or SAP.
 
 **Concept**
-The orders ui contains a list of orders for a first overview. The details of each order can be displayed by selecting it. 
+The orders ui contains a list of orders for a first overview. The details of each order can be displayed by selecting it.
 The ui has an area for all order details. This contains general information like order number and the due date, information about the product to produce and a list of operations of the selected order.
 
 **Hide completed**
@@ -309,7 +307,7 @@ The job UI provides also the possibility to start, abort and reorder each job.
 
 **Concept**
 The job UI is basically a list of all current jobs. There are some buttons on the bottom side to start, abort and moving each job.
-To start, abort or moving a job it is necessary to select the job and click on the button you want. 
+To start, abort or moving a job it is necessary to select the job and click on the button you want.
 The buttons will be automatically disabled and enabled depending if the action is executable with the selected job.
 
 
