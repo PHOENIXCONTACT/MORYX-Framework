@@ -42,6 +42,11 @@ namespace Moryx.Threading
         public IModuleLogger ErrorLogger { get; }
 
         /// <summary>
+        /// Provide the number of unprocessed elements in the queue
+        /// </summary>
+        public int PendingElements => _pendingElements;
+
+        /// <summary>
         /// Create a new <see cref="Threading.ParallelOperations.EventDecoupler{TEventArgs}"/> to decouple a single listener from an event
         /// </summary>
         public ParallelOperationsQueue(Action<TElement> elementExecution, IParallelOperations parallelOperations, IModuleLogger errorLogger)
