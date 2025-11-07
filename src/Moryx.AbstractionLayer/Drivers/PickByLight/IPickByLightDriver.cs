@@ -11,11 +11,13 @@ namespace Moryx.AbstractionLayer.Drivers.PickByLight
         /// <summary>
         /// Activate instruction for this address
         /// </summary>
+        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
         Task ActivateInstruction(string address, LightInstructions instruction);
 
         /// <summary>
         /// Deactivate an instruction
         /// </summary>
+        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
         Task DeactivateInstruction(string address);
 
         /// <summary>

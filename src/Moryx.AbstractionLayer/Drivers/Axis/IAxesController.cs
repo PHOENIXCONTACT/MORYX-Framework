@@ -12,6 +12,8 @@ namespace Moryx.AbstractionLayer.Drivers.Axis
         /// Will move the axes of the system to the given position
         /// </summary>
         /// <param name="movement">Array of axes which should be moved</param>
+        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
+        /// <exception cref="MoveAxesException">Will be thrown for errors during moving axes</exception>
         Task<AxisMovementResponse> MoveAxesAsync(params AxisMovement[] movement);
     }
 }

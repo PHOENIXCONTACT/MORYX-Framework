@@ -3,13 +3,12 @@
 
 using Moryx.AbstractionLayer.Drivers.InOut;
 
-namespace Moryx.AbstractionLayer.Drivers.Scales
-{
-    /// <summary>
-    /// Interface for weight scales to request a weight
-    /// </summary>
-    public interface IWeightScaleDriver : IInputDriver<MeasuredWeight>
-    {
+namespace Moryx.AbstractionLayer.Drivers.Scales;
 
-    }
+/// <summary>
+/// Interface for weight scales to request a weight
+/// </summary>
+public interface IWeightScaleDriver : IInputDriver<MeasuredWeight>
+{
+
 }
