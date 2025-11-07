@@ -14,7 +14,7 @@ namespace Moryx.Drivers.OpcUa;
 
 /// <summary>
 /// MessageChannel representing an Opc Ua node
-/// Because it is possible to get channels before the driver is running and has 
+/// Because it is possible to get channels before the driver is running and has
 /// browsed all nodes, only o
 /// </summary>
 public class OpcUaNode : IMessageChannel<object>
@@ -141,9 +141,10 @@ public class OpcUaNode : IMessageChannel<object>
     /// Not implemented yet
     /// </summary>
     /// <param name="payload"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public Task SendAsync(object payload)
+    public Task SendAsync(object payload, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

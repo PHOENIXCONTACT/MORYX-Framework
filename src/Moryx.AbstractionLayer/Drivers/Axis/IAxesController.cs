@@ -11,9 +11,11 @@ namespace Moryx.AbstractionLayer.Drivers.Axis
         /// <summary>
         /// Will move the axes of the system to the given position
         /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <param name="movement">Array of axes which should be moved</param>
         /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
         /// <exception cref="MoveAxesException">Will be thrown for errors during moving axes</exception>
-        Task<AxisMovementResponse> MoveAxesAsync(params AxisMovement[] movement);
+        /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
+        Task<AxisMovementResponse> MoveAxesAsync(CancellationToken cancellationToken = default, params AxisMovement[] movement);
     }
 }

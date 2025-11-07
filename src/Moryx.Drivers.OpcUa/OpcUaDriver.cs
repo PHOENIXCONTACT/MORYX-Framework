@@ -957,7 +957,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     }
 
     /// <inheritdoc/>
-    public Task SendAsync(object payload)
+    public Task SendAsync(object payload, CancellationToken cancellationToken = default)
     {
         if (payload is not OpcUaMessage msg)
         {
@@ -986,7 +986,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         WriteNode(node, msg.Payload);
     }
 
-    public Task SendAsync(OpcUaMessage payload)
+    public Task SendAsync(OpcUaMessage payload, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
