@@ -68,3 +68,12 @@ These feature were infrequently used and has been removed to simplify the codeba
 
 - Moryx.Tools.FunctionResult: Moved to Moryx.Tools
 - Moryx.AbstractionLayer namespace: All classes have been moved to more specific domain namespaces e.g. Moryx.AbstractionLayer.Resources, Moryx.AbstractionLayer.Products, Moryx.AbstractionLayer.Processes etc.
+
+## Reworked driver APIs
+
+All driver APIs have been reworked to use TPL async/await instead of callbacks for the following reasons:
+
+- The same logic looks almost synchronous.
+- Cleaner and integrates seamlessly with .NET’s exception system.
+- You can chain tasks with LINQ-like methods or await syntax.
+- Async stack-traces in IDE show the actual logical call flow — even across await boundaries.
