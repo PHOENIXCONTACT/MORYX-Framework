@@ -6,7 +6,7 @@ using Moryx.Workplans.WorkplanSteps;
 
 namespace Moryx.Workplans.Endpoint
 {
-    public static class ModelConverter
+    internal static class ModelConverter
     {
         private static readonly ICustomSerialization WorkplanStepSerialization = new WorkplanStepSerialization();
         public static WorkplanNodeClassification ToClassification(Type type)

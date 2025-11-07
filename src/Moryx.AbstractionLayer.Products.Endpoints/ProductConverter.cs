@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {
-    public class ProductConverter
+    internal class ProductConverter
     {
         private IProductManagement _productManagement;
 
