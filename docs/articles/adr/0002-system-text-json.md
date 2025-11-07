@@ -2,7 +2,7 @@
 
 **Date:** 2025-11-07 \
 **Status:** Accepted \
-**Context:** MORYX 8+ Projects
+**Context:** MORYX 10+ Projects
 
 We will use `System.Text.Json` as the default JSON serialization library in all new and existing MORYX projects wherever possible.
 `Newtonsoft.Json` (Json.NET) will be used only in exceptional cases where specific functionality is required that `System.Text.Json` does not (yet) provide, such as advanced features like `TypeNameHandling.Full` or custom converters that cannot be easily replicated.
