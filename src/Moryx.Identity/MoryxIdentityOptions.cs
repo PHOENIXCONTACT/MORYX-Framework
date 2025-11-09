@@ -21,12 +21,6 @@ namespace Moryx.Identity
         public string BaseAddress { get; set; }
 
         /// <summary>
-        /// Gets the cookie name under which the JWT token for the remote request can be found 
-        /// </summary>
-        [Obsolete("Use " + nameof(MoryxIdentityDefaults.JWT_COOKIE_NAME) + " instead, if you want to retrieve the name of the cookie.")]
-        public string CookieName { get; } = "moryx_user_token";
-
-        /// <summary>
         /// Gets the url to which the request is posted
         /// </summary>
         public string RequestUri { get; } = "/api/auth/user/permissions";

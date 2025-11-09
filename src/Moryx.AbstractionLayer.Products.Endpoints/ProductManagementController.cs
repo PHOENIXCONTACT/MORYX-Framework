@@ -260,7 +260,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var recipes = _productManagement.GetRecipes(productType, (RecipeClassification)classification);
             var recipeModels = new List<RecipeModel>();
             foreach (var recipe in recipes)
-                recipeModels.Add(_productConverter.ConvertRecipeV2(recipe));
+                recipeModels.Add(_productConverter.ConvertRecipe(recipe));
             return recipeModels.ToArray();
         }
         #endregion
@@ -343,7 +343,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var recipe = _productManagement.LoadRecipe(id);
             if (recipe == null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductManagementController_RecipeNotFound, id) });
-            return _productConverter.ConvertRecipeV2(recipe);
+            return _productConverter.ConvertRecipe(recipe);
         }
 
         [HttpPost]
@@ -394,7 +394,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             if (recipe == null)
                 return BadRequest($"Recipe of type {recipeType} could not created");
 
-            return _productConverter.ConvertRecipeV2(recipe);
+            return _productConverter.ConvertRecipe(recipe);
         }
         #endregion
     }

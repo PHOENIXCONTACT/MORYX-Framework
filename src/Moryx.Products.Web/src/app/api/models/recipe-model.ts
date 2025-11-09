@@ -13,6 +13,5 @@ export interface RecipeModel {
   revision?: number;
   state?: RecipeState;
   type?: null | string;
-  /** @deprecated */workplanId?: number;
   workplanModel?: WorkplanModel;
 }

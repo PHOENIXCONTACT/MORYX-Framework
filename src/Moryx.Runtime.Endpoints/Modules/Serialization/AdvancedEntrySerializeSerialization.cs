@@ -14,7 +14,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Serialization
         private readonly EntrySerializeSerialization _entrySerializeSerialization;
 
         /// <inheritdoc />
-        public AdvancedEntrySerializeSerialization(IContainer container, IEmptyPropertyProvider emptyPropertyProvider) : base(container, emptyPropertyProvider)
+        public AdvancedEntrySerializeSerialization(IContainer container, IServiceProvider serviceProvider, IEmptyPropertyProvider emptyPropertyProvider) : base(container, serviceProvider, emptyPropertyProvider)
         {
             _entrySerializeSerialization = new EntrySerializeSerialization();
         }

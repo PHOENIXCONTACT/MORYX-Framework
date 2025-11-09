@@ -8,7 +8,6 @@ export interface InstructionModel {
   id?: number;
   items?: null | Array<InstructionItemModel>;
   inputs?: null | Entry;
-  possibleResults?: null | Array<string>;
   results?: null | Array<InstructionResultModel>;
   sender?: null | string;
   type?: InstructionType;

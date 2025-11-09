@@ -20,11 +20,9 @@ namespace Moryx.ControlSystem.Tests
         public void GetAllValuesIfNoResultIsDecorated()
         {
             // Act
-            var instructionResult = EnumInstructionResult.PossibleResults(typeof(TestResults1));
-            var possibleResults = EnumInstructionResult.PossibleInstructionResults(typeof(TestResults1));
+            var possibleResults = EnumInstructionResult.PossibleResults(typeof(TestResults1));
 
             // Assert
-            Assert.That(instructionResult.Count, Is.EqualTo(2), "There should be 2 results because all of the results are not decorated");
             Assert.That(possibleResults.Count, Is.EqualTo(2), "There should be 2 results because all of the results are not decorated");
         }
 

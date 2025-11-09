@@ -26,7 +26,7 @@ namespace Moryx.Tests.Configuration
             var config = new TransformerTestConfig();
 
             // tranform a config object
-            var serialization = new PossibleValuesSerialization(null, null);//new TransformationProviderMock(config));
+            var serialization = new PossibleValuesSerialization(null, null, null);//new TransformationProviderMock(config));
             var converted = EntryConvert.EncodeObject(config, serialization);
 
             bool foundPropertyWithDescriptionAttribute = false;
@@ -173,7 +173,7 @@ namespace Moryx.Tests.Configuration
 
             //var provider = new TransformationProviderMock(config);
             // tranform a config object
-            var configToModel = new PossibleValuesSerialization(null, null);
+            var configToModel = new PossibleValuesSerialization(null, null, null);
             var convertedObject = EntryConvert.EncodeObject(config, configToModel);
 
             // find the int field to chang its value

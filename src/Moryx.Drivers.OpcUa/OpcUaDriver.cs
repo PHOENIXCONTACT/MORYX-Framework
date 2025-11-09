@@ -98,14 +98,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     public string OpcUaServerUrl { get; set; }
 
     /// <summary>
-    /// Port of the OPC UA Server
-    /// </summary>
-    [EntrySerialize, DataMember]
-    [Obsolete("This property will be removed in a future version. It's recommended to include the port into the URL")]
-    [Display(Name = nameof(Strings.OpcUaDriver_OpcUaServerPort), ResourceType = typeof(Strings))]
-    public int OpcUaServerPort { get; set; }
-
-    /// <summary>
     /// Username needed to authenticate on the server
     /// </summary>
     [EntrySerialize, DataMember]
@@ -327,7 +319,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         {
             builder = new UriBuilder(OpcUaServerUrl);
             builder.Scheme = BuildScheme(builder);
-            builder.Port = BuildPort(builder);
 
             selectedEndpoint = CoreClientUtils.SelectEndpoint(config,
                 builder.Uri.ToString(), UseEncryption);
@@ -366,15 +357,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
             return false;
         }
         return true;
-    }
-
-    private int BuildPort(UriBuilder builder)
-    {
-        return (builder.Port > -1)
-            ? builder.Port
-            : OpcUaServerPort > 0
-                ? OpcUaServerPort
-                : DefaultSchemePort(builder.Scheme);
     }
 
     private static string BuildScheme(UriBuilder builder)
@@ -983,7 +965,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
             return;
         }
 
-        WriteNode(node, msg.Payload);
+        WriteNode(node.Identifier, msg.Payload);
     }
 
     public Task SendAsync(OpcUaMessage payload)

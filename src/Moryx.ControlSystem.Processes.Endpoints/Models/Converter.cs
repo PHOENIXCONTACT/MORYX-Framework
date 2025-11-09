@@ -13,7 +13,7 @@ namespace Moryx.ControlSystem.Processes.Endpoints
     /// <summary>
     /// JobProcessModel,ProcessActivityModel,TracingModel Models Converter
     /// </summary>
-    public static class Converter
+    internal static class Converter
     {
         internal static JobProcessModel ConvertProcess(IProcess process, IProcessControl processControl, IResourceManagement resourceManagement)
         {

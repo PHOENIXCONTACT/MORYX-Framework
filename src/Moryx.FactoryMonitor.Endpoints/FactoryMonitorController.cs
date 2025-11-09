@@ -292,17 +292,6 @@ namespace Moryx.FactoryMonitor.Endpoints
         /// <summary>
         /// Changes the background of the factory
         /// </summary>
-        [HttpPost("backgroundurl")]
-        [Obsolete("Use background endpoint instead")]
-        public ActionResult ChangeBackground(string url)
-        {
-            var manufacturingConfig = _resourceManager.GetResources<IManufacturingFactory>().FirstOrDefault();
-            return ChangeBackground(manufacturingConfig.Id, url);
-        }
-
-        /// <summary>
-        /// Changes the background of the factory
-        /// </summary>
         [HttpPost("background")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

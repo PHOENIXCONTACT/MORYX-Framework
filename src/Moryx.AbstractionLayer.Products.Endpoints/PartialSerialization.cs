@@ -27,14 +27,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         }
 
         /// <summary>
-        /// Creates a new <see cref="PartialSerialization{T}"/>  instance
-        /// </summary>
-        [Obsolete("Use serialization with containers instead")]
-        public PartialSerialization() : this(null, null)
-        {
-        }
-
-        /// <summary>
         /// Create serialization with access to global and local container
         /// </summary>
         /// <param name="localContainer"></param>

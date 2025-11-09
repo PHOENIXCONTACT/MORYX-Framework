@@ -5,7 +5,7 @@ using Moryx.Media.Endpoints.Model;
 
 namespace Moryx.Media.Endpoints
 {
-    public static class MediaModelConverter
+    internal static class MediaModelConverter
     {
         public static ContentDescriptorModel ConvertContent(ContentDescriptor contentDescriptor)
         {

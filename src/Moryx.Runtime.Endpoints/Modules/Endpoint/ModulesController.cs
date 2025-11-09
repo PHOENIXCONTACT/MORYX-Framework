@@ -270,7 +270,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         /// </summary>
         private ICustomSerialization CreateEditorSerializeSerialization(IServerModule module)
         {
-            return new AdvancedEntrySerializeSerialization(module.Container, (IEmptyPropertyProvider)_configManager)
+            return new AdvancedEntrySerializeSerialization(module.Container, _serviceProvider, (IEmptyPropertyProvider)_configManager)
             {
                 FormatProvider = Thread.CurrentThread.CurrentUICulture
             };

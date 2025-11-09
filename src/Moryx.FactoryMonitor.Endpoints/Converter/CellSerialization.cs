@@ -15,7 +15,7 @@ namespace Moryx.FactoryMonitor.Endpoints
     /// </summary>
     internal class CellSerialization : PossibleValuesSerialization
     {
-        public CellSerialization() : base(new ContainerMock(), new ValueProviderExecutor(new ValueProviderExecutorSettings()))
+        public CellSerialization() : base(new ContainerMock(), new ServiceProviderMock(), new ValueProviderExecutor(new ValueProviderExecutorSettings()))
         {
         }
 
@@ -67,6 +67,14 @@ namespace Moryx.FactoryMonitor.Endpoints
             }
 
             public Array ResolveAll(Type service)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private class ServiceProviderMock : IServiceProvider
+        {
+            public object GetService(Type serviceType)
             {
                 throw new NotImplementedException();
             }

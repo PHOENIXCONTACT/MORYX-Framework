@@ -137,12 +137,12 @@ namespace Moryx.Resources.Samples
 
         public override bool UpdateFromPredecessor => false;
 
-        public override IEnumerable<string> GetValues(Container.IContainer container)
+        public override IEnumerable<string> GetValues(Container.IContainer container, IServiceProvider serviceProvider)
         {
             return [nameof(TechnicalStaff), nameof(ExpertStaff)];
         }
 
-        public override object Parse(Container.IContainer container, string value)
+        public override object Parse(Container.IContainer container, IServiceProvider serviceProvider, string value)
         {
             switch (value)
             {

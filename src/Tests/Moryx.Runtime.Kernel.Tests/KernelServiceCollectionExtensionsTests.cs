@@ -91,16 +91,17 @@ namespace Moryx.Runtime.Kernel.Tests
             var moduleManagerMock = new Mock<IModuleManager>();
             _serviceCollection.AddSingleton(moduleManagerMock.Object);
             var provider = _serviceCollection.BuildServiceProvider();
+            var moduleManager = provider.GetRequiredService<IModuleManager>();
 
             // Act
-            provider.StartMoryxModules();
+            moduleManager.StartModules();
 
             // Assert
             moduleManagerMock.Verify(m => m.StartModules(), Times.Once);
             moduleManagerMock.VerifyNoOtherCalls();
 
             // Act
-            provider.StopMoryxModules();
+            moduleManager.StopModules();
 
             // Assert
             moduleManagerMock.Verify(m => m.StopModules(), Times.Once);

@@ -14,7 +14,6 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
     {
         public InstructionModel()
         {
-            PossibleResults = [];
             Results = [];
         }
 
@@ -47,13 +46,6 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
         /// </summary>
         [DataMember]
         public Entry Inputs { get; set; }
-
-        /// <summary>
-        /// Results of the instruction
-        /// </summary>
-        [DataMember]
-        [Obsolete("Use the result objects in 'Results' property instead!")]
-        public string[] PossibleResults { get; set; }
 
         /// <summary>
         /// Possible results with key and display values

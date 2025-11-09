@@ -23,15 +23,6 @@ namespace Moryx.ControlSystem.VisualInstructions
         }
 
         /// <summary>
-        /// Determine possible string buttons from enum result
-        /// </summary>
-        [Obsolete("Method took over the previous signature, use 'PossibleResults' instead")]
-        public static IReadOnlyList<InstructionResult> PossibleInstructionResults(Type resultEnum, params string[] exceptions)
-        {
-            return PossibleResults(resultEnum, exceptions);
-        }
-
-        /// <summary>
         /// Parse the given result back to an enum value
         /// </summary>
         public static int ResultToEnumValue(Type resultEnum, InstructionResult result)

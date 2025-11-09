@@ -28,9 +28,9 @@ namespace Moryx.Tests
             var attrWithFull = new PossibleTypesAttribute(typeof(SomeBase)) { UseFullname = true };
 
             // Act
-            var valuesFromBase = attrWithBase.GetValues(null).ToArray();
-            var valuesFromArray = attrWithArray.GetValues(null).ToArray();
-            var valuesWithFull = attrWithFull.GetValues(null).ToArray();
+            var valuesFromBase = attrWithBase.GetValues(null, null).ToArray();
+            var valuesFromArray = attrWithArray.GetValues(null, null).ToArray();
+            var valuesWithFull = attrWithFull.GetValues(null, null).ToArray();
 
             // Assert
             // Check values from base type
@@ -55,7 +55,7 @@ namespace Moryx.Tests
             var attr = new StateMachineKeysAttribute(typeof(MyStateBase));
 
             // Act
-            var possibleValues = attr.GetValues(null).ToArray();
+            var possibleValues = attr.GetValues(null, null).ToArray();
 
             // Assert
             Assert.That(possibleValues.Length, Is.EqualTo(3));

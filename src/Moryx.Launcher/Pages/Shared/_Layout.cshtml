@@ -1,4 +1,4 @@
-@using System.Linq;
+﻿@using System.Linq;
 @using Microsoft.AspNetCore.Builder;
 @using Microsoft.Extensions.Configuration
 @using Microsoft.Extensions.Options;
@@ -117,7 +117,7 @@
 
                             <moryx-dropdown-item class="tw-p-1 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200 tw-border-t tw-border-gray-200">
                                 <a class="tw-flex tw-items-center tw-w-full tw-h-full" onclick="document.getElementById('aboutModal').style.display='flex'">
-									<span class="material-symbols-outlined">info</span>
+                                    <span class="material-symbols-outlined">info</span>
                                     <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.Layout_About</span>
                                 </a>
                             </moryx-dropdown-item>
@@ -129,8 +129,6 @@
                         string signInRedirectUrl = null;
                         if (_identityOptions.CurrentValue.BaseAddress is not null)
                             signInRedirectUrl = _identityOptions.CurrentValue.BaseAddress;
-                        else if (modules.FirstOrDefault(m => m.Category == ModuleCategory.SignIn) is var signInModule && signInModule is not null)
-                            signInRedirectUrl = signInModule.Route;
 
                         <moryx-auth-buttons authUrl="@signInRedirectUrl">
                             <span sign-in>@Strings.Layout_SignIn</span>
@@ -156,8 +154,8 @@
                             var activeClass = isActive ? "active tw-border-primary-600" : "tw-border-transparent";
                             var route = cookie == null || isActive ? $"/{item.Route}" : cookie;
                             <li class="tw-group tw-relative tw-w-full hover:tw-cursor-pointer hover:tw-bg-primary-200
-                                                            hover:tw-text-primary-600
-                                                                        tw-border-l-4 hover:tw-rounded tw-p-1 @(activeClass) ">
+                                                                        hover:tw-text-primary-600
+                                                                                    tw-border-l-4 hover:tw-rounded tw-p-1 @(activeClass) ">
                                 <a class="tw-flex tw-flex-row tw-items-center 2xl:tw-justify-start tw-p-1 tw-w-full" href="@(route)">
                                     @if (item is WebModuleItem webModuleItem && !isActive && !string.IsNullOrEmpty(webModuleItem.EventStream))
                                     {
@@ -167,7 +165,7 @@
                                     <span class="tw-font-semibold tw-hidden 2xl:tw-block">@item.Title</span>
                                 </a>
                                 <p class="tw-align-middle tw-hidden 2xl:group-hover:tw-hidden tw-absolute group-hover:tw-block tw-bg-primary-600  tw-min-w-full tw-p-2 tw-text-white tw-text-nowrap tw-z-100
-                                                                    tw-top-0 tw-left-full tw-ml-2 tw-pl-3 tw-rounded-md tw-truncate">@item.Title</p>
+                                                                                tw-top-0 tw-left-full tw-ml-2 tw-pl-3 tw-rounded-md tw-truncate">@item.Title</p>
                             </li>
                         }
                         <li class="tw-invisible tw-h-6 tw-pt-10 tw-text-sm tw-font-thin"></li>
@@ -176,7 +174,7 @@
             }
         }
         <div class="tw-flex-1 tw-flex tw-flex-col tw-overflow-auto tw-h-full tw-w-full tw-box-border" main>
-			@Html.Partial("AboutModal")
+            @Html.Partial("AboutModal")
 
             @if (Url.RouteUrl(ViewContext.RouteData.Values).Split('/').Length > 1 &&
             !Url.RouteUrl(ViewContext.RouteData.Values).Split('/')[1].Contains("Notifications"))
@@ -198,7 +196,7 @@
                             <span class="tw-font-bold tw-truncate tw-text-wrap">@Strings.Layout_Modules</span>
                         </button>
                         <moryx-dropdown-container style="left: -100000px; z-index: 999;"
-                        class="tw-absolute tw-bg-white tw-rounded tw-w-72 tw-flex tw-flex-col tw-shadow">
+                                                  class="tw-absolute tw-bg-white tw-rounded tw-w-72 tw-flex tw-flex-col tw-shadow">
                             <moryx-dropdown-item closeOnClick="false" class="tw-max-h-80 tw-overflow-auto tw-flex tw-flex-col tw-p-2 tw-border-y tw-border-gray-200 tw-rounded">
                                 <div class="tw-grid tw-grid-cols-2 tw-auto-rows-auto tw-gap-2  tw-p-2 tw-mb-2">
                                     @foreach (var item in modules.Where(m => m.Category == ModuleCategory.User))
@@ -214,13 +212,13 @@
                         </moryx-dropdown-container>
                     </moryx-dropdown-menu>
                 </moryx-nav-button>
-                @for(var index=0; index <10; index++)
+                @for (var index = 0; index < 10; index++)
                 {
                     var list = modules.Where(m => m.Category == ModuleCategory.User).ToList();
-                    if(index < list.Count)
+                    if (index < list.Count)
                     {
                         var item = list[index];
-                    // Fetch last location if set for this route
+                        // Fetch last location if set for this route
                         var cookie = Context.Request.Cookies[item.Route + "-location"];
                         var currentRoute = @Url.RouteUrl(ViewContext.RouteData.Values);
                         string[] splitRoute = currentRoute.Split('/');
@@ -248,7 +246,7 @@
                             <span class="tw-font-bold tw-truncate tw-text-wrap">@Strings.Layout_More</span>
                         </button>
                         <moryx-dropdown-container style="left: -100000px; z-index: 999;"
-                        class="tw-absolute tw-bg-white tw-rounded tw-w-60 tw-flex tw-flex-col tw-shadow">
+                                                  class="tw-absolute tw-bg-white tw-rounded tw-w-60 tw-flex tw-flex-col tw-shadow">
                             <moryx-dropdown-subitem class="tw-w-full tw-h-full hover:tw-bg-primary-200 hover:tw-cursor-pointer tw-p-3 tw-text-nowrap ">
                                 <div class="tw-w-full tw-h-full tw-flex tw-items-center tw-justify-between" button>
                                     <div class="tw-flex tw-items-center">
@@ -305,11 +303,11 @@
                                 }
                             }
 
-							<moryx-dropdown-item class="tw-p-3 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200">
+                            <moryx-dropdown-item class="tw-p-3 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200">
                                 <a class="tw-flex tw-items-center tw-w-full tw-h-full" onclick="document.getElementById('aboutModal').style.display='flex'">
-									<span class="material-symbols-outlined">info</span>
-									<span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.Layout_About</span>
-								</a>
+                                    <span class="material-symbols-outlined">info</span>
+                                    <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@Strings.Layout_About</span>
+                                </a>
                             </moryx-dropdown-item>
                         </moryx-dropdown-container>
                     </moryx-dropdown-menu>
