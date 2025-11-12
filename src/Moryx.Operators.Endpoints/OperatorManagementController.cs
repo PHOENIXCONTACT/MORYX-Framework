@@ -100,7 +100,7 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Route("resources/{operatorIdentifier}")]
     [Authorize(Policy = OperatorPermissions.CanManage)]
-    public ActionResult<IEnumerable<ResourceModel>> GetResources(string? operatorIdentifier = null)
+    public ActionResult<IEnumerable<OperatorsResourceModel>> GetResources(string? operatorIdentifier = null)
     {
         return Response(() =>
          {
@@ -122,7 +122,7 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [Route("resources")]
     [Authorize(Policy = OperatorPermissions.CanManage)]
-    public ActionResult<IEnumerable<ResourceModel>> GetResources() => GetResources(null);
+    public ActionResult<IEnumerable<OperatorsResourceModel>> GetResources() => GetResources(null);
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]

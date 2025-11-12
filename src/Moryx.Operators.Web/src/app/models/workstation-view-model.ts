@@ -1,10 +1,10 @@
-import { ResourceModel } from "../api/models/Moryx/Operators/Endpoints/resource-model";
+import { OperatorsResourceModel } from "../api/models/Moryx/Operators/Endpoints/operators-resource-model";
 import { OperatorViewModel } from "./operator-view-model";
 
 export class WorkstationViewModel  {
 
     constructor(
-        private _data : ResourceModel ,
+        private _data : OperatorsResourceModel ,
     )
         {}
 

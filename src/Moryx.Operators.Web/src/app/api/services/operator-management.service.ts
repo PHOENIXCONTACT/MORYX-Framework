@@ -27,7 +27,7 @@ import { GetResources_1$Params } from '../fn/operator-management/get-resources-1
 import { GetResources$Params } from '../fn/operator-management/get-resources';
 import { AssignableOperator as MoryxOperatorsAssignableOperator } from '../models/Moryx/Operators/assignable-operator';
 import { ExtendedOperatorModel as MoryxOperatorsEndpointsExtendedOperatorModel } from '../models/Moryx/Operators/Endpoints/extended-operator-model';
-import { ResourceModel as MoryxOperatorsEndpointsResourceModel } from '../models/Moryx/Operators/Endpoints/resource-model';
+import { OperatorsResourceModel as MoryxOperatorsEndpointsResourceModel } from '../models/Moryx/Operators/Endpoints/operators-resource-model';
 import { signIn } from '../fn/operator-management/sign-in';
 import { SignIn$Params } from '../fn/operator-management/sign-in';
 import { signOut } from '../fn/operator-management/sign-out';
