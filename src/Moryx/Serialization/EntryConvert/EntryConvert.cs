@@ -116,7 +116,7 @@ namespace Moryx.Serialization
                 Type = TransformType(property.PropertyType),
                 UnitType = customSerialization.GetUnitTypeByAttributes(property),
                 IsReadOnly = isReadOnly,
-                Possible = customSerialization.PossibleValues(property.PropertyType, property)
+                Possible = ConvertPossible(customSerialization.PossibleValues(property.PropertyType, property))
             };
 
             // Get most basic default
@@ -124,7 +124,7 @@ namespace Moryx.Serialization
             if (defaultAttribute != null)
                 entryValue.Default = defaultAttribute.Value.ToString();
             else if (entryValue.Possible != null && entryValue.Possible.Length >= 1)
-                entryValue.Default = entryValue.Possible[0];
+                entryValue.Default = entryValue.Possible[0].Key;
             else if (property.PropertyType.IsValueType)
             {
                 var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);
@@ -153,7 +153,7 @@ namespace Moryx.Serialization
             {
                 var prototypeEntry = Prototype(prototype, customSerialization);
                 prototypeEntry.Validation = validation;
-                prototypeEntry.Value.Possible = possibleElementValues;
+                prototypeEntry.Value.Possible = ConvertPossible(possibleElementValues);
                 yield return prototypeEntry;
             }
         }
@@ -264,7 +264,7 @@ namespace Moryx.Serialization
                 var strategy = CreateStrategy(instance, instance, instanceType, customSerialization);
                 foreach (var entry in strategy.Serialize())
                 {
-                    entry.Value.Possible = possibleElementValues;
+                    entry.Value.Possible = ConvertPossible(possibleElementValues);
                     converted.SubEntries.Add(entry);
                 }
                 return converted;
@@ -304,7 +304,7 @@ namespace Moryx.Serialization
                         var strategy = CreateStrategy(value, value, property.PropertyType, customSerialization);
                         foreach (var entry in strategy.Serialize())
                         {
-                            entry.Value.Possible = possibleElementValues;
+                            entry.Value.Possible = ConvertPossible(possibleElementValues);
                             convertedProperty.SubEntries.Add(entry);
                         }
                         break;
@@ -470,7 +470,7 @@ namespace Moryx.Serialization
                     UnitType = serialization.GetUnitTypeByAttributes(parameter),
                     Current = defaultValue,
                     Default = defaultValue,
-                    Possible = serialization.PossibleValues(parameterType, parameter)
+                    Possible = ConvertPossible(serialization.PossibleValues(parameterType, parameter))
                 },
                 Validation = serialization.CreateValidation(parameterType, parameter)
             };
@@ -493,6 +493,26 @@ namespace Moryx.Serialization
             }
 
             return parameterModel;
+        }
+
+        /// <summary>
+        /// Convert string[] possible values to EntryPossible[].
+        /// Key and DisplayName are set to the string value.
+        /// </summary>
+        private static EntryPossible[] ConvertPossible(string[] possible)
+        {
+            if (possible == null)
+                return null;
+
+            var result = new EntryPossible[possible.Length];
+            for (var i = 0; i < possible.Length; i++)
+            {
+                var p = possible[i];
+                result[i] = p != null
+                    ? new EntryPossible { Key = p, DisplayName = p, Description = null }
+                    : null;
+            }
+            return result;
         }
 
         #endregion
