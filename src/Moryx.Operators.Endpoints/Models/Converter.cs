@@ -57,7 +57,7 @@ internal static class Converter
         return model;
     }
 
-    internal static OperatorsResourceModel ToModel(IOperatorAssignable resource) => new()
+    internal static AttendableResourceModel ToModel(IOperatorAssignable resource) => new()
     {
         Id = resource.Id,
         Name = resource.Name

@@ -20,7 +20,7 @@ import {
 } from "../models/model-converter";
 import { SkillTypeModel } from "../api/models/Moryx/Operators/Endpoints/skill-type-model";
 import { SkillTypeCreationContextModel } from "../api/models/Moryx/Operators/Endpoints/skill-type-creation-context-model";
-import { OperatorsResourceModel } from "../api/models/Moryx/Operators/Endpoints/operators-resource-model";
+import { AttendableResourceModel } from "../api/models/Moryx/Operators/Endpoints/attendable-resource-model";
 import { SkillModel } from "../api/models/Moryx/Operators/Endpoints/skill-model";
 import { IOperatorAssignable } from "../api/models/Moryx/Operators/i-operator-assignable";
 

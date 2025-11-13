@@ -5,6 +5,6 @@ namespace Moryx.Operators.Endpoints;
 
 public class ExtendedOperatorModel : OperatorModel
 {
-    public IEnumerable<OperatorsResourceModel>? AssignedResources { get; set; }
+    public IEnumerable<AttendableResourceModel>? AssignedResources { get; set; }
 }
 

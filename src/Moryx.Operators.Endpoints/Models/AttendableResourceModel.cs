@@ -3,7 +3,7 @@
 
 namespace Moryx.Operators.Endpoints;
 
-public class OperatorsResourceModel
+public class AttendableResourceModel
 {
     public long? Id { get; set; }
 

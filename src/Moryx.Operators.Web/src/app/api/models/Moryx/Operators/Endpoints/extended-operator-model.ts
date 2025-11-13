@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-import { OperatorsResourceModel as MoryxOperatorsEndpointsResourceModel } from '../../../../models/Moryx/Operators/Endpoints/operators-resource-model';
+import { AttendableResourceModel as MoryxOperatorsEndpointsResourceModel } from '../../../../models/Moryx/Operators/Endpoints/attendable-resource-model';
 export interface ExtendedOperatorModel {
   assignedResources?: Array<MoryxOperatorsEndpointsResourceModel> | null;
   firstName?: string | null;
