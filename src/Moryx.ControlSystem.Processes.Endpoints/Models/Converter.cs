@@ -1,18 +1,19 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Activities;
 using Moryx.Serialization;
 using System.Reflection;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.ControlSystem.Processes.Endpoints
 {
     /// <summary>
     /// JobProcessModel,ProcessActivityModel,TracingModel Models Converter
     /// </summary>
-    public static class Converter
+    internal static class Converter
     {
         internal static JobProcessModel ConvertProcess(IProcess process, IProcessControl processControl, IResourceManagement resourceManagement)
         {

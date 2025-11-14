@@ -84,9 +84,9 @@ namespace Moryx.AbstractionLayer.TestTools.Resources
         }
 
         /// <inheritdoc />
-        public TResource Instantiate<TResource>() where TResource : Resource
+        public TResource Instantiate<TResource>() where TResource : class, IResource
         {
-            return (TResource)Instantiate(typeof(TResource).FullName);
+            return Instantiate(typeof(TResource).FullName) as TResource;
         }
 
         /// <inheritdoc />

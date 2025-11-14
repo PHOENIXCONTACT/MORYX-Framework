@@ -1,15 +1,16 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Bindings;
 
-namespace Moryx.AbstractionLayer
+namespace Moryx.AbstractionLayer.Activities
 {
     /// <summary>
     /// Default factory that can create resolvers based on activities for
-    /// <see cref="IActivity"/>, <see cref="IProductType"/>, <see cref="ProductInstance"/>, <see cref="Process"/> and <see cref="IRecipe"/>.
+    /// <see cref="IActivity"/>, <see cref="ProductType"/>, <see cref="ProductInstance"/>, <see cref="Process"/> and <see cref="IRecipe"/>.
     /// It also creates a resolver for unknown keys.
     /// </summary>
     public class ActivityBindingResolverFactory : ProcessBindingResolverFactory

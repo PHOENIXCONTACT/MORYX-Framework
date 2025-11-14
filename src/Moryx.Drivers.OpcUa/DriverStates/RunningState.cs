@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Drivers;
-using Opc.Ua;
 
 namespace Moryx.Drivers.OpcUa.DriverStates;
 
@@ -20,7 +19,7 @@ internal class RunningState(OpcUaDriver context, StateMachines.StateBase.StateMa
         return Context.GetNode(identifier);
     }
 
-    internal override DataValue ReadValue(string identifier)
+    internal override DataValueResult ReadValue(string identifier)
     {
         return Context.OnReadValueOfNode(identifier);
     }

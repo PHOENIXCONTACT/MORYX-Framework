@@ -3,8 +3,8 @@
 
 using Moryx.AbstractionLayer.Products;
 using Moryx.Modules;
-using Moryx.Products.Model;
 using System.Reflection;
+using Moryx.Products.Management.Model;
 
 namespace Moryx.Products.Management.Implementation.Storage
 {
@@ -50,7 +50,7 @@ namespace Moryx.Products.Management.Implementation.Storage
             return productType;
         }
 
-        public IList<PartLinkInfo> GetAllPartLinks(IProductType modifiedInstance)
+        public IList<PartLinkInfo> GetAllPartLinks(ProductType modifiedInstance)
         {
             var result = new List<PartLinkInfo>();
             foreach (var linkStrategy in PartLinksInformation.Values.Select(p => p.Strategy))

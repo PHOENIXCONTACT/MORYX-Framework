@@ -1,0 +1,21 @@
+<div class="remove-resource-header">
+    <h2 mat-dialog-title>
+        {{ TranslationConstants.REMOVE_RESOURCE_DIALOG.TITLE | translate }}
+    </h2>
+</div>
+
+<div mat-dialog-content class="remove-resource">
+    <p>
+        {{ TranslationConstants.REMOVE_RESOURCE_DIALOG.SUB_TITLE | translate }}
+        {{ resourceToBeRemoved()?.name }}
+    </p>
+</div>
+
+<div mat-dialog-actions align="end">
+    <button mat-button (click)="onClose()">
+        {{ TranslationConstants.REMOVE_RESOURCE_DIALOG.CANCEL | translate }}
+    </button>
+    <button mat-flat-button [mat-dialog-close]="resourceToBeRemoved ()">
+        {{ TranslationConstants.REMOVE_RESOURCE_DIALOG.REMOVE | translate }}
+    </button>
+</div>

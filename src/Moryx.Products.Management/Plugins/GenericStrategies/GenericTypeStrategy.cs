@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
 using Moryx.Modules;
-using Moryx.Products.Model;
+using Moryx.Products.Management.Model;
 
 namespace Moryx.Products.Management
 {
@@ -13,7 +13,7 @@ namespace Moryx.Products.Management
     /// Strategy for simple products
     /// </summary>
     [ExpectedConfig(typeof(GenericTypeConfiguration))]
-    [StrategyConfiguration(typeof(IProductType), DerivedTypes = true)]
+    [StrategyConfiguration(typeof(ProductType), DerivedTypes = true)]
     [Plugin(LifeCycle.Transient, typeof(IProductTypeStrategy), Name = nameof(GenericTypeStrategy))]
     internal class GenericTypeStrategy : TypeStrategyBase<GenericTypeConfiguration>, IProductTypeStrategy
     {
@@ -37,17 +37,17 @@ namespace Moryx.Products.Management
             return EntityMapper.TransformSelector(selector);
         }
 
-        public override bool HasChanged(IProductType current, IGenericColumns dbProperties)
+        public override bool HasChanged(ProductType current, IGenericColumns dbProperties)
         {
             return EntityMapper.HasChanged(dbProperties, current);
         }
 
-        public override void SaveType(IProductType source, IGenericColumns target)
+        public override void SaveType(ProductType source, IGenericColumns target)
         {
             EntityMapper.WriteValue(source, target);
         }
 
-        public override void LoadType(IGenericColumns source, IProductType target)
+        public override void LoadType(IGenericColumns source, ProductType target)
         {
             EntityMapper.ReadValue(source, target);
         }

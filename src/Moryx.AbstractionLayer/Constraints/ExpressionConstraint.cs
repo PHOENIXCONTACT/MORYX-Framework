@@ -1,10 +1,10 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer
+namespace Moryx.AbstractionLayer.Constraints
 {
     /// <summary>
-    /// Constraint that evalutes an expression and compares it to an expected value
+    /// Constraint that evaluates an expression and compares it to an expected value
     /// </summary>
     public static class ExpressionConstraint
     {

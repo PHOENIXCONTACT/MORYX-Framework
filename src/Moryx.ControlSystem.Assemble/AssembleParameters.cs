@@ -1,7 +1,8 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.VisualInstructions;
@@ -16,7 +17,7 @@ namespace Moryx.ControlSystem.Assemble
         /// <summary>
         /// Product that may provide additional Parameters
         /// </summary>
-        public IProductType Product { get; set; }
+        public ProductType Product { get; set; }
 
         /// <summary>
         /// Creates a new instance of <see cref="AssembleParameters"/>

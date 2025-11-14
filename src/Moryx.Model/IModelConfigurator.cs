@@ -3,7 +3,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Moryx.Configuration;
 using Moryx.Model.Configuration;
 
 namespace Moryx.Model
@@ -52,7 +51,7 @@ namespace Moryx.Model
         /// <summary>
         /// Initializes the model configurator
         /// </summary>
-        void Initialize(Type contextType, IConfigManager configManager, ILogger logger);
+        void Initialize(Type contextType, IDatabaseConfig config, ILogger logger);
 
         /// <summary>
         /// Creates a context with internal configuration
@@ -68,11 +67,6 @@ namespace Moryx.Model
         /// Creates a context based on `DbContextOptions`
         /// </summary>
         DbContext CreateContext(Type contextType, DbContextOptions dbContextOptions);
-
-        /// <summary>
-        /// Updates the configuration of the underlying model
-        /// </summary>
-        void UpdateConfig();
 
         /// <summary>
         /// Test connection for config
@@ -107,21 +101,5 @@ namespace Moryx.Model
         /// <param name="config"></param>
         /// <returns></returns>
         Task DeleteDatabase(IDatabaseConfig config);
-
-        /// <summary>
-        /// Dump the database und save the backup at the given file path
-        /// This method works asynchronous
-        /// </summary>
-        /// <param name="config">Config describing the database target</param>
-        /// <param name="targetPath">Path to store backup</param>
-        /// <returns>True if Backup is in progress</returns>
-        Task DumpDatabase(IDatabaseConfig config, string targetPath);
-
-        /// <summary>
-        /// Restore this database with the given backup file
-        /// </summary>
-        /// <param name="config">Config to use</param>
-        /// <param name="filePath">Filepath of dump</param>
-        Task RestoreDatabase(IDatabaseConfig config, string filePath);
     }
 }

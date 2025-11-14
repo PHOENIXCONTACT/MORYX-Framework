@@ -136,8 +136,11 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
                 } while (amount > 0);
             }
 
-            // Add to job list
-            JobList.Add(new LinkedList<IJobData>(jobDatas), context.Position, JobStorage.Save);
+            // Enqueue adding to job list
+            // ToDo: Make add method async and await execution
+            var tcs = new TaskCompletionSource();
+            _taskQueue.Enqueue(() => AddJobs(jobDatas, context.Position, tcs));
+            tcs.Task.Wait();
 
             // Now schedule the scheduling
             if (_running)
@@ -145,6 +148,19 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
             // Return the jobs without awaiting the task
             return jobDatas;
+        }
+
+        private void AddJobs(List<IProductionJobData> jobDatas, JobPosition position, TaskCompletionSource tcs)
+        {
+            try
+            {
+                JobList.Add(new LinkedList<IJobData>(jobDatas), position, JobStorage.Save);
+                tcs.SetResult();
+            }
+            catch (Exception e)
+            {
+                tcs.SetException(e);
+            }
         }
 
         private void OnSlotsAvailable(object sender, EventArgs args)

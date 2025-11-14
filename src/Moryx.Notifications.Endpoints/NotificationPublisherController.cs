@@ -49,7 +49,7 @@ namespace Moryx.Notifications.Endpoints
         {
             var notification = _notificationPublisher.Get(guid);
             if (notification == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.NOTIFICATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.NotificationPublisherController_NotificationNotFound });
 
             return Converter.ToModel(notification);
         }
@@ -115,7 +115,7 @@ namespace Moryx.Notifications.Endpoints
         {
             var notification = _notificationPublisher.Get(guid);
             if (notification == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.NOTIFICATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.NotificationPublisherController_NotificationNotFound });
 
             _notificationPublisher.Acknowledge(notification);
             return Ok();

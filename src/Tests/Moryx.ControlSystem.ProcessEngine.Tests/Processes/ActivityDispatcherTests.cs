@@ -3,7 +3,6 @@
 
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
@@ -14,6 +13,9 @@ using Moryx.Logging;
 using Moryx.TestTools.UnitTest;
 using NUnit.Framework;
 using System.Collections.Generic;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Constraints;
+using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 {

@@ -11,14 +11,13 @@ using Moryx.Factory;
 using Moryx.ControlSystem.Cells;
 using System.Threading.Channels;
 using Moryx.Asp.Extensions;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Moryx.Orders;
 using Moryx.AbstractionLayer.Capabilities;
 using System.Timers;
 using Moryx.FactoryMonitor.Endpoints.Models;
-using Moryx.AbstractionLayer;
-using Moryx.FactoryMonitor.Endpoints.Localizations;
+using Moryx.AbstractionLayer.Processes;
+using Moryx.FactoryMonitor.Endpoints.Properties;
 //old models in '.Model' namespace. Only ones still in use: TransoirtRoute- / PathModel & CellSettingsModel
 using Moryx.FactoryMonitor.Endpoints.Model;
 using Moryx.FactoryMonitor.Endpoints.Extensions;
@@ -56,7 +55,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         }
 
         /// <summary>
-        /// Return the initial data/state of the factory  
+        /// Return the initial data/state of the factory
         /// </summary>
         /// <returns><see cref="FactoryStateModel"/></returns>
         [HttpGet("state")]
@@ -130,7 +129,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         {
             // check if there is a factory with the given id
             var factory = _resourceManager.GetResource<IManufacturingFactory>(x => x.Id == factoryId);
-            if (factory is null) return NotFound(Strings.FACTORY_NOT_FOUND);
+            if (factory is null) return NotFound(Strings.FactoryMonitorController_FactoryNotFound_);
             var converter = new Converter(_serialization);
 
             var root = _resourceManager.GetRootFactory();
@@ -168,7 +167,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             };
 
             var factory = _resourceManager.Read(factoryId, e => (ManufacturingFactory)e);
-            if (factory is not ManufacturingFactory manufacturingFactory) BadRequest(Strings.FACTORY_NOT_FOUND);
+            if (factory is not ManufacturingFactory manufacturingFactory) BadRequest(Strings.FactoryMonitorController_FactoryNotFound_);
             var parentFactory = factory.GetFactory(); //Get Parent factory
 
             return new FactoryModel
@@ -256,7 +255,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             }
             finally
             {
-                // Unregister handler 
+                // Unregister handler
                 foreach (var cell in _cells)
                 {
                     cell.CapabilitiesChanged -= capabilitiesEventHandler;
@@ -273,7 +272,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         }
 
         /// <summary>
-        /// Return the location of the cell in the factory  
+        /// Return the location of the cell in the factory
         /// </summary>
         /// <returns><see cref="CellLocationModel"/></returns>
         [HttpPost("move-cell")]
@@ -291,18 +290,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         }
 
         /// <summary>
-        /// Changes the background of the factory  
-        /// </summary>
-        [HttpPost("backgroundurl")]
-        [Obsolete("Use background endpoint instead")]
-        public ActionResult ChangeBackground(string url)
-        {
-            var manufacturingConfig = _resourceManager.GetResources<IManufacturingFactory>().FirstOrDefault();
-            return ChangeBackground(manufacturingConfig.Id, url);
-        }
-
-        /// <summary>
-        /// Changes the background of the factory  
+        /// Changes the background of the factory
         /// </summary>
         [HttpPost("background")]
         [ProducesResponseType(StatusCodes.Status200OK)]

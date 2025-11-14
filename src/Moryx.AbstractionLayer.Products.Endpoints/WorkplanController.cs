@@ -4,7 +4,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moryx.AbstractionLayer.Properties;
+using Moryx.AbstractionLayer.Products.Endpoints.Properties;
 using Moryx.Asp.Extensions;
 using Moryx.Workplans;
 
@@ -57,7 +57,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 return BadRequest($"Workplan id was 0");
             var versions = _workplans.LoadVersions(id);
             if (versions == null)
-                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.WORKPLAN_NOT_FOUND, id) });
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.WorkplanController_WorkplanNotFound, id) });
             var model = new List<WorkplanModel>();
             foreach (var v in versions)
             {
@@ -78,7 +78,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 return BadRequest($"Workplan id was 0");
             var workplan = _workplans.LoadWorkplan(id);
             if (workplan == null)
-                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.WORKPLAN_NOT_FOUND, id) });
+                return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.WorkplanController_WorkplanNotFound, id) });
             return ProductConverter.ConvertWorkplan(workplan);
         }
 

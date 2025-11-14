@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Bindings;
@@ -85,7 +87,7 @@ namespace Moryx.AbstractionLayer.Tests
         {
             public string Part { get; set; }  // e.g. Product.Part.Product
 
-            public IProductType Target { get; set; }
+            public ProductType Target { get; set; }
 
             private IBindingResolver _resolver;
 
@@ -96,7 +98,7 @@ namespace Moryx.AbstractionLayer.Tests
                 if (_resolver == null)
                     _resolver = ResolverFactory.Create(Part);
 
-                parameters.Target = (IProductType)_resolver.Resolve(process);
+                parameters.Target = (ProductType)_resolver.Resolve(process);
             }
         }
 

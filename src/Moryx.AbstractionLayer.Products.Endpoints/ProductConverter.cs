@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {
-    public class ProductConverter
+    internal class ProductConverter
     {
         private IProductManagement _productManagement;
 
@@ -57,7 +57,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 HasWorkplans = typeof(IWorkplanRecipe).IsAssignableFrom(recipeType)
             };
         }
-        public ProductModel ConvertProduct(IProductType productType, bool flat)
+        public ProductModel ConvertProduct(ProductType productType, bool flat)
         {
 
             // Base object
@@ -80,9 +80,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var properties = typeWrapper != null ? typeWrapper.Properties.ToArray() : productType.GetType().GetProperties();
             converted.Properties = EntryConvert.EncodeObject(productType, _productSerialization);
 
-            // Files         
-            converted.Files = ConvertFiles(productType, properties);
-
             // Recipes
             var recipes = _productManagement.GetRecipes(productType, RecipeClassification.CloneFilter);
             converted.Recipes = recipes.Select(ConvertRecipe).ToArray();
@@ -93,26 +90,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return converted;
         }
 
-        private ProductFileModel[] ConvertFiles(IProductType productType, IEnumerable<PropertyInfo> properties)
-        {
-            var productFileProperties = properties.Where(p => p.PropertyType == typeof(ProductFile)).ToArray();
-            var fileModels = new ProductFileModel[productFileProperties.Length];
-            for (int i = 0; i < fileModels.Length; i++)
-            {
-                var value = (ProductFile)productFileProperties[i].GetValue(productType);
-                fileModels[i] = new ProductFileModel()
-                {
-                    PropertyName = productFileProperties[i].Name,
-                    FileName = value?.Name,
-                    FileHash = value?.FileHash,
-                    FilePath = value?.FilePath,
-                    MimeType = value?.MimeType
-                };
-            }
-            return fileModels;
-        }
-
-        private void ConvertParts(IProductType productType, IEnumerable<PropertyInfo> properties, ProductModel converted)
+        private void ConvertParts(ProductType productType, IEnumerable<PropertyInfo> properties, ProductModel converted)
         {
             var connectors = new List<PartConnector>();
             foreach (var property in properties)
@@ -174,7 +152,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return part;
         }
 
-        public IProductType ConvertProductBack(ProductModel source, ProductType converted)
+        public ProductType ConvertProductBack(ProductModel source, ProductType converted)
         {
             // Copy base values
             converted.Identity = new ProductIdentity(source.Identifier, source.Revision);
@@ -218,9 +196,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var typeWrapper = _productManagement.GetTypeWrapper(converted.GetType().FullName);
             var properties = typeWrapper != null ? typeWrapper.Properties.ToArray() : converted.GetType().GetProperties();
             EntryConvert.UpdateInstance(converted, source.Properties, _productSerialization);
-
-            // Copy Files
-            ConvertFilesBack(converted, source, properties);
 
             // Convert parts
             foreach (var partConnector in source.Parts ?? Enumerable.Empty<PartConnector>())
@@ -301,29 +276,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             value.Product = part.Product is null ? null : _productManagement.LoadType(part.Product.Id);
         }
 
-        private static void ConvertFilesBack(object converted, ProductModel product, PropertyInfo[] properties)
-        {
-            foreach (var fileModel in product.Files)
-            {
-                var prop = properties.Single(p => p.Name == fileModel.PropertyName);
-                var productFile = new ProductFile()
-                {
-                    MimeType = fileModel.MimeType,
-                    FilePath = fileModel.FilePath,
-                    FileHash = fileModel.FileHash,
-                    Name = fileModel.FileName
-                };
-                if (productFile.GetType().GetProperties().All(p => p.GetValue(productFile) is null))
-                    prop.SetValue(converted, null);
-                else
-                    prop.SetValue(converted, productFile);
-            }
-        }
-
-        [Obsolete("Use ConvertRecipe on instance")]
-        public static RecipeModel ConvertRecipe(IRecipe recipe) => ConvertRecipe(recipe, new PartialSerialization<ProductionRecipe>(null, null));
-
-        public RecipeModel ConvertRecipeV2(IRecipe recipe) => ConvertRecipe(recipe, _recipeSerialization);
+        public RecipeModel ConvertRecipe(IRecipe recipe) => ConvertRecipe(recipe, _recipeSerialization);
 
         private static RecipeModel ConvertRecipe(IRecipe recipe, ICustomSerialization serialization)
         {
@@ -361,14 +314,13 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var wpRecipe = recipe as IWorkplanRecipe;
             if (wpRecipe?.Workplan != null)
             {
-                converted.WorkplanId = wpRecipe.Workplan.Id;
                 converted.WorkplanModel = ConvertWorkplan(wpRecipe.Workplan);
             }
 
             return converted;
         }
 
-        public IProductRecipe ConvertRecipeBack(RecipeModel recipe, IProductRecipe productRecipe, IProductType productType)
+        public IProductRecipe ConvertRecipeBack(RecipeModel recipe, IProductRecipe productRecipe, ProductType productType)
         {
             productRecipe.Name = recipe.Name;
             productRecipe.Revision = recipe.Revision;
@@ -425,7 +377,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return model;
         }
 
-        public ProductInstance ConvertProductInstanceBack(ProductInstanceModel model, IProductType type)
+        public ProductInstance ConvertProductInstanceBack(ProductInstanceModel model, ProductType type)
         {
             var productInstance = type.CreateInstance();
             productInstance.Id = model.Id;

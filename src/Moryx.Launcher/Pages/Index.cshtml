@@ -10,7 +10,7 @@
 }
 <div class="tw-grid tw-auto-rows-auto tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-4 2xl:tw-grid-cols-6 tw-gap-4 tw-p-4 tw-overflow-y-auto tw-h-full tw-w-full tw-gap-2 tw-justify-items-stretch">
     @{
-        var modules = await _navigator.GetWebModuleItems(HttpContext);
+        var modules = await _navigator.GetModuleItems(HttpContext);
 
         foreach (var item in modules.Where(m => m.Category == ModuleCategory.User))
         {

@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer.TestTools.Resources;
 using Moryx.ControlSystem.Cells;
@@ -15,6 +14,8 @@ using Moryx.Orders;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests
 {

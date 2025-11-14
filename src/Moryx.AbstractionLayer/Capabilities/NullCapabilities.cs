@@ -16,7 +16,7 @@ namespace Moryx.AbstractionLayer.Capabilities
         /// <summary>
         /// Singleton instance
         /// </summary>
-        public static NullCapabilities Instance => _instance ?? (_instance = new NullCapabilities());
+        public static NullCapabilities Instance => _instance ??= new NullCapabilities();
 
         /// <summary>
         /// Private constructor to enforce singleton

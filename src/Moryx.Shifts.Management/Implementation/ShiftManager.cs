@@ -5,10 +5,8 @@ using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
+using Moryx.Shifts.Management.Model;
 
 [assembly: InternalsVisibleTo("Moryx.Shift.Management.IntegrationTests")]
 

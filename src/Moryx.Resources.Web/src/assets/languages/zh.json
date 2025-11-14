@@ -20,7 +20,7 @@
     "ADD": "加",
     "ADD_CHILD": "添加子资源",
     "RELOAD": "刷新",
-    "NEXT": "下一页" 
+    "NEXT": "下一页"
   },
   "ADD_RESOURCE_DIALOG": {
     "TITLE": "您想创建哪种资源类型？"
@@ -46,5 +46,11 @@
       "REPEAT": "重复",
       "CLEAR": "清除"
     }
+  },
+  "REMOVE_RESOURCE_DIALOG": {
+    "TITLE": "删除资源",
+    "SUB_TITLE": "该资源将被永久删除:",
+    "CANCEL": "取消",
+    "REMOVE": "删除"
   }
 }

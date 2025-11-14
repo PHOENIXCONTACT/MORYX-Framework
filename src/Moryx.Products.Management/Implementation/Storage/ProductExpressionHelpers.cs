@@ -4,7 +4,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using Moryx.AbstractionLayer.Products;
-using Moryx.Products.Model;
+using Moryx.Products.Management.Model;
 
 namespace Moryx.Products.Management
 {
@@ -73,7 +73,7 @@ namespace Moryx.Products.Management
             typeMember = null;
             do
             {
-                if (expression.Member is PropertyInfo propertyInfo && typeof(IProductType).IsAssignableFrom(propertyInfo.PropertyType))
+                if (expression.Member is PropertyInfo propertyInfo && typeof(ProductType).IsAssignableFrom(propertyInfo.PropertyType))
                     return true;
                 typeMember = expression.Member;
                 expression = expression.Expression as MemberExpression;

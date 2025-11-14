@@ -8,7 +8,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
 {
     internal static class Converter
     {
-        internal static ICustomSerialization _serialization = new PossibleValuesSerialization(null, new EmptyValueProvider());
+        internal static ICustomSerialization _serialization = new PossibleValuesSerialization(null, null, new EmptyValueProvider());
 
         internal static ActiveInstruction FromModel(InstructionModel instruction)
         {

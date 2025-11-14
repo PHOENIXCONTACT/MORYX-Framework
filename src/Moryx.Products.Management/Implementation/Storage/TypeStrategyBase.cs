@@ -3,7 +3,7 @@
 
 using System.Linq.Expressions;
 using Moryx.AbstractionLayer.Products;
-using Moryx.Products.Model;
+using Moryx.Products.Management.Model;
 using Moryx.Tools;
 
 namespace Moryx.Products.Management
@@ -30,13 +30,13 @@ namespace Moryx.Products.Management
         }
 
         /// <inheritdoc />
-        public abstract bool HasChanged(IProductType current, IGenericColumns dbProperties);
+        public abstract bool HasChanged(ProductType current, IGenericColumns dbProperties);
 
         /// <inheritdoc />
-        public abstract void LoadType(IGenericColumns source, IProductType target);
+        public abstract void LoadType(IGenericColumns source, ProductType target);
 
         /// <inheritdoc />
-        public abstract void SaveType(IProductType source, IGenericColumns target);
+        public abstract void SaveType(ProductType source, IGenericColumns target);
 
         public abstract Expression<Func<IGenericColumns, bool>> TransformSelector<TProduct>(Expression<Func<TProduct, bool>> selector);
     }

@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\..\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj" />
+	  <ProjectReference Include="..\..\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj" />
     <ProjectReference Include="..\..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
     <ProjectReference Include="..\..\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj" />
     <ProjectReference Include="..\..\Moryx.Resources.Management\Moryx.Resources.Management.csproj" />

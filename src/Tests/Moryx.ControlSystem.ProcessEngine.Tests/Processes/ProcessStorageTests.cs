@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging.Abstractions;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
+using Moryx.AbstractionLayer.TestTools;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs.Production;
 using Moryx.ControlSystem.ProcessEngine.Model;
@@ -15,7 +18,6 @@ using Moryx.ControlSystem.Processes;
 using Moryx.ControlSystem.TestTools;
 using Moryx.ControlSystem.TestTools.Activities;
 using Moryx.Logging;
-using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
 using Moryx.Tools;
 using NUnit.Framework;
@@ -35,19 +37,15 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         public void GlobalSetup()
         {
             ReflectionTool.TestMode = true;
-            _unitOfWorkFactory = BuildUnitOfWorkFactory();
+            _unitOfWorkFactory = InMemoryUnitOfWorkFactoryBuilder
+                .Sqlite<ProcessContext>()
+                .EnsureDbIsCreated();
 
             var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, s, e) => { });
             _storage = new ProcessStorage { UnitOfWorkFactory = _unitOfWorkFactory, Logger = logger };
             _storage.Start();
 
             CreateDatabaseItems();
-        }
-
-        protected virtual UnitOfWorkFactory<ProcessContext> BuildUnitOfWorkFactory()
-        {
-            // Prepare in memory ControlSystem db
-            return new UnitOfWorkFactory<ProcessContext>(new InMemoryDbContextManager(nameof(ProcessStorageTests)));
         }
 
         #region Tests
@@ -269,16 +267,16 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 var processData = CreateProcessData(processEntity.Job.Id, processEntity.Id);
                 activityData = CreateActivityData(new MountActivity(), processData);
                 activityData.Resource = new CellReference(10);
-                ((Tracing)activityData.Tracing).ResourceId = activityData.Resource.Id;
+                activityData.Tracing.ResourceId = activityData.Resource.Id;
+
+                var activityRepo = uow.GetRepository<IActivityEntityRepository>();
 
                 var activityEntityId = activityData.Id = IdShiftGenerator.Generate(processEntity.Id, ProcessTestsBase.NextId);
-                uow.DbContext.ActivityEntities.Add(new()
-                {
-                    Id = activityEntityId,
-                    TaskId = activityData.Task.Id,
-                    ResourceId = activityData.Resource.Id,
-                    ProcessId = processData.Id,
-                });
+                var activityEntity = activityRepo.Create();
+                activityEntity.Id = activityEntityId;
+                activityEntity.TaskId = activityData.Task.Id;
+                activityEntity.ResourceId = activityData.Resource.Id;
+                activityEntity.ProcessId = processData.Id;
 
                 uow.SaveChanges();
                 activityData.EntityCreated = true;
@@ -389,15 +387,15 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
         private static ProcessEntity CreateProcessEntity(IUnitOfWork<ProcessContext> uow, string typeName, int state, long jobId)
         {
-            var process = uow.DbContext.ProcessEntities.Add(new()
-            {
-                Id = IdShiftGenerator.Generate(jobId << 14, ProcessTestsBase.NextId),
-                TypeName = typeName,
-                State = state,
-                JobId = jobId,
-            });
+            var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
-            return process.Entity;
+            var processEntity = processRepo.Create();
+            processEntity.Id = IdShiftGenerator.Generate(jobId << 14, ProcessTestsBase.NextId);
+            processEntity.TypeName = typeName;
+            processEntity.State = state;
+            processEntity.JobId = jobId;
+
+            return processEntity;
         }
 
         private static JobEntity CreateJobEntity(IUnitOfWork uow)

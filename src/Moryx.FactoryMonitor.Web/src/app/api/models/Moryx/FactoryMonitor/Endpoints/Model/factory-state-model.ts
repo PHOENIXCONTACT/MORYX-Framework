@@ -10,7 +10,6 @@ export interface FactoryStateModel {
   activityChangedModels?: null | Array<MoryxFactoryMonitorEndpointsModelsActivityChangedModel>;
   backgroundURL?: null | string;
   cellStateChangedModels?: null | Array<MoryxFactoryMonitorEndpointsModelsCellStateChangedModel>;
-  /** @deprecated */cells?: null | Array<MoryxFactoryMonitorEndpointsModelCellModel>;
   hasManufacturingFactory?: boolean;
   iconName?: null | string;
   id?: number;

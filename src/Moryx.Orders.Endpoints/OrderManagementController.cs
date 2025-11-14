@@ -185,7 +185,7 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             return Converter.ToModel(operation);
         }
@@ -200,7 +200,7 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.DOCUMENT_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_GetDocuments_DocumentNotFound });
 
             return operation.Documents.Select(Converter.ToModel).ToArray();
         }
@@ -216,11 +216,11 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.DOCUMENT_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_GetDocuments_DocumentNotFound });
 
             var document = operation.Documents.FirstOrDefault(x => x.Identifier == identifier);
             if (document == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.DOCUMENT_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_GetDocuments_DocumentNotFound });
 
             if (string.IsNullOrEmpty(document.ContentType))
                 return BadRequest();
@@ -238,7 +238,7 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.PRODUCTPARTS_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_GetProductParts_ProductPartsNotFound });
 
             return operation.Parts.Select(Converter.ToModel).ToArray();
         }
@@ -254,13 +254,13 @@ namespace Moryx.Orders.Endpoints
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
             {
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
             }
 
             var beginContext = _orderManagement.GetBeginContext(operation);
             if (beginContext == null)
             {
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
             }
 
             return beginContext;
@@ -276,11 +276,11 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             var reportContext = _orderManagement.GetReportContext(operation);
             if (reportContext == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             return reportContext;
         }
@@ -295,11 +295,11 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             var reportContext = _orderManagement.GetInterruptContext(operation);
             if (reportContext == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             return reportContext;
         }
@@ -314,11 +314,11 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             var adviceContext = _orderManagement.GetAdviceContext(operation);
             if (adviceContext == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             return adviceContext;
         }
@@ -332,7 +332,7 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             return _orderManagement.GetLogs(operation).Select(Converter.ToModel).ToArray();
         }
@@ -376,7 +376,7 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             if (beginModel.UserId is null)
                 _orderManagement.BeginOperation(operation, beginModel.Amount);
@@ -396,7 +396,7 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             _orderManagement.AbortOperation(operation);
             return Ok();
@@ -412,7 +412,7 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             _orderManagement.ReportOperation(operation, Converter.FromModel(report, _userManagement));
             return Ok();
@@ -428,7 +428,7 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             _orderManagement.InterruptOperation(operation, Converter.FromModel(report, _userManagement));
             return Ok();
@@ -444,7 +444,7 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             var result = await _orderManagement.TryAdvice(operation, Converter.FromModel(advice, operation));
             if (result.Success)
@@ -465,7 +465,7 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             _orderManagement.SetOperationSortOrder(sortOrder, operation);
             return Ok();
@@ -481,7 +481,7 @@ namespace Moryx.Orders.Endpoints
         {
             var operation = _orderManagement.GetOperation(guid);
             if (operation == null)
-                return NotFound(new MoryxExceptionResponse { Title = Strings.OPERATION_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             _orderManagement.Reload(operation);
             return Ok();

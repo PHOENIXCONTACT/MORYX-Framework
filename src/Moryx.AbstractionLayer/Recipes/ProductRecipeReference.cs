@@ -11,10 +11,10 @@ namespace Moryx.AbstractionLayer.Recipes
     public class ProductRecipeReference : RecipeReference, IProductRecipe
     {
         /// <inheritdoc />
-        public IProductType Product { get; set; }
+        public ProductType Product { get; set; }
 
         /// <inheritdoc />
-        public IProductType Target => null;
+        public ProductType Target => null;
 
         /// <summary>
         /// Creates a new instance of the <see cref="ProductRecipeReference"/>

@@ -155,7 +155,7 @@ namespace Moryx.Orders.Management
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public new IProductType Product
+        public new ProductType Product
         {
             get => base.Product;
             set => base.Product = value;

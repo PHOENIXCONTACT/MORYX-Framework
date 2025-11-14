@@ -8,15 +8,19 @@ namespace Moryx.AbstractionLayer.Products
     /// <summary>
     /// Base class for all products
     /// </summary>
-    public abstract class ProductType : IProductType
+    public abstract class ProductType : IPersistentObject, IIdentifiableObject
     {
         /// <inheritdoc />
         public long Id { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Name of the product
+        /// </summary>
         public string Name { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Current state of the products
+        /// </summary>
         public ProductState State { get; set; }
 
         /// <inheritdoc />

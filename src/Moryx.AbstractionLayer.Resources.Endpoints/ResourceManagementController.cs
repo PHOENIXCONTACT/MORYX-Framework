@@ -10,11 +10,11 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moryx.Asp.Extensions;
 using Moryx.Serialization;
 using Moryx.Tools;
-using Moryx.AbstractionLayer.Properties;
 using Moryx.Runtime.Modules;
 using Moryx.Configuration;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
+using Moryx.AbstractionLayer.Resources.Endpoints.Properties;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
@@ -155,7 +155,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             }
             catch (Exception)
             {
-                return NotFound(new MoryxExceptionResponse { Title = Strings.RESOURCE_NOT_FOUND });
+                return NotFound(new MoryxExceptionResponse { Title = Strings.ResourceManagementController_ResourceNotFound });
             }
 
             ValueProviderExecutor.Execute(resource, new ValueProviderExecutorSettings()
@@ -398,7 +398,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
 
             public bool Match(Resource instance)
             {
-                // Check type of instance, if filter is set            
+                // Check type of instance, if filter is set
                 if (_typeNodes != null && _typeNodes.All(tn => !tn.ResourceType.IsInstanceOfType(instance)))
                     return false;
 

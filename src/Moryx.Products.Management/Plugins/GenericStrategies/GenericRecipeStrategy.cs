@@ -5,7 +5,7 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.Modules;
-using Moryx.Products.Model;
+using Moryx.Products.Management.Model;
 
 namespace Moryx.Products.Management
 {
@@ -20,7 +20,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Injected entity mapper
         /// </summary>
-        public GenericEntityMapper<ProductionRecipe, IProductType> EntityMapper { get; set; }
+        public GenericEntityMapper<ProductionRecipe, ProductType> EntityMapper { get; set; }
 
         /// <summary>
         /// Initialize the type strategy

@@ -6,7 +6,7 @@ using Moryx.Model;
 using Moryx.Model.Attributes;
 using Moryx.Model.Repositories;
 using Moryx.Products.Management;
-using Moryx.Products.Model;
+using Moryx.Products.Management.Model;
 using Moryx.Workplans;
 
 namespace Moryx.Benchmarking.Setups

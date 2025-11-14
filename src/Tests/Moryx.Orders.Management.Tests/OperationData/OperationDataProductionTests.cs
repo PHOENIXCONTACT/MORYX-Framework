@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using Moryx.ControlSystem.Jobs;
 using Moq;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Recipes;
 using NUnit.Framework;
 

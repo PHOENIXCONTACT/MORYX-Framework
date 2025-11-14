@@ -7,10 +7,10 @@ using System.Linq;
 using Moq;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.AbstractionLayer.TestTools;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Model;
-using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
 using Moryx.TestTools.UnitTest;
 using NUnit.Framework;
@@ -29,7 +29,9 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
         [SetUp]
         public void TestFixtureSetUp()
         {
-            _unitOfWorkFactory = BuildUnitOfWorkFactory();
+            _unitOfWorkFactory = InMemoryUnitOfWorkFactoryBuilder
+                .Sqlite<ProcessContext>()
+                .EnsureDbIsCreated();
 
             var recipeProviderMock = new Mock<IRecipeProvider>();
             var productMock = recipeProviderMock.As<IProductManagement>(); // Is has to be a RecipeProvider and also a ProductManagement
@@ -60,11 +62,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             };
 
             _jobHistory = _jobStorage;
-        }
-
-        protected virtual UnitOfWorkFactory<ProcessContext> BuildUnitOfWorkFactory()
-        {
-            return new UnitOfWorkFactory<ProcessContext>(new InMemoryDbContextManager(Guid.NewGuid().ToString()));
         }
 
         [Test]

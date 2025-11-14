@@ -16,18 +16,17 @@ using Moryx.StateMachines;
 using Moryx.Threading;
 using Opc.Ua;
 using Opc.Ua.Client;
-using Opc.Ua.Configuration;
 using System.ComponentModel.DataAnnotations;
-using Moryx.Drivers.OpcUa.Localizations;
+using Moryx.Drivers.OpcUa.Properties;
 
 namespace Moryx.Drivers.OpcUa;
 
 /// <summary>
-/// Driver to communicate via Opc Ua . It is able to write and read nodes 
+/// Driver to communicate via Opc Ua . It is able to write and read nodes
 /// and subscribe to value changes of nodes in a session
 /// </summary>
 [ResourceRegistration]
-[Display(Name = nameof(Strings.OPCUA_DRIVER), Description = nameof(Strings.OPCUA_DRIVER_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+[Display(Name = nameof(Strings.OpcUaDriver_DisplayName), Description = nameof(Strings.OpcUaDriver_Description), ResourceType = typeof(Strings))]
 public class OpcUaDriver : Driver, IOpcUaDriver2
 {
     //TODO 6.1 Invoke Methods
@@ -36,17 +35,16 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// <summary>
     /// Current tate of the driver
     /// </summary>
-
     [EntrySerialize]
-    [Display(Name = nameof(Strings.DRIVER_STATE), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_StateName), ResourceType = typeof(Strings))]
     public string StateName => CurrentState?.ToString() ?? "";
 
     [EntrySerialize, ReadOnly(true)]
-    [Display(Name = nameof(Strings.SERVER_STATUS), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_ServerStatus), ResourceType = typeof(Strings))]
     public ServerState ServerStatus { get; private set; }
 
     [EntrySerialize, ReadOnly(true)]
-    [Display(Name = nameof(Strings.DEVICE_SET), Description = nameof(Strings.DEVICE_SET_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_DeviceSet), Description = nameof(Strings.OpcUaDriver_DeviceSet_Description), ResourceType = typeof(Strings))]
     public List<DeviceType> DeviceSet { get; set; } = [];
 
     #region Configuration
@@ -54,14 +52,14 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// List of default subscriptions
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.DEFAULT_SUBSCRIPTIONS), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_DefaultSubscriptions), ResourceType = typeof(Strings))]
     public List<string> DefaultSubscriptions { get; set; } = [];
 
     [DataMember]
     public Dictionary<string, string> NodeIdAliasDictionary;
 
     [EntrySerialize]
-    [Display(Name = nameof(Strings.NODE_ID_ALIAS), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_NodeIdAlias), ResourceType = typeof(Strings))]
     internal List<NodeIdAlias> NodeIdAlias
     {
         get
@@ -89,57 +87,49 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// Identifier of the driver
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.IDENTIFIER), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_Identifier), ResourceType = typeof(Strings))]
     public string Identifier { get; set; }
 
     /// <summary>
     /// Url of the OPC UA Server
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.OPCUA_SERVER_URL), Description = nameof(Strings.OPCUA_SERVER_URL_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_OpcUaServerUrl), Description = nameof(Strings.OpcUaDriver_OpcUaServerUrl_Description), ResourceType = typeof(Strings))]
     public string OpcUaServerUrl { get; set; }
-
-    /// <summary>
-    /// Port of the OPC UA Server
-    /// </summary>
-    [EntrySerialize, DataMember]
-    [Obsolete("This property will be removed in a future version. It's recommended to include the port into the URL")]
-    [Display(Name = nameof(Strings.OPCUA_SERVER_PORT), ResourceType = typeof(Localizations.Strings))]
-    public int OpcUaServerPort { get; set; }
 
     /// <summary>
     /// Username needed to authenticate on the server
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.USERNAME), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_Username), ResourceType = typeof(Strings))]
     public string Username { get; set; }
 
     /// <summary>
     /// Password needed to authenticate on the server
     /// </summary>
     [EntrySerialize, DataMember, Password]
-    [Display(Name = nameof(Strings.PASSWORD), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_Password), ResourceType = typeof(Strings))]
     public string Password { get; set; }
 
     /// <summary>
     /// Use encryption during communication
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.USE_ENCRYPTION), Description = nameof(Strings.USE_ENCRYPTION_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_UseEncryption), Description = nameof(Strings.OpcUaDriver_UseEncryption_Description), ResourceType = typeof(Strings))]
     public bool UseEncryption { get; set; }
 
     /// <summary>
     /// Path of the config file
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.FILE_PATH_CLIENT), Description = nameof(Strings.FILE_PATH_CLIENT_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_FilePathClientConfig), Description = nameof(Strings.OpcUaDriver_FilePathClientConfig_Description), ResourceType = typeof(Strings))]
     public string FilePathClientConfig { get; set; }
 
     /// <summary>
     /// Reconnection Period
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.RECONNECTION_PERIOD), Description = nameof(Strings.RECONNECTION_PERIOD_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_ReconnectionPeriod), Description = nameof(Strings.OpcUaDriver_ReconnectionPeriod_Description), ResourceType = typeof(Strings))]
     public int ReconnectionPeriod { get; set; }
 
     /// <summary>
@@ -147,14 +137,14 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// </summary>
     //TODO 6.2 Update Publishing- and SamplingInterval whithout restarting the driver
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.PUBLISH_INTERVALL), Description = nameof(Strings.PUBLISH_INTERVALL_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_PublishingInterval), Description = nameof(Strings.OpcUaDriver_PublishingInterval_Description), ResourceType = typeof(Strings))]
     public int PublishingInterval { get; set; }
 
     /// <summary>
     /// Interval on which the changes of the monitored values are checked
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.USE_ENCRYPTION), Description = nameof(Strings.USE_ENCRYPTION_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_SamplingInterval), Description = nameof(Strings.OpcUaDriver_SamplingInterval_Description), ResourceType = typeof(Strings))]
     public int SamplingInterval { get; set; }
 
     //TODO 6.1 Use selfsigned certificates for communication
@@ -162,10 +152,10 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     #endregion
 
     /// <summary>
-    /// All nodes found on the Opc Ua server 
+    /// All nodes found on the Opc Ua server
     /// </summary>
     [EntrySerialize, ReadOnly(true)]
-    [Display(Name = nameof(Strings.DISPLAY_NODE), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.OpcUaDriver_Nodes), ResourceType = typeof(Strings))]
     public List<OpcUaDisplayNode> Nodes { get; private set; } = [];
     /// <summary>
     /// The number of nodes under the driver
@@ -199,9 +189,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     private readonly object _lock = new();
     private readonly object _stateLock = new();
 
-    private string _applicationName = "MORYX OpcUa Client ";
-
     private Subscription _subscription = null;
+
+    public ApplicationConfigurationFactory ApplicationConfigurationFactory { get; set; } = new ApplicationConfigurationFactory();
 
     /// <inheritdoc/>
     public event EventHandler<object> Received;
@@ -272,7 +262,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     protected override void OnStart()
     {
         base.OnStart();
-        _applicationName += " " + Identifier;
+        ApplicationConfigurationFactory.ApplicationName += " " + Identifier;
         Connect();
     }
 
@@ -296,7 +286,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// Try to connect to the Opc Ua server
     /// </summary>
     /// <exception cref="Exception"></exception>
-    internal async void TryConnect(bool firstTry)
+    internal async Task TryConnect(bool firstTry)
     {
         if (_session == null)
         {
@@ -317,18 +307,18 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
 
     private async Task<bool> CreateSession(bool firstTry)
     {
-        var config = await CreateConfig();
+        var config = await ApplicationConfigurationFactory.Create(Logger, FilePathClientConfig);
         if (config == null)
         {
             return false;
         }
 
-        var builder = new UriBuilder(OpcUaServerUrl);
+        UriBuilder builder = null;
         EndpointDescription selectedEndpoint;
         try
         {
+            builder = new UriBuilder(OpcUaServerUrl);
             builder.Scheme = BuildScheme(builder);
-            builder.Port = BuildPort(builder);
 
             selectedEndpoint = CoreClientUtils.SelectEndpoint(config,
                 builder.Uri.ToString(), UseEncryption);
@@ -337,10 +327,10 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         {
             if (firstTry)
             {
-                Logger.Log(LogLevel.Error, "Failed to connect {Uri} ({Message})", builder.Uri, e.Message);
+                Logger.Log(LogLevel.Error, "Failed to connect {Uri} ({Message})", builder?.Uri.ToString() ?? OpcUaServerUrl, e.Message);
             }
 
-            ParallelOperations.ScheduleExecution(TryToConnectAgaion, ReconnectionPeriod, -1);
+            ParallelOperations?.ScheduleExecution(TryToConnectAgain, ReconnectionPeriod, -1);
             return false;
         }
         var endpointConfiguration = EndpointConfiguration.Create(config);
@@ -354,7 +344,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
 
         try
         {
-            _session = await Session.Create(config, endpoint, false, false, _applicationName, 60000, userIdentity, null);
+            _session = await Session.Create(config, endpoint, false, false, ApplicationConfigurationFactory.ApplicationName, 60000, userIdentity, null);
         }
         catch (Exception ex)
         {
@@ -363,19 +353,10 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
                 Logger.Log(LogLevel.Error, "{Message}", ex.Message);
             }
 
-            ParallelOperations.ScheduleExecution(TryToConnectAgaion, ReconnectionPeriod, -1);
+            ParallelOperations.ScheduleExecution(TryToConnectAgain, ReconnectionPeriod, -1);
             return false;
         }
         return true;
-    }
-
-    private int BuildPort(UriBuilder builder)
-    {
-        return (builder.Port > -1)
-            ? builder.Port
-            : OpcUaServerPort > 0
-                ? OpcUaServerPort
-                : DefaultSchemePort(builder.Scheme);
     }
 
     private static string BuildScheme(UriBuilder builder)
@@ -392,75 +373,16 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         return scheme.Contains("tcp") ? DefaultPortTcp : DefaultPortHttps;
     }
 
-    private async Task<ApplicationConfiguration> CreateConfig()
-    {
-        var application = new ApplicationInstance
-        {
-            ApplicationName = _applicationName,
-            ApplicationType = ApplicationType.Client,
-            ConfigSectionName = "Moryx.OpcUa.Client",
-        };
-
-        ApplicationConfiguration config;
-        var defaultPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "Config\\Opc.Ua.Default.Config.xml"));
-        var filePath = string.IsNullOrEmpty(FilePathClientConfig) ? defaultPath : FilePathClientConfig;
-        try
-        {
-            config = await application.LoadApplicationConfiguration(filePath, false);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError("{Message}", ex.Message);
-            return null;
-        }
-
-        _applicationName = config.ApplicationName;
-        // check the application certificate
-        var haveAppCertificate = await application.CheckApplicationInstanceCertificate(false, 0);
-        if (!haveAppCertificate)
-        {
-            throw new Exception("Application instance certificate invalid!");
-        }
-        else
-        {
-            config.ApplicationUri = X509Utils.GetApplicationUriFromCertificate(config.SecurityConfiguration.ApplicationCertificate.Certificate);
-            config.CertificateValidator.CertificateValidation += CertificateValidatorCertificateValidation;
-        }
-        return config;
-    }
-
-    private void TryToConnectAgaion()
+    private void TryToConnectAgain()
     {
         State.OnConnectingCompleted(false);
-    }
-
-    private void CertificateValidatorCertificateValidation(CertificateValidator validator, CertificateValidationEventArgs e)
-    {
-        Logger.Log(LogLevel.Error, "{StatusCode}", e.Error.StatusCode);
-        if (e.Error.StatusCode == StatusCodes.BadCertificateUntrusted)
-        {
-            if (validator.AutoAcceptUntrustedCertificates)
-            {
-                e.Accept = true;
-                if (validator.AutoAcceptUntrustedCertificates)
-                {
-                    Logger.Log(LogLevel.Information, "Accepted Certificate: {Subject}",
-                    e.Certificate.Subject);
-                }
-                else
-                {
-                    Logger.Log(LogLevel.Information, "Rejected Certificate: {Subject}",
-                    e.Certificate.Subject);
-                }
-            }
-        }
     }
 
     private void ClientKeepAlive(ISession session, KeepAliveEventArgs e)
     {
 
         // check for events from discarded sessions.
-        if (!Object.ReferenceEquals(session, _session))
+        if (!ReferenceEquals(session, _session))
         {
             return;
         }
@@ -503,7 +425,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     private void ReconnectComplete(object sender, EventArgs e)
     {
         // ignore callbacks from discarded objects.
-        if (!Object.ReferenceEquals(sender, _reconnectHandler))
+        if (!ReferenceEquals(sender, _reconnectHandler))
         {
             return;
         }
@@ -742,12 +664,20 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
             AttributeId = Attributes.Value,
             DisplayName = node.DisplayName,
             SamplingInterval = SamplingInterval,
-            QueueSize = (uint)(PublishingInterval / SamplingInterval + 10),
+            QueueSize = ComputeQueueSize(PublishingInterval, SamplingInterval),
             DiscardOldest = true
         };
         monitoredItem.Notification += OnMonitoredItemNotification;
         node.MonitoredItem = monitoredItem;
         return monitoredItem;
+    }
+
+    private uint ComputeQueueSize(int publishingInterval, int samplingInterval)
+    {
+        samplingInterval = samplingInterval > 0
+            ? SamplingInterval
+            : 1;
+        return (uint)(publishingInterval / samplingInterval + 10);
     }
 
     private void OnMonitoredItemNotification(MonitoredItem monitoredItem, MonitoredItemNotificationEventArgs e)
@@ -791,7 +721,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         var namespaceUris = _session.NamespaceUris;
         var nodes = new List<OpcUaNode>();
 
-        BrowseNodes(Opc.Ua.ObjectIds.RootFolder, namespaceUris, nodes, 0);
+        BrowseNodes(ObjectIds.RootFolder, namespaceUris, nodes, 0);
         _nodes = nodes;
 
         _savedIds.Clear();
@@ -951,40 +881,43 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// <inheritdoc/>
     public object ReadNode(string NodeId)
     {
-
-        var value = State.ReadValue(NodeId);
-        if (value == null)
-        {
-            Logger.Log(LogLevel.Error, "There was an error, when trying to read the value of the node. Please look into the log for further information");
-            return null;
-        }
-        return value.Value;
+        return ReadNodeDataValue(NodeId).Result.Value;
     }
 
-    internal DataValue OnReadValueOfNode(string identifier)
+    private DataValueResult ReadNodeDataValue(string nodeId)
+    {
+        var value = State.ReadValue(nodeId);
+        if (!value.Success)
+        {
+            if (value.Error?.Exception != null)
+            {
+                Logger.Log(LogLevel.Error, value.Error.Exception, value.Error?.Message);
+                return null;
+            }
+        }
+        return value;
+    }
+
+    internal DataValueResult OnReadValueOfNode(string identifier)
     {
         var node = State.GetNode(identifier);
-        var errormsg = "When trying to read the value of the node, ";
         if (node == null)
         {
-            Logger.Log(LogLevel.Error, "{errormsg} the node with the id {identifier} was not found", errormsg, identifier);
-            return null;
+            return DataValueResult.WithError($"The node \"{identifier}\" was not found");
         }
         if (node.NodeClass != NodeClass.Variable)
         {
-            Logger.Log(LogLevel.Error, "{errormsg} the node with the id {identifier} was no variable node", errormsg, identifier);
-            return null;
+            return DataValueResult.WithError($"The node \"{identifier}\" was not of type 'variable'");
         }
 
         var nodeId = ExpandedNodeId.ToNodeId(node.NodeId, _session.NamespaceUris);
         var value = _session.ReadValue(nodeId);
         if (StatusCode.IsGood(value.StatusCode))
         {
-            return value;
+            return new DataValueResult(value);
         }
 
-        Logger.Log(LogLevel.Error, "{errormsg} the status was {StatusCode}", errormsg, value.StatusCode);
-        return null;
+        return DataValueResult.WithError($"The node \"{identifier}\" was not of type 'variable'");
     }
 
     /// <summary>
@@ -1032,7 +965,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
             return;
         }
 
-        WriteNode(node, msg.Payload);
+        WriteNode(node.Identifier, msg.Payload);
     }
 
     public Task SendAsync(OpcUaMessage payload)
@@ -1050,7 +983,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     [EntrySerialize]
     public string ReadNodeAsString(string NodeId)
     {
-        var value = ReadNode(NodeId);
+        var value = ReadNodeDataValue(NodeId);
         if (value == null)
         {
             return "There was an error, when trying to read the value of the node. Please look into the log for further information";
@@ -1060,7 +993,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     }
 
     /// <summary>
-    /// Method to write values to a node over the UI for testing 
+    /// Method to write values to a node over the UI for testing
     /// </summary>
     /// <param name="identifier"></param>
     /// <param name="valueString"></param>
@@ -1219,5 +1152,4 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     {
         throw new NotImplementedException();
     }
-
 }

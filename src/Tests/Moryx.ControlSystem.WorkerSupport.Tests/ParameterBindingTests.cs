@@ -3,8 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Identity;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Bindings;
@@ -252,7 +253,7 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
 
             public string Part { get; set; }  // e.g. Product.Part.Product
 
-            public IProductType Target { get; set; }
+            public ProductType Target { get; set; }
 
             protected override void Populate(IProcess process, Parameters instance)
             {
@@ -260,7 +261,7 @@ namespace Moryx.Resources.AssemblyInstruction.Tests
                     _resolver = ResolverFactory.Create(Part);
 
                 var parameters = (InsertPartParameters)instance;
-                parameters.Target = (IProductType)_resolver.Resolve(process);
+                parameters.Target = (ProductType)_resolver.Resolve(process);
             }
         }
 

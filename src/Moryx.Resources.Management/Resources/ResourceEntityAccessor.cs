@@ -4,7 +4,7 @@
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Model;
 using Moryx.Model.Repositories;
-using Moryx.Resources.Model;
+using Moryx.Resources.Management.Model;
 using Moryx.Serialization;
 using Newtonsoft.Json;
 

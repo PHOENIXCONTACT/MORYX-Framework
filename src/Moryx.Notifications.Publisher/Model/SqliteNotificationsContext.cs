@@ -2,14 +2,14 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
-using Moryx.Model.Sqlite.Attributes;
+using Moryx.Model.Sqlite;
 
-namespace Moryx.Notifications.Model
+namespace Moryx.Notifications.Publisher.Model
 {
     /// <summary>
-    /// The DBContext of this database model.
+    /// Sqlite specific implementation of <see cref="NotificationsContext"/>
     /// </summary>
-    [SqliteContext]
+    [SqliteDbContext(typeof(NotificationsContext))]
     public class SqliteNotificationsContext : NotificationsContext
     {
         /// <inheritdoc />
@@ -20,12 +20,6 @@ namespace Moryx.Notifications.Model
         /// <inheritdoc />
         public SqliteNotificationsContext(DbContextOptions options) : base(options)
         {
-        }
-
-        /// <inheritdoc />
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
         }
     }
 }

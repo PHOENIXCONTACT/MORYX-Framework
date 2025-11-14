@@ -30,7 +30,7 @@ public class SolarSystemContext : MoryxDbContext
 
     public SolarSystemContext(DbContextOptions options) : base(options)
     {
-        // Optional: If Moryx.Model.InMemory is used for testing
+        // Necessary for DesignTimeDbContextFactory
     }
 
     public virtual DbSet<Planet> Planets { get; set; }
@@ -45,6 +45,50 @@ public class SolarSystemContext : MoryxDbContext
 
         // Additional FluentAPI calls ...
     }
+}
+````
+
+If you want to provide database provider specific implementations you can derive from this context. The database specific attribute provides an argument for the base context. This is important to use the base context in a generic way, without knowledge about the specific database providers. For example for PostgreSQL:
+
+````cs
+[NpgsqlDbContext(typeof(SolarSystemContext))]
+public class NpgsqlSolarSystemContext : SolarSystemContext
+{
+    public NpgsqlSolarSystemContext()
+    {
+    }
+
+    public NpgsqlSolarSystemContext(DbContextOptions options) : base(options)
+    {
+        // Necessary for DesignTimeDbContextFactory
+    }
+}
+````
+
+or for Sqlite:
+
+````cs
+[SqliteDbContext(typeof(SolarSystemContext))]
+public class SqliteSolarSystemContext : SolarSystemContext
+{
+    public SqliteSolarSystemContext()
+    {
+    }
+
+    public SqliteSolarSystemContext(DbContextOptions options) : base(options)
+    {
+        // Necessary for DesignTimeDbContextFactory
+    }
+}
+````
+
+If you just want to support one database provider, you can use the database specific attribute on the base context directly.
+
+````cs
+[NpgsqlDbContext]
+public class SolarSystemContext : MoryxDbContext
+{
+    ...
 }
 ````
 
@@ -126,11 +170,11 @@ You can decide between three options of tracking:
 If an entity consists of one or more navigation properties you might want to have access to them.
 There are three ways to access these kind of properties:
 
-| Mode | Explanation |
-|---------------------|---|
-| `Eager loading` | With eager loading it is possible to configure which relations shall be loaded every time (Have a look on the [Include extension](https://msdn.microsoft.com/en-us/library/system.data.entity.dbextensions.include.aspx)) |
-| `Lazy loading`     | Lazy loading loads relations when you access them |
-| `Explicit loading`   | You can load a relation explicitly when lazy loading was turned off |
+| Mode               | Explanation                                                                                                                                                                                                               |
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Eager loading`    | With eager loading it is possible to configure which relations shall be loaded every time (Have a look on the [Include extension](https://msdn.microsoft.com/en-us/library/system.data.entity.dbextensions.include.aspx)) |
+| `Lazy loading`     | Lazy loading loads relations when you access them                                                                                                                                                                         |
+| `Explicit loading` | You can load a relation explicitly when lazy loading was turned off                                                                                                                                                       |
 
 ### Enable automatic lazy loading
 
@@ -252,10 +296,10 @@ Database migration consists of a migration configuration that is needed for ever
 
 The entity framework comes with two cli commands to do database model migration:
 
-| Script | Explanation |
-|---------------------|---|
-| `dotnet ef migrations add`    | This command is executed every time you want to create a new migration |
-| `dotnet ef database update`   | This command runs all database migrations found in the corresponding assembly. This step can also be called from code. |
+| Script                      | Explanation                                                                                                            |
+|-----------------------------|------------------------------------------------------------------------------------------------------------------------|
+| `dotnet ef migrations add`  | This command is executed every time you want to create a new migration                                                 |
+| `dotnet ef database update` | This command runs all database migrations found in the corresponding assembly. This step can also be called from code. |
 
 When EF guys are talking about the *CodeFirst Migrations* approach they mean exactly these commands.
 
@@ -263,52 +307,49 @@ When EF guys are talking about the *CodeFirst Migrations* approach they mean exa
 
 Before we implement the UnitOfWork you can configure your migration. The ef migration every time needs an executable for the startup project.
 It is necessary to have one if you project is just a class library.
-We use the default StartProject of an application to create the migration. Keep in mind that the project must be referenced in the start project. The migration tool needs to know the data model connection string for the migration. MORYX cannot configure the migration process therefore we must put the connection string in the default `appsettings.json`. Make this file copy to output directory in build process.
+We use the default StartProject of an application to create the migration. Keep in mind that the project must be referenced in the start project. The migration tool needs to know the data model connection string for the migration. MORYX cannot configure the migration process therefore we provide two options by default:
 
-````json
-{
-  "ConnectionStrings": {
-    "Moryx.TestTools.Test.Model": "Username=postgres;Password=postgres;Host=localhost;Port=5432;Persist Security Info=True;Database=Moryx.TestTools.Test.Model"
-  }
-}
-````
+- Pass the connection string as parameter to the migration command
+- Use `EFCORETOOLSDB` environment variable
 
-The model will be instantiated without any configuration and therfore it is necessary to tell the model where the connectionString can be found. This must be done within the DbContext implementation `OnConfiguring` method.
+For both options we need implementations of the `IDesignTimeDbContextFactory<TContext>` interface for every `DbContext` you want to migrate ([Microsoft Docs](https://learn.microsoft.com/en-us/ef/core/cli/dbcontext-creation?tabs=dotnet-core-cli#from-a-design-time-factory)). This factory is used by the migration tool to create an instance of your context during design time. MORYX provides a base implementation for you to make your life easier and avoid code duplication. Each database specific implementation provides a base class for you to derive from. For PostgreSQL it is the `NpgsqlDesignTimeDbContextFactory<TContext>` located in the `Moryx.Model.PostgreSQL` package. For Sqlite it is the `SqliteDesignTimeDbContextFactory<TContext>` located in the `Moryx.Model.Sqlite` package.
+
+Samples for the SolarSystemContext could look as follows. There is no additional code necessary within the classes.
 
 ````cs
-protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+// Npgsql
+public class NpgsqlSolarSystemContextDesignTimeFactory : NpgsqlDesignTimeDbContextFactory<NpgsqlSolarSystemContext>
 {
-    base.OnConfiguring(optionsBuilder);
+}
 
-    if (!optionsBuilder.IsConfigured)
-    {
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .Build();
-        var connectionString = configuration.GetConnectionString("Moryx.TestTools.Test.Model");
-        optionsBuilder.UseNpgsql(connectionString);
-    }
+// Sqlite
+public class SqliteSolarSystemContextDesignTimeFactory : NpgsqlDesignTimeDbContextFactory<SqliteSolarSystemContext>
+{
 }
 ````
 
-After you configured the connection string, navigate with your command line to the folder of the data model project. To create a migration call:
+The `Moryx.Model.DesignTimeFactory<TContext>` base classes already implement the logic to read the connection string from the command line parameters or the `EFCORETOOLSDB` environment variable.
 
 ````ps
-dotnet ef migrations add InitialCreate  --startup-project ..\StartProject.Core\StartProject.Core.csproj
+// Using command line parameter
+dotnet ef migrations add InitialCreate -s .path/to/StartProject.csproj -c SolarSystemContext -- --connection "YourConnectionString"
+
+// Using environment variable
+$env:EFCORETOOLSDB="YourConnectionString"
+dotnet ef migrations add InitialCreate -s .path/to/StartProject.csproj -c SolarSystemContext
 ````
-
-An alternative is that the StartProject is the default visual studio start up project and you use the `Package Manager Console`.
-
-This will create a folder named Migrations in the project and a `Configurations.cs` file within.
-As mentioned before MORYX has already done some work for you.
 
 ### Update-Database
 
 The last step to do, is to apply the migrations to the database so that your context and its entities are on the same version. Copy the following line to the command line:
 
 ````ps
-dotnet ef database update InitialCreate  --startup-project ..\StartProject.Core\StartProject.Core.csproj
+// Using command line parameter
+dotnet ef database update InitialCreate -s path/to/StartProject.csproj -c SolarSystemContext -- --connection "YourConnectionString"
+
+// Using environment variable
+$env:EFCORETOOLSDB="YourConnectionString"
+dotnet ef database update InitialCreate -s path/to/StartProject.csproj -c SolarSystemContext
 ````
 
 The database should now have been updated. Have a look.

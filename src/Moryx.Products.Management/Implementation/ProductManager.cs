@@ -3,12 +3,11 @@
 
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.Model.Repositories;
-using Moryx.Products.Model;
+using Moryx.Products.Management.Model;
 
 namespace Moryx.Products.Management
 {
@@ -52,7 +51,7 @@ namespace Moryx.Products.Management
         {
         }
 
-        public IReadOnlyList<IProductType> LoadTypes(ProductQuery query)
+        public IReadOnlyList<ProductType> LoadTypes(ProductQuery query)
         {
             return Storage.LoadTypes(query);
         }
@@ -62,17 +61,17 @@ namespace Moryx.Products.Management
             return Storage.LoadTypes(selector);
         }
 
-        public IProductType LoadType(long id)
+        public ProductType LoadType(long id)
         {
             return Storage.LoadType(id);
         }
 
-        public IProductType LoadType(ProductIdentity identity)
+        public ProductType LoadType(ProductIdentity identity)
         {
             return Storage.LoadType(identity);
         }
 
-        public long SaveType(IProductType modifiedInstance)
+        public long SaveType(ProductType modifiedInstance)
         {
             var saved = Storage.SaveType(modifiedInstance);
             //reload the object for correct references
@@ -82,7 +81,7 @@ namespace Moryx.Products.Management
             return saved;
         }
 
-        public IProductType CreateType(string type)
+        public ProductType CreateType(string type)
         {
             var wrapper = Storage.GetTypeWrapper(type);
             if (wrapper == null || wrapper.Constructor == null)
@@ -90,7 +89,7 @@ namespace Moryx.Products.Management
             return wrapper.Constructor();
         }
 
-        public IProductType Duplicate(ProductType template, ProductIdentity newIdentity)
+        public ProductType Duplicate(ProductType template, ProductIdentity newIdentity)
         {
             // Fetch existing products for identity validation
             var existing = LoadTypes(new ProductQuery { Identifier = newIdentity.Identifier });
@@ -197,7 +196,7 @@ namespace Moryx.Products.Management
             }
         }
 
-        public ProductInstance CreateInstance(IProductType productType, bool save)
+        public ProductInstance CreateInstance(ProductType productType, bool save)
         {
             var instance = productType.CreateInstance();
             if (save)
@@ -220,7 +219,7 @@ namespace Moryx.Products.Management
             return Storage.LoadInstances(selector);
         }
 
-        private void RaiseProductChanged(IProductType productType)
+        private void RaiseProductChanged(ProductType productType)
         {
             // This must never by null
             // ReSharper disable once PossibleNullReferenceException
@@ -232,6 +231,6 @@ namespace Moryx.Products.Management
             return Storage.GetTypeWrapper(typeName);
         }
 
-        public event EventHandler<IProductType> TypeChanged;
+        public event EventHandler<ProductType> TypeChanged;
     }
 }

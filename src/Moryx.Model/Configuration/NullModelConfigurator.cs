@@ -3,7 +3,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Moryx.Configuration;
 
 namespace Moryx.Model.Configuration
 {
@@ -16,7 +15,7 @@ namespace Moryx.Model.Configuration
         public IDatabaseConfig Config => new DatabaseConfig<DatabaseConnectionSettings>();
 
         /// <inheritdoc />
-        public void Initialize(Type contextType, IConfigManager configManager, ILogger logger)
+        public void Initialize(Type contextType, IDatabaseConfig config, ILogger logger)
         {
         }
 
@@ -28,12 +27,6 @@ namespace Moryx.Model.Configuration
 
         /// <inheritdoc />
         public DbContext CreateContext(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public void UpdateConfig()
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
@@ -70,18 +63,6 @@ namespace Moryx.Model.Configuration
 
         /// <inheritdoc />
         public Task DeleteDatabase(IDatabaseConfig config)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public Task DumpDatabase(IDatabaseConfig config, string targetPath)
-        {
-            throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
-        }
-
-        /// <inheritdoc />
-        public Task RestoreDatabase(IDatabaseConfig config, string filePath)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }

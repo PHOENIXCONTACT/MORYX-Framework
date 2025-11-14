@@ -1,65 +1,62 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
 
-	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
-		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-		<DefaultItemExcludes>src\**;node_modules\**;package\**</DefaultItemExcludes>
-		<IsPackable>true</IsPackable>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <DefaultItemExcludes>src\**;node_modules\**;package\**</DefaultItemExcludes>
+    <IsPackable>true</IsPackable>
+    <Deterministic>true</Deterministic>
+    <DeterministicSourcePaths>true</DeterministicSourcePaths>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<Content Remove="tsconfig*.json" />
-		<Content Remove="package.json" />
-		<Content Remove="ng-openapi-gen.json" />
-		<Content Remove="ng-open-api.json" />
-		<Content Remove="package-lock.json" />
-		<Content Remove="angular.json" />
-		<Content Remove=".prettierrc.json; prettierrc.json;" />
-		<Content Remove="service-config.json" />
-	</ItemGroup>
+  <ItemGroup>
+    <Content Remove="tsconfig*.json"/>
+    <Content Remove="package.json"/>
+    <Content Remove="ng-openapi-gen.json"/>
+    <Content Remove="ng-open-api.json"/>
+    <Content Remove="package-lock.json"/>
+    <Content Remove="angular.json"/>
+    <Content Remove=".prettierrc.json; prettierrc.json;"/>
+    <Content Remove="service-config.json"/>
+  </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Moryx\Moryx.csproj" />
-		<ProjectReference Include="..\Moryx.Identity\Moryx.Identity.csproj" />
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx\Moryx.csproj"/>
+    <ProjectReference Include="..\Moryx.Identity\Moryx.Identity.csproj"/>
+    <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+  </ItemGroup>
 
-	<ItemGroup>
-		<None Include="wwwroot\**\*">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\**\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
-	<ItemGroup>
-		<Compile Update="Properties\Strings.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Strings.resx</DependentUpon>
-		</Compile>
-	</ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
 
-	<ItemGroup>
-		<EmbeddedResource Update="Properties\Strings.resx">
-			<Generator>PublicResXFileCodeGenerator</Generator>
-			<LastGenOutput>Strings.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-	</ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 
-	<PropertyGroup>
-		<Deterministic>true</Deterministic>
-		<DeterministicSourcePaths>true</DeterministicSourcePaths>
-	</PropertyGroup>
+  <ItemGroup>
+    <SourceRoot Include="$(MSBuildProjectDirectory)/"/>
+  </ItemGroup>
 
-	<ItemGroup>
-		<SourceRoot Include="$(MSBuildProjectDirectory)/" />
-	</ItemGroup>
-
-	<Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\js\dist\main.js')) And ('$(NoBuild)' != 'true') ">
-		<Exec WorkingDirectory="./" Command="npm config set strict-ssl false" />
-		<Exec WorkingDirectory="./" Command="npm install --no-audit" />
-		<Exec WorkingDirectory="./" Command="npm run build:css" />
-		<Exec WorkingDirectory="./" Command="npm run build:prod" />
-		<Exec WorkingDirectory="./" Command="npm run copy:componentsfiles" />
-		<Exec WorkingDirectory="./" Command="npm config set strict-ssl true" />
-	  </Target>
+  <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\js\dist\main.js')) And ('$(NoBuild)' != 'true') ">
+    <Exec WorkingDirectory="./" Command="npm config set strict-ssl false"/>
+    <Exec WorkingDirectory="./" Command="npm install --no-audit"/>
+    <Exec WorkingDirectory="./" Command="npm run build:css"/>
+    <Exec WorkingDirectory="./" Command="npm run build:prod"/>
+    <Exec WorkingDirectory="./" Command="npm run copy:componentsfiles"/>
+    <Exec WorkingDirectory="./" Command="npm config set strict-ssl true"/>
+  </Target>
 </Project>

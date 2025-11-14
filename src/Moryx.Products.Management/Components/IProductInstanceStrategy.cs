@@ -4,7 +4,7 @@
 using System.Linq.Expressions;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Modules;
-using Moryx.Products.Model;
+using Moryx.Products.Management.Model;
 
 namespace Moryx.Products.Management
 {

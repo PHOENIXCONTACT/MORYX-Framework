@@ -2,9 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.Container;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.ProcessEngine.Model;
@@ -308,7 +310,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
 
         private ProcessData GetProcessByEngine(IWorkplanEngine engine)
         {
-            var processContext = (AbstractionLayer.ProcessContext)engine.Context;
+            var processContext = (AbstractionLayer.Processes.ProcessContext)engine.Context;
             return ActivityPool.GetProcess(processContext.Process);
         }
 
@@ -320,7 +322,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         private void PrepareEngine(ProcessData processData)
         {
             var workplan = ((IWorkplanRecipe)processData.Recipe).Workplan;
-            processData.Engine = WorkplanInstance.CreateEngine(workplan, new AbstractionLayer.ProcessContext(processData.Process));
+            processData.Engine = WorkplanInstance.CreateEngine(workplan, new AbstractionLayer.Processes.ProcessContext(processData.Process));
 
             processData.Engine.TransitionTriggered += OnTransitionTriggered;
             processData.Engine.Completed += OnWorkflowCompleted;

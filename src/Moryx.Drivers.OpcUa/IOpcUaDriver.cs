@@ -29,14 +29,6 @@ public interface IOpcUaDriver : IDriver, IMessageDriver<object>, IMessageDriver<
     object ReadNode(string NodeId);
 
     /// <summary>
-    /// Write a value to a node
-    /// </summary>
-    /// <param name="node">representing OpcUaNode</param>
-    /// <param name="payload">value to be written to the node</param>
-    [Obsolete("Use WriteNode(string NodeId, object payload) instead")]
-    void WriteNode(OpcUaNode node, object payload);
-
-    /// <summary>
     /// Rebrowse Nodes
     /// </summary>
     void RebrowseNodes();

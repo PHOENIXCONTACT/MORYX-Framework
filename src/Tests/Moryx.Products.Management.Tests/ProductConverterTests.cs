@@ -45,9 +45,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
                 {
                     ProductPartLink = new DummyProductPartLink() { Id=1, Product = new DummyProductType() { Id = 2022 } },
                     ProductPartLinkEnumerable = new List<DummyProductPartLink>(){ new() { Id=2, Product = new DummyProductType() { Id = 2023 } } }
-                },
-                new DummyProductTypeWithFiles(),
-                new DummyProductTypeWithFiles() { FirstProductFile = new ProductFile() { Name="FirstFile" }, SecondProductFile = new ProductFile() { Name="SecondFile" }}
+                }
             };
             // Create Recipe objects for test cases
             var dummyRecipeLists = new List<List<IProductRecipe>>()
@@ -66,7 +64,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
                                 yield return new TestCaseData(dummyType, state, identity, recipes, flat, testCaseCounter++);
         }
         /// <summary>
-        /// Test if the conversion to and back from a ProductModel without modification of the model 
+        /// Test if the conversion to and back from a ProductModel without modification of the model
         /// in between works without information loss.
         /// </summary>
         [TestCaseSource(nameof(ProductForwardBackwardConversionTestCaseGenerator))]
@@ -82,7 +80,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             // - Expected behavior from the RecipeManagement
             if (recipes.Any())
                 ReflectionTool.TestMode = true;
-            _productManagerMock.Setup(rm => rm.GetRecipes(It.IsAny<IProductType>(), RecipeClassification.CloneFilter)).Returns(recipes);
+            _productManagerMock.Setup(rm => rm.GetRecipes(It.IsAny<ProductType>(), RecipeClassification.CloneFilter)).Returns(recipes);
             _productManagerMock.Setup(rm => rm.LoadRecipe(It.IsAny<long>())).Returns((long id) => new DummyProductRecipe() { Id = id });
             // - Create target ProductType object
             var targetDummyProductType = (DummyProductType)Activator.CreateInstance(originalProductType.GetType());
@@ -220,12 +218,12 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             targetDummyRecipe.Id = 42;
             if (originalWorkplanRecipe is not null)
                 ((DummyProductWorkplanRecipe)targetDummyRecipe).Workplan = workplanInTargetRecipe;
-            // - No change of classification on clones should be possible, thereby preset it 
+            // - No change of classification on clones should be possible, thereby preset it
             if (originalRecipe.Classification.HasFlag(RecipeClassification.Clone))
                 targetDummyRecipe.Classification = originalRecipe.Classification;
 
             // Act
-            var convertedModel = _productConverter.ConvertRecipeV2(originalRecipe);
+            var convertedModel = _productConverter.ConvertRecipe(originalRecipe);
             var recoveredOriginal = _productConverter.ConvertRecipeBack(convertedModel, targetDummyRecipe, backupProductType);
 
             // Assert

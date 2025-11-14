@@ -3,7 +3,7 @@
 
 using System.Linq.Expressions;
 using System.Reflection;
-using Moryx.Products.Model;
+using Moryx.Products.Management.Model;
 using Moryx.Tools;
 
 namespace Moryx.Products.Management

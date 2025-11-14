@@ -9,36 +9,41 @@ import { ProductsDetailsViewComponent } from "./components/products-details-view
 import { ProductsImporterComponent } from "./components/products-importer/products-importer.component";
 import { SearchResultComponent } from "./components/search-result/search-result.component";
 import { ImporterGuard } from "./guards/importer.guard";
+import { ProductsDetailsViewResolver } from "./components/products-details-view/products-details-view-resolver";
 
 export const routes: Routes = [
-    {
-        path: 'details/:id',
-        component: ProductsDetailsViewComponent,
+  {
+    path: 'details/:id',
+    component: ProductsDetailsViewComponent,
+    resolve: {
+      product: ProductsDetailsViewResolver
+    },
+    children: [
+      { path: '', redirectTo: 'properties', pathMatch: 'full' },
+      { path: 'properties', component: ProductPropertiesComponent },
+      { path: 'references', component: ProductReferencesComponent },
+      {
+        path: 'parts/:partName/:partId',
+        component: ProductPartsComponent,
+      },
+      {
+        path: 'recipes',
+        component: ProductRecipesComponent,
         children: [
-          { path: 'properties', component: ProductPropertiesComponent },
-          { path: 'references', component: ProductReferencesComponent },
-          {
-            path: 'parts/:partName/:partId',
-            component: ProductPartsComponent,
-          },
-          {
-            path: 'recipes',
-            component: ProductRecipesComponent,
-            children: [
-              { path: '', component: DefaultViewComponent, pathMatch: 'full' },
+          { path: '', component: DefaultViewComponent, pathMatch: 'full' },
               {
                 path: ':recipeId',
                 component: ProductRecipesDetailsComponent,
               },
-            ],
-          },
         ],
       },
-      { path: '', component: DefaultViewComponent, pathMatch: 'full' },
-      {
-        path: 'import/:importer',
-        component: ProductsImporterComponent,
-        canActivate: [ImporterGuard]
-      },
+    ],
+  },
+  { path: '', component: DefaultViewComponent, pathMatch: 'full' },
+  {
+    path: 'import/:importer',
+    component: ProductsImporterComponent,
+    canActivate: [ImporterGuard]
+  },
       {path: 'search', component: SearchResultComponent}
 ]

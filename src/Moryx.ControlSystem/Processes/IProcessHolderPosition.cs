@@ -1,7 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
 
@@ -40,7 +40,7 @@ namespace Moryx.ControlSystem.Processes
         void Mount(MountInformation mountInformation);
 
         /// <summary>
-        /// Clear mount information AFTER they were moved somewhere else 
+        /// Clear mount information AFTER they were moved somewhere else
         /// </summary>
         void Unmount();
 

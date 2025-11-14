@@ -4,9 +4,7 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
-using Moryx.Communication;
 using Moryx.Configuration;
-using Moryx.Runtime.Configuration;
 using Moryx.Serialization;
 
 namespace Moryx.TestModule
@@ -28,9 +26,6 @@ namespace Moryx.TestModule
     [DataContract]
     public class ModuleConfig : ConfigBase
     {
-        [SharedConfig(false)]
-        public PortConfig Config { get; set; }
-
         [DataMember]
         [DefaultValue(0x2)]
         public byte ByteValue { get; set; }

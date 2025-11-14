@@ -5,7 +5,6 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Orders.Documents;
 using Moryx.Serialization;
-using Moryx.Tools;
 using Moryx.Users;
 
 namespace Moryx.Orders.Endpoints
@@ -85,9 +84,7 @@ namespace Moryx.Orders.Endpoints
             {
                 LogLevel = message.LogLevel,
                 Message = message.Message,
-                Exception = message.Exception != null
-                    ? ExceptionPrinter.Print(message.Exception)
-                    : string.Empty,
+                Exception = message.Exception?.ToString() ?? string.Empty,
                 TimeStamp = message.Timestamp
             };
         }

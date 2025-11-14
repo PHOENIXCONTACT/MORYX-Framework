@@ -3,7 +3,7 @@
 
 using System.Threading;
 using Microsoft.Extensions.Logging.Abstractions;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.TestTools.Activities;

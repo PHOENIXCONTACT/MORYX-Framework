@@ -5,12 +5,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 namespace Moryx.Operators.Management.Model.Migrations.Npgsql;
 
+/// <inheritdoc />
 public partial class InitialCreate : Migration
 {
+    /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.EnsureSchema(
@@ -117,6 +118,7 @@ public partial class InitialCreate : Migration
             column: "SkillTypeId");
     }
 
+    /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.DropTable(

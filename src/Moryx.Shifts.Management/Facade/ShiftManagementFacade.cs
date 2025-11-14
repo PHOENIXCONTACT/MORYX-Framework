@@ -3,13 +3,7 @@
 
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using Moryx.Shifts.Management.Localizations;
-
-[assembly: InternalsVisibleTo("Moryx.Shifts.Management.IntegrationTests")]
 
 namespace Moryx.Shifts.Management
 {
@@ -43,7 +37,7 @@ namespace Moryx.Shifts.Management
         private ShiftCreationContext Verified(ShiftCreationContext context)
         {
             context.Type = ShiftTypes.SingleOrDefault(t => t.Id == context.Type?.Id) ??
-                throw new ArgumentException(string.Format(Strings.ID_NOT_FOUND, nameof(ShiftType), context.Type?.Id));
+                throw new ArgumentException(string.Format(Strings.ShiftManagementFacade_IdNotFoundExceptionMessage, nameof(ShiftType), context.Type?.Id));
 
             return context;
         }
@@ -58,9 +52,9 @@ namespace Moryx.Shifts.Management
         private Shift Verified(Shift shift)
         {
             var verifiedShift = Shifts.SingleOrDefault(s => s.Id == shift.Id) ??
-                throw new ArgumentException(string.Format(Strings.ID_NOT_FOUND, nameof(Shift), shift.Id));
+                throw new ArgumentException(string.Format(Strings.ShiftManagementFacade_IdNotFoundExceptionMessage, nameof(Shift), shift.Id));
             verifiedShift.Type = ShiftTypes.SingleOrDefault(t => t.Id == shift.Type?.Id) ??
-                throw new ArgumentException(string.Format(Strings.ID_NOT_FOUND, nameof(ShiftType), shift.Type?.Id));
+                throw new ArgumentException(string.Format(Strings.ShiftManagementFacade_IdNotFoundExceptionMessage, nameof(ShiftType), shift.Type?.Id));
 
             return shift;
         }
@@ -74,7 +68,7 @@ namespace Moryx.Shifts.Management
         private Shift VerifiedShift(long id)
         {
             var shift = Shifts.SingleOrDefault(s => s.Id == id) ??
-                throw new ArgumentException(string.Format(Strings.ID_NOT_FOUND, nameof(Shift), id));
+                throw new ArgumentException(string.Format(Strings.ShiftManagementFacade_IdNotFoundExceptionMessage, nameof(Shift), id));
             return shift;
         }
 
@@ -95,7 +89,7 @@ namespace Moryx.Shifts.Management
         private ShiftType Verified(ShiftType type)
         {
             var verifiedType = ShiftTypes.SingleOrDefault(t => t.Id == type.Id) ??
-                throw new ArgumentException(string.Format(Strings.ID_NOT_FOUND, nameof(ShiftType), type.Id));
+                throw new ArgumentException(string.Format(Strings.ShiftManagementFacade_IdNotFoundExceptionMessage, nameof(ShiftType), type.Id));
 
             return type;
         }
@@ -109,7 +103,7 @@ namespace Moryx.Shifts.Management
         private ShiftType VerifiedType(long id)
         {
             var type = ShiftTypes.SingleOrDefault(s => s.Id == id) ??
-                throw new ArgumentException(string.Format(Strings.ID_NOT_FOUND, nameof(ShiftType), id));
+                throw new ArgumentException(string.Format(Strings.ShiftManagementFacade_IdNotFoundExceptionMessage, nameof(ShiftType), id));
             return type;
         }
 
@@ -123,7 +117,7 @@ namespace Moryx.Shifts.Management
         private ShiftAssignementCreationContext Verified(ShiftAssignementCreationContext context)
         {
             context.Shift = Shifts.SingleOrDefault(s => s.Id == context.Shift?.Id) ??
-                throw new ArgumentException(string.Format(Strings.ID_NOT_FOUND, nameof(Shift), context.Shift?.Id));
+                throw new ArgumentException(string.Format(Strings.ShiftManagementFacade_IdNotFoundExceptionMessage, nameof(Shift), context.Shift?.Id));
 
             return context;
         }
@@ -138,9 +132,9 @@ namespace Moryx.Shifts.Management
         private ShiftAssignement Verified(ShiftAssignement assignement)
         {
             var verifiedShift = ShiftAssignements.SingleOrDefault(a => a.Id == assignement.Id) ??
-                throw new ArgumentException(string.Format(Strings.ID_NOT_FOUND, nameof(ShiftAssignement), assignement.Id));
+                throw new ArgumentException(string.Format(Strings.ShiftManagementFacade_IdNotFoundExceptionMessage, nameof(ShiftAssignement), assignement.Id));
             verifiedShift.Shift = Shifts.SingleOrDefault(s => s.Id == verifiedShift.Shift?.Id) ??
-                throw new ArgumentException(string.Format(Strings.ID_NOT_FOUND, nameof(Shift), verifiedShift.Shift?.Id));
+                throw new ArgumentException(string.Format(Strings.ShiftManagementFacade_IdNotFoundExceptionMessage, nameof(Shift), verifiedShift.Shift?.Id));
 
             return assignement;
         }
@@ -154,7 +148,7 @@ namespace Moryx.Shifts.Management
         private ShiftAssignement VerifiedAssignement(long id)
         {
             var assignement = ShiftAssignements.SingleOrDefault(a => a.Id == id) ??
-                throw new ArgumentException(string.Format(Strings.ID_NOT_FOUND, nameof(ShiftAssignement), id));
+                throw new ArgumentException(string.Format(Strings.ShiftManagementFacade_IdNotFoundExceptionMessage, nameof(ShiftAssignement), id));
 
             return assignement;
         }

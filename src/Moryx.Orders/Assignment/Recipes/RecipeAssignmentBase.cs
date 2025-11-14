@@ -72,7 +72,7 @@ namespace Moryx.Orders.Assignment
         /// Default implementation to assign the current recipe to the operation
         /// Will use the given product
         /// </summary>
-        protected Task<IProductRecipe> LoadDefaultRecipe(IProductType sourceProduct)
+        protected Task<IProductRecipe> LoadDefaultRecipe(ProductType sourceProduct)
         {
             var defaultRecipe = ProductManagement.GetRecipes(sourceProduct, RecipeClassification.Default)
                 .SingleOrDefault();

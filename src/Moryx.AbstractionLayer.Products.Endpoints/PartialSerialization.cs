@@ -27,14 +27,6 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         }
 
         /// <summary>
-        /// Creates a new <see cref="PartialSerialization{T}"/>  instance
-        /// </summary>
-        [Obsolete("Use serialization with containers instead")]
-        public PartialSerialization() : this(null, null)
-        {
-        }
-
-        /// <summary>
         /// Create serialization with access to global and local container
         /// </summary>
         /// <param name="localContainer"></param>
@@ -55,8 +47,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             // Skip reference or domain model properties
             var type = prop.PropertyType;
-            if (type == typeof(ProductFile) ||
-                typeof(IProductType).IsAssignableFrom(type) ||
+            if (typeof(ProductType).IsAssignableFrom(type) ||
                 typeof(IProductPartLink).IsAssignableFrom(type) ||
                 typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(type))
                 return false;

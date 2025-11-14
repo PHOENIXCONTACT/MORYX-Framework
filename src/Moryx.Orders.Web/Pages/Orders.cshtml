@@ -11,7 +11,7 @@
   Layout = "_Layout";
 }
 @attribute [WebModule("Orders", "shopping_cart"),
-    Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description"), 
+    Display(ResourceType = typeof(Strings), Name = nameof(Strings.Module_Title), Description = nameof(Strings.Module_Description)),
     Authorize(Policy = OrderPermissions.CanView),
     AllowAnonymous]
 @section Styles {

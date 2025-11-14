@@ -2,13 +2,14 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Moryx.Model.Sqlite.Attributes;
-using System.IO;
+using Moryx.Model.Sqlite;
 
 namespace Moryx.Shifts.Management.Model
 {
-    [SqliteContext]
+    /// <summary>
+    /// Sqlite specific implementation of <see cref="ShiftsContext"/>
+    /// </summary>
+    [SqliteDbContext(typeof(ShiftsContext))]
     public class SqliteShiftsContext : ShiftsContext
     {
         public SqliteShiftsContext()
@@ -17,21 +18,6 @@ namespace Moryx.Shifts.Management.Model
 
         public SqliteShiftsContext(DbContextOptions options) : base(options)
         {
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-
-            if (!optionsBuilder.IsConfigured)
-            {
-                var configuration = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json")
-                    .Build();
-                var connectionString = configuration.GetConnectionString("Moryx.Shifts.Management.Model.Sqlite");
-                optionsBuilder.UseSqlite(connectionString);
-            }
         }
     }
 }

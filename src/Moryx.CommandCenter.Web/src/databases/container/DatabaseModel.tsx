@@ -46,7 +46,6 @@ interface DatabaseModelStateModel {
     activeTab: number;
     config: DatabaseConfigModel;
     targetModel: string;
-    selectedBackup: string;
     testConnectionPending: boolean;
     testConnectionResult: TestConnectionResult;
 }
@@ -72,7 +71,6 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
             activeTab: 1,
             config: this.getConfigValue(),
             targetModel: props.DataModel.targetModel,
-            selectedBackup : (props.DataModel.backups.length !== 0 ? props.DataModel.backups[0].fileName : ""),
             testConnectionPending : false,
             testConnectionResult : TestConnectionResult.ConfigurationError,
         };
@@ -124,10 +122,6 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         const config = {...this.state.config };
         config.entries[entryName] = e;
         this.setState({ config });
-    }
-
-    public onSelectBackup(e: React.ChangeEvent<HTMLInputElement>): void {
-        this.setState({ selectedBackup: e.target.value });
     }
 
     private createEntriesInput(): React.JSX.Element[] {
@@ -237,32 +231,6 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                 toast.error("Database not deleted: " + data.errorMessage, { autoClose: 5000 });
             }
             this.onTestConnection();
-        }).catch((d) => this.props.onShowWaitDialog(false));
-    }
-
-    public onExecuteDump(): void {
-        this.props.onShowWaitDialog(true);
-
-        this.props.RestClient.dumpDatabase(this.createConfigModel(), this.props.DataModel.targetModel).then((data) => {
-            this.props.onShowWaitDialog(false);
-            if (data.success) {
-                toast.success("Database dump started successfully. Please refer to the log to get information about the progress.", { autoClose: 5000 });
-            } else {
-                toast.error("Dump start failed: " + data.errorMessage, { autoClose: 5000 });
-            }
-        }).catch((d) => this.props.onShowWaitDialog(false));
-    }
-
-    public onExecuteRestore(): void {
-        this.props.onShowWaitDialog(true);
-
-        this.props.RestClient.restoreDatabase({ Config: this.createConfigModel(), BackupFileName: this.props.DataModel.targetModel }, this.state.targetModel).then((data) => {
-            this.props.onShowWaitDialog(false);
-            if (data.success) {
-                toast.success("Database restore started successfully. Please refer to the log to get information about the progress.", { autoClose: 5000 });
-            } else {
-                toast.error("Restore start failed: " + data.errorMessage, { autoClose: 5000 });
-            }
         }).catch((d) => this.props.onShowWaitDialog(false));
     }
 
@@ -377,41 +345,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                 </Stack>
                             </GridLegacy>
                             <GridLegacy item={true} md={12}>
-                                <Button color="primary" onClick={() => this.onSave()}>Save</Button>
-                            </GridLegacy>
-                        </DatabaseSection>
-                        <DatabaseSection title="Backup &amp; Restore">
-                            <GridLegacy item={true} md={12}>
-                                <Stack>
-                                    <TextField
-                                        label="Backup"
-                                        size="small"
-                                        margin="dense"
-                                        disabled={this.props.DataModel.backups.length === 0 }
-                                        variant="outlined"
-                                        select={true}
-                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.onSelectBackup(e)}>
-                                        {
-                                            this.props.DataModel.backups.map((backup, idx) => {
-                                                return (<MenuItem key={idx} value={backup.fileName}>{backup.fileName + " (Size: " + kbToString(backup.size * 1024) + ", Created on: " + moment(backup.creationDate).format("YYYY-MM-DD HH:mm:ss") + ")"}</MenuItem>);
-                                            })
-                                        }
-                                    </TextField>
-                                </Stack>
-                            </GridLegacy>
-                            <GridLegacy item={true} md={12}>
-                                <ButtonGroup>
-                                    <Button color="primary"
-                                        disabled={this.state.testConnectionResult !== TestConnectionResult.Success && this.state.testConnectionResult !== TestConnectionResult.PendingMigrations}
-                                        onClick={this.onExecuteDump.bind(this)}>
-                                        Create a backup
-                                    </Button>
-                                    <Button color="primary"
-                                        disabled={this.state.selectedBackup === "" || (this.state.testConnectionResult !== TestConnectionResult.Success && this.state.testConnectionResult !== TestConnectionResult.PendingMigrations)}
-                                        onClick={this.onExecuteRestore.bind(this)}>
-                                        Restore selected backup
-                                    </Button>
-                                </ButtonGroup>
+                                <Button color="primary" variant="outlined" onClick={() => this.onSave()}>Save</Button>
                             </GridLegacy>
                         </DatabaseSection>
                         <DatabaseSection title="Database">

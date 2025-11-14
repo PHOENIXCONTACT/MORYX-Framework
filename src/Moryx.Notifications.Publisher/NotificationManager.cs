@@ -4,10 +4,10 @@
 using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model.Repositories;
-using Moryx.Notifications.Model;
 using Moryx.Threading;
 using Moryx.Tools;
 using Microsoft.Extensions.Logging;
+using Moryx.Notifications.Publisher.Model;
 
 namespace Moryx.Notifications.Publisher
 {
@@ -120,14 +120,16 @@ namespace Moryx.Notifications.Publisher
 
         private void OnSourceStateChanged(object sender, bool activated)
         {
+            var source = (INotificationSource)sender;
+
+            // On activation of the source
             if (activated)
             {
-                // only deactivated is implemented
+                source.Sync();
                 return;
             }
 
-            var source = (INotificationSource)sender;
-
+            // On deactivation of the source
             // Run in new task and add
             var task = Task.Run(delegate
             {

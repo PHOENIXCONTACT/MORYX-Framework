@@ -121,7 +121,14 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             // Check the direct next job for a follow-up
             var next = JobList.Next(job);
             if (next == null || next.Classification != JobClassification.Waiting)
+            {
+                // If the completed job was a setup, but the following jobs are already gone (e.g. aborted), release the slot
+                if (classification == JobClassification.Completed && job.IsSetup() && _slots.TryRelease(job))
+                {
+                    RaiseSlotAvailable();
+                }
                 return;
+            }
 
             if (classification == JobClassification.Completing)
             {
@@ -159,3 +166,4 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         }
     }
 }
+

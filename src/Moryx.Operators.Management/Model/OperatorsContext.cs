@@ -1,31 +1,31 @@
 ﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
 
+// ReSharper disable UnusedMember.Global
+// ReSharper disable VirtualMemberNeverOverridden.Global
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 namespace Moryx.Operators.Management.Model;
 
+/// <summary>
+/// The DBContext of this database model.
+/// </summary>
 public class OperatorsContext : MoryxDbContext
 {
+    /// <inheritdoc />
     public OperatorsContext()
     {
     }
 
+    /// <inheritdoc />
     public OperatorsContext(DbContextOptions options) : base(options)
     {
     }
 
-    public virtual DbSet<OperatorEntity> OperatorEntities { get; set; }
-
-    public virtual DbSet<ResourceLinkEntity> ResourceLinkEntities { get; set; }
-
-    public virtual DbSet<SkillEntity> SkillEntities { get; set; }
-
-    public virtual DbSet<SkillTypeEntity> SkillTypeEntities { get; set; }
-
+    /// <inheritdoc />
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
@@ -33,13 +33,23 @@ public class OperatorsContext : MoryxDbContext
         optionsBuilder.UseLazyLoadingProxies();
     }
 
+    /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<OperatorEntity>().HasMany(o => o.AssignedResources);
+        modelBuilder.Entity<OperatorEntity>()
+            .HasMany(o => o.AssignedResources);
 
-        modelBuilder.Entity<SkillEntity>().HasOne(s => s.SkillType);
+        modelBuilder.Entity<SkillEntity>()
+            .HasOne(s => s.SkillType);
     }
-}
 
+    public virtual DbSet<OperatorEntity> Operators { get; set; }
+
+    public virtual DbSet<ResourceLinkEntity> ResourceLinks { get; set; }
+
+    public virtual DbSet<SkillEntity> Skills { get; set; }
+
+    public virtual DbSet<SkillTypeEntity> SkillTypes { get; set; }
+}

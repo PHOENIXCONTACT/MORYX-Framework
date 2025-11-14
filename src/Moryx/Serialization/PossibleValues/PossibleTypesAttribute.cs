@@ -43,7 +43,7 @@ namespace Moryx.Serialization
         public override bool UpdateFromPredecessor => false;
 
         /// <inheritdoc />
-        public override IEnumerable<string> GetValues(IContainer container)
+        public override IEnumerable<string> GetValues(IContainer container, IServiceProvider serviceProvider)
         {
             return _types.Select(t => UseFullname ? t.FullName : t.Name);
         }

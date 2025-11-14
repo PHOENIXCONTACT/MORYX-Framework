@@ -8,10 +8,10 @@ using Moryx.Threading;
 using Moq;
 using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
-using Moryx.Notifications.Model;
 using NUnit.Framework;
 using Moryx.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moryx.Notifications.Publisher.Model;
 
 namespace Moryx.Notifications.Tests
 {

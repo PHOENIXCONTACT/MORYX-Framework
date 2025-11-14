@@ -1,9 +1,5 @@
-﻿## Migration calls
+﻿dotnet ef migrations add InitialCreate -s ../StartProject.Asp/StartProject.Asp.csproj -o ./Model/Migrations/Npgsql/ -c NpgsqlOperatorsContext -- --connection "Host=localhost;Database=OperatorsContext;Username=postgres;Password=postgres"
+dotnet ef database update InitialCreate -s ../StartProject.Asp/StartProject.Asp.csproj -c NpgsqlOperatorsContext -- --connection "Host=localhost;Database=OperatorsContext;Username=postgres;Password=postgres"
 
-## Second Migration NpgSql
-dotnet ef migrations add InitialCreate --startup-project ..\..\src\StartProject.Asp\StartProject.Asp.csproj --output-dir .\Model\Migrations\Npgsql\ --context NpgsqlOperatorsContext
-dotnet ef database update InitialCreate --startup-project ..\..\src\StartProject\StartProject.csproj --context NpgsqlOperatorsContext
-
-## Second Migration SqLite
-dotnet ef migrations add InitialCreate --startup-project ..\..\src\StartProject.Asp\StartProject.Asp.csproj --output-dir .\Model\Migrations\Sqlite\ --context SqliteOperatorsContext
-dotnet ef database update InitialCreate --startup-project ..\..\src\StartProject\StartProject.csproj --context SqliteOperatorsContext
+dotnet ef migrations add InitialCreate -s ../StartProject.Asp/StartProject.Asp.csproj -o ./Model/Migrations/Sqlite/ -c SqliteOperatorsContext -- --connection "Data Source=OperatorsContext.db"
+dotnet ef database update InitialCreate -s ../StartProject.Asp/StartProject.Asp.csproj -c SqliteOperatorsContext -- --connection "Data Source=OperatorsContext.db"

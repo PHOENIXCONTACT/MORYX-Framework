@@ -4,20 +4,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Products.Management;
 using Moryx.Products.Management.NullStrategies;
-using Moryx.Products.Model;
 using Moryx.Products.Samples;
 using Moryx.Products.Samples.Recipe;
 using Moryx.Tools;
 using Moryx.Workplans;
 using Moq;
 using Moryx.AbstractionLayer.Identity;
-using Moryx.Model.InMemory;
+using Moryx.AbstractionLayer.TestTools;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.Model.Repositories;
+using Moryx.Products.Management.Model;
 using Moryx.Serialization;
 using NUnit.Framework;
 
@@ -241,9 +241,13 @@ namespace Moryx.Products.IntegrationTests
             _storage.Start();
         }
 
-        protected virtual UnitOfWorkFactory<ProductsContext> BuildUnitOfWorkFactory()
+        protected virtual UnitOfWorkFactory<SqliteProductsContext> BuildUnitOfWorkFactory()
         {
-            return new UnitOfWorkFactory<ProductsContext>(new InMemoryDbContextManager("ProductStorageTest"));
+            var uowFactory = InMemoryUnitOfWorkFactoryBuilder
+                .Sqlite<SqliteProductsContext>();
+            uowFactory.EnsureDbIsCreated();
+
+            return uowFactory;
         }
 
         private Mock<IStorageStrategyFactory> CreateStrategyFactory()
@@ -352,7 +356,7 @@ namespace Moryx.Products.IntegrationTests
                 {
                     IProductRecipeStrategy strategy = new GenericRecipeStrategy
                     {
-                        EntityMapper = new GenericEntityMapper<ProductionRecipe, IProductType>
+                        EntityMapper = new GenericEntityMapper<ProductionRecipe, ProductType>
                         {
                             MapperFactory = mapperFactory.Object
                         }

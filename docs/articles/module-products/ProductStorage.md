@@ -31,7 +31,7 @@ public override bool HasChanged(IProduct current, IGenericColumns dbProperties)
 
 ### Load Product
 
-Loading products refer to the conversion from product entity to typed object of type [IProduct](/src/Moryx.AbstractionLayer/Products/IProductType.cs). The implementation usually follows a standard pattern.
+Loading products refer to the conversion from product entity to typed object of type [ProductType](/src/Moryx.AbstractionLayer/Products/ProductType.cs). The implementation usually follows a standard pattern.
 
 * (optional) fetch extended repo and entity
 * copy properties to product
@@ -40,7 +40,7 @@ An implementation for our watch would look like this:
 
 ````cs
 // In class WatchStrategy
-public void LoadType(IGenericColumns source, IProductType target)
+public void LoadType(IGenericColumns source, ProductType target)
 {
     var watch = (WatchProduct)target;
     watch.Weight = source.Float1;

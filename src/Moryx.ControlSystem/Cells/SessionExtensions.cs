@@ -2,7 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Processes;
@@ -32,8 +33,8 @@ namespace Moryx.ControlSystem.Cells
         }
 
         /// <summary>
-        /// Modifies the <see cref="IProductInstance"/> of type <typeparamref name="TInstance"/> 
-        /// on the <see cref="IProcess"/> of the <paramref name="session"/> using the given 
+        /// Modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
+        /// on the <see cref="IProcess"/> of the <paramref name="session"/> using the given
         /// <paramref name="setter"/>.
         /// </summary>
         /// <typeparam name="TInstance">The expected type of the product instance</typeparam>
@@ -46,18 +47,18 @@ namespace Moryx.ControlSystem.Cells
         /// ]]>
         /// </code>
         /// </example>
-        /// <exception cref="InvalidCastException">Thrown if the <see cref="IProcess"/> of the 
+        /// <exception cref="InvalidCastException">Thrown if the <see cref="IProcess"/> of the
         /// <paramref name="session"/> does not hold a product instance of type <typeparamref name="TInstance"/>
         /// </exception>
-        /// <exception cref="InvalidOperationException">Thrown if the <see cref="IProcess"/> of the 
+        /// <exception cref="InvalidOperationException">Thrown if the <see cref="IProcess"/> of the
         /// <paramref name="session"/> is no <see cref="ProductionProcess"/></exception>
         public static TInstance ModifyProductInstance<TInstance>(this Session session, Action<TInstance> setter)
-            where TInstance : IProductInstance => session.Process.ModifyProductInstance(setter);
+            where TInstance : ProductInstance => session.Process.ModifyProductInstance(setter);
 
         /// <summary>
-        /// Tries to modifies the <see cref="IProductInstance"/> of type <typeparamref name="TInstance"/> 
-        /// on the <see cref="IProcess"/> of the <paramref name="session"/> using the given 
-        /// <paramref name="setter"/>. Returns false, if the 
+        /// Tries to modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
+        /// on the <see cref="IProcess"/> of the <paramref name="session"/> using the given
+        /// <paramref name="setter"/>. Returns false, if the
         /// operation could not be executed.
         /// </summary>
         /// <typeparam name="TInstance">The expected type of the product instance</typeparam>
@@ -71,7 +72,7 @@ namespace Moryx.ControlSystem.Cells
         /// </code>
         /// </example>
         public static bool TryModifyProductInstance<TInstance>(this Session session, Action<TInstance> setter)
-            where TInstance : IProductInstance => session.Process.TryModifyProductInstance(setter);
+            where TInstance : ProductInstance => session.Process.TryModifyProductInstance(setter);
 
         /// <summary>
         /// Extension method to get the <see cref="Activity"/> from the <paramref name="session"/>
@@ -79,7 +80,7 @@ namespace Moryx.ControlSystem.Cells
         /// <typeparam name="TActivityType">Type of the <see cref="Activity"/> that is expected.</typeparam>
         /// <param name="session">The sesion to get the <see cref="Activity"/> from</param>
         /// <returns>
-        /// The <see cref="Activity"/> in the session, if the <paramref name="session"/> currently handles an 
+        /// The <see cref="Activity"/> in the session, if the <paramref name="session"/> currently handles an
         /// Activity of type <typeparamref name="TActivityType"/>; Otherwise returns null
         /// </returns>
         public static TActivityType GetActivity<TActivityType>(this Session session) where TActivityType : Activity
@@ -98,7 +99,7 @@ namespace Moryx.ControlSystem.Cells
         /// <typeparam name="TActivityType">Type of the <see cref="Activity"/> that is expected.</typeparam>
         /// <param name="session">The sesion to get the <see cref="Activity"/> from</param>
         /// <returns>
-        /// The last <see cref="Activity"/> in the session, if the <paramref name="session"/> currently handles an 
+        /// The last <see cref="Activity"/> in the session, if the <paramref name="session"/> currently handles an
         /// Activity of type <typeparamref name="TActivityType"/>; Otherwise returns null
         /// </returns>
         public static TActivityType GetLastActivity<TActivityType>(this Session session) where TActivityType : Activity
@@ -110,7 +111,7 @@ namespace Moryx.ControlSystem.Cells
         /// <typeparam name="TProductType">Type of the <see cref="ProductType"/> that is expected.</typeparam>
         /// <param name="session">The session to get the <see cref="ProductType"/> from</param>
         /// <returns>
-        /// The target <see cref="ProductType"/> in the session, if it belongs to a <see cref="ProductionProcess"/> 
+        /// The target <see cref="ProductType"/> in the session, if it belongs to a <see cref="ProductionProcess"/>
         /// or holds an <see cref="ISetupRecipe"/> with a <typeparamref name="TProductType"/>; Otherwise returns null.
         /// </returns>
         public static TProductType GetProductType<TProductType>(this Session session) where TProductType : ProductType

@@ -118,9 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Module_Description" xml:space="preserve">
-    <value>Dieses Modul erlaubt es dir Aufträge anzusehen, zu erstellen und zu verändern, die vom System bearbeitet werden sollen.</value>
+    <value>Planen und verwalten Sie die Schichten der Bediener anhand von Qualifikationsmetriken und Verfügbarkeit.</value>
   </data>
   <data name="Module_Title" xml:space="preserve">
-    <value>Aufträge</value>
+    <value>Schichtplanung</value>
   </data>
 </root>

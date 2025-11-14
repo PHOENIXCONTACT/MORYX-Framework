@@ -7,7 +7,6 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
 using Moryx.Runtime.Modules;
-using Moryx.Operators.Management.Facade;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators.Skills;
 

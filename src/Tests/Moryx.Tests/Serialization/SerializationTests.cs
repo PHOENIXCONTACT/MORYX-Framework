@@ -41,7 +41,7 @@ namespace Moryx.Tests
         {
             // Arrange
             var serialization = possibleValues
-                ? new PossibleValuesSerialization(null, new ValueProviderExecutor(new ValueProviderExecutorSettings().AddDefaultValueProvider()))
+                ? new PossibleValuesSerialization(null, null, new ValueProviderExecutor(new ValueProviderExecutorSettings().AddDefaultValueProvider()))
                 : (ICustomSerialization)new DefaultSerialization();
 
             // Act

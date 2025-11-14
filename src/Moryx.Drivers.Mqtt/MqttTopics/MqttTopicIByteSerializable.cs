@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.Communication;
 using Moryx.Serialization;
-using Moryx.Drivers.Mqtt.Localizations;
+using Moryx.Drivers.Mqtt.Properties;
 using Moryx.AbstractionLayer.Resources;
 namespace Moryx.Drivers.Mqtt.MqttTopics;
 
@@ -13,14 +13,14 @@ namespace Moryx.Drivers.Mqtt.MqttTopics;
 /// MQTT Topic, where the published messages implement IByteSerializable
 /// </summary>
 [ResourceRegistration]
-[Display(Name = nameof(Strings.MQTT_TOPIC_BYTE), Description = nameof(Strings.MQTT_TOPIC_BYTE_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+[Display(Name = nameof(Strings.MqttTopicIByteSerializable_DisplayName), Description = nameof(Strings.MqttTopicIByteSerializable_Description), ResourceType = typeof(Strings))]
 public class MqttTopicIByteSerializable : MqttTopic<IByteSerializable>
 {
     #region EntrySerialize
 
     /// <inheritdoc />
     [EntrySerialize, DataMember]
-    [Display(Name = nameof(Strings.MESSAGE_NAME), ResourceType = typeof(Localizations.Strings))]
+    [Display(Name = nameof(Strings.MqttTopicIByteSerializable_MessageName), ResourceType = typeof(Strings))]
     [PossibleTypes(typeof(IByteSerializable))]
     public override string MessageName
     {
@@ -30,7 +30,7 @@ public class MqttTopicIByteSerializable : MqttTopic<IByteSerializable>
     #endregion
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="payload"></param>
     /// <returns></returns>
@@ -40,7 +40,7 @@ public class MqttTopicIByteSerializable : MqttTopic<IByteSerializable>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="messageAsBytes"></param>
     /// <returns></returns>

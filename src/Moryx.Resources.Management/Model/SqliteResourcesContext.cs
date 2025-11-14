@@ -2,15 +2,14 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
-using Moryx.Model.Sqlite.Attributes;
+using Moryx.Model.Sqlite;
 
-// ReSharper disable once CheckNamespace
-namespace Moryx.Resources.Model
+namespace Moryx.Resources.Management.Model
 {
     /// <summary>
     /// Sqlite specific implementation of <see cref="ResourcesContext"/>
     /// </summary>
-    [SqliteContext]
+    [SqliteDbContext(typeof(ResourcesContext))]
     public class SqliteResourcesContext : ResourcesContext
     {
         /// <inheritdoc />
@@ -21,12 +20,6 @@ namespace Moryx.Resources.Model
         /// <inheritdoc />
         public SqliteResourcesContext(DbContextOptions options) : base(options)
         {
-        }
-
-        /// <inheritdoc />
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
         }
     }
 }

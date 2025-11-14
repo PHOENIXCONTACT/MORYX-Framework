@@ -28,12 +28,12 @@ namespace Moryx.Identity.AccessManagement
         /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
         /// <param name="jwtConfigurationSection">The section of the configuration containing the <see cref="JwtSettings"/>.</param>
         /// <param name="connectionString">The connection string for the PostgreSql database used by the MORYX AccessManagement.</param>
-        /// <param name="corsOptionsAction">Action providing CORS options used for a call to 
+        /// <param name="corsOptionsAction">Action providing CORS options used for a call to
         /// <see cref="CorsServiceCollectionExtensions.AddCors(IServiceCollection, Action{CorsOptions})"/>.</param>
         /// <remarks>
-        /// This method configures the <see cref="IServiceCollection"/> to use the MORYX AccessManagement with a PostgreSql 
-        /// database provider. 
-        /// It combines MORYX identity specific service registrations with the effects of 
+        /// This method configures the <see cref="IServiceCollection"/> to use the MORYX AccessManagement with a PostgreSql
+        /// database provider.
+        /// It combines MORYX identity specific service registrations with the effects of
         /// <see cref="EntityFrameworkServiceCollectionExtensions.AddDbContext{MoryxIdentitiesDbContext}(IServiceCollection, Action{DbContextOptionsBuilder}?, ServiceLifetime, ServiceLifetime)"/>
         /// <see cref="IdentityServiceCollectionExtensions.AddIdentity{MoryxUser, MoryxRole}(IServiceCollection, Action{IdentityOptions})"/>
         /// using the <see cref="MoryxUserManager"/>, the <see cref="MoryxRoleManager"/> and the <see cref="MoryxIdentitiesDbContext"/>,
@@ -61,12 +61,12 @@ namespace Moryx.Identity.AccessManagement
         /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
         /// <param name="jwtConfigurationSection">The section of the configuration containing the <see cref="JwtSettings"/>.</param>
         /// <param name="dbOptionsAction">A <see cref="Action{DbOptionsContextBuilder}"/> tp use a custom database provider.</param>
-        /// <param name="corsOptionsAction">Action providing CORS options used for a call to 
+        /// <param name="corsOptionsAction">Action providing CORS options used for a call to
         /// <see cref="CorsServiceCollectionExtensions.AddCors(IServiceCollection, Action{CorsOptions})"/>.</param>
         /// <remarks>
         /// This method configures the <see cref="IServiceCollection"/> to use the MORYX AccessManagement with a custom
-        /// database provider. 
-        /// It combines MORYX identity specific service registrations with the effects of 
+        /// database provider.
+        /// It combines MORYX identity specific service registrations with the effects of
         /// <see cref="EntityFrameworkServiceCollectionExtensions.AddDbContext{MoryxIdentitiesDbContext}(IServiceCollection, Action{DbContextOptionsBuilder}?, ServiceLifetime, ServiceLifetime)"/>
         /// <see cref="IdentityServiceCollectionExtensions.AddIdentity{MoryxUser, MoryxRole}(IServiceCollection, Action{IdentityOptions}?)"/>
         /// using the <see cref="MoryxUserManager"/>, the <see cref="MoryxRoleManager"/> and the <see cref="MoryxIdentitiesDbContext"/>,
@@ -89,9 +89,6 @@ namespace Moryx.Identity.AccessManagement
             // Explicitly register the settings object by delegating to the IOptions object
             services.AddSingleton(resolver =>
                 resolver.GetRequiredService<IOptions<JwtSettings>>().Value);
-
-            // Register AutoMapper
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // Register Identity
             services.AddDbContext<MoryxIdentitiesDbContext>(dbOptionsAction);

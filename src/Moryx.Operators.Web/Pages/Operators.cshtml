@@ -1,23 +1,24 @@
 ﻿@page "{*_}"
 @using System.ComponentModel.DataAnnotations
 @using Moryx.Asp.Integration
-@using Moryx.Operators.Web
-@using Moryx.Operators.Web.Localizations
+@using Moryx.Operators.Web.Properties
 
 @{
     ViewData["Title"] = Strings.Module_Title;
-ViewData["BaseRef"] = "Operators";
+    ViewData["BaseRef"] = "Operators";
 
-Layout = "_Layout";
+    Layout = "_Layout";
 }
 
 @attribute [WebModule("Operators", "engineering"),
-Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description")]
+            Display(ResourceType = typeof(Strings), Name = nameof(Strings.Module_Title), Description = nameof(Strings.Module_Description))]
+
 @section Styles {
-<link rel="stylesheet" href="/_content/Moryx.Operators.Web/styles.css">
+    <link rel="stylesheet" href="/_content/Moryx.Operators.Web/styles.css">
 }
+
 @section Scripts
-    {
+{
     <script src="/_content/Moryx.Operators.Web/runtime.js" type="module"></script>
     <script src="/_content/Moryx.Operators.Web/polyfills.js" type="module"></script>
     <script src="/_content/Moryx.Operators.Web/main.js" type="module"></script>

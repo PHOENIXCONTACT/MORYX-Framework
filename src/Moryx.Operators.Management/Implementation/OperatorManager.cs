@@ -4,11 +4,7 @@
 using Moryx.Container;
 using Moryx.Model.Repositories;
 using Moryx.Operators.Management.Model;
-using System.Runtime.CompilerServices;
-using System.ComponentModel;
 using Moryx.AbstractionLayer.Resources;
-
-[assembly: InternalsVisibleTo("Moryx.Operators.Management.IntegrationTests")]
 
 namespace Moryx.Operators.Management;
 

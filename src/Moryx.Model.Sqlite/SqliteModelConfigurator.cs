@@ -1,17 +1,18 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel;
 using System.Data.Common;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
-using Moryx.Model.Sqlite.Attributes;
 
 namespace Moryx.Model.Sqlite
 {
     /// <summary>
     /// Used to configure, create and update data models
     /// </summary>
+    [DisplayName("SQLite Connector")]
     public sealed class SqliteModelConfigurator : ModelConfiguratorBase<SqliteDatabaseConfig>
     {
         /// <inheritdoc />
@@ -42,18 +43,6 @@ namespace Moryx.Model.Sqlite
                 File.Delete(dbFilePath);
 
             return Task.CompletedTask;
-        }
-
-        /// <inheritdoc />
-        public override Task DumpDatabase(IDatabaseConfig config, string targetPath)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <inheritdoc />
-        public override Task RestoreDatabase(IDatabaseConfig config, string filePath)
-        {
-            throw new NotSupportedException();
         }
 
         /// <inheritdoc />
@@ -117,7 +106,7 @@ namespace Moryx.Model.Sqlite
         /// <inheritdoc />
         protected override DbContext CreateMigrationContext(IDatabaseConfig config)
         {
-            var migrationAssemblyType = FindMigrationAssemblyType(typeof(SqliteContextAttribute));
+            var migrationAssemblyType = FindMigrationAssemblyType(typeof(SqliteDbContextAttribute));
 
             var builder = new DbContextOptionsBuilder();
             builder.UseSqlite(

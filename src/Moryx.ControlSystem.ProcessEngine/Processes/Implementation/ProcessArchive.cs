@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
@@ -74,7 +75,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                     var process = (ProductionProcess)recipe.CreateProcess();
                     process.Id = match.Id;
                     process.ProductInstance = productInstance;
-                    var context = new AbstractionLayer.ProcessContext(process);
+                    var context = new AbstractionLayer.Processes.ProcessContext(process);
                     var taskMap = recipe.Workplan.Steps
                         .Select(step => step.CreateInstance(context))
                         .OfType<ITask>().ToDictionary(task => task.Id, task => task);
@@ -147,7 +148,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
 
             // Prepare fake process and task map
             var fakeProcess = recipe.CreateProcess();
-            var context = new AbstractionLayer.ProcessContext(fakeProcess);
+            var context = new AbstractionLayer.Processes.ProcessContext(fakeProcess);
             var taskMap = recipe.Workplan.Steps
                 .Select(step => step.CreateInstance(context))
                 .OfType<ITask>().ToDictionary(task => task.Id, task => task);

@@ -4,7 +4,7 @@
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 using Moryx.Model;
 
-namespace Moryx.Notifications.Model
+namespace Moryx.Notifications.Publisher.Model
 {
     public class NotificationTypeEntity : EntityBase
     {

@@ -6,7 +6,7 @@ using Moryx.AbstractionLayer.Recipes;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Modules;
-using Moryx.Products.Model;
+using Moryx.Products.Management.Model;
 using Moryx.Tools;
 
 namespace Moryx.Products.Management

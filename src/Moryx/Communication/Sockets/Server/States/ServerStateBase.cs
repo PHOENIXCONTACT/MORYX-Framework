@@ -59,6 +59,5 @@ namespace Moryx.Communication.Sockets
 
         [StateDefinition(typeof(ServerReconnectingState))]
         protected const int StateReconnecting = 40;
-
     }
 }

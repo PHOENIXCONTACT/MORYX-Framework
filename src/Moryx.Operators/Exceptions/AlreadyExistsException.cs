@@ -22,7 +22,7 @@ public class AlreadyExistsException : Exception
     /// Creates an exception that includes the operators ID in the exception message
     /// </summary>
     /// <param name="operatorIdentifier">Operator's ID</param>
-    public AlreadyExistsException(string operatorIdentifier) : base(string.Format(Strings.OPERATOR_EXIST, operatorIdentifier))
+    public AlreadyExistsException(string operatorIdentifier) : base(string.Format(Strings.AlreadyExistsException_Message, operatorIdentifier))
     {
     }
 }

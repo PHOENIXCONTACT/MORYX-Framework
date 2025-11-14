@@ -47,5 +47,11 @@
       "REPEAT": "REPEAT",
       "CLEAR": "CLEAR"
     }
+  },
+  "REMOVE_RESOURCE_DIALOG": {
+    "TITLE": "Remove Resource",
+    "SUB_TITLE": "The resource will be permanently removed:",
+    "CANCEL": "CANCEL",
+    "REMOVE": "REMOVE"
   }
 }

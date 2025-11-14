@@ -36,7 +36,7 @@
     "METHODS": "Metodi",
     "REFS": {
       "LINK": "Link",
-      "LINKED_RESOURCE": "Risorsa collegata",      
+      "LINKED_RESOURCE": "Risorsa collegata",
       "PLACEHOLDER": "Selezionare una risorsa disponibile per aggiungerla come riferimento",
       "NO_TARGET": "Nessun target selezionato"
     },
@@ -46,5 +46,11 @@
       "REPEAT": "RIPETI",
       "CLEAR": "PULISCI"
     }
+  },
+  "REMOVE_RESOURCE_DIALOG": {
+    "TITLE": "Rimuovi risorsa",
+    "SUB_TITLE": "La risorsa verrà rimossa in modo permanente:",
+    "CANCEL": "ANNULLA",
+    "REMOVE": "RIMUOVI"
   }
 }

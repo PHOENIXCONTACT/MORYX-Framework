@@ -8,7 +8,7 @@ using Moryx.Container;
 using Moryx.Logging;
 using Moryx.Model.Repositories;
 using Moryx.Modules;
-using Moryx.Resources.Model;
+using Moryx.Resources.Management.Model;
 using Moryx.Tools;
 using IResource = Moryx.AbstractionLayer.Resources.IResource;
 

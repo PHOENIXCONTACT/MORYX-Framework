@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <IsPackable>true</IsPackable>
@@ -6,27 +7,33 @@
     <Description>Opc Ua Driver</Description>
     <PackageTags>MORYX;IoT;Manufacturing;Resource;OpcUa</PackageTags>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" />
   </ItemGroup>
+
   <ItemGroup Label="FilesToCopy">
     <Content Include="Moryx.Drivers.OpcUa.targets" PackagePath="build/Moryx.Drivers.OpcUa.targets" />
     <Content Include="Config\**" Pack="true" PackageCopyToOutput="true" PackageFlatten="false" IncludeContentInPack="true" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Update="Localizations\Strings.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Strings.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Localizations\Strings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+    <EmbeddedResource Update="Properties\Strings.resx">
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Strings.Designer.cs">
+      <DependentUpon>Strings.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+  
 </Project>

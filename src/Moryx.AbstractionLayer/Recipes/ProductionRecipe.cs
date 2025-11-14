@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 
 namespace Moryx.AbstractionLayer.Recipes
@@ -11,10 +12,10 @@ namespace Moryx.AbstractionLayer.Recipes
     public class ProductionRecipe : WorkplanRecipe, IProductionRecipe
     {
         /// <inheritdoc />
-        public IProductType Product { get; set; }
+        public ProductType Product { get; set; }
 
         /// <inheritdoc />
-        public virtual IProductType Target => Product;
+        public virtual ProductType Target => Product;
 
         /// <summary>
         /// Prepare recipe by filling DisabledSteps and TaskAssignment properties

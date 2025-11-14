@@ -2,12 +2,13 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Drawing;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.Model;
 using Moryx.Model.Repositories;
-using Moryx.Products.Model;
+using Moryx.Products.Management.Model;
 using Moryx.Workplans;
 using Moryx.Workplans.WorkplanSteps;
 using Newtonsoft.Json;

@@ -3,7 +3,6 @@
 
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.StateMachines;
-using Opc.Ua;
 using Opc.Ua.Client;
 
 namespace Moryx.Drivers.OpcUa.DriverStates;
@@ -58,7 +57,7 @@ internal abstract class DriverOpcUaState(OpcUaDriver context, StateBase.StateMap
         Context.SaveSubscriptionToBeAdded(node);
     }
 
-    internal virtual DataValue ReadValue(string identifier)
+    internal virtual DataValueResult ReadValue(string identifier)
     {
         throw new InvalidOperationException();
     }

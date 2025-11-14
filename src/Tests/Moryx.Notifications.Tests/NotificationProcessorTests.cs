@@ -5,8 +5,8 @@ using System;
 using System.Linq;
 using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
-using Moryx.Notifications.Model;
 using Moryx.Notifications.Publisher;
+using Moryx.Notifications.Publisher.Model;
 using NUnit.Framework;
 
 namespace Moryx.Notifications.Tests

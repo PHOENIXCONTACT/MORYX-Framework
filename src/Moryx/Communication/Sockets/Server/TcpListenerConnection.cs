@@ -14,12 +14,14 @@ namespace Moryx.Communication.Sockets
     /// </summary>
     [ExpectedConfig(typeof(TcpListenerConfig))]
     [Plugin(LifeCycle.Transient, typeof(IBinaryConnection), Name = nameof(TcpListenerConnection))]
-    public class TcpListenerConnection : IBinaryConnection, IStateContext, IDisposable
+    public class TcpListenerConnection : IBinaryConnection, IStateContext
     {
         #region Dependencies
 
-        /// <inheritdoc />
-        [UseChild]
+        /// <summary>
+        /// Logger for this instance
+        /// </summary>
+        [UseChild(nameof(TcpListenerConnection))]
         public ILogger Logger { get; set; }
 
         #endregion
@@ -47,7 +49,7 @@ namespace Moryx.Communication.Sockets
         /// <summary>
         /// Static TCP server
         /// </summary>
-        internal TcpServer Server => TcpServer.Instance;
+        private TcpServer Server => TcpServer.Instance;
 
         /// <summary>
         /// Port this is instance is listening on
@@ -152,7 +154,7 @@ namespace Moryx.Communication.Sockets
             }
             catch (Exception ex)
             {
-                Logger.Log(LogLevel.Critical, ex, "StateChanged event to {0} ran into an exception!", _state);
+                Logger.Log(LogLevel.Critical, ex, "StateChanged event to {state} ran into an exception!", _state);
             }
         }
 
@@ -192,18 +194,17 @@ namespace Moryx.Communication.Sockets
         /// <param name="transmission">Open connection</param>
         internal void ExecuteAssignConnection(TcpTransmission transmission)
         {
-            Logger.Log(LogLevel.Information, "Connection established on port {0}", _config.Port);
+            Logger.Log(LogLevel.Information, "Connection established on port {port}", _config.Port);
             _transmission = transmission;
             _transmission.Disconnected += Disconnected;
             _transmission.Received += MessageReceived;
 
             // Configure keep alive on tcp
-            if (_config.MonitoringIntervalMs > 0)
-                _transmission.ConfigureKeepAlive(_config.MonitoringIntervalMs, _config.MonitoringTimeoutMs);
+            _transmission.ConfigureKeepAlive(_config.KeepAliveConfig);
         }
 
         /// <summary>
-        /// The initial message, usually a logon that was used to determine this listener 
+        /// The initial message, usually a logon that was used to determine this listener
         /// </summary>
         internal void PublishInitialMessage(BinaryMessage message)
         {

@@ -1,7 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Castle.MicroKernel.Registration;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.Container;
@@ -63,9 +62,9 @@ internal class SkillStorage : ISkillStorage, ILoggingComponent
     public IEnumerable<Skill> GetSkills(IReadOnlyList<SkillType> types, IReadOnlyList<OperatorData> operators)
     {
         using var uow = UnitOfWorkFactory.Create();
-        var repo = uow.GetRepository<ISkillRepository>();
+        var repo = uow.GetRepository<ISkillEntityRepository>();
         var skillEntities = repo.Linq.Active()
-            .AsEnumerable() //because of query translation error 
+            .AsEnumerable() //because of query translation error
             .Where(se => se.Expiration >= DateOnly.FromDateTime(DateTime.UtcNow))
             .ToList();
 
@@ -101,7 +100,7 @@ internal class SkillStorage : ISkillStorage, ILoggingComponent
     public Skill Create(SkillCreationContext context)
     {
         using var uow = UnitOfWorkFactory.Create();
-        var repo = uow.GetRepository<ISkillRepository>();
+        var repo = uow.GetRepository<ISkillEntityRepository>();
 
         var entity = repo.Create();
         entity.SkillTypeId = context.Type.Id;
@@ -122,7 +121,7 @@ internal class SkillStorage : ISkillStorage, ILoggingComponent
     public void Delete(Skill Skill)
     {
         using var uow = UnitOfWorkFactory.Create();
-        var repo = uow.GetRepository<ISkillRepository>();
+        var repo = uow.GetRepository<ISkillEntityRepository>();
         var entity = repo.GetByKey(Skill.Id);
         repo.Remove(entity);
         uow.SaveChanges();
@@ -210,7 +209,7 @@ internal class SkillStorage : ISkillStorage, ILoggingComponent
     public void Delete(SkillType type)
     {
         using var uow = UnitOfWorkFactory.Create();
-        var skillsRepo = uow.GetRepository<ISkillRepository>();
+        var skillsRepo = uow.GetRepository<ISkillEntityRepository>();
         skillsRepo.Linq.Where(s => s.SkillTypeId == type.Id)
             .ForEach(e => skillsRepo.Remove(e));
 

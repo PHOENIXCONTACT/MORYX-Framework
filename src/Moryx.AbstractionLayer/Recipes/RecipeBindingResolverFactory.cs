@@ -3,6 +3,7 @@
 
 using System.Text.RegularExpressions;
 using Moryx.AbstractionLayer.Identity;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.Bindings;
 using Moryx.Workplans;
 

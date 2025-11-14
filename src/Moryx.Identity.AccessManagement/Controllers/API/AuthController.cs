@@ -3,7 +3,6 @@
 
 using System.Security.Claims;
 using System.Text.Json;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +27,6 @@ namespace Moryx.Identity.AccessManagement.Controllers
         private readonly MoryxRoleManager _roleManager;
         private readonly IPermissionManager _permissionManager;
         private readonly ITokenService _tokenService;
-        private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
         /// <summary>
@@ -40,14 +38,12 @@ namespace Moryx.Identity.AccessManagement.Controllers
         /// <param name="permissionManager">The permission manager used by the AccessManagement</param>
         /// <param name="tokenService">A token service for handling the JWTs</param>
         /// <param name="configuration">Configuration settings mainly for the cookies' domain</param>
-        public AuthController(IMapper mapper,
-            MoryxUserManager userManager,
+        public AuthController(MoryxUserManager userManager,
             MoryxRoleManager roleManager,
             IPermissionManager permissionManager,
             ITokenService tokenService,
             IConfiguration configuration)
         {
-            _mapper = mapper;
             _userManager = userManager;
             _roleManager = roleManager;
             _permissionManager = permissionManager;
@@ -75,7 +71,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
                     });
                 }
 
-                var user = _mapper.Map<MoryxUserModel, MoryxUser>(userModel);
+                var user = ModelConverter.GetUserFromModel(userModel);
                 var userCreateResult = await _userManager.CreateAsync(user, userModel.Password);
 
                 if (userCreateResult.Succeeded)
@@ -133,7 +129,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
                 var jwtToken = await _tokenService.GenerateToken(user);
                 HttpContext.Response.Cookies.SetJwtCookie(jwtToken, user);
 
-                var userModel = _mapper.Map<MoryxUser, MoryxUserModel>(user);
+                var userModel = ModelConverter.GetUserModelFromUser(user);
                 return Ok(userModel);
             }
 
@@ -182,8 +178,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
         [Route("RefreshToken")]
         public async Task<IActionResult> RefreshToken()
         {
-
-            TokenRequest tokenRequest = new TokenRequest()
+            var tokenRequest = new TokenRequest
             {
                 RefreshToken = Request.Cookies[MoryxIdentityDefaults.REFRESH_TOKEN_COOKIE_NAME],
                 Token = Request.Cookies[MoryxIdentityDefaults.JWT_COOKIE_NAME]
@@ -207,7 +202,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
             if (user is null)
                 return NotFound("User not found");
 
-            var userModel = _mapper.Map<MoryxUser, MoryxUserModel>(user);
+            var userModel = ModelConverter.GetUserModelFromUser(user);
             return Ok(userModel);
         }
 
@@ -245,7 +240,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
         /// <summary>
         /// Verifies whether the given token is valid
         /// </summary>
-        /// <param name="token">The token to be verified.</param>       
+        /// <param name="token">The token to be verified.</param>
         [AllowAnonymous]
         [HttpPost("verifyToken")]
         public IActionResult VerifyToken([FromBody] string token)
@@ -451,7 +446,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
         }
 
         /// <summary>
-        /// Returns a list of permissions available in the system. Includes all permissions that start with 
+        /// Returns a list of permissions available in the system. Includes all permissions that start with
         /// the provided <paramref name="filter"/>.
         /// </summary>
         /// <param name="filter">A filter on the returned list. </param>
@@ -465,7 +460,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
             var permissions = _permissionManager.Permissions
                 .Include(p => p.Roles).ToArray()
                 .Where(p => p.Name.StartsWith(filter))
-                .Select(permission => _mapper.Map<Permission, PermissionModel>(permission)).ToArray();
+                .Select(ModelConverter.GetPermissionModelFromPermission).ToArray();
 
             return Ok(permissions);
         }
@@ -536,4 +531,3 @@ namespace Moryx.Identity.AccessManagement.Controllers
         }
     }
 }
-

@@ -5,7 +5,7 @@ export { ICapabilities as MoryxAbstractionLayerCapabilitiesICapabilities } from 
 export { AssignableOperator as MoryxOperatorsAssignableOperator } from './models/Moryx/Operators/assignable-operator';
 export { ExtendedOperatorModel as MoryxOperatorsEndpointsExtendedOperatorModel } from './models/Moryx/Operators/Endpoints/extended-operator-model';
 export { OperatorModel as MoryxOperatorsEndpointsOperatorModel } from './models/Moryx/Operators/Endpoints/operator-model';
-export { ResourceModel as MoryxOperatorsEndpointsResourceModel } from './models/Moryx/Operators/Endpoints/resource-model';
+export { AttendableResourceModel as MoryxOperatorsEndpointsResourceModel } from './models/Moryx/Operators/Endpoints/attendable-resource-model';
 export { SkillCreationContextModel as MoryxOperatorsEndpointsSkillCreationContextModel } from './models/Moryx/Operators/Endpoints/skill-creation-context-model';
 export { SkillModel as MoryxOperatorsEndpointsSkillModel } from './models/Moryx/Operators/Endpoints/skill-model';
 export { SkillTypeCreationContextModel as MoryxOperatorsEndpointsSkillTypeCreationContextModel } from './models/Moryx/Operators/Endpoints/skill-type-creation-context-model';

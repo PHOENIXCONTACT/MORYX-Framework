@@ -3,7 +3,7 @@ uid: ProductsConcept
 ---
 # Products
 
-The abstraction layer provides just basic interfaces and classes to handle [ProductTypes](/src/Moryx.AbstractionLayer/Products/IProductType.cs) and [ProductInstances](/src/Moryx.AbstractionLayer/Products/ProductInstance.cs).
+The abstraction layer provides just basic interfaces and classes to handle [ProductTypes](/src/Moryx.AbstractionLayer/Products/ProductType.cs) and [ProductInstances](/src/Moryx.AbstractionLayer/Products/ProductInstance.cs).
 They are used in derived projects only. 
 The following picture shows the stucture how a product is placed in an application and which components will use it. 
 In the following sections are short descriptions about each part of the product concept.

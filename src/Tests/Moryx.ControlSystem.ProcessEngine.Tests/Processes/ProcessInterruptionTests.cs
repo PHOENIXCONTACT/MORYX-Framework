@@ -7,13 +7,14 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using Moryx.AbstractionLayer;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.ProcessEngine.Model;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.ControlSystem.TestTools;
 using Moryx.Logging;
 using Moryx.Model.Repositories;
 using NUnit.Framework;
+using Activity = Moryx.AbstractionLayer.Activities.Activity;
 using ProcessContext = Moryx.ControlSystem.ProcessEngine.Model.ProcessContext;
 
 namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
@@ -112,7 +113,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             Assert.That(stopWatch.ElapsedMilliseconds, Is.LessThanOrEqualTo(expectedWaitTime + 200));
         }
 
-        private ActivityData FillPool(AbstractionLayer.Activity activity)
+        private ActivityData FillPool(Activity activity)
         {
             var process = new ProductionProcess { Id = 1 };
             activity.Process = process;
