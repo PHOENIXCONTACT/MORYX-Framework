@@ -6,7 +6,7 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ResourceModel as MoryxOperatorsEndpointsResourceModel } from '../../models/Moryx/Operators/Endpoints/resource-model';
+import { AttendableResourceModel as MoryxOperatorsEndpointsResourceModel } from '../../models/Moryx/Operators/Endpoints/attendable-resource-model';
 
 export interface GetResources_1$Params {
 }
