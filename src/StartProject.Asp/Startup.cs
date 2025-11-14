@@ -1,13 +1,14 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Moryx.Launcher;
+using System.Globalization;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Localization;
-using System.Globalization;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.Extensions.Options;
+using Moryx.Launcher;
 
 namespace StartProject.Asp
 {
@@ -63,6 +64,7 @@ namespace StartProject.Asp
             services.AddSwaggerGen(c =>
             {
                 c.CustomOperationIds(api => ((ControllerActionDescriptor)api.ActionDescriptor).MethodInfo.Name);
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First(d => d.ActionDescriptor.EndpointMetadata.OfType<ActionMethodSelectorAttribute>().Any()));
             });
 
             //Authentification
