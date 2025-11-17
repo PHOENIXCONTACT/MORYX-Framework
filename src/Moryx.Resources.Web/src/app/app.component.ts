@@ -15,10 +15,7 @@ import {
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
-import {
-  MoryxAbstractionLayerResourcesEndpointsResourceModel as ResourceModel,
-  MoryxAbstractionLayerResourcesEndpointsResourceTypeModel as ResourceTypeModel,
-} from './api/models';
+import { ResourceModel, ResourceTypeModel,} from './api/models';
 import { ResourceModificationService } from './api/services';
 import { DialogAddResourceComponent } from './dialogs/dialog-add-resource/dialog-add-resource.component';
 import { ResourceConstructionParameters } from './models/ResourceConstructionParameters';

@@ -8,13 +8,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ResourceModel as MoryxAbstractionLayerResourcesEndpointsResourceModel } from '../../models/Moryx/AbstractionLayer/Resources/Endpoints/resource-model';
+import { ResourceModel } from '../../models/resource-model';
 
 export interface Save$Params {
-      body?: MoryxAbstractionLayerResourcesEndpointsResourceModel
+      body?: ResourceModel
 }
 
-export function save(http: HttpClient, rootUrl: string, params?: Save$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceModel>> {
+export function save(http: HttpClient, rootUrl: string, params?: Save$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceModel>> {
   const rb = new RequestBuilder(rootUrl, save.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/*+json');
@@ -25,7 +25,7 @@ export function save(http: HttpClient, rootUrl: string, params?: Save$Params, co
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceModel>;
+      return r as StrictHttpResponse<ResourceModel>;
     })
   );
 }

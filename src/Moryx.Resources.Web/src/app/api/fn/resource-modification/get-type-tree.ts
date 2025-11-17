@@ -8,12 +8,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ResourceTypeModel as MoryxAbstractionLayerResourcesEndpointsResourceTypeModel } from '../../models/Moryx/AbstractionLayer/Resources/Endpoints/resource-type-model';
+import { ResourceTypeModel } from '../../models/resource-type-model';
 
 export interface GetTypeTree$Params {
 }
 
-export function getTypeTree(http: HttpClient, rootUrl: string, params?: GetTypeTree$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceTypeModel>> {
+export function getTypeTree(http: HttpClient, rootUrl: string, params?: GetTypeTree$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceTypeModel>> {
   const rb = new RequestBuilder(rootUrl, getTypeTree.PATH, 'get');
   if (params) {
   }
@@ -23,7 +23,7 @@ export function getTypeTree(http: HttpClient, rootUrl: string, params?: GetTypeT
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceTypeModel>;
+      return r as StrictHttpResponse<ResourceTypeModel>;
     })
   );
 }

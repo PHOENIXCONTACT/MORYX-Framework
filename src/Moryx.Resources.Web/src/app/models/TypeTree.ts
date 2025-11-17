@@ -1,4 +1,4 @@
-import { MoryxAbstractionLayerResourcesEndpointsResourceModel as ResourceModel } from "../api/models";
+import { ResourceModel } from "../api/models";
 
 /**
  * This method takes the id of the target node and returns an array of resource ids.

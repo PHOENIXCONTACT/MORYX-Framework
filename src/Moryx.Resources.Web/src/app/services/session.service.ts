@@ -1,6 +1,6 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Injectable } from '@angular/core';
-import { MoryxAbstractionLayerResourcesEndpointsResourceModel as ResourceModel } from '../api/models';
+import { ResourceModel } from '../api/models';
 
 @Injectable({
   providedIn: 'root'

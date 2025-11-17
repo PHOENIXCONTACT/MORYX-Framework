@@ -2,11 +2,7 @@ import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import {
-  MoryxAbstractionLayerResourcesEndpointsReferenceTypeModel as ReferenceTypeModel,
-  MoryxAbstractionLayerResourcesEndpointsResourceModel as ResourceModel,
-  MoryxAbstractionLayerResourcesEndpointsResourceReferenceModel as ResourceReferenceModel,
-} from '../../../api/models';
+import { ReferenceTypeModel, ResourceModel, ResourceReferenceModel } from '../../../api/models';
 import { CacheResourceService } from '../../../services/cache-resource.service';
 import { EditResourceService } from '../../../services/edit-resource.service';
 import { Subscription } from 'rxjs';

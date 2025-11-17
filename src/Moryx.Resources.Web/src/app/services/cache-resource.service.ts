@@ -2,11 +2,7 @@ import { Injectable } from '@angular/core';
 import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
-import {
-  MoryxAbstractionLayerResourcesEndpointsReferenceValue as ReferenceValue,
-  MoryxAbstractionLayerResourcesEndpointsResourceModel as ResourceModel,
-  MoryxAbstractionLayerResourcesEndpointsResourceTypeModel as ResourceTypeModel,
-} from '../api/models';
+import { ReferenceValue, ResourceModel, ResourceTypeModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 
@@ -88,8 +84,11 @@ export class CacheResourceService {
       })
       .catch(async err => await this.moryxSnackbar.handleError(err));
 
+    // ToDo: Properly handle pagination
     await this.resourceModification
       .getResources({
+        PageNumber: 1,
+        PageSize: 10000,
         body: {
           referenceCondition: {
             name: 'Parent',
@@ -100,7 +99,7 @@ export class CacheResourceService {
         },
       })
       .toAsync()
-      .then(resources => this.resources.next(resources))
+      .then(pagedResources => this.resources.next(pagedResources.items ?? []))
       .catch(async err => await this.moryxSnackbar.handleError(err));
   }
 
