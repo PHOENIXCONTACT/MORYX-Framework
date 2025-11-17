@@ -427,7 +427,7 @@ namespace Moryx.Orders.Management.Tests
             var operationData = GetRunningOperation(10, false, 10, 10);
 
             // Act
-            operationData.Interrupt();
+            operationData.Interrupt(User);
 
             // Assert
             // We should now be interrupting
@@ -454,7 +454,7 @@ namespace Moryx.Orders.Management.Tests
 
             // Assert
             Assert.That(operationData.State.CanInterrupt, Is.False);
-            Assert.Throws<InvalidOperationException>(() => operationData.Interrupt());
+            Assert.Throws<InvalidOperationException>(() => operationData.Interrupt(User));
         }
     }
 }

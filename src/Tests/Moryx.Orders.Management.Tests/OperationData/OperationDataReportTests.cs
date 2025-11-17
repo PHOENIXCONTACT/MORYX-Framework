@@ -137,7 +137,7 @@ namespace Moryx.Orders.Management.Tests
             var operationData = GetRunningOperation(10, false, 10, 10);
 
             // Act
-            operationData.Interrupt();
+            operationData.Interrupt(User);
 
             // Assert
             // Raise partial report

@@ -150,7 +150,7 @@ namespace Moryx.Orders.Management.Tests
         {
             var operationData = GetRunningOperation(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
 
-            operationData.Interrupt();
+            operationData.Interrupt(User);
 
             return operationData;
         }
@@ -173,7 +173,7 @@ namespace Moryx.Orders.Management.Tests
             var operationData = GetAmountReachedOperation(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
 
             // Interrupt
-            operationData.Interrupt();
+            operationData.Interrupt(User);
 
             return operationData;
         }
