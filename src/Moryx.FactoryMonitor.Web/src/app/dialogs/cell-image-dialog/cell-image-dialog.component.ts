@@ -12,7 +12,7 @@ import {
 import { CellIconUploaderDialogComponent } from '../cell-icon-selector-dialog/cell-icon-selector-dialog.component';
 import { environment } from 'src/environments/environment';
 import { CellSettingsService } from 'src/app/services/cell-settings.service';
-import { CellSettingsModel } from 'src/app/api/models/Moryx/FactoryMonitor/Endpoints/Model/cell-settings-model';
+import { CellSettingsModel } from 'src/app/api/models/cell-settings-model';
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';

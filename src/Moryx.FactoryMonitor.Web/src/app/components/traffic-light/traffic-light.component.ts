@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { CellState } from 'src/app/api/models/Moryx/FactoryMonitor/Endpoints/Model/cell-state';
+import { CellState } from 'src/app/api/models/cell-state';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import Cell from 'src/app/models/cell';
 import { CellStoreService } from 'src/app/services/cell-store.service';

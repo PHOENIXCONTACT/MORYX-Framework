@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { FactoryStateModel } from '../api/models/Moryx/FactoryMonitor/Endpoints/Model/factory-state-model';
+import { FactoryStateModel } from '../api/models/factory-state-model';
 import { FactoryMonitorService } from '../api/services';
-import { VisualizableItemModel } from '../api/models/Moryx/FactoryMonitor/Endpoints/Models/visualizable-item-model';
+import { VisualizableItemModel } from '../api/models/visualizable-item-model';
 
 @Injectable({
   providedIn: 'root'

@@ -3,15 +3,15 @@ import { BehaviorSubject } from 'rxjs';
 import { FactoryStateStreamService } from './factory-state-stream.service';
 import { OrderStoreService } from './order-store.service';
 import { FactoryMonitorService } from '../api/services';
-import { CellLocationModel } from '../api/models/Moryx/FactoryMonitor/Endpoints/Model/cell-location-model';
+import { CellLocationModel } from '../api/models/cell-location-model';
 import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
 import Cell from '../models/cell';
 import Order from '../models/order';
 import { Converter } from '../extensions/converter';
-import { FactoryStateModel } from '../api/models/Moryx/FactoryMonitor/Endpoints/Model/factory-state-model';
-import { ResourceChangedModel } from '../api/models/Moryx/FactoryMonitor/Endpoints/Models/resource-changed-model';
-import { ActivityChangedModel } from '../api/models/Moryx/FactoryMonitor/Endpoints/Models/activity-changed-model';
-import { CellStateChangedModel } from '../api/models/Moryx/FactoryMonitor/Endpoints/Models/cell-state-changed-model';
+import { FactoryStateModel } from '../api/models/factory-state-model';
+import { ResourceChangedModel } from '../api/models/resource-changed-model';
+import { ActivityChangedModel } from '../api/models/activity-changed-model';
+import { CellStateChangedModel } from '../api/models/cell-state-changed-model';
 import { FactorySelectionService } from './factory-selection.service';
 
 @Injectable({

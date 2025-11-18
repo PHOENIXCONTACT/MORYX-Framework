@@ -1,5 +1,5 @@
 import { Component, input, Input, signal } from '@angular/core';
-import { CellPropertySettings } from 'src/app/api/models/Moryx/FactoryMonitor/Endpoints/Model/cell-property-settings';
+import { CellPropertySettings } from 'src/app/api/models/cell-property-settings';
 import { CommonModule, NgStyle } from '@angular/common';
 
 @Component({

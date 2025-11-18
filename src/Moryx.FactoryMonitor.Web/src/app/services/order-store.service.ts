@@ -1,9 +1,9 @@
 import { ApplicationRef, Injectable, NgZone, ɵgetUnknownElementStrictMode } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
-import { OrderModel } from '../api/models/Moryx/FactoryMonitor/Endpoints/Model/order-model';
+import { OrderModel } from '../api/models/order-model';
 import { FactoryStateStreamService } from './factory-state-stream.service';
 import Order from '../models/order';
-import { InternalOperationClassification } from '../api/models/Moryx/FactoryMonitor/Endpoints/Models/internal-operation-classification';
+import { InternalOperationClassification } from '../api/models/internal-operation-classification';
 
 @Injectable({
   providedIn: 'root',
