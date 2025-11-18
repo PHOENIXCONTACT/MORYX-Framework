@@ -7,7 +7,7 @@ import { TranslationConstants } from "../extensions/translation-constants.extens
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OperatorSkill } from "../models/operator-skill-model";
 import { SKILLS } from "../models/dummy-data";
-import { SkillTypeModel } from "../api/models/Moryx/Operators/Endpoints/skill-type-model";
+import { SkillTypeModel } from "../api/models/skill-type-model";
 import { SkillType } from "../models/skill-type-model";
 import { skillToOperatorSkill, skillTypeToModel } from "../models/model-converter";
 import { Router, RouterLink } from "@angular/router";

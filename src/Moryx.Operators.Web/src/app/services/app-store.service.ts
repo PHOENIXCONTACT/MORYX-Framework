@@ -7,22 +7,21 @@ import {
   SkillManagementService,
 } from "../api/services";
 import { MoryxSnackbarService } from "@moryx/ngx-web-framework";
-import { OperatorModel } from "../api/models/Moryx/Operators/Endpoints/operator-model";
-import { AssignableOperator } from "../api/models/Moryx/Operators/assignable-operator";
+import { OperatorModel } from "../api/models/operator-model";
+import { AssignableOperator } from "../api/models/assignable-operator";
 import { OperatorSkill } from "../models/operator-skill-model";
 import { SkillType } from "../models/skill-type-model";
 import { SKILLS, SKILL_TYPES } from "../models/dummy-data";
-import { MoryxOperatorsAssignableOperator } from "../api/models";
-import { SkillCreationContextModel } from "../api/models/Moryx/Operators/Endpoints/skill-creation-context-model";
+import { SkillCreationContextModel } from "../api/models/skill-creation-context-model";
 import {
   skillToOperatorSkill,
   skillTypeModelToModel,
 } from "../models/model-converter";
-import { SkillTypeModel } from "../api/models/Moryx/Operators/Endpoints/skill-type-model";
-import { SkillTypeCreationContextModel } from "../api/models/Moryx/Operators/Endpoints/skill-type-creation-context-model";
-import { AttendableResourceModel } from "../api/models/Moryx/Operators/Endpoints/attendable-resource-model";
-import { SkillModel } from "../api/models/Moryx/Operators/Endpoints/skill-model";
-import { IOperatorAssignable } from "../api/models/Moryx/Operators/i-operator-assignable";
+import { SkillTypeModel } from "../api/models/skill-type-model";
+import { SkillTypeCreationContextModel } from "../api/models/skill-type-creation-context-model";
+import { AttendableResourceModel } from "../api/models/attendable-resource-model";
+import { SkillModel } from "../api/models/skill-model";
+import { IOperatorAssignable } from "../api/models/i-operator-assignable";
 
 @Injectable({
   providedIn: "root",
@@ -49,7 +48,7 @@ export class AppStoreService {
   }
 
   private initialize() {
-    this.skillManagementService.getTypes_1().subscribe((types) => {
+    this.skillManagementService.getTypes().subscribe((types) => {
       //types
       const typeModels = types.map(skillTypeModelToModel);
       this._skillTypes.next(typeModels);
@@ -69,11 +68,11 @@ export class AppStoreService {
     });
 
     this.operatorManagementService
-      .getAll_5()
+      .getAll()
       .subscribe((operators) => this.mapOperatorsToModel(operators));
   }
   //#region Operator
-  private mapOperatorsToModel(operators: MoryxOperatorsAssignableOperator[]) {
+  private mapOperatorsToModel(operators: AssignableOperator[]) {
     this.skills$.subscribe((skills) => {
       const operatorsModels = operators.map(
         (operator) => new OperatorViewModel(operator)
@@ -107,7 +106,7 @@ export class AppStoreService {
         next: (result) => {
           //update the current operator in the list of operators
           this.operatorManagementService
-            .get_2({
+            .get({
               identifier: operator.data.identifier ?? "",
             })
             .subscribe((operatorResult) => {
@@ -138,7 +137,7 @@ export class AppStoreService {
       .subscribe((operatorResult) => {
 
           this.operatorManagementService
-          .get_2({
+          .get({
             identifier: operator.data.identifier ?? "",
           })
           .subscribe((operatorResult) => {
@@ -199,7 +198,7 @@ export class AppStoreService {
     if (!model) return new Promise(() => {});
 
     return this.operatorManagementService
-      .update_1({ identifier: model.data.identifier ?? "", body: operator })
+      .update({ identifier: model.data.identifier ?? "", body: operator })
       .toAsync()
       .then((result) => {
         return;
@@ -225,7 +224,7 @@ export class AppStoreService {
     );
     if (result) return Promise.resolve(result);
 
-    return firstValueFrom(this.operatorManagementService.getAll_5()).then(
+    return firstValueFrom(this.operatorManagementService.getAll()).then(
       (operators) => {
         if (!operators) return undefined;
         this.mapOperatorsToModel(operators);
@@ -283,7 +282,7 @@ export class AppStoreService {
 
   deleteSkillType(skillType: SkillType) {
     this.skillManagementService
-      .deleteType_1({
+      .deleteType({
         id: skillType.id,
       })
       .subscribe((result) => {
@@ -328,7 +327,7 @@ export class AppStoreService {
       capabilities: type.acquiredCapabilities,
     };
     this.skillManagementService
-      .update_3({
+      .update_1({
         body: skillData,
       })
       .subscribe((result) => {

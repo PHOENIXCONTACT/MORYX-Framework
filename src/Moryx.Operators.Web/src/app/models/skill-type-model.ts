@@ -1,5 +1,4 @@
 import { Entry } from "@moryx/ngx-web-framework";
-import { TimeSpan } from "../api/models/System/time-span";
 
 export interface SkillType{
     id: number;

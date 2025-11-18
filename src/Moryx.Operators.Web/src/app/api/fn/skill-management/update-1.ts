@@ -10,22 +10,24 @@ import { RequestBuilder } from '../../request-builder';
 
 import { SkillTypeModel } from '../../models/skill-type-model';
 
-export interface GetTypePrototype$Params {
+export interface Update_1$Params {
+      body?: SkillTypeModel
 }
 
-export function getTypePrototype(http: HttpClient, rootUrl: string, params?: GetTypePrototype$Params, context?: HttpContext): Observable<StrictHttpResponse<SkillTypeModel>> {
-  const rb = new RequestBuilder(rootUrl, getTypePrototype.PATH, 'get');
+export function update_1(http: HttpClient, rootUrl: string, params?: Update_1$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  const rb = new RequestBuilder(rootUrl, update_1.PATH, 'put');
   if (params) {
+    rb.body(params.body, 'application/*+json');
   }
 
   return http.request(
-    rb.build({ responseType: 'json', accept: 'application/json', context })
+    rb.build({ responseType: 'text', accept: '*/*', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<SkillTypeModel>;
+      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
     })
   );
 }
 
-getTypePrototype.PATH = '/api/moryx/skills/types/prototype';
+update_1.PATH = '/api/moryx/skills/types';

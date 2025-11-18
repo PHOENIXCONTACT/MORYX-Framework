@@ -8,13 +8,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { AttendableResourceModel } from '../../models/attendable-resource-model';
+import { SkillTypeModel } from '../../models/skill-type-model';
 
-export interface GetResources_1$Params {
+export interface GetTypes$Params {
 }
 
-export function getResources_1(http: HttpClient, rootUrl: string, params?: GetResources_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AttendableResourceModel>>> {
-  const rb = new RequestBuilder(rootUrl, getResources_1.PATH, 'get');
+export function getTypes(http: HttpClient, rootUrl: string, params?: GetTypes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<SkillTypeModel>>> {
+  const rb = new RequestBuilder(rootUrl, getTypes.PATH, 'get');
   if (params) {
   }
 
@@ -23,9 +23,9 @@ export function getResources_1(http: HttpClient, rootUrl: string, params?: GetRe
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<AttendableResourceModel>>;
+      return r as StrictHttpResponse<Array<SkillTypeModel>>;
     })
   );
 }
 
-getResources_1.PATH = '/api/moryx/operators/resources';
+getTypes.PATH = '/api/moryx/skills/types';
