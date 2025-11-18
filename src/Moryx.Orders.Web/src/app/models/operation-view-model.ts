@@ -1,5 +1,5 @@
-import { OperationModel } from "../api/models/Moryx/Orders/Endpoints/operation-model";
-import { OperationClassification } from "../api/models/Moryx/Orders/operation-classification";
+import { OperationModel } from '../api/models';
+import { OperationClassification } from '../api/models';
 
 export class OperationViewModel{
     model: OperationModel;

@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, input, OnInit, signal } from '@angular/core';
 import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ProductPartModel } from 'src/app/api/models/Moryx/Orders/Endpoints/product-part-model';
+import { ProductPartModel } from '../../../api/models';
 import { OrderManagementService } from 'src/app/api/services';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { OperationViewModel } from 'src/app/models/operation-view-model';

@@ -14,10 +14,10 @@ import {
   ProductManagementService,
 } from "../../api/services";
 import { WorkplanService } from "../../api/services/workplan.service";
-import { RecipeClassificationModel } from "src/app/api/models/Moryx/AbstractionLayer/Products/Endpoints/recipe-classification-model";
-import { RecipeModel } from "src/app/api/models/Moryx/AbstractionLayer/Products/Endpoints/recipe-model";
-import { WorkplanModel } from "src/app/api/models/Moryx/AbstractionLayer/Products/Endpoints/workplan-model";
-import { OperationModel } from "src/app/api/models/Moryx/Orders/Endpoints/operation-model";
+import { RecipeClassificationModel } from "../../api/models";
+import { RecipeModel } from "../../api/models";
+import { WorkplanModel } from "../../api/models";
+import { OperationModel } from "../../api/models";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatToolbarModule } from "@angular/material/toolbar";
@@ -164,7 +164,6 @@ export class OperationRecipesComponent implements OnInit {
     this.isEditMode.update((_) => false);
     this.isLoading.update((_) => true);
     this.selectedRecipe.update((item) => {
-      item!.workplanId = this.selectedWorkplan()!.id!;
       item!.workplanModel = this.selectedWorkplan();
       return item;
     });

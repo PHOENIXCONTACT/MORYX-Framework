@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.2.32630.192
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11205.157 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StartProject.Asp", "src\StartProject.Asp\StartProject.Asp.csproj", "{4F1466B5-131E-4080-AC4F-BD1630EDF11F}"
 EndProject
@@ -937,7 +937,5 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {36EFC961-F4E7-49DC-A36A-99594FFB8243}
-		RESX_TaskErrorCategory = Message
-		RESX_ShowErrorsInErrorList = True
 	EndGlobalSection
 EndGlobal
