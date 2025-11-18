@@ -13,10 +13,13 @@ import { abortOperation } from '../fn/order-management/abort-operation';
 import { AbortOperation$Params } from '../fn/order-management/abort-operation';
 import { addOperation } from '../fn/order-management/add-operation';
 import { AddOperation$Params } from '../fn/order-management/add-operation';
+import { AdviceContext } from '../models/advice-context';
 import { adviceOperation } from '../fn/order-management/advice-operation';
 import { AdviceOperation$Params } from '../fn/order-management/advice-operation';
+import { BeginContext } from '../models/begin-context';
 import { beginOperation } from '../fn/order-management/begin-operation';
 import { BeginOperation$Params } from '../fn/order-management/begin-operation';
+import { DocumentModel } from '../models/document-model';
 import { getAdviceContext } from '../fn/order-management/get-advice-context';
 import { GetAdviceContext$Params } from '../fn/order-management/get-advice-context';
 import { getAssignableRecipes } from '../fn/order-management/get-assignable-recipes';
@@ -41,17 +44,16 @@ import { getReportContext } from '../fn/order-management/get-report-context';
 import { GetReportContext$Params } from '../fn/order-management/get-report-context';
 import { interruptOperation } from '../fn/order-management/interrupt-operation';
 import { InterruptOperation$Params } from '../fn/order-management/interrupt-operation';
-import { AdviceContext as MoryxOrdersAdviceContext } from '../models/Moryx/Orders/advice-context';
-import { BeginContext as MoryxOrdersBeginContext } from '../models/Moryx/Orders/begin-context';
-import { OperationChangedModel as MoryxOrdersEndpointsModelsOperationChangedModel } from '../models/Moryx/Orders/Endpoints/Models/operation-changed-model';
-import { OperationLogMessageModel as MoryxOrdersEndpointsOperationLogMessageModel } from '../models/Moryx/Orders/Endpoints/operation-log-message-model';
-import { OperationModel as MoryxOrdersEndpointsOperationModel } from '../models/Moryx/Orders/Endpoints/operation-model';
-import { ProductPartModel as MoryxOrdersEndpointsProductPartModel } from '../models/Moryx/Orders/Endpoints/product-part-model';
-import { ReportContext as MoryxOrdersReportContext } from '../models/Moryx/Orders/report-context';
+import { OperationChangedModel } from '../models/operation-changed-model';
+import { OperationLogMessageModel } from '../models/operation-log-message-model';
+import { OperationModel } from '../models/operation-model';
+import { OperationRecipeModel } from '../models/operation-recipe-model';
 import { operationStream } from '../fn/order-management/operation-stream';
 import { OperationStream$Params } from '../fn/order-management/operation-stream';
+import { ProductPartModel } from '../models/product-part-model';
 import { reload } from '../fn/order-management/reload';
 import { Reload$Params } from '../fn/order-management/reload';
+import { ReportContext } from '../models/report-context';
 import { reportOperation } from '../fn/order-management/report-operation';
 import { ReportOperation$Params } from '../fn/order-management/report-operation';
 import { setOperationSortOrder } from '../fn/order-management/set-operation-sort-order';
@@ -72,7 +74,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getOperations$Response(params?: GetOperations$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOrdersEndpointsOperationModel>>> {
+  getOperations$Response(params?: GetOperations$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OperationModel>>> {
     return getOperations(this.http, this.rootUrl, params, context);
   }
 
@@ -82,9 +84,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getOperations(params?: GetOperations$Params, context?: HttpContext): Observable<Array<MoryxOrdersEndpointsOperationModel>> {
+  getOperations(params?: GetOperations$Params, context?: HttpContext): Observable<Array<OperationModel>> {
     return this.getOperations$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxOrdersEndpointsOperationModel>>): Array<MoryxOrdersEndpointsOperationModel> => r.body)
+      map((r: StrictHttpResponse<Array<OperationModel>>): Array<OperationModel> => r.body)
     );
   }
 
@@ -97,7 +99,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  addOperation$Response(params?: AddOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersEndpointsOperationModel>> {
+  addOperation$Response(params?: AddOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<OperationModel>> {
     return addOperation(this.http, this.rootUrl, params, context);
   }
 
@@ -107,9 +109,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  addOperation(params?: AddOperation$Params, context?: HttpContext): Observable<MoryxOrdersEndpointsOperationModel> {
+  addOperation(params?: AddOperation$Params, context?: HttpContext): Observable<OperationModel> {
     return this.addOperation$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOrdersEndpointsOperationModel>): MoryxOrdersEndpointsOperationModel => r.body)
+      map((r: StrictHttpResponse<OperationModel>): OperationModel => r.body)
     );
   }
 
@@ -122,7 +124,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  operationStream$Response(params?: OperationStream$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersEndpointsModelsOperationChangedModel>> {
+  operationStream$Response(params?: OperationStream$Params, context?: HttpContext): Observable<StrictHttpResponse<OperationChangedModel>> {
     return operationStream(this.http, this.rootUrl, params, context);
   }
 
@@ -132,9 +134,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  operationStream(params?: OperationStream$Params, context?: HttpContext): Observable<MoryxOrdersEndpointsModelsOperationChangedModel> {
+  operationStream(params?: OperationStream$Params, context?: HttpContext): Observable<OperationChangedModel> {
     return this.operationStream$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOrdersEndpointsModelsOperationChangedModel>): MoryxOrdersEndpointsModelsOperationChangedModel => r.body)
+      map((r: StrictHttpResponse<OperationChangedModel>): OperationChangedModel => r.body)
     );
   }
 
@@ -147,7 +149,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getOperation$Response(params: GetOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersEndpointsOperationModel>> {
+  getOperation$Response(params: GetOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<OperationModel>> {
     return getOperation(this.http, this.rootUrl, params, context);
   }
 
@@ -157,9 +159,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getOperation(params: GetOperation$Params, context?: HttpContext): Observable<MoryxOrdersEndpointsOperationModel> {
+  getOperation(params: GetOperation$Params, context?: HttpContext): Observable<OperationModel> {
     return this.getOperation$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOrdersEndpointsOperationModel>): MoryxOrdersEndpointsOperationModel => r.body)
+      map((r: StrictHttpResponse<OperationModel>): OperationModel => r.body)
     );
   }
 
@@ -172,7 +174,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDocuments$Response(params: GetDocuments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOrdersEndpointsOperationModel>>> {
+  getDocuments$Response(params: GetDocuments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<DocumentModel>>> {
     return getDocuments(this.http, this.rootUrl, params, context);
   }
 
@@ -182,9 +184,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDocuments(params: GetDocuments$Params, context?: HttpContext): Observable<Array<MoryxOrdersEndpointsOperationModel>> {
+  getDocuments(params: GetDocuments$Params, context?: HttpContext): Observable<Array<DocumentModel>> {
     return this.getDocuments$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxOrdersEndpointsOperationModel>>): Array<MoryxOrdersEndpointsOperationModel> => r.body)
+      map((r: StrictHttpResponse<Array<DocumentModel>>): Array<DocumentModel> => r.body)
     );
   }
 
@@ -222,7 +224,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getProductParts$Response(params: GetProductParts$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOrdersEndpointsProductPartModel>>> {
+  getProductParts$Response(params: GetProductParts$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ProductPartModel>>> {
     return getProductParts(this.http, this.rootUrl, params, context);
   }
 
@@ -232,9 +234,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getProductParts(params: GetProductParts$Params, context?: HttpContext): Observable<Array<MoryxOrdersEndpointsProductPartModel>> {
+  getProductParts(params: GetProductParts$Params, context?: HttpContext): Observable<Array<ProductPartModel>> {
     return this.getProductParts$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxOrdersEndpointsProductPartModel>>): Array<MoryxOrdersEndpointsProductPartModel> => r.body)
+      map((r: StrictHttpResponse<Array<ProductPartModel>>): Array<ProductPartModel> => r.body)
     );
   }
 
@@ -247,7 +249,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getBeginContext$Response(params: GetBeginContext$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersBeginContext>> {
+  getBeginContext$Response(params: GetBeginContext$Params, context?: HttpContext): Observable<StrictHttpResponse<BeginContext>> {
     return getBeginContext(this.http, this.rootUrl, params, context);
   }
 
@@ -257,9 +259,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getBeginContext(params: GetBeginContext$Params, context?: HttpContext): Observable<MoryxOrdersBeginContext> {
+  getBeginContext(params: GetBeginContext$Params, context?: HttpContext): Observable<BeginContext> {
     return this.getBeginContext$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOrdersBeginContext>): MoryxOrdersBeginContext => r.body)
+      map((r: StrictHttpResponse<BeginContext>): BeginContext => r.body)
     );
   }
 
@@ -297,7 +299,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getReportContext$Response(params: GetReportContext$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersReportContext>> {
+  getReportContext$Response(params: GetReportContext$Params, context?: HttpContext): Observable<StrictHttpResponse<ReportContext>> {
     return getReportContext(this.http, this.rootUrl, params, context);
   }
 
@@ -307,9 +309,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getReportContext(params: GetReportContext$Params, context?: HttpContext): Observable<MoryxOrdersReportContext> {
+  getReportContext(params: GetReportContext$Params, context?: HttpContext): Observable<ReportContext> {
     return this.getReportContext$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOrdersReportContext>): MoryxOrdersReportContext => r.body)
+      map((r: StrictHttpResponse<ReportContext>): ReportContext => r.body)
     );
   }
 
@@ -347,7 +349,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getInterruptContext$Response(params: GetInterruptContext$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersReportContext>> {
+  getInterruptContext$Response(params: GetInterruptContext$Params, context?: HttpContext): Observable<StrictHttpResponse<ReportContext>> {
     return getInterruptContext(this.http, this.rootUrl, params, context);
   }
 
@@ -357,9 +359,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getInterruptContext(params: GetInterruptContext$Params, context?: HttpContext): Observable<MoryxOrdersReportContext> {
+  getInterruptContext(params: GetInterruptContext$Params, context?: HttpContext): Observable<ReportContext> {
     return this.getInterruptContext$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOrdersReportContext>): MoryxOrdersReportContext => r.body)
+      map((r: StrictHttpResponse<ReportContext>): ReportContext => r.body)
     );
   }
 
@@ -397,7 +399,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAdviceContext$Response(params: GetAdviceContext$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersAdviceContext>> {
+  getAdviceContext$Response(params: GetAdviceContext$Params, context?: HttpContext): Observable<StrictHttpResponse<AdviceContext>> {
     return getAdviceContext(this.http, this.rootUrl, params, context);
   }
 
@@ -407,9 +409,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAdviceContext(params: GetAdviceContext$Params, context?: HttpContext): Observable<MoryxOrdersAdviceContext> {
+  getAdviceContext(params: GetAdviceContext$Params, context?: HttpContext): Observable<AdviceContext> {
     return this.getAdviceContext$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOrdersAdviceContext>): MoryxOrdersAdviceContext => r.body)
+      map((r: StrictHttpResponse<AdviceContext>): AdviceContext => r.body)
     );
   }
 
@@ -447,7 +449,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getLogs$Response(params: GetLogs$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersEndpointsOperationLogMessageModel>> {
+  getLogs$Response(params: GetLogs$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OperationLogMessageModel>>> {
     return getLogs(this.http, this.rootUrl, params, context);
   }
 
@@ -457,9 +459,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getLogs(params: GetLogs$Params, context?: HttpContext): Observable<MoryxOrdersEndpointsOperationLogMessageModel> {
+  getLogs(params: GetLogs$Params, context?: HttpContext): Observable<Array<OperationLogMessageModel>> {
     return this.getLogs$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOrdersEndpointsOperationLogMessageModel>): MoryxOrdersEndpointsOperationLogMessageModel => r.body)
+      map((r: StrictHttpResponse<Array<OperationLogMessageModel>>): Array<OperationLogMessageModel> => r.body)
     );
   }
 
@@ -472,7 +474,7 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAssignableRecipes$Response(params?: GetAssignableRecipes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOrdersEndpointsOperationModel>>> {
+  getAssignableRecipes$Response(params?: GetAssignableRecipes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OperationRecipeModel>>> {
     return getAssignableRecipes(this.http, this.rootUrl, params, context);
   }
 
@@ -482,9 +484,9 @@ export class OrderManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAssignableRecipes(params?: GetAssignableRecipes$Params, context?: HttpContext): Observable<Array<MoryxOrdersEndpointsOperationModel>> {
+  getAssignableRecipes(params?: GetAssignableRecipes$Params, context?: HttpContext): Observable<Array<OperationRecipeModel>> {
     return this.getAssignableRecipes$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxOrdersEndpointsOperationModel>>): Array<MoryxOrdersEndpointsOperationModel> => r.body)
+      map((r: StrictHttpResponse<Array<OperationRecipeModel>>): Array<OperationRecipeModel> => r.body)
     );
   }
 

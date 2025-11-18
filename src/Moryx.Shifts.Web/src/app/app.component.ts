@@ -20,7 +20,7 @@ import { AppStoreService } from './services/app-store.service';
 import { FilterButtonType, ShiftElementTab, ViewType } from './models/types';
 import { OrderModel, getOrderHoursForTheDay, getOrderOfTheDayBasedOnOperatorHours, getOrdersBasedOnOperatorHours, totalOrderHours } from './models/order-model';
 import { addCalendarDaysToAssignment } from './models/model-converter';
-import { ResourceModel } from './api/models/Moryx/Operators/Endpoints/resource-model';
+import { AttendableResourceModel } from './api/models/attendable-resource-model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { EmptyStateComponent, LanguageService, MoryxSnackbarService } from '@moryx/ngx-web-framework';
@@ -65,10 +65,10 @@ export class AppComponent implements OnInit {
   isOperatorFilterPanelOpened = signal(false);
   isResourceFilterPanelOpened = signal(false);
   operators = signal<OperatorModel[]>([]);
-  resources = signal<ResourceModel[]>([]);
+  resources = signal<AttendableResourceModel[]>([]);
   shifts = signal<ShiftCardModel[]>([]);
   operatorsSelectedForFilter = signal<OperatorModel[]>([]);
-  resourcesSelectedForFilter = signal<ResourceModel[]>([]);
+  resourcesSelectedForFilter = signal<AttendableResourceModel[]>([]);
   droppableElementSearchString = signal<string | undefined>(undefined);
   searchOperatorInCalendarString = signal<string | undefined>(undefined);
   searchResourceInCalendarString = signal<string | undefined>(undefined);
@@ -222,7 +222,7 @@ export class AppComponent implements OnInit {
   }
 
   dropElement(
-    event: CdkDragDrop<ResourceModel[] | OperatorModel[]>,
+    event: CdkDragDrop<AttendableResourceModel[] | OperatorModel[]>,
     shift?: ShiftCardModel,
     day?: CalendarDate
   ) {
@@ -233,16 +233,16 @@ export class AppComponent implements OnInit {
   }
 
   private handleAssignment(
-    event: CdkDragDrop<ResourceModel[] | OperatorModel[]>,
+    event: CdkDragDrop<AttendableResourceModel[] | OperatorModel[]>,
     shift?: ShiftCardModel,
     day?: CalendarDate
   ) {
     var operator: OperatorModel | undefined = undefined;
-    var resource: ResourceModel | undefined = undefined;
+    var resource: AttendableResourceModel | undefined = undefined;
     //operator was dropped
     if (instanceOfOperator(event.item.data))
       operator = <OperatorModel>event.item.data;
-    else resource = <ResourceModel>event.item.data;
+    else resource = <AttendableResourceModel>event.item.data;
     
     this.translate
     .get([
@@ -315,11 +315,11 @@ export class AppComponent implements OnInit {
     return this.operatorsSelectedForFilter().some((x) => x.id === operator.id);
   }
 
-  isResourceSelected(resource: ResourceModel) {
+  isResourceSelected(resource: AttendableResourceModel) {
     return this.resourcesSelectedForFilter().some((x) => x.id === resource.id);
   }
 
-  selectResource(resource: ResourceModel) {
+  selectResource(resource: AttendableResourceModel) {
     this.appStore.selectResource(resource);
   }
 

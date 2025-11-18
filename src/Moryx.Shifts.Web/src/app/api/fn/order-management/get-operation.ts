@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { OperationModel as MoryxOrdersEndpointsOperationModel } from '../../models/Moryx/Orders/Endpoints/operation-model';
+import { OperationModel } from '../../models/operation-model';
 
 export interface GetOperation$Params {
   guid: string;
 }
 
-export function getOperation(http: HttpClient, rootUrl: string, params: GetOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersEndpointsOperationModel>> {
+export function getOperation(http: HttpClient, rootUrl: string, params: GetOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<OperationModel>> {
   const rb = new RequestBuilder(rootUrl, getOperation.PATH, 'get');
   if (params) {
     rb.path('guid', params.guid, {});
@@ -23,7 +23,7 @@ export function getOperation(http: HttpClient, rootUrl: string, params: GetOpera
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<MoryxOrdersEndpointsOperationModel>;
+      return r as StrictHttpResponse<OperationModel>;
     })
   );
 }

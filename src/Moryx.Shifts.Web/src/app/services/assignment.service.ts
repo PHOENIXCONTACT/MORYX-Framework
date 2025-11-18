@@ -6,11 +6,11 @@ import {
   OperatorManagementService,
   ShiftManagementService,
 } from '../api/services';
-import { ShiftAssignementModel } from '../api/models/Moryx/Shifts/Endpoints/shift-assignement-model';
+import { ShiftAssignementModel } from '../api/models/shift-assignement-model';
 import {
   calendarDatesToFlagEnumString
 } from '../models/model-converter';
-import { ShiftAssignementCreationContextModel } from '../api/models/Moryx/Shifts/shift-assignement-creation-context-model';
+import { ShiftAssignementCreationContextModel } from '../api/models/shift-assignement-creation-context-model';
 
 @Injectable({
   providedIn: 'root',

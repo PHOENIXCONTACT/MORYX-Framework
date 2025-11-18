@@ -6,11 +6,11 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ReportModel as MoryxOrdersEndpointsReportModel } from '../../models/Moryx/Orders/Endpoints/report-model';
+import { ReportModel } from '../../models/report-model';
 
 export interface ReportOperation$Params {
   guid: string;
-      body?: MoryxOrdersEndpointsReportModel
+      body?: ReportModel
 }
 
 export function reportOperation(http: HttpClient, rootUrl: string, params: ReportOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {

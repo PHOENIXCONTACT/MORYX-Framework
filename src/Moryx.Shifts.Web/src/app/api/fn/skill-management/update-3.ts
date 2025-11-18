@@ -6,10 +6,10 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { SkillTypeModel as MoryxOperatorsEndpointsSkillTypeModel } from '../../models/Moryx/Operators/Endpoints/skill-type-model';
+import { SkillTypeModel } from '../../models/skill-type-model';
 
 export interface Update_3$Params {
-      body?: MoryxOperatorsEndpointsSkillTypeModel
+      body?: SkillTypeModel
 }
 
 export function update_3(http: HttpClient, rootUrl: string, params?: Update_3$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {

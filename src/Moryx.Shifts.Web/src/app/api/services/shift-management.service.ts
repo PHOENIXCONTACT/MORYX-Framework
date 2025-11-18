@@ -21,8 +21,6 @@ import { deleteShiftAssignement } from '../fn/shift-management/delete-shift-assi
 import { DeleteShiftAssignement$Params } from '../fn/shift-management/delete-shift-assignement';
 import { deleteShiftType } from '../fn/shift-management/delete-shift-type';
 import { DeleteShiftType$Params } from '../fn/shift-management/delete-shift-type';
-import { getDummy } from '../fn/shift-management/get-dummy';
-import { GetDummy$Params } from '../fn/shift-management/get-dummy';
 import { getShiftAssignements } from '../fn/shift-management/get-shift-assignements';
 import { getShiftAssignements_1 } from '../fn/shift-management/get-shift-assignements-1';
 import { GetShiftAssignements_1$Params } from '../fn/shift-management/get-shift-assignements-1';
@@ -33,9 +31,9 @@ import { GetShifts_1$Params } from '../fn/shift-management/get-shifts-1';
 import { GetShifts$Params } from '../fn/shift-management/get-shifts';
 import { getShiftTypes } from '../fn/shift-management/get-shift-types';
 import { GetShiftTypes$Params } from '../fn/shift-management/get-shift-types';
-import { ShiftAssignementModel as MoryxShiftsEndpointsShiftAssignementModel } from '../models/Moryx/Shifts/Endpoints/shift-assignement-model';
-import { ShiftModel as MoryxShiftsEndpointsShiftModel } from '../models/Moryx/Shifts/Endpoints/shift-model';
-import { ShiftTypeModel as MoryxShiftsEndpointsShiftTypeModel } from '../models/Moryx/Shifts/Endpoints/shift-type-model';
+import { ShiftAssignementModel } from '../models/shift-assignement-model';
+import { ShiftModel } from '../models/shift-model';
+import { ShiftTypeModel } from '../models/shift-type-model';
 import { updateShift } from '../fn/shift-management/update-shift';
 import { UpdateShift$Params } from '../fn/shift-management/update-shift';
 import { updateShiftAssignement } from '../fn/shift-management/update-shift-assignement';
@@ -49,31 +47,6 @@ export class ShiftManagementService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `getDummy()` */
-  static readonly GetDummyPath = '/api/moryx/shifts/dummy';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getDummy()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getDummy$Response(params?: GetDummy$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxShiftsEndpointsShiftAssignementModel>>> {
-    return getDummy(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getDummy$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getDummy(params?: GetDummy$Params, context?: HttpContext): Observable<Array<MoryxShiftsEndpointsShiftAssignementModel>> {
-    return this.getDummy$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxShiftsEndpointsShiftAssignementModel>>): Array<MoryxShiftsEndpointsShiftAssignementModel> => r.body)
-    );
-  }
-
   /** Path part for operation `getShifts()` */
   static readonly GetShiftsPath = '/api/moryx/shifts';
 
@@ -83,7 +56,7 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShifts$Response(params?: GetShifts$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxShiftsEndpointsShiftModel>>> {
+  getShifts$Response(params?: GetShifts$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ShiftModel>>> {
     return getShifts(this.http, this.rootUrl, params, context);
   }
 
@@ -93,9 +66,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShifts(params?: GetShifts$Params, context?: HttpContext): Observable<Array<MoryxShiftsEndpointsShiftModel>> {
+  getShifts(params?: GetShifts$Params, context?: HttpContext): Observable<Array<ShiftModel>> {
     return this.getShifts$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxShiftsEndpointsShiftModel>>): Array<MoryxShiftsEndpointsShiftModel> => r.body)
+      map((r: StrictHttpResponse<Array<ShiftModel>>): Array<ShiftModel> => r.body)
     );
   }
 
@@ -133,7 +106,7 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createShift$Response(params?: CreateShift$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxShiftsEndpointsShiftModel>> {
+  createShift$Response(params?: CreateShift$Params, context?: HttpContext): Observable<StrictHttpResponse<ShiftModel>> {
     return createShift(this.http, this.rootUrl, params, context);
   }
 
@@ -143,9 +116,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createShift(params?: CreateShift$Params, context?: HttpContext): Observable<MoryxShiftsEndpointsShiftModel> {
+  createShift(params?: CreateShift$Params, context?: HttpContext): Observable<ShiftModel> {
     return this.createShift$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxShiftsEndpointsShiftModel>): MoryxShiftsEndpointsShiftModel => r.body)
+      map((r: StrictHttpResponse<ShiftModel>): ShiftModel => r.body)
     );
   }
 
@@ -158,7 +131,7 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShifts_1$Response(params?: GetShifts_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxShiftsEndpointsShiftModel>>> {
+  getShifts_1$Response(params?: GetShifts_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ShiftModel>>> {
     return getShifts_1(this.http, this.rootUrl, params, context);
   }
 
@@ -168,9 +141,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShifts_1(params?: GetShifts_1$Params, context?: HttpContext): Observable<Array<MoryxShiftsEndpointsShiftModel>> {
+  getShifts_1(params?: GetShifts_1$Params, context?: HttpContext): Observable<Array<ShiftModel>> {
     return this.getShifts_1$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxShiftsEndpointsShiftModel>>): Array<MoryxShiftsEndpointsShiftModel> => r.body)
+      map((r: StrictHttpResponse<Array<ShiftModel>>): Array<ShiftModel> => r.body)
     );
   }
 
@@ -208,7 +181,7 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShiftTypes$Response(params?: GetShiftTypes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxShiftsEndpointsShiftTypeModel>>> {
+  getShiftTypes$Response(params?: GetShiftTypes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ShiftTypeModel>>> {
     return getShiftTypes(this.http, this.rootUrl, params, context);
   }
 
@@ -218,9 +191,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShiftTypes(params?: GetShiftTypes$Params, context?: HttpContext): Observable<Array<MoryxShiftsEndpointsShiftTypeModel>> {
+  getShiftTypes(params?: GetShiftTypes$Params, context?: HttpContext): Observable<Array<ShiftTypeModel>> {
     return this.getShiftTypes$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxShiftsEndpointsShiftTypeModel>>): Array<MoryxShiftsEndpointsShiftTypeModel> => r.body)
+      map((r: StrictHttpResponse<Array<ShiftTypeModel>>): Array<ShiftTypeModel> => r.body)
     );
   }
 
@@ -258,7 +231,7 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createShiftType$Response(params?: CreateShiftType$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxShiftsEndpointsShiftTypeModel>> {
+  createShiftType$Response(params?: CreateShiftType$Params, context?: HttpContext): Observable<StrictHttpResponse<ShiftTypeModel>> {
     return createShiftType(this.http, this.rootUrl, params, context);
   }
 
@@ -268,9 +241,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createShiftType(params?: CreateShiftType$Params, context?: HttpContext): Observable<MoryxShiftsEndpointsShiftTypeModel> {
+  createShiftType(params?: CreateShiftType$Params, context?: HttpContext): Observable<ShiftTypeModel> {
     return this.createShiftType$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxShiftsEndpointsShiftTypeModel>): MoryxShiftsEndpointsShiftTypeModel => r.body)
+      map((r: StrictHttpResponse<ShiftTypeModel>): ShiftTypeModel => r.body)
     );
   }
 
@@ -308,7 +281,7 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShiftAssignements$Response(params?: GetShiftAssignements$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxShiftsEndpointsShiftAssignementModel>>> {
+  getShiftAssignements$Response(params?: GetShiftAssignements$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ShiftAssignementModel>>> {
     return getShiftAssignements(this.http, this.rootUrl, params, context);
   }
 
@@ -318,9 +291,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShiftAssignements(params?: GetShiftAssignements$Params, context?: HttpContext): Observable<Array<MoryxShiftsEndpointsShiftAssignementModel>> {
+  getShiftAssignements(params?: GetShiftAssignements$Params, context?: HttpContext): Observable<Array<ShiftAssignementModel>> {
     return this.getShiftAssignements$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxShiftsEndpointsShiftAssignementModel>>): Array<MoryxShiftsEndpointsShiftAssignementModel> => r.body)
+      map((r: StrictHttpResponse<Array<ShiftAssignementModel>>): Array<ShiftAssignementModel> => r.body)
     );
   }
 
@@ -358,7 +331,7 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createShiftAssignement$Response(params?: CreateShiftAssignement$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxShiftsEndpointsShiftAssignementModel>> {
+  createShiftAssignement$Response(params?: CreateShiftAssignement$Params, context?: HttpContext): Observable<StrictHttpResponse<ShiftAssignementModel>> {
     return createShiftAssignement(this.http, this.rootUrl, params, context);
   }
 
@@ -368,9 +341,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  createShiftAssignement(params?: CreateShiftAssignement$Params, context?: HttpContext): Observable<MoryxShiftsEndpointsShiftAssignementModel> {
+  createShiftAssignement(params?: CreateShiftAssignement$Params, context?: HttpContext): Observable<ShiftAssignementModel> {
     return this.createShiftAssignement$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxShiftsEndpointsShiftAssignementModel>): MoryxShiftsEndpointsShiftAssignementModel => r.body)
+      map((r: StrictHttpResponse<ShiftAssignementModel>): ShiftAssignementModel => r.body)
     );
   }
 
@@ -383,7 +356,7 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShiftAssignements_1$Response(params?: GetShiftAssignements_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxShiftsEndpointsShiftAssignementModel>>> {
+  getShiftAssignements_1$Response(params?: GetShiftAssignements_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ShiftAssignementModel>>> {
     return getShiftAssignements_1(this.http, this.rootUrl, params, context);
   }
 
@@ -393,9 +366,9 @@ export class ShiftManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getShiftAssignements_1(params?: GetShiftAssignements_1$Params, context?: HttpContext): Observable<Array<MoryxShiftsEndpointsShiftAssignementModel>> {
+  getShiftAssignements_1(params?: GetShiftAssignements_1$Params, context?: HttpContext): Observable<Array<ShiftAssignementModel>> {
     return this.getShiftAssignements_1$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxShiftsEndpointsShiftAssignementModel>>): Array<MoryxShiftsEndpointsShiftAssignementModel> => r.body)
+      map((r: StrictHttpResponse<Array<ShiftAssignementModel>>): Array<ShiftAssignementModel> => r.body)
     );
   }
 

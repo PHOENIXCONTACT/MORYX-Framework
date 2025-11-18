@@ -8,7 +8,7 @@ import { ShiftInstanceModel } from '../models/shift-instance-model';
 import { ShiftCardModel } from '../models/shift-card-model';
 import { AssignmentService } from './assignment.service';
 import { ShiftService } from './shift.service';
-import  moment from 'moment';
+import moment from 'moment';
 import { AssignmentCardModel } from '../models/assignment-card-model';
 import AssignmentData from '../models/assignment-data';
 import {
@@ -31,7 +31,7 @@ import {
   shiftInstanceToShiftCardModel,
   shiftTypeToShiftTypeModel,
 } from '../models/model-converter';
-import { ResourceModel } from '../api/models/Moryx/Operators/Endpoints/resource-model';
+import { AttendableResourceModel } from '../api/models/attendable-resource-model';
 import { CopyShiftAndAssignmentData } from '../dialogs/copy-shift-and-assignment/copy-shift-and-assignment.component';
 
 @Injectable({
@@ -46,7 +46,7 @@ export class AppStoreService {
   private isResourceFilterPanelOpened = new BehaviorSubject(false);
   private isDraggingItem = new BehaviorSubject(false);
   private operatorsSelectedForFilter = new BehaviorSubject<OperatorModel[]>([]);
-  private resourcesSelectedForFilter = new BehaviorSubject<ResourceModel[]>([]);
+  private resourcesSelectedForFilter = new BehaviorSubject<AttendableResourceModel[]>([]);
   private droppableElementSearchString = new BehaviorSubject<
     string | undefined
   >(undefined);
@@ -60,7 +60,7 @@ export class AppStoreService {
   private currentView = new BehaviorSubject<ViewType>('Assignments');
   private orders = new BehaviorSubject<OrderModel[]>([]);
   private operators = new BehaviorSubject<OperatorModel[]>([]);
-  private resources = new BehaviorSubject<ResourceModel[]>([]);
+  private resources = new BehaviorSubject<AttendableResourceModel[]>([]);
 
   // events
   public isOperatorFilterPanelOpened$ =
@@ -115,7 +115,7 @@ export class AppStoreService {
 
     //fetch resources and operator elements from the API in parallel
     forkJoin([
-      this.operatorService.getResources(),
+      this.operatorService.getResources_1(),
       this.operatorService.getAll_5(),
     ]).subscribe((results) => {
       const resources = results[0];
@@ -177,93 +177,93 @@ export class AppStoreService {
 
 
     //find all shift instances for previous week
-    return await this.getShiftInstancesForPeriod(start,end)
-    .then(async (instances) => {
-      const assignments =  await firstValueFrom(this.assignmentService.assignments);
-      const instancesForPreviousWeek = instances.filter(
-        (x) =>
-          isDayInInterval(x.startDate, start, end) ||
-          isDayInInterval(x.endDate, start, end)
-      );
+    return await this.getShiftInstancesForPeriod(start, end)
+      .then(async (instances) => {
+        const assignments = await firstValueFrom(this.assignmentService.assignments);
+        const instancesForPreviousWeek = instances.filter(
+          (x) =>
+            isDayInInterval(x.startDate, start, end) ||
+            isDayInInterval(x.endDate, start, end)
+        );
 
-      if (!instancesForPreviousWeek.length) return shiftsAndAssignment;
+        if (!instancesForPreviousWeek.length) return shiftsAndAssignment;
 
-      for (let previousInstance of instancesForPreviousWeek) {
-        const newStartDate = moment(previousInstance.endDate).add(1, 'days');
-        const newInstance = <ShiftInstanceModel>{
-          id: previousInstance.id,// temporary id
-          shiftType: previousInstance.shiftType,
-          startDate: newStartDate.toDate(),
-          endDate: newStartDate
-            .add(previousInstance.shiftType.duration, 'days')
-            .toDate(),
-        };
-
-        shiftsAndAssignment.shiftInstances.push(newInstance);
-        const foundAssignments = assignments.filter((x) => x.shiftInstanceId === previousInstance.id);
-        const foundAssignmentsData = foundAssignments.map((assignment) => {
-          const assignmentData = <AssignmentData>{
-            days: assignment.days.map(
-              (x) =>
-                <CalendarDate>{
-                  date: moment(x.date)
-                    .add(previousInstance.shiftType.duration, 'days')
-                    .toDate(),
-                  day: moment(x.date)
-                    .add(previousInstance.shiftType.duration, 'days')
-                    .day(),
-                }
-            ),
-            resource: assignment.resource,
-            operator: assignment.operator,
-            shift: shiftInstanceToShiftCardModel(newInstance),
-            notes: assignment.notes,
-            priority: assignment.priority,
-            calendarState: calendarState,
+        for (let previousInstance of instancesForPreviousWeek) {
+          const newStartDate = moment(previousInstance.endDate).add(1, 'days');
+          const newInstance = <ShiftInstanceModel>{
+            id: previousInstance.id,// temporary id
+            shiftType: previousInstance.shiftType,
+            startDate: newStartDate.toDate(),
+            endDate: newStartDate
+              .add(previousInstance.shiftType.duration, 'days')
+              .toDate(),
           };
-          assignmentData.shift.id = previousInstance.id; //temporary id
-          return assignmentData;
-        });
-        shiftsAndAssignment.assignments.push(...foundAssignmentsData);
-          
-      }
 
-      return shiftsAndAssignment;
-    });
+          shiftsAndAssignment.shiftInstances.push(newInstance);
+          const foundAssignments = assignments.filter((x) => x.shiftInstanceId === previousInstance.id);
+          const foundAssignmentsData = foundAssignments.map((assignment) => {
+            const assignmentData = <AssignmentData>{
+              days: assignment.days.map(
+                (x) =>
+                  <CalendarDate>{
+                    date: moment(x.date)
+                      .add(previousInstance.shiftType.duration, 'days')
+                      .toDate(),
+                    day: moment(x.date)
+                      .add(previousInstance.shiftType.duration, 'days')
+                      .day(),
+                  }
+              ),
+              resource: assignment.resource,
+              operator: assignment.operator,
+              shift: shiftInstanceToShiftCardModel(newInstance),
+              notes: assignment.notes,
+              priority: assignment.priority,
+              calendarState: calendarState,
+            };
+            assignmentData.shift.id = previousInstance.id; //temporary id
+            return assignmentData;
+          });
+          shiftsAndAssignment.assignments.push(...foundAssignmentsData);
+
+        }
+
+        return shiftsAndAssignment;
+      });
   }
 
   async getShiftInstancesForPeriod(
     start: Date,
     end: Date): Promise<ShiftInstanceModel[]> {
 
-      //find all shift instances
-      const previousInstances = firstValueFrom(this.shiftService.shiftInstances);
-  
-      return await previousInstances.then(async (instances) => {
-        const instancesFound = instances.filter(
-          (x) =>
-            isDayInInterval(x.startDate, start, end) ||
-            isDayInInterval(x.endDate, start, end)
-        );
+    //find all shift instances
+    const previousInstances = firstValueFrom(this.shiftService.shiftInstances);
 
-        return instancesFound;
-      });
+    return await previousInstances.then(async (instances) => {
+      const instancesFound = instances.filter(
+        (x) =>
+          isDayInInterval(x.startDate, start, end) ||
+          isDayInInterval(x.endDate, start, end)
+      );
+
+      return instancesFound;
+    });
   }
 
   async createNewAssignmentAndShift(data: CopyShiftAndAssignmentData) {
     //create new shift instance for the new week
     for (let newInstance of data.shiftInstances) {
       await this.shiftService.addInstance(newInstance)
-      .then(async (instance) => {
-        this.shiftService.addToInstanceList(instance);
+        .then(async (instance) => {
+          this.shiftService.addToInstanceList(instance);
 
-        const assignments = data.assignments.filter( x => x.shift.id === newInstance.id); // based on temporary id
-        for (let assignment of assignments) {      
-            assignment.shift = shiftInstanceToShiftCardModel(instance); 
+          const assignments = data.assignments.filter(x => x.shift.id === newInstance.id); // based on temporary id
+          for (let assignment of assignments) {
+            assignment.shift = shiftInstanceToShiftCardModel(instance);
             await this.assignmentService.addNewAssignment(assignment)
-            .then(newAssignment => this.assignmentService.addAssignmentsToList([newAssignment]))
-        }
-      });
+              .then(newAssignment => this.assignmentService.addAssignmentsToList([newAssignment]))
+          }
+        });
     }
   }
 
@@ -289,7 +289,7 @@ export class AppStoreService {
       );
   }
 
-  selectResource(resource: ResourceModel) {
+  selectResource(resource: AttendableResourceModel) {
     if (
       !this.resourcesSelectedForFilter.value.some((x) => resource.id === x.id)
     )
@@ -361,9 +361,9 @@ export class AppStoreService {
 
   getResourcesBasedOnOperator(
     operatorId: string
-  ): Promise<Array<ResourceModel>> {
+  ): Promise<Array<AttendableResourceModel>> {
     var resourcesAsync = firstValueFrom(
-      this.operatorService.getResourcesByOperator({ identifier: operatorId })
+      this.operatorService.getResources({ operatorIdentifier: operatorId })
     );
     return resourcesAsync.then((resources) => resources);
   }

@@ -6,10 +6,10 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ShiftTypeModel as MoryxShiftsEndpointsShiftTypeModel } from '../../models/Moryx/Shifts/Endpoints/shift-type-model';
+import { ShiftTypeModel } from '../../models/shift-type-model';
 
 export interface UpdateShiftType$Params {
-      body?: MoryxShiftsEndpointsShiftTypeModel
+      body?: ShiftTypeModel
 }
 
 export function updateShiftType(http: HttpClient, rootUrl: string, params?: UpdateShiftType$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {

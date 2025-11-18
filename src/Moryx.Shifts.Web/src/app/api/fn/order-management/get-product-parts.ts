@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ProductPartModel as MoryxOrdersEndpointsProductPartModel } from '../../models/Moryx/Orders/Endpoints/product-part-model';
+import { ProductPartModel } from '../../models/product-part-model';
 
 export interface GetProductParts$Params {
   guid: string;
 }
 
-export function getProductParts(http: HttpClient, rootUrl: string, params: GetProductParts$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOrdersEndpointsProductPartModel>>> {
+export function getProductParts(http: HttpClient, rootUrl: string, params: GetProductParts$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ProductPartModel>>> {
   const rb = new RequestBuilder(rootUrl, getProductParts.PATH, 'get');
   if (params) {
     rb.path('guid', params.guid, {});
@@ -23,7 +23,7 @@ export function getProductParts(http: HttpClient, rootUrl: string, params: GetPr
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<MoryxOrdersEndpointsProductPartModel>>;
+      return r as StrictHttpResponse<Array<ProductPartModel>>;
     })
   );
 }

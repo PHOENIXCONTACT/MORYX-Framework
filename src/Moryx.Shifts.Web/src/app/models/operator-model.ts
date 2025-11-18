@@ -1,4 +1,4 @@
-import { AssignableOperator } from "../api/models/Moryx/Operators/assignable-operator";
+import { AssignableOperator } from "../api/models/assignable-operator";
 
 export interface OperatorModel extends AssignableOperator {
     id: string;

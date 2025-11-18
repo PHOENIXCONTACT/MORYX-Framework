@@ -5,13 +5,12 @@ import { ShiftCardModel } from '../models/shift-card-model';
 import { ShiftInstanceModel } from '../models/shift-instance-model';
 import { SHIFTS, SHIFT_INSTANCES, SHIFT_TYPES } from '../models/dummy-data';
 import { ShiftManagementService } from '../api/services';
-import { MoryxShiftsEndpointsShiftTypeModel } from '../api/models';
 import { Time } from '@angular/common';
-import { ShiftModel } from '../api/models/Moryx/Shifts/Endpoints/shift-model';
+import { ShiftModel } from '../api/models/shift-model';
 import { formatDateDigits } from '../utils';
-import  moment from 'moment';
-import { ShiftCreationContextModel } from '../api/models/Moryx/Shifts/shift-creation-context-model';
-import { ShiftTypeCreationContextModel } from '../api/models/Moryx/Shifts/shift-type-creation-context-model';
+import moment from 'moment';
+import { ShiftCreationContextModel } from '../api/models/shift-creation-context-model';
+import { ShiftTypeCreationContextModel } from '../api/models/shift-type-creation-context-model';
 import {
   shiftToShitInstanceModel,
   shiftTypeToShiftTypeModel,
@@ -27,27 +26,27 @@ export class ShiftService {
   constructor(private shiftManagement: ShiftManagementService) {
     //fetch shift types
     this.shiftManagement.getShiftTypes()
-    .subscribe((shifts) => {
-      const typeModels = shifts.map(shiftTypeToShiftTypeModel);
-      this.shiftTypes.next(typeModels);
+      .subscribe((shifts) => {
+        const typeModels = shifts.map(shiftTypeToShiftTypeModel);
+        this.shiftTypes.next(typeModels);
 
-      // //fetch shift instances
-      this.shiftManagement.getShifts()
-      .subscribe((instanceModels) => {
-        const instances = instanceModels.map((x) =>
-          shiftToShitInstanceModel(typeModels, x)
-        );
-        this.shiftInstances.next(instances);
+        // //fetch shift instances
+        this.shiftManagement.getShifts()
+          .subscribe((instanceModels) => {
+            const instances = instanceModels.map((x) =>
+              shiftToShitInstanceModel(typeModels, x)
+            );
+            this.shiftInstances.next(instances);
+          });
       });
-    });
   }
 
-  public addToInstanceList(instance: ShiftInstanceModel){
-    this.shiftInstances.next([...this.shiftInstances.value,instance]);
+  public addToInstanceList(instance: ShiftInstanceModel) {
+    this.shiftInstances.next([...this.shiftInstances.value, instance]);
   }
 
-  public addToTypeList(type: ShiftTypeModel){
-    this.shiftTypes.next([...this.shiftTypes.value,type]);
+  public addToTypeList(type: ShiftTypeModel) {
+    this.shiftTypes.next([...this.shiftTypes.value, type]);
   }
 
   public addType(
@@ -96,7 +95,7 @@ export class ShiftService {
       })
       .subscribe((result) => {
         const found = this.shiftInstances.value.find((x) => x.id === id);
-        if(!found) return;
+        if (!found) return;
         found.startDate = shiftInstance.startDate;
         found.endDate = shiftInstance.endDate;
       });

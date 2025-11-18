@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ReportContext as MoryxOrdersReportContext } from '../../models/Moryx/Orders/report-context';
+import { ReportContext } from '../../models/report-context';
 
 export interface GetInterruptContext$Params {
   guid: string;
 }
 
-export function getInterruptContext(http: HttpClient, rootUrl: string, params: GetInterruptContext$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersReportContext>> {
+export function getInterruptContext(http: HttpClient, rootUrl: string, params: GetInterruptContext$Params, context?: HttpContext): Observable<StrictHttpResponse<ReportContext>> {
   const rb = new RequestBuilder(rootUrl, getInterruptContext.PATH, 'get');
   if (params) {
     rb.path('guid', params.guid, {});
@@ -23,7 +23,7 @@ export function getInterruptContext(http: HttpClient, rootUrl: string, params: G
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<MoryxOrdersReportContext>;
+      return r as StrictHttpResponse<ReportContext>;
     })
   );
 }

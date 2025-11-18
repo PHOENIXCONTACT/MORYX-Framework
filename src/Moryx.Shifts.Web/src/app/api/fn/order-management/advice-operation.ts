@@ -6,11 +6,11 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { AdviceModel as MoryxOrdersEndpointsAdviceModel } from '../../models/Moryx/Orders/Endpoints/advice-model';
+import { AdviceModel } from '../../models/advice-model';
 
 export interface AdviceOperation$Params {
   guid: string;
-      body?: MoryxOrdersEndpointsAdviceModel
+      body?: AdviceModel
 }
 
 export function adviceOperation(http: HttpClient, rootUrl: string, params: AdviceOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {

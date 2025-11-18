@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { SkillModel as MoryxOperatorsEndpointsSkillModel } from '../../models/Moryx/Operators/Endpoints/skill-model';
+import { SkillModel } from '../../models/skill-model';
 
 export interface GetSkill$Params {
   id: number;
 }
 
-export function getSkill(http: HttpClient, rootUrl: string, params: GetSkill$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOperatorsEndpointsSkillModel>> {
+export function getSkill(http: HttpClient, rootUrl: string, params: GetSkill$Params, context?: HttpContext): Observable<StrictHttpResponse<SkillModel>> {
   const rb = new RequestBuilder(rootUrl, getSkill.PATH, 'get');
   if (params) {
     rb.path('id', params.id, {});
@@ -23,7 +23,7 @@ export function getSkill(http: HttpClient, rootUrl: string, params: GetSkill$Par
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<MoryxOperatorsEndpointsSkillModel>;
+      return r as StrictHttpResponse<SkillModel>;
     })
   );
 }

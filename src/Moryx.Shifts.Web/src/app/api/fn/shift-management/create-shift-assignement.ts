@@ -6,14 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ShiftAssignementModel as MoryxShiftsEndpointsShiftAssignementModel } from '../../models/Moryx/Shifts/Endpoints/shift-assignement-model';
-import { ShiftAssignementCreationContextModel as MoryxShiftsShiftAssignementCreationContextModel } from '../../models/Moryx/Shifts/shift-assignement-creation-context-model';
+import { ShiftAssignementCreationContextModel } from '../../models/shift-assignement-creation-context-model';
+import { ShiftAssignementModel } from '../../models/shift-assignement-model';
 
 export interface CreateShiftAssignement$Params {
-      body?: MoryxShiftsShiftAssignementCreationContextModel
+      body?: ShiftAssignementCreationContextModel
 }
 
-export function createShiftAssignement(http: HttpClient, rootUrl: string, params?: CreateShiftAssignement$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxShiftsEndpointsShiftAssignementModel>> {
+export function createShiftAssignement(http: HttpClient, rootUrl: string, params?: CreateShiftAssignement$Params, context?: HttpContext): Observable<StrictHttpResponse<ShiftAssignementModel>> {
   const rb = new RequestBuilder(rootUrl, createShiftAssignement.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/*+json');
@@ -24,7 +24,7 @@ export function createShiftAssignement(http: HttpClient, rootUrl: string, params
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<MoryxShiftsEndpointsShiftAssignementModel>;
+      return r as StrictHttpResponse<ShiftAssignementModel>;
     })
   );
 }

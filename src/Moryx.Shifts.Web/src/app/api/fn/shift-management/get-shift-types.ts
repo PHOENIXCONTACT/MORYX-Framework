@@ -6,12 +6,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ShiftTypeModel as MoryxShiftsEndpointsShiftTypeModel } from '../../models/Moryx/Shifts/Endpoints/shift-type-model';
+import { ShiftTypeModel } from '../../models/shift-type-model';
 
 export interface GetShiftTypes$Params {
 }
 
-export function getShiftTypes(http: HttpClient, rootUrl: string, params?: GetShiftTypes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxShiftsEndpointsShiftTypeModel>>> {
+export function getShiftTypes(http: HttpClient, rootUrl: string, params?: GetShiftTypes$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ShiftTypeModel>>> {
   const rb = new RequestBuilder(rootUrl, getShiftTypes.PATH, 'get');
   if (params) {
   }
@@ -21,7 +21,7 @@ export function getShiftTypes(http: HttpClient, rootUrl: string, params?: GetShi
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<MoryxShiftsEndpointsShiftTypeModel>>;
+      return r as StrictHttpResponse<Array<ShiftTypeModel>>;
     })
   );
 }
