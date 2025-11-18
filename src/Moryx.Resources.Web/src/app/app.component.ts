@@ -15,10 +15,7 @@ import {
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
-import {
-  MoryxAbstractionLayerResourcesEndpointsResourceModel as ResourceModel,
-  MoryxAbstractionLayerResourcesEndpointsResourceTypeModel as ResourceTypeModel,
-} from './api/models';
+import { ResourceModel, ResourceTypeModel } from './api/models';
 import { ResourceModificationService } from './api/services';
 import { DialogAddResourceComponent } from './dialogs/dialog-add-resource/dialog-add-resource.component';
 import { ResourceConstructionParameters } from './models/ResourceConstructionParameters';
@@ -68,7 +65,7 @@ import { DialogRemoveResourceComponent } from "./dialogs/dialog-remove-resource/
 export class AppComponent implements OnInit, OnDestroy {
   private readonly trigger = viewChild.required(MatMenuTrigger);
   menuTopLeftPosition = signal<Position>({ x: '0px', y: '0px' });
-  
+
   readonly resourceToolbarImage = environment.assets + 'assets/resource-toolbar.jpg';
 
   private userPermissions: string[] = [];
@@ -295,7 +292,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if (!resource) return;
 
     const dialogRef = this.dialog.open(DialogRemoveResourceComponent, {
-        data: resource,
+      data: resource,
     });
 
     dialogRef.afterClosed().subscribe(async (resourceToBeDeleted) => {

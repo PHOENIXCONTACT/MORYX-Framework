@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import {
-  MoryxAbstractionLayerResourcesEndpointsResourceModel as ResourceModel,
-  MoryxAbstractionLayerResourcesEndpointsResourceReferenceModel as ResourceReferenceModel,
-} from '../api/models';
+import { ResourceModel, ResourceReferenceModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
 import { StrictHttpResponse } from '../api/strict-http-response';
 import { CacheResourceService } from './cache-resource.service';
@@ -38,7 +35,7 @@ export class EditResourceService {
     private sessionService: SessionService,
     private translate: TranslateService,
     private moryxSnackbar: MoryxSnackbarService
-  ) {}
+  ) { }
 
   loadResource() {
     var id = 0;
@@ -125,7 +122,7 @@ export class EditResourceService {
     if (!resource) return;
 
     this.editingUnsavedResource = resource.id === 0;
-    
+
     // When the resource was already save, other resources might also be
     if (!this.editingUnsavedResource) await this.cacheService.loadResources();
 

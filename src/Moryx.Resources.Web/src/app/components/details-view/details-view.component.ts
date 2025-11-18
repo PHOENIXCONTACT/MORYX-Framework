@@ -4,7 +4,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { SessionService } from 'src/app/services/session.service';
-import { MoryxAbstractionLayerResourcesEndpointsResourceModel as ResourceModel } from '../../api/models';
+import { ResourceModel } from '../../api/models';
 import { EditResourceService } from '../../services/edit-resource.service';
 import { Permissions } from './../../extensions/permissions.extensions';
 import { MatTabsModule } from '@angular/material/tabs';

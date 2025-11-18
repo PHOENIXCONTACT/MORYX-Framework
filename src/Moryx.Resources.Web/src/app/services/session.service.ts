@@ -1,6 +1,6 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Injectable } from '@angular/core';
-import { MoryxAbstractionLayerResourcesEndpointsResourceModel as ResourceModel } from '../api/models';
+import { ResourceModel } from '../api/models';
 
 @Injectable({
   providedIn: 'root'
@@ -17,20 +17,20 @@ export class SessionService {
     sessionStorage.setItem(this.RESOURCE_TREE, nodesString);
   }
 
-  restoreTreeState(treeControl: FlatTreeControl<FlatNode, FlatNode>) : void {
+  restoreTreeState(treeControl: FlatTreeControl<FlatNode, FlatNode>): void {
     const expandedNodes = sessionStorage.getItem(this.RESOURCE_TREE);
     if (!expandedNodes) return;
-    
+
     const expandedNodesArray = expandedNodes.split(',');
     for (let id of expandedNodesArray) {
       const node = treeControl.dataNodes.find(n => String(n.id) === id);
-      if(!node) continue;
+      if (!node) continue;
       treeControl.expand(node);
     }
   }
 
   setWipResource(resource: ResourceModel, details: ResourceStorageDetails) {
-    const resourceStorageObject: ResourceStorageObject = {resource: resource, details: details};
+    const resourceStorageObject: ResourceStorageObject = { resource: resource, details: details };
     sessionStorage.setItem(this.WIP_RESOURCE, JSON.stringify(resourceStorageObject));
   }
 
