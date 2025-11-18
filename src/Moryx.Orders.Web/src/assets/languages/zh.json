@@ -62,9 +62,7 @@
   },
   "REPORT_DIALOG": {
     "REPORT_TITLE": "报告操作",
-    "INTERRUPT_TITLE": "中断操作",
     "REPORT": "报告",
-    "INTERRUPT": "中断",
     "OPERATION": "操作",
     "ORDER": "订单",
     "PRODUCT": "产品",
@@ -78,8 +76,11 @@
     "COMMENT": "评论",
     "CONFIRMATION": "确认",
     "PARTIAL": "部分",
-    "FINAL": "最终",
-    "CANCEL": "取消"
+    "FINAL": "最终"
+  },
+  "INTERRUPT_DIALOG": {
+    "TITLE": "中断操作",
+    "PROMPT": "接下来的操作不会启动新进程。已经启动的进程将正常完成，操作状态将变为 '中断'。"
   },
   "CREATE_DIALOG": {
     "TITLE": "新订单",
@@ -91,7 +92,6 @@
     "RECIPE": "配方",
     "AMOUNT": "数量",
     "ADDED_OPERATIONS": "已添加的操作",
-    "CANCEL": "取消",
     "CLEAR": "清除",
     "CREATE": "创建",
     "ADD": "添加",
@@ -109,7 +109,6 @@
     "OVERDELIVERY": "超交",
     "UNDERDELIVERY": "欠交",
     "PARTIAL_AMOUNT": "部分数量",
-    "CANCEL": "取消",
     "BEGIN": "开始",
     "OPERATOR_SELECTION_LABEL": "操作",
     "OPERATOR_SELECTION_PLACEHOLDER": "(可选） 请选择您的助手",
@@ -121,6 +120,8 @@
     "CANNOT_REDUCE_TARGET_AMOUNT": "目标金额不得进一步减少"
   },
   "DISMISS": "关闭",
+  "CANCEL": "取消",
+  "CONFIRM": "证",
   "DEFAULT_MESSAGE": "服务器发生了错误。",
   "SERVER_NOT_REACHABLE": "无法访问服务器，请检查您的网络连接或代理设置。"
 }

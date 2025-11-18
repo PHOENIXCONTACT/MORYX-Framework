@@ -13,6 +13,8 @@ import { OrderManagementService } from '../../api/services/order-management.serv
 import { BeginDialogComponent, BeginDialogData } from '../../dialogs/begin-dialog/begin-dialog.component';
 import { CreateDialogComponent } from '../../dialogs/create-dialog/create-dialog.component';
 import { ReportDialogComponent, ReportDialogData } from '../../dialogs/report-dialog/report-dialog.component';
+import { InterruptDialogComponent } from '../../dialogs/interrupt-dialog/interrupt-dialog.component';
+import { InterruptDialogData } from '../../dialogs/interrupt-dialog/interrupt-dialog-data';
 import '../../extensions/observable.extensions';
 import { OperationViewModel } from '../../models/operation-view-model';
 import { OperationModel } from '../../api/models';
@@ -183,24 +185,17 @@ export class OperationsComponent implements OnInit, OnDestroy {
   }
 
   onInterrupt(operation: OperationViewModel) {
-    this.dialog.open(ReportDialogComponent, {
-      data: <ReportDialogData>{
+    this.dialog.open(InterruptDialogComponent, {
+      data: <InterruptDialogData>{
         operation: operation,
-        isReport: false,
-        onGetContext: this.getInterruptContext.bind(this),
         onSubmit: this.submitInterruption.bind(this),
       },
     });
   }
 
-  private getInterruptContext(guid: string): Observable<ReportContext> {
-    return this.orderManagementService.getInterruptContext({ guid: guid });
-  }
-
-  private submitInterruption(guid: string, body: ReportModel): Observable<void> {
+  private submitInterruption(guid: string): Observable<void> {
     return this.orderManagementService.interruptOperation({
       guid: guid,
-      // body: body,
     });
   }
 

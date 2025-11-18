@@ -49,7 +49,7 @@ export class ReportDialogComponent implements OnInit {
   confirmationType = signal("");
   estimatedSuccess = computed(() => this.success() + (this.context()?.reportedSuccess ?? 0));
   estimatedFailure = computed(() => this.scrap() + (this.context()?.reportedFailure ?? 0));
-  canInterrupt = computed(() => {
+  canReport = computed(() => {
     if (this.success() < 0 || this.scrap() < 0) return false;
 
     if (this.confirmationType() == "partial" && !this.context()?.canPartial)
@@ -74,8 +74,8 @@ export class ReportDialogComponent implements OnInit {
       .onGetContext(this.data.operation.model.identifier!)
       .toAsync();
     this.context.update(_=> result);
-    this.success.update(_=> this.data.isReport ? this.context()?.unreportedSuccess! : 0);
-    this.scrap.update(_=> this.data.isReport ? this.context()?.unreportedFailure! : 0);
+    this.success.update(_=> this.context()?.unreportedSuccess ?? 0);
+    this.scrap.update(_=> this.context()?.unreportedFailure ?? 0);
     this.isLoading.update(_=> false);
     if (this.context()?.canPartial) this.confirmationType.update(_=> "partial");
     else this.confirmationType.update(_=> "final");
@@ -107,7 +107,6 @@ export class ReportDialogComponent implements OnInit {
 }
 
 export interface ReportDialogData {
-  isReport: boolean;
   operation: OperationViewModel;
   onSubmit: (guid: string, body: ReportModel) => Observable<void>;
   onGetContext: (guid: string) => Observable<ReportContext>;
