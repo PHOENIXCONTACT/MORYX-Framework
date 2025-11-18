@@ -1,4 +1,4 @@
-import { JobModel } from "../api/models/Moryx/ControlSystem/Jobs/Endpoints/job-model";
+import { JobModel } from "../api/models/job-model";
 
 export class JobViewModel {
   model: JobModel;
@@ -26,15 +26,15 @@ export class JobViewModel {
     if (this.model.productionJob && this.model.productionJob.amount) {
       this.productionSuccessPercent = Math.round(
         (this.model.productionJob.successCount! * 100) /
-          this.model.productionJob.amount
+        this.model.productionJob.amount
       );
       this.productionScrapPercent = Math.round(
         (this.model.productionJob.failureCount! * 100) /
-          this.model.productionJob.amount
+        this.model.productionJob.amount
       );
       this.productionRunningPercent = Math.round(
         (this.model.productionJob.runningCount! * 100) /
-          this.model.productionJob.amount
+        this.model.productionJob.amount
       );
       this.productionResidualPercent =
         100 -
@@ -53,12 +53,12 @@ export class JobViewModel {
         this.model.setupJob.steps === undefined
           ? 0
           : this.model.setupJob.steps!.filter((s) => s.state === 'Completed')
-              .length;
+            .length;
       let running =
         this.model.setupJob.steps === undefined
           ? 0
           : this.model.setupJob.steps!.filter((s) => s.state === 'Running')
-              .length;
+            .length;
       let amount =
         this.model.setupJob.steps === undefined
           ? 0

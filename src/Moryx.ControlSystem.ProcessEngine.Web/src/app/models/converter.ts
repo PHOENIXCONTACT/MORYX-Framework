@@ -1,5 +1,5 @@
-import { ProcessHolderGroupModel } from "../api/models/Moryx/ControlSystem/Processes/Endpoints/process-holder-group-model";
-import { ProcessHolderPositionModel } from "../api/models/Moryx/ControlSystem/Processes/Endpoints/process-holder-position-model";
+import { ProcessHolderGroupModel } from "../api/models/process-holder-group-model";
+import { ProcessHolderPositionModel } from "../api/models/process-holder-position-model";
 import { ProcessHolderGroup } from "./process-holder-group-model";
 import ProcessHolderNode from "./process-holder-node";
 import { ProcessHolderPosition } from "./process-holder-position-model";

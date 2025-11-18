@@ -20,8 +20,8 @@ import {
 } from "@moryx/ngx-web-framework";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { BehaviorSubject, Subscription } from "rxjs";
-import { JobProcessModel } from "src/app/api/models/Moryx/ControlSystem/Processes/Endpoints/job-process-model";
-import { ProcessActivityModel } from "src/app/api/models/Moryx/ControlSystem/Processes/Endpoints/process-activity-model";
+import { JobProcessModel } from "src/app/api/models/job-process-model";
+import { ProcessActivityModel } from "src/app/api/models/process-activity-model";
 import { ProcessEngineService } from "src/app/api/services";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { JobViewModel } from "src/app/models/job-view-model";
@@ -118,7 +118,7 @@ export class ProcessesComponent implements OnInit, OnDestroy {
         // Replace with new object from stream
         const index = this.processes().indexOf(oldProcess!);
         updatedProcess.activities = oldProcess.activities;
-        this.processes.update(items =>{
+        this.processes.update(items => {
           items[index!] = updatedProcess;
           return items;
         });

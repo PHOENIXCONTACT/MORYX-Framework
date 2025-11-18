@@ -26,10 +26,10 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ProcessEngineService } from "src/app/api/services";
 import { ProcessHolderGroup } from "src/app/models/process-holder-group-model";
 import ProcessHolderNode from "../../models/process-holder-node";
-import { Category } from "src/app/api/models/Moryx/ControlSystem/Processes/Endpoints/category";
+import { Category } from "src/app/api/models/category";
 import { ConvertToNode, ConvertToProcessHolderGroup } from "src/app/models/converter";
-import { ApiResponse } from "src/app/api/models/Moryx/ControlSystem/Processes/Endpoints/api-response-model";
-import { ProcessHolderGroupModel } from "src/app/api/models/Moryx/ControlSystem/Processes/Endpoints/process-holder-group-model";
+import { ProcessHolderGroupModelArrayApiResponse } from "src/app/api/models/process-holder-group-model-array-api-response";
+import { ProcessHolderGroupModel } from "src/app/api/models/process-holder-group-model";
 
 @Component({
   selector: "app-process-holders",
@@ -57,9 +57,9 @@ export class ProcessHoldersComponent implements OnInit {
   loading = signal(false);
   filterText = signal("");
   visualizationCategory = Category;
-  
+
   TranslationConstants = TranslationConstants;
-  
+
   hasChild = (_: number, node: ProcessHolderNode) =>
     !!node.children && node.children.length > 0;
   childrenAccessor = (node: ProcessHolderNode) => node.children ?? [];
@@ -73,8 +73,8 @@ export class ProcessHoldersComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading.set(true);
-    this._processService.getProcessHolderGroups().subscribe({
-      next: (response : ApiResponse<Array<ProcessHolderGroupModel>>) => {
+    this._processService.getGroups().subscribe({
+      next: (response: ProcessHolderGroupModelArrayApiResponse) => {
         console.log(response);
         this.processHolderGroups.set(response.data?.map((x) => ConvertToProcessHolderGroup(x)) ?? []);
         this.buildTree(this.processHolderGroups());
@@ -95,7 +95,7 @@ export class ProcessHoldersComponent implements OnInit {
     });
   }
 
-   private async getTranslations(): Promise<{ [key: string]: string }> {
+  private async getTranslations(): Promise<{ [key: string]: string }> {
     return await this._translate
       .get([TranslationConstants.PROCESS_HOLDER_GROUPS.OPERATION_SUCCEEDED])
       .toAsync();
