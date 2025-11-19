@@ -34,7 +34,14 @@ namespace Moryx.Products.Management.Implementation.Storage
             Type = type;
             foreach (var propInfo in type.GetProperties())
             {
-                _properties.Add(propInfo.Name, propInfo);
+                if (_properties.TryAdd(propInfo.Name, propInfo))
+                {
+                    continue;
+                }
+                else if (propInfo.DeclaringType == type)
+                {
+                    _properties[propInfo.Name] = propInfo;
+                }
             }
         }
 
