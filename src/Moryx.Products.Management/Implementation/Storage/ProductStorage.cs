@@ -582,7 +582,9 @@ namespace Moryx.Products.Management
 
         private ProductTypeEntity SaveProduct(ProductPartsSaverContext saverContext, ProductType modifiedInstance)
         {
-            var strategy = TypeInformation[modifiedInstance.GetType().FullName].Strategy;
+            var strategy = TypeInformation[modifiedInstance.GetType().FullName].Strategy
+                ?? throw new InvalidOperationException($"Cannot save product of type {modifiedInstance.GetType().FullName}. No {nameof(IProductTypeStrategy)} is configured for this type in the {nameof(ModuleConfig)}");
+
             //TODO use uow directly instead of repo if that is possible
             // Get or create entity
             var repo = saverContext.GetRepository<IProductTypeRepository>();
