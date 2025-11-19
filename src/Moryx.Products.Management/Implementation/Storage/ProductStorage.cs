@@ -84,9 +84,7 @@ namespace Moryx.Products.Management
             var types = ReflectionTool.GetPublicClasses<ProductType>();
             foreach (var type in types)
             {
-                if (TypeInformation.ContainsKey(type.FullName))
-                    continue;
-                TypeInformation.Add(type.FullName, new ProductTypeInformation(type));
+                TypeInformation.TryAdd(type.FullName, new ProductTypeInformation(type));
             }
 
             foreach (var config in Config.TypeStrategies)
