@@ -267,7 +267,7 @@ namespace Moryx.Orders.Management
             ValidateHealthState();
 
             var operationData = GetOperationDataSave(operation);
-            OperationManager.Interrupt(operationData, user);
+            OperationManager.Interrupt(operationData, user ?? UserManagement.DefaultUser);
         }
 
         private IOperationData GetOperationDataSave(Operation operation)
