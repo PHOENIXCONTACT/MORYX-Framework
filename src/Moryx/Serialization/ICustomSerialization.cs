@@ -31,7 +31,7 @@ namespace Moryx.Serialization
         /// <param name="memberType">Either <see cref="PropertyInfo.PropertyType"/> or <see cref="ParameterInfo.ParameterType"/></param>
         /// <param name="attributeProvider">The <see cref="PropertyInfo"/> or <see cref="ParameterInfo"/> to retrieve custom attributes</param>
         /// <returns>Possible values or null</returns>
-        string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider);
+        EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider);
 
         /// <summary>
         /// Possible values for the elements of a collection property
@@ -39,7 +39,7 @@ namespace Moryx.Serialization
         /// <param name="memberType">Either <see cref="PropertyInfo.PropertyType"/> or <see cref="ParameterInfo.ParameterType"/></param>
         /// <param name="attributeProvider">The <see cref="PropertyInfo"/> or <see cref="ParameterInfo"/> to retrieve custom attributes</param>
         /// <returns>Possible values or null</returns>
-        string[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider);
+        EntryPossible[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider);
 
         /// <summary>
         /// Entry validation object

@@ -66,7 +66,7 @@ namespace Moryx.Serialization
         }
 
         /// <see cref="ICustomSerialization"/>
-        public virtual string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        public virtual EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             // Element type for collections
             var isCollection = EntryConvert.IsCollection(memberType);
@@ -74,13 +74,13 @@ namespace Moryx.Serialization
                 memberType = EntryConvert.ElementType(memberType);
 
             // Enum names, member name or null
-            return memberType.IsEnum
+            return ConvertPossible(memberType.IsEnum
                 ? Enum.GetNames(memberType)
-                : isCollection ? [memberType.Name] : null;
+                : isCollection ? [memberType.Name] : null);
         }
 
         /// <see cref="ICustomSerialization"/>
-        public virtual string[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        public virtual EntryPossible[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             var elementType = EntryConvert.ElementType(memberType);
             return PossibleValues(elementType, attributeProvider);
@@ -326,6 +326,26 @@ namespace Moryx.Serialization
             return property is PropertyInfo propertyInfo &&
                    propertyInfo.PropertyType.IsEnum &&
                    propertyInfo.PropertyType.GetCustomAttributes(typeof(System.FlagsAttribute), false).Any();
+        }
+
+        /// <summary>
+        /// Convert string[] possible values to EntryPossible[].
+        /// Key and DisplayName are set to the string value.
+        /// </summary>
+        private static EntryPossible[] ConvertPossible(string[] possible)
+        {
+            if (possible == null)
+                return null;
+
+            var result = new EntryPossible[possible.Length];
+            for (var i = 0; i < possible.Length; i++)
+            {
+                var p = possible[i];
+                result[i] = p != null
+                    ? new EntryPossible { Key = p, DisplayName = p, Description = null }
+                    : null;
+            }
+            return result;
         }
     }
 }

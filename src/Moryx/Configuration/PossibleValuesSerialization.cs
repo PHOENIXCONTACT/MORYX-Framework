@@ -58,7 +58,7 @@ namespace Moryx.Configuration
         }
 
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
-        public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        public override EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             // Possible values for primitive collections only apply to members
@@ -67,7 +67,7 @@ namespace Moryx.Configuration
 
             // Use attribute
             var values = valuesAttribute.GetValues(Container, ServiceProvider);
-            return values?.Distinct().ToArray();
+            return ConvertPossible(values?.Distinct());
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Moryx.Configuration
         }
 
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
-        public override string[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        public override EntryPossible[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             if (valuesAttribute == null)
@@ -93,7 +93,7 @@ namespace Moryx.Configuration
 
             // Use attribute
             var values = valuesAttribute.GetValues(Container, ServiceProvider);
-            return values?.Distinct().ToArray();
+            return ConvertPossible(values?.Distinct());
         }
 
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
@@ -129,6 +129,18 @@ namespace Moryx.Configuration
             }
 
             return instance;
+        }
+
+        /// <summary>
+        /// Converts an <see cref="IEnumerable{String}"/>
+        /// of possible values to an <see cref="EntryPossible"/> array.
+        /// Key and DisplayName are set to the string value.
+        /// </summary>
+        private static EntryPossible[] ConvertPossible(IEnumerable<string> possible)
+        {
+            return possible?
+                .Select(p => p != null ? new EntryPossible { Key = p, DisplayName = p, Description = null } : null)
+                .ToArray();
         }
     }
 }

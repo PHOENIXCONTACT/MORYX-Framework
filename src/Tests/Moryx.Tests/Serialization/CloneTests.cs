@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Linq;
 using Moryx.Serialization;
 using NUnit.Framework;
 
@@ -39,7 +40,12 @@ namespace Moryx.Tests
                     Default = "42",
                     Type = (EntryValueType)(id % 7),
                     UnitType = (EntryUnitType)(id % Enum.GetNames(typeof(EntryUnitType)).Length),
-                    Possible = ["12334", "1123361", "11236"]
+                    Possible =
+                    [
+                        new EntryPossible { Key = "12334",   DisplayName = "Option A", Description = "First possible value" },
+                        new EntryPossible { Key = "1123361", DisplayName = "Option B", Description = "Second possible value" },
+                        new EntryPossible { Key = "11236",   DisplayName = "Option C", Description = "Third possible value" }
+                    ]
                 }
             };
             for (var i = 0; i < children; i++)
@@ -61,7 +67,9 @@ namespace Moryx.Tests
             // Compare value
             Assert.That(value.Value.Current, Is.EqualTo(expected.Value.Current));
             Assert.That(value.Value.Default, Is.EqualTo(expected.Value.Default));
-            Assert.That(value.Value.Possible, Is.EqualTo(expected.Value.Possible));
+            Assert.That(
+                value.Value.Possible.Select(p => (p.Key, p.DisplayName, p.Description)),
+                Is.EqualTo(expected.Value.Possible.Select(p => (p.Key, p.DisplayName, p.Description))));
             Assert.That(value.Value.Type, Is.EqualTo(expected.Value.Type));
             Assert.That(value.Value.UnitType, Is.EqualTo(expected.Value.UnitType));
 
