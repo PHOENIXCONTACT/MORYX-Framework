@@ -10,7 +10,7 @@ namespace Moryx.Drivers.OpcUa;
 /// <summary>
 /// Opc Ua Client
 /// </summary>
-public interface IOpcUaDriver : IDriver, IMessageDriver<object>, IMessageDriver<OpcUaMessage>, IInOutDriver<object, object>
+public interface IOpcUaDriver : IMessageDriver<object>, IMessageDriver<OpcUaMessage>, IInOutDriver<object, object>
 {
     // TODO 6.3: Subscriptions with different publishing and sampling intervals can be created
     // TODO 6.2: Subscriptions to ObjectNodes are possible
@@ -23,19 +23,15 @@ public interface IOpcUaDriver : IDriver, IMessageDriver<object>, IMessageDriver<
     /// <summary>
     /// Read the value of a Node
     /// </summary>
-    /// <param name="NodeId">NodeId</param>
+    /// <param name="nodeId">NodeId</param>
     /// <returns>If node doesn't exists or there was an error, when trying to read
-    /// the node, the return value will be null</returns>       
-    object ReadNode(string NodeId);
+    /// the node, the return value will be null</returns>
+    object ReadNode(string nodeId);
 
     /// <summary>
     /// Rebrowse Nodes
     /// </summary>
     void RebrowseNodes();
-}
-
-public interface IOpcUaDriver2 : IOpcUaDriver
-{
 
     /// <summary>
     /// Returns an opcUaNode to a string
@@ -58,44 +54,4 @@ public interface IOpcUaDriver2 : IOpcUaDriver
     /// <param name="parameters"></param>
     /// <returns>returns null, if type of the node doesn't fit or node not found</returns>
     List<object> InvokeMethod(string nodeId, object[] parameters);
-}
-
-public static class OpcUaDriverExtensions
-{
-    public static OpcUaNode GetNode(this IOpcUaDriver driver, string nodeId)
-    {
-        if (driver is IOpcUaDriver2 d2)
-        {
-            return d2.GetNode(nodeId);
-        }
-        else
-        {
-            throw new NotSupportedException();
-        }
-    }
-
-    public static void WriteNode(this IOpcUaDriver driver, string nodeId, object payload)
-    {
-        if (driver is IOpcUaDriver2 d2)
-        {
-            d2.WriteNode(nodeId, payload);
-        }
-        else
-        {
-            throw new NotSupportedException();
-        }
-    }
-
-    public static List<object> InvokeMethod(this IOpcUaDriver driver, string nodeId, object[] parameters)
-    {
-        if (driver is IOpcUaDriver2 d2)
-        {
-            return d2.InvokeMethod(nodeId, parameters);
-        }
-        else
-        {
-            throw new NotSupportedException();
-        }
-    }
-
 }
