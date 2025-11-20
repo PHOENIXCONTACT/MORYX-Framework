@@ -855,6 +855,12 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         WriteNode(node, payload);
     }
 
+    /// <inheritdoc />
+    public Task WriteNodeAsync(string nodeId, object payload, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     internal void OnWriteNode(OpcUaNode node, object payload)
     {
 
@@ -882,6 +888,12 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     public object ReadNode(string nodeId)
     {
         return ReadNodeDataValue(nodeId).Result.Value;
+    }
+
+    /// <inheritdoc />
+    public Task<object> ReadNodeAsync(string nodeId, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 
     private DataValueResult ReadNodeDataValue(string nodeId)
@@ -1150,11 +1162,5 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             DeviceSet.Add(deviceType);
 
         }
-
-    }
-
-    public List<object> InvokeMethod(string nodeId, object[] parameters)
-    {
-        throw new NotImplementedException();
     }
 }

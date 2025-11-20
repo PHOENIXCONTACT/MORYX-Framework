@@ -1,7 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Drivers.InOut;
 using Moryx.AbstractionLayer.Drivers.Message;
 
@@ -29,6 +28,15 @@ public interface IOpcUaDriver : IMessageDriver<object>, IMessageDriver<OpcUaMess
     object ReadNode(string nodeId);
 
     /// <summary>
+    /// Read the value of a Node
+    /// </summary>
+    /// <param name="nodeId">NodeId</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    /// <returns>If node doesn't exists or there was an error, when trying to read
+    /// the node, the return value will be null</returns>
+    Task<object> ReadNodeAsync(string nodeId, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Rebrowse Nodes
     /// </summary>
     void RebrowseNodes();
@@ -48,10 +56,10 @@ public interface IOpcUaDriver : IMessageDriver<object>, IMessageDriver<OpcUaMess
     void WriteNode(string nodeId, object payload);
 
     /// <summary>
-    /// Invokes the method of a method noe
+    /// Write a value to a node
     /// </summary>
-    /// <param name="nodeId"></param>
-    /// <param name="parameters"></param>
-    /// <returns>returns null, if type of the node doesn't fit or node not found</returns>
-    List<object> InvokeMethod(string nodeId, object[] parameters);
+    /// <param name="nodeId">id of the representing OpcUaNode</param>
+    /// <param name="payload">value to be written to the node</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    Task WriteNodeAsync(string nodeId, object payload, CancellationToken cancellationToken = default);
 }
