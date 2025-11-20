@@ -1,26 +1,26 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Drivers.Camera
+namespace Moryx.AbstractionLayer.Drivers.Camera;
+
+/// <summary>
+/// Interface for camera devices, that provide image data
+/// </summary>
+public interface ICameraDriver<TImage> : IDriver where TImage : class
 {
     /// <summary>
-    /// Interface for camera devices, that provide image data
+    /// Capture a single image from the camera
     /// </summary>
-    public interface ICameraDriver<TImage> : IDriver where TImage : class
-    {
-        /// <summary>
-        /// Eventhandler to continously provide images from a camera
-        /// </summary>
-        event EventHandler<TImage> CapturedImage;
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    /// <returns>
+    ///     The image that was captured or null in case no image
+    ///     could be retrieved
+    /// </returns>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
+    Task<TImage> CaptureImageAsync(CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Capture a single image from the camera
-        /// </summary>
-        /// <returns>
-        ///     The image that was captured or null in case no image
-        ///     could be retrieved
-        /// </returns>
-        Task<TImage?> CaptureImage();
-    }
+    /// <summary>
+    /// Event to continuously provide images from a camera
+    /// </summary>
+    event EventHandler<TImage> CapturedImage;
 }
-

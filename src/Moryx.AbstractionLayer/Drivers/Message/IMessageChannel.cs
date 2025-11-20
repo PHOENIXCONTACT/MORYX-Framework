@@ -32,7 +32,9 @@ namespace Moryx.AbstractionLayer.Drivers.Message
         /// <summary>
         /// Send data async through channel
         /// </summary>
-        Task SendAsync(TSend payload);
+        /// <param name="payload">Message to send through the driver</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        Task SendAsync(TSend payload, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Event raised when the driver receives a message

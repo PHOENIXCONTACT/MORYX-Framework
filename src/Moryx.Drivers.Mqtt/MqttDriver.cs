@@ -311,7 +311,7 @@ public class MqttDriver : Driver, IMessageDriver<object>
     }
 
     /// <inheritdoc />
-    public async Task SendAsync(object message)
+    public async Task SendAsync(object message, CancellationToken cancellationToken = default)
     {
         IReadOnlyList<MqttTopic> topics;
         // Search by identifier if set

@@ -9,35 +9,24 @@ namespace Moryx.AbstractionLayer.Drivers.Marking
     public interface IMarkingLaserDriver : IDriver
     {
         /// <summary>
-        /// Set up marking file as a preperation for the marking process
+        /// Set up marking file as a preparation for the marking process
         /// </summary>
-        void SetMarkingFile(MarkingFile file, DriverResponse<MarkingFileResponse> callback);
+        /// <param name="file">The marking file used for the marking system</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
+        /// <exception cref="MarkingFileException">Will be thrown when errors occur during setting the marking file</exception>
+        /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
+        Task<MarkingFileResponse> SetMarkingFileAsync(MarkingFile file, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Will start the marking process and executes the given callback after finish
         /// </summary>
         /// <param name="config">The configuration for the marking process.</param>
-        /// <param name="callback">The callback which will be executed after the marking process</param>
-        void Mark(MarkingConfiguration config, DriverResponse<MarkingResponse> callback);
-
-        /// <summary>
-        /// Triggers a message to get the last error
-        /// </summary>
-        void RequestLastError();
-
-        /// <summary>
-        /// Triggers a message to get the last warning
-        /// </summary>
-        void RequestLastWarning();
-
-        /// <summary>
-        /// Will be fired if an error occured
-        /// </summary>
-        event EventHandler<NotificationResponse> ErrorOccured;
-
-        /// <summary>
-        /// Will be fired of a warning occured
-        /// </summary>
-        event EventHandler<NotificationResponse> WarningOccured;
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
+        /// <exception cref="MarkingException">Will be thrown when errors occur during marking execution</exception>
+        /// <exception cref="SegmentsNotSupportedException">Exception if the system does not support segments</exception>
+        /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
+        Task<MarkingResponse> MarkAsync(MarkingConfiguration config, CancellationToken cancellationToken = default);
     }
 }

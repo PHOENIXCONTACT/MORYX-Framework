@@ -67,7 +67,7 @@ namespace Moryx.Resources.Benchmarking
             }
         }
 
-        public Task SendAsync(object payload)
+        public Task SendAsync(object payload, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
