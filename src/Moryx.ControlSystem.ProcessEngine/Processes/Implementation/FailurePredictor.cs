@@ -105,7 +105,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
 
         private void OnPathPrediction(object sender, PathPredictionEventArgs predictionEventArgs)
         {
-            var processContext = (ProcessContext)predictionEventArgs.EngineInstance.Context;
+            var processContext = (ProcessWorkplanContext)predictionEventArgs.EngineInstance.Context;
             var processData = ActivityPool.GetProcess(processContext.Process);
 
             if (predictionEventArgs.PredictedOutcome == NodeClassification.Failed)

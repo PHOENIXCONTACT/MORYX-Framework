@@ -26,6 +26,7 @@ The simulator module has also been renamed, and its namespace and package id hav
 - IResourceManagement.Create -> IResourceManagement.CreateUnsafe
 - IResourceManagement.Read -> IResourceManagement.ReadUnsafe
 - IResourceManagement.Modify -> IResourceManagement.ModifyUnsafe
+- ProcessContext -> ProcessWorkplanContext
 
 ## Reduction of interfaces
 

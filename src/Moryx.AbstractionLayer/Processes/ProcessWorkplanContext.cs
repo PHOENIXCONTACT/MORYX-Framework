@@ -9,12 +9,12 @@ namespace Moryx.AbstractionLayer.Processes
     /// <summary>
     /// Context for workplans that execute a process
     /// </summary>
-    public class ProcessContext : IWorkplanContext
+    public class ProcessWorkplanContext : IWorkplanContext
     {
         /// <summary>
         /// Create process context for process
         /// </summary>
-        public ProcessContext(IProcess process)
+        public ProcessWorkplanContext(IProcess process)
         {
             Process = process;
         }
