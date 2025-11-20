@@ -38,7 +38,7 @@ namespace Moryx.AbstractionLayer.Processes
     /// All activities created for the process are stored with the process for tracing purposes.
     /// All objects representing a process implement the <see cref="IProcess"/> interface.
     /// </summary>
-    public interface IProcess : IPersistentObject, IConstraintContext
+    public interface IProcess : IPersistentObject
     {
         /// <summary>
         /// A link to the recipe of this process.
