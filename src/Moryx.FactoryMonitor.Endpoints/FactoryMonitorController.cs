@@ -82,11 +82,11 @@ namespace Moryx.FactoryMonitor.Endpoints
                     var activity = activities.FirstOrDefault(a => a.Tracing.ResourceId == cell.Id);
                     //to-do: handle multiple activities in one cell
                     activityChangedModels.Add(cell.GetActivityChangedModel(activity, _orderManager.GetOrderModels(_colorPalette)));
-                    cellStateChangedModels.Add(cell.GetCellStateChangedModel(ActivityProgress.Running, _resourceManager.Read(cell.Id, r => r)));
+                    cellStateChangedModels.Add(cell.GetCellStateChangedModel(ActivityProgress.Running, _resourceManager.ReadUnsafe(cell.Id, r => r)));
                 }
                 else
                 {
-                    cellStateChangedModels.Add(cell.GetCellStateChangedModel(_resourceManager.Read(cell.Id, r => r)));
+                    cellStateChangedModels.Add(cell.GetCellStateChangedModel(_resourceManager.ReadUnsafe(cell.Id, r => r)));
                 }
                 resourceChangedModels.Add(cell.GetResourceChangedModel(converter, _resourceManager, CellFilterBaseOnLocation));
             }
@@ -133,7 +133,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             var converter = new Converter(_serialization);
 
             var root = _resourceManager.GetRootFactory();
-            SimpleGraph graph = _resourceManager.Read(factory.Id, e => SimpleGraph.Create(e as ManufacturingFactory));
+            SimpleGraph graph = _resourceManager.ReadUnsafe(factory.Id, e => SimpleGraph.Create(e as ManufacturingFactory));
 
             //root level (Factory)
             if (root.Id == factoryId)
@@ -166,7 +166,7 @@ namespace Moryx.FactoryMonitor.Endpoints
                 root.BackgroundUrl
             };
 
-            var factory = _resourceManager.Read(factoryId, e => (ManufacturingFactory)e);
+            var factory = _resourceManager.ReadUnsafe(factoryId, e => (ManufacturingFactory)e);
             if (factory is not ManufacturingFactory manufacturingFactory) BadRequest(Strings.FactoryMonitorController_FactoryNotFound_);
             var parentFactory = factory.GetFactory(); //Get Parent factory
 
@@ -220,7 +220,7 @@ namespace Moryx.FactoryMonitor.Endpoints
                 await FactoryMonitorHelper.ResourceUpdated(serializerSettings, _factoryChannel, _resourceManager, CellFilterBaseOnLocation, converter, cancelToken)); //resource events are substitute with a timer event since there are no such events
 
             var capabilitiesEventHandler = new EventHandler<ICapabilities>(async (sender, eventArgs) =>
-                await FactoryMonitorHelper.PublishCellUpdate((sender as ICell).GetCellStateChangedModel(_resourceManager.Read((sender as ICell).Id, r => r)), serializerSettings, _factoryChannel, cancelToken));
+                await FactoryMonitorHelper.PublishCellUpdate((sender as ICell).GetCellStateChangedModel(_resourceManager.ReadUnsafe((sender as ICell).Id, r => r)), serializerSettings, _factoryChannel, cancelToken));
 
             var orderStartedEventHandler = new EventHandler<OperationStartedEventArgs>(async (sender, eventArgs) =>
                 await FactoryMonitorHelper.OrderStarted(eventArgs, serializerSettings, _factoryChannel, cancelToken));
@@ -229,7 +229,7 @@ namespace Moryx.FactoryMonitor.Endpoints
                 await FactoryMonitorHelper.OrderUpdated(eventArgs, serializerSettings, _factoryChannel, cancelToken));
 
             var activityEventHandler = new EventHandler<ActivityUpdatedEventArgs>(async (sender, eventArgs) => await
-                FactoryMonitorHelper.ActivityUpdated(eventArgs, serializerSettings, _factoryChannel, _cells, _resourceManager.Read(eventArgs.Activity.Tracing.ResourceId, r => r), converter, _orderManager.GetOrderModels(_colorPalette), cancelToken));
+                FactoryMonitorHelper.ActivityUpdated(eventArgs, serializerSettings, _factoryChannel, _cells, _resourceManager.ReadUnsafe(eventArgs.Activity.Tracing.ResourceId, r => r), converter, _orderManager.GetOrderModels(_colorPalette), cancelToken));
 
             foreach (var cell in _cells)
             {
@@ -280,7 +280,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         {
             var cellLocation = _resourceManager.GetResource<IMachineLocation>(l => l.Id == location.Id);
 
-            _resourceManager.Modify(cellLocation, r =>
+            _resourceManager.ModifyUnsafe(cellLocation, r =>
             {
                 var machineLocation = (IMachineLocation)r;
                 machineLocation.Position = new Position { PositionX = location.PositionX, PositionY = location.PositionY };
@@ -304,7 +304,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             var manufacturingConfig = _resourceManager.GetResources<IManufacturingFactory>().SingleOrDefault(f => f.Id == resourceId);
             if (manufacturingConfig is null)
                 return NotFound("The resource to be modified could not be found");
-            _resourceManager.Modify(manufacturingConfig.Id, r =>
+            _resourceManager.ModifyUnsafe(manufacturingConfig.Id, r =>
             {
                 ((IManufacturingFactory)r).BackgroundUrl = url;
                 return true;
@@ -329,7 +329,7 @@ namespace Moryx.FactoryMonitor.Endpoints
                 return NotFound(new MoryxExceptionResponse { Title = "Cell/Resource not found" });
 
             var converter = new Converter(_serialization);
-            var cell = _resourceManager.Read(cellLocation.Machine.Id, r => r);
+            var cell = _resourceManager.ReadUnsafe(cellLocation.Machine.Id, r => r);
             return converter.ToResourceChangedModel(cell)?.CellPropertySettings;
         }
 
@@ -347,10 +347,10 @@ namespace Moryx.FactoryMonitor.Endpoints
             var destinationPath = originCellLocation.Destinations.FirstOrDefault(dest => dest.Destination == destinationCellLocation);
             if (destinationPath == null)
             {
-                var bareOrigin = (MachineLocation)_resourceManager.Read(originCellLocation, bare => bare);
-                var bareDestination = (MachineLocation)_resourceManager.Read(destinationCellLocation, bare => bare);
+                var bareOrigin = (MachineLocation)_resourceManager.ReadUnsafe(originCellLocation, bare => bare);
+                var bareDestination = (MachineLocation)_resourceManager.ReadUnsafe(destinationCellLocation, bare => bare);
 
-                _resourceManager.Create(typeof(TransportPath), resource =>
+                _resourceManager.CreateUnsafe(typeof(TransportPath), resource =>
                 {
                     var newPath = (TransportPath)resource;
                     newPath.Name = $"{originCellLocation.Name}=>{destinationCellLocation.Name}";
@@ -362,7 +362,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             }
             else
             {
-                _resourceManager.Modify(destinationPath, r =>
+                _resourceManager.ModifyUnsafe(destinationPath, r =>
                 {
                     ((ITransportPath)r).WayPoints = path;
                     return true;
@@ -383,7 +383,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             if (cellLocation is null)
                 return NotFound();
 
-            _resourceManager.Modify(cellLocation, r =>
+            _resourceManager.ModifyUnsafe(cellLocation, r =>
             {
                 ((IMachineLocation)r).SpecificIcon = string.IsNullOrEmpty(settings.Icon) ? ((IMachineLocation)r).SpecificIcon : settings.Icon;
                 ((IMachineLocation)r).Image = string.IsNullOrEmpty(settings.Image) ? ((IMachineLocation)r).Image : settings.Image;
@@ -404,7 +404,7 @@ namespace Moryx.FactoryMonitor.Endpoints
 
         private bool CellFilterBaseOnLocation(IMachineLocation locationParam)
         {
-            var location = _resourceManager.Read(locationParam.Id, e => (MachineLocation)e);
+            var location = _resourceManager.ReadUnsafe(locationParam.Id, e => (MachineLocation)e);
             var machine = location.Children?.FirstOrDefault(x => x is ICell);
 
             if (location is null || machine is null) return false;

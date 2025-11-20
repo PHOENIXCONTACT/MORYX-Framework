@@ -22,6 +22,10 @@ The simulator module has also been renamed, and its namespace and package id hav
 - ResourceRelationType.CurrentExchangablePart -> ResourceRelationType.CurrentExchangeablePart
 - ResourceRelationType.PossibleExchangablePart -> ResourceRelationType.PossibleExchangeablePart
 - MqttDriver.BrokerURL -> MqttDriver.BrokerUrl
+- IResourceManagement.GetAllResources -> IResourceManagement.GetResourcesUnsafe
+- IResourceManagement.Create -> IResourceManagement.CreateUnsafe
+- IResourceManagement.Read -> IResourceManagement.ReadUnsafe
+- IResourceManagement.Modify -> IResourceManagement.ModifyUnsafe
 
 ## Reduction of interfaces
 

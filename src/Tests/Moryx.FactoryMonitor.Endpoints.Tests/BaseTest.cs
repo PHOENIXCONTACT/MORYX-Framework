@@ -80,7 +80,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             _resourceManagementMock.Setup(rm =>
             rm.GetResource<IMachineLocation>(It.Is<Func<IMachineLocation, bool>>(f => f(_assemblyCellLocation))))
                 .Returns(_assemblyCellLocation);
-            _resourceManagementMock.Setup(rm => rm.Read(_assemblyCellLocation.Id, It.IsAny<Func<Resource, MachineLocation>>()))
+            _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_assemblyCellLocation.Id, It.IsAny<Func<Resource, MachineLocation>>()))
                 .Returns(_assemblyCellLocation);
             //_solderingCell location 
             _solderingCellLocation = _graph.Instantiate<MachineLocation>();
@@ -91,7 +91,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             _resourceManagementMock.Setup(rm =>
             rm.GetResource<IMachineLocation>(It.Is<Func<IMachineLocation, bool>>(f => f(_solderingCellLocation))))
                 .Returns(_solderingCellLocation);
-            _resourceManagementMock.Setup(rm => rm.Read(_solderingCellLocation.Id, It.IsAny<Func<Resource, MachineLocation>>()))
+            _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_solderingCellLocation.Id, It.IsAny<Func<Resource, MachineLocation>>()))
                 .Returns(_solderingCellLocation);
 
             // resource management cells
@@ -101,17 +101,17 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
                 .Returns(GetLocations());
             _resourceManagementMock.Setup(rm => rm.GetResources(It.IsAny<Func<IMachineLocation, bool>>()))
                 .Returns(GetLocations());
-            _resourceManagementMock.Setup(rm => rm.Read(_assemblyCellId, It.IsAny<Func<Resource, Resource>>()))
+            _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_assemblyCellId, It.IsAny<Func<Resource, Resource>>()))
                 .Returns(_assemblyCell);
-            _resourceManagementMock.Setup(rm => rm.Read(_assemblyCellId, It.IsAny<Func<Resource, ResourceChangedModel>>()))
+            _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_assemblyCellId, It.IsAny<Func<Resource, ResourceChangedModel>>()))
                  .Returns(converter.ToResourceChangedModel(_assemblyCell));
-            _resourceManagementMock.Setup(rm => rm.Read(_solderingCellId, It.IsAny<Func<Resource, Resource>>()))
+            _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_solderingCellId, It.IsAny<Func<Resource, Resource>>()))
                 .Returns(_solderingCell);
-            _resourceManagementMock.Setup(rm => rm.Read(_solderingCellId, It.IsAny<Func<Resource, ResourceChangedModel>>()))
+            _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_solderingCellId, It.IsAny<Func<Resource, ResourceChangedModel>>()))
                  .Returns(converter.ToResourceChangedModel(_solderingCell));
-            _resourceManagementMock.Setup(rm => rm.Read(_manufactoringFactoryId, It.IsAny<Func<Resource, Resource>>()))
+            _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_manufactoringFactoryId, It.IsAny<Func<Resource, Resource>>()))
                 .Returns(_manufactoringFactory);
-            _resourceManagementMock.Setup(rm => rm.Read(_manufactoringFactoryId, It.IsAny<Func<Resource, ResourceChangedModel>>()))
+            _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_manufactoringFactoryId, It.IsAny<Func<Resource, ResourceChangedModel>>()))
                 .Returns(converter.ToResourceChangedModel(_manufactoringFactory));
             //process
             _processFacadeMock.SetupGet(pm => pm.RunningProcesses)
