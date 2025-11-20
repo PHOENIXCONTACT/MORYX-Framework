@@ -30,8 +30,8 @@ internal class ProcessHolderGroupStream(
 
         //using this because resourceManagement.GetResources<T> is very restricted in the sense
         // that casting at line 55 doesn't work
-        var groups = resourceManagement.GetAllResources<IProcessHolderGroup>(_ => true);
-        var allPositions = resourceManagement.GetAllResources<IProcessHolderPosition>(_ => true);
+        var groups = resourceManagement.GetResourcesUnsafe<IProcessHolderGroup>(_ => true);
+        var allPositions = resourceManagement.GetResourcesUnsafe<IProcessHolderPosition>(_ => true);
 
         // Define event handling
         var groupChannel = Channel.CreateUnbounded<ProcessHolderGroupChangedEventArg>();

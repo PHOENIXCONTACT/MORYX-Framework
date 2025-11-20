@@ -46,7 +46,7 @@ namespace Moryx.ControlSystem.Simulator
 
         public void Start()
         {
-            _drivers = ResourceManagement.GetAllResources<ISimulationDriver>(x => true).ToList();
+            _drivers = ResourceManagement.GetResourcesUnsafe<ISimulationDriver>(x => true).ToList();
             foreach (var driver in _drivers)
             {
                 driver.SimulatedStateChanged += SimulationStateChanged;

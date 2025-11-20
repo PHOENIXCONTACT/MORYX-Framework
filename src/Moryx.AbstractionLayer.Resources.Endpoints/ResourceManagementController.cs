@@ -63,7 +63,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             if (ids is null || ids.Length == 0)
                 ids = _resourceManagement.GetResources<IResource>().Select(r => r.Id).ToArray();
 
-            return ids.Select(id => _resourceManagement.Read(id, r => converter.GetDetails(r)))
+            return ids.Select(id => _resourceManagement.ReadUnsafe(id, r => converter.GetDetails(r)))
                 .Where(details => details != null).ToArray();
         }
 
@@ -75,10 +75,10 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         public ActionResult<ResourceModel[]> GetResources(ResourceQuery query)
         {
             var filter = new ResourceQueryFilter(query, _resourceTypeTree);
-            var resourceProxies = _resourceManagement.GetAllResources<IResource>(r => filter.Match(r as Resource)).ToArray();
+            var resourceProxies = _resourceManagement.GetResourcesUnsafe<IResource>(r => filter.Match(r as Resource)).ToArray();
 
             var converter = new ResourceQueryConverter(_resourceTypeTree, _serialization, query);
-            var values = resourceProxies.Select(p => _resourceManagement.Read(p.Id, r => converter.QueryConversion(r))).Where(details => details != null).ToArray();
+            var values = resourceProxies.Select(p => _resourceManagement.ReadUnsafe(p.Id, r => converter.QueryConversion(r))).Where(details => details != null).ToArray();
             return values;
         }
 
@@ -91,7 +91,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         public ActionResult<ResourceModel> GetDetails(long id)
         {
             var converter = new ResourceToModelConverter(_resourceTypeTree, _serialization);
-            var resourceModel = _resourceManagement.Read(id, r => converter.GetDetails(r));
+            var resourceModel = _resourceManagement.ReadUnsafe(id, r => converter.GetDetails(r));
             if (resourceModel is null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
@@ -107,13 +107,13 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Authorize(Policy = ResourcePermissions.CanInvokeMethod)]
         public ActionResult<Entry> InvokeMethod(long id, string method, Entry parameters)
         {
-            if (_resourceManagement.GetAllResources<IResource>(r => r.Id == id) is null)
+            if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
             Entry entry = null;
             try
             {
-                _resourceManagement.Modify(id, r =>
+                _resourceManagement.ModifyUnsafe(id, r =>
                 {
                     entry = EntryConvert.InvokeMethod(r.Descriptor, new MethodEntry { Name = method, Parameters = parameters }, _serialization);
                     return true;
@@ -171,7 +171,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         {
             try
             {
-                var id = _resourceManagement.Create(_resourceTypeTree[type].ResourceType, r => EntryConvert.InvokeMethod(r, method, _serialization));
+                var id = _resourceManagement.CreateUnsafe(_resourceTypeTree[type].ResourceType, r => EntryConvert.InvokeMethod(r, method, _serialization));
                 return GetDetails(id);
             }
             catch (Exception e)
@@ -190,16 +190,16 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Authorize(Policy = ResourcePermissions.CanAdd)]
         public ActionResult<ResourceModel> Save(ResourceModel model)
         {
-            if (_resourceManagement.GetAllResources<IResource>(r => r.Id == model.Id).Any())
+            if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == model.Id).Any())
                 return Conflict($"The resource '{model.Id}' already exists.");
             try
             {
-                var id = _resourceManagement.Create(_resourceTypeTree[model.Type].ResourceType, r =>
+                var id = _resourceManagement.CreateUnsafe(_resourceTypeTree[model.Type].ResourceType, r =>
                 {
                     var resourcesToSave = new HashSet<long>();
                     var resourceCache = new Dictionary<long, Resource>();
                     FromModel(model, resourcesToSave, resourceCache, r);
-                    resourcesToSave.Skip(1).ForEach(id => _resourceManagement.Modify(id, r => true));
+                    resourcesToSave.Skip(1).ForEach(id => _resourceManagement.ModifyUnsafe(id, r => true));
                 });
 
                 return GetDetails(id);
@@ -231,11 +231,11 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                     resource = (Resource)Activator.CreateInstance(_resourceTypeTree[model.Type].ResourceType);
                 else if (model.Id == 0)
                 {
-                    var id = _resourceManagement.Create(_resourceTypeTree[model.Type].ResourceType, r => { });
-                    resource = _resourceManagement.Read<Resource>(id, resource => resource);
+                    var id = _resourceManagement.CreateUnsafe(_resourceTypeTree[model.Type].ResourceType, r => { });
+                    resource = _resourceManagement.ReadUnsafe<Resource>(id, resource => resource);
                 }
                 else
-                    resource = _resourceManagement.Read<Resource>(model.Id, resource => resource);
+                    resource = _resourceManagement.ReadUnsafe<Resource>(model.Id, resource => resource);
 
             // Write to cache because following calls might only have an empty reference
             if (model.Id == 0)
@@ -340,17 +340,17 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Authorize(Policy = ResourcePermissions.CanEdit)]
         public ActionResult<ResourceModel> Update(long id, ResourceModel model)
         {
-            if (_resourceManagement.GetAllResources<IResource>(r => r.Id == id) is null)
+            if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
             try
             {
-                _resourceManagement.Modify(id, r =>
+                _resourceManagement.ModifyUnsafe(id, r =>
                 {
                     var resourcesToSave = new HashSet<long>();
                     var resourceCache = new Dictionary<long, Resource>();
                     FromModel(model, resourcesToSave, resourceCache, r);
-                    resourcesToSave.ForEach(id => _resourceManagement.Modify(id, r => true));
+                    resourcesToSave.ForEach(id => _resourceManagement.ModifyUnsafe(id, r => true));
                     return true;
                 });
             }
@@ -373,7 +373,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [Authorize(Policy = ResourcePermissions.CanDelete)]
         public ActionResult Remove(long id)
         {
-            if (_resourceManagement.GetAllResources<IResource>(r => r.Id == id) is null)
+            if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
             var deleted = _resourceManagement.Delete(id);

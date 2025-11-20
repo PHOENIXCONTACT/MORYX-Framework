@@ -99,7 +99,7 @@ namespace Moryx.Simulation.Tests
             _anotherAssemblyCell.Driver = _anotherAssemblyDriverMock.Object;
 
             //resource management
-            _resourceManagementMock.Setup(rm => rm.GetAllResources(It.IsAny<Func<ISimulationDriver, bool>>()))
+            _resourceManagementMock.Setup(rm => rm.GetResourcesUnsafe(It.IsAny<Func<ISimulationDriver, bool>>()))
                 .Returns([_assemblyDriverMock.Object, _anotherAssemblyDriverMock.Object]);
 
             _processControlMock.SetupSequence(pc => pc.Targets(It.IsAny<IProcess>()))

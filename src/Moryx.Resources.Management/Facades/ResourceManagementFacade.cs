@@ -19,8 +19,6 @@ namespace Moryx.Resources.Management
 
         #endregion
 
-        #region IFacadeControl
-
         /// <seealso cref="IFacadeControl"/>
         public override void Activate()
         {
@@ -51,7 +49,6 @@ namespace Moryx.Resources.Management
         {
             ResourceRemoved?.Invoke(this, publicResource.Proxify(TypeController));
         }
-        #endregion
 
         #region IResourceManagement
         public TResource GetResource<TResource>() where TResource : class, IResource
@@ -110,8 +107,7 @@ namespace Moryx.Resources.Management
 
         #endregion
 
-        #region IResourceModification
-        public long Create(Type resourceType, Action<Resource> initializer)
+        public long CreateUnsafe(Type resourceType, Action<Resource> initializer)
         {
             ValidateHealthState();
 
@@ -121,14 +117,7 @@ namespace Moryx.Resources.Management
             return resource.Id;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="id"></param>
-        /// <param name="accessor"></param>
-        /// <returns>null, when a resource with this id doesn't exist</returns>
-        public TResult Read<TResult>(long id, Func<Resource, TResult> accessor)
+        public TResult ReadUnsafe<TResult>(long id, Func<Resource, TResult> accessor)
         {
             ValidateHealthState();
 
@@ -138,7 +127,7 @@ namespace Moryx.Resources.Management
             return result;
         }
 
-        public void Modify(long id, Func<Resource, bool> modifier)
+        public void ModifyUnsafe(long id, Func<Resource, bool> modifier)
         {
             ValidateHealthState();
 
@@ -162,21 +151,17 @@ namespace Moryx.Resources.Management
             return ResourceGraph.Destroy(resource);
         }
 
-        public IEnumerable<TResource> GetAllResources<TResource>(Func<TResource, bool> predicate)
+        public IEnumerable<TResource> GetResourcesUnsafe<TResource>(Func<TResource, bool> predicate)
              where TResource : class, IResource
         {
             ValidateHealthState();
             return ResourceGraph.GetResources(predicate);
         }
-        #endregion
 
-        /// <inheritdoc />
         public event EventHandler<IResource> ResourceAdded;
 
-        /// <inheritdoc />
         public event EventHandler<IResource> ResourceRemoved;
 
-        /// <inheritdoc />
         public event EventHandler<ICapabilities> CapabilitiesChanged;
     }
 

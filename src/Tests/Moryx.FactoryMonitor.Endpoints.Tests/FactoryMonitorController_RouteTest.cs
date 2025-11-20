@@ -21,11 +21,11 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
         {
             // Arange
             long expectedId = 10;
-            _resourceManagementMock.Setup(rm => rm.Read(_assemblyCellLocation.Id, It.IsAny<Func<Resource, Resource>>()))
+            _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_assemblyCellLocation.Id, It.IsAny<Func<Resource, Resource>>()))
                 .Returns(new MachineLocation { Id = _assemblyCellLocation.Id });
-            _resourceManagementMock.Setup(rm => rm.Read(_solderingCellLocation.Id, It.IsAny<Func<Resource, Resource>>()))
+            _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_solderingCellLocation.Id, It.IsAny<Func<Resource, Resource>>()))
                 .Returns(new MachineLocation { Id = _solderingCellLocation.Id });
-            _resourceManagementMock.Setup(rm => rm.Create(typeof(TransportPath), It.IsAny<Action<Resource>>()))
+            _resourceManagementMock.Setup(rm => rm.CreateUnsafe(typeof(TransportPath), It.IsAny<Action<Resource>>()))
                 .Returns(expectedId);
 
             //Act
@@ -33,7 +33,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 
             //Assert
             Assert.That(((OkResult)endPointResult).StatusCode, Is.EqualTo(200));
-            _resourceManagementMock.Verify(rm => rm.Create(typeof(TransportPath), It.IsAny<Action<Resource>>()), Times.Once, "The resource was not created!");
+            _resourceManagementMock.Verify(rm => rm.CreateUnsafe(typeof(TransportPath), It.IsAny<Action<Resource>>()), Times.Once, "The resource was not created!");
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 
             //Assert
             Assert.That(((OkResult)endPointResult).StatusCode, Is.EqualTo(200));
-            _resourceManagementMock.Verify(rm => rm.Modify(expectedId, It.IsAny<Func<Resource, bool>>()), Times.Once, "The resource was not updated!");
+            _resourceManagementMock.Verify(rm => rm.ModifyUnsafe(expectedId, It.IsAny<Func<Resource, bool>>()), Times.Once, "The resource was not updated!");
 
             _solderingCellLocation.Destinations.Clear();
         }

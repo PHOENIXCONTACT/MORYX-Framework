@@ -24,7 +24,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
            Func<IMachineLocation, bool> cellFilter)
         {
 
-            var resourceChangedCellModel = resourceManager.Read(cell.Id, converter.ToResourceChangedModel);
+            var resourceChangedCellModel = resourceManager.ReadUnsafe(cell.Id, converter.ToResourceChangedModel);
 
             var machineLocation = resourceManager
                 .GetResources(cellFilter)
@@ -39,7 +39,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
 
         public static long GetFactoryId(this ICell cell, IResourceManagement resourceManagement)
         {
-            var resource = resourceManagement.Read(cell, x => x.GetFactory());
+            var resource = resourceManagement.ReadUnsafe(cell, x => x.GetFactory());
             return resource?.Id ?? -1;
         }
 
