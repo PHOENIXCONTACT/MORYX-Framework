@@ -8,10 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <dotnetVersion>10.0.0-rc.1.25451.107</dotnetVersion>
-    <efCoreVersion>10.0.0-rc.1.25451.107</efCoreVersion>
-
-    <AspNetCoreVersion>10.0.0-rc.1.25451.107</AspNetCoreVersion>
+    <dotnetVersion>10.0.0</dotnetVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,26 +21,25 @@
     <PackageVersion Include="WireMock.Net" Version="1.15.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
 
-    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="$(dotnetVersion)" />
 	  <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(dotnetVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="$(dotnetVersion)" />
 
-    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="$(AspNetCoreVersion)" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(AspNetCoreVersion)" />
-    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(AspNetCoreVersion)" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(AspNetCoreVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="$(AspNetCoreVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="$(dotnetVersion)" />
 
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(efCoreVersion)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(efCoreVersion)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(efCoreVersion)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="$(efCoreVersion)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="$(efCoreVersion)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(efCoreVersion)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(efCoreVersion)" />
-    
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0-rc.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(dotnetVersion)" />
+
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
 
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
     <PackageVersion Include="Microsoft.Identity.Web" Version="4.0.1" />

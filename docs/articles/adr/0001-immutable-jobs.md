@@ -1,10 +1,10 @@
-# ADR: Immutable Jobs
+# ADR-001: Immutable Jobs
 
-In the design of the ProcessEngine there was the reoccurring question whether or not jobs can be altered after creation. 
+**Date:** 2018-05-28 \
+**Status:** Accepted \
+**Context:** ProcessEngine
 
-## Status
-
-**Accepted**
+In the design of the ProcessEngine there was the reoccurring question whether or not jobs can be altered after creation.
 
 ## Decision
 

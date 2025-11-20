@@ -6,11 +6,11 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Description>Core package of the MORYX ecosystem. It defines the necessary types for MORYX compatibility as well as commonly required tools.</Description>
     <PackageTags>MORYX;Serialization;Configuration;Logging;Core;Modules;Workplans</PackageTags>
-	<IsPackable>true</IsPackable>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Newtonsoft.Json"/>
     <PackageReference Include="Microsoft.Extensions.Logging"/>
   </ItemGroup>
 

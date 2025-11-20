@@ -11,8 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Moryx.Analytics.Server\Moryx.Analytics.Server.csproj" />
-    <ProjectReference Include="..\Moryx.Analytics.Web\Moryx.Analytics.Web.csproj" />
     <ProjectReference Include="..\Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj" />
     <ProjectReference Include="..\Moryx.CommandCenter.Web\Moryx.CommandCenter.Web.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.Jobs.Endpoints\Moryx.ControlSystem.Jobs.Endpoints.csproj" />
