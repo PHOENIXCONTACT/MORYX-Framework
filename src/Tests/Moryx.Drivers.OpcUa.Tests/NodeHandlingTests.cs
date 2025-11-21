@@ -3,7 +3,7 @@
 
 using Moq;
 using Moryx.AbstractionLayer.Drivers.Message;
-using Moryx.Drivers.OpcUa.DriverStates;
+using Moryx.Drivers.OpcUa.States;
 using Moryx.Modules;
 using NUnit.Framework;
 using Opc.Ua;
@@ -82,7 +82,7 @@ public class NodeHandlingTests : OpcUaTestBase
         //Act
         ((IPlugin)_driver).Start();
 
-        //Assert I           
+        //Assert I
         Assert.That(node, Is.Not.Null);
         Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), "Driver was not running");
     }
@@ -104,7 +104,7 @@ public class NodeHandlingTests : OpcUaTestBase
     public void TestSubscribingMonitoredItemsAfterBrowsing()
     {
         //Arrange
-        var expectedNode = _nodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
+        var expectedNode = _nodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
         var channel = _driver.Channel<object>(expectedNode.Value.NodeId.ToString());
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
@@ -115,7 +115,7 @@ public class NodeHandlingTests : OpcUaTestBase
             }
         };
 
-        //Act          
+        //Act
         channel.Received += DoSomething;
         ((IPlugin)_driver).Start();
 
@@ -146,7 +146,7 @@ public class NodeHandlingTests : OpcUaTestBase
             }
         };
 
-        //Act          
+        //Act
         channel.Received += DoSomething;
         ((IPlugin)_driver).Start();
         _driver.SubscribeNode(channel.Identifier);
@@ -186,14 +186,14 @@ public class NodeHandlingTests : OpcUaTestBase
         ((IMessageChannel<OpcUaMessage, OpcUaMessage>)_driver).Received += (sender, e) =>
         {
             waitSubscription2.Set();
-            //Assert III              
+            //Assert III
             Assert.That(e, Is.Not.Null);
             CheckReceivedValue(e.Payload, VALUE);
         };
         ((IMessageChannel<object, object>)_driver).Received += (sender, e) =>
         {
             waitSubscription3.Set();
-            //Assert IV              
+            //Assert IV
             var msg = e as OpcUaMessage;
             Assert.That(msg, Is.Not.Null, "Message received from the Driver.Received event has the wrong type");
             CheckReceivedValue(msg.Payload, VALUE);
@@ -201,15 +201,15 @@ public class NodeHandlingTests : OpcUaTestBase
         _driver.Input.InputChanged += (sender, e) =>
         {
             waitSubscription4.Set();
-            //Assert V              
+            //Assert V
             Assert.That(e.Key, Is.EqualTo(channel.NodeId.ToString()));
         };
 
         ((IPlugin)_driver).Start();
         _driver.SubscribeNode(channel.Identifier);
 
-        // Act            
-        _driver.onSubscriptionChanged(channel.NodeId, VALUE);
+        // Act
+        _driver.OnSubscriptionChanged(channel.NodeId, VALUE);
 
         //Assert I
         Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), "Driver was not running");
@@ -231,7 +231,7 @@ public class NodeHandlingTests : OpcUaTestBase
         //Arrange
         const string alias = "whatever";
         var nodeId = NodeId.ToExpandedNodeId(_nodes.First().Key, _namespaceTable);
-        _driver.NodeIdAliasDictionary.Add(alias, nodeId.ToString());
+        _driver._nodeIdAliasDictionary.Add(alias, nodeId.ToString());
         ((IPlugin)_driver).Start();
 
         //Act

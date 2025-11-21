@@ -4,7 +4,7 @@
 using Moryx.AbstractionLayer.Drivers;
 using Opc.Ua.Client;
 
-namespace Moryx.Drivers.OpcUa.DriverStates;
+namespace Moryx.Drivers.OpcUa.States;
 
 internal class ReconnectingState(OpcUaDriver context, StateMachines.StateBase.StateMap stateMap) : DriverOpcUaState(context, stateMap, StateClassification.Offline)
 {
