@@ -47,7 +47,7 @@
 
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
     <PackageVersion Include="Microsoft.Identity.Web" Version="4.0.1" />
-    <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="4.0.1" />
+    <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="4.1.0" />
 
 	  <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
 
