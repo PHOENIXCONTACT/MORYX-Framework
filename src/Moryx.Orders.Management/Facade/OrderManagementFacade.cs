@@ -257,17 +257,15 @@ namespace Moryx.Orders.Management
             return OperationManager.GetInterruptContext(operationData);
         }
 
-        public void InterruptOperation(Operation operation)
-        {
-            InterruptOperation(operation, UserManagement.DefaultUser);
-        }
-
         public void InterruptOperation(Operation operation, User user)
         {
             ValidateHealthState();
 
+            // Get default user if there is no
+            user ??= UserManagement.DefaultUser;
+
             var operationData = GetOperationDataSave(operation);
-            OperationManager.Interrupt(operationData, user ?? UserManagement.DefaultUser);
+            OperationManager.Interrupt(operationData, user);
         }
 
         private IOperationData GetOperationDataSave(Operation operation)

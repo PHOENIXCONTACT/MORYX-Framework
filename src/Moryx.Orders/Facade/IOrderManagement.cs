@@ -82,11 +82,6 @@ namespace Moryx.Orders
         /// <summary>
         /// Processes a interrupt for the given operation
         /// </summary>
-        void InterruptOperation(Operation operation);
-
-        /// <summary>
-        /// Processes a interrupt for the given operation
-        /// </summary>
         void InterruptOperation(Operation operation, User user);
 
         /// <summary>
