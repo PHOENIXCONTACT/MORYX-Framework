@@ -5,7 +5,8 @@ using Opc.Ua;
 using Opc.Ua.Configuration;
 
 namespace Moryx.Drivers.OpcUa;
-public class ApplicationConfigurationFactory
+
+internal class ApplicationConfigurationFactory
 {
     private ILogger _logger;
 

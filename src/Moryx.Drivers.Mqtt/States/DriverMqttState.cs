@@ -4,7 +4,7 @@
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.StateMachines;
 
-namespace Moryx.Drivers.Mqtt.DriverStates
+namespace Moryx.Drivers.Mqtt.States
 {
     internal abstract class DriverMqttState : DriverState<MqttDriver>
     {

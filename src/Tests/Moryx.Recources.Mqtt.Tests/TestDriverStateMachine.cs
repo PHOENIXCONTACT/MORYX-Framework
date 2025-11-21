@@ -5,9 +5,9 @@ using System;
 using System.Threading;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.TestTools;
 using Moryx.Drivers.Mqtt;
-using Moryx.Drivers.Mqtt.DriverStates;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Tools;
@@ -20,13 +20,10 @@ namespace Moryx.Resources.Mqtt.Tests
     [TestFixture(MqttProtocolVersion.V310)]
     [TestFixture(MqttProtocolVersion.V311)]
     [TestFixture(MqttProtocolVersion.V500)]
-    public class TestDriverStateMachine
+    public class TestDriverStateMachine(MqttProtocolVersion version)
     {
         private Mock<IMqttClient> _mockClient;
         private MqttDriver _driver;
-        private MqttProtocolVersion _version;
-
-        public TestDriverStateMachine(MqttProtocolVersion version) => _version = version;
 
         [SetUp]
         public void Setup()
@@ -40,7 +37,7 @@ namespace Moryx.Resources.Mqtt.Tests
                 Id = 4,
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 Channels = new ReferenceCollectionMock<MqttTopic>(),
-                MqttVersion = _version
+                MqttVersion = version
             };
 
             //Setup mock for MQTT-Client
@@ -53,7 +50,7 @@ namespace Moryx.Resources.Mqtt.Tests
                 .ReturnsAsync(new MqttClientConnectResult(), TimeSpan.FromMilliseconds(100));
         }
 
-        [Test(Description = $"After stopping the driver it should be in the {nameof(DisconnectedState)}")]
+        [Test(Description = $"After stopping the driver it should be Offline")]
         public void Stop_Always_EndsInDisconnectedState()
         {
             //Arrange
@@ -64,10 +61,10 @@ namespace Moryx.Resources.Mqtt.Tests
             ((IPlugin)_driver).Stop();
 
             //Assert I
-            Assert.That(_driver.State, Is.InstanceOf(typeof(DisconnectedState)));
+            Assert.That(_driver.State.Classification, Is.EqualTo(StateClassification.Offline));
         }
 
-        [Test(Description = $"After restarting the driver it should be in the {nameof(ConnectingToBrokerState)}")]
+        [Test(Description = $"After restarting the driver it should be Initializing")]
         public void Start_AfterStop_LeadsToConnectingToBrokerState()
         {
             //Arrange
@@ -79,7 +76,7 @@ namespace Moryx.Resources.Mqtt.Tests
             ((IPlugin)_driver).Start();
 
             //Assert I
-            Assert.That(_driver.State, Is.InstanceOf(typeof(ConnectingToBrokerState)));
+            Assert.That(_driver.State.Classification, Is.EqualTo(StateClassification.Initializing));
         }
     }
 }

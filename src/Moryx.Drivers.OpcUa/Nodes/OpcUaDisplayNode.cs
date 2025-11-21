@@ -9,7 +9,7 @@ namespace Moryx.Drivers.OpcUa.Nodes;
 /// <summary>
 /// Class to show Opc Ua Nodes on the UI, since OpcUaNode is not serializable
 /// </summary>
-public class OpcUaDisplayNode
+internal class OpcUaDisplayNode
 {
     private readonly ExpandedNodeId _nodeId;
     public OpcUaDisplayNode(ExpandedNodeId nodeId)

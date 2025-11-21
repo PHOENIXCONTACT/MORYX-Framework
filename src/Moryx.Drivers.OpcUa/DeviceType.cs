@@ -6,7 +6,7 @@ namespace Moryx.Drivers.OpcUa;
 /// <summary>
 /// https://reference.opcfoundation.org/DI/v104/docs/4.7
 /// </summary>
-public class DeviceType
+internal class DeviceType
 {
     public string Name { get; set; }
     public string SerialNumber { get; set; }

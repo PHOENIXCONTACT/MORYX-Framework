@@ -3,7 +3,7 @@
 
 namespace Moryx.Drivers.Mqtt;
 
-enum TopicValidationResult
+internal enum TopicValidationResult
 {
     Uninitialized, Valid, Invalid
 }
