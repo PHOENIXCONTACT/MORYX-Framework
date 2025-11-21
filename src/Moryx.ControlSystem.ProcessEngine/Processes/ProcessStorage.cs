@@ -148,7 +148,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 }
 
                 // Restore activities from workflow
-                var context = new AbstractionLayer.Processes.ProcessContext(process);
+                var context = new ProcessWorkplanContext(process);
                 var taskMap = recipe.Workplan.Steps
                     .Select(step => step.CreateInstance(context))
                     .OfType<ITask>().ToDictionary(task => task.Id, task => task);

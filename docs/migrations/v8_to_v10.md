@@ -26,6 +26,7 @@ The simulator module has also been renamed, and its namespace and package id hav
 - IResourceManagement.Create -> IResourceManagement.CreateUnsafe
 - IResourceManagement.Read -> IResourceManagement.ReadUnsafe
 - IResourceManagement.Modify -> IResourceManagement.ModifyUnsafe
+- ProcessContext -> ProcessWorkplanContext
 
 ## Reduction of interfaces
 
@@ -85,3 +86,7 @@ All driver APIs have been reworked to use TPL async/await instead of callbacks f
 - Cleaner and integrates seamlessly with .NET’s exception system.
 - You can chain tasks with LINQ-like methods or await syntax.
 - Async stack-traces in IDE show the actual logical call flow — even across await boundaries.
+
+## ConstraintContext during activity-handling
+
+The `IConstraintContext` interface was removed from `IProcess`. Instead a new wrapper was introduced `ActivityConstraintContext` which provides the Activity and the Process for better handling in `IConstraint` implementations.
