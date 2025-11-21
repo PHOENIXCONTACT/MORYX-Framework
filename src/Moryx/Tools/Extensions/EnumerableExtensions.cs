@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.ObjectModel;
+using Moryx.Serialization;
 
 namespace Moryx.Tools
 {
@@ -51,6 +52,17 @@ namespace Moryx.Tools
         public static IEnumerable<TSource> Intersect<TSource, TCompare>(this IEnumerable<TSource> source, ICollection<TCompare> compare, Func<TSource, TCompare, bool> filter)
         {
             return source.Where(entry => compare.Any(item => filter(entry, item)));
+        }
+
+        /// <summary>
+        /// Converts an <see cref="IEnumerable{String}"/> of possible values to an <see cref="EntryPossible"/> array.
+        /// Key and DisplayName are set to the string value.
+        /// </summary>
+        public static EntryPossible[] ToEntryPossibleArray(this IEnumerable<string> possible)
+        {
+            return possible?
+                .Select(p => p != null ? new EntryPossible { Key = p, DisplayName = p, Description = null } : null)
+                .ToArray();
         }
     }
 }
