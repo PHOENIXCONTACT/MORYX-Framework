@@ -1,7 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Drivers.InOut;
 using Moryx.AbstractionLayer.Drivers.Message;
 
@@ -10,7 +9,7 @@ namespace Moryx.Drivers.OpcUa;
 /// <summary>
 /// Opc Ua Client
 /// </summary>
-public interface IOpcUaDriver : IDriver, IMessageDriver<object>, IMessageDriver<OpcUaMessage>, IInOutDriver<object, object>
+public interface IOpcUaDriver : IMessageDriver<object>, IMessageDriver<OpcUaMessage>, IInOutDriver<object, object>
 {
     // TODO 6.3: Subscriptions with different publishing and sampling intervals can be created
     // TODO 6.2: Subscriptions to ObjectNodes are possible
@@ -23,19 +22,24 @@ public interface IOpcUaDriver : IDriver, IMessageDriver<object>, IMessageDriver<
     /// <summary>
     /// Read the value of a Node
     /// </summary>
-    /// <param name="NodeId">NodeId</param>
+    /// <param name="nodeId">NodeId</param>
     /// <returns>If node doesn't exists or there was an error, when trying to read
-    /// the node, the return value will be null</returns>       
-    object ReadNode(string NodeId);
+    /// the node, the return value will be null</returns>
+    object ReadNode(string nodeId);
+
+    /// <summary>
+    /// Read the value of a Node
+    /// </summary>
+    /// <param name="nodeId">NodeId</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    /// <returns>If node doesn't exists or there was an error, when trying to read
+    /// the node, the return value will be null</returns>
+    Task<object> ReadNodeAsync(string nodeId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Rebrowse Nodes
     /// </summary>
     void RebrowseNodes();
-}
-
-public interface IOpcUaDriver2 : IOpcUaDriver
-{
 
     /// <summary>
     /// Returns an opcUaNode to a string
@@ -52,50 +56,10 @@ public interface IOpcUaDriver2 : IOpcUaDriver
     void WriteNode(string nodeId, object payload);
 
     /// <summary>
-    /// Invokes the method of a method noe
+    /// Write a value to a node
     /// </summary>
-    /// <param name="nodeId"></param>
-    /// <param name="parameters"></param>
-    /// <returns>returns null, if type of the node doesn't fit or node not found</returns>
-    List<object> InvokeMethod(string nodeId, object[] parameters);
-}
-
-public static class OpcUaDriverExtensions
-{
-    public static OpcUaNode GetNode(this IOpcUaDriver driver, string nodeId)
-    {
-        if (driver is IOpcUaDriver2 d2)
-        {
-            return d2.GetNode(nodeId);
-        }
-        else
-        {
-            throw new NotSupportedException();
-        }
-    }
-
-    public static void WriteNode(this IOpcUaDriver driver, string nodeId, object payload)
-    {
-        if (driver is IOpcUaDriver2 d2)
-        {
-            d2.WriteNode(nodeId, payload);
-        }
-        else
-        {
-            throw new NotSupportedException();
-        }
-    }
-
-    public static List<object> InvokeMethod(this IOpcUaDriver driver, string nodeId, object[] parameters)
-    {
-        if (driver is IOpcUaDriver2 d2)
-        {
-            return d2.InvokeMethod(nodeId, parameters);
-        }
-        else
-        {
-            throw new NotSupportedException();
-        }
-    }
-
+    /// <param name="nodeId">id of the representing OpcUaNode</param>
+    /// <param name="payload">value to be written to the node</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    Task WriteNodeAsync(string nodeId, object payload, CancellationToken cancellationToken = default);
 }

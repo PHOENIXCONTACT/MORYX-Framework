@@ -27,11 +27,11 @@ namespace Moryx.Drivers.OpcUa;
 /// </summary>
 [ResourceRegistration]
 [Display(Name = nameof(Strings.OpcUaDriver_DisplayName), Description = nameof(Strings.OpcUaDriver_Description), ResourceType = typeof(Strings))]
-public class OpcUaDriver : Driver, IOpcUaDriver2
+public class OpcUaDriver : Driver, IOpcUaDriver
 {
     //TODO 6.1 Invoke Methods
 
-    private const int NODE_LAYERS_SHOWN = 5;
+    private const int NodeLayersShown = 5;
     /// <summary>
     /// Current tate of the driver
     /// </summary>
@@ -808,7 +808,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
                 _nodesFlat.Add(node.Identifier, node);
             }
 
-            if (layer < NODE_LAYERS_SHOWN)
+            if (layer < NodeLayersShown)
             {
                 list.Add(node);
             }
@@ -843,7 +843,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     #endregion
 
     #region Read and write nodes
-    /// <inheritdoc/>
+
     public void WriteNode(OpcUaNode node, object payload)
     {
         State.WriteNode(node, payload);
@@ -853,6 +853,12 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     {
         var node = State.GetNode(nodeId);
         WriteNode(node, payload);
+    }
+
+    /// <inheritdoc />
+    public Task WriteNodeAsync(string nodeId, object payload, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 
     internal void OnWriteNode(OpcUaNode node, object payload)
@@ -879,9 +885,15 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         }
     }
     /// <inheritdoc/>
-    public object ReadNode(string NodeId)
+    public object ReadNode(string nodeId)
     {
-        return ReadNodeDataValue(NodeId).Result.Value;
+        return ReadNodeDataValue(nodeId).Result.Value;
+    }
+
+    /// <inheritdoc />
+    public Task<object> ReadNodeAsync(string nodeId, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 
     private DataValueResult ReadNodeDataValue(string nodeId)
@@ -978,12 +990,12 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// <summary>
     /// Method to read nodes from the ui for testing
     /// </summary>
-    /// <param name="NodeId"></param>
+    /// <param name="nodeId"></param>
     /// <returns></returns>
     [EntrySerialize]
-    public string ReadNodeAsString(string NodeId)
+    public string ReadNodeAsString(string nodeId)
     {
-        var value = ReadNodeDataValue(NodeId);
+        var value = ReadNodeDataValue(nodeId);
         if (value == null)
         {
             return "There was an error, when trying to read the value of the node. Please look into the log for further information";
@@ -1027,29 +1039,34 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         {
             switch (type)
             {
-                case BuiltInType.Boolean: return bool.Parse(stringValue);
-
-                case BuiltInType.Int16: return short.Parse(stringValue);
+                case BuiltInType.Boolean:
+                    return bool.Parse(stringValue);
+                case BuiltInType.Int16:
+                    return short.Parse(stringValue);
                 case BuiltInType.Enumeration:
                 case BuiltInType.Integer:
-                case BuiltInType.Int32: return int.Parse(stringValue);
-                case BuiltInType.Int64: return long.Parse(stringValue);
-                case BuiltInType.UInt16: return ushort.Parse(stringValue);
+                case BuiltInType.Int32:
+                    return int.Parse(stringValue);
+                case BuiltInType.Int64:
+                    return long.Parse(stringValue);
+                case BuiltInType.UInt16:
+                    return ushort.Parse(stringValue);
                 case BuiltInType.UInteger:
-                case BuiltInType.UInt32: return uint.Parse(stringValue);
-                case BuiltInType.UInt64: return ulong.Parse(stringValue);
-                case BuiltInType.DateTime: return DateTime.Parse(stringValue);
-
+                case BuiltInType.UInt32:
+                    return uint.Parse(stringValue);
+                case BuiltInType.UInt64:
+                    return ulong.Parse(stringValue);
+                case BuiltInType.DateTime:
+                    return DateTime.Parse(stringValue);
                 case BuiltInType.Guid:
-                case BuiltInType.String: return stringValue;
-
+                case BuiltInType.String:
+                    return stringValue;
                 case BuiltInType.Number:
                 case BuiltInType.Float:
                 case BuiltInType.Double:
                     return double.Parse(stringValue);
-
-                case BuiltInType.Byte: return byte.Parse(stringValue);
-
+                case BuiltInType.Byte:
+                    return byte.Parse(stringValue);
             }
         }
         catch (Exception ex)
@@ -1063,9 +1080,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     }
 
     [EntrySerialize]
-    public List<string> FindNodeId(string Displayname)
+    public List<string> FindNodeId(string displayName)
     {
-        var result = _nodesFlat.Where(x => x.Value.DisplayName.ToLower().Contains(Displayname.ToLower()) || x.Value.DisplayName.ToLower().Equals(Displayname.ToLower()))
+        var result = _nodesFlat.Where(x => x.Value.DisplayName.ToLower().Contains(displayName.ToLower()) || x.Value.DisplayName.ToLower().Equals(displayName.ToLower()))
             .Select(x => x.Key).ToList();
 
         return result;
@@ -1145,11 +1162,5 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
             DeviceSet.Add(deviceType);
 
         }
-
-    }
-
-    public List<object> InvokeMethod(string nodeId, object[] parameters)
-    {
-        throw new NotImplementedException();
     }
 }
