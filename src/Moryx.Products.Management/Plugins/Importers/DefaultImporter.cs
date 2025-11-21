@@ -4,7 +4,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Moryx.AbstractionLayer.Products;
-using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Serialization;
 
@@ -14,7 +13,7 @@ namespace Moryx.Products.Management.Importers
     /// Product importer which can create all types of products
     /// </summary>
     [ExpectedConfig(typeof(ProductImporterConfig))]
-    [Plugin(LifeCycle.Transient, typeof(IProductImporter), Name = nameof(DefaultImporter))]
+    [ProductImporter(nameof(DefaultImporter))]
     public class DefaultImporter : ProductImporterBase<ProductImporterConfig, DefaultImporterParameters>
     {
         /// <inheritdoc />

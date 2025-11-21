@@ -94,6 +94,12 @@ The API of `IResourceInitializer` was adjusted
 - `Initialize` is now returning async task
 - Introduced `ResourceInitializerResult` object for extensibility and option to save
 - Its now possible to execute initializers from the facade
+- The initializers are registered transient by default.
+
+## Product importer
+
+- Introduced `ProductImporterAttribute` for harmonized registration of importers.
+- The importers are registered transient by default.
 
 ## ConstraintContext during activity-handling
 
