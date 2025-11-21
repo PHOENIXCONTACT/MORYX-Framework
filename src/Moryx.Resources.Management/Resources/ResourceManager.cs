@@ -45,6 +45,16 @@ namespace Moryx.Resources.Management
         [UseChild(nameof(ResourceManager))]
         public IModuleLogger Logger { get; set; }
 
+        /// <summary>
+        /// Config of this module
+        /// </summary>
+        public ModuleConfig Config { get; set; }
+
+        /// <summary>
+        /// Factory to create resource initializers
+        /// </summary>
+        public IResourceInitializerFactory InitializerFactory { get; set; }
+
         #endregion
 
         #region Fields
@@ -99,6 +109,11 @@ namespace Moryx.Resources.Management
         /// </summary>
         private List<Resource> _failedResources = [];
 
+        /// <summary>
+        /// Configured resource initializers
+        /// </summary>
+        private IResourceInitializer[] _inizializers;
+
         #endregion
 
         #region LifeCycle
@@ -125,7 +140,7 @@ namespace Moryx.Resources.Management
         }
 
         /// <summary>
-        /// Handles the initialization of the resource 
+        /// Handles the initialization of the resource
         /// </summary>
         /// <param name="resource"></param>
         private void InitializeResource(Resource resource)
@@ -282,6 +297,10 @@ namespace Moryx.Resources.Management
 
         public void Start()
         {
+            // Create configured resource initializers
+            _inizializers = (from importerConfig in Config.Initializers
+                select InitializerFactory.Create(importerConfig)).ToArray();
+
             // start resources
             _startup = ResourceStartupPhase.Starting;
             Parallel.ForEach(Graph.GetAll().Except(_failedResources), StartResource);
@@ -377,16 +396,27 @@ namespace Moryx.Resources.Management
             }
         }
 
-        public void ExecuteInitializer(IResourceInitializer initializer)
+        public Task<ResourceInitializerResult> ExecuteInitializer(string initializerName, object parameters)
         {
-            var roots = initializer.Execute(Graph);
+            var initializer = _inizializers.First(i => i.Name == initializerName);
+            return ExecuteInitializer(initializer, parameters);
+        }
 
-            if (roots.Count == 0)
+        public async Task<ResourceInitializerResult> ExecuteInitializer(IResourceInitializer initializer, object parameters)
+        {
+            var result = await initializer.Execute(Graph, parameters);
+
+            if (result.InitializedResources.Count == 0)
                 throw new InvalidOperationException("ResourceInitializer must return at least one resource");
 
-            using var uow = UowFactory.Create();
-            ResourceLinker.SaveRoots(uow, roots);
-            uow.SaveChanges();
+            if (!result.Saved)
+            {
+                using var uow = UowFactory.Create();
+                ResourceLinker.SaveRoots(uow, result.InitializedResources);
+                await uow.SaveChangesAsync();
+            }
+
+            return result;
         }
 
         #region IResourceCreator

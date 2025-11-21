@@ -6,7 +6,7 @@ using Moryx.Modules;
 namespace Moryx.AbstractionLayer.Resources
 {
     /// <summary>
-    /// Resource initializers are used to create an initial set of resources. 
+    /// Resource initializers are used to create an initial set of resources.
     /// This will be used by the module console of the resource management.
     /// </summary>
     public interface IResourceInitializer : IConfiguredPlugin<ResourceInitializerConfig>
@@ -25,6 +25,6 @@ namespace Moryx.AbstractionLayer.Resources
         /// Within this method, the resource trees should be created
         /// It is only necessary to return the roots
         /// </summary>
-        IReadOnlyList<Resource> Execute(IResourceGraph graph);
+        Task<ResourceInitializerResult> Execute(IResourceGraph graph, object parameters);
     }
 }

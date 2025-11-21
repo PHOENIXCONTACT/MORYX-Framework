@@ -10,11 +10,14 @@ namespace Moryx.Resources.Samples.Initializer
     [ExpectedConfig(typeof(SampleMachineInitializerConfig))]
     public class SampleMachineInitializer : ResourceInitializerBase<SampleMachineInitializerConfig>
     {
+        /// <inheritdoc />
         public override string Name => "Sample Machine";
 
+        /// <inheritdoc />
         public override string Description => "Creates a sample machine and two cells";
 
-        public override IReadOnlyList<Resource> Execute(IResourceGraph graph)
+        /// <inheritdoc />
+        public override Task<ResourceInitializerResult> Execute(IResourceGraph graph, object parameters)
         {
             var machine = graph.Instantiate<Machine>();
             machine.Name = Config.MachineName;
@@ -55,7 +58,7 @@ namespace Moryx.Resources.Samples.Initializer
             anotherGate.Parent = machine;
             machine.Children.Add(anotherGate);
 
-            return [machine];
+            return InitializedAsync([machine]);
         }
     }
 }

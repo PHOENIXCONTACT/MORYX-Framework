@@ -8,7 +8,6 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
 using Moryx.Notifications;
-using Moryx.Resources.Management.Facades;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Resources.Management

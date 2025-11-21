@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer.TestTools;
@@ -27,6 +28,7 @@ namespace Moryx.Resources.Management.Tests
         private ResourceGraph _graph;
         private ResourceManager _resourceManager;
         private Mock<IResourceInitializer> _initializerMock;
+        private ModuleConfig _moduleConfig;
 
         private const string DatabaseResourceName = "Resource Mock";
 
@@ -48,7 +50,7 @@ namespace Moryx.Resources.Management.Tests
                 .Returns(Array.Empty<Resource>());
 
             _initializerMock = new Mock<IResourceInitializer>();
-            _initializerMock.Setup(i => i.Execute(It.IsAny<IResourceGraph>())).Returns([_resourceMock]);
+            _initializerMock.Setup(i => i.Execute(It.IsAny<IResourceGraph>(), It.IsAny<object>())).ReturnsAsync(new ResourceInitializerResult { InitializedResources = [_resourceMock]});
             _linkerMock.Setup(l => l.SaveRoots(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()))
                 .Returns([_resourceMock]);
             _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(),
@@ -56,12 +58,16 @@ namespace Moryx.Resources.Management.Tests
                 .Returns(Array.Empty<Resource>());
 
             _graph = new ResourceGraph { TypeController = _typeControllerMock.Object };
+            _moduleConfig = new ModuleConfig();
+            _moduleConfig.Initialize();
+            
             _resourceManager = new ResourceManager
             {
                 UowFactory = _modelFactory,
                 ResourceLinker = _linkerMock.Object,
                 TypeController = _typeControllerMock.Object,
                 Graph = _graph,
+                Config = _moduleConfig,
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory())
             };
 
@@ -83,10 +89,10 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test(Description = "Executes a resource initializer on the manager to add resources")]
-        public void ExecuteInitializer()
+        public async Task ExecuteInitializer()
         {
             // Act
-            _resourceManager.ExecuteInitializer(_initializerMock.Object);
+            await _resourceManager.ExecuteInitializer(_initializerMock.Object, null);
 
             // Assert
             _linkerMock.Verify(l => l.SaveRoots(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()), Times.Once);

@@ -25,7 +25,7 @@ namespace Moryx.Resources.Management
 
         #endregion
 
-        [EntrySerialize, DisplayName("Initialize Resource"), Description("Calls the configured resource initializer")]
+        [EntrySerialize, DisplayName("Initialize Resource"), Description("Calls the configured resource initializers")]
         public string CallResourceInitializer([PluginConfigs(typeof(IResourceInitializer), true)] ResourceInitializerConfig[] configs)
         {
             foreach (var config in configs)
@@ -33,7 +33,7 @@ namespace Moryx.Resources.Management
                 try
                 {
                     var initializer = InitializerFactory.Create(config);
-                    ResourceManager.ExecuteInitializer(initializer);
+                    ResourceManager.ExecuteInitializer(initializer, null).Wait();
                     InitializerFactory.Destroy(initializer);
                 }
                 catch (Exception e)

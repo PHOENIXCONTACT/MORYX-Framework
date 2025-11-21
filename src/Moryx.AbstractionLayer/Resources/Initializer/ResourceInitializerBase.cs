@@ -56,6 +56,42 @@ namespace Moryx.AbstractionLayer.Resources
         }
 
         /// <inheritdoc />
-        public abstract IReadOnlyList<Resource> Execute(IResourceGraph graph);
+        public abstract Task<ResourceInitializerResult> Execute(IResourceGraph graph, object parameters);
+
+        /// <summary>
+        /// Creates an <see cref="ResourceInitializerResult"/> within a completed task
+        /// </summary>
+        /// <param name="initializedResources">Initialized root resources</param>
+        protected static Task<ResourceInitializerResult> InitializedAsync(IReadOnlyList<Resource> initializedResources) =>
+            InitializedAsync(initializedResources, false);
+
+        /// <summary>
+        /// Creates an <see cref="ResourceInitializerResult"/> within a completed task
+        /// </summary>
+        /// <param name="initializedResources">Initialized root resources</param>
+        /// <param name="saved">If true, the roots will not be saved again after result</param>
+        protected static Task<ResourceInitializerResult> InitializedAsync(IReadOnlyList<Resource> initializedResources, bool saved) =>
+            Task.FromResult(Initialized(initializedResources, saved));
+
+        /// <summary>
+        /// Creates an <see cref="ResourceInitializerResult"/>
+        /// </summary>
+        /// <param name="initializedResources">Initialized root resources</param>
+        protected static ResourceInitializerResult Initialized(IReadOnlyList<Resource> initializedResources) =>
+            Initialized(initializedResources, false);
+
+        /// <summary>
+        /// Creates an <see cref="ResourceInitializerResult"/>
+        /// </summary>
+        /// <param name="initializedResources">Initialized root resources</param>
+        /// <param name="saved">If true, the roots will not be saved again after result</param>
+        protected static ResourceInitializerResult Initialized(IReadOnlyList<Resource> initializedResources, bool saved)
+        {
+            return new ResourceInitializerResult
+            {
+                Saved = saved,
+                InitializedResources = initializedResources
+            };
+        }
     }
 }

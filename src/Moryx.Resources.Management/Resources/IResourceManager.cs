@@ -12,9 +12,14 @@ namespace Moryx.AbstractionLayer.Resources
     internal interface IResourceManager : IInitializablePlugin
     {
         /// <summary>
-        /// Executes the intializer on this creator
+        /// Executes the resource initializer
         /// </summary>
-        void ExecuteInitializer(IResourceInitializer initializer);
+        Task<ResourceInitializerResult> ExecuteInitializer(IResourceInitializer initializer, object parameters);
+
+        /// <summary>
+        /// Executes a pre-configured the resource initializer selected by name
+        /// </summary>
+        Task<ResourceInitializerResult> ExecuteInitializer(string initializerName, object parameters);
 
         /// <summary>
         /// Event raised when a resource was added at runtime
