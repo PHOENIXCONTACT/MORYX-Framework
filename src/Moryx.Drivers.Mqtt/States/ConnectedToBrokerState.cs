@@ -4,7 +4,7 @@
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers;
 
-namespace Moryx.Drivers.Mqtt.DriverStates
+namespace Moryx.Drivers.Mqtt.States
 {
     internal class ConnectedToBrokerState : DriverMqttState
     {
