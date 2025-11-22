@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { MoryxSerializationMethodEntry as MethodEntry } from '../api/models';
+import { MethodEntry } from '../api/models';
 import {
   Entry,
   EntryValue,

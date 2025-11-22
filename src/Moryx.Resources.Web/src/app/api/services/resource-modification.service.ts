@@ -23,11 +23,12 @@ import { getTypeTree } from '../fn/resource-modification/get-type-tree';
 import { GetTypeTree$Params } from '../fn/resource-modification/get-type-tree';
 import { invokeMethod } from '../fn/resource-modification/invoke-method';
 import { InvokeMethod$Params } from '../fn/resource-modification/invoke-method';
-import { ResourceModel as MoryxAbstractionLayerResourcesEndpointsResourceModel } from '../models/Moryx/AbstractionLayer/Resources/Endpoints/resource-model';
-import { ResourceTypeModel as MoryxAbstractionLayerResourcesEndpointsResourceTypeModel } from '../models/Moryx/AbstractionLayer/Resources/Endpoints/resource-type-model';
 import { Entry } from '@moryx/ngx-web-framework/entry-editor/src/models/entry';
 import { remove } from '../fn/resource-modification/remove';
 import { Remove$Params } from '../fn/resource-modification/remove';
+import { ResourceModel } from '../models/resource-model';
+import { ResourceModelPagedResult } from '../models/resource-model-paged-result';
+import { ResourceTypeModel } from '../models/resource-type-model';
 import { save } from '../fn/resource-modification/save';
 import { Save$Params } from '../fn/resource-modification/save';
 import { update } from '../fn/resource-modification/update';
@@ -48,7 +49,7 @@ export class ResourceModificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypeTree$Response(params?: GetTypeTree$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceTypeModel>> {
+  getTypeTree$Response(params?: GetTypeTree$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceTypeModel>> {
     return getTypeTree(this.http, this.rootUrl, params, context);
   }
 
@@ -58,9 +59,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypeTree(params?: GetTypeTree$Params, context?: HttpContext): Observable<MoryxAbstractionLayerResourcesEndpointsResourceTypeModel> {
+  getTypeTree(params?: GetTypeTree$Params, context?: HttpContext): Observable<ResourceTypeModel> {
     return this.getTypeTree$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceTypeModel>): MoryxAbstractionLayerResourcesEndpointsResourceTypeModel => r.body)
+      map((r: StrictHttpResponse<ResourceTypeModel>): ResourceTypeModel => r.body)
     );
   }
 
@@ -73,7 +74,7 @@ export class ResourceModificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDetailsBatch$Response(params?: GetDetailsBatch$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxAbstractionLayerResourcesEndpointsResourceModel>>> {
+  getDetailsBatch$Response(params?: GetDetailsBatch$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ResourceModel>>> {
     return getDetailsBatch(this.http, this.rootUrl, params, context);
   }
 
@@ -83,9 +84,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDetailsBatch(params?: GetDetailsBatch$Params, context?: HttpContext): Observable<Array<MoryxAbstractionLayerResourcesEndpointsResourceModel>> {
+  getDetailsBatch(params?: GetDetailsBatch$Params, context?: HttpContext): Observable<Array<ResourceModel>> {
     return this.getDetailsBatch$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxAbstractionLayerResourcesEndpointsResourceModel>>): Array<MoryxAbstractionLayerResourcesEndpointsResourceModel> => r.body)
+      map((r: StrictHttpResponse<Array<ResourceModel>>): Array<ResourceModel> => r.body)
     );
   }
 
@@ -98,7 +99,7 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  save$Response(params?: Save$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceModel>> {
+  save$Response(params?: Save$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceModel>> {
     return save(this.http, this.rootUrl, params, context);
   }
 
@@ -108,9 +109,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  save(params?: Save$Params, context?: HttpContext): Observable<MoryxAbstractionLayerResourcesEndpointsResourceModel> {
+  save(params?: Save$Params, context?: HttpContext): Observable<ResourceModel> {
     return this.save$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceModel>): MoryxAbstractionLayerResourcesEndpointsResourceModel => r.body)
+      map((r: StrictHttpResponse<ResourceModel>): ResourceModel => r.body)
     );
   }
 
@@ -123,7 +124,7 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  getResources$Response(params?: GetResources$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxAbstractionLayerResourcesEndpointsResourceModel>>> {
+  getResources$Response(params?: GetResources$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceModelPagedResult>> {
     return getResources(this.http, this.rootUrl, params, context);
   }
 
@@ -133,9 +134,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  getResources(params?: GetResources$Params, context?: HttpContext): Observable<Array<MoryxAbstractionLayerResourcesEndpointsResourceModel>> {
+  getResources(params?: GetResources$Params, context?: HttpContext): Observable<ResourceModelPagedResult> {
     return this.getResources$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxAbstractionLayerResourcesEndpointsResourceModel>>): Array<MoryxAbstractionLayerResourcesEndpointsResourceModel> => r.body)
+      map((r: StrictHttpResponse<ResourceModelPagedResult>): ResourceModelPagedResult => r.body)
     );
   }
 
@@ -148,7 +149,7 @@ export class ResourceModificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDetails$Response(params: GetDetails$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceModel>> {
+  getDetails$Response(params: GetDetails$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceModel>> {
     return getDetails(this.http, this.rootUrl, params, context);
   }
 
@@ -158,9 +159,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDetails(params: GetDetails$Params, context?: HttpContext): Observable<MoryxAbstractionLayerResourcesEndpointsResourceModel> {
+  getDetails(params: GetDetails$Params, context?: HttpContext): Observable<ResourceModel> {
     return this.getDetails$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceModel>): MoryxAbstractionLayerResourcesEndpointsResourceModel => r.body)
+      map((r: StrictHttpResponse<ResourceModel>): ResourceModel => r.body)
     );
   }
 
@@ -173,7 +174,7 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  update$Response(params: Update$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceModel>> {
+  update$Response(params: Update$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceModel>> {
     return update(this.http, this.rootUrl, params, context);
   }
 
@@ -183,9 +184,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  update(params: Update$Params, context?: HttpContext): Observable<MoryxAbstractionLayerResourcesEndpointsResourceModel> {
+  update(params: Update$Params, context?: HttpContext): Observable<ResourceModel> {
     return this.update$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceModel>): MoryxAbstractionLayerResourcesEndpointsResourceModel => r.body)
+      map((r: StrictHttpResponse<ResourceModel>): ResourceModel => r.body)
     );
   }
 
@@ -248,7 +249,7 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  constructWithParameters$Response(params: ConstructWithParameters$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceModel>> {
+  constructWithParameters$Response(params: ConstructWithParameters$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceModel>> {
     return constructWithParameters(this.http, this.rootUrl, params, context);
   }
 
@@ -258,9 +259,9 @@ export class ResourceModificationService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  constructWithParameters(params: ConstructWithParameters$Params, context?: HttpContext): Observable<MoryxAbstractionLayerResourcesEndpointsResourceModel> {
+  constructWithParameters(params: ConstructWithParameters$Params, context?: HttpContext): Observable<ResourceModel> {
     return this.constructWithParameters$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceModel>): MoryxAbstractionLayerResourcesEndpointsResourceModel => r.body)
+      map((r: StrictHttpResponse<ResourceModel>): ResourceModel => r.body)
     );
   }
 

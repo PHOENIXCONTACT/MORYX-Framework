@@ -1,5 +1,4 @@
-import { MoryxSerializationMethodEntry as MethodEntry } from "../api/models";
-
+import { MethodEntry } from "../api/models";
 
 export interface ResourceConstructionParameters {
   name: string;

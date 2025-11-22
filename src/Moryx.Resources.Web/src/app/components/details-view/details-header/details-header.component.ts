@@ -2,7 +2,7 @@ import { AfterContentChecked, Component, input } from "@angular/core";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { FormControlService } from "src/app/services/form-control-service.service";
-import { MoryxAbstractionLayerResourcesEndpointsResourceModel as ResourceModel } from "../../../api/models";
+import { ResourceModel } from "../../../api/models";
 import { MatDividerModule } from "@angular/material/divider";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";

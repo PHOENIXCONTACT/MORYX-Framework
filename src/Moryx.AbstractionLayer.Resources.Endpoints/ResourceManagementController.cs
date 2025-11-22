@@ -1,20 +1,21 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Reflection;
+using System.Runtime.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Resources.Endpoints.Properties;
 using Moryx.Asp.Extensions;
+using Moryx.Configuration;
+using Moryx.Runtime.Modules;
 using Moryx.Serialization;
 using Moryx.Tools;
-using Moryx.Runtime.Modules;
-using Moryx.Configuration;
-using System.Runtime.Serialization;
-using System.ComponentModel.DataAnnotations;
-using Moryx.AbstractionLayer.Resources.Endpoints.Properties;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints
 {
@@ -68,11 +69,14 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         }
 
         [HttpPost]
+        [InvalidQueryParameter(nameof(PaginationParameters.PageNumber))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         [Route("query")]
         [Authorize(Policy = ResourcePermissions.CanViewTree)]
-        public ActionResult<ResourceModel[]> GetResources(ResourceQuery query)
+        public ActionResult<ResourceModel[]> GetResources(ResourceQuery query) => QueryResourceModels(query);
+
+        private ResourceModel[] QueryResourceModels(ResourceQuery query)
         {
             var filter = new ResourceQueryFilter(query, _resourceTypeTree);
             var resourceProxies = _resourceManagement.GetResourcesUnsafe<IResource>(r => filter.Match(r as Resource)).ToArray();
@@ -80,6 +84,17 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             var converter = new ResourceQueryConverter(_resourceTypeTree, _serialization, query);
             var values = resourceProxies.Select(p => _resourceManagement.ReadUnsafe(p.Id, r => converter.QueryConversion(r))).Where(details => details != null).ToArray();
             return values;
+        }
+
+        [HttpPost("query")]
+        [RequiresQueryParameter(nameof(PaginationParameters.PageNumber))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Policy = ResourcePermissions.CanViewTree)]
+        public ActionResult<PagedResult<ResourceModel>> GetResources([FromBody] ResourceQuery query, [FromQuery] PaginationParameters parameters)
+        {
+            var resourceModels = QueryResourceModels(query);
+            return new PagedResult<ResourceModel>().With(parameters).Of(resourceModels);
         }
 
         [HttpGet]

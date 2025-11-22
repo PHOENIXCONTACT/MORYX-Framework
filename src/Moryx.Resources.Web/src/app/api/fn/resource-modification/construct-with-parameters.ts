@@ -8,7 +8,7 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ResourceModel as MoryxAbstractionLayerResourcesEndpointsResourceModel } from '../../models/Moryx/AbstractionLayer/Resources/Endpoints/resource-model';
+import { ResourceModel } from '../../models/resource-model';
 import { Entry } from '@moryx/ngx-web-framework/entry-editor/src/models/entry';
 
 
@@ -18,7 +18,7 @@ export interface ConstructWithParameters$Params {
       body?: Entry
 }
 
-export function constructWithParameters(http: HttpClient, rootUrl: string, params: ConstructWithParameters$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceModel>> {
+export function constructWithParameters(http: HttpClient, rootUrl: string, params: ConstructWithParameters$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceModel>> {
   const rb = new RequestBuilder(rootUrl, constructWithParameters.PATH, 'post');
   if (params) {
     rb.path('type', params.type, {});
@@ -31,7 +31,7 @@ export function constructWithParameters(http: HttpClient, rootUrl: string, param
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<MoryxAbstractionLayerResourcesEndpointsResourceModel>;
+      return r as StrictHttpResponse<ResourceModel>;
     })
   );
 }

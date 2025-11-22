@@ -8,16 +8,20 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ResourceModel as MoryxAbstractionLayerResourcesEndpointsResourceModel } from '../../models/Moryx/AbstractionLayer/Resources/Endpoints/resource-model';
-import { ResourceQuery as MoryxAbstractionLayerResourcesEndpointsResourceQuery } from '../../models/Moryx/AbstractionLayer/Resources/Endpoints/resource-query';
+import { ResourceModelPagedResult } from '../../models/resource-model-paged-result';
+import { ResourceQuery } from '../../models/resource-query';
 
 export interface GetResources$Params {
-      body?: MoryxAbstractionLayerResourcesEndpointsResourceQuery
+  PageNumber?: number;
+  PageSize?: number;
+      body?: ResourceQuery
 }
 
-export function getResources(http: HttpClient, rootUrl: string, params?: GetResources$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxAbstractionLayerResourcesEndpointsResourceModel>>> {
+export function getResources(http: HttpClient, rootUrl: string, params?: GetResources$Params, context?: HttpContext): Observable<StrictHttpResponse<ResourceModelPagedResult>> {
   const rb = new RequestBuilder(rootUrl, getResources.PATH, 'post');
   if (params) {
+    rb.query('PageNumber', params.PageNumber, {});
+    rb.query('PageSize', params.PageSize, {});
     rb.body(params.body, 'application/*+json');
   }
 
@@ -26,7 +30,7 @@ export function getResources(http: HttpClient, rootUrl: string, params?: GetReso
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<MoryxAbstractionLayerResourcesEndpointsResourceModel>>;
+      return r as StrictHttpResponse<ResourceModelPagedResult>;
     })
   );
 }

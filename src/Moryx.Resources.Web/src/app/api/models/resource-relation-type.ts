@@ -11,8 +11,8 @@ export enum ResourceRelationType {
   Driver = 'Driver',
   TransportSystem = 'TransportSystem',
   TransportRoute = 'TransportRoute',
-  CurrentExchangablePart = 'CurrentExchangablePart',
-  PossibleExchangablePart = 'PossibleExchangablePart',
+  CurrentExchangeablePart = 'CurrentExchangeablePart',
+  PossibleExchangeablePart = 'PossibleExchangeablePart',
   Decorated = 'Decorated',
   Extension = 'Extension',
   Custom = 'Custom'

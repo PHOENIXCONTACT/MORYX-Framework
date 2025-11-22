@@ -8,13 +8,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ResourceModel as MoryxAbstractionLayerResourcesEndpointsResourceModel } from '../../models/Moryx/AbstractionLayer/Resources/Endpoints/resource-model';
+import { ResourceModel } from '../../models/resource-model';
 
 export interface GetDetailsBatch$Params {
   ids?: Array<number>;
 }
 
-export function getDetailsBatch(http: HttpClient, rootUrl: string, params?: GetDetailsBatch$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxAbstractionLayerResourcesEndpointsResourceModel>>> {
+export function getDetailsBatch(http: HttpClient, rootUrl: string, params?: GetDetailsBatch$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ResourceModel>>> {
   const rb = new RequestBuilder(rootUrl, getDetailsBatch.PATH, 'get');
   if (params) {
     rb.query('ids', params.ids, {});
@@ -25,7 +25,7 @@ export function getDetailsBatch(http: HttpClient, rootUrl: string, params?: GetD
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<MoryxAbstractionLayerResourcesEndpointsResourceModel>>;
+      return r as StrictHttpResponse<Array<ResourceModel>>;
     })
   );
 }
