@@ -9,7 +9,6 @@ using Moryx.AbstractionLayer.Drivers.InOut;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
-using Moryx.Drivers.OpcUa.DriverStates;
 using Moryx.Drivers.OpcUa.Nodes;
 using Moryx.Serialization;
 using Moryx.StateMachines;
@@ -18,6 +17,7 @@ using Opc.Ua;
 using Opc.Ua.Client;
 using System.ComponentModel.DataAnnotations;
 using Moryx.Drivers.OpcUa.Properties;
+using Moryx.Drivers.OpcUa.States;
 
 namespace Moryx.Drivers.OpcUa;
 
@@ -27,25 +27,25 @@ namespace Moryx.Drivers.OpcUa;
 /// </summary>
 [ResourceRegistration]
 [Display(Name = nameof(Strings.OpcUaDriver_DisplayName), Description = nameof(Strings.OpcUaDriver_Description), ResourceType = typeof(Strings))]
-public class OpcUaDriver : Driver, IOpcUaDriver2
+public class OpcUaDriver : Driver, IOpcUaDriver
 {
     //TODO 6.1 Invoke Methods
 
-    private const int NODE_LAYERS_SHOWN = 5;
+    private const int NodeLayersShown = 5;
     /// <summary>
     /// Current tate of the driver
     /// </summary>
     [EntrySerialize]
     [Display(Name = nameof(Strings.OpcUaDriver_StateName), ResourceType = typeof(Strings))]
-    public string StateName => CurrentState?.ToString() ?? "";
+    internal string StateName => CurrentState?.ToString() ?? "";
 
     [EntrySerialize, ReadOnly(true)]
     [Display(Name = nameof(Strings.OpcUaDriver_ServerStatus), ResourceType = typeof(Strings))]
-    public ServerState ServerStatus { get; private set; }
+    internal ServerState ServerStatus { get; private set; }
 
     [EntrySerialize, ReadOnly(true)]
     [Display(Name = nameof(Strings.OpcUaDriver_DeviceSet), Description = nameof(Strings.OpcUaDriver_DeviceSet_Description), ResourceType = typeof(Strings))]
-    public List<DeviceType> DeviceSet { get; set; } = [];
+    internal List<DeviceType> DeviceSet { get; set; } = [];
 
     #region Configuration
     /// <summary>
@@ -56,7 +56,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     public List<string> DefaultSubscriptions { get; set; } = [];
 
     [DataMember]
-    public Dictionary<string, string> NodeIdAliasDictionary;
+    internal Dictionary<string, string> _nodeIdAliasDictionary; // TODO: Internal field just for tests, could be private
 
     [EntrySerialize]
     [Display(Name = nameof(Strings.OpcUaDriver_NodeIdAlias), ResourceType = typeof(Strings))]
@@ -64,25 +64,26 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     {
         get
         {
-            if (NodeIdAliasDictionary == null)
+            if (_nodeIdAliasDictionary == null)
             {
-                NodeIdAliasDictionary = [];
+                _nodeIdAliasDictionary = [];
                 return [];
             }
-            return [.. NodeIdAliasDictionary.Select(x => new NodeIdAlias { Alias = x.Key, NodeId = x.Value })];
+            return [.. _nodeIdAliasDictionary.Select(x => new NodeIdAlias { Alias = x.Key, NodeId = x.Value })];
         }
         set
         {
             if (value != null)
             {
-                NodeIdAliasDictionary = value.ToDictionary(x => x.Alias, x => x.NodeId);
+                _nodeIdAliasDictionary = value.ToDictionary(x => x.Alias, x => x.NodeId);
             }
             else
             {
-                NodeIdAliasDictionary = [];
+                _nodeIdAliasDictionary = [];
             }
         }
     }
+
     /// <summary>
     /// Identifier of the driver
     /// </summary>
@@ -132,10 +133,10 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     [Display(Name = nameof(Strings.OpcUaDriver_ReconnectionPeriod), Description = nameof(Strings.OpcUaDriver_ReconnectionPeriod_Description), ResourceType = typeof(Strings))]
     public int ReconnectionPeriod { get; set; }
 
+    // TODO: Update Publishing- and SamplingInterval without restarting the driver
     /// <summary>
     /// Interval, how often the server publishes notifications to the driver
     /// </summary>
-    //TODO 6.2 Update Publishing- and SamplingInterval whithout restarting the driver
     [EntrySerialize, DataMember]
     [Display(Name = nameof(Strings.OpcUaDriver_PublishingInterval), Description = nameof(Strings.OpcUaDriver_PublishingInterval_Description), ResourceType = typeof(Strings))]
     public int PublishingInterval { get; set; }
@@ -147,7 +148,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     [Display(Name = nameof(Strings.OpcUaDriver_SamplingInterval), Description = nameof(Strings.OpcUaDriver_SamplingInterval_Description), ResourceType = typeof(Strings))]
     public int SamplingInterval { get; set; }
 
-    //TODO 6.1 Use selfsigned certificates for communication
+    //TODO: Use selfsigned certificates for communication
 
     #endregion
 
@@ -156,7 +157,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// </summary>
     [EntrySerialize, ReadOnly(true)]
     [Display(Name = nameof(Strings.OpcUaDriver_Nodes), ResourceType = typeof(Strings))]
-    public List<OpcUaDisplayNode> Nodes { get; private set; } = [];
+    internal List<OpcUaDisplayNode> Nodes { get; private set; } = [];
     /// <summary>
     /// The number of nodes under the driver
     /// </summary>
@@ -172,10 +173,12 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// </summary>
     public IParallelOperations ParallelOperations { get; set; }
 
-    internal DriverOpcUaState State => (DriverOpcUaState)CurrentState;
+    private DriverOpcUaState State => (DriverOpcUaState)CurrentState;
 
+    /// <inheritdoc />
     public IInput<object> Input { get; set; }
 
+    /// <inheritdoc />
     public IOutput<object> Output { get; set; }
 
     private List<OpcUaNode> _nodes = [];
@@ -183,30 +186,32 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     private List<OpcUaNode> _nodesToBeSubscribed = [];
     private readonly HashSet<string> _savedIds = [];
 
-    internal ISession _session;
+    internal ISession _session; //TODO: Internal field just for tests
     private SessionReconnectHandler _reconnectHandler;
 
     private readonly object _lock = new();
     private readonly object _stateLock = new();
 
-    private Subscription _subscription = null;
+    private Subscription _subscription;
 
-    public ApplicationConfigurationFactory ApplicationConfigurationFactory { get; set; } = new ApplicationConfigurationFactory();
+    //TODO: Internal property just for tests, use xml also in tests
+    internal ApplicationConfigurationFactory ApplicationConfigurationFactory { get; set; } = new();
 
     /// <inheritdoc/>
     public event EventHandler<object> Received;
 
-    private event EventHandler<OpcUaMessage> _opcUaMessageReceived;
+    private event EventHandler<OpcUaMessage> OpcUaMessageReceived;
+
     event EventHandler<OpcUaMessage> IMessageChannel<OpcUaMessage, OpcUaMessage>.Received
     {
         add
         {
-            _opcUaMessageReceived += value;
+            OpcUaMessageReceived += value;
         }
 
         remove
         {
-            _opcUaMessageReceived -= value;
+            OpcUaMessageReceived -= value;
         }
     }
 
@@ -215,7 +220,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// </summary>
     /// <param name="nodes"></param>
     /// <returns></returns>
-    private List<OpcUaDisplayNode> ConvertToDisplayNodes(List<OpcUaNode> nodes)
+    private static List<OpcUaDisplayNode> ConvertToDisplayNodes(List<OpcUaNode> nodes)
     {
         var list = new List<OpcUaDisplayNode>();
         foreach (var node in nodes)
@@ -250,7 +255,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         base.OnInitialize();
         Input = new OpcUaInput(this);
         Output = new OpcUaOutput(this);
-        NodeIdAliasDictionary ??= [];
+        _nodeIdAliasDictionary ??= [];
 
         StateMachine.Initialize(this).With<DriverOpcUaState>();
 
@@ -274,7 +279,8 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     #endregion
 
     #region Connection Handling
-    internal void Connect()
+
+    private void Connect()
     {
         lock (_stateLock)
         {
@@ -337,7 +343,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         var endpoint = new ConfiguredEndpoint(null, selectedEndpoint, endpointConfiguration);
 
         var userIdentity = new UserIdentity(Username, Password);
-        if (Username == null || Username.Equals(""))
+        if (string.IsNullOrEmpty(Username))
         {
             userIdentity = null;
         }
@@ -365,13 +371,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     }
 
     private static bool IsOpcScheme(string scheme) => !string.IsNullOrEmpty(scheme) && scheme.Contains("opc");
-
-    private static int DefaultSchemePort(string scheme)
-    {
-        const int DefaultPortTcp = 62541;
-        const int DefaultPortHttps = 62540;
-        return scheme.Contains("tcp") ? DefaultPortTcp : DefaultPortHttps;
-    }
 
     private void TryToConnectAgain()
     {
@@ -450,7 +449,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// <summary>
     /// Disconnect from the OPC UA server
     /// </summary>
-    public void Disconnect()
+    internal void Disconnect()
     {
         RemoveSubscription();
         if (_session == null)
@@ -507,9 +506,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
 
     private string GetNodeIdAsString(string identifier)
     {
-        if (NodeIdAliasDictionary.ContainsKey(identifier))
+        if (_nodeIdAliasDictionary.ContainsKey(identifier))
         {
-            return NodeIdAliasDictionary[identifier];
+            return _nodeIdAliasDictionary[identifier];
         }
 
         return identifier;
@@ -616,7 +615,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
 
             if (node.NodeClass != NodeClass.Variable)
             {
-                Logger.Log(LogLevel.Warning, "It was tried to subscribe to the node {NodeId}. But that node is no variable node", node.NodeId);
+                Logger.Log(LogLevel.Warning, "It was tried to subscribe to the node {nodeId}. But that node is no variable node", node.NodeId);
                 continue;
             }
             var monitoredItem = CreateMonitoredItem(node);
@@ -635,7 +634,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
 
     internal void AddSubscriptionToSession(OpcUaNode node)
     {
-
         if (node.NodeClass != NodeClass.Variable)
         {
             Logger.Log(LogLevel.Warning, "It was tried to subscribe to the node {NodeId}. But that node is no variable node", node.NodeId);
@@ -685,10 +683,10 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         var nodeId = new ExpandedNodeId(monitoredItem.ResolvedNodeId,
             _session.NamespaceUris.GetString(monitoredItem.ResolvedNodeId.NamespaceIndex));
         var receivedObject = ((MonitoredItemNotification)e.NotificationValue).Value.Value;
-        onSubscriptionChanged(nodeId, receivedObject);
+        OnSubscriptionChanged(nodeId, receivedObject);
     }
 
-    internal void onSubscriptionChanged(ExpandedNodeId nodeId, object value)
+    internal void OnSubscriptionChanged(ExpandedNodeId nodeId, object value)
     {
         var nodeIdString = nodeId.ToString();
 
@@ -711,10 +709,11 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         }
 
         Received?.Invoke(this, msg);
-        _opcUaMessageReceived?.Invoke(this, msg);
+        OpcUaMessageReceived?.Invoke(this, msg);
     }
 
     #region Browse Nodes
+
     internal void BrowseNodes()
     {
 
@@ -808,7 +807,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
                 _nodesFlat.Add(node.Identifier, node);
             }
 
-            if (layer < NODE_LAYERS_SHOWN)
+            if (layer < NodeLayersShown)
             {
                 list.Add(node);
             }
@@ -843,8 +842,8 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     #endregion
 
     #region Read and write nodes
-    /// <inheritdoc/>
-    public void WriteNode(OpcUaNode node, object payload)
+
+    internal void WriteNode(OpcUaNode node, object payload)
     {
         State.WriteNode(node, payload);
     }
@@ -853,6 +852,12 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     {
         var node = State.GetNode(nodeId);
         WriteNode(node, payload);
+    }
+
+    /// <inheritdoc />
+    public Task WriteNodeAsync(string nodeId, object payload, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 
     internal void OnWriteNode(OpcUaNode node, object payload)
@@ -879,9 +884,15 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         }
     }
     /// <inheritdoc/>
-    public object ReadNode(string NodeId)
+    public object ReadNode(string nodeId)
     {
-        return ReadNodeDataValue(NodeId).Result.Value;
+        return ReadNodeDataValue(nodeId).Result.Value;
+    }
+
+    /// <inheritdoc />
+    public Task<object> ReadNodeAsync(string nodeId, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 
     private DataValueResult ReadNodeDataValue(string nodeId)
@@ -939,7 +950,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     }
 
     /// <inheritdoc/>
-    public Task SendAsync(object payload)
+    public Task SendAsync(object payload, CancellationToken cancellationToken = default)
     {
         if (payload is not OpcUaMessage msg)
         {
@@ -947,43 +958,47 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
                 "using the Opc Ua Driver directly");
             return Task.CompletedTask;
         }
-        return SendAsync(msg);
+        return SendAsync(msg, cancellationToken);
     }
 
+    /// <inheritdoc />
     public void Send(OpcUaMessage msg)
     {
         var node = State.GetNode(msg.Identifier);
-        var errormsg = "When trying to read the value of the node, ";
+        const string errorMsg = "When trying to read the value of the node, ";
         if (node == null)
         {
-            Logger.Log(LogLevel.Error, "{errormsg} the node with the id {Identifier} was not found", errormsg, msg.Identifier);
+            Logger.Log(LogLevel.Error, "{errorMsg} the node with the id {Identifier} was not found", errorMsg, msg.Identifier);
             return;
         }
         if (node.NodeClass != NodeClass.Variable)
         {
-            Logger.Log(LogLevel.Error, "{errormsg} the node with the id {Identifier} was no variable node", errormsg, msg.Identifier);
+            Logger.Log(LogLevel.Error, "{errorMsg} the node with the id {Identifier} was no variable node", errorMsg, msg.Identifier);
             return;
         }
 
         WriteNode(node.Identifier, msg.Payload);
     }
 
-    public Task SendAsync(OpcUaMessage payload)
+    /// <inheritdoc />
+    public Task SendAsync(OpcUaMessage payload, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
+
     #endregion
 
     #region UI Methods
+
     /// <summary>
     /// Method to read nodes from the ui for testing
     /// </summary>
-    /// <param name="NodeId"></param>
+    /// <param name="nodeId"></param>
     /// <returns></returns>
     [EntrySerialize]
-    public string ReadNodeAsString(string NodeId)
+    internal string ReadNodeAsString(string nodeId)
     {
-        var value = ReadNodeDataValue(NodeId);
+        var value = ReadNodeDataValue(nodeId);
         if (value == null)
         {
             return "There was an error, when trying to read the value of the node. Please look into the log for further information";
@@ -998,7 +1013,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// <param name="identifier"></param>
     /// <param name="valueString"></param>
     [EntrySerialize]
-    public void WriteNode(string identifier, string valueString)
+    internal void WriteNode(string identifier, string valueString)
     {
         var node = State.GetNode(identifier);
         var errormsg = "When trying to read the value of the node, ";
@@ -1027,29 +1042,34 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
         {
             switch (type)
             {
-                case BuiltInType.Boolean: return bool.Parse(stringValue);
-
-                case BuiltInType.Int16: return short.Parse(stringValue);
+                case BuiltInType.Boolean:
+                    return bool.Parse(stringValue);
+                case BuiltInType.Int16:
+                    return short.Parse(stringValue);
                 case BuiltInType.Enumeration:
                 case BuiltInType.Integer:
-                case BuiltInType.Int32: return int.Parse(stringValue);
-                case BuiltInType.Int64: return long.Parse(stringValue);
-                case BuiltInType.UInt16: return ushort.Parse(stringValue);
+                case BuiltInType.Int32:
+                    return int.Parse(stringValue);
+                case BuiltInType.Int64:
+                    return long.Parse(stringValue);
+                case BuiltInType.UInt16:
+                    return ushort.Parse(stringValue);
                 case BuiltInType.UInteger:
-                case BuiltInType.UInt32: return uint.Parse(stringValue);
-                case BuiltInType.UInt64: return ulong.Parse(stringValue);
-                case BuiltInType.DateTime: return DateTime.Parse(stringValue);
-
+                case BuiltInType.UInt32:
+                    return uint.Parse(stringValue);
+                case BuiltInType.UInt64:
+                    return ulong.Parse(stringValue);
+                case BuiltInType.DateTime:
+                    return DateTime.Parse(stringValue);
                 case BuiltInType.Guid:
-                case BuiltInType.String: return stringValue;
-
+                case BuiltInType.String:
+                    return stringValue;
                 case BuiltInType.Number:
                 case BuiltInType.Float:
                 case BuiltInType.Double:
                     return double.Parse(stringValue);
-
-                case BuiltInType.Byte: return byte.Parse(stringValue);
-
+                case BuiltInType.Byte:
+                    return byte.Parse(stringValue);
             }
         }
         catch (Exception ex)
@@ -1063,9 +1083,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     }
 
     [EntrySerialize]
-    public List<string> FindNodeId(string Displayname)
+    internal List<string> FindNodeId(string displayName)
     {
-        var result = _nodesFlat.Where(x => x.Value.DisplayName.ToLower().Contains(Displayname.ToLower()) || x.Value.DisplayName.ToLower().Equals(Displayname.ToLower()))
+        var result = _nodesFlat.Where(x => x.Value.DisplayName.ToLower().Contains(displayName.ToLower()) || x.Value.DisplayName.ToLower().Equals(displayName.ToLower()))
             .Select(x => x.Key).ToList();
 
         return result;
@@ -1086,7 +1106,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
     /// </summary>
     /// <param name="identifier"></param>
     [EntrySerialize]
-    public void SubscribeNode(string identifier)
+    internal void SubscribeNode(string identifier)
     {
         var node = State.GetNode(identifier);
         AddSubscription(node);
@@ -1145,11 +1165,5 @@ public class OpcUaDriver : Driver, IOpcUaDriver2
             DeviceSet.Add(deviceType);
 
         }
-
-    }
-
-    public List<object> InvokeMethod(string nodeId, object[] parameters)
-    {
-        throw new NotImplementedException();
     }
 }

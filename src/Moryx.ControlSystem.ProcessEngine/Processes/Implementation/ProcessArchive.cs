@@ -75,7 +75,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                     var process = (ProductionProcess)recipe.CreateProcess();
                     process.Id = match.Id;
                     process.ProductInstance = productInstance;
-                    var context = new AbstractionLayer.Processes.ProcessContext(process);
+                    var context = new ProcessWorkplanContext(process);
                     var taskMap = recipe.Workplan.Steps
                         .Select(step => step.CreateInstance(context))
                         .OfType<ITask>().ToDictionary(task => task.Id, task => task);
@@ -148,7 +148,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
 
             // Prepare fake process and task map
             var fakeProcess = recipe.CreateProcess();
-            var context = new AbstractionLayer.Processes.ProcessContext(fakeProcess);
+            var context = new AbstractionLayer.Processes.ProcessWorkplanContext(fakeProcess);
             var taskMap = recipe.Workplan.Steps
                 .Select(step => step.CreateInstance(context))
                 .OfType<ITask>().ToDictionary(task => task.Id, task => task);

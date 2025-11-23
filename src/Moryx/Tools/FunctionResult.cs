@@ -1,6 +1,8 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+#nullable enable
+
 namespace Moryx.Tools
 {
     /// <summary>
@@ -14,12 +16,12 @@ namespace Moryx.Tools
         /// <summary>
         /// Result value in case of success
         /// </summary>
-        public TResult? Result { get; } = default;
+        public TResult? Result { get; }
 
         /// <summary>
         /// Error in case of failure
         /// </summary>
-        public FunctionResultError? Error { get; } = null;
+        public FunctionResultError? Error { get; }
 
         /// <summary>
         /// Indicates if the result contains a valid value
@@ -56,8 +58,8 @@ namespace Moryx.Tools
         /// <summary>
         /// Process result value and errors in a 'pattern matching '-like way
         /// </summary>
-        /// <param name="success">Function to be excecuted in case of success</param>
-        /// <param name="error">Function to be excecuted in case of an error</param>
+        /// <param name="success">Function to be executed in case of success</param>
+        /// <param name="error">Function to be executed in case of an error</param>
         /// <returns><see cref="FunctionResult{TResult}" /> of the executed function</returns>
         public FunctionResult<TResult> Match(Func<TResult, FunctionResult<TResult>> success, Func<FunctionResultError, FunctionResult<TResult>> error)
             => Success ? success(Result!) : error(Error!);
@@ -65,8 +67,8 @@ namespace Moryx.Tools
         /// <summary>
         /// Process result value and errors in a 'pattern matching '-like way
         /// </summary>
-        /// <param name="success">Action to be excecuted in case of success</param>
-        /// <param name="error">Action to be excecuted in case of an error</param>
+        /// <param name="success">Action to be executed in case of success</param>
+        /// <param name="error">Action to be executed in case of an error</param>
         /// <returns>The current <see cref="FunctionResult{TResult}" /></returns>
         public FunctionResult<TResult> Match(Action<TResult> success, Action<FunctionResultError> error)
             => Match(
@@ -84,17 +86,16 @@ namespace Moryx.Tools
 
     /// <summary>
     /// <see cref="FunctionResult"/> of type <see cref="Nothing"/> to be used
-    /// for functions that would return <see cref="void"/>
+    /// for functions that would return void
     /// </summary>
     public class FunctionResult : FunctionResult<Nothing>
     {
         /// <summary>
         /// Creates a `successful` <see cref="FunctionResult"/> with 'no' value
-        /// <typeparam name="TResult"></typeparam>
+        /// </summary>
         public FunctionResult() : base(new Nothing())
         {
         }
-
 
         /// <summary>
         /// Creates an error result with <see cref="FunctionResultError"/>
@@ -149,8 +150,8 @@ namespace Moryx.Tools
     }
 
     /// <summary>
-    /// Holds a description of the error and optionally an
-    /// <see cref="Exception"/>
+    /// Holds a description of the error and optionally an <see cref="Exception"/>
+    /// </summary>
     public class FunctionResultError
     {
         /// <summary>
@@ -161,7 +162,7 @@ namespace Moryx.Tools
         /// <summary>
         /// Exception that might be the reason for the error
         /// </summary>
-        public Exception? Exception { get; } = null;
+        public Exception? Exception { get; }
 
 
         /// <summary>
@@ -190,16 +191,12 @@ namespace Moryx.Tools
         /// <inheritdoc/>
         public override string ToString()
         {
-            return Exception != null
-                ? Exception.Message
-                : Message;
+            return Exception?.Message ?? Message;
         }
-
     }
 
-
     /// <summary>
-    /// Placeholder type to return nothing when for example <see cref="void"/>
+    /// Placeholder type to return nothing when for example void
     /// would be returned
     /// </summary>
     public class Nothing

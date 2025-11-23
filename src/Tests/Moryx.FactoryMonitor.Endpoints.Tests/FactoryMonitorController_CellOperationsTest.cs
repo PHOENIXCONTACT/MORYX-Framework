@@ -58,7 +58,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 
             //Assert
             Assert.That(((OkResult)endPointResult).StatusCode, Is.EqualTo(200));
-            _resourceManagementMock.Verify(rm => rm.Modify(_assemblyCellLocation.Id, It.IsAny<Func<Resource, bool>>()), Times.Once, "The Location resource was not updated!");
+            _resourceManagementMock.Verify(rm => rm.ModifyUnsafe(_assemblyCellLocation.Id, It.IsAny<Func<Resource, bool>>()), Times.Once, "The Location resource was not updated!");
         }
 
         [Test]

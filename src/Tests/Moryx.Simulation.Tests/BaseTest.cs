@@ -62,7 +62,7 @@ namespace Moryx.Simulation.Tests
 
             //resource management
             _resourceManagementMock = new Mock<IResourceManagement>();
-            _resourceManagementMock.Setup(rm => rm.GetAllResources<ISimulationDriver>(It.IsAny<Func<ISimulationDriver, bool>>()))
+            _resourceManagementMock.Setup(rm => rm.GetResourcesUnsafe<ISimulationDriver>(It.IsAny<Func<ISimulationDriver, bool>>()))
                 .Returns([_assemblyCellDriver, _anotherAssemblyCellDriver]);
 
             //logger mock

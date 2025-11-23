@@ -61,7 +61,7 @@ namespace Moryx.Simulation.Tests
             _assemblyCell.Driver = _simulationDriverTestMock.Object;
 
             //resource management
-            _resourceManagementMock.Setup(rm => rm.GetAllResources<ISimulationDriver>(It.IsAny<Func<ISimulationDriver, bool>>()))
+            _resourceManagementMock.Setup(rm => rm.GetResourcesUnsafe<ISimulationDriver>(It.IsAny<Func<ISimulationDriver, bool>>()))
                 .Returns([_simulationDriverTestMock.Object]);
 
             //start the simulator

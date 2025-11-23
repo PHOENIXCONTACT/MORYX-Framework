@@ -55,7 +55,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
             Converter converter,
             Func<IMachineLocation, bool> filter)
         {
-            VisualizableItemModel result = resourceManager.Read(Id, e =>
+            VisualizableItemModel result = resourceManager.ReadUnsafe(Id, e =>
             {
                 if (e.GetDisplayableResourceLocation(logger) is not MachineLocation displayableItemLocation) return null;
 

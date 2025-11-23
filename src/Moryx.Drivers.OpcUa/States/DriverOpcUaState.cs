@@ -5,7 +5,7 @@ using Moryx.AbstractionLayer.Drivers;
 using Moryx.StateMachines;
 using Opc.Ua.Client;
 
-namespace Moryx.Drivers.OpcUa.DriverStates;
+namespace Moryx.Drivers.OpcUa.States;
 
 internal abstract class DriverOpcUaState(OpcUaDriver context, StateBase.StateMap stateMap, StateClassification classification) : DriverState<OpcUaDriver>(context, stateMap, classification)
 {

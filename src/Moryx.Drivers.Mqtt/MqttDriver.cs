@@ -9,7 +9,6 @@ using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Drivers.Mqtt.DriverStates;
 using Moryx.Serialization;
 using Moryx.StateMachines;
 using Moryx.Threading;
@@ -20,6 +19,7 @@ using Moryx.Configuration;
 using System.Security.Claims;
 using Moryx.Drivers.Mqtt.Properties;
 using System.ComponentModel.DataAnnotations;
+using Moryx.Drivers.Mqtt.States;
 
 namespace Moryx.Drivers.Mqtt;
 
@@ -311,7 +311,7 @@ public class MqttDriver : Driver, IMessageDriver<object>
     }
 
     /// <inheritdoc />
-    public async Task SendAsync(object message)
+    public async Task SendAsync(object message, CancellationToken cancellationToken = default)
     {
         IReadOnlyList<MqttTopic> topics;
         // Search by identifier if set

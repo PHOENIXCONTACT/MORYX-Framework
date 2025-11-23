@@ -310,7 +310,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
 
         private ProcessData GetProcessByEngine(IWorkplanEngine engine)
         {
-            var processContext = (AbstractionLayer.Processes.ProcessContext)engine.Context;
+            var processContext = (ProcessWorkplanContext)engine.Context;
             return ActivityPool.GetProcess(processContext.Process);
         }
 
@@ -322,7 +322,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         private void PrepareEngine(ProcessData processData)
         {
             var workplan = ((IWorkplanRecipe)processData.Recipe).Workplan;
-            processData.Engine = WorkplanInstance.CreateEngine(workplan, new AbstractionLayer.Processes.ProcessContext(processData.Process));
+            processData.Engine = WorkplanInstance.CreateEngine(workplan, new ProcessWorkplanContext(processData.Process));
 
             processData.Engine.TransitionTriggered += OnTransitionTriggered;
             processData.Engine.Completed += OnWorkflowCompleted;

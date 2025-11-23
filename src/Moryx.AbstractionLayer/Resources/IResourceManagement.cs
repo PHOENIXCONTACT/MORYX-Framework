@@ -63,25 +63,69 @@ namespace Moryx.AbstractionLayer.Resources
         /// <summary>
         /// Get all resources including the private ones of this type that match the predicate
         /// </summary>
-        IEnumerable<TResource> GetAllResources<TResource>(Func<TResource, bool> predicate)
+        /// <remarks>
+        /// This method returns the actual resource instances, not wrapped by proxy.
+        /// As a result, all internal members, including properties and
+        /// methods not exposed through interfaces, are accessible.
+        ///
+        /// This API is intended primarily for endpoint controllers that must export or
+        /// inspect the full internal state of a resource.
+        ///
+        /// Because the returned objects are the originals, the API consumer is responsible for keeping and watching the life-cycle.
+        /// Use with extreme caution. Do not keep the instances in memory for later usage.
+        /// </remarks>
+        IEnumerable<TResource> GetResourcesUnsafe<TResource>(Func<TResource, bool> predicate)
             where TResource : class, IResource;
 
         /// <summary>
         /// Create and initialize a resource
         /// </summary>
-        long Create(Type resourceType, Action<Resource> initializer);
+        /// <remarks>
+        /// The <param name="initializer"></param> action uses the actual resource instance, not wrapped by proxy.
+        /// As a result, all internal members, including properties and
+        /// methods not exposed through interfaces, are accessible.
+        ///
+        /// This API is intended primarily for endpoint controllers that must export or
+        /// inspect the full internal state of a resource.
+        ///
+        /// Because the returned objects are the originals, the API consumer is responsible for keeping and watching the life-cycle.
+        /// Use with extreme caution. Do not keep the instance in memory for later usage.
+        /// </remarks>
+        long CreateUnsafe(Type resourceType, Action<Resource> initializer);
 
         /// <summary>
         /// Read data from a resource
         /// </summary>
-        TResult Read<TResult>(long id, Func<Resource, TResult> accessor);
+        /// <remarks>
+        /// The <param name="accessor"></param> action uses the actual resource instance, not wrapped by proxy.
+        /// As a result, all internal members, including properties and
+        /// methods not exposed through interfaces, are accessible.
+        ///
+        /// This API is intended primarily for endpoint controllers that must export or
+        /// inspect the full internal state of a resource.
+        ///
+        /// Because the returned objects are the originals, the API consumer is responsible for keeping and watching the life-cycle.
+        /// Use with extreme caution. Do not keep the instance in memory for later usage.
+        /// </remarks>
+        TResult ReadUnsafe<TResult>(long id, Func<Resource, TResult> accessor);
 
         /// <summary>
-        /// Modify the resource. 
+        /// Modify the resource.
         /// </summary>
         /// <param name="id">Id of the resource</param>
         /// <param name="modifier">Modifier delegate, must return <value>true</value> in order to save changes</param>
-        void Modify(long id, Func<Resource, bool> modifier);
+        /// <remarks>
+        /// The <param name="modifier"></param> action uses the actual resource instance, not wrapped by proxy.
+        /// As a result, all internal members, including properties and
+        /// methods not exposed through interfaces, are accessible.
+        ///
+        /// This API is intended primarily for endpoint controllers that must export or
+        /// inspect the full internal state of a resource.
+        ///
+        /// Because the returned objects are the originals, the API consumer is responsible for keeping and watching the life-cycle.
+        /// Use with extreme caution. Do not keep the instance in memory for later usage.
+        /// </remarks>
+        void ModifyUnsafe(long id, Func<Resource, bool> modifier);
 
         /// <summary>
         /// Create and initialize a resource

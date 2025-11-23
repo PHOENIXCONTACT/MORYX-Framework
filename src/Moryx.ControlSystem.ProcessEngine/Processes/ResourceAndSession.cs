@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Cells;
 
 namespace Moryx.ControlSystem.ProcessEngine.Processes
@@ -57,8 +58,9 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             if (Session.Reference.IsEmpty && activity.ProcessRequirement == ProcessRequirement.Required)
                 return false;
 
-            // Validate the constrains on the rtw with the process.
-            if (ReadyToWork?.Constraints.Any(c => !c.Check(activity.Process)) == true)
+            // Validate the constraints on the rtw with the activity.
+            var constraintContext = new ActivityConstraintContext(activity);
+            if (ReadyToWork?.Constraints.Any(c => !c.Check(constraintContext)) == true)
                 return false;
 
             // If we made it here, all conditions are met

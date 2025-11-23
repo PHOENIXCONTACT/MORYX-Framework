@@ -17,18 +17,21 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
         /// Single value output
         /// Only available for <see cref="SupportedAccess.Single"/>
         /// </summary>
+        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
         TOut Value { get; set; }
 
         /// <summary>
         /// Index based output
         /// Only available for <see cref="SupportedAccess.Index"/>
         /// </summary>
+        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
         TOut this[int index] { get; set; }
 
         /// <summary>
         /// Key based output
         /// Only available for <see cref="SupportedAccess.Key"/>
         /// </summary>
+        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
         TOut this[string key] { get; set; }
     }
 }

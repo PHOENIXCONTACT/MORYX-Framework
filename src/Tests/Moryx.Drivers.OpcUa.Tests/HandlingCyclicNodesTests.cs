@@ -3,7 +3,7 @@
 
 using System.Text.Json;
 using Moq;
-using Moryx.Drivers.OpcUa.DriverStates;
+using Moryx.Drivers.OpcUa.States;
 using Moryx.Modules;
 using Moryx.Tools;
 using NUnit.Framework;

@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
+using Moryx.Drivers.OpcUa.States;
 using Moryx.Tools;
 using NUnit.Framework;
 using Opc.Ua.Client;
 using Opc.Ua;
 using Moryx.Modules;
-using Moryx.Drivers.OpcUa.DriverStates;
 
 namespace Moryx.Drivers.OpcUa.Tests;
 

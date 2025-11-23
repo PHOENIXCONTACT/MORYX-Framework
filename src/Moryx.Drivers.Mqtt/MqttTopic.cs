@@ -176,7 +176,7 @@ namespace Moryx.Drivers.Mqtt
         public abstract void Send(object payload);
 
         /// <inheritdoc />
-        public abstract Task SendAsync(object payload);
+        public abstract Task SendAsync(object payload, CancellationToken cancellationToken = default);
 
         //This method has to call MqttDriver.OnSend
         internal abstract Task OnSend(object payload);
@@ -289,7 +289,7 @@ namespace Moryx.Drivers.Mqtt
         }
 
         /// <inheritdoc />
-        public override Task SendAsync(object payload)
+        public override Task SendAsync(object payload, CancellationToken cancellationToken = default)
         {
             if (payload is TMessage send)
             {
@@ -308,7 +308,7 @@ namespace Moryx.Drivers.Mqtt
         }
 
         /// <inheritdoc />
-        public Task SendAsync(TMessage payload)
+        public Task SendAsync(TMessage payload, CancellationToken cancellationToken = default)
         {
             return MqttDriver.Send(this, payload);
         }

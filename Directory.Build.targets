@@ -3,7 +3,7 @@
 
 	<ItemGroup>
 		<!-- Asp.Net Core Framework dependency -->
-		<FrameworkReference Update="Microsoft.AspNetCore.App" Version="$(AspNetCoreVersion)" />
+		<FrameworkReference Update="Microsoft.AspNetCore.App" Version="$(dotnetVersion)" />
 	</ItemGroup>
 
 </Project>

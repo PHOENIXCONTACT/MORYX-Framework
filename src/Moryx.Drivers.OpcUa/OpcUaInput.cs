@@ -9,7 +9,7 @@ namespace Moryx.Drivers.OpcUa;
 /// <summary>
 /// Class to read OpcUaNodes as Inputs
 /// </summary>
-public class OpcUaInput : IInput<object>
+internal class OpcUaInput : IInput<object>
 {
     public OpcUaInput(OpcUaDriver driver)
     {

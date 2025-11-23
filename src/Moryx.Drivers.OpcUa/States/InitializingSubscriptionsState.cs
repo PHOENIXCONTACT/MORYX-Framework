@@ -3,7 +3,7 @@
 
 using Moryx.AbstractionLayer.Drivers;
 
-namespace Moryx.Drivers.OpcUa.DriverStates;
+namespace Moryx.Drivers.OpcUa.States;
 
 internal class InitializingSubscriptionsState(OpcUaDriver context, StateMachines.StateBase.StateMap stateMap)
       : DriverOpcUaState(context, stateMap, StateClassification.Initializing)
