@@ -65,7 +65,7 @@ namespace Moryx.Tools
                 {
                     // Since loading assemblies and building the app is usually done before the ServiceCollection
                     // is fully setup, we cannot guarantee to have a Logger here.
-                    Debug.WriteLine($"Failed to load public classes for assembly {assembly.FullName}. Exception: {ex.Message}");
+                    Debug.WriteLine("Failed to load public classes for assembly {0}. Exception: {1}", assembly.FullName, ex);
                 }
             }
 
