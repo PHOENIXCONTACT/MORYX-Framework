@@ -4,11 +4,6 @@
 
 export { AssignableOperator } from './models/assignable-operator';
 export { AttendableResourceModel } from './models/attendable-resource-model';
-export { Entry } from './models/entry';
-export { EntryUnitType } from './models/entry-unit-type';
-export { EntryValidation } from './models/entry-validation';
-export { EntryValue } from './models/entry-value';
-export { EntryValueType } from './models/entry-value-type';
 export { ExtendedOperatorModel } from './models/extended-operator-model';
 export { ICapabilities } from './models/i-capabilities';
 export { IOperatorAssignable } from './models/i-operator-assignable';
