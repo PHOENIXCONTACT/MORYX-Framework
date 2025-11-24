@@ -1,9 +1,11 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.DependencyInjection;
 using Moryx.Configuration;
 using Moryx.Container;
+using Moryx.FileSystem;
+using Moryx.Runtime.Kernel.FileSystem;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
 
@@ -26,6 +28,10 @@ namespace Moryx.Runtime.Kernel
             // Register module manager
             serviceCollection.AddSingleton<ModuleManager>();
             serviceCollection.AddSingleton<IModuleManager>(x => x.GetRequiredService<ModuleManager>());
+
+            // Register local file system
+            serviceCollection.AddSingleton<LocalFileSystem>();
+            serviceCollection.AddSingleton<IMoryxFileSystem>(x => x.GetRequiredService<LocalFileSystem>());
 
             // Register parallel operations
             serviceCollection.AddTransient<IParallelOperations, ParallelOperations>();
@@ -92,6 +98,19 @@ namespace Moryx.Runtime.Kernel
                 Directory.CreateDirectory(configDirectory);
             configManager.ConfigDirectory = configDirectory;
             return configManager;
+        }
+
+        /// <summary>
+        /// Use moryx file system and configure base directory
+        /// </summary>
+        /// <returns></returns>
+        public static IMoryxFileSystem UseLocalFileSystem(this IServiceProvider serviceProvider, string path)
+        {
+            var fileSystem = serviceProvider.GetRequiredService<LocalFileSystem>();
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            fileSystem.SetBasePath(path);
+            return fileSystem;
         }
     }
 }

@@ -26,6 +26,7 @@ namespace StartProject.Asp
                     webBuilder.UseStartup<Startup>();
                 }).Build();
 
+            host.Services.UseLocalFileSystem("fs");
             host.Services.UseMoryxConfigurations("Config");
 
             var moduleManager = host.Services.GetRequiredService<IModuleManager>();
