@@ -9,12 +9,12 @@ namespace Moryx.AbstractionLayer.Resources;
 public class ResourceInitializerResult
 {
     /// <summary>
-    /// Flag if all roots were saved already within the initializer
+    /// If true, the resources will not be saved, but are assumed to already have been saved within the initializer
     /// </summary>
     public bool Saved { get; set; }
 
     /// <summary>
-    /// Initialized resources, only roots should be returned
+    /// Initialized resources, only roots should be returned as resources are saved recursively
     /// </summary>
     public IReadOnlyList<Resource> InitializedResources { get; set; }
 }
