@@ -53,16 +53,5 @@ namespace Moryx.Tools
         {
             return source.Where(entry => compare.Any(item => filter(entry, item)));
         }
-
-        /// <summary>
-        /// Converts an <see cref="IEnumerable{String}"/> of possible values to an <see cref="EntryPossible"/> array.
-        /// Key and DisplayName are set to the string value.
-        /// </summary>
-        public static EntryPossible[] ToEntryPossibleArray(this IEnumerable<string> possible)
-        {
-            return possible?
-                .Select(p => p != null ? new EntryPossible { Key = p, DisplayName = p, Description = null } : null)
-                .ToArray();
-        }
     }
 }

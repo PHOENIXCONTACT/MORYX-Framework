@@ -67,7 +67,7 @@ namespace Moryx.Configuration
 
             // Use attribute
             var values = valuesAttribute.GetValues(Container, ServiceProvider);
-            return values?.Distinct().ToEntryPossibleArray();
+            return EntryPossible.FromStrings(values?.Distinct());
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Moryx.Configuration
 
             // Use attribute
             var values = valuesAttribute.GetValues(Container, ServiceProvider);
-            return values?.Distinct().ToEntryPossibleArray();
+            return EntryPossible.FromStrings(values?.Distinct());
         }
 
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>

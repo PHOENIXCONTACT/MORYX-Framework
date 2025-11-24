@@ -74,9 +74,9 @@ namespace Moryx.Serialization
                 memberType = EntryConvert.ElementType(memberType);
 
             // Enum names, member name or null
-            return (memberType.IsEnum
+            return EntryPossible.FromStrings(memberType.IsEnum
                 ? Enum.GetNames(memberType)
-                : isCollection ? [memberType.Name] : null).ToEntryPossibleArray();
+                : isCollection ? [memberType.Name] : null);
         }
 
         /// <see cref="ICustomSerialization"/>
