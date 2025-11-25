@@ -6,10 +6,10 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ShiftAssignementModel as MoryxShiftsEndpointsShiftAssignementModel } from '../../models/Moryx/Shifts/Endpoints/shift-assignement-model';
+import { ShiftAssignementModel } from '../../models/shift-assignement-model';
 
 export interface UpdateShiftAssignement$Params {
-      body?: MoryxShiftsEndpointsShiftAssignementModel
+      body?: ShiftAssignementModel
 }
 
 export function updateShiftAssignement(http: HttpClient, rootUrl: string, params?: UpdateShiftAssignement$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {

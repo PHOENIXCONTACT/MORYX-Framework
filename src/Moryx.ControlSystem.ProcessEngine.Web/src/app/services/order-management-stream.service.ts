@@ -1,13 +1,13 @@
 import { Injectable, NgZone } from '@angular/core';
 import { ApiConfiguration } from 'src/app/api/api-configuration';
 import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, OperationType } from 'src/app/models/operation-models';
-import { OperationModel } from '../api/models/Moryx/Orders/Endpoints/operation-model';
+import { OperationModel } from '../api/models/operation-model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrderManagementStreamService {
-  constructor(private config: ApiConfiguration, private zone: NgZone) {}
+  constructor(private config: ApiConfiguration, private zone: NgZone) { }
 
   public stream(operationType: OperationType, callbackFunction: Function) {
     const eventSource = new EventSource(this.config.rootUrl + '/api/moryx/orders/stream');
@@ -91,7 +91,7 @@ export class OrderManagementStreamService {
       if (!operationModel || operationType !== OperationType.Update) {
         return;
       }
-      
+
       this.zone.run(() => callbackFunction(operationModel!));
     });
   }

@@ -2,11 +2,7 @@ import { Component, inject, model, OnInit, signal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import {
-  MoryxSerializationMethodEntry as MethodEntry,
-  MoryxAbstractionLayerResourcesEndpointsResourceModel as ResourceModel,
-  MoryxAbstractionLayerResourcesEndpointsResourceTypeModel as ResourceTypeModel,
-} from '../../api/models';
+import { MethodEntry, ResourceModel, ResourceTypeModel } from '../../api/models';
 import { Permissions } from './../../extensions/permissions.extensions';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { CacheResourceService } from 'src/app/services/cache-resource.service';
@@ -51,7 +47,7 @@ export class DialogAddResourceComponent implements OnInit {
     public dialogRef: MatDialogRef<DialogAddResourceComponent>,
     private cache: CacheResourceService,
     public translate: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.types.update(() => this.cache.flatTypes?.filter(t => t.creatable).sort((a, b) => this.byName(a, b)));

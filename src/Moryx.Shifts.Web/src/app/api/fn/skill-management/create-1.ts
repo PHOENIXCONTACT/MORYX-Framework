@@ -6,14 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { SkillCreationContextModel as MoryxOperatorsEndpointsSkillCreationContextModel } from '../../models/Moryx/Operators/Endpoints/skill-creation-context-model';
-import { SkillModel as MoryxOperatorsEndpointsSkillModel } from '../../models/Moryx/Operators/Endpoints/skill-model';
+import { SkillCreationContextModel } from '../../models/skill-creation-context-model';
+import { SkillModel } from '../../models/skill-model';
 
 export interface Create_1$Params {
-      body?: MoryxOperatorsEndpointsSkillCreationContextModel
+      body?: SkillCreationContextModel
 }
 
-export function create_1(http: HttpClient, rootUrl: string, params?: Create_1$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOperatorsEndpointsSkillModel>> {
+export function create_1(http: HttpClient, rootUrl: string, params?: Create_1$Params, context?: HttpContext): Observable<StrictHttpResponse<SkillModel>> {
   const rb = new RequestBuilder(rootUrl, create_1.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/*+json');
@@ -24,7 +24,7 @@ export function create_1(http: HttpClient, rootUrl: string, params?: Create_1$Pa
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<MoryxOperatorsEndpointsSkillModel>;
+      return r as StrictHttpResponse<SkillModel>;
     })
   );
 }

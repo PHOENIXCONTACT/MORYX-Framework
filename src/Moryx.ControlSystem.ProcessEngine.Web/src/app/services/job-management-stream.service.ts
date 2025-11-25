@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { JobManagementService } from '../api/services';
-import { JobModel } from '../api/models/Moryx/ControlSystem/Jobs/Endpoints/job-model';
+import { JobModel } from '../api/models/job-model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,21 +12,21 @@ export class JobManagementStreamService {
   constructor(
     private jobManagementService: JobManagementService,
     private ngZone: NgZone) {
-    
-      const eventSource = new EventSource(this.jobManagementService.rootUrl + JobManagementService.ProgressStreamPath);
+
+    const eventSource = new EventSource(this.jobManagementService.rootUrl + JobManagementService.ProgressStreamPath);
     eventSource.onmessage = event => {
-      const job =<JobModel> JSON.parse(event.data);
+      const job = <JobModel>JSON.parse(event.data);
       this.ngZone.run(() => this.publishUpdate(job));
     };
   }
 
   private publishUpdate(job: JobModel): void {
-    if(Object.keys(job).length > 0) {
+    if (Object.keys(job).length > 0) {
       this.updatedJob.next(job);
     }
     else {
       this.updatedJob.next(undefined);
     }
   }
-  
+
 }

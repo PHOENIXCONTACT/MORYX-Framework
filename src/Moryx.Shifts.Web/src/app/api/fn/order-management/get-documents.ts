@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { OperationModel as MoryxOrdersEndpointsOperationModel } from '../../models/Moryx/Orders/Endpoints/operation-model';
+import { DocumentModel } from '../../models/document-model';
 
 export interface GetDocuments$Params {
   guid: string;
 }
 
-export function getDocuments(http: HttpClient, rootUrl: string, params: GetDocuments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOrdersEndpointsOperationModel>>> {
+export function getDocuments(http: HttpClient, rootUrl: string, params: GetDocuments$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<DocumentModel>>> {
   const rb = new RequestBuilder(rootUrl, getDocuments.PATH, 'get');
   if (params) {
     rb.path('guid', params.guid, {});
@@ -23,7 +23,7 @@ export function getDocuments(http: HttpClient, rootUrl: string, params: GetDocum
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<MoryxOrdersEndpointsOperationModel>>;
+      return r as StrictHttpResponse<Array<DocumentModel>>;
     })
   );
 }

@@ -1,8 +1,8 @@
-import { OrderModel } from '../api/models/Moryx/FactoryMonitor/Endpoints/Model/order-model';
-import { ActivityChangedModel } from '../api/models/Moryx/FactoryMonitor/Endpoints/Models/activity-changed-model';
-import { CellStateChangedModel } from '../api/models/Moryx/FactoryMonitor/Endpoints/Models/cell-state-changed-model';
-import { OrderChangedModel } from '../api/models/Moryx/FactoryMonitor/Endpoints/Models/order-changed-model';
-import { ResourceChangedModel } from '../api/models/Moryx/FactoryMonitor/Endpoints/Models/resource-changed-model';
+import { OrderModel } from '../api/models/order-model';
+import { ActivityChangedModel } from '../api/models/activity-changed-model';
+import { CellStateChangedModel } from '../api/models/cell-state-changed-model';
+import { OrderChangedModel } from '../api/models/order-changed-model';
+import { ResourceChangedModel } from '../api/models/resource-changed-model';
 import Cell from '../models/cell';
 import Order from '../models/order';
 

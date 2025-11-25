@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { AdviceContext as MoryxOrdersAdviceContext } from '../../models/Moryx/Orders/advice-context';
+import { AdviceContext } from '../../models/advice-context';
 
 export interface GetAdviceContext$Params {
   guid: string;
 }
 
-export function getAdviceContext(http: HttpClient, rootUrl: string, params: GetAdviceContext$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersAdviceContext>> {
+export function getAdviceContext(http: HttpClient, rootUrl: string, params: GetAdviceContext$Params, context?: HttpContext): Observable<StrictHttpResponse<AdviceContext>> {
   const rb = new RequestBuilder(rootUrl, getAdviceContext.PATH, 'get');
   if (params) {
     rb.path('guid', params.guid, {});
@@ -23,7 +23,7 @@ export function getAdviceContext(http: HttpClient, rootUrl: string, params: GetA
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<MoryxOrdersAdviceContext>;
+      return r as StrictHttpResponse<AdviceContext>;
     })
   );
 }

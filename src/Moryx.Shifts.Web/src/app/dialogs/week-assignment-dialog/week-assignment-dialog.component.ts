@@ -25,7 +25,7 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { CalendarDate } from 'src/app/models/calendar-state';
 import  moment from 'moment';
 import { AppStoreService } from 'src/app/services/app-store.service';
-import { ResourceModel } from 'src/app/api/models/Moryx/Operators/Endpoints/resource-model';
+import { AttendableResourceModel } from 'src/app/api/models/attendable-resource-model';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { firstValueFrom } from 'rxjs';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -61,7 +61,7 @@ import { WeekDayToggleButtonComponent } from 'src/app/week-day-toggle-button/wee
 })
 export class WeekAssignmentDialogComponent implements OnInit {
   operators = signal<OperatorModel[]>([]);
-  resources = signal<ResourceModel[]>([]);
+  resources = signal<AttendableResourceModel[]>([]);
   shiftInstances = signal<ShiftInstanceModel[]>([]);
   shiftNumberOfdays = signal(0);
 

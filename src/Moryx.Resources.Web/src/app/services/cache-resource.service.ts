@@ -2,11 +2,7 @@ import { Injectable } from '@angular/core';
 import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
-import {
-  MoryxAbstractionLayerResourcesEndpointsReferenceValue as ReferenceValue,
-  MoryxAbstractionLayerResourcesEndpointsResourceModel as ResourceModel,
-  MoryxAbstractionLayerResourcesEndpointsResourceTypeModel as ResourceTypeModel,
-} from '../api/models';
+import { ReferenceValue, ResourceModel, ResourceTypeModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 

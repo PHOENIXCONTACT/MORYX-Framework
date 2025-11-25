@@ -10,7 +10,7 @@ import { TranslateService, TranslatePipe, TranslateModule } from '@ngx-translate
 import { FactorySelectionService } from 'src/app/services/factory-selection.service';
 import { FactoryMonitorService } from 'src/app/api/services';
 import { ChangeBackgroundService } from 'src/app/services/change-background.service';
-import { FactoryModel } from 'src/app/api/models/Moryx/FactoryMonitor/Endpoints/Models/factory-model';
+import { FactoryModel } from 'src/app/api/models/factory-model';
 import { MatButtonModule, MatFabButton, MatMiniFabButton } from '@angular/material/button';
 import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 import { MatIcon, MatIconModule } from '@angular/material/icon';

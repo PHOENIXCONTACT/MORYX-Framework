@@ -1,6 +1,6 @@
 import { Component, computed, input, Input } from "@angular/core";
 import { OperatorSkill } from "../models/operator-skill-model";
-import { SkillTypeModel } from "../api/models/Moryx/Operators/Endpoints/skill-type-model";
+import { SkillTypeModel } from "../api/models/skill-type-model";
 import { CommonModule } from "@angular/common";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import {MatChipsModule} from '@angular/material/chips';

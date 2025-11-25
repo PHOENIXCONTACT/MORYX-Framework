@@ -1,20 +1,20 @@
 import { Time } from '@angular/common';
-import { MoryxShiftsEndpointsShiftTypeModel } from '../api/models';
-import { AssignableOperator } from '../api/models/Moryx/Operators/assignable-operator';
-import { ShiftAssignementModel } from '../api/models/Moryx/Shifts/Endpoints/shift-assignement-model';
+import { ShiftTypeModel as MoryxShiftsEndpointsShiftTypeModel } from '../api/models';
+import { AssignableOperator } from '../api/models/assignable-operator';
+import { ShiftAssignementModel } from '../api/models/shift-assignement-model';
 import { AssignmentCardModel } from './assignment-card-model';
 import { OperatorModel, OperatorStatus } from './operator-model';
 import { ShiftTypeModel } from './shift-type-model';
 import { ShiftInstanceModel } from './shift-instance-model';
-import { ShiftModel } from '../api/models/Moryx/Shifts/Endpoints/shift-model';
+import { ShiftModel } from '../api/models/shift-model';
 import { stringToDate } from '../utils';
-import  moment from 'moment';
-import { AssignedDays } from '../api/models/Moryx/Shifts/assigned-days';
+import moment from 'moment';
+import { AssignedDays } from '../api/models/assigned-days';
 import { CalendarDate } from './calendar-state';
 import { PossibleAssignedDays } from './types';
 import { ShiftCardModel } from './shift-card-model';
-import { ResourceModel } from '../api/models/Moryx/Operators/Endpoints/resource-model';
-import { ExtendedOperatorModel } from '../api/models/Moryx/Operators/Endpoints/extended-operator-model';
+import { AttendableResourceModel } from '../api/models/attendable-resource-model';
+import { ExtendedOperatorModel } from '../api/models/extended-operator-model';
 
 
 
@@ -39,7 +39,7 @@ export function extendedAssignableOPeratorToOperatorModel(
 
 
 export function assignmentToAssignmentCardModel(
-  resources: ResourceModel[],
+  resources: AttendableResourceModel[],
   operators: OperatorModel[],
   assignment: ShiftAssignementModel,
 ): AssignmentCardModel {
@@ -66,10 +66,10 @@ export function addCalendarDaysToAssignment(
   shiftInstance: ShiftInstanceModel | undefined,
 ): AssignmentCardModel {
 
-if(!shiftInstance) return model;
+  if (!shiftInstance) return model;
 
- model.days = assignedDaysToCalendarDates(shiftInstance.startDate,shiftInstance.endDate,model.assignedDays);
- return model;
+  model.days = assignedDaysToCalendarDates(shiftInstance.startDate, shiftInstance.endDate, model.assignedDays);
+  return model;
 }
 
 export function assignedDaysToCalendarDates(
@@ -78,8 +78,8 @@ export function assignedDaysToCalendarDates(
   assignedDays: string
 ): CalendarDate[] {
   let calendarDates: CalendarDate[] = [];
-  
-  if(!assignedDays) return calendarDates;
+
+  if (!assignedDays) return calendarDates;
 
   const dayStringArray = assignedDays.split(',');
   const start = moment(startDate);
@@ -100,12 +100,12 @@ export function assignedDaysToCalendarDates(
 
     for (let dayString of dayStringArray) {
       const dayEnum = PossibleAssignedDays[day];
-      const dayValue = dayString.replace(' ','');
-      if(dayEnum === dayValue){
-          calendarDates.push(<CalendarDate>{
-            date: currentDate.toDate(),
-            day: currentDate.date(),
-          });
+      const dayValue = dayString.replace(' ', '');
+      if (dayEnum === dayValue) {
+        calendarDates.push(<CalendarDate>{
+          date: currentDate.toDate(),
+          day: currentDate.date(),
+        });
       }
     }
   }
@@ -118,20 +118,20 @@ export function shiftTypeToShiftTypeModel(
 ): ShiftTypeModel {
 
 
-      const data = <ShiftTypeModel>{
-        id: shiftType.id,
-        name: shiftType.name,
-        duration: shiftType.periode,
-        startTime: <Time>{
-          hours: Number((<string>shiftType.startTime).split(':')[0]),
-          minutes: Number((<string>shiftType.startTime).split(':')[1]),
-        },
-        endTime: <Time>{
-          hours: Number((<string>shiftType.endtime).split(':')[0]),
-          minutes: Number((<string>shiftType.endtime).split(':')[1]),
-        },
-      };
-      return data;
+  const data = <ShiftTypeModel>{
+    id: shiftType.id,
+    name: shiftType.name,
+    duration: shiftType.periode,
+    startTime: <Time>{
+      hours: Number((<string>shiftType.startTime).split(':')[0]),
+      minutes: Number((<string>shiftType.startTime).split(':')[1]),
+    },
+    endTime: <Time>{
+      hours: Number((<string>shiftType.endtime).split(':')[0]),
+      minutes: Number((<string>shiftType.endtime).split(':')[1]),
+    },
+  };
+  return data;
 }
 
 export function shiftToShitInstanceModel(
@@ -150,7 +150,7 @@ export function shiftToShitInstanceModel(
 }
 
 
-export function shiftInstanceToShiftCardModel(instance : ShiftInstanceModel): ShiftCardModel{
+export function shiftInstanceToShiftCardModel(instance: ShiftInstanceModel): ShiftCardModel {
   const shiftCard = <ShiftCardModel>{
     id: instance.id,
     shiftName: instance.shiftType.name,
@@ -162,21 +162,21 @@ export function shiftInstanceToShiftCardModel(instance : ShiftInstanceModel): Sh
   return shiftCard;
 }
 
-export function calendarDatesToFlagEnumString(calendarDates: CalendarDate[],shiftStartDate: Date,shiftEndDate: Date): string{
+export function calendarDatesToFlagEnumString(calendarDates: CalendarDate[], shiftStartDate: Date, shiftEndDate: Date): string {
 
   let stringResult = '';
-const endDate = moment(shiftEndDate);
-  for (let currentDate = moment(shiftStartDate),index = 1; currentDate.diff(endDate,'days') <= 0; currentDate = currentDate.add(1,'days'),index++) {
-    
+  const endDate = moment(shiftEndDate);
+  for (let currentDate = moment(shiftStartDate), index = 1; currentDate.diff(endDate, 'days') <= 0; currentDate = currentDate.add(1, 'days'), index++) {
+
     const day = PossibleAssignedDays[index];
     const correspondingCalendarDate = calendarDates.find(x => moment(x.date).diff(currentDate) === 0);
     //the current date is not in the calendar for the shift
-    if(!correspondingCalendarDate) continue;
+    if (!correspondingCalendarDate) continue;
 
-    if(stringResult === '')
-      stringResult+= `${day}`;
+    if (stringResult === '')
+      stringResult += `${day}`;
     else
-      stringResult+= `,${day}`
+      stringResult += `,${day}`
   }
   return stringResult;
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FactoryMonitorService } from '../api/services';
 import { Subject } from 'rxjs';
-import { CellSettingsModel } from '../api/models/Moryx/FactoryMonitor/Endpoints/Model/cell-settings-model';
+import { CellSettingsModel } from '../api/models/cell-settings-model';
 import { TranslateService } from '@ngx-translate/core';
 import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
 import { CellStoreService } from './cell-store.service';

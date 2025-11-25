@@ -1,11 +1,11 @@
-import { ResourceModel } from "../api/models/Moryx/Operators/Endpoints/resource-model";
+import { AttendableResourceModel } from "../api/models/attendable-resource-model";
 import { CalendarDate } from "./calendar-state";
 import { OperatorModel, OperatorStatus } from "./operator-model";
 
 export interface AssignmentCardModel{
     operator: OperatorModel ;
     notes: string | undefined;
-    resource: ResourceModel ;
+    resource: AttendableResourceModel ;
     priority: number ;
     status: OperatorStatus;
     id: number;

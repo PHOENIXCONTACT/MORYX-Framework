@@ -1,49 +1,49 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, viewChild, input, computed, signal, effect, untracked } from '@angular/core';
 import { EditMenuState } from 'src/app/services/EditMenutState';
 import { CellStoreService } from 'src/app/services/cell-store.service';
-import { CellState } from '../../api/models/Moryx/FactoryMonitor/Endpoints/Model/cell-state';
+import { CellState } from '../../api/models/cell-state';
 import { EditMenuService } from 'src/app/services/edit-menu.service';
 import { OrderStoreService } from 'src/app/services/order-store.service';
 import { CdkDragEnd, CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
 import { CellSettingsService } from 'src/app/services/cell-settings.service';
 import Cell from 'src/app/models/cell';
 import { FactorySelectionService } from 'src/app/services/factory-selection.service';
-import { ActivityClassification } from 'src/app/api/models/Moryx/ControlSystem/Activities/activity-classification';
+import { ActivityClassification } from 'src/app/api/models/activity-classification';
 import { CommonModule, NgStyle } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-cell',
-    templateUrl: './cell.component.html',
-    styleUrls: ['./cell.component.scss'],
-    imports: [ 
-      CommonModule,
-      MatIcon,
-      DragDropModule
-    ],
-    standalone: true
+  selector: 'app-cell',
+  templateUrl: './cell.component.html',
+  styleUrls: ['./cell.component.scss'],
+  imports: [
+    CommonModule,
+    MatIcon,
+    DragDropModule
+  ],
+  standalone: true
 })
 export class CellComponent implements OnInit {
   cellElement = viewChild<ElementRef<HTMLElement>>('cell');
   container = input<ElementRef<HTMLElement>>();
   parameters = input.required<Cell>();
-  isEditMode =  computed(() => this.editMenuState() === EditMenuState.EditingCells);
+  isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
   private editMenuState = signal<EditMenuState | undefined>(undefined);
-  currentCell = signal< Cell | undefined>(undefined);
+  currentCell = signal<Cell | undefined>(undefined);
   isHighlighted = signal<boolean>(true);
   factoryId!: number;
   backgroundColor = computed(() =>
     this.currentCell()?.state === CellState.NotReadyToWork ? '#e46d6d' : 'white'
   )
   borderColor = computed(() => {
-    if (this.isHighlighted() && this.currentCell()!.orderColor) 
+    if (this.isHighlighted() && this.currentCell()!.orderColor)
       return this.currentCell()?.orderColor!;
     if (this.currentCell()?.state === CellState.NotReadyToWork)
       return '#e46d6d';
     return 'white'
   })
   iconColor = computed(() => {
-    if (this.isHighlighted() && this.currentCell()?.orderColor) 
+    if (this.isHighlighted() && this.currentCell()?.orderColor)
       return this.currentCell()?.orderColor!;
     if (this.currentCell()?.state === CellState.NotReadyToWork)
       return 'white';
@@ -66,10 +66,10 @@ export class CellComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
     //react to the selection of a factory
     this.factorySelectionService.factorySelected$.subscribe({
-      next: factory=>{
+      next: factory => {
         this.factoryId = factory?.id ?? 0;
       }
     })
@@ -98,8 +98,10 @@ export class CellComponent implements OnInit {
         if (!newSettings || newSettings?.cellId != this.currentCell()?.id) return;
 
         //set the new settings
-        this.currentCell.set(<Cell>{ iconName: newSettings.cellSettings.icon ?? this.currentCell()?.iconName!,
-          image: newSettings.cellSettings.image ?? ''});
+        this.currentCell.set(<Cell>{
+          iconName: newSettings.cellSettings.icon ?? this.currentCell()?.iconName!,
+          image: newSettings.cellSettings.image ?? ''
+        });
       },
     });
   }
@@ -107,10 +109,10 @@ export class CellComponent implements OnInit {
   private updateCell(newParams: Cell) {
     this.currentCell.set(newParams);
     if (this.currentCell()?.orderNumber && this.currentCell()?.operationNumber)
-      if(newParams.state == CellState.Running && 
-        this.orderStoreService.getOrder(this.currentCell()?.orderNumber!,this.currentCell()?.operationNumber!)?.isToggled){
+      if (newParams.state == CellState.Running &&
+        this.orderStoreService.getOrder(this.currentCell()?.orderNumber!, this.currentCell()?.operationNumber!)?.isToggled) {
         this.isHighlighted.set(true)
-      }else{
+      } else {
         this.isHighlighted.set(false)
       }
   }

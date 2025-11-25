@@ -7,6 +7,11 @@
         "OrderManagement",
         "ProcessEngine",
         "JobManagement"
-    ]
-  }
-
+    ],
+    "module": true,
+    "services": true,
+    "apiService": "",
+    "enumStyle": "pascal",
+    "enumArray": false,
+    "promises": false
+}

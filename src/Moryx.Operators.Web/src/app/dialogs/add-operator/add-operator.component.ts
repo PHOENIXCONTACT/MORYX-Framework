@@ -3,7 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { OperatorViewModel } from 'src/app/models/operator-view-model';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { AssignableOperator } from 'src/app/api/models/Moryx/Operators/assignable-operator';
+import { AssignableOperator } from 'src/app/api/models/assignable-operator';
 import { AppStoreService } from 'src/app/services/app-store.service';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';

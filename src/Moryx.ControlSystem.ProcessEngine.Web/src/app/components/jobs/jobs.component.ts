@@ -25,8 +25,8 @@ import { ProcessesComponent } from "../processes/processes.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatButtonModule } from "@angular/material/button";
-import { JobModel } from "src/app/api/models/Moryx/ControlSystem/Jobs/Endpoints/job-model";
-import { OperationModel } from "src/app/api/models/Moryx/Orders/Endpoints/operation-model";
+import { JobModel } from "src/app/api/models/job-model";
+import { OperationModel } from "src/app/api/models/operation-model";
 
 @Component({
   selector: "app-jobs",
@@ -48,7 +48,7 @@ import { OperationModel } from "src/app/api/models/Moryx/Orders/Endpoints/operat
 })
 export class JobsComponent implements OnInit {
   jobCollection = signal<JobViewModel[]>([]);
-  operations =signal<OperationModel[]>([]);
+  operations = signal<OperationModel[]>([]);
   isLoading = signal<boolean>(true);
 
   environment = environment;
@@ -61,7 +61,7 @@ export class JobsComponent implements OnInit {
     public translate: TranslateService,
     private orderManagementEvents: OrderManagementStreamService,
     private moryxSnackbar: MoryxSnackbarService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.fetchJobs();
@@ -71,7 +71,7 @@ export class JobsComponent implements OnInit {
     );
 
     this.orderManagementService.getOperations().subscribe({
-      next: (value) => this.operations.update(_=> value),
+      next: (value) => this.operations.update(_ => value),
       error: async (e: HttpErrorResponse) =>
         await this.moryxSnackbar.handleError(e),
     });
@@ -89,7 +89,7 @@ export class JobsComponent implements OnInit {
     const jobVM = this.jobCollection().find((j) => j.model.id === updatedJob.id);
     if (!jobVM) this.jobCollection().push(new JobViewModel(updatedJob));
     else if (updatedJob.state === "Completed")
-      this.jobCollection.update(_=> this.jobCollection().filter((jVm) => jVm !== jobVM));
+      this.jobCollection.update(_ => this.jobCollection().filter((jVm) => jVm !== jobVM));
     else jobVM.updateModel(updatedJob);
   }
 
@@ -111,14 +111,14 @@ export class JobsComponent implements OnInit {
   }
 
   private fetchJobs() {
-    this.jobManagementService.getAll_1().subscribe({
+    this.jobManagementService.getAll().subscribe({
       next: (data) => {
-        this.jobCollection.update(_=> data.map((model) => new JobViewModel(model)));
-        this.isLoading.update(_=> false);
+        this.jobCollection.update(_ => data.map((model) => new JobViewModel(model)));
+        this.isLoading.update(_ => false);
       },
       error: async (err: HttpErrorResponse) => {
         await this.moryxSnackbar.handleError(err);
-        this.isLoading.update(_=> false);
+        this.isLoading.update(_ => false);
       },
     });
   }
@@ -138,7 +138,7 @@ export class JobsComponent implements OnInit {
   }
 
   getOrderNumber(job: JobModel): string {
-    if (job.productionJob) 
+    if (job.productionJob)
       return this.operations().find(operation => operation.jobIds?.find(j => j === job.id))?.order!;
     return "";
   }

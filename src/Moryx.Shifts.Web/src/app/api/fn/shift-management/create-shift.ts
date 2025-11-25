@@ -6,14 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ShiftModel as MoryxShiftsEndpointsShiftModel } from '../../models/Moryx/Shifts/Endpoints/shift-model';
-import { ShiftCreationContextModel as MoryxShiftsShiftCreationContextModel } from '../../models/Moryx/Shifts/shift-creation-context-model';
+import { ShiftCreationContextModel } from '../../models/shift-creation-context-model';
+import { ShiftModel } from '../../models/shift-model';
 
 export interface CreateShift$Params {
-      body?: MoryxShiftsShiftCreationContextModel
+      body?: ShiftCreationContextModel
 }
 
-export function createShift(http: HttpClient, rootUrl: string, params?: CreateShift$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxShiftsEndpointsShiftModel>> {
+export function createShift(http: HttpClient, rootUrl: string, params?: CreateShift$Params, context?: HttpContext): Observable<StrictHttpResponse<ShiftModel>> {
   const rb = new RequestBuilder(rootUrl, createShift.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/*+json');
@@ -24,7 +24,7 @@ export function createShift(http: HttpClient, rootUrl: string, params?: CreateSh
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<MoryxShiftsEndpointsShiftModel>;
+      return r as StrictHttpResponse<ShiftModel>;
     })
   );
 }

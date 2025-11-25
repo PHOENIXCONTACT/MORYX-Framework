@@ -6,13 +6,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { BeginContext as MoryxOrdersBeginContext } from '../../models/Moryx/Orders/begin-context';
+import { BeginContext } from '../../models/begin-context';
 
 export interface GetBeginContext$Params {
   guid: string;
 }
 
-export function getBeginContext(http: HttpClient, rootUrl: string, params: GetBeginContext$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersBeginContext>> {
+export function getBeginContext(http: HttpClient, rootUrl: string, params: GetBeginContext$Params, context?: HttpContext): Observable<StrictHttpResponse<BeginContext>> {
   const rb = new RequestBuilder(rootUrl, getBeginContext.PATH, 'get');
   if (params) {
     rb.path('guid', params.guid, {});
@@ -23,7 +23,7 @@ export function getBeginContext(http: HttpClient, rootUrl: string, params: GetBe
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<MoryxOrdersBeginContext>;
+      return r as StrictHttpResponse<BeginContext>;
     })
   );
 }

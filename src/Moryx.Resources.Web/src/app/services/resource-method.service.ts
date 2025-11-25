@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { MoryxSerializationMethodEntry as MethodEntry } from '../api/models';
+import { MethodEntry } from '../api/models';
 import {
   Entry,
   EntryValue,
@@ -32,7 +32,7 @@ export class ResourceMethodService {
     private moryxSnackbar: MoryxSnackbarService,
   ) {
     this.editService.activeResource$.subscribe((resource) => {
-      if (!resource) 
+      if (!resource)
         return;
 
       this.selectedMethod = undefined;
@@ -67,7 +67,7 @@ export class ResourceMethodService {
       method.parameters.subEntries.length > 0
     ) {
       for (var p of method.parameters.subEntries) {
-        if(!p.value) return;
+        if (!p.value) return;
         if (!p.value.current) {
           if (p.value.default) p.value.current = p.value.default;
           else if (p.value.type === EntryValueType.Boolean)
@@ -102,10 +102,10 @@ export class ResourceMethodService {
         next: (result) => {
           this.methodResult = result
             ? ({
-                subEntries: [result] as Entry[],
-                identifier: 'root',
-                value: { type: EntryValueType.Class } as EntryValue,
-              } as Entry)
+              subEntries: [result] as Entry[],
+              identifier: 'root',
+              value: { type: EntryValueType.Class } as EntryValue,
+            } as Entry)
             : undefined;
           this.resultView = true;
         },
@@ -120,9 +120,9 @@ export class ResourceMethodService {
     //clear the entry parameter values for boolean types
     if (method.parameters?.subEntries?.length) {
       for (var p of method.parameters.subEntries) {
-          if (p.value?.type === EntryValueType.Boolean)
-            p.value.current = 'false';
-        }
+        if (p.value?.type === EntryValueType.Boolean)
+          p.value.current = 'false';
       }
+    }
   }
 }

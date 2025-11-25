@@ -6,11 +6,11 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { OperatorModel as MoryxOperatorsEndpointsOperatorModel } from '../../models/Moryx/Operators/Endpoints/operator-model';
+import { OperatorModel } from '../../models/operator-model';
 
 export interface Update_1$Params {
   identifier: string;
-      body?: MoryxOperatorsEndpointsOperatorModel
+      body?: OperatorModel
 }
 
 export function update_1(http: HttpClient, rootUrl: string, params: Update_1$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {

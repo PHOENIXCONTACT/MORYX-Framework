@@ -6,12 +6,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { AssignableOperator as MoryxOperatorsAssignableOperator } from '../../models/Moryx/Operators/assignable-operator';
+import { AssignableOperator } from '../../models/assignable-operator';
 
 export interface GetAll_5$Params {
 }
 
-export function getAll_5(http: HttpClient, rootUrl: string, params?: GetAll_5$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOperatorsAssignableOperator>>> {
+export function getAll_5(http: HttpClient, rootUrl: string, params?: GetAll_5$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AssignableOperator>>> {
   const rb = new RequestBuilder(rootUrl, getAll_5.PATH, 'get');
   if (params) {
   }
@@ -21,7 +21,7 @@ export function getAll_5(http: HttpClient, rootUrl: string, params?: GetAll_5$Pa
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<MoryxOperatorsAssignableOperator>>;
+      return r as StrictHttpResponse<Array<AssignableOperator>>;
     })
   );
 }

@@ -2,11 +2,7 @@ import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import {
-  MoryxAbstractionLayerResourcesEndpointsReferenceTypeModel as ReferenceTypeModel,
-  MoryxAbstractionLayerResourcesEndpointsResourceModel as ResourceModel,
-  MoryxAbstractionLayerResourcesEndpointsResourceReferenceModel as ResourceReferenceModel,
-} from '../../../api/models';
+import { ReferenceTypeModel, ResourceModel, ResourceReferenceModel } from '../../../api/models';
 import { CacheResourceService } from '../../../services/cache-resource.service';
 import { EditResourceService } from '../../../services/edit-resource.service';
 import { Subscription } from 'rxjs';
@@ -59,7 +55,7 @@ export class ResourceReferencesComponent implements OnInit, OnDestroy {
     public editService: EditResourceService,
     public translate: TranslateService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.serviceSubscription = this.editService.activeResource$.subscribe(resource => {
@@ -80,7 +76,7 @@ export class ResourceReferencesComponent implements OnInit, OnDestroy {
 
     this.resource = resource;
     this.references = resource.references;
-      this.referenceTypes.update(() => resourceType?.references);
+    this.referenceTypes.update(() => resourceType?.references);
     if (this.selectedReferenceType()) {
       this.onReferenceChanged(undefined);
     }

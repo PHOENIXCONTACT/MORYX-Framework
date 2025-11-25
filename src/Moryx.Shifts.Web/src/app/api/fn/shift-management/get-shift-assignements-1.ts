@@ -6,14 +6,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ShiftAssignementModel as MoryxShiftsEndpointsShiftAssignementModel } from '../../models/Moryx/Shifts/Endpoints/shift-assignement-model';
+import { ShiftAssignementModel } from '../../models/shift-assignement-model';
 
 export interface GetShiftAssignements_1$Params {
   earliestDate?: string;
   latestDate?: string;
 }
 
-export function getShiftAssignements_1(http: HttpClient, rootUrl: string, params?: GetShiftAssignements_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxShiftsEndpointsShiftAssignementModel>>> {
+export function getShiftAssignements_1(http: HttpClient, rootUrl: string, params?: GetShiftAssignements_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ShiftAssignementModel>>> {
   const rb = new RequestBuilder(rootUrl, getShiftAssignements_1.PATH, 'get');
   if (params) {
     rb.query('earliestDate', params.earliestDate, {});
@@ -25,7 +25,7 @@ export function getShiftAssignements_1(http: HttpClient, rootUrl: string, params
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<MoryxShiftsEndpointsShiftAssignementModel>>;
+      return r as StrictHttpResponse<Array<ShiftAssignementModel>>;
     })
   );
 }

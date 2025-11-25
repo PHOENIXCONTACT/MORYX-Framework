@@ -7,7 +7,7 @@ import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { AddOperatorComponentDialog } from '../dialogs/add-operator/add-operator.component';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { OperatorSkill } from '../models/operator-skill-model';
-import { SkillTypeModel } from '../api/models/Moryx/Operators/Endpoints/skill-type-model';
+import { SkillTypeModel } from '../api/models/skill-type-model';
 import { skillTypeToModel } from '../models/model-converter';
 import { OperatorViewModel } from '../models/operator-view-model';
 import { AppStoreService } from '../services/app-store.service';

@@ -5,5 +5,11 @@
     "includeTags": [
         "ProductManagement",
         "Workplan"
-    ]
-  }
+    ],
+    "module": true,
+    "services": true,
+    "apiService": "",
+    "enumStyle": "pascal",
+    "enumArray": false,
+    "promises": false
+}

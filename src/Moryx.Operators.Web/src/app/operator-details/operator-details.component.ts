@@ -1,5 +1,5 @@
 import { Component, effect, input, OnInit, signal, untracked } from "@angular/core";
-import { OperatorModel } from "../api/models/Moryx/Operators/Endpoints/operator-model";
+import { OperatorModel } from "../api/models/operator-model";
 import { OperatorManagementService } from "../api/services";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
@@ -13,12 +13,12 @@ import { SkillNewDialogComponent } from "../dialogs/skill-new-dialog/skill-new-d
 import { SkillEditDialogComponent } from "../dialogs/skill-edit-dialog/skill-edit-dialog.component";
 import { ConfirmationDialogComponent } from "../dialogs/confirmation-dialog/confirmation-dialog.component";
 import { OperatorViewModel } from "../models/operator-view-model";
-import { AssignableOperator } from "../api/models/Moryx/Operators/assignable-operator";
+import { AssignableOperator } from "../api/models/assignable-operator";
 import { skillToOperatorSkill, skillTypeToModel } from "../models/model-converter";
-import { SkillTypeModel } from "../api/models/Moryx/Operators/Endpoints/skill-type-model";
+import { SkillTypeModel } from "../api/models/skill-type-model";
 import { timeInterval } from "rxjs";
 import { AppStoreService } from "../services/app-store.service";
-import { IOperatorAssignable } from "../api/models/Moryx/Operators/i-operator-assignable";
+import { IOperatorAssignable } from "../api/models/i-operator-assignable";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";

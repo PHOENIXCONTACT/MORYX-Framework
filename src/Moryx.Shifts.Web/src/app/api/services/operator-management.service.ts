@@ -11,8 +11,11 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { add } from '../fn/operator-management/add';
 import { Add$Params } from '../fn/operator-management/add';
+import { AssignableOperator } from '../models/assignable-operator';
+import { AttendableResourceModel } from '../models/attendable-resource-model';
 import { deleteOperator } from '../fn/operator-management/delete-operator';
 import { DeleteOperator$Params } from '../fn/operator-management/delete-operator';
+import { ExtendedOperatorModel } from '../models/extended-operator-model';
 import { get_2 } from '../fn/operator-management/get-2';
 import { Get_2$Params } from '../fn/operator-management/get-2';
 import { getAll_5 } from '../fn/operator-management/get-all-5';
@@ -22,12 +25,9 @@ import { GetDefaultOperator$Params } from '../fn/operator-management/get-default
 import { getOperatorsByResource } from '../fn/operator-management/get-operators-by-resource';
 import { GetOperatorsByResource$Params } from '../fn/operator-management/get-operators-by-resource';
 import { getResources } from '../fn/operator-management/get-resources';
+import { getResources_1 } from '../fn/operator-management/get-resources-1';
+import { GetResources_1$Params } from '../fn/operator-management/get-resources-1';
 import { GetResources$Params } from '../fn/operator-management/get-resources';
-import { getResourcesByOperator } from '../fn/operator-management/get-resources-by-operator';
-import { GetResourcesByOperator$Params } from '../fn/operator-management/get-resources-by-operator';
-import { AssignableOperator as MoryxOperatorsAssignableOperator } from '../models/Moryx/Operators/assignable-operator';
-import { ExtendedOperatorModel as MoryxOperatorsEndpointsExtendedOperatorModel } from '../models/Moryx/Operators/Endpoints/extended-operator-model';
-import { ResourceModel as MoryxOperatorsEndpointsResourceModel } from '../models/Moryx/Operators/Endpoints/resource-model';
 import { signIn } from '../fn/operator-management/sign-in';
 import { SignIn$Params } from '../fn/operator-management/sign-in';
 import { signOut } from '../fn/operator-management/sign-out';
@@ -50,7 +50,7 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAll_5$Response(params?: GetAll_5$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOperatorsAssignableOperator>>> {
+  getAll_5$Response(params?: GetAll_5$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AssignableOperator>>> {
     return getAll_5(this.http, this.rootUrl, params, context);
   }
 
@@ -60,9 +60,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAll_5(params?: GetAll_5$Params, context?: HttpContext): Observable<Array<MoryxOperatorsAssignableOperator>> {
+  getAll_5(params?: GetAll_5$Params, context?: HttpContext): Observable<Array<AssignableOperator>> {
     return this.getAll_5$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxOperatorsAssignableOperator>>): Array<MoryxOperatorsAssignableOperator> => r.body)
+      map((r: StrictHttpResponse<Array<AssignableOperator>>): Array<AssignableOperator> => r.body)
     );
   }
 
@@ -125,7 +125,7 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  get_2$Response(params: Get_2$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOperatorsEndpointsExtendedOperatorModel>> {
+  get_2$Response(params: Get_2$Params, context?: HttpContext): Observable<StrictHttpResponse<ExtendedOperatorModel>> {
     return get_2(this.http, this.rootUrl, params, context);
   }
 
@@ -135,9 +135,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  get_2(params: Get_2$Params, context?: HttpContext): Observable<MoryxOperatorsEndpointsExtendedOperatorModel> {
+  get_2(params: Get_2$Params, context?: HttpContext): Observable<ExtendedOperatorModel> {
     return this.get_2$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOperatorsEndpointsExtendedOperatorModel>): MoryxOperatorsEndpointsExtendedOperatorModel => r.body)
+      map((r: StrictHttpResponse<ExtendedOperatorModel>): ExtendedOperatorModel => r.body)
     );
   }
 
@@ -175,7 +175,7 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getOperatorsByResource$Response(params: GetOperatorsByResource$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOperatorsEndpointsExtendedOperatorModel>>> {
+  getOperatorsByResource$Response(params: GetOperatorsByResource$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<ExtendedOperatorModel>>> {
     return getOperatorsByResource(this.http, this.rootUrl, params, context);
   }
 
@@ -185,34 +185,59 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getOperatorsByResource(params: GetOperatorsByResource$Params, context?: HttpContext): Observable<Array<MoryxOperatorsEndpointsExtendedOperatorModel>> {
+  getOperatorsByResource(params: GetOperatorsByResource$Params, context?: HttpContext): Observable<Array<ExtendedOperatorModel>> {
     return this.getOperatorsByResource$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxOperatorsEndpointsExtendedOperatorModel>>): Array<MoryxOperatorsEndpointsExtendedOperatorModel> => r.body)
+      map((r: StrictHttpResponse<Array<ExtendedOperatorModel>>): Array<ExtendedOperatorModel> => r.body)
     );
   }
 
-  /** Path part for operation `getResourcesByOperator()` */
-  static readonly GetResourcesByOperatorPath = '/api/moryx/operators/{identifier}/resources';
+  /** Path part for operation `getResources()` */
+  static readonly GetResourcesPath = '/api/moryx/operators/resources/{operatorIdentifier}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getResourcesByOperator()` instead.
+   * To access only the response body, use `getResources()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getResourcesByOperator$Response(params: GetResourcesByOperator$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOperatorsEndpointsResourceModel>>> {
-    return getResourcesByOperator(this.http, this.rootUrl, params, context);
+  getResources$Response(params: GetResources$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AttendableResourceModel>>> {
+    return getResources(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getResourcesByOperator$Response()` instead.
+   * To access the full response (for headers, for example), `getResources$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getResourcesByOperator(params: GetResourcesByOperator$Params, context?: HttpContext): Observable<Array<MoryxOperatorsEndpointsResourceModel>> {
-    return this.getResourcesByOperator$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxOperatorsEndpointsResourceModel>>): Array<MoryxOperatorsEndpointsResourceModel> => r.body)
+  getResources(params: GetResources$Params, context?: HttpContext): Observable<Array<AttendableResourceModel>> {
+    return this.getResources$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<AttendableResourceModel>>): Array<AttendableResourceModel> => r.body)
+    );
+  }
+
+  /** Path part for operation `getResources_1()` */
+  static readonly GetResources_1Path = '/api/moryx/operators/resources';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getResources_1()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getResources_1$Response(params?: GetResources_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AttendableResourceModel>>> {
+    return getResources_1(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getResources_1$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getResources_1(params?: GetResources_1$Params, context?: HttpContext): Observable<Array<AttendableResourceModel>> {
+    return this.getResources_1$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<AttendableResourceModel>>): Array<AttendableResourceModel> => r.body)
     );
   }
 
@@ -225,7 +250,7 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDefaultOperator$Response(params?: GetDefaultOperator$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOperatorsEndpointsExtendedOperatorModel>> {
+  getDefaultOperator$Response(params?: GetDefaultOperator$Params, context?: HttpContext): Observable<StrictHttpResponse<ExtendedOperatorModel>> {
     return getDefaultOperator(this.http, this.rootUrl, params, context);
   }
 
@@ -235,9 +260,9 @@ export class OperatorManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getDefaultOperator(params?: GetDefaultOperator$Params, context?: HttpContext): Observable<MoryxOperatorsEndpointsExtendedOperatorModel> {
+  getDefaultOperator(params?: GetDefaultOperator$Params, context?: HttpContext): Observable<ExtendedOperatorModel> {
     return this.getDefaultOperator$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOperatorsEndpointsExtendedOperatorModel>): MoryxOperatorsEndpointsExtendedOperatorModel => r.body)
+      map((r: StrictHttpResponse<ExtendedOperatorModel>): ExtendedOperatorModel => r.body)
     );
   }
 
@@ -288,31 +313,6 @@ export class OperatorManagementService extends BaseService {
   signOut(params?: SignOut$Params, context?: HttpContext): Observable<void> {
     return this.signOut$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
-    );
-  }
-
-  /** Path part for operation `getResources()` */
-  static readonly GetResourcesPath = '/api/moryx/operators/resources';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getResources()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getResources$Response(params?: GetResources$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOperatorsEndpointsResourceModel>>> {
-    return getResources(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getResources$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getResources(params?: GetResources$Params, context?: HttpContext): Observable<Array<MoryxOperatorsEndpointsResourceModel>> {
-    return this.getResources$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxOperatorsEndpointsResourceModel>>): Array<MoryxOperatorsEndpointsResourceModel> => r.body)
     );
   }
 

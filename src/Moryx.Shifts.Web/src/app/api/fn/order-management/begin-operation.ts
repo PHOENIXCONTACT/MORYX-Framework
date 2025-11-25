@@ -6,11 +6,11 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { BeginModel as MoryxOrdersEndpointsBeginModel } from '../../models/Moryx/Orders/Endpoints/begin-model';
+import { BeginModel } from '../../models/begin-model';
 
 export interface BeginOperation$Params {
   guid: string;
-      body?: MoryxOrdersEndpointsBeginModel
+      body?: BeginModel
 }
 
 export function beginOperation(http: HttpClient, rootUrl: string, params: BeginOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {

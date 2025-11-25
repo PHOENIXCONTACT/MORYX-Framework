@@ -6,12 +6,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { SkillTypeModel as MoryxOperatorsEndpointsSkillTypeModel } from '../../models/Moryx/Operators/Endpoints/skill-type-model';
+import { SkillTypeModel } from '../../models/skill-type-model';
 
 export interface GetTypes_1$Params {
 }
 
-export function getTypes_1(http: HttpClient, rootUrl: string, params?: GetTypes_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOperatorsEndpointsSkillTypeModel>>> {
+export function getTypes_1(http: HttpClient, rootUrl: string, params?: GetTypes_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<SkillTypeModel>>> {
   const rb = new RequestBuilder(rootUrl, getTypes_1.PATH, 'get');
   if (params) {
   }
@@ -21,7 +21,7 @@ export function getTypes_1(http: HttpClient, rootUrl: string, params?: GetTypes_
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<MoryxOperatorsEndpointsSkillTypeModel>>;
+      return r as StrictHttpResponse<Array<SkillTypeModel>>;
     })
   );
 }

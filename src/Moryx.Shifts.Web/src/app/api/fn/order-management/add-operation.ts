@@ -6,15 +6,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { OperationCreationContextModel as MoryxOrdersEndpointsModelsOperationCreationContextModel } from '../../models/Moryx/Orders/Endpoints/Models/operation-creation-context-model';
-import { OperationModel as MoryxOrdersEndpointsOperationModel } from '../../models/Moryx/Orders/Endpoints/operation-model';
+import { OperationCreationContextModel } from '../../models/operation-creation-context-model';
+import { OperationModel } from '../../models/operation-model';
 
 export interface AddOperation$Params {
   sourceId?: string;
-      body?: MoryxOrdersEndpointsModelsOperationCreationContextModel
+      body?: OperationCreationContextModel
 }
 
-export function addOperation(http: HttpClient, rootUrl: string, params?: AddOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOrdersEndpointsOperationModel>> {
+export function addOperation(http: HttpClient, rootUrl: string, params?: AddOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<OperationModel>> {
   const rb = new RequestBuilder(rootUrl, addOperation.PATH, 'post');
   if (params) {
     rb.query('sourceId', params.sourceId, {});
@@ -26,7 +26,7 @@ export function addOperation(http: HttpClient, rootUrl: string, params?: AddOper
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<MoryxOrdersEndpointsOperationModel>;
+      return r as StrictHttpResponse<OperationModel>;
     })
   );
 }

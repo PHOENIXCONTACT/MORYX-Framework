@@ -1,4 +1,4 @@
-import { ResourceModel } from '../api/models/Moryx/Operators/Endpoints/Models/resource-model';
+import { AttendableResourceModel } from '../api/models/attendable-resource-model';
 import { AssignmentCardModel, DayOfTheWeek } from './assignment-card-model';
 import { OperatorModel, OperatorStatus } from './operator-model';
 import { OrderModel } from './order-model';
@@ -89,7 +89,7 @@ export const OPERATORS: OperatorModel[] = [
   { id: "8", name: 'Operator 7', status: OperatorStatus.Available },
 ];
 
-export const RESOURCES: ResourceModel[] = [
+export const RESOURCES: AttendableResourceModel[] = [
   { id: 1, name: 'Building 1' },
   { id: 2, name: 'Komax' },
   { id: 3, name: 'HM' },

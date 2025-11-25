@@ -6,14 +6,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ResourceModel as MoryxOperatorsEndpointsResourceModel } from '../../models/Moryx/Operators/Endpoints/resource-model';
+import { AttendableResourceModel } from '../../models/attendable-resource-model';
 
 export interface GetResources$Params {
+  operatorIdentifier: string;
 }
 
-export function getResources(http: HttpClient, rootUrl: string, params?: GetResources$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOperatorsEndpointsResourceModel>>> {
+export function getResources(http: HttpClient, rootUrl: string, params: GetResources$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<AttendableResourceModel>>> {
   const rb = new RequestBuilder(rootUrl, getResources.PATH, 'get');
   if (params) {
+    rb.path('operatorIdentifier', params.operatorIdentifier, {});
   }
 
   return http.request(
@@ -21,9 +23,9 @@ export function getResources(http: HttpClient, rootUrl: string, params?: GetReso
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<Array<MoryxOperatorsEndpointsResourceModel>>;
+      return r as StrictHttpResponse<Array<AttendableResourceModel>>;
     })
   );
 }
 
-getResources.PATH = '/api/moryx/operators/resources';
+getResources.PATH = '/api/moryx/operators/resources/{operatorIdentifier}';

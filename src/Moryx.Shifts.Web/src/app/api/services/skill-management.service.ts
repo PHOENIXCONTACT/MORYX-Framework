@@ -27,8 +27,8 @@ import { getTypePrototype } from '../fn/skill-management/get-type-prototype';
 import { GetTypePrototype$Params } from '../fn/skill-management/get-type-prototype';
 import { getTypes_1 } from '../fn/skill-management/get-types-1';
 import { GetTypes_1$Params } from '../fn/skill-management/get-types-1';
-import { SkillModel as MoryxOperatorsEndpointsSkillModel } from '../models/Moryx/Operators/Endpoints/skill-model';
-import { SkillTypeModel as MoryxOperatorsEndpointsSkillTypeModel } from '../models/Moryx/Operators/Endpoints/skill-type-model';
+import { SkillModel } from '../models/skill-model';
+import { SkillTypeModel } from '../models/skill-type-model';
 import { update_3 } from '../fn/skill-management/update-3';
 import { Update_3$Params } from '../fn/skill-management/update-3';
 
@@ -47,7 +47,7 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypes_1$Response(params?: GetTypes_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOperatorsEndpointsSkillTypeModel>>> {
+  getTypes_1$Response(params?: GetTypes_1$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<SkillTypeModel>>> {
     return getTypes_1(this.http, this.rootUrl, params, context);
   }
 
@@ -57,9 +57,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypes_1(params?: GetTypes_1$Params, context?: HttpContext): Observable<Array<MoryxOperatorsEndpointsSkillTypeModel>> {
+  getTypes_1(params?: GetTypes_1$Params, context?: HttpContext): Observable<Array<SkillTypeModel>> {
     return this.getTypes_1$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxOperatorsEndpointsSkillTypeModel>>): Array<MoryxOperatorsEndpointsSkillTypeModel> => r.body)
+      map((r: StrictHttpResponse<Array<SkillTypeModel>>): Array<SkillTypeModel> => r.body)
     );
   }
 
@@ -97,7 +97,7 @@ export class SkillManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  create$Response(params?: Create$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOperatorsEndpointsSkillTypeModel>> {
+  create$Response(params?: Create$Params, context?: HttpContext): Observable<StrictHttpResponse<SkillTypeModel>> {
     return create(this.http, this.rootUrl, params, context);
   }
 
@@ -107,9 +107,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  create(params?: Create$Params, context?: HttpContext): Observable<MoryxOperatorsEndpointsSkillTypeModel> {
+  create(params?: Create$Params, context?: HttpContext): Observable<SkillTypeModel> {
     return this.create$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOperatorsEndpointsSkillTypeModel>): MoryxOperatorsEndpointsSkillTypeModel => r.body)
+      map((r: StrictHttpResponse<SkillTypeModel>): SkillTypeModel => r.body)
     );
   }
 
@@ -122,7 +122,7 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getType$Response(params: GetType$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOperatorsEndpointsSkillTypeModel>> {
+  getType$Response(params: GetType$Params, context?: HttpContext): Observable<StrictHttpResponse<SkillTypeModel>> {
     return getType(this.http, this.rootUrl, params, context);
   }
 
@@ -132,9 +132,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getType(params: GetType$Params, context?: HttpContext): Observable<MoryxOperatorsEndpointsSkillTypeModel> {
+  getType(params: GetType$Params, context?: HttpContext): Observable<SkillTypeModel> {
     return this.getType$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOperatorsEndpointsSkillTypeModel>): MoryxOperatorsEndpointsSkillTypeModel => r.body)
+      map((r: StrictHttpResponse<SkillTypeModel>): SkillTypeModel => r.body)
     );
   }
 
@@ -164,7 +164,7 @@ export class SkillManagementService extends BaseService {
   }
 
   /** Path part for operation `getTypePrototype()` */
-  static readonly GetTypePrototypePath = '/api/moryx/skills/type-prototype';
+  static readonly GetTypePrototypePath = '/api/moryx/skills/types/prototype';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -172,7 +172,7 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypePrototype$Response(params?: GetTypePrototype$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOperatorsEndpointsSkillTypeModel>> {
+  getTypePrototype$Response(params?: GetTypePrototype$Params, context?: HttpContext): Observable<StrictHttpResponse<SkillTypeModel>> {
     return getTypePrototype(this.http, this.rootUrl, params, context);
   }
 
@@ -182,9 +182,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getTypePrototype(params?: GetTypePrototype$Params, context?: HttpContext): Observable<MoryxOperatorsEndpointsSkillTypeModel> {
+  getTypePrototype(params?: GetTypePrototype$Params, context?: HttpContext): Observable<SkillTypeModel> {
     return this.getTypePrototype$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOperatorsEndpointsSkillTypeModel>): MoryxOperatorsEndpointsSkillTypeModel => r.body)
+      map((r: StrictHttpResponse<SkillTypeModel>): SkillTypeModel => r.body)
     );
   }
 
@@ -197,7 +197,7 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getSkills$Response(params?: GetSkills$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<MoryxOperatorsEndpointsSkillModel>>> {
+  getSkills$Response(params?: GetSkills$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<SkillModel>>> {
     return getSkills(this.http, this.rootUrl, params, context);
   }
 
@@ -207,9 +207,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getSkills(params?: GetSkills$Params, context?: HttpContext): Observable<Array<MoryxOperatorsEndpointsSkillModel>> {
+  getSkills(params?: GetSkills$Params, context?: HttpContext): Observable<Array<SkillModel>> {
     return this.getSkills$Response(params, context).pipe(
-      map((r: StrictHttpResponse<Array<MoryxOperatorsEndpointsSkillModel>>): Array<MoryxOperatorsEndpointsSkillModel> => r.body)
+      map((r: StrictHttpResponse<Array<SkillModel>>): Array<SkillModel> => r.body)
     );
   }
 
@@ -222,7 +222,7 @@ export class SkillManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  create_1$Response(params?: Create_1$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOperatorsEndpointsSkillModel>> {
+  create_1$Response(params?: Create_1$Params, context?: HttpContext): Observable<StrictHttpResponse<SkillModel>> {
     return create_1(this.http, this.rootUrl, params, context);
   }
 
@@ -232,9 +232,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  create_1(params?: Create_1$Params, context?: HttpContext): Observable<MoryxOperatorsEndpointsSkillModel> {
+  create_1(params?: Create_1$Params, context?: HttpContext): Observable<SkillModel> {
     return this.create_1$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOperatorsEndpointsSkillModel>): MoryxOperatorsEndpointsSkillModel => r.body)
+      map((r: StrictHttpResponse<SkillModel>): SkillModel => r.body)
     );
   }
 
@@ -247,7 +247,7 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getSkill$Response(params: GetSkill$Params, context?: HttpContext): Observable<StrictHttpResponse<MoryxOperatorsEndpointsSkillModel>> {
+  getSkill$Response(params: GetSkill$Params, context?: HttpContext): Observable<StrictHttpResponse<SkillModel>> {
     return getSkill(this.http, this.rootUrl, params, context);
   }
 
@@ -257,9 +257,9 @@ export class SkillManagementService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getSkill(params: GetSkill$Params, context?: HttpContext): Observable<MoryxOperatorsEndpointsSkillModel> {
+  getSkill(params: GetSkill$Params, context?: HttpContext): Observable<SkillModel> {
     return this.getSkill$Response(params, context).pipe(
-      map((r: StrictHttpResponse<MoryxOperatorsEndpointsSkillModel>): MoryxOperatorsEndpointsSkillModel => r.body)
+      map((r: StrictHttpResponse<SkillModel>): SkillModel => r.body)
     );
   }
 
