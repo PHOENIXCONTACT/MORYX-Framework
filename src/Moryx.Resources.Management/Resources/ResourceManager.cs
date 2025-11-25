@@ -318,6 +318,8 @@ namespace Moryx.Resources.Management
         {
             lock (Graph.GetResource(resource.Id) ?? _fallbackLock)
             {
+                var isNew = resource.Id == 0;
+
                 using var uow = UowFactory.Create();
                 var newResources = new HashSet<Resource>();
 
@@ -350,6 +352,11 @@ namespace Moryx.Resources.Management
 
                 foreach (var instance in newResources)
                     AddResource(instance, true);
+
+                if (!isNew)
+                {
+                    RaiseResourceChanged(resource);
+                }
             }
         }
 
@@ -379,6 +386,7 @@ namespace Moryx.Resources.Management
                 foreach (var newResource in newResources)
                     AddResource(newResource, true);
             }
+            RaiseResourceChanged(instance);
         }
 
         public void ExecuteInitializer(IResourceInitializer initializer)
@@ -445,7 +453,7 @@ namespace Moryx.Resources.Management
 
         #region IResourceManagement
 
-
+        
         private void RaiseResourceAdded(IResource newResource)
         {
             ResourceAdded?.Invoke(this, newResource);
@@ -466,6 +474,13 @@ namespace Moryx.Resources.Management
             if (Graph.GetAll().Any(x => x.Id == ((IResource)originalSender).Id))
                 CapabilitiesChanged?.Invoke(originalSender, capabilities);
         }
+
+        private void RaiseResourceChanged(IResource updated)
+        {
+            ResourceChanged?.Invoke(this, updated);
+        }
+
+        public event EventHandler<IResource> ResourceChanged;
 
         #endregion
     }

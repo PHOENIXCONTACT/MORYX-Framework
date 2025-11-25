@@ -27,7 +27,6 @@ namespace Moryx.Resources.Management.Tests
         private ResourceGraph _graph;
         private ResourceManager _resourceManager;
         private Mock<IResourceInitializer> _initializerMock;
-
         private const string DatabaseResourceName = "Resource Mock";
 
         [SetUp]
@@ -64,7 +63,6 @@ namespace Moryx.Resources.Management.Tests
                 Graph = _graph,
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory())
             };
-
             _typeControllerMock.Setup(tc => tc.Create(typeof(ResourceMock).ResourceType())).Returns(_resourceMock);
             _typeControllerMock.Setup(tc => tc.Create(typeof(PublicResourceMock).ResourceType())).Returns(new PublicResourceMock()
             {
@@ -210,6 +208,44 @@ namespace Moryx.Resources.Management.Tests
 
             Assert.IsNotNull(entity);
             Assert.AreEqual(testResource.Name, entity.Name);
+        }
+
+        [Test(Description = "Should notify facade listeners when resource Changed")]
+        public void RaiseResourceChangesOnRaiseChanged()
+        {
+            // Arrange
+            var testResource = _graph.Instantiate<PublicResourceMock>();
+            int notifications = 0;
+            _resourceManager.ResourceChanged += (sender, resource) =>
+            {
+                notifications = +1;
+            };
+            _resourceManager.Save(testResource);
+
+            // Act
+            testResource.Name = "Hello World";
+            testResource.RaiseChanged();
+
+            // Assert
+            Assert.That(notifications, Is.EqualTo(1));
+        }
+
+        [Test(Description = "Should not notify facade listeners when new resource added")]
+        public void DontRaiseResourceChangesOnAdded()
+        {
+            // Arrange
+            var testResource = _graph.Instantiate<PublicResourceMock>();
+            int notifications = 0;
+            _resourceManager.ResourceChanged += (sender, resource) =>
+            {
+                notifications = +1;
+            };
+
+            // Act
+            _resourceManager.Save(testResource);
+
+            // Assert
+            Assert.That(notifications, Is.EqualTo(0));
         }
 
         [Test(Description = "Adds a resource while the ResourceManager was initialized but not started")]
