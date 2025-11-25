@@ -86,8 +86,10 @@ All driver APIs have been reworked to use TPL async/await instead of callbacks f
 - Cleaner and integrates seamlessly with .NET’s exception system.
 - You can chain tasks with LINQ-like methods or await syntax.
 - Async stack-traces in IDE show the actual logical call flow — even across await boundaries.
+- The APIs for `IMessageDriver` and `IInOutDriver` with their generics and different variants was too complicated and all known usages simply used objects and root members instead different argument types. So we simplified the APIs, which also improves exhangeability of different drivers and simplifies Simulator implementations. To adjust your usages, simply remove all generic arguments.
+- `IRfidDriver`, `IScannerDriver` and `IWeightScaleDriver` were extended with commonly used methods, extendable by options and result objects
+- Added generic `ISingleInput{TOptions, TResult}` and `IContinuousInput{TOptions, TResult}` for general pattern of input devices
 
-The APIs for IMessageDriver and IInOutDriver with their generics and different variants was too complicated and all known usages simply used objects and root members instead different argument types. So we simplified the APIs, which also improves exhangeability of different drivers and simplifies Simulator implementations. To adjust your usages, simply remove all generic arguments.
 
 ## ConstraintContext during activity-handling
 

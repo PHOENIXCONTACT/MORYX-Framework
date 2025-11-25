@@ -1,22 +1,21 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Drivers.InOut;
-
-namespace Moryx.AbstractionLayer.Drivers.Scales;
+namespace Moryx.AbstractionLayer.Drivers.InOut;
 
 /// <summary>
-/// Interface for weight scales to request a weight
+/// Interface for drivers providing single inputs
 /// </summary>
-public interface IWeightScaleDriver : IInputDriver,
-    ISingleInput<MeasureOptions, MeasuredWeight>,
-    IContinuousInput<MeasureOptions, MeasuredWeight>
+/// <typeparam name="TResult">Type which is used for the result</typeparam>
+/// <typeparam name="TOptions">Options used for automatic read of values</typeparam>
+public interface ISingleInput<in TOptions, TResult>
 {
     /// <summary>
-    /// Performs a tare operation on the weight scale, resetting its measurement to zero.
+    /// Reads a single value from the device
     /// </summary>
+    /// <param name="options">Options that define how the operation should be performed.</param>
     /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <exception cref="DriverStateException">Thrown if the driver is in an invalid state for this operation.</exception>
     /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
-    Task TaraAsync(CancellationToken cancellationToken = default);
+    Task<TResult> ReadAsync(TOptions options, CancellationToken cancellationToken = default);
 }
