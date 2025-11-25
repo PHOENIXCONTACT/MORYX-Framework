@@ -333,6 +333,8 @@ namespace Moryx.Resources.Management
         {
             lock (Graph.GetResource(resource.Id) ?? _fallbackLock)
             {
+                var isNew = resource.Id == 0;
+
                 using var uow = UowFactory.Create();
                 var newResources = new HashSet<Resource>();
 
@@ -351,9 +353,9 @@ namespace Moryx.Resources.Management
                     resource.Id = entity.Id;
                     foreach (var instance in newResources)
                     {
-                        if (!references.ContainsKey(instance))
+                        if (!references.TryGetValue(instance, out var reference))
                             continue;
-                        instance.Id = references[instance].Id;
+                        instance.Id = reference.Id;
                     }
 
                 }
@@ -365,6 +367,11 @@ namespace Moryx.Resources.Management
 
                 foreach (var instance in newResources)
                     AddResource(instance, true);
+
+                if (!isNew)
+                {
+                    RaiseResourceChanged(resource);
+                }
             }
         }
 
@@ -393,6 +400,8 @@ namespace Moryx.Resources.Management
 
                 foreach (var newResource in newResources)
                     AddResource(newResource, true);
+
+                RaiseResourceChanged(instance);
             }
         }
 
@@ -477,11 +486,17 @@ namespace Moryx.Resources.Management
         }
         public event EventHandler<IResource> ResourceAdded;
 
-        private void RaiseResourceRemoved(IResource newResource)
+        private void RaiseResourceRemoved(IResource removedResource)
         {
-            ResourceRemoved?.Invoke(this, newResource);
+            ResourceRemoved?.Invoke(this, removedResource);
         }
         public event EventHandler<IResource> ResourceRemoved;
+
+        private void RaiseResourceChanged(IResource changedResource)
+        {
+            ResourceChanged?.Invoke(this, changedResource);
+        }
+        public event EventHandler<IResource> ResourceChanged;
 
         ///
         public event EventHandler<ICapabilities> CapabilitiesChanged;
