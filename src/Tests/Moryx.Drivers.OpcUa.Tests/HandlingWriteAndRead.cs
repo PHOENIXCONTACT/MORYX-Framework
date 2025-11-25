@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
-using Moryx.Drivers.OpcUa.Nodes;
+using Moryx.Drivers.OpcUa;
 using Moryx.Modules;
 using NUnit.Framework;
 using Opc.Ua;

@@ -10,7 +10,7 @@ using Moryx.Logging;
 using Opc.Ua;
 using Opc.Ua.Client;
 
-namespace Moryx.Drivers.OpcUa.Nodes;
+namespace Moryx.Drivers.OpcUa;
 
 /// <summary>
 /// MessageChannel representing an Opc Ua node

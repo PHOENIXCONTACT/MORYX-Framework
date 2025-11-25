@@ -179,7 +179,7 @@ namespace Moryx.Drivers.Mqtt
         public abstract Task SendAsync(object payload, CancellationToken cancellationToken = default);
 
         //This method has to call MqttDriver.OnSend
-        internal abstract Task OnSend(object payload);
+        internal abstract Task OnSend(object payload, CancellationToken cancellationToken);
 
         //This method has to call MqttDriver.OnReceive
         internal abstract void OnReceived(string receivedTopic, byte[] messageAsBytes);
@@ -294,7 +294,7 @@ namespace Moryx.Drivers.Mqtt
         }
 
 
-        internal override Task OnSend(object payload)
+        internal override Task OnSend(object payload, CancellationToken cancellationToken)
         {
             var topic = Identifier;
             var msg = Serialize(payload);
@@ -329,7 +329,7 @@ namespace Moryx.Drivers.Mqtt
             }
 
             topic = MqttDriver.Identifier + topic;
-            return MqttDriver.OnSend(new MqttMessageTopic(ResponseTopic, topic), msg);
+            return MqttDriver.OnSend(new MqttMessageTopic(ResponseTopic, topic), msg, cancellationToken);
         }
 
         internal override void OnReceived(string receivedTopic, byte[] messageAsBytes)

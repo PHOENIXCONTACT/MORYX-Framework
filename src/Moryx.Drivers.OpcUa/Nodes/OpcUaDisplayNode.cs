@@ -4,7 +4,7 @@
 using System.Globalization;
 using Opc.Ua;
 
-namespace Moryx.Drivers.OpcUa.Nodes;
+namespace Moryx.Drivers.OpcUa;
 
 /// <summary>
 /// Class to show Opc Ua Nodes on the UI, since OpcUaNode is not serializable
@@ -25,7 +25,7 @@ internal class OpcUaDisplayNode
     /// <summary>
     /// Id of the Opc Ua Node
     /// </summary>
-    public string NodeId => _nodeId == null ? "" : _nodeId.Format(CultureInfo.InvariantCulture);
+    public string NodeId => _nodeId == null ? string.Empty : _nodeId.Format(CultureInfo.InvariantCulture);
 
     /// <summary>
     /// Display Name of the Opc Ua Node

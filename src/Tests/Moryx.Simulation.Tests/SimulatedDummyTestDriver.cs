@@ -62,7 +62,7 @@ namespace Moryx.Simulation.Tests
             }
         }
 
-        public Task SendAsync(object payload, CancellationToken cancellationToken = default)
+        public virtual Task SendAsync(object payload, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }

@@ -315,8 +315,9 @@ public class MqttDriver : Driver, IMessageDriver
     /// </summary>
     /// <param name="messageTopic">The topic to publish on</param>
     /// <param name="message">The message to be published</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task OnSend(MqttMessageTopic messageTopic, byte[] message)
+    public async Task OnSend(MqttMessageTopic messageTopic, byte[] message, CancellationToken cancellationToken)
     {
         var messageMqttBuilder = new MqttApplicationMessageBuilder()
           .WithTopic(messageTopic.Topic)
@@ -332,7 +333,7 @@ public class MqttDriver : Driver, IMessageDriver
         }
 
         var messageMqtt = messageMqttBuilder.Build();
-        await _mqttClient.PublishAsync(messageMqtt, CancellationToken.None);
+        await _mqttClient.PublishAsync(messageMqtt, cancellationToken);
     }
 
     private Task OnReceived(MqttApplicationMessageReceivedEventArgs args)

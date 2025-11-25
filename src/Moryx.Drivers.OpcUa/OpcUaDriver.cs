@@ -10,7 +10,7 @@ using Moryx.AbstractionLayer.Drivers.InOut;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
-using Moryx.Drivers.OpcUa.Nodes;
+using Moryx.Drivers.OpcUa;
 using Moryx.Drivers.OpcUa.Properties;
 using Moryx.Drivers.OpcUa.States;
 using Moryx.Serialization;
@@ -1117,9 +1117,4 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
     /// <inheritdoc/>
     public event EventHandler<object> Received;
-
-    public IMessageChannel GetChannel(string identifier)
-    {
-        return State.GetNode(identifier);
-    }
 }

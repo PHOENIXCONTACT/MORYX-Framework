@@ -3,7 +3,7 @@
 
 using Moryx.AbstractionLayer.Drivers.InOut;
 using Moryx.AbstractionLayer.Drivers.Message;
-using Moryx.Drivers.OpcUa.Nodes;
+using Moryx.Drivers.OpcUa;
 
 namespace Moryx.Drivers.OpcUa;
 

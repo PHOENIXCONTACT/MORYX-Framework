@@ -22,7 +22,7 @@ namespace Moryx.Drivers.Mqtt.States
 
         internal override Task SendAsync(MqttTopic topic, object message, CancellationToken cancellationToken)
         {
-            return topic.SendAsync(message, cancellationToken);
+            return topic.OnSend(message, cancellationToken);
         }
 
         internal override void ConnectionToBrokerLost()
