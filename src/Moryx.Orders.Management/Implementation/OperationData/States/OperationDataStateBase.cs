@@ -94,7 +94,7 @@ namespace Moryx.Orders.Management
             if (IsFailed)
                 classification = OperationClassification.Failed;
             if (IsAssigning)
-                classification = OperationClassification.Loading;
+                classification = OperationClassification.Assigning;
 
             if (CanAssign && Context.AssignState.HasFlag(OperationAssignState.Changed))
                 classification |= OperationClassification.CanReload;

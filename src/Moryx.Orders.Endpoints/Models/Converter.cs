@@ -135,7 +135,7 @@ namespace Moryx.Orders.Endpoints
                 CanReport = operation.FullState.HasFlag(OperationClassification.CanReport),
                 CanAdvice = operation.FullState.HasFlag(OperationClassification.CanAdvice),
                 IsFailed = operation.FullState.HasFlag(OperationClassification.Failed),
-                IsAssigning = operation.FullState.HasFlag(OperationClassification.Loading),
+                IsAssigning = operation.FullState.HasFlag(OperationClassification.Assigning),
                 IsCreated = operation.State > OperationClassification.Initial &&
                     !operation.FullState.HasFlag(OperationClassification.Failed),
                 IsAborted = operation.FullState.HasFlag(OperationClassification.Aborted),
