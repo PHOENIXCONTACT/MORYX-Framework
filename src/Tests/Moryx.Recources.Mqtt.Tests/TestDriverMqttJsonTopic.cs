@@ -97,8 +97,8 @@ namespace Moryx.Resources.Mqtt.Tests
                 .Callback<MqttApplicationMessage, CancellationToken>(CheckSentMessage);
 
             //Act
-            _mqttTopicPascal.Send(new JsonMessageTest { Name = MESSAGE_VALUE_NAME, Age = MESSAGE_VALUE_AGE });
-            _mqttTopicCamel.Send(new JsonMessageTest { Name = MESSAGE_VALUE_NAME, Age = MESSAGE_VALUE_AGE });
+            _mqttTopicPascal.OnSend(new JsonMessageTest { Name = MESSAGE_VALUE_NAME, Age = MESSAGE_VALUE_AGE }, CancellationToken.None);
+            _mqttTopicCamel.OnSend(new JsonMessageTest { Name = MESSAGE_VALUE_NAME, Age = MESSAGE_VALUE_AGE }, CancellationToken.None);
 
             //Assert 1
             _mockClient.Verify((m => m.PublishAsync(

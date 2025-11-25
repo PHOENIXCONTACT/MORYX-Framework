@@ -14,7 +14,7 @@ namespace Moryx.Drivers.OpcUa.Tests;
 public class OpcUaTestBase
 {
     protected Mock<ISession> _sessionMock;
-    protected Dictionary<NodeId, ReferenceDescription> _nodes;
+    protected Dictionary<NodeId, ReferenceDescription> Nodes { get; private set; }
     protected ReferenceDescription _root;
     protected NamespaceTable _namespaceTable;
     protected OpcUaDriver _driver;
@@ -61,7 +61,7 @@ public class OpcUaTestBase
             NodeClass = NodeClass.Object,
             BrowseName = "root"
         };
-        _nodes = new Dictionary<NodeId, ReferenceDescription>
+        Nodes = new Dictionary<NodeId, ReferenceDescription>
         {
             { ExpandedNodeId.ToNodeId(node1.NodeId, _namespaceTable), node1 },
             { ExpandedNodeId.ToNodeId(node2.NodeId, _namespaceTable), node2 },

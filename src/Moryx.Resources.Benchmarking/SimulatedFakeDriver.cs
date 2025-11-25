@@ -13,7 +13,7 @@ using Moryx.Resources.Benchmarking.Messages;
 namespace Moryx.Resources.Benchmarking
 {
     [ResourceRegistration]
-    public class SimulatedFakeDriver : Driver, IMessageDriver<object>, ISimulationDriver
+    public class SimulatedFakeDriver : Driver, IMessageDriver, ISimulationDriver
     {
         public bool HasChannels => false;
 
@@ -42,16 +42,6 @@ namespace Moryx.Resources.Benchmarking
             base.OnStart();
 
             SimulatedState = SimulationState.Idle;
-        }
-
-        public IMessageChannel<TChannel> Channel<TChannel>(string identifier)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IMessageChannel<TSend, TReceive> Channel<TSend, TReceive>(string identifier)
-        {
-            throw new NotImplementedException();
         }
 
         public void Send(object payload)

@@ -13,7 +13,7 @@ using Moryx.Resources.Benchmarking;
 
 namespace Moryx.Simulation.Tests
 {
-    public class SimulatedDummyTestDriver : Driver, IMessageDriver<object>, ISimulationDriver
+    public class SimulatedDummyTestDriver : Driver, IMessageDriver, ISimulationDriver
     {
         public bool HasChannels => false;
 
@@ -44,17 +44,7 @@ namespace Moryx.Simulation.Tests
             SimulatedState = SimulationState.Idle;
         }
 
-        public IMessageChannel<TChannel> Channel<TChannel>(string identifier)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IMessageChannel<TSend, TReceive> Channel<TSend, TReceive>(string identifier)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void Send(object payload)
+        public virtual Task SendAsync(object payload, CancellationToken cancellationToken = default)
         {
             switch (payload)
             {
@@ -65,10 +55,7 @@ namespace Moryx.Simulation.Tests
                     SimulatedState = SimulationState.Idle;
                     break;
             }
-        }
 
-        public Task SendAsync(object payload, CancellationToken cancellationToken = default)
-        {
             return Task.CompletedTask;
         }
 

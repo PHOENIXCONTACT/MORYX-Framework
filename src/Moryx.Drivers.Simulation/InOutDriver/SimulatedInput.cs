@@ -8,17 +8,17 @@ namespace Moryx.Drivers.Simulation.InOutDriver
     /// <summary>
     /// Class that represents that inputs and lets the simulated driver modify values and raise events
     /// </summary>
-    public class SimulatedInput<TIn> : IInput<TIn>
+    public class SimulatedInput : IInput
     {
         /// <summary>
         /// Direkt access to a single value
         /// </summary>
-        public TIn Value => Values.ContainsKey(string.Empty) ? Values[string.Empty] : default;
+        public object Value => Values.ContainsKey(string.Empty) ? Values[string.Empty] : default;
 
         /// <summary>
         /// Index based access
         /// </summary>
-        public TIn this[int index]
+        public object this[int index]
         {
             get
             {
@@ -32,7 +32,7 @@ namespace Moryx.Drivers.Simulation.InOutDriver
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public TIn this[string key] => Values.ContainsKey(key) ? Values[key] : default;
+        public object this[string key] => Values.ContainsKey(key) ? Values[key] : default;
 
         /// <summary>
         /// All access types supported
@@ -42,25 +42,22 @@ namespace Moryx.Drivers.Simulation.InOutDriver
         /// <summary>
         /// Internal value dictionary
         /// </summary>
-        public Dictionary<string, TIn> Values { get; } = new Dictionary<string, TIn>();
+        public Dictionary<string, object> Values { get; } = new Dictionary<string, object>();
 
         /// <summary>
         /// Raise the input changed event for a given key
         /// </summary>
-        /// <param name="key"></param>
-        public void RaiseInputChanged() => InputChanged?.Invoke(this, new InputChangedEventArgs());
+        public void RaiseInputChanged(object value) => InputChanged?.Invoke(this, new InputChangedEventArgs { Value = value});
 
         /// <summary>
         /// Raise the input changed event for a given key
         /// </summary>
-        /// <param name="key"></param>
-        public void RaiseInputChanged(int index) => InputChanged?.Invoke(this, new InputChangedEventArgs(index));
+        public void RaiseInputChanged(int index, object value) => InputChanged?.Invoke(this, new InputChangedEventArgs(index, value));
 
         /// <summary>
         /// Raise the input changed event for a given key
         /// </summary>
-        /// <param name="key"></param>
-        public void RaiseInputChanged(string key) => InputChanged?.Invoke(this, new InputChangedEventArgs(key));
+        public void RaiseInputChanged(string key, object value) => InputChanged?.Invoke(this, new InputChangedEventArgs(key, value));
 
         /// <summary>
         /// Event raised, when an input changed

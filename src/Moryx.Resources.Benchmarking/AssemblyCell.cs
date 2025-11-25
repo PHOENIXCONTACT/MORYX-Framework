@@ -15,7 +15,7 @@ namespace Moryx.Resources.Benchmarking
     public class AssemblyCell : Cell
     {
         [ResourceReference(ResourceRelationType.Driver, IsRequired = true)]
-        public IMessageDriver<object> Driver { get; set; }
+        public IMessageDriver Driver { get; set; }
 
         protected override void OnInitialize()
         {
@@ -44,12 +44,12 @@ namespace Moryx.Resources.Benchmarking
         public override void StartActivity(ActivityStart activityStart)
         {
             _activityStart = activityStart;
-            Driver.Send(new AssembleProductMessage { ActivityId = activityStart.Activity.Id });
+            Driver.SendAsync(new AssembleProductMessage { ActivityId = activityStart.Activity.Id }).Wait();
         }
 
         public override void SequenceCompleted(SequenceCompleted completed)
         {
-            Driver.Send(new ReleaseWorkpieceMessage());
+            Driver.SendAsync(new ReleaseWorkpieceMessage()).Wait();
         }
 
         private ActivityStart _activityStart;

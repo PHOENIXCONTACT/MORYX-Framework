@@ -18,7 +18,7 @@ namespace Moryx.Resources.Samples
         public string OutfeedMessage { get; set; }
 
         [ResourceReference(ResourceRelationType.Driver)]
-        public IMessageDriver<object> Driver { get; set; }
+        public IMessageDriver Driver { get; set; }
 
         protected override void OnInitialize()
         {

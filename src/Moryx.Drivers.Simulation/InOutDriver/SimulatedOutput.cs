@@ -5,12 +5,12 @@ using Moryx.AbstractionLayer.Drivers.InOut;
 
 namespace Moryx.Drivers.Simulation.InOutDriver
 {
-    public class SimulatedOutput<TOut> : IOutput<TOut>
+    public class SimulatedOutput : IOutput
     {
         /// <summary>
         /// Set the single output
         /// </summary>
-        public TOut Value
+        public object Value
         {
             get
             {
@@ -30,7 +30,7 @@ namespace Moryx.Drivers.Simulation.InOutDriver
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public TOut this[int index]
+        public object this[int index]
         {
             get
             {
@@ -48,7 +48,7 @@ namespace Moryx.Drivers.Simulation.InOutDriver
         /// <summary>
         /// Key based output
         /// </summary>
-        public TOut this[string key]
+        public object this[string key]
         {
             get => Values.ContainsKey(key) ? Values[key] : default;
             set
@@ -61,7 +61,7 @@ namespace Moryx.Drivers.Simulation.InOutDriver
         /// <summary>
         /// Internal dictionary holding the values
         /// </summary>
-        public Dictionary<string, TOut> Values { get; } = new Dictionary<string, TOut>();
+        public Dictionary<string, object> Values { get; } = new Dictionary<string, object>();
 
         /// <summary>
         /// Simulation supports all access modes

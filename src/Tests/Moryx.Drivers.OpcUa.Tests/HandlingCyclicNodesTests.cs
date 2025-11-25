@@ -84,7 +84,7 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
             if (e is RunningState)
             {
                 //Assert II
-                Assert.That(_nodes.Count - 1, Is.EqualTo(_driver.Nodes.Count), "Number of browsed nodes doesn't fit");
+                Assert.That(Nodes.Count - 1, Is.EqualTo(_driver.Nodes.Count), "Number of browsed nodes doesn't fit");
                 Assert.DoesNotThrow(() => JsonSerializer.Serialize(_driver.Nodes));
                 wait.Set();
             }

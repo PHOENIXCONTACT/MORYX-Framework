@@ -114,37 +114,7 @@ namespace Moryx.Resources.Mqtt.Tests
             ((IInitializable)topic).Initialize();
             ((IPlugin)topic).Start();
         }
-
-        [Test(Description = "Find Channel with one parameter")]
-        public void Channel_FindChannel_TChannel()
-        {
-            var c = _driver.Channel<IByteSerializable>(_topicBoolMqtt.Identifier);
-            Assert.That(c != null);
-            Assert.That(c.Identifier.Equals(_topicBoolMqtt.Identifier));
-        }
-
-        [Test(Description = "Find Channel with two parameters")]
-        public void Channel_FindChannel_TSend_TReceive()
-        {
-            var c = _driver.Channel<IByteSerializable, IByteSerializable>(_topicBoolMqtt.Identifier);
-            Assert.That(c != null);
-            Assert.That(c.Identifier.Equals(_topicBoolMqtt.Identifier));
-        }
-
-        [Test(Description = "Return null, if parameter don't match")]
-        public void Channel_NotFindChannel_ParametersDoNotMatch()
-        {
-            var c = _driver.Channel<BoolByteSerializableMessage>(_topicBoolMqtt.Identifier);
-            Assert.That(c == null);
-        }
-
-        [Test(Description = "Return null, if idientifier does not exist")]
-        public void Channel_NotFindChannel_IdentifierDoesNotExist()
-        {
-            var c = _driver.Channel<BoolMqttMessage>("doesNotExist");
-            Assert.That(c == null);
-        }
-
+        
         [Test(Description = "Change topicName")]
         public void ChangeChannelName()
         {
@@ -296,7 +266,7 @@ namespace Moryx.Resources.Mqtt.Tests
                     CheckSentMessageWithPlaceholder(applicationMessage, _placeholderMessages, topic));
 
             //Act
-            _topicPlaceholder.Send(_placeholderMessages);
+            _topicPlaceholder.OnSend(_placeholderMessages, CancellationToken.None);
 
             //Assert I
             _mockClient.Verify(m => m.PublishAsync(It.IsAny<MqttApplicationMessage>(),
@@ -320,7 +290,7 @@ namespace Moryx.Resources.Mqtt.Tests
             _topicPlaceholder.Identifier += "/{placeholderNoFound}";
 
             //Act + Assert
-            Assert.Throws<ArgumentException>(() => _topicPlaceholder.Send(_placeholderMessages));
+            Assert.Throws<ArgumentException>(() => _topicPlaceholder.OnSend(_placeholderMessages, CancellationToken.None));
         }
 
         [Test]
@@ -343,7 +313,7 @@ namespace Moryx.Resources.Mqtt.Tests
                     CheckMessageSentWithWildcards(applicationMessage, topicMsg));
 
             //Act
-            mqttTopic.Send(msg);
+            mqttTopic.OnSend(msg, CancellationToken.None);
 
             //Assert
             _mockClient.Verify(m => m.PublishAsync(It.IsAny<MqttApplicationMessage>(),
@@ -374,7 +344,7 @@ namespace Moryx.Resources.Mqtt.Tests
             SetupTopic(mqttTopic);
 
             //Act + Assert
-            Assert.Throws<ArgumentException>(() => mqttTopic.Send(msg));
+            Assert.Throws<ArgumentException>(() => mqttTopic.OnSend(msg, CancellationToken.None));
         }
 
         [Test]
@@ -390,7 +360,7 @@ namespace Moryx.Resources.Mqtt.Tests
             SetupTopic(mqttTopic);
 
             //Act + Assert
-            Assert.Throws<ArgumentException>(() => mqttTopic.Send(msg));
+            Assert.Throws<ArgumentException>(() => mqttTopic.OnSend(msg, CancellationToken.None));
         }
 
         [Test]

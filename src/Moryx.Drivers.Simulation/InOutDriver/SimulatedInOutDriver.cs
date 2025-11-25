@@ -15,7 +15,7 @@ namespace Moryx.Drivers.Simulation.InOutDriver
     /// <summary>
     /// Base class for simulation drivers that implement the IInOutDriver interface
     /// </summary>
-    public abstract class SimulatedInOutDriver<TIn, TOut> : Driver, IInOutDriver<TIn, TOut>, ISimulationDriver
+    public abstract class SimulatedInOutDriver : Driver, IInOutDriver, ISimulationDriver
     {
         [ResourceReference(ResourceRelationType.Driver, ResourceReferenceRole.Source)]
         public Cell Cell { get; set; }
@@ -54,7 +54,8 @@ namespace Moryx.Drivers.Simulation.InOutDriver
         /// </summary>
         public abstract void Result(SimulationResult result);
 
-        protected SimulatedInput<TIn> SimulatedInput { get; } = new SimulatedInput<TIn>();
+        protected SimulatedInput SimulatedInput { get; } = new SimulatedInput();
+
         [EntrySerialize]
         public List<ValueModel> Inputs
         {
@@ -63,25 +64,20 @@ namespace Moryx.Drivers.Simulation.InOutDriver
             {
                 foreach (var item in value)
                 {
-                    // Update with type conversion
-                    if (SimulatedInput.Values.ContainsKey(item.Key))
-                        SimulatedInput.Values[item.Key] = (TIn)Convert.ChangeType(item.Value, SimulatedInput.Values[item.Key].GetType());
-                    else
-                        SimulatedInput.Values[item.Key] = (TIn)Convert.ChangeType(item.Value, typeof(TIn));
-
+                    SimulatedInput.Values[item.Key] = item.Value;
                     SimulatedInput.RaiseInputChanged(item.Key);
                 }
             }
         }
-        public IInput<TIn> Input => SimulatedInput;
+        public IInput Input => SimulatedInput;
 
-        protected SimulatedOutput<TOut> SimulatedOutput { get; } = new SimulatedOutput<TOut>();
+        protected SimulatedOutput SimulatedOutput { get; } = new SimulatedOutput();
         [EntrySerialize, ReadOnly(true)]
         public List<ValueModel> Outputs
         {
             get => SimulatedOutput.Values.Select(pair => new ValueModel { Key = pair.Key, Value = pair.Value.ToString() }).ToList();
         }
-        public IOutput<TOut> Output => SimulatedOutput;
+        public IOutput Output => SimulatedOutput;
 
         /// <summary>
         /// React to output changes from the cell. Remember to set the simulation state correctly
@@ -91,40 +87,29 @@ namespace Moryx.Drivers.Simulation.InOutDriver
         [EntrySerialize]
         public void SetBool(string key, bool value)
         {
-            if (typeof(TIn).IsAssignableFrom(typeof(bool)))
-                SimulatedInput.Values[key] = (TIn)(object)value;
-            else
-                SimulatedInput.Values[key] = (TIn)Convert.ChangeType(value, typeof(TIn));
+
+                SimulatedInput.Values[key] = value;
             SimulatedInput.RaiseInputChanged(key);
         }
 
         [EntrySerialize]
         public void SetFloat(string key, float value)
         {
-            if (typeof(TIn).IsAssignableFrom(typeof(float)))
-                SimulatedInput.Values[key] = (TIn)(object)value;
-            else
-                SimulatedInput.Values[key] = (TIn)Convert.ChangeType(value, typeof(TIn));
+            SimulatedInput.Values[key] = value;
             SimulatedInput.RaiseInputChanged(key);
         }
 
         [EntrySerialize]
         public void SetInteger(string key, int value)
         {
-            if (typeof(TIn).IsAssignableFrom(typeof(int)))
-                SimulatedInput.Values[key] = (TIn)(object)value;
-            else
-                SimulatedInput.Values[key] = (TIn)Convert.ChangeType(value, typeof(TIn));
+            SimulatedInput.Values[key] = value;
             SimulatedInput.RaiseInputChanged(key);
         }
 
         [EntrySerialize]
         public void SetString(string key, string value)
         {
-            if (typeof(TIn).IsAssignableFrom(typeof(string)))
-                SimulatedInput.Values[key] = (TIn)(object)value;
-            else
-                SimulatedInput.Values[key] = (TIn)Convert.ChangeType(value, typeof(TIn));
+            SimulatedInput.Values[key] = value;
             SimulatedInput.RaiseInputChanged(key);
         }
 

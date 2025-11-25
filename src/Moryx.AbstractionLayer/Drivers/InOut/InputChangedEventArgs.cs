@@ -31,9 +31,8 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
         /// <summary>
         /// Input changed for single value
         /// </summary>
-        public InputChangedEventArgs(object value)
+        public InputChangedEventArgs()
         {
-            Value = value;
             InputAccess = SupportedAccess.Single;
         }
 

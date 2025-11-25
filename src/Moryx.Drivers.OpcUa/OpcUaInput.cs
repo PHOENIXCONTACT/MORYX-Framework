@@ -22,7 +22,7 @@ internal class OpcUaInput : IInput
         if (e is not IIdentifierMessage opcUaMessage)
             return;
 
-        var eventArgs = new InputChangedEventArgs(opcUaMessage.Identifier);
+        var eventArgs = new InputChangedEventArgs(opcUaMessage.Identifier, opcUaMessage);
         InputChanged?.Invoke(this, eventArgs);
     }
 

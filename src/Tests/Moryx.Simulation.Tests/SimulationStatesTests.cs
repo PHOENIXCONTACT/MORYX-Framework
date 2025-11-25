@@ -19,21 +19,21 @@ namespace Moryx.Simulation.Tests
         }
 
         [Test]
-        public void SimulationStates_Should_Simulate_IdleState()
+        public async Task SimulationStates_Should_Simulate_IdleState()
         {
             //Arrange
             var message = new ReleaseWorkpieceMessage();
             _processControlMock.Setup(pc => pc.RunningProcesses).Returns([new Process { }]);
 
             //Act
-            _assemblyCell.Driver.Send(message);
+            await _assemblyCell.Driver.SendAsync(message);
 
             //Assert
             Assert.That(_assemblyCellDriver.SimulatedState, Is.EqualTo(SimulationState.Idle));
         }
 
         [Test]
-        public void SimulationStates_Should_Simulate_ExecutingState()
+        public async Task SimulationStates_Should_Simulate_ExecutingState()
         {
             //Arrange
             var activity = new AssemblyActivity();
@@ -41,7 +41,7 @@ namespace Moryx.Simulation.Tests
             _processControlMock.Raise(p => p.ActivityUpdated += null, new ActivityUpdatedEventArgs(activity, ActivityProgress.Ready));
 
             //Act
-            _assemblyCell.Driver.Send(new AssembleProductMessage());
+            await _assemblyCell.Driver.SendAsync(new AssembleProductMessage());
 
             //Assert
             Assert.That(_assemblyCellDriver.SimulatedState, Is.EqualTo(SimulationState.Executing));
