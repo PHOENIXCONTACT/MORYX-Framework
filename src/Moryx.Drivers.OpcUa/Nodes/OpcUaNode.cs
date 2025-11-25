@@ -5,19 +5,18 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers;
-using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.Logging;
 using Opc.Ua;
 using Opc.Ua.Client;
 
-namespace Moryx.Drivers.OpcUa;
+namespace Moryx.Drivers.OpcUa.Nodes;
 
 /// <summary>
 /// MessageChannel representing an Opc Ua node
 /// Because it is possible to get channels before the driver is running and has
 /// browsed all nodes, only o
 /// </summary>
-public class OpcUaNode : IMessageChannel<object>
+public class OpcUaNode
 {
     private IOpcUaDriver _driver => (IOpcUaDriver)Driver;
 
@@ -120,33 +119,6 @@ public class OpcUaNode : IMessageChannel<object>
     internal void UpdateNodeId(NamespaceTable namespaceTable)
     {
         NodeId = new ExpandedNodeId(NodeId.Identifier, (ushort)namespaceTable.GetIndex(NodeId.NamespaceUri), NodeId.NamespaceUri, NodeId.ServerIndex);
-    }
-
-    /// <summary>
-    /// Write a value to the Node. At the moment this only works for variable nodes
-    /// TODO 6.2: Object Nodes should be able to send whole objects containing the values of the variable nodes included in this object
-    /// </summary>
-    /// <param name="payload">value, which should be written to the node</param>
-    public void Send(object payload)
-    {
-        if (NodeClass != NodeClass.Variable)
-        {
-            _logger?.Log(LogLevel.Error, "It is tried to read the value of node {NodeId}, but the node is no variable node", NodeId);
-            return;
-        }
-        _driver.WriteNode(this.Identifier, payload);
-    }
-
-    /// <summary>
-    /// Not implemented yet
-    /// </summary>
-    /// <param name="payload"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public Task SendAsync(object payload, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
     }
 
     internal void ReceivedMessage(object payload)
