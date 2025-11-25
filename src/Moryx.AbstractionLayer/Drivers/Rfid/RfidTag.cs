@@ -14,7 +14,7 @@ namespace Moryx.AbstractionLayer.Drivers.Rfid
         public string Epc { get; set; }
 
         /// <summary>
-        /// Simmilar to the Epc but unique
+        /// Similar to the <see cref="Epc"/>> but unique
         /// </summary>
         public string Tid { get; set; }
 
@@ -29,7 +29,7 @@ namespace Moryx.AbstractionLayer.Drivers.Rfid
         public int SignalStrength { get; set; }
 
         /// <summary>
-        /// The time when the tag was readed
+        /// The time when the tag was read
         /// </summary>
         public DateTime TimeStamp { get; set; }
 
