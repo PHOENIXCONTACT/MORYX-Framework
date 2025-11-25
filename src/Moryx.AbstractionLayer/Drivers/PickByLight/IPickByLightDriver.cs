@@ -11,14 +11,14 @@ namespace Moryx.AbstractionLayer.Drivers.PickByLight
         /// <summary>
         /// Activate instruction for this address
         /// </summary>
-        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
+        /// <exception cref="DriverStateException">Thrown if the driver is in an invalid state for this operation.</exception>
         /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
         Task<InstructionConfirmation> ActivateInstructionAsync(string address, LightInstructions instruction, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Deactivate an instruction
         /// </summary>
-        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
+        /// <exception cref="DriverStateException">Thrown if the driver is in an invalid state for this operation.</exception>
         /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
         Task<InstructionConfirmation> DeactivateInstructionAsync(string address, CancellationToken cancellationToken = default);
 

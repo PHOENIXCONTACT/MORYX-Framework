@@ -13,7 +13,7 @@ namespace Moryx.AbstractionLayer.Drivers.Marking
         /// </summary>
         /// <param name="file">The marking file used for the marking system</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
-        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
+        /// <exception cref="DriverStateException">Thrown if the driver is in an invalid state for this operation.</exception>
         /// <exception cref="MarkingFileException">Will be thrown when errors occur during setting the marking file</exception>
         /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
         Task<MarkingFileResponse> SetMarkingFileAsync(MarkingFile file, CancellationToken cancellationToken = default);
@@ -23,7 +23,7 @@ namespace Moryx.AbstractionLayer.Drivers.Marking
         /// </summary>
         /// <param name="config">The configuration for the marking process.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
-        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
+        /// <exception cref="DriverStateException">Thrown if the driver is in an invalid state for this operation.</exception>
         /// <exception cref="MarkingException">Will be thrown when errors occur during marking execution</exception>
         /// <exception cref="SegmentsNotSupportedException">Exception if the system does not support segments</exception>
         /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
