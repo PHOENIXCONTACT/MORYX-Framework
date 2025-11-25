@@ -20,9 +20,9 @@ namespace Moryx.Drivers.Mqtt.States
             ExecuteDisconnect().Wait();
         }
 
-        internal override Task Send(MqttTopic topic, object message)
+        internal override Task Send(MqttTopic topic, object message, CancellationToken cancellationToken)
         {
-            return topic.OnSend(message);
+            return topic.OnSend(message, cancellationToken);
         }
 
         internal override void ConnectionToBrokerLost()

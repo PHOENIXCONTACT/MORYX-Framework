@@ -87,6 +87,10 @@ All driver APIs have been reworked to use TPL async/await instead of callbacks f
 - You can chain tasks with LINQ-like methods or await syntax.
 - Async stack-traces in IDE show the actual logical call flow — even across await boundaries.
 
+The APIs for IMessageDriver and IInOutDriver with their generics, channels and different variants was too complicated and all known usages simply used objects and root members instead of channels and different argument types. So we simplified the APIs, which also improves exhangeability of different drivers and simplifies Simulator implementations.
+
+To adjust your usages, simply remove all generic arguments. If you used channels, please define payload objects that contain the relevant routing information like topics or target device identifiers.
+
 ## ConstraintContext during activity-handling
 
 The `IConstraintContext` interface was removed from `IProcess`. Instead a new wrapper was introduced `ActivityConstraintContext` which provides the Activity and the Process for better handling in `IConstraint` implementations.
