@@ -62,9 +62,7 @@
   },
   "REPORT_DIALOG": {
     "REPORT_TITLE": "Report Operation",
-    "INTERRUPT_TITLE": "Interrupt Operation",
     "REPORT": "REPORT",
-    "INTERRUPT": "INTERRUPT",
     "OPERATION": "Operation",
     "ORDER": "Order",
     "PRODUCT": "Product",
@@ -78,8 +76,11 @@
     "COMMENT": "Comment",
     "CONFIRMATION": "Confirmation",
     "PARTIAL": "Partial",
-    "FINAL": "Final",
-    "CANCEL": "CANCEL"
+    "FINAL": "Final"
+  },
+  "INTERRUPT_DIALOG": {
+    "TITLE": "Interrupt Operation",
+    "PROMPT": "No new processes are started for the operation. Processes that have already been started are completed normally and the status of the operation then changes to 'Interrupted'."
   },
   "CREATE_DIALOG": {
     "TITLE": "New Order",
@@ -91,7 +92,6 @@
     "RECIPE": "Recipe",
     "AMOUNT": "Amount",
     "ADDED_OPERATIONS": "Added Operations",
-    "CANCEL": "CANCEL",
     "CLEAR": "CLEAR",
     "CREATE": "CREATE",
     "ADD": "ADD",
@@ -109,7 +109,6 @@
     "OVERDELIVERY": "Overdelivery",
     "UNDERDELIVERY": "Underdelivery",
     "PARTIAL_AMOUNT": "Target Amount",
-    "CANCEL": "CANCEL",
     "BEGIN": "BEGIN",
     "OPERATOR_SELECTION_LABEL": "Operator",
     "OPERATOR_SELECTION_PLACEHOLDER": "(Optional) Select an operator",
@@ -121,6 +120,8 @@
     "CANNOT_REDUCE_TARGET_AMOUNT": "The target amount cannot be further reduced"
   },
   "DISMISS": "DISMISS",
+  "CANCEL": "CANCEL",
+  "CONFIRM": "CONFIRM",
   "DEFAULT_MESSAGE": "Something went wrong on the server.",
   "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings."
 }

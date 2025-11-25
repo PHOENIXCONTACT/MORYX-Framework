@@ -155,12 +155,9 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc />
-        public void Interrupt(IOperationData operationData, OperationReport report)
+        public void Interrupt(IOperationData operationData, User user)
         {
-            if (!report.User.SignedIn)
-                throw new InvalidOperationException("User for the interrupt of the operation was not signed in.");
-
-            operationData.Interrupt(report);
+            operationData.Interrupt(user);
         }
 
         /// <inheritdoc />

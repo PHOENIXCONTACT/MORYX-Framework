@@ -1,5 +1,5 @@
 <h2 mat-dialog-title class="interrupt-dialog-title">
-  {{ (data.isReport ? TranslationConstants.REPORT_DIALOG.REPORT_TITLE : TranslationConstants.REPORT_DIALOG.INTERRUPT_TITLE) | translate }}
+  {{ TranslationConstants.REPORT_DIALOG.REPORT_TITLE | translate }}
 </h2>
 <mat-dialog-content>
   <p>
@@ -132,13 +132,13 @@
 </mat-dialog-content>
 <div mat-dialog-actions align="end">
   <button mat-button mat-dialog-close color="primary">
-    {{ TranslationConstants.REPORT_DIALOG.CANCEL | translate }}
+    {{ TranslationConstants.CANCEL | translate }}
   </button>
   <button
     mat-flat-button
     (click)="submit()"
-    [disabled]="!canInterrupt()">
-    {{ (data.isReport ? TranslationConstants.REPORT_DIALOG.REPORT : TranslationConstants.REPORT_DIALOG.INTERRUPT) | translate }}
+    [disabled]="!canReport()">
+    {{ TranslationConstants.REPORT_DIALOG.REPORT | translate }}
   </button>
   <mat-progress-bar mode="indeterminate" *ngIf="isLoading()"></mat-progress-bar>
 </div>

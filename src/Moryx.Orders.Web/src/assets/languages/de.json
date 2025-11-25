@@ -79,7 +79,10 @@
     "CONFIRMATION": "Rückmeldeart",
     "PARTIAL": "Teilrückmelden",
     "FINAL": "Endrückmelden",
-    "CANCEL": "ABBRECHEN"
+  },
+  "INTERRUPT_DIALOG": {
+    "TITLE": "Vorgang unterbrechen",
+    "PROMPT": "Es werden keine neuen Prozesse für den Vorgang gestartet. Bereits gestartete Prozesse werden normal beendet und anschließend wechselt der Status des Vorgangs zu 'Unterbrochen'."
   },
   "CREATE_DIALOG": {
     "TITLE": "Neuer Auftrag",
@@ -91,7 +94,6 @@
     "RECIPE": "Rezept",
     "AMOUNT": "Menge",
     "ADDED_OPERATIONS": "Hinzugefügte Vorgänge",
-    "CANCEL": "ABBRECHEN",
     "CLEAR": "ZURÜCKSETZEN",
     "CREATE": "ERSTELLEN",
     "ADD": "HINZUFÜGEN",
@@ -109,7 +111,6 @@
     "OVERDELIVERY": "Überlieferung",
     "UNDERDELIVERY": "Unterlieferung",
     "PARTIAL_AMOUNT": "Zielmenge",
-    "CANCEL": "ABBRECHEN",
     "BEGIN": "BEGINNEN",
     "OPERATOR_SELECTION_LABEL": "Bediener",
     "OPERATOR_SELECTION_PLACEHOLDER": "(Optional) Wählen Sie einen Bediener",
@@ -121,6 +122,8 @@
     "CANNOT_REDUCE_TARGET_AMOUNT": "Die Zielmenge kann nicht weiter reduziert werden"
   },
   "DISMISS": "OKAY",
+  "CANCEL": "ABBRECHEN",
+  "CONFIRM": "BESTÄTIGEN",
   "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
   "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Internetverbindung oder Proxy-Einstellungen."
 }

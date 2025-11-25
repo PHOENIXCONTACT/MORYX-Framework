@@ -82,7 +82,7 @@ namespace Moryx.Orders
         /// <summary>
         /// Processes a interrupt for the given operation
         /// </summary>
-        void InterruptOperation(Operation operation, OperationReport report);
+        void InterruptOperation(Operation operation, User user);
 
         /// <summary>
         /// Updates the operation source
@@ -107,7 +107,7 @@ namespace Moryx.Orders
         /// <summary>
         /// Will be raised if an operation was interrupted
         /// </summary>
-        event EventHandler<OperationReportEventArgs> OperationInterrupted;
+        event EventHandler<OperationChangedEventArgs> OperationInterrupted;
 
         /// <summary>
         /// Will be raised if an operation was partially reported
@@ -146,7 +146,7 @@ namespace Moryx.Orders
         AdviceContext GetAdviceContext(Operation operation);
 
         /// <summary>
-        /// Tries to advise the <see cref="Operation"/>. 
+        /// Tries to advise the <see cref="Operation"/>.
         /// The returned advice result contains information regarding the successful or unsuccessful attempt.
         /// </summary>
         /// <param name="operation">The <see cref="Operation"/> to advice.</param>

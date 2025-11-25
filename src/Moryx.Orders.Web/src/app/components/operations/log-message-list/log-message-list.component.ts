@@ -3,8 +3,8 @@ import { Component, effect, input, Input, OnInit, signal, untracked } from '@ang
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { delay, tap } from 'rxjs';
-import { LogLevel } from 'src/app/api/models/Microsoft/Extensions/Logging/log-level';
-import { OperationLogMessageModel } from 'src/app/api/models/Moryx/Orders/Endpoints/operation-log-message-model';
+import { LogLevel } from '../../../api/models';
+import { OperationLogMessageModel } from '../../../api/models';
 import { OrderManagementService } from 'src/app/api/services';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 

@@ -13,8 +13,8 @@ import { EmptyStateComponent, MoryxSnackbarService } from '@moryx/ngx-web-framew
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { BehaviorSubject } from 'rxjs';
-import { DocumentModel } from 'src/app/api/models/Moryx/Orders/Endpoints/document-model';
-import { OperationModel } from 'src/app/api/models/Moryx/Orders/Endpoints/operation-model';
+import { DocumentModel } from "../../api/models";
+import { OperationModel } from "../../api/models";
 import { OrderManagementService } from 'src/app/api/services';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { environment } from 'src/environments/environment';

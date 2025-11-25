@@ -1,6 +1,6 @@
-import { AdviceModel } from "../api/models/Moryx/Orders/Endpoints/advice-model";
-import { OperationModel } from "../api/models/Moryx/Orders/Endpoints/operation-model";
-import { ReportModel } from "../api/models/Moryx/Orders/Endpoints/report-model";
+import { AdviceModel } from '../api/models';
+import { OperationModel } from '../api/models';
+import { ReportModel } from '../api/models';
 
 
 export class OperationChangedModelBase {

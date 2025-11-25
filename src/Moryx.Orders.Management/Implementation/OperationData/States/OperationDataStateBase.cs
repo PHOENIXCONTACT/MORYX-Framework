@@ -72,7 +72,7 @@ namespace Moryx.Orders.Management
             return null;
         }
 
-        public virtual void Interrupt(OperationReport report) => InvalidState();
+        public virtual void Interrupt(User user) => InvalidState();
 
         public virtual void Report(OperationReport report) => InvalidState();
 

@@ -34,21 +34,10 @@ namespace Moryx.Orders.Management
         public override void DecreaseTargetBy(int amount, User user)
             => Context.HandleDecreaseTargetBy(amount);
 
-        public override void Interrupt(OperationReport report)
+        public override void Interrupt(User user)
         {
-            switch (report.ConfirmationType)
-            {
-                case ConfirmationType.Partial:
-                    NextState(StateInterrupting);
-                    Context.HandleManualInterrupting(report);
-                    break;
-                case ConfirmationType.Final:
-                    // ReSharper disable once ExplicitCallerInfoArgument
-                    InvalidState(nameof(Report) + "(final)");
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            NextState(StateInterrupting);
+            Context.HandleManualInterrupting();
         }
 
         public override ReportContext GetReportContext()

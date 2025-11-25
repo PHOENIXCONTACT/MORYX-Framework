@@ -351,8 +351,8 @@ namespace Moryx.Orders.Management
         private void OnOperationCompleted(object sender, ReportEventArgs eventArgs)
             => OperationCompleted?.Invoke(this, eventArgs);
 
-        public event EventHandler<ReportEventArgs> OperationInterrupted;
-        private void OnOperationInterrupted(object sender, ReportEventArgs eventArgs)
+        public event EventHandler<OperationEventArgs> OperationInterrupted;
+        private void OnOperationInterrupted(object sender, OperationEventArgs eventArgs)
             => OperationInterrupted?.Invoke(this, eventArgs);
 
         public event EventHandler<ReportEventArgs> OperationPartialReport;

@@ -420,42 +420,35 @@ namespace Moryx.Orders.Management
             Started?.Invoke(this, new StartedEventArgs(this, user));
         }
 
+        /// <param name="user"></param>
         /// <inheritdoc cref="IOperationData"/>
-        public void Interrupt(OperationReport report)
+        public void Interrupt(User user)
         {
-            Log(LogLevel.Debug, "Operation will be interrupted with SuccessCount {0} and FailureCount {1} by user {2}",
-                report.SuccessCount, report.FailureCount, report.User.Identifier);
+            Log(LogLevel.Debug, "Operation will be interrupted by user {0}",
+                user.Identifier);
 
             lock (_stateLock)
-                _state.Interrupt(report);
+                _state.Interrupt(user);
         }
 
         /// <summary>
         /// Will complete all jobs and executes a partial report
         /// </summary>
-        internal void HandleManualInterrupting(OperationReport report)
+        internal void HandleManualInterrupting()
         {
             JobHandler.Complete(this);
-            HandlePartialReport(report);
         }
 
         /// <summary>
         /// Will handle manual interrupts. The interrupt was triggered by the user.
         /// Will throw the <see cref="Interrupted"/> event
         /// </summary>
-        internal void HandleManualInterrupted(OperationReport report)
+        internal void HandleManualInterrupted()
         {
             Operation.TargetAmount = ReachableAmount;
 
-            lock (_reports)
-            {
-                _reports.Add(report);
-                Operation.Reports = _reports.ToArray();
-
-            }
-
             Updated?.Invoke(this, new OperationEventArgs(this));
-            Interrupted?.Invoke(this, new ReportEventArgs(this, report));
+            Interrupted?.Invoke(this, new OperationEventArgs(this));
         }
 
         /// <summary>
@@ -466,19 +459,8 @@ namespace Moryx.Orders.Management
         {
             Operation.TargetAmount = ReachableAmount;
 
-            // Add report for interrupted with user which have started the interruption
-            OperationReport report;
-            lock (_reports)
-            {
-                var lastReportUser = Operation.Reports.Last().User;
-                report = new OperationReport(ConfirmationType.Partial, 0, 0, lastReportUser);
-
-                _reports.Add(report);
-                Operation.Reports = _reports.ToArray();
-            }
-
             Updated?.Invoke(this, new OperationEventArgs(this));
-            Interrupted?.Invoke(this, new ReportEventArgs(this, report));
+            Interrupted?.Invoke(this, new OperationEventArgs(this));
         }
 
         /// <inheritdoc cref="IOperationData"/>
@@ -757,7 +739,7 @@ namespace Moryx.Orders.Management
         public event EventHandler<StartedEventArgs> Started;
 
         /// <inheritdoc cref="IOperationData.Interrupted"/>
-        public event EventHandler<ReportEventArgs> Interrupted;
+        public event EventHandler<OperationEventArgs> Interrupted;
 
         /// <inheritdoc cref="IOperationData.Completed"/>
         public event EventHandler<ReportEventArgs> Completed;

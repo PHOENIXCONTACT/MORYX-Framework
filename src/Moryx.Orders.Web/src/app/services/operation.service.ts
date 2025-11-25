@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { ApiConfiguration } from 'src/app/api/api-configuration';
-import { OperationModel } from 'src/app/api/models/Moryx/Orders/Endpoints/operation-model';
+import { OperationModel } from '../api/models';
 import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, OperationType } from 'src/app/models/operation-models';
 
 @Injectable({

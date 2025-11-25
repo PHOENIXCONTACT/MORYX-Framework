@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { OperatorManagementService } from '../api/services';
-import { AssignableOperator } from '../api/models/Moryx/Operators/assignable-operator';
-import { OperatorModel } from '../api/models/Moryx/Operators/Endpoints/operator-model';
+import { AssignableOperator } from '../api/models';
+import { OperatorModel } from '../api/models';
 
 @Injectable({
   providedIn: 'root',

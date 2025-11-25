@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using Moq;
 using Moryx.ControlSystem.Jobs;
 using NUnit.Framework;
 
@@ -129,63 +130,18 @@ namespace Moryx.Orders.Management.Tests
             }
         }
 
-        [TestCase(ConfirmationType.Partial, Description = "Tests interrupting the running operation. Only partial report should be possible.")]
-        [TestCase(ConfirmationType.Final, Description = "Tests interrupting the running operation. Final reports should not be possible.")]
-        public void ReportWhileRunningByInterrupt(ConfirmationType confirmationType)
+        [Test(Description = "Tests interrupting the running operation.")]
+        public void ReportWhileRunningByInterrupt()
         {
             // Arrange
             var operationData = GetRunningOperation(10, false, 10, 10);
 
-            var partialReportRaised = false;
-            operationData.PartialReport += (_, _) => partialReportRaised = true;
-
-            var report = new OperationReport(confirmationType, 5, 5, User);
-
-            switch (confirmationType)
-            {
-                case ConfirmationType.Partial:
-                    // Act
-                    operationData.Interrupt(report);
-
-                    // Assert
-                    // Raise partial report
-                    Assert.That(partialReportRaised);
-                    break;
-                case ConfirmationType.Final:
-                    // Final reports by interrupt are not allowed
-                    // Act - Assert
-                    Assert.Throws<InvalidOperationException>(() => operationData.Interrupt(report), "No final report while interrupting the OperationData");
-                    Assert.That(partialReportRaised, Is.False);
-                    break;
-            }
-        }
-
-        [TestCase(ConfirmationType.Partial, false, true, Description = "Tests interrupting the amount reached operation. " +
-                                                                       "Partial report should be possible. The operation should be interrupted.")]
-        [TestCase(ConfirmationType.Final, true, false, Description = "Tests interrupting the amount reached operation. " +
-                                                                     "By final reporting, the operation will be completed.")]
-        public void ReportWhileAmountReachedByInterrupt(ConfirmationType confirmationType, bool expectedCompleted, bool expectedInterrupted)
-        {
-            // Arrange
-            var operationData = GetAmountReachedOperation(10, false, 10, 10);
-
-            var partialReportRaised = false;
-            operationData.PartialReport += (_, _) => partialReportRaised = true;
-
-            var interruptedRaised = false;
-            operationData.Interrupted += (_, _) => interruptedRaised = true;
-
-            var completedRaised = false;
-            operationData.Completed += (_, _) => completedRaised = true;
-
             // Act
-            var report = new OperationReport(confirmationType, 5, 5, User);
-            operationData.Interrupt(report);
+            operationData.Interrupt(User);
 
             // Assert
-            Assert.That(partialReportRaised, Is.False);
-            Assert.That(interruptedRaised, Is.EqualTo(expectedInterrupted));
-            Assert.That(completedRaised, Is.EqualTo(expectedCompleted));
+            // Raise partial report
+            JobHandlerMock.Verify(j => j.Complete(operationData), Times.Once);
         }
 
         [TestCase(ConfirmationType.Partial, false, true, Description = "Tests reporting the amount reached operation. " +

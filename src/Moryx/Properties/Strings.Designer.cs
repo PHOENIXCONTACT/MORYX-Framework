@@ -69,15 +69,15 @@ namespace Moryx.Properties {
             }
         }
         
-        public static string SubworkflowStep_Description {
+        public static string SubworkplanStep_Description {
             get {
-                return ResourceManager.GetString("SubworkflowStep_Description", resourceCulture);
+                return ResourceManager.GetString("SubworkplanStep_Description", resourceCulture);
             }
         }
         
-        public static string SubworkflowStep_Name {
+        public static string SubworkplanStep_DisplayName {
             get {
-                return ResourceManager.GetString("SubworkflowStep_Name", resourceCulture);
+                return ResourceManager.GetString("SubworkplanStep_DisplayName", resourceCulture);
             }
         }
     }

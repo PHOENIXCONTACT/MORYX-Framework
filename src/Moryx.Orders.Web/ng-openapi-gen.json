@@ -1,4 +1,6 @@
 {
+    "_README": "To (re)generate the api services disable https in the demo run `ng-openapi-gen` in the terminal.",
+    "_NOTE": "Note: You will need to revert the changes related to the Entry format, as they are provided by the ngx-web-framework.",
     "$schema": "node_modules/ng-openapi-gen/ng-openapi-gen-schema.json",
     "input": "http://localhost:5000/swagger/v1/swagger.json",
     "ignoreUnusedModels": true,
@@ -7,5 +9,11 @@
         "ProductManagement",
         "Workplan",
         "OperatorManagement"
-    ]   
+    ],
+    "module": true,
+    "services": true,
+    "apiService": "",
+    "enumStyle": "pascal",
+    "enumArray": false,
+    "promises": false
 }

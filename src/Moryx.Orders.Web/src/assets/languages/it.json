@@ -62,9 +62,7 @@
   },
   "REPORT_DIALOG": {
     "REPORT_TITLE": "Report Operazione",
-    "INTERRUPT_TITLE": "Ferma Operazione",
     "REPORT": "REPORT",
-    "INTERRUPT": "INTERROMPERE",
     "OPERATION": "Operazione",
     "ORDER": "Ordine",
     "PRODUCT": "Prodotto",
@@ -78,8 +76,11 @@
     "COMMENT": "Commenti",
     "CONFIRMATION": "Conferma",
     "PARTIAL": "Parziale",
-    "FINAL": "Finale",
-    "CANCEL": "CANCELLA"
+    "FINAL": "Finale"
+  },
+  "INTERRUPT_DIALOG": {
+    "TITLE": "Ferma Operazione",
+    "PROMPT": "Per la seguente operazione non vengono avviati nuovi processi. I processi già avviati vengono completati normalmente e lo stato dell'operazione passa a 'Interrotto'."
   },
   "CREATE_DIALOG": {
     "TITLE": "Nuovo Ordine",
@@ -91,7 +92,6 @@
     "RECIPE": "Ricetta",
     "AMOUNT": "Quantità",
     "ADDED_OPERATIONS": "Operazioni aggiunte",
-    "CANCEL": "CANCELLA",
     "CLEAR": "PULISCI",
     "CREATE": "CREA",
     "ADD": "AGGIUNGERE",
@@ -109,7 +109,6 @@
     "OVERDELIVERY": "Prodotte",
     "UNDERDELIVERY": "Non prodotte",
     "PARTIAL_AMOUNT": "Quantità parziale",
-    "CANCEL": "CANCELLA",
     "BEGIN": "INIZIA",
     "OPERATOR_SELECTION_LABEL": "Operatore",
     "OPERATOR_SELECTION_PLACEHOLDER": "(Facoltativo) Selezionare un operatore",
@@ -121,6 +120,8 @@
     "CANNOT_REDUCE_TARGET_AMOUNT": "L'importo target non può essere ulteriormente ridotto"
   },
   "DISMISS": "RIFIUTARE",
+  "CANCEL": "CANCELLA",
+  "CONFIRM": "CONFERMARE",
   "DEFAULT_MESSAGE": "Qualcosa è andato storto sul server.",
   "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controllare la connessione internet o le impostazioni del proxy."
 }

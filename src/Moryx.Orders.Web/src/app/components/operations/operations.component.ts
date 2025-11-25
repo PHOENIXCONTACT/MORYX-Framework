@@ -13,13 +13,15 @@ import { OrderManagementService } from '../../api/services/order-management.serv
 import { BeginDialogComponent, BeginDialogData } from '../../dialogs/begin-dialog/begin-dialog.component';
 import { CreateDialogComponent } from '../../dialogs/create-dialog/create-dialog.component';
 import { ReportDialogComponent, ReportDialogData } from '../../dialogs/report-dialog/report-dialog.component';
+import { InterruptDialogComponent } from '../../dialogs/interrupt-dialog/interrupt-dialog.component';
+import { InterruptDialogData } from '../../dialogs/interrupt-dialog/interrupt-dialog-data';
 import '../../extensions/observable.extensions';
 import { OperationViewModel } from '../../models/operation-view-model';
-import { OperationModel } from 'src/app/api/models/Moryx/Orders/Endpoints/operation-model';
-import { ReportModel } from 'src/app/api/models/Moryx/Orders/Endpoints/report-model';
-import { OperationClassification } from 'src/app/api/models/Moryx/Orders/operation-classification';
-import { ReportContext } from 'src/app/api/models/Moryx/Orders/report-context';
-import { LogLevel } from 'src/app/api/models/Microsoft/Extensions/Logging/log-level';
+import { OperationModel } from '../../api/models';
+import { ReportModel } from '../../api/models';
+import { OperationClassification } from '../../api/models';
+import { ReportContext } from '../../api/models';
+import { LogLevel } from '../../api/models';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DrawerContent } from './drawer-content';
 import { CommonModule } from '@angular/common';
@@ -183,24 +185,17 @@ export class OperationsComponent implements OnInit, OnDestroy {
   }
 
   onInterrupt(operation: OperationViewModel) {
-    this.dialog.open(ReportDialogComponent, {
-      data: <ReportDialogData>{
+    this.dialog.open(InterruptDialogComponent, {
+      data: <InterruptDialogData>{
         operation: operation,
-        isReport: false,
-        onGetContext: this.getInterruptContext.bind(this),
         onSubmit: this.submitInterruption.bind(this),
       },
     });
   }
 
-  private getInterruptContext(guid: string): Observable<ReportContext> {
-    return this.orderManagementService.getInterruptContext({ guid: guid });
-  }
-
-  private submitInterruption(guid: string, body: ReportModel): Observable<void> {
+  private submitInterruption(guid: string): Observable<void> {
     return this.orderManagementService.interruptOperation({
       guid: guid,
-      body: body,
     });
   }
 
