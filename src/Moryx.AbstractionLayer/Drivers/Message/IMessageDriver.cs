@@ -6,20 +6,16 @@ namespace Moryx.AbstractionLayer.Drivers.Message
     /// <summary>
     /// Multipurpose driver that exchanges information with a device
     /// </summary>
-    public interface IMessageDriver : IDriver
+    public interface IMessageDriver : IDriver, IMessageChannel
     {
         /// <summary>
-        /// Send data async through channel
+        /// Flag if the drivers supports identified channels or topics
         /// </summary>
-        /// <param name="payload">Message to send through the driver</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
-        /// <exception cref="DriverStateException">Thrown if the driver is in an invalid state for this operation.</exception>
-        /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
-        Task SendAsync(object payload, CancellationToken cancellationToken = default);
+        bool HasChannels { get; }
 
         /// <summary>
-        /// Event raised when the driver receives a message
+        /// Get channel using specialized API
         /// </summary>
-        event EventHandler<object> Received;
+        IMessageChannel Channel(string identifier);
     }
 }

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Bindings;
@@ -20,7 +21,7 @@ namespace Moryx.Drivers.Mqtt
     /// Base class for MQTT topics a MQTT Driver can subscribe.
     /// </summary>
     [ResourceRegistration]
-    public abstract class MqttTopic : Resource
+    public abstract class MqttTopic : Resource, IMessageChannel
     {
         /// <summary>
         /// Event raised, when a message is received
@@ -157,8 +158,9 @@ namespace Moryx.Drivers.Mqtt
         public Type MessageType { get; set; }
 
         /// <summary>
-        /// Typed parent <see cref="MqttDriver"/>
+        /// Driver, who subscribes this topic.
         /// </summary>
+        public IDriver Driver => MqttDriver;
         protected MqttDriver MqttDriver => (MqttDriver)Parent;
 
         #endregion
@@ -170,14 +172,16 @@ namespace Moryx.Drivers.Mqtt
             MqttDriver?.NewTopicAdded(SubscribedTopic);
         }
 
-        /// <summary>
-        /// This method has to call MqttDriver.OnSend
-        /// </summary>
-        internal abstract Task OnSend(object payload, CancellationToken cancellationToken);
+        /// <inheritdoc />
+        public abstract void Send(object payload);
 
-        /// <summary>
-        /// This method has to call MqttDriver.OnReceive
-        /// </summary>
+        /// <inheritdoc />
+        public abstract Task SendAsync(object payload, CancellationToken cancellationToken = default);
+
+        //This method has to call MqttDriver.OnSend
+        internal abstract Task OnSend(object payload);
+
+        //This method has to call MqttDriver.OnReceive
         internal abstract void OnReceived(string receivedTopic, byte[] messageAsBytes);
 
         /// <summary>
@@ -212,7 +216,7 @@ namespace Moryx.Drivers.Mqtt
     }
 
     /// <inheritdoc cref="MqttTopic" />
-    public abstract class MqttTopic<TMessage> : MqttTopic
+    public abstract class MqttTopic<TMessage> : MqttTopic, IMessageChannel
     {
         /// <summary>
         /// Constructor for MessageType
@@ -229,7 +233,7 @@ namespace Moryx.Drivers.Mqtt
                 if (typeList.Length == 1)
                 {
                     var type = typeList.First();
-                    if (!string.IsNullOrEmpty(Identifier) && RegexTopic.GetGroupNames().Length > 1)
+                    if (Identifier != default && RegexTopic.GetGroupNames().Length > 1)
                     {
                         var placeholderNames = RegexTopic.GetGroupNames();
                         for (var i = 1; i < placeholderNames.Length; i++)
@@ -261,8 +265,36 @@ namespace Moryx.Drivers.Mqtt
             }
         }
 
+        /// <inheritdoc />
+        public override void Send(object payload)
+        {
+            if (payload is TMessage send)
+            {
+                MqttDriver.Send(payload);;
+            }
+            else
+            {
+                Logger.Log(LogLevel.Error, "Message {0} has the wrong Type. It is {1} instead of {2}",
+                    payload, payload.GetType(), typeof(TMessage));
+                throw new ArgumentException("Message " + payload + " has the wrong Type. It is " + payload.GetType() + " instead of " + typeof(TMessage));
+            }
+        }
 
-        internal override Task OnSend(object payload, CancellationToken cancellationToken)
+        /// <inheritdoc />
+        public override Task SendAsync(object payload, CancellationToken cancellationToken = default)
+        {
+            if (payload is TMessage send)
+            {
+                return MqttDriver.SendAsync(payload, cancellationToken);
+            }
+
+            Logger.Log(LogLevel.Error, "Message {0} has the wrong Type. It is {1} instead of {2}",
+                payload, payload.GetType(), typeof(TMessage));
+            throw new ArgumentException("Message " + payload + " has the wrong Type. It is " + payload.GetType() + " instead of " + typeof(TMessage));
+        }
+
+
+        internal override Task OnSend(object payload)
         {
             var topic = Identifier;
             var msg = Serialize(payload);
@@ -297,53 +329,51 @@ namespace Moryx.Drivers.Mqtt
             }
 
             topic = MqttDriver.Identifier + topic;
-            return MqttDriver.OnSend(new MqttMessageTopic(ResponseTopic, topic), msg, cancellationToken);
+            return MqttDriver.OnSend(new MqttMessageTopic(ResponseTopic, topic), msg);
         }
 
         internal override void OnReceived(string receivedTopic, byte[] messageAsBytes)
         {
-            if (MessageType == null)
+            if (MessageType != null)
             {
-                Logger.Log(LogLevel.Error, "Message was received, but not MessageType was set.");
-                return;
-            }
-
-            var msg = Deserialize(messageAsBytes);
-            if (msg is IIdentifierMessage identMessage)
-            {
-                identMessage.Identifier = receivedTopic;
-            }
-
-            var groupNames = RegexTopic.GetGroupNames();
-            if (groupNames.Length > 1)
-            {
-                var placeholderValues = RegexTopic.Match(receivedTopic).Groups;
-                if (placeholderValues.Count == groupNames.Length)
+                var msg = Deserialize(messageAsBytes);
+                if (msg is IIdentifierMessage identMessage)
                 {
-                    for (var i = 1; i < placeholderValues.Count; i++)
+                    identMessage.Identifier = receivedTopic;
+                }
+
+                var groupNames = RegexTopic.GetGroupNames();
+                if (groupNames.Length > 1)
+                {
+                    var placeholderValues = RegexTopic.Match(receivedTopic).Groups;
+                    if (placeholderValues.Count == groupNames.Length)
                     {
-                        var placeholderName = groupNames[i].Replace("__", ".");
-                        var resolver = new BindingResolverFactory().Create(placeholderName);
-                        var placeholderValue = placeholderValues[i].ToString();
-                        if (!resolver.Update(msg, placeholderValue))
+                        for (var i = 1; i < placeholderValues.Count; i++)
                         {
-                            Logger.Log(LogLevel.Error, "Placeholder " + placeholderName + " cannot be filled. " +
-                                                       "MessageType " + typeof(TMessage).Name +
-                                                       " may not contain a " +
-                                                       "matching property");
+                            var placeholderName = groupNames[i].Replace("__", ".");
+                            var resolver = new BindingResolverFactory().Create(placeholderName);
+                            var placeholderValue = placeholderValues[i].ToString();
+                            if (!resolver.Update(msg, placeholderValue))
+                            {
+                                Logger.Log(LogLevel.Error, "Placeholder " + placeholderName + " cannot be filled. " +
+                                                           "MessageType " + typeof(TMessage).Name + " may not contain a " +
+                                                           "matching property");
+                            }
                         }
                     }
+                    else
+                    {
+                        Logger.Log(LogLevel.Warning, "Number of found Placeholders does not match of number of possible " +
+                                                    "corresponding values");
+                    }
                 }
-                else
-                {
-                    Logger.Log(LogLevel.Warning,
-                        "Number of found Placeholders does not match of number of possible " +
-                        "corresponding values");
-                }
+                RaiseReceived(msg);
+                MqttDriver.OnReceived(msg);
             }
-
-            RaiseReceived(msg);
-            MqttDriver.OnReceived(msg);
+            else
+            {
+                Logger.Log(LogLevel.Error, "Message was received, but not MessageType was set.");
+            }
         }
 
         /// <summary>

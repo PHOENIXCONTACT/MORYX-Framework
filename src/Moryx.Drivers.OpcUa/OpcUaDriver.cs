@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers;
@@ -10,14 +11,13 @@ using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
 using Moryx.Drivers.OpcUa.Nodes;
+using Moryx.Drivers.OpcUa.Properties;
+using Moryx.Drivers.OpcUa.States;
 using Moryx.Serialization;
 using Moryx.StateMachines;
 using Moryx.Threading;
 using Opc.Ua;
 using Opc.Ua.Client;
-using System.ComponentModel.DataAnnotations;
-using Moryx.Drivers.OpcUa.Properties;
-using Moryx.Drivers.OpcUa.States;
 
 namespace Moryx.Drivers.OpcUa;
 
@@ -164,6 +164,11 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     /// </summary>
     public IParallelOperations ParallelOperations { get; set; }
 
+    /// <summary>
+    /// The number of nodes under the driver
+    /// </summary>
+    public bool HasChannels => _nodesFlat.Count > 0;
+
     private DriverOpcUaState State => (DriverOpcUaState)CurrentState;
 
     /// <inheritdoc />
@@ -171,6 +176,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
     /// <inheritdoc />
     public IOutput Output { get; set; }
+
+    /// <inheritdoc />
+    public IDriver Driver => this;
 
     private List<OpcUaNode> _nodes = [];
     private readonly Dictionary<string, OpcUaNode> _nodesFlat = [];
@@ -436,7 +444,13 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     }
 
     #endregion
-    
+
+    /// <inheritdoc />
+    public IMessageChannel Channel(string identifier)
+    {
+        return State.GetNode(identifier);
+    }
+
     /// <inheritdoc/>
     public OpcUaNode GetNode(string identifier)
     {
@@ -885,7 +899,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         if (payload is not OpcUaMessage msg)
         {
             Logger.Log(LogLevel.Warning, "Currently it is only possible to send messages of the type OpcUaMessage " +
-                "using the Opc Ua Driver directly");
+                                         "using the Opc Ua Driver directly");
             return;
         }
 
@@ -903,6 +917,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         }
 
         WriteNode(node.Identifier, msg.Payload);
+
     }
 
     /// <inheritdoc/>
@@ -911,11 +926,13 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         if (payload is not OpcUaMessage msg)
         {
             Logger.Log(LogLevel.Warning, "Currently it is only possible to send messages of the type OpcUaMessage " +
-                "using the Opc Ua Driver directly");
+                                         "using the Opc Ua Driver directly");
             return Task.CompletedTask;
         }
-        return SendAsync(msg, cancellationToken);
+
+        throw new NotImplementedException();
     }
+
 
     #endregion
 
@@ -1100,4 +1117,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
     /// <inheritdoc/>
     public event EventHandler<object> Received;
+
+    public IMessageChannel GetChannel(string identifier)
+    {
+        return State.GetNode(identifier);
+    }
 }

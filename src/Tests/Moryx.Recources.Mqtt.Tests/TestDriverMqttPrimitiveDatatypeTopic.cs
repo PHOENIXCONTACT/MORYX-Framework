@@ -99,7 +99,7 @@ namespace Moryx.Resources.Mqtt.Tests
                     => SendMessagIntIConvertible(sentMsg, token));
 
             //Act
-            _mqttTopicInt.OnSend(MESSAGE_VALUE_INT, CancellationToken.None);
+            _mqttTopicInt.Send(MESSAGE_VALUE_INT);
 
             //Assert 1
             _mockClient.Verify((m => m.PublishAsync(
@@ -129,7 +129,7 @@ namespace Moryx.Resources.Mqtt.Tests
                     => SendMessagStringIConvertible(sentMsg, token));
 
             //Act
-            _mqttTopicString.OnSend(MESSAGE_VALUE_STRING, CancellationToken.None);
+            _mqttTopicString.Send(MESSAGE_VALUE_STRING);
 
             //Assert 1
             _mockClient.Verify((m => m.PublishAsync(

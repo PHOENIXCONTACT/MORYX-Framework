@@ -88,6 +88,18 @@ public class NodeHandlingTests : OpcUaTestBase
         Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), "Driver was not running");
     }
 
+    [Test(Description = "Channels without namespace uri won't be created before the driver is running")]
+    public void TestReturnChannelBeforeDriverIsRunning()
+    {
+        //Arrange
+        var expectedNode = Nodes.First();
+
+        //Act
+        var channel = _driver.Channel(expectedNode.Key.ToString());
+
+        //Assert
+        Assert.That(channel, Is.Null);
+    }
 
     [Test(Description = "Subscribe monitored items after browsing")]
     public void TestSubscribingMonitoredItemsAfterBrowsing()

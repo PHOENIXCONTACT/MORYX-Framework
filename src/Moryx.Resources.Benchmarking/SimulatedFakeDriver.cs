@@ -44,6 +44,11 @@ namespace Moryx.Resources.Benchmarking
             SimulatedState = SimulationState.Idle;
         }
 
+        public IMessageChannel Channel(string identifier)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Send(object payload)
         {
             switch (payload)

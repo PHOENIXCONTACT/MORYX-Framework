@@ -89,14 +89,14 @@ namespace Moryx.Resources.Mqtt.Tests
         }
 
         [Test(Description = "Publish Message using Driver")]
-        public async Task Send_UsingDriver_IIdentifierMessage_Topic_QOS_Message()
+        public void Send_UsingDriver_IIdentifierMessage_Topic_QOS_Message()
         {
             //Arrange
             _mockClient.Setup(m => m.PublishAsync(
                     It.IsAny<MqttApplicationMessage>(), It.IsAny<CancellationToken>()))
                 .Callback<MqttApplicationMessage, CancellationToken>((sentMsg, token) => SendMessageBoolMqttMessage(sentMsg, token));
             //Act
-            await _driver.SendAsync(new BoolMqttMessage { Message = MESSAGE_VALUE, Identifier = _topicBoolMqtt.Identifier });
+            _driver.Send(new BoolMqttMessage { Message = MESSAGE_VALUE, Identifier = _topicBoolMqtt.Identifier });
 
             //Assert 1
             _mockClient.Verify((m => m.PublishAsync(
@@ -104,7 +104,7 @@ namespace Moryx.Resources.Mqtt.Tests
         }
 
         [Test(Description = "Publish Message using the MqttTopic")]
-        public async Task Send_UsingTopic_IIdentifierMessage_Topic_QOS_Message()
+        public void Send_UsingTopic_IIdentifierMessage_Topic_QOS_Message()
         {
             //Arrange
             _mockClient.Setup(m => m.PublishAsync(
@@ -112,7 +112,7 @@ namespace Moryx.Resources.Mqtt.Tests
                 .Callback<MqttApplicationMessage, CancellationToken>((sentMsg, token)
                     => SendMessageBoolMqttMessage(sentMsg, token));
             //Act
-            await _topicBoolMqtt.OnSend(new BoolMqttMessage { Message = MESSAGE_VALUE, Identifier = _topicBoolMqtt.Identifier }, CancellationToken.None);
+            _topicBoolMqtt.Send(new BoolMqttMessage { Message = MESSAGE_VALUE, Identifier = _topicBoolMqtt.Identifier });
 
             //Assert 1
             _mockClient.Verify((m => m.PublishAsync(
@@ -143,7 +143,7 @@ namespace Moryx.Resources.Mqtt.Tests
                     => SendMessageBoolIByteSerializableMessage(sentMsg, token));
 
             //Act
-            _topicBoolIByteSerializable.OnSend(new BoolByteSerializableMessage { Message = MESSAGE_VALUE }, CancellationToken.None);
+            _topicBoolIByteSerializable.Send(new BoolByteSerializableMessage { Message = MESSAGE_VALUE });
 
             //Assert 1
             _mockClient.Verify((m => m.PublishAsync(

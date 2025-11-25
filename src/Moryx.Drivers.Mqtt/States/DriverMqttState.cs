@@ -20,7 +20,7 @@ namespace Moryx.Drivers.Mqtt.States
             await Context.Disconnect();
         }
 
-        internal virtual Task Send(MqttTopic topic, object message, CancellationToken cancellationToken)
+        internal virtual Task SendAsync(MqttTopic topic, object message, CancellationToken cancellationToken)
         {
             throw new InvalidOperationException($"Current state {GetType().Name} can net send message of type {message.GetType().Name}");
         }

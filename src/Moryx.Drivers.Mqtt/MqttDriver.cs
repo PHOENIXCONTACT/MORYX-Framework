@@ -31,6 +31,8 @@ namespace Moryx.Drivers.Mqtt;
 public class MqttDriver : Driver, IMessageDriver
 {
     private string _clientId;
+    /// <inheritdoc/>
+    public event EventHandler<object> Received;
 
     /// <summary>
     /// Timer used in message queue
@@ -45,6 +47,11 @@ public class MqttDriver : Driver, IMessageDriver
     [EntrySerialize]
     [Display(Name = nameof(Strings.MqttDriver_DriverState), ResourceType = typeof(Strings))]
     public string DriverState => CurrentState?.ToString() ?? string.Empty;
+
+    /// <summary>
+    /// Returns this driver object
+    /// </summary>
+    public IDriver Driver => this;
 
     /// <summary>
     /// Name of the Root Topic
@@ -125,7 +132,8 @@ public class MqttDriver : Driver, IMessageDriver
     #endregion
 
     #region Properties
-
+    /// <inheritdoc />
+    public bool HasChannels => Channels.Count > 0;
     internal DriverMqttState State => (DriverMqttState)CurrentState;
     private IMqttClient _mqttClient;
 
@@ -262,6 +270,31 @@ public class MqttDriver : Driver, IMessageDriver
     }
 
     /// <inheritdoc />
+    public IMessageChannel Channel(string identifier)
+    {
+        var channelList = Channels.Where(t => t.Identifier.Equals(identifier)).ToList();
+        switch (channelList.Count)
+        {
+            case 0:
+                Logger.Log(LogLevel.Warning,
+                    "No channels with the name {identifier} exists.", identifier);
+                return null;
+            case 1:
+                return channelList[0];
+            default:
+                Logger.Log(LogLevel.Warning,
+                    "Several channels with the name {identifier} exist.", identifier);
+                return null;
+        }
+    }
+
+    /// <inheritdoc />
+    public void Send(object message)
+    {
+        SendAsync(message).Wait();
+    }
+
+    /// <inheritdoc />
     public async Task SendAsync(object message, CancellationToken cancellationToken = default)
     {
         IReadOnlyList<MqttTopic> topics;
@@ -272,14 +305,9 @@ public class MqttDriver : Driver, IMessageDriver
             topics = Channels.Where(t => t.MessageType.IsInstanceOfType(message)).ToList();
 
         if (topics.Count == 1)
-            await State.Send(topics[0], message, cancellationToken);
+            await State.SendAsync(topics[0], message, cancellationToken);
         else
             Logger.Log(LogLevel.Warning, "Corresponding topic for message {message} not found.", message);
-    }
-
-    internal Task Send(MqttTopic topic, object message, CancellationToken cancellationToken)
-    {
-        return State.Send(topic, message, cancellationToken);
     }
 
     /// <summary>
@@ -287,9 +315,8 @@ public class MqttDriver : Driver, IMessageDriver
     /// </summary>
     /// <param name="messageTopic">The topic to publish on</param>
     /// <param name="message">The message to be published</param>
-    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task OnSend(MqttMessageTopic messageTopic, byte[] message, CancellationToken cancellationToken)
+    public async Task OnSend(MqttMessageTopic messageTopic, byte[] message)
     {
         var messageMqttBuilder = new MqttApplicationMessageBuilder()
           .WithTopic(messageTopic.Topic)
@@ -305,7 +332,7 @@ public class MqttDriver : Driver, IMessageDriver
         }
 
         var messageMqtt = messageMqttBuilder.Build();
-        await _mqttClient.PublishAsync(messageMqtt, cancellationToken);
+        await _mqttClient.PublishAsync(messageMqtt, CancellationToken.None);
     }
 
     private Task OnReceived(MqttApplicationMessageReceivedEventArgs args)
@@ -389,10 +416,6 @@ public class MqttDriver : Driver, IMessageDriver
             return MqttQualityOfServiceLevel.ExactlyOnce;
         return (MqttQualityOfServiceLevel)Enum.Parse(typeof(MqttQualityOfServiceLevel), qos);
     }
-
-
-    /// <inheritdoc/>
-    public event EventHandler<object> Received;
 }
 
 internal class MqttQoSAttribute : PossibleValuesAttribute

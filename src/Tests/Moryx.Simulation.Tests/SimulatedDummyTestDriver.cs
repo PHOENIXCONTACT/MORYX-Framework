@@ -44,7 +44,12 @@ namespace Moryx.Simulation.Tests
             SimulatedState = SimulationState.Idle;
         }
 
-        public virtual Task SendAsync(object payload, CancellationToken cancellationToken = default)
+        public IMessageChannel Channel(string identifier)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void Send(object payload)
         {
             switch (payload)
             {
@@ -55,7 +60,10 @@ namespace Moryx.Simulation.Tests
                     SimulatedState = SimulationState.Idle;
                     break;
             }
+        }
 
+        public Task SendAsync(object payload, CancellationToken cancellationToken = default)
+        {
             return Task.CompletedTask;
         }
 
