@@ -87,6 +87,20 @@ All driver APIs have been reworked to use TPL async/await instead of callbacks f
 - You can chain tasks with LINQ-like methods or await syntax.
 - Async stack-traces in IDE show the actual logical call flow — even across await boundaries.
 
+## Resource initialization
+
+The API of `IResourceInitializer` was adjusted
+
+- `Initialize` is now returning async task
+- Introduced `ResourceInitializerResult` object for extensibility and option to save
+- Its now possible to execute initializers from the facade
+- The initializers are registered transient by default.
+
+## Product importer
+
+- Introduced `ProductImporterAttribute` for harmonized registration of importers.
+- The importers are registered transient by default.
+
 ## ConstraintContext during activity-handling
 
 The `IConstraintContext` interface was removed from `IProcess`. Instead a new wrapper was introduced `ActivityConstraintContext` which provides the Activity and the Process for better handling in `IConstraint` implementations.

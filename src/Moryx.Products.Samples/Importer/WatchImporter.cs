@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations;
-using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Products.Management;
 using Moryx.AbstractionLayer.Products;
@@ -10,7 +9,7 @@ using Moryx.AbstractionLayer.Products;
 namespace Moryx.Products.Samples
 {
     [ExpectedConfig(typeof(WatchImporterConfig))]
-    [Plugin(LifeCycle.Singleton, typeof(IProductImporter), Name = nameof(WatchImporter))]
+    [ProductImporter(nameof(WatchImporter))]
     public class WatchImporter : ProductImporterBase<WatchImporterConfig, SpecializedWatchImportParameters>
     {
         public IProductStorage Storage { get; set; }

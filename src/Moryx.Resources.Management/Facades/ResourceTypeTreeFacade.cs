@@ -1,21 +1,20 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Runtime.Modules;
 
-namespace Moryx.Resources.Management.Facades
+namespace Moryx.Resources.Management
 {
-    internal class ResourceTypeTreeFacade : IResourceTypeTree, IFacadeControl
+    internal class ResourceTypeTreeFacade : FacadeBase, IResourceTypeTree
     {
         #region Dependency Injection
 
         public IResourceTypeTree TypeTree { get; set; }
-        #endregion
-        #region IResourceTypeTree
-        public IResourceTypeNode RootType => TypeTree.RootType;
 
-        public Action ValidateHealthState { get; set; }
+        #endregion
+
+        public IResourceTypeNode RootType => TypeTree.RootType;
 
         public IResourceTypeNode this[string typeName] => TypeTree[typeName];
 
@@ -28,18 +27,6 @@ namespace Moryx.Resources.Management.Facades
         {
             return TypeTree.SupportedTypes(constraints);
         }
-
-        public void Activate()
-        {
-
-        }
-
-        public void Deactivate()
-        {
-
-        }
-
-        #endregion
     }
 }
 

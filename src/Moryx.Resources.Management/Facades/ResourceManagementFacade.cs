@@ -11,28 +11,30 @@ namespace Moryx.Resources.Management
     {
         #region Dependency Injection
 
-        public IResourceManager Manager { get; set; }
+        public IResourceManager ResourceManager { get; set; }
 
         public IResourceGraph ResourceGraph { get; set; }
 
         public IResourceTypeController TypeController { get; set; }
+
+        public IResourceInitializerFactory InitializerFactory { get; set; }
 
         #endregion
 
         /// <seealso cref="IFacadeControl"/>
         public override void Activate()
         {
-            Manager.ResourceAdded += OnResourceAdded;
-            Manager.CapabilitiesChanged += OnCapabilitiesChanged;
-            Manager.ResourceRemoved += OnResourceRemoved;
+            ResourceManager.ResourceAdded += OnResourceAdded;
+            ResourceManager.CapabilitiesChanged += OnCapabilitiesChanged;
+            ResourceManager.ResourceRemoved += OnResourceRemoved;
         }
 
         /// <seealso cref="IFacadeControl"/>
         public override void Deactivate()
         {
-            Manager.ResourceAdded -= OnResourceAdded;
-            Manager.CapabilitiesChanged -= OnCapabilitiesChanged;
-            Manager.ResourceRemoved -= OnResourceRemoved;
+            ResourceManager.ResourceAdded -= OnResourceAdded;
+            ResourceManager.CapabilitiesChanged -= OnCapabilitiesChanged;
+            ResourceManager.ResourceRemoved -= OnResourceRemoved;
         }
 
         private void OnCapabilitiesChanged(object sender, ICapabilities args)
@@ -156,6 +158,24 @@ namespace Moryx.Resources.Management
         {
             ValidateHealthState();
             return ResourceGraph.GetResources(predicate);
+        }
+
+        public Task ExecuteInitializer(string initializerName, object parameters)
+        {
+            ValidateHealthState();
+
+            return ResourceManager.ExecuteInitializer(initializerName, parameters);
+        }
+
+        public async Task ExecuteInitializer(ResourceInitializerConfig initializerConfig, object parameters)
+        {
+            ValidateHealthState();
+
+            var initializer = InitializerFactory.Create(initializerConfig);
+
+            var result = await ResourceManager.ExecuteInitializer(initializer, parameters);
+
+            InitializerFactory.Destroy(initializer);
         }
 
         public event EventHandler<IResource> ResourceAdded;

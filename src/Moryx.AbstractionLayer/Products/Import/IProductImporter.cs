@@ -16,7 +16,7 @@ namespace Moryx.AbstractionLayer.Products
         string Name { get; }
 
         /// <summary>
-        /// Importer is long running and synchronous execution useless
+        /// Importer is long-running and synchronous execution useless
         /// </summary>
         bool LongRunning { get; }
 

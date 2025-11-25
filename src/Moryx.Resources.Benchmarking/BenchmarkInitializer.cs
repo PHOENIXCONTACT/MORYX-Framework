@@ -15,7 +15,7 @@ namespace Moryx.Resources.Benchmarking
 
         public override string Description => $"Creates a ring of {CellCount} Benchmark resources";
 
-        public override IReadOnlyList<Resource> Execute(IResourceGraph graph)
+        public override Task<ResourceInitializerResult> Execute(IResourceGraph graph, object parameters)
         {
             // Create Reporter
             var reporter = graph.Instantiate<BenchmarkReporter>();
@@ -48,7 +48,7 @@ namespace Moryx.Resources.Benchmarking
                 reporter.Children.Add(instance);
             }
 
-            return [reporter];
+            return InitializedAsync([reporter]);
         }
     }
 }

@@ -56,6 +56,42 @@ namespace Moryx.AbstractionLayer.Resources
         }
 
         /// <inheritdoc />
-        public abstract IReadOnlyList<Resource> Execute(IResourceGraph graph);
+        public abstract Task<ResourceInitializerResult> Execute(IResourceGraph graph, object parameters);
+
+        /// <summary>
+        /// Creates an <see cref="ResourceInitializerResult"/> within a completed task
+        /// </summary>
+        /// <param name="initializedResources">Initialized resources, only roots should be returned as resources are saved recursively</param>
+        protected static Task<ResourceInitializerResult> InitializedAsync(IReadOnlyList<Resource> initializedResources) =>
+            InitializedAsync(initializedResources, false);
+
+        /// <summary>
+        /// Creates an <see cref="ResourceInitializerResult"/> within a completed task
+        /// </summary>
+        /// <param name="initializedResources">Initialized resources, only roots should be returned as resources are saved recursively</param>
+        /// <param name="saved">If true, the resources will not be saved, but are assumed to already have been saved within the initializer</param>
+        protected static Task<ResourceInitializerResult> InitializedAsync(IReadOnlyList<Resource> initializedResources, bool saved) =>
+            Task.FromResult(Initialized(initializedResources, saved));
+
+        /// <summary>
+        /// Creates an <see cref="ResourceInitializerResult"/>
+        /// </summary>
+        /// <param name="initializedResources">Initialized resources, only roots should be returned as resources are saved recursively</param>
+        protected static ResourceInitializerResult Initialized(IReadOnlyList<Resource> initializedResources) =>
+            Initialized(initializedResources, false);
+
+        /// <summary>
+        /// Creates an <see cref="ResourceInitializerResult"/>
+        /// </summary>
+        /// <param name="initializedResources">Initialized resources, only roots should be returned as resources are saved recursively</param>
+        /// <param name="saved">If true, the resources will not be saved, but are assumed to already have been saved within the initializer</param>
+        protected static ResourceInitializerResult Initialized(IReadOnlyList<Resource> initializedResources, bool saved)
+        {
+            return new ResourceInitializerResult
+            {
+                Saved = saved,
+                InitializedResources = initializedResources
+            };
+        }
     }
 }
