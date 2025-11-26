@@ -3,7 +3,7 @@
 
 using Opc.Ua;
 
-namespace Moryx.Drivers.OpcUa.Nodes;
+namespace Moryx.Drivers.OpcUa;
 
 /// <summary>
 /// Class to show Opc Ua Object Nodes on the UI

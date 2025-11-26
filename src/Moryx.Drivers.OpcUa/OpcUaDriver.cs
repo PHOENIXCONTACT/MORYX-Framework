@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers;
@@ -9,15 +10,14 @@ using Moryx.AbstractionLayer.Drivers.InOut;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
-using Moryx.Drivers.OpcUa.Nodes;
+using Moryx.Drivers.OpcUa;
+using Moryx.Drivers.OpcUa.Properties;
+using Moryx.Drivers.OpcUa.States;
 using Moryx.Serialization;
 using Moryx.StateMachines;
 using Moryx.Threading;
 using Opc.Ua;
 using Opc.Ua.Client;
-using System.ComponentModel.DataAnnotations;
-using Moryx.Drivers.OpcUa.Properties;
-using Moryx.Drivers.OpcUa.States;
 
 namespace Moryx.Drivers.OpcUa;
 
@@ -158,28 +158,27 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     [EntrySerialize, ReadOnly(true)]
     [Display(Name = nameof(Strings.OpcUaDriver_Nodes), ResourceType = typeof(Strings))]
     internal List<OpcUaDisplayNode> Nodes { get; private set; } = [];
-    /// <summary>
-    /// The number of nodes under the driver
-    /// </summary>
-    public bool HasChannels => _nodesFlat.Count > 0;
-
-    /// <summary>
-    /// The driver
-    /// </summary>
-    public IDriver Driver => this;
 
     /// <summary>
     /// Timer used in message queue
     /// </summary>
     public IParallelOperations ParallelOperations { get; set; }
 
+    /// <summary>
+    /// The number of nodes under the driver
+    /// </summary>
+    public bool HasChannels => _nodesFlat.Count > 0;
+
     private DriverOpcUaState State => (DriverOpcUaState)CurrentState;
 
     /// <inheritdoc />
-    public IInput<object> Input { get; set; }
+    public IInput Input { get; set; }
 
     /// <inheritdoc />
-    public IOutput<object> Output { get; set; }
+    public IOutput Output { get; set; }
+
+    /// <inheritdoc />
+    public IDriver Driver => this;
 
     private List<OpcUaNode> _nodes = [];
     private readonly Dictionary<string, OpcUaNode> _nodesFlat = [];
@@ -196,25 +195,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
     //TODO: Internal property just for tests, use xml also in tests
     internal ApplicationConfigurationFactory ApplicationConfigurationFactory { get; set; } = new();
-
-    /// <inheritdoc/>
-    public event EventHandler<object> Received;
-
-    private event EventHandler<OpcUaMessage> OpcUaMessageReceived;
-
-    event EventHandler<OpcUaMessage> IMessageChannel<OpcUaMessage, OpcUaMessage>.Received
-    {
-        add
-        {
-            OpcUaMessageReceived += value;
-        }
-
-        remove
-        {
-            OpcUaMessageReceived -= value;
-        }
-    }
-
+    
     /// <summary>
     /// Convert an OpcUaNode to an entity to be shown on the UI
     /// </summary>
@@ -464,32 +445,10 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
     #endregion
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <typeparam name="TChannel"></typeparam>
-    /// <param name="identifier"></param>
-    /// <returns></returns>
-    public IMessageChannel<TChannel> Channel<TChannel>(string identifier)
+    /// <inheritdoc />
+    public IMessageChannel Channel(string identifier)
     {
-        if (typeof(TChannel) != typeof(object))
-        {
-            Logger.Log(LogLevel.Warning,
-                "Opc Ua Message Channels only implement IMessageChannel<object>");
-            return null;
-        }
-        return (IMessageChannel<TChannel>)State.GetNode(identifier);
-    }
-
-    /// <inheritdoc/>
-    public IMessageChannel<TSend, TReceive> Channel<TSend, TReceive>(string identifier)
-    {
-        if (typeof(TSend) == typeof(TReceive))
-        {
-            return (IMessageChannel<TSend, TReceive>)Channel<TSend>(identifier);
-        }
-
-        throw new NotSupportedException("Opc Ua Message Channels only implement IMessageChannel<object>");
+        return State.GetNode(identifier);
     }
 
     /// <inheritdoc/>
@@ -601,7 +560,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         //Subscribe default Nodes
         foreach (var nodeId in DefaultSubscriptions)
         {
-            var node = (OpcUaNode)Channel<object, object>(nodeId);
+            var node = State.GetNode(nodeId);
             if (node == null)
             {
                 Logger.Log(LogLevel.Warning, "Node with the id {nodeId} was not found", nodeId);
@@ -709,7 +668,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         }
 
         Received?.Invoke(this, msg);
-        OpcUaMessageReceived?.Invoke(this, msg);
     }
 
     #region Browse Nodes
@@ -941,29 +899,10 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         if (payload is not OpcUaMessage msg)
         {
             Logger.Log(LogLevel.Warning, "Currently it is only possible to send messages of the type OpcUaMessage " +
-                "using the Opc Ua Driver directly");
+                                         "using the Opc Ua Driver directly");
             return;
         }
 
-        Send(msg);
-
-    }
-
-    /// <inheritdoc/>
-    public Task SendAsync(object payload, CancellationToken cancellationToken = default)
-    {
-        if (payload is not OpcUaMessage msg)
-        {
-            Logger.Log(LogLevel.Warning, "Currently it is only possible to send messages of the type OpcUaMessage " +
-                "using the Opc Ua Driver directly");
-            return Task.CompletedTask;
-        }
-        return SendAsync(msg, cancellationToken);
-    }
-
-    /// <inheritdoc />
-    public void Send(OpcUaMessage msg)
-    {
         var node = State.GetNode(msg.Identifier);
         const string errorMsg = "When trying to read the value of the node, ";
         if (node == null)
@@ -978,13 +917,22 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         }
 
         WriteNode(node.Identifier, msg.Payload);
+
     }
 
-    /// <inheritdoc />
-    public Task SendAsync(OpcUaMessage payload, CancellationToken cancellationToken = default)
+    /// <inheritdoc/>
+    public Task SendAsync(object payload, CancellationToken cancellationToken = default)
     {
+        if (payload is not OpcUaMessage msg)
+        {
+            Logger.Log(LogLevel.Warning, "Currently it is only possible to send messages of the type OpcUaMessage " +
+                                         "using the Opc Ua Driver directly");
+            return Task.CompletedTask;
+        }
+
         throw new NotImplementedException();
     }
+
 
     #endregion
 
@@ -1166,4 +1114,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
         }
     }
+
+    /// <inheritdoc/>
+    public event EventHandler<object> Received;
 }

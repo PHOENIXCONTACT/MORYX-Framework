@@ -21,7 +21,7 @@ namespace Moryx.Drivers.Mqtt
     /// Base class for MQTT topics a MQTT Driver can subscribe.
     /// </summary>
     [ResourceRegistration]
-    public abstract class MqttTopic : Resource, IMessageChannel<object>
+    public abstract class MqttTopic : Resource, IMessageChannel
     {
         /// <summary>
         /// Event raised, when a message is received
@@ -179,7 +179,7 @@ namespace Moryx.Drivers.Mqtt
         public abstract Task SendAsync(object payload, CancellationToken cancellationToken = default);
 
         //This method has to call MqttDriver.OnSend
-        internal abstract Task OnSend(object payload);
+        internal abstract Task OnSend(object payload, CancellationToken cancellationToken);
 
         //This method has to call MqttDriver.OnReceive
         internal abstract void OnReceived(string receivedTopic, byte[] messageAsBytes);
@@ -216,16 +216,8 @@ namespace Moryx.Drivers.Mqtt
     }
 
     /// <inheritdoc cref="MqttTopic" />
-    public abstract class MqttTopic<TMessage> : MqttTopic, IMessageChannel<TMessage>
+    public abstract class MqttTopic<TMessage> : MqttTopic, IMessageChannel
     {
-        protected event EventHandler<TMessage> ReceivedTMessage;
-
-        event EventHandler<TMessage> IMessageChannel<TMessage, TMessage>.Received
-        {
-            add => ReceivedTMessage += value;
-            remove => ReceivedTMessage -= value;
-        }
-
         /// <summary>
         /// Constructor for MessageType
         /// </summary>
@@ -278,7 +270,7 @@ namespace Moryx.Drivers.Mqtt
         {
             if (payload is TMessage send)
             {
-                Send(send);
+                MqttDriver.Send(payload);;
             }
             else
             {
@@ -293,7 +285,7 @@ namespace Moryx.Drivers.Mqtt
         {
             if (payload is TMessage send)
             {
-                return SendAsync(send);
+                return MqttDriver.SendAsync(payload, cancellationToken);
             }
 
             Logger.Log(LogLevel.Error, "Message {0} has the wrong Type. It is {1} instead of {2}",
@@ -301,19 +293,8 @@ namespace Moryx.Drivers.Mqtt
             throw new ArgumentException("Message " + payload + " has the wrong Type. It is " + payload.GetType() + " instead of " + typeof(TMessage));
         }
 
-        /// <inheritdoc />
-        public void Send(TMessage message)
-        {
-            MqttDriver.Send(this, message);
-        }
 
-        /// <inheritdoc />
-        public Task SendAsync(TMessage payload, CancellationToken cancellationToken = default)
-        {
-            return MqttDriver.Send(this, payload);
-        }
-
-        internal override Task OnSend(object payload)
+        internal override Task OnSend(object payload, CancellationToken cancellationToken)
         {
             var topic = Identifier;
             var msg = Serialize(payload);
@@ -348,7 +329,7 @@ namespace Moryx.Drivers.Mqtt
             }
 
             topic = MqttDriver.Identifier + topic;
-            return MqttDriver.OnSend(new MqttMessageTopic(ResponseTopic, topic), msg);
+            return MqttDriver.OnSend(new MqttMessageTopic(ResponseTopic, topic), msg, cancellationToken);
         }
 
         internal override void OnReceived(string receivedTopic, byte[] messageAsBytes)
@@ -387,7 +368,6 @@ namespace Moryx.Drivers.Mqtt
                     }
                 }
                 RaiseReceived(msg);
-                ReceivedTMessage?.Invoke(this, msg);
                 MqttDriver.OnReceived(msg);
             }
             else

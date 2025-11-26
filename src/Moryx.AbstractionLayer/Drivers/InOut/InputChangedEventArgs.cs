@@ -24,6 +24,11 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
         public string Key { get; }
 
         /// <summary>
+        /// Changed value of the input
+        /// </summary>
+        public object Value { get; set; }
+
+        /// <summary>
         /// Input changed for single value
         /// </summary>
         public InputChangedEventArgs()
@@ -34,28 +39,31 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
         /// <summary>
         /// Input changed for numeric index
         /// </summary>
-        public InputChangedEventArgs(int index)
+        public InputChangedEventArgs(int index, object value)
         {
             Index = index;
+            Value = value;
             InputAccess = SupportedAccess.Index;
         }
 
         /// <summary>
         /// Input changed for text key
         /// </summary>
-        public InputChangedEventArgs(string key)
+        public InputChangedEventArgs(string key, object value)
         {
             Key = key;
+            Value = value;
             InputAccess = SupportedAccess.Key;
         }
 
         /// <summary>
         /// Input can be access via index or key
         /// </summary>
-        public InputChangedEventArgs(int index, string key)
+        public InputChangedEventArgs(int index, string key, object value)
         {
             Index = index;
             Key = key;
+            Value = value;
             InputAccess = SupportedAccess.Index | SupportedAccess.Key;
         }
     }

@@ -28,7 +28,7 @@ namespace Moryx.Drivers.Mqtt;
 /// </summary>
 [ResourceRegistration]
 [Display(Name = nameof(Strings.MqttDriver_DisplayName), Description = nameof(Strings.MqttDriver_Description), ResourceType = typeof(Strings))]
-public class MqttDriver : Driver, IMessageDriver<object>
+public class MqttDriver : Driver, IMessageDriver
 {
     private string _clientId;
     /// <inheritdoc/>
@@ -270,16 +270,7 @@ public class MqttDriver : Driver, IMessageDriver<object>
     }
 
     /// <inheritdoc />
-    public IMessageChannel<TSend, TReceive> Channel<TSend, TReceive>(string identifier)
-    {
-        if (typeof(TSend) == typeof(TReceive))
-            return (IMessageChannel<TSend, TReceive>)Channel<TSend>(identifier);
-
-        throw new NotSupportedException("Send and Receive Type of an MQTT Topic have to be the same in this implementation.");
-    }
-
-    /// <inheritdoc />
-    public IMessageChannel<TChannel> Channel<TChannel>(string identifier)
+    public IMessageChannel Channel(string identifier)
     {
         var channelList = Channels.Where(t => t.Identifier.Equals(identifier)).ToList();
         switch (channelList.Count)
@@ -287,21 +278,14 @@ public class MqttDriver : Driver, IMessageDriver<object>
             case 0:
                 Logger.Log(LogLevel.Warning,
                     "No channels with the name {identifier} exists.", identifier);
-                break;
+                return null;
             case 1:
-                var channel = channelList.First();
-                if (typeof(TChannel).IsAssignableFrom(channel.MessageType))
-                    return (IMessageChannel<TChannel>)channel;
-                Logger.Log(LogLevel.Warning,
-                    "Channel with the name {identifier} exists. But data types don't match.", identifier);
-                break;
+                return channelList[0];
             default:
                 Logger.Log(LogLevel.Warning,
                     "Several channels with the name {identifier} exist.", identifier);
-                break;
+                return null;
         }
-
-        return null;
     }
 
     /// <inheritdoc />
@@ -321,14 +305,9 @@ public class MqttDriver : Driver, IMessageDriver<object>
             topics = Channels.Where(t => t.MessageType.IsInstanceOfType(message)).ToList();
 
         if (topics.Count == 1)
-            await State.Send(topics[0], message);
+            await State.SendAsync(topics[0], message, cancellationToken);
         else
             Logger.Log(LogLevel.Warning, "Corresponding topic for message {message} not found.", message);
-    }
-
-    internal Task Send(MqttTopic topic, object message)
-    {
-        return State.Send(topic, message);
     }
 
     /// <summary>
@@ -336,8 +315,9 @@ public class MqttDriver : Driver, IMessageDriver<object>
     /// </summary>
     /// <param name="messageTopic">The topic to publish on</param>
     /// <param name="message">The message to be published</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task OnSend(MqttMessageTopic messageTopic, byte[] message)
+    public async Task OnSend(MqttMessageTopic messageTopic, byte[] message, CancellationToken cancellationToken)
     {
         var messageMqttBuilder = new MqttApplicationMessageBuilder()
           .WithTopic(messageTopic.Topic)
@@ -353,7 +333,7 @@ public class MqttDriver : Driver, IMessageDriver<object>
         }
 
         var messageMqtt = messageMqttBuilder.Build();
-        await _mqttClient.PublishAsync(messageMqtt, CancellationToken.None);
+        await _mqttClient.PublishAsync(messageMqtt, cancellationToken);
     }
 
     private Task OnReceived(MqttApplicationMessageReceivedEventArgs args)

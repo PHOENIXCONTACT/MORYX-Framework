@@ -17,7 +17,7 @@ namespace Moryx.Drivers.OpcUa;
 /// Because it is possible to get channels before the driver is running and has
 /// browsed all nodes, only o
 /// </summary>
-public class OpcUaNode : IMessageChannel<object>
+public class OpcUaNode : IMessageChannel
 {
     private IOpcUaDriver _driver => (IOpcUaDriver)Driver;
 

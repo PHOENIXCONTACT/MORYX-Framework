@@ -61,7 +61,7 @@ namespace Moryx.Resources.Mqtt.Tests
             ((IPlugin)_driver).Stop();
 
             //Assert I
-            Assert.That(_driver.State.Classification, Is.EqualTo(StateClassification.Offline));
+            Assert.That(_driver.CurrentState.Classification, Is.EqualTo(StateClassification.Offline));
         }
 
         [Test(Description = $"After restarting the driver it should be Initializing")]
@@ -76,7 +76,7 @@ namespace Moryx.Resources.Mqtt.Tests
             ((IPlugin)_driver).Start();
 
             //Assert I
-            Assert.That(_driver.State.Classification, Is.EqualTo(StateClassification.Initializing));
+            Assert.That(_driver.CurrentState.Classification, Is.EqualTo(StateClassification.Initializing));
         }
     }
 }

@@ -9,10 +9,14 @@ namespace Moryx.Drivers.OpcUa;
 /// <summary>
 /// Class to read OpcUaNodes as Outputs
 /// </summary>
-internal class OpcUaOutput(OpcUaDriver driver) : IOutput<object>
+internal class OpcUaOutput(OpcUaDriver driver) : IOutput
 {
     /// <inheritdoc/>
-    public object this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public object this[int index]
+    {
+        get => throw new NotImplementedException();
+        set => throw new NotImplementedException();
+    }
 
     /// <summary>
     /// Gets or sets the value of a variable OpcUaNode

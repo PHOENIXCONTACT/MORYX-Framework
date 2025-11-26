@@ -4,9 +4,9 @@
 namespace Moryx.AbstractionLayer.Drivers.Message
 {
     /// <summary>
-    /// Multi-purpose driver that exchanges information with a device
+    /// Multipurpose driver that exchanges information with a device
     /// </summary>
-    public interface IMessageDriver<TMessage> : IDriver, IMessageChannel<TMessage>
+    public interface IMessageDriver : IDriver, IMessageChannel
     {
         /// <summary>
         /// Flag if the drivers supports identified channels or topics
@@ -16,11 +16,6 @@ namespace Moryx.AbstractionLayer.Drivers.Message
         /// <summary>
         /// Get channel using specialized API
         /// </summary>
-        IMessageChannel<TChannel> Channel<TChannel>(string identifier);
-
-        /// <summary>
-        /// Get channel using specialized API
-        /// </summary>
-        IMessageChannel<TSend, TReceive> Channel<TSend, TReceive>(string identifier);
+        IMessageChannel Channel(string identifier);
     }
 }

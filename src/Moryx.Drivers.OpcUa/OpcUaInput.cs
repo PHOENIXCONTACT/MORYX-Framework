@@ -9,17 +9,20 @@ namespace Moryx.Drivers.OpcUa;
 /// <summary>
 /// Class to read OpcUaNodes as Inputs
 /// </summary>
-internal class OpcUaInput : IInput<object>
+internal class OpcUaInput : IInput
 {
     public OpcUaInput(OpcUaDriver driver)
     {
         _driver = driver;
-        ((IMessageDriver<OpcUaMessage>)_driver).Received += OnReceived;
+        ((IMessageDriver)_driver).Received += OnReceived;
     }
 
-    private void OnReceived(object sender, OpcUaMessage e)
+    private void OnReceived(object sender, object e)
     {
-        var eventArgs = new InputChangedEventArgs(e.Identifier);
+        if (e is not IIdentifierMessage opcUaMessage)
+            return;
+
+        var eventArgs = new InputChangedEventArgs(opcUaMessage.Identifier, opcUaMessage);
         InputChanged?.Invoke(this, eventArgs);
     }
 

@@ -6,7 +6,7 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
     /// <summary>
     /// Interface for writing output
     /// </summary>
-    public interface IOutput<TOut>
+    public interface IOutput
     {
         /// <summary>
         /// Access flags for the output
@@ -17,21 +17,21 @@ namespace Moryx.AbstractionLayer.Drivers.InOut
         /// Single value output
         /// Only available for <see cref="SupportedAccess.Single"/>
         /// </summary>
-        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
-        TOut Value { get; set; }
+        /// <exception cref="DriverStateException">Thrown if the driver is in an invalid state for this operation.</exception>
+        object Value { get; set; }
 
         /// <summary>
         /// Index based output
         /// Only available for <see cref="SupportedAccess.Index"/>
         /// </summary>
-        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
-        TOut this[int index] { get; set; }
+        /// <exception cref="DriverStateException">Thrown if the driver is in an invalid state for this operation.</exception>
+        object this[int index] { get; set; }
 
         /// <summary>
         /// Key based output
         /// Only available for <see cref="SupportedAccess.Key"/>
         /// </summary>
-        /// <exception cref="DriverStateException">Will be thrown when the driver is in wrong state</exception>
-        TOut this[string key] { get; set; }
+        /// <exception cref="DriverStateException">Thrown if the driver is in an invalid state for this operation.</exception>
+        object this[string key] { get; set; }
     }
 }

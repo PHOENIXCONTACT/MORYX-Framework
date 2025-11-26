@@ -4,7 +4,7 @@
 namespace Moryx.AbstractionLayer.Drivers.InOut
 {
     /// <summary>
-    /// Flags enums of the supported modes of an <see cref="IInOutDriver{TIn,TOut}"/>
+    /// Flags enums of the supported modes of an <see cref="IInOutDriver"/>
     /// </summary>
     [Flags]
     public enum SupportedAccess

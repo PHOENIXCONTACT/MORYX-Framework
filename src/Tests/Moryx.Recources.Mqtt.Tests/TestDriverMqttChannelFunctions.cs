@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.TestTools;
-using Moryx.Communication;
 using Moryx.Drivers.Mqtt;
 using Moryx.Drivers.Mqtt.MqttTopics;
 using Moryx.Logging;
@@ -118,30 +117,16 @@ namespace Moryx.Resources.Mqtt.Tests
         [Test(Description = "Find Channel with one parameter")]
         public void Channel_FindChannel_TChannel()
         {
-            var c = _driver.Channel<IByteSerializable>(_topicBoolMqtt.Identifier);
+            var c = _driver.Channel(_topicBoolMqtt.Identifier);
             Assert.That(c != null);
             Assert.That(c.Identifier.Equals(_topicBoolMqtt.Identifier));
         }
 
-        [Test(Description = "Find Channel with two parameters")]
-        public void Channel_FindChannel_TSend_TReceive()
-        {
-            var c = _driver.Channel<IByteSerializable, IByteSerializable>(_topicBoolMqtt.Identifier);
-            Assert.That(c != null);
-            Assert.That(c.Identifier.Equals(_topicBoolMqtt.Identifier));
-        }
-
-        [Test(Description = "Return null, if parameter don't match")]
-        public void Channel_NotFindChannel_ParametersDoNotMatch()
-        {
-            var c = _driver.Channel<BoolByteSerializableMessage>(_topicBoolMqtt.Identifier);
-            Assert.That(c == null);
-        }
-
-        [Test(Description = "Return null, if idientifier does not exist")]
+        
+        [Test(Description = "Return null, if identifier does not exist")]
         public void Channel_NotFindChannel_IdentifierDoesNotExist()
         {
-            var c = _driver.Channel<BoolMqttMessage>("doesNotExist");
+            var c = _driver.Channel("doesNotExist");
             Assert.That(c == null);
         }
 

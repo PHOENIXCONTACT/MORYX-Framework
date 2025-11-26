@@ -33,8 +33,8 @@ namespace Moryx.Simulation.Tests
             _anotherAssemblyDriverMock.SetupGet(dr => dr.Usages).Returns([_anotherAssemblyCell]);
             _anotherAssemblyDriverMock.SetupGet(dr => dr.SimulatedState).Returns(SimulationState.Idle);
 
-            _assemblyDriverMock.Setup(dr => dr.Send(It.IsAny<AssembleProductMessage>()))
-                .Callback<object>(param =>
+            _assemblyDriverMock.Setup(dr => dr.SendAsync(It.IsAny<AssembleProductMessage>(), It.IsAny<CancellationToken>()))
+                .Callback<object, CancellationToken>((param, _) =>
                 {
                     var message = param as AssembleProductMessage;
                     _assemblyDriverMock.Setup(dr => dr.SimulatedState)
@@ -43,8 +43,8 @@ namespace Moryx.Simulation.Tests
                     _assemblyDriverMock.Raise(dr => dr.SimulatedStateChanged += null, _assemblyDriverMock.Object, SimulationState.Executing);
                 });
 
-            _anotherAssemblyDriverMock.Setup(dr => dr.Send(It.IsAny<AssembleProductMessage>()))
-            .Callback<object>(param =>
+            _anotherAssemblyDriverMock.Setup(dr => dr.SendAsync(It.IsAny<AssembleProductMessage>(), It.IsAny<CancellationToken>()))
+            .Callback<object, CancellationToken>((param, _) =>
             {
                 var message = param as AssembleProductMessage;
                 _anotherAssemblyDriverMock.Setup(dr => dr.SimulatedState)
@@ -53,8 +53,8 @@ namespace Moryx.Simulation.Tests
                 _anotherAssemblyDriverMock.Raise(dr => dr.SimulatedStateChanged += null, _anotherAssemblyDriverMock.Object, SimulationState.Executing);
             });
 
-            _assemblyDriverMock.Setup(dr => dr.Send(It.IsAny<ReleaseWorkpieceMessage>()))
-               .Callback<object>(param =>
+            _assemblyDriverMock.Setup(dr => dr.SendAsync(It.IsAny<ReleaseWorkpieceMessage>(), It.IsAny<CancellationToken>()))
+               .Callback<object, CancellationToken>((param, _) =>
                {
                    var message = param as AssembleProductMessage;
                    _assemblyDriverMock.Setup(dr => dr.SimulatedState)

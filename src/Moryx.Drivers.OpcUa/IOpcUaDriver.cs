@@ -3,13 +3,14 @@
 
 using Moryx.AbstractionLayer.Drivers.InOut;
 using Moryx.AbstractionLayer.Drivers.Message;
+using Moryx.Drivers.OpcUa;
 
 namespace Moryx.Drivers.OpcUa;
 
 /// <summary>
 /// Opc Ua Client
 /// </summary>
-public interface IOpcUaDriver : IMessageDriver<object>, IMessageDriver<OpcUaMessage>, IInOutDriver<object, object>
+public interface IOpcUaDriver : IMessageDriver, IInOutDriver
 {
     // TODO 6.3: Subscriptions with different publishing and sampling intervals can be created
     // TODO 6.2: Subscriptions to ObjectNodes are possible
