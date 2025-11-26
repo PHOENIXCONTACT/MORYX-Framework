@@ -11,7 +11,7 @@ namespace Moryx.Orders
     /// Flag:   Overall  |   Usage  |  State  |
     /// </summary>
     [Flags]
-    public enum OperationClassification
+    public enum OperationStateClassification
     {
         /// <summary>
         /// Classification during the creation

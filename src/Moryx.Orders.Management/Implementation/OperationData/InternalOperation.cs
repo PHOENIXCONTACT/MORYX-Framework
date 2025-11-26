@@ -165,7 +165,7 @@ namespace Moryx.Orders.Management
         public new InternalOperationProgress Progress { get; }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public new OperationClassification State
+        public new OperationStateClassification State
         {
             get => base.State;
             set => base.State = value;

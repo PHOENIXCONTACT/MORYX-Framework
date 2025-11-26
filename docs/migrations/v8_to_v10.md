@@ -27,7 +27,8 @@ The simulator module has also been renamed, and its namespace and package id hav
 - IResourceManagement.Read -> IResourceManagement.ReadUnsafe
 - IResourceManagement.Modify -> IResourceManagement.ModifyUnsafe
 - ProcessContext -> ProcessWorkplanContext
-- OperationClassification.Loading -> OperationClassification.Assigning
+- OperationClassification -> OperationStateClassification
+- OperationClassification.Loading -> OperationStateClassification.Assigning
 
 ## Reduction of interfaces
 

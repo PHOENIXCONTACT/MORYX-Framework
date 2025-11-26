@@ -12,7 +12,7 @@ namespace Moryx.Orders.Management
         public override bool IsAssigning => true;
 
         public InitialAssignState(OperationData context, StateMap stateMap)
-            : base(context, stateMap, OperationClassification.Initial)
+            : base(context, stateMap, OperationStateClassification.Initial)
         {
         }
 

@@ -202,7 +202,7 @@ namespace Moryx.Orders.Management.Tests
             var readyEvent = new ManualResetEvent(false);
             var readyCallback = new EventHandler<OperationEventArgs>(delegate (object _, OperationEventArgs args)
             {
-                if (args.OperationData.State.Classification == OperationClassification.Ready)
+                if (args.OperationData.State.Classification == OperationStateClassification.Ready)
                     readyEvent.Set();
             });
 

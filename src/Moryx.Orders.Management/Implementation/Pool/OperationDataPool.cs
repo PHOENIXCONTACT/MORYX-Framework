@@ -133,7 +133,7 @@ namespace Moryx.Orders.Management
                     else
                     {
                         Logger.Log(LogLevel.Error, "More than 1 operation was found for the given constraint. Picking the operation with the most plausible state");
-                        operationData = results.FirstOrDefault(o => o.State.Classification != OperationClassification.Completed);
+                        operationData = results.FirstOrDefault(o => o.State.Classification != OperationStateClassification.Completed);
                     }
                 }
                 else
@@ -286,7 +286,7 @@ namespace Moryx.Orders.Management
 
             // Only save the operation of the classification is more than just ready
             // Initial or ready operations have not to be stored because they can be created again any time from the ERP system
-            if (operationData.State.Classification < OperationClassification.Ready)
+            if (operationData.State.Classification < OperationStateClassification.Ready)
             {
                 OperationUpdated?.Invoke(this, eventArgs);
                 return;

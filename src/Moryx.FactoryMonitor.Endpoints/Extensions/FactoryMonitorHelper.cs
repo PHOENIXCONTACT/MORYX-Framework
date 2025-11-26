@@ -23,7 +23,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
 
         public static async Task OrderUpdated(OperationChangedEventArgs orderEventArg, JsonSerializerSettings serializerSettings, Channel<Tuple<string, string>> _factoryChannel, CancellationToken cancelToken)
         {
-            if (cancelToken.IsCancellationRequested || orderEventArg.Operation.State is not OperationClassification.Running) return;
+            if (cancelToken.IsCancellationRequested || orderEventArg.Operation.State is not OperationStateClassification.Running) return;
 
             var orderReferenceModel = Converter.ToOrderChangedModel(orderEventArg.Operation);
             await SendOrderUpdate(orderReferenceModel, serializerSettings, _factoryChannel, cancelToken);

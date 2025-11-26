@@ -22,7 +22,7 @@ namespace Moryx.Orders.Management
         public override bool CanFinalReport => false;
 
         public InterruptingState(OperationData context, StateMap stateMap)
-            : base(context, stateMap, OperationClassification.Interrupting)
+            : base(context, stateMap, OperationStateClassification.Interrupting)
         {
         }
 

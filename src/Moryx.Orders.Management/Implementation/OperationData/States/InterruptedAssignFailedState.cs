@@ -14,7 +14,7 @@ namespace Moryx.Orders.Management
         public override bool IsFailed => true;
 
         public InterruptedAssignFailedState(OperationData context, StateMap stateMap)
-            : base(context, stateMap, OperationClassification.Interrupted)
+            : base(context, stateMap, OperationStateClassification.Interrupted)
         {
         }
 

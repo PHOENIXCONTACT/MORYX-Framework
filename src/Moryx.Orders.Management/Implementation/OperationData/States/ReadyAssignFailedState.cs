@@ -14,7 +14,7 @@ namespace Moryx.Orders.Management
         public override bool IsFailed => true;
 
         public ReadyAssignFailedState(OperationData context, StateMap stateMap)
-            : base(context, stateMap, OperationClassification.Ready)
+            : base(context, stateMap, OperationStateClassification.Ready)
         {
         }
 

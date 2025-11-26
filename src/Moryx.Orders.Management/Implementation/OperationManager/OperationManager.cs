@@ -66,8 +66,8 @@ namespace Moryx.Orders.Management
 
             // Max Running Operations
             var runningOperations = OperationDataPool.GetAll(o =>
-                o.State.Classification is OperationClassification.Running or OperationClassification.Interrupting);
-            if (state.Classification != OperationClassification.Running && state.Classification != OperationClassification.Interrupting &&
+                o.State.Classification is OperationStateClassification.Running or OperationStateClassification.Interrupting);
+            if (state.Classification != OperationStateClassification.Running && state.Classification != OperationStateClassification.Interrupting &&
                 ModuleConfig.MaxRunningOperations >= 0 && runningOperations.Count >= ModuleConfig.MaxRunningOperations)
             {
                 restrictions.Add(new BeginRestriction(false, Strings.OperationManager_MaxRunningErrorText, RestrictionSeverity.Error));
@@ -76,14 +76,14 @@ namespace Moryx.Orders.Management
 
         private static void AddOverDeliveryRestriction(IList<BeginRestriction> restrictions, IOperationData operationData, IOperationState state)
         {
-            if (state.CanBegin && operationData.Operation.State.HasFlag(OperationClassification.IsAmountReached))
+            if (state.CanBegin && operationData.Operation.State.HasFlag(OperationStateClassification.IsAmountReached))
             {
                 restrictions.Add(new BeginRestriction(canBegin: true, canReduce: false, operationData.Operation.Progress.SuccessCount,
                     Strings.OperationManager_OverDeliveryNotice, RestrictionSeverity.Warning));
             }
-            else if ((state.Classification == OperationClassification.Running
-                && !operationData.Operation.State.HasFlag(OperationClassification.IsAmountReached))
-                || state.Classification == OperationClassification.Interrupting)
+            else if ((state.Classification == OperationStateClassification.Running
+                && !operationData.Operation.State.HasFlag(OperationStateClassification.IsAmountReached))
+                || state.Classification == OperationStateClassification.Interrupting)
             {
                 restrictions.Add(new BeginRestriction(canBegin: true, canReduce: true, operationData.Operation.Progress.SuccessCount,
                     Strings.OperationManager_OverDeliveryNotice, RestrictionSeverity.Info));
