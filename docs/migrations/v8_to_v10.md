@@ -130,3 +130,7 @@ The `IConstraintContext` interface was removed from `IProcess`. Instead a new wr
 ## Renamed Moryx.Asp.Extensions to Moryx.AspNetCore
 
 Renamed the package Moryx.Asp.Extensions to Moryx.AspNetCore and moved the classes to the respective namespace. This change was applied to match the Microsoft namespaces. In the past the project was used in MORYX <6 for C#-extensions on ASP.NET Components to initialize the Runtime environment and register endpoints inside the ServerModules. Since we use controllers based on the facades, these stuff was already removed.
+
+## EntryConvert: localized possible values
+
+EntryConvert now uses `EntryPossible[]` instead of `string[]` for `EntryValue.Possible`; each item contains `Key`, `DisplayName` and `Description`.

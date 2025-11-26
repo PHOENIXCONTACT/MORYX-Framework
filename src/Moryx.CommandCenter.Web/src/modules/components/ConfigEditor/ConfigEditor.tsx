@@ -241,7 +241,7 @@ export default class ConfigEditor extends React.Component<ConfigEditorPropModel,
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.onEntryTypeChange(e)}>
                                 {
                                     this.props.ParentEntry.value.possible.map((possibleValue, idx) => {
-                                        return (<MenuItem key={idx} value={possibleValue}>{possibleValue}</MenuItem>);
+                                        return (<MenuItem key={idx} value={possibleValue.key}>{possibleValue.displayName}</MenuItem>);
                                     })
                                 }
                             </TextField>
