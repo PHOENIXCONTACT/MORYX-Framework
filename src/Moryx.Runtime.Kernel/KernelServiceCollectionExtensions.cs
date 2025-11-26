@@ -6,6 +6,7 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
+using Moryx.Tools;
 
 namespace Moryx.Runtime.Kernel
 {
@@ -43,11 +44,7 @@ namespace Moryx.Runtime.Kernel
         public static void AddMoryxModules(this IServiceCollection serviceCollection)
         {
             // Find all module types in the app domain
-            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().Where(p => !p.IsDynamic);
-            var modules = loadedAssemblies
-                .SelectMany(assembly => assembly.GetExportedTypes())
-                .Where(type => !type.IsInterface & !type.IsAbstract & typeof(IServerModule).IsAssignableFrom(type))
-                .ToList();
+            var modules = ReflectionTool.GetPublicClasses<IServerModule>();
             foreach (var module in modules)
             {
                 // Register module as server module

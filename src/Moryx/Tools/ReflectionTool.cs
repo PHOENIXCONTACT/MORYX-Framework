@@ -1,8 +1,10 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 
 namespace Moryx.Tools
 {
@@ -48,9 +50,10 @@ namespace Moryx.Tools
         /// </summary>
         private static Type[] LoadPublicClasses()
         {
+            var assemblies = _relevantAssemblies.Value;
             // Assume 30 exports per assembly for initial size
-            var publicClasses = new List<Type>(_relevantAssemblies.Value.Length * 30);
-            foreach (var assembly in _relevantAssemblies.Value)
+            var publicClasses = new List<Type>(assemblies.Length * 30);
+            foreach (var assembly in assemblies)
             {
                 try
                 {
@@ -58,13 +61,15 @@ namespace Moryx.Tools
                         .Where(type => type.IsClass && !type.IsAbstract);
                     publicClasses.AddRange(exports);
                 }
-                catch (Exception x)
+                catch (Exception ex)
                 {
-                    CrashHandler.WriteErrorToFile($"Failed to load types from {assembly.FullName}. Error: {x.Message}");
+                    // Since loading assemblies and building the app is usually done before the ServiceCollection
+                    // is fully setup, we cannot guarantee to have a Logger here.
+                    Debug.WriteLine("Failed to load public classes for assembly {0}. Exception: {1}", assembly.FullName, ex);
                 }
             }
 
-            return publicClasses.ToArray();
+            return [.. publicClasses];
         }
 
         /// <summary>
