@@ -2,13 +2,15 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Threading.Tasks;
 using Moryx.StateMachines;
+using Moryx.Tests.AsyncTestMachine;
 using NUnit.Framework;
 
 namespace Moryx.Tests
 {
     [TestFixture]
-    public class StateMachineTests
+    public class AsyncStateMachineTests
     {
         [Test(Description = "Test the initial state. Throws an exception if the wrong state was selected.")]
         public void Initial()
@@ -17,21 +19,21 @@ namespace Moryx.Tests
             var context = CreateContext();
 
             // Assert
-            Assert.DoesNotThrow(delegate
+            Assert.DoesNotThrowAsync(async delegate
             {
                 // Act
-                context.State.Initial();
+                await context.State.InitialAsync();
             });
         }
 
         [Test(Description = "Test transition from A to B state. This state is only possible in AState")]
-        public void AtoBState()
+        public async Task AtoBState()
         {
             // Arrange
             var context = CreateContext();
 
             // Act
-            context.State.AtoB();
+            await context.State.AtoBAsync();
 
             // Assert
             Assert.That(context.AtoBTriggered);
@@ -40,14 +42,14 @@ namespace Moryx.Tests
         }
 
         [Test(Description = "Test transition from B to C state. This state is only possible in BState")]
-        public void BtoCState()
+        public async Task BtoCState()
         {
             // Arrange
             var context = CreateContext();
 
             // Act
-            context.State.AtoB();
-            context.State.BtoC();
+            await context.State.AtoBAsync();
+            await context.State.BtoCAsync();
 
             // Assert
             Assert.That(context.AtoBTriggered);
@@ -56,15 +58,15 @@ namespace Moryx.Tests
         }
 
         [Test(Description = "Test transition from C to A state. This state is only possible in CState")]
-        public void CtoAState()
+        public async Task CtoAState()
         {
             // Arrange
             var context = CreateContext();
 
             // Act
-            context.State.AtoB();
-            context.State.BtoC();
-            context.State.CtoA();
+            await context.State.AtoBAsync();
+            await context.State.BtoCAsync();
+            await context.State.CtoAAsync();
 
             // Assert
             Assert.That(context.AtoBTriggered);
@@ -72,106 +74,79 @@ namespace Moryx.Tests
             Assert.That(context.CtoATriggered);
         }
 
-        [Test(Description = "Test will check the string representation of StateMachine.Dump")]
-        public void Dump()
-        {
-            // Arrange
-            var context = CreateContext();
-
-            // Act
-            var text = StateMachine.Dump(context.State);
-
-            // Assert
-            const string resultText = "Current: [AState (10)] - All: [AState (10)], [BState (20)], [CState (30)]";
-            Assert.That(text, Is.EqualTo(resultText));
-        }
 
         [Test]
-        public void Reload()
+        public async Task Reload()
         {
             // Assert
-            var context = new MyContext();
-            StateMachine.Initialize(context).With<MyStateBase>();
-            context.State.AtoB();
+            var context = new MyAsyncContext();
+            await StateMachine.Initialize(context).WithAsync<MyAsyncStateBase>();
+            await context.State.AtoBAsync();
 
             // Act
-            var reloadedContext = new MyContext();
+            var reloadedContext = new MyAsyncContext();
             var bkey = context.State.Key;
-            StateMachine.Reload(reloadedContext, bkey).With<MyStateBase>();
+            await StateMachine.Reload(reloadedContext, bkey).WithAsync<MyAsyncStateBase>();
 
             // Assert
-            Assert.Throws<InvalidOperationException>(() => reloadedContext.State.Initial());
+            Assert.ThrowsAsync<InvalidOperationException>(() => reloadedContext.State.InitialAsync());
 
             // Act
-            context.State.BtoC();
+            await context.State.BtoCAsync();
 
             // Assert
             Assert.That(context.BtoCTriggered);
             Assert.That(context.CtoATriggered, Is.False);
         }
 
-        [Test]
-        public void ReloadUnknown()
-        {
-            // Arrange
-            var context = new MyContext();
-
-            // Assert
-            Assert.Throws<InvalidOperationException>(delegate
-            {
-                // Act
-                StateMachine.Reload(context, int.MaxValue).With<MyStateBase>();
-            });
-        }
-
         [Test(Description = "Brings the StateMachine to B and force to A without exit the current or enter the forced state.")]
-        public void ForceState()
+        public async Task ForceStateAsync()
         {
             // Arrange
             var context = CreateContext();
-            context.State.AtoB();
+            await context.State.AtoBAsync();
 
             // Act
-            StateMachine.Force(context.State, MyStateBase.StateA);
+            await StateMachine.ForceAsync(context.State, MyStateBase.StateA);
 
             // Assert
-            Assert.DoesNotThrow(() => context.State.AtoB());
+            Assert.DoesNotThrowAsync(() => context.State.AtoBAsync());
         }
 
         [Test(Description = "Brings the StateMachine to B and force to A with exiting the current state.")]
-        public void ForceStateWithExitCurrent()
+        public async Task ForceStateWithExitCurrent()
         {
             // Arrange
             var context = CreateContext();
-            context.State.AtoB();
+            await context.State.AtoBAsync();
             context.BExited = false;
 
             // Act
-            StateMachine.Force(context.State, MyStateBase.StateA, true, false);
+            await StateMachine.ForceAsync(context.State, MyStateBase.StateA, true, false);
 
             // Assert
             Assert.That(context.BExited);
         }
 
         [Test(Description = "Brings the StateMachine to B and force to A with entering the forced state.")]
-        public void ForceStateWithEnterForced()
+        public async Task ForceStateWithEnterForced()
         {
             // Arrange
             var context = CreateContext();
-            context.State.AtoB();
+            await context.State.AtoBAsync();
             context.AEntered = false;
 
             // Act
-            StateMachine.Force(context.State, MyStateBase.StateA, false, true);
+            await StateMachine.ForceAsync(context.State, MyStateBase.StateA, false, true);
 
             // Assert
             Assert.That(context.AEntered);
         }
 
-        private static MyContext CreateContext()
+        private static MyAsyncContext CreateContext()
         {
-            var context = new MyContext();
-            StateMachine.Initialize(context).With<MyStateBase>();
+            var context = new MyAsyncContext();
+            StateMachine.Initialize(context).WithAsync<MyAsyncStateBase>();
 
             return context;
         }

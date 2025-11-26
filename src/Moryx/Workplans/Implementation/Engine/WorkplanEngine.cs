@@ -14,7 +14,7 @@ namespace Moryx.Workplans
 
         internal EngineState State { get; private set; }
 
-        void IStateContext.SetState(IState state)
+        void IStateContext.SetState(StateBase state)
         {
             State = (EngineState)state;
         }

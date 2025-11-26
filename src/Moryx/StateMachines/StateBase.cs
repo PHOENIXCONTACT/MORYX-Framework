@@ -11,7 +11,7 @@ namespace Moryx.StateMachines
     /// <summary>
     /// Base class for state machine states
     /// </summary>
-    public abstract class StateBase : IState
+    public abstract class StateBase
     {
         /// <summary>
         /// Map of state names and their object reference
@@ -39,17 +39,22 @@ namespace Moryx.StateMachines
             Context = context;
         }
 
-        /// <see cref="IState"/>
+        /// <summary>
+        /// Will be called while entering the next state
+        /// </summary>
         public virtual void OnEnter()
         {
 
         }
 
-        /// <see cref="IState"/>
+        /// <summary>
+        /// Will be called while exiting the current state
+        /// </summary>
         public virtual void OnExit()
         {
 
         }
+
 
         /// <summary>
         /// Throws an exception that the current state is invalid.
@@ -89,26 +94,15 @@ namespace Moryx.StateMachines
 
         /// <summary>
         /// Create a state machine of the given base type and will set it on the given context
-        /// Will internally called by the <see cref="StateMachine"/> wrapper class
+        /// Returns the initial state after initialization.
         /// </summary>
-        internal static void Create<TStateBase>(IStateContext context, int? initialKey)
-            where TStateBase : StateBase
-        {
-            var stateBaseType = typeof(TStateBase);
-            Create(stateBaseType, context, initialKey);
-        }
-
-        /// <summary>
-        /// Create a state machine of the given base type and will set it on the given context
-        /// Will internally called by the <see cref="StateMachine"/> wrapper class
-        /// </summary>
-        internal static void Create(Type stateBaseType, IStateContext context, int? initialKey)
+        protected static StateBase CreateMap(Type stateBaseType, IStateContext context, int? initialKey)
         {
             // Check the base type
             if (!stateBaseType.IsAbstract)
                 throw new ArgumentException("The state base class must be abstract!");
 
-            if(!typeof(StateBase).IsAssignableFrom(stateBaseType))
+            if (!typeof(StateBase).IsAssignableFrom(stateBaseType))
                 throw new ArgumentException($"'{stateBaseType.Name}' class is not a valid 'StateBase'!");
 
             // Load all fields
@@ -156,6 +150,23 @@ namespace Moryx.StateMachines
                 throw new InvalidOperationException("There is no state flagged with " +
                                                     $"'{nameof(StateDefinitionAttribute.IsInitial)} = true'.");
 
+            return initialState;
+        } 
+
+        /// <summary>
+        /// Create a state machine of the given base type and will set it on the given context
+        /// Will internally called by the <see cref="StateMachine"/> wrapper class
+        /// </summary>
+        internal static void Create(Type stateBaseType, IStateContext context, int? initialKey)
+        {
+            if (typeof(AsyncStateBase).IsAssignableFrom(stateBaseType))
+            {
+                throw new InvalidOperationException("Creating async state on synchronous StateBase " +
+                                                    $"is not supported, use {nameof(AsyncStateBase)}.{nameof(AsyncStateBase.CreateAsync)} instead");
+            }
+
+            var initialState = CreateMap(stateBaseType, context, initialKey);
+
             context.SetState(initialState);
             initialState.OnEnter();
         }
@@ -176,9 +187,9 @@ namespace Moryx.StateMachines
         /// <summary>
         /// Forces a specific state with option to exit the current and enter the forced state
         /// </summary>
-        internal void Force(int state, bool exitCurrent, bool enterForced)
+        internal virtual void Force(int state, bool exitCurrent, bool enterForced)
         {
-            if (!Map.ContainsKey(state))
+            if (!Map.TryGetValue(state, out var next))
             {
                 throw new InvalidOperationException("State cannot be forced. " +
                                                     $"The state {state} does not exist in StateMachine.");
@@ -188,7 +199,7 @@ namespace Moryx.StateMachines
             if (exitCurrent)
                 OnExit();
 
-            var next = Map[state];
+            // Set next state
             Context.SetState(next);
 
             // If requested, enter forced state
@@ -211,7 +222,7 @@ namespace Moryx.StateMachines
         /// <param name="state">Number of the next state</param>
         protected virtual void NextState(int state)
         {
-            if (!Map.ContainsKey(state))
+            if (!Map.TryGetValue(state, out var next))
             {
                 throw new InvalidOperationException($"The state {state} does not exist in StateMachine.");
             }
@@ -219,8 +230,7 @@ namespace Moryx.StateMachines
             // Exit the old state
             OnExit();
 
-            // Set the next state
-            var next = Map[state];
+            // Set next state
             Context.SetState(next);
 
             // Enter the next state
@@ -236,9 +246,9 @@ namespace Moryx.StateMachines
         }
 
         /// <summary>
-        /// Shortcut class for the statemap dictionary
+        /// Shortcut class for the stateMap dictionary
         /// </summary>
-        public sealed class StateMap : Dictionary<int, IState>
+        public sealed class StateMap : Dictionary<int, StateBase>
         {
         }
     }

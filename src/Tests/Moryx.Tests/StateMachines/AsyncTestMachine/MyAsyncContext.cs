@@ -1,13 +1,14 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Threading.Tasks;
 using Moryx.StateMachines;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.AsyncTestMachine
 {
-    public class MyContext : IStateContext
+    public class MyAsyncContext : IStateContext
     {
-        public MyStateBase State { get; private set; }
+        public MyAsyncStateBase State { get; private set; }
 
         public bool AEntered { get; set; }
 
@@ -19,24 +20,27 @@ namespace Moryx.Tests
 
         public bool CtoATriggered { get; set; }
 
-        internal void HandleAtoB()
+        internal Task HandleAtoB()
         {
             AtoBTriggered = true;
+            return Task.CompletedTask;
         }
 
-        internal void HandleBtoC()
+        internal Task HandleBtoC()
         {
             BtoCTriggered = true;
+            return Task.CompletedTask;
         }
 
-        internal void HandleCtoA()
+        internal Task HandleCtoA()
         {
             CtoATriggered = true;
+            return Task.CompletedTask;
         }
 
-        void IStateContext.SetState(StateBase state)
+        public void SetState(StateBase state)
         {
-            State = (MyStateBase)state;
+            State = (MyAsyncStateBase)state;
         }
     }
 }
