@@ -27,6 +27,7 @@ namespace Moryx.Resources.Management
             ResourceManager.ResourceAdded += OnResourceAdded;
             ResourceManager.CapabilitiesChanged += OnCapabilitiesChanged;
             ResourceManager.ResourceRemoved += OnResourceRemoved;
+            ResourceManager.ResourceChanged += OnResourceChanged;
         }
 
         /// <seealso cref="IFacadeControl"/>
@@ -35,6 +36,7 @@ namespace Moryx.Resources.Management
             ResourceManager.ResourceAdded -= OnResourceAdded;
             ResourceManager.CapabilitiesChanged -= OnCapabilitiesChanged;
             ResourceManager.ResourceRemoved -= OnResourceRemoved;
+            ResourceManager.ResourceChanged -= OnResourceChanged;
         }
 
         private void OnCapabilitiesChanged(object sender, ICapabilities args)
@@ -42,14 +44,19 @@ namespace Moryx.Resources.Management
             CapabilitiesChanged?.Invoke(((IResource)sender).Proxify(TypeController), args);
         }
 
-        private void OnResourceAdded(object sender, IResource publicResource)
+        private void OnResourceAdded(object sender, IResource resource)
         {
-            ResourceAdded?.Invoke(this, publicResource.Proxify(TypeController));
+            ResourceAdded?.Invoke(this, resource.Proxify(TypeController));
         }
 
-        private void OnResourceRemoved(object sender, IResource publicResource)
+        private void OnResourceChanged(object sender, IResource resource)
         {
-            ResourceRemoved?.Invoke(this, publicResource.Proxify(TypeController));
+            ResourceChanged?.Invoke(this, resource.Proxify(TypeController));
+        }
+
+        private void OnResourceRemoved(object sender, IResource resource)
+        {
+            ResourceRemoved?.Invoke(this, resource.Proxify(TypeController));
         }
 
         #region IResourceManagement
@@ -181,6 +188,8 @@ namespace Moryx.Resources.Management
         public event EventHandler<IResource> ResourceAdded;
 
         public event EventHandler<IResource> ResourceRemoved;
+
+        public event EventHandler<IResource> ResourceChanged;
 
         public event EventHandler<ICapabilities> CapabilitiesChanged;
     }
