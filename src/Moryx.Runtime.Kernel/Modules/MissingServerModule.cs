@@ -46,7 +46,7 @@ namespace Moryx.Runtime.Kernel.Modules
         {
         }
 
-        public Task Initialize()
+        public Task InitializeAsync()
         {
             return Task.CompletedTask;
         }

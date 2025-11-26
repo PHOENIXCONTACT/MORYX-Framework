@@ -75,7 +75,7 @@ namespace Moryx.Runtime.Modules
         /// </summary>
         public IModuleContainerFactory ContainerFactory { get; }
 
-        async Task IAsyncInitializable.Initialize()
+        async Task IAsyncInitializable.InitializeAsync()
         {
             await _stateLockSemaphore.WaitAsync();
             try

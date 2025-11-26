@@ -26,7 +26,7 @@ namespace Moryx.Runtime.Kernel
             if (!AvailableModules.Contains(module))
                 return Task.CompletedTask; // Module not executable
 
-            return module.Initialize();
+            return module.InitializeAsync();
         }
 
         /// <inheritdoc />
@@ -35,7 +35,7 @@ namespace Moryx.Runtime.Kernel
             if (!AvailableModules.Contains(module))
                 return; // Module not executable
 
-            await module.Initialize();
+            await module.InitializeAsync();
 
             await StartModule(module);
         }
@@ -45,7 +45,7 @@ namespace Moryx.Runtime.Kernel
         {
             foreach (var module in AvailableModules)
             {
-                await module.Initialize();
+                await module.InitializeAsync();
             }
 
             // Find root server modules and convert all others to waiting services
@@ -86,7 +86,7 @@ namespace Moryx.Runtime.Kernel
             // Should be caught by ServerModuleBase but better be safe than sorry 
             try
             {
-                await module.Initialize();
+                await module.InitializeAsync();
                 await module.StartAsync();
             }
             catch (Exception ex)

@@ -37,7 +37,7 @@ namespace Moryx.Runtime.Tests
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Stopped), "Module not in stopped state!");
 
             // Call initialize
-            await casted.Initialize();
+            await casted.InitializeAsync();
 
             // Validate result
             Assert.That(_moduleUnderTest.LastInvoke, Is.EqualTo(InvokedMethod.Initialize), "Initialize was not called!");
@@ -48,7 +48,7 @@ namespace Moryx.Runtime.Tests
         public async Task ReadyToRunning()
         {
             var casted = (IServerModule)_moduleUnderTest;
-            await casted.Initialize();
+            await casted.InitializeAsync();
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Ready), "Module not in ready state!");
 
             // Call initialize
@@ -63,7 +63,7 @@ namespace Moryx.Runtime.Tests
         public async Task RunningToStopped()
         {
             var casted = (IServerModule)_moduleUnderTest;
-            await casted.Initialize();
+            await casted.InitializeAsync();
             await casted.StartAsync();
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Running), "Module not in running state!");
 
@@ -83,7 +83,7 @@ namespace Moryx.Runtime.Tests
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Stopped), "Module not in stopped state!");
 
             // Call initialize
-            await casted.Initialize();
+            await casted.InitializeAsync();
 
             // Validate result
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Failure), "Module did not detect error!");
@@ -93,7 +93,7 @@ namespace Moryx.Runtime.Tests
         public async Task StartFails()
         {
             var casted = (IServerModule)_moduleUnderTest;
-            await casted.Initialize();
+            await casted.InitializeAsync();
             _moduleUnderTest.CurrentMode = TestMode.MoryxException;
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Ready), "Module not in ready state!");
 
@@ -108,7 +108,7 @@ namespace Moryx.Runtime.Tests
         public async Task StopFails()
         {
             var casted = (IServerModule)_moduleUnderTest;
-            await casted.Initialize();
+            await casted.InitializeAsync();
             await casted.StartAsync();
             _moduleUnderTest.CurrentMode = TestMode.MoryxException;
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Running), "Module not in running state!");
@@ -126,7 +126,7 @@ namespace Moryx.Runtime.Tests
             var module = new DelayedExceptionModule(new ModuleContainerFactory(), _configManagerMock.Object, new TestLoggerMgmt());
             var casted = (IServerModule)module;
 
-            await casted.Initialize();
+            await casted.InitializeAsync();
             await casted.StartAsync();
 
             await casted.StopAsync();

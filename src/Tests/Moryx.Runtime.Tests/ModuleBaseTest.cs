@@ -33,7 +33,7 @@ namespace Moryx.Runtime.Tests
         public async Task StrategiesInConfigFound()
         {
             var casted = (IServerModule)_moduleUnderTest;
-            await casted.Initialize();
+            await casted.InitializeAsync();
 
             var containerConfig = _moduleUnderTest.Strategies;
 

@@ -100,7 +100,7 @@ namespace Moryx.TestTools.IntegrationTest
         {
             var module = (IServerModule)Services.GetService(_moduleType);
 
-            await module.Initialize();
+            await module.InitializeAsync();
             module.Container.Register(typeof(NotSoParallelOps), [typeof(IParallelOperations)], nameof(NotSoParallelOps), Container.LifeCycle.Singleton);
 
             var strategies = module.GetType().GetProperty(nameof(ServerModuleBase<ConfigBase>.Strategies)).GetValue(module) as Dictionary<Type, string>;

@@ -28,7 +28,7 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
         /// Initialize this component and prepare it for incoming taks. This must only involve preparation and must not start
         /// any active functionality and/or periodic execution of logic.
         /// </summary>
-        public Task Initialize()
+        public Task InitializeAsync()
         {
             return Task.CompletedTask;
         }
