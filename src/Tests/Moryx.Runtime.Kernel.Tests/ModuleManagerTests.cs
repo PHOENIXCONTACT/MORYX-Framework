@@ -213,10 +213,10 @@ namespace Moryx.Runtime.Kernel.Tests
             Thread.Sleep(3000); // Give the thread pool some time
 
             mockModule1.Verify(mock => mock.Initialize(), Times.Exactly(2));
-            mockModule1.Verify(mock => mock.Start());
+            mockModule1.Verify(mock => mock.StartAsync());
 
             mockModule2.Verify(mock => mock.Initialize(), Times.Exactly(2));
-            mockModule2.Verify(mock => mock.Start());
+            mockModule2.Verify(mock => mock.StartAsync());
         }
 
         [Test]
@@ -234,7 +234,7 @@ namespace Moryx.Runtime.Kernel.Tests
 
             // Assert
             mockModule.Verify(mock => mock.Initialize());
-            mockModule.Verify(mock => mock.Start());
+            mockModule.Verify(mock => mock.StartAsync());
         }
 
         [Test]
@@ -251,8 +251,8 @@ namespace Moryx.Runtime.Kernel.Tests
             moduleManager.StopModules();
 
             // Assert
-            mockModule1.Verify(mock => mock.Stop());
-            mockModule2.Verify(mock => mock.Stop());
+            mockModule1.Verify(mock => mock.StopAsync());
+            mockModule2.Verify(mock => mock.StopAsync());
         }
 
         [Test]

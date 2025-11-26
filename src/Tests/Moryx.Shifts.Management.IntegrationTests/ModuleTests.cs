@@ -12,57 +12,57 @@ namespace Moryx.Shifts.Management.IntegrationTests
     internal class ModuleTests : TestBase
     {
         [SetUp]
-        public override void SetUp()
+        public override Task SetUp()
         {
-            base.SetUp();
+            return base.SetUp();
         }
 
         [TearDown]
-        public override void TearDown()
+        public override Task TearDown()
         {
-            base.TearDown();
+            return base.TearDown();
         }
 
         [Test]
-        public void Start_WhenModuleIsStopped_StartsModule()
+        public async Task Start_WhenModuleIsStopped_StartsModule()
         {
             // Arrange
             // Act
-            var module = _env.StartTestModule();
+            var module = await _env.StartTestModule();
 
             // Assert
             Assert.That(module.State, Is.EqualTo(ServerModuleState.Running));
         }
 
         [Test]
-        public void Stop_WhenModuleIsRunning_StopsModule()
+        public async Task Stop_WhenModuleIsRunning_StopsModule()
         {
             // Arrange
-            _env.StartTestModule();
+            await _env.StartTestModule();
 
             // Act
-            var module = _env.StopTestModule();
+            var module = await _env.StopTestModule();
 
             // Assert
             Assert.That(module.State, Is.EqualTo(ServerModuleState.Stopped));
         }
 
         [Test]
-        public void Start_WithDatabaseIsFilled_StartsModule()
+        public async Task Start_WithDatabaseIsFilled_StartsModule()
         {
             // Arrange
             _resourceManagementMock.Setup(r => r.GetResource<IResource>(It.IsAny<long>())).Returns(ResourceMock.Object);
             _operatorManagementMock.SetupGet(o => o.Operators).Returns([Operator]);
 
-            _env.StartTestModule();
+            await _env.StartTestModule();
             var shiftType = _facade.CreateShiftType(TypeContext);
             var shift = _facade.CreateShift(GetShiftContext(shiftType));
             var context = GetAssignementContext(shift, ResourceMock.Object, Operator);
             var assignement = _facade.CreateShiftAssignement(context);
 
             // Act
-            _env.StopTestModule();
-            var module = _env.StartTestModule();
+            await _env.StopTestModule();
+            var module = await _env.StartTestModule();
 
             // Assert
             Assert.Multiple(() =>
@@ -75,11 +75,11 @@ namespace Moryx.Shifts.Management.IntegrationTests
         }
 
         [Test]
-        public void AnyMethod_WhenFacadeNotActivated_ThrowsHealthStateException()
+        public async Task AnyMethod_WhenFacadeNotActivated_ThrowsHealthStateException()
         {
             // Arrange
-            _env.StartTestModule();
-            _env.StopTestModule();
+            await _env.StartTestModule();
+            await _env.StopTestModule();
 
             // Act
             // Assert

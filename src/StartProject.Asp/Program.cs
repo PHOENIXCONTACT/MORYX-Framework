@@ -10,7 +10,7 @@ namespace StartProject.Asp
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             AppDomainBuilder.LoadAssemblies();
 
@@ -29,11 +29,11 @@ namespace StartProject.Asp
             host.Services.UseMoryxConfigurations("Config");
 
             var moduleManager = host.Services.GetRequiredService<IModuleManager>();
-            moduleManager.StartModules();
+            await moduleManager.StartModules();
 
-            host.Run();
+            await host.RunAsync();
 
-            moduleManager.StopModules();
+            await moduleManager.StopModules();
         }
     }
 }

@@ -48,32 +48,35 @@ namespace Moryx.ControlSystem.WorkerSupport
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             // Register all imported components
             Container.SetInstance(ResourceManagement);
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             Container.Resolve<IWorkerSupportController>().Start();
 
             // Activate facade
             ActivateFacade(_workerSupportFacade);
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             // Deactivate facade
             DeactivateFacade(_workerSupportFacade);
 
             Container.Resolve<IWorkerSupportController>().Stop();
+            return Task.CompletedTask;
         }
 
         #endregion

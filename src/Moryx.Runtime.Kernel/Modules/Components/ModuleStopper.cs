@@ -21,7 +21,7 @@ namespace Moryx.Runtime.Kernel
         /// Stop this plugin and all required dependencies
         /// </summary>
         /// <param name="module"></param>
-        public void Stop(IServerModule module)
+        public async Task StopAsync(IServerModule module)
         {
             if (!AvailableModules.Contains(module))
                 return;
@@ -34,13 +34,13 @@ namespace Moryx.Runtime.Kernel
             {
                 // We will enque the service to make sure it is restarted later on
                 AddWaitingService(module, dependingService);
-                Stop(dependingService);
+                await StopAsync(dependingService);
             }
 
             // Since stop is synchron we don't need an event
             try
             {
-                module.Stop();
+                await module.StopAsync();
             }
             catch
             {
@@ -51,12 +51,12 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// Stop all services
         /// </summary>
-        public void StopAll()
+        public async Task StopAllAsync()
         {
-            // Detemine all leaves of the dependency tree
+            // Determine all leaves of the dependency tree
             foreach (var plugin in AvailableModules)
             {
-                Stop(plugin);
+                await StopAsync(plugin);
             }
         }
     }

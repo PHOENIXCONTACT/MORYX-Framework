@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Threading.Tasks;
 using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Runtime.Modules;
@@ -27,22 +28,25 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
         /// Initialize this component and prepare it for incoming taks. This must only involve preparation and must not start
         /// any active functionality and/or periodic execution of logic.
         /// </summary>
-        public void Initialize()
+        public Task Initialize()
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Start all components and modules to begin execution
         /// </summary>
-        public void Start()
+        public Task StartAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Stop execution, dispose components and return to clean state
         /// </summary>
-        public void Stop()
+        public Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
         public void AcknowledgeNotification(IModuleNotification notification)

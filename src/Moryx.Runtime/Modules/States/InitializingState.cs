@@ -11,34 +11,35 @@ namespace Moryx.Runtime.Modules
             : base(context, stateMap)
         {
         }
-
-        public override void OnEnter()
+        public override async Task OnEnterAsync()
         {
             try
             {
-                Context.Initialize();
-                NextState(StateReady);
+                await Context.Initialize();
+                await NextStateAsync(StateReady);
             }
             catch (Exception ex)
             {
                 Context.ReportError(ex);
-                NextState(StateInitializedFailure);
+                await NextStateAsync(StateInitializedFailure);
             }
         }
-
-        public override void Initialize()
+        public override Task Initialize()
         {
             // Nothing to do here
+            return Task.CompletedTask;
         }
 
-        public override void Start()
+        public override Task Start()
         {
             // Nothing to do here
+            return Task.CompletedTask;
         }
 
-        public override void Stop()
+        public override Task Stop()
         {
             // Nothing to do here
+            return Task.CompletedTask;
         }
     }
 }

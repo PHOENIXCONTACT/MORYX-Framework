@@ -32,30 +32,33 @@ namespace Moryx.DependentTestModule
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             Thread.Sleep(2000); // Just for system testing.
 
             // Activate facades
             ActivateFacade(_testModuleFacade);
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             Thread.Sleep(2000); // Just for system testing.
 
             // Deactivate facades
             DeactivateFacade(_testModuleFacade);
+            return Task.CompletedTask;
         }
 
         #endregion

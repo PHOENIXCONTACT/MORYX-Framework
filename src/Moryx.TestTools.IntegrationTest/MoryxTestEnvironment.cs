@@ -96,18 +96,18 @@ namespace Moryx.TestTools.IntegrationTest
         /// Initializes and starts the module with the facade interface of type
         /// </summary>
         /// <returns>The started module.</returns>
-        public IServerModule StartTestModule()
+        public async Task<IServerModule> StartTestModule()
         {
             var module = (IServerModule)Services.GetService(_moduleType);
 
-            module.Initialize();
+            await module.Initialize();
             module.Container.Register(typeof(NotSoParallelOps), [typeof(IParallelOperations)], nameof(NotSoParallelOps), Container.LifeCycle.Singleton);
 
             var strategies = module.GetType().GetProperty(nameof(ServerModuleBase<ConfigBase>.Strategies)).GetValue(module) as Dictionary<Type, string>;
             if (strategies is not null && !strategies.Any(s => s.Value == nameof(NotSoParallelOps)))
                 strategies.Add(typeof(IParallelOperations), nameof(NotSoParallelOps));
 
-            module.Start();
+            await module.StartAsync();
             return module;
         }
 
@@ -115,10 +115,10 @@ namespace Moryx.TestTools.IntegrationTest
         /// Stops the module with the facade interface of type <typeparamref name="T"/>.
         /// </summary>
         /// <returns>The stopped module.</returns>
-        public IServerModule StopTestModule()
+        public async Task<IServerModule> StopTestModule()
         {
             var module = (IServerModule)Services.GetService(_moduleType);
-            module.Stop();
+            await module.StopAsync();
 
             return module;
         }

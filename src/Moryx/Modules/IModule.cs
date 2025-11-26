@@ -9,7 +9,7 @@ namespace Moryx.Modules
     /// It may contain components and exchangeable plugins to increase reuse, customization and flexibility.
     /// This does only apply to level 1 components like a ServerModule or ClientModule.
     /// </summary>
-    public interface IModule : IInitializable
+    public interface IModule : IAsyncInitializable
     {
         /// <summary>
         /// Unique name for this module within the environment it is designed for

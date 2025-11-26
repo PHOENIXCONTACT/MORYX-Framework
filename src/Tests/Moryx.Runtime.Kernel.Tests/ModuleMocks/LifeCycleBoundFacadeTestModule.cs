@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -26,20 +27,24 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 
         public FacadeBase Facade => _facade;
 
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             _facade = new TestFacade();
             _facade.StateChanged += OnFacadeActivated;
+
+            return Task.CompletedTask;
         }
 
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             ActivateFacade(_facade);
+            return Task.CompletedTask;
         }
 
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             DeactivateFacade(_facade);
+            return Task.CompletedTask;
         }
 
         private void OnFacadeActivated(object sender, bool activated)

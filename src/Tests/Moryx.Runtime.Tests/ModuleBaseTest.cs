@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Threading.Tasks;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.Tests.Mocks;
 using Moryx.Runtime.Tests.Modules;
@@ -29,10 +30,10 @@ namespace Moryx.Runtime.Tests
         }
 
         [Test]
-        public void StrategiesInConfigFound()
+        public async Task StrategiesInConfigFound()
         {
             var casted = (IServerModule)_moduleUnderTest;
-            casted.Initialize();
+            await casted.Initialize();
 
             var containerConfig = _moduleUnderTest.Strategies;
 

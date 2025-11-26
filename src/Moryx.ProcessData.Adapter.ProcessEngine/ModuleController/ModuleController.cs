@@ -52,24 +52,27 @@ namespace Moryx.ProcessData.Adapter.ProcessEngine
         }
 
         /// <inheritdoc />
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             Container.SetInstance(ProcessControl)
                 .SetInstance(JobManagement)
                 .SetInstance(ProcessDataMonitor)
                 .SetInstance(ResourceManagement);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             Container.Resolve<ProcessEngineAdapter>().Start();
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             Container.Resolve<ProcessEngineAdapter>().Stop();
+            return Task.CompletedTask;
         }
     }
 }

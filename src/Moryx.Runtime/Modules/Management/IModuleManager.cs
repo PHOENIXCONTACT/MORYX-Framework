@@ -11,36 +11,36 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Start all modules in cascading order
         /// </summary>
-        void StartModules();
+        Task StartModules();
 
         /// <summary>
         /// Stop all modules in cascading order
         /// </summary>
-        void StopModules();
+        Task StopModules();
 
         /// <summary>
         /// Initialize a server module
         /// </summary>
         /// <param name="module"></param>
-        void InitializeModule(IServerModule module);
+        Task InitializeModule(IServerModule module);
 
         /// <summary>
         /// Start a specific module and all its dependencies
         /// </summary>
         /// <param name="module">Module to start</param>
-        void StartModule(IServerModule module);
+        Task StartModule(IServerModule module);
 
         /// <summary>
         /// Stop a specific modules
         /// </summary>
         /// <param name="module">Module to stop</param>
-        void StopModule(IServerModule module);
+        Task StopModule(IServerModule module);
 
         /// <summary>
         /// Restart the module and all of its dependecies
         /// </summary>
         /// <param name="module"></param>
-        void ReincarnateModule(IServerModule module);
+        Task ReincarnateModule(IServerModule module);
 
         /// <summary>
         /// All modules managed by the service manager

@@ -42,7 +42,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             // Extend container
             Container.RegisterNotifications();
@@ -61,12 +61,13 @@ namespace Moryx.Resources.Management
 
             // Load resources
             Container.LoadComponents<IResource>();
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             // Start type controller for resource and proxy creation
             Container.Resolve<IResourceTypeController>().Start();
@@ -83,12 +84,13 @@ namespace Moryx.Resources.Management
             ActivateFacade(_notificationSourceFacade);
             ActivateFacade(_resourceManagementFacade);
 
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             // Tear down facades
             DeactivateFacade(_notificationSourceFacade);
@@ -96,6 +98,7 @@ namespace Moryx.Resources.Management
             DeactivateFacade(_resourceTypeTreeFacade);
             var resourceManager = Container.Resolve<IResourceManager>();
             resourceManager.Stop();
+            return Task.CompletedTask;
         }
 
         private readonly ResourceManagementFacade _resourceManagementFacade = new();

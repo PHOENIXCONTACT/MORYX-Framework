@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Threading.Tasks;
 using Moryx.Runtime.Kernel;
 using Moryx.Runtime.Modules;
 using Moryx.Runtime.Tests.Mocks;
@@ -30,13 +31,13 @@ namespace Moryx.Runtime.Tests
         }
 
         [Test]
-        public void StoppedToReady()
+        public async Task StoppedToReady()
         {
             var casted = (IServerModule)_moduleUnderTest;
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Stopped), "Module not in stopped state!");
 
             // Call initialize
-            casted.Initialize();
+            await casted.Initialize();
 
             // Validate result
             Assert.That(_moduleUnderTest.LastInvoke, Is.EqualTo(InvokedMethod.Initialize), "Initialize was not called!");
@@ -44,14 +45,14 @@ namespace Moryx.Runtime.Tests
         }
 
         [Test]
-        public void ReadyToRunning()
+        public async Task ReadyToRunning()
         {
             var casted = (IServerModule)_moduleUnderTest;
-            casted.Initialize();
+            await casted.Initialize();
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Ready), "Module not in ready state!");
 
             // Call initialize
-            casted.Start();
+            await casted.StartAsync();
 
             // Validate result
             Assert.That(_moduleUnderTest.LastInvoke, Is.EqualTo(InvokedMethod.Start), "Start was not called!");
@@ -59,15 +60,15 @@ namespace Moryx.Runtime.Tests
         }
 
         [Test]
-        public void RunningToStopped()
+        public async Task RunningToStopped()
         {
             var casted = (IServerModule)_moduleUnderTest;
-            casted.Initialize();
-            casted.Start();
+            await casted.Initialize();
+            await casted.StartAsync();
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Running), "Module not in running state!");
 
             // Call initialize
-            casted.Stop();
+            await casted.StopAsync();
 
             // Validate result
             Assert.That(_moduleUnderTest.LastInvoke, Is.EqualTo(InvokedMethod.Stop), "Stop was not called!");
@@ -75,60 +76,60 @@ namespace Moryx.Runtime.Tests
         }
 
         [Test]
-        public void InitializeFails()
+        public async Task InitializeFails()
         {
             _moduleUnderTest.CurrentMode = TestMode.MoryxException;
             var casted = (IServerModule)_moduleUnderTest;
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Stopped), "Module not in stopped state!");
 
             // Call initialize
-            casted.Initialize();
+            await casted.Initialize();
 
             // Validate result
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Failure), "Module did not detect error!");
         }
 
         [Test]
-        public void StartFails()
+        public async Task StartFails()
         {
             var casted = (IServerModule)_moduleUnderTest;
-            casted.Initialize();
+            await casted.Initialize();
             _moduleUnderTest.CurrentMode = TestMode.MoryxException;
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Ready), "Module not in ready state!");
 
             // Call initialize
-            casted.Start();
+            await casted.StartAsync();
 
             // Validate result
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Failure), "Module did not detect error!");
         }
 
         [Test]
-        public void StopFails()
+        public async Task StopFails()
         {
             var casted = (IServerModule)_moduleUnderTest;
-            casted.Initialize();
-            casted.Start();
+            await casted.Initialize();
+            await casted.StartAsync();
             _moduleUnderTest.CurrentMode = TestMode.MoryxException;
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Running), "Module not in running state!");
 
             // Call initialize
-            casted.Stop();
+            await casted.StopAsync();
 
             // Validate result
             Assert.That(casted.State, Is.EqualTo(ServerModuleState.Stopped), "Module was not stopped!");
         }
 
         [Test]
-        public void FailureInStopped()
+        public async Task FailureInStopped()
         {
             var module = new DelayedExceptionModule(new ModuleContainerFactory(), _configManagerMock.Object, new TestLoggerMgmt());
             var casted = (IServerModule)module;
 
-            casted.Initialize();
-            casted.Start();
+            await casted.Initialize();
+            await casted.StartAsync();
 
-            casted.Stop();
+            await casted.StopAsync();
             module.WaitEvent.Set();
         }
     }

@@ -11,8 +11,9 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        protected override void OnFailure()
+        protected override Task OnFailure()
         {
+            return Task.CompletedTask;
         }
     }
 
@@ -22,11 +23,11 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        protected override void OnFailure()
+        protected override async Task OnFailure()
         {
             try
             {
-                Context.Stop();
+                await Context.Stop();
             }
             catch (Exception ex)
             {
@@ -44,9 +45,9 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        public override void OnEnter()
+        public override async Task OnEnterAsync()
         {
-            OnFailure();
+            await OnFailure();
 
             try
             {
@@ -60,16 +61,27 @@ namespace Moryx.Runtime.Modules
             }
         }
 
-        protected abstract void OnFailure();
+        protected abstract Task OnFailure();
 
-        public override void Initialize()
+        public override async Task Initialize()
         {
-            NextState(StateInitializing);
+            await NextStateAsync(StateInitializing);
+
+            try
+            {
+                await Context.Initialize();
+                await NextStateAsync(StateReady);
+            }
+            catch (Exception ex)
+            {
+                Context.ReportError(ex);
+                await NextStateAsync(StateInitializedFailure);
+            }
         }
 
-        public override void Stop()
+        public override Task Stop()
         {
-            NextState(StateStopped);
+            return NextStateAsync(StateStopped);
         }
     }
 }

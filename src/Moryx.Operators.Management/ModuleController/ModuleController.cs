@@ -44,15 +44,16 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
     public IDbContextManager DbContextManager { get; } = dbContextManager;
 
     /// <inheritdoc />
-    protected override void OnInitialize()
+    protected override Task OnInitializeAsync()
     {
         Container
             .ActivateDbContexts(DbContextManager)
             .SetInstance(ResourceManagement);
+        return Task.CompletedTask;
     }
 
     /// <inheritdoc />
-    protected override void OnStart()
+    protected override Task OnStartAsync()
     {
         Container.Resolve<IOperatorManager>().Start();
         Container.Resolve<IAttendanceManager>().Start();
@@ -60,10 +61,11 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
         Container.Resolve<ISkillManager>().Start();
 
         ActivateFacade(_facade);
+        return Task.CompletedTask;
     }
 
     /// <inheritdoc />
-    protected override void OnStop()
+    protected override Task OnStopAsync()
     {
         DeactivateFacade(_facade);
 
@@ -71,6 +73,7 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
         Container.Resolve<ISkillStorage>().Stop();
         Container.Resolve<IAttendanceManager>().Stop();
         Container.Resolve<IOperatorManager>().Stop();
+        return Task.CompletedTask;
     }
 
     private readonly OperatorManagementFacade _facade = new();
