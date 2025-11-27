@@ -10,4 +10,3 @@ The three sections below explain the entry format, how it is created from object
 
 * [Entry Format](EntryFormat.md)
 * [Entry Convert](EntryConvert.md)
-* [Entry To Model](EntryToModelConverter.md)
