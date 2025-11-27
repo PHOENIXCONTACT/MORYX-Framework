@@ -68,12 +68,11 @@ namespace Moryx.Resources.Benchmarking
         public int StepId { get; set; }
 
         /// <inheritdoc />
-        protected override Task OnInitializeAsync()
+        protected override async Task OnInitializeAsync()
         {
-            base.OnInitializeAsync();
+            await base.OnInitializeAsync();
 
             Capabilities = new BenchmarkCapabilities(StepId);
-            return Task.CompletedTask;
         }
 
         /// <inheritdoc />

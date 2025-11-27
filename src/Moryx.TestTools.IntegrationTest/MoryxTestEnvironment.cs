@@ -96,7 +96,7 @@ namespace Moryx.TestTools.IntegrationTest
         /// Initializes and starts the module with the facade interface of type
         /// </summary>
         /// <returns>The started module.</returns>
-        public async Task<IServerModule> StartTestModule()
+        public async Task<IServerModule> StartTestModuleAsync()
         {
             var module = (IServerModule)Services.GetService(_moduleType);
 
@@ -115,7 +115,7 @@ namespace Moryx.TestTools.IntegrationTest
         /// Stops the module with the facade interface of type <typeparamref name="T"/>.
         /// </summary>
         /// <returns>The stopped module.</returns>
-        public async Task<IServerModule> StopTestModule()
+        public async Task<IServerModule> StopTestModuleAsync()
         {
             var module = (IServerModule)Services.GetService(_moduleType);
             await module.StopAsync();

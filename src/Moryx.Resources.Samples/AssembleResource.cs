@@ -34,16 +34,6 @@ namespace Moryx.Resources.Samples
             }
         }
 
-        protected override Task OnStartAsync()
-        {
-            return base.OnStartAsync();
-        }
-
-        protected override Task OnStopAsync()
-        {
-            return base.OnStopAsync();
-        }
-
         [EntrySerialize]
         public void ChangeNumber(string fooNumber)
         {

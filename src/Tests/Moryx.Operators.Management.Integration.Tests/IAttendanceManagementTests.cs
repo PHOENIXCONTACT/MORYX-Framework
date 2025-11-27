@@ -20,7 +20,7 @@ internal class IAttendanceManagementTests : TestsBase
     [TearDown]
     public Task TearDown()
     {
-        return _env.StopTestModule();
+        return _env.StopTestModuleAsync();
     }
 
     [Test]
@@ -29,8 +29,8 @@ internal class IAttendanceManagementTests : TestsBase
         // Arrange
         // Act
         _config.DefaultOperator = _defaultOperatorIdentifier;
-        await _env.StopTestModule();
-        await _env.StartTestModule();
+        await _env.StopTestModuleAsync();
+        await _env.StartTestModuleAsync();
 
         // Assert
         Assert.Multiple(() =>
@@ -46,12 +46,12 @@ internal class IAttendanceManagementTests : TestsBase
     {
         // Arrange
         _config.DefaultOperator = _defaultOperatorIdentifier;
-        await _env.StopTestModule();
-        await _env.StartTestModule();
+        await _env.StopTestModuleAsync();
+        await _env.StartTestModuleAsync();
 
         // Act
-        await _env.StopTestModule();
-        await _env.StartTestModule();
+        await _env.StopTestModuleAsync();
+        await _env.StartTestModuleAsync();
 
         // Assert
         Assert.DoesNotThrow(() => _facade.Operators.Single(o => o.Identifier == _defaultOperatorIdentifier));

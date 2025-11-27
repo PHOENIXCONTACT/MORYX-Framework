@@ -187,7 +187,7 @@ namespace Moryx.Runtime.Kernel.Tests
             var moduleManager = CreateObjectUnderTest([mockModule.Object]);
 
             // Act
-            await moduleManager.InitializeModule(mockModule.Object);
+            await moduleManager.InitializeModuleAsync(mockModule.Object);
 
             // Assert
             mockModule.Verify(mock => mock.InitializeAsync());
@@ -227,7 +227,7 @@ namespace Moryx.Runtime.Kernel.Tests
             var moduleManager = CreateObjectUnderTest([mockModule.Object]);
 
             // Act
-            await moduleManager.StartModule(mockModule.Object);
+            await moduleManager.StartModuleAsync(mockModule.Object);
 
             Thread.Sleep(1);
 

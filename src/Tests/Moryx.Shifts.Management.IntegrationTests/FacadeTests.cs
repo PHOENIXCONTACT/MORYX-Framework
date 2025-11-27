@@ -12,7 +12,7 @@ namespace Moryx.Shifts.Management.IntegrationTests
         public override Task SetUp()
         {
             base.SetUp();
-            return _env.StartTestModule();
+            return _env.StartTestModuleAsync();
         }
 
         [TearDown]

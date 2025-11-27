@@ -27,7 +27,7 @@ namespace Moryx.Resources.Management
         public IResourceGraph Graph { get; set; }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyList<Resource>> SaveRoots(IUnitOfWork uow, IReadOnlyList<Resource> instances)
+        public async Task<IReadOnlyList<Resource>> SaveRootsAsync(IUnitOfWork uow, IReadOnlyList<Resource> instances)
         {
             var context = new ReferenceSaverContext(uow, Graph);
             foreach (var instance in instances)
@@ -81,7 +81,7 @@ namespace Moryx.Resources.Management
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyList<Resource>> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity, Dictionary<Resource, ResourceEntity> dict = null)
+        public async Task<IReadOnlyList<Resource>> SaveReferencesAsync(IUnitOfWork uow, Resource instance, ResourceEntity entity, Dictionary<Resource, ResourceEntity> dict = null)
         {
             var context = new ReferenceSaverContext(uow, Graph, instance, entity);
             await SaveReferences(context, instance, dict);
@@ -124,7 +124,7 @@ namespace Moryx.Resources.Management
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyList<Resource>> SaveSingleCollection(IUnitOfWork uow, Resource instance, PropertyInfo property)
+        public async Task<IReadOnlyList<Resource>> SaveSingleCollectionAsync(IUnitOfWork uow, Resource instance, PropertyInfo property)
         {
             var entity = uow.GetEntity<ResourceEntity>(instance);
             var relations = await ResourceRelationAccessor.FromEntity(uow, entity);

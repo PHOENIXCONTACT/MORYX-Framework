@@ -156,7 +156,7 @@ namespace Moryx.Resources.Management.Tests
             var mocks = SetupDbMocks(relations);
 
             // Act
-            var newResources = await _linker.SaveReferences(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
+            var newResources = await _linker.SaveReferencesAsync(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
 
             // Assert
             Assert.Multiple(() =>
@@ -234,7 +234,7 @@ namespace Moryx.Resources.Management.Tests
             var mocks = SetupDbMocks(relations);
 
             // Act
-            var newResources = await _linker.SaveReferences(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
+            var newResources = await _linker.SaveReferencesAsync(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
 
             // Assert
             Assert.That(newResources.Count, Is.EqualTo(1));
@@ -289,7 +289,7 @@ namespace Moryx.Resources.Management.Tests
             var mocks = SetupDbMocks(relations);
 
             // Act
-            await _linker.SaveReferences(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
+            await _linker.SaveReferencesAsync(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
 
             // Assert
             Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 2)), Times.Never), "Linker did remove relation 1-2");
@@ -330,7 +330,7 @@ namespace Moryx.Resources.Management.Tests
 
             // Act
             parent.Children.Add(child);
-            await _linker.SaveReferences(mocks.Item1.Object, parent, new ResourceEntity { Id = 1 });
+            await _linker.SaveReferencesAsync(mocks.Item1.Object, parent, new ResourceEntity { Id = 1 });
 
             // Assert
             Assert.That(parent.Children.Contains(child), "Child was not set");
@@ -360,7 +360,7 @@ namespace Moryx.Resources.Management.Tests
 
             // Act
             parent.Children.Remove(child);
-            await _linker.SaveReferences(mocks.Item1.Object, parent, new ResourceEntity { Id = 1 });
+            await _linker.SaveReferencesAsync(mocks.Item1.Object, parent, new ResourceEntity { Id = 1 });
 
             // Assert
             Assert.That(parent.Children.Contains(child), Is.False, "Child was not removed");
@@ -393,7 +393,7 @@ namespace Moryx.Resources.Management.Tests
 
             // Act
             child.Parent = parent2;
-            await _linker.SaveReferences(mocks.Item1.Object, child, new ResourceEntity { Id = 3 });
+            await _linker.SaveReferencesAsync(mocks.Item1.Object, child, new ResourceEntity { Id = 3 });
 
             // Assert
             Assert.That(parent1.Children, Does.Not.Contain(child), "Child was not removed");
@@ -442,9 +442,9 @@ namespace Moryx.Resources.Management.Tests
 
             // Assert
             if (isNull || isEmpty)
-                Assert.ThrowsAsync<ValidationException>(() => _linker.SaveReferences(dbMocks.Item1.Object, instance, new ResourceEntity()));
+                Assert.ThrowsAsync<ValidationException>(() => _linker.SaveReferencesAsync(dbMocks.Item1.Object, instance, new ResourceEntity()));
             else
-                Assert.DoesNotThrowAsync(() => _linker.SaveReferences(dbMocks.Item1.Object, instance, new ResourceEntity()));
+                Assert.DoesNotThrowAsync(() => _linker.SaveReferencesAsync(dbMocks.Item1.Object, instance, new ResourceEntity()));
         }
 
         private static Tuple<Mock<IUnitOfWork>, Mock<IResourceRelationRepository>, Mock<IResourceRepository>> SetupDbMocks(List<ResourceRelationEntity> relations)

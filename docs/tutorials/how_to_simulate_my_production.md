@@ -77,7 +77,8 @@ For simulation driver to work, you need `Moryx.Simulation.ISimulationDriver`.
 ```
 
 So here is an example of how your mock driver can implement `Moryx.Simulation.ISimulationDriver`:
-``` csharp
+
+````cs
     [ResourceRegistration]
     public class TestMockDriver : Driver, IMessageDriver<object>,ISimulationDriver {
 
@@ -107,7 +108,7 @@ So here is an example of how your mock driver can implement `Moryx.Simulation.IS
 
         protected override async Task OnStartAsync()
         {
-            await base.OnStart();
+            await base.OnStartAsync();
 
             // initial simulated state of the driver
             SimulatedState = SimulationState.Idle;
@@ -160,7 +161,8 @@ So here is an example of how your mock driver can implement `Moryx.Simulation.IS
 
         //... rest of your codes//
     }
-```
+````
+
 Note: The `Send()` method might differ from cell to cell.You can override the `Send()` and do your implementation of what needs to happend when your "mock" driver receives something from the cell. In case your driver doesn't have a `send()` method, you can use your own method and react upon the type of message you received just like described inside the `TestMockDriver.Send()` method above.
 
  # How does my Cell use my `MockDriver` ?

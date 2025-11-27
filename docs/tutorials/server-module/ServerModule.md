@@ -102,7 +102,8 @@ protected override async Task OnStartAsync()
     ActivateFacade(_playGroundExecution);
 
     // Start Plugin
-    await Container.Resolve<IExamplePlugin>().StartAsync();
+    var plugin = Container.Resolve<IExamplePlugin>();
+    await plugin.StartAsync();
 }
 ````
 
@@ -118,7 +119,8 @@ protected override async Task OnStopAsync()
     DeactivateFacade(_playGroundExecution);
 
     // Stop Plugin
-    await Container.Resolve<IExamplePlugin>().StopAsync();
+    var plugin = Container.Resolve<IExamplePlugin>();
+    await plugin.StopAsync();
 }
 ````
 

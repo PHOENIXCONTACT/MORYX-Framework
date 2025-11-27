@@ -97,7 +97,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             if (module == null)
                 return NotFound($"Module with name \"{moduleName}\" could not be found");
 
-            _moduleManager.StartModule(module);
+            _moduleManager.StartModuleAsync(module);
             return Ok();
         }
 
@@ -109,7 +109,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             if (module == null)
                 return NotFound($"Module with name \"{moduleName}\" could not be found");
 
-            _moduleManager.StopModule(module);
+            _moduleManager.StopModuleAsync(module);
             return Ok();
         }
 
@@ -121,7 +121,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             if (module == null)
                 return NotFound($"Module with name \"{moduleName}\" could not be found");
 
-            Task.Run(() => _moduleManager.ReincarnateModule(module));
+            Task.Run(() => _moduleManager.ReincarnateModuleAsync(module));
             return Ok();
         }
 
@@ -158,7 +158,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             foreach (var notification in notifications)
                 module.AcknowledgeNotification(notification);
 
-            _moduleManager.InitializeModule(module);
+            _moduleManager.InitializeModuleAsync(module);
             return Ok();
         }
 
@@ -207,7 +207,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
 
                 if (request.UpdateMode == ConfigUpdateMode.SaveAndReincarnate)
                     // This has to be done parallel so we can also reincarnate the Maintenance itself
-                    Task.Run(() => _moduleManager.ReincarnateModule(module));
+                    Task.Run(() => _moduleManager.ReincarnateModuleAsync(module));
                 return Ok();
             }
             catch (Exception ex)

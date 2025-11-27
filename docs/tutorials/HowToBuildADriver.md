@@ -85,7 +85,7 @@ public class StateExampleDriver : Driver, IExampleDriver, IStateContext
     /// <seealso cref="IDriver"/>
     public override async Task OnInitializeAsync()
     {
-        await base.Initialize();
+        await base.InitializeAsync();
 
         StateMachine.Initialize<ExampleStateBase>(this).With<ExampleStateBase>();
     }

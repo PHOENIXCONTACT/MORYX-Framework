@@ -36,8 +36,8 @@ public async Task Start_WhenModuleIsStopped_StartsModule()
     var facade = _env.GetTestModule();
 
     // Act
-    var module = await _env.StartTestModule();
-    var module = await _env.StopTestModule();
+    var module = await _env.StartTestModuleAsync();
+    var module = await _env.StopTestModuleAsync();
 
     // Assert
     Assert.That(module.State, Is.EqualTo(ServerModuleState.Stopped));

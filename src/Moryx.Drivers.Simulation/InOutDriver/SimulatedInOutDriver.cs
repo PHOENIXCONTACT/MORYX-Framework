@@ -34,14 +34,13 @@ namespace Moryx.Drivers.Simulation.InOutDriver
             }
         }
 
-        protected override Task OnStartAsync()
+        protected override async Task OnStartAsync()
         {
-            base.OnStartAsync();
+            await base.OnStartAsync();
 
             SimulatedOutput.OutputSet += OnOutputSet;
 
             SimulatedState = SimulationState.Idle;
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -88,8 +87,7 @@ namespace Moryx.Drivers.Simulation.InOutDriver
         [EntrySerialize]
         public void SetBool(string key, bool value)
         {
-
-                SimulatedInput.Values[key] = value;
+            SimulatedInput.Values[key] = value;
             SimulatedInput.RaiseInputChanged(key);
         }
 

@@ -48,6 +48,10 @@ protected override async Task OnStopAsync()
 
 - `StartModules()` -> `StartModulesAsync()`
 - `StopModules()` -> `StopModulesAsync()`
+- `InitalizeModule(IServerModule module)` -> `InitalizeModuleAsync(IServerModule module)`
+- `StartModule(IServerModule module)` -> `StartModuleAsync(IServerModule module)`
+- `StopModule(IServerModule module)` -> `StopModuleAsync(IServerModule module)`
+- `ReincarnateModule(IServerModule module)` -> `ReincarnateModuleAsync(IServerModule module)`
 
 The `Main` method in `Program.cs` must be updated to a Task-based signature.
 

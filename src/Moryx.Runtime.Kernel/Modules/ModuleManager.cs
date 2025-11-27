@@ -80,7 +80,7 @@ namespace Moryx.Runtime.Kernel
         /// Initialize a server module
         /// </summary>
         /// <param name="module"></param>
-        public Task InitializeModule(IServerModule module)
+        public Task InitializeModuleAsync(IServerModule module)
         {
             return _moduleStarter.InitializeAsync(module);
         }
@@ -89,7 +89,7 @@ namespace Moryx.Runtime.Kernel
         /// Start a specific module and all its dependencies
         /// </summary>
         /// <param name="module">Module to start</param>
-        public Task StartModule(IServerModule module)
+        public Task StartModuleAsync(IServerModule module)
         {
             return _moduleStarter.StartAsync(module);
         }
@@ -98,7 +98,7 @@ namespace Moryx.Runtime.Kernel
         /// Stop a specific module
         /// </summary>
         /// <param name="module">Module to stop</param>
-        public Task StopModule(IServerModule module)
+        public Task StopModuleAsync(IServerModule module)
         {
             return _moduleStopper.StopAsync(module);
         }
@@ -107,7 +107,7 @@ namespace Moryx.Runtime.Kernel
         /// Restart the module and all of its dependencies
         /// </summary>
         /// <param name="module"></param>
-        public async Task ReincarnateModule(IServerModule module)
+        public async Task ReincarnateModuleAsync(IServerModule module)
         {
             // Stop execution
             await _moduleStopper.StopAsync(module);

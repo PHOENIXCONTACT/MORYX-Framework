@@ -26,10 +26,10 @@ internal class ModuleTests : TestsBase
     public async Task Start_WhenModuleIsStopped_StartsModule()
     {
         // Arrange
-        await _env.StopTestModule();
+        await _env.StopTestModuleAsync();
 
         // Act
-        var module = await _env.StartTestModule();
+        var module = await _env.StartTestModuleAsync();
 
         // Assert
         Assert.That(module.State, Is.EqualTo(ServerModuleState.Running));
@@ -40,7 +40,7 @@ internal class ModuleTests : TestsBase
     {
         // Arrange
         // Act
-        var module = await _env.StopTestModule();
+        var module = await _env.StopTestModuleAsync();
 
         // Assert
         Assert.That(module.State, Is.EqualTo(ServerModuleState.Stopped));
@@ -57,8 +57,8 @@ internal class ModuleTests : TestsBase
         _skillsFacade.CreateSkill(SkillCreationContext);
 
         // Act
-        await _env.StopTestModule();
-        var module = await _env.StartTestModule();
+        await _env.StopTestModuleAsync();
+        var module = await _env.StartTestModuleAsync();
 
         // Assert
         Assert.Multiple(() =>
@@ -80,7 +80,7 @@ internal class ModuleTests : TestsBase
     public async Task AnyMethod_WhenFacadeNotActivated_ThrowsHealthStateException()
     {
         // Arrange
-        await _env.StopTestModule();
+        await _env.StopTestModuleAsync();
 
         // Act
         // Assert

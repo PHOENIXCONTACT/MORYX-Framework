@@ -22,25 +22,25 @@ namespace Moryx.Runtime.Modules
         /// Initialize a server module
         /// </summary>
         /// <param name="module"></param>
-        Task InitializeModule(IServerModule module);
+        Task InitializeModuleAsync(IServerModule module);
 
         /// <summary>
         /// Start a specific module and all its dependencies
         /// </summary>
         /// <param name="module">Module to start</param>
-        Task StartModule(IServerModule module);
+        Task StartModuleAsync(IServerModule module);
 
         /// <summary>
         /// Stop a specific modules
         /// </summary>
         /// <param name="module">Module to stop</param>
-        Task StopModule(IServerModule module);
+        Task StopModuleAsync(IServerModule module);
 
         /// <summary>
         /// Restart the module and all of its dependecies
         /// </summary>
         /// <param name="module"></param>
-        Task ReincarnateModule(IServerModule module);
+        Task ReincarnateModuleAsync(IServerModule module);
 
         /// <summary>
         /// All modules managed by the service manager

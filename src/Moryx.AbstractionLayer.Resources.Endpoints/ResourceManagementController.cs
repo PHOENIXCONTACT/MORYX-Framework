@@ -105,7 +105,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         [Route("{id}/invoke/{method}")]
         [Authorize(Policy = ResourcePermissions.CanInvokeMethod)]
-        public ActionResult<Entry> InvokeMethod(long id, string method, Entry parameters)
+        public async Task<ActionResult<Entry>> InvokeMethod(long id, string method, Entry parameters)
         {
             if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
@@ -113,7 +113,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             Entry entry = null;
             try
             {
-                _resourceManagement.ModifyUnsafeAsync(id, r =>
+                await _resourceManagement.ModifyUnsafeAsync(id, r =>
                 {
                     entry = EntryConvert.InvokeMethod(r.Descriptor, new MethodEntry { Name = method, Parameters = parameters }, _serialization);
                     return Task.FromResult(true);

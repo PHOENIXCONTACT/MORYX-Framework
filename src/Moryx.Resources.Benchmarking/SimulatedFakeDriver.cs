@@ -37,12 +37,11 @@ namespace Moryx.Resources.Benchmarking
 
         public IEnumerable<ICell> Usages => [Cell];
 
-        protected override Task OnStartAsync()
+        protected override async Task OnStartAsync()
         {
-            base.OnStartAsync();
+            await base.OnStartAsync();
 
             SimulatedState = SimulationState.Idle;
-            return Task.CompletedTask;
         }
 
         public IMessageChannel Channel(string identifier)

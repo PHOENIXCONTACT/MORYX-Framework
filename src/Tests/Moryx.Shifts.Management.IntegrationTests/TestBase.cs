@@ -33,7 +33,7 @@ namespace Moryx.Shifts.Management.IntegrationTests
 
         public virtual Task TearDown()
         {
-            return _env.StopTestModule();
+            return _env.StopTestModuleAsync();
         }
 
         #region Test tools 

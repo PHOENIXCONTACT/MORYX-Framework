@@ -73,16 +73,14 @@ namespace Moryx.ControlSystem.Processes
         public MountInformation MountInformation => new(Process, Session);
 
         /// <inheritdoc />
-        protected override Task OnInitializeAsync()
+        protected override async Task OnInitializeAsync()
         {
-            base.OnInitializeAsync();
+            await base.OnInitializeAsync();
 
             if (_processId == EmptyProcess.ProcessId)
                 Process = new EmptyProcess();
             else if (_processId != 0) // Everything is unknown until we receive a response from the control system
                 Process = new UnknownProcess(_processId);
-
-            return Task.CompletedTask;
         }
 
         /// <summary>

@@ -346,7 +346,7 @@ namespace Moryx.Resources.Management
                     newResources.Add(resource);
 
                 var references = new Dictionary<Resource, ResourceEntity>();
-                var newInstances = await ResourceLinker.SaveReferences(uow, resource, entity, references);
+                var newInstances = await ResourceLinker.SaveReferencesAsync(uow, resource, entity, references);
                 newResources.AddRange(newInstances);
 
                 try
@@ -396,7 +396,7 @@ namespace Moryx.Resources.Management
                 try
                 {
                     using var uow = UowFactory.Create();
-                    var newResources = await ResourceLinker.SaveSingleCollection(uow, instance, property);
+                    var newResources = await ResourceLinker.SaveSingleCollectionAsync(uow, instance, property);
 
                     try
                     {
@@ -438,7 +438,7 @@ namespace Moryx.Resources.Management
             if (!result.Saved)
             {
                 using var uow = UowFactory.Create();
-                await ResourceLinker.SaveRoots(uow, result.InitializedResources);
+                await ResourceLinker.SaveRootsAsync(uow, result.InitializedResources);
                 await uow.SaveChangesAsync();
             }
 

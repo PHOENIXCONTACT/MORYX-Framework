@@ -47,22 +47,22 @@ namespace Moryx.Resources.Management.Tests
             _typeControllerMock = new Mock<IResourceTypeController>();
 
             _linkerMock = new Mock<IResourceLinker>();
-            _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(),
+            _linkerMock.Setup(l => l.SaveReferencesAsync(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(),
                 It.IsAny<Dictionary<Resource, ResourceEntity>>()))
                 .ReturnsAsync(Array.Empty<Resource>());
 
             _initializerMock = new Mock<IResourceInitializer>();
             _initializerMock.Setup(i => i.Execute(It.IsAny<IResourceGraph>(), It.IsAny<object>())).ReturnsAsync(new ResourceInitializerResult { InitializedResources = [_resourceMock]});
-            _linkerMock.Setup(l => l.SaveRoots(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()))
+            _linkerMock.Setup(l => l.SaveRootsAsync(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()))
                 .ReturnsAsync([_resourceMock]);
-            _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(),
+            _linkerMock.Setup(l => l.SaveReferencesAsync(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(),
                 It.IsAny<Dictionary<Resource, ResourceEntity>>()))
                 .ReturnsAsync(Array.Empty<Resource>());
 
             _graph = new ResourceGraph { TypeController = _typeControllerMock.Object };
             _moduleConfig = new ModuleConfig();
             _moduleConfig.Initialize();
-            
+
             _resourceManager = new ResourceManager
             {
                 UowFactory = _modelFactory,
@@ -97,7 +97,7 @@ namespace Moryx.Resources.Management.Tests
             await _resourceManager.ExecuteInitializer(_initializerMock.Object, null);
 
             // Assert
-            _linkerMock.Verify(l => l.SaveRoots(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()), Times.Once);
+            _linkerMock.Verify(l => l.SaveRootsAsync(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()), Times.Once);
         }
 
         [Test(Description = "If resource manager starts with filled database, it will initialized with values of database.")]
@@ -147,7 +147,7 @@ namespace Moryx.Resources.Management.Tests
         {
             // Arrange
             var collectionProperty = typeof(IReferenceResource).GetProperty(nameof(IReferenceResource.References));
-            _linkerMock.Setup(l => l.SaveSingleCollection(It.IsAny<IUnitOfWork>(), _resourceMock, collectionProperty))
+            _linkerMock.Setup(l => l.SaveSingleCollectionAsync(It.IsAny<IUnitOfWork>(), _resourceMock, collectionProperty))
                 .ReturnsAsync(Array.Empty<Resource>);
 
             var waitEvent = new ManualResetEvent(false);
@@ -168,7 +168,7 @@ namespace Moryx.Resources.Management.Tests
 
             // Assert
             waitEvent.WaitOne(1000);
-            _linkerMock.Verify(l => l.SaveSingleCollection(It.IsAny<IUnitOfWork>(), _resourceMock, collectionProperty), Times.Once);
+            _linkerMock.Verify(l => l.SaveSingleCollectionAsync(It.IsAny<IUnitOfWork>(), _resourceMock, collectionProperty), Times.Once);
         }
 
         [Test(Description = "Saving resources should save to database")]
@@ -185,7 +185,7 @@ namespace Moryx.Resources.Management.Tests
             await _resourceManager.SaveAsync(_resourceMock);
 
             // Assert
-            _linkerMock.Verify(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), _resourceMock, It.IsAny<ResourceEntity>(),
+            _linkerMock.Verify(l => l.SaveReferencesAsync(It.IsAny<IUnitOfWork>(), _resourceMock, It.IsAny<ResourceEntity>(),
                 It.IsAny<Dictionary<Resource, ResourceEntity>>()), Times.Once);
 
             using var uow = _modelFactory.Create();
@@ -206,13 +206,20 @@ namespace Moryx.Resources.Management.Tests
             await _resourceManager.SaveAsync(testResource);
             _linkerMock.Invocations.Clear();
 
+            var waitEvent = new ManualResetEvent(false);
+            _resourceManager.ResourceChanged += (sender, resource) =>
+            {
+                waitEvent.Set();
+            };
+
             // Act
             testResource.Name = "Hello World";
             testResource.RaiseChanged();
 
             // Assert
-            _linkerMock.Verify(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), testResource, It.IsAny<ResourceEntity>()
-                , It.IsAny<Dictionary<Resource, ResourceEntity>>()), Times.Once);
+            waitEvent.WaitOne(1000);
+            _linkerMock.Verify(l => l.SaveReferencesAsync(It.IsAny<IUnitOfWork>(), testResource, It.IsAny<ResourceEntity>(),
+                It.IsAny<Dictionary<Resource, ResourceEntity>>()), Times.Once);
 
             ResourceEntity entity;
             using (var uow = _modelFactory.Create())

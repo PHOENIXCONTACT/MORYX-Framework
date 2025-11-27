@@ -231,9 +231,10 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
     #region Lifecycle
     /// <inheritdoc/>
-    protected override Task OnInitializeAsync()
+    protected override async Task OnInitializeAsync()
     {
-        base.OnInitializeAsync();
+        await base.OnInitializeAsync();
+
         Input = new OpcUaInput(this);
         Output = new OpcUaOutput(this);
         _nodeIdAliasDictionary ??= [];
@@ -241,16 +242,14 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         StateMachine.Initialize(this).With<DriverOpcUaState>();
 
         ServerStatus = ServerState.Unknown;
-        return Task.CompletedTask;
     }
 
     /// <inheritdoc/>
-    protected override Task OnStartAsync()
+    protected override async Task OnStartAsync()
     {
-        base.OnStartAsync();
+        await base.OnStartAsync();
         ApplicationConfigurationFactory.ApplicationName += " " + Identifier;
         Connect();
-        return Task.CompletedTask;
     }
 
     /// <inheritdoc/>

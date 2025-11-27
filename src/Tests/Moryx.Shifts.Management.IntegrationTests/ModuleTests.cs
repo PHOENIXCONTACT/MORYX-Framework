@@ -28,7 +28,7 @@ namespace Moryx.Shifts.Management.IntegrationTests
         {
             // Arrange
             // Act
-            var module = await _env.StartTestModule();
+            var module = await _env.StartTestModuleAsync();
 
             // Assert
             Assert.That(module.State, Is.EqualTo(ServerModuleState.Running));
@@ -38,10 +38,10 @@ namespace Moryx.Shifts.Management.IntegrationTests
         public async Task Stop_WhenModuleIsRunning_StopsModule()
         {
             // Arrange
-            await _env.StartTestModule();
+            await _env.StartTestModuleAsync();
 
             // Act
-            var module = await _env.StopTestModule();
+            var module = await _env.StopTestModuleAsync();
 
             // Assert
             Assert.That(module.State, Is.EqualTo(ServerModuleState.Stopped));
@@ -54,15 +54,15 @@ namespace Moryx.Shifts.Management.IntegrationTests
             _resourceManagementMock.Setup(r => r.GetResource<IResource>(It.IsAny<long>())).Returns(ResourceMock.Object);
             _operatorManagementMock.SetupGet(o => o.Operators).Returns([Operator]);
 
-            await _env.StartTestModule();
+            await _env.StartTestModuleAsync();
             var shiftType = _facade.CreateShiftType(TypeContext);
             var shift = _facade.CreateShift(GetShiftContext(shiftType));
             var context = GetAssignementContext(shift, ResourceMock.Object, Operator);
             var assignement = _facade.CreateShiftAssignement(context);
 
             // Act
-            await _env.StopTestModule();
-            var module = await _env.StartTestModule();
+            await _env.StopTestModuleAsync();
+            var module = await _env.StartTestModuleAsync();
 
             // Assert
             Assert.Multiple(() =>
@@ -78,8 +78,8 @@ namespace Moryx.Shifts.Management.IntegrationTests
         public async Task AnyMethod_WhenFacadeNotActivated_ThrowsHealthStateException()
         {
             // Arrange
-            await _env.StartTestModule();
-            await _env.StopTestModule();
+            await _env.StartTestModuleAsync();
+            await _env.StopTestModuleAsync();
 
             // Act
             // Assert

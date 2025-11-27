@@ -35,9 +35,10 @@ So here is an example of how your mock driver can implement `Moryx.ControlSystem
 
         public IEnumerable<ICell> Usages => new[] { Cell };
 
-        protected override Task OnStartAsync()
+        protected override async Task OnStartAsync()
         {
-            base.OnStart();
+            await base.OnStartAsync();
+            
             // initial simulated state of the driver
             SimulatedState = SimulationState.Idle;
         }

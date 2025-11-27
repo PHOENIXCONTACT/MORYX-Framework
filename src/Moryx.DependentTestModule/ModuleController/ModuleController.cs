@@ -40,13 +40,12 @@ namespace Moryx.DependentTestModule
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override Task OnStartAsync()
+        protected override async Task OnStartAsync()
         {
-            Thread.Sleep(2000); // Just for system testing.
+            await Task.Delay(2000); // Just for system testing.
 
             // Activate facades
             ActivateFacade(_testModuleFacade);
-            return Task.CompletedTask;
         }
 
         /// <summary>
