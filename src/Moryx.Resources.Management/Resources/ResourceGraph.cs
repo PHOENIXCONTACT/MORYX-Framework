@@ -27,9 +27,9 @@ namespace Moryx.Resources.Management
         /// </summary>
         private readonly IDictionary<long, Resource> _graph = new Dictionary<long, Resource>();
 
-        public Action<Resource> SaveDelegate { get; set; }
+        public Func<Resource, Task> SaveDelegate { get; set; }
 
-        public Func<Resource, bool, bool> DestroyDelegate { get; set; }
+        public Func<Resource, bool, Task<bool>> DestroyDelegate { get; set; }
 
         public Resource Add(Resource instance)
         {
@@ -139,17 +139,17 @@ namespace Moryx.Resources.Management
             return Instantiate(type) as TResource;
         }
 
-        public void Save(IResource resource)
+        public Task SaveAsync(IResource resource)
         {
-            SaveDelegate((Resource)resource);
+            return SaveDelegate((Resource)resource);
         }
 
-        public bool Destroy(IResource resource)
+        public Task<bool> DestroyAsync(IResource resource)
         {
-            return Destroy(resource, false);
+            return DestroyAsync(resource, false);
         }
 
-        public bool Destroy(IResource resource, bool permanent)
+        public Task<bool> DestroyAsync(IResource resource, bool permanent)
         {
             return DestroyDelegate((Resource)resource, permanent);
         }

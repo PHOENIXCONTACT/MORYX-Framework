@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.EntityFrameworkCore;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Model;
 using Moryx.Model.Repositories;
@@ -77,13 +78,13 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Save the resource instance to a database entity
         /// </summary>
-        public static ResourceEntity SaveToEntity(IUnitOfWork uow, Resource instance)
+        public static async Task<ResourceEntity> SaveToEntity(IUnitOfWork uow, Resource instance)
         {
             // Create entity and populate from object
-            var entity = uow.FindEntity<ResourceEntity>(instance);
+            var entity = await uow.FindEntityAsync<ResourceEntity>(instance);
             if (entity is null)
             {
-                entity = uow.CreateEntity<ResourceEntity>(instance);
+                entity = await uow.CreateEntityAsync<ResourceEntity>(instance);
                 entity.Type = instance.ResourceType();
             }
 
@@ -102,17 +103,17 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Fetch all resources and their relations from the database 
         /// </summary>
-        public static ICollection<ResourceEntityAccessor> FetchResourceTemplates(IUnitOfWork uow)
+        public static async Task<ICollection<ResourceEntityAccessor>> FetchResourceTemplates(IUnitOfWork uow)
         {
             var resourceRepo = uow.GetRepository<IResourceRepository>();
 
-            var resources =
+            var resources = await
                 (from res in resourceRepo.Linq
                  where res.Deleted == null
                  select res)
-                .ToList();
+                .ToListAsync();
 
-            var resourcEntityAccessors = resources
+            var resourceEntityAccessors = resources
                 .Select(res =>
                     new ResourceEntityAccessor
                     {
@@ -139,7 +140,7 @@ namespace Moryx.Resources.Management
                                     }).ToList()
                     })
                 .ToList();
-            return resourcEntityAccessors;
+            return resourceEntityAccessors;
         }
 
         /// <summary>
@@ -190,7 +191,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Load all relations template of a resource entity
         /// </summary>
-        public static ICollection<ResourceRelationAccessor> FromEntity(IUnitOfWork uow, ResourceEntity entity)
+        public static async Task<ICollection<ResourceRelationAccessor>> FromEntity(IUnitOfWork uow, ResourceEntity entity)
         {
             if (entity.Id <= 0)
                 return Array.Empty<ResourceRelationAccessor>();

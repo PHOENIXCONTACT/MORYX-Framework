@@ -67,38 +67,35 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override Task OnStartAsync()
+        protected override async Task OnStartAsync()
         {
             // Start type controller for resource and proxy creation
             Container.Resolve<IResourceTypeController>().Start();
 
             // Load manager to boot resources
             var resourceManager = Container.Resolve<IResourceManager>();
-            resourceManager.Initialize();
+            await resourceManager.InitializeAsync();
 
             // Boot up manager
-            resourceManager.Start();
+            await resourceManager.StartAsync();
 
             // Activate external facade to register events
             ActivateFacade(_resourceTypeTreeFacade);
             ActivateFacade(_notificationSourceFacade);
             ActivateFacade(_resourceManagementFacade);
-
-            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected override Task OnStopAsync()
+        protected override async Task OnStopAsync()
         {
             // Tear down facades
             DeactivateFacade(_notificationSourceFacade);
             DeactivateFacade(_resourceManagementFacade);
             DeactivateFacade(_resourceTypeTreeFacade);
             var resourceManager = Container.Resolve<IResourceManager>();
-            resourceManager.Stop();
-            return Task.CompletedTask;
+            await resourceManager.StopAsync();
         }
 
         private readonly ResourceManagementFacade _resourceManagementFacade = new();

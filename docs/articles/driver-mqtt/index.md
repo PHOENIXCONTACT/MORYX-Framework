@@ -1,13 +1,13 @@
 # MORYX MQTT
 
 This repository contains tools for communication with resources via MQTT. <br/>
-[MQTT](MqttGeneralInformation.md) is a light weight protocol using the publish/subscribe-architecture. 
+[MQTT](MqttGeneralInformation.md) is a light weight protocol using the publish/subscribe-architecture.
 
 ### Add a MQTT-Driver
 In order to communicate with a resource using MQTT, first you need a [MQTT-Broker](SetUpTestEnvironment.md). Then you have to create a [DriverMqtt](DriverMqtt.md):
 1. Run *Application.sln* and *Application.UI.sln*
 2. Open the tab *Resources* in the UI
-3. Create a new DriverMqtt 
+3. Create a new DriverMqtt
 4. Add topics to the driver by selecting it and pressing the button *Add*
 
 ### Select the right topic
@@ -29,9 +29,9 @@ public class ExampleResource: IResource{
 
     private IMessageChannel<IConvertible> _channel;
 
-    protected override void OnInitialize()
+    protected override async Task OnInitializeAsync()
     {
-        base.OnInitialize();
+        await base.OnInitializeAsync();
 
         // Subscribe all topics, which receive IIdentifiermessage
         Driver.Received += OnDriverReceived;
@@ -57,9 +57,9 @@ public class MqttSensorResource : PublicResource
 {
     public IMessageChannel<IConvertible> SensorTopic { get; set; }
 
-    protected override void OnInitialize()
+    protected override async Task OnInitializeAsync()
     {
-        base.OnInitialize();
+        await base.OnInitializeAsync();
 
         SensorTopic.Received += OnSensorReceived;
     }

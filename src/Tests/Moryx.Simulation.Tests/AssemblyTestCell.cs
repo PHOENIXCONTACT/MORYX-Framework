@@ -9,7 +9,7 @@ namespace Moryx.Simulation.Tests
     {
         public void TestInit()
         {
-            OnInitialize();
+            OnInitializeAsync();
         }
     }
 }

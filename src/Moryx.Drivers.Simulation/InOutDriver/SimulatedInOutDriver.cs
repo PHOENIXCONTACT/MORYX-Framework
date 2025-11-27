@@ -34,13 +34,14 @@ namespace Moryx.Drivers.Simulation.InOutDriver
             }
         }
 
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
-            base.OnStart();
+            base.OnStartAsync();
 
             SimulatedOutput.OutputSet += OnOutputSet;
 
             SimulatedState = SimulationState.Idle;
+            return Task.CompletedTask;
         }
 
         /// <summary>

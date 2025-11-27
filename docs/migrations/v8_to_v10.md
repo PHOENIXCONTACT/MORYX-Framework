@@ -2,6 +2,17 @@
 
 ## Async life-cycle
 
+### Changes in StateBase
+
+We now provide a full async implementation of the `StateBase`. To keep constistent naming, the `StateBase` was splitted to `SyncStateBase` and `AsyncStateBase`.
+Due to the reduction of unneccessary interfaces, `IState` was removed and `StateBase` will be used in e.g. `IStateContext` now.
+
+The `StateMachine` class was extended by `WithAsync()` and `ForceAsync()`. The `AsyncStateBase` provides async all the way: `NextStateAsync()`, `OnEnterAsync()`, `OnExitAsync`.\
+**Upgrade hint:** Replace `StateBase<TContext>` by `SyncStateBase<TContext>`.
+
+The same convention was applied to `DriverState`. It was renamed to `SyncDriverState` and a new implementation `AsyncDriverState` was added with full async support.\
+**Upgrade hint:** Replace `DriverState<TContext>` by `SyncDriverState<TContext>`.
+
 ### Server Module lifecycle refactored to async methods
 
 The lifecycle methods of ServerModules have been migrated from void to async Task to enable modern asynchronous programming with async/await.
@@ -13,6 +24,25 @@ The runtime now supports asynchronous initialization, startup, and shutdown proc
 - `OnInitialize()` -> `OnInitializeAsync()`
 - `OnStart()` -> `OnStartAsync()`
 - `OnStop()` -> `OnStopAsync()`
+
+````cs
+protected override Task OnInitializeAsync()
+{
+    return Task.CompletedTask;
+}
+
+protected override async Task OnStartAsync()
+{
+    var asyncFoo = Container.Resolve<IAsyncFoo>();
+    await asyncFoo.StartAsync();
+}
+
+protected override async Task OnStopAsync()
+{
+    var asyncFoo = Container.Resolve<IAsyncFoo>();
+    await asyncFoo.StopAsync();
+}
+````
 
 **Changes in IModuleManager:**
 
@@ -37,16 +67,42 @@ public static async Task Main(string[] args)
 }
 ````
 
-### Changes in StateBase
+### Resource lifecycle refactored to async methods
 
-We now provide a full async implementation of the `StateBase`. To keep constistent naming, the `StateBase` was splitted to `SyncStateBase` and `AsyncStateBase`.
-Due to the reduction of unneccessary interfaces, `IState` was removed and `StateBase` will be used in e.g. `IStateContext` now.
+Same as done in ServerModules has been done for Resources. The ResourceManagement now supports asynchronous initialization, startup, and shutdown processes.
 
-The `StateMachine` class was extended by `WithAsync()` and `ForceAsync()`. The `AsyncStateBase` provides async all the way: `NextStateAsync()`, `OnEnterAsync()`, `OnExitAsync`.\
-**Upgrade hint:** Replace `StateBase<TContext>` by `SyncStateBase<TContext>`.
+**Changes in Resource**:
 
-The same convention was applied to `DriverState`. It was renamed to `SyncDriverState` and a new implementation `AsyncDriverState` was added with full async support.\
-**Upgrade hint:** Replace `DriverState<TContext>` by `SyncDriverState<TContext>`.
+- `OnInitialize()` -> `OnInitializeAsync()`
+- `OnStart()` -> `OnStartAsync()`
+- `OnStop()` -> `OnStopAsync()`
+
+````cs
+protected override Task OnInitializeAsync()
+{
+    return base.OnStartAsync();
+}
+
+protected override Task OnStartAsync()
+{
+    return base.OnStartAsync();
+}
+
+protected override Task OnStopAsync()
+{
+    return base.OnStopAsync();
+}
+````
+
+**Changes in IResourceGraph**
+
+- `Save(IResource resource)` -> `SaveAsync(IResource resource)`
+- `Destroy(IResource resource)` -> `DestroyAsync(IResource resource)`
+- `Destroy(IResource resource, bool permanent)` -> `DestroyAsync(IResource resource, bool permanent)`
+
+**Changes in IResourceManagement**
+
+- Modification methods are now using async Task.
 
 ## Replaced result of visual instructions with dedicated result object
 
@@ -72,9 +128,9 @@ The simulator module has also been renamed, and its namespace and package id hav
 - ResourceRelationType.PossibleExchangablePart -> ResourceRelationType.PossibleExchangeablePart
 - MqttDriver.BrokerURL -> MqttDriver.BrokerUrl
 - IResourceManagement.GetAllResources -> IResourceManagement.GetResourcesUnsafe
-- IResourceManagement.Create -> IResourceManagement.CreateUnsafe
-- IResourceManagement.Read -> IResourceManagement.ReadUnsafe
-- IResourceManagement.Modify -> IResourceManagement.ModifyUnsafe
+- IResourceManagement.Create -> IResourceManagement.CreateUnsafeAsync
+- IResourceManagement.Read -> IResourceManagement.ReadUnsafeAsync
+- IResourceManagement.Modify -> IResourceManagement.ModifyUnsafeAsync
 - ProcessContext -> ProcessWorkplanContext
 - OperationClassification -> OperationStateClassification
 - OperationClassification.Loading -> OperationStateClassification.Assigning

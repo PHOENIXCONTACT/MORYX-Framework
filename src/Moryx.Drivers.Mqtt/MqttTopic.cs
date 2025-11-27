@@ -166,10 +166,12 @@ namespace Moryx.Drivers.Mqtt
         #endregion
 
         /// <inheritdoc />
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
-            base.OnStart();
+            base.OnStartAsync();
             MqttDriver?.NewTopicAdded(SubscribedTopic);
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />

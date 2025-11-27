@@ -91,7 +91,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// Because the returned objects are the originals, the API consumer is responsible for keeping and watching the life-cycle.
         /// Use with extreme caution. Do not keep the instance in memory for later usage.
         /// </remarks>
-        long CreateUnsafe(Type resourceType, Action<Resource> initializer);
+        Task<long> CreateUnsafeAsync(Type resourceType, Func<Resource, Task> initializer);
 
         /// <summary>
         /// Read data from a resource
@@ -125,12 +125,12 @@ namespace Moryx.AbstractionLayer.Resources
         /// Because the returned objects are the originals, the API consumer is responsible for keeping and watching the life-cycle.
         /// Use with extreme caution. Do not keep the instance in memory for later usage.
         /// </remarks>
-        void ModifyUnsafe(long id, Func<Resource, bool> modifier);
+        Task ModifyUnsafeAsync(long id, Func<Resource, Task<bool>> modifier);
 
         /// <summary>
         /// Create and initialize a resource
         /// </summary>
-        bool Delete(long id);
+        Task<bool> DeleteAsync(long id);
 
         /// <summary>
         /// Executes a preconfigured initializer with the given configuration

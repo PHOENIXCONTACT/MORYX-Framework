@@ -5,6 +5,7 @@ using System;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.TestTools;
@@ -39,7 +40,7 @@ namespace Moryx.Resources.Mqtt.Tests
         public TestDriverMqttPrimitiveDatatypeTopic(MqttProtocolVersion version) => _version = version;
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             ReflectionTool.TestMode = true;
 
@@ -57,8 +58,8 @@ namespace Moryx.Resources.Mqtt.Tests
                 MessageType = typeof(string)
             };
 
-            ((IInitializable)_mqttTopicInt).Initialize();
-            ((IInitializable)_mqttTopicString).Initialize();
+            await ((IAsyncInitializable)_mqttTopicInt).InitializeAsync();
+            await ((IAsyncInitializable)_mqttTopicString).InitializeAsync();
 
             _driver = new MqttDriver
             {
@@ -76,7 +77,7 @@ namespace Moryx.Resources.Mqtt.Tests
                 .ReturnsAsync(new MqttClientSubscribeResult(0, Array.Empty<MqttClientSubscribeResultItem>(), "", Array.Empty<MqttUserProperty>()));
 
             _driver.InitializeForTest(_mockClient.Object);
-            ((IPlugin)_driver).Start();
+            await ((IAsyncPlugin)_driver).StartAsync();
             _driver.OnConnected(new MqttClientConnectedEventArgs(new MqttClientConnectResult())).Wait();
             _mqttTopicInt.Parent = _driver;
             _mqttTopicString.Parent = _driver;

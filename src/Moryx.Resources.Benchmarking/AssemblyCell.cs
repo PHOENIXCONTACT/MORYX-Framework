@@ -17,11 +17,12 @@ namespace Moryx.Resources.Benchmarking
         [ResourceReference(ResourceRelationType.Driver, IsRequired = true)]
         public IMessageDriver Driver { get; set; }
 
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
-            base.OnInitialize();
+            base.OnInitializeAsync();
 
             Driver.Received += OnMessageReceived;
+            return Task.CompletedTask;
         }
 
         protected override void OnDispose()

@@ -5,6 +5,7 @@ using System;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.TestTools;
@@ -40,7 +41,7 @@ namespace Moryx.Resources.Mqtt.Tests
         public TestDriverMqttJsonTopic(MqttProtocolVersion version) => _version = version;
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             ReflectionTool.TestMode = true;
 
@@ -56,8 +57,8 @@ namespace Moryx.Resources.Mqtt.Tests
                 MessageName = nameof(JsonMessageTest)
             };
 
-            ((IInitializable)_mqttTopicCamel).Initialize();
-            ((IInitializable)_mqttTopicPascal).Initialize();
+            await ((IAsyncInitializable)_mqttTopicCamel).InitializeAsync();
+            await ((IAsyncInitializable)_mqttTopicPascal).InitializeAsync();
 
             _driver = new MqttDriver
             {
@@ -75,7 +76,7 @@ namespace Moryx.Resources.Mqtt.Tests
                 .ReturnsAsync(new MqttClientSubscribeResult(0, Array.Empty<MqttClientSubscribeResultItem>(), "", Array.Empty<MqttUserProperty>()));
 
             _driver.InitializeForTest(_mockClient.Object);
-            ((IPlugin)_driver).Start();
+            await ((IAsyncPlugin)_driver).StartAsync();
             _driver.OnConnected(new MqttClientConnectedEventArgs(new MqttClientConnectResult())).Wait();
             _mqttTopicCamel.Parent = _driver;
             _mqttTopicPascal.Parent = _driver;

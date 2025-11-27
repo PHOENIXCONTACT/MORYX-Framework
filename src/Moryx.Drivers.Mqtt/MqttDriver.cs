@@ -142,9 +142,9 @@ public class MqttDriver : Driver, IMessageDriver
     #region Lifecycle
 
     /// <inheritdoc />
-    protected override void OnInitialize()
+    protected override Task OnInitializeAsync()
     {
-        base.OnInitialize();
+        base.OnInitializeAsync();
 
         var factory = new MqttFactory();
         _mqttClient = factory.CreateMqttClient();
@@ -157,9 +157,11 @@ public class MqttDriver : Driver, IMessageDriver
         _mqttClient.DisconnectedAsync += OnDisconnected;
 
         StateMachine.Initialize(this).With<DriverMqttState>();
+
+        return Task.CompletedTask;
     }
 
-    internal void InitializeForTest(IMqttClient client)
+    internal void InitializeForTest(IMqttClient client) //TODO: no explicit method for tests
     {
         _mqttClient = client;
         _mqttClient.ApplicationMessageReceivedAsync += OnReceived;
@@ -169,19 +171,23 @@ public class MqttDriver : Driver, IMessageDriver
     }
 
     /// <inheritdoc />
-    protected override void OnStart()
+    protected override Task OnStartAsync()
     {
-        base.OnStart();
+        base.OnStartAsync();
 
         State.Connect();
+
+        return Task.CompletedTask;
     }
 
     /// <inheritdoc />
-    protected override void OnStop()
+    protected override Task OnStopAsync()
     {
         State.Disconnect();
 
-        base.OnStop();
+        base.OnStopAsync();
+
+        return Task.CompletedTask;
     }
 
     /// <inheritdoc />

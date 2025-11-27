@@ -35,7 +35,7 @@ So here is an example of how your mock driver can implement `Moryx.ControlSystem
 
         public IEnumerable<ICell> Usages => new[] { Cell };
 
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             base.OnStart();
             // initial simulated state of the driver
@@ -99,7 +99,7 @@ Note: The `Send()` method might differ from cell to cell.You can override the `S
 In your cell definition/Class you can use the following example based on the type of driver you're trying to simulate. Let's say we are trying to "mock" an `MQTT driver` since Moryx MQTT driver implements from `IMessageDriver<object>` in your cell you can have the following case:
 ```csharp
     // SolderingCell.cs
-    
+
    [ResourceRegistration]
     public class SolderingCell : Cell
     {
@@ -185,6 +185,6 @@ Moryx will take care of the relationship once you assign the driver to the cell.
                     break;
             }
         }
-        
+
     //... rest of the codes//
  ```

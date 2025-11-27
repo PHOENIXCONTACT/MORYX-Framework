@@ -3,17 +3,19 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer.TestTools;
-using Moq;
+using Moryx.Logging;
 using Moryx.Model.InMemory;
 using Moryx.Model.Repositories;
-using NUnit.Framework;
-using Microsoft.Extensions.Logging.Abstractions;
-using Moryx.Logging;
+using Moryx.Notifications;
 using Moryx.Resources.Management.Model;
+using NUnit.Framework;
 
 namespace Moryx.Resources.Management.Tests
 {
@@ -47,15 +49,15 @@ namespace Moryx.Resources.Management.Tests
             _linkerMock = new Mock<IResourceLinker>();
             _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(),
                 It.IsAny<Dictionary<Resource, ResourceEntity>>()))
-                .Returns(Array.Empty<Resource>());
+                .ReturnsAsync(Array.Empty<Resource>());
 
             _initializerMock = new Mock<IResourceInitializer>();
             _initializerMock.Setup(i => i.Execute(It.IsAny<IResourceGraph>(), It.IsAny<object>())).ReturnsAsync(new ResourceInitializerResult { InitializedResources = [_resourceMock]});
             _linkerMock.Setup(l => l.SaveRoots(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()))
-                .Returns([_resourceMock]);
+                .ReturnsAsync([_resourceMock]);
             _linkerMock.Setup(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(),
                 It.IsAny<Dictionary<Resource, ResourceEntity>>()))
-                .Returns(Array.Empty<Resource>());
+                .ReturnsAsync(Array.Empty<Resource>());
 
             _graph = new ResourceGraph { TypeController = _typeControllerMock.Object };
             _moduleConfig = new ModuleConfig();
@@ -99,10 +101,10 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test(Description = "If resource manager starts with filled database, it will initialized with values of database.")]
-        public void InitializeWithDatabaseEntity()
+        public async Task InitializeWithDatabaseEntity()
         {
             // Act
-            _resourceManager.Initialize();
+            await _resourceManager.InitializeAsync();
 
             // Assert
             Assert.That(_resourceMock.InitializeCalls, Is.EqualTo(1), "The resource was not initialized.");
@@ -110,13 +112,13 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test(Description = "Start call to ResourceManager starts the handled resources.")]
-        public void StartStartsResources()
+        public async Task StartStartsResources()
         {
             // Arrange
-            _resourceManager.Initialize();
+            await _resourceManager.InitializeAsync();
 
             // Act
-            _resourceManager.Start();
+            await _resourceManager.StartAsync();
 
             // Assert
             Assert.That(_resourceMock.InitializeCalls, Is.EqualTo(1));
@@ -125,14 +127,14 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test(Description = "Stop call to ResourceManager stops the handled resources.")]
-        public void StopStopsResources()
+        public async Task StopStopsResources()
         {
             // Arrange
-            _resourceManager.Initialize();
-            _resourceManager.Start();
+            await _resourceManager.InitializeAsync();
+            await _resourceManager.StartAsync();
 
             // Act
-            _resourceManager.Stop();
+            await _resourceManager.StopAsync();
 
             // Assert
             Assert.That(_resourceMock.InitializeCalls, Is.EqualTo(1));
@@ -141,62 +143,67 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test(Description = "ResourceManager is attached to all reference collections and and listens to changed events.")]
-        public void AutoSaveCollectionsWillBeSaved()
+        public async Task AutoSaveCollectionsWillBeSaved()
         {
             // Arrange
             var collectionProperty = typeof(IReferenceResource).GetProperty(nameof(IReferenceResource.References));
             _linkerMock.Setup(l => l.SaveSingleCollection(It.IsAny<IUnitOfWork>(), _resourceMock, collectionProperty))
-                .Returns(() => Array.Empty<Resource>());
+                .ReturnsAsync(Array.Empty<Resource>);
+
+            var waitEvent = new ManualResetEvent(false);
+            _resourceManager.ResourceChanged += (sender, resource) =>
+            {
+                waitEvent.Set();
+            };
 
             var referenceCollectionMock = new ReferenceCollectionMock<IResource>();
             _resourceMock.References = referenceCollectionMock;
 
-            _resourceManager.Initialize();
-            _resourceManager.Start();
+            await _resourceManager.InitializeAsync();
+            await _resourceManager.StartAsync();
 
             // Act
             var eventArgs = new ReferenceCollectionChangedEventArgs(_resourceMock, collectionProperty);
             referenceCollectionMock.RaiseCollectionChanged(eventArgs);
 
             // Assert
+            waitEvent.WaitOne(1000);
             _linkerMock.Verify(l => l.SaveSingleCollection(It.IsAny<IUnitOfWork>(), _resourceMock, collectionProperty), Times.Once);
         }
 
         [Test(Description = "Saving resources should save to database")]
-        public void SaveResource()
+        public async Task SaveResource()
         {
             // Arrange
-            _resourceManager.Initialize();
-            _resourceManager.Start();
+            await _resourceManager.InitializeAsync();
+            await _resourceManager.StartAsync();
             _linkerMock.Invocations.Clear();
 
             _resourceMock.Name = "A Resource Description";
 
             // Act
-            _resourceManager.Save(_resourceMock);
+            await _resourceManager.SaveAsync(_resourceMock);
 
             // Assert
             _linkerMock.Verify(l => l.SaveReferences(It.IsAny<IUnitOfWork>(), _resourceMock, It.IsAny<ResourceEntity>(),
                 It.IsAny<Dictionary<Resource, ResourceEntity>>()), Times.Once);
 
-            using (var uow = _modelFactory.Create())
-            {
-                var resourceRepo = uow.GetRepository<IResourceRepository>();
-                var entity = resourceRepo.GetByKey(_resourceMock.Id);
+            using var uow = _modelFactory.Create();
+            var resourceRepo = uow.GetRepository<IResourceRepository>();
+            var entity = await resourceRepo.GetByKeyAsync(_resourceMock.Id);
 
-                Assert.That(entity.Description, Is.EqualTo(_resourceMock.Description));
-            }
+            Assert.That(entity.Description, Is.EqualTo(_resourceMock.Description));
         }
 
         [Test(Description = "Resources should be saved on Changed event")]
-        public void SaveResourceOnResourceChanged()
+        public async Task SaveResourceOnResourceChanged()
         {
             // Arrange
-            _resourceManager.Initialize();
-            _resourceManager.Start();
+            await _resourceManager.InitializeAsync();
+            await _resourceManager.StartAsync();
 
             var testResource = _graph.Instantiate<PublicResourceMock>();
-            _resourceManager.Save(testResource);
+            await _resourceManager.SaveAsync(testResource);
             _linkerMock.Invocations.Clear();
 
             // Act
@@ -211,7 +218,7 @@ namespace Moryx.Resources.Management.Tests
             using (var uow = _modelFactory.Create())
             {
                 var resourceRepo = uow.GetRepository<IResourceRepository>();
-                entity = resourceRepo.GetByKey(testResource.Id);
+                entity = await resourceRepo.GetByKeyAsync(testResource.Id);
             }
 
             Assert.That(entity, Is.Not.Null);
@@ -219,53 +226,60 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test(Description = "Should notify facade listeners when resource Changed")]
-        public void RaiseResourceChangesOnChangedResource()
+        public async Task RaiseResourceChangesOnChangedResource()
         {
             // Arrange
             var testResource = _graph.Instantiate<PublicResourceMock>();
             int notifications = 0;
+            var waitEvent = new ManualResetEvent(false);
             _resourceManager.ResourceChanged += (sender, resource) =>
             {
                 notifications = +1;
+                waitEvent.Set();
             };
-            _resourceManager.Save(testResource);
+            await _resourceManager.SaveAsync(testResource);
 
             // Act
             testResource.Name = "Hello World";
             testResource.RaiseChanged();
 
             // Assert
+            waitEvent.WaitOne(1000);
             Assert.That(notifications, Is.EqualTo(1));
         }
 
         [Test(Description = "Should not notify facade listeners when new resource added")]
-        public void DontRaiseResourceChangesOnAdded()
+        public async Task DontRaiseResourceChangesOnAdded()
         {
             // Arrange
             var testResource = _graph.Instantiate<PublicResourceMock>();
-            int notifications = 0;
+            var notifications = 0;
+            var waitEvent = new ManualResetEvent(false);
+
             _resourceManager.ResourceChanged += (sender, resource) =>
             {
                 notifications = +1;
+                waitEvent.Set();
             };
 
             // Act
-            _resourceManager.Save(testResource);
+            await _resourceManager.SaveAsync(testResource);
 
             // Assert
+            waitEvent.WaitOne(1000);
             Assert.That(notifications, Is.EqualTo(0));
         }
 
 
         [Test(Description = "Adds a resource while the ResourceManager was initialized but not started")]
-        public void AddResourceWhileInitializedDoesNotStartResource()
+        public async Task AddResourceWhileInitializedDoesNotStartResource()
         {
             // Arrange
-            _resourceManager.Initialize();
+            await _resourceManager.InitializeAsync();
             var testResource = _graph.Instantiate<PublicResourceMock>();
 
             // Act
-            _resourceManager.Save(testResource);
+            await _resourceManager.SaveAsync(testResource);
 
             // Arrange
             Assert.That(testResource.InitializeCalls, Is.EqualTo(1));
@@ -274,17 +288,17 @@ namespace Moryx.Resources.Management.Tests
 
         [TestCase(true, Description = "")]
         [TestCase(false, Description = "")]
-        public void DestroyResource(bool permanent)
+        public async Task DestroyResource(bool permanent)
         {
             // Arrange
-            _resourceManager.Initialize();
-            _resourceManager.Start();
+            await _resourceManager.InitializeAsync();
+            await _resourceManager.StartAsync();
 
             var testResource = _graph.Instantiate<PublicResourceMock>();
-            _resourceManager.Save(testResource);
+            await _resourceManager.SaveAsync(testResource);
 
             // Act
-            _resourceManager.Destroy(testResource, permanent);
+            await _resourceManager.Destroy(testResource, permanent);
 
             // Assert
             Assert.That(testResource.StopCalls, Is.EqualTo(1));
@@ -293,21 +307,18 @@ namespace Moryx.Resources.Management.Tests
 
             Assert.Throws<ResourceNotFoundException>(() => _graph.GetResource<PublicResourceMock>());
 
-            using (var uow = _modelFactory.Create())
+            using var uow = _modelFactory.Create();
+            var resourceRepo = uow.GetRepository<IResourceRepository>();
+
+            var entity = await resourceRepo.GetByKeyAsync(testResource.Id);
+            if (permanent)
             {
-                var resourceRepo = uow.GetRepository<IResourceRepository>();
-
-                var entity = resourceRepo.GetByKey(testResource.Id);
-                if (permanent)
-                {
-                    Assert.That(entity, Is.Null);
-                }
-                else
-                {
-                    Assert.That(entity, Is.Not.Null);
-                    Assert.That(entity.Deleted, Is.Not.Null);
-                }
-
+                Assert.That(entity, Is.Null);
+            }
+            else
+            {
+                Assert.That(entity, Is.Not.Null);
+                Assert.That(entity.Deleted, Is.Not.Null);
             }
         }
 
@@ -327,22 +338,22 @@ namespace Moryx.Resources.Management.Tests
             [ResourceReference(ResourceRelationType.Extension, AutoSave = true)]
             public IReferences<IResource> References { get; set; }
 
-            protected override void OnInitialize()
+            protected override async Task OnInitializeAsync()
             {
-                base.OnInitialize();
+                await base.OnInitializeAsync();
                 InitializeCalls++;
             }
 
-            protected override void OnStart()
+            protected override async Task OnStartAsync()
             {
-                base.OnStart();
+                await base.OnStartAsync();
                 StartCalls++;
             }
 
-            protected override void OnStop()
+            protected override Task OnStopAsync()
             {
-                base.OnStop();
                 StopCalls++;
+                return base.OnStopAsync();
             }
 
             public void RaiseChanged()
@@ -355,9 +366,9 @@ namespace Moryx.Resources.Management.Tests
         {
             public ICapabilities Capabilities { get; private set; }
 
-            protected override void OnInitialize()
+            protected override async Task OnInitializeAsync()
             {
-                base.OnInitialize();
+                await base.OnInitializeAsync();
                 Capabilities = new TestCapabilities();
             }
 

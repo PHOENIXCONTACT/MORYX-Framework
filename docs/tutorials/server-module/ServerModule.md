@@ -112,7 +112,7 @@ Even the greatest ServerModule must be stopped from time to time. We must overri
 /// <summary>
 /// Code executed when service is stopped
 /// </summary>
-protected async override void OnStop()
+protected override async Task OnStopAsync()
 {
     // Deactivate facades
     DeactivateFacade(_playGroundExecution);

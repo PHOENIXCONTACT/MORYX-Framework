@@ -28,29 +28,28 @@ After we defined our facade, we want to export it from the server module.
 All we must do for this is to let our module controller implement the [IFacadeContainer](/src/Moryx.Runtime/Modules/IFacadeContainer.cs) interface.
 Add the "IFacadeContainer<IFacade>" interface to the module controller class and implement it at the bottom of the file:
 
-```C#
+```cs
 public class ModuleController: ServerModuleFacadeControllerBase<ModuleConfig>,
         IFacadeContainer<IFacade>
 {
-internal const string ModuleName = "ExampleName";
-
     /// <summary>
     /// Name of this module
     /// </summary>
-    public override string Name
-    {
-        get { return ModuleName; }
-    }
+    public override string Name => "ExampleName";
 
     private readonly Facade _facade = new Facade();
     IFacade IFacadeContainer<IFacade>.Facade => _facade;
 
-    protected override void OnStart(){
+    protected override async Task OnStartAsync()
+    {
+        await base.OnStartAsync();
         ActivateFacade(_facade);
     }
 
-    protected override void OnStop(){
+    protected override Task OnStopAsync()
+    {
         DeactivateFacade(_facade);
+        return base.OnStopAsync();
     }
 
     ...
@@ -82,8 +81,6 @@ Your dependent module should look like this:
 [Description("Example description")]
 public class ModuleController : ServerModuleBase<ModuleConfig>
 {
-    internal const string ModuleName = "Dependent";
-
     /// <summary>
     /// Name of this module
     /// </summary>

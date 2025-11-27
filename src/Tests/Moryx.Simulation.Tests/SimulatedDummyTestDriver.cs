@@ -37,9 +37,9 @@ namespace Moryx.Simulation.Tests
 
         public virtual IEnumerable<ICell> Usages => [Cell];
 
-        protected override void OnStart()
+        protected override async Task OnStartAsync()
         {
-            base.OnStart();
+            await base.OnStartAsync();
 
             SimulatedState = SimulationState.Idle;
         }
