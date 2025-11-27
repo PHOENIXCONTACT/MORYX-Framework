@@ -76,13 +76,13 @@ The implementation of the NeedleLinkStrategy is implemented below. The `PartCrea
 ````cs
 private class NeedleLinkStrategy : LinkStrategyBase<NeedleProduct>
 {
-    public override void LoadPartLink(IGenericColumns linkEntity, IProductPartLink target)
+    public override void LoadPartLink(IGenericColumns linkEntity, ProductPartLink target)
     {
         var needleLink = (NeedlePartLink)target;
         needleLink.Role = (NeedleRole)linkEntity.Integer1;
     }
 
-    public override void SavePartLink(IProductPartLink source, IGenericColumns target)
+    public override void SavePartLink(ProductPartLink source, IGenericColumns target)
     {
         var needleLink = (NeedlePartLink)source;
         target.Integer1 = (int)needleLink.Role;

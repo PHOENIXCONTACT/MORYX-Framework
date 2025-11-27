@@ -29,7 +29,7 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Part link that created this <see cref="ProductInstance"/>. This is <value>null</value> for root instances
         /// </summary>
-        public IProductPartLink PartLink { get; set; }
+        public ProductPartLink PartLink { get; set; }
     }
 
     /// <summary>

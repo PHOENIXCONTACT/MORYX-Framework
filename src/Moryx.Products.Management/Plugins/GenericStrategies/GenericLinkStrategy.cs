@@ -12,7 +12,7 @@ namespace Moryx.Products.Management
     /// 
     /// </summary>
     [ExpectedConfig(typeof(GenericLinkConfiguration))]
-    [StrategyConfiguration(typeof(IProductPartLink), DerivedTypes = true)]
+    [StrategyConfiguration(typeof(ProductPartLink), DerivedTypes = true)]
     [Plugin(LifeCycle.Transient, typeof(IProductLinkStrategy), Name = nameof(GenericLinkStrategy))]
     internal class GenericLinkStrategy : LinkStrategyBase<GenericLinkConfiguration>
     {
@@ -31,7 +31,7 @@ namespace Moryx.Products.Management
             var property = TargetType.GetProperty(PropertyName);
             var linkType = property.PropertyType;
             // Extract element type from collections
-            if (typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(linkType))
+            if (typeof(IEnumerable<ProductPartLink>).IsAssignableFrom(linkType))
             {
                 linkType = linkType.GetGenericArguments()[0];
             }
@@ -39,12 +39,12 @@ namespace Moryx.Products.Management
             EntityMapper.Initialize(linkType, Config);
         }
 
-        public override void LoadPartLink(IGenericColumns linkEntity, IProductPartLink target)
+        public override void LoadPartLink(IGenericColumns linkEntity, ProductPartLink target)
         {
             EntityMapper.ReadValue(linkEntity, target);
         }
 
-        public override void SavePartLink(IProductPartLink source, IGenericColumns target)
+        public override void SavePartLink(ProductPartLink source, IGenericColumns target)
         {
             EntityMapper.WriteValue(source, target);
         }

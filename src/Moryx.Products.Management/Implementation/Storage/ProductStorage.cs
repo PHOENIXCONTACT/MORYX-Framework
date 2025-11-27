@@ -111,14 +111,14 @@ namespace Moryx.Products.Management
                 var typeInfo = TypeInformation[config.TargetType];
                 var strategy = StrategyFactory.CreateLinkStrategy(config);
                 if (!typeInfo.PartLinksInformation.ContainsKey(config.PartName))
-                    typeInfo.PartLinksInformation.Add(config.PartName, new ConstructorStrategyInformation<IProductPartLink, ProductLinkConfiguration, IProductLinkStrategy>());
+                    typeInfo.PartLinksInformation.Add(config.PartName, new ConstructorStrategyInformation<ProductPartLink, ProductLinkConfiguration, IProductLinkStrategy>());
                 var partLinkInfo = typeInfo.PartLinksInformation[config.PartName];
                 partLinkInfo.Strategy = strategy;
 
                 var property = strategy.TargetType.GetProperty(config.PartName);
                 var linkType = property.PropertyType;
                 // Extract element type from collections
-                if (typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(linkType))
+                if (typeof(IEnumerable<ProductPartLink>).IsAssignableFrom(linkType))
                 {
                     linkType = linkType.GetGenericArguments()[0];
                 }
@@ -129,7 +129,7 @@ namespace Moryx.Products.Management
                     linkType = typeof(ProductPartLink<>).MakeGenericType(genericElement);
                 }
 
-                partLinkInfo.Constructor = ReflectionTool.ConstructorDelegate<IProductPartLink>(linkType);
+                partLinkInfo.Constructor = ReflectionTool.ConstructorDelegate<ProductPartLink>(linkType);
             }
 
             // Create recipe strategies
@@ -481,7 +481,7 @@ namespace Moryx.Products.Management
             return product != null ? Transform(uow, product, true) : null;
         }
 
-        private ProductType Transform(IUnitOfWork uow, ProductTypeEntity typeEntity, bool full, IDictionary<long, ProductType> loadedProducts = null, IProductPartLink parentLink = null)
+        private ProductType Transform(IUnitOfWork uow, ProductTypeEntity typeEntity, bool full, IDictionary<long, ProductType> loadedProducts = null, ProductPartLink parentLink = null)
         {
             // Build cache if this wasn't done before
             if (loadedProducts == null)
@@ -525,7 +525,7 @@ namespace Moryx.Products.Management
                 var part = partLink.Strategy;
                 object value = null;
                 var property = type.GetProperty(part.PropertyName);
-                if (typeof(IProductPartLink).IsAssignableFrom(property.PropertyType))
+                if (typeof(ProductPartLink).IsAssignableFrom(property.PropertyType))
                 {
                     var linkEntity = FindLink(part.PropertyName, typeEntity);
                     if (linkEntity != null)
@@ -626,7 +626,7 @@ namespace Moryx.Products.Management
                 var linkStrategy = partLinkInfo.ProductLinkStrategy;
                 if (partLinkInfo.Type == PartLinkType.single)
                 {
-                    var link = (IProductPartLink)partLinkInfo.Value;
+                    var link = (ProductPartLink)partLinkInfo.Value;
                     var linkEntity = FindLink(linkStrategy.PropertyName, typeEntity);
                     if (linkEntity == null && link != null) // link is new
                     {
@@ -654,7 +654,7 @@ namespace Moryx.Products.Management
                 }
                 else if (partLinkInfo.Type == PartLinkType.list)
                 {
-                    var links = (IEnumerable<IProductPartLink>)partLinkInfo.Value;
+                    var links = (IEnumerable<ProductPartLink>)partLinkInfo.Value;
                     // Delete the removed ones
                     var toDelete = (from link in typeEntity.Parts
                                     where link.PropertyName == linkStrategy.PropertyName
@@ -688,7 +688,7 @@ namespace Moryx.Products.Management
             return typeEntity;
         }
 
-        private ProductTypeEntity GetPartEntity(ProductPartsSaverContext saverContext, IProductPartLink link)
+        private ProductTypeEntity GetPartEntity(ProductPartsSaverContext saverContext, ProductPartLink link)
         {
             if (saverContext.EntityCache.ContainsKey((ProductIdentity)link.Product.Identity))
             {
@@ -866,7 +866,7 @@ namespace Moryx.Products.Management
             strategy.LoadInstance(entity, productInstance);
 
             // Group all parts of the instance by the property they belong to
-            var partLinks = ReflectionTool.GetReferences<IProductPartLink>(productType)
+            var partLinks = ReflectionTool.GetReferences<ProductPartLink>(productType)
                 .SelectMany(g => g).ToList();
             var partGroups = ReflectionTool.GetReferences<ProductInstance>(productInstance)
                 .ToDictionary(p => p.Key, p => p.ToList());

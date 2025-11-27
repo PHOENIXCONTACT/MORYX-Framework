@@ -63,15 +63,15 @@ namespace Moryx.AbstractionLayer.Processes
     }
 
     /// <summary>
-    /// Special resolver that can detect <see cref="IProductPartLink{T}"/> and skip the additional reference to
-    /// <see cref="IProductPartLink{T}.Product"/>.
+    /// Special resolver that can detect <see cref="ProductPartLink{T}"/> and skip the additional reference to
+    /// <see cref="ProductPartLink{T}.Product"/>.
     /// </summary>
     public class PartLinkShortCut : BindingResolverBase
     {
         /// <inheritdoc />
         protected override object Resolve(object source)
         {
-            if (!(source is IProductPartLink partLink))
+            if (!(source is ProductPartLink partLink))
             {
                 // Our object is not a part link, so we leave the chain
                 this.Remove();

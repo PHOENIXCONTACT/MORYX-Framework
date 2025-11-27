@@ -42,10 +42,10 @@ namespace Moryx.Products.Management
         }
 
         /// <inheritdoc />
-        public abstract void LoadPartLink(IGenericColumns linkEntity, IProductPartLink target);
+        public abstract void LoadPartLink(IGenericColumns linkEntity, ProductPartLink target);
 
         /// <inheritdoc />
-        public abstract void SavePartLink(IProductPartLink source, IGenericColumns target);
+        public abstract void SavePartLink(ProductPartLink source, IGenericColumns target);
 
         /// <inheritdoc />
         public virtual void DeletePartLink(IReadOnlyList<IGenericColumns> deprecatedEntities)

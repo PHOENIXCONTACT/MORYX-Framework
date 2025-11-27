@@ -66,7 +66,7 @@ namespace Moryx.Products.Management
             // Configure part links
             var typeWrapper = Storage.GetTypeWrapper(product.FullName);
             var links = typeWrapper != null && typeWrapper.PartLinks != null ? typeWrapper.PartLinks :
-                product.GetProperties().Where(p => typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) || typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType));
+                product.GetProperties().Where(p => typeof(ProductPartLink).IsAssignableFrom(p.PropertyType) || typeof(IEnumerable<ProductPartLink>).IsAssignableFrom(p.PropertyType));
 
             foreach (var link in links)
             {
@@ -77,7 +77,7 @@ namespace Moryx.Products.Management
                 else
                 {
                     var linkType = link.PropertyType;
-                    if (typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(linkType))
+                    if (typeof(IEnumerable<ProductPartLink>).IsAssignableFrom(linkType))
                         linkType = linkType.GetGenericArguments()[0];
                     var linkConfig = StrategyConfig<IProductLinkStrategy, ProductLinkConfiguration, ProductPartLink>(linkType);
                     if (linkConfig == null)
@@ -192,7 +192,7 @@ namespace Moryx.Products.Management
             var filteredProperties = targetProperties
                 .Where(p => baseProperties.All(bp => bp.Name != p.Name))
                 .Where(p => p.GetSetMethod() != null)
-                .Where(p => !typeof(IProductPartLink).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(p.PropertyType))
+                .Where(p => !typeof(ProductPartLink).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<ProductPartLink>).IsAssignableFrom(p.PropertyType))
                 .Where(p => !typeof(ProductInstance).IsAssignableFrom(p.PropertyType) & !typeof(IEnumerable<ProductInstance>).IsAssignableFrom(p.PropertyType))
                 .ToList();
 
