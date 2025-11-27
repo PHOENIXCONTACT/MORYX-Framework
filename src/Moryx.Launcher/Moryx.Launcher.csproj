@@ -53,7 +53,7 @@
 
   <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\js\dist\main.js')) And ('$(NoBuild)' != 'true') ">
     <Exec WorkingDirectory="./" Command="npm config set strict-ssl false"/>
-    <Exec WorkingDirectory="./" Command="npm install --no-audit"/>
+    <Exec WorkingDirectory="./" Command="npm ci"/>
     <Exec WorkingDirectory="./" Command="npm run build:css"/>
     <Exec WorkingDirectory="./" Command="npm run build:prod"/>
     <Exec WorkingDirectory="./" Command="npm run copy:componentsfiles"/>

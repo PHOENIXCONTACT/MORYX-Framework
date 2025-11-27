@@ -35,7 +35,7 @@
   </ItemGroup>
   <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\main.js')) And ('$(NoBuild)' != 'true') ">
     <Exec WorkingDirectory=".\" Command="npm config set strict-ssl false" />
-    <Exec WorkingDirectory=".\" Command="npm install" />
+    <Exec WorkingDirectory=".\" Command="npm ci" />
     <Exec WorkingDirectory=".\" Command="npm run build:prod" />
     <Exec WorkingDirectory=".\" Command="npm config set strict-ssl true" />
   </Target>
