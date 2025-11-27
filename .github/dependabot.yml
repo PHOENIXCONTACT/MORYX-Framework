@@ -46,27 +46,266 @@ updates:
       - "npm"
       - "dependencies"
   - package-ecosystem: "npm"
-    directories:
-      - "/src/*"
+    directory: "/src/Moryx.CommandCenter.Web/"
     target-branch: "future"
     open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
     groups:
-      # All patch updates together, may be merged when CI is green.
       npm-patch:
         update-types: ["patch"]
-      # All minor updates together. Requires green CI + manual check.
       npm-minor:
         update-types: ["minor"]
-      # All minor updates together. Requires green CI + manual check.
       npm-major:
         update-types: ["major"]
     schedule:
       interval: "weekly"
-      # Check for npm updates on Fridays
       day: "friday"
       time: "08:10"
       timezone: "Europe/Berlin"
-    # Labels on pull requests for security and version updates
+    labels:
+      - "npm"
+      - "dependencies"
+  - package-ecosystem: "npm"
+    directory: "/src/Moryx.ControlSystem.ProcessEngine.Web/"
+    target-branch: "future"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      npm-patch:
+        update-types: ["patch"]
+      npm-minor:
+        update-types: ["minor"]
+      npm-major:
+        update-types: ["major"]
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "08:15"
+      timezone: "Europe/Berlin"
+    labels:
+      - "npm"
+      - "dependencies"
+  - package-ecosystem: "npm"
+    directory: "/src/Moryx.ControlSystem.WorkerSupport.Web/"
+    target-branch: "future"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      npm-patch:
+        update-types: ["patch"]
+      npm-minor:
+        update-types: ["minor"]
+      npm-major:
+        update-types: ["major"]
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "08:20"
+      timezone: "Europe/Berlin"
+    labels:
+      - "npm"
+      - "dependencies"
+  - package-ecosystem: "npm"
+    directory: "/src/Moryx.FactoryMonitor.Web/"
+    target-branch: "future"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      npm-patch:
+        update-types: ["patch"]
+      npm-minor:
+        update-types: ["minor"]
+      npm-major:
+        update-types: ["major"]
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "08:25"
+      timezone: "Europe/Berlin"
+    labels:
+      - "npm"
+      - "dependencies"
+  - package-ecosystem: "npm"
+    directory: "/src/Moryx.Media.Web/"
+    target-branch: "future"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      npm-patch:
+        update-types: ["patch"]
+      npm-minor:
+        update-types: ["minor"]
+      npm-major:
+        update-types: ["major"]
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "08:30"
+      timezone: "Europe/Berlin"
+    labels:
+      - "npm"
+      - "dependencies"
+  - package-ecosystem: "npm"
+    directory: "/src/Moryx.Notifications.Web/"
+    target-branch: "future"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      npm-patch:
+        update-types: ["patch"]
+      npm-minor:
+        update-types: ["minor"]
+      npm-major:
+        update-types: ["major"]
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "08:35"
+      timezone: "Europe/Berlin"
+    labels:
+      - "npm"
+      - "dependencies"
+  - package-ecosystem: "npm"
+    directory: "/src/Moryx.Operators.Web/"
+    target-branch: "future"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      npm-patch:
+        update-types: ["patch"]
+      npm-minor:
+        update-types: ["minor"]
+      npm-major:
+        update-types: ["major"]
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "08:40"
+      timezone: "Europe/Berlin"
+    labels:
+      - "npm"
+      - "dependencies"
+  - package-ecosystem: "npm"
+    directory: "/src/Moryx.Orders.Web/"
+    target-branch: "future"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      npm-patch:
+        update-types: ["patch"]
+      npm-minor:
+        update-types: ["minor"]
+      npm-major:
+        update-types: ["major"]
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "08:45"
+      timezone: "Europe/Berlin"
+    labels:
+      - "npm"
+      - "dependencies"
+  - package-ecosystem: "npm"
+    directory: "/src/Moryx.Products.Web/"
+    target-branch: "future"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      npm-patch:
+        update-types: ["patch"]
+      npm-minor:
+        update-types: ["minor"]
+      npm-major:
+        update-types: ["major"]
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "08:50"
+      timezone: "Europe/Berlin"
+    labels:
+      - "npm"
+      - "dependencies"
+  - package-ecosystem: "npm"
+    directory: "/src/Moryx.Resources.Web/"
+    target-branch: "future"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      npm-patch:
+        update-types: ["patch"]
+      npm-minor:
+        update-types: ["minor"]
+      npm-major:
+        update-types: ["major"]
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "08:55"
+      timezone: "Europe/Berlin"
+    labels:
+      - "npm"
+      - "dependencies"
+  - package-ecosystem: "npm"
+    directory: "/src/Moryx.Shifts.Web/"
+    target-branch: "future"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      npm-patch:
+        update-types: ["patch"]
+      npm-minor:
+        update-types: ["minor"]
+      npm-major:
+        update-types: ["major"]
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "09:00"
+      timezone: "Europe/Berlin"
+    labels:
+      - "npm"
+      - "dependencies"
+  - package-ecosystem: "npm"
+    directory: "/src/Moryx.Workplans.Web/"
+    target-branch: "future"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "@angular/*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      npm-patch:
+        update-types: ["patch"]
+      npm-minor:
+        update-types: ["minor"]
+      npm-major:
+        update-types: ["major"]
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "09:05"
+      timezone: "Europe/Berlin"
     labels:
       - "npm"
       - "dependencies"
