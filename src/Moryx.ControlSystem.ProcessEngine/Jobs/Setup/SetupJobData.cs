@@ -121,13 +121,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
             var notification = new Notification(Strings.SetupJobData_RetryFailedNotification_Title,
                 string.Format(Strings.SetupJobData_RetryFailedNotification_Message, Recipe.Name), Severity.Error, true);
 
-            NotificationAdapter.Publish(this, notification);
+            NotificationAdapter?.Publish(this, notification);
         }
 
         internal void ClearNotification()
         {
             _retryCounter = 0;
-            NotificationAdapter.AcknowledgeAll(this);
+            NotificationAdapter?.AcknowledgeAll(this);
         }
 
         /// <inheritdoc />
