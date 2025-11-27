@@ -17,7 +17,10 @@ namespace Moryx.Runtime.Kernel
         /// </summary>
         public IDictionary<IServerModule, ICollection<IServerModule>> WaitingModules { get; set; }
 
-        protected void AddWaitingService(IServerModule dependency, IServerModule dependent)
+        /// <summary>
+        /// Adds a module to the collection of waiting modules, if not already part of
+        /// </summary>
+        protected void AddWaitingModule(IServerModule dependency, IServerModule dependent)
         {
             lock (WaitingModules)
             {

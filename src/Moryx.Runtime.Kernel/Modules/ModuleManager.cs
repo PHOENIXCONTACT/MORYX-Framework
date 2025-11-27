@@ -63,7 +63,7 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// Start all modules in cascading order
         /// </summary>
-        public Task StartModules()
+        public Task StartModulesAsync()
         {
             return _moduleStarter.StartAllAsync();
         }
@@ -71,7 +71,7 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// Stop all modules in cascading order
         /// </summary>
-        public Task StopModules()
+        public Task StopModulesAsync()
         {
             return _moduleStopper.StopAllAsync();
         }

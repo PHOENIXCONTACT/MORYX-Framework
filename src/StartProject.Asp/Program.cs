@@ -29,11 +29,11 @@ namespace StartProject.Asp
             host.Services.UseMoryxConfigurations("Config");
 
             var moduleManager = host.Services.GetRequiredService<IModuleManager>();
-            await moduleManager.StartModules();
+            await moduleManager.StartModulesAsync();
 
             await host.RunAsync();
 
-            await moduleManager.StopModules();
+            await moduleManager.StopModulesAsync();
         }
     }
 }

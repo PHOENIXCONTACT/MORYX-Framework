@@ -11,12 +11,12 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Start all modules in cascading order
         /// </summary>
-        Task StartModules();
+        Task StartModulesAsync();
 
         /// <summary>
         /// Stop all modules in cascading order
         /// </summary>
-        Task StopModules();
+        Task StopModulesAsync();
 
         /// <summary>
         /// Initialize a server module

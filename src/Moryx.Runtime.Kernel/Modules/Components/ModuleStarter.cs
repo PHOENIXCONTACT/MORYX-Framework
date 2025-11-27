@@ -12,6 +12,7 @@ namespace Moryx.Runtime.Kernel
         private readonly IModuleDependencyManager _dependencyManager;
         private readonly ILogger _logger;
         private readonly ModuleManagerConfig _config;
+        private readonly SemaphoreSlim _waitingModulesSemaphore = new(1, 1);
 
         public ModuleStarter(IModuleDependencyManager dependencyManager, ILogger logger, ModuleManagerConfig config)
         {
@@ -54,6 +55,7 @@ namespace Moryx.Runtime.Kernel
             {
                 ConvertBranch(root);
             }
+
             foreach (var module in depTree.RootModules.Where(ShouldBeStarted).Select(branch => branch.RepresentedModule))
             {
                 await StartModule(module);
@@ -73,12 +75,17 @@ namespace Moryx.Runtime.Kernel
             var awaitingDependencies = _dependencyManager.GetDependencyBranch(module).Dependencies
                                      .Where(item => !item.RepresentedModule.State.HasFlag(ServerModuleState.Running))
                                      // Filter missing modules if they are optional
-                                     .Where(item => item.RepresentedModule is not MissingServerModule module || !module.Optional)
+                                     .Where(item => item.RepresentedModule is not MissingServerModule { Optional: true })
                                      .Select(item => item.RepresentedModule).ToArray();
+
             if (awaitingDependencies.Length != 0)
-                await EnqueServiceAndStartDependencies(awaitingDependencies, module);
+            {
+                await EnqueueServiceAndStartDependencies(awaitingDependencies, module);
+            }
             else
-                Task.Run(() => ExecuteModuleStart(module));
+            {
+                _ = Task.Run(async () => await ExecuteModuleStart(module));
+            }
         }
 
         private async Task ExecuteModuleStart(IServerModule module)
@@ -93,49 +100,55 @@ namespace Moryx.Runtime.Kernel
             {
                 _logger.LogError(ex, "Failed to start module {name}", module.Name);
             }
+
             // Forward result
             await ModuleChangedState(module, module.State);
         }
 
-        private Task ModuleChangedState(IServerModule module, ServerModuleState newState)
+
+        private async Task ModuleChangedState(IServerModule module, ServerModuleState newState)
         {
             // Check if it switched to running
             if (!newState.HasFlag(ServerModuleState.Running))
-                return Task.CompletedTask;
+                return;
 
             // Now we start every service waiting on this service to return
-            lock (WaitingModules)
+            await _waitingModulesSemaphore.WaitAsync();
+            try
             {
-                if (!WaitingModules.ContainsKey(module))
-                    return Task.CompletedTask;
+                if (!WaitingModules.TryGetValue(module, out var value))
+                    return;
 
-                // To increase boot speed we fork plugin start if more than one dependent was found
-                foreach (var waitingModule in WaitingModules[module].ToArray())
+                // To increase boot speed we fork module start if more than one dependent was found
+                foreach (var waitingModule in value.ToArray())
                 {
-                    WaitingModules[module].Remove(waitingModule);
-                    StartModule(waitingModule);
+                    value.Remove(waitingModule);
+                    await StartModule(waitingModule);
                 }
+
                 // We remove this service for now after we started every dependent
                 WaitingModules.Remove(module);
             }
-
-            return Task.CompletedTask;
+            finally
+            {
+                _waitingModulesSemaphore.Release();
+            }
         }
 
         private void ConvertBranch(IModuleDependency branch)
         {
             foreach (var dependent in branch.Dependents.Where(ShouldBeStarted))
             {
-                AddWaitingService(branch.RepresentedModule, dependent.RepresentedModule);
+                AddWaitingModule(branch.RepresentedModule, dependent.RepresentedModule);
                 ConvertBranch(dependent);
             }
         }
 
-        private async Task EnqueServiceAndStartDependencies(IEnumerable<IServerModule> dependencies, IServerModule waitingService)
+        private async Task EnqueueServiceAndStartDependencies(IEnumerable<IServerModule> dependencies, IServerModule waitingService)
         {
             foreach (var dependency in dependencies)
             {
-                AddWaitingService(dependency, waitingService);
+                AddWaitingModule(dependency, waitingService);
                 await StartAsync(dependency);
             }
         }

@@ -28,23 +28,23 @@ namespace Moryx.Runtime.Kernel
 
             // First we have to find all running modules that depend on this service
             var dependingServices = _dependencyManager.GetDependencyBranch(module).Dependents.Select(item => item.RepresentedModule);
-            // Now we will stop all of them recursivly
+            // Now we will stop all of them recursively
             foreach (var dependingService in dependingServices.Where(dependent => dependent.State.HasFlag(ServerModuleState.Running)
                                                                                || dependent.State == ServerModuleState.Starting))
             {
-                // We will enque the service to make sure it is restarted later on
-                AddWaitingService(module, dependingService);
+                // We will enqueue the service to make sure it is restarted later on
+                AddWaitingModule(module, dependingService);
                 await StopAsync(dependingService);
             }
 
-            // Since stop is synchron we don't need an event
+            // Since stop is synchronous we don't need an event
             try
             {
                 await module.StopAsync();
             }
             catch
             {
-                Console.WriteLine("Failed to stop service <{0}>", module.Name);
+                _logger.LogError("Failed to stop module <{moduleName}>", module.Name);
             }
         }
 
@@ -54,9 +54,9 @@ namespace Moryx.Runtime.Kernel
         public async Task StopAllAsync()
         {
             // Determine all leaves of the dependency tree
-            foreach (var plugin in AvailableModules)
+            foreach (var module in AvailableModules)
             {
-                await StopAsync(plugin);
+                await StopAsync(module);
             }
         }
     }
