@@ -84,7 +84,7 @@ namespace Moryx.Resources.Benchmarking
         public event EventHandler<SimulationState> SimulatedStateChanged;
     }
 
-    public class FakeDriverState : DriverState<SimulatedFakeDriver>
+    public class FakeDriverState : SyncDriverState<SimulatedFakeDriver>
     {
         [StateDefinition(typeof(FakeDriverState), IsInitial = true)]
         public int InitialState = 0;

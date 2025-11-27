@@ -31,7 +31,7 @@ namespace Moryx.Resources.Samples.DriverTutorial
     }
 }
 ````
-If you are implementing a Driver that is sending messages, [IMessageDriver](../../src/Moryx.AbstractionLayer/Drivers/Message/IMessageDriver.cs) is probably the beter choice. An `IMessageDriver<TMessage>` can be used for a specific type of message. It contains several channels, which can represent for example Mqtt-Topics or OPC UA nodes. 
+If you are implementing a Driver that is sending messages, [IMessageDriver](../../src/Moryx.AbstractionLayer/Drivers/Message/IMessageDriver.cs) is probably the beter choice. An `IMessageDriver<TMessage>` can be used for a specific type of message. It contains several channels, which can represent for example Mqtt-Topics or OPC UA nodes.
 
 ### The implementation
 
@@ -82,7 +82,7 @@ using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.Resources.Samples.DriverTutorial
 {
-    
+
     [ResourceRegistration]
     [DisplayName("StateExample Driver"), Description("An example driver that uses the state machine")]
     public class StateExampleDriver : Driver, IExampleDriver, IStateContext
@@ -109,27 +109,27 @@ namespace Moryx.Resources.Samples.DriverTutorial
         }
     }
 
-    
+
 }
 ````
 
-In order to create the State machine, first define a base type, the methods you need and your states.  States are derived from `StateBase`. For drivers there exists a specific `DriverState`, which includes the methods `Connect()` and `Disconnect()`. Typical States for a Driver are `Disconnected`, `Connecting` and `Connected`.
+In order to create the State machine, first define a base type, the methods you need and your states. States are derived from `SyncStateBase` or `AsyncStateBase`. For drivers there exists a specific `SyncDriverState`/`AsyncDriverState`, which includes the methods `Connect()`/`ConnectAsync()` and `Disconnect()`/`DisconnectAsync()`. Typical States for a Driver are `Disconnected`, `Connecting` and `Connected`.
 
 ```cs
-internal class ExampleStateBase: DriverState<StateExampleDriver>{
+internal class ExampleStateBase : SyncDriverState<StateExampleDriver>{
     protected MyStateBase(MyContext context, StateMap stateMap)
         : base(context, stateMap)
     {
     }
 
     // Here you will add all needed methods
-    ... 
+    ...
 
     internal virtual void ConnectionLost(){
         //In order to change the State, use NextState()
         NextState(StateDisconnected);
     }
-    
+
     [StateDefinition(typeof(DisconnectedState), IsInitial = true)]
     protected const int StateDisconnected = 10;
 
@@ -144,7 +144,7 @@ internal class ExampleStateBase: DriverState<StateExampleDriver>{
 All states are derived from the base state and contain the state specific implementations of the methods. If a state shouldn't be able to call a method, use `InvalidState()`.
 
 ```cs
-internal class DisconnectedState: ExampleStateBase{
+internal class DisconnectedState : ExampleStateBase{
     ...
 
     internal override void Send(object payload){

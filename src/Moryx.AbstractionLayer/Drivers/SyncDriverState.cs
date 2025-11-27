@@ -6,22 +6,22 @@ using Moryx.StateMachines;
 namespace Moryx.AbstractionLayer.Drivers
 {
     /// <summary>
-    /// Base class for states with typed context object
+    /// Base class for synchronous driver states with typed context object
     /// </summary>
     /// <typeparam name="TContext">Type of the driver context</typeparam>
-    public abstract class DriverState<TContext> : SyncStateBase<TContext>, IDriverState
+    public abstract class SyncDriverState<TContext> : SyncStateBase<TContext>, IDriverState
         where TContext : Driver
     {
         /// <inheritdoc />
         public StateClassification Classification { get; protected set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DriverState{TContext}"/> class.
+        /// Initializes a new instance of the <see cref="SyncDriverState{TContext}"/> class.
         /// </summary>
         /// <param name="classification">The classification of the state.</param>
         /// <param name="stateMap">Map of states to objects</param>
         /// <param name="context">Context of the state machine</param>
-        protected DriverState(TContext context, StateMap stateMap, StateClassification classification) : base(context, stateMap)
+        protected SyncDriverState(TContext context, StateMap stateMap, StateClassification classification) : base(context, stateMap)
         {
             Classification = classification;
         }

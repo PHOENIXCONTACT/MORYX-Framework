@@ -42,9 +42,11 @@ public static async Task Main(string[] args)
 We now provide a full async implementation of the `StateBase`. To keep constistent naming, the `StateBase` was splitted to `SyncStateBase` and `AsyncStateBase`.
 Due to the reduction of unneccessary interfaces, `IState` was removed and `StateBase` will be used in e.g. `IStateContext` now.
 
-The `StateMachine` class was extended by `WithAsync()` and `ForceAsync()`. The `AsyncStateBase` provides async all the way: `NextStateAsync()`, `OnEnterAsync()`, `OnExitAsync`.
+The `StateMachine` class was extended by `WithAsync()` and `ForceAsync()`. The `AsyncStateBase` provides async all the way: `NextStateAsync()`, `OnEnterAsync()`, `OnExitAsync`.\
+**Upgrade hint:** Replace `StateBase<TContext>` by `SyncStateBase<TContext>`.
 
-Upgrade hint: Replace `StateBase<TContext>` by `SyncStateBase<TContext>`.
+The same convention was applied to `DriverState`. It was renamed to `SyncDriverState` and a new implementation `AsyncDriverState` was added with full async support.\
+**Upgrade hint:** Replace `DriverState<TContext>` by `SyncDriverState<TContext>`.
 
 ## Replaced result of visual instructions with dedicated result object
 
@@ -79,6 +81,7 @@ The simulator module has also been renamed, and its namespace and package id hav
 - IAsyncInitializable.Initialize -> IAsyncInitializable.InitializeAsync
 - IAsyncPlugin.Start -> IAsyncPlugin.StartAsync
 - IAsyncPlugin.Stop -> IAsyncPlugin.StopAsync
+- DriverState -> SyncDriverState
 
 ## Reduction of interfaces
 

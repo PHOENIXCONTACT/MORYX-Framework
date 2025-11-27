@@ -84,7 +84,7 @@ namespace Moryx.Simulation.Tests
         public virtual event EventHandler<SimulationState> SimulatedStateChanged;
     }
 
-    public class DummyDriverState : DriverState<SimulatedDummyTestDriver>
+    public class DummyDriverState : SyncDriverState<SimulatedDummyTestDriver>
     {
         [StateDefinition(typeof(FakeDriverState), IsInitial = true)]
         public int InitialState = 0;
