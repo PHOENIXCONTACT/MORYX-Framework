@@ -25,19 +25,19 @@ public void SetUp()
 }
 ```
 
-Using the created environment you can start and stop the module as you please. 
+Using the created environment you can start and stop the module as you please.
 You can also retrieve the facade of the module to test all the functionalities the running module should provide.
 
 ```csharp
 [Test]
-public void Start_WhenModuleIsStopped_StartsModule()
+public async Task Start_WhenModuleIsStopped_StartsModule()
 {
     // Arrange
     var facade = _env.GetTestModule();
 
     // Act
-    var module = _env.StartTestModule();
-    var module = _env.StopTestModule();
+    var module = await _env.StartTestModule();
+    var module = await _env.StopTestModule();
 
     // Assert
     Assert.That(module.State, Is.EqualTo(ServerModuleState.Stopped));

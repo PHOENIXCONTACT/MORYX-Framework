@@ -1,5 +1,42 @@
 # MORYX 8.x to 10.x
 
+## Async life-cycle
+
+### Server Module lifecycle refactored to async methods
+
+The lifecycle methods of ServerModules have been migrated from void to async Task to enable modern asynchronous programming with async/await.
+Since there was no native async context for lifecycle methods, asynchronous calls must be synchronized to preserve the existing start/stop behavior.
+The runtime now supports asynchronous initialization, startup, and shutdown processes (e.g., loading entities from a database during startup).
+
+**Changes in ServerModuleBase:**
+
+- `OnInitialize()` -> `OnInitializeAsync()`
+- `OnStart()` -> `OnStartAsync()`
+- `OnStop()` -> `OnStopAsync()`
+
+**Changes in IModuleManager:**
+
+- `StartModules()` -> `StartModulesAsync()`
+- `StopModules()` -> `StopModulesAsync()`
+
+The `Main` method in `Program.cs` must be updated to a Task-based signature.
+
+````cs
+public static async Task Main(string[] args)
+{
+    AppDomainBuilder.LoadAssemblies();
+
+    [...]
+
+    var moduleManager = host.Services.GetRequiredService<IModuleManager>();
+    await moduleManager.StartModulesAsync();
+
+    await host.RunAsync();
+
+    await moduleManager.StopModulesAsync();
+}
+````
+
 ## Replaced result of visual instructions with dedicated result object
 
 In *Moryx.Factory* **6.3** and **8.1** we introduced the new result object and optional extended APIs. The result object solved issues caused by localization of the different results. With **Moryx 10** we remove all old APIs based on strings.
