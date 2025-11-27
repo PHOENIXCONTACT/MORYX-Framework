@@ -9,6 +9,19 @@ updates:
     directory: "/" # Location of package manifests
     target-branch: "future"
     open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "Microsoft.*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      # All patch updates together, may be merged when CI is green.
+      patch-updates:
+        update-types: ["patch"]
+      # All minor updates together. Requires green CI + manual check.
+      minor-updates:
+        update-types: ["minor"]
+      # All minor updates together. Requires green CI + manual check.
+      major-updates:
+        update-types: ["major"]
     schedule:
       interval: "weekly"
       # Check for nuget updates on Fridays
@@ -17,10 +30,10 @@ updates:
       timezone: "Europe/Berlin"
     # Labels on pull requests for security and version updates
     labels:
-      - "nuget" 
+      - "nuget"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "src/Moryx.CommandCenter.Web/" 
+    directory: "src/Moryx.CommandCenter.Web/"
     open-pull-requests-limit: 10
     schedule:
       interval: "weekly"
@@ -30,5 +43,30 @@ updates:
       timezone: "Europe/Berlin"
     # Labels on pull requests for security and version updates
     labels:
-      - "npm" 
+      - "npm"
+      - "dependencies"
+  - package-ecosystem: "npm"
+    directories:
+      - "/src/*"
+    target-branch: "future"
+    open-pull-requests-limit: 10
+    groups:
+      # All patch updates together, may be merged when CI is green.
+      npm-patch:
+        update-types: ["patch"]
+      # All minor updates together. Requires green CI + manual check.
+      npm-minor:
+        update-types: ["minor"]
+      # All minor updates together. Requires green CI + manual check.
+      npm-major:
+        update-types: ["major"]
+    schedule:
+      interval: "weekly"
+      # Check for npm updates on Fridays
+      day: "friday"
+      time: "08:10"
+      timezone: "Europe/Berlin"
+    # Labels on pull requests for security and version updates
+    labels:
+      - "npm"
       - "dependencies"
