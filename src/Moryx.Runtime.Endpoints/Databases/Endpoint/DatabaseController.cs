@@ -132,7 +132,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             }
         }
 
-        private IDatabaseConfig UpdateConfigFromModel(IDatabaseConfig dbConfig, DatabaseConfigModel configModel)
+        private DatabaseConfig UpdateConfigFromModel(DatabaseConfig dbConfig, DatabaseConfigModel configModel)
         {
             dbConfig.ConfiguratorTypename = configModel.ConfiguratorTypename;
             dbConfig.ConnectionSettings.FromDictionary(configModel.Entries);
@@ -218,7 +218,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             }
         }
 
-        private static bool IsConfigValid(IDatabaseConfig config)
+        private static bool IsConfigValid(DatabaseConfig config)
         {
             return config.IsValid();
         }
@@ -263,7 +263,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             return model;
         }
 
-        private static DatabaseConfigModel SerializeConfig(IDatabaseConfig dbConfig)
+        private static DatabaseConfigModel SerializeConfig(DatabaseConfig dbConfig)
         {
             return new()
             {
@@ -323,7 +323,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             return setups.OrderBy(setup => setup.SortOrder);
         }
 
-        private static async Task<DbMigrationsModel[]> GetAvailableUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
+        private static async Task<DbMigrationsModel[]> GetAvailableUpdates(DatabaseConfig dbConfig, IModelConfigurator configurator)
         {
             try
             {
@@ -339,7 +339,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             }
         }
 
-        private static async Task<DbMigrationsModel[]> GetInstalledUpdates(IDatabaseConfig dbConfig, IModelConfigurator configurator)
+        private static async Task<DbMigrationsModel[]> GetInstalledUpdates(DatabaseConfig dbConfig, IModelConfigurator configurator)
         {
             try
             {

@@ -9,31 +9,11 @@ namespace Moryx.Model
 {
     /// <inheritdoc />
     [DataContract]
-    public class DatabaseConfig<T> : IDatabaseConfig
+    public class DatabaseConfig<T> : DatabaseConfig
         where T : DatabaseConnectionSettings
     {
         /// <inheritdoc />
-        [DataMember]
-        public ConfigState ConfigState { get; set; }
-
-        /// <inheritdoc />
-        public string LoadError { get; set; }
-
-        /// <inheritdoc />
-        [DataMember]
-        public DatabaseConnectionSettings ConnectionSettings { get; set; }
-
-        /// <inheritdoc />
-        [DataMember]
-        public string ConfiguratorTypename { get; set; }
-
-        /// <inheritdoc />
-        public void Initialize()
-        {
-        }
-
-        /// <inheritdoc />
-        public bool IsValid()
+        public override bool IsValid()
             => !string.IsNullOrEmpty(ConfiguratorTypename)
                 && ConnectionSettings.IsValid();
     }

@@ -46,7 +46,7 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// Cache of allready created config objects
         /// </summary>
-        protected IDictionary<string, IConfig> ConfigCache { get; } = new Dictionary<string, IConfig>();
+        protected IDictionary<string, ConfigBase> ConfigCache { get; } = new Dictionary<string, ConfigBase>();
 
         /// <summary>
         /// Fill all available empty properties of the config.
@@ -60,7 +60,7 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// Generic get configuration method
         /// </summary>
-        public IConfig GetConfiguration(Type configType, string name, bool getCopy)
+        public ConfigBase GetConfiguration(Type configType, string name, bool getCopy)
         {
             if (getCopy)
                 return TryGetFromDirectory(configType, name);
@@ -82,7 +82,7 @@ namespace Moryx.Runtime.Kernel
         /// <param name="configuration">The configuration which should be saved.</param>
         /// <param name="liveUpdate">Should a live update of the configuration be performed?</param>
         /// <param name="name">Name of the configuration</param>
-        public void SaveConfiguration(IConfig configuration, string name, bool liveUpdate)
+        public void SaveConfiguration(ConfigBase configuration, string name, bool liveUpdate)
         {
             var configType = configuration.GetType();
 
@@ -116,10 +116,10 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// Try to read config from directory or create default replacement
         /// </summary>
-        protected virtual IConfig TryGetFromDirectory(Type confType, string name)
+        protected virtual ConfigBase TryGetFromDirectory(Type confType, string name)
         {
             // Get or create config object
-            IConfig config;
+            ConfigBase config;
             var configPath = GetConfigPath(name);
 
             if (File.Exists(configPath))
@@ -127,7 +127,7 @@ namespace Moryx.Runtime.Kernel
                 try
                 {
                     var fileContent = File.ReadAllText(configPath);
-                    config = (IConfig)JsonConvert.DeserializeObject(fileContent, confType, JsonSettings.ReadableReplace);
+                    config = (ConfigBase)JsonConvert.DeserializeObject(fileContent, confType, JsonSettings.ReadableReplace);
 
                     ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddProviders(ValueProviders));
                 }
@@ -144,15 +144,14 @@ namespace Moryx.Runtime.Kernel
             return config;
         }
 
-        private IConfig CreateConfig(Type confType, ConfigState state, string loadError)
+        private ConfigBase CreateConfig(Type confType, ConfigState state, string loadError)
         {
-            var config = (IConfig)Activator.CreateInstance(confType);
+            var config = (ConfigBase)Activator.CreateInstance(confType);
             config.ConfigState = state;
             config.LoadError = loadError;
 
             // Initialize ConfigBase
-            var configBase = config as ConfigBase;
-            configBase?.Initialize();
+            config.Initialize();
 
             // Fill default values
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddProviders(ValueProviders));

@@ -3,14 +3,15 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using Moryx.Modules;
 
 namespace Moryx.Configuration
 {
     /// <summary>
-    /// Base implementation of IConfig to reduce redundant code
+    /// Base implementation of a config handled by <see cref="IConfigManager"/>
     /// </summary>
     [DataContract]
-    public class ConfigBase : UpdatableEntry, IConfig
+    public class ConfigBase : UpdatableEntry, IInitializable
     {
         /// <summary>
         /// Current state of the config object

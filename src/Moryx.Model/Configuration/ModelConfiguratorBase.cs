@@ -12,7 +12,7 @@ namespace Moryx.Model.Configuration
     /// Base class for model configurators
     /// </summary>
     public abstract class ModelConfiguratorBase<TConfig> : IModelConfigurator
-        where TConfig : class, IDatabaseConfig, new()
+        where TConfig : DatabaseConfig, new()
     {
         /// <summary>
         /// The underlying context's type
@@ -25,10 +25,10 @@ namespace Moryx.Model.Configuration
         protected ILogger Logger { get; private set; }
 
         /// <inheritdoc />
-        public IDatabaseConfig Config { get; private set; }
+        public DatabaseConfig Config { get; private set; }
 
         /// <inheritdoc />
-        public void Initialize(Type contextType, IDatabaseConfig config, ILogger logger)
+        public void Initialize(Type contextType, DatabaseConfig config, ILogger logger)
         {
             ContextType = contextType;
 
@@ -48,7 +48,7 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public DbContext CreateContext(IDatabaseConfig config)
+        public DbContext CreateContext(DatabaseConfig config)
         {
             return CreateContext(ContextType, BuildDbContextOptions(config));
         }
@@ -61,7 +61,7 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<TestConnectionResult> TestConnection(IDatabaseConfig config)
+        public virtual async Task<TestConnectionResult> TestConnection(DatabaseConfig config)
         {
             if (string.IsNullOrWhiteSpace(config.ConnectionSettings.Database))
                 return TestConnectionResult.ConfigurationError;
@@ -87,7 +87,7 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<bool> CreateDatabase(IDatabaseConfig config)
+        public virtual async Task<bool> CreateDatabase(DatabaseConfig config)
         {
             // Check is database is configured
             if (!CheckDatabaseConfig(config))
@@ -107,7 +107,7 @@ namespace Moryx.Model.Configuration
         /// <param name="config">Config for testing the connection</param>
         /// <param name="context">Database context</param>
         /// <returns></returns>
-        protected async Task<bool> CreateDatabase(IDatabaseConfig config, DbContext context)
+        protected async Task<bool> CreateDatabase(DatabaseConfig config, DbContext context)
         {
             //Will create the database if it does not already exist. Applies any pending migrations for the context to the database.
             await context.Database.MigrateAsync();
@@ -123,7 +123,7 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<DatabaseMigrationSummary> MigrateDatabase(IDatabaseConfig config)
+        public virtual async Task<DatabaseMigrationSummary> MigrateDatabase(DatabaseConfig config)
         {
             var result = new DatabaseMigrationSummary();
 
@@ -158,7 +158,7 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<IReadOnlyList<string>> AvailableMigrations(IDatabaseConfig config)
+        public virtual async Task<IReadOnlyList<string>> AvailableMigrations(DatabaseConfig config)
         {
             await using var context = CreateMigrationContext(config);
             return await AvailableMigrations(context);
@@ -183,7 +183,7 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<IReadOnlyList<string>> AppliedMigrations(IDatabaseConfig config)
+        public virtual async Task<IReadOnlyList<string>> AppliedMigrations(DatabaseConfig config)
         {
             await using var context = CreateMigrationContext(config);
             return await AppliedMigrations(context);
@@ -210,12 +210,12 @@ namespace Moryx.Model.Configuration
         /// <summary>
         /// Creates a <see cref="DbConnection"/>
         /// </summary>
-        protected abstract DbConnection CreateConnection(IDatabaseConfig config);
+        protected abstract DbConnection CreateConnection(DatabaseConfig config);
 
         /// <summary>
         /// Creates a <see cref="DbConnection"/>
         /// </summary>
-        protected abstract DbConnection CreateConnection(IDatabaseConfig config, bool includeModel);
+        protected abstract DbConnection CreateConnection(DatabaseConfig config, bool includeModel);
 
         /// <summary>
         /// Creates a <see cref="DbCommand"/>
@@ -225,15 +225,15 @@ namespace Moryx.Model.Configuration
         /// <summary>
         /// Builds options to access the database
         /// </summary>
-        public abstract DbContextOptions BuildDbContextOptions(IDatabaseConfig config);
+        public abstract DbContextOptions BuildDbContextOptions(DatabaseConfig config);
 
         /// <inheritdoc />
-        public abstract Task DeleteDatabase(IDatabaseConfig config);
+        public abstract Task DeleteDatabase(DatabaseConfig config);
 
         /// <summary>
         /// Generally tests the connection to the database
         /// </summary>
-        private async Task<bool> TestDatabaseConnection(IDatabaseConfig config)
+        private async Task<bool> TestDatabaseConnection(DatabaseConfig config)
         {
             if (!CheckDatabaseConfig(config))
                 return false;
@@ -253,7 +253,7 @@ namespace Moryx.Model.Configuration
         /// <summary>
         /// Validates the config gor Host, Database, Username and Port
         /// </summary>
-        protected static bool CheckDatabaseConfig(IDatabaseConfig config)
+        protected static bool CheckDatabaseConfig(DatabaseConfig config)
         {
             return (!(string.IsNullOrEmpty(config.ConfiguratorTypename) ||
                       string.IsNullOrEmpty(config.ConnectionSettings.ConnectionString)));
@@ -275,7 +275,7 @@ namespace Moryx.Model.Configuration
         /// <summary>
         /// Creates a context for migration purposes based on a config
         /// </summary>
-        protected virtual DbContext CreateMigrationContext(IDatabaseConfig config)
+        protected virtual DbContext CreateMigrationContext(DatabaseConfig config)
         {
             return CreateContext(config);
         }

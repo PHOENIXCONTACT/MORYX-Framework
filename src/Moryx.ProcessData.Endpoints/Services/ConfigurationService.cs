@@ -31,9 +31,7 @@ namespace Moryx.ProcessData.Endpoints.Services
         }
 
         public MeasurandResponse GetMeasuarand(string name)
-            => GetMeasuarands()
-                .Where(m => m.Name == name)
-                .FirstOrDefault();
+            => GetMeasuarands().FirstOrDefault(m => m.Name == name);
 
         public ConfiguredBindings GetMeasuarandBindings(string name)
             => new()
@@ -62,7 +60,7 @@ namespace Moryx.ProcessData.Endpoints.Services
                 .Distinct()
                 .ToList();
 
-        private static List<MeasurementBinding> FindMeasurandBindings(IConfig config, string measurandName)
+        private static List<MeasurementBinding> FindMeasurandBindings(ConfigBase config, string measurandName)
         {
             var bindings = config.GetType().GetProperties()
                 .FirstOrDefault(p => p.PropertyType == typeof(List<MeasurementBinding>) && p.Name == measurandName);
@@ -147,12 +145,12 @@ namespace Moryx.ProcessData.Endpoints.Services
         public IServerModule GetModule(string moduleName)
            => _moduleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
 
-        private IConfig GetConfig(IModule module, bool copy)
+        private ConfigBase GetConfig(IModule module, bool copy)
         {
             var moduleType = module.GetType();
             var configType = moduleType.BaseType != null && moduleType.BaseType.IsGenericType
                 ? moduleType.BaseType.GetGenericArguments()[0]
-                : moduleType.Assembly.GetTypes().FirstOrDefault(type => typeof(IConfig).IsAssignableFrom(type));
+                : moduleType.Assembly.GetTypes().FirstOrDefault(type => typeof(ConfigBase).IsAssignableFrom(type));
 
             return _configManager.GetConfiguration(configType, copy);
         }
@@ -186,7 +184,7 @@ namespace Moryx.ProcessData.Endpoints.Services
 
     internal static class BindingPropertiesExtension
     {
-        public static List<MeasurementBinding> GetMeasurementBindings(this PropertyInfo propertyInfo, IConfig config)
+        public static List<MeasurementBinding> GetMeasurementBindings(this PropertyInfo propertyInfo, ConfigBase config)
             => (List<MeasurementBinding>)propertyInfo.GetValue(config, null);
 
         public static string AppendWithDot(this string prefix, string str)

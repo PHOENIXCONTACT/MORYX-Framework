@@ -102,7 +102,7 @@ namespace Moryx.Model
 
                 var configType = configuratorType.BaseType.GenericTypeArguments.First();
 
-                var typedConfig = (IDatabaseConfig)_configManager.GetConfiguration(configType,
+                var typedConfig = (DatabaseConfig)_configManager.GetConfiguration(configType,
                     ConfigFilename(possibleModel.DbContext), true);
 
                 // If database is empty, fill with TargetModel name
@@ -124,7 +124,7 @@ namespace Moryx.Model
         }
 
         /// <inheritdoc />
-        public void UpdateConfig(Type dbContextType, Type configuratorType, IDatabaseConfig databaseConfig)
+        public void UpdateConfig(Type dbContextType, Type configuratorType, DatabaseConfig databaseConfig)
         {
             _configManager.SaveConfiguration(databaseConfig, ConfigFilename(dbContextType));
 
@@ -178,7 +178,7 @@ namespace Moryx.Model
             Create<TContext>(null);
 
         /// <inheritdoc />
-        public TContext Create<TContext>(IDatabaseConfig config) where TContext : DbContext
+        public TContext Create<TContext>(DatabaseConfig config) where TContext : DbContext
         {
             var wrapper = _configuredModels.FirstOrDefault(k => k.BaseDbContextType == typeof(TContext));
             if (wrapper == null)
@@ -199,7 +199,7 @@ namespace Moryx.Model
 
             public IModelConfigurator Configurator { get; set; }
 
-            public IDatabaseConfig DatabaseConfig { get; set; }
+            public DatabaseConfig DatabaseConfig { get; set; }
         }
 
         private class PossibleModelWrapper

@@ -19,7 +19,7 @@ namespace Moryx.Runtime.Modules
     /// <typeparam name="TConf">Configuration type for the server module.</typeparam>
     [DebuggerDisplay("{" + nameof(Name) + "} - {" + nameof(State) + "}")]
     public abstract class ServerModuleBase<TConf> : IServerModule, IServerModuleStateContext
-        where TConf : class, IConfig, new()
+        where TConf : ConfigBase, new()
     {
         /// <inheritdoc />
         public abstract string Name { get; }

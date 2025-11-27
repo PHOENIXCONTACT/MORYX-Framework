@@ -63,7 +63,7 @@ namespace Moryx.Model.Sqlite
             Create<TContext>(null);
 
         /// <inheritdoc />
-        public TContext Create<TContext>(IDatabaseConfig config) where TContext : DbContext
+        public TContext Create<TContext>(DatabaseConfig config) where TContext : DbContext
         {
             var connectionString = string.IsNullOrEmpty(_connectionString)
                 ? Guid.NewGuid().ToString()
@@ -94,7 +94,7 @@ namespace Moryx.Model.Sqlite
         }
 
         /// <inheritdoc />
-        public void UpdateConfig(Type dbContextType, Type configuratorType, IDatabaseConfig databaseConfig)
+        public void UpdateConfig(Type dbContextType, Type configuratorType, DatabaseConfig databaseConfig)
         {
             throw new NotImplementedException();
         }

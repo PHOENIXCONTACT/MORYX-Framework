@@ -17,13 +17,13 @@ namespace Moryx.Model.SqlServer;
 public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServerDatabaseConfig>
 {
     /// <inheritdoc />
-    protected override DbConnection CreateConnection(IDatabaseConfig config)
+    protected override DbConnection CreateConnection(DatabaseConfig config)
     {
         return CreateConnection(config, true);
     }
 
     /// <inheritdoc />
-    protected override DbConnection CreateConnection(IDatabaseConfig config, bool includeModel)
+    protected override DbConnection CreateConnection(DatabaseConfig config, bool includeModel)
     {
         return new SqlConnection(BuildConnectionString(config, includeModel));
     }
@@ -35,7 +35,7 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
     }
 
     /// <inheritdoc />
-    public override async Task DeleteDatabase(IDatabaseConfig config)
+    public override async Task DeleteDatabase(DatabaseConfig config)
     {
         var settings = (SqlServerDatabaseConnectionSettings)config.ConnectionSettings;
 
@@ -52,7 +52,7 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
         await command.ExecuteNonQueryAsync();
     }
 
-    private static SqlConnectionStringBuilder CreateConnectionStringBuilder(IDatabaseConfig config, bool includeModel = true)
+    private static SqlConnectionStringBuilder CreateConnectionStringBuilder(DatabaseConfig config, bool includeModel = true)
     {
         var builder = new SqlConnectionStringBuilder(config.ConnectionSettings.ConnectionString)
         {
@@ -63,7 +63,7 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
     }
 
     /// <inheritdoc />
-    public override DbContextOptions BuildDbContextOptions(IDatabaseConfig config)
+    public override DbContextOptions BuildDbContextOptions(DatabaseConfig config)
     {
         var builder = new DbContextOptionsBuilder();
         builder.UseSqlServer(BuildConnectionString(config, true));
@@ -71,7 +71,7 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
         return builder.Options;
     }
 
-    private static string BuildConnectionString(IDatabaseConfig config, bool includeModel)
+    private static string BuildConnectionString(DatabaseConfig config, bool includeModel)
     {
         if (!IsValidDatabaseName(config.ConnectionSettings.Database))
             throw new ArgumentException("Invalid database name.");
@@ -83,7 +83,7 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
     }
 
     /// <inheritdoc />
-    protected override DbContext CreateMigrationContext(IDatabaseConfig config)
+    protected override DbContext CreateMigrationContext(DatabaseConfig config)
     {
         var migrationAssemblyType = FindMigrationAssemblyType(typeof(SqlServerDbContextAttribute));
 

@@ -30,7 +30,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Services
 
             // Assert config
             var configType = configuratorType.BaseType.GenericTypeArguments.First();
-            var dbConfig = (IDatabaseConfig)Activator.CreateInstance(configType);
+            var dbConfig = (DatabaseConfig)Activator.CreateInstance(configType);
             var updatedConfig = UpdateConfigFromModel(dbConfig, config);
             if (!updatedConfig.IsValid())
                 requestErrors.Add("Requested config values aren't valid");
@@ -52,7 +52,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Services
             return _dbContextManager.Contexts.First(c => c.FullName == targetModel);
         }
 
-        private static IDatabaseConfig UpdateConfigFromModel(IDatabaseConfig dbConfig, DatabaseConfigModel configModel)
+        private static DatabaseConfig UpdateConfigFromModel(DatabaseConfig dbConfig, DatabaseConfigModel configModel)
         {
             //dbConfig.ConfiguratorTypename = configModel.ConfiguratorTypename;
             dbConfig.ConnectionSettings.FromDictionary(configModel.Entries);

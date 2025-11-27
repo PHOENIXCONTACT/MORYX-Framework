@@ -11,7 +11,7 @@ namespace Moryx.Runtime.Modules
 {
     internal class ConfigParser
     {
-        internal static void ParseStrategies(IConfig moduleConfig, IDictionary<Type, string> containerConfig)
+        internal static void ParseStrategies(ConfigBase moduleConfig, IDictionary<Type, string> containerConfig)
         {
             ParseEntry(moduleConfig, containerConfig);
         }

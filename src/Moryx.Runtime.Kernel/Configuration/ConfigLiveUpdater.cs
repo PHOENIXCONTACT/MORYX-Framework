@@ -9,7 +9,7 @@ namespace Moryx.Runtime.Kernel
 {
     internal class ConfigLiveUpdater
     {
-        public void UpdateLive(Type sharedType, IConfig activeConfig, IConfig modifiedCopy)
+        public void UpdateLive(Type sharedType, ConfigBase activeConfig, ConfigBase modifiedCopy)
         {
             UpdateObject(sharedType, activeConfig, modifiedCopy);
         }

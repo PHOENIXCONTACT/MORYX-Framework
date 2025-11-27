@@ -27,7 +27,7 @@ namespace Moryx.Model
         }
 
         /// <inheritdoc />
-        public TContext Create(IDatabaseConfig config)
+        public TContext Create(DatabaseConfig config)
         {
             return _manager.Create<TContext>(config);
         }

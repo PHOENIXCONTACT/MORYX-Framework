@@ -46,12 +46,12 @@ namespace Moryx.Model
         /// <summary>
         /// Gets the configuration of the underlying model
         /// </summary>
-        IDatabaseConfig Config { get; }
+        DatabaseConfig Config { get; }
 
         /// <summary>
         /// Initializes the model configurator
         /// </summary>
-        void Initialize(Type contextType, IDatabaseConfig config, ILogger logger);
+        void Initialize(Type contextType, DatabaseConfig config, ILogger logger);
 
         /// <summary>
         /// Creates a context with internal configuration
@@ -61,7 +61,7 @@ namespace Moryx.Model
         /// <summary>
         /// Creates a context based on a config
         /// </summary>
-        DbContext CreateContext(IDatabaseConfig config);
+        DbContext CreateContext(DatabaseConfig config);
 
         /// <summary>
         /// Creates a context based on `DbContextOptions`
@@ -71,35 +71,35 @@ namespace Moryx.Model
         /// <summary>
         /// Test connection for config
         /// </summary>
-        Task<TestConnectionResult> TestConnection(IDatabaseConfig config);
+        Task<TestConnectionResult> TestConnection(DatabaseConfig config);
 
         /// <summary>
         /// Create a new database for this model with given config
         /// </summary>
-        Task<bool> CreateDatabase(IDatabaseConfig config);
+        Task<bool> CreateDatabase(DatabaseConfig config);
 
         /// <summary>
         /// Retrieves all names of available updates
         /// </summary>
         /// <returns></returns>
-        Task<IReadOnlyList<string>> AvailableMigrations(IDatabaseConfig config);
+        Task<IReadOnlyList<string>> AvailableMigrations(DatabaseConfig config);
 
         /// <summary>
         /// Retrieves all names of installed updates
         /// </summary>
         /// <returns></returns>
-        Task<IReadOnlyList<string>> AppliedMigrations(IDatabaseConfig config);
+        Task<IReadOnlyList<string>> AppliedMigrations(DatabaseConfig config);
 
         /// <summary>
         ///
         /// </summary>
-        Task<DatabaseMigrationSummary> MigrateDatabase(IDatabaseConfig config);
+        Task<DatabaseMigrationSummary> MigrateDatabase(DatabaseConfig config);
 
         /// <summary>
         /// Delete this database
         /// </summary>
         /// <param name="config"></param>
         /// <returns></returns>
-        Task DeleteDatabase(IDatabaseConfig config);
+        Task DeleteDatabase(DatabaseConfig config);
     }
 }

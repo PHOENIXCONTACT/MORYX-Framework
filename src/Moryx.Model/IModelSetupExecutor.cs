@@ -18,6 +18,6 @@ namespace Moryx.Model
         /// <summary>
         /// Executes the given setup
         /// </summary>
-        Task Execute(IDatabaseConfig config, IModelSetup setup, string setupData);
+        Task Execute(DatabaseConfig config, IModelSetup setup, string setupData);
     }
 }

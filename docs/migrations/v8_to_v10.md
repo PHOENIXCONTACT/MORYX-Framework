@@ -36,6 +36,8 @@ Several interfaces have been removed to streamline the codebase and reduce compl
 
 - `IProductType`: Replaced with base-class `ProductType`
 - `IProductInstance`: Replaced with base-class `ProductInstance`
+- `IConfig`: Replaced with base-class `ConfigBase`
+- `IDatabaseConfig`: Replaced with base-class `DatabaseConfig`
 
 ## Method Signature Changes
 
