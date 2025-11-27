@@ -37,11 +37,21 @@ public static async Task Main(string[] args)
 }
 ````
 
+### Changes in StateBase
+
+We now provide a full async implementation of the `StateBase`. To keep constistent naming, the `StateBase` was splitted to `SyncStateBase` and `AsyncStateBase`.
+Due to the reduction of unneccessary interfaces, `IState` was removed and `StateBase` will be used in e.g. `IStateContext` now.
+
+The `StateMachine` class was extended by `WithAsync()` and `ForceAsync()`. The `AsyncStateBase` provides async all the way: `NextStateAsync()`, `OnEnterAsync()`, `OnExitAsync`.
+
+Upgrade hint: Replace `StateBase<TContext>` by `SyncStateBase<TContext>`.
+
 ## Replaced result of visual instructions with dedicated result object
 
 In *Moryx.Factory* **6.3** and **8.1** we introduced the new result object and optional extended APIs. The result object solved issues caused by localization of the different results. With **Moryx 10** we remove all old APIs based on strings.
 
 ## Replaced `IVisualInstructions` with `VisualInstructionParameters`
+
 The interface was only used in `VisualInstructionParameters` which can and is being used as a base class in most cases anyway.
 Hence, `IVisualInstructions` is removed in favor of a more extendable base class.
 
@@ -66,6 +76,9 @@ The simulator module has also been renamed, and its namespace and package id hav
 - ProcessContext -> ProcessWorkplanContext
 - OperationClassification -> OperationStateClassification
 - OperationClassification.Loading -> OperationStateClassification.Assigning
+- IAsyncInitializable.Initialize -> IAsyncInitializable.InitializeAsync
+- IAsyncPlugin.Start -> IAsyncPlugin.StartAsync
+- IAsyncPlugin.Stop -> IAsyncPlugin.StopAsync
 
 ## Reduction of interfaces
 
@@ -75,6 +88,7 @@ Several interfaces have been removed to streamline the codebase and reduce compl
 - `IProductInstance`: Replaced with base-class `ProductInstance`
 - `IConfig`: Replaced with base-class `ConfigBase`
 - `IDatabaseConfig`: Replaced with base-class `DatabaseConfig`
+- `IState`: Replace with base-class `StateBase`
 
 ## Method Signature Changes
 
@@ -113,7 +127,6 @@ These feature were infrequently used and has been removed to simplify the codeba
 - Moryx.Identity: This namespace contained base classes and services for the old WPF client to provide the authorization context. Since MORYX support web uis, this is deprecated
 - PortConfig: Used for old wcf services. Deprecated since ASP.NET Core.
 - ProxyConfig.Port: Use the full address instead. It contains also http/https, domain and port
-- EntryToModelConverter: This component was used in WPF UIs to map an entry to a view model and vice versa. This is not used anymore and brings no benefit to the platform.
 
 ## Moved classes and namespaces
 

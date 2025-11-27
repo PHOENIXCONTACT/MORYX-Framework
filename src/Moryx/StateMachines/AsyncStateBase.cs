@@ -3,6 +3,9 @@
 
 namespace Moryx.StateMachines;
 
+/// <summary>
+/// Base class for asynchronous state machine states
+/// </summary>
 public abstract class AsyncStateBase : StateBase
 {
     /// <summary>
@@ -30,12 +33,6 @@ public abstract class AsyncStateBase : StateBase
         return Task.CompletedTask;
     }
 
-    /// <inheritdoc />
-    protected override void NextState(int state)
-    {
-        throw new InvalidOperationException("Synchronous calls are not allowed on AsyncState");
-    }
-
     /// <summary>
     /// Jump to next state async
     /// </summary>
@@ -57,12 +54,6 @@ public abstract class AsyncStateBase : StateBase
         await ((AsyncStateBase)next).OnEnterAsync();
     }
 
-    /// <inheritdoc />
-    internal override void Force(int state, bool exitCurrent, bool enterForced)
-    {
-        throw new InvalidOperationException("Synchronous calls are not allowed on AsyncState");
-    }
-
     /// <summary>
     /// Forces a specific state with option to exit the current and enter the forced state
     /// </summary>
@@ -74,16 +65,18 @@ public abstract class AsyncStateBase : StateBase
                                                 $"The state {state} does not exist in StateMachine.");
         }
 
+        var nextState = (AsyncStateBase)next;
+
         // If requested, exit current state
         if (exitCurrent)
             await OnExitAsync();
 
         // Set next state
-        Context.SetState(next);
+        Context.SetState(nextState);
 
         // If requested, enter forced state
         if (enterForced)
-            await ((AsyncStateBase)next).OnEnterAsync();
+            await nextState.OnEnterAsync();
     }
 
     /// <summary>
@@ -92,13 +85,12 @@ public abstract class AsyncStateBase : StateBase
     /// </summary>
     internal static Task CreateAsync(Type stateBaseType, IStateContext context, int? initialKey)
     {
-        var initialState = (AsyncStateBase)CreateMap(stateBaseType, context, initialKey);
-
         if (!typeof(AsyncStateBase).IsAssignableFrom(stateBaseType))
-        {
-            throw new InvalidOperationException("Creating state on async StateBase " +
-                                                $"is not supported, use {nameof(StateBase)}.{nameof(StateBase.Create)} instead");
-        }
+            throw new InvalidOperationException($"Only states inherited from {nameof(AsyncStateBase)} are supported!");
+
+        var initialState = CreateMapAndGetInitial(stateBaseType, context, initialKey) as AsyncStateBase;
+        if (initialState == null)
+            throw new ArgumentException($"Initial state does not inherit from {nameof(AsyncStateBase)}");
 
         context.SetState(initialState);
         return initialState.OnEnterAsync();
@@ -106,9 +98,9 @@ public abstract class AsyncStateBase : StateBase
 }
 
 /// <summary>
-/// Base class for state machine states
+/// Base class for asynchronous state machine states
 /// </summary>
-/// <typeparam name="TContext"></typeparam>
+/// <typeparam name="TContext">Typed context</typeparam>
 public abstract class AsyncStateBase<TContext> : AsyncStateBase
     where TContext : IStateContext
 {

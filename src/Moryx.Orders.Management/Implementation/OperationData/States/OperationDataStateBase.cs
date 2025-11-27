@@ -8,7 +8,7 @@ using Moryx.Users;
 
 namespace Moryx.Orders.Management
 {
-    internal abstract class OperationDataStateBase : StateBase<OperationData>, IOperationState
+    internal abstract class OperationDataStateBase : SyncStateBase<OperationData>, IOperationState
     {
         public const int CompletedKey = 80;
 

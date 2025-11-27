@@ -40,23 +40,6 @@ namespace Moryx.StateMachines
         }
 
         /// <summary>
-        /// Will be called while entering the next state
-        /// </summary>
-        public virtual void OnEnter()
-        {
-
-        }
-
-        /// <summary>
-        /// Will be called while exiting the current state
-        /// </summary>
-        public virtual void OnExit()
-        {
-
-        }
-
-
-        /// <summary>
         /// Throws an exception that the current state is invalid.
         /// </summary>
         protected void InvalidState([CallerMemberName] string methodName = "")
@@ -96,7 +79,7 @@ namespace Moryx.StateMachines
         /// Create a state machine of the given base type and will set it on the given context
         /// Returns the initial state after initialization.
         /// </summary>
-        protected static StateBase CreateMap(Type stateBaseType, IStateContext context, int? initialKey)
+        protected static StateBase CreateMapAndGetInitial(Type stateBaseType, IStateContext context, int? initialKey)
         {
             // Check the base type
             if (!stateBaseType.IsAbstract)
@@ -114,9 +97,9 @@ namespace Moryx.StateMachines
 
             if (definedStates.Length == 0)
                 throw new InvalidOperationException("There was no state constant defined in the given base type." +
-                                                    $"There musst be at least one constant integer attributed with the {nameof(StateDefinitionAttribute)}.");
+                                                    $"There must be at least one constant integer attributed with the {nameof(StateDefinitionAttribute)}.");
 
-            // If a initial key is set, we check if it exists
+            // If an initial key is set, we check if it exists
             if (initialKey.HasValue && definedStates.All(s => s.Key != initialKey.Value))
                 throw new InvalidOperationException($"There was no state defined with key: {initialKey}");
 
@@ -132,7 +115,10 @@ namespace Moryx.StateMachines
             StateBase initialState = null;
             foreach (var definedState in definedStates)
             {
-                var instance = (StateBase)Activator.CreateInstance(definedState.Type, context, stateMap);
+                var instance = Activator.CreateInstance(definedState.Type, context, stateMap) as StateBase;
+                if (instance == null)
+                    throw new InvalidOperationException($"Could not create instance of State type {definedState.Type.Name}");
+
                 instance.Key = definedState.Key;
 
                 if (initialKey.HasValue && initialKey.Value == definedState.Key)
@@ -151,24 +137,6 @@ namespace Moryx.StateMachines
                                                     $"'{nameof(StateDefinitionAttribute.IsInitial)} = true'.");
 
             return initialState;
-        } 
-
-        /// <summary>
-        /// Create a state machine of the given base type and will set it on the given context
-        /// Will internally called by the <see cref="StateMachine"/> wrapper class
-        /// </summary>
-        internal static void Create(Type stateBaseType, IStateContext context, int? initialKey)
-        {
-            if (typeof(AsyncStateBase).IsAssignableFrom(stateBaseType))
-            {
-                throw new InvalidOperationException("Creating async state on synchronous StateBase " +
-                                                    $"is not supported, use {nameof(AsyncStateBase)}.{nameof(AsyncStateBase.CreateAsync)} instead");
-            }
-
-            var initialState = CreateMap(stateBaseType, context, initialKey);
-
-            context.SetState(initialState);
-            initialState.OnEnter();
         }
 
         /// <summary>
@@ -184,28 +152,6 @@ namespace Moryx.StateMachines
             return stateFields;
         }
 
-        /// <summary>
-        /// Forces a specific state with option to exit the current and enter the forced state
-        /// </summary>
-        internal virtual void Force(int state, bool exitCurrent, bool enterForced)
-        {
-            if (!Map.TryGetValue(state, out var next))
-            {
-                throw new InvalidOperationException("State cannot be forced. " +
-                                                    $"The state {state} does not exist in StateMachine.");
-            }
-
-            // If requested, exit current state
-            if (exitCurrent)
-                OnExit();
-
-            // Set next state
-            Context.SetState(next);
-
-            // If requested, enter forced state
-            if (enterForced)
-                next.OnEnter();
-        }
 
         /// <summary>
         /// Will return the protected map.
@@ -214,27 +160,6 @@ namespace Moryx.StateMachines
         internal StateMap GetMap()
         {
             return Map;
-        }
-
-        /// <summary>
-        /// Jump to next state
-        /// </summary>
-        /// <param name="state">Number of the next state</param>
-        protected virtual void NextState(int state)
-        {
-            if (!Map.TryGetValue(state, out var next))
-            {
-                throw new InvalidOperationException($"The state {state} does not exist in StateMachine.");
-            }
-
-            // Exit the old state
-            OnExit();
-
-            // Set next state
-            Context.SetState(next);
-
-            // Enter the next state
-            next.OnEnter();
         }
 
         /// <summary>
@@ -248,30 +173,6 @@ namespace Moryx.StateMachines
         /// <summary>
         /// Shortcut class for the stateMap dictionary
         /// </summary>
-        public sealed class StateMap : Dictionary<int, StateBase>
-        {
-        }
-    }
-
-    /// <summary>
-    /// Base class for state machine states
-    /// </summary>
-    /// <typeparam name="TContext"></typeparam>
-    public abstract class StateBase<TContext> : StateBase
-        where TContext : IStateContext
-    {
-        /// <summary>
-        /// Context of the state machine
-        /// </summary>
-        protected new TContext Context => (TContext)base.Context;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StateBase"/> class.
-        /// </summary>
-        /// <param name="stateMap">Map of states to objects</param>
-        /// <param name="context">Context of the state machine</param>
-        protected StateBase(TContext context, StateMap stateMap) : base(context, stateMap)
-        {
-        }
+        public sealed class StateMap : Dictionary<int, StateBase>;
     }
 }

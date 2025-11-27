@@ -9,7 +9,7 @@ namespace Moryx.AbstractionLayer.Drivers
     /// Base class for states with typed context object
     /// </summary>
     /// <typeparam name="TContext">Type of the driver context</typeparam>
-    public abstract class DriverState<TContext> : StateBase<TContext>, IDriverState
+    public abstract class DriverState<TContext> : SyncStateBase<TContext>, IDriverState
         where TContext : Driver
     {
         /// <inheritdoc />
