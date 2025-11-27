@@ -271,12 +271,12 @@ namespace Moryx.Orders.Management.Tests
             var completedOperation = new InternalOperation();
             var completedOperationDataMock = new Mock<IOperationData>();
             completedOperationDataMock.SetupGet(o => o.Operation).Returns(completedOperation);
-            completedOperationDataMock.SetupGet(o => o.State.Classification).Returns(OperationClassification.Completed);
+            completedOperationDataMock.SetupGet(o => o.State.Classification).Returns(OperationStateClassification.Completed);
 
             var runningOperation = new InternalOperation();
             var runningOperationDataMock = new Mock<IOperationData>();
             runningOperationDataMock.SetupGet(o => o.Operation).Returns(runningOperation);
-            runningOperationDataMock.SetupGet(o => o.State.Classification).Returns(OperationClassification.Running);
+            runningOperationDataMock.SetupGet(o => o.State.Classification).Returns(OperationStateClassification.Running);
 
             runningOperation.Recipes = new List<IProductRecipe> { clone };
 

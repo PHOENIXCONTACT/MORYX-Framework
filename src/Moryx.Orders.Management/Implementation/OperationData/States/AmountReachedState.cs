@@ -28,7 +28,7 @@ namespace Moryx.Orders.Management
         public override bool IsAmountReached => true;
 
         public AmountReachedState(OperationData context, StateMap stateMap)
-            : base(context, stateMap, OperationClassification.Running)
+            : base(context, stateMap, OperationStateClassification.Running)
         {
         }
 

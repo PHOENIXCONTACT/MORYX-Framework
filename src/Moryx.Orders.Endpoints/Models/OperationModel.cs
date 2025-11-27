@@ -60,7 +60,7 @@ namespace Moryx.Orders.Endpoints
         public string Order { get; set; }
 
         [DataMember]
-        public OperationClassification Classification { get; set; }
+        public OperationStateClassification Classification { get; set; }
 
         [DataMember]
         public string StateDisplayName { get; set; }

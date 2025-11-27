@@ -56,7 +56,7 @@ namespace Moryx.Orders.Management
 
         private void ImportTryAgain(Action<string> outputStream)
         {
-            var operations = OperationDataPool.GetAll(o => o.State.Classification == OperationClassification.Initial)
+            var operations = OperationDataPool.GetAll(o => o.State.Classification == OperationStateClassification.Initial)
                 .ToArray();
 
             if (!operations.Any())

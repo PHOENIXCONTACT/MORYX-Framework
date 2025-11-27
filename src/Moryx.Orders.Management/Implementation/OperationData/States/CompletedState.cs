@@ -10,7 +10,7 @@ namespace Moryx.Orders.Management
     internal sealed class CompletedState : OperationDataStateBase
     {
         public CompletedState(OperationData context, StateMap stateMap)
-            : base(context, stateMap, OperationClassification.Completed)
+            : base(context, stateMap, OperationStateClassification.Completed)
         {
         }
 

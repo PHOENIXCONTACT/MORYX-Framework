@@ -12,7 +12,7 @@ namespace Moryx.Orders.Management
     {
         public const int CompletedKey = 80;
 
-        public OperationClassification Classification { get; private set; }
+        public OperationStateClassification Classification { get; private set; }
 
         int IOperationState.Key => Key;
 
@@ -38,7 +38,7 @@ namespace Moryx.Orders.Management
 
         public virtual bool IsAmountReached => false;
 
-        protected OperationDataStateBase(OperationData context, StateMap stateMap, OperationClassification classification) : base(context, stateMap)
+        protected OperationDataStateBase(OperationData context, StateMap stateMap, OperationStateClassification classification) : base(context, stateMap)
         {
             Classification = classification;
         }
@@ -88,26 +88,26 @@ namespace Moryx.Orders.Management
         {
         }
 
-        public OperationClassification GetFullClassification()
+        public OperationStateClassification GetFullClassification()
         {
             var classification = this.Classification;
             if (IsFailed)
-                classification = OperationClassification.Failed;
+                classification = OperationStateClassification.Failed;
             if (IsAssigning)
-                classification = OperationClassification.Loading;
+                classification = OperationStateClassification.Assigning;
 
             if (CanAssign && Context.AssignState.HasFlag(OperationAssignState.Changed))
-                classification |= OperationClassification.CanReload;
+                classification |= OperationStateClassification.CanReload;
             if (CanBegin)
-                classification |= OperationClassification.CanBegin;
+                classification |= OperationStateClassification.CanBegin;
             if (CanInterrupt)
-                classification |= OperationClassification.CanInterrupt;
+                classification |= OperationStateClassification.CanInterrupt;
             if (CanPartialReport || CanFinalReport)
-                classification |= OperationClassification.CanReport;
+                classification |= OperationStateClassification.CanReport;
             if (CanAdvice)
-                classification |= OperationClassification.CanAdvice;
+                classification |= OperationStateClassification.CanAdvice;
             if (IsAmountReached)
-                classification |= OperationClassification.IsAmountReached;
+                classification |= OperationStateClassification.IsAmountReached;
 
             return classification;
         }

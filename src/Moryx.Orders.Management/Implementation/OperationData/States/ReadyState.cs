@@ -19,7 +19,7 @@ namespace Moryx.Orders.Management
         public override bool CanAdvice => true;
 
         public ReadyState(OperationData context, StateMap stateMap)
-            : base(context, stateMap, OperationClassification.Ready)
+            : base(context, stateMap, OperationStateClassification.Ready)
         {
         }
 

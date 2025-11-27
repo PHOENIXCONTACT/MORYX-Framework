@@ -10,7 +10,7 @@ namespace Moryx.Orders.Management
     internal sealed class AbortedState : OperationDataStateBase
     {
         public AbortedState(OperationData context, StateMap stateMap)
-            : base(context, stateMap, OperationClassification.Aborted)
+            : base(context, stateMap, OperationStateClassification.Aborted)
         {
         }
     }

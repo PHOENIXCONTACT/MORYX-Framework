@@ -125,14 +125,14 @@ namespace Moryx.Orders.Management.Assignment
             if (productRecipe.TemplateId == 0)
             {
                 operations = OperationDataPool.GetAll(o =>
-                    o.State.Classification < OperationClassification.Completed &&
+                    o.State.Classification < OperationStateClassification.Completed &&
                     o.Operation.Recipes.Any(r => r.TemplateId == productRecipe.Id)).ToList();
             }
             // Else the recipe is a clone
             else
             {
                 operations = OperationDataPool.GetAll(o =>
-                    o.State.Classification < OperationClassification.Completed &&
+                    o.State.Classification < OperationStateClassification.Completed &&
                     o.Operation.Recipes.Any(r => r.Id == productRecipe.Id)).ToList();
             }
 
@@ -145,7 +145,7 @@ namespace Moryx.Orders.Management.Assignment
         {
             // Update not initial operations
             var operations = OperationDataPool.GetAll(o =>
-                o.State.Classification < OperationClassification.Completed).ToArray();
+                o.State.Classification < OperationStateClassification.Completed).ToArray();
 
             // Try to find affected operations
             foreach (var operationData in operations)

@@ -16,7 +16,7 @@ namespace Moryx.Orders.Management
         public override bool IsCreated => false;
 
         public InitialAssignFailedState(OperationData context, StateMap stateMap)
-            : base(context, stateMap, OperationClassification.Initial)
+            : base(context, stateMap, OperationStateClassification.Initial)
         {
         }
 

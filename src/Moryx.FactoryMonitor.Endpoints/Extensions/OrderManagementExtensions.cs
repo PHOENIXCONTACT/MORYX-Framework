@@ -10,7 +10,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
     {
         public static List<OrderModel> GetOrderModels(this IOrderManagement orderManager, string[] colorPalette)
         {
-            var orders = orderManager.GetOperations(x => x.State is OperationClassification.Running)
+            var orders = orderManager.GetOperations(x => x.State is OperationStateClassification.Running)
                 .Select(Converter.ToOrderModel).ToList();
 
             // Assign color to order

@@ -12,7 +12,7 @@ namespace Moryx.Orders.Management
         public override bool IsAssigning => true;
 
         public InterruptedAssignState(OperationData context, StateMap stateMap)
-            : base(context, stateMap, OperationClassification.Interrupted)
+            : base(context, stateMap, OperationStateClassification.Interrupted)
         {
         }
 

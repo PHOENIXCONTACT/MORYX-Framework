@@ -15,8 +15,8 @@ namespace Moryx.Orders.Management
         /// </summary>
         int Key { get; }
 
-        /// <see cref="OperationClassification"/>
-        OperationClassification Classification { get; }
+        /// <see cref="OperationStateClassification"/>
+        OperationStateClassification Classification { get; }
 
         /// <summary>
         /// Flag if the operation can be assigned

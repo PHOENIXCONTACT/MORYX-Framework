@@ -129,17 +129,17 @@ namespace Moryx.Orders.Endpoints
 
                 Order = operation.Order.Number,
 
-                CanAssign = operation.FullState.HasFlag(OperationClassification.CanReload),
-                CanBegin = operation.FullState.HasFlag(OperationClassification.CanBegin),
-                CanInterrupt = operation.FullState.HasFlag(OperationClassification.CanInterrupt),
-                CanReport = operation.FullState.HasFlag(OperationClassification.CanReport),
-                CanAdvice = operation.FullState.HasFlag(OperationClassification.CanAdvice),
-                IsFailed = operation.FullState.HasFlag(OperationClassification.Failed),
-                IsAssigning = operation.FullState.HasFlag(OperationClassification.Loading),
-                IsCreated = operation.State > OperationClassification.Initial &&
-                    !operation.FullState.HasFlag(OperationClassification.Failed),
-                IsAborted = operation.FullState.HasFlag(OperationClassification.Aborted),
-                IsAmountReached = operation.FullState.HasFlag(OperationClassification.IsAmountReached),
+                CanAssign = operation.FullState.HasFlag(OperationStateClassification.CanReload),
+                CanBegin = operation.FullState.HasFlag(OperationStateClassification.CanBegin),
+                CanInterrupt = operation.FullState.HasFlag(OperationStateClassification.CanInterrupt),
+                CanReport = operation.FullState.HasFlag(OperationStateClassification.CanReport),
+                CanAdvice = operation.FullState.HasFlag(OperationStateClassification.CanAdvice),
+                IsFailed = operation.FullState.HasFlag(OperationStateClassification.Failed),
+                IsAssigning = operation.FullState.HasFlag(OperationStateClassification.Assigning),
+                IsCreated = operation.State > OperationStateClassification.Initial &&
+                    !operation.FullState.HasFlag(OperationStateClassification.Failed),
+                IsAborted = operation.FullState.HasFlag(OperationStateClassification.Aborted),
+                IsAmountReached = operation.FullState.HasFlag(OperationStateClassification.IsAmountReached),
 
                 RecipeIds = operation.Recipes.Select(r => r.Id).ToArray()
             };

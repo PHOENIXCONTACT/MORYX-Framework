@@ -21,7 +21,7 @@ namespace Moryx.Orders.Management
         public override bool CanAdvice => true;
 
         public InterruptedState(OperationData context, StateMap stateMap)
-            : base(context, stateMap, OperationClassification.Interrupted)
+            : base(context, stateMap, OperationStateClassification.Interrupted)
         {
         }
 
