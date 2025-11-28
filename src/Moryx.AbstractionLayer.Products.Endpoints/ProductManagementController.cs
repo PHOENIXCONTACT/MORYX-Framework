@@ -9,8 +9,8 @@ using Moryx.Serialization;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Moryx.AbstractionLayer.Products.Endpoints.Properties;
+using Moryx.AspNetCore;
 using Moryx.Configuration;
-using Moryx.Asp.Extensions;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints

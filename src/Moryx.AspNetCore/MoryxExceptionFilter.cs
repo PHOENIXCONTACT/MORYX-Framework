@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Moryx.Asp.Extensions
+namespace Moryx.AspNetCore
 {
     public class MoryxExceptionFilter : IExceptionFilter
     {

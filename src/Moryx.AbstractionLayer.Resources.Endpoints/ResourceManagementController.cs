@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Moryx.Asp.Extensions;
 using Moryx.Serialization;
 using Moryx.Tools;
 using Moryx.Runtime.Modules;
@@ -15,6 +14,7 @@ using Moryx.Configuration;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
 using Moryx.AbstractionLayer.Resources.Endpoints.Properties;
+using Moryx.AspNetCore;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints
 {

@@ -4,10 +4,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moryx.Asp.Extensions;
 using Moryx.ControlSystem.Jobs.Endpoints.Properties;
 using Newtonsoft.Json;
 using System.Threading.Channels;
+using Moryx.AspNetCore;
 using Newtonsoft.Json.Serialization;
 
 namespace Moryx.ControlSystem.Jobs.Endpoints
