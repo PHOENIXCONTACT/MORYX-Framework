@@ -690,8 +690,16 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     }
 
     //todo: Change to BFS
-    private void BrowseNodes(NodeId nodeId, NamespaceTable namespaceTable, List<OpcUaNode> list, int layer)
+    private void BrowseNodes(NodeId nodeId, NamespaceTable namespaceTable, List<OpcUaNode> list, int layer, HashSet<string> visitedNodes = null)
     {
+        visitedNodes ??= [];
+        var branchNodes = new HashSet<string>(visitedNodes);
+
+        if (branchNodes.Contains(nodeId.ToString()))
+        {
+            return;
+        }
+        branchNodes.Add(nodeId.ToString());
 
         _session.Browse(null, null, nodeId, uint.MaxValue, BrowseDirection.Forward, ReferenceTypeIds.HierarchicalReferences, true, (uint)NodeClass.Variable | (uint)NodeClass.Object | (uint)NodeClass.Method,
                 out var continuationPoint,
@@ -724,9 +732,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         {
             var nextRdNodeId = OpcUaNode.CreateExpandedNodeId(nextRd.NodeId.ToString());
             OpcUaNode node = null;
-            if (_nodesFlat.ContainsKey(nextRdNodeId))
+            if (_nodesFlat.TryGetValue(nextRdNodeId, out var value))
             {
-                node = _nodesFlat[nextRdNodeId];
+                node = value;
             }
 
             if (node == null)
@@ -749,16 +757,12 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             if (nextRd.NodeClass == NodeClass.Object)
             {
                 var nodesOfObject = new List<OpcUaNode>();
-                BrowseNodes(ExpandedNodeId.ToNodeId(nextRd.NodeId, namespaceTable), namespaceTable, nodesOfObject, layer + 1);
+                BrowseNodes(ExpandedNodeId.ToNodeId(nextRd.NodeId, namespaceTable), namespaceTable, nodesOfObject, layer + 1, branchNodes);
                 node.Nodes = nodesOfObject;
+
             }
 
-            var result = _savedIds.Add(node.Identifier);
-
-            if (result == false)
-            {
-                continue;
-            }
+            _savedIds.Add(node.Identifier);
 
             if (!_nodesFlat.ContainsKey(node.Identifier))
             {

@@ -1,12 +1,8 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
 
-using Moq;
-using Moryx.AbstractionLayer.Drivers.Message;
-using Moryx.Drivers.OpcUa.DriverStates;
-using Moryx.Modules;
 using NUnit.Framework;
 using Opc.Ua;
-using Opc.Ua.Client;
 
 namespace Moryx.Drivers.OpcUa.Tests;
 

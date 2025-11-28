@@ -20,7 +20,7 @@ public class HandleContinuationPoint : OpcUaTestBase
     public void SetUp()
     {
         ReflectionTool.TestMode = true;
-        _references = CreateNodes();
+        _references = CreateNodes(_namespaceTable);
 
         _sessionMock = new Mock<ISession>();
         var byteArray = Array.Empty<byte>();
