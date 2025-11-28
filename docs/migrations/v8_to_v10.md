@@ -14,6 +14,11 @@ To reduce the number of API packages and simplify the overall architecture, **Mo
 
 The simulator module has also been renamed, and its namespace and package id have changed accordingly to reflect its new location within Moryx.ControlSystem.
 
+## ProcessEngineContext and ControlSystemAttached/Detached
+
+The methods `ControlSystemAttached` and `ControlSystemDetached` were renamed to `ProcessEngineAttached` and `ProcessEngineDetached` to match the naming of the framework. ControlSystem is a term for multiple modules and components used within the framework (ProcessEngine, SetupProvider, MaterialManager, ...).
+
+The `ProcessEngineContext` was added to the `ProcessEngineAttached` to provide the `Cell` a possibility to gather information from the process engine. The class is empty in 10.0 because it defines only the API. Features are implemented in the next feature-releases of MORYX 10.x.
 
 ## Renamings and Typo-Fixes
 
@@ -29,6 +34,8 @@ The simulator module has also been renamed, and its namespace and package id hav
 - ProcessContext -> ProcessWorkplanContext
 - OperationClassification -> OperationStateClassification
 - OperationClassification.Loading -> OperationStateClassification.Assigning
+- IControlSystemBound.ControlSystemAttached -> ICell.ProcessEngineAttached
+- IControlSystemBound.ControlSystemDetached -> ICell.ProcessEngineDetached
 
 ## Reduction of interfaces
 
@@ -38,6 +45,7 @@ Several interfaces have been removed to streamline the codebase and reduce compl
 - `IProductInstance`: Replaced with base-class `ProductInstance`
 - `IConfig`: Replaced with base-class `ConfigBase`
 - `IDatabaseConfig`: Replaced with base-class `DatabaseConfig`
+- `IControlSystemBound`: Merged with `ICell`
 
 ## Method Signature Changes
 

@@ -26,12 +26,12 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             Id = id;
         }
 
-        public IEnumerable<Session> ControlSystemAttached()
+        public IEnumerable<Session> ProcessEngineAttached(ProcessEngineContext context)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Session> ControlSystemDetached()
+        public IEnumerable<Session> ProcessEngineDetached()
         {
             throw new NotImplementedException();
         }

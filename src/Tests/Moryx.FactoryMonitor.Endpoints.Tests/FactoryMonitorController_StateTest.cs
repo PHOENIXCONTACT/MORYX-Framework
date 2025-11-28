@@ -32,12 +32,12 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
         {
             base.Setup();
 
-            _assemblyCell.Capabilities = new DummyCapabilities1();
+            _assemblyCell.ChangeCapabilities(new DummyCapabilities1());
             _assemblyCell.Temperature = 125.2;
             _assemblyCell.Name = "Assembly 1.0";
             _assemblyCell.Parent = _manufactoringFactory;
 
-            _solderingCell.Capabilities = new DummyCapabilities2();
+            _solderingCell.ChangeCapabilities(new DummyCapabilities2());
             _solderingCell.Temperature = 130;
             _solderingCell.Name = "Soldering 1.0";
             _solderingCell.Parent = _manufactoringFactory;
@@ -66,7 +66,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
         public void ShouldInferCorrectCellStatus()
         {
             // Arrange
-            _solderingCell.Capabilities = NullCapabilities.Instance;
+            _solderingCell.ChangeCapabilities(NullCapabilities.Instance);
 
             //Act
             var endpointResult = _factoryMonitor.InitialFactoryState();
@@ -83,7 +83,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
         [Test]
         public void FactoryStatesStream()
         {
-            //Arrange 
+            //Arrange
             var source = new CancellationTokenSource();
             var cancelToken = source.Token;
             var process = new Process
@@ -126,7 +126,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _assemblyCellId)?.State,
                 Is.EqualTo(CellState.Running));
 
-            //Assert part 1 
+            //Assert part 1
             RaiseActivityUpdated(assemblyActivity, ActivityProgress.Completed);
             Thread.Sleep(500);
             ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
@@ -158,7 +158,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
 
             //Assert part 3
-            _solderingCell.RaiseCapabilitiesChanged(NullCapabilities.Instance);
+            _solderingCell.ChangeCapabilities(NullCapabilities.Instance);
             Thread.Sleep(500);
             ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
 
