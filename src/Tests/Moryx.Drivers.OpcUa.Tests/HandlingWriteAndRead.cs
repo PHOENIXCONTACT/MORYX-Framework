@@ -62,7 +62,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
         //Arrange
         var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
         var resultValue = 8;
-        SetupRead(resultValue, nodeId);
+        SetupRead(resultValue);
 
         //Act
         var value = _driver.ReadNode(node.NodeId.ToString());
@@ -77,7 +77,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
         //Arrange
         var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
         var resultValue = 8;
-        SetupRead(resultValue, nodeId);
+        SetupRead(resultValue);
 
         //Act
         var value = _driver.Input[node.NodeId.ToString()];
@@ -93,7 +93,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
         //Arrange
         var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
         var resultValue = 8;
-        SetupRead(resultValue, nodeId);
+        SetupRead(resultValue);
 
         //Act
         var value = _driver.Output[node.NodeId.ToString()];
@@ -103,7 +103,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
         Assert.That(value, Is.EqualTo(resultValue));
     }
 
-    private void SetupRead(object resultValue, NodeId nodeId)
+    private void SetupRead(object resultValue)
     {
         _sessionMock.Setup(s => s.ReadValue(It.IsAny<NodeId>())).Callback((NodeId nodeId) =>
         {

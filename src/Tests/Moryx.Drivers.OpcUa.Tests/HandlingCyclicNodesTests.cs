@@ -1,4 +1,5 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
 
 using System.Text.Json;
 using Moq;
@@ -14,7 +15,7 @@ namespace Moryx.Drivers.OpcUa.Tests;
 [TestFixture]
 public class HandlingCyclicNodesTests : OpcUaTestBase
 {
-    private readonly NamespaceTable _namespaceTable = CreateNamespaceTable();
+    private new readonly NamespaceTable _namespaceTable = CreateNamespaceTable();
 
     [SetUp]
     public void Setup()

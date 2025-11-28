@@ -11,7 +11,6 @@ using Moryx.AbstractionLayer.Drivers.InOut;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
-using Moryx.Drivers.OpcUa;
 using Moryx.Drivers.OpcUa.Properties;
 using Moryx.Drivers.OpcUa.States;
 using Moryx.Serialization;
@@ -456,19 +455,19 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     public OpcUaNode GetNode(string identifier)
     {
         var nodeId = OpcUaNode.CreateExpandedNodeId(GetNodeIdAsString(identifier));
-        if (!_nodesFlat.ContainsKey(nodeId))
+        if (!_nodesFlat.TryGetValue(nodeId, out var value))
         {
             return null;
         }
 
-        return _nodesFlat[nodeId];
+        return value;
     }
 
     private string GetNodeIdAsString(string identifier)
     {
-        if (_nodeIdAliasDictionary.ContainsKey(identifier))
+        if (_nodeIdAliasDictionary.TryGetValue(identifier, out var value))
         {
-            return _nodeIdAliasDictionary[identifier];
+            return value;
         }
 
         return identifier;
@@ -656,7 +655,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             Payload = value
         };
 
-        if (nodeId.IdType == IdType.Numeric && int.Parse(nodeId.Identifier.ToString()) == Variables.Server_ServerStatus
+        if (nodeId.IdType == IdType.Numeric && int.Parse(nodeId.Identifier.ToString(), CultureInfo.InvariantCulture) == Variables.Server_ServerStatus
             && nodeId.NamespaceIndex == 0)
         {
             ServerStatus = ((ServerStatusDataType)((ExtensionObject)value).Body).State;
@@ -811,6 +810,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         State.WriteNode(node, payload);
     }
 
+    /// <inheritdoc/>
     public void WriteNode(string nodeId, object payload)
     {
         var node = State.GetNode(nodeId);
@@ -835,8 +835,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                 Value = payload
             }
         };
-
-        _session.Write(null, [valueToBeWritten], out var results, out var diagnosticInfos);
+        _session.Write(null, [valueToBeWritten], out var results, out _);
 
         if (results != null)
         {
@@ -928,7 +927,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     /// <inheritdoc/>
     public Task SendAsync(object payload, CancellationToken cancellationToken = default)
     {
-        if (payload is not OpcUaMessage msg)
+        if (payload is not OpcUaMessage)
         {
             Logger.Log(LogLevel.Warning, "Currently it is only possible to send messages of the type OpcUaMessage " +
                                          "using the Opc Ua Driver directly");
@@ -937,7 +936,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
         throw new NotImplementedException();
     }
-
 
     #endregion
 
@@ -1115,7 +1113,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                 var value = ReadNode(subSubNode.NodeId.ToString()).ToString();
                 if (property.PropertyType == typeof(int))
                 {
-                    property.SetValue(deviceType, int.Parse(value));
+                    property.SetValue(deviceType, int.Parse(value, CultureInfo.InvariantCulture));
                 }
                 else
                 {

@@ -211,7 +211,7 @@ public class NodeHandlingTests : OpcUaTestBase
         Assert.That(waitSubscription2.WaitOne(TimeSpan.FromSeconds(2)), "Driver doesn't raise received Event");
     }
 
-    private void CheckReceivedValue(object receivedValue, object expectedValue)
+    private static void CheckReceivedValue(object receivedValue, object expectedValue)
     {
         //Asert II
         Assert.That(receivedValue.GetType(), Is.EqualTo(expectedValue.GetType()), "Received object has the wrong type");

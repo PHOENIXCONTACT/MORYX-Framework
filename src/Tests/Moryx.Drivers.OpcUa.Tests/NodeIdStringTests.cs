@@ -9,7 +9,7 @@ namespace Moryx.Drivers.OpcUa.Tests;
 [TestFixture]
 public class NodeIdStringTests : OpcUaTestBase
 {
-    private NamespaceTable _namespaceTable = new(["http://opcfoundation.org/UA/", "http://anothernamespace.org/"]);
+    private new readonly NamespaceTable _namespaceTable = new(["http://opcfoundation.org/UA/", "http://anothernamespace.org/"]);
 
     [SetUp]
     public void Setup()
