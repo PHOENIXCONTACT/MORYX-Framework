@@ -3,6 +3,7 @@
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers;
@@ -950,13 +951,21 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     [EntrySerialize]
     internal string ReadNodeAsString(string nodeId)
     {
-        var value = ReadNodeDataValue(nodeId);
-        if (value == null)
+        try
         {
-            return "There was an error, when trying to read the value of the node. Please look into the log for further information";
-        }
+            var value = ReadNodeDataValue(nodeId);
+            if (value == null)
+            {
+                return "There was an error, when trying to read the value of the node. Please look into the log for further information";
+            }
 
-        return value.ToString();
+            return value.ToString();
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Failed to read node as string");
+            return e.Message;
+        }
     }
 
     /// <summary>
@@ -997,31 +1006,31 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                 case BuiltInType.Boolean:
                     return bool.Parse(stringValue);
                 case BuiltInType.Int16:
-                    return short.Parse(stringValue);
+                    return short.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.Enumeration:
                 case BuiltInType.Integer:
                 case BuiltInType.Int32:
-                    return int.Parse(stringValue);
+                    return int.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.Int64:
-                    return long.Parse(stringValue);
+                    return long.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.UInt16:
-                    return ushort.Parse(stringValue);
+                    return ushort.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.UInteger:
                 case BuiltInType.UInt32:
-                    return uint.Parse(stringValue);
+                    return uint.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.UInt64:
-                    return ulong.Parse(stringValue);
+                    return ulong.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.DateTime:
-                    return DateTime.Parse(stringValue);
+                    return DateTime.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.Guid:
                 case BuiltInType.String:
                     return stringValue;
                 case BuiltInType.Number:
                 case BuiltInType.Float:
                 case BuiltInType.Double:
-                    return double.Parse(stringValue);
+                    return double.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.Byte:
-                    return byte.Parse(stringValue);
+                    return byte.Parse(stringValue, CultureInfo.InvariantCulture);
             }
         }
         catch (Exception ex)
