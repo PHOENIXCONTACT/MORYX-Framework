@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Products;
-using Moryx.Asp.Extensions;
 using Moryx.Orders.Endpoints.Properties;
 using Moryx.Users;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using System.Net;
 using System.Threading.Channels;
+using Moryx.AspNetCore;
 using Moryx.Orders.Endpoints.Models;
 
 namespace Moryx.Orders.Endpoints

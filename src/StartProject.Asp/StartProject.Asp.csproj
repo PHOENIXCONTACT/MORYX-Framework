@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj" />
+    <ProjectReference Include="..\Moryx.AspNetCore\Moryx.AspNetCore.csproj" />
     <ProjectReference Include="..\Moryx.CommandCenter.Web\Moryx.CommandCenter.Web.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.Jobs.Endpoints\Moryx.ControlSystem.Jobs.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.MaterialManager\Moryx.ControlSystem.MaterialManager.csproj" />
