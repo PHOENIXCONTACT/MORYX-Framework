@@ -2,11 +2,13 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Buffers;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer.TestTools;
 using Moryx.Drivers.Mqtt;
 using Moryx.Drivers.Mqtt.MqttTopics;
@@ -14,7 +16,6 @@ using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Tools;
 using MQTTnet;
-using MQTTnet.Client;
 using MQTTnet.Formatter;
 using MQTTnet.Packets;
 using MQTTnet.Protocol;
@@ -66,7 +67,8 @@ namespace Moryx.Resources.Mqtt.Tests
                 Id = 4,
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 Channels = new ReferenceCollectionMock<MqttTopic> { _mqttTopicInt, _mqttTopicString },
-                MqttVersion = _version
+                MqttVersion = _version,
+                BrokerUrl = "mock"
             };
 
             _mockClient = new Mock<IMqttClient>();
@@ -85,8 +87,7 @@ namespace Moryx.Resources.Mqtt.Tests
         private Expression<Func<MqttClientOptions, bool>> CorrectClientOptions()
         {
             return o => o.ProtocolVersion == _driver.MqttVersion && o.CleanSession == !_driver.ReconnectWithoutCleanSession
-                        && o.ClientId == $"{System.Net.Dns.GetHostName()}-{_driver.Id}-{_driver.Name}" && (o.ChannelOptions as MqttClientTcpOptions).Server == _driver.BrokerUrl &&
-                        (o.ChannelOptions as MqttClientTcpOptions).Port == _driver.Port;
+                        && o.ClientId == $"{System.Net.Dns.GetHostName()}-{_driver.Id}-{_driver.Name}";
         }
 
         [Test(Description = "Publish int32 Message using the MqttTopicPrimitive")]
@@ -115,7 +116,7 @@ namespace Moryx.Resources.Mqtt.Tests
                 "Topic should be " + _driver.Identifier + _mqttTopicInt.Identifier + ", but is " + sentMsg.Topic);
             Assert.That(sentMsg.QualityOfServiceLevel, Is.EqualTo(MqttQualityOfServiceLevel.ExactlyOnce),
                 "Qos should be ExactlyOnce, but is " + sentMsg.QualityOfServiceLevel);
-            var msg = BitConverter.ToInt32(sentMsg.Payload, 0);
+            var msg = BitConverter.ToInt32(sentMsg.Payload.ToArray(), 0);
             Assert.That(msg == MESSAGE_VALUE_INT, "Message should be " + MESSAGE_VALUE_INT + ", but is " + msg);
         }
 

@@ -124,7 +124,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
         //Act
         var result = _driver.FindNodeId(node.DisplayName.ToString());
 
-        //Assert           
+        //Assert
         Assert.That(result.Any(x => x.Equals(nodeId)), Is.True);
     }
 }

@@ -11,7 +11,7 @@ using Moryx.Drivers.Mqtt;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Tools;
-using MQTTnet.Client;
+using MQTTnet;
 using MQTTnet.Formatter;
 using NUnit.Framework;
 
@@ -37,7 +37,8 @@ namespace Moryx.Resources.Mqtt.Tests
                 Id = 4,
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 Channels = new ReferenceCollectionMock<MqttTopic>(),
-                MqttVersion = version
+                MqttVersion = version,
+                BrokerUrl = "mock"
             };
 
             //Setup mock for MQTT-Client

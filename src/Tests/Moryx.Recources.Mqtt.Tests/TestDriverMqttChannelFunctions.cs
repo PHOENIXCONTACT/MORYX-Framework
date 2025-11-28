@@ -17,7 +17,6 @@ using Moryx.Resources.Mqtt.Tests.TestMessages;
 using Moryx.TestTools.UnitTest;
 using Moryx.Tools;
 using MQTTnet;
-using MQTTnet.Client;
 using MQTTnet.Formatter;
 using MQTTnet.Packets;
 using MQTTnet.Protocol;
@@ -50,7 +49,7 @@ namespace Moryx.Resources.Mqtt.Tests
             _driver = CreateMqttDriver();
             _mockClient = SetupMqttClientMock();
 
-            //Initialize MqttDriver 
+            //Initialize MqttDriver
             _driver.InitializeForTest(_mockClient.Object);
             ((IPlugin)_driver).Start();
             _driver.OnConnected(new MqttClientConnectedEventArgs(new MqttClientConnectResult())).Wait();
@@ -88,7 +87,8 @@ namespace Moryx.Resources.Mqtt.Tests
                 Id = 4,
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 Channels = new ReferenceCollectionMock<MqttTopic>(),
-                MqttVersion = _version
+                MqttVersion = _version,
+                BrokerUrl = "mock"
             };
         }
 
@@ -122,7 +122,7 @@ namespace Moryx.Resources.Mqtt.Tests
             Assert.That(c.Identifier.Equals(_topicBoolMqtt.Identifier));
         }
 
-        
+
         [Test(Description = "Return null, if identifier does not exist")]
         public void Channel_NotFindChannel_IdentifierDoesNotExist()
         {
