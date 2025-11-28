@@ -73,13 +73,13 @@ namespace Moryx.Products.Samples
     [Plugin(LifeCycle.Transient, typeof(IProductLinkStrategy), Name = nameof(NeedleLinkStrategy))]
     public class NeedleLinkStrategy : LinkStrategyBase
     {
-        public override void LoadPartLink(IGenericColumns linkEntity, IProductPartLink target)
+        public override void LoadPartLink(IGenericColumns linkEntity, ProductPartLink target)
         {
             var link = (NeedlePartLink)target;
             link.Role = (NeedleRole)linkEntity.Integer1;
         }
 
-        public override void SavePartLink(IProductPartLink source, IGenericColumns target)
+        public override void SavePartLink(ProductPartLink source, IGenericColumns target)
         {
             var link = (NeedlePartLink)source;
             target.Integer1 = (int)link.Role;

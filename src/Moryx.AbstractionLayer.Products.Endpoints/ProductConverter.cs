@@ -97,9 +97,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             {
                 var displayName = property.GetDisplayName();
 
-                if (typeof(IProductPartLink).IsAssignableFrom(property.PropertyType))
+                if (typeof(ProductPartLink).IsAssignableFrom(property.PropertyType))
                 {
-                    var link = (IProductPartLink)property.GetValue(productType);
+                    var link = (ProductPartLink)property.GetValue(productType);
                     var partModel = ConvertPart(link);
                     var connector = new PartConnector
                     {
@@ -111,9 +111,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                     };
                     connectors.Add(connector);
                 }
-                else if (typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(property.PropertyType))
+                else if (typeof(IEnumerable<ProductPartLink>).IsAssignableFrom(property.PropertyType))
                 {
-                    var links = (IEnumerable<IProductPartLink>)property.GetValue(productType);
+                    var links = (IEnumerable<ProductPartLink>)property.GetValue(productType);
                     var linkType = property.PropertyType.GetGenericArguments()[0];
                     var connector = new PartConnector
                     {
@@ -132,12 +132,31 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
 
         private static string FetchProductType(Type linkType)
         {
-            var partLinkInterface = linkType.GetInterfaces().First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IProductPartLink<>));
-            var prodType = partLinkInterface.GetGenericArguments()[0];
+            var partLinkBase = FindGenericBaseDefinition(linkType, typeof(ProductPartLink<>));
+            if (partLinkBase == null)
+            {
+                throw new InvalidOperationException($"Cannot find product type for {linkType.FullName}");
+            }
+
+            var prodType = partLinkBase.GetGenericArguments()[0];
             return prodType.FullName;
         }
 
-        private PartModel ConvertPart(IProductPartLink link)
+        private static Type FindGenericBaseDefinition(Type type, Type genericDefinition)
+        {
+            var current = type;
+            while (current != null && current != typeof(object))
+            {
+                if (current.IsGenericType && current.GetGenericTypeDefinition() == genericDefinition)
+                    return current;
+
+                current = current.BaseType;
+            }
+
+            return null;
+        }
+
+        private PartModel ConvertPart(ProductPartLink link)
         {
             // No link, no DTO!
             if (link is null || link.Product is null)
@@ -222,7 +241,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                         value = Activator.CreateInstance(prop.PropertyType);
                         prop.SetValue(converted, value);
                     }
-                    UpdateReference((IProductPartLink)value, partConnector.Parts[0]);
+                    UpdateReference((ProductPartLink)value, partConnector.Parts[0]);
                 }
                 else if (partConnector.Parts.Length == 0)
                 {
@@ -236,7 +255,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         private void UpdateCollection(IList value, IEnumerable<PartModel> parts)
         {
             // Track which part links are still represented by the models
-            var oldParts = new List<IProductPartLink>(value.OfType<IProductPartLink>());
+            var oldParts = new List<ProductPartLink>(value.OfType<ProductPartLink>());
             // Iterate over the part models
             // Create or update the part links
             var elemType = value.GetType().GetInterfaces()
@@ -251,7 +270,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 // new partlink
                 if (oldPartMatch == null)
                 {
-                    oldPartMatch = (IProductPartLink)Activator.CreateInstance(elemType);
+                    oldPartMatch = (ProductPartLink)Activator.CreateInstance(elemType);
                     oldPartMatch.Product = _productManagement.LoadType(partModel.Product.Id);
                     value.Add(oldPartMatch);
                 }
@@ -270,7 +289,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 value.Remove(part);
         }
 
-        private void UpdateReference(IProductPartLink value, PartModel part)
+        private void UpdateReference(ProductPartLink value, PartModel part)
         {
             EntryConvert.UpdateInstance(value, part.Properties);
             value.Product = part.Product is null ? null : _productManagement.LoadType(part.Product.Id);

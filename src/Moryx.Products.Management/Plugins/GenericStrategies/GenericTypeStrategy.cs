@@ -20,7 +20,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Injected entity mapper
         /// </summary>
-        public GenericEntityMapper<ProductType, IProductPartLink> EntityMapper { get; set; }
+        public GenericEntityMapper<ProductType, ProductPartLink> EntityMapper { get; set; }
 
         /// <summary>
         /// Initialize the type strategy

@@ -36,6 +36,7 @@ Several interfaces have been removed to streamline the codebase and reduce compl
 
 - `IProductType`: Replaced with base-class `ProductType`
 - `IProductInstance`: Replaced with base-class `ProductInstance`
+- `IProductPartLink`: Replaced with base-class `ProductPartLink`
 - `IConfig`: Replaced with base-class `ConfigBase`
 - `IDatabaseConfig`: Replaced with base-class `DatabaseConfig`
 
