@@ -11,45 +11,32 @@ using Moryx.AbstractionLayer.Activities;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests.Resources
 {
-    public class DummyCell : Resource, ICell
+    public class DummyCell : Cell
     {
         [EntryVisualization("celcius", "thermometer")]
         public double Temperature { get; set; }
 
-        public ICapabilities Capabilities { get; set; }
-
-        public virtual event EventHandler<ReadyToWork> ReadyToWork;
-        public virtual event EventHandler<NotReadyToWork> NotReadyToWork;
-        public virtual event EventHandler<ActivityCompleted> ActivityCompleted;
-        public virtual event EventHandler<ICapabilities> CapabilitiesChanged;
-
-        public void RaiseCapabilitiesChanged(ICapabilities capabilities)
+        public void ChangeCapabilities(ICapabilities capabilities)
         {
             Capabilities = capabilities;
-            CapabilitiesChanged.Invoke(this, capabilities);
         }
 
-        public IEnumerable<Session> ControlSystemAttached()
+        protected override IEnumerable<Session> ProcessEngineAttached()
         {
             yield break;
         }
 
-        public IEnumerable<Session> ControlSystemDetached()
+        protected override IEnumerable<Session> ProcessEngineDetached()
+        {
+            yield break;
+        }
+
+        public override void StartActivity(ActivityStart activityStart)
         {
             throw new NotImplementedException();
         }
 
-        public void ProcessAborting(IActivity affectedActivity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SequenceCompleted(SequenceCompleted completed)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void StartActivity(ActivityStart activityStart)
+        public override void SequenceCompleted(SequenceCompleted completed)
         {
             throw new NotImplementedException();
         }

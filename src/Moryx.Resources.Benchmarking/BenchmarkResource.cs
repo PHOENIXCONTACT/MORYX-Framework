@@ -18,7 +18,7 @@ namespace Moryx.Resources.Benchmarking
 {
     [ResourceRegistration]
     [DisplayName("Benchmark Resource")]
-    public class BenchmarkResource : Resource, IBenchmarkResource, INotificationSender
+    public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
 
     {
         #region Config
@@ -76,19 +76,18 @@ namespace Moryx.Resources.Benchmarking
         }
 
         /// <inheritdoc />
-        public IEnumerable<Session> ControlSystemAttached()
+        protected override IEnumerable<Session> ProcessEngineAttached()
         {
             yield return Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Push);
         }
 
         /// <inheritdoc />
-        public IEnumerable<Session> ControlSystemDetached()
+        protected override IEnumerable<Session> ProcessEngineDetached()
         {
             yield break;
         }
 
-        /// <inheritdoc />
-        public void StartActivity(ActivityStart activityStart)
+        public override void StartActivity(ActivityStart activityStart)
         {
             _rtwWait.Stop();
             _runtimeWait.Start();
@@ -111,13 +110,10 @@ namespace Moryx.Resources.Benchmarking
         }
 
         /// <inheritdoc />
-        public void ProcessAborting(IActivity affectedActivity)
+        public override void ProcessAborting(IActivity affectedActivity)
         {
             VisualInstructor.Clear(_instructionId);
         }
-
-        /// <inheritdoc />
-        public event EventHandler<ActivityCompleted> ActivityCompleted;
 
         private void CompleteActivity(int result, ActivityStart activityStart)
         {
@@ -136,18 +132,18 @@ namespace Moryx.Resources.Benchmarking
             _acWait.Start();
 
             // ReSharper disable once PossibleNullReferenceException
-            ActivityCompleted(this, resultMsg);
+            PublishActivityCompleted(resultMsg);
         }
 
         /// <inheritdoc />
-        public void SequenceCompleted(SequenceCompleted completed)
+        public override void SequenceCompleted(SequenceCompleted completed)
         {
             _acWait.Stop();
             _activityCount++;
 
             _rtwWait.Start();
             var rtw = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Push);
-            ReadyToWork?.Invoke(this, rtw);
+            PublishReadyToWork(rtw);
         }
 
         /// <inheritdoc />
@@ -223,14 +219,6 @@ namespace Moryx.Resources.Benchmarking
         }
 
         string INotificationSender.Identifier => Id.ToString();
-
-#pragma warning disable 67
-        /// <inheritdoc />
-        public event EventHandler<NotReadyToWork> NotReadyToWork;
-#pragma warning restore 67
-
-        /// <inheritdoc />
-        public event EventHandler<ReadyToWork> ReadyToWork;
     }
 }
 

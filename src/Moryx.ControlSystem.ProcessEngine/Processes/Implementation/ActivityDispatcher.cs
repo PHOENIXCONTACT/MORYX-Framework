@@ -91,7 +91,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 var cell = _cells[index];
                 try
                 {
-                    sessions[index] = cell.ControlSystemAttached()
+                    sessions[index] = cell.ProcessEngineAttached(new ProcessEngineContext())
                         .Select(session => new ResourceAndSession(cell, session))
                         .ToArray();
                 }
@@ -116,7 +116,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             {
                 try
                 {
-                    foreach (var session in cell.ControlSystemDetached().OfType<ActivityCompleted>())
+                    foreach (var session in cell.ProcessEngineDetached().OfType<ActivityCompleted>())
                         HandleActivityCompleted(cell, session);
                 }
                 catch (Exception e)
@@ -206,7 +206,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             cell.ActivityCompleted += OnCellActivityCompleted;
 
             // Attach the new cell
-            var sessions = cell.ControlSystemAttached()
+            var sessions = cell.ProcessEngineAttached(new ProcessEngineContext())
                 .Select(s => new ResourceAndSession(cell, s));
             HandleAttachedCells(sessions);
         }

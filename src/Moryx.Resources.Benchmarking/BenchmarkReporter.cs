@@ -64,13 +64,13 @@ namespace Moryx.Resources.Benchmarking
         }
 
         /// <inheritdoc />
-        public override IEnumerable<Session> ControlSystemAttached()
+        protected override IEnumerable<Session> ProcessEngineAttached()
         {
             yield return Session.StartSession(ActivityClassification.Setup, ReadyToWorkType.Push);
         }
 
         /// <inheritdoc />
-        public override IEnumerable<Session> ControlSystemDetached()
+        protected override IEnumerable<Session> ProcessEngineDetached()
         {
             yield break;
         }
