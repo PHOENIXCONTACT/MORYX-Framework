@@ -55,7 +55,7 @@
     <PackageVersion Include="Castle.Windsor" Version="6.0.0" />
 
     <!-- Dependencies for drivers and adapters -->
-    <PackageVersion Include="System.IO.Ports" Version="8.0.0" />
+    <PackageVersion Include="System.IO.Ports" Version="10.0.0" />
     <PackageVersion Include="MQTTnet" Version="4.3.1.873" />
     <PackageVersion Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.376.213" />
 
