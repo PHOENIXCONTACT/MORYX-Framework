@@ -16,13 +16,13 @@ namespace Moryx.Model.Sqlite
     public sealed class SqliteModelConfigurator : ModelConfiguratorBase<SqliteDatabaseConfig>
     {
         /// <inheritdoc />
-        protected override DbConnection CreateConnection(IDatabaseConfig config)
+        protected override DbConnection CreateConnection(DatabaseConfig config)
         {
             return CreateConnection(config, true);
         }
 
         /// <inheritdoc />
-        protected override DbConnection CreateConnection(IDatabaseConfig config, bool includeModel)
+        protected override DbConnection CreateConnection(DatabaseConfig config, bool includeModel)
         {
             return new SqliteConnection(BuildConnectionString(config));
         }
@@ -34,7 +34,7 @@ namespace Moryx.Model.Sqlite
         }
 
         /// <inheritdoc />
-        public override Task DeleteDatabase(IDatabaseConfig config)
+        public override Task DeleteDatabase(DatabaseConfig config)
         {
             SqliteConnection.ClearAllPools();
 
@@ -46,7 +46,7 @@ namespace Moryx.Model.Sqlite
         }
 
         /// <inheritdoc />
-        public override DbContextOptions BuildDbContextOptions(IDatabaseConfig config)
+        public override DbContextOptions BuildDbContextOptions(DatabaseConfig config)
         {
             var builder = new DbContextOptionsBuilder();
             builder.UseSqlite(BuildConnectionString(config));
@@ -54,13 +54,13 @@ namespace Moryx.Model.Sqlite
             return builder.Options;
         }
 
-        private static string BuildConnectionString(IDatabaseConfig config)
+        private static string BuildConnectionString(DatabaseConfig config)
         {
             return config.ConnectionSettings.ConnectionString;
         }
 
         /// <inheritdoc />
-        public override Task<TestConnectionResult> TestConnection(IDatabaseConfig config)
+        public override Task<TestConnectionResult> TestConnection(DatabaseConfig config)
         {
             var dbFilePath = GetFilePath(config);
             var directory = Path.GetDirectoryName(dbFilePath);
@@ -78,14 +78,14 @@ namespace Moryx.Model.Sqlite
             return Task.FromResult(TestConnectionResult.ConnectionOkDbDoesNotExist);
         }
 
-        private static string GetFilePath(IDatabaseConfig config)
+        private static string GetFilePath(DatabaseConfig config)
         {
             var builder = new SqliteConnectionStringBuilder(config.ConnectionSettings.ConnectionString);
             return builder.DataSource;
         }
 
         /// <inheritdoc />
-        public override Task<bool> CreateDatabase(IDatabaseConfig config)
+        public override Task<bool> CreateDatabase(DatabaseConfig config)
         {
             if (!CheckDatabaseConfig(config))
             {
@@ -104,7 +104,7 @@ namespace Moryx.Model.Sqlite
         }
 
         /// <inheritdoc />
-        protected override DbContext CreateMigrationContext(IDatabaseConfig config)
+        protected override DbContext CreateMigrationContext(DatabaseConfig config)
         {
             var migrationAssemblyType = FindMigrationAssemblyType(typeof(SqliteDbContextAttribute));
 

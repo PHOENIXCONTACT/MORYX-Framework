@@ -35,7 +35,7 @@ public class SubConfig
 }
 ````
 
-The basic structure of the configuration object including the [IConfig](/src/Moryx/Configuration/IConfig.cs) implementation. The dummy properties and subclass can be renamed or deleted once you understand the structure of a configuration.
+The basic structure of the configuration object including the [ConfigBase](/src/Moryx/Configuration/ConfigBase.cs) implementation. The dummy properties and subclass can be renamed or deleted once you understand the structure of a configuration.
 
 ## Conventions
 

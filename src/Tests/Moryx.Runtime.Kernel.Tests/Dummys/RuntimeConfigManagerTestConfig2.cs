@@ -8,27 +8,8 @@ namespace Moryx.Runtime.Kernel.Tests.Dummys
     /// <summary>
     /// Test subconfig
     /// </summary>
-    public class RuntimeConfigManagerTestConfig2 : IConfig
+    public class RuntimeConfigManagerTestConfig2 : ConfigBase
     {
-        /// <summary>
-        /// Current state of the config object.
-        /// </summary>
-        public ConfigState ConfigState
-        {
-            get; set;
-        }
 
-        /// <summary>
-        /// Exception message if load failed.
-        /// </summary>
-        public string LoadError
-        {
-            get; set;
-        }
-
-        public void Initialize()
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

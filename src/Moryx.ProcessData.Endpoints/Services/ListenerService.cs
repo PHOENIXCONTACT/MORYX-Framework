@@ -58,12 +58,12 @@ namespace Moryx.ProcessData.Endpoints.Services
         public IServerModule GetModule(string moduleName)
             => _moduleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
 
-        private IConfig GetConfig(IModule module, bool copy)
+        private ConfigBase GetConfig(IModule module, bool copy)
         {
             var moduleType = module.GetType();
             var configType = moduleType.BaseType != null && moduleType.BaseType.IsGenericType
                 ? moduleType.BaseType.GetGenericArguments()[0]
-                : moduleType.Assembly.GetTypes().FirstOrDefault(type => typeof(IConfig).IsAssignableFrom(type));
+                : moduleType.Assembly.GetTypes().FirstOrDefault(type => typeof(ConfigBase).IsAssignableFrom(type));
 
             return _configManager.GetConfiguration(configType, copy);
         }
@@ -78,7 +78,7 @@ namespace Moryx.ProcessData.Endpoints.Services
         private IServerModule ProcessDataMonitor()
             => GetModule("ProcessDataMonitor");
 
-        private static List<ProcessDataListenerConfig> FindListeners(IConfig config)
+        private static List<ProcessDataListenerConfig> FindListeners(ConfigBase config)
             => config.GetType().GetProperties()
                 .Where(p => p.PropertyType == typeof(List<ProcessDataListenerConfig>))
                 .SelectMany(info => (List<ProcessDataListenerConfig>)info.GetValue(config, null))

@@ -16,13 +16,13 @@ namespace Moryx.Model.PostgreSQL
     public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase<NpgsqlDatabaseConfig>
     {
         /// <inheritdoc />
-        protected override DbConnection CreateConnection(IDatabaseConfig config)
+        protected override DbConnection CreateConnection(DatabaseConfig config)
         {
             return CreateConnection(config, true);
         }
 
         /// <inheritdoc />
-        protected override DbConnection CreateConnection(IDatabaseConfig config, bool includeModel)
+        protected override DbConnection CreateConnection(DatabaseConfig config, bool includeModel)
         {
             return new NpgsqlConnection(BuildConnectionString(config, includeModel));
         }
@@ -34,7 +34,7 @@ namespace Moryx.Model.PostgreSQL
         }
 
         /// <inheritdoc />
-        public override async Task DeleteDatabase(IDatabaseConfig config)
+        public override async Task DeleteDatabase(DatabaseConfig config)
         {
             var settings = (NpgsqlDatabaseConnectionSettings)config.ConnectionSettings;
 
@@ -52,7 +52,7 @@ namespace Moryx.Model.PostgreSQL
             await connection.CloseAsync();
         }
 
-        private static NpgsqlConnectionStringBuilder CreateConnectionStringBuilder(IDatabaseConfig config, bool includeModel = true)
+        private static NpgsqlConnectionStringBuilder CreateConnectionStringBuilder(DatabaseConfig config, bool includeModel = true)
         {
             var builder = new NpgsqlConnectionStringBuilder(config.ConnectionSettings.ConnectionString);
 
@@ -71,7 +71,7 @@ namespace Moryx.Model.PostgreSQL
         /// </summary>
         /// <param name="config"></param>
         /// <returns>Modified copy of given config</returns>
-        private static IDatabaseConfig CreateTestDatabaseConfig(IDatabaseConfig config)
+        private static DatabaseConfig CreateTestDatabaseConfig(DatabaseConfig config)
         {
             var testConfig = new DatabaseConfig<DatabaseConnectionSettings>
             {
@@ -92,7 +92,7 @@ namespace Moryx.Model.PostgreSQL
         }
 
         /// <inheritdoc/>
-        public override Task<TestConnectionResult> TestConnection(IDatabaseConfig config)
+        public override Task<TestConnectionResult> TestConnection(DatabaseConfig config)
         {
             // Using the "postgres" database to check the server's availability.
             // might lead to edge-case when "postgres" database has been deleted.
@@ -100,7 +100,7 @@ namespace Moryx.Model.PostgreSQL
         }
 
         /// <inheritdoc />
-        public override DbContextOptions BuildDbContextOptions(IDatabaseConfig config)
+        public override DbContextOptions BuildDbContextOptions(DatabaseConfig config)
         {
             var builder = new DbContextOptionsBuilder();
             builder.UseNpgsql(BuildConnectionString(config, true));
@@ -108,7 +108,7 @@ namespace Moryx.Model.PostgreSQL
             return builder.Options;
         }
 
-        private static string BuildConnectionString(IDatabaseConfig config, bool includeModel)
+        private static string BuildConnectionString(DatabaseConfig config, bool includeModel)
         {
             var builder = CreateConnectionStringBuilder(config, includeModel);
             builder.PersistSecurityInfo = true;
@@ -117,7 +117,7 @@ namespace Moryx.Model.PostgreSQL
         }
 
         /// <inheritdoc />
-        protected override DbContext CreateMigrationContext(IDatabaseConfig config)
+        protected override DbContext CreateMigrationContext(DatabaseConfig config)
         {
             var migrationAssemblyType = FindMigrationAssemblyType(typeof(NpgsqlDbContextAttribute));
 

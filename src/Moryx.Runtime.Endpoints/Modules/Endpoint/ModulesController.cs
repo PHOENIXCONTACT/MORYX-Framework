@@ -280,12 +280,12 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         /// Get the config type
         /// </summary>
         /// <returns></returns>
-        private IConfig GetConfig(IModule module, bool copy)
+        private ConfigBase GetConfig(IModule module, bool copy)
         {
             var moduleType = module.GetType();
             var configType = moduleType.BaseType != null && moduleType.BaseType.IsGenericType
                 ? moduleType.BaseType.GetGenericArguments()[0]
-                : moduleType.Assembly.GetTypes().FirstOrDefault(type => typeof(IConfig).IsAssignableFrom(type));
+                : moduleType.Assembly.GetTypes().FirstOrDefault(type => typeof(ConfigBase).IsAssignableFrom(type));
 
             return _configManager.GetConfiguration(configType, copy);
         }

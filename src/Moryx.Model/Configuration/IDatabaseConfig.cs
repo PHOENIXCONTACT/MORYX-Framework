@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Runtime.Serialization;
 using Moryx.Configuration;
 
 namespace Moryx.Model.Configuration
@@ -8,21 +9,24 @@ namespace Moryx.Model.Configuration
     /// <summary>
     /// Interface for database configuration
     /// </summary>
-    public interface IDatabaseConfig : IConfig
+    [DataContract]
+    public abstract class DatabaseConfig : ConfigBase
     {
         /// <summary>
         /// Connection string
         /// </summary>
-        DatabaseConnectionSettings ConnectionSettings { get; set; }
+        [DataMember]
+        public DatabaseConnectionSettings ConnectionSettings { get; set; }
 
         /// <summary>
         /// Database configurator typename
         /// </summary>
-        string ConfiguratorTypename { get; set; }
+        [DataMember]
+        public string ConfiguratorTypename { get; set; }
 
         /// <summary>
         /// Checks if the configuration is valid
         /// </summary>
-        public bool IsValid();
+        public abstract bool IsValid();
     }
 }

@@ -12,10 +12,10 @@ namespace Moryx.Model.Configuration
     public sealed class NullModelConfigurator : IModelConfigurator
     {
         /// <inheritdoc />
-        public IDatabaseConfig Config => new DatabaseConfig<DatabaseConnectionSettings>();
+        public DatabaseConfig Config => new DatabaseConfig<DatabaseConnectionSettings>();
 
         /// <inheritdoc />
-        public void Initialize(Type contextType, IDatabaseConfig config, ILogger logger)
+        public void Initialize(Type contextType, DatabaseConfig config, ILogger logger)
         {
         }
 
@@ -26,43 +26,43 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public DbContext CreateContext(IDatabaseConfig config)
+        public DbContext CreateContext(DatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task<TestConnectionResult> TestConnection(IDatabaseConfig config)
+        public Task<TestConnectionResult> TestConnection(DatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task<bool> CreateDatabase(IDatabaseConfig config)
+        public Task<bool> CreateDatabase(DatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<string>> AvailableMigrations(IDatabaseConfig config)
+        public Task<IReadOnlyList<string>> AvailableMigrations(DatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<string>> AppliedMigrations(IDatabaseConfig config)
+        public Task<IReadOnlyList<string>> AppliedMigrations(DatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task<DatabaseMigrationSummary> MigrateDatabase(IDatabaseConfig config)
+        public Task<DatabaseMigrationSummary> MigrateDatabase(DatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task DeleteDatabase(IDatabaseConfig config)
+        public Task DeleteDatabase(DatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }

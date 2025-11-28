@@ -14,7 +14,7 @@ namespace Moryx.Configuration
         /// <typeparam name="T">Type of config object</typeparam>
         /// <returns>Configuration object</returns>
         public static T GetConfiguration<T>(this IConfigManager configManager)
-            where T : class, IConfig, new()
+            where T : ConfigBase, new()
         {
             var configType = typeof(T);
             return (T)configManager.GetConfiguration(configType, configType.FullName, false);
@@ -28,7 +28,7 @@ namespace Moryx.Configuration
         /// <param name="name">Name of the config and target file</param>
         /// <returns>Configuration object</returns>
         public static T GetConfiguration<T>(this IConfigManager configManager, string name)
-            where T : class, IConfig, new()
+            where T : ConfigBase, new()
         {
             var configType = typeof(T);
             return (T)configManager.GetConfiguration(configType, name, false);
@@ -42,7 +42,7 @@ namespace Moryx.Configuration
         /// <param name="getCopy"><value>True</value>Create new instance. <value>False</value>Get from cache if possible</param>
         /// <returns>Configuration object</returns>
         public static T GetConfiguration<T>(this IConfigManager configManager, bool getCopy)
-            where T : class, IConfig, new()
+            where T : ConfigBase, new()
         {
             var configType = typeof(T);
             return (T)configManager.GetConfiguration(configType, configType.FullName, getCopy);
@@ -57,7 +57,7 @@ namespace Moryx.Configuration
         /// <param name="name">Will lookup the config by the given name</param>
         /// <returns>Configuration object</returns>
         public static T GetConfiguration<T>(this IConfigManager configManager, bool getCopy, string name)
-            where T : class, IConfig, new()
+            where T : ConfigBase, new()
         {
             return (T)configManager.GetConfiguration(typeof(T), name, getCopy);
         }
@@ -69,7 +69,7 @@ namespace Moryx.Configuration
         /// <param name="configType">Type of config object</param>
         /// <param name="getCopy"><value>True</value>Create new instance. <value>False</value>Get from cache if possible</param>
         /// <returns>Configuration object</returns>
-        public static IConfig GetConfiguration(this IConfigManager configManager, Type configType, bool getCopy)
+        public static ConfigBase GetConfiguration(this IConfigManager configManager, Type configType, bool getCopy)
         {
             return configManager.GetConfiguration(configType, configType.FullName, getCopy);
         }
@@ -79,7 +79,7 @@ namespace Moryx.Configuration
         /// </summary>
         /// <param name="configManager">Config manager instance</param>
         /// <param name="configuration">Object to save</param>
-        public static void SaveConfiguration(this IConfigManager configManager, IConfig configuration)
+        public static void SaveConfiguration(this IConfigManager configManager, ConfigBase configuration)
         {
             configManager.SaveConfiguration(configuration, configuration.GetType().FullName, false);
         }
@@ -90,7 +90,7 @@ namespace Moryx.Configuration
         /// <param name="configManager">Config manager instance</param>
         /// <param name="configuration">Object to save</param>
         /// <param name="liveUpdate">Flag if config should be updated on the currently used object reference</param>
-        public static void SaveConfiguration(this IConfigManager configManager, IConfig configuration, bool liveUpdate)
+        public static void SaveConfiguration(this IConfigManager configManager, ConfigBase configuration, bool liveUpdate)
         {
             configManager.SaveConfiguration(configuration, configuration.GetType().FullName, liveUpdate);
         }
@@ -101,7 +101,7 @@ namespace Moryx.Configuration
         /// <param name="configManager">Config manager instance</param>
         /// <param name="configuration">Object to save</param>
         /// <param name="name">Will save the configuration under the given name</param>
-        public static void SaveConfiguration(this IConfigManager configManager, IConfig configuration, string name)
+        public static void SaveConfiguration(this IConfigManager configManager, ConfigBase configuration, string name)
         {
             configManager.SaveConfiguration(configuration, name, false);
         }

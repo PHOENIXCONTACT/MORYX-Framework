@@ -37,7 +37,7 @@ namespace Moryx.Model.InMemory
             _internalFactory.Create();
 
         /// <inheritdoc />
-        public IUnitOfWork<TContext> Create(IDatabaseConfig config) =>
+        public IUnitOfWork<TContext> Create(DatabaseConfig config) =>
             _internalFactory.Create(config);
     }
 }

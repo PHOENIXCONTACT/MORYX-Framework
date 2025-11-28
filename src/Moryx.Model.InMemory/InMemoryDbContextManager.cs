@@ -56,7 +56,7 @@ namespace Moryx.Model.InMemory
             Create<TContext>(null);
 
         /// <inheritdoc />
-        public TContext Create<TContext>(IDatabaseConfig config) where TContext : DbContext
+        public TContext Create<TContext>(DatabaseConfig config) where TContext : DbContext
         {
             var dbName = string.IsNullOrEmpty(_instanceId)
                 ? Guid.NewGuid().ToString()
@@ -72,7 +72,7 @@ namespace Moryx.Model.InMemory
         }
 
         /// <inheritdoc />
-        public void UpdateConfig(Type dbContextType, Type configuratorType, IDatabaseConfig databaseConfig)
+        public void UpdateConfig(Type dbContextType, Type configuratorType, DatabaseConfig databaseConfig)
         {
             throw new NotImplementedException();
         }

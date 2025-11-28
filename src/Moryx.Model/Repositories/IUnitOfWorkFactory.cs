@@ -20,6 +20,6 @@ namespace Moryx.Model.Repositories
         /// <summary>
         /// Create unit of work using standard mode and alternative config
         /// </summary>
-        IUnitOfWork<TContext> Create(IDatabaseConfig config);
+        IUnitOfWork<TContext> Create(DatabaseConfig config);
     }
 }

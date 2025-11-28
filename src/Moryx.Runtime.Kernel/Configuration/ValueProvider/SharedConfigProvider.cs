@@ -19,7 +19,7 @@ namespace Moryx.Runtime.Kernel
         public ValueProviderResult Handle(object parent, PropertyInfo property)
         {
             var sharedAtt = property.GetCustomAttribute<SharedConfigAttribute>();
-            if (sharedAtt == null || !typeof(IConfig).IsAssignableFrom(property.PropertyType))
+            if (sharedAtt == null || !typeof(ConfigBase).IsAssignableFrom(property.PropertyType))
                 return ValueProviderResult.Skipped;
 
             var sharedConf = _configManager.GetConfiguration(property.PropertyType, sharedAtt.UseCopy);
@@ -27,14 +27,14 @@ namespace Moryx.Runtime.Kernel
             return ValueProviderResult.Handled;
         }
 
-        internal IEnumerable<IConfig> IncludedSharedConfigs(object parent)
+        internal IEnumerable<ConfigBase> IncludedSharedConfigs(object parent)
         {
-            var sharedConfigs = new List<IConfig>();
+            var sharedConfigs = new List<ConfigBase>();
             ScanType(parent, sharedConfigs);
             return sharedConfigs;
         }
 
-        private void ScanType(object instance, List<IConfig> foundShared)
+        private void ScanType(object instance, List<ConfigBase> foundShared)
         {
             foreach (var property in instance.GetType().GetProperties())
             {
@@ -42,7 +42,7 @@ namespace Moryx.Runtime.Kernel
                 if (sharedAtt == null || sharedAtt.UseCopy)
                     continue;
 
-                var config = (IConfig)property.GetValue(instance);
+                var config = (ConfigBase)property.GetValue(instance);
                 if (!foundShared.Contains(config))
                     foundShared.Add(config);
             }

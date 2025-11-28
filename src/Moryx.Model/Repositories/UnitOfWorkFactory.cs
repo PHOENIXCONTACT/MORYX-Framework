@@ -46,7 +46,7 @@ namespace Moryx.Model.Repositories
         }
 
         /// <inheritdoc />
-        public IUnitOfWork<TContext> Create(IDatabaseConfig config)
+        public IUnitOfWork<TContext> Create(DatabaseConfig config)
         {
             var context = _manager.Create<TContext>(config);
             return new UnitOfWork<TContext>(context, Repositories);

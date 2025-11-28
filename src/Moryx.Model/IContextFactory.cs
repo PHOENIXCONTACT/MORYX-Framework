@@ -20,6 +20,6 @@ namespace Moryx.Model
         /// <summary>
         /// Create context using standard mode and alternative config
         /// </summary>
-        TContext Create(IDatabaseConfig config);
+        TContext Create(DatabaseConfig config);
     }
 }

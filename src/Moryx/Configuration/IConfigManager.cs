@@ -16,7 +16,7 @@ namespace Moryx.Configuration
         /// <param name="getCopy">Return currently active config or a temporary copy</param>
         /// <param name="name">Name of the config</param>
         /// <returns>Config object</returns>
-        IConfig GetConfiguration(Type confType, string name, bool getCopy);
+        ConfigBase GetConfiguration(Type confType, string name, bool getCopy);
 
         /// <summary>
         /// Save configuration using its type
@@ -24,7 +24,7 @@ namespace Moryx.Configuration
         /// <param name="configuration">Configuration object</param>
         /// <param name="name">Name of the configuration</param>
         /// <param name="liveUpdate">Update currently active config live</param>
-        void SaveConfiguration(IConfig configuration, string name, bool liveUpdate);
+        void SaveConfiguration(ConfigBase configuration, string name, bool liveUpdate);
 
         /// <summary>
         /// Save any shared configs included in this partial config

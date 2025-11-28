@@ -31,18 +31,8 @@ namespace Moryx.Runtime.Kernel.Tests.Dummys
     /// Test configuration
     /// </summary>
     [DataContract]
-    public class RuntimeConfigManagerTestConfig1 : IConfig, IUpdatableConfig
+    public class RuntimeConfigManagerTestConfig1 : ConfigBase, IUpdatableConfig
     {
-        /// <summary>
-        /// Current state of the config object. 
-        /// </summary>
-        public ConfigState ConfigState { get; set; }
-
-        /// <summary>
-        /// Exception message if load failed. 
-        /// </summary>
-        public string LoadError { get; set; }
-
         /// <summary>
         /// The boolean field default
         /// </summary>
@@ -142,11 +132,6 @@ namespace Moryx.Runtime.Kernel.Tests.Dummys
         {
             if (ConfigChanged != null)
                 ConfigChanged(this, new ConfigChangedEventArgs(modifiedProperties));
-        }
-
-        public void Initialize()
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>

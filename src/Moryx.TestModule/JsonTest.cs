@@ -178,18 +178,18 @@ namespace Moryx.TestModule
 
         private long WriteLoop(IUnitOfWork uow, ModuleConfig config, JsonSerializerSettings settings)
         {
-            var json = JsonConvert.SerializeObject(config, typeof(IConfig), settings);
+            var json = JsonConvert.SerializeObject(config, typeof(ConfigBase), settings);
             var entity = uow.GetRepository<IJsonEntityRepository>().Create(json);
             uow.SaveChanges();
             return entity.Id;
         }
 
-        private IConfig ReadLoop(IUnitOfWork uow, long id, JsonSerializerSettings settings)
+        private ConfigBase ReadLoop(IUnitOfWork uow, long id, JsonSerializerSettings settings)
         {
             var json = (from e in uow.GetRepository<IJsonEntityRepository>().Linq
                         where e.Id == id
                         select e.JsonData).FirstOrDefault();
-            return JsonConvert.DeserializeObject<IConfig>(json, settings);
+            return JsonConvert.DeserializeObject<ConfigBase>(json, settings);
         }
     }
 }
