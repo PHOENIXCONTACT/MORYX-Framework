@@ -84,10 +84,26 @@ public class OpcUaNode : IMessageChannel
 
     public static string CreateExpandedNodeId(string nodeId)
     {
-        var result = Regex.Replace(nodeId, ";ns=\\d+", "");
-        result = result.Trim();
+        var result = nodeId.Trim();
+        result = OpcUaNodeHelpers.StringWithUriAndNamespaceIndex().Replace(result, "");
+        result = RemoveNamespaceIndexZero(result);
         return result;
     }
+
+    private static string RemoveNamespaceIndexZero(string @string)
+    {
+        if (@string.StartsWith("ns=0;"))
+        {
+            return @string.Substring(5);
+        }
+        return @string;
+    }
+
+    public static string CreateExpandedNodeId(NodeId nodeId)
+    {
+        return CreateExpandedNodeId(nodeId.ToString());
+    }
+
     internal MonitoredItem MonitoredItem { get; set; }
 
     #region Constructors
@@ -153,5 +169,4 @@ public class OpcUaNode : IMessageChannel
     {
         _received?.Invoke(this, payload);
     }
-
 }
