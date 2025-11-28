@@ -3,4 +3,4 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("Moryx.Resources.Mqtt.Tests")]
+[assembly: InternalsVisibleTo("Moryx.Drivers.Mqtt.Tests")]

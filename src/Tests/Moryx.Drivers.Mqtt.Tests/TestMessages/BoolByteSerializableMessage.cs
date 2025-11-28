@@ -2,13 +2,13 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.Communication;
 
-namespace Moryx.Resources.Mqtt.Tests.TestMessages
+namespace Moryx.Drivers.Mqtt.Tests.TestMessages
 {
-    public class BoolMqttMessage : IIdentifierMessage, IByteSerializable
+    public class BoolByteSerializableMessage : IByteSerializable
     {
+        public bool Message;
         public byte[] ToBytes()
         {
             return [Convert.ToByte(Message)];
@@ -18,9 +18,7 @@ namespace Moryx.Resources.Mqtt.Tests.TestMessages
         {
             Message = BitConverter.ToBoolean(bytes, 0);
         }
-
-        public string Identifier { get; set; }
-        public bool Message { get; set; }
     }
+
 }
 

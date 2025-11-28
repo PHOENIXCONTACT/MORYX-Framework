@@ -5,15 +5,13 @@ using System;
 using System.Buffers;
 using System.Linq.Expressions;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.TestTools;
-using Moryx.Drivers.Mqtt;
 using Moryx.Drivers.Mqtt.MqttTopics;
+using Moryx.Drivers.Mqtt.Tests.TestMessages;
 using Moryx.Logging;
 using Moryx.Modules;
-using Moryx.Resources.Mqtt.Tests.TestMessages;
 using Moryx.Tools;
 using MQTTnet;
 using MQTTnet.Formatter;
@@ -21,7 +19,7 @@ using MQTTnet.Packets;
 using MQTTnet.Protocol;
 using NUnit.Framework;
 
-namespace Moryx.Resources.Mqtt.Tests
+namespace Moryx.Drivers.Mqtt.Tests
 {
     [TestFixture(MqttProtocolVersion.V310)]
     [TestFixture(MqttProtocolVersion.V311)]

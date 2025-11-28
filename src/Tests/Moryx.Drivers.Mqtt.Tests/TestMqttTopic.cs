@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Moryx.Drivers.Mqtt.MqttTopics;
 using NUnit.Framework;
 
-namespace Moryx.Resources.Mqtt.Tests
+namespace Moryx.Drivers.Mqtt.Tests
 {
     [TestFixture]
     public class TestMqttTopic
