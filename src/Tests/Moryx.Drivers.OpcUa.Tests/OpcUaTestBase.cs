@@ -16,12 +16,13 @@ public class OpcUaTestBase
     private const ushort IndexNamespace1 = 1;
     private const ushort IndexNamespace2 = 2;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     protected Mock<ISession> _sessionMock;
     protected Dictionary<NodeId, ReferenceDescription> _rootNodes;
-    protected Dictionary<NodeId, ReferenceDescription> _node1Nodes;
     protected ReferenceDescription _root;
     protected NamespaceTable _namespaceTable = CreateNamespaceTable();
     protected OpcUaDriver _driver;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
     protected static NamespaceTable CreateNamespaceTable()
     {
@@ -57,22 +58,12 @@ public class OpcUaTestBase
             BrowseName = "browsename3"
         };
 
-        var root = new ReferenceDescription()
-        {
-            NodeId = ObjectIds.RootFolder,
-            DisplayName = "root",
-            NodeClass = NodeClass.Object,
-            BrowseName = "root"
-        };
         _rootNodes = new Dictionary<NodeId, ReferenceDescription>
         {
             { ExpandedNodeId.ToNodeId(node1.NodeId, namespaceTable), node1 },
             { ExpandedNodeId.ToNodeId(node3.NodeId, namespaceTable), node3 }
         };
-        _node1Nodes = new Dictionary<NodeId, ReferenceDescription>
-        {
-            { ExpandedNodeId.ToNodeId(node2.NodeId, namespaceTable), node2 }
-        };
+
         return [node1, node2, node3];
     }
 
@@ -84,7 +75,7 @@ public class OpcUaTestBase
         var ns1Level1Refs = new ReferenceDescriptionCollection { nextRefs[1] };
 
         _sessionMock = new Mock<ISession>();
-        byte[] byteArray = null;
+        byte[]? byteArray = null;
         _sessionMock.Setup(s => s.NamespaceUris).Returns(_namespaceTable);
         _sessionMock.Setup(s => s.AddSubscription(It.IsAny<Subscription>())).Returns(true);
         _sessionMock.Setup(s => s.Browse(null, null, ObjectIds.RootFolder, It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
@@ -99,7 +90,7 @@ public class OpcUaTestBase
         _sessionMock.Setup(s => s.AddSubscription(It.IsAny<Subscription>())).Callback((Subscription sub) =>
         {
             var prop = sub.GetType().GetProperties().FirstOrDefault(propInfo => propInfo.Name.Equals(nameof(sub.Session)));
-            prop.SetValue(sub, _sessionMock.Object);
+            prop?.SetValue(sub, _sessionMock.Object);
         });
 
         uint subscriptionId = 12;

@@ -14,13 +14,17 @@ namespace Moryx.Drivers.OpcUa.Tests;
 [TestFixture]
 public class HandleContinuationPoint : OpcUaTestBase
 {
-    private ReferenceDescriptionCollection _references;
+    private readonly ReferenceDescriptionCollection _references;
+
+    public HandleContinuationPoint()
+    {
+        _references = CreateNodes(_namespaceTable);
+    }
 
     [SetUp]
     public void SetUp()
     {
         ReflectionTool.TestMode = true;
-        _references = CreateNodes(_namespaceTable);
 
         _sessionMock = new Mock<ISession>();
         var byteArray = Array.Empty<byte>();
@@ -30,7 +34,7 @@ public class HandleContinuationPoint : OpcUaTestBase
         _sessionMock.Setup(s => s.AddSubscription(It.IsAny<Subscription>())).Callback((Subscription sub) =>
         {
             var prop = sub.GetType().GetProperties().FirstOrDefault(propInfo => propInfo.Name.Equals(nameof(sub.Session)));
-            prop.SetValue(sub, _sessionMock.Object);
+            prop?.SetValue(sub, _sessionMock.Object);
         });
 
         uint subscriptionId = 12;
@@ -78,7 +82,7 @@ public class HandleContinuationPoint : OpcUaTestBase
         _sessionMock.Setup(s => s.Browse(null, null, ObjectIds.RootFolder, It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
            true, It.IsAny<uint>(), out byteArray, out nextRefs1));
 
-        byte[] furtherContinuationPoint = null;
+        byte[]? furtherContinuationPoint = null;
         _sessionMock.Setup(s => s.BrowseNext(null, false, byteArray, out furtherContinuationPoint, out nextRefs2));
 
         var wait = new AutoResetEvent(false);

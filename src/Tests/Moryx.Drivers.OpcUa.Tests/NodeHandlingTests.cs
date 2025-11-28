@@ -75,8 +75,8 @@ public class NodeHandlingTests : OpcUaTestBase
             if (e is RunningState)
             {
                 //Assert II
-                Assert.That(node.DisplayName, Is.EqualTo(expectedNode.Value.DisplayName.Text));
-                Assert.That(node.BrowseName.ToString(), Is.EqualTo(expectedNode.Value.BrowseName.ToString()));
+                Assert.That(node?.DisplayName, Is.EqualTo(expectedNode.Value.DisplayName.Text));
+                Assert.That(node?.BrowseName.ToString(), Is.EqualTo(expectedNode.Value.BrowseName.ToString()));
                 wait.Set();
             }
         };
