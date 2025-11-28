@@ -18,7 +18,7 @@
     <PackageVersion Include="NUnit" Version="4.4.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="5.2.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.11.2" />
-    <PackageVersion Include="WireMock.Net" Version="1.15.0" />
+    <PackageVersion Include="WireMock.Net" Version="1.16.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
 
 	  <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
