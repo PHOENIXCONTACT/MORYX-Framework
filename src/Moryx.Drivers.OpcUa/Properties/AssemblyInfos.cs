@@ -4,3 +4,4 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Moryx.Drivers.OpcUa.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
