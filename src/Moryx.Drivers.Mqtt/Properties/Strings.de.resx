@@ -126,7 +126,7 @@
   <data name="MqttDriver_MqttVersion" xml:space="preserve">
     <value>MQTT-Version</value>
   </data>
-  <data name="MQTT_VERSION_DESCRIPTION" xml:space="preserve">
+  <data name="MqttDriver_MqttVersion_Description" xml:space="preserve">
     <value>MQTT-Versionsnummer. Falls unbekannt, wird Version 3.1.0 verwendet.</value>
   </data>
   <data name="MqttDriver_Password" xml:space="preserve">
@@ -135,16 +135,16 @@
   <data name="MqttDriver_Password_Description" xml:space="preserve">
     <value>Passwort zur Authentifizierung beim MQTT-Broker</value>
   </data>
-  <data name="PORT_DESCRIPTION" xml:space="preserve">
+  <data name="MqttDriver_Port_Description" xml:space="preserve">
     <value>Portnummer. Wenn nicht angegeben, wird der Standardport 1883 verwendet.</value>
   </data>
   <data name="MqttDriver_ReconnectWithoutCleanSession" xml:space="preserve">
     <value>Neu verbinden mit sauberer Sitzung</value>
   </data>
-  <data name="RECONNECT_CLEAN_SESSION_DESCRIPTION" xml:space="preserve">
+  <data name="MqttDriver_ReconnectWithoutCleanSession_Description" xml:space="preserve">
     <value>Festlegen, ob die Verbindung mit einer neuen, sauberen Sitzung wiederhergestellt werden soll.</value>
   </data>
-  <data name="RECONNECT_DELAY_MS_DESCRIPTION" xml:space="preserve">
+  <data name="MqttDriver_ReconnectDelayMs_Description" xml:space="preserve">
     <value>Verzögerung in Millisekunden beim Öffnen einer neuen Verbindung nach einem Verbindungsfehler.</value>
   </data>
   <data name="MqttDriver_ReconnectDelayMs" xml:space="preserve">
@@ -189,9 +189,6 @@
   <data name="MqttTopicIByteSerializable_MessageName" xml:space="preserve">
     <value>Name der Nachricht</value>
   </data>
-  <data name="TOPIC_NAME" xml:space="preserve">
-    <value>Name des Themas</value>
-  </data>
   <data name="MqttTopic_Identifier_Description" xml:space="preserve">
     <value>Identifikation für MQTT-Thema. Vermeiden Sie Leerzeichen und befolgen Sie MQTT-Best Practices</value>
   </data>
@@ -201,7 +198,7 @@
   <data name="MqttTopic_ResponseTopic" xml:space="preserve">
     <value>Thema für Antworten</value>
   </data>
-  <data name="RESPONSE_TOPIC_DESCRIPTION" xml:space="preserve">
+  <data name="MqttTopic_ResponseTopic_Description" xml:space="preserve">
     <value>Thema, auf das andere Clients antworten können</value>
   </data>
   <data name="MqttTopicPrimitive_DisplayName" xml:space="preserve">
@@ -219,29 +216,17 @@
   <data name="MqttTopicJson_Format" xml:space="preserve">
     <value>Nachrichtenformat</value>
   </data>
-  <data name="RETAIN" xml:space="preserve">
+  <data name="MqttTopic_Retain" xml:space="preserve">
     <value>Retain</value>
   </data>
-  <data name="RETAIN_DESCRIPTION" xml:space="preserve">
+  <data name="MqttTopic_Retain_Description" xml:space="preserve">
     <value>Gesendete Nachrichten werden als Retain markiert</value>
   </data>
-  <data name="MqttTopic_TopicType" xml:space="preserve">
-    <value>Topic Typ</value>
+  <data name="MqttDriver_Reconnect_Description" xml:space="preserve">
+    <value>Führt eine Neuverbindung aus</value>
   </data>
-  <data name="MqttTopic_TopicType_Description" xml:space="preserve">
-    <value>Nachrichtenfluss Richtung</value>
-  </data>
-  <data name="MqttTopicJson_EnumsAsStrings" xml:space="preserve">
-    <value>Enums als Strings</value>
-  </data>
-  <data name="MqttTopicJson_EnumsAsStrings_Description" xml:space="preserve">
-    <value>Steuert ob Enums als Strings oder als Zahlen codiert werden</value>
-  </data>
-  <data name="MqttTopicJson_Serializer" xml:space="preserve">
-    <value>Serialisierer</value>
-  </data>
-  <data name="MqttTopicJson_Serializer_Description" xml:space="preserve">
-    <value>Steuert welche Serialisierungsbibliothek genutzt werden soll</value>
+  <data name="MqttDriver_Reconnect_Name" xml:space="preserve">
+    <value>Neu verbinden</value>
   </data>
   <data name="MqttDriver_TraceMessageContent_Name" xml:space="preserve">
     <value>Nachrichteninhalt aufzeichnen</value>
@@ -249,22 +234,37 @@
   <data name="MqttDriver_TraceMessageContent_Description" xml:space="preserve">
     <value>Entscheidet ob der gesamte Nachrichten Inhalt gespeichert werden soll</value>
   </data>
-  <data name="MqttDriver_Reconnect_Name" xml:space="preserve">
-    <value>Neu verbinden</value>
-  </data>
-  <data name="MqttDriver_Reconnect_Description" xml:space="preserve">
-    <value>Führt eine Neuverbindung aus</value>
-  </data>
-  <data name="MqttDriver_LastWillTopic_Description" xml:space="preserve">
-    <value>Das Topic auf das die Last Will Nachricht veröffentlicht werden soll. Hat keinen Effekt, wenn HasLastWill nicht gesetzt ist</value>
-  </data>
-  <data name="MqttDriver_LastWillTopic" xml:space="preserve">
-    <value>Last Will Topic</value>
+  <data name="MqttDriver_HasLastWill" xml:space="preserve">
+    <value>Hat Last Will Nachricht</value>
   </data>
   <data name="MqttDriver_HasLastWill_Description" xml:space="preserve">
     <value>Entscheidet, ob eine Last Will Nachricht registriert werden soll</value>
   </data>
-  <data name="MqttDriver_HasLastWill" xml:space="preserve">
-    <value>Hat Last Will Nachricht</value>
+  <data name="MqttDriver_LastWillTopic" xml:space="preserve">
+    <value>Last Will Topic</value>
+  </data>
+  <data name="MqttDriver_LastWillTopic_Description" xml:space="preserve">
+    <value>Das Topic auf das die Last Will Nachricht veröffentlicht werden soll. Hat keinen Effekt, wenn HasLastWill nicht gesetzt ist</value>
+  </data>
+  <data name="MqttTopic_TopicType_Description" xml:space="preserve">
+    <value>Nachrichtenfluss Richtung</value>
+  </data>
+  <data name="MqttTopic_TopicType" xml:space="preserve">
+    <value>Topic Typ</value>
+  </data>
+  <data name="MqttTopicJson_Serializer" xml:space="preserve">
+    <value>Serialisierer</value>
+  </data>
+  <data name="MqttTopicJson_Serializer_Description" xml:space="preserve">
+    <value>Steuert welche Serialisierungsbibliothek genutzt werden soll</value>
+  </data>
+  <data name="MqttTopicJson_EnumsAsStrings" xml:space="preserve">
+    <value>Enums als Strings</value>
+  </data>
+  <data name="MqttTopicJson_EnumsAsStrings_Description" xml:space="preserve">
+    <value>Steuert ob Enums als Strings oder als Zahlen codiert werden</value>
+  </data>
+  <data name="MqttDriver_BrokerUrl_Description" xml:space="preserve">
+    <value>Host-Adresse des MQTT-Brokers</value>
   </data>
 </root>

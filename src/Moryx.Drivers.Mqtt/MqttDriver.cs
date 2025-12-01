@@ -1,7 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Buffers;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Drivers;
 using MQTTnet;
@@ -31,6 +30,7 @@ namespace Moryx.Drivers.Mqtt;
 [Display(Name = nameof(Strings.MqttDriver_DisplayName), Description = nameof(Strings.MqttDriver_Description), ResourceType = typeof(Strings))]
 public class MqttDriver : Driver, IMessageDriver
 {
+
     private string _clientId;
     /// <inheritdoc/>
     public event EventHandler<object> Received;
@@ -39,6 +39,8 @@ public class MqttDriver : Driver, IMessageDriver
     /// Timer used in message queue
     /// </summary>
     public IParallelOperations ParallelOperations { get; set; }
+
+    internal static readonly System.Diagnostics.ActivitySource _activitySource = new System.Diagnostics.ActivitySource("Moryx.Drivers.Mqtt.MqttDriver");
 
     #region EntrySerialize
 
@@ -174,7 +176,40 @@ public class MqttDriver : Driver, IMessageDriver
     [Display(Name = nameof(Strings.MqttDriver_ReconnectDelayMs), Description = nameof(Strings.MqttDriver_ReconnectDelayMs_Description), ResourceType = typeof(Strings))]
     public int ReconnectDelayMs { get; set; }
 
-    internal static readonly System.Diagnostics.ActivitySource _activitySource = new System.Diagnostics.ActivitySource("Moryx.Drivers.Mqtt.MqttDriver");
+    /// <summary>
+    /// Decides if a last will message should be registered on the broker.
+    /// A last will message is then automatically published by the broker to
+    /// let other clients know that this client was disconnected
+    /// </summary>
+    [EntrySerialize, DataMember]
+    [Display(
+        Name = nameof(Strings.MqttDriver_HasLastWill),
+        Description = nameof(Strings.MqttDriver_HasLastWill_Description),
+        ResourceType = typeof(Strings)
+    )]
+    public bool HasLastWill { get; set; }
+
+    /// <summary>
+    /// The topic the last will message should be published to. Has no effect if HasLastWill is not set
+    /// </summary>
+    [EntrySerialize, DataMember]
+    [Display(
+        Name = nameof(Strings.MqttDriver_LastWillTopic),
+        Description = nameof(Strings.MqttDriver_LastWillTopic_Description),
+        ResourceType = typeof(Strings)
+    )]
+    public string LastWillTopic { get; set; }
+
+    /// <summary>
+    /// Content of the last will message. Has no effect if HasLastWill is not set
+    /// </summary>
+    [EntrySerialize, DataMember]
+    [Display(
+        Name = "Last will content",
+        Description = "Content of the last will message. Has no effect if HasLastWill is not set",
+        ResourceType = typeof(Strings)
+    )]
+    public string LastWillContent { get; set; }
 
     #endregion
 
@@ -278,40 +313,7 @@ public class MqttDriver : Driver, IMessageDriver
         }
     }
 
-    /// <summary>
-    /// Decides if a last will message should be registered on the broker.
-    /// A last will message is then automatically published by the broker to
-    /// let other clients know that this client was disconnected
-    /// </summary>
-    [EntrySerialize, DataMember]
-    [Display(
-        Name = nameof(Strings.MqttDriver_HasLastWill),
-        Description = nameof(Strings.MqttDriver_HasLastWill_Description),
-        ResourceType = typeof(Strings)
-    )]
-    public bool HasLastWill { get; set; }
-
-    /// <summary>
-    /// The topic the last will message should be published to. Has no effect if HasLastWill is not set
-    /// </summary>
-    [EntrySerialize, DataMember]
-    [Display(
-        Name = nameof(Strings.MqttDriver_LastWillTopic),
-        Description = nameof(Strings.MqttDriver_LastWillTopic_Description),
-        ResourceType = typeof(Strings)
-    )]
-    public string LastWillTopic { get; set; }
-
-    /// <summary>
-    /// Content of the last will message. Has no effect if HasLastWill is not set
-    /// </summary>
-    [EntrySerialize, DataMember]
-    [Display(
-        Name = "Last will content",
-        Description = "Content of the last will message. Has no effect if HasLastWill is not set",
-        ResourceType = typeof(Strings)
-    )]
-    public string LastWillContent { get; set; }
+    
 
     private MqttClientOptionsBuilder ConfigureMqttClient()
     {
@@ -431,7 +433,9 @@ public class MqttDriver : Driver, IMessageDriver
         }
 
         if (topics.Count == 1)
+        {
             await State.SendAsync(topics[0], message, cancellationToken);
+        }
         else
         {
             Logger.Log(LogLevel.Warning, "Corresponding topic for message {message} not found.", message);

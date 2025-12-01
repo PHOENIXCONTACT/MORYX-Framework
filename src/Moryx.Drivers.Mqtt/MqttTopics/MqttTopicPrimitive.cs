@@ -1,8 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-
-using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
@@ -10,6 +8,7 @@ using System.Text;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 using Moryx.Drivers.Mqtt.Properties;
+using System.Buffers;
 
 namespace Moryx.Drivers.Mqtt.MqttTopics
 {
@@ -39,29 +38,65 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         protected internal override byte[] Serialize(object payload)
         {
             if (payload is bool b)
+            {
                 return BitConverter.GetBytes(b);
+            }
+
             if (payload is char c)
+            {
                 return BitConverter.GetBytes(c);
+            }
+
             if (payload is double d)
+            {
                 return BitConverter.GetBytes(d);
+            }
+
             if (payload is short s)
+            {
                 return BitConverter.GetBytes(s);
+            }
+
             if (payload is int i)
+            {
                 return BitConverter.GetBytes(i);
+            }
+
             if (payload is long l)
+            {
                 return BitConverter.GetBytes(l);
+            }
+
             if (payload is float f)
+            {
                 return BitConverter.GetBytes(f);
+            }
+
             if (payload is ushort us)
+            {
                 return BitConverter.GetBytes(us);
+            }
+
             if (payload is uint ui)
+            {
                 return BitConverter.GetBytes(ui);
+            }
+
             if (payload is ulong ul)
+            {
                 return BitConverter.GetBytes(ul);
+            }
+
             if (payload is string str)
+            {
                 return Encoding.ASCII.GetBytes(str);
+            }
+
             if (payload is byte byteMessage)
+            {
                 return [byteMessage];
+            }
+
             if (payload is Enum e)
             {
                 throw new NotImplementedException();
@@ -85,35 +120,85 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc />
-        protected internal override IConvertible Deserialize(ArraySegment<byte> messageAsBytes)
+        private IConvertible DeserializeInternal(ReadOnlySpan<byte> messageSpan)
         {
-            ReadOnlySpan<byte> messageSpan = messageAsBytes.AsSpan();
             if (MessageType == typeof(bool))
+            {
                 return BitConverter.ToBoolean(messageSpan);
+            }
+
             if (MessageType == typeof(char))
-               return BitConverter.ToChar(messageSpan);
+            {
+                return BitConverter.ToChar(messageSpan);
+            }
+
             if (MessageType == typeof(double))
-               return BitConverter.ToDouble(messageSpan);
+            {
+                return BitConverter.ToDouble(messageSpan);
+            }
+
             if (MessageType == typeof(short))
-               return BitConverter.ToInt16(messageSpan);
+            {
+                return BitConverter.ToInt16(messageSpan);
+            }
+
             if (MessageType == typeof(int))
-               return BitConverter.ToInt32(messageSpan);
+            {
+                return BitConverter.ToInt32(messageSpan);
+            }
+
             if (MessageType == typeof(long))
-               return BitConverter.ToInt64(messageSpan);
+            {
+                return BitConverter.ToInt64(messageSpan);
+            }
+
             if (MessageType == typeof(ushort))
-               return BitConverter.ToUInt16(messageSpan);
+            {
+                return BitConverter.ToUInt16(messageSpan);
+            }
+
             if (MessageType == typeof(uint))
-               return BitConverter.ToUInt32(messageSpan);
+            {
+                return BitConverter.ToUInt32(messageSpan);
+            }
+
             if (MessageType == typeof(ulong))
-               return BitConverter.ToUInt64(messageSpan);
+            {
+                return BitConverter.ToUInt64(messageSpan);
+            }
+
             if (MessageType == typeof(string))
-               return Encoding.ASCII.GetString(messageSpan);
+            {
+                return Encoding.ASCII.GetString(messageSpan);
+            }
+
             if (MessageType == typeof(byte))
-               return messageSpan[0];
+            {
+                return messageSpan[0];
+            }
+
             if (MessageType == typeof(float))
-               return BitConverter.ToSingle(messageSpan);
+            {
+                return BitConverter.ToSingle(messageSpan);
+            }
+
             throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        protected internal override IConvertible Deserialize(ReadOnlySequence<byte> payload)
+        {
+            if (payload.IsSingleSegment)
+            {
+                return DeserializeInternal(payload.FirstSpan);
+            }
+            else
+            {
+                var length = (int)payload.Length;
+                var messageSpan = length < 4000 ? stackalloc byte[length] : new byte[length];
+                payload.CopyTo(messageSpan);
+                return DeserializeInternal(messageSpan);
+            }
         }
 
         #region private methodes
@@ -150,7 +235,7 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
             }
         }
 
-        private string TypeCodeToString(TypeCode type)
+        private static string TypeCodeToString(TypeCode type)
         {
             switch (type)
             {

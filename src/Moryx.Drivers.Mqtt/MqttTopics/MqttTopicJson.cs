@@ -9,8 +9,8 @@ using Moryx.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Moryx.Drivers.Mqtt.Properties;
-using System;
 using System.Text.Json;
+using System.Buffers;
 
 namespace Moryx.Drivers.Mqtt.MqttTopics
 {
@@ -75,16 +75,16 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         }
 
         /// <inheritdoc />
-        protected internal override object Deserialize(ArraySegment<byte> messageAsBytes)
+        protected internal override object Deserialize(ReadOnlySequence<byte> payload)
         {
             if (Serializer == SerializerSelection.SystemTextJson)
             {
                 var options = GetSystemTextJsonOptions();
-                return System.Text.Json.JsonSerializer.Deserialize(messageAsBytes, MessageType, options);
+                return JsonDocument.Parse(payload).Deserialize(MessageType, options);
             }
 
             var msg = Constructor();
-            var json = Encoding.UTF8.GetString(messageAsBytes.AsSpan());
+            var json = Encoding.UTF8.GetString(payload);
             JsonConvert.PopulateObject(json, msg, GetSettings());
             return msg;
         }

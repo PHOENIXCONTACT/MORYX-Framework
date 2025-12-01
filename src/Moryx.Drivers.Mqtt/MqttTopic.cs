@@ -15,7 +15,6 @@ using Moryx.Tools;
 using Moryx.Drivers.Mqtt.Properties;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using System.Collections.Generic;
 using Moryx.Drivers.Mqtt.Messages;
 using System.Buffers;
 
@@ -33,9 +32,10 @@ namespace Moryx.Drivers.Mqtt
         /// </summary>
         public event EventHandler<object> Received;
 
-        [DataMember, EntrySerialize] // TODO: Description
-        public TopicType TopicType { get; set; }
-
+        /// <summary>
+        /// Injected service, used for scheduling tasks
+        /// </summary>
+        [DataMember, EntrySerialize]
         public IParallelOperations ParallelOperations { get; set; }
 
         #region Properties
@@ -50,7 +50,7 @@ namespace Moryx.Drivers.Mqtt
             set
             {
                 var (validationResult, errorMessage) = ValidateTopicString(value);
-            
+
                 switch (validationResult)
                 {
                     case TopicValidationResult.Valid:
@@ -86,6 +86,20 @@ namespace Moryx.Drivers.Mqtt
                 }
             }
         }
+
+        /// <summary>
+        /// Determines if the topic can be written to, read from or both
+        /// </summary>
+        [DataMember, EntrySerialize]
+        [Display(Name = "Topic type", Description = "Determines if the topic can be written to, read from or both")]
+        public TopicType TopicType { get; set; }
+
+        /// <summary>
+        /// "Determines if the decoded message is stored as part of the diagnostics span for debugging purposes
+        /// </summary>
+        [DataMember, EntrySerialize]
+        [Display(Name = "Trace decoded", Description = "Determines if the decoded message is stored as part of the activity span for debugging purposes")]
+        public bool TraceDecodedMessage { get; set; }
 
         private (TopicValidationResult result, string errorMessage) ValidateTopicString(string value)
         {
@@ -127,14 +141,21 @@ namespace Moryx.Drivers.Mqtt
         [Display(Name = nameof(Strings.MqttTopic_ResponseTopic), Description = nameof(Strings.MqttTopic_ResponseTopic_Description), ResourceType = typeof(Strings))]
         public string ResponseTopic { get; set; }
 
+        /// <summary>
+        /// Marks if messages send by this topic should be marked as retained by default.
+        /// Messages can implment IRetainAware to overwrite the default.
+        /// </summary>
         [EntrySerialize, DataMember, DefaultValue(false)]
-        [Display(Name = nameof(Strings.RETAIN), Description = nameof(Strings.RETAIN_DESCRIPTION), ResourceType = typeof(Localizations.Strings))]
+        [Display(Name = nameof(Strings.MqttTopic_Retain), Description = nameof(Strings.MqttTopic_Retain_Description), ResourceType = typeof(Strings))]
         public bool Retain { get; set; }
 
         private void ReportToDriverThatTopicChanged(TopicChanged args)
         {
             if (TopicType == TopicType.PublishOnly) // TODO check for changes in topic type too
+            {
                 return;
+            }
+
             MqttDriver.OnTopicChanged(args.OldTopic, args.NewTopic);
         }
 
@@ -151,6 +172,9 @@ namespace Moryx.Drivers.Mqtt
         }
 
         private string _topicName;
+        /// <summary>
+        /// cached regex of the topic identifier
+        /// </summary>
         protected internal Regex RegexTopic;
 
         /// <summary>
@@ -172,14 +196,21 @@ namespace Moryx.Drivers.Mqtt
         /// </summary>
         public Type MessageType { get; set; }
 
-        [EntrySerialize, ReadOnly(true)] // TODO describe
+        /// <summary>
+        /// Output the type name of the resolved MessageType.
+        /// This allows the user to check if the Type resolution has succeeded.
+        /// </summary>
+        [EntrySerialize, ReadOnly(true)]
         public string ResolveTypeName => MessageType?.FullName ?? "Unresolved";
-
 
         /// <summary>
         /// Driver, who subscribes this topic.
         /// </summary>
         public IDriver Driver => MqttDriver;
+
+        /// <summary>
+        /// Typed reference to the parent
+        /// </summary>
         protected MqttDriver MqttDriver => (MqttDriver)Parent;
 
         #endregion
@@ -191,6 +222,7 @@ namespace Moryx.Drivers.Mqtt
             MqttDriver?.NewTopicAdded(SubscribedTopic);
         }
 
+        /// <inheritdoc />
         protected override void OnStop()
         {
             base.OnStop();
@@ -207,7 +239,7 @@ namespace Moryx.Drivers.Mqtt
         internal abstract Task OnSend(object payload, CancellationToken cancellationToken);
 
         //This method has to call MqttDriver.OnReceive
-        internal abstract void OnReceived(string receivedTopic, ReadOnlySequence<byte> messageAsBytes, string? responseTopic = null, bool retain = false);
+        internal abstract void OnReceived(string receivedTopic, ReadOnlySequence<byte> messageAsBytes, string responseTopic = null, bool retain = false);
 
         /// <summary>
         ///
@@ -232,14 +264,12 @@ namespace Moryx.Drivers.Mqtt
     /// <inheritdoc cref="MqttTopic" />
     public abstract class MqttTopic<TMessage> : MqttTopic, IMessageChannel
     {
+        private static readonly System.Diagnostics.ActivitySource _activitySource = new System.Diagnostics.ActivitySource("Moryx.Drivers.Mqtt.MqttTopic");
 
-        [DataMember, EntrySerialize]
-        public bool TraceDecodedMessage { get; set; }
-
-        public static readonly System.Diagnostics.ActivitySource activitySource = new System.Diagnostics.ActivitySource("Moryx.Drivers.Mqtt.MqttTopic");
-
-        protected virtual System.Diagnostics.ActivitySource ActivitySource => activitySource;
-
+        /// <summary>
+        /// Activity source used for tracing messages handled by this topic. Can be overwritten by other implementations
+        /// </summary>
+        protected virtual System.Diagnostics.ActivitySource ActivitySource => _activitySource;
 
         /// <summary>
         /// Constructor for MessageType
@@ -292,13 +322,13 @@ namespace Moryx.Drivers.Mqtt
         {
             if (payload is TMessage send)
             {
-                MqttDriver.Send(payload);;
+                MqttDriver.Send(payload);
             }
             else
             {
-                Logger.Log(LogLevel.Error, "Message {0} has the wrong Type. It is {1} instead of {2}",
+                Logger.Log(LogLevel.Error, "Message {payload} has the wrong Type. It is {realType} instead of {expectedType}",
                     payload, payload.GetType(), typeof(TMessage));
-                throw new ArgumentException("Message " + payload + " has the wrong Type. It is " + payload.GetType() + " instead of " + typeof(TMessage));
+                throw new ArgumentException($"Message {payload} has the wrong Type. It is {payload.GetType()} instead of {typeof(TMessage)}");
             }
         }
 
@@ -314,7 +344,6 @@ namespace Moryx.Drivers.Mqtt
                 payload, payload.GetType(), typeof(TMessage));
             throw new ArgumentException("Message " + payload + " has the wrong Type. It is " + payload.GetType() + " instead of " + typeof(TMessage));
         }
-
 
         internal override Task OnSend(object payload, CancellationToken cancellationToken)
         {
@@ -355,11 +384,11 @@ namespace Moryx.Drivers.Mqtt
                 ? ram.Retain.Value
                 : Retain;
             return MqttDriver.OnSend(
-                new MqttMessageTopic(ResponseTopic, topic,retain),
+                new MqttMessageTopic(ResponseTopic, topic, retain),
                 msg, cancellationToken);
         }
 
-        internal override void OnReceived(string receivedTopic, ReadOnlySequence<byte> messageAsBytes, string? responseTopic, bool retain)
+        internal override void OnReceived(string receivedTopic, ReadOnlySequence<byte> messageAsBytes, string responseTopic, bool retain)
         {
             TMessage msg;
             using (var span = ActivitySource.StartActivity("parsing", ActivityKind.Internal, parentContext: default, tags: new Dictionary<string, object>{
@@ -368,57 +397,55 @@ namespace Moryx.Drivers.Mqtt
                 { "topic.type", MessageName }
             }))
             {
-                if (MessageType != null)
-                {
-                    msg = Deserialize(messageAsBytes);
-                    if (msg is IIdentifierMessage identMessage)
-                    {
-                        identMessage.Identifier = receivedTopic;
-                    }
-                    if (responseTopic is not null && msg is IRespondableMessage respondable)
-                    {
-                        respondable.ResponseIdentifier = responseTopic;
-                    }
-                    if (msg is IRetainAwareMessage retainAware)
-                    {
-                        retainAware.Retain = retain;
-                    }
-
-                    var groupNames = RegexTopic.GetGroupNames();
-                    if (groupNames.Length > 1)
-                    {
-                        var placeholderValues = RegexTopic.Match(receivedTopic).Groups;
-                        if (placeholderValues.Count == groupNames.Length)
-                        {
-                            for (var i = 1; i < placeholderValues.Count; i++)
-                            {
-                                var placeholderName = groupNames[i].Replace("__", ".");
-                                var resolver = new BindingResolverFactory().Create(placeholderName);
-                                var placeholderValue = placeholderValues[i].ToString();
-                                if (!resolver.Update(msg, placeholderValue))
-                                {
-                                    Logger.Log(LogLevel.Error, "Placeholder {placeholderName} cannot be filled. MessageType {typeName} may not contain a matching property", placeholderName, MessageType.Name);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Logger.Log(LogLevel.Warning, "Number of found Placeholders does not match of number of possible " +
-                                                        "corresponding values");
-                        }
-
-                        if (TraceDecodedMessage && span is not null)
-                        {
-                            span.AddTag("message.decoded", Newtonsoft.Json.JsonConvert.SerializeObject(msg));
-                        }
-                    }
-                }
-                else
+                if (MessageType == null)
                 {
                     Logger.Log(LogLevel.Error, "Message was received, but not MessageType was set.");
                     span.SetStatus(ActivityStatusCode.Error, "MessageType not set");
                     return;
                 }
+
+                msg = Deserialize(messageAsBytes);
+                if (msg is IIdentifierMessage identMessage)
+                {
+                    identMessage.Identifier = receivedTopic;
+                }
+                if (responseTopic is not null && msg is IRespondableMessage respondable)
+                {
+                    respondable.ResponseIdentifier = responseTopic;
+                }
+                if (msg is IRetainAwareMessage retainAware)
+                {
+                    retainAware.Retain = retain;
+                }
+
+                var groupNames = RegexTopic.GetGroupNames();
+                if (groupNames.Length > 1)
+                {
+                    var placeholderValues = RegexTopic.Match(receivedTopic).Groups;
+                    if (placeholderValues.Count == groupNames.Length)
+                    {
+                        for (var i = 1; i < placeholderValues.Count; i++)
+                        {
+                            var placeholderName = groupNames[i].Replace("__", ".");
+                            var resolver = new BindingResolverFactory().Create(placeholderName);
+                            var placeholderValue = placeholderValues[i].ToString();
+                            if (!resolver.Update(msg, placeholderValue))
+                            {
+                                Logger.Log(LogLevel.Error, "Placeholder {placeholderName} cannot be filled. MessageType {typeName} may not contain a matching property", placeholderName, MessageType.Name);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Logger.Log(LogLevel.Warning, "Number of found Placeholders does not match of number of possible corresponding values");
+                    }
+
+                    if (TraceDecodedMessage && span is not null)
+                    {
+                        span.AddTag("message.decoded", System.Text.Json.JsonSerializer.Serialize(msg));
+                    }
+                }
+                
             }
 
             using (var span = ActivitySource.StartActivity("PublishReceived", ActivityKind.Internal, parentContext: default, tags: new Dictionary<string, object>{
@@ -442,8 +469,8 @@ namespace Moryx.Drivers.Mqtt
         /// <summary>
         /// deserializes received byte-array to an object of TMessage
         /// </summary>
-        /// <param name="messageAsBytes"></param>
+        /// <param name="payload"></param>
         /// <returns></returns>
-        protected internal abstract TMessage Deserialize(ArraySegment<byte> messageAsBytes);
+        protected internal abstract TMessage Deserialize(ReadOnlySequence<byte> payload);
     }
 }

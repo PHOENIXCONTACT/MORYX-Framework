@@ -65,7 +65,7 @@ namespace Moryx.Drivers.Mqtt.Tests
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 Channels = new ReferenceCollectionMock<MqttTopic> { _mqttTopicCamel, _mqttTopicPascal },
                 MqttVersion = _version,
-                BrokerUrl = "mock"
+                BrokerURL = "mock"
             };
 
             _mockClient = new Mock<IMqttClient>();
@@ -158,12 +158,14 @@ namespace Moryx.Drivers.Mqtt.Tests
 
             //Act
             _driver.Receive(
-                new MqttApplicationMessage() {
+                new MqttApplicationMessage()
+                {
                     Topic = _driver.Identifier + _mqttTopicPascal.Identifier,
                     PayloadSegment = Encoding.ASCII.GetBytes(pascalJson)
                 });
             _driver.Receive(
-                new MqttApplicationMessage() {
+                new MqttApplicationMessage()
+                {
                     Topic = _driver.Identifier + _mqttTopicCamel.Identifier,
                     PayloadSegment = Encoding.ASCII.GetBytes(camelJson)
                 });
