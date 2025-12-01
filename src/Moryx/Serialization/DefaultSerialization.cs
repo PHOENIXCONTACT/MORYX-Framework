@@ -4,6 +4,7 @@
 using System.Collections;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Reflection;
 using Moryx.Configuration;
 using Moryx.Tools;
@@ -98,28 +99,39 @@ namespace Moryx.Serialization
             // Iterate over attributes reading all validation rules
             foreach (var attribute in validationAttributes)
             {
-                if (attribute is MinLengthAttribute minAttribute)
+                switch (attribute)
                 {
-                    validation.Minimum = minAttribute.Length;
+                    case MinLengthAttribute minAttribute:
+                        validation.Minimum = minAttribute.Length;
+                        break;
+                    case MaxLengthAttribute maxAttribute:
+                        validation.Maximum = maxAttribute.Length;
+                        break;
+                    case RangeAttribute rangeAttribute:
+                        validation.Minimum = Convert.ToDouble(rangeAttribute.Minimum, CultureInfo.CurrentCulture);
+                        validation.Maximum = Convert.ToDouble(rangeAttribute.Maximum, CultureInfo.CurrentCulture);
+                        break;
+                    case RegularExpressionAttribute regexAttribute:
+                        validation.Regex = regexAttribute.Pattern;
+                        break;
+                    case StringLengthAttribute strLength:
+                        validation.Minimum = strLength.MinimumLength;
+                        validation.Maximum = strLength.MaximumLength;
+                        break;
+                    case RequiredAttribute:
+                        validation.IsRequired = true;
+                        break;
+                    case LengthAttribute lengthAttribute:
+                        validation.Minimum = lengthAttribute.MinimumLength;
+                        validation.Maximum = lengthAttribute.MaximumLength;
+                        break;
+                    case Base64StringAttribute:
+                        validation.IsBase64String = true;
+                        break;
+                    case DataTypeAttribute dataTypeAttribute:
+                        validation.DataType = dataTypeAttribute.DataType;
+                        break;
                 }
-                else if (attribute is MaxLengthAttribute maxAttribute)
-                {
-                    validation.Maximum = maxAttribute.Length;
-                }
-                else if (attribute is RangeAttribute rangeAttribute)
-                {
-                    validation.Minimum = Convert.ToDouble(rangeAttribute.Minimum);
-                    validation.Maximum = Convert.ToDouble(rangeAttribute.Maximum);
-                }
-                else if (attribute is RegularExpressionAttribute regexAttribute)
-                    validation.Regex = regexAttribute.Pattern;
-                else if (attribute is StringLengthAttribute strLength)
-                {
-                    validation.Minimum = strLength.MinimumLength;
-                    validation.Maximum = strLength.MaximumLength;
-                }
-                else if (attribute is RequiredAttribute)
-                    validation.IsRequired = true;
             }
 
             return validation;

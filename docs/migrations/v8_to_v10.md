@@ -170,3 +170,11 @@ Features:
 * Support unsubscribing from Topics, by removing or changing the resource
 * Support changing the broker without restarting the Resource Management, by a) providing a Reconnect method and b) handling changes to the relevant properties
 * Support diagnostic tracing of message contents, before and after deserialization
+
+## EntryConvert
+
+Added support for additional ValidationAttributes in EntryConvert:
+
+- LengthAttribute
+- Base64StringAttribute
+- DataTypeAttribute
