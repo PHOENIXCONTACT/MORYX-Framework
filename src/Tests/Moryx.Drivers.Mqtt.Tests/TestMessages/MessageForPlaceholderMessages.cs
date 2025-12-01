@@ -3,7 +3,7 @@
 
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Resources.Mqtt.Tests.TestMessages
+namespace Moryx.Drivers.Mqtt.Tests.TestMessages
 {
     public class MessageForPlaceholderMessages
     {

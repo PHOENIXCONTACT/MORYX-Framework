@@ -7,15 +7,14 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.TestTools;
-using Moryx.Drivers.Mqtt;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Tools;
-using MQTTnet.Client;
+using MQTTnet;
 using MQTTnet.Formatter;
 using NUnit.Framework;
 
-namespace Moryx.Resources.Mqtt.Tests
+namespace Moryx.Drivers.Mqtt.Tests
 {
     [TestFixture(MqttProtocolVersion.V310)]
     [TestFixture(MqttProtocolVersion.V311)]
@@ -37,7 +36,8 @@ namespace Moryx.Resources.Mqtt.Tests
                 Id = 4,
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 Channels = new ReferenceCollectionMock<MqttTopic>(),
-                MqttVersion = version
+                MqttVersion = version,
+                BrokerUrl = "mock"
             };
 
             //Setup mock for MQTT-Client

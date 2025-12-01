@@ -42,24 +42,22 @@
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
 
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
-    <PackageVersion Include="Microsoft.Identity.Web" Version="4.1.1" />
-    <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="4.1.0" />
+    <PackageVersion Include="Microsoft.Identity.Web" Version="4.0.0" />
+    <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="4.0.0" />
 
 	  <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
 
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageVersion Include="CommandLineParser" Version="2.9.1" />
-    <PackageVersion Include="AutoMapper" Version="14.0.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.4" />
 
     <PackageVersion Include="Castle.Windsor" Version="6.0.0" />
 
     <!-- Dependencies for drivers and adapters -->
     <PackageVersion Include="System.IO.Ports" Version="10.0.0" />
-    <PackageVersion Include="MQTTnet" Version="4.3.1.873" />
+    <PackageVersion Include="MQTTnet" Version="5.0.1.1416" />
     <PackageVersion Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.376.213" />
 
-    <PackageVersion Include="InfluxDB.LineProtocol" Version="1.1.1" />
+    <PackageVersion Include="InfluxDB.LineProtocol" Version="1.1.0" />
     <PackageVersion Include="InfluxDB.Client" Version="4.18.0" />
     <PackageVersion Include="CsvHelper" Version="33.1.0" />
 

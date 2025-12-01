@@ -195,7 +195,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
     //TODO: Internal property just for tests, use xml also in tests
     internal ApplicationConfigurationFactory ApplicationConfigurationFactory { get; set; } = new();
-    
+
     /// <summary>
     /// Convert an OpcUaNode to an entity to be shown on the UI
     /// </summary>

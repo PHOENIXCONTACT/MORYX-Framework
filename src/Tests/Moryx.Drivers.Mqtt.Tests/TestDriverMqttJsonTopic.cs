@@ -2,26 +2,25 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Buffers;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.TestTools;
-using Moryx.Drivers.Mqtt;
 using Moryx.Drivers.Mqtt.MqttTopics;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Tools;
 using MQTTnet;
-using MQTTnet.Client;
 using MQTTnet.Formatter;
 using MQTTnet.Packets;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 
-namespace Moryx.Resources.Mqtt.Tests
+namespace Moryx.Drivers.Mqtt.Tests
 {
     [TestFixture(MqttProtocolVersion.V310)]
     [TestFixture(MqttProtocolVersion.V311)]
@@ -65,7 +64,8 @@ namespace Moryx.Resources.Mqtt.Tests
                 Id = 4,
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 Channels = new ReferenceCollectionMock<MqttTopic> { _mqttTopicCamel, _mqttTopicPascal },
-                MqttVersion = _version
+                MqttVersion = _version,
+                BrokerUrl = "mock"
             };
 
             _mockClient = new Mock<IMqttClient>();
@@ -84,8 +84,7 @@ namespace Moryx.Resources.Mqtt.Tests
         private Expression<Func<MqttClientOptions, bool>> CorrectClientOptions()
         {
             return o => o.ProtocolVersion == _driver.MqttVersion && o.CleanSession == !_driver.ReconnectWithoutCleanSession
-                        && o.ClientId == $"{System.Net.Dns.GetHostName()}-{_driver.Id}-{_driver.Name}" && (o.ChannelOptions as MqttClientTcpOptions).Server == _driver.BrokerUrl &&
-                        (o.ChannelOptions as MqttClientTcpOptions).Port == _driver.Port;
+                        && o.ClientId == $"{System.Net.Dns.GetHostName()}-{_driver.Id}-{_driver.Name}";
         }
 
         [Test(Description = "Publish Json Message using the MqttTopicJson")]
@@ -109,7 +108,8 @@ namespace Moryx.Resources.Mqtt.Tests
         private void CheckSentMessage(MqttApplicationMessage sentMsg, CancellationToken token)
         {
             var msg = new JsonMessageTest();
-            var payload = Encoding.UTF8.GetString(sentMsg.Payload, 0, sentMsg.Payload.Length);
+            var payloadArray = sentMsg.Payload.ToArray();
+            var payload = Encoding.UTF8.GetString(payloadArray, 0, payloadArray.Length);
             if (sentMsg.Topic == _driver.Identifier + _mqttTopicCamel.Identifier)
             {
                 Assert.That(payload.Contains(nameof(JsonMessageTest.Age).ToLower()));

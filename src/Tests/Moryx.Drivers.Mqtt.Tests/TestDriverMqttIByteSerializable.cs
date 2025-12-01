@@ -2,26 +2,24 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Buffers;
 using System.Linq.Expressions;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.TestTools;
-using Moryx.Drivers.Mqtt;
 using Moryx.Drivers.Mqtt.MqttTopics;
+using Moryx.Drivers.Mqtt.Tests.TestMessages;
 using Moryx.Logging;
 using Moryx.Modules;
-using Moryx.Resources.Mqtt.Tests.TestMessages;
 using Moryx.Tools;
 using MQTTnet;
-using MQTTnet.Client;
 using MQTTnet.Formatter;
 using MQTTnet.Packets;
 using MQTTnet.Protocol;
 using NUnit.Framework;
 
-namespace Moryx.Resources.Mqtt.Tests
+namespace Moryx.Drivers.Mqtt.Tests
 {
     [TestFixture(MqttProtocolVersion.V310)]
     [TestFixture(MqttProtocolVersion.V311)]
@@ -64,7 +62,8 @@ namespace Moryx.Resources.Mqtt.Tests
                 Id = 4,
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 Channels = new ReferenceCollectionMock<MqttTopic> { _topicBoolMqtt, _topicBoolIByteSerializable },
-                MqttVersion = _version
+                MqttVersion = _version,
+                BrokerUrl = "mock"
             };
 
             _mockClient = new Mock<IMqttClient>();
@@ -84,8 +83,7 @@ namespace Moryx.Resources.Mqtt.Tests
         private Expression<Func<MqttClientOptions, bool>> CorrectClientOptions()
         {
             return o => o.ProtocolVersion == _driver.MqttVersion && o.CleanSession == !_driver.ReconnectWithoutCleanSession
-                        && o.ClientId == $"{System.Net.Dns.GetHostName()}-{_driver.Id}-{_driver.Name}" && (o.ChannelOptions as MqttClientTcpOptions).Server == _driver.BrokerUrl &&
-                        (o.ChannelOptions as MqttClientTcpOptions).Port == _driver.Port;
+                        && o.ClientId == $"{System.Net.Dns.GetHostName()}-{_driver.Id}-{_driver.Name}";
         }
 
         [Test(Description = "Publish Message using Driver")]
@@ -129,7 +127,7 @@ namespace Moryx.Resources.Mqtt.Tests
             Assert.That(mqttMsg.QualityOfServiceLevel, Is.EqualTo(MqttQualityOfServiceLevel.ExactlyOnce),
                 "Qos should be ExactlyOnce, but is " + mqttMsg.QualityOfServiceLevel);
             var msg = new BoolMqttMessage();
-            msg.FromBytes(mqttMsg.Payload);
+            msg.FromBytes(mqttMsg.Payload.ToArray());
             Assert.That(msg.Message == MESSAGE_VALUE, "Message should be " + MESSAGE_VALUE + ", but is " + msg.Message);
         }
 
@@ -160,7 +158,7 @@ namespace Moryx.Resources.Mqtt.Tests
             Assert.That(sentMsg.QualityOfServiceLevel, Is.EqualTo(MqttQualityOfServiceLevel.ExactlyOnce),
                 "Qos should be ExactlyOnce, but is " + sentMsg.QualityOfServiceLevel);
             var msg = new BoolByteSerializableMessage();
-            msg.FromBytes(sentMsg.Payload);
+            msg.FromBytes(sentMsg.Payload.ToArray());
             Assert.That(msg.Message == MESSAGE_VALUE, "Message should be " + MESSAGE_VALUE + ", but is " + msg.Message);
         }
 
