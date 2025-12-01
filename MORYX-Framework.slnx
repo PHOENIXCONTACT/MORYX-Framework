@@ -1,0 +1,183 @@
+<Solution>
+  <Folder Name="/Benchmark/">
+    <Project Path="src/Moryx.Benchmarking/Moryx.Benchmarking.csproj" />
+    <Project Path="src/Moryx.Resources.Benchmarking/Moryx.Resources.Benchmarking.csproj" />
+    <Project Path="src/Moryx.Resources.BenchmarkSetup/Moryx.Benchmarking.Setups.csproj" />
+  </Folder>
+  <Folder Name="/CommandCenter/">
+    <Project Path="src/Moryx.CommandCenter.Web/Moryx.CommandCenter.Web.csproj" />
+  </Folder>
+  <Folder Name="/ControlSystem/">
+    <Project Path="src/Moryx.ControlSystem.Jobs.Endpoints/Moryx.ControlSystem.Jobs.Endpoints.csproj" />
+    <Project Path="src/Moryx.ControlSystem.MaterialManager/Moryx.ControlSystem.MaterialManager.csproj" />
+    <Project Path="src/Moryx.ControlSystem.ProcessEngine.Web/Moryx.ControlSystem.ProcessEngine.Web.csproj" />
+    <Project Path="src/Moryx.ControlSystem.ProcessEngine/Moryx.ControlSystem.ProcessEngine.csproj" />
+    <Project Path="src/Moryx.ControlSystem.Processes.Endpoints/Moryx.ControlSystem.Processes.Endpoints.csproj" />
+    <Project Path="src/Moryx.ControlSystem.SetupProvider/Moryx.ControlSystem.SetupProvider.csproj" />
+    <Project Path="src/Moryx.ControlSystem.Simulator/Moryx.ControlSystem.Simulator.csproj" />
+    <Project Path="src/Moryx.ControlSystem.VisualInstructions.Endpoints/Moryx.ControlSystem.VisualInstructions.Endpoints.csproj" />
+    <Project Path="src/Moryx.ControlSystem.WorkerSupport.Web/Moryx.ControlSystem.WorkerSupport.Web.csproj" />
+    <Project Path="src/Moryx.ControlSystem.WorkerSupport/Moryx.ControlSystem.WorkerSupport.csproj" />
+    <Project Path="src/Moryx.Resources.AssemblyInstruction/Moryx.Resources.AssemblyInstruction.csproj" />
+  </Folder>
+  <Folder Name="/Drivers/">
+    <Project Path="src/Moryx.Drivers.Mqtt/Moryx.Drivers.Mqtt.csproj" />
+    <Project Path="src/Moryx.Drivers.OpcUa/Moryx.Drivers.OpcUa.csproj" />
+    <Project Path="src/Moryx.Drivers.Simulation/Moryx.Drivers.Simulation.csproj" />
+  </Folder>
+  <Folder Name="/Factory/">
+    <Project Path="src/Moryx.ControlSystem/Moryx.ControlSystem.csproj" />
+    <Project Path="src/Moryx.Factory/Moryx.Factory.csproj" />
+    <Project Path="src/Moryx.Orders/Moryx.Orders.csproj" />
+    <Project Path="src/Moryx.ProcessData/Moryx.ProcessData.csproj" />
+    <Project Path="src/Moryx.Users/Moryx.Users.csproj" />
+  </Folder>
+  <Folder Name="/FactoryMonitor/">
+    <Project Path="src/Moryx.FactoryMonitor.Endpoints/Moryx.FactoryMonitor.Endpoints.csproj" />
+    <Project Path="src/Moryx.FactoryMonitor.Web/Moryx.FactoryMonitor.Web.csproj" />
+  </Folder>
+  <Folder Name="/Identity/">
+    <Project Path="src/Moryx.Identity.AccessManagement/Moryx.Identity.AccessManagement.csproj" />
+    <Project Path="src/Moryx.Identity/Moryx.Identity.csproj" />
+  </Folder>
+  <Folder Name="/Media/">
+    <Project Path="src/Moryx.Media.Endpoints/Moryx.Media.Endpoints.csproj" />
+    <Project Path="src/Moryx.Media.Server/Moryx.Media.Server.csproj" />
+    <Project Path="src/Moryx.Media.Web/Moryx.Media.Web.csproj" />
+    <Project Path="src/Moryx.Media/Moryx.Media.csproj" />
+  </Folder>
+  <Folder Name="/Model/">
+    <Project Path="src/Moryx.Model.InMemory/Moryx.Model.InMemory.csproj" />
+    <Project Path="src/Moryx.Model.PostgreSQL/Moryx.Model.PostgreSQL.csproj" />
+    <Project Path="src/Moryx.Model.Sqlite/Moryx.Model.Sqlite.csproj" />
+    <Project Path="src/Moryx.Model.SqlServer/Moryx.Model.SqlServer.csproj" />
+    <Project Path="src/Moryx.Model/Moryx.Model.csproj" />
+  </Folder>
+  <Folder Name="/Notifications/">
+    <Project Path="src/Moryx.Notifications.Endpoints/Moryx.Notifications.Endpoints.csproj" />
+    <Project Path="src/Moryx.Notifications.Publisher/Moryx.Notifications.Publisher.csproj" />
+    <Project Path="src/Moryx.Notifications.Web/Moryx.Notifications.Web.csproj" />
+  </Folder>
+  <Folder Name="/Operators/">
+    <Project Path="src/Moryx.Operators.Endpoints/Moryx.Operators.Endpoints.csproj" />
+    <Project Path="src/Moryx.Operators.Management/Moryx.Operators.Management.csproj" />
+    <Project Path="src/Moryx.Operators.Web/Moryx.Operators.Web.csproj" />
+    <Project Path="src/Moryx.Operators/Moryx.Operators.csproj" />
+    <Project Path="src/Moryx.Shifts.Endpoints/Moryx.Shifts.Endpoints.csproj" />
+    <Project Path="src/Moryx.Shifts.Management/Moryx.Shifts.Management.csproj" />
+    <Project Path="src/Moryx.Shifts.Web/Moryx.Shifts.Web.csproj" />
+    <Project Path="src/Moryx.Shifts/Moryx.Shifts.csproj" />
+  </Folder>
+  <Folder Name="/Orders/">
+    <Project Path="src/Moryx.Orders.Endpoints/Moryx.Orders.Endpoints.csproj" />
+    <Project Path="src/Moryx.Orders.Management/Moryx.Orders.Management.csproj" />
+    <Project Path="src/Moryx.Orders.Web/Moryx.Orders.Web.csproj" />
+  </Folder>
+  <Folder Name="/ProcessData/">
+    <Project Path="src/Moryx.ProcessData.Adapter.NotificationPublisher/Moryx.ProcessData.Adapter.NotificationPublisher.csproj" />
+    <Project Path="src/Moryx.ProcessData.Adapter.OrderManagement/Moryx.ProcessData.Adapter.OrderManagement.csproj" />
+    <Project Path="src/Moryx.ProcessData.Adapter.ProcessEngine/Moryx.ProcessData.Adapter.ProcessEngine.csproj" />
+    <Project Path="src/Moryx.ProcessData.Adapter.ResourceManagement/Moryx.ProcessData.Adapter.ResourceManagement.csproj" />
+    <Project Path="src/Moryx.ProcessData.Endpoints/Moryx.ProcessData.Endpoints.csproj" />
+    <Project Path="src/Moryx.ProcessData.InfluxDbListener/Moryx.ProcessData.InfluxDbListener.csproj" />
+    <Project Path="src/Moryx.ProcessData.Monitor/Moryx.ProcessData.Monitor.csproj" />
+    <Project Path="src/Moryx.ProcessData.SpreadsheetsListener/Moryx.ProcessData.SpreadsheetsListener.csproj" />
+  </Folder>
+  <Folder Name="/Products/">
+    <Project Path="src/Moryx.AbstractionLayer.Products.Endpoints/Moryx.AbstractionLayer.Products.Endpoints.csproj" />
+    <Project Path="src/Moryx.Products.Management/Moryx.Products.Management.csproj" />
+    <Project Path="src/Moryx.Products.Samples/Moryx.Products.Samples.csproj" />
+    <Project Path="src/Moryx.Products.Web/Moryx.Products.Web.csproj" />
+  </Folder>
+  <Folder Name="/Resources/">
+    <Project Path="src/Moryx.AbstractionLayer.Resources.Endpoints/Moryx.AbstractionLayer.Resources.Endpoints.csproj" />
+    <Project Path="src/Moryx.Resources.Management/Moryx.Resources.Management.csproj" />
+    <Project Path="src/Moryx.Resources.Samples/Moryx.Resources.Samples.csproj" />
+    <Project Path="src/Moryx.Resources.Web/Moryx.Resources.Web.csproj" />
+  </Folder>
+  <Folder Name="/Runtime/">
+    <Project Path="src/Moryx.AspNetCore/Moryx.AspNetCore.csproj" />
+    <Project Path="src/Moryx.Runtime.Endpoints/Moryx.Runtime.Endpoints.csproj" />
+    <Project Path="src/Moryx.Runtime.Kernel/Moryx.Runtime.Kernel.csproj" />
+    <Project Path="src/Moryx.Runtime/Moryx.Runtime.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".build/Common.props" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="LICENSE" />
+    <File Path="NOTICE" />
+    <File Path="NuGet.Config" />
+    <File Path="VERSION" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <File Path="src/Tests/Directory.Build.props" />
+  </Folder>
+  <Folder Name="/Tests/IntegrationTests/">
+    <Project Path="src/Tests/Moryx.Communication.Sockets.IntegrationTests/Moryx.Communication.Sockets.IntegrationTests.csproj" />
+    <Project Path="src/Tests/Moryx.Operators.Management.Integration.Tests/Moryx.Operators.Management.Integration.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Products.IntegrationTests/Moryx.Products.IntegrationTests.csproj" />
+    <Project Path="src/Tests/Moryx.Runtime.Endpoints.IntegrationTests/Moryx.Runtime.Endpoints.IntegrationTests.csproj" />
+    <Project Path="src/Tests/Moryx.Shifts.Management.IntegrationTests/Moryx.Shifts.Management.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/Tests/UnitTests/">
+    <Project Path="src/Tests/Moryx.AbstractionLayer.Tests/Moryx.AbstractionLayer.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Container.Tests/Moryx.Container.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.ControlSystem.ProcessEngine.Tests/Moryx.ControlSystem.ProcessEngine.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.ControlSystem.SetupProvider.Tests/Moryx.ControlSystem.SetupProvider.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.ControlSystem.Tests/Moryx.ControlSystem.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.ControlSystem.VisualInstructions.Endpoints.Tests/Moryx.ControlSystem.VisualInstructions.Endpoints.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.ControlSystem.WorkerSupport.Tests/Moryx.ControlSystem.WorkerSupport.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Drivers.Mqtt.Tests/Moryx.Drivers.Mqtt.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Drivers.OpcUa.Tests/Moryx.Drivers.OpcUa.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.FactoryMonitor.Endpoints.Tests/Moryx.FactoryMonitor.Endpoints.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Media.Endpoints.Tests/Moryx.Media.Endpoints.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Media.Server.Tests/Moryx.Media.Server.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Model.Tests/Moryx.Model.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Notifications.Tests/Moryx.Notifications.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Orders.Endpoints.Tests/Moryx.Orders.Endpoints.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Orders.Management.Tests/Moryx.Orders.Management.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.ProcessData.InfluxDbListener.Tests/Moryx.ProcessData.InfluxDbListener.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.ProcessData.SpreadsheetsListener.Tests/Moryx.ProcessData.SpreadsheetsListener.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.ProcessData.Tests/Moryx.ProcessData.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Products.Management.Tests/Moryx.AbstractionLayer.Products.Endpoints.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Resources.Management.Tests/Moryx.Resources.Management.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Runtime.Endpoints.Tests/Moryx.Runtime.Endpoints.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Runtime.Kernel.Tests/Moryx.Runtime.Kernel.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Runtime.Tests/Moryx.Runtime.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Simulation.Tests/Moryx.Simulation.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Tests/Moryx.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.Workplans.Editing.Tests/Moryx.Workplans.Editing.Tests.csproj" />
+  </Folder>
+  <Folder Name="/TestTools/">
+    <Project Path="src/Moryx.AbstractionLayer.TestTools/Moryx.AbstractionLayer.TestTools.csproj" />
+    <Project Path="src/Moryx.ControlSystem.Assemble/Moryx.ControlSystem.TestTools.Assemble.csproj" />
+    <Project Path="src/Moryx.ControlSystem.TestTools/Moryx.ControlSystem.TestTools.csproj" />
+    <Project Path="src/Moryx.DependentTestModule/Moryx.DependentTestModule.csproj" />
+    <Project Path="src/Moryx.TestModule/Moryx.TestModule.csproj" />
+    <Project Path="src/Moryx.TestTools.IntegrationTest/Moryx.TestTools.IntegrationTest.csproj" />
+    <Project Path="src/Moryx.TestTools.Test.Model/Moryx.TestTools.Test.Model.csproj" />
+    <Project Path="src/Moryx.TestTools.UnitTest/Moryx.TestTools.UnitTest.csproj" />
+    <Project Path="src/Tests/Moryx.Container.TestPlugin/Moryx.Container.TestPlugin.csproj" />
+    <Project Path="src/Tests/Moryx.Container.TestRootPlugin/Moryx.Container.TestRootPlugin.csproj" />
+    <Project Path="src/Tests/Moryx.Container.TestTools/Moryx.Container.TestTools.csproj" />
+  </Folder>
+  <Folder Name="/Workplans/">
+    <Project Path="src/Moryx.Workplans.Editing/Moryx.Workplans.Editing.csproj" />
+    <Project Path="src/Moryx.Workplans.Samples/Moryx.Workplans.Samples.csproj" />
+    <Project Path="src/Moryx.Workplans.Web/Moryx.Workplans.Web.csproj" />
+    <Project Path="src/Moryx.Workplans/Moryx.Workplans.csproj" />
+  </Folder>
+  <Project Path="src/Moryx.AbstractionLayer/Moryx.AbstractionLayer.csproj" />
+  <Project Path="src/Moryx.Communication.Serial/Moryx.Communication.Serial.csproj" />
+  <Project Path="src/Moryx.Container/Moryx.Container.csproj" />
+  <Project Path="src/Moryx.Launcher/Moryx.Launcher.csproj" />
+  <Project Path="src/Moryx.Notifications/Moryx.Notifications.csproj" />
+  <Project Path="src/Moryx/Moryx.csproj" />
+  <Project Path="src/StartProject.Asp/StartProject.Asp.csproj" />
+  <Properties Name="ExtensibilityGlobals" Scope="PostLoad">
+    <Property Name="RESX_ShowErrorsInErrorList" Value="True" />
+    <Property Name="RESX_TaskErrorCategory" Value="Message" />
+  </Properties>
+</Solution>
