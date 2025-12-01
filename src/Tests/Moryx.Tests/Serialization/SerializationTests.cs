@@ -1000,6 +1000,44 @@ namespace Moryx.Tests
             Assert.That(dummyDecoded.SingleClass.Foo, Is.EqualTo(1.1234f));
         }
 
+        [Test]
+        public void AllowedEnumValuesTest()
+        {
+            // Arrange
+            var encoded = EntryConvert.EncodeClass(typeof(AllowedDeniedValuesClass));
+
+            // Assert
+            Assert.That(encoded.SubEntries[0].Value.Possible, Has.Exactly(2).Items);
+
+            string[] expected = [nameof(DummyEnum.ValueA), nameof(DummyEnum.ValueB)];
+            Assert.That(encoded.SubEntries[0].Value.Possible, Is.SupersetOf(expected));
+        }
+
+        [Test]
+        public void DeniedEnumValuesTest()
+        {
+            // Arrange
+            var encoded = EntryConvert.EncodeClass(typeof(AllowedDeniedValuesClass));
+
+            // Assert
+            Assert.That(encoded.SubEntries[1].Value.Possible, Has.Exactly(2).Items);
+
+            string[] expected = [nameof(DummyEnum.ValueA), nameof(DummyEnum.ValueB)];
+            Assert.That(encoded.SubEntries[0].Value.Possible, Is.SupersetOf(expected));
+        }
+
+        [Test]
+        public void AllowedIntValuesTest()
+        {
+            // Arrange
+            var encoded = EntryConvert.EncodeClass(typeof(AllowedDeniedValuesClass));
+
+            // Assert
+            Assert.That(encoded.SubEntries[2].Value.Possible, Has.Exactly(3).Items);
+            string[] expected = ["1", "5", "20"];
+            Assert.That(encoded.SubEntries[2].Value.Possible, Is.SupersetOf(expected));
+        }
+
         private static Entry CreateTestEntry()
         {
             return new Entry

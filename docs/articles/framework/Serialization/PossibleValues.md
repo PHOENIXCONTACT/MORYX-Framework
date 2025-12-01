@@ -1,9 +1,40 @@
 ---
 uid: PossibleValues
 ---
-# PossibleValuesAttribute
+# Possible Values
 
-In many cases it makes sense to limit the number of options a user or maintainer can select for a value. Either to eliminate values which are not supported or to offer a preselected list of values to reduce complexity. An easy example would be to give a range of integer values for a timer interval and a more complex approach is to list all possible component names that support a given interface. This attribute is abstract and can not be used directly but must be inherited to implement a certain behavior. This attribute is only used for user interaction purposes and is not validated by neither the configuration management nor any other component of the platform. Values modified code or the json will still be loaded as valid and passed on to the module! Its abstract members are described below.
+In many cases it makes sense to limit the number of options a user or maintainer can select for a value. Either to eliminate values which are not supported or to offer a preselected list of values to reduce complexity. An easy example would be to give a range of integer values for a timer interval and a more complex approach is to list all possible component names that support a given interface.
+
+There are two options to define possible values
+1. .NET `AllowedValuesAttribute`/`DeniedValuesAttribute`
+2. MORYX `PossibleValuesAttribute`
+
+## .NET `AllowedValuesAttribute`/`DeniedValuesAttribute`
+
+The `AllowedValuesAttribute` specifies a list of values that should be allowed in a property. The `DeniedValuesAttribute` specifies a list of values that should not be allowed in a property.
+
+You can provide allowed values as follows:
+
+````cs
+[AllowedValues(1, 5, 10)]
+public int MyIntValues { get; set; }
+
+[AllowedValues(SomeEnum.A, SomeEnum.B, SomeEnum.Z)]
+public SomeEnum MyEnumValues { get; set; }
+````
+
+and you can provide denied values as follows. All other enum values are automatically possible.
+
+````cs
+[DeniedValues(SomeEnum.C, SomeEnum.D)]
+public SomeEnum MyEnumValues { get; set; }
+````
+
+It is not supported to use `AllowedValues` and `DeniedValues` in combination. `AllowedValues` are always be prefered.
+
+## PossibleValuesAttribute
+
+This attribute is abstract and can not be used directly but must be inherited to implement a certain behavior. This attribute is only used for user interaction purposes and is not validated by neither the configuration management nor any other component of the platform. Values modified code or the json will still be loaded as valid and passed on to the module! Its abstract members are described below.
 
 ````cs
 /// <summary>
@@ -41,41 +72,7 @@ public abstract class PossibleValuesAttribute : Attribute
 }
 ````
 
-### PrimitiveValuesAttribute
-
-This basic implementation of the `PossibleValuesAttribute` enables you to add several possible values to basic-datatype properties. It supports the following data types:
-
-- bool
-- byte
-- int
-- long
-- double
-- string
-
-To realize that it uses overloaded constructors with a param-parameter in the specific data-type.
-
-### CpuCountAttribute
-
-As a direct descendant this attribute can be used to configure the number of parallel processes used for a certain operation. An overload of the constructor allows to specify how many threads should be reserved for the rest of the application. If this value is greater than the total thread count, it will be initialized with 1.
-
-````cs
-[DataMember, Description("If this property is 0 it will be set to the systems thread count")]
-[CpuCount]
-public int ImporterThreads { get; set; }
-
-[DataMember, Description("If this property is 0 it is set to the systems thread count - 2 unless the system does not offer enough threads, then 1")]
-[CpuCount(2)]
-public int ModestThreadCount { get; set; }
-````
-
-### CurrentHostNameAttribute
-
-Whenever you want to configure a hostname for WCF this attribute provides a nice alternative to `[DefaultValue("localhost")]`. Its usage in code is pretty straight forward.
-
-````cs
-[DataMember, CurrentHostName]
-public string HostName { get; set; }
-````
+## Implementations
 
 ### IntegerStepsAttribute
 

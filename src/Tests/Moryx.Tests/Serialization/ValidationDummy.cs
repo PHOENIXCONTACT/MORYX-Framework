@@ -34,7 +34,4 @@ public class ValidationDummy
 
     [Required]
     public bool RequiredBool { get; set; }
-
-    [Required(ErrorMessage = "Some error {0}")]
-    public string PropWithError { get; set; }
 }

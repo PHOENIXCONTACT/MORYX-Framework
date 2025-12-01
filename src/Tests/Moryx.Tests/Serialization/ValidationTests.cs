@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Moryx.Serialization;
-using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace Moryx.Tests;
@@ -45,8 +44,6 @@ public class ValidationTests
     {
         var requiredBoolValidation = GetValidation(nameof(ValidationDummy.RequiredBool));
         Assert.That(requiredBoolValidation.IsRequired, Is.EqualTo(true));
-
-        var json = JsonConvert.SerializeObject(_validationDummySubEntries);
     }
 
     [Test]

@@ -173,8 +173,12 @@ Features:
 
 ## EntryConvert
 
+Added support for `AllowedValuesAttribute` and `DeniedValuesAttribute`. Refer to EntryConvert [PossibleValues-docs](/docs/articles/framework/Serialization/PossibleValues.md).
+
 Added support for additional ValidationAttributes in EntryConvert:
 
 - LengthAttribute
 - Base64StringAttribute
 - DataTypeAttribute
+
+Removed `PrimitiveValuesAttribute`, use `AllowedValuesAttribute` of .NET instead.

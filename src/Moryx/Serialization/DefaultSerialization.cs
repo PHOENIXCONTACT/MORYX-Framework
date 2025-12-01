@@ -74,10 +74,26 @@ namespace Moryx.Serialization
             if (isCollection)
                 memberType = EntryConvert.ElementType(memberType);
 
-            // Enum names, member name or null
-            return memberType.IsEnum
-                ? Enum.GetNames(memberType)
-                : isCollection ? [memberType.Name] : null;
+            // Enum names, member name for collections, allowed values or null
+            if (memberType.IsEnum)
+            {
+                return GetPossibleEnumNames(memberType, attributeProvider);
+            }
+
+            if (isCollection)
+            {
+                return [memberType.Name];
+            }
+
+            var allowedValuesAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
+            if (allowedValuesAttribute != null)
+            {
+                var allowedValues = allowedValuesAttribute.Values.Where(v => v != null && v.GetType() == memberType)
+                    .Select(v => v.ToString());
+                return allowedValues.ToArray();
+            }
+
+            return null;
         }
 
         /// <see cref="ICustomSerialization"/>
@@ -333,11 +349,37 @@ namespace Moryx.Serialization
         /// </summary>
         /// <param name="property">The property to inspect for attributes.</param>
         /// <returns>True if the property has the Flags attribute; otherwise, false.</returns>
-        private bool HasFlagsAttribute(ICustomAttributeProvider property)
+        private static bool HasFlagsAttribute(ICustomAttributeProvider property)
         {
             return property is PropertyInfo propertyInfo &&
                    propertyInfo.PropertyType.IsEnum &&
                    propertyInfo.PropertyType.GetCustomAttributes(typeof(System.FlagsAttribute), false).Any();
+        }
+
+        /// <summary>
+        /// Returns the possible enum names.
+        /// Depending on the <see cref="AllowedValuesAttribute"/> and <see cref="DeniedValuesAttribute"/>
+        /// </summary>
+        private static string[] GetPossibleEnumNames(Type memberType, ICustomAttributeProvider attributeProvider)
+        {
+            var enumNames = Enum.GetNames(memberType);
+            var allowedValuesAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
+            if (allowedValuesAttribute != null)
+            {
+                var allowedEnumNames = allowedValuesAttribute.Values.Where(v => v != null && enumNames.Contains(v.ToString()))
+                    .Select(v => v.ToString());
+                return allowedEnumNames.Distinct().ToArray();
+            }
+
+            var deniedValuesAttribute = attributeProvider.GetCustomAttribute<DeniedValuesAttribute>();
+            if (deniedValuesAttribute != null)
+            {
+                var deniedEnumNames = deniedValuesAttribute.Values.Where(v => v != null)
+                    .Select(v => v.ToString());
+                return enumNames.Except(deniedEnumNames).ToArray();
+            }
+
+            return enumNames;
         }
     }
 }
