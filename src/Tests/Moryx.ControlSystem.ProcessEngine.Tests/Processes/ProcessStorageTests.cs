@@ -391,7 +391,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             var process = uow.DbContext.Processes.Add(new()
             {
                 Id = IdShiftGenerator.Generate(jobId << 14, ProcessTestsBase.NextId),
-                TypeName = typeName,
                 State = state,
                 JobId = jobId,
             });

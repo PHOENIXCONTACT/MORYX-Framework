@@ -18,7 +18,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Model.Migrations.Npgsql
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "8.0.21")
+                .HasAnnotation("ProductVersion", "10.0.0")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -142,9 +142,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Model.Migrations.Npgsql
 
                     b.Property<int>("State")
                         .HasColumnType("integer");
-
-                    b.Property<string>("TypeName")
-                        .HasColumnType("text");
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("timestamp with time zone");

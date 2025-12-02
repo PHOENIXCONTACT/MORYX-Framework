@@ -17,8 +17,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Model
             set => base.Id = value;
         }
 
-        public virtual string TypeName { get; set; }
-
         /// <summary>
         /// Only used for production process
         /// </summary>
