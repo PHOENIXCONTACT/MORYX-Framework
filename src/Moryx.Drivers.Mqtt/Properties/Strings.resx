@@ -267,4 +267,10 @@
   <data name="MqttDriver_BrokerUrl_Description" xml:space="preserve">
     <value>Host address of the mqtt broker</value>
   </data>
+  <data name="MqttTopic_TraceDecoded" xml:space="preserve">
+    <value>Trace decoded</value>
+  </data>
+  <data name="MqttTopic_TraceDecoded_Description" xml:space="preserve">
+    <value>Determines if the decoded message is stored as part of the activity span for debugging purposes</value>
+  </data>
 </root>

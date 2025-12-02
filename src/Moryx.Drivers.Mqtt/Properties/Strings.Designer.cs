@@ -403,6 +403,24 @@ namespace Moryx.Drivers.Mqtt.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trace decoded.
+        /// </summary>
+        public static string MqttTopic_TraceDecoded {
+            get {
+                return ResourceManager.GetString("MqttTopic_TraceDecoded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Determines if the decoded message is stored as part of the activity span for debugging purposes.
+        /// </summary>
+        public static string MqttTopic_TraceDecoded_Description {
+            get {
+                return ResourceManager.GetString("MqttTopic_TraceDecoded_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MQTT topic for messages implementing IByteSerializable.
         /// </summary>
         public static string MqttTopicIByteSerializable_Description {

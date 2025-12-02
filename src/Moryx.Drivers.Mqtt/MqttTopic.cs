@@ -91,14 +91,14 @@ namespace Moryx.Drivers.Mqtt
         /// Determines if the topic can be written to, read from or both
         /// </summary>
         [DataMember, EntrySerialize]
-        [Display(Name = "Topic type", Description = "Determines if the topic can be written to, read from or both")]
+        [Display(Name = nameof(Strings.MqttTopic_TopicType), Description = nameof(Strings.MqttTopic_TopicType_Description), ResourceType = typeof(Strings))]
         public TopicType TopicType { get; set; }
 
         /// <summary>
         /// "Determines if the decoded message is stored as part of the diagnostics span for debugging purposes
         /// </summary>
         [DataMember, EntrySerialize]
-        [Display(Name = "Trace decoded", Description = "Determines if the decoded message is stored as part of the activity span for debugging purposes")]
+        [Display(Name = nameof(Strings.MqttTopic_TraceDecoded), Description = nameof(Strings.MqttTopic_TraceDecoded_Description), ResourceType = typeof(Strings))]
         public bool TraceDecodedMessage { get; set; }
 
         private (TopicValidationResult result, string errorMessage) ValidateTopicString(string value)
