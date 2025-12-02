@@ -326,14 +326,14 @@ namespace Moryx.Drivers.Mqtt
         /// <inheritdoc />
         public override async Task SendAsync(object payload, CancellationToken cancellationToken = default)
         {
-            if (payload is TMessage)
+            if (payload is not TMessage)
             {
-                await MqttDriver.SendInternalAsync(this, payload, cancellationToken);
+                Logger.Log(LogLevel.Error, "Message {0} has the wrong Type. It is {1} instead of {2}",
+                    payload, payload.GetType(), typeof(TMessage));
+                throw new ArgumentException("Message " + payload + " has the wrong Type. It is " + payload.GetType() + " instead of " + typeof(TMessage));
             }
 
-            Logger.Log(LogLevel.Error, "Message {0} has the wrong Type. It is {1} instead of {2}",
-                payload, payload.GetType(), typeof(TMessage));
-            throw new ArgumentException("Message " + payload + " has the wrong Type. It is " + payload.GetType() + " instead of " + typeof(TMessage));
+            await MqttDriver.SendInternalAsync(this, payload, cancellationToken);
         }
 
         internal override Task OnSend(object payload, CancellationToken cancellationToken)
