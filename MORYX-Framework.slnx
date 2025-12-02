@@ -144,8 +144,8 @@
     <Project Path="src/Tests/Moryx.Simulation.Tests/Moryx.Simulation.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Tests/Moryx.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Workplans.Editing.Tests/Moryx.Workplans.Editing.Tests.csproj" />
-    <Project Path="src\Tests\Moryx.VisualInstructions.Controller.Tests\Moryx.VisualInstructions.Controller.Tests.csproj" />
-    <Project Path="src\Tests\Moryx.VisualInstructions.Endpoints.Tests\Moryx.VisualInstructions.Endpoints.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.VisualInstructions.Controller.Tests/Moryx.VisualInstructions.Controller.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.VisualInstructions.Endpoints.Tests/Moryx.VisualInstructions.Endpoints.Tests.csproj" />
   </Folder>
   <Folder Name="/TestTools/">
     <Project Path="src/Moryx.AbstractionLayer.TestTools/Moryx.AbstractionLayer.TestTools.csproj" />
@@ -162,10 +162,10 @@
   </Folder>
   <Folder Name="/VisualInstructions/">
     <Project Path="src/Moryx.VisualInstructions/Moryx.VisualInstructions.csproj" />
-    <Project Path="src\Moryx.Resources.VisualInstructions\Moryx.Resources.VisualInstructions.csproj" />
-    <Project Path="src\Moryx.VisualInstructions.Controller\Moryx.VisualInstructions.Controller.csproj" />
-    <Project Path="src\Moryx.VisualInstructions.Endpoints\Moryx.VisualInstructions.Endpoints.csproj" />
-    <Project Path="src\Moryx.VisualInstructions.Web\Moryx.VisualInstructions.Web.csproj" />
+    <Project Path="src/Moryx.Resources.VisualInstructions/Moryx.Resources.VisualInstructions.csproj" />
+    <Project Path="src/Moryx.VisualInstructions.Controller/Moryx.VisualInstructions.Controller.csproj" />
+    <Project Path="src/Moryx.VisualInstructions.Endpoints/Moryx.VisualInstructions.Endpoints.csproj" />
+    <Project Path="src/Moryx.VisualInstructions.Web/Moryx.VisualInstructions.Web.csproj" />
   </Folder>
   <Folder Name="/Workplans/">
     <Project Path="src/Moryx.Workplans.Editing/Moryx.Workplans.Editing.csproj" />
