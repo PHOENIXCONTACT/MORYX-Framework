@@ -35,7 +35,6 @@ namespace Moryx.Drivers.Mqtt
         /// <summary>
         /// Injected service, used for scheduling tasks
         /// </summary>
-        [DataMember, EntrySerialize]
         public IParallelOperations ParallelOperations { get; set; }
 
         #region Properties
@@ -145,7 +144,7 @@ namespace Moryx.Drivers.Mqtt
         /// Marks if messages send by this topic should be marked as retained by default.
         /// Messages can implment IRetainAware to overwrite the default.
         /// </summary>
-        [EntrySerialize, DataMember, DefaultValue(false)]
+        [EntrySerialize, DataMember]
         [Display(Name = nameof(Strings.MqttTopic_Retain), Description = nameof(Strings.MqttTopic_Retain_Description), ResourceType = typeof(Strings))]
         public bool Retain { get; set; }
 
