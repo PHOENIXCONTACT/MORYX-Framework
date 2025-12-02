@@ -38,7 +38,7 @@ namespace Moryx.VisualInstructions.Endpoints
         [HttpGet("stream")]
         [ProducesResponseType(typeof(InstructionModel[]), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [Authorize(Policy = VisualInstructionPermissions.CanView)]
+        [Authorize(Policy = VisualInstructionsPermissions.CanView)]
         public async Task InstructionStream(CancellationToken cancelToken)
         {
             var response = Response;
@@ -111,7 +111,7 @@ namespace Moryx.VisualInstructions.Endpoints
         [HttpGet("{identifier}")]
         [ProducesResponseType(typeof(InstructionModel[]), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [Authorize(Policy = VisualInstructionPermissions.CanView)]
+        [Authorize(Policy = VisualInstructionsPermissions.CanView)]
         public ActionResult<InstructionModel[]> GetAll(string identifier)
         {
             if (string.IsNullOrEmpty(identifier))
@@ -122,7 +122,7 @@ namespace Moryx.VisualInstructions.Endpoints
 
         [HttpPost("{identifier}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(Policy = VisualInstructionPermissions.CanAdd)]
+        [Authorize(Policy = VisualInstructionsPermissions.CanAdd)]
         public void AddInstruction(string identifier, InstructionModel instruction)
         {
             _visualInstructions.AddInstruction(identifier, Converter.FromModel(instruction));
@@ -130,7 +130,7 @@ namespace Moryx.VisualInstructions.Endpoints
 
         [HttpDelete("{identifier}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Authorize(Policy = VisualInstructionPermissions.CanClear)]
+        [Authorize(Policy = VisualInstructionsPermissions.CanClear)]
         public void ClearInstruction(string identifier, InstructionModel instruction)
         {
             _visualInstructions.ClearInstruction(identifier, Converter.FromModel(instruction));
@@ -139,7 +139,7 @@ namespace Moryx.VisualInstructions.Endpoints
         [HttpPut("{identifier}/response")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Policy = VisualInstructionPermissions.CanComplete)]
+        [Authorize(Policy = VisualInstructionsPermissions.CanComplete)]
         public void CompleteInstruction(string identifier, InstructionResponseModel response)
         {
             var activeInstruction = _visualInstructions.GetInstructions(identifier)?.FirstOrDefault(ai => ai.Id == response.Id);
@@ -168,7 +168,7 @@ namespace Moryx.VisualInstructions.Endpoints
 
         [HttpGet("instructors")]
         [ProducesResponseType(typeof(string[]), StatusCodes.Status200OK)]
-        [Authorize(Policy = VisualInstructionPermissions.CanView)]
+        [Authorize(Policy = VisualInstructionsPermissions.CanView)]
         public ActionResult<string[]> GetInstructors()
         {
             return _visualInstructions.GetInstructors().ToArray();

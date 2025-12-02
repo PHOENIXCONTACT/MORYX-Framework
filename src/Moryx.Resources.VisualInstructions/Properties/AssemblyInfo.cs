@@ -4,6 +4,4 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-[assembly: InternalsVisibleTo("Moryx.Resources.IntegrationTests")]
 [assembly: InternalsVisibleTo("Moryx.Resources.VisualInstructions.Tests")]
-[assembly: InternalsVisibleTo("Moryx.Resources.Assemble.Tests")]

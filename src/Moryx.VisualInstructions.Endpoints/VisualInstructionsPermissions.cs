@@ -3,9 +3,9 @@
 
 namespace Moryx.VisualInstructions.Endpoints
 {
-    public static class VisualInstructionPermissions
+    public static class VisualInstructionsPermissions
     {
-        private const string Prefix = "Moryx.VisualInstruction.";
+        private const string Prefix = "Moryx.VisualInstructions.";
         public const string CanView = Prefix + "CanView";
         public const string CanComplete = Prefix + "CanComplete";
         public const string CanAdd = Prefix + "CanAdd";
