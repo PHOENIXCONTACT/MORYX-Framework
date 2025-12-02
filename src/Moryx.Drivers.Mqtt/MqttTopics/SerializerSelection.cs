@@ -9,12 +9,13 @@ namespace Moryx.Drivers.Mqtt.MqttTopics;
 public enum SerializerSelection
 {
     /// <summary>
-    /// Use newtonsoft.json for serialization
-    /// </summary>
-    NewtonsoftJson,
-    /// <summary>
     /// Use System.Text.Json for serialization
     /// </summary>
-    SystemTextJson
+    SystemTextJson = 0,
+    /// <summary>
+    /// Use newtonsoft.json for serialization
+    /// </summary>
+    [Obsolete("Newtonsoft.Json support will be remove soon. See https://github.com/PHOENIXCONTACT/MORYX-Framework/blob/future/docs/articles/adr/0002-system-text-json.md")]
+    NewtonsoftJson = 1,
 }
 
