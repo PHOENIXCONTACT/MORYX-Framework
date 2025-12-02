@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Moryx.Resources.VisualInstructions\Moryx.Resources.VisualInstructions.csproj" />
+    <ProjectReference Include="..\..\Moryx.VisualInstructions\Moryx.VisualInstructions.csproj" />
   </ItemGroup>
 
 </Project>

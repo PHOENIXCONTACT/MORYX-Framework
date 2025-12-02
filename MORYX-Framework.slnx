@@ -143,6 +143,7 @@
     <Project Path="src/Tests/Moryx.Runtime.Tests/Moryx.Runtime.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Simulation.Tests/Moryx.Simulation.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Tests/Moryx.Tests.csproj" />
+    <Project Path="src/Tests/Moryx.VisualInstructions.Tests/Moryx.VisualInstructions.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Workplans.Editing.Tests/Moryx.Workplans.Editing.Tests.csproj" />
     <Project Path="src/Tests/Moryx.VisualInstructions.Controller.Tests/Moryx.VisualInstructions.Controller.Tests.csproj" />
     <Project Path="src/Tests/Moryx.VisualInstructions.Endpoints.Tests/Moryx.VisualInstructions.Endpoints.Tests.csproj" />
