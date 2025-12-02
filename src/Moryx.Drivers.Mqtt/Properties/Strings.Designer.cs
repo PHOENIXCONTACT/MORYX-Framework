@@ -19,7 +19,7 @@ namespace Moryx.Drivers.Mqtt.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Strings {
@@ -57,15 +57,6 @@ namespace Moryx.Drivers.Mqtt.Properties {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to MQTT Broker URL or IP address.
-        /// </summary>
-        public static string BROKER_URL_DESCRIPTION {
-            get {
-                return ResourceManager.GetString("BROKER_URL_DESCRIPTION", resourceCulture);
             }
         }
         
@@ -405,18 +396,18 @@ namespace Moryx.Drivers.Mqtt.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Trace decoded.
         /// </summary>
-        public static string MqttTopic_TraceDecoded {
+        public static string MqttTopic_TraceDecodedMessage {
             get {
-                return ResourceManager.GetString("MqttTopic_TraceDecoded", resourceCulture);
+                return ResourceManager.GetString("MqttTopic_TraceDecodedMessage", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Determines if the decoded message is stored as part of the activity span for debugging purposes.
         /// </summary>
-        public static string MqttTopic_TraceDecoded_Description {
+        public static string MqttTopic_TraceDecodedMessage_Description {
             get {
-                return ResourceManager.GetString("MqttTopic_TraceDecoded_Description", resourceCulture);
+                return ResourceManager.GetString("MqttTopic_TraceDecodedMessage_Description", resourceCulture);
             }
         }
         

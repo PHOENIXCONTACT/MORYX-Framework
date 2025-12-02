@@ -98,7 +98,7 @@ namespace Moryx.Drivers.Mqtt
         /// "Determines if the decoded message is stored as part of the diagnostics span for debugging purposes
         /// </summary>
         [DataMember, EntrySerialize]
-        [Display(Name = nameof(Strings.MqttTopic_TraceDecoded), Description = nameof(Strings.MqttTopic_TraceDecoded_Description), ResourceType = typeof(Strings))]
+        [Display(Name = nameof(Strings.MqttTopic_TraceDecodedMessage), Description = nameof(Strings.MqttTopic_TraceDecodedMessage_Description), ResourceType = typeof(Strings))]
         public bool TraceDecodedMessage { get; set; }
 
         private (TopicValidationResult result, string errorMessage) ValidateTopicString(string value)
