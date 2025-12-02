@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Moryx.Resources.AssemblyInstruction.Properties {
+namespace Moryx.Resources.VisualInstructions.Properties {
     using System;
-    
-    
+
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -23,15 +23,15 @@ namespace Moryx.Resources.AssemblyInstruction.Properties {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Strings {
-        
+
         private static global::System.Resources.ResourceManager resourceMan;
-        
+
         private static global::System.Globalization.CultureInfo resourceCulture;
-        
+
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Strings() {
         }
-        
+
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
@@ -45,7 +45,7 @@ namespace Moryx.Resources.AssemblyInstruction.Properties {
                 return resourceMan;
             }
         }
-        
+
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
@@ -59,7 +59,7 @@ namespace Moryx.Resources.AssemblyInstruction.Properties {
                 resourceCulture = value;
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Clear.
         /// </summary>
@@ -68,7 +68,7 @@ namespace Moryx.Resources.AssemblyInstruction.Properties {
                 return ResourceManager.GetString("VisualInstructor_Clear", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Remove an instruction manually.
         /// </summary>
@@ -77,7 +77,7 @@ namespace Moryx.Resources.AssemblyInstruction.Properties {
                 return ResourceManager.GetString("VisualInstructor_Clear_Description", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Current Instructions.
         /// </summary>
@@ -86,7 +86,7 @@ namespace Moryx.Resources.AssemblyInstruction.Properties {
                 return ResourceManager.GetString("VisualInstructor_CurrentInstructions", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Currently published instructions.
         /// </summary>

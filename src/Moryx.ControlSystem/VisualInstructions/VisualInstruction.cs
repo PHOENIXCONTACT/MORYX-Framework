@@ -4,7 +4,7 @@
 using System.Runtime.Serialization;
 using Moryx.Serialization;
 
-namespace Moryx.ControlSystem.VisualInstructions
+namespace Moryx.VisualInstructions
 {
     /// <summary>
     /// Type of instruction

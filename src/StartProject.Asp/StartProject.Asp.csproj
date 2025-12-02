@@ -22,8 +22,8 @@
     <ProjectReference Include="..\Moryx.ControlSystem.ProcessEngine\Moryx.ControlSystem.ProcessEngine.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.Processes.Endpoints\Moryx.ControlSystem.Processes.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.SetupProvider\Moryx.ControlSystem.SetupProvider.csproj" />
-    <ProjectReference Include="..\Moryx.ControlSystem.VisualInstructions.Endpoints\Moryx.ControlSystem.VisualInstructions.Endpoints.csproj" />
-    <ProjectReference Include="..\Moryx.ControlSystem.VisualInstructions.Web\Moryx.ControlSystem.VisualInstructions.Web.csproj" />
+    <ProjectReference Include="..\Moryx.VisualInstructions.Endpoints\Moryx.VisualInstructions.Endpoints.csproj" />
+    <ProjectReference Include="..\Moryx.VisualInstructions.Web\Moryx.VisualInstructions.Web.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.VisualInstructions\Moryx.ControlSystem.VisualInstructions.csproj" />
     <ProjectReference Include="..\Moryx.Drivers.Mqtt\Moryx.Drivers.Mqtt.csproj" />
     <ProjectReference Include="..\Moryx.Drivers.OpcUa\Moryx.Drivers.OpcUa.csproj" />

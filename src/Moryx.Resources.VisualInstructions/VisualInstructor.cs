@@ -5,12 +5,12 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.ControlSystem.VisualInstructions;
-using Moryx.Resources.AssemblyInstruction.Properties;
+using Moryx.Resources.VisualInstructions.Properties;
 using Moryx.Serialization;
 using Moryx.Threading;
+using Moryx.VisualInstructions;
 
-namespace Moryx.Resources.AssemblyInstruction
+namespace Moryx.Resources.VisualInstructions
 {
     /// <summary>
     /// Resource implementation for a visual instructor
@@ -19,6 +19,7 @@ namespace Moryx.Resources.AssemblyInstruction
     public class VisualInstructor : Resource, IVisualInstructor, IVisualInstructionSource
     {
         #region Dependencies
+
         /// <summary>
         /// Injected parallel operations for asynchronous execution
         /// </summary>
@@ -170,7 +171,6 @@ namespace Moryx.Resources.AssemblyInstruction
 
             public Action<ActiveInstructionResponse> Callback { get; set; }
         }
-
     }
 }
 

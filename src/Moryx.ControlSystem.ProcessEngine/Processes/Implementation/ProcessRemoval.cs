@@ -9,7 +9,7 @@ using Moryx.AbstractionLayer.Workplans;
 using Moryx.Container;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Processes;
-using Moryx.ControlSystem.VisualInstructions;
+using Moryx.VisualInstructions;
 using Moryx.Logging;
 
 namespace Moryx.ControlSystem.ProcessEngine.Processes

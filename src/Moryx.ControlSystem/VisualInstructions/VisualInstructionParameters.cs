@@ -6,7 +6,7 @@ using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.Serialization;
 
-namespace Moryx.ControlSystem.VisualInstructions
+namespace Moryx.VisualInstructions
 {
     /// <summary>
     /// Provides parameters with visual instructions

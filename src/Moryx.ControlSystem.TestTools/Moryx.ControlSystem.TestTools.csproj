@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Moryx.AbstractionLayer.TestTools\Moryx.AbstractionLayer.TestTools.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem\Moryx.ControlSystem.csproj" />
+    <ProjectReference Include="..\Moryx.VisualInstructions\Moryx.VisualInstructions.csproj" />
   </ItemGroup>
 
 </Project>

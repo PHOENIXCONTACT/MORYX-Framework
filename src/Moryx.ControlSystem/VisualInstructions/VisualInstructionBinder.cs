@@ -3,7 +3,7 @@
 
 using Moryx.Bindings;
 
-namespace Moryx.ControlSystem.VisualInstructions
+namespace Moryx.VisualInstructions
 {
     /// <summary>
     /// Class to resolve visual instruction bindings

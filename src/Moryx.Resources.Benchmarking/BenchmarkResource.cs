@@ -10,7 +10,7 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Benchmarking;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
-using Moryx.ControlSystem.VisualInstructions;
+using Moryx.VisualInstructions;
 using Moryx.Notifications;
 using Moryx.Serialization;
 

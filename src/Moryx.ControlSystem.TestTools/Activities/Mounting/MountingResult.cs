@@ -1,7 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.ControlSystem.VisualInstructions;
+using Moryx.VisualInstructions;
 using System.ComponentModel.DataAnnotations;
 
 namespace Moryx.ControlSystem.TestTools.Activities

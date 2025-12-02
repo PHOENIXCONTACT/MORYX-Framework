@@ -4,7 +4,7 @@
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Activities;
-using Moryx.ControlSystem.VisualInstructions;
+using Moryx.VisualInstructions;
 
 namespace Moryx.Benchmarking
 {

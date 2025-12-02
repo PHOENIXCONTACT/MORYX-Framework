@@ -2,7 +2,17 @@
 
 ## WorkerSupport / VisualInstructions
 
-The WorkerSupport Module `Moryx.ControlSystem.WorkerSupport` was renamed to `Moryx.ControlSystem.VisualInstructions` to match all namespaces. Also the Resource project was renamed from `Moryx.Resources.AssemblyInstruction` to `Moryx.Resources.VisualInstructions`.
+The WorkerSupport Module `Moryx.ControlSystem.WorkerSupport` was renamed to `Moryx.VisualInstructions.Controller` to match all namespaces. Also the Resource project was renamed from `Moryx.Resources.AssemblyInstruction` to `Moryx.Resources.VisualInstructions`.
+
+VisualInstructions has an own separate namespace now.
+
+| Project                             | Description                                               | MORYX 8                                     |
+|-------------------------------------|-----------------------------------------------------------|---------------------------------------------|
+| Moryx.VisualInstructions            | API for usage of Visual Instructions                      | Moryx.ControlSystem.VisualInstructions      |
+| Moryx.VisualInstructions.Controller | Module for managing Visual Instructions                   | Moryx.ControlSystem.WorkerSupport           |
+| Moryx.VisualInstructions.Web        | Web Module to display Visual Instructions                 | Moryx.ControlSystem.WorkerSupport.Web       |
+| Moryx.VisualInstructions.Endpoints  | ASP.NET Controller for hosting API of Visual Instructions | Moryx.ControlSystem.WorkerSupport.Endpoints |
+| Moryx.Resources.VisualInstructions  | Digital Twin of a visual instructions                     | Moryx.Resources.AssemblyInstructions        |
 
 ### Replaced result of visual instructions with dedicated result object
 
