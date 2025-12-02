@@ -3,10 +3,9 @@
 
 using System.IO;
 using Moryx.Configuration;
-using Moryx.Runtime.Kernel;
 using NUnit.Framework;
 
-namespace Moryx.Tests.Configuration
+namespace Moryx.Runtime.Kernel.Tests.Configuration
 {
     [TestFixture]
     public class CachedConfigManagerTests

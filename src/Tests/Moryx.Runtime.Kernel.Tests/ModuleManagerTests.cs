@@ -6,13 +6,13 @@ using System.Linq;
 using System.Threading;
 using Moryx.Configuration;
 using Moryx.Logging;
-using Moryx.Runtime.Kernel.Tests.Dummys;
 using Moryx.Runtime.Kernel.Tests.ModuleMocks;
 using Moryx.Runtime.Modules;
 using Moq;
 using Moryx.Tools;
 using NUnit.Framework;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moryx.Runtime.Kernel.Tests.Dummies;
 
 namespace Moryx.Runtime.Kernel.Tests
 {
@@ -174,8 +174,8 @@ namespace Moryx.Runtime.Kernel.Tests
 
             // Assert
             Assert.That(moduleManager.AllModules.Count(), Is.EqualTo(3));
-            var moduleBUsingA_Dependencies = moduleManager.StartDependencies(moduleBUsingA);
-            Assert.That(moduleBUsingA_Dependencies.Count(), Is.EqualTo(1));
+            var moduleBUsingADependencies = moduleManager.StartDependencies(moduleBUsingA);
+            Assert.That(moduleBUsingADependencies.Count(), Is.EqualTo(1));
         }
 
         [Test]
@@ -263,10 +263,10 @@ namespace Moryx.Runtime.Kernel.Tests
             var eventFired = false;
 
             var moduleManager = CreateObjectUnderTest([mockModule.Object]);
-            moduleManager.ModuleStateChanged += (sender, args) => eventFired = true;
+            moduleManager.ModuleStateChanged += (_, _) => eventFired = true;
 
             // Act
-            mockModule.Raise(mock => mock.StateChanged += null, null, new ModuleStateChangedEventArgs());
+            mockModule.Raise(mock => mock.StateChanged += null, mockModule.Object, new ModuleStateChangedEventArgs());
 
             // Assert
             Assert.That(eventFired, "ModuleManager doesn't observe state changed events of modules.");

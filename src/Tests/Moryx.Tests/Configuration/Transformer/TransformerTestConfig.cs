@@ -1,17 +1,18 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.Serialization;
+using System.ComponentModel.DataAnnotations;
 using Moryx.Configuration;
+using Moryx.Serialization;
 
-namespace Moryx.Runtime.Kernel.Tests.Dummys
+namespace Moryx.Tests.Configuration.Transformer
 {
     /// <summary>
-    /// Testenum
+    /// Testconfig enum
     /// </summary>
-    public enum TestConfig1Enum
+    internal enum TestConfig1Enum
     {
         /// <summary>
         /// The enum value1
@@ -28,115 +29,126 @@ namespace Moryx.Runtime.Kernel.Tests.Dummys
     }
 
     /// <summary>
-    /// Test configuration
+    /// Test config
     /// </summary>
-    [DataContract]
-    public class RuntimeConfigManagerTestConfig1 : ConfigBase, IUpdatableConfig
+    internal class TransformerTestConfig
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TransformerTestConfig"/> class.
+        /// </summary>
+        public TransformerTestConfig()
+        {
+            SubConfig = new SubConfig();
+            SubConfigList = [];
+        }
+
         /// <summary>
         /// The boolean field default
         /// </summary>
         public const bool BooleanFieldDefault = true;
+
         /// <summary>
         /// The string field default
         /// </summary>
         public const string StringFieldDefault = "42";
+
         /// <summary>
         /// The int field default
         /// </summary>
         public const int IntFieldDefault = 43;
+
         /// <summary>
         /// The double field default
         /// </summary>
         public const double DoubleFieldDefault = 44.1;
+
         /// <summary>
         /// The long field default
         /// </summary>
         public const long LongFieldDefault = 45;
-        /// <summary>
-        /// The byte field default
-        /// </summary>
-        public const byte ByteFieldDefault = 255;
+
         /// <summary>
         /// The enum field default
         /// </summary>
         public const TestConfig1Enum EnumFieldDefault = TestConfig1Enum.EnumValue3;
 
         /// <summary>
-        /// Gets or sets a nullable boolean value.
+        /// String field display name
         /// </summary>
-        [DataMember]
-        [DefaultValue(BooleanFieldDefault)]
-        public bool? NullableBooleanField { get; set; }
+        public const string StringFieldDisplayName = "My string Field";
 
+        // no attributes: for some testcases
         /// <summary>
         /// Gets or sets a boolean value.
         /// </summary>
-        [DataMember]
-        [DefaultValue(BooleanFieldDefault)]
         public bool BooleanField { get; set; }
 
         /// <summary>
         /// Gets or sets a string value.
         /// </summary>
-        [DataMember]
         [DefaultValue(StringFieldDefault)]
+        [Description("StringField Test description")]
+        [DisplayName(StringFieldDisplayName)]
+        [Required, MinLength(3), MaxLength(10), Password]
         public string StringField { get; set; }
+
+        /// <summary>
+        /// Gets the read only property.
+        /// </summary>
+        public string ReadOnlyProperty => "Test";
 
         /// <summary>
         /// Gets or sets a int value.
         /// </summary>
-        [DataMember]
         [DefaultValue(IntFieldDefault)]
+        [IntegerSteps(40, 45, 3, StepMode.Addition)]
+        [Description("IntField Test description")]
         public int IntField { get; set; }
 
         /// <summary>
         /// Gets or sets a double value.
         /// </summary>
-        [DataMember]
         [DefaultValue(DoubleFieldDefault)]
+        [Description("DoubleField Test description")]
         public double DoubleField { get; set; }
-
-        /// <summary>
-        /// Gets or sets a sub configuration value.
-        /// </summary>
-        [DataMember]
-        public RuntimeConfigManagerTestConfig2 SubConfig { get; set; }
 
         /// <summary>
         /// Gets or sets a long value.
         /// </summary>
-        [DataMember]
         [DefaultValue(LongFieldDefault)]
+        [IntegerSteps(1, 10, 3, StepMode.Multiplication)]
+        [Description("LongField Test description")]
         public long LongField { get; set; }
-
-        /// <summary>
-        /// Gets or sets a byte value.
-        /// </summary>
-        [DataMember]
-        [DefaultValue(ByteFieldDefault)]
-        public byte ByteField { get; set; }
 
         /// <summary>
         /// Gets or sets a enum value.
         /// </summary>
-        [DataMember]
         [DefaultValue(EnumFieldDefault)]
+        [Description("EnumField Test description")]
         public TestConfig1Enum EnumField { get; set; }
 
         /// <summary>
-        /// External raise method invoked by <see cref="T:Moryx.Configuration.IConfigManager" />
+        /// Gets or sets a list of subconfigs.
         /// </summary>
-        /// <param name="modifiedProperties">Properties modified</param>
-        public void RaiseConfigChanged(params string[] modifiedProperties)
-        {
-            if (ConfigChanged != null)
-                ConfigChanged(this, new ConfigChangedEventArgs(modifiedProperties));
-        }
+        [Description("SubConfigList Test description")]
+        public List<SubConfig> SubConfigList { get; set; }
 
         /// <summary>
-        /// Event raised when the config was modified
+        /// Gets or sets a subconfig.
         /// </summary>
-        public event EventHandler<ConfigChangedEventArgs> ConfigChanged;
+        [Description("SubConfig Test description")]
+        public SubConfig SubConfig { get; set; }
+    }
+
+    /// <summary>
+    /// Test subconfig
+    /// </summary>
+    internal class SubConfig
+    {
+        /// <summary>
+        /// Gets or sets the int field.
+        /// </summary>
+        [Description("IntField Test description")]
+        public int IntField { get; set; }
     }
 }
