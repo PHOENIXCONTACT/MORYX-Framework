@@ -12,11 +12,6 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
     [DataContract]
     public class InstructionModel
     {
-        public InstructionModel()
-        {
-            Results = [];
-        }
-
         /// <summary>
         /// Runtime unique identifier of this instruction
         /// </summary>
@@ -51,7 +46,7 @@ namespace Moryx.ControlSystem.VisualInstructions.Endpoints
         /// Possible results with key and display values
         /// </summary>
         [DataMember]
-        public InstructionResultModel[] Results { get; set; }
+        public InstructionResultModel[] Results { get; set; } = [];
     }
 }
 
