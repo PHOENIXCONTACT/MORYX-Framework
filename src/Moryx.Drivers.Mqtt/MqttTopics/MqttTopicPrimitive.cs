@@ -19,6 +19,10 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
     [Display(Name = nameof(Strings.MqttTopicPrimitive_DisplayName), Description = nameof(Strings.MqttTopicPrimitive_Description), ResourceType = typeof(Strings))]
     public class MqttTopicPrimitive : MqttTopic<IConvertible>
     {
+        /// <summary>
+        /// Used to limit the amount of bytes we allocate on the stack before falling back to heap allocation
+        /// </summary>
+        private const int MAX_STACK_BUFFER_SIZE = 4096;
         #region Properties
 
         /// <summary>
@@ -195,7 +199,7 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
             else
             {
                 var length = (int)payload.Length;
-                var messageSpan = length < 4000 ? stackalloc byte[length] : new byte[length];
+                var messageSpan = length < MAX_STACK_BUFFER_SIZE ? stackalloc byte[length] : new byte[length];
                 payload.CopyTo(messageSpan);
                 return DeserializeInternal(messageSpan);
             }
