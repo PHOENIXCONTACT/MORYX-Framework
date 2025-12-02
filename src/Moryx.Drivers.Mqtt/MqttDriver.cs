@@ -291,7 +291,8 @@ public class MqttDriver : Driver, IMessageDriver
         var options = ConfigureMqttClient().Build();
         try
         {
-            var result = await _mqttClient.ConnectAsync(options, CancellationToken.None);
+            var result = await _mqttClient.ConnectAsync(
+                options, CancellationToken.None);
             if (result.ReasonString != null)
             {
                 Logger.Log(LogLevel.Information, "Server returned {reason} on connection attemt", result.ReasonString);
@@ -319,10 +320,10 @@ public class MqttDriver : Driver, IMessageDriver
     {
         _clientId = $"{System.Net.Dns.GetHostName()}-{Id}-{Name}";
         var optionsBuilder = new MqttClientOptionsBuilder()
-                            .WithClientId(_clientId)
-                            .WithTcpServer(BrokerURL, Port)
-                            .WithTlsOptions(new MqttClientTlsOptions() { UseTls = UseTls })
-                            .WithCleanSession(!ReconnectWithoutCleanSession);
+            .WithClientId(_clientId)
+            .WithTcpServer(BrokerURL, Port)
+            .WithTlsOptions(new MqttClientTlsOptions() { UseTls = UseTls })
+            .WithCleanSession(!ReconnectWithoutCleanSession);
         
         if(HasLastWill)
         {
@@ -417,13 +418,22 @@ public class MqttDriver : Driver, IMessageDriver
         try
         {
             // Search by identifier if set
-            if (message is IIdentifierMessage identifierMessage && !string.IsNullOrEmpty(identifierMessage.Identifier))
+            if (message is IIdentifierMessage identifierMessage
+                && !string.IsNullOrEmpty(identifierMessage.Identifier))
             {
-                topics = Channels.Where(t => t.TopicType != TopicType.SubscribeOnly && t.Matches(identifierMessage.Identifier)).ToList();
+                topics = Channels
+                    .Where(t =>
+                        t.TopicType != TopicType.SubscribeOnly
+                        && t.Matches(identifierMessage.Identifier))
+                    .ToList();
             }
             else
             {
-                topics = Channels.Where(t => t.TopicType != TopicType.SubscribeOnly && (t.MessageType?.IsInstanceOfType(message) ?? false)).ToList();
+                topics = Channels
+                    .Where(t =>
+                        t.TopicType != TopicType.SubscribeOnly
+                        && (t.MessageType?.IsInstanceOfType(message) ?? false))
+                    .ToList();
             }
         }
         catch (Exception ex)
@@ -434,11 +444,34 @@ public class MqttDriver : Driver, IMessageDriver
 
         if (topics.Count == 1)
         {
-            await State.SendAsync(topics[0], message, cancellationToken);
+            await SendInternalAsync(topics[0], message, cancellationToken);
         }
         else
         {
             Logger.Log(LogLevel.Warning, "Corresponding topic for message {message} not found.", message);
+        }
+    }
+
+    /// <summary>
+    /// Send with a topic already preselected.
+    /// This is used when a specific topic resource has already been determined.
+    /// (Including when Send is called on a Topic Resource directly)
+    /// </summary>
+    /// <param name="topic"></param>
+    /// <param name="message"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    internal async Task SendInternalAsync(MqttTopic topic, object message, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await State.SendAsync(topic, message, cancellationToken);
+
+        }
+        catch(Exception ex)
+        {
+            Logger.LogError(ex, "Failed not send message to broker");
+            throw;
         }
     }
 
@@ -451,14 +484,16 @@ public class MqttDriver : Driver, IMessageDriver
     /// <returns></returns>
     public async Task OnSend(MqttMessageTopic messageTopic, byte[] message, CancellationToken cancellationToken)
     {
-        using var span = _activitySource.StartActivity("Send", ActivityKind.Producer, parentContext: default, tags: new Dictionary<string, object>() {
+        using var span = _activitySource.StartActivity("Send",
+            ActivityKind.Producer, parentContext: default, tags: new Dictionary<string, object>() {
             {"message.topic", messageTopic.Topic},
             {"message.retain", messageTopic.retain},
             {"message.length", message.Length},
         });
-        if (span is not null && TraceMessageContent)
+
+        if (TraceMessageContent)
         {
-            span.AddTag("message.content", System.Text.Encoding.UTF8.GetString(message));
+            span?.AddTag("message.content", System.Text.Encoding.UTF8.GetString(message));
         }
 
         var messageMqttBuilder = new MqttApplicationMessageBuilder()
@@ -501,9 +536,9 @@ public class MqttDriver : Driver, IMessageDriver
             { "message.length", message.Length }
         });
 
-        if (TraceMessageContent && span is not null)
+        if (TraceMessageContent)
         {
-            span.AddTag("message.content", appMessage.ConvertPayloadToString());
+            span?.AddTag("message.content", appMessage.ConvertPayloadToString());
         }
 
         var topic = topicName;
@@ -511,10 +546,12 @@ public class MqttDriver : Driver, IMessageDriver
         {
             topic = topicName.Substring(Identifier.Length);
         }
+
         var topicList =
             Channels
                 .Where(t => t.TopicType != TopicType.PublishOnly && t.Matches(topic))
                 .ToList();
+
         if (topicList.Count >= 1)
         {
             foreach (var topicResource in topicList)
@@ -577,6 +614,7 @@ public class MqttDriver : Driver, IMessageDriver
             .WithTopic(topicName)
             .WithQualityOfServiceLevel(ConvertStringToQoS(QualityOfService))
             .Build();
+
         if (MqttVersion == MqttProtocolVersion.V500)
         {
             topicFilter.NoLocal = true;

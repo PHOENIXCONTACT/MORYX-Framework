@@ -322,7 +322,7 @@ namespace Moryx.Drivers.Mqtt
         {
             if (payload is TMessage send)
             {
-                MqttDriver.Send(payload);
+                MqttDriver.SendInternalAsync(this, payload).GetAwaiter().GetResult();
             }
             else
             {
@@ -333,11 +333,11 @@ namespace Moryx.Drivers.Mqtt
         }
 
         /// <inheritdoc />
-        public override Task SendAsync(object payload, CancellationToken cancellationToken = default)
+        public override async Task SendAsync(object payload, CancellationToken cancellationToken = default)
         {
             if (payload is TMessage send)
             {
-                return MqttDriver.SendAsync(payload, cancellationToken);
+                await MqttDriver.SendInternalAsync(this, payload, cancellationToken);
             }
 
             Logger.Log(LogLevel.Error, "Message {0} has the wrong Type. It is {1} instead of {2}",
@@ -399,12 +399,21 @@ namespace Moryx.Drivers.Mqtt
             {
                 if (MessageType == null)
                 {
-                    Logger.Log(LogLevel.Error, "Message was received, but not MessageType was set.");
+                    Logger.Log(LogLevel.Error, "Message was received, but no MessageType was set.");
                     span.SetStatus(ActivityStatusCode.Error, "MessageType not set");
                     return;
                 }
+                try
+                {
+                    msg = Deserialize(messageAsBytes);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, "Failed to deserialize message");
+                    span?.AddException(ex);
+                    return;
+                }
 
-                msg = Deserialize(messageAsBytes);
                 if (msg is IIdentifierMessage identMessage)
                 {
                     identMessage.Identifier = receivedTopic;
@@ -445,10 +454,10 @@ namespace Moryx.Drivers.Mqtt
                         span.AddTag("message.decoded", System.Text.Json.JsonSerializer.Serialize(msg));
                     }
                 }
-                
             }
 
-            using (var span = ActivitySource.StartActivity("PublishReceived", ActivityKind.Internal, parentContext: default, tags: new Dictionary<string, object>{
+            using (var span = ActivitySource.StartActivity("PublishReceived",
+                ActivityKind.Internal, parentContext: default, tags: new Dictionary<string, object>{
                 { "topic.name", Name },
                 { "topic.id", Id },
                 { "topic.type", MessageName }
