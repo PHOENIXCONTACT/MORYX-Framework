@@ -314,8 +314,6 @@ public class MqttDriver : Driver, IMessageDriver
         }
     }
 
-    
-
     private MqttClientOptionsBuilder ConfigureMqttClient()
     {
         _clientId = $"{System.Net.Dns.GetHostName()}-{Id}-{Name}";
@@ -324,8 +322,8 @@ public class MqttDriver : Driver, IMessageDriver
             .WithTcpServer(BrokerURL, Port)
             .WithTlsOptions(new MqttClientTlsOptions() { UseTls = UseTls })
             .WithCleanSession(!ReconnectWithoutCleanSession);
-        
-        if(HasLastWill)
+
+        if (HasLastWill)
         {
             optionsBuilder
                 .WithWillRetain(true)
@@ -468,9 +466,9 @@ public class MqttDriver : Driver, IMessageDriver
             await State.SendAsync(topic, message, cancellationToken);
 
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            Logger.LogError(ex, "Failed not send message to broker");
+            Logger.LogError(ex, "Failed to send message to broker");
             throw;
         }
     }
@@ -518,7 +516,7 @@ public class MqttDriver : Driver, IMessageDriver
     {
         // Experimental: Dispatch to new thread to prevent exceptions or deadlocks from causing inflight blockage
         ParallelOperations.ExecuteParallel(
-            param => Receive(param.ApplicationMessage), 
+            param => Receive(param.ApplicationMessage),
             new { args.ApplicationMessage }
         );
 
@@ -636,7 +634,7 @@ public class MqttDriver : Driver, IMessageDriver
         {
             return MqttQualityOfServiceLevel.ExactlyOnce;
         }
-        return (MqttQualityOfServiceLevel)Enum.Parse(typeof(MqttQualityOfServiceLevel), qos);
+        return Enum.Parse<MqttQualityOfServiceLevel>(qos);
     }
 
     internal void ExistingTopicRemoved(string subscribedTopic)
