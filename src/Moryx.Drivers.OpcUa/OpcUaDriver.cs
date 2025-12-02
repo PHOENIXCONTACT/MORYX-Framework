@@ -29,9 +29,8 @@ namespace Moryx.Drivers.OpcUa;
 [Display(Name = nameof(Strings.OpcUaDriver_DisplayName), Description = nameof(Strings.OpcUaDriver_Description), ResourceType = typeof(Strings))]
 public class OpcUaDriver : Driver, IOpcUaDriver
 {
-    //TODO 6.1 Invoke Methods
-
     private const int NodeLayersShown = 5;
+
     /// <summary>
     /// Current tate of the driver
     /// </summary>
@@ -188,8 +187,8 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     internal ISession _session; //TODO: Internal field just for tests
     private SessionReconnectHandler _reconnectHandler;
 
-    private readonly object _lock = new();
-    private readonly object _stateLock = new();
+    private readonly Lock _lock = new();
+    private readonly Lock _stateLock = new();
 
     private Subscription _subscription;
 
@@ -452,10 +451,10 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     }
 
     /// <inheritdoc/>
-    public OpcUaNode GetNode(string identifier)
+    public OpcUaNode GetNode(string nodeId)
     {
-        var nodeId = OpcUaNode.CreateExpandedNodeId(GetNodeIdAsString(identifier));
-        if (!_nodesFlat.TryGetValue(nodeId, out var value))
+        var expandedNodeId = OpcUaNode.CreateExpandedNodeId(GetNodeIdAsString(nodeId));
+        if (!_nodesFlat.TryGetValue(expandedNodeId, out var value))
         {
             return null;
         }
@@ -764,11 +763,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
             _savedIds.Add(node.Identifier);
 
-            if (!_nodesFlat.ContainsKey(node.Identifier))
-            {
-                _nodesFlat.Add(node.Identifier, node);
-            }
-
+            _nodesFlat.TryAdd(node.Identifier, node);
             if (layer < NodeLayersShown)
             {
                 list.Add(node);
@@ -864,7 +859,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         {
             if (value.Error?.Exception != null)
             {
-                Logger.Log(LogLevel.Error, value.Error.Exception, value.Error?.Message);
+                Logger.Log(LogLevel.Error, value.Error.Exception, "Error reading node data.");
                 return null;
             }
         }
@@ -1044,7 +1039,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     [EntrySerialize]
     internal List<string> FindNodeId(string displayName)
     {
-        var result = _nodesFlat.Where(x => x.Value.DisplayName.ToLower().Contains(displayName.ToLower()) || x.Value.DisplayName.ToLower().Equals(displayName.ToLower()))
+        var result = _nodesFlat.Where(x => x.Value.DisplayName.Contains(displayName, StringComparison.CurrentCultureIgnoreCase) || x.Value.DisplayName.ToLower().Equals(displayName.ToLower()))
             .Select(x => x.Key).ToList();
 
         return result;

@@ -11,16 +11,14 @@ public class NodeIdStringTests : OpcUaTestBase
 {
     private new readonly NamespaceTable _namespaceTable = new(["http://opcfoundation.org/UA/", "http://anothernamespace.org/"]);
 
-    [SetUp]
-    public void Setup()
-    {
-    }
+    private const string NodeIdWithUriOnly = "nsu=http://anothernamespace.org/;i=2994";
+    private const string NodeIdWithNamespaceOnly = "ns=1;i=2994";
+    private const string NodeIdWithDefaultNamespaceOnly = "ns=0;i=2994";
+    private const string NodeIdWithUriAndIndex = "nsu=http://anothernamespace.org/;ns=1;i=2994";
 
     [Test]
     public void NamespaceIndexIsIgnoredWhenUriIsSpecified()
     {
-        var NodeIdWithUriAndIndex = "nsu=http://anothernamespace.org/;ns=1;i=2994";
-
         var nodeIdString = OpcUaNode.CreateExpandedNodeId(NodeIdWithUriAndIndex);
         Assert.That(nodeIdString, Is.EqualTo("nsu=http://anothernamespace.org/;i=2994"));
     }
@@ -28,8 +26,6 @@ public class NodeIdStringTests : OpcUaTestBase
     [Test]
     public void NamespaceUriIsUsedWhenIndexIsNotSpecified()
     {
-        var NodeIdWithUriOnly = "nsu=http://anothernamespace.org/;i=2994";
-
         var nodeIdString = OpcUaNode.CreateExpandedNodeId(NodeIdWithUriOnly);
         Assert.That(nodeIdString, Is.EqualTo("nsu=http://anothernamespace.org/;i=2994"));
     }
@@ -37,18 +33,14 @@ public class NodeIdStringTests : OpcUaTestBase
     [Test]
     public void NamespaceIndexIsUsedWhenUriIsNotSpecified()
     {
-        var NodeIdWithUriOnly = "ns=1;i=2994";
-
-        var nodeIdString = OpcUaNode.CreateExpandedNodeId(NodeIdWithUriOnly);
+        var nodeIdString = OpcUaNode.CreateExpandedNodeId(NodeIdWithNamespaceOnly);
         Assert.That(nodeIdString, Is.EqualTo("ns=1;i=2994"));
     }
 
     [Test]
     public void NamespaceIndexIgnoredWhenZeroAndUriIsNotSpecified()
     {
-        var NodeIdWithUriOnly = "ns=0;i=2994";
-
-        var nodeIdString = OpcUaNode.CreateExpandedNodeId(NodeIdWithUriOnly);
+        var nodeIdString = OpcUaNode.CreateExpandedNodeId(NodeIdWithDefaultNamespaceOnly);
         Assert.That(nodeIdString, Is.EqualTo("i=2994"));
     }
 

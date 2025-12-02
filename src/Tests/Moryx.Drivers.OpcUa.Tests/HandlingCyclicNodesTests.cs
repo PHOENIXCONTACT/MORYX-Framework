@@ -3,6 +3,7 @@
 
 using System.Text.Json;
 using Moq;
+using Moryx.AbstractionLayer.Drivers;
 using Moryx.Drivers.OpcUa.States;
 using Moryx.Modules;
 using Moryx.Tools;
@@ -75,7 +76,7 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
-            if (e is RunningState)
+            if (e.Classification == StateClassification.Running)
             {
                 //Assert II
                 Assert.That(_driver.Nodes.Count, Is.EqualTo(1), "Number of browsed nodes doesn't fit");
@@ -123,7 +124,7 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
-            if (e is RunningState)
+            if (e.Classification == StateClassification.Running)
             {
                 //Assert II
                 var node = (OpcUaObjectDisplayNode)_driver.Nodes[0];
@@ -191,7 +192,7 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
-            if (e is RunningState)
+            if (e.Classification == StateClassification.Running)
             {
                 //Assert II
                 Assert.That(_driver.Nodes.Count, Is.EqualTo(3), "Number of browsed nodes doesn't fit");

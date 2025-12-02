@@ -14,16 +14,13 @@ namespace Moryx.Drivers.OpcUa.Tests;
 [TestFixture]
 public class HandleContinuationPoint : OpcUaTestBase
 {
-    private readonly ReferenceDescriptionCollection _references;
-
-    public HandleContinuationPoint()
-    {
-        _references = CreateNodes(_namespaceTable);
-    }
+    private ReferenceDescriptionCollection _references;
 
     [SetUp]
     public void SetUp()
     {
+        _references = CreateNodes(_namespaceTable);
+
         ReflectionTool.TestMode = true;
 
         _sessionMock = new Mock<ISession>();

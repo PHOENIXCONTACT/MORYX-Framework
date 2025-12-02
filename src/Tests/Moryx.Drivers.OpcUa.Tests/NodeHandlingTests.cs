@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
+using Moryx.AbstractionLayer.Drivers;
 using Moryx.Drivers.OpcUa.States;
 using Moryx.Modules;
 using NUnit.Framework;
@@ -35,7 +36,7 @@ public class NodeHandlingTests : OpcUaTestBase
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
-            if (e is RunningState)
+            if (e.Classification == StateClassification.Running)
             {
                 //Assert II
                 Assert.That(_driver.Nodes, Has.Count.EqualTo(_rootNodes.Count), "Number of browsed nodes doesn't fit");
@@ -72,7 +73,7 @@ public class NodeHandlingTests : OpcUaTestBase
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
-            if (e is RunningState)
+            if (e.Classification == StateClassification.Running)
             {
                 //Assert II
                 Assert.That(node?.DisplayName, Is.EqualTo(expectedNode.Value.DisplayName.Text));
@@ -110,7 +111,7 @@ public class NodeHandlingTests : OpcUaTestBase
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
-            if (e is RunningState)
+            if (e.Classification == StateClassification.Running)
             {
                 wait.Set();
             }
@@ -141,7 +142,7 @@ public class NodeHandlingTests : OpcUaTestBase
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
-            if (e is RunningState)
+            if (e.Classification == StateClassification.Running)
             {
                 wait.Set();
             }
@@ -172,7 +173,7 @@ public class NodeHandlingTests : OpcUaTestBase
         var waitSubscription3 = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
-            if (e is RunningState)
+            if (e.Classification == StateClassification.Running)
             {
                 wait.Set();
             }

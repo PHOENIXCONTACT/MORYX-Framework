@@ -16,13 +16,11 @@ public class OpcUaTestBase
     private const ushort IndexNamespace1 = 1;
     private const ushort IndexNamespace2 = 2;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     protected Mock<ISession> _sessionMock;
     protected Dictionary<NodeId, ReferenceDescription> _rootNodes;
     protected ReferenceDescription _root;
     protected NamespaceTable _namespaceTable = CreateNamespaceTable();
     protected OpcUaDriver _driver;
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
     protected static NamespaceTable CreateNamespaceTable()
     {

@@ -8,5 +8,5 @@ namespace Moryx.Drivers.OpcUa;
 internal static partial class OpcUaNodeHelpers
 {
     [GeneratedRegex(";ns=\\d+")]
-    public static partial Regex StringWithUriAndNamespaceIndex();
+    public static partial Regex NodeIdWithNamespaceIndexRegex();
 }
