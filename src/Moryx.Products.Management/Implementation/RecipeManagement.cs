@@ -48,13 +48,6 @@ namespace Moryx.Products.Management
             return saved;
         }
 
-        public void Save(long productId, ICollection<IProductRecipe> recipes)
-        {
-            Storage.SaveRecipes(productId, recipes);
-            foreach (var recipe in recipes)
-                RaiseRecipeChanged(recipe);
-        }
-
         public void Remove(long recipeId)
         {
             Storage.RemoveRecipe(recipeId);

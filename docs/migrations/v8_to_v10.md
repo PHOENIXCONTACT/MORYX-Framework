@@ -84,6 +84,7 @@ With MORYX 10, several changes have been made to the data model to improve perfo
 
 - Removed `TypeName` from ProcessEntity. It was not used.
 - Combined `Classname`, `Namespace` in `TypeName` of `WorkplanStepEntity` and removed `Assembly`
+- Renamed `Type` to `TypeName` in `RecipeEntity
 
 ## Launcher
 
@@ -135,9 +136,13 @@ The API of `IResourceInitializer` was adjusted
 - `Initialize` is now returning async task
 - Introduced `ResourceInitializerResult` object for extensibility and option to save
 - Its now possible to execute initializers from the facade
-- The initializers are registered transient by default.
+- The initializers are registered transient by default.`
 
-## Product importer
+## Modules-Products
+
+- Removed `productId` from `SaveRecipes` of `IProductStorage` and changed argument to `IReadOnlyList`
+
+### Product importer
 
 - Introduced `ProductImporterAttribute` for harmonized registration of importers.
 - The importers are registered transient by default.

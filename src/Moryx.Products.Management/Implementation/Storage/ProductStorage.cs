@@ -191,12 +191,12 @@ namespace Moryx.Products.Management
         /// </summary>
         private IProductRecipe LoadRecipe(IUnitOfWork uow, ProductRecipeEntity recipeEntity)
         {
-            var productRecipe = RecipeInformation[recipeEntity.Type].Constructor();
+            var productRecipe = RecipeInformation[recipeEntity.TypeName].Constructor();
 
             RecipeStorage.CopyToRecipe(recipeEntity, productRecipe);
             productRecipe.Product = LoadType(uow, productRecipe.Product.Id);
 
-            RecipeInformation[recipeEntity.Type].Strategy.LoadRecipe(recipeEntity, productRecipe);
+            RecipeInformation[recipeEntity.TypeName].Strategy.LoadRecipe(recipeEntity, productRecipe);
 
             return productRecipe;
         }
@@ -214,6 +214,20 @@ namespace Moryx.Products.Management
             }
         }
 
+        /// <inheritdoc />
+        public void SaveRecipes(IReadOnlyList<IProductRecipe> recipes)
+        {
+            using var uow = Factory.Create();
+
+            // Save changes to recipes
+            foreach (var recipe in recipes)
+            {
+                SaveRecipe(uow, recipe);
+            }
+
+            uow.SaveChanges();
+        }
+
         /// <summary>
         /// Saves <see cref="ProductRecipe"/> to database and return the <see cref="ProductRecipeEntity"/>
         /// </summary>
@@ -224,33 +238,6 @@ namespace Moryx.Products.Management
             RecipeInformation[recipe.GetType().FullName].Strategy.SaveRecipe(recipe, entity);
 
             return entity;
-        }
-
-        /// <inheritdoc />
-        public void SaveRecipes(long productId, ICollection<IProductRecipe> recipes)
-        {
-            using (var uow = Factory.Create())
-            {
-                // Prepare required repos
-                var prodRepo = uow.GetRepository<IProductTypeRepository>();
-                var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
-
-                // Save changes to recipes
-                foreach (var recipe in recipes)
-                {
-                    SaveRecipe(uow, recipe);
-                }
-
-                var prod = prodRepo.GetByKey(productId);
-
-                // Find deleted ones and remove from db
-                var deleted = from dbRecipe in prod.Recipes
-                              where recipes.All(r => r.Id != dbRecipe.Id)
-                              select dbRecipe;
-                recipeRepo.RemoveRange(deleted);
-
-                uow.SaveChanges();
-            }
         }
 
         /// <inheritdoc />
@@ -582,7 +569,7 @@ namespace Moryx.Products.Management
 
         private ProductTypeEntity SaveProduct(ProductPartsSaverContext saverContext, ProductType modifiedProductType)
         {
-            var strategy = TypeInformation[modifiedProductType.GetType().FullName].Strategy
+            var strategy = TypeInformation[modifiedProductType.ProductTypeName()].Strategy
                 ?? throw new InvalidOperationException($"Cannot save product of type {modifiedProductType.GetType().FullName}. No {nameof(IProductTypeStrategy)} is configured for this type in the {nameof(ModuleConfig)}");
 
             //TODO use uow directly instead of repo if that is possible
@@ -596,7 +583,7 @@ namespace Moryx.Products.Management
             // If entity does not exist or was deleted, create a new one
             if (entities.All(p => p.Deleted != null))
             {
-                typeEntity = repo.Create(identity.Identifier, identity.Revision, modifiedProductType.Name, modifiedProductType.GetType().FullName);
+                typeEntity = repo.Create(identity.Identifier, identity.Revision, modifiedProductType.Name, modifiedProductType.ProductTypeName());
                 saverContext.UnitOfWork.LinkEntityToBusinessObject(modifiedProductType, typeEntity);
             }
             else

@@ -49,7 +49,7 @@ namespace Moryx.Products.Management
         {
             var entity = uow.GetEntity<ProductRecipeEntity>(recipe);
 
-            entity.Type = recipe.GetType().FullName;
+            entity.TypeName = recipe.RecipeTypeName();
             entity.Revision = recipe.Revision;
             entity.Name = recipe.Name;
             entity.TemplateId = recipe.TemplateId;
@@ -128,7 +128,7 @@ namespace Moryx.Products.Management
 
                 // Restore output descriptions
                 step.OutputDescriptions = new OutputDescription[stepEntity.OutputDescriptions.Count];
-                for (int index = 0; index < step.OutputDescriptions.Length; index++)
+                for (var index = 0; index < step.OutputDescriptions.Length; index++)
                 {
                     var descriptionEntity = stepEntity.OutputDescriptions.First(ode => ode.Index == index);
                     var description = new OutputDescription
@@ -284,7 +284,7 @@ namespace Moryx.Products.Management
                     stepEntity = stepRepo.Create();
                     stepEntity.StepId = step.Id;
                     stepEntity.Name = step.Name;
-                    stepEntity.TypeName = stepType.FullName;
+                    stepEntity.TypeName = step.WorkplanStepTypeName();
                     stepEntity.Name = stepType.Name;
                     stepEntity.PositionX = step.Position.X;
                     stepEntity.PositionY = step.Position.Y;
