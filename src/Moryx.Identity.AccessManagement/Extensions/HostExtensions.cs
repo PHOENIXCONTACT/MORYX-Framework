@@ -10,7 +10,7 @@ using Moryx.Identity.AccessManagement.Data;
 namespace Moryx.Identity.AccessManagement
 {
     /// <summary>
-    /// Extension methods to use setup the MORYX AccessManagement within an Asp.Net Core application 
+    /// Extension methods to use setup the MORYX AccessManagement within an Asp.Net Core application
     /// using the created host of the application.
     /// </summary>
     public static class HostExtensions
@@ -20,7 +20,6 @@ namespace Moryx.Identity.AccessManagement
             "Moryx.Runtime.Database.CanSetAndTestConfig",
             "Moryx.Runtime.Database.CanCreate",
             "Moryx.Runtime.Database.CanErase",
-            "Moryx.Runtime.Database.CanDumpAndRestore",
             "Moryx.Runtime.Database.CanMigrateModel",
             "Moryx.Runtime.Database.CanSetup",
             "Moryx.Runtime.Modules.CanView",
@@ -56,10 +55,10 @@ namespace Moryx.Identity.AccessManagement
             "Moryx.Jobs.CanComplete",
             "Moryx.Jobs.CanAbort",
             "Moryx.Processes.CanView",
-            "Moryx.VisualInstruction.CanView",
-            "Moryx.VisualInstruction.CanComplete",
-            "Moryx.VisualInstruction.CanAdd",
-            "Moryx.VisualInstruction.CanClear",
+            "Moryx.VisualInstructions.CanView",
+            "Moryx.VisualInstructions.CanComplete",
+            "Moryx.VisualInstructions.CanAdd",
+            "Moryx.VisualInstructions.CanClear",
             "Moryx.Notifications.CanView",
             "Moryx.Notifications.CanAcknowledge",
             "Moryx.Orders.CanView",
@@ -71,12 +70,12 @@ namespace Moryx.Identity.AccessManagement
             "Moryx.Orders.CanReport",
             "Moryx.Orders.CanAdvice",
             "Moryx.FactoryMonitor.CanView",
-            "Moryx.Analytics.CanView",
             "Moryx.CommandCenter.CanView",
             "Moryx.Skills.CanView",
             "Moryx.Skills.CanManage",
             "Moryx.Operators.CanView",
-            "Moryx.Operators.CanManage"
+            "Moryx.Operators.CanManage",
+            "Moryx.Launcher.CanViewExternalModules"
         ];
 
         /// <summary>
