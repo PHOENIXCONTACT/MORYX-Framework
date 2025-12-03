@@ -463,13 +463,13 @@ namespace Moryx.Drivers.Mqtt
         /// </summary>
         /// <param name="payload"></param>
         /// <returns></returns>
-        protected internal abstract byte[] Serialize(object payload);
+        protected abstract byte[] Serialize(object payload);
 
         /// <summary>
         /// deserializes received byte-array to an object of TMessage
         /// </summary>
         /// <param name="payload"></param>
         /// <returns></returns>
-        protected internal abstract TMessage Deserialize(ReadOnlySequence<byte> payload);
+        protected abstract TMessage Deserialize(ReadOnlySequence<byte> payload);
     }
 }

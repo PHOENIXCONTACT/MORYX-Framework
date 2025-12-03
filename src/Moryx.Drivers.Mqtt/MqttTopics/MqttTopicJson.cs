@@ -62,7 +62,7 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         public bool EnumsAsStrings { get; set; }
 
         /// <inheritdoc />
-        protected internal override byte[] Serialize(object payload)
+        protected override byte[] Serialize(object payload)
         {
             if (Serializer == SerializerSelection.SystemTextJson)
             {
@@ -75,7 +75,7 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         }
 
         /// <inheritdoc />
-        protected internal override object Deserialize(ReadOnlySequence<byte> payload)
+        protected override object Deserialize(ReadOnlySequence<byte> payload)
         {
             if (Serializer == SerializerSelection.SystemTextJson)
             {

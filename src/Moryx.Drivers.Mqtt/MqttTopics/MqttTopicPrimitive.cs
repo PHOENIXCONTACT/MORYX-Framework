@@ -39,7 +39,7 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         #endregion
 
         /// <inheritdoc />
-        protected internal override byte[] Serialize(object payload)
+        protected override byte[] Serialize(object payload)
         {
             if (payload is bool b)
             {
@@ -190,7 +190,7 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         }
 
         /// <inheritdoc />
-        protected internal override IConvertible Deserialize(ReadOnlySequence<byte> payload)
+        protected override IConvertible Deserialize(ReadOnlySequence<byte> payload)
         {
             if (payload.IsSingleSegment)
             {
