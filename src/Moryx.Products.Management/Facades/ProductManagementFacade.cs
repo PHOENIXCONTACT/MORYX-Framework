@@ -12,11 +12,8 @@ using Moryx.Workplans;
 
 namespace Moryx.Products.Management
 {
-    internal class ProductManagementFacade : IFacadeControl, IProductManagement
+    internal class ProductManagementFacade : FacadeBase, IProductManagement
     {
-        // Use this delegate in every call for clean health state management
-        public Action ValidateHealthState { get; set; }
-
         #region Dependencies
 
         public IProductManager ProductManager { get; set; }
@@ -27,23 +24,24 @@ namespace Moryx.Products.Management
 
         public IWorkplans Workplans { get; set; }
 
-        public ModuleConfig Config { get; set; }
-
         public IModuleLogger Logger { get; set; }
 
         #endregion
 
-        public void Activate()
+        public override void Activate()
         {
+            base.Activate();
+
             ProductManager.TypeChanged += OnTypeChanged;
             RecipeManagement.RecipeChanged += OnRecipeChanged;
-
         }
 
-        public void Deactivate()
+        public override void Deactivate()
         {
             ProductManager.TypeChanged -= OnTypeChanged;
             RecipeManagement.RecipeChanged -= OnRecipeChanged;
+
+            base.Deactivate();
         }
 
         public string Name => ModuleController.ModuleName;
