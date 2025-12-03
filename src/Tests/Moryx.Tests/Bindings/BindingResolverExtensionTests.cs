@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections.Generic;
 using Moryx.Bindings;
 using NUnit.Framework;
 
@@ -136,6 +137,29 @@ namespace Moryx.Tests.Bindings
             var result = resolver.Resolve(data);
 
             Assert.That(textToFormat, Is.EqualTo(result));
+        }
+
+        [TestCase("This text used dictionary indexer '{Branch.Dictionary[A]}'", "This text used dictionary indexer 'Dict Value A'", Description = "Should return dictionary value")]
+        [TestCase("This text used dictionary indexer '{Branch.Dictionary[B]}'", "This text used dictionary indexer 'Dict Value B'", Description = "Should return dictionary value")]
+        public void DictionaryIndexerOnBranch(string textToFormat, string textResult)
+        {
+            var data = new Foo
+            {
+                Branch = new Branch
+                {
+                    Dictionary = new Dictionary<string, string>
+                    {
+                        { "A", "Dict Value A" },
+                        { "B", "Dict Value B" }
+                    }
+                }
+            };
+
+            var bindingResolverFactory = new BindingResolverFactory();
+            var resolver = TextBindingResolverFactory.Create(textToFormat, bindingResolverFactory);
+            var result = resolver.Resolve(data);
+
+            Assert.That(result, Is.EqualTo(textResult));
         }
 
         private int CountChainLinks(IBindingResolverChain chain)

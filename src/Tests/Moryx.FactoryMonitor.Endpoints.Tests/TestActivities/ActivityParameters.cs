@@ -3,7 +3,7 @@
 
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
-using Moryx.ControlSystem.VisualInstructions;
+using Moryx.VisualInstructions;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests
 {
