@@ -8,7 +8,7 @@ namespace Moryx.Orders.Assignment
     /// <summary>
     /// Will be used to validate the complete operation after finishing the creation
     /// </summary>
-    public interface IOperationValidation : IConfiguredPlugin<OperationValidationConfig>
+    public interface IOperationValidation : IAsyncConfiguredPlugin<OperationValidationConfig>
     {
         /// <summary>
         /// Validates the given operation

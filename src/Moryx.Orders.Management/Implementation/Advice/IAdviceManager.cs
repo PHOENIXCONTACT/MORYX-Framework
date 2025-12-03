@@ -9,7 +9,7 @@ namespace Moryx.Orders.Management.Advice
     /// <summary>
     /// Component which handles advices for an operation
     /// </summary>
-    internal interface IAdviceManager : IPlugin
+    internal interface IAdviceManager : IAsyncPlugin
     {
         /// <summary>
         /// This will create an order advice for produced parts

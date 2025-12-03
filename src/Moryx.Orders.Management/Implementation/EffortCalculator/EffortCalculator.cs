@@ -25,10 +25,6 @@ namespace Moryx.Orders.Management
             JobManagement.EvaluationsOutdated += OnEvaluationsOutdated;
         }
 
-        public void Dispose()
-        {
-        }
-
         private void OnOperationUpdated(object sender, OperationEventArgs operationEventArgs)
         {
         }

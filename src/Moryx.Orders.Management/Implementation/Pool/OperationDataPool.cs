@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Logging;
@@ -18,7 +19,9 @@ namespace Moryx.Orders.Management
         #region Dependencies
 
         public IUnitOfWorkFactory<OrdersContext> UnitOfWorkFactory { get; set; }
+
         public IModuleLogger Logger { get; set; }
+
         public IOperationFactory OperationFactory { get; set; }
 
         #endregion
@@ -30,16 +33,17 @@ namespace Moryx.Orders.Management
 
         #endregion
 
-        public void Start()
+        public async Task StartAsync()
         {
             using var uow = UnitOfWorkFactory.Create();
 
             var operationRepo = uow.GetRepository<IOperationEntityRepository>();
             // Restore only operations which are not completed
-            var restored = operationRepo.Linq.Active().Where(o => o.State < OperationDataStateBase.CompletedKey).ToArray();
+            var restored = await operationRepo.Linq.Active()
+                .Where(o => o.State < OperationDataStateBase.CompletedKey).ToArrayAsync();
 
             foreach (var entity in restored)
-                RestoreByEntity(entity);
+                await RestoreByEntity(entity);
 
             _lock.EnterReadLock();
             var operations = _operations.ToList();
@@ -49,7 +53,7 @@ namespace Moryx.Orders.Management
                 operationData.Resume();
         }
 
-        public void Stop()
+        public Task StopAsync()
         {
             _lock.EnterWriteLock();
 
@@ -57,6 +61,8 @@ namespace Moryx.Orders.Management
             _operations.Clear();
 
             _lock.ExitWriteLock();
+
+            return Task.CompletedTask;
         }
 
         public IReadOnlyList<IOperationData> GetAll() =>
@@ -90,7 +96,7 @@ namespace Moryx.Orders.Management
             }
         }
 
-        public IOperationData Get(Guid identifier)
+        public Task<IOperationData> Get(Guid identifier)
         {
             Logger.Log(LogLevel.Debug, "Trying to fetch operation with identifier: {0}.", identifier);
 
@@ -100,7 +106,7 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Will return the operation with the given order and operation numbers
         /// </summary>
-        public IOperationData Get(string orderNumber, string operationNumber)
+        public Task<IOperationData> Get(string orderNumber, string operationNumber)
         {
             Logger.Log(LogLevel.Debug, "Trying to fetch operation with order and operation: {0}-{1}.", orderNumber, operationNumber);
 
@@ -108,7 +114,7 @@ namespace Moryx.Orders.Management
                 o => o.Number.Equals(operationNumber) && o.Order.Number.Equals(orderNumber));
         }
 
-        private IOperationData GetOperationByIdentifier(Func<IOperationData, bool> predicate, Expression<Func<OperationEntity, bool>> entityPredicate)
+        private async Task<IOperationData> GetOperationByIdentifier(Func<IOperationData, bool> predicate, Expression<Func<OperationEntity, bool>> entityPredicate)
         {
             IOperationData operationData = null;
             try
@@ -123,7 +129,6 @@ namespace Moryx.Orders.Management
                 }
                 else if (results.Count > 1)
                 {
-
                     var firstElement = results.First();
                     if (results.All(x => ReferenceEquals(firstElement, x)))
                     {
@@ -158,21 +163,23 @@ namespace Moryx.Orders.Management
             if (operationEntity == null)
                 return null;
 
-            operationData = RestoreByEntity(operationEntity);
+            operationData = await RestoreByEntity(operationEntity);
 
             return operationData;
         }
 
-        public IOperationData Add(OperationCreationContext context, IOperationSource source)
+        public async Task<IOperationData> Add(OperationCreationContext context, IOperationSource source)
         {
             // Get the order from the current operation list
             var orderData = GetOrderByNumber(context.Order.Number);
-            // If there is not the needed order then try to get it from the database. May be this is an old order
+            // If there is not the needed order then try to get it from the database. Maybe this is an old order
             if (orderData == null)
             {
                 using var uow = UnitOfWorkFactory.Create();
 
-                var entity = uow.GetRepository<IOrderEntityRepository>().GetByNumber(context.Order.Number);
+                var entity = await uow.GetRepository<IOrderEntityRepository>().Linq
+                    .FirstOrDefaultAsync(o => o.Number.Equals(context.Order.Number));
+
                 // Load an OrderData object from the storage with the given entity
                 // or create a new one if the needed order was not in the database
                 if (entity == null)
@@ -202,12 +209,12 @@ namespace Moryx.Orders.Management
             _lock.ExitWriteLock();
 
             // Decouple creation
-            Task.Run(operationData.Assign);
+            _ = Task.Run(operationData.Assign);
 
             return operationData;
         }
 
-        private IOperationData RestoreByEntity(OperationEntity entity)
+        private async Task<IOperationData> RestoreByEntity(OperationEntity entity)
         {
             var orderData = GetOrderByNumber(entity.Order.Number) ??
                                     OperationStorage.LoadOrder(entity.Order);
@@ -215,10 +222,7 @@ namespace Moryx.Orders.Management
             var operationData = OperationFactory.Create();
             operationData.Initialize(entity, orderData);
 
-            var restoreTask = operationData.Restore();
-
-            // TODO: Run synchronously until start process is task based
-            restoreTask.Wait();
+            await operationData.Restore();
 
             AttachToOperationEvents(operationData);
 
@@ -243,11 +247,11 @@ namespace Moryx.Orders.Management
         IReadOnlyList<Operation> IOperationPool.GetAll(Func<Operation, bool> filter) =>
             GetAll(data => filter(data.Operation)).Select(data => data.Operation).ToArray();
 
-        Operation IOperationPool.Get(Guid identifier) =>
-            Get(identifier)?.Operation;
+        async Task<Operation> IOperationPool.GetAsync(Guid identifier) =>
+            (await Get(identifier))?.Operation;
 
-        Operation IOperationPool.Get(string orderNumber, string operationNumber) =>
-            Get(orderNumber, operationNumber)?.Operation;
+        async Task<Operation> IOperationPool.GetAsync(string orderNumber, string operationNumber) =>
+            (await Get(orderNumber, operationNumber))?.Operation;
 
         IReadOnlyList<Order> IOperationPool.GetOrders() =>
             GetOrders().Select(data => data.Order).ToArray();
@@ -295,19 +299,18 @@ namespace Moryx.Orders.Management
             _lock.EnterWriteLock();
             try
             {
-                using (var uow = UnitOfWorkFactory.Create())
-                {
-                    var orderData = operationData.OrderData;
-                    var orderId = ((IPersistentObject)orderData).Id;
-                    var orderEntity = orderId == 0
-                        ? OperationStorage.SaveOrder(uow, orderData)
-                        : uow.GetRepository<IOrderEntityRepository>().GetByKey(orderId);
+                using var uow = UnitOfWorkFactory.Create();
 
-                    var operationEntity = OperationStorage.SaveOperation(uow, operationData);
-                    operationEntity.Order = orderEntity;
+                var orderData = operationData.OrderData;
+                var orderId = ((IPersistentObject)orderData).Id;
+                var orderEntity = orderId == 0
+                    ? OperationStorage.SaveOrder(uow, orderData)
+                    : uow.GetRepository<IOrderEntityRepository>().GetByKey(orderId);
 
-                    uow.SaveChanges();
-                }
+                var operationEntity = OperationStorage.SaveOperation(uow, operationData);
+                operationEntity.Order = orderEntity;
+
+                uow.SaveChanges();
             }
             finally
             {

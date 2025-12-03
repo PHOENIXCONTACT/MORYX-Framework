@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.ControlSystem.Jobs;
@@ -68,7 +69,7 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "The start of the OperationPool should restore an OperationData from the database")]
-        public void StartTheOperationPool()
+        public async Task StartTheOperationPool()
         {
             // Arrange
             using var uow = _unitOfWorkFactory.Create();
@@ -77,10 +78,10 @@ namespace Moryx.Orders.Management.Tests
             operationEntity.Order = orderEntity;
             operationEntity.Number = "0010";
             operationEntity.ProductId = 1;
-            uow.SaveChanges();
+            await uow.SaveChangesAsync();
 
             //Act
-            _operationDataPool.Start();
+            await _operationDataPool.StartAsync();
 
             //Assert
             _operationDataMock.Verify(opd => opd.Initialize(
@@ -94,7 +95,7 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "The OperationPool should only load not completed operations from the database during the start")]
-        public void RestoreOnlyNotCompletedOperations()
+        public async Task RestoreOnlyNotCompletedOperations()
         {
             // Arrange
             using var uow = _unitOfWorkFactory.Create();
@@ -107,16 +108,16 @@ namespace Moryx.Orders.Management.Tests
                 .Create(Guid.NewGuid(), "0010", 0, DateTime.Now, DateTime.Now);
             operationEntity.Order = orderEntity;
             operationEntity.ProductId = 1;
-            uow.SaveChanges();
+            await uow.SaveChangesAsync();
 
             operationEntity = uow.GetRepository<IOperationEntityRepository>().Create(Guid.NewGuid(), "0020",
                 OperationDataStateBase.CompletedKey, DateTime.Now, DateTime.Now);
             operationEntity.Order = orderEntity;
             operationEntity.ProductId = 1;
-            uow.SaveChanges();
+            await uow.SaveChangesAsync();
 
             // Act
-            _operationDataPool.Start();
+            await _operationDataPool.StartAsync();
 
             // Assert
             _operationDataMock.Verify(opd => opd.Initialize(
@@ -132,7 +133,7 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "The OperationData should have all ProductParts and Advices after the restoring during the start of the OperationPool")]
-        public void ShouldRestoreProductPartsAndAdvices()
+        public async Task ShouldRestoreProductPartsAndAdvices()
         {
             // Arrange
             using var uow = _unitOfWorkFactory.Create();
@@ -152,7 +153,7 @@ namespace Moryx.Orders.Management.Tests
             operationEntity.Advices.Add(advice1);
             operationEntity.Advices.Add(advice2);
             operationEntity.Source = "{ \"$type\":\"Moryx.Orders.NullOperationSource, Moryx.Orders\" }";
-            uow.SaveChanges();
+            await uow.SaveChangesAsync();
 
             var operationData = new OperationData
             {
@@ -165,7 +166,7 @@ namespace Moryx.Orders.Management.Tests
             _operationFactoryMock.Setup(opf => opf.Create()).Returns(() => operationData);
 
             // Act
-            _operationDataPool.Start();
+            await _operationDataPool.StartAsync();
 
             // Assert
             Assert.That(operationData.Operation.Parts.Count, Is.EqualTo(2), "There should be 2 restored product parts");
@@ -173,14 +174,14 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Add an operation to the pool and check the returned object")]
-        public void AddOperationWithNewOrder()
+        public async Task AddOperationWithNewOrder()
         {
             //Arrange
             var operationContext = CreateOperationContext();
             var operationSource = new NullOperationSource();
 
             //Act
-            _operationDataPool.Add(operationContext, operationSource);
+            await _operationDataPool.Add(operationContext, operationSource);
 
             //Assert
             Assert.That(_operationDataPool.GetAll().Count, Is.EqualTo(1), "One message was added to the pool, but did not come back");
@@ -189,7 +190,7 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "If a new operation should be added to an existing order then it should be loaded from the database")]
-        public void AddOperationToAnExistingOrder()
+        public async Task AddOperationToAnExistingOrder()
         {
             // Arrange
             using var uow = _unitOfWorkFactory.Create();
@@ -201,32 +202,34 @@ namespace Moryx.Orders.Management.Tests
             _operationDataMock.SetupGet(op => op.OrderData).Returns(() => orderData);
 
             // Add a completed operation to the database
-            var operationEntity = uow.GetRepository<IOperationEntityRepository>().Create();
+            var operationEntity = await uow.GetRepository<IOperationEntityRepository>().CreateAsync();
             operationEntity.Order = orderEntity;
             operationEntity.Number = "0010";
             operationEntity.ProductId = 1;
             operationEntity.State = OperationDataStateBase.CompletedKey;
-            uow.SaveChanges();
+            await uow.SaveChangesAsync();
 
             var operationContext = CreateOperationContext();
 
             // Act
-            _operationDataPool.Start();
-            _operationDataPool.Add(operationContext, new NullOperationSource());
+            await _operationDataPool.StartAsync();
+            await _operationDataPool.Add(operationContext, new NullOperationSource());
 
             // Assert
             Assert.That(_operationDataPool.GetAll().Count, Is.EqualTo(1), "There should be only one operation after the start");
-            Assert.That(orderRepo.GetAll().Count, Is.EqualTo(1), "There should only one order in the database");
+
+            var orderEntities = await orderRepo.GetAllAsync();
+            Assert.That(orderEntities.Count, Is.EqualTo(1), "There should only one order in the database");
         }
 
         [TestCase("123456", "1234", false, Description = "Get operation from the pool which is in the current operation list")]
         [TestCase("", "", true, Description = "The OperationPool returns a null for the requested order and operation which are unknown")]
-        public void GetOperationFromCurrentOperationList(string orderNumber, string operationNumber, bool resultShouldBeNull)
+        public async Task GetOperationFromCurrentOperationList(string orderNumber, string operationNumber, bool resultShouldBeNull)
         {
             // Arrange
             var operationContext = CreateOperationContext("123456", "1234");
-            _operationDataPool.Start();
-            _operationDataPool.Add(operationContext, new NullOperationSource());
+            await _operationDataPool.StartAsync();
+            await _operationDataPool.Add(operationContext, new NullOperationSource());
             _operationDataMock.SetupGet(op => op.Number).Returns("1234");
 
             var orderData = new OrderData();
@@ -234,7 +237,7 @@ namespace Moryx.Orders.Management.Tests
             _operationDataMock.SetupGet(op => op.OrderData).Returns(orderData);
 
             // Act
-            var operation = _operationDataPool.Get(orderNumber, operationNumber);
+            var operation = await _operationDataPool.Get(orderNumber, operationNumber);
 
             // Assert
             if (resultShouldBeNull)
@@ -248,17 +251,16 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Should not throw an exception for new identical operation number/order number after completing previous one.")]
-        public void ShouldNotThrowAnExceptionForSecondOperation()
+        public async Task ShouldNotThrowAnExceptionForSecondOperation()
         {
             //Step 1
             // Arrange
-            NullUserManagement userManager = new NullUserManagement();
-            string operationNumber = "123456";
-            string orderNumber = "1234";
-            var operationDataMock1 = InitializeOperation(operationNumber, orderNumber, _operationDataPool, true);
+            const string operationNumber = "123456";
+            const string orderNumber = "1234";
+            var operationDataMock1 = await InitializeOperation(operationNumber, orderNumber, _operationDataPool, true);
 
             // Act
-            var operation1 = _operationDataPool.Get(orderNumber, operationNumber);
+            var operation1 = await _operationDataPool.Get(orderNumber, operationNumber);
             operationDataMock1.SetupGet(op => op.State)
                 .Returns(new CompletedState(null, null));
             //Assert
@@ -269,12 +271,12 @@ namespace Moryx.Orders.Management.Tests
             var operationDataMock2 = InitializeOperation(operationNumber, orderNumber, _operationDataPool, false);
 
             IOperationData notCompletedOperation = null;
-            Assert.DoesNotThrow(() => notCompletedOperation = _operationDataPool.Get(orderNumber, operationNumber));
+            Assert.DoesNotThrowAsync(async () => notCompletedOperation = await _operationDataPool.Get(orderNumber, operationNumber));
             //Assert
             Assert.That(notCompletedOperation, Is.Not.Null, "There should be an operation with the given order and operation number");
         }
 
-        private Mock<IOperationData> InitializeOperation(string operationNumber, string orderNumber,
+        private async Task<Mock<IOperationData>> InitializeOperation(string operationNumber, string orderNumber,
             OperationDataPool operationDataPool, bool startOperationPool)
         {
             var context = CreateOperationContext(orderNumber, operationNumber);
@@ -283,9 +285,9 @@ namespace Moryx.Orders.Management.Tests
             _operationFactoryMock.Setup(opf => opf.Create()).Returns(mock.Object);
 
             if (startOperationPool)
-                operationDataPool.Start();
+                await operationDataPool.StartAsync();
 
-            operationDataPool.Add(context, new NullOperationSource());
+            await operationDataPool.Add(context, new NullOperationSource());
             mock.SetupGet(op => op.State).Returns(new ReadyState(null, null));
             var orderData = new OrderData();
             orderData.Order.Number = orderNumber;
@@ -295,7 +297,7 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Get operation from the database is it is already completed")]
-        public void GetOperationFromDatabase()
+        public async Task GetOperationFromDatabase()
         {
             // Arrange
             const string orderNumber = "12345678";
@@ -308,15 +310,15 @@ namespace Moryx.Orders.Management.Tests
                 var orderData = OperationStorage.LoadOrder(orderEntity);
                 _operationDataMock.SetupGet(op => op.OrderData).Returns(() => orderData);
 
-                var operationEntity = uow.GetRepository<IOperationEntityRepository>().Create();
+                var operationEntity = await uow.GetRepository<IOperationEntityRepository>().CreateAsync();
                 operationEntity.Order = orderEntity;
                 operationEntity.Number = operationNumber;
                 operationEntity.ProductId = 1;
                 operationEntity.State = OperationDataStateBase.CompletedKey;
-                uow.SaveChanges();
+                await uow.SaveChangesAsync();
             }
 
-            _operationDataPool.Start();
+            await _operationDataPool.StartAsync();
 
             // Act
             var operation = _operationDataPool.Get(orderNumber, operationNumber);

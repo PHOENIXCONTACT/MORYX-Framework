@@ -95,20 +95,20 @@ namespace Moryx.Orders.Management
             Container.LoadComponents<ICountStrategy>();
             Container.LoadComponents<IOperationDispatcher>();
             Container.LoadComponents<IAdviceExecutor>();
+            
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override Task OnStartAsync()
+        protected override async Task OnStartAsync()
         {
             if (Config.Users.UserRequired && UserManagement is NullUserManagement)
                 throw new InvalidOperationException("UserRequired configured but there is no UserManagement module available");
 
-            Container.Resolve<ComponentOrchestration>().Start();
+            await Container.Resolve<ComponentOrchestration>().StartAsync();
 
             ActivateFacade(_orderManagementFacade);
             ActivateFacade(_notificationSourceFacade);
-            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
@@ -117,8 +117,7 @@ namespace Moryx.Orders.Management
             DeactivateFacade(_notificationSourceFacade);
             DeactivateFacade(_orderManagementFacade);
 
-            Container.Resolve<ComponentOrchestration>().Stop();
-            return Task.CompletedTask;
+            return Container.Resolve<ComponentOrchestration>().StopAsync();
         }
 
         #endregion

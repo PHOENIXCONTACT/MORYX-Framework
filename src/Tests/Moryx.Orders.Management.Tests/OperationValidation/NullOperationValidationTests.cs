@@ -16,12 +16,12 @@ namespace Moryx.Orders.Management.Tests
         private IOperationLogger _operationLogger;
 
         [SetUp]
-        public void SetUp()
+        public Task SetUp()
         {
             var operationLoggerMock = new Mock<IOperationLogger>();
             _operationLogger = operationLoggerMock.Object;
             _nullOperationValidation = new NullOperationValidation();
-            _nullOperationValidation.Initialize(new OperationValidationConfig());
+            return _nullOperationValidation.InitializeAsync(new OperationValidationConfig());
         }
 
         [Test(Description = "Validates that null is a valid parameter when calling validate.")]

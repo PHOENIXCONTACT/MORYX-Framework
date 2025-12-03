@@ -42,7 +42,7 @@ namespace Moryx.Orders.Management.Tests
         private User _user;
 
         [SetUp]
-        public void SetUp()
+        public async Task SetUp()
         {
             _orderModel = new UnitOfWorkFactory<OrdersContext>(new InMemoryDbContextManager(Guid.NewGuid().ToString()));
 
@@ -156,19 +156,19 @@ namespace Moryx.Orders.Management.Tests
             var operationFactory = new OperationFactoryMock(logger, jobHandler, assignment, notificationAdapter.Object);
             _operationDataPool.OperationFactory = operationFactory;
 
-            productAssignment.Initialize(new ProductAssignmentConfig());
-            partsAssignement.Initialize(new PartsAssignmentConfig());
-            recipeAssignment.Initialize(new RecipeAssignmentConfig());
-            operationValidation.Initialize(new OperationValidationConfig());
+            await productAssignment.InitializeAsync(new ProductAssignmentConfig());
+            await partsAssignement.InitializeAsync(new PartsAssignmentConfig());
+            await recipeAssignment.InitializeAsync(new RecipeAssignmentConfig());
+            await operationValidation.InitializeAsync(new OperationValidationConfig());
 
-            productAssignment.Start();
-            partsAssignement.Start();
-            recipeAssignment.Start();
-            operationValidation.Start();
+            await productAssignment.StartAsync();
+            await partsAssignement.StartAsync();
+            await recipeAssignment.StartAsync();
+            await operationValidation.StartAsync();
 
             assignment.Start();
 
-            _operationDataPool.Start();
+            await _operationDataPool.StartAsync();
             jobHandler.Start();
 
             // Prepare product management
@@ -193,7 +193,7 @@ namespace Moryx.Orders.Management.Tests
 
         [Test(Description = "Runs a full production of a operation. At the end, a final report will be executed.")]
         [Ignore("This test takes very long should be fixed!")]
-        public void SimpleCompletedProduction()
+        public async Task SimpleCompletedProduction()
         {
             const int amount = 10;
 
@@ -208,7 +208,7 @@ namespace Moryx.Orders.Management.Tests
 
             // Act
             _operationDataPool.OperationUpdated += readyCallback;
-            _operationDataPool.Add(CreateOperationContext(_product), new NullOperationSource());
+            await _operationDataPool.Add(CreateOperationContext(_product), new NullOperationSource());
             var readyReachedResult = readyEvent.WaitOne(60000);
             _operationDataPool.OperationUpdated -= readyCallback;
 

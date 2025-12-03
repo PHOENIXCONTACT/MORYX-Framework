@@ -9,7 +9,7 @@ namespace Moryx.Orders.Dispatcher
     /// <summary>
     /// Interface used dispatch jobs for operations
     /// </summary>
-    public interface IOperationDispatcher : IConfiguredPlugin<OperationDispatcherConfig>
+    public interface IOperationDispatcher : IAsyncConfiguredPlugin<OperationDispatcherConfig>
     {
         /// <summary>
         /// A new job will be added to the <see cref="IJobManagement"/> and to the given operation.

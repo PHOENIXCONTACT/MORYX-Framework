@@ -9,16 +9,19 @@ namespace Moryx.Orders.Management.Assignment
     [Component(LifeCycle.Singleton, typeof(IOperationValidation), Name = nameof(NullOperationValidation))]
     internal class NullOperationValidation : IOperationValidation
     {
-        public void Initialize(OperationValidationConfig config)
+        public Task InitializeAsync(OperationValidationConfig config)
         {
+            return Task.CompletedTask;
         }
 
-        public void Start()
+        public Task StartAsync()
         {
+            return Task.CompletedTask;
         }
 
-        public void Stop()
+        public Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
         public bool ValidateCreationContext(OrderCreationContext orderContext)

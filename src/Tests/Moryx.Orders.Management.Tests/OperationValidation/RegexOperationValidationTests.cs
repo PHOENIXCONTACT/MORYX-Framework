@@ -19,13 +19,13 @@ namespace Moryx.Orders.Management.Tests
         private InternalOperation _operation;
 
         [SetUp]
-        public void SetUp()
+        public async Task SetUp()
         {
             var operationLoggerMock = new Mock<IOperationLogger>();
             _operationLogger = operationLoggerMock.Object;
 
             _regexOperationValidation = new RegexOperationValidation();
-            _regexOperationValidation.Initialize(new RegexOperationValidationConfig());
+            await _regexOperationValidation.InitializeAsync(new RegexOperationValidationConfig());
 
             _operation = new InternalOperation
             {

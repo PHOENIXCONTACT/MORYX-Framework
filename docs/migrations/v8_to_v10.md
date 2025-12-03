@@ -108,6 +108,32 @@ protected override Task OnStopAsync()
 
 - Modification methods are now using async Task.
 
+### OrderManagement plugin lifecycle refactored to async methods
+
+Same as done in ServerModules has been done for OrderManagement plugins. The OrderManagement now supports asynchronous initialization, startup, and shutdown processes.
+
+Plugins which has been moved to async lifecycle:
+
+- `IAdviceExecutor`
+- `IDocumentLoader`
+- `IPartsAssignment`
+- `IProductAssignment`
+- `IRecipeAssignment`
+- `IOperationValidation`
+- `IOperationDispatcher`
+
+Some APIs of the `IOperationPool`:
+
+- `Operation Get(Guid identifier)` -> `Task<Operation> GetAsync(Guid identifier)`
+- `Operation Get(string orderNumber, string operationNumber)` -> `Task<Operation> GetAsync(string orderNumber, string operationNumber)`
+
+Some APIs of the `IOrderManagement`-facade:
+
+- `Operation GetOperation(Guid identifier)` -> `Task<Operation> GetOperationAsync(Guid identifier)`
+- `Operation GetOperation(string orderNumber, string operationNumber)` -> `Task<Operation> GetOperationAsync(string orderNumber, string operationNumber)`
+- `Operation AddOperation(OperationCreationContext context)` -> `Task<Operation> AddOperationAsync(OperationCreationContext context)`
+- `Operation AddOperation(OperationCreationContext context, IOperationSource source)` -> `Task<Operation> AddOperationAsync(OperationCreationContext context, IOperationSource source)`
+
 ## WorkerSupport / VisualInstructions
 
 The WorkerSupport Module `Moryx.ControlSystem.WorkerSupport` was renamed to `Moryx.VisualInstructions.Controller` to match all namespaces. Also the Resource project was renamed from `Moryx.Resources.AssemblyInstruction` to `Moryx.Resources.VisualInstructions`.

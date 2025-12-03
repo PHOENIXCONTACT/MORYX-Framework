@@ -32,19 +32,22 @@ namespace Moryx.Orders.Dispatcher
         #endregion
 
         /// <inheritdoc />
-        public void Initialize(OperationDispatcherConfig config)
+        public Task InitializeAsync(OperationDispatcherConfig config)
         {
             Config = (TConf)config;
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual void Start()
+        public virtual Task StartAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual void Stop()
+        public virtual Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />

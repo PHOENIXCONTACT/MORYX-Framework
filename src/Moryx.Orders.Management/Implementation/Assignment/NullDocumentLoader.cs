@@ -16,17 +16,20 @@ namespace Moryx.Orders.Management.Assignment
         private static readonly IReadOnlyList<Document> EmptyDocuments = Array.Empty<Document>();
 
         /// <inheritdoc />
-        public void Initialize(DocumentLoaderConfig config)
+        public Task InitializeAsync(DocumentLoaderConfig config)
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public void Start()
+        public Task StartAsync()
         {
+            return Task.CompletedTask;
         }
 
-        public void Stop()
+        public Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />

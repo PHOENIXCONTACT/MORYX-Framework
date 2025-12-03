@@ -21,22 +21,22 @@ namespace Moryx.Orders
         /// <summary>
         /// Will return the operation with the given identifier
         /// </summary>
-        Operation GetOperation(Guid identifier);
+        Task<Operation> GetOperationAsync(Guid identifier);
 
         /// <summary>
         /// Will return the operation with the given order and operation numbers
         /// </summary>
-        Operation GetOperation(string orderNumber, string operationNumber);
+        Task<Operation> GetOperationAsync(string orderNumber, string operationNumber);
 
         /// <summary>
         /// Will add a new operation to the pool.
         /// </summary>
-        Operation AddOperation(OperationCreationContext context);
+        Task<Operation> AddOperationAsync(OperationCreationContext context);
 
         /// <summary>
         /// Will add a new operation to the pool.
         /// </summary>
-        Operation AddOperation(OperationCreationContext context, IOperationSource source);
+        Task<Operation> AddOperationAsync(OperationCreationContext context, IOperationSource source);
 
         /// <summary>
         /// Returns a report context of the given operation

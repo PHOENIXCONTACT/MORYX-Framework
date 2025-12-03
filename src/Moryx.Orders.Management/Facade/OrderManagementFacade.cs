@@ -134,28 +134,28 @@ namespace Moryx.Orders.Management
             return filtered.Select(o => o.Operation).ToArray();
         }
 
-        public Operation GetOperation(string orderNumber, string operationNumber)
+        public async Task<Operation> GetOperationAsync(string orderNumber, string operationNumber)
         {
             ValidateHealthState();
 
-            var operationData = OperationDataPool.Get(orderNumber, operationNumber);
+            var operationData = await OperationDataPool.Get(orderNumber, operationNumber);
             return operationData?.Operation;
         }
 
-        public Operation GetOperation(Guid identifier)
+        public async Task<Operation> GetOperationAsync(Guid identifier)
         {
             ValidateHealthState();
 
-            var operationData = OperationDataPool.Get(identifier);
+            var operationData = await OperationDataPool.Get(identifier);
             return operationData?.Operation;
         }
 
-        public Operation AddOperation(OperationCreationContext context)
+        public Task<Operation> AddOperationAsync(OperationCreationContext context)
         {
-            return AddOperation(context, new NullOperationSource());
+            return AddOperationAsync(context, new NullOperationSource());
         }
 
-        public Operation AddOperation(OperationCreationContext context, IOperationSource source)
+        public async Task<Operation> AddOperationAsync(OperationCreationContext context, IOperationSource source)
         {
             ValidateHealthState();
 
@@ -176,7 +176,7 @@ namespace Moryx.Orders.Management
             }
 
             // Add to pool
-            var operationData = OperationDataPool.Add(context, source);
+            var operationData = await OperationDataPool.Add(context, source);
 
             return operationData.Operation;
         }

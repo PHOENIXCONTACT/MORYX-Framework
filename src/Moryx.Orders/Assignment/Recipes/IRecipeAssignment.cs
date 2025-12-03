@@ -10,7 +10,7 @@ namespace Moryx.Orders.Assignment
     /// <summary>
     /// Will be to assign recipes to the operation based on existing data.
     /// </summary>
-    public interface IRecipeAssignment : IConfiguredPlugin<RecipeAssignmentConfig>
+    public interface IRecipeAssignment : IAsyncConfiguredPlugin<RecipeAssignmentConfig>
     {
         /// <summary>
         /// Returns the possible recipes for the given product identity
