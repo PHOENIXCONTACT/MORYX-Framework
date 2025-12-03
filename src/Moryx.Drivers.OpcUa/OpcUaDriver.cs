@@ -3,6 +3,7 @@
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers;
@@ -10,7 +11,6 @@ using Moryx.AbstractionLayer.Drivers.InOut;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
-using Moryx.Drivers.OpcUa;
 using Moryx.Drivers.OpcUa.Properties;
 using Moryx.Drivers.OpcUa.States;
 using Moryx.Serialization;
@@ -29,9 +29,8 @@ namespace Moryx.Drivers.OpcUa;
 [Display(Name = nameof(Strings.OpcUaDriver_DisplayName), Description = nameof(Strings.OpcUaDriver_Description), ResourceType = typeof(Strings))]
 public class OpcUaDriver : Driver, IOpcUaDriver
 {
-    //TODO 6.1 Invoke Methods
-
     private const int NodeLayersShown = 5;
+
     /// <summary>
     /// Current tate of the driver
     /// </summary>
@@ -188,8 +187,8 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     internal ISession _session; //TODO: Internal field just for tests
     private SessionReconnectHandler _reconnectHandler;
 
-    private readonly object _lock = new();
-    private readonly object _stateLock = new();
+    private readonly Lock _lock = new();
+    private readonly Lock _stateLock = new();
 
     private Subscription _subscription;
 
@@ -452,22 +451,22 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     }
 
     /// <inheritdoc/>
-    public OpcUaNode GetNode(string identifier)
+    public OpcUaNode GetNode(string nodeId)
     {
-        var nodeId = OpcUaNode.CreateExpandedNodeId(GetNodeIdAsString(identifier));
-        if (!_nodesFlat.ContainsKey(nodeId))
+        var expandedNodeId = OpcUaNode.CreateExpandedNodeId(GetNodeIdAsString(nodeId));
+        if (!_nodesFlat.TryGetValue(expandedNodeId, out var value))
         {
             return null;
         }
 
-        return _nodesFlat[nodeId];
+        return value;
     }
 
     private string GetNodeIdAsString(string identifier)
     {
-        if (_nodeIdAliasDictionary.ContainsKey(identifier))
+        if (_nodeIdAliasDictionary.TryGetValue(identifier, out var value))
         {
-            return _nodeIdAliasDictionary[identifier];
+            return value;
         }
 
         return identifier;
@@ -655,7 +654,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             Payload = value
         };
 
-        if (nodeId.IdType == IdType.Numeric && int.Parse(nodeId.Identifier.ToString()) == Variables.Server_ServerStatus
+        if (nodeId.IdType == IdType.Numeric && int.Parse(nodeId.Identifier.ToString(), CultureInfo.InvariantCulture) == Variables.Server_ServerStatus
             && nodeId.NamespaceIndex == 0)
         {
             ServerStatus = ((ServerStatusDataType)((ExtensionObject)value).Body).State;
@@ -690,8 +689,16 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     }
 
     //todo: Change to BFS
-    private void BrowseNodes(NodeId nodeId, NamespaceTable namespaceTable, List<OpcUaNode> list, int layer)
+    private void BrowseNodes(NodeId nodeId, NamespaceTable namespaceTable, List<OpcUaNode> list, int layer, HashSet<string> visitedNodes = null)
     {
+        visitedNodes ??= [];
+        var branchNodes = new HashSet<string>(visitedNodes);
+
+        if (branchNodes.Contains(nodeId.ToString()))
+        {
+            return;
+        }
+        branchNodes.Add(nodeId.ToString());
 
         _session.Browse(null, null, nodeId, uint.MaxValue, BrowseDirection.Forward, ReferenceTypeIds.HierarchicalReferences, true, (uint)NodeClass.Variable | (uint)NodeClass.Object | (uint)NodeClass.Method,
                 out var continuationPoint,
@@ -724,9 +731,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         {
             var nextRdNodeId = OpcUaNode.CreateExpandedNodeId(nextRd.NodeId.ToString());
             OpcUaNode node = null;
-            if (_nodesFlat.ContainsKey(nextRdNodeId))
+            if (_nodesFlat.TryGetValue(nextRdNodeId, out var value))
             {
-                node = _nodesFlat[nextRdNodeId];
+                node = value;
             }
 
             if (node == null)
@@ -749,22 +756,14 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             if (nextRd.NodeClass == NodeClass.Object)
             {
                 var nodesOfObject = new List<OpcUaNode>();
-                BrowseNodes(ExpandedNodeId.ToNodeId(nextRd.NodeId, namespaceTable), namespaceTable, nodesOfObject, layer + 1);
+                BrowseNodes(ExpandedNodeId.ToNodeId(nextRd.NodeId, namespaceTable), namespaceTable, nodesOfObject, layer + 1, branchNodes);
                 node.Nodes = nodesOfObject;
+
             }
 
-            var result = _savedIds.Add(node.Identifier);
+            _savedIds.Add(node.Identifier);
 
-            if (result == false)
-            {
-                continue;
-            }
-
-            if (!_nodesFlat.ContainsKey(node.Identifier))
-            {
-                _nodesFlat.Add(node.Identifier, node);
-            }
-
+            _nodesFlat.TryAdd(node.Identifier, node);
             if (layer < NodeLayersShown)
             {
                 list.Add(node);
@@ -806,6 +805,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         State.WriteNode(node, payload);
     }
 
+    /// <inheritdoc/>
     public void WriteNode(string nodeId, object payload)
     {
         var node = State.GetNode(nodeId);
@@ -830,8 +830,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                 Value = payload
             }
         };
-
-        _session.Write(null, [valueToBeWritten], out var results, out var diagnosticInfos);
+        _session.Write(null, [valueToBeWritten], out var results, out _);
 
         if (results != null)
         {
@@ -860,7 +859,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         {
             if (value.Error?.Exception != null)
             {
-                Logger.Log(LogLevel.Error, value.Error.Exception, value.Error?.Message);
+                Logger.Log(LogLevel.Error, value.Error.Exception, "Error reading node data.");
                 return null;
             }
         }
@@ -923,7 +922,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     /// <inheritdoc/>
     public Task SendAsync(object payload, CancellationToken cancellationToken = default)
     {
-        if (payload is not OpcUaMessage msg)
+        if (payload is not OpcUaMessage)
         {
             Logger.Log(LogLevel.Warning, "Currently it is only possible to send messages of the type OpcUaMessage " +
                                          "using the Opc Ua Driver directly");
@@ -932,7 +931,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
         throw new NotImplementedException();
     }
-
 
     #endregion
 
@@ -946,13 +944,21 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     [EntrySerialize]
     internal string ReadNodeAsString(string nodeId)
     {
-        var value = ReadNodeDataValue(nodeId);
-        if (value == null)
+        try
         {
-            return "There was an error, when trying to read the value of the node. Please look into the log for further information";
-        }
+            var value = ReadNodeDataValue(nodeId);
+            if (value == null)
+            {
+                return "There was an error, when trying to read the value of the node. Please look into the log for further information";
+            }
 
-        return value.ToString();
+            return value.ToString();
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Failed to read node as string");
+            return e.Message;
+        }
     }
 
     /// <summary>
@@ -993,31 +999,31 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                 case BuiltInType.Boolean:
                     return bool.Parse(stringValue);
                 case BuiltInType.Int16:
-                    return short.Parse(stringValue);
+                    return short.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.Enumeration:
                 case BuiltInType.Integer:
                 case BuiltInType.Int32:
-                    return int.Parse(stringValue);
+                    return int.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.Int64:
-                    return long.Parse(stringValue);
+                    return long.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.UInt16:
-                    return ushort.Parse(stringValue);
+                    return ushort.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.UInteger:
                 case BuiltInType.UInt32:
-                    return uint.Parse(stringValue);
+                    return uint.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.UInt64:
-                    return ulong.Parse(stringValue);
+                    return ulong.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.DateTime:
-                    return DateTime.Parse(stringValue);
+                    return DateTime.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.Guid:
                 case BuiltInType.String:
                     return stringValue;
                 case BuiltInType.Number:
                 case BuiltInType.Float:
                 case BuiltInType.Double:
-                    return double.Parse(stringValue);
+                    return double.Parse(stringValue, CultureInfo.InvariantCulture);
                 case BuiltInType.Byte:
-                    return byte.Parse(stringValue);
+                    return byte.Parse(stringValue, CultureInfo.InvariantCulture);
             }
         }
         catch (Exception ex)
@@ -1033,7 +1039,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     [EntrySerialize]
     internal List<string> FindNodeId(string displayName)
     {
-        var result = _nodesFlat.Where(x => x.Value.DisplayName.ToLower().Contains(displayName.ToLower()) || x.Value.DisplayName.ToLower().Equals(displayName.ToLower()))
+        var result = _nodesFlat.Where(x => x.Value.DisplayName.Contains(displayName, StringComparison.CurrentCultureIgnoreCase) || x.Value.DisplayName.ToLower().Equals(displayName.ToLower()))
             .Select(x => x.Key).ToList();
 
         return result;
@@ -1102,7 +1108,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                 var value = ReadNode(subSubNode.NodeId.ToString()).ToString();
                 if (property.PropertyType == typeof(int))
                 {
-                    property.SetValue(deviceType, int.Parse(value));
+                    property.SetValue(deviceType, int.Parse(value, CultureInfo.InvariantCulture));
                 }
                 else
                 {

@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
+using Moryx.AbstractionLayer.Drivers;
 using Moryx.Drivers.OpcUa.States;
 using Moryx.Modules;
 using NUnit.Framework;
@@ -15,7 +16,7 @@ namespace Moryx.Drivers.OpcUa.Tests;
 [TestFixture]
 public class NodeHandlingTests : OpcUaTestBase
 {
-    private const string VALUE = "value";
+    private const string Value = "value";
     [SetUp]
     public void Setup()
     {
@@ -35,10 +36,10 @@ public class NodeHandlingTests : OpcUaTestBase
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
-            if (e is RunningState)
+            if (e.Classification == StateClassification.Running)
             {
                 //Assert II
-                Assert.That(_driver.Nodes, Has.Count.EqualTo(Nodes.Count), "Number of browsed nodes doesn't fit");
+                Assert.That(_driver.Nodes, Has.Count.EqualTo(_rootNodes.Count), "Number of browsed nodes doesn't fit");
                 wait.Set();
             }
         };
@@ -66,16 +67,17 @@ public class NodeHandlingTests : OpcUaTestBase
     public void TestUpdatingNodeAfterBrowsing()
     {
         //Arrange
-        var expectedNode = Nodes.First();
-        var node = _driver.GetNode(expectedNode.Value.NodeId.ToString());
+        var expectedNode = _rootNodes.First();
+        var channel = _driver.Channel(OpcUaNode.CreateExpandedNodeId(expectedNode.Value.NodeId.ToString()));
+        var node = channel as OpcUaNode;
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
-            if (e is RunningState)
+            if (e.Classification == StateClassification.Running)
             {
                 //Assert II
-                Assert.That(node.DisplayName, Is.EqualTo(expectedNode.Value.DisplayName.Text));
-                Assert.That(node.BrowseName.ToString(), Is.EqualTo(expectedNode.Value.BrowseName.ToString()));
+                Assert.That(node?.DisplayName, Is.EqualTo(expectedNode.Value.DisplayName.Text));
+                Assert.That(node?.BrowseName.ToString(), Is.EqualTo(expectedNode.Value.BrowseName.ToString()));
                 wait.Set();
             }
         };
@@ -91,7 +93,7 @@ public class NodeHandlingTests : OpcUaTestBase
     public void TestReturnChannelBeforeDriverIsRunning()
     {
         //Arrange
-        var expectedNode = Nodes.First();
+        var expectedNode = _rootNodes.First();
 
         //Act
         var channel = _driver.Channel(expectedNode.Key.ToString());
@@ -104,19 +106,19 @@ public class NodeHandlingTests : OpcUaTestBase
     public void TestSubscribingMonitoredItemsAfterBrowsing()
     {
         //Arrange
-        var expectedNode = Nodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
-        var node = _driver.GetNode(expectedNode.Value.NodeId.ToString());
+        var expectedNode = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
+        var channel = _driver.Channel(expectedNode.Value.NodeId.ToString());
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
-            if (e is RunningState)
+            if (e.Classification == StateClassification.Running)
             {
                 wait.Set();
             }
         };
 
-        //Act
-        node.Received += DoSomething;
+        //Act          
+        channel.Received += DoSomething;
         ((IPlugin)_driver).Start();
 
         //Assert I
@@ -135,21 +137,21 @@ public class NodeHandlingTests : OpcUaTestBase
     [Test(Description = "Nodes can only be subscribed ones")]
     public void TestNodesCanOnlyBeSubscribedOnes()
     {
-        var expectedNode = Nodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
-        var node = _driver.GetNode(expectedNode.Value.NodeId.ToString());
+        var expectedNode = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
+        var channel = _driver.Channel(expectedNode.Value.NodeId.ToString());
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
-            if (e is RunningState)
+            if (e.Classification == StateClassification.Running)
             {
                 wait.Set();
             }
         };
 
-        //Act
-        node.Received += DoSomething;
+        //Act          
+        channel.Received += DoSomething;
         ((IPlugin)_driver).Start();
-        _driver.SubscribeNode(node.Identifier);
+        _driver.SubscribeNode(channel.Identifier);
 
         //Assert I
         MonitoredItemCreateResultCollection results2;
@@ -163,16 +165,15 @@ public class NodeHandlingTests : OpcUaTestBase
     public void TestSubcribedValueChanges()
     {
         // Arrange
-        var expectedNode = Nodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
-        var node = _driver.GetNode(expectedNode.Value.NodeId.ToString());
+        var expectedNode = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
+        var node = (OpcUaNode)_driver.Channel(expectedNode.Value.NodeId.ToString());
         var wait = new AutoResetEvent(false);
         var waitSubscription1 = new AutoResetEvent(false);
         var waitSubscription2 = new AutoResetEvent(false);
         var waitSubscription3 = new AutoResetEvent(false);
-        var waitSubscription4 = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
-            if (e is RunningState)
+            if (e.Classification == StateClassification.Running)
             {
                 wait.Set();
             }
@@ -180,14 +181,22 @@ public class NodeHandlingTests : OpcUaTestBase
 
         node.Received += (sender, e) =>
         {
+            //Assert II
             waitSubscription1.Set();
-            CheckReceivedValue(e, VALUE);
+            CheckReceivedValue(e, Value);
         };
-
+        (_driver).Received += (sender, e) =>
+        {
+            waitSubscription2.Set();
+            //Assert III
+            var msg = e as OpcUaMessage;
+            Assert.That(msg, Is.Not.Null, "Message received from the Driver.Received event has the wrong type");
+            CheckReceivedValue(msg!.Payload, Value);
+        };
         _driver.Input.InputChanged += (sender, e) =>
         {
-            waitSubscription4.Set();
-            //Assert V
+            waitSubscription3.Set();
+            //Assert IV
             Assert.That(e.Key, Is.EqualTo(node.NodeId.ToString()));
         };
 
@@ -195,16 +204,15 @@ public class NodeHandlingTests : OpcUaTestBase
         _driver.SubscribeNode(node.Identifier);
 
         // Act
-        _driver.OnSubscriptionChanged(node.NodeId, VALUE);
+        _driver.OnSubscriptionChanged(node.NodeId, Value);
 
         //Assert I
         Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), "Driver was not running");
         Assert.That(waitSubscription1.WaitOne(TimeSpan.FromSeconds(2)), "Channel doesn't raise received Event");
         Assert.That(waitSubscription2.WaitOne(TimeSpan.FromSeconds(2)), "Driver doesn't raise received Event");
-        Assert.That(waitSubscription3.WaitOne(TimeSpan.FromSeconds(2)), "Driver doesn't raise received Event");
     }
 
-    private void CheckReceivedValue(object receivedValue, object expectedValue)
+    private static void CheckReceivedValue(object receivedValue, object expectedValue)
     {
         //Asert II
         Assert.That(receivedValue.GetType(), Is.EqualTo(expectedValue.GetType()), "Received object has the wrong type");
@@ -216,14 +224,14 @@ public class NodeHandlingTests : OpcUaTestBase
     {
         //Arrange
         const string alias = "whatever";
-        var nodeId = NodeId.ToExpandedNodeId(Nodes.First().Key, _namespaceTable);
+        var nodeId = NodeId.ToExpandedNodeId(_rootNodes.First().Key, _namespaceTable);
         _driver._nodeIdAliasDictionary.Add(alias, nodeId.ToString());
         ((IPlugin)_driver).Start();
 
         //Act
-        var node = _driver.GetNode(alias);
+        var channel = _driver.Channel(alias);
 
         //Assert
-        Assert.That(OpcUaNode.CreateExpandedNodeId(nodeId.ToString()), Is.EqualTo(node.Identifier));
+        Assert.That(OpcUaNode.CreateExpandedNodeId(nodeId.ToString()), Is.EqualTo(channel.Identifier));
     }
 }

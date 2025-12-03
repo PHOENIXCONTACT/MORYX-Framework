@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moq;
-using Moryx.Drivers.OpcUa;
 using Moryx.Modules;
 using NUnit.Framework;
 using Opc.Ua;
@@ -24,7 +23,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
     public void TestSendPrimitiveValue()
     {
         //Arrange
-        var node = Nodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable).Value;
+        var node = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable).Value;
         var msg = new OpcUaMessage()
         {
             Identifier = node.NodeId.ToString(),
@@ -45,7 +44,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
     public void TestSetOutput()
     {
         //Arrange
-        var node = Nodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable).Value;
+        var node = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable).Value;
         var value = 5;
 
         //Act
@@ -61,9 +60,9 @@ public class HandlingWriteAndRead : OpcUaTestBase
     public void TestRead()
     {
         //Arrange
-        var (nodeId, node) = Nodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
+        var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
         var resultValue = 8;
-        SetupRead(resultValue, nodeId);
+        SetupRead(resultValue);
 
         //Act
         var value = _driver.ReadNode(node.NodeId.ToString());
@@ -76,9 +75,9 @@ public class HandlingWriteAndRead : OpcUaTestBase
     public void TestGetInput()
     {
         //Arrange
-        var (nodeId, node) = Nodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
+        var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
         var resultValue = 8;
-        SetupRead(resultValue, nodeId);
+        SetupRead(resultValue);
 
         //Act
         var value = _driver.Input[node.NodeId.ToString()];
@@ -92,9 +91,9 @@ public class HandlingWriteAndRead : OpcUaTestBase
     public void TestReadOuput()
     {
         //Arrange
-        var (nodeId, node) = Nodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
+        var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
         var resultValue = 8;
-        SetupRead(resultValue, nodeId);
+        SetupRead(resultValue);
 
         //Act
         var value = _driver.Output[node.NodeId.ToString()];
@@ -104,7 +103,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
         Assert.That(value, Is.EqualTo(resultValue));
     }
 
-    private void SetupRead(object resultValue, NodeId nodeId)
+    private void SetupRead(object resultValue)
     {
         _sessionMock.Setup(s => s.ReadValue(It.IsAny<NodeId>())).Callback((NodeId nodeId) =>
         {
@@ -118,7 +117,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
     public void TestFindNode()
     {
         //Arrange
-        var (_, node) = Nodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
+        var (_, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
         var nodeId = OpcUaNode.CreateExpandedNodeId(node.NodeId.ToString());
 
         //Act
