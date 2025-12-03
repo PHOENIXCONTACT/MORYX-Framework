@@ -57,4 +57,15 @@ namespace Moryx.Tests.Configuration
     public class NonPersistedTestConfig : TestConfig
     {
     }
+
+    [DataContract]
+    public class SecretConfig : ConfigBase
+    {
+        [DataMember]
+        public string NormalSetting { get; set; }
+
+        [DataMember]
+        [Password]
+        public string ServiceApiKey { get; set; }
+    }
 }

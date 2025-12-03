@@ -36,6 +36,10 @@ namespace Moryx.Resources.Management
         public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
             : base(containerFactory, configManager, loggerFactory)
         {
+            // first tests:
+            var moviesConfig = (MoviesConfig)configManager.GetConfiguration(typeof(MoviesConfig), "MoviesConfig", getCopy: true);
+            Console.WriteLine($"MoviesConfig Loaded with ServiceApiKey: {moviesConfig.ServiceApiKey}");
+
             DbContextManager = contextManager;
         }
 
