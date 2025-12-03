@@ -6,7 +6,7 @@ namespace Moryx.AbstractionLayer.Products
     /// <summary>
     /// Base class that allows to assign a value to <see cref="IPersistentObject.Id"/>
     /// </summary>
-    public abstract class ProductPartLink : IProductPartLink
+    public abstract class ProductPartLink : IPersistentObject
     {
         /// <summary>
         /// Default constructor for a new part link
@@ -53,7 +53,7 @@ namespace Moryx.AbstractionLayer.Products
     /// <summary>
     /// Class to create generic part structure
     /// </summary>
-    public class ProductPartLink<TProduct> : ProductPartLink, IProductPartLink<TProduct>
+    public class ProductPartLink<TProduct> : ProductPartLink
         where TProduct : ProductType
     {
         /// <summary>

@@ -10,6 +10,7 @@ using Moryx.Benchmarking;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.VisualInstructions;
+using Moryx.VisualInstructions;
 using Moryx.Serialization;
 using Moryx.Threading;
 
@@ -64,13 +65,13 @@ namespace Moryx.Resources.Benchmarking
         }
 
         /// <inheritdoc />
-        public override IEnumerable<Session> ControlSystemAttached()
+        protected override IEnumerable<Session> ProcessEngineAttached()
         {
             yield return Session.StartSession(ActivityClassification.Setup, ReadyToWorkType.Push);
         }
 
         /// <inheritdoc />
-        public override IEnumerable<Session> ControlSystemDetached()
+        protected override IEnumerable<Session> ProcessEngineDetached()
         {
             yield break;
         }

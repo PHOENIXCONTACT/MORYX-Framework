@@ -108,21 +108,40 @@ protected override Task OnStopAsync()
 
 - Modification methods are now using async Task.
 
-## Replaced result of visual instructions with dedicated result object
+## WorkerSupport / VisualInstructions
+
+The WorkerSupport Module `Moryx.ControlSystem.WorkerSupport` was renamed to `Moryx.VisualInstructions.Controller` to match all namespaces. Also the Resource project was renamed from `Moryx.Resources.AssemblyInstruction` to `Moryx.Resources.VisualInstructions`.
+
+VisualInstructions has an own separate namespace now.
+
+| Project                             | Description                                               | MORYX 8                                     |
+|-------------------------------------|-----------------------------------------------------------|---------------------------------------------|
+| Moryx.VisualInstructions            | API for usage of Visual Instructions                      | Moryx.ControlSystem.VisualInstructions      |
+| Moryx.VisualInstructions.Controller | Module for managing Visual Instructions                   | Moryx.ControlSystem.WorkerSupport           |
+| Moryx.VisualInstructions.Web        | Web Module to display Visual Instructions                 | Moryx.ControlSystem.WorkerSupport.Web       |
+| Moryx.VisualInstructions.Endpoints  | ASP.NET Controller for hosting API of Visual Instructions | Moryx.ControlSystem.WorkerSupport.Endpoints |
+| Moryx.Resources.VisualInstructions  | Digital Twin of a visual instructions                     | Moryx.Resources.AssemblyInstructions        |
+
+### Replaced result of visual instructions with dedicated result object
 
 In *Moryx.Factory* **6.3** and **8.1** we introduced the new result object and optional extended APIs. The result object solved issues caused by localization of the different results. With **Moryx 10** we remove all old APIs based on strings.
 
-## Replaced `IVisualInstructions` with `VisualInstructionParameters`
+### Replaced `IVisualInstructions` with `VisualInstructionParameters`
 
 The interface was only used in `VisualInstructionParameters` which can and is being used as a base class in most cases anyway.
 Hence, `IVisualInstructions` is removed in favor of a more extendable base class.
 
 ## Integration of Moryx.Simulation into Moryx.ControlSystem
 
-To reduce the number of API packages and simplify the overall architecture, **Moryx.Simulation** has been integrated into **Moryx.ControlSystem** starting with Moryx 10. All simulation-related APIs and functionality are now part of the Moryx.ControlSystem package. This change streamlines dependency management and makes it easier to maintain and extend simulation features within the control system context.
+To reduce the number of API packages and simplify the overall architecture, **Moryx.Simulation** has been integrated into **Moryx.ControlSystem** starting with MORYX 10. All simulation-related APIs and functionality are now part of the Moryx.ControlSystem package. This change streamlines dependency management and makes it easier to maintain and extend simulation features within the control system context.
 
 The simulator module has also been renamed, and its namespace and package id have changed accordingly to reflect its new location within Moryx.ControlSystem.
 
+## ProcessEngineContext and ControlSystemAttached/Detached
+
+The methods `ControlSystemAttached` and `ControlSystemDetached` were renamed to `ProcessEngineAttached` and `ProcessEngineDetached` to match the naming of the framework. ControlSystem is a term for multiple modules and components used within the framework (ProcessEngine, SetupProvider, MaterialManager, ...).
+
+The `ProcessEngineContext` was added to the `ProcessEngineAttached` to provide the `Cell` a possibility to gather information from the process engine. The class is empty in 10.0 because it defines only the API. Features are implemented in the next feature-releases of MORYX 10.x.
 
 ## Renamings and Typo-Fixes
 
@@ -142,6 +161,8 @@ The simulator module has also been renamed, and its namespace and package id hav
 - IAsyncPlugin.Start -> IAsyncPlugin.StartAsync
 - IAsyncPlugin.Stop -> IAsyncPlugin.StopAsync
 - DriverState -> SyncDriverState
+- IControlSystemBound.ControlSystemAttached -> ICell.ProcessEngineAttached
+- IControlSystemBound.ControlSystemDetached -> ICell.ProcessEngineDetached
 
 ## Reduction of interfaces
 
@@ -149,8 +170,10 @@ Several interfaces have been removed to streamline the codebase and reduce compl
 
 - `IProductType`: Replaced with base-class `ProductType`
 - `IProductInstance`: Replaced with base-class `ProductInstance`
+- `IProductPartLink`: Replaced with base-class `ProductPartLink`
 - `IConfig`: Replaced with base-class `ConfigBase`
 - `IDatabaseConfig`: Replaced with base-class `DatabaseConfig`
+- `IControlSystemBound`: Merged with `ICell`
 - `IState`: Replace with base-class `StateBase`
 
 ## Method Signature Changes
@@ -190,6 +213,7 @@ These feature were infrequently used and has been removed to simplify the codeba
 - Moryx.Identity: This namespace contained base classes and services for the old WPF client to provide the authorization context. Since MORYX support web uis, this is deprecated
 - PortConfig: Used for old wcf services. Deprecated since ASP.NET Core.
 - ProxyConfig.Port: Use the full address instead. It contains also http/https, domain and port
+- EntryToModelConverter: This component was used in WPF UIs to map an entry to a view model and vice versa. This is not used anymore and brings no benefit to the platform.
 
 ## Moved classes and namespaces
 
@@ -230,3 +254,7 @@ The API of `IResourceInitializer` was adjusted
 ## ConstraintContext during activity-handling
 
 The `IConstraintContext` interface was removed from `IProcess`. Instead a new wrapper was introduced `ActivityConstraintContext` which provides the Activity and the Process for better handling in `IConstraint` implementations.
+
+## Renamed Moryx.Asp.Extensions to Moryx.AspNetCore
+
+Renamed the package Moryx.Asp.Extensions to Moryx.AspNetCore and moved the classes to the respective namespace. This change was applied to match the Microsoft namespaces. In the past the project was used in MORYX <6 for C#-extensions on ASP.NET Components to initialize the Runtime environment and register endpoints inside the ServerModules. Since we use controllers based on the facades, these stuff was already removed.

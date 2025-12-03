@@ -151,24 +151,16 @@ namespace Moryx.AbstractionLayer.Resources
             return $"{Id}:{Name} ({GetType().Name})";
         }
 
-        /// <summary>
-        /// Current capabilities of this resource
-        /// </summary>
-        private ICapabilities _capabilities = NullCapabilities.Instance;
-
         /// <inheritdoc />
         public ICapabilities Capabilities
         {
-            get
-            {
-                return _capabilities;
-            }
+            get;
             protected set
             {
-                _capabilities = value;
-                CapabilitiesChanged?.Invoke(this, _capabilities);
+                field = value;
+                CapabilitiesChanged?.Invoke(this, field);
             }
-        }
+        } = NullCapabilities.Instance;
 
         /// <summary>
         /// <seealso cref="IResource"/>

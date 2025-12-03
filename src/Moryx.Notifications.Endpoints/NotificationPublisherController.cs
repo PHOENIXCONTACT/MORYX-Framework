@@ -4,7 +4,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moryx.Asp.Extensions;
+using Moryx.AspNetCore;
 using Moryx.Notifications.Endpoints.Properties;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;

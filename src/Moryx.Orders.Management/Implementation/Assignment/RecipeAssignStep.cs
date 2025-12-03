@@ -154,7 +154,7 @@ namespace Moryx.Orders.Management.Assignment
 
                 foreach (var recipe in recipes)
                 {
-                    var references = ReflectionTool.GetReferences<IProductPartLink>(recipe.Product)
+                    var references = ReflectionTool.GetReferences<ProductPartLink>(recipe.Product)
                         .SelectMany(g => g).ToList();
 
                     // Operation is affected if a recipe referenced the updated product type directly of is a part of a referenced product type

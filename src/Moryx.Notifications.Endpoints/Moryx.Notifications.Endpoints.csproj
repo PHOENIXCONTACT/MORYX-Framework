@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj" />
+	  <ProjectReference Include="..\Moryx.AspNetCore\Moryx.AspNetCore.csproj" />
 	  <ProjectReference Include="..\Moryx.Notifications\Moryx.Notifications.csproj" />
 	</ItemGroup>
 

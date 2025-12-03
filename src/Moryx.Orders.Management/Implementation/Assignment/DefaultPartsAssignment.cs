@@ -70,10 +70,10 @@ namespace Moryx.Orders.Management.Assignment
         private static void IteratePartLinks(ProductType product, Dictionary<ProductType, uint> countedParts, Type productType)
         {
             var properties = productType.GetProperties()
-                            .Where(p => p.PropertyType.IsAssignableTo(typeof(IProductPartLink)));
+                            .Where(p => p.PropertyType.IsAssignableTo(typeof(ProductPartLink)));
             foreach (var property in properties)
             {
-                if (property.GetValue(product) is not IProductPartLink propertyValue)
+                if (property.GetValue(product) is not ProductPartLink propertyValue)
                 {
                     continue;
                 }
@@ -97,12 +97,12 @@ namespace Moryx.Orders.Management.Assignment
             var properties = productType.GetProperties().Where(p =>
                 p.PropertyType.IsGenericType &&
                 p.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>) &&
-                p.PropertyType.GetGenericArguments()[0].IsAssignableTo(typeof(IProductPartLink))
+                p.PropertyType.GetGenericArguments()[0].IsAssignableTo(typeof(ProductPartLink))
             );
 
             foreach (var property in properties)
             {
-                if (property.GetValue(product) is not IEnumerable<IProductPartLink> propertyValue || !propertyValue.Any())
+                if (property.GetValue(product) is not IEnumerable<ProductPartLink> propertyValue || !propertyValue.Any())
                 {
                     continue;
                 }

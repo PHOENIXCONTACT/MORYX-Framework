@@ -9,8 +9,20 @@ namespace Moryx.ControlSystem.Cells
     /// <summary>
     /// Interface for all cells
     /// </summary>
-    public interface ICell : IResource, IControlSystemBound
+    public interface ICell : IResource
     {
+        /// <summary>
+        /// Called if the process engine  was attached to production cells.
+        /// Can return currently active sessions within the cell
+        /// </summary>
+        IEnumerable<Session> ProcessEngineAttached(ProcessEngineContext context);
+
+        /// <summary>
+        /// Called if the process engine was detached from production cells.
+        /// Can return currently active sessions within the cell
+        /// </summary>
+        IEnumerable<Session> ProcessEngineDetached();
+
         /// <summary>
         /// Start an activity in the cell
         /// </summary>
@@ -23,7 +35,7 @@ namespace Moryx.ControlSystem.Cells
         void ProcessAborting(IActivity affectedActivity);
 
         /// <summary>
-        /// Callback from the control system, that the sequence was completed
+        /// Callback from the process engine, that the sequence was completed
         /// </summary>
         void SequenceCompleted(SequenceCompleted completed);
 

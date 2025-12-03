@@ -387,15 +387,16 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
         private static ProcessEntity CreateProcessEntity(IUnitOfWork<ProcessContext> uow, string typeName, int state, long jobId)
         {
-            var processRepo = uow.GetRepository<IProcessEntityRepository>();
+            // Do not use Repository.Create here because id is self-generated.
+            var process = uow.DbContext.Processes.Add(new()
+            {
+                Id = IdShiftGenerator.Generate(jobId << 14, ProcessTestsBase.NextId),
+                TypeName = typeName,
+                State = state,
+                JobId = jobId,
+            });
 
-            var processEntity = processRepo.Create();
-            processEntity.Id = IdShiftGenerator.Generate(jobId << 14, ProcessTestsBase.NextId);
-            processEntity.TypeName = typeName;
-            processEntity.State = state;
-            processEntity.JobId = jobId;
-
-            return processEntity;
+            return process.Entity;
         }
 
         private static JobEntity CreateJobEntity(IUnitOfWork uow)

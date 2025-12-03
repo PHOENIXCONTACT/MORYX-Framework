@@ -8,7 +8,7 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.ControlSystem.Capabilities;
 using Moryx.ControlSystem.Setups;
-using Moryx.ControlSystem.VisualInstructions;
+using Moryx.VisualInstructions;
 using Moryx.Modules;
 using Moryx.Tools;
 using Moryx.Workplans;

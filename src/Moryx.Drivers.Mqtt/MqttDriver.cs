@@ -1,10 +1,10 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Buffers;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Drivers;
 using MQTTnet;
-using MQTTnet.Client;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using Moryx.AbstractionLayer.Drivers.Message;
@@ -146,7 +146,7 @@ public class MqttDriver : Driver, IMessageDriver
     {
         await base.OnInitializeAsync();
 
-        var factory = new MqttFactory();
+        var factory = new MqttClientFactory();
         _mqttClient = factory.CreateMqttClient();
 
         _mqttClient.ApplicationMessageReceivedAsync += OnReceived;
@@ -339,14 +339,17 @@ public class MqttDriver : Driver, IMessageDriver
     private Task OnReceived(MqttApplicationMessageReceivedEventArgs args)
     {
         // Experimental: Dispatch to new thread to prevent exceptions or deadlocks from causing inflight blockage
-        ParallelOperations.ExecuteParallel(param => Receive(param.Topic, param.Payload), new { args.ApplicationMessage.Topic, args.ApplicationMessage.Payload });
+        ParallelOperations.ExecuteParallel(param => Receive(param.Topic, param.Payload), new
+        {
+            args.ApplicationMessage.Topic,
+            Payload = args.ApplicationMessage.Payload.ToArray()
+        });
 
         return Task.CompletedTask;
     }
 
     internal void Receive(string topicName, byte[] message)
     {
-
         var topic = topicName;
         if (Identifier != "")
         {

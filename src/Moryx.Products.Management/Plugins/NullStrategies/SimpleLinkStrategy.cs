@@ -10,16 +10,16 @@ namespace Moryx.Products.Management.NullStrategies
     /// <summary>
     /// Simple link strategy without any properties
     /// </summary>
-    [PropertylessStrategyConfiguration(typeof(IProductPartLink), DerivedTypes = true)]
+    [PropertylessStrategyConfiguration(typeof(ProductPartLink), DerivedTypes = true)]
     [Plugin(LifeCycle.Transient, typeof(IProductLinkStrategy), Name = nameof(SimpleLinkStrategy))]
     internal class SimpleLinkStrategy : LinkStrategyBase
     {
-        public override void LoadPartLink(IGenericColumns linkEntity, IProductPartLink target)
+        public override void LoadPartLink(IGenericColumns linkEntity, ProductPartLink target)
         {
             // We have no custom properties
         }
 
-        public override void SavePartLink(IProductPartLink source, IGenericColumns target)
+        public override void SavePartLink(ProductPartLink source, IGenericColumns target)
         {
             // We have no custom properties
         }

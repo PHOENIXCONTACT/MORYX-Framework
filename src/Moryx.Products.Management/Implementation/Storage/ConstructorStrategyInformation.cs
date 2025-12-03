@@ -24,8 +24,8 @@ namespace Moryx.Products.Management.Implementation.Storage
 
         public IProductTypeStrategy Strategy { get; set; }
 
-        public IDictionary<string, ConstructorStrategyInformation<IProductPartLink, ProductLinkConfiguration, IProductLinkStrategy>> PartLinksInformation =
-            new Dictionary<string, ConstructorStrategyInformation<IProductPartLink, ProductLinkConfiguration, IProductLinkStrategy>>();
+        public IDictionary<string, ConstructorStrategyInformation<ProductPartLink, ProductLinkConfiguration, IProductLinkStrategy>> PartLinksInformation =
+            new Dictionary<string, ConstructorStrategyInformation<ProductPartLink, ProductLinkConfiguration, IProductLinkStrategy>>();
 
         private IDictionary<string, PropertyInfo> _properties = new Dictionary<string, PropertyInfo>();
 
@@ -65,9 +65,9 @@ namespace Moryx.Products.Management.Implementation.Storage
                 var property = _properties[linkStrategy.PropertyName];
                 var value = property.GetValue(modifiedInstance);
                 var partLink = new PartLinkInfo(linkStrategy, value);
-                if (typeof(IProductPartLink).IsAssignableFrom(property.PropertyType))
+                if (typeof(ProductPartLink).IsAssignableFrom(property.PropertyType))
                     partLink.Type = PartLinkType.single;
-                else if (typeof(IEnumerable<IProductPartLink>).IsAssignableFrom(property.PropertyType))
+                else if (typeof(IEnumerable<ProductPartLink>).IsAssignableFrom(property.PropertyType))
                     partLink.Type = PartLinkType.list;
                 result.Add(partLink);
             }
@@ -76,7 +76,7 @@ namespace Moryx.Products.Management.Implementation.Storage
 
         public ProductTypeWrapper GetTypeWrapper()
         {
-            var partLinks = new Dictionary<string, Func<IProductPartLink>>();
+            var partLinks = new Dictionary<string, Func<ProductPartLink>>();
             foreach (var partLinkInfo in PartLinksInformation)
                 partLinks.Add(partLinkInfo.Key, partLinkInfo.Value.Constructor);
             return new ProductTypeWrapper(Identifier, Constructor, partLinks, _properties.Values.ToList());

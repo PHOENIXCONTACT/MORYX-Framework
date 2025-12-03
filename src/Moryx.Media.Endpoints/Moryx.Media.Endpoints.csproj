@@ -7,7 +7,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Moryx.Asp.Extensions\Moryx.Asp.Extensions.csproj" />
+    <ProjectReference Include="..\Moryx.AspNetCore\Moryx.AspNetCore.csproj" />
     <ProjectReference Include="..\Moryx.Media\Moryx.Media.csproj" />
   </ItemGroup>
   <ItemGroup>

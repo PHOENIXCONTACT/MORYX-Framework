@@ -31,12 +31,12 @@ namespace Moryx.Resources.Benchmarking
             base.OnDispose();
         }
 
-        public override IEnumerable<Session> ControlSystemAttached()
+        protected override IEnumerable<Session> ProcessEngineAttached()
         {
             yield break;
         }
 
-        public override IEnumerable<Session> ControlSystemDetached()
+        protected override IEnumerable<Session> ProcessEngineDetached()
         {
             yield break;
         }

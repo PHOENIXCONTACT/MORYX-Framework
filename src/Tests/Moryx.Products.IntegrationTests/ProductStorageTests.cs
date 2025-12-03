@@ -288,7 +288,7 @@ namespace Moryx.Products.IntegrationTests
                         case nameof(GenericTypeStrategy):
                             strategy = new GenericTypeStrategy
                             {
-                                EntityMapper = new GenericEntityMapper<ProductType, IProductPartLink>
+                                EntityMapper = new GenericEntityMapper<ProductType, ProductPartLink>
                                 {
                                     MapperFactory = mapperFactory.Object
                                 }

@@ -3,7 +3,6 @@
 
 using System.ComponentModel;
 using Moryx.AbstractionLayer.Activities;
-using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 
 namespace Moryx.ControlSystem.Cells
@@ -14,11 +13,30 @@ namespace Moryx.ControlSystem.Cells
     [Description("Base type for all cells within a production system")]
     public abstract class Cell : Resource, ICell
     {
-        /// <inheritdoc />
-        public abstract IEnumerable<Session> ControlSystemAttached();
+        /// <summary>
+        /// Context class used by the process engine to inform cell about updates
+        /// </summary>
+        public ProcessEngineContext ProcessEngineContext { get; private set; }
 
         /// <inheritdoc />
-        public abstract IEnumerable<Session> ControlSystemDetached();
+        IEnumerable<Session> ICell.ProcessEngineAttached(ProcessEngineContext context)
+        {
+            ProcessEngineContext = context;
+            return ProcessEngineAttached();
+        }
+
+        /// <see cref="ICell.ProcessEngineAttached"/>
+        protected abstract IEnumerable<Session> ProcessEngineAttached();
+
+        /// <inheritdoc />
+        IEnumerable<Session> ICell.ProcessEngineDetached()
+        {
+            ProcessEngineContext = null;
+            return ProcessEngineDetached();
+        }
+
+        /// <see cref="ICell.ProcessEngineDetached"/>
+        protected abstract IEnumerable<Session> ProcessEngineDetached();
 
         /// <inheritdoc />
         public abstract void StartActivity(ActivityStart activityStart);
@@ -28,20 +46,7 @@ namespace Moryx.ControlSystem.Cells
 
         /// <inheritdoc />
         public abstract void SequenceCompleted(SequenceCompleted completed);
-        private ICapabilities _capabilities = NullCapabilities.Instance;
 
-        public ICapabilities Capabilities
-        {
-            get
-            {
-                return _capabilities;
-            }
-            protected set
-            {
-                _capabilities = value;
-                this.CapabilitiesChanged?.Invoke(this, _capabilities);
-            }
-        }
         /// <summary>
         /// Publish a <see cref="ReadyToWork"/> from the resource
         /// </summary>
@@ -75,6 +80,5 @@ namespace Moryx.ControlSystem.Cells
 
         /// <inheritdoc />
         public event EventHandler<ActivityCompleted> ActivityCompleted;
-        public event EventHandler<ICapabilities> CapabilitiesChanged;
     }
 }

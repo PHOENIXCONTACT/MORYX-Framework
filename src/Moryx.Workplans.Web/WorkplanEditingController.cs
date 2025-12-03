@@ -5,7 +5,7 @@ using System.Drawing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Products.Endpoints;
-using Moryx.Asp.Extensions;
+using Moryx.AspNetCore;
 using Moryx.Serialization;
 using Moryx.Workplans.Web.Properties;
 

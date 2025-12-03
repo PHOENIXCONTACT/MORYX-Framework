@@ -76,7 +76,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
         }
 
         /// <summary>
-        /// Creates and inserts setup and/or clean up for the <paramref name="current"/> 
+        /// Creates and inserts setup and/or clean up for the <paramref name="current"/>
         /// job. Returns the next job to be handled.
         /// </summary>
         private LinkedListNode<IJobData> HandleCurrentJob(LinkedList<IJobData> newJobs, LinkedListNode<IJobData> current)
@@ -164,7 +164,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
         }
 
         /// <summary>
-        /// Abort the <paramref name="current"/> and all following jobs that would cause the 
+        /// Abort the <paramref name="current"/> and all following jobs that would cause the
         /// same exception during cleanup creation as they share the same recipe
         /// </summary>
         /// <param name="current">The job that caused the exception initially</param>
@@ -220,7 +220,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
         }
 
         /// <summary>
-        /// Abort the <paramref name="current"/> and all previous jobs that would cause the 
+        /// Abort the <paramref name="current"/> and all previous jobs that would cause the
         /// same exception during cleanup creation as they share the same recipe
         /// </summary>
         /// <param name="current">The job that caused the exception initially</param>
@@ -324,12 +324,12 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
 
         private class CellReference : Cell, ICell
         {
-            public override IEnumerable<Session> ControlSystemAttached()
+            protected override IEnumerable<Session> ProcessEngineAttached()
             {
                 yield break;
             }
 
-            public override IEnumerable<Session> ControlSystemDetached()
+            protected override IEnumerable<Session> ProcessEngineDetached()
             {
                 yield break;
             }

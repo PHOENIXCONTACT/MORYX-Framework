@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Resources.AssemblyInstruction;
+using Moryx.Resources.VisualInstructions;
 
 namespace Moryx.Resources.Benchmarking
 {
