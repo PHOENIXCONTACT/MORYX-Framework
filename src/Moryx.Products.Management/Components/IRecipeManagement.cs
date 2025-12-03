@@ -17,11 +17,6 @@ namespace Moryx.Products.Management
         IProductRecipe Get(long recipeId);
 
         /// <summary>
-        /// Will load all recipes by the given product
-        /// </summary>
-        IReadOnlyList<IProductRecipe> GetAllByProduct(ProductType productType);
-
-        /// <summary>
         /// Retrieves a recipe for the product
         /// </summary>
         IReadOnlyList<IProductRecipe> GetRecipes(ProductType productType, RecipeClassification classifications);

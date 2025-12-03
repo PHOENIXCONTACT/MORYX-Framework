@@ -41,4 +41,14 @@ internal static class InternalExtensions
     {
         return workplanStep.GetType().FullName;
     }
+
+    /// <summary>
+    /// Returns the string representation of the product instance type
+    /// </summary>
+    /// <param name="productInstance">Source product instance</param>
+    /// <returns>Type identifier as string</returns>
+    public static string ProductInstanceTypeName(this ProductInstance productInstance)
+    {
+        return productInstance.GetType().FullName;
+    }
 }

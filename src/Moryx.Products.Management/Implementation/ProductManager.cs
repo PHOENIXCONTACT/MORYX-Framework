@@ -47,10 +47,6 @@ namespace Moryx.Products.Management
         {
         }
 
-        public void Dispose()
-        {
-        }
-
         public IReadOnlyList<ProductType> LoadTypes(ProductQuery query)
         {
             return Storage.LoadTypes(query);

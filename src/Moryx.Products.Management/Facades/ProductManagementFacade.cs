@@ -109,7 +109,7 @@ namespace Moryx.Products.Management
         public ProductType Duplicate(ProductType template, ProductIdentity newIdentity)
         {
             ValidateHealthState();
-            return ProductManager.Duplicate((ProductType)template, newIdentity);
+            return ProductManager.Duplicate(template, newIdentity);
         }
 
         public long SaveType(ProductType modifiedInstance)
@@ -225,7 +225,7 @@ namespace Moryx.Products.Management
                 throw ex;
             }
 
-            return (ProductInstance)instances.SingleOrDefault(); ;
+            return (ProductInstance)instances.SingleOrDefault();
         }
 
         public TInstance GetInstance<TInstance>(Expression<Func<TInstance, bool>> selector)
