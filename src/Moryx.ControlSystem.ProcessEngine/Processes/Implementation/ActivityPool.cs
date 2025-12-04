@@ -205,11 +205,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             return result;
         }
 
-        public IReadOnlyList<Activity> GetByCondition(Func<IActivity, bool> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
         public IReadOnlyList<ActivityData> GetAllOpen()
         {
             _activitiesLock.EnterReadLock();

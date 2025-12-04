@@ -55,21 +55,19 @@ The `ProcessEngineContext` was added to the `ProcessEngineAttached` to provide t
 
 Several interfaces have been removed to streamline the codebase and reduce complexity. The following interfaces are no longer available:
 
-- `IProductType`: Replaced with base-class `ProductType`
-- `IProductInstance`: Replaced with base-class `ProductInstance`
-- `IProductPartLink`: Replaced with base-class `ProductPartLink`
-- `IConfig`: Replaced with base-class `ConfigBase`
 - `IDatabaseConfig`: Replaced with base-class `DatabaseConfig`
 - `IControlSystemBound`: Merged with `ICell`
-- `ISetupRecipe`: Replaced with class `SetupRecipe`
-- `IProductionRecipe`: Replaced with class `ProductionRecipe`
 - `INamedTask`: Merged into `ITask`
 - `IProductionRecipe`: Replaced with class `ProductionRecipe`
 - `ISetupRecipe`: Replaced with class `SetupRecipe`
 
 The following interfaces are still existent for api extensions but the base class is used in whole code base:
 
-- `IActivity`: Replaced with class `Activity`. The interface should only be used for API extensions.
+- `IActivity`: Replaced with class `Activity`
+- `IProductType`: Replaced with class `ProductType`
+- `IProductInstance`: Replaced with class `ProductInstance`
+- `IProductPartLink`: Replaced with class `ProductPartLink`
+- `IConfig`: Replaced with class `ConfigBase`
 
 ## Method Signature Changes
 

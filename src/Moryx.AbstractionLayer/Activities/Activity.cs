@@ -118,18 +118,20 @@ namespace Moryx.AbstractionLayer.Activities
             Tracing = new TTracing();
         }
 
-        ///
+        /// <inheritdoc />
         public new TParam Parameters
         {
             get => (TParam)base.Parameters;
             set => base.Parameters = value;
         }
 
-        ///
+        /// <summary>
+        /// All activity trace information
+        /// </summary>
         public new TTracing Tracing
         {
             get => (TTracing)base.Tracing;
-            init => base.Tracing = value;
+            set => base.Tracing = value;
         }
     }
 
