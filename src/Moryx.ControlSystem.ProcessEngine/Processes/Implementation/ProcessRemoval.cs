@@ -202,6 +202,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         {
             public long Id => -1;
 
+            public string Name => nameof(ProcessFixUpTask);
+
             public Type ActivityType => typeof(ProcessFixupActivity);
 
             private readonly VisualInstructionParameters _parameters;
