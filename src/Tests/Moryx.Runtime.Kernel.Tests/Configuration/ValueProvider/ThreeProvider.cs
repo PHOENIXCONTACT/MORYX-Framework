@@ -1,10 +1,10 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Configuration;
 using System.Reflection;
+using Moryx.Configuration;
 
-namespace Moryx.Tests.Configuration.ValueProvider
+namespace Moryx.Runtime.Kernel.Tests.Configuration.ValueProvider
 {
     internal class ThreeProvider : IValueProvider
     {

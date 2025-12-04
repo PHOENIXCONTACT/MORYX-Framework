@@ -19,8 +19,9 @@ public class HandleContinuationPoint : OpcUaTestBase
     [SetUp]
     public void SetUp()
     {
+        _references = CreateNodes(_namespaceTable);
+
         ReflectionTool.TestMode = true;
-        _references = CreateNodes();
 
         _sessionMock = new Mock<ISession>();
         var byteArray = Array.Empty<byte>();
@@ -30,7 +31,7 @@ public class HandleContinuationPoint : OpcUaTestBase
         _sessionMock.Setup(s => s.AddSubscription(It.IsAny<Subscription>())).Callback((Subscription sub) =>
         {
             var prop = sub.GetType().GetProperties().FirstOrDefault(propInfo => propInfo.Name.Equals(nameof(sub.Session)));
-            prop.SetValue(sub, _sessionMock.Object);
+            prop?.SetValue(sub, _sessionMock.Object);
         });
 
         uint subscriptionId = 12;
@@ -64,7 +65,7 @@ public class HandleContinuationPoint : OpcUaTestBase
     }
 
     [Test]
-    public void TestContinuationPoint()
+    public async Task TestContinuationPoint()
     {
         //Arrange
         var byteArray = new byte[] { 0, 1 };
@@ -78,7 +79,7 @@ public class HandleContinuationPoint : OpcUaTestBase
         _sessionMock.Setup(s => s.Browse(null, null, ObjectIds.RootFolder, It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
            true, It.IsAny<uint>(), out byteArray, out nextRefs1));
 
-        byte[] furtherContinuationPoint = null;
+        byte[]? furtherContinuationPoint = null;
         _sessionMock.Setup(s => s.BrowseNext(null, false, byteArray, out furtherContinuationPoint, out nextRefs2));
 
         var wait = new AutoResetEvent(false);
@@ -93,7 +94,7 @@ public class HandleContinuationPoint : OpcUaTestBase
         };
 
         //Act
-        ((IPlugin)_driver).Start();
+        await ((IAsyncPlugin)_driver).StartAsync();
 
         //Assert
         Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), Is.True, "Driver was not running");

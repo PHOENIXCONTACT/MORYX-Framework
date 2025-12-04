@@ -21,7 +21,9 @@ namespace Moryx.Drivers.Mqtt.Tests
             const string topicBeginning = "abc";
             _topicWithPlaceholders = topicBeginning;
             foreach (var n in _placeHolderNames)
+            {
                 _topicWithPlaceholders += "/" + n;
+            }
         }
 
         [Test(Description = "Tests if a received topic can be matched to the corresponding TopicResource")]
@@ -63,7 +65,9 @@ namespace Moryx.Drivers.Mqtt.Tests
             //Assert
             Assert.That(_placeHolderNames.Count, Is.EqualTo(names.Length));
             foreach (var n in names)
+            {
                 Assert.That(_placeHolderNames.Contains("{" + n + "}"));
+            }
         }
 
     }

@@ -158,8 +158,11 @@ namespace Moryx.Drivers.Mqtt.Tests
             _mqttTopicInt.Received += OnReceivedIntMessage;
 
             //Act
-            _driver.Receive(_driver.Identifier + _mqttTopicInt.Identifier,
-                BitConverter.GetBytes(MESSAGE_VALUE_INT));
+            _driver.Receive(new MqttApplicationMessage()
+            {
+                Topic = _driver.Identifier + _mqttTopicInt.Identifier,
+                PayloadSegment = BitConverter.GetBytes(MESSAGE_VALUE_INT)
+            });
 
             //Assert 1
             Assert.That(wait.WaitOne(TimeSpan.FromSeconds(TIMEOUT)), "Received Event was not raised");
@@ -181,8 +184,11 @@ namespace Moryx.Drivers.Mqtt.Tests
             _mqttTopicString.Received += OnReceivedStringMessage;
 
             //Act
-            _driver.Receive(_driver.Identifier + _mqttTopicString.Identifier,
-                Encoding.ASCII.GetBytes(MESSAGE_VALUE_STRING));
+            _driver.Receive(new MqttApplicationMessage()
+            {
+                Topic = _driver.Identifier + _mqttTopicString.Identifier,
+                PayloadSegment = Encoding.ASCII.GetBytes(MESSAGE_VALUE_STRING)
+            });
 
             //Assert 1
             Assert.That(wait.WaitOne(TimeSpan.FromSeconds(TIMEOUT)), "Received Event was not raised");

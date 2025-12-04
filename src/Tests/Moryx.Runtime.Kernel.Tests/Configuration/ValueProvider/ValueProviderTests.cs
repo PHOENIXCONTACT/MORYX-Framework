@@ -4,7 +4,7 @@
 using Moryx.Configuration;
 using NUnit.Framework;
 
-namespace Moryx.Tests.Configuration.ValueProvider
+namespace Moryx.Runtime.Kernel.Tests.Configuration.ValueProvider
 {
     [TestFixture]
     public class ValueProviderTests
