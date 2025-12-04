@@ -38,14 +38,14 @@ namespace Moryx.Drivers.Mqtt.Tests
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 Channels = new ReferenceCollectionMock<MqttTopic>(),
                 MqttVersion = version,
-                BrokerURL = "mock"
+                BrokerUrl = "mock"
             };
 
             //Setup mock for MQTT-Client
             _mockClient = new Mock<IMqttClient>();
             var options = new MqttClientOptionsBuilder()
                 .WithClientId(_driver.Id.ToString(CultureInfo.InvariantCulture))
-                .WithTcpServer(_driver.BrokerURL, _driver.Port)
+                .WithTcpServer(_driver.BrokerUrl, _driver.Port)
                 .Build();
             _mockClient.Setup(m => m.ConnectAsync(It.IsAny<MqttClientOptions>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new MqttClientConnectResult(), TimeSpan.FromMilliseconds(100));

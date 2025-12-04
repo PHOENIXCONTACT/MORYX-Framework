@@ -15,6 +15,6 @@ public enum JsonFormat
     /// <summary>
     /// Format object keys as camelCase
     /// </summary>
-    camelCase = 1
+    CamelCase = 1
 }
 

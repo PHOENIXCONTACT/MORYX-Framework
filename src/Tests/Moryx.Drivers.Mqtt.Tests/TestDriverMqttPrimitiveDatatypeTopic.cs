@@ -66,7 +66,7 @@ namespace Moryx.Drivers.Mqtt.Tests
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 Channels = new ReferenceCollectionMock<MqttTopic> { _mqttTopicInt, _mqttTopicString },
                 MqttVersion = _version,
-                BrokerURL = "mock"
+                BrokerUrl = "mock"
             };
 
             _mockClient = new Mock<IMqttClient>();

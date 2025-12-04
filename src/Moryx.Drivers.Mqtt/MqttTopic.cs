@@ -17,6 +17,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using Moryx.Drivers.Mqtt.Messages;
 using System.Buffers;
+using System.Text.Json;
 
 namespace Moryx.Drivers.Mqtt
 {
@@ -442,7 +443,7 @@ namespace Moryx.Drivers.Mqtt
 
                     if (TraceDecodedMessage && span is not null)
                     {
-                        span.AddTag("message.decoded", System.Text.Json.JsonSerializer.Serialize(msg));
+                        span.AddTag("message.decoded", JsonSerializer.Serialize(msg));
                     }
                 }
             }

@@ -47,7 +47,7 @@ namespace Moryx.Drivers.Mqtt.Tests
             {
                 Identifier = "JsonMqttCamel",
                 MessageName = nameof(JsonMessageTest),
-                Format = JsonFormat.camelCase
+                Format = JsonFormat.CamelCase
             };
             _mqttTopicPascal = new MqttTopicJson()
             {
@@ -65,7 +65,7 @@ namespace Moryx.Drivers.Mqtt.Tests
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 Channels = new ReferenceCollectionMock<MqttTopic> { _mqttTopicCamel, _mqttTopicPascal },
                 MqttVersion = _version,
-                BrokerURL = "mock"
+                BrokerUrl = "mock"
             };
 
             _mockClient = new Mock<IMqttClient>();

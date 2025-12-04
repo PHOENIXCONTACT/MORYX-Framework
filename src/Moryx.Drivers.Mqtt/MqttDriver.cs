@@ -40,7 +40,7 @@ public class MqttDriver : Driver, IMessageDriver
     /// </summary>
     public IParallelOperations ParallelOperations { get; set; }
 
-    internal static readonly System.Diagnostics.ActivitySource _activitySource = new System.Diagnostics.ActivitySource("Moryx.Drivers.Mqtt.MqttDriver");
+    internal static readonly ActivitySource _activitySource = new ActivitySource("Moryx.Drivers.Mqtt.MqttDriver");
 
     #region EntrySerialize
 
@@ -68,10 +68,10 @@ public class MqttDriver : Driver, IMessageDriver
     /// </summary>
     [EntrySerialize, DataMember, DefaultValue("127.0.0.1")]
     [Display(Name = nameof(Strings.MqttDriver_BrokerUrl), Description = nameof(Strings.MqttDriver_BrokerUrl_Description), ResourceType = typeof(Strings))]
-    public string BrokerURL
+    public string BrokerUrl
     {
-        get => _brokerURL;
-        set => ConfigChange(ref _brokerURL, value);
+        get => _brokerUrl;
+        set => ConfigChange(ref _brokerUrl, value);
     }
 
     private void ConfigChange<T>(ref T field, T value) where T : IEquatable<T>
@@ -218,7 +218,7 @@ public class MqttDriver : Driver, IMessageDriver
     public bool HasChannels => Channels.Count > 0;
     internal DriverMqttState State => (DriverMqttState)CurrentState;
     private IMqttClient _mqttClient;
-    private string _brokerURL;
+    private string _brokerUrl;
     private string _identifier;
     private int _port;
     private int _scheduledReconnect;
@@ -320,7 +320,7 @@ public class MqttDriver : Driver, IMessageDriver
         _clientId = $"{System.Net.Dns.GetHostName()}-{Id}-{Name}";
         var optionsBuilder = new MqttClientOptionsBuilder()
             .WithClientId(_clientId)
-            .WithTcpServer(BrokerURL, Port)
+            .WithTcpServer(BrokerUrl, Port)
             .WithTlsOptions(new MqttClientTlsOptions() { UseTls = UseTls })
             .WithCleanSession(!ReconnectWithoutCleanSession);
 
@@ -655,8 +655,14 @@ public class MqttDriver : Driver, IMessageDriver
             var result = _mqttClient.UnsubscribeAsync(Identifier + subscribedTopic).Result;
         }
         // Ignore exceptions that can occure during shutdown
-        catch (ObjectDisposedException) { }
-        catch (MqttClientDisconnectedException) { }
+        catch (ObjectDisposedException)
+        {
+            // Ignore
+        }
+        catch (MqttClientDisconnectedException)
+        {
+            // Ignore
+        }
         catch (Exception ex)
         {
             Logger.LogError(ex, "Failed to unsubscribe from topic {topic}", subscribedTopic);

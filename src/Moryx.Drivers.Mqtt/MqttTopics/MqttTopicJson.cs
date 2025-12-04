@@ -8,6 +8,7 @@ using Moryx.Serialization;
 using Moryx.Drivers.Mqtt.Properties;
 using System.Text.Json;
 using System.Buffers;
+using System.Text.Json.Serialization;
 
 namespace Moryx.Drivers.Mqtt.MqttTopics
 {
@@ -51,7 +52,7 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         protected override byte[] Serialize(object payload)
         {
             var options = GetSystemTextJsonOptions();
-            return System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(payload, options);
+            return JsonSerializer.SerializeToUtf8Bytes(payload, options);
         }
 
         /// <inheritdoc />
@@ -63,14 +64,14 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
 
         private JsonSerializerOptions GetSystemTextJsonOptions()
         {
-            var options = new System.Text.Json.JsonSerializerOptions()
+            var options = new JsonSerializerOptions()
             {
-                PropertyNamingPolicy = Format == JsonFormat.camelCase ? JsonNamingPolicy.CamelCase : null,
+                PropertyNamingPolicy = Format == JsonFormat.CamelCase ? JsonNamingPolicy.CamelCase : null,
             };
             options.Converters.Clear();
             if (EnumsAsStrings)
             {
-                options.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+                options.Converters.Add(new JsonStringEnumConverter());
             }
 
             return options;
