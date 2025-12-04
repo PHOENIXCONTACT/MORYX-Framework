@@ -159,6 +159,12 @@ namespace Moryx.Products.Management
             return recipeId;
         }
 
+        public void SaveRecipes(IReadOnlyList<IProductRecipe> recipes)
+        {
+            ValidateHealthState();
+            RecipeManagement.Save(recipes);
+        }
+
         public Workplan LoadWorkplan(long workplanId)
         {
             ValidateHealthState();

@@ -67,6 +67,11 @@ namespace Moryx.AbstractionLayer.Products
         long SaveRecipe(IProductRecipe recipe);
 
         /// <summary>
+        /// Saves given recipe to the storage
+        /// </summary>
+        void SaveRecipes(IReadOnlyList<IProductRecipe> recipes);
+
+        /// <summary>
         /// Create an product instance of given product
         /// </summary>
         /// <param name="productType">Product to instantiate</param>

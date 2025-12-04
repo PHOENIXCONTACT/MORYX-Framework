@@ -36,6 +36,15 @@ namespace Moryx.Products.Management
             return Storage.LoadRecipes(productType.Id, classification);
         }
 
+        public void Save(IReadOnlyList<IProductRecipe> recipes)
+        {
+            Storage.SaveRecipes(recipes);
+            foreach (var recipe in recipes)
+            {
+                RaiseRecipeChanged(recipe);
+            }
+        }
+
         public long Save(IProductRecipe recipe)
         {
             var saved = Storage.SaveRecipe(recipe);

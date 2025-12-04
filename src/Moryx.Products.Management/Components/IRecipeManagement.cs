@@ -22,6 +22,11 @@ namespace Moryx.Products.Management
         IReadOnlyList<IProductRecipe> GetRecipes(ProductType productType, RecipeClassification classifications);
 
         /// <summary>
+        /// Saves multiple recipes
+        /// </summary>
+        void Save(IReadOnlyList<IProductRecipe> recipes);
+
+        /// <summary>
         /// A recipe was changed, give users the chance to update their reference
         /// </summary>
         event EventHandler<IRecipe> RecipeChanged;
