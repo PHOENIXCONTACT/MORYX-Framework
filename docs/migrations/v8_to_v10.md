@@ -130,3 +130,24 @@ The `IConstraintContext` interface was removed from `IProcess`. Instead a new wr
 ## Renamed Moryx.Asp.Extensions to Moryx.AspNetCore
 
 Renamed the package Moryx.Asp.Extensions to Moryx.AspNetCore and moved the classes to the respective namespace. This change was applied to match the Microsoft namespaces. In the past the project was used in MORYX <6 for C#-extensions on ASP.NET Components to initialize the Runtime environment and register endpoints inside the ServerModules. Since we use controllers based on the facades, these stuff was already removed.
+
+## Changes to the MQTT Driver package
+
+Bugfixes:
+
+* The change in ConnectingToBrokerState prevents an application crash that were not uncommon during debugging
+
+Cleanup:
+
+* Mostly typos in the string resources or non equal punctuation
+* Don't use the obsolete Payload Method and use ReadOnlySequence instead. To avoid unnecessary array copies methods deserializing the data have breaking signature changes
+* Remove Newtonoft.Json in favor of System.Text.Json
+
+Features:
+
+* Add the option to add custom topics as the User by removing internal access modifiers from MqttTopic Serialize and Deserialize
+* Add Retain information for Publishing and Receiving messages
+* Support Mqtt5 response topics
+* Support unsubscribing from Topics, by removing or changing the resource
+* Support changing the broker without restarting the Resource Management, by a) providing a Reconnect method and b) handling changes to the relevant properties
+* Support diagnostic tracing of message contents, before and after deserialization
