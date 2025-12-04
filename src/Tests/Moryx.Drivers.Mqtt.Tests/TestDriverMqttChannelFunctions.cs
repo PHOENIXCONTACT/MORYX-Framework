@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -121,7 +122,6 @@ namespace Moryx.Drivers.Mqtt.Tests
             Assert.That(c.Identifier.Equals(_topicBoolMqtt.Identifier));
         }
 
-
         [Test(Description = "Return null, if identifier does not exist")]
         public void Channel_NotFindChannel_IdentifierDoesNotExist()
         {
@@ -206,7 +206,10 @@ namespace Moryx.Drivers.Mqtt.Tests
         {
             //Arrange
             if (subscribedTopic.Equals(""))
+            {
                 subscribedTopic = newTopic;
+            }
+
             var topic = new MqttTopicJson
             {
                 MessageName = messageName,
@@ -240,15 +243,18 @@ namespace Moryx.Drivers.Mqtt.Tests
             };
             var topic = _driver.Identifier + _topicPlaceholder.Identifier
                 .Replace("{PcName}", _placeholderMessages.PcName)
-                .Replace("{AdapterNumber}", _placeholderMessages.AdapterNumber.ToString())
+                .Replace("{AdapterNumber}", _placeholderMessages.AdapterNumber.ToString(CultureInfo.InvariantCulture))
                 .Replace("{ClassProperty.Test}", _placeholderMessages.ClassProperty.Test);
             var wait = new AutoResetEvent(false);
             _topicPlaceholder.Received += (sender, eventArgs) => { wait.Set(); };
             _topicPlaceholder.Received += OnPlaceholderMessageReceived;
 
             //Act
-            _driver.Receive(topic,
-                Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(msg)));
+            _driver.Receive(new MqttApplicationMessage()
+            {
+                Topic = topic,
+                PayloadSegment = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(msg))
+            });
 
             //Assert 1
             Assert.That(wait.WaitOne(TimeSpan.FromSeconds(TIMEOUT)), "Received Event was not raised");
@@ -290,9 +296,9 @@ namespace Moryx.Drivers.Mqtt.Tests
             MessageForPlaceholderMessages msg, string topicIdentifier)
         {
             var topic = _driver.Identifier + topicIdentifier.Replace("{PcName}", msg.PcName)
-                .Replace("{AdapterNumber}", msg.AdapterNumber.ToString())
-                .Replace("{Value}", msg.Value.ToString())
-                .Replace("{Identity.Revision}", msg.Identity.Revision.ToString())
+                .Replace("{AdapterNumber}", msg.AdapterNumber.ToString(CultureInfo.InvariantCulture))
+                .Replace("{Value}", msg.Value.ToString(CultureInfo.InvariantCulture))
+                .Replace("{Identity.Revision}", msg.Identity.Revision.ToString(CultureInfo.InvariantCulture))
                 .Replace("{Identity.Identifier}", msg.Identity.Identifier);
             Assert.That(topic, Is.EqualTo(applicationMessage.Topic), "topic was wrongly built, placeholders weren't replaced with the right values");
         }
@@ -427,8 +433,11 @@ namespace Moryx.Drivers.Mqtt.Tests
             mqttTopic.Received += (sender, eventArgs) => { wait.Set(); };
 
             //Act
-            _driver.Receive(_driver.Identifier + TOPIC,
-                Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(msg)));
+            _driver.Receive(new MqttApplicationMessage()
+            {
+                Topic = _driver.Identifier + TOPIC,
+                PayloadSegment = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(msg))
+            });
 
             //Assert 1
             Assert.That(wait.WaitOne(TimeSpan.FromSeconds(TIMEOUT)), "Received Event was not raised");

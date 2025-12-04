@@ -35,6 +35,12 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Services
             if (!updatedConfig.IsValid())
                 requestErrors.Add("Requested config values aren't valid");
 
+            // If database was not set, use context name as database name
+            if (string.IsNullOrEmpty(updatedConfig.ConnectionSettings.Database))
+            {
+                updatedConfig.ConnectionSettings.Database = dbContextType.Name;
+            }
+
             // Save config and reload all DataModels
             _dbContextManager.UpdateConfig(
                 dbContextType,
