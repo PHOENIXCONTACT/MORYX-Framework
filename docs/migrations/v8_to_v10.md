@@ -170,3 +170,8 @@ Features:
 * Support unsubscribing from Topics, by removing or changing the resource
 * Support changing the broker without restarting the Resource Management, by a) providing a Reconnect method and b) handling changes to the relevant properties
 * Support diagnostic tracing of message contents, before and after deserialization
+
+## EntryConvert
+
+- Supports async invocation of methods now by `InvokeMethodAsync`. Synchronous methods are executed synchronously.
+- The synchronous `InvokeMethod` does now support async methods too. They are executed synchronously.

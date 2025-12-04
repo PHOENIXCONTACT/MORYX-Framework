@@ -235,7 +235,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
 
         [HttpPost("{moduleName}/console")]
         [Authorize(Policy = RuntimePermissions.ModulesCanInvoke)]
-        public ActionResult<Entry> InvokeMethod([FromRoute] string moduleName, [FromBody] MethodEntry method)
+        public async Task<ActionResult<Entry>> InvokeMethod([FromRoute] string moduleName, [FromBody] MethodEntry method)
         {
             ArgumentNullException.ThrowIfNull(method);
 
@@ -245,8 +245,20 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
 
             try
             {
-                return EntryConvert.InvokeMethod(serverModule.Console, method,
-                    CreateEditorSerializeSerialization(serverModule));
+                if (method.IsAsync)
+                {
+                    return await EntryConvert.InvokeMethodAsync(serverModule.Console, method,
+                        CreateEditorSerializeSerialization(serverModule));
+                }
+                else
+                {
+                    // ReSharper disable once MethodHasAsyncOverload
+                    EntryConvert.InvokeMethod(serverModule.Console, method,
+                        CreateEditorSerializeSerialization(serverModule));
+
+                    return null;
+                }
+
             }
             catch (Exception e)
             {
