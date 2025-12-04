@@ -73,7 +73,7 @@ public class OpcUaNode : IMessageChannel
     {
         add
         {
-            _driver.AddSubscription(this);
+            _driver.AddSubscriptionAsync(this).GetAwaiter().GetResult();
             _received += value;
         }
         remove
@@ -160,19 +160,22 @@ public class OpcUaNode : IMessageChannel
             _logger?.Log(LogLevel.Error, "It is tried to read the value of node {NodeId}, but the node is no variable node", NodeId);
             return;
         }
-        _driver.WriteNode(Identifier, payload);
+        _driver.WriteNodeAsync(Identifier, payload).GetAwaiter().GetResult();
     }
 
     /// <summary>
-    /// Not implemented yet
+    /// Write a value to the Node. At the moment this only works for variable nodes
     /// </summary>
-    /// <param name="payload"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
+    /// <param name="payload">value, which should be written to the node</param>
+    /// <param name="cancellationToken">Cancellation token</param>
     public Task SendAsync(object payload, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        if (NodeClass != NodeClass.Variable)
+        {
+            _logger?.Log(LogLevel.Error, "It is tried to read the value of node {NodeId}, but the node is no variable node", NodeId);
+            return Task.CompletedTask;
+        }
+        return _driver.WriteNodeAsync(Identifier, payload, cancellationToken);
     }
 
     internal void ReceivedMessage(object payload)

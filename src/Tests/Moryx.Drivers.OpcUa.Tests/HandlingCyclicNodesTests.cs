@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Collections;
 using System.Text.Json;
 using Moq;
 using Moryx.AbstractionLayer.Drivers;
@@ -18,7 +19,7 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
     private new readonly NamespaceTable _namespaceTable = CreateNamespaceTable();
 
     [SetUp]
-    public void Setup()
+    public async Task Setup()
     {
         ReflectionTool.TestMode = true;
 
@@ -26,11 +27,7 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
         _sessionMock.Setup(s => s.NamespaceUris).Returns(_namespaceTable);
         _sessionMock.Setup(s => s.AddSubscription(It.IsAny<Subscription>())).Returns(true);
 
-        uint subscriptionId = 12;
-        double revisedPublishingInterval = 12;
-        uint revisedLifetimeCounter = 5;
-        uint revisedKeepAliveCount = 5;
-        _sessionMock.Setup(s => s.CreateSubscription(
+        _sessionMock.Setup(s => s.CreateSubscriptionAsync(
             null,
             It.IsAny<double>(),
             It.IsAny<uint>(),
@@ -38,21 +35,31 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
             It.IsAny<uint>(),
             It.IsAny<bool>(),
             It.IsAny<byte>(),
-            out subscriptionId,
-            out revisedPublishingInterval,
-            out revisedLifetimeCounter,
-            out revisedKeepAliveCount)).Callback(() =>
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new CreateSubscriptionResponse()
             {
-                subscriptionId = 12;
+                SubscriptionId = 12,
+                RevisedPublishingInterval = 12,
+                RevisedLifetimeCount = 5,
+                RevisedMaxKeepAliveCount = 5
             });
 
         var result = new MonitoredItemCreateResult(0);
         MonitoredItemCreateResultCollection results = [result];
-        DiagnosticInfoCollection diagnosticInfos;
-        _sessionMock.Setup(s => s.CreateMonitoredItems(null, It.IsAny<uint>(), It.IsAny<TimestampsToReturn>(),
-            It.IsAny<MonitoredItemCreateRequestCollection>(), out results, out diagnosticInfos));
+        _sessionMock
+            .Setup(s => s.CreateMonitoredItemsAsync(null, It.IsAny<uint>(), It.IsAny<TimestampsToReturn>(),
+                It.IsAny<MonitoredItemCreateRequestCollection>(), It.IsAny<CancellationToken>()));
+        _sessionMock
+            .Setup(s => s.SetPublishingModeAsync(null, It.IsAny<bool>(), It.IsAny<UInt32Collection>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new SetPublishingModeResponse()
+            {
+                Results = [StatusCodes.Good],
+                DiagnosticInfos = []
+            });
 
-        CreateDriver();
+        var subscriptionFactoryMock = CreateSubscriptionFactoryMock(_sessionMock.Object);
+
+        _driver = await CreateDriver(subscriptionFactoryMock.Object);
     }
 
     private void SetupDriver()
@@ -102,14 +109,18 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
     private void SetupDirectCyclicNodes()
     {
         var nextRefs = CreateNodes(_namespaceTable);
-        var byteArray = Array.Empty<byte>();
+        ByteStringCollection? byteArray = null;
         var nextRefsDefault = new ReferenceDescriptionCollection() { nextRefs[0] };
-        _sessionMock.Setup(s => s.Browse(null, null, ObjectIds.RootFolder, It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
-            true, It.IsAny<uint>(), out byteArray, out nextRefsDefault));
 
-        _sessionMock.Setup(s => s.Browse(null, null, It.Is<NodeId>(x => x != ObjectIds.RootFolder &&
-            x.ToString() != ExpandedNodeId.ToNodeId(nextRefs[0].NodeId, _namespaceTable).ToString()), It.IsAny<uint>(), It.IsAny<BrowseDirection>(),
-            ReferenceTypeIds.HierarchicalReferences, true, It.IsAny<uint>(), out byteArray, out nextRefsDefault));
+        _sessionMock.Setup(s => s.BrowseAsync(null, null, new List<NodeId> { ObjectIds.RootFolder }, It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
+    true, It.IsAny<uint>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((null, byteArray, [nextRefsDefault], null));
+
+        _sessionMock.Setup(s => s.BrowseAsync(null, null, It.Is<List<NodeId>>(x => x.First() != ObjectIds.RootFolder &&
+            x.First().ToString() != ExpandedNodeId.ToNodeId(nextRefs[0].NodeId, _namespaceTable).ToString()), It.IsAny<uint>(), It.IsAny<BrowseDirection>(),
+            ReferenceTypeIds.HierarchicalReferences, true, It.IsAny<uint>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((null, byteArray, [nextRefsDefault], null))
+            ;
     }
 
     [Test(Description = "Do not show cyclic nodes in the UI")]
@@ -163,21 +174,24 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
             NodeClass = NodeClass.Object,
             BrowseName = "browsename2"
         };
-        var byteArray = Array.Empty<byte>();
+        ByteStringCollection? byteArray = null;
 
         var rootResult = new ReferenceDescriptionCollection() { node1 };
-        _sessionMock.Setup(s => s.Browse(null, null, ObjectIds.RootFolder, It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
-            true, It.IsAny<uint>(), out byteArray, out rootResult));
+        _sessionMock.Setup(s => s.BrowseAsync(null, null, new List<NodeId> { ObjectIds.RootFolder }, It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
+            true, It.IsAny<uint>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((null, byteArray, [rootResult], null));
 
         var node1Result = new ReferenceDescriptionCollection() { node2 };
-        _sessionMock.Setup(s => s.Browse(null, null, It.Is<NodeId>(x => x != ObjectIds.RootFolder &&
-            x.ToString() == ExpandedNodeId.ToNodeId(node1.NodeId, _namespaceTable).ToString()), It.IsAny<uint>(), It.IsAny<BrowseDirection>(),
-            ReferenceTypeIds.HierarchicalReferences, true, It.IsAny<uint>(), out byteArray, out node1Result));
+        _sessionMock.Setup(s => s.BrowseAsync(null, null, It.Is<List<NodeId>>(x => x.First() != ObjectIds.RootFolder &&
+            x.First().ToString() == ExpandedNodeId.ToNodeId(node1.NodeId, _namespaceTable).ToString()), It.IsAny<uint>(), It.IsAny<BrowseDirection>(),
+            ReferenceTypeIds.HierarchicalReferences, true, It.IsAny<uint>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((null, byteArray, [node1Result], null));
 
         var node2Result = new ReferenceDescriptionCollection() { node1 };
-        _sessionMock.Setup(s => s.Browse(null, null, It.Is<NodeId>(x => x != ObjectIds.RootFolder &&
-            x.ToString() == ExpandedNodeId.ToNodeId(node2.NodeId, _namespaceTable).ToString()), It.IsAny<uint>(), It.IsAny<BrowseDirection>(),
-            ReferenceTypeIds.HierarchicalReferences, true, It.IsAny<uint>(), out byteArray, out node2Result));
+        _sessionMock.Setup(s => s.BrowseAsync(null, null, It.Is<List<NodeId>>(x => x.First() != ObjectIds.RootFolder &&
+            x.First().ToString() == ExpandedNodeId.ToNodeId(node2.NodeId, _namespaceTable).ToString()), It.IsAny<uint>(), It.IsAny<BrowseDirection>(),
+            ReferenceTypeIds.HierarchicalReferences, true, It.IsAny<uint>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((null, byteArray, [node2Result], null));
     }
 
     [Test(Description = "If a node exists on different branches (is not cyclic), then it should be resolved")]
@@ -222,15 +236,17 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
         var node1 = nextRefs[0];
         var node2 = nextRefs[1];
         var node3 = nextRefs[2];
-        var byteArray = Array.Empty<byte>();
+        ByteStringCollection? byteArray = null;
 
         var rootResult = nextRefs;
-        _sessionMock.Setup(s => s.Browse(null, null, ObjectIds.RootFolder, It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
-            true, It.IsAny<uint>(), out byteArray, out rootResult));
+        _sessionMock.Setup(s => s.BrowseAsync(null, null, new List<NodeId> { ObjectIds.RootFolder }, It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
+            true, It.IsAny<uint>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((null, byteArray, [rootResult], null));
 
         var node1Result = new ReferenceDescriptionCollection() { node2 };
-        _sessionMock.Setup(s => s.Browse(null, null, It.Is<NodeId>(x => x != ObjectIds.RootFolder &&
-            x.ToString() == ExpandedNodeId.ToNodeId(node1.NodeId, _namespaceTable).ToString()), It.IsAny<uint>(), It.IsAny<BrowseDirection>(),
-            ReferenceTypeIds.HierarchicalReferences, true, It.IsAny<uint>(), out byteArray, out node1Result));
+        _sessionMock.Setup(s => s.BrowseAsync(null, null, It.Is<List<NodeId>>(x => x.First() != ObjectIds.RootFolder &&
+            x.First().ToString() == ExpandedNodeId.ToNodeId(node1.NodeId, _namespaceTable).ToString()), It.IsAny<uint>(), It.IsAny<BrowseDirection>(),
+            ReferenceTypeIds.HierarchicalReferences, true, It.IsAny<uint>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((null, byteArray, [node1Result], null));
     }
 }

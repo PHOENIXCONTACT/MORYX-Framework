@@ -14,24 +14,24 @@ internal abstract class DriverOpcUaState(OpcUaDriver context, StateBase.StateMap
         InvalidState();
     }
 
-    internal virtual void OnConnectingCompleted(bool successfull)
+    internal virtual Task OnConnectingCompletedAsync(bool successfull)
     {
-        InvalidState();
+        return InvalidStateAsync();
     }
 
-    internal virtual void RebrowseNodes()
+    internal virtual Task RebrowseNodesAsync()
     {
-        InvalidState();
+        return InvalidStateAsync();
     }
 
-    internal virtual void OnBrowsingNodesCompleted()
+    internal virtual Task OnBrowsingNodesCompletedAsync()
     {
-        InvalidState();
+        return InvalidStateAsync();
     }
 
-    internal virtual void OnSubscriptionsInitialized()
+    internal virtual Task OnSubscriptionsInitializedAsync()
     {
-        InvalidState();
+        return InvalidStateAsync();
     }
 
     public override void Disconnect()
@@ -40,11 +40,11 @@ internal abstract class DriverOpcUaState(OpcUaDriver context, StateBase.StateMap
         NextState(StateDisconnected);
     }
 
-    internal virtual void OnConnectionLost(KeepAliveEventArgs e)
+    internal virtual async Task OnConnectionLostAsync(KeepAliveEventArgs e)
     {
         Context.RemoveSubscription();
         NextState(StateReconnecting);
-        Context.Reconnect(e);
+        await Context.Reconnect(e);
     }
 
     internal virtual OpcUaNode GetNode(string identifier)
@@ -57,14 +57,14 @@ internal abstract class DriverOpcUaState(OpcUaDriver context, StateBase.StateMap
         Context.SaveSubscriptionToBeAdded(node);
     }
 
-    internal virtual DataValueResult ReadValue(string identifier)
+    internal virtual Task<DataValueResult> ReadValueAsync(string identifier, CancellationToken cancellationToken)
     {
         throw new InvalidOperationException();
     }
 
-    internal virtual void WriteNode(OpcUaNode node, object payload)
+    internal virtual Task WriteNodeAsync(OpcUaNode node, object payload, CancellationToken cancellationToken)
     {
-        InvalidState();
+        return InvalidStateAsync();
     }
 
     internal virtual void Send()

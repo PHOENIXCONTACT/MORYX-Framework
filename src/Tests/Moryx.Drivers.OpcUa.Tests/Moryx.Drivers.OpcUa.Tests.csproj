@@ -11,7 +11,7 @@
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="coverlet.collector" />
-	<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client"/>
+	<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Moryx.Drivers.OpcUa\Moryx.Drivers.OpcUa.csproj" />
