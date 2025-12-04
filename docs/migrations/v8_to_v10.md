@@ -71,6 +71,8 @@ public static async Task Main(string[] args)
 }
 ````
 
+Note: For projects using top-level statements you can use the new async methods without any further actions.
+
 ### Resource lifecycle refactored to async methods
 
 Same as done in ServerModules has been done for Resources. The ResourceManagement now supports asynchronous initialization, startup, and shutdown processes.
