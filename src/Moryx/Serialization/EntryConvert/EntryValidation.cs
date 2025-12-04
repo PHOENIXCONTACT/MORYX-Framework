@@ -43,12 +43,6 @@ namespace Moryx.Serialization
         public bool IsRequired { get; set; }
 
         /// <summary>
-        /// Specifies that a data field value is a well-formed Base64 string.
-        /// </summary>
-        [DataMember]
-        public bool IsBase64String { get; set; }
-
-        /// <summary>
         /// Creates a new <see cref="EntryValidation"/> instance initializing <see cref="EntryValidation.Maximum"/>
         /// and <see cref="EntryValidation.Minimum"/> validation to the largest possible range.
         /// </summary>
@@ -76,8 +70,7 @@ namespace Moryx.Serialization
                 Maximum = Maximum,
                 Regex = Regex,
                 IsRequired = IsRequired,
-                DataType = DataType,
-                IsBase64String = IsBase64String
+                DataType = DataType
             };
             return copy;
         }

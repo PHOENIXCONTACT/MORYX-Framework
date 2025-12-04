@@ -3,7 +3,7 @@
 
 using Moryx.Serialization;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.Serialization
 {
     internal interface IExplicitInterface
     {

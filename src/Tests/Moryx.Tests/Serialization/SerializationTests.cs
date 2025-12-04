@@ -12,7 +12,7 @@ using Moryx.Configuration;
 using Moryx.Serialization;
 using NUnit.Framework;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.Serialization
 {
     /// <summary>
     /// Unit tests for the static <see cref="EntryConvert"/> class

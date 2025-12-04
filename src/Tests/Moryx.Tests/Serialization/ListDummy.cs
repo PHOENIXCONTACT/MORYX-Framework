@@ -3,9 +3,8 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Moryx.Serialization;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.Serialization
 {
     public class ListDummy
     {

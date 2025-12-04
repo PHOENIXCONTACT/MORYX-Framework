@@ -7,7 +7,7 @@ using System.Linq;
 using Moryx.Serialization;
 using NUnit.Framework;
 
-namespace Moryx.Tests;
+namespace Moryx.Tests.Serialization;
 
 [TestFixture]
 public class ValidationTests
@@ -17,58 +17,72 @@ public class ValidationTests
     [SetUp]
     public void Setup()
     {
+        // Act
         var encoded = EntryConvert.EncodeClass(typeof(ValidationDummy));
 
         // Assert
         Assert.That(encoded, Is.Not.Null);
-        Assert.That(encoded.SubEntries.Count, Is.EqualTo(9));
+        Assert.That(encoded.SubEntries.Count, Is.EqualTo(8));
         _validationDummySubEntries = encoded.SubEntries;
     }
 
-    [Test]
-    public void ValidateBase64Attribute()
+    [Test(Description = "Base64StringAttribute must be used to set EntryValueType in EntryEntryValue")]
+    public void ValidateBase64StringAttribute()
     {
-        var base64StrEntryValidation = GetValidation(nameof(ValidationDummy.Base64String));
-        Assert.That(base64StrEntryValidation.IsBase64String, Is.EqualTo(true));
+        // Arrange / Act
+        var entry = _validationDummySubEntries.Single(e => e.Identifier == nameof(ValidationDummy.Base64String));
+
+        // Assert
+        Assert.That(entry.Value.UnitType, Is.EqualTo(EntryUnitType.Base64));
     }
 
-    [Test]
+    [Test(Description = "DataType must be set in EntryValidation")]
     public void ValidateDateTypeAttribute()
     {
+        // Arrange / Act
         var emailValidation = GetValidation(nameof(ValidationDummy.EmailDataType));
+
+        // Assert
         Assert.That(emailValidation.DataType, Is.EqualTo(DataType.EmailAddress));
     }
 
-    [Test]
+    [Test(Description = "RequiredAttribute must be noted in EntryValidation")]
     public void ValidateRequiredAttribute()
     {
+        // Arrange / Act
         var requiredBoolValidation = GetValidation(nameof(ValidationDummy.RequiredBool));
+
+        // Assert
         Assert.That(requiredBoolValidation.IsRequired, Is.EqualTo(true));
     }
 
-    [Test]
+    [Test(Description = "RegexAttribute must be noted in EntryValidation")]
     public void ValidateRegexAttribute()
     {
+        // Arrange / Act
         var regexValidation = GetValidation(nameof(ValidationDummy.RegexString));
+
+        // Assert
         Assert.That(regexValidation.Regex, Is.EqualTo(ValidationDummy.Regex));
     }
 
-    [Test]
+    [Test(Description = "Attributes defining Length (min/max) must be noted in EntryValidation")]
     public void ValidateLenghtAttribute()
     {
+        // Arrange / Act
         var minMaxStringLenghtStringValidation = GetValidation(nameof(ValidationDummy.MinMaxStringLenghtString));
+        var minMaxLenghtStringValidation = GetValidation(nameof(ValidationDummy.MinMaxLenghtString));
+        var minLengthValidation = GetValidation(nameof(ValidationDummy.MinLenghtString));
+        var maxLengthValidation = GetValidation(nameof(ValidationDummy.MaxLengthString));
+
+        // Assert
         Assert.That(minMaxStringLenghtStringValidation.Minimum, Is.EqualTo(ValidationDummy.MinimumLength));
         Assert.That(minMaxStringLenghtStringValidation.Maximum, Is.EqualTo(ValidationDummy.MaximumLength));
-
-        var minMaxLenghtStringValidation = GetValidation(nameof(ValidationDummy.MinMaxLenghtString));
         Assert.That(minMaxLenghtStringValidation.Minimum, Is.EqualTo(ValidationDummy.MinimumLength));
         Assert.That(minMaxLenghtStringValidation.Maximum, Is.EqualTo(ValidationDummy.MaximumLength));
-
-        var minLengthValidation = GetValidation(nameof(ValidationDummy.MinLenghtString));
         Assert.That(minLengthValidation.Minimum, Is.EqualTo(ValidationDummy.MinimumLength));
-
-        var maxLengthValidation = GetValidation(nameof(ValidationDummy.MaxLengthString));
         Assert.That(maxLengthValidation.Maximum, Is.EqualTo(ValidationDummy.MaximumLength));
+
     }
 
     private EntryValidation GetValidation(string identifier)

@@ -19,8 +19,4 @@
     <ProjectReference Include="..\..\Moryx\Moryx.csproj"/>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Configuration\" />
-  </ItemGroup>
-
 </Project>

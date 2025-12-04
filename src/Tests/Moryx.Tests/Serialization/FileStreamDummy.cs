@@ -3,7 +3,7 @@
 
 using System.IO;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.Serialization
 {
     public class FileStreamDummy
     {

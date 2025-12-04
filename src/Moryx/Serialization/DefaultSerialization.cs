@@ -141,9 +141,6 @@ namespace Moryx.Serialization
                         validation.Minimum = lengthAttribute.MinimumLength;
                         validation.Maximum = lengthAttribute.MaximumLength;
                         break;
-                    case Base64StringAttribute:
-                        validation.IsBase64String = true;
-                        break;
                     case DataTypeAttribute dataTypeAttribute:
                         validation.DataType = dataTypeAttribute.DataType;
                         break;
@@ -287,14 +284,20 @@ namespace Moryx.Serialization
                 switch (fileAttr.Type)
                 {
                     case FileSystemPathType.File:
-                        unitType = EntryUnitType.File;
+                        unitType = EntryUnitType.FilePath;
                         break;
                     case FileSystemPathType.Directory:
-                        unitType = EntryUnitType.Directory;
+                        unitType = EntryUnitType.DirectoryPath;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+            }
+
+            var base64Attr = property.GetCustomAttribute<Base64StringAttribute>();
+            if (base64Attr != null)
+            {
+                unitType = EntryUnitType.Base64;
             }
 
             return unitType;

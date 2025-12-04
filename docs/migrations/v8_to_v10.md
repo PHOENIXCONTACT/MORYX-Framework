@@ -177,8 +177,13 @@ Added support for `AllowedValuesAttribute` and `DeniedValuesAttribute`. Refer to
 
 Added support for additional ValidationAttributes in EntryConvert:
 
-- LengthAttribute
-- Base64StringAttribute
-- DataTypeAttribute
+- LengthAttribute: Sets the `EntryValidation.Minumum` and `EntryValidation.Maximum`
+- DataTypeAttribute: Sets the `EntryValidation.DataType`
+- Base64StringAttribute: Sets the new `EntryUnitType.Base64`
 
 Removed `PrimitiveValuesAttribute`, use `AllowedValuesAttribute` of .NET instead.
+
+### API Changes
+
+- Renamed `EntryUnitType.File` to `EntryUnitType.FilePath`
+- Renamed `EntryUnitType.Directory` to `EntryUnitType.DirectoryPath`
