@@ -14,7 +14,10 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
         {
             RequiredWasCalled = true;
 
-            return SetupEvaluation.Remove(new TestSetupCapabilities { SetupState = ((ITestRecipe)recipe).SetupState });
+            return SetupEvaluation.Remove(new TestSetupCapabilities
+            {
+                SetupState = ((TestRecipe)recipe).SetupState
+            });
         }
     }
 }

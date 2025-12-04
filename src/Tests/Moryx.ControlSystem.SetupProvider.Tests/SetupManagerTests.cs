@@ -6,7 +6,6 @@ using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Capabilities;
-using Moryx.AbstractionLayer.Recipes;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Setups;
@@ -100,7 +99,7 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
             // Arrange
             var manager = CreateSetupManager(_setupManagerConfig);
             AdjustCurrentResourceCapabilities(currentState);
-            IProductionRecipe recipe = CreateRecipe(4711, 42).Object;
+            var recipe = CreateRecipe(4711, 42);
 
             // Act
             var requiredSetup = manager.RequiredSetup(SetupExecution.BeforeProduction, recipe, new CurrentResourceTarget(_resourceManagerMock.Object));
@@ -122,7 +121,7 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
             var manager = CreateSetupManager(_setupManagerConfig);
             AdjustCurrentResourceCapabilities(42);
 
-            var recipe = CreateRecipe(1783, 42).Object;
+            var recipe = CreateRecipe(1783, 42);
 
             // Act
             var setupRecipe = manager.RequiredSetup(SetupExecution.AfterProduction, recipe, new CurrentResourceTarget(_resourceManagerMock.Object));
@@ -166,18 +165,17 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
         }
 
         /// <summary>
-        /// Creates an <see cref="IProductRecipe"/>. The implementation also implements <see cref="ITestRecipe"/>
-        /// for special test handling
+        /// Creates an <see cref="TestRecipe"/> for special test handling
         /// </summary>
-        private static Mock<IProductionRecipe> CreateRecipe(long id, int state)
+        private static TestRecipe CreateRecipe(long id, int state)
         {
-            var productRecipeMock = new Mock<IProductionRecipe>();
-            productRecipeMock.SetupGet(r => r.Id).Returns(id);
+            var recipe = new TestRecipe
+            {
+                Id = id,
+                SetupState = state
+            };
 
-            var testRecipeMock = productRecipeMock.As<ITestRecipe>();
-            testRecipeMock.SetupGet(s => s.SetupState).Returns(state);
-
-            return productRecipeMock;
+            return recipe;
         }
 
         /// <summary>

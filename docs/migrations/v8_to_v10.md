@@ -61,6 +61,13 @@ Several interfaces have been removed to streamline the codebase and reduce compl
 - `IConfig`: Replaced with base-class `ConfigBase`
 - `IDatabaseConfig`: Replaced with base-class `DatabaseConfig`
 - `IControlSystemBound`: Merged with `ICell`
+- `ISetupRecipe`: Replaced with class `SetupRecipe`
+- `IProductionRecipe`: Replaced with class `ProductionRecipe`
+- `INamedTask`: Merged into `ITask`
+- `IProductionRecipe`: Replaced with class `ProductionRecipe`
+- `ISetupRecipe`: Replaced with class `SetupRecipe`
+
+The following interfaces are still existent for api extensions but the base class is used in whole code base:
 
 ## Method Signature Changes
 
@@ -105,6 +112,7 @@ These feature were infrequently used and has been removed to simplify the codeba
 - PortConfig: Used for old wcf services. Deprecated since ASP.NET Core.
 - ProxyConfig.Port: Use the full address instead. It contains also http/https, domain and port
 - EntryToModelConverter: This component was used in WPF UIs to map an entry to a view model and vice versa. This is not used anymore and brings no benefit to the platform.
+- `HandlerMap` was removed from code. I was a good helper for .NET Framework. Since `switch` supports [pattern matching in C#7.0](https://devblogs.microsoft.com/dotnet/new-features-in-c-7-0/#switch-statements-with-patterns) this is not required anymore.
 
 ## Moved classes and namespaces
 

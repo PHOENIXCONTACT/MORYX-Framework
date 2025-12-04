@@ -130,7 +130,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
                 {
                     // Replace endless jobs with max size jobs
                     var jobSize = (amount < IdShiftGenerator.MaxAmount & amount > 0) ? amount : IdShiftGenerator.MaxAmount;
-                    var jobData = (IProductionJobData)JobDataFactory.Create((IProductionRecipe)template.Recipe, jobSize);
+                    var jobData = (IProductionJobData)JobDataFactory.Create((ProductionRecipe)template.Recipe, jobSize);
                     jobDatas.Add(jobData);
                     amount -= jobSize;
                 } while (amount > 0);

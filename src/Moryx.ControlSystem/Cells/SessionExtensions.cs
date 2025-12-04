@@ -112,11 +112,11 @@ namespace Moryx.ControlSystem.Cells
         /// <param name="session">The session to get the <see cref="ProductType"/> from</param>
         /// <returns>
         /// The target <see cref="ProductType"/> in the session, if it belongs to a <see cref="ProductionProcess"/>
-        /// or holds an <see cref="ISetupRecipe"/> with a <typeparamref name="TProductType"/>; Otherwise returns null.
+        /// or holds an <see cref="SetupRecipe"/> with a <typeparamref name="TProductType"/>; Otherwise returns null.
         /// </returns>
         public static TProductType GetProductType<TProductType>(this Session session) where TProductType : ProductType
         {
-            if (session.Process.Recipe is ISetupRecipe setupRecipe)
+            if (session.Process.Recipe is SetupRecipe setupRecipe)
                 return setupRecipe.TargetRecipe.Target as TProductType;
 
             if (session.Process.Recipe is IProductRecipe prodcutRecipe)

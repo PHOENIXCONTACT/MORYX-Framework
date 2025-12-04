@@ -15,11 +15,11 @@ namespace Moryx.ControlSystem.Recipes
         /// or and empty string if none could be found.
         /// </summary>
         /// <param name="recipe">An <see cref="IRecipe"/> that implements <see cref="IOrderBasedRecipe"/> 
-        /// or an <see cref="ISetupRecipe"/> targeting an <see cref="IOrderBasedRecipe"/></param>
+        /// or an <see cref="SetupRecipe"/> targeting an <see cref="IOrderBasedRecipe"/></param>
         /// <param name="seperator">Separation char between order number and operation number</param>
         public static string GetOrderOperationString(this IRecipe recipe, string seperator = "-")
         {
-            var target = (recipe is ISetupRecipe setup ? setup.TargetRecipe : recipe) as IOrderBasedRecipe;
+            var target = (recipe is SetupRecipe setup ? setup.TargetRecipe : recipe) as IOrderBasedRecipe;
             return $"{target?.OrderNumber}{(target is null ? "" : seperator)}{target?.OperationNumber}";
         }
     }

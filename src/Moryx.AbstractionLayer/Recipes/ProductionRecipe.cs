@@ -9,7 +9,7 @@ namespace Moryx.AbstractionLayer.Recipes
     /// <summary>
     /// Recipe which contains a workplan and product
     /// </summary>
-    public class ProductionRecipe : WorkplanRecipe, IProductionRecipe
+    public class ProductionRecipe : WorkplanRecipe, IProductRecipe
     {
         /// <inheritdoc />
         public ProductType Product { get; set; }

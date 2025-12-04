@@ -35,7 +35,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
         #endregion
 
         /// <inheritdoc />
-        public new ISetupRecipe Recipe => (ISetupRecipe)base.Recipe;
+        public new SetupRecipe Recipe => (SetupRecipe)base.Recipe;
 
         /// <inheritdoc />
         public int RunningCount { get; private set; }
@@ -79,7 +79,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
             StateMachine.Reload(this, entity.State).With<SetupJobStateBase>();
         }
 
-        public void UpdateSetup(ISetupRecipe updatedRecipe)
+        public void UpdateSetup(SetupRecipe updatedRecipe)
         {
             InvokeStateMachine(s =>
             {

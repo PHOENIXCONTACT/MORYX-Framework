@@ -14,7 +14,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// <summary>
         /// Current recipe of this job
         /// </summary>
-        new ISetupRecipe Recipe { get; }
+        new SetupRecipe Recipe { get; }
 
         /// <summary>
         /// Number of running setup activities
@@ -40,6 +40,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// The job failed to properly setup the machine. 
         /// It must retry with a new recipe that should make the necessary changes.
         /// </summary>
-        void UpdateSetup(ISetupRecipe updatedRecipe);
+        void UpdateSetup(SetupRecipe updatedRecipe);
     }
 }

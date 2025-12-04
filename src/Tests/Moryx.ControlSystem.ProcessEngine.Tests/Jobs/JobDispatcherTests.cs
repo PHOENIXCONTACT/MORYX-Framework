@@ -129,7 +129,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
         public void Cleanup()
         {
             // Arrange
-            var recipeMock = new Mock<IProductionRecipe>();
+            var recipeMock = new Mock<ProductionRecipe>();
             var jobData = new ProductionJobData(recipeMock.Object, 10);
             jobData.ProgressChanged += (sender, args) => { };
 

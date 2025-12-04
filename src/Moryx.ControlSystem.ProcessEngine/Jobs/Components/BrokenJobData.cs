@@ -33,7 +33,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Components
 
         #region Not Implemented
 
-        public IProductionRecipe Recipe => throw new NotImplementedException();
+        public ProductionRecipe Recipe => throw new NotImplementedException();
 
         public int SuccessCount => throw new NotImplementedException();
 
@@ -71,7 +71,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Components
 
         IWorkplanRecipe IJobData.Recipe => throw new NotImplementedException();
 
-        ISetupRecipe ISetupJobData.Recipe => throw new NotImplementedException();
+        SetupRecipe ISetupJobData.Recipe => throw new NotImplementedException();
 
         public event EventHandler ProgressChanged;
         public event EventHandler<JobStateEventArgs> StateChanged;
@@ -96,7 +96,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Components
 
         public void Stop() => throw new NotImplementedException();
 
-        public void UpdateSetup(ISetupRecipe updatedRecipe) => throw new NotImplementedException();
+        public void UpdateSetup(SetupRecipe updatedRecipe) => throw new NotImplementedException();
 
         #endregion
     }

@@ -11,15 +11,21 @@ namespace Moryx.ControlSystem.Recipes
     /// Recipe to instantiate a setup recipe.
     /// </summary>
     [DebuggerDisplay(nameof(SetupRecipe) + " <Id: {" + nameof(Id) + "}, TargetRecipe: {" + nameof(TargetRecipe) + "}, Execution: {" + nameof(Execution) + "}>")]
-    public class SetupRecipe : WorkplanRecipe, ISetupRecipe
+    public class SetupRecipe : WorkplanRecipe
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Recipe of the next job prepared by this
+        /// </summary>
         public IProductRecipe TargetRecipe { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Flag if this setup is a cleanup
+        /// </summary>
         public SetupExecution Execution { get; set; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Flags of setup classifications
+        /// </summary>
         public SetupClassification SetupClassification { get; set; }
 
         /// <summary>

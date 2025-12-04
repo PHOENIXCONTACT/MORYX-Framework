@@ -47,7 +47,7 @@ namespace Moryx.ControlSystem.Jobs
         /// <summary>
         /// Add another job to the context
         /// </summary>
-        public JobCreationContext Add(IProductionRecipe recipe)
+        public JobCreationContext Add(ProductionRecipe recipe)
         {
             return Add(recipe, 0);
         }
@@ -55,7 +55,7 @@ namespace Moryx.ControlSystem.Jobs
         /// <summary>
         /// Add another job to the context
         /// </summary>
-        public JobCreationContext Add(IProductionRecipe recipe, uint amount)
+        public JobCreationContext Add(ProductionRecipe recipe, uint amount)
         {
             if (recipe == null)
                 throw new ArgumentNullException(nameof(recipe), "Recipe should not be null");

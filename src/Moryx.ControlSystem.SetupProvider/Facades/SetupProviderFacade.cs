@@ -42,7 +42,7 @@ namespace Moryx.ControlSystem.SetupProvider
             };
         }
 
-        public ISetupRecipe RequiredSetup(SetupExecution execution, IProductionRecipe recipe, ISetupTarget targetSystem)
+        public SetupRecipe RequiredSetup(SetupExecution execution, ProductionRecipe recipe, ISetupTarget targetSystem)
         {
 
             ValidateHealthState();

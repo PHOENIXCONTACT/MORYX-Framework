@@ -71,7 +71,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 var processes = new List<IProcess>();
                 foreach (var match in query)
                 {
-                    var recipe = (IProductionRecipe)ProductManagement.LoadRecipe(match.RecipeId);
+                    var recipe = (ProductionRecipe)ProductManagement.LoadRecipe(match.RecipeId);
                     var process = (ProductionProcess)recipe.CreateProcess();
                     process.Id = match.Id;
                     process.ProductInstance = productInstance;

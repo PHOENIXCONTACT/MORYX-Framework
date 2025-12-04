@@ -18,7 +18,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
 
         public virtual bool RecipeRequired => false;
 
-        public virtual void UpdateSetup(ISetupRecipe newRecipe)
+        public virtual void UpdateSetup(SetupRecipe newRecipe)
         {
             InvalidJobState();
         }

@@ -25,27 +25,27 @@ namespace Moryx.ControlSystem.Jobs
         }
 
         /// <summary>
-        /// Checks if the <paramref name="job"/> references an <see cref="IProductionRecipe"/>
+        /// Checks if the <paramref name="job"/> references an <see cref="ProductionRecipe"/>
         /// </summary>
-        public static bool IsProduction(this Job job) => job.Recipe is IProductionRecipe;
+        public static bool IsProduction(this Job job) => job.Recipe is ProductionRecipe;
 
         /// <summary>
-        /// Checks if the <paramref name="job"/> references an <see cref="ISetupRecipe"/>
+        /// Checks if the <paramref name="job"/> references an <see cref="SetupRecipe"/>
         /// </summary>
-        public static bool IsSetup(this Job job) => job.Recipe is ISetupRecipe;
+        public static bool IsSetup(this Job job) => job.Recipe is SetupRecipe;
 
         /// <summary>
-        /// Checks if the <paramref name="job"/> holds an <see cref="ISetupRecipe"/> 
+        /// Checks if the <paramref name="job"/> holds an <see cref="SetupRecipe"/> 
         /// that is set to be executed <see cref="SetupExecution.BeforeProduction"/>
         /// </summary>
         public static bool IsPreparingSetup(this Job job)
-            => job.Recipe is ISetupRecipe setup && setup.Execution == SetupExecution.BeforeProduction;
+            => job.Recipe is SetupRecipe setup && setup.Execution == SetupExecution.BeforeProduction;
 
         /// <summary>
-        /// Checks if the <paramref name="job"/> holds an <see cref="ISetupRecipe"/> 
+        /// Checks if the <paramref name="job"/> holds an <see cref="SetupRecipe"/> 
         /// that is set to be executed <see cref="SetupExecution.AfterProduction"/>
         /// </summary>
         public static bool IsCleaningUpSetup(this Job job)
-            => job.Recipe is ISetupRecipe setup && setup.Execution == SetupExecution.AfterProduction;
+            => job.Recipe is SetupRecipe setup && setup.Execution == SetupExecution.AfterProduction;
     }
 }

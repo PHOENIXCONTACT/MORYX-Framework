@@ -48,11 +48,11 @@ namespace Moryx.Orders.Management.Assignment
             }
 
             // Process recipes
-            var processed = new List<IProductionRecipe>(selectedRecipes.Count);
+            var processed = new List<ProductionRecipe>(selectedRecipes.Count);
             foreach (var selected in selectedRecipes)
             {
                 // Clone recipe
-                var clone = (IProductionRecipe)selected.Clone();
+                var clone = (ProductionRecipe)selected.Clone();
                 var successfullyProcessed = await RecipeAssignment.ProcessRecipe(clone, operation, operationLogger);
 
                 if (!successfullyProcessed)

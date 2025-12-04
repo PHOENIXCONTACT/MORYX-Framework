@@ -20,7 +20,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             if (one == null || other == null)
                 return false;
 
-            if (one.Recipe is ISetupRecipe || other.Recipe is ISetupRecipe)
+            if (one.Recipe is SetupRecipe || other.Recipe is SetupRecipe)
                 return false; // Setups can not be identical
 
             return one.Recipe.Id == other.Recipe.Id;
@@ -32,7 +32,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         public static bool IsPrepare(this Job candidate)
         {
             return candidate != null
-                 && candidate.Recipe is ISetupRecipe prepare
+                 && candidate.Recipe is SetupRecipe prepare
                  && prepare.Execution == SetupExecution.BeforeProduction;
         }
 
@@ -41,7 +41,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// </summary>
         public static bool IsPrepareOf(this Job candidate, Job target)
         {
-            return IsPrepare(candidate) && ((ISetupRecipe)candidate.Recipe).TargetRecipe == target?.Recipe;
+            return IsPrepare(candidate) && ((SetupRecipe)candidate.Recipe).TargetRecipe == target?.Recipe;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         public static bool IsCleanup(this Job candidate)
         {
             return candidate != null
-                && candidate.Recipe is ISetupRecipe cleanup
+                && candidate.Recipe is SetupRecipe cleanup
                 && cleanup.Execution == SetupExecution.AfterProduction;
         }
 
@@ -59,7 +59,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// </summary>
         public static bool IsCleanupOf(this Job candidate, Job target)
         {
-            return IsCleanup(candidate) && ((ISetupRecipe)candidate.Recipe).TargetRecipe == target?.Recipe;
+            return IsCleanup(candidate) && ((SetupRecipe)candidate.Recipe).TargetRecipe == target?.Recipe;
         }
     }
 }
