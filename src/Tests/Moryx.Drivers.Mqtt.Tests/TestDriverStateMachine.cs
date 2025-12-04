@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Globalization;
 using System.Threading;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
@@ -43,7 +44,7 @@ namespace Moryx.Drivers.Mqtt.Tests
             //Setup mock for MQTT-Client
             _mockClient = new Mock<IMqttClient>();
             var options = new MqttClientOptionsBuilder()
-                .WithClientId(_driver.Id.ToString())
+                .WithClientId(_driver.Id.ToString(CultureInfo.InvariantCulture))
                 .WithTcpServer(_driver.BrokerUrl, _driver.Port)
                 .Build();
             _mockClient.Setup(m => m.ConnectAsync(It.IsAny<MqttClientOptions>(), It.IsAny<CancellationToken>()))

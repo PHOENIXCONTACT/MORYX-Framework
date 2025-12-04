@@ -7,6 +7,7 @@ using Moryx.Communication;
 using Moryx.Serialization;
 using Moryx.Drivers.Mqtt.Properties;
 using Moryx.AbstractionLayer.Resources;
+using System.Buffers;
 namespace Moryx.Drivers.Mqtt.MqttTopics;
 
 /// <summary>
@@ -34,7 +35,7 @@ public class MqttTopicIByteSerializable : MqttTopic<IByteSerializable>
     /// </summary>
     /// <param name="payload"></param>
     /// <returns></returns>
-    protected internal override byte[] Serialize(object payload)
+    protected override byte[] Serialize(object payload)
     {
         return ((IByteSerializable)payload).ToBytes();
     }
@@ -42,12 +43,12 @@ public class MqttTopicIByteSerializable : MqttTopic<IByteSerializable>
     /// <summary>
     ///
     /// </summary>
-    /// <param name="messageAsBytes"></param>
+    /// <param name="payload"></param>
     /// <returns></returns>
-    protected internal override IByteSerializable Deserialize(byte[] messageAsBytes)
+    protected override IByteSerializable Deserialize(ReadOnlySequence<byte> payload)
     {
         var msg = Constructor();
-        msg.FromBytes(messageAsBytes);
+        msg.FromBytes(payload.ToArray());
         return msg;
     }
 }
