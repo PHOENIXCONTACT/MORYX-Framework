@@ -4,7 +4,6 @@
 using System.Text.Json;
 using Moq;
 using Moryx.AbstractionLayer.Drivers;
-using Moryx.Drivers.OpcUa.States;
 using Moryx.Modules;
 using Moryx.Tools;
 using NUnit.Framework;
@@ -102,7 +101,6 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
     /// </summary>
     private void SetupDirectCyclicNodes()
     {
-
         var nextRefs = CreateNodes(_namespaceTable);
         var byteArray = Array.Empty<byte>();
         var nextRefsDefault = new ReferenceDescriptionCollection() { nextRefs[0] };
