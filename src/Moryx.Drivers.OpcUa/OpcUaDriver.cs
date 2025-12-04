@@ -206,7 +206,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         foreach (var node in nodes)
         {
             OpcUaDisplayNode displayNode;
-            if (node.NodeClass == NodeClass.Object)
+            if (node.NodeClass == NodeClass.Object || node.NodeClass == NodeClass.Variable)
             {
                 var objectDisplayNode = new OpcUaObjectDisplayNode(node.NodeId)
                 {
@@ -689,7 +689,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     }
 
     //todo: Change to BFS
-    private void BrowseNodes(NodeId nodeId, NamespaceTable namespaceTable, List<OpcUaNode> list, int layer, HashSet<string> visitedNodes = null)
+    private void BrowseNodes(NodeId nodeId, NamespaceTable namespaceTable, List<OpcUaNode> list, int layer, HashSet<string> visitedNodes = null, uint referenceTypes = ReferenceTypes.HierarchicalReferences)
     {
         visitedNodes ??= [];
         var branchNodes = new HashSet<string>(visitedNodes);
@@ -700,7 +700,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         }
         branchNodes.Add(nodeId.ToString());
 
-        _session.Browse(null, null, nodeId, uint.MaxValue, BrowseDirection.Forward, ReferenceTypeIds.HierarchicalReferences, true, (uint)NodeClass.Variable | (uint)NodeClass.Object | (uint)NodeClass.Method,
+        _session.Browse(null, null, nodeId, uint.MaxValue, BrowseDirection.Forward, new NodeId(referenceTypes), true, (uint)NodeClass.Variable | (uint)NodeClass.Object | (uint)NodeClass.Method,
                 out var continuationPoint,
                 out var nextRefs);
 
@@ -753,12 +753,15 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                 continue;
             }
 
-            if (nextRd.NodeClass == NodeClass.Object)
+            if (nextRd.NodeClass == NodeClass.Object || nextRd.NodeClass == NodeClass.Variable)
             {
-                var nodesOfObject = new List<OpcUaNode>();
-                BrowseNodes(ExpandedNodeId.ToNodeId(nextRd.NodeId, namespaceTable), namespaceTable, nodesOfObject, layer + 1, branchNodes);
-                node.Nodes = nodesOfObject;
+                var types = nextRd.NodeClass == NodeClass.Object
+                    ? ReferenceTypes.HierarchicalReferences
+                    : ReferenceTypes.HasComponent;
 
+                var nodesOfObject = new List<OpcUaNode>();
+                BrowseNodes(ExpandedNodeId.ToNodeId(nextRd.NodeId, namespaceTable), namespaceTable, nodesOfObject, layer + 1, branchNodes, types);
+                node.Nodes = nodesOfObject;
             }
 
             _savedIds.Add(node.Identifier);
