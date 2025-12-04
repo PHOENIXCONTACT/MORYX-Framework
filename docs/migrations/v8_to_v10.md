@@ -69,6 +69,8 @@ Several interfaces have been removed to streamline the codebase and reduce compl
 
 The following interfaces are still existent for api extensions but the base class is used in whole code base:
 
+- `IActivity`: Replaced with class `Activity`. The interface should only be used for API extensions.
+
 ## Method Signature Changes
 
 - `PossibleValuesAttribute`: `virtual IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)` -> `abstract IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)`

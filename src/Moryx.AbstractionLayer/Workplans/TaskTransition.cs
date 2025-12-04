@@ -92,23 +92,25 @@ namespace Moryx.AbstractionLayer.Workplans
         /// Create activity instance from transition
         /// </summary>
         /// <returns>the new IActivity object</returns>
-        public IActivity CreateActivity(IProcess process)
+        public Activity CreateActivity(IProcess process)
         {
             // Create activity
             var activity = new TActivity
             {
+                Name = Name,
                 Parameters = _parameters.Bind(process),
                 Process = process
             };
 
-            // Set name of activity
-            if (activity is Activity activityClass)
-                activityClass.Name = Name;
+            if (activity is not Activity castedActivity)
+            {
+                throw new InvalidCastException($"Activity type must inherit from Activity");
+            }
 
             // Link objects
-            process.AddActivity(activity);
+            process.AddActivity(castedActivity);
 
-            return activity;
+            return castedActivity;
         }
     }
 }

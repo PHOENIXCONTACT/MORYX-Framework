@@ -11,7 +11,7 @@ namespace Moryx.ControlSystem.Simulator
     {
         public IProcess Process { get; set; }
 
-        public IActivity NextActivity { get; set; }
+        public Activity NextActivity { get; set; }
 
         public ISimulationDriver Source { get; set; }
 

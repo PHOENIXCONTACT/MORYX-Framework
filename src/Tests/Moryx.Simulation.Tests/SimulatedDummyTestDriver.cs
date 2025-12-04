@@ -68,7 +68,7 @@ namespace Moryx.Simulation.Tests
             return Task.CompletedTask;
         }
 
-        public virtual void Ready(IActivity activity)
+        public virtual void Ready(Activity activity)
         {
             SimulatedState = SimulationState.Requested;
 

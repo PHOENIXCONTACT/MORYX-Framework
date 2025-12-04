@@ -32,7 +32,7 @@ namespace Moryx.ControlSystem.Cells
         /// A process is aborting and an activity currently handled by the cell
         /// is affected by this.
         /// </summary>
-        void ProcessAborting(IActivity affectedActivity);
+        void ProcessAborting(Activity affectedActivity);
 
         /// <summary>
         /// Callback from the process engine, that the sequence was completed

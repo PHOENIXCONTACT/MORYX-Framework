@@ -63,8 +63,8 @@ namespace Moryx.Simulation.Tests
                    _assemblyDriverMock.Raise(dr => dr.SimulatedStateChanged += null, _assemblyDriverMock.Object, SimulationState.Idle);
                });
 
-            _anotherAssemblyDriverMock.Setup(dr => dr.Ready(It.IsAny<IActivity>()))
-               .Callback<IActivity>(message =>
+            _anotherAssemblyDriverMock.Setup(dr => dr.Ready(It.IsAny<Activity>()))
+               .Callback<Activity>(message =>
                {
                    _anotherAssemblyDriverMock.Setup(dr => dr.SimulatedState)
                    .Returns(SimulationState.Requested);
@@ -73,8 +73,8 @@ namespace Moryx.Simulation.Tests
                    _anotherAssemblyDriverMock.Raise(dr => dr.Received += null, _anotherAssemblyDriverMock.Object, new WorkpieceArrivedMessage { });
                });
 
-            _assemblyDriverMock.Setup(dr => dr.Ready(It.IsAny<IActivity>()))
-               .Callback<IActivity>(message =>
+            _assemblyDriverMock.Setup(dr => dr.Ready(It.IsAny<Activity>()))
+               .Callback<Activity>(message =>
                {
                    _assemblyDriverMock.Setup(dr => dr.SimulatedState)
                    .Returns(SimulationState.Requested);
@@ -109,8 +109,8 @@ namespace Moryx.Simulation.Tests
                  .Returns([_assemblyCell, _anotherAssemblyCell])
                  .Returns([_assemblyCell, _anotherAssemblyCell]);
 
-            _processControlMock.Setup(pc => pc.Targets(It.IsAny<IActivity>()))
-                 .Returns<IActivity>(activity => _activityTargets[activity]);
+            _processControlMock.Setup(pc => pc.Targets(It.IsAny<Activity>()))
+                 .Returns<Activity>(activity => _activityTargets[activity]);
         }
 
         [Test]
@@ -130,8 +130,8 @@ namespace Moryx.Simulation.Tests
 
             //assert
             //check if both cells received a ready to work from the simulator
-            _assemblyDriverMock.Verify(dr => dr.Ready(It.IsAny<IActivity>()), Times.Once);
-            _anotherAssemblyDriverMock.Verify(dr => dr.Ready(It.IsAny<IActivity>()), Times.Once);
+            _assemblyDriverMock.Verify(dr => dr.Ready(It.IsAny<Activity>()), Times.Once);
+            _anotherAssemblyDriverMock.Verify(dr => dr.Ready(It.IsAny<Activity>()), Times.Once);
         }
 
         [Test]
@@ -146,9 +146,9 @@ namespace Moryx.Simulation.Tests
             //Act
             RaiseActivityUpdated(activity1, ControlSystem.Processes.ActivityProgress.Ready);
 
-            //Assert 
-            _anotherAssemblyDriverMock.Verify(dr => dr.Ready(It.IsAny<IActivity>()), Times.Once);
-            _assemblyDriverMock.Verify(dr => dr.Ready(It.IsAny<IActivity>()), Times.Never);
+            //Assert
+            _anotherAssemblyDriverMock.Verify(dr => dr.Ready(It.IsAny<Activity>()), Times.Once);
+            _assemblyDriverMock.Verify(dr => dr.Ready(It.IsAny<Activity>()), Times.Never);
         }
 
         [Test]
@@ -167,11 +167,11 @@ namespace Moryx.Simulation.Tests
             readyActivity.Id = 1337;
             CreateActivity(readyActivity, _processMock.Object, [_assemblyCell]);
 
-            _processMock.Setup(p => p.GetActivities(It.IsAny<Func<IActivity, bool>>()))
+            _processMock.Setup(p => p.GetActivities(It.IsAny<Func<Activity, bool>>()))
                 .Returns([completedActivity, readyActivity]);
 
             _processMock.SetupGet(x => x.Id).Returns(processId);
-            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()))
+            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<Activity, bool>>()))
                 .Returns(completedActivity);
             _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
 
@@ -192,12 +192,12 @@ namespace Moryx.Simulation.Tests
             completedActivity.Result = new ActivityResult();
             var readyActivity = new AssemblyActivity();
 
-            _processMock.Setup(p => p.GetActivities(It.IsAny<Func<IActivity, bool>>()))
+            _processMock.Setup(p => p.GetActivities(It.IsAny<Func<Activity, bool>>()))
                 .Returns([readyActivity]);
             _processMock.Setup(p => p.GetActivities())
                 .Returns([completedActivity, readyActivity]);
             _processMock.SetupGet(x => x.Id).Returns(processId);
-            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()));
+            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<Activity, bool>>()));
 
             _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
             CreateActivity(readyActivity, _processMock.Object, [_anotherAssemblyCell]);
@@ -222,11 +222,11 @@ namespace Moryx.Simulation.Tests
             runningActivity.Tracing.ResourceId = _assemblyCell.Id;
             CreateActivity(runningActivity, _processMock.Object, [_assemblyCell]);
 
-            _processMock.Setup(p => p.GetActivities(It.IsAny<Func<IActivity, bool>>()))
+            _processMock.Setup(p => p.GetActivities(It.IsAny<Func<Activity, bool>>()))
                 .Returns([runningActivity]);
 
             _processMock.SetupGet(x => x.Id).Returns(processId);
-            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()));
+            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<Activity, bool>>()));
             _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
 
             // Act
@@ -247,11 +247,11 @@ namespace Moryx.Simulation.Tests
             var readyActivity = new AssemblyActivity();
             CreateActivity(readyActivity, _processMock.Object, [_assemblyCell]);
 
-            _processMock.Setup(p => p.GetActivities(It.IsAny<Func<IActivity, bool>>()))
+            _processMock.Setup(p => p.GetActivities(It.IsAny<Func<Activity, bool>>()))
                 .Returns([readyActivity]);
 
             _processMock.SetupGet(x => x.Id).Returns(processId);
-            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()));
+            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<Activity, bool>>()));
             _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
 
             var exception = new Exception("Test");
@@ -276,11 +276,11 @@ namespace Moryx.Simulation.Tests
             runningActivity.Tracing.ResourceId = _assemblyCell.Id;
             CreateActivity(runningActivity, _processMock.Object, [_assemblyCell]);
 
-            _processMock.Setup(p => p.GetActivities(It.IsAny<Func<IActivity, bool>>()))
+            _processMock.Setup(p => p.GetActivities(It.IsAny<Func<Activity, bool>>()))
                 .Returns([runningActivity]);
 
             _processMock.SetupGet(x => x.Id).Returns(processId);
-            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()));
+            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<Activity, bool>>()));
             _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
 
             var exception = new Exception("Test");
@@ -306,7 +306,7 @@ namespace Moryx.Simulation.Tests
                 .Returns([activity1, activity2])
                 .Returns([activity1, activity2]);
 
-            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()))
+            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<Activity, bool>>()))
                 .Returns(activity2);
 
             _processMock.SetupGet(x => x.Id).Returns(processId);

@@ -23,7 +23,7 @@ namespace Moryx.AbstractionLayer.Workplans
         /// <param name="outputs">The outputs of the steps.</param>
         /// <returns></returns>
         public static TaskStep<TActivity, TParam> AddStep<TActivity, TParam>(this Workplan workplan, TaskStep<TActivity, TParam> task, TParam parameter, IConnector input, params IConnector[] outputs)
-            where TActivity : IActivity<TParam>, new()
+            where TActivity : Activity<TParam>, new()
             where TParam : IParameters, new()
         {
             task.Parameters = parameter;
@@ -52,7 +52,7 @@ namespace Moryx.AbstractionLayer.Workplans
         /// <param name="outputs">The outputs of the steps.</param>
         /// <returns></returns>
         public static TaskStep<TActivity, TProcParam, TParam> AddStep<TActivity, TProcParam, TParam>(this Workplan workplan, TaskStep<TActivity, TProcParam, TParam> task, TParam parameter, IConnector input, params IConnector[] outputs)
-            where TActivity : IActivity<TProcParam>, new()
+            where TActivity : Activity<TProcParam>, new()
             where TProcParam : IParameters
             where TParam : TProcParam, new()
         {
@@ -82,7 +82,7 @@ namespace Moryx.AbstractionLayer.Workplans
         /// <param name="outputs">The outputs of the steps.</param>
         /// <returns></returns>
         public static TaskStep<TActivity, TParam> AddStep<TActivity, TParam>(this Workplan workplan, TaskStep<TActivity, TParam> task, TParam parameter, IConnector[] input, params IConnector[] outputs)
-            where TActivity : IActivity<TParam>, new()
+            where TActivity : Activity<TParam>, new()
             where TParam : IParameters, new()
         {
             task.Parameters = parameter;
@@ -111,7 +111,7 @@ namespace Moryx.AbstractionLayer.Workplans
         /// <param name="outputs">The outputs of the steps.</param>
         /// <returns></returns>
         public static TaskStep<TActivity, TProcParam, TParam> AddStep<TActivity, TProcParam, TParam>(this Workplan workplan, TaskStep<TActivity, TProcParam, TParam> task, TParam parameter, IConnector[] input, params IConnector[] outputs)
-            where TActivity : IActivity<TProcParam>, new()
+            where TActivity : Activity<TProcParam>, new()
             where TProcParam : IParameters
             where TParam : TProcParam, new()
         {

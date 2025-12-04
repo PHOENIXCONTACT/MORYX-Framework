@@ -11,7 +11,7 @@ namespace Moryx.ControlSystem.Cells
     /// </summary>
     public class ActivityCompleted : Session, ICompletableSession
     {
-        internal ActivityCompleted(IActivity completed, Session currentSession)
+        internal ActivityCompleted(Activity completed, Session currentSession)
             : base(currentSession)
         {
             CompletedActivity = completed;
@@ -20,7 +20,7 @@ namespace Moryx.ControlSystem.Cells
         /// <summary>
         /// Activity that was completed
         /// </summary>
-        public IActivity CompletedActivity { get; }
+        public Activity CompletedActivity { get; }
 
         /// <summary>
         /// Complete the current sequence to await new ready to work

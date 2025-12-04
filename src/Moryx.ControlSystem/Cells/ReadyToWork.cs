@@ -53,7 +53,7 @@ namespace Moryx.ControlSystem.Cells
         /// Creates the start activity message to send an activity to a resource.
         /// </summary>
         /// <param name="activity">The activity.</param>
-        public ActivityStart StartActivity(IActivity activity)
+        public ActivityStart StartActivity(Activity activity)
         {
             return new ActivityStart(this, activity) { Process = activity.Process };
         }

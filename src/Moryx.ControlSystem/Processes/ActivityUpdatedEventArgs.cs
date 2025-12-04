@@ -32,7 +32,7 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Activity references
         /// </summary>
-        public IActivity Activity { get; }
+        public Activity Activity { get; }
 
         /// <summary>
         /// Current progress
@@ -42,7 +42,7 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Initialize the activity event args
         /// </summary>
-        public ActivityUpdatedEventArgs(IActivity activity, ActivityProgress progress)
+        public ActivityUpdatedEventArgs(Activity activity, ActivityProgress progress)
         {
             Activity = activity;
             Progress = progress;

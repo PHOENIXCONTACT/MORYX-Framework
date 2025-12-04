@@ -69,7 +69,7 @@ namespace Moryx.ControlSystem.ProcessEngine
             return ActivityDataPool.GetProcess(process)?.NextTargets() ?? Array.Empty<ICell>();
         }
 
-        public IReadOnlyList<ICell> Targets(IActivity activity)
+        public IReadOnlyList<ICell> Targets(Activity activity)
         {
             ValidateHealthState();
             return ActivityDataPool.GetByActivity(activity)?.Targets ?? Array.Empty<ICell>();

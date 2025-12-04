@@ -47,7 +47,7 @@ namespace Moryx.ProcessData.Endpoints.Services
 
         private static Type GetMeasurandType(string measurandName)
             => measurandName.Contains("Activity")
-                ? typeof(IActivity)
+                ? typeof(Activity)
                 : measurandName.Contains("Notification")
                     ? typeof(Notification)
                     : measurandName.Contains("Process")

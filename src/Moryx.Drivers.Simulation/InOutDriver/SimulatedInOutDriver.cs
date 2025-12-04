@@ -47,7 +47,7 @@ namespace Moryx.Drivers.Simulation.InOutDriver
         /// Driver should publish application specific Ready event
         /// Remember to set the SimulationState
         /// </summary>
-        public abstract void Ready(IActivity activity);
+        public abstract void Ready(Activity activity);
 
         /// <summary>
         /// Driver should publish the result for the currently executed activity

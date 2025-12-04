@@ -67,7 +67,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// Get wrapped activity data by business object
         /// </summary>
-        ActivityData GetByActivity(IActivity wrapped);
+        ActivityData GetByActivity(Activity wrapped);
 
         /// <summary>
         /// Find an activity that meets certain criteria

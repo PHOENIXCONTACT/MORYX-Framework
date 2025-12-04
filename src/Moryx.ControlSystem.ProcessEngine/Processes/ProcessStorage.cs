@@ -391,7 +391,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// </summary>
         /// <param name="source">Data source</param>
         /// <param name="target">Entity target</param>
-        private void SaveTracing(IActivity source, ActivityEntity target)
+        private void SaveTracing(Activity source, ActivityEntity target)
         {
             // Fetch tracing type cache and save reference on target
             var tracingType = _tracingWrappers.First(tt => tt.TypeCheck(source.Tracing));

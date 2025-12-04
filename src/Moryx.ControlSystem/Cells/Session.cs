@@ -131,7 +131,7 @@ namespace Moryx.ControlSystem.Cells
         /// with a new session context and marks the activity as failed.
         /// </summary>
         /// <param name="unknown"></param>
-        public static UnknownActivityAborted WrapUnknownActivity(IActivity unknown)
+        public static UnknownActivityAborted WrapUnknownActivity(Activity unknown)
         {
             var wrapper = StartSession(ActivityClassification.Unknown, ReadyToWorkType.Unset, unknown.Process.Id)
                 .CompleteSequence(null, false, []);

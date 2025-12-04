@@ -37,36 +37,36 @@ namespace Moryx.ControlSystem.Processes
         public IRecipe Recipe { get; set; }
 
         /// <inheritdoc />
-        public IEnumerable<IActivity> GetActivities()
+        public IEnumerable<Activity> GetActivities()
         {
             return [];
         }
 
         /// <inheritdoc />
-        public IEnumerable<IActivity> GetActivities(Func<IActivity, bool> predicate)
+        public IEnumerable<Activity> GetActivities(Func<Activity, bool> predicate)
         {
             return [];
         }
 
         /// <inheritdoc />
-        public IActivity GetActivity(ActivitySelectionType selectionType)
+        public Activity GetActivity(ActivitySelectionType selectionType)
         {
             return null;
         }
 
         /// <inheritdoc />
-        public IActivity GetActivity(ActivitySelectionType selectionType, Func<IActivity, bool> predicate)
+        public Activity GetActivity(ActivitySelectionType selectionType, Func<Activity, bool> predicate)
         {
             return null;
         }
 
         /// <inheritdoc />
-        public void AddActivity(IActivity toAdd)
+        public void AddActivity(Activity toAdd)
         {
         }
 
         /// <inheritdoc />
-        public void RemoveActivity(IActivity toRemove)
+        public void RemoveActivity(Activity toRemove)
         {
         }
     }

@@ -28,7 +28,7 @@ namespace Moryx.Simulation.Tests
         protected SimulatedDummyTestDriver _anotherAssemblyCellDriver;
         protected ProcessSimulator _processSimulator;
         protected NotSoParallelOps _parallelOperations = new();
-        protected readonly Dictionary<IActivity, IReadOnlyList<ICell>> _activityTargets = [];
+        protected readonly Dictionary<Activity, IReadOnlyList<ICell>> _activityTargets = [];
 
         [SetUp]
         public virtual void Setup()
@@ -53,8 +53,8 @@ namespace Moryx.Simulation.Tests
 
             //process control
             _processControlMock = new Mock<IProcessControl>();
-            _processControlMock.Setup(pc => pc.Targets(It.IsAny<IActivity>()))
-                .Returns<IActivity>(a => _activityTargets.TryGetValue(a, out IReadOnlyList<ICell>? value) ? value : []);
+            _processControlMock.Setup(pc => pc.Targets(It.IsAny<Activity>()))
+                .Returns<Activity>(a => _activityTargets.TryGetValue(a, out IReadOnlyList<ICell>? value) ? value : []);
 
             _processControlMock.Setup(pc => pc.Targets(It.IsAny<IProcess>()))
                 .Returns([_assemblyCell, _anotherAssemblyCell]);
@@ -86,7 +86,7 @@ namespace Moryx.Simulation.Tests
             return activity;
         }
 
-        protected void RaiseActivityUpdated(IActivity activity, ActivityProgress progress)
+        protected void RaiseActivityUpdated(Activity activity, ActivityProgress progress)
         {
             _processControlMock.Raise(pm => pm.ActivityUpdated += null, new ActivityUpdatedEventArgs(activity, progress));
         }

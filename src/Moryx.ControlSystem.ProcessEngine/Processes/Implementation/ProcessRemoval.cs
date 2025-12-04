@@ -223,7 +223,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 };
             }
 
-            public IActivity CreateActivity(IProcess process)
+            public Activity CreateActivity(IProcess process)
             {
                 var activity = new ProcessFixupActivity
                 {

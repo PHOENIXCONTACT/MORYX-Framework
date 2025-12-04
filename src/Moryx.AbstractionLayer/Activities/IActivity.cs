@@ -17,6 +17,11 @@ namespace Moryx.AbstractionLayer.Activities
         long Id { get; }
 
         /// <summary>
+        /// Name of the activity
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// Parameters of the activity
         /// </summary>
         IParameters Parameters { get; set; }

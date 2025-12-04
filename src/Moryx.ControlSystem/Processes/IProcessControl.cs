@@ -31,7 +31,7 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Possible cells that can execute the activity
         /// </summary>
-        IReadOnlyList<ICell> Targets(IActivity activity);
+        IReadOnlyList<ICell> Targets(Activity activity);
 
         /// <summary>
         /// A process has changed

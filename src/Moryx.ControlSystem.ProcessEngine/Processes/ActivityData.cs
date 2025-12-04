@@ -43,7 +43,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         }
 
         /// <summary>
-        /// Shortcut to <see cref="IActivity.Tracing"/>
+        /// Shortcut to <see cref="Activity.Tracing"/>
         /// </summary>
         public Tracing Tracing
         {

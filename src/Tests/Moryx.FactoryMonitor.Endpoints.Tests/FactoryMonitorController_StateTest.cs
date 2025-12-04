@@ -227,7 +227,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             RaiseProcessUpdated(process, ProcessProgress.Running);
         }
 
-        private void RaiseActivityUpdated(IActivity activity, ActivityProgress progress)
+        private void RaiseActivityUpdated(Activity activity, ActivityProgress progress)
         {
             _processFacadeMock.Raise(pm => pm.ActivityUpdated += null, new ActivityUpdatedEventArgs(activity, progress));
         }

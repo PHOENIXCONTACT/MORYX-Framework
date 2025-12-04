@@ -11,7 +11,7 @@ namespace Moryx.AbstractionLayer.Processes
     /// </summary>
     public class Process : IProcess
     {
-        private readonly List<IActivity> _activities = [];
+        private readonly List<Activity> _activities = [];
         private readonly ReaderWriterLockSlim _activitiesLock = new(LockRecursionPolicy.SupportsRecursion);
 
         /// <inheritdoc />
@@ -21,7 +21,7 @@ namespace Moryx.AbstractionLayer.Processes
         public IRecipe Recipe { get; set; }
 
         /// <inheritdoc />
-        public IEnumerable<IActivity> GetActivities()
+        public IEnumerable<Activity> GetActivities()
         {
             _activitiesLock.EnterReadLock();
 
@@ -33,11 +33,11 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public IEnumerable<IActivity> GetActivities(Func<IActivity, bool> predicate)
+        public IEnumerable<Activity> GetActivities(Func<Activity, bool> predicate)
         {
             _activitiesLock.EnterReadLock();
 
-            IActivity[] result;
+            Activity[] result;
 
             if (predicate == null)
                 result = _activities.ToArray();
@@ -50,7 +50,7 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public IActivity GetActivity(ActivitySelectionType selectionType)
+        public Activity GetActivity(ActivitySelectionType selectionType)
         {
             _activitiesLock.EnterReadLock();
 
@@ -62,11 +62,11 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public IActivity GetActivity(ActivitySelectionType selectionType, Func<IActivity, bool> predicate)
+        public Activity GetActivity(ActivitySelectionType selectionType, Func<Activity, bool> predicate)
         {
             _activitiesLock.EnterReadLock();
 
-            IActivity result = null;
+            Activity result = null;
 
             var tmpList = predicate != null ? _activities.Where(predicate) : _activities;
 
@@ -92,7 +92,7 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public void AddActivity(IActivity toAdd)
+        public void AddActivity(Activity toAdd)
         {
             _activitiesLock.EnterWriteLock();
 
@@ -102,7 +102,7 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public void RemoveActivity(IActivity toRemove)
+        public void RemoveActivity(Activity toRemove)
         {
             _activitiesLock.EnterWriteLock();
 

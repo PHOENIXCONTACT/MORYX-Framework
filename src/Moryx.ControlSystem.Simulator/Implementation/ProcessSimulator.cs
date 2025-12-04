@@ -81,7 +81,7 @@ namespace Moryx.ControlSystem.Simulator
             if (newState == SimulationState.Offline || newState > SimulationState.Idle)
                 return;
 
-            IActivity nextActivity;
+            Activity nextActivity;
             lock (_movements)
             {
                 nextActivity = ProcessControl.RunningProcesses
@@ -156,7 +156,7 @@ namespace Moryx.ControlSystem.Simulator
         /// Production Activity is ready and transport initiated
         /// </summary>
         /// <param name="activity"></param>
-        private void ActivityReady(IActivity activity)
+        private void ActivityReady(Activity activity)
         {
             var process = activity.Process;
 
@@ -180,7 +180,7 @@ namespace Moryx.ControlSystem.Simulator
             SimulateMovement(activity, process, movementTarget);
         }
 
-        private void SimulateReady(ISimulationDriver target, IActivity activity)
+        private void SimulateReady(ISimulationDriver target, Activity activity)
         {
 
             if (target.SimulatedState > SimulationState.Idle)
@@ -202,7 +202,7 @@ namespace Moryx.ControlSystem.Simulator
             }
         }
 
-        private void SimulateMovement(IActivity activity, IProcess process, ISimulationDriver movementTarget)
+        private void SimulateMovement(Activity activity, IProcess process, ISimulationDriver movementTarget)
         {
             Logger.LogDebug("Simulating movement to driver {0}-{1} for activity '{2}'.",
                         movementTarget.Id, movementTarget.Name, activity.ToString());
@@ -226,7 +226,7 @@ namespace Moryx.ControlSystem.Simulator
         /// Activity has switched to running and we start the completion timer
         /// </summary>
         /// <param name="activity"></param>
-        private void ActivityRunning(IActivity activity)
+        private void ActivityRunning(Activity activity)
         {
             // Check if this activity should be executed by an simulation driver
             var driver = _drivers.FirstOrDefault(d => d.Usages.Any(cell => cell.Id == activity.Tracing.ResourceId));
@@ -243,7 +243,7 @@ namespace Moryx.ControlSystem.Simulator
             ParallelOperations.ScheduleExecution(CompleteActivity, completionArgs, executionTime, -1);
         }
 
-        private int CalculateExecutionTime(IActivity activity)
+        private int CalculateExecutionTime(Activity activity)
         {
             if (activity.Parameters is ISimulationParameters simulationParameters)
                 return (int)(simulationParameters.ExecutionTime.TotalMilliseconds / Config.Acceleration);
@@ -337,11 +337,11 @@ namespace Moryx.ControlSystem.Simulator
 
         private class ActivityAndDriver
         {
-            public IActivity Activity { get; }
+            public Activity Activity { get; }
 
             public ISimulationDriver Driver { get; }
 
-            public ActivityAndDriver(IActivity activity, ISimulationDriver driver)
+            public ActivityAndDriver(Activity activity, ISimulationDriver driver)
             {
                 Activity = activity;
                 Driver = driver;

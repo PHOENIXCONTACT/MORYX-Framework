@@ -34,7 +34,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
         protected const long _solderingCellId = 2;
         protected const long _manufactoringFactoryId = 3;
         protected string backgroundUrl = "https://www.kuka.com/-/media/kuka-corporate/images/home/stage/kuka-robot-systems.jpg?rev=65074bf713a74a8ea6b08da65d068946&w=1400&hash=6E6DBB77432C3395E47F2A539F6EEE86";
-        protected readonly Dictionary<IActivity, IReadOnlyList<ICell>> _activityTargets = new();
+        protected readonly Dictionary<Activity, IReadOnlyList<ICell>> _activityTargets = new();
         protected TransportRouteModel _transportPathModel;
         protected Position _assemblyCellposition;
         protected Position _solderingCellPosition;
@@ -71,7 +71,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             _resourceManagementMock.Setup(rm => rm.GetResource<ICell>(_solderingCellId))
                 .Returns(_solderingCell);
 
-            //_assemblyCell location 
+            //_assemblyCell location
             _assemblyCellLocation = _graph.Instantiate<MachineLocation>();
             _assemblyCellLocation.Children.Add(_assemblyCell);
             _assemblyCellLocation.Id = 4;
@@ -82,7 +82,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
                 .Returns(_assemblyCellLocation);
             _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_assemblyCellLocation.Id, It.IsAny<Func<Resource, MachineLocation>>()))
                 .Returns(_assemblyCellLocation);
-            //_solderingCell location 
+            //_solderingCell location
             _solderingCellLocation = _graph.Instantiate<MachineLocation>();
             _solderingCellLocation.Children.Add(_solderingCell);
             _solderingCellLocation.Id = 5;
@@ -116,8 +116,8 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             //process
             _processFacadeMock.SetupGet(pm => pm.RunningProcesses)
                 .Returns(Array.Empty<IProcess>());
-            _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<IActivity>()))
-                .Returns<IActivity>(a => _activityTargets.ContainsKey(a) ? _activityTargets[a] : Array.Empty<ICell>());
+            _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<Activity>()))
+                .Returns<Activity>(a => _activityTargets.ContainsKey(a) ? _activityTargets[a] : Array.Empty<ICell>());
 
             //orders
             _orderFacadeMock.Setup(o => o.GetOperations(It.IsAny<Func<Operation, bool>>()))

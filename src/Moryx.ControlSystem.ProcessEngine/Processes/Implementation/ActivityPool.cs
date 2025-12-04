@@ -185,7 +185,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             ActivityUpdated?.Invoke(this, new ActivityUpdatedEventArgs(activityData.Activity, progress));
         }
 
-        public ActivityData GetByActivity(IActivity wrapped)
+        public ActivityData GetByActivity(Activity wrapped)
         {
             // Performance optimized nested locking
             _activitiesLock.EnterReadLock();
@@ -203,6 +203,11 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             _activitiesLock.ExitReadLock();
 
             return result;
+        }
+
+        public IReadOnlyList<Activity> GetByCondition(Func<IActivity, bool> predicate)
+        {
+            throw new NotImplementedException();
         }
 
         public IReadOnlyList<ActivityData> GetAllOpen()
@@ -295,19 +300,19 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             return GetProcess(id)?.Process;
         }
 
-        public IReadOnlyList<IActivity> GetByCondition(Func<IActivity, bool> predicate)
+        public IReadOnlyList<Activity> GetByCondition(Func<Activity, bool> predicate)
         {
             var matches = GetByCondition(ad => predicate(ad.Activity));
             return FastExtraction(matches, ad => ad.Activity);
         }
 
-        IReadOnlyList<IActivity> IActivityPool.GetAllOpen()
+        IReadOnlyList<Activity> IActivityPool.GetAllOpen()
         {
             var open = GetAllOpen();
             return FastExtraction(open, ad => ad.Activity);
         }
 
-        public IReadOnlyList<IActivity> GetAllOpen(IProcess process)
+        public IReadOnlyList<Activity> GetAllOpen(IProcess process)
         {
             var wrapper = GetProcess(process);
             var open = GetAllOpen(wrapper);

@@ -146,7 +146,7 @@ namespace Moryx.AbstractionLayer.Processes
                     var product = (process.Recipe as IProductRecipe)?.Product;
                     return product;
                 }
-                case IActivity activity:
+                case Activity activity:
                 {
                     var product = (activity.Process.Recipe as IProductRecipe)?.Product;
                     return product;
