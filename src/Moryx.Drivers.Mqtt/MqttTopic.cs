@@ -27,10 +27,6 @@ namespace Moryx.Drivers.Mqtt
     [ResourceRegistration]
     public abstract class MqttTopic : Resource, IMessageChannel
     {
-        /// <summary>
-        /// Event raised, when a message is received
-        /// </summary>
-        public event EventHandler<object> Received;
 
         /// <summary>
         /// Injected service, used for scheduling tasks
@@ -180,7 +176,7 @@ namespace Moryx.Drivers.Mqtt
         /// corresponding topic to be subscribed
         /// placeholders are replaced with +
         /// </summary>
-        [EntrySerialize, ReadOnly(true)]
+        [EntrySerialize]
         public string SubscribedTopic => _subscribedTopic;
 
         private string _subscribedTopic;
@@ -199,7 +195,7 @@ namespace Moryx.Drivers.Mqtt
         /// Output the type name of the resolved MessageType.
         /// This allows the user to check if the Type resolution has succeeded.
         /// </summary>
-        [EntrySerialize, ReadOnly(true)]
+        [EntrySerialize]
         public string ResolveTypeName => MessageType?.FullName ?? "Unresolved";
 
         /// <summary>
@@ -258,6 +254,11 @@ namespace Moryx.Drivers.Mqtt
         {
             return RegexTopic.IsMatch(receivedTopic);
         }
+
+        /// <summary>
+        /// Event raised, when a message is received
+        /// </summary>
+        public event EventHandler<object> Received;
     }
 
     /// <inheritdoc cref="MqttTopic" />
