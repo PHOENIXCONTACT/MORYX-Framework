@@ -3,11 +3,8 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using System.Text;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Moryx.Drivers.Mqtt.Properties;
 using System.Text.Json;
 using System.Buffers;
@@ -38,18 +35,7 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         [Display(Name = nameof(Strings.MqttTopicJson_Format), ResourceType = typeof(Strings))]
         public JsonFormat Format { get; set; }
 
-        /// <summary>
-        /// Controls serializer library to use
-        /// <see cref="SerializerSelection"/>
-        /// </summary>
-        [DataMember, EntrySerialize]
-        [Display(
-            Name = nameof(Strings.MqttTopicJson_Serializer),
-            Description = nameof(Strings.MqttTopicJson_Serializer_Description),
-            ResourceType = typeof(Strings)
-        )]
-        public SerializerSelection Serializer { get; set; }
-
+        
         /// <summary>
         /// Controls if enums should be serialized as strings or as ints
         /// </summary>
@@ -64,29 +50,15 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         /// <inheritdoc />
         protected override byte[] Serialize(object payload)
         {
-            if (Serializer == SerializerSelection.SystemTextJson)
-            {
-
-                var options = GetSystemTextJsonOptions();
-                return System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(payload, options);
-            }
-            var json = JsonConvert.SerializeObject(payload, GetSettings());
-            return Encoding.UTF8.GetBytes(json);
+            var options = GetSystemTextJsonOptions();
+            return System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(payload, options);
         }
 
         /// <inheritdoc />
         protected override object Deserialize(ReadOnlySequence<byte> payload)
         {
-            if (Serializer == SerializerSelection.SystemTextJson)
-            {
-                var options = GetSystemTextJsonOptions();
-                return JsonDocument.Parse(payload).Deserialize(MessageType, options);
-            }
-
-            var msg = Constructor();
-            var json = Encoding.UTF8.GetString(payload);
-            JsonConvert.PopulateObject(json, msg, GetSettings());
-            return msg;
+            var options = GetSystemTextJsonOptions();
+            return JsonDocument.Parse(payload).Deserialize(MessageType, options);
         }
 
         private JsonSerializerOptions GetSystemTextJsonOptions()
@@ -102,25 +74,6 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
             }
 
             return options;
-        }
-
-        private JsonSerializerSettings GetSettings()
-        {
-            var settings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-            };
-            if (EnumsAsStrings)
-            {
-                settings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-            }
-
-            if (Format == JsonFormat.camelCase)
-            {
-                settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            }
-
-            return settings;
         }
 
     }
