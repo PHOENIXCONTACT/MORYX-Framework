@@ -221,6 +221,7 @@ public class MqttDriver : Driver, IMessageDriver
     private string _brokerURL;
     private string _identifier;
     private int _port;
+    private int _scheduledReconnect;
 
     #endregion
 
@@ -373,6 +374,12 @@ public class MqttDriver : Driver, IMessageDriver
 
     internal async Task Disconnect()
     {
+        if(_scheduledReconnect != 0)
+        {
+            ParallelOperations.StopExecution(_scheduledReconnect);
+            _scheduledReconnect = 0;
+        }
+
         if (_mqttClient.IsConnected)
         {
             await _mqttClient.DisconnectAsync(new MqttClientDisconnectOptions
@@ -658,13 +665,20 @@ public class MqttDriver : Driver, IMessageDriver
 
     internal void DelayedConnectionAttempt()
     {
-        ParallelOperations.ScheduleExecution(() => Connect(false).ContinueWith(t =>
+        _scheduledReconnect = ParallelOperations.ScheduleExecution(async () =>
         {
-            if (t.IsFaulted)
+            // early return, when reconnect was cancelled
+            if (_scheduledReconnect == 0)
+                return;
+            try
             {
-                Logger.LogWarning(t.Exception, "Failed to connect to broker");
+                await Connect(false);
             }
-        }, scheduler: TaskScheduler.Current), ReconnectDelayMs, -1);
+            catch (Exception ex)
+            {
+                Logger.LogWarning(ex, "Failed to connect to broker");
+            }
+        }, ReconnectDelayMs, -1);
     }
 }
 
