@@ -55,7 +55,7 @@ namespace Moryx.Runtime.Modules
             LoggerFactory = loggerFactory;
             Logger = LoggerFactory.CreateLogger(GetType().Namespace);
 
-            StateMachine.Initialize((IServerModuleStateContext)this).WithAsync<ServerModuleStateBase>().Wait();
+            StateMachine.InitializeAsync((IServerModuleStateContext)this).WithAsync<ServerModuleStateBase>().Wait();
         }
 
         #region ValidateHealthState
@@ -303,13 +303,15 @@ namespace Moryx.Runtime.Modules
 
         private readonly SemaphoreSlim _stateLockSemaphore = new(1, 1);
 
-        void IStateContext.SetState(StateBase state)
+        Task IAsyncStateContext.SetStateAsync(StateBase state)
         {
             var oldState = _state?.Classification ?? ServerModuleState.Stopped;
 
             _state = (ServerModuleStateBase)state;
 
             StateChange(oldState, State);
+
+            return Task.CompletedTask;
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace Moryx.AbstractionLayer.Drivers;
 /// </summary>
 /// <typeparam name="TContext">Type of the driver context</typeparam>
 public abstract class AsyncDriverState<TContext> : AsyncStateBase<TContext>, IDriverState
-    where TContext : Driver
+    where TContext : AsyncDriver
 
 {
     /// <inheritdoc />

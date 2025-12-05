@@ -9,7 +9,7 @@ namespace Moryx.Runtime.Modules
     /// <summary>
     /// Interface for server module base to access state based transitions
     /// </summary>
-    internal interface IServerModuleStateContext : IStateContext
+    internal interface IServerModuleStateContext : IAsyncStateContext
     {
         /// <summary>
         /// Initialize the module

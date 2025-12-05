@@ -18,9 +18,47 @@ namespace Moryx.AbstractionLayer.Drivers
         {
             CurrentState = (IDriverState)state;
             StateChanged?.Invoke(this, CurrentState);
+
+            OnStateChanged();
+        }
+
+        /// <summary>
+        /// Will be called after the state change
+        /// </summary>
+        protected virtual void OnStateChanged()
+        {
         }
 
         /// <inheritdoc />
         public event EventHandler<IDriverState> StateChanged;
+    }
+
+    /// <summary>
+    /// Base class for devices to reduce boilerplate code
+    /// </summary>
+    public abstract class AsyncDriver : Resource, IDriver, IAsyncStateContext
+    {
+        /// <inheritdoc />
+        public IDriverState CurrentState { get; private set; }
+
+        Task IAsyncStateContext.SetStateAsync(StateBase state)
+        {
+            CurrentState = (IDriverState)state;
+            StateChanged?.Invoke(this, CurrentState);
+
+            return OnStateChanged();
+        }
+
+        /// <summary>
+        /// Will be called after the state change
+        /// </summary>
+        protected virtual Task OnStateChanged()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public event EventHandler<IDriverState> StateChanged;
+
     }
 }

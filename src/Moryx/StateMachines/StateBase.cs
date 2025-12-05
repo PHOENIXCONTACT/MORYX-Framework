@@ -26,14 +26,14 @@ namespace Moryx.StateMachines
         /// <summary>
         /// Context of the state machine
         /// </summary>
-        protected IStateContext Context { get; set; }
+        protected object Context { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StateBase"/> class.
         /// </summary>
         /// <param name="context">Context of the state machine</param>
         /// <param name="stateMap">Map of states to objects</param>
-        protected StateBase(IStateContext context, StateMap stateMap)
+        protected StateBase(object context, StateMap stateMap)
         {
             Map = stateMap;
             Context = context;
@@ -79,7 +79,7 @@ namespace Moryx.StateMachines
         /// Create a state machine of the given base type and will set it on the given context
         /// Returns the initial state after initialization.
         /// </summary>
-        protected static StateBase CreateMapAndGetInitial(Type stateBaseType, IStateContext context, int? initialKey)
+        protected static StateBase CreateMapAndGetInitial(Type stateBaseType, object context, int? initialKey)
         {
             // Check the base type
             if (!stateBaseType.IsAbstract)

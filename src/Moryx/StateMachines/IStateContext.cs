@@ -13,4 +13,15 @@ namespace Moryx.StateMachines
         /// </summary>
         void SetState(StateBase state);
     }
+
+    /// <summary>
+    /// Represents the context of a state machine including a typed state property
+    /// </summary>
+    public interface IAsyncStateContext
+    {
+        /// <summary>
+        /// Update state on context
+        /// </summary>
+        Task SetStateAsync(StateBase state);
+    }
 }

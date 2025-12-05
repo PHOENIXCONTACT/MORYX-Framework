@@ -6,7 +6,7 @@ using Moryx.StateMachines;
 
 namespace Moryx.Tests.AsyncTestMachine
 {
-    public class MyAsyncContext : IStateContext
+    public class MyAsyncContext : IAsyncStateContext
     {
         public MyAsyncStateBase State { get; private set; }
 
@@ -38,9 +38,10 @@ namespace Moryx.Tests.AsyncTestMachine
             return Task.CompletedTask;
         }
 
-        public void SetState(StateBase state)
+        public Task SetStateAsync(StateBase state)
         {
             State = (MyAsyncStateBase)state;
+            return Task.CompletedTask;
         }
     }
 }

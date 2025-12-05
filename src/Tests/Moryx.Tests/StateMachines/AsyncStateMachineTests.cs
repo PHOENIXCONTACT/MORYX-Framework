@@ -13,10 +13,10 @@ namespace Moryx.Tests
     public class AsyncStateMachineTests
     {
         [Test(Description = "Test the initial state. Throws an exception if the wrong state was selected.")]
-        public void Initial()
+        public async Task Initial()
         {
             //Arrange
-            var context = CreateContext();
+            var context = await CreateContext();
 
             // Assert
             Assert.DoesNotThrowAsync(async delegate
@@ -30,7 +30,7 @@ namespace Moryx.Tests
         public async Task AtoBState()
         {
             // Arrange
-            var context = CreateContext();
+            var context = await CreateContext();
 
             // Act
             await context.State.AtoBAsync();
@@ -45,7 +45,7 @@ namespace Moryx.Tests
         public async Task BtoCState()
         {
             // Arrange
-            var context = CreateContext();
+            var context = await CreateContext();
 
             // Act
             await context.State.AtoBAsync();
@@ -61,7 +61,7 @@ namespace Moryx.Tests
         public async Task CtoAState()
         {
             // Arrange
-            var context = CreateContext();
+            var context = await CreateContext();
 
             // Act
             await context.State.AtoBAsync();
@@ -80,13 +80,13 @@ namespace Moryx.Tests
         {
             // Assert
             var context = new MyAsyncContext();
-            await StateMachine.Initialize(context).WithAsync<MyAsyncStateBase>();
+            await StateMachine.InitializeAsync(context).WithAsync<MyAsyncStateBase>();
             await context.State.AtoBAsync();
 
             // Act
             var reloadedContext = new MyAsyncContext();
             var bkey = context.State.Key;
-            await StateMachine.Reload(reloadedContext, bkey).WithAsync<MyAsyncStateBase>();
+            await StateMachine.ReloadAsync(reloadedContext, bkey).WithAsync<MyAsyncStateBase>();
 
             // Assert
             Assert.ThrowsAsync<InvalidOperationException>(() => reloadedContext.State.InitialAsync());
@@ -103,7 +103,7 @@ namespace Moryx.Tests
         public async Task ForceStateAsync()
         {
             // Arrange
-            var context = CreateContext();
+            var context = await CreateContext();
             await context.State.AtoBAsync();
 
             // Act
@@ -117,7 +117,7 @@ namespace Moryx.Tests
         public async Task ForceStateWithExitCurrent()
         {
             // Arrange
-            var context = CreateContext();
+            var context = await CreateContext();
             await context.State.AtoBAsync();
             context.BExited = false;
 
@@ -132,7 +132,7 @@ namespace Moryx.Tests
         public async Task ForceStateWithEnterForced()
         {
             // Arrange
-            var context = CreateContext();
+            var context = await CreateContext();
             await context.State.AtoBAsync();
             context.AEntered = false;
 
@@ -143,10 +143,10 @@ namespace Moryx.Tests
             Assert.That(context.AEntered);
         }
 
-        private static MyAsyncContext CreateContext()
+        private static async Task<MyAsyncContext> CreateContext()
         {
             var context = new MyAsyncContext();
-            StateMachine.Initialize(context).WithAsync<MyAsyncStateBase>();
+            await StateMachine.InitializeAsync(context).WithAsync<MyAsyncStateBase>();
 
             return context;
         }
