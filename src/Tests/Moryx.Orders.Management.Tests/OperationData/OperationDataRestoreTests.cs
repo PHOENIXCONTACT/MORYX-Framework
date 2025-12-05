@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Moryx.ControlSystem.Jobs;
 using Moq;
 using Moryx.Model.InMemory;
@@ -31,35 +32,37 @@ namespace Moryx.Orders.Management.Tests
 
         [Test(Description = "No resume of creating operations. " +
                             "All tests should fail because creating operations should not be stored.")]
-        public void ResumeCreating()
+        public async Task ResumeCreating()
         {
             // Arrange
-            var databaseId = SaveToDatabase(InitializeOperationData(10, false, 11, 9));
+            var operationToSave = await InitializeOperationData(10, false, 11, 9);
+            var databaseId = await SaveToDatabase(operationToSave);
 
             // Act - Assert: Initial
-            var operationData = ReloadFromDatabase(databaseId, false);
-            operationData.Restore();
+            var operationData = await ReloadFromDatabase(databaseId, false);
+            await operationData.Restore();
 
-            Assert.Throws<InvalidOperationException>(() => operationData.Resume(), "There should be no restoring of Initial OperationData");
+            Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Resume(), "There should be no restoring of Initial OperationData");
 
             // Act - Assert: Creating
-            operationData.Assign();
-            Assert.Throws<InvalidOperationException>(() => operationData.Resume(), "There should be no restoring of Creating OperationData");
+            await operationData.Assign();
+            Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Resume(), "There should be no restoring of Creating OperationData");
 
             // Act - Assert: CreationFailed
-            operationData.AssignCompleted(false);
-            Assert.Throws<InvalidOperationException>(() => operationData.Resume(), "There should be no restoring of CreationFailed OperationData");
+            await operationData.AssignCompleted(false);
+            Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Resume(), "There should be no restoring of CreationFailed OperationData");
         }
 
         [Test(Description = "Restores a ready operation.")]
-        public void RestoreReady()
+        public async Task RestoreReady()
         {
             // Arrange
-            var databaseId = SaveToDatabase(GetReadyOperation(10, false, 11, 9));
+            var operationToSave = await GetReadyOperation(10, false, 11, 9);
+            var databaseId = await SaveToDatabase(operationToSave);
 
             // Act
-            var operationData = ReloadFromDatabase(databaseId, false);
-            operationData.Restore();
+            var operationData = await ReloadFromDatabase(databaseId, false);
+            await operationData.Restore();
 
             //
             Assert.DoesNotThrow(() => AssignmentMock.Verify(c => c.Restore(operationData), Times.Once));
@@ -84,36 +87,36 @@ namespace Moryx.Orders.Management.Tests
         [Test(Description = "Restore a running operation should be possible." +
                             "Will simulate a production, stores the operation and reloads it after job was finished. " +
                             "The amount should be reached")]
-        public void RestoreRunning()
+        public async Task RestoreRunning()
         {
             // Arrange
-            var operationData = GetRunningOperation(10, false, 11, 9);
+            var operationData = await GetRunningOperation(10, false, 11, 9);
 
             // Simulate shutdown and with producing job
-            var databaseId = SimulateProductionWithShutdown(operationData);
+            var databaseId = await SimulateProductionWithShutdown(operationData);
 
             // Act
-            operationData = ReloadFromDatabase(databaseId, false);
-            operationData.Restore();
-            operationData.Resume();
+            operationData = await ReloadFromDatabase(databaseId, false);
+            await operationData.Restore();
+            await operationData.Resume();
 
             // because of the successful job, the restore
             // evaluates the jobs again and the amount should be reached
 
             // Assert
-            AssertAmountReached(operationData);
+            await AssertAmountReached(operationData);
         }
 
         [Test(Description = "Restore a running operation. " +
                             "Will simulate a production, stores the operation and reloads it. " +
                             "Will not call Resume since no other job should be dispatched.")]
-        public void DoNotDispatchJobAfterRestore()
+        public async Task DoNotDispatchJobAfterRestore()
         {
             // Arrange
-            var operationData = GetRunningOperation(10, false, 11, 10);
+            var operationData = await GetRunningOperation(10, false, 11, 10);
 
             // Simulate shutdown and with producing job
-            var databaseId = SimulateProductionWithShutdown(operationData);
+            var databaseId = await SimulateProductionWithShutdown(operationData);
             JobHandlerMock.Invocations.Clear();
 
             // Change the amount to not have amount reached and a new job can be created to go on with the production.
@@ -121,8 +124,8 @@ namespace Moryx.Orders.Management.Tests
             initialJob.SuccessCount = 8;
 
             // Act
-            operationData = ReloadFromDatabase(databaseId, false);
-            operationData.Restore();
+            operationData = await ReloadFromDatabase(databaseId, false);
+            await operationData.Restore();
             // Don't call operationData.Resume to be sure that no additional job will be dispatched.
 
             // Assert
@@ -131,16 +134,16 @@ namespace Moryx.Orders.Management.Tests
 
         [Test(Description = "Will restore an operation which is interrupting. " +
                             "After the restore, the operation should be interrupted.")]
-        public void RestoreInterrupting()
+        public async Task RestoreInterrupting()
         {
             // Arrange
-            var operationData = GetInterruptingOperation(10, false, 11, 9);
+            var operationData = await GetInterruptingOperation(10, false, 11, 9);
 
             // Simulate shutdown and with producing job
-            var databaseId = SimulateProductionWithShutdown(operationData);
+            var databaseId = await SimulateProductionWithShutdown(operationData);
 
             // Act
-            operationData = ReloadFromDatabase(databaseId, false);
+            operationData = await ReloadFromDatabase(databaseId, false);
 
             // because of the successful job, the restore
             // evaluates the jobs again and the operation should be amount reached
@@ -148,8 +151,8 @@ namespace Moryx.Orders.Management.Tests
             var interruptedRaised = false;
             operationData.Interrupted += (_, _) => interruptedRaised = true;
 
-            operationData.Restore();
-            operationData.Resume();
+            await operationData.Restore();
+            await operationData.Resume();
 
             // Assert
             Assert.That(interruptedRaised, $"The {nameof(IOperationData.Interrupted)} event was not raised.");
@@ -161,50 +164,50 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Will restore an operation which is interrupted.")]
-        public void RestoreInterrupted()
+        public async Task RestoreInterrupted()
         {
             // Arrange
-            var operationData = GetInterruptedOperation(10, false, 11, 9);
+            var operationData = await GetInterruptedOperation(10, false, 11, 9);
 
             // Simulate shutdown and with producing job
-            var databaseId = SaveToDatabase(operationData);
+            var databaseId = await SaveToDatabase(operationData);
 
             // Act
-            operationData = ReloadFromDatabase(databaseId, false);
-            operationData.Restore();
+            operationData = await ReloadFromDatabase(databaseId, false);
+            await operationData.Restore();
 
             // Assert
-            AssertInterrupted(operationData);
+            await AssertInterrupted(operationData);
         }
 
         [Test(Description = "Will restore an operation where the amount was reached.")]
-        public void RestoreAmountReached()
+        public async Task RestoreAmountReached()
         {
             // Arrange
-            var operationData = GetAmountReachedOperation(10, false, 10, 9);
+            var operationData = await GetAmountReachedOperation(10, false, 10, 9);
 
             // Simulate shutdown and with producing job
-            var databaseId = SaveToDatabase(operationData);
+            var databaseId = await SaveToDatabase(operationData);
 
             // Act
-            operationData = ReloadFromDatabase(databaseId, false);
+            operationData = await ReloadFromDatabase(databaseId, false);
 
             // Assert
-            AssertAmountReached(operationData);
+            await AssertAmountReached(operationData);
         }
 
         [Test(Description = "Will restore an operation which is already completed.")]
-        public void RestoreCompleted()
+        public async Task RestoreCompleted()
         {
             // Arrange
-            var operationData = GetCompletedOperation(10, false, 11, 9);
+            var operationData = await GetCompletedOperation(10, false, 11, 9);
 
             // Simulate shutdown and with producing job
-            var databaseId = SaveToDatabase(operationData);
+            var databaseId = await SaveToDatabase(operationData);
 
             // Act
-            operationData = ReloadFromDatabase(databaseId, false);
-            operationData.Restore();
+            operationData = await ReloadFromDatabase(databaseId, false);
+            await operationData.Restore();
 
             // Assert
             Assert.That(operationData.State.CanBegin, Is.False);
@@ -218,7 +221,7 @@ namespace Moryx.Orders.Management.Tests
         /// Do some assertion operations on the given OperationData
         /// Will do a final report to complete the operation
         /// </summary>
-        private void AssertAmountReached(IOperationData operationData)
+        private async Task AssertAmountReached(IOperationData operationData)
         {
             Assert.That(operationData.State.CanBegin);
             Assert.That(operationData.State.CanPartialReport);
@@ -226,22 +229,22 @@ namespace Moryx.Orders.Management.Tests
             Assert.That(operationData.State.CanInterrupt);
             Assert.That(operationData.State.CanAdvice);
 
-            AssertCompletableOperation(operationData);
+            await AssertCompletableOperation(operationData);
         }
 
-        private void AssertInterrupted(IOperationData operationData)
+        private async Task AssertInterrupted(IOperationData operationData)
         {
-            AssertCompletableOperation(operationData);
+            await AssertCompletableOperation(operationData);
         }
 
-        private void AssertCompletableOperation(IOperationData operationData)
+        private async Task AssertCompletableOperation(IOperationData operationData)
         {
             // Final Report should complete the operation
             var completedRaised = false;
             operationData.Completed += (_, _) => completedRaised = true;
 
             var report = new OperationReport(ConfirmationType.Final, 10, 0, User);
-            operationData.Report(report);
+            await operationData.Report(report);
 
             Assert.That(completedRaised, $"The {nameof(IOperationData.Completed)} event was not raised.");
         }
@@ -250,7 +253,7 @@ namespace Moryx.Orders.Management.Tests
         /// Runs some production on the first job of the operation
         /// Will finish the job after saving the operation to the database
         /// </summary>
-        private long SimulateProductionWithShutdown(IOperationData operationData)
+        private async Task<long> SimulateProductionWithShutdown(IOperationData operationData)
         {
             var initialJob = operationData.Operation.Jobs.First();
 
@@ -262,10 +265,10 @@ namespace Moryx.Orders.Management.Tests
             initialJob.SuccessCount = 1;
             ((TestJob)initialJob).SetRunning(2);
 
-            operationData.JobStateChanged(new JobStateChangedEventArgs(initialJob, JobClassification.Idle, JobClassification.Running));
+            await operationData.JobStateChanged(new JobStateChangedEventArgs(initialJob, JobClassification.Idle, JobClassification.Running));
 
             // Save the operation
-            var databaseId = SaveToDatabase(operationData);
+            var databaseId = await SaveToDatabase(operationData);
 
             // bring the job to the end
             initialJob.Classification = JobClassification.Completed;
@@ -278,16 +281,16 @@ namespace Moryx.Orders.Management.Tests
         /// <summary>
         /// Saves the given operation to the database
         /// </summary>
-        private long SaveToDatabase(IOperationData operationData)
+        private async Task<long> SaveToDatabase(IOperationData operationData)
         {
             using var uow = _orderModel.Create();
 
-            var orderEntity = OperationStorage.SaveOrder(uow, _orderData);
-            var operationEntity = OperationStorage.SaveOperation(uow, operationData);
+            var orderEntity = await OperationStorage.SaveOrder(uow, _orderData);
+            var operationEntity = await OperationStorage.SaveOperation(uow, operationData);
 
             operationEntity.Order = orderEntity;
 
-            uow.SaveChanges();
+            await uow.SaveChangesAsync();
 
             return operationEntity.Id;
         }
@@ -295,16 +298,16 @@ namespace Moryx.Orders.Management.Tests
         /// <summary>
         /// Reloads the operation with the given id from the database
         /// </summary>
-        private IOperationData ReloadFromDatabase(long operationId, bool replaceScrap)
+        private async Task<IOperationData> ReloadFromDatabase(long operationId, bool replaceScrap)
         {
             var operationData = GetOperationDataInstance(replaceScrap);
 
             using var uow = _orderModel.Create();
 
-            var operationEntity = uow.GetRepository<IOperationEntityRepository>()
-                .GetByKey(operationId);
+            var operationEntity = await uow.GetRepository<IOperationEntityRepository>()
+                .GetByKeyAsync(operationId);
 
-            operationData.Initialize(operationEntity, _orderData);
+            await operationData.Initialize(operationEntity, _orderData);
 
             return operationData;
         }

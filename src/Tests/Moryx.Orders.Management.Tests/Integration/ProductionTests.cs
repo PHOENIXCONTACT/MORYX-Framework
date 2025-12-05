@@ -222,7 +222,7 @@ namespace Moryx.Orders.Management.Tests
 
             // Act
             // We begin the operation with the full amount
-            operationData.Adjust(amount, _user);
+            await operationData.Adjust(amount, _user);
 
             // Assert
             // A job should be dispatched
@@ -258,7 +258,7 @@ namespace Moryx.Orders.Management.Tests
 
             // Act
             _operationDataPool.OperationUpdated += completedCallback;
-            operationData.Report(new OperationReport(ConfirmationType.Final, amount, 0, _user));
+            await operationData.Report(new OperationReport(ConfirmationType.Final, amount, 0, _user));
             _operationDataPool.OperationUpdated -= completedCallback;
 
             // Assert

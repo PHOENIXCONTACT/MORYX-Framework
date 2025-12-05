@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace Moryx.Orders.Management.Tests
@@ -10,15 +11,15 @@ namespace Moryx.Orders.Management.Tests
     public class OperationDataAdviceTests : OperationDataTestBase
     {
         [Test(Description = "An advice should be possible after a successful creation until it is completed")]
-        public void AdviceShouldBePossible()
+        public async Task AdviceShouldBePossible()
         {
             // Arrange
-            var ready = GetReadyOperation(1, false, 0, 0);
-            var running = GetRunningOperation(1, false, 0, 0);
-            var interrupting = GetInterruptingOperation(1, false, 0, 0);
-            var interrupted = GetInterruptedOperation(1, false, 0, 0);
-            var amountReached = GetAmountReachedOperation(1, false, 0, 0);
-            var completed = GetCompletedOperation(1, false, 0, 0);
+            var ready = await GetReadyOperation(1, false, 0, 0);
+            var running = await GetRunningOperation(1, false, 0, 0);
+            var interrupting = await GetInterruptingOperation(1, false, 0, 0);
+            var interrupted = await GetInterruptedOperation(1, false, 0, 0);
+            var amountReached = await GetAmountReachedOperation(1, false, 0, 0);
+            var completed = await GetCompletedOperation(1, false, 0, 0);
 
             // Assert
             Assert.That(ready.State.CanAdvice);
@@ -30,10 +31,10 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [TestCase(Description = "There should be an event to inform about a performed advice ")]
-        public void ShouldRaiseAnEventAfterAnAdvice()
+        public async Task ShouldRaiseAnEventAfterAnAdvice()
         {
             // Arrange
-            var operationData = GetReadyOperation(10, false, 0, 0);
+            var operationData = await GetReadyOperation(10, false, 0, 0);
             var advice = new OrderAdvice("Hosentasche", 5);
             var adviced = false;
 
@@ -43,7 +44,7 @@ namespace Moryx.Orders.Management.Tests
             };
 
             // Act
-            operationData.Advice(advice);
+            await operationData.Advice(advice);
 
             // Assert
             Assert.That(adviced, "There should be an event to inform about the advice");
@@ -51,10 +52,10 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "An advice with a negative amount should not be possible")]
-        public void ShouldThrowExceptionForNegativeAmountToAdvice()
+        public async Task ShouldThrowExceptionForNegativeAmountToAdvice()
         {
             // Arrange
-            var operationData = GetRunningOperation(10, false, 0, 0);
+            var operationData = await GetRunningOperation(10, false, 0, 0);
             var advice = new OrderAdvice("Kapuze", -1);
 
             // Act & Assert
