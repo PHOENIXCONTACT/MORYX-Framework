@@ -87,7 +87,7 @@ namespace Moryx.Runtime.Modules
                 _stateLockSemaphore.Release();
             }
         }
-        async Task IServerModuleStateContext.Initialize()
+        async Task IServerModuleStateContext.InitializeAsync()
         {
             // Activate logging
             var logger = new ModuleLogger(GetType().Namespace, LoggerFactory, Notifications.AddFromLogStream);
@@ -165,7 +165,7 @@ namespace Moryx.Runtime.Modules
             }
         }
 
-        async Task IServerModuleStateContext.Stop()
+        async Task IServerModuleStateContext.StopAsync()
         {
             Logger.Log(LogLevel.Information, "{0} is stopping...", Name);
 

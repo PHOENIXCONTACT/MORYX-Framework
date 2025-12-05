@@ -14,7 +14,7 @@ namespace Moryx.Runtime.Modules
         {
             try
             {
-                await Context.Stop();
+                await Context.StopAsync();
             }
             catch (Exception ex)
             {

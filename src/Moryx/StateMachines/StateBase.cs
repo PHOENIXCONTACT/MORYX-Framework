@@ -76,8 +76,7 @@ namespace Moryx.StateMachines
         }
 
         /// <summary>
-        /// Create a state machine of the given base type and will set it on the given context
-        /// Returns the initial state after initialization.
+        /// Create a state machine of the given base type. Returns the initial state after initialization.
         /// </summary>
         protected static StateBase CreateMapAndGetInitial(Type stateBaseType, IStateContext context, int? initialKey)
         {

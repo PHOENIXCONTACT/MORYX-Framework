@@ -15,7 +15,7 @@ namespace Moryx.Runtime.Modules
         {
             try
             {
-                await Context.Initialize();
+                await Context.InitializeAsync();
                 await NextStateAsync(StateReady);
             }
             catch (Exception ex)
