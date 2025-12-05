@@ -136,7 +136,7 @@ The API of `IResourceInitializer` was adjusted
 - `Initialize` is now returning async task
 - Introduced `ResourceInitializerResult` object for extensibility and option to save
 - Its now possible to execute initializers from the facade
-- The initializers are registered transient by default.`
+- The initializers are registered transient by default.
 
 ## Modules-Products
 
