@@ -69,7 +69,7 @@ namespace Moryx.Orders.Management.Assignment
         }
 
         /// <inheritdoc />
-        public virtual bool ValidateCreationContext(OrderCreationContext orderContext)
+        public virtual Task<bool> ValidateCreationContext(OrderCreationContext orderContext)
         {
             foreach (var operation in orderContext.Operations)
             {
@@ -77,10 +77,10 @@ namespace Moryx.Orders.Management.Assignment
                                        ValidateOperationAmount(operation.TotalAmount);
 
                 if (validationResult == false)
-                    return false;
+                    return Task.FromResult(false);
             }
 
-            return true;
+            return Task.FromResult(true);
         }
 
         /// <summary>

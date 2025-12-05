@@ -30,11 +30,14 @@ namespace Moryx.Orders.Management
 
         private readonly IList<IOperationData> _operations = new List<IOperationData>();
         private readonly ReaderWriterLockSlim _lock = new();
+        private OperationSavingContext _savingContext;
 
         #endregion
 
         public async Task StartAsync()
         {
+            _savingContext = new OperationSavingContext(UnitOfWorkFactory);
+
             using var uow = UnitOfWorkFactory.Create();
 
             var operationRepo = uow.GetRepository<IOperationEntityRepository>();
@@ -50,7 +53,7 @@ namespace Moryx.Orders.Management
             _lock.ExitReadLock();
 
             foreach (var operationData in operations)
-                operationData.Resume();
+                await operationData.Resume();
         }
 
         public Task StopAsync()
@@ -61,6 +64,8 @@ namespace Moryx.Orders.Management
             _operations.Clear();
 
             _lock.ExitWriteLock();
+
+            _savingContext = null;
 
             return Task.CompletedTask;
         }
@@ -199,8 +204,8 @@ namespace Moryx.Orders.Management
                 return existingOperation;
 
             // Create new operation
-            var operationData = OperationFactory.Create();
-            operationData.Initialize(context, orderData, source);
+            var operationData = OperationFactory.Create(_savingContext);
+            await operationData.Initialize(context, orderData, source);
 
             AttachToOperationEvents(operationData);
 
@@ -209,7 +214,17 @@ namespace Moryx.Orders.Management
             _lock.ExitWriteLock();
 
             // Decouple creation
-            _ = Task.Run(operationData.Assign);
+            _ = Task.Run(() =>
+            {
+                try
+                {
+                    operationData.Assign();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e, "Error during assigning of operation {operationIdentifier}", operationData.Identifier);
+                }
+            });
 
             return operationData;
         }
@@ -219,8 +234,8 @@ namespace Moryx.Orders.Management
             var orderData = GetOrderByNumber(entity.Order.Number) ??
                                     OperationStorage.LoadOrder(entity.Order);
 
-            var operationData = OperationFactory.Create();
-            operationData.Initialize(entity, orderData);
+            var operationData = OperationFactory.Create(_savingContext);
+            await operationData.Initialize(entity, orderData);
 
             await operationData.Restore();
 
@@ -286,37 +301,6 @@ namespace Moryx.Orders.Management
 
         private void OnOperationUpdated(object sender, OperationEventArgs eventArgs)
         {
-            var operationData = (IOperationData)sender;
-
-            // Only save the operation of the classification is more than just ready
-            // Initial or ready operations have not to be stored because they can be created again any time from the ERP system
-            if (operationData.State.Classification < OperationStateClassification.Ready)
-            {
-                OperationUpdated?.Invoke(this, eventArgs);
-                return;
-            }
-
-            _lock.EnterWriteLock();
-            try
-            {
-                using var uow = UnitOfWorkFactory.Create();
-
-                var orderData = operationData.OrderData;
-                var orderId = ((IPersistentObject)orderData).Id;
-                var orderEntity = orderId == 0
-                    ? OperationStorage.SaveOrder(uow, orderData)
-                    : uow.GetRepository<IOrderEntityRepository>().GetByKey(orderId);
-
-                var operationEntity = OperationStorage.SaveOperation(uow, operationData);
-                operationEntity.Order = orderEntity;
-
-                uow.SaveChanges();
-            }
-            finally
-            {
-                _lock.ExitWriteLock();
-            }
-
             OperationUpdated?.Invoke(this, eventArgs);
         }
 
@@ -335,13 +319,6 @@ namespace Moryx.Orders.Management
             operationData.OrderData.RemoveOperation(operationData);
 
             _lock.ExitWriteLock();
-
-            // Mark deleted in database
-            using (var uow = UnitOfWorkFactory.Create())
-            {
-                OperationStorage.RemoveOperation(uow, operationData);
-                uow.SaveChanges();
-            }
 
             OperationAborted?.Invoke(this, eventArgs);
         }
@@ -376,5 +353,7 @@ namespace Moryx.Orders.Management
         public event EventHandler<OperationEventArgs> OperationUpdated;
 
         #endregion
+
+
     }
 }

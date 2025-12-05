@@ -18,6 +18,6 @@ namespace Moryx.Orders.Assignment
         /// <summary>
         /// Validates the given creation context
         /// </summary>
-        bool ValidateCreationContext(OrderCreationContext orderContext);
+        Task<bool> ValidateCreationContext(OrderCreationContext orderContext);
     }
 }

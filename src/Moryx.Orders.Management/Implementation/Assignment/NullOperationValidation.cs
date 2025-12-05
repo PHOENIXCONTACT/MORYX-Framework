@@ -24,9 +24,9 @@ namespace Moryx.Orders.Management.Assignment
             return Task.CompletedTask;
         }
 
-        public bool ValidateCreationContext(OrderCreationContext orderContext)
+        public Task<bool> ValidateCreationContext(OrderCreationContext orderContext)
         {
-            return true;
+            return Task.FromResult(true);
         }
 
         public Task<bool> Validate(Operation operation, IOperationLogger operationLogger)

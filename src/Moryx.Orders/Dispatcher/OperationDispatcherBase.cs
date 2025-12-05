@@ -77,7 +77,6 @@ namespace Moryx.Orders.Dispatcher
         {
             var newJobs = JobManagement.Add(context);
             JobsDispatched?.Invoke(this, new JobDispatchedEventArgs(operation, newJobs));
-
         }
 
         /// <inheritdoc />

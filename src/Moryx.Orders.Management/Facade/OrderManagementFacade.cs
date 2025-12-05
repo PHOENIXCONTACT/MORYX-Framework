@@ -134,7 +134,7 @@ namespace Moryx.Orders.Management
             return filtered.Select(o => o.Operation).ToArray();
         }
 
-        public async Task<Operation> GetOperationAsync(string orderNumber, string operationNumber)
+        public async Task<Operation> GetOperation(string orderNumber, string operationNumber)
         {
             ValidateHealthState();
 
@@ -142,7 +142,7 @@ namespace Moryx.Orders.Management
             return operationData?.Operation;
         }
 
-        public async Task<Operation> GetOperationAsync(Guid identifier)
+        public async Task<Operation> GetOperation(Guid identifier)
         {
             ValidateHealthState();
 
@@ -150,12 +150,12 @@ namespace Moryx.Orders.Management
             return operationData?.Operation;
         }
 
-        public Task<Operation> AddOperationAsync(OperationCreationContext context)
+        public Task<Operation> AddOperation(OperationCreationContext context)
         {
-            return AddOperationAsync(context, new NullOperationSource());
+            return AddOperation(context, new NullOperationSource());
         }
 
-        public async Task<Operation> AddOperationAsync(OperationCreationContext context, IOperationSource source)
+        public async Task<Operation> AddOperation(OperationCreationContext context, IOperationSource source)
         {
             ValidateHealthState();
 
@@ -189,36 +189,36 @@ namespace Moryx.Orders.Management
             return OperationManager.GetBeginContext(operationData);
         }
 
-        public void BeginOperation(Operation operation, int amount)
+        public Task BeginOperation(Operation operation, int amount)
         {
-            BeginOperation(operation, amount, UserManagement.DefaultUser);
+            return BeginOperation(operation, amount, UserManagement.DefaultUser);
         }
 
-        public void BeginOperation(Operation operation, int amount, User user)
-        {
-            ValidateHealthState();
-
-            var operationData = GetOperationDataSave(operation);
-            OperationManager.Adjust(operationData, user, amount);
-        }
-
-        public void AbortOperation(Operation operation)
+        public Task BeginOperation(Operation operation, int amount, User user)
         {
             ValidateHealthState();
 
             var operationData = GetOperationDataSave(operation);
-            OperationManager.Abort(operationData);
+            return OperationManager.Adjust(operationData, user, amount);
         }
 
-        public void SetOperationSortOrder(int sortOrder, Operation operation)
+        public Task AbortOperation(Operation operation)
         {
             ValidateHealthState();
 
             var operationData = GetOperationDataSave(operation);
-            operationData.SortOrder = sortOrder;
+            return OperationManager.Abort(operationData);
         }
 
-        public void UpdateSource(IOperationSource source, Operation operation)
+        public Task SetOperationSortOrder(int sortOrder, Operation operation)
+        {
+            ValidateHealthState();
+
+            var operationData = GetOperationDataSave(operation);
+            return operationData.SetSortOrder(sortOrder);
+        }
+
+        public Task UpdateSource(IOperationSource source, Operation operation)
         {
             ValidateHealthState();
 
@@ -226,7 +226,7 @@ namespace Moryx.Orders.Management
             if (operationData.Operation.Source.Type != source.Type)
                 throw new InvalidOperationException("Type of the operation source cannot be changed");
 
-            operationData.UpdateSource(source);
+            return operationData.UpdateSource(source);
         }
 
         public ReportContext GetReportContext(Operation operation)
@@ -238,7 +238,7 @@ namespace Moryx.Orders.Management
             return reportContext;
         }
 
-        public void ReportOperation(Operation operation, OperationReport report)
+        public Task ReportOperation(Operation operation, OperationReport report)
         {
             ValidateHealthState();
 
@@ -246,7 +246,7 @@ namespace Moryx.Orders.Management
             report.User ??= UserManagement.DefaultUser;
 
             var operationData = GetOperationDataSave(operation);
-            OperationManager.Report(operationData, report);
+            return OperationManager.Report(operationData, report);
         }
 
         public ReportContext GetInterruptContext(Operation operation)
@@ -257,7 +257,7 @@ namespace Moryx.Orders.Management
             return OperationManager.GetInterruptContext(operationData);
         }
 
-        public void InterruptOperation(Operation operation, User user)
+        public Task InterruptOperation(Operation operation, User user)
         {
             ValidateHealthState();
 
@@ -265,7 +265,7 @@ namespace Moryx.Orders.Management
             user ??= UserManagement.DefaultUser;
 
             var operationData = GetOperationDataSave(operation);
-            OperationManager.Interrupt(operationData, user);
+            return OperationManager.Interrupt(operationData, user);
         }
 
         private IOperationData GetOperationDataSave(Operation operation)
@@ -277,11 +277,11 @@ namespace Moryx.Orders.Management
             return operationData;
         }
 
-        public void Reload(Operation operation)
+        public Task Reload(Operation operation)
         {
             ValidateHealthState();
 
-            OperationManager.Assign(OperationDataPool.Get(operation));
+            return OperationManager.Assign(OperationDataPool.Get(operation));
         }
 
         public AdviceContext GetAdviceContext(Operation operation)

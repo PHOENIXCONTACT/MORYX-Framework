@@ -31,8 +31,10 @@ namespace Moryx.Orders.Endpoints
 
         private static JsonSerializerSettings CreateSerializerSettings()
         {
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            var serializerSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
             serializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
             return serializerSettings;
         }
@@ -49,7 +51,7 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanView)]
         public ActionResult<OperationModel[]> GetOperations(string orderNumber = null, string operationNumber = null)
         {
-            return _orderManagement.GetOperations(o => true)
+            return _orderManagement.GetOperations(_ => true)
                 .Where(o => orderNumber is null || o.Order.Number == orderNumber)
                 .Where(o => operationNumber is null || o.Number == operationNumber)
                 .Select(Converter.ToModel).ToArray();
@@ -178,7 +180,7 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanView)]
         public async Task<ActionResult<OperationModel>> GetOperation(Guid guid)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
@@ -193,7 +195,7 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanViewDocuments)]
         public async Task<ActionResult<DocumentModel[]>> GetDocuments(Guid guid)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_GetDocuments_DocumentNotFound });
 
@@ -209,7 +211,7 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanViewDocuments)]
         public async Task<IActionResult> GetDocumentStream(Guid guid, string identifier)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_GetDocuments_DocumentNotFound });
 
@@ -231,7 +233,7 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanView)]
         public async Task<ActionResult<ProductPartModel[]>> GetProductParts(Guid guid)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_GetProductParts_ProductPartsNotFound });
 
@@ -246,7 +248,7 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanBegin)]
         public async Task<ActionResult<BeginContext>> GetBeginContext(Guid guid)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
             {
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
@@ -269,7 +271,7 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanReport)]
         public async Task<ActionResult<ReportContext>> GetReportContext(Guid guid)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
@@ -288,7 +290,7 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanInterrupt)]
         public async Task<ActionResult<ReportContext>> GetInterruptContext(Guid guid)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
@@ -307,7 +309,7 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanAdvice)]
         public async Task<ActionResult<AdviceContext>> GetAdviceContext(Guid guid)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
@@ -325,7 +327,7 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanView)]
         public async Task<ActionResult<OperationLogMessageModel[]>> GetLogs(Guid guid)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
@@ -358,12 +360,12 @@ namespace Moryx.Orders.Endpoints
 
             if (sourceId == null)
             {
-                var operation = await _orderManagement.AddOperationAsync(context);
+                var operation = await _orderManagement.AddOperation(context);
                 return Converter.ToModel(operation);
             }
             else
             {
-                var operation = await _orderManagement.AddOperationAsync(context, new ClientOperationSource(sourceId));
+                var operation = await _orderManagement.AddOperation(context, new ClientOperationSource(sourceId));
                 return Converter.ToModel(operation);
             }
         }
@@ -376,17 +378,17 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanBegin)]
         public async Task<ActionResult> BeginOperation(Guid guid, BeginModel beginModel)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             if (beginModel.UserId is null)
             {
-                _orderManagement.BeginOperation(operation, beginModel.Amount);
+                await _orderManagement.BeginOperation(operation, beginModel.Amount);
             }
             else
             {
-                _orderManagement.BeginOperation(operation, beginModel.Amount, _userManagement?.GetUser(beginModel.UserId));
+                await _orderManagement.BeginOperation(operation, beginModel.Amount, _userManagement?.GetUser(beginModel.UserId));
             }
 
             return Ok();
@@ -400,11 +402,11 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanInterrupt)]
         public async Task<ActionResult> AbortOperation(Guid guid)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
-            _orderManagement.AbortOperation(operation);
+            await _orderManagement.AbortOperation(operation);
             return Ok();
         }
 
@@ -416,11 +418,11 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanReport)]
         public async Task<ActionResult> ReportOperation(Guid guid, ReportModel report)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
-            _orderManagement.ReportOperation(operation, Converter.FromModel(report, _userManagement));
+            await _orderManagement.ReportOperation(operation, Converter.FromModel(report, _userManagement));
             return Ok();
         }
 
@@ -432,13 +434,13 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanInterrupt)]
         public async Task<ActionResult> InterruptOperation(Guid guid, string userIdentifier)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
             var user = _userManagement?.GetUser(userIdentifier);
 
-            _orderManagement.InterruptOperation(operation, user);
+            await _orderManagement.InterruptOperation(operation, user);
             return Ok();
         }
 
@@ -450,7 +452,7 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanAdvice)]
         public async Task<ActionResult> AdviceOperation(Guid guid, AdviceModel advice)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
@@ -471,11 +473,11 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanManage)]
         public async Task<ActionResult> SetOperationSortOrder(Guid guid, [FromBody] int sortOrder)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
-            _orderManagement.SetOperationSortOrder(sortOrder, operation);
+            await _orderManagement.SetOperationSortOrder(sortOrder, operation);
             return Ok();
         }
 
@@ -487,11 +489,11 @@ namespace Moryx.Orders.Endpoints
         [Authorize(Policy = OrderPermissions.CanManage)]
         public async Task<ActionResult> Reload(Guid guid)
         {
-            var operation = await _orderManagement.GetOperationAsync(guid);
+            var operation = await _orderManagement.GetOperation(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
-            _orderManagement.Reload(operation);
+            await _orderManagement.Reload(operation);
             return Ok();
         }
         #endregion
