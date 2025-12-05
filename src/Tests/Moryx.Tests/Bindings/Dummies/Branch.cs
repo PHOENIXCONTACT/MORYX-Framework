@@ -6,5 +6,6 @@ namespace Moryx.Tests.Bindings
     public class Branch
     {
         public string Name { get; set; }
+        public int Value1 { get; set; }
     }
 }
