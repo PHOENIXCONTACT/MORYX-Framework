@@ -1,8 +1,10 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
+using Moryx.Logging;
 using Moryx.Orders.Dispatcher;
 using Moryx.Threading;
 
@@ -30,6 +32,11 @@ namespace Moryx.Orders.Management
         /// Operation dispatcher will be used to execute the dispatch of a job
         /// </summary>
         public IOperationDispatcher Dispatcher { get; set; }
+
+        /// <summary>
+        /// Logger for this component
+        /// </summary>
+        public IModuleLogger Logger { get; set; }
 
         /// <inheritdoc />
         public void Start()
@@ -60,7 +67,7 @@ namespace Moryx.Orders.Management
             }
             catch (Exception e)
             {
-                throw; // TODO handle exception
+                Logger.LogError(e, "Error during adding jobs to operation {operationIdentifier}.", eventArgs.Operation.Identifier);
             }
         }
 
@@ -79,7 +86,7 @@ namespace Moryx.Orders.Management
             }
             catch (Exception e)
             {
-                throw; // TODO handle exception
+                Logger.LogError(e, "Error during job progress change of job {jobId}.", job.Id);
             }
         }
 
@@ -103,7 +110,7 @@ namespace Moryx.Orders.Management
             }
             catch (Exception e)
             {
-                throw; // TODO handle exception
+                Logger.LogError(e, "Error during job state change of job {jobId}.", eventArgs.Job.Id);
             }
         }
 
