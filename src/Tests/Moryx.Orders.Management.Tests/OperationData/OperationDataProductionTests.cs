@@ -70,7 +70,7 @@ namespace Moryx.Orders.Management.Tests
             }
             else
             {
-                Assert.Throws<InvalidOperationException>(() => operationData.Adjust(10, User));
+                Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Adjust(10, User));
             }
         }
 
@@ -81,7 +81,7 @@ namespace Moryx.Orders.Management.Tests
             var operation = await GetReadyOperation(10, false, 10, 10);
 
             // Act / Assert
-            await Assert.ThatAsync(() => operation.Adjust(-1, User), Throws.InvalidOperationException);
+            Assert.ThrowsAsync<InvalidOperationException>(() => operation.Adjust(-1, User));
         }
 
         [Test(Description = "Adjust an operation in state " + nameof(InterruptedState) + "with an amount less than 0 is not allowed.")]
@@ -91,7 +91,7 @@ namespace Moryx.Orders.Management.Tests
             var operation = await GetInterruptedOperation(10, false, 10, 10);
 
             // Act / Assert
-            await Assert.ThatAsync(() => operation.Adjust(-1, User), Throws.InvalidOperationException);
+            Assert.ThrowsAsync<InvalidOperationException>(() => operation.Adjust(-1, User));
         }
 
         [Test(Description = "Adjust an operation in state " + nameof(AmountReachedState) + "with an amount less than 0 is not allowed.")]
@@ -101,7 +101,7 @@ namespace Moryx.Orders.Management.Tests
             var operation = await GetAmountReachedOperation(10, false, 10, 10);
 
             // Act / Assert
-            await Assert.ThatAsync(() => operation.Adjust(-1, User), Throws.InvalidOperationException);
+            Assert.ThrowsAsync<InvalidOperationException>(() => operation.Adjust(-1, User));
         }
 
         [Test(Description = "Adjust an operation in state " + nameof(CompletedState) + "with an amount less than 0 is not allowed.")]
@@ -111,7 +111,7 @@ namespace Moryx.Orders.Management.Tests
             var operation = await GetAmountReachedOperation(10, false, 10, 10);
 
             // Act / Assert
-            await Assert.ThatAsync(() => operation.Adjust(-1, User), Throws.InvalidOperationException);
+            Assert.ThrowsAsync<InvalidOperationException>(() => operation.Adjust(-1, User));
         }
 
         [Test(Description = "If an operation is running or interrupting the target " +
@@ -320,7 +320,7 @@ namespace Moryx.Orders.Management.Tests
 
             // Act - Assert
             Assert.That(operationData.State.CanBegin, Is.False);
-            Assert.Throws<InvalidOperationException>(() => operationData.Adjust(1, User));
+            Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Adjust(1, User));
         }
 
         [Test(Description = "Will simulate reaching the operation amount with only success parts and do not replace scrap.")]
@@ -479,7 +479,7 @@ namespace Moryx.Orders.Management.Tests
 
             // Assert
             Assert.That(operationData.State.CanInterrupt, Is.False);
-            Assert.Throws<InvalidOperationException>(() => operationData.Interrupt(User));
+            Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Interrupt(User));
         }
     }
 }

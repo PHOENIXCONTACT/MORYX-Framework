@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Runtime.CompilerServices;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
@@ -252,13 +253,19 @@ namespace Moryx.Orders.Management
             operationRepo.Remove(entity);
         }
 
-        private static DateTime ConvertToUtc(DateTime dateTime)
+        private static DateTime ConvertToUtc(DateTime dateTime, [CallerArgumentExpression(nameof(dateTime))]string member = "")
         {
-            if (dateTime.Kind == DateTimeKind.Utc)
-                return dateTime;
-            if (dateTime.Kind == DateTimeKind.Local)
-                return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.Local);
-            throw new ArgumentException($"Provided {nameof(DateTime)} is neither UTC nor Local Time");
+            switch (dateTime.Kind)
+            {
+                case DateTimeKind.Utc:
+                    return dateTime;
+                case DateTimeKind.Local:
+                    return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.Local);
+                case DateTimeKind.Unspecified:
+                    return dateTime;
+                default:
+                    throw new ArgumentOutOfRangeException($"Provided {nameof(DateTime)} for {member} is neither UTC nor Local Time");
+            }
         }
     }
 }

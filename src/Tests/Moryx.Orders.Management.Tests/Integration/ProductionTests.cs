@@ -149,11 +149,19 @@ namespace Moryx.Orders.Management.Tests
             {
                 AssignStepFactory = stepFactory.Object,
                 LoggerProvider = new OperationLoggerProvider()
+                {
+                    Logger = logger
+                }
             };
 
             var notificationAdapter = new Mock<INotificationAdapter>();
 
-            var operationFactory = new OperationFactoryMock(logger, jobHandler, assignment, notificationAdapter.Object);
+            var moduleConfig = new ModuleConfig()
+            {
+                DisableAmountReachedNotification = true
+            };
+
+            var operationFactory = new OperationFactoryMock(logger, moduleConfig, jobHandler, assignment, notificationAdapter.Object);
             _operationDataPool.OperationFactory = operationFactory;
 
             await productAssignment.InitializeAsync(new ProductAssignmentConfig());
@@ -192,7 +200,7 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Runs a full production of a operation. At the end, a final report will be executed.")]
-        [Ignore("This test takes very long should be fixed!")]
+        //[Ignore("This test takes very long should be fixed!")]
         public async Task SimpleCompletedProduction()
         {
             const int amount = 10;

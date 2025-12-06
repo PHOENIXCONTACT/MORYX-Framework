@@ -35,10 +35,13 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Validate that null is a valid parameter when calling the Validation of CreationContext.")]
-        public void ValidateCreationContextNull()
+        public async Task ValidateCreationContextNull()
         {
-            //Assert
-            Assert.That(_nullOperationValidation.ValidateCreationContext(null), "There should be a successful validation");
+            // Act
+            var result = await _nullOperationValidation.ValidateCreationContext(null);
+
+            // Assert
+            Assert.That(result, "There should be a successful validation");
         }
     }
 }

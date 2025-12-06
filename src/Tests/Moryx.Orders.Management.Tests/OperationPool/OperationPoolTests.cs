@@ -22,7 +22,7 @@ namespace Moryx.Orders.Management.Tests
     {
         private IUnitOfWorkFactory<OrdersContext> _unitOfWorkFactory;
         private OperationDataPool _operationDataPool;
-        private IModuleLogger _moduleLogger = new ModuleLogger("Dummy", new NullLoggerFactory());
+        private readonly IModuleLogger _moduleLogger = new ModuleLogger("Dummy", new NullLoggerFactory());
         private Mock<IOperationData> _operationDataMock;
         private Mock<IOperationFactory> _operationFactoryMock;
         private Mock<IOperationAssignment> _operationAssignmentMock;
@@ -37,7 +37,8 @@ namespace Moryx.Orders.Management.Tests
             _operationDataMock = SetupOperationDataMock();
 
             _operationFactoryMock = new Mock<IOperationFactory>();
-            _operationFactoryMock.Setup(opf => opf.Create()).Returns(() => _operationDataMock.Object);
+            _operationFactoryMock.Setup(opf => opf.Create(It.IsAny<IOperationSavingContext>()))
+                .Returns(() => _operationDataMock.Object);
 
             _operationDataPool = new OperationDataPool
             {
@@ -52,19 +53,18 @@ namespace Moryx.Orders.Management.Tests
             _countStrategyMock = new Mock<ICountStrategy>();
         }
 
-        private Mock<IOperationData> SetupOperationDataMock()
+        private static Mock<IOperationData> SetupOperationDataMock()
         {
             var mock = new Mock<IOperationData>();
             mock.SetupAllProperties();
             mock.Setup(opd => opd.Initialize(It.IsAny<OperationCreationContext>(), It.IsAny<OrderData>(), It.IsAny<IOperationSource>()))
-                .Returns<OperationCreationContext, OrderData, IOperationSource>((context, _, _) =>
+                .ReturnsAsync((OperationCreationContext context, OrderData _, IOperationSource _) =>
                 {
-
                     mock.SetupGet(od => od.Number).Returns(context.Number);
                     return mock.Object;
                 });
             mock.Setup(opd => opd.Initialize(It.IsAny<OperationEntity>(), It.IsAny<OrderData>()))
-                .Returns(() => mock.Object);
+                .ReturnsAsync(() => mock.Object);
             return mock;
         }
 
@@ -74,7 +74,7 @@ namespace Moryx.Orders.Management.Tests
             // Arrange
             using var uow = _unitOfWorkFactory.Create();
             var orderEntity = uow.GetRepository<IOrderEntityRepository>().Create("314725836");
-            var operationEntity = uow.GetRepository<IOperationEntityRepository>().Create();
+            var operationEntity = await uow.GetRepository<IOperationEntityRepository>().CreateAsync();
             operationEntity.Order = orderEntity;
             operationEntity.Number = "0010";
             operationEntity.ProductId = 1;
@@ -155,7 +155,7 @@ namespace Moryx.Orders.Management.Tests
             operationEntity.Source = "{ \"$type\":\"Moryx.Orders.NullOperationSource, Moryx.Orders\" }";
             await uow.SaveChangesAsync();
 
-            var operationData = new OperationData
+            var operationData = new OperationData(new NullOperationSavingContext())
             {
                 OperationAssignment = _operationAssignmentMock.Object,
                 JobHandler = _jobHandlerMock.Object,
@@ -163,7 +163,8 @@ namespace Moryx.Orders.Management.Tests
                 CountStrategy = _countStrategyMock.Object,
             };
 
-            _operationFactoryMock.Setup(opf => opf.Create()).Returns(() => operationData);
+            _operationFactoryMock.Setup(opf => opf.Create(It.IsAny<IOperationSavingContext>()))
+                .Returns(() => operationData);
 
             // Act
             await _operationDataPool.StartAsync();
@@ -280,9 +281,9 @@ namespace Moryx.Orders.Management.Tests
             OperationDataPool operationDataPool, bool startOperationPool)
         {
             var context = CreateOperationContext(orderNumber, operationNumber);
-            var mock = new Mock<IOperationData>();
-            mock = SetupOperationDataMock();
-            _operationFactoryMock.Setup(opf => opf.Create()).Returns(mock.Object);
+            var mock = SetupOperationDataMock();
+            _operationFactoryMock.Setup(opf => opf.Create(It.IsAny<IOperationSavingContext>()))
+                .Returns(mock.Object);
 
             if (startOperationPool)
                 await operationDataPool.StartAsync();
