@@ -10,8 +10,5 @@ namespace Moryx.Products.Management.Model;
 /// </summary>
 public interface IWorkplanStepRepository : IRepository<WorkplanStepEntity>
 {
-    /// <summary>
-    /// Creates instance with all not nullable properties prefilled
-    /// </summary>
-    WorkplanStepEntity Create(long stepId, string name, string assembly, string nameSpace, string classname, int positionX, int positionY);
+
 }

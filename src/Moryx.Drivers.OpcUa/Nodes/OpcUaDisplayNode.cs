@@ -25,7 +25,7 @@ internal class OpcUaDisplayNode
     /// <summary>
     /// Id of the Opc Ua Node
     /// </summary>
-    public string NodeId => _nodeId == null ? string.Empty : _nodeId.Format(CultureInfo.InvariantCulture);
+    public string NodeId => _nodeId == null ? string.Empty : _nodeId.ToString();
 
     /// <summary>
     /// Display Name of the Opc Ua Node

@@ -12,11 +12,7 @@ public class WorkplanStepEntity : EntityBase
 
     public virtual string Name { get; set; }
 
-    public virtual string Assembly { get; set; }
-
-    public virtual string NameSpace { get; set; }
-
-    public virtual string Classname { get; set; }
+    public virtual string TypeName { get; set; }
 
     public virtual string Parameters { get; set; }
 

@@ -6,7 +6,7 @@ using Moryx.StateMachines;
 namespace Moryx.AbstractionLayer.Drivers;
 
 /// <summary>
-/// Base class for synchronous driver states with typed context object
+/// Base class for asynchronous driver states with typed context object
 /// </summary>
 /// <typeparam name="TContext">Type of the driver context</typeparam>
 public abstract class AsyncDriverState<TContext> : AsyncStateBase<TContext>, IDriverState
@@ -38,7 +38,7 @@ public abstract class AsyncDriverState<TContext> : AsyncStateBase<TContext>, IDr
     /// <summary>
     /// State transition to disconnect
     /// </summary>
-    public virtual Task Disconnect()
+    public virtual Task DisconnectAsync()
     {
         return InvalidStateAsync();
     }

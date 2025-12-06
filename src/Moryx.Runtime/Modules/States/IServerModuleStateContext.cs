@@ -14,7 +14,7 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Initialize the module
         /// </summary>
-        Task Initialize();
+        Task InitializeAsync();
 
         /// <summary>
         /// Destructs an initialized module
@@ -34,7 +34,7 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Stop the module
         /// </summary>
-        Task Stop();
+        Task StopAsync();
 
         /// <summary>
         /// Report a failure

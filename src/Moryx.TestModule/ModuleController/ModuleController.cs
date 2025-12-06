@@ -42,16 +42,15 @@ namespace Moryx.TestModule
         }
 
         /// <inheritdoc />
-        protected override Task OnStartAsync()
+        protected override async Task OnStartAsync()
         {
-            Thread.Sleep(Config.SleepTime); // Just for system testing.
+            await Task.Delay(Config.SleepTime); // Just for system testing.
 
             var plugin = Container.Resolve<ITestPlugin>("TestPlugin");
             plugin.Start();
 
             // Activate facades
             ActivateFacade(_testModule);
-            return Task.CompletedTask;
         }
 
         /// <inheritdoc />

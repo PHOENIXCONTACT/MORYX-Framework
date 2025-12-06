@@ -4,7 +4,7 @@
 using System.Reflection;
 using Moryx.Configuration;
 
-namespace Moryx.Tests.Configuration.ValueProvider
+namespace Moryx.Runtime.Kernel.Tests.Configuration.ValueProvider
 {
     public class NoStringValueProviderFilter : IValueProviderFilter
     {

@@ -3,12 +3,12 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using System.Text;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Moryx.Drivers.Mqtt.Properties;
+using System.Text.Json;
+using System.Buffers;
+using System.Text.Json.Serialization;
 
 namespace Moryx.Drivers.Mqtt.MqttTopics
 {
@@ -36,43 +36,47 @@ namespace Moryx.Drivers.Mqtt.MqttTopics
         [Display(Name = nameof(Strings.MqttTopicJson_Format), ResourceType = typeof(Strings))]
         public JsonFormat Format { get; set; }
 
+        
+        /// <summary>
+        /// Controls if enums should be serialized as strings or as ints
+        /// </summary>
+        [DataMember, EntrySerialize]
+        [Display(
+            Name = nameof(Strings.MqttTopicJson_EnumsAsStrings),
+            Description = nameof(Strings.MqttTopicJson_EnumsAsStrings_Description),
+            ResourceType = typeof(Strings)
+        )]
+        public bool EnumsAsStrings { get; set; }
+
         /// <inheritdoc />
-        protected internal override byte[] Serialize(object payload)
+        protected override byte[] Serialize(object payload)
         {
-            var json = JsonConvert.SerializeObject(payload, GetSettings());
-            return Encoding.UTF8.GetBytes(json);
+            var options = GetSystemTextJsonOptions();
+            return JsonSerializer.SerializeToUtf8Bytes(payload, options);
         }
 
         /// <inheritdoc />
-        protected internal override object Deserialize(byte[] messageAsBytes)
+        protected override object Deserialize(ReadOnlySequence<byte> payload)
         {
-            var msg = Constructor();
-            var json = Encoding.UTF8.GetString(messageAsBytes, 0, messageAsBytes.Length);
-            JsonConvert.PopulateObject(json, msg, GetSettings());
-            return msg;
+            var options = GetSystemTextJsonOptions();
+            return JsonDocument.Parse(payload).Deserialize(MessageType, options);
         }
 
-        private JsonSerializerSettings GetSettings()
+        private JsonSerializerOptions GetSystemTextJsonOptions()
         {
-            var settings = new JsonSerializerSettings
+            var options = new JsonSerializerOptions()
             {
-                NullValueHandling = NullValueHandling.Ignore,
+                PropertyNamingPolicy = Format == JsonFormat.CamelCase ? JsonNamingPolicy.CamelCase : null,
             };
-            if (Format == JsonFormat.camelCase)
-                settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            options.Converters.Clear();
+            if (EnumsAsStrings)
+            {
+                options.Converters.Add(new JsonStringEnumConverter());
+            }
 
-            return settings;
+            return options;
         }
 
-    }
-
-    /// <summary>
-    /// Configuration value for the JSON format
-    /// </summary>
-    public enum JsonFormat
-    {
-        PascalCase = 0,
-        camelCase = 1
     }
 }
 

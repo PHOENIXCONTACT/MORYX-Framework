@@ -14,7 +14,7 @@ Your new ServerModule-Project gets at least one folder: "ModuleController". The 
 
 For implementation details click on the file name:
 - [ServerModule](#servermodule)
-  - [The ModuleController.cs](#the-modulecontrollercs)
+  - [The ModuleController.cs - File](#the-modulecontrollercs)
   - [The ModuleConfig.cs - File](#the-moduleconfigcs---file)
   - [The ModuleConsole.cs - File](#the-moduleconsolecs---file)
 
@@ -27,7 +27,7 @@ The ModuleController.cs-File is the key point of your module. Here, all the comp
 4. Stop the started components when the ServerModule is stopped
 5. Export and Import facades -> this topic of its own, take a look into [this guide](Facades.md)
 
-Now we will look at examples for these points. But first create your your class implementing `ServerModuleBase`. If your ServerModule exports facades, use `ServerModuleFacadeControllerBase` instead and specifiy those facades using `IFacadeContainer<TFacade>`.
+Now we will look at examples for these points. But first create your your class implementing `ServerModuleBase`. If your ServerModule exports facades, use `ServerModuleFacadeControllerBase` instead and specify those facades using `IFacadeContainer<TFacade>`.
 
 For the following properties and attributes reference these files:
 
@@ -38,8 +38,6 @@ For the following properties and attributes reference these files:
 [Description("Example description")]
 public class ModuleController : ServerModuleBase<ModuleConfig>
 {
-    internal const string ModuleName = ;
-
     /// <summary>
     /// Name of this module
     /// </summary>
@@ -74,7 +72,7 @@ public ModuleController(IModuleContainerFactory containerFactory, IConfigManager
 }
 ````
 
-Now we will register the global components to the internal container of our module. We will also load the components of this module. Components can be for example Plugins or Strategies. We do this in the _OnInitialize_ method we must override form our base class:
+Now we will register the global components to the internal container of our module. We will also load the components of this module. Components can be for example Plugins or Strategies. We do this in the `OnInitializeAsync` method we must override form our base class:
 
 ````cs
 /// <summary>
@@ -93,7 +91,7 @@ protected override Task OnInitializeAsync()
 }
 ````
 
-After the initialization we have to start the custom plugins of our ServerModule activate facades. We do so in the derived _OnStartAsync_ method.
+After the initialization we have to start the custom plugins of our ServerModule activate facades. We do so in the derived `OnStartAsync` method.
 
 ````cs
 protected override async Task OnStartAsync()
@@ -107,7 +105,7 @@ protected override async Task OnStartAsync()
 }
 ````
 
-Even the greatest ServerModule must be stopped from time to time. We must override the _OnStopAsync_ method to clean up our ServerModule and we must put it in a state in which it can be reinitialized. This includes for example to dispose and deactivate facades and plugins:
+Even the greatest ServerModule must be stopped from time to time. We must override the `OnStopAsync` method to clean up our ServerModule and we must put it in a state in which it can be reinitialized. This includes for example to dispose and deactivate facades and plugins:
 
 ````cs
 /// <summary>
@@ -126,14 +124,14 @@ protected override async Task OnStopAsync()
 
 ## The ModuleConfig.cs - File
 
-In the _ModuleConfig.cs_-file you can define the data fields needed to configure your ServerModule. For each file a xml configuration file will be automatically during the *build* process. Here you can set the configuration values for your ServerModule manually. You can also use the CommandCenter website to edit the values.
+In the `ModuleConfig.cs`-file you can define the data fields needed to configure your ServerModule. Here you can set the configuration values for your ServerModule manually. You can also use the CommandCenter website to edit the values.
 
 The following points must be noted:
 
-* Your ModuleConfig class must derive from ConfigBase.cs
-* You must add the _DataContract_ attribute to your class
-* You must add the _DataMember_ attribute for each of the data fields
-* (Beyond this you can use the _DefaultValue_ attribute to add a default value to your data fields)
+* Your `ModuleConfig` class must derive from `ConfigBase`
+* You must add the `DataContract` attribute to your class
+* You must add the `DataMember` attribute for each of the data fields
+* (Beyond this you can use the `DefaultValueAttribute` to add a default value to your data fields)
 
 The following code is an example for a ModuleConfig.cs:
 
@@ -141,34 +139,19 @@ The following code is an example for a ModuleConfig.cs:
 [DataContract]
 public class ModuleConfig : ConfigBase
 {
-    public ModuleConfig()
-    {
-        ExecutionWebHostConfig = new HostConfig
-        {
-            Endpoint = "ExecutionWeb",
-            BindingType = ServiceBindingType.WebHttp,
-            MetadataEnabled = true,
-            HelpEnabled = true
-        };
-    }
-
     [DataMember]
     [DefaultValue(42)]
     public int InstanceCount { get; set; }
 
     [DataMember]
     [DefaultValue("Hello World")]
-    public string WcfMessage { get; set; }
-
-    [DataMember]
-    public HostConfig ExecutionWebHostConfig { get; set; }
-
+    public string SomeString { get; set; }
 }
 ````
 
 ## The ModuleConsole.cs - File
 
-The module console provides a way to execute methods using the maintenance. It can be used for initial testing, debugging or 'admin access'-features. For this feature you need to create a `ModuleConsole.cs` file in your _ModuleController_ folder, implement `IServerModuleConsole` and add methods using the Attribute `EntrySerialize` in order to see them on the UI. Although the interface is empty, it's needed for the export.
+The module console provides a way to execute methods using the maintenance. It can be used for initial testing, debugging or 'admin access'-features. For this feature you need to create a `ModuleConsole.cs` file in your `ModuleController` folder, implement `IServerModuleConsole` and add methods using the `EntrySerializeAttribute` in order to see them on the UI. Although the interface is empty, it's needed for the export.
 
 ````C#
 [ServerModuleConsole]
@@ -179,7 +162,5 @@ internal class ModuleConsole : IServerModuleConsole
     {
         ...
     }
-
-    ...
 }
 ````

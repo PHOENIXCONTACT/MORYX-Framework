@@ -28,7 +28,6 @@ namespace Moryx.DependentTestModule
 
         #region State transition
 
-        // ReSharper disable RedundantOverridenMember
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
@@ -51,13 +50,12 @@ namespace Moryx.DependentTestModule
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected override Task OnStopAsync()
+        protected override async Task OnStopAsync()
         {
-            Thread.Sleep(2000); // Just for system testing.
+            await Task.Delay(2000); // Just for system testing.
 
             // Deactivate facades
             DeactivateFacade(_testModuleFacade);
-            return Task.CompletedTask;
         }
 
         #endregion

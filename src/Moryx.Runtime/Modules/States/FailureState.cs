@@ -27,7 +27,7 @@ namespace Moryx.Runtime.Modules
         {
             try
             {
-                await Context.Stop();
+                await Context.StopAsync();
             }
             catch (Exception ex)
             {
@@ -63,20 +63,9 @@ namespace Moryx.Runtime.Modules
 
         protected abstract Task OnFailure();
 
-        public override async Task Initialize()
+        public override Task Initialize()
         {
-            await NextStateAsync(StateInitializing);
-
-            try
-            {
-                await Context.Initialize();
-                await NextStateAsync(StateReady);
-            }
-            catch (Exception ex)
-            {
-                Context.ReportError(ex);
-                await NextStateAsync(StateInitializedFailure);
-            }
+            return NextStateAsync(StateInitializing);
         }
 
         public override Task Stop()

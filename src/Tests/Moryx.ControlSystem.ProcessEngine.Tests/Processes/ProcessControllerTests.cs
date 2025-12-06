@@ -265,7 +265,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             var processRepo = uow.GetRepository<IProcessEntityRepository>();
             _processEntity = processRepo.Create();
             _processEntity.Id = IdShiftGenerator.Generate(jobId, NextId);
-            _processEntity.TypeName = "testProcess";
             _processEntity.State = (int)_processData.State;
             _processEntity.JobId = jobId;
 

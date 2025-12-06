@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Globalization;
-using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Drivers;
 using Moryx.AbstractionLayer.Drivers.Message;
@@ -21,6 +20,7 @@ public class OpcUaNode : IMessageChannel
 {
     private IOpcUaDriver _driver => (IOpcUaDriver)Driver;
 
+    private const int DefaultNamespaceLength = 5;
     private readonly IModuleLogger _logger;
 
     /// <inheritdoc/>
@@ -82,12 +82,34 @@ public class OpcUaNode : IMessageChannel
         }
     }
 
+    /// <summary>
+    /// Converts a NodeId string into an expanded NodeId string that matches the OPC UA specification;
+    /// </summary>
     public static string CreateExpandedNodeId(string nodeId)
     {
-        var result = Regex.Replace(nodeId, ";ns=\\d+", "");
-        result = result.Trim();
+        var result = nodeId.Trim();
+        result = OpcUaNodeHelpers.NodeIdWithNamespaceIndexRegex().Replace(result, "");
+        result = RemoveNamespaceIndexZero(result);
         return result;
     }
+
+    private static string RemoveNamespaceIndexZero(string nodeId)
+    {
+        if (nodeId.StartsWith("ns=0;"))
+        {
+            return nodeId[DefaultNamespaceLength..];
+        }
+        return nodeId;
+    }
+
+    /// <summary>
+    /// Converts a NodeId into an expanded NodeId string that matches the OPC UA specification;
+    /// </summary>
+    public static string CreateExpandedNodeId(NodeId nodeId)
+    {
+        return CreateExpandedNodeId(nodeId.ToString());
+    }
+
     internal MonitoredItem MonitoredItem { get; set; }
 
     #region Constructors
@@ -98,17 +120,21 @@ public class OpcUaNode : IMessageChannel
 
     }
 
+    /// <inheritdoc />
     public OpcUaNode(IOpcUaDriver driver, IModuleLogger logger, string namespaceUri, string nodeIdValue)
         : this(driver, logger)
     {
         NodeId = new ExpandedNodeId(nodeIdValue, namespaceUri);
     }
 
+    /// <inheritdoc />
     public OpcUaNode(IOpcUaDriver driver, IModuleLogger logger, ExpandedNodeId nodeId, NamespaceTable namespaceTable)
         : this(driver, logger)
     {
         NodeId = new ExpandedNodeId(nodeId.Identifier, nodeId.NamespaceIndex, namespaceTable.GetString(nodeId.NamespaceIndex), nodeId.ServerIndex);
     }
+
+    /// <inheritdoc />
     public OpcUaNode(IOpcUaDriver driver, IModuleLogger logger, string identifier)
     {
         Driver = driver;
@@ -134,7 +160,7 @@ public class OpcUaNode : IMessageChannel
             _logger?.Log(LogLevel.Error, "It is tried to read the value of node {NodeId}, but the node is no variable node", NodeId);
             return;
         }
-        _driver.WriteNode(this.Identifier, payload);
+        _driver.WriteNode(Identifier, payload);
     }
 
     /// <summary>
@@ -153,5 +179,4 @@ public class OpcUaNode : IMessageChannel
     {
         _received?.Invoke(this, payload);
     }
-
 }

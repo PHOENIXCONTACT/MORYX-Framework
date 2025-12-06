@@ -580,15 +580,15 @@ namespace Moryx.Products.Management
             }
         }
 
-        private ProductTypeEntity SaveProduct(ProductPartsSaverContext saverContext, ProductType modifiedInstance)
+        private ProductTypeEntity SaveProduct(ProductPartsSaverContext saverContext, ProductType modifiedProductType)
         {
-            var strategy = TypeInformation[modifiedInstance.GetType().FullName].Strategy
-                ?? throw new InvalidOperationException($"Cannot save product of type {modifiedInstance.GetType().FullName}. No {nameof(IProductTypeStrategy)} is configured for this type in the {nameof(ModuleConfig)}");
+            var strategy = TypeInformation[modifiedProductType.GetType().FullName].Strategy
+                ?? throw new InvalidOperationException($"Cannot save product of type {modifiedProductType.GetType().FullName}. No {nameof(IProductTypeStrategy)} is configured for this type in the {nameof(ModuleConfig)}");
 
             //TODO use uow directly instead of repo if that is possible
             // Get or create entity
             var repo = saverContext.GetRepository<IProductTypeRepository>();
-            var identity = (ProductIdentity)modifiedInstance.Identity;
+            var identity = (ProductIdentity)modifiedProductType.Identity;
             ProductTypeEntity typeEntity;
             var entities = repo.Linq
                 .Where(p => p.Identifier == identity.Identifier && p.Revision == identity.Revision)
@@ -596,32 +596,32 @@ namespace Moryx.Products.Management
             // If entity does not exist or was deleted, create a new one
             if (entities.All(p => p.Deleted != null))
             {
-                typeEntity = repo.Create(identity.Identifier, identity.Revision, modifiedInstance.Name, modifiedInstance.GetType().FullName);
-                saverContext.UnitOfWork.LinkEntityToBusinessObject(modifiedInstance, typeEntity);
+                typeEntity = repo.Create(identity.Identifier, identity.Revision, modifiedProductType.Name, modifiedProductType.GetType().FullName);
+                saverContext.UnitOfWork.LinkEntityToBusinessObject(modifiedProductType, typeEntity);
             }
             else
             {
                 typeEntity = entities.First(p => p.Deleted == null);
-                typeEntity.Name = modifiedInstance.Name;
+                typeEntity.Name = modifiedProductType.Name;
                 // Set id in case it was imported under existing material and revision
-                modifiedInstance.Id = typeEntity.Id;
+                modifiedProductType.Id = typeEntity.Id;
             }
             // Check if we need to create a new version
-            if (typeEntity.CurrentVersion == null || typeEntity.CurrentVersion.State != (int)modifiedInstance.State || strategy.HasChanged(modifiedInstance, typeEntity.CurrentVersion))
+            if (typeEntity.CurrentVersion == null || typeEntity.CurrentVersion.State != (int)modifiedProductType.State || strategy.HasChanged(modifiedProductType, typeEntity.CurrentVersion))
             {
                 var version = saverContext.GetRepository<IProductPropertiesRepository>().Create();
-                version.State = (int)modifiedInstance.State;
+                version.State = (int)modifiedProductType.State;
                 typeEntity.SetCurrentVersion(version);
             }
-            saverContext.PersistentObjectCache.Add(modifiedInstance, typeEntity);
-            strategy.SaveType(modifiedInstance, typeEntity.CurrentVersion);
+            saverContext.PersistentObjectCache.Add(modifiedProductType, typeEntity);
+            strategy.SaveType(modifiedProductType, typeEntity.CurrentVersion);
             saverContext.EntityCache.Add(new ProductIdentity(typeEntity.Identifier, typeEntity.Revision), typeEntity);
 
             // And nasty again!
-            var type = modifiedInstance.GetType();
+            var type = modifiedProductType.GetType();
 
             var linkRepo = saverContext.GetRepository<IPartLinkRepository>();
-            foreach (var partLinkInfo in TypeInformation[type.FullName].GetAllPartLinks(modifiedInstance))
+            foreach (var partLinkInfo in TypeInformation[type.FullName].GetAllPartLinks(modifiedProductType))
             {
                 var linkStrategy = partLinkInfo.ProductLinkStrategy;
                 if (partLinkInfo.Type == PartLinkType.single)

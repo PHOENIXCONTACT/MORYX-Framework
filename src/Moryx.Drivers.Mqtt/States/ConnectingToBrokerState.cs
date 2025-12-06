@@ -15,9 +15,13 @@ namespace Moryx.Drivers.Mqtt.States
         internal override void TriedConnecting(bool successful)
         {
             if (successful)
+            {
                 NextState(StateConnected);
+            }
             else
-                Context.ParallelOperations.ScheduleExecution(async () => await Context.Connect(false), Context.ReconnectDelayMs, -1);
+            {
+                Context.DelayedConnectionAttempt();
+            }
         }
 
         public override void Disconnect()

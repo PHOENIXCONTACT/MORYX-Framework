@@ -292,7 +292,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 entity = uow.DbContext.Processes.Add(new ProcessEntity
                 {
                     Id = processData.Id,
-                    TypeName = processData.Process.GetType().Name,
                     State = (int)processData.State,
                     JobId = processData.Job.Id,
                 }).Entity;
@@ -330,7 +329,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                     uow.DbContext.Processes.Add(new ProcessEntity
                     {
                         Id = processData.Id,
-                        TypeName = processData.Process.GetType().Name,
                         JobId = processData.Job.Id,
                         State = (int)processData.State,
                         Rework = processData.Rework,
@@ -364,7 +362,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             }
             else
             {
-                // Do not use Repository.Create here because id is self-generated. 
+                // Do not use Repository.Create here because id is self-generated.
                 dbActivity = new()
                 {
                     Id = activity.Id,
