@@ -444,7 +444,7 @@ namespace Moryx.Orders.Management
                 Updated?.Invoke(this, new OperationEventArgs(this));
             }
 
-            DispatchJob();
+            await DispatchJob();
         }
 
         /// <summary>
@@ -454,8 +454,8 @@ namespace Moryx.Orders.Management
         internal async Task HandleDecreaseTargetBy(int amount)
         {
             Operation.TargetAmount += amount;
-            JobHandler.Complete(this);
-            DispatchJob();
+            await JobHandler.Complete(this);
+            await DispatchJob();
             await _savingContext.SaveOperation(this);
             Updated?.Invoke(this, new OperationEventArgs(this));
         }
@@ -481,9 +481,9 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Will complete all jobs and executes a partial report
         /// </summary>
-        internal void HandleManualInterrupting()
+        internal Task HandleManualInterrupting()
         {
-            JobHandler.Complete(this);
+            return JobHandler.Complete(this);
         }
 
         /// <summary>
@@ -696,7 +696,7 @@ namespace Moryx.Orders.Management
 
                 // Complete running jobs to stop the production of the outdated recipe
                 // New jobs will be dispatched automatically with the new recipes
-                JobHandler.Complete(this);
+                await JobHandler.Complete(this);
             }
         }
 
@@ -718,9 +718,9 @@ namespace Moryx.Orders.Management
             await _stateLock.ExecuteSafeAsync(() => _state.JobsUpdated(args));
         }
 
-        internal void DispatchJob()
+        internal Task DispatchJob()
         {
-            _dispatchHandler.TryDispatch();
+            return _dispatchHandler.TryDispatch();
         }
 
         /// <inheritdoc />
@@ -827,7 +827,7 @@ namespace Moryx.Orders.Management
                 _jobHandler = operationData.JobHandler;
             }
 
-            public void TryDispatch()
+            public async Task TryDispatch()
             {
                 lock (_dispatchLock)
                 {
@@ -847,17 +847,17 @@ namespace Moryx.Orders.Management
                 {
                     _operationData.Log(LogLevel.Error, "There is nothing to dispatch. Check the {0}.", _countStrategy.GetType().Name);
 
-                    TryRequestedDispatches();
+                    await TryRequestedDispatches();
                     return;
                 }
 
                 _operationData.Log(LogLevel.Debug, "At least one job should be dispatched");
 
-                _jobHandler.Dispatch(_operationData, missingAmounts);
-                TryRequestedDispatches();
+                await _jobHandler.Dispatch(_operationData, missingAmounts);
+                await TryRequestedDispatches();
             }
 
-            private void TryRequestedDispatches()
+            private async Task TryRequestedDispatches()
             {
                 lock (_dispatchLock)
                 {
@@ -870,7 +870,7 @@ namespace Moryx.Orders.Management
                     _isDispatchingRequested = false;
                 }
 
-                TryDispatch();
+                await TryDispatch();
             }
         }
 

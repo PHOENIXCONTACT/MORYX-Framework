@@ -37,7 +37,7 @@ namespace Moryx.Orders.Management
         public override async Task Interrupt(User user)
         {
             await NextStateAsync(StateInterrupting);
-            Context.HandleManualInterrupting();
+            await Context.HandleManualInterrupting();
         }
 
         public override ReportContext GetReportContext()
@@ -98,7 +98,7 @@ namespace Moryx.Orders.Management
 
             if (!Context.CanReachAmount)
             {
-                Context.DispatchJob();
+                await Context.DispatchJob();
             }
         }
     }

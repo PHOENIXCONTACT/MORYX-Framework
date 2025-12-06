@@ -29,7 +29,7 @@ namespace Moryx.ControlSystem.Jobs
         /// <summary>
         /// Creates multiple jobs at once
         /// </summary>
-        IReadOnlyList<Job> Add(JobCreationContext context);
+        Task<IReadOnlyList<Job>> Add(JobCreationContext context);
 
         /// <summary>
         /// Returns a job by the given id

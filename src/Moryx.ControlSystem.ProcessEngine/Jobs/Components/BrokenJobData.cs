@@ -6,7 +6,7 @@ using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.ControlSystem.Recipes;
 
-namespace Moryx.ControlSystem.ProcessEngine.Jobs.Components
+namespace Moryx.ControlSystem.ProcessEngine.Jobs
 {
     internal class BrokenJobState : IJobState
     {

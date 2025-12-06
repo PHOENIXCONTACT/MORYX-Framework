@@ -82,7 +82,7 @@ namespace Moryx.Orders.Management
                     return;
 
                 await operationData.JobProgressChanged(job);
-                Dispatcher.JobProgressChanged(operationData.Operation, job);
+                await Dispatcher.JobProgressChanged(operationData.Operation, job);
             }
             catch (Exception e)
             {
@@ -106,7 +106,7 @@ namespace Moryx.Orders.Management
                     return;
 
                 await operationData.JobStateChanged(eventArgs);
-                Dispatcher.JobStateChanged(operationData.Operation, eventArgs);
+                await Dispatcher.JobStateChanged(operationData.Operation, eventArgs);
             }
             catch (Exception e)
             {
@@ -115,15 +115,15 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc />
-        public void Dispatch(IOperationData operationData, IReadOnlyList<DispatchContext> dispatchContexts)
+        public Task Dispatch(IOperationData operationData, IReadOnlyList<DispatchContext> dispatchContexts)
         {
-            Dispatcher.Dispatch(operationData.Operation, dispatchContexts);
+            return Dispatcher.Dispatch(operationData.Operation, dispatchContexts);
         }
 
         /// <inheritdoc />
-        public void Complete(IOperationData operationData)
+        public Task Complete(IOperationData operationData)
         {
-            Dispatcher.Complete(operationData.Operation);
+            return Dispatcher.Complete(operationData.Operation);
         }
 
         /// <inheritdoc />

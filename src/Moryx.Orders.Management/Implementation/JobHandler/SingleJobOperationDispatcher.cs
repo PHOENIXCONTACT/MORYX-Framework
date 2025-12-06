@@ -15,7 +15,7 @@ namespace Moryx.Orders.Management
     public class SingleJobOperationDispatcher : OperationDispatcherBase
     {
         /// <inheritdoc />
-        public override void Dispatch(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts)
+        public override async Task Dispatch(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts)
         {
             // Wait until all jobs are completing to avoid separate jobs for every scrap
             var allCompleting = operation.Jobs.All(j => j.Classification >= JobClassification.Completing);
@@ -32,21 +32,23 @@ namespace Moryx.Orders.Management
 
             try
             {
-                AddJobs(operation, creationContext);
+                await AddJobs(operation, creationContext);
             }
             catch (KeyNotFoundException)
             {
                 // Positioning failed, because reference already completed
                 creationContext.Append();
-                AddJobs(operation, creationContext);
+                await AddJobs(operation, creationContext);
             }
         }
 
         /// <inheritdoc />
-        public override void Complete(Operation operation)
+        public override Task Complete(Operation operation)
         {
             var jobs = operation.Jobs.Where(j => j.Classification < JobClassification.Completing);
             ParallelOperations.ExecuteParallel(() => jobs.ForEach(job => JobManagement.Complete(job)));
+
+            return Task.CompletedTask;
         }
     }
 }
