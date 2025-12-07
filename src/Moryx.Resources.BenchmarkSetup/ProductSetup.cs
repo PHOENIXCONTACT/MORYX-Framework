@@ -44,7 +44,7 @@ namespace Moryx.Benchmarking.Setups
             var propRepo = openContext.GetRepository<IProductPropertiesRepository>();
 
             // Create product
-            var prod = prodRepo.Create("123456", 1, "DummyProduct", "BenchmarkProduct");
+            var prod = prodRepo.Create("123456", 1, "DummyProduct", typeof(BenchmarkProduct).FullName);
             var prop = propRepo.Create();
             prod.SetCurrentVersion(prop);
 
@@ -136,7 +136,7 @@ namespace Moryx.Benchmarking.Setups
             var recipe = recipeRepo.Create();
             recipe.Name = "Recipe-Steps:" + stepCount;
             recipe.Classification = (int)RecipeClassification.Alternative;
-            recipe.Type = nameof(ProductionRecipe);
+            recipe.TypeName = typeof(ProductionRecipe).FullName;
             recipe.State = (int)RecipeState.Released;
             recipe.Workplan = workplanEntity;
             recipe.Product = product;
