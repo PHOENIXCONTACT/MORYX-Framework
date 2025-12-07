@@ -189,7 +189,7 @@ namespace Moryx.Orders.Management.Tests
 
             // Prepare jobs
             _jobManagementMock.Setup(j => j.Add(It.IsAny<JobCreationContext>()))
-                .Returns((JobCreationContext creationContext) =>
+                .ReturnsAsync((JobCreationContext creationContext) =>
                 [
                     new Job(_recipe, (int)creationContext.Templates.Single().Amount)
                     {
