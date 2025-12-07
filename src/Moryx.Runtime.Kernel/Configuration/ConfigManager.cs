@@ -1,9 +1,13 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Configuration;
 using Moryx.Configuration;
 using Moryx.Serialization;
 using Newtonsoft.Json;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace Moryx.Runtime.Kernel
 {
@@ -14,6 +18,9 @@ namespace Moryx.Runtime.Kernel
     {
         private readonly ConfigLiveUpdater _liveUpdater = new();
         private readonly SharedConfigProvider _sharedProvider;
+
+        // NEW: hook into Microsoft.Extensions.Configuration
+        public IConfiguration? Configuration { get; set; }
 
         /// <summary>
         /// Extension of the config files used in the MORYX
@@ -26,6 +33,56 @@ namespace Moryx.Runtime.Kernel
         public ConfigManager()
         {
             _sharedProvider = new SharedConfigProvider(this);
+        }
+
+        protected virtual void ApplyConfigurationProviders(object config)
+        {
+            if (Configuration == null || config == null)
+                return;
+
+            var configType = config.GetType();
+            var isConfigBase = typeof(ConfigBase).IsAssignableFrom(configType);
+            var defaultSectionName = isConfigBase ? configType.Name : null;
+
+            foreach (var prop in configType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            {
+                if (!prop.CanRead || !prop.CanWrite)
+                    continue;
+
+                // Only handle simple string properties for now
+                if (prop.PropertyType != typeof(string))
+                    continue;
+
+                var currentValue = prop.GetValue(config) as string;
+
+                // Decide if this property should be treated as "secret"
+                var hasPasswordAttribute = prop.GetCustomAttribute<PasswordAttribute>() != null
+                                           || prop.GetCustomAttribute(typeof(PasswordPropertyTextAttribute)) != null;
+
+                // Option 1: explicit key in config file, e.g. "Movies:ServiceApiKey"
+                // Option 2: implicit key: "{ConfigTypeName}:{PropertyName}"
+                string? candidateKey = null;
+
+                if (!string.IsNullOrWhiteSpace(currentValue) && currentValue!.Contains(":"))
+                {
+                    // Config file holds the key directly
+                    candidateKey = currentValue;
+                }
+                else if (hasPasswordAttribute && !string.IsNullOrWhiteSpace(defaultSectionName))
+                {
+                    candidateKey = $"{defaultSectionName}:{prop.Name}";
+                }
+
+                if (string.IsNullOrWhiteSpace(candidateKey))
+                    continue;
+
+                var providerValue = Configuration[candidateKey!];
+                if (!string.IsNullOrEmpty(providerValue))
+                {
+                    // Replace placeholder with the actual secret
+                    prop.SetValue(config, providerValue);
+                }
+            }
         }
 
         /// <summary>
@@ -130,6 +187,9 @@ namespace Moryx.Runtime.Kernel
                     config = (ConfigBase)JsonConvert.DeserializeObject(fileContent, confType, JsonSettings.ReadableReplace);
 
                     ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddProviders(ValueProviders));
+
+                    // NEW: overlay values from Microsoft.Extensions.Configuration providers
+                    ApplyConfigurationProviders(config);
                 }
                 catch (Exception e)
                 {
@@ -139,6 +199,12 @@ namespace Moryx.Runtime.Kernel
             else
             {
                 config = CreateConfig(confType, ConfigState.Generated, "Config file not found! Running on default values.");
+
+                // Defaults & shared configs
+                ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddProviders(ValueProviders));
+
+                // NEW: even here we can try to fill from providers
+                ApplyConfigurationProviders(config);
             }
 
             return config;

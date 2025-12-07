@@ -1,8 +1,11 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 using Moryx.Configuration;
 using NUnit.Framework;
 
@@ -14,6 +17,7 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration
         private const string ConfigDir = "Configs";
 
         private string _fullConfigDir;
+        private string _tempDir;
         private IConfigManager _configManager;
 
         [SetUp]
@@ -22,6 +26,12 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration
             // Clear configs dir
             _fullConfigDir = Path.Combine(Directory.GetCurrentDirectory(), ConfigDir);
             Directory.CreateDirectory(_fullConfigDir);
+
+            _tempDir = Path.Combine(
+                Path.GetTempPath(),
+                "ConfigManagerTests",
+                Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(_tempDir);
 
             // Init config manager
             _configManager = new ConfigManager { ConfigDirectory = ConfigDir };
@@ -139,10 +149,157 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration
             Assert.That(reloaded.DummyString, Is.EqualTo(someString), "Config file was not loaded correctly");
         }
 
+        private ConfigManager CreateManager(IConfiguration configuration)
+        {
+            return new ConfigManager
+            {
+                ConfigDirectory = _tempDir,
+                Configuration = configuration
+            };
+        }
+
+        [Test(Description = "Resolves an explicit configuration key placeholder from IConfiguration.")]
+        public void ExplicitConfigurationKey_IsResolvedFromConfiguration()
+        {
+            var json = @"{
+                          ""NormalSetting"": ""from-json"",
+                          ""ServiceApiKey"": ""Secrets:ServiceApiKey""
+                        }";
+            File.WriteAllText(Path.Combine(_tempDir, "SecretConfig.json"), json);
+
+            var configDict = new Dictionary<string, string?>
+            {
+                ["Secrets:ServiceApiKey"] = "from-provider"
+            };
+
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(configDict)
+                .Build();
+
+            var manager = CreateManager(configuration);
+
+            var config = (SecretConfig)manager.GetConfiguration(
+                typeof(SecretConfig),
+                "SecretConfig",
+                getCopy: true);
+
+            Assert.That(config.NormalSetting, Is.EqualTo("from-json"));
+            Assert.That(config.ServiceApiKey, Is.EqualTo("from-provider"));
+        }
+
+        [Test(Description = "Uses convention key TypeName:PropertyName for [Password] when value is not an explicit key.")]
+        public void PasswordAttribute_UsesConventionKey_WhenValueIsNotExplicitKey()
+        {
+            var json = @"{
+                          ""NormalSetting"": ""from-json"",
+                          ""ServiceApiKey"": ""ignored-json-value""
+                        }";
+            File.WriteAllText(Path.Combine(_tempDir, "SecretConfig.json"), json);
+
+            var configDict = new Dictionary<string, string?>
+            {
+                ["SecretConfig:ServiceApiKey"] = "from-convention"
+            };
+
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(configDict)
+                .Build();
+
+            var manager = CreateManager(configuration);
+
+            var config = (SecretConfig)manager.GetConfiguration(
+                typeof(SecretConfig),
+                "SecretConfig",
+                getCopy: true);
+
+            Assert.That(config.ServiceApiKey, Is.EqualTo("from-convention"));
+        }
+
+        [Test(Description = "Keeps JSON value when IConfiguration has no matching entry.")]
+        public void ProviderDoesNotOverride_WhenNoEntryExists()
+        {
+            var json = @"{
+                          ""NormalSetting"": ""from-json"",
+                          ""ServiceApiKey"": ""from-json""
+                        }";
+            File.WriteAllText(Path.Combine(_tempDir, "SecretConfig.json"), json);
+
+            var configuration = new ConfigurationBuilder().Build();
+            var manager = CreateManager(configuration);
+
+            var config = (SecretConfig)manager.GetConfiguration(
+                typeof(SecretConfig),
+                "SecretConfig",
+                getCopy: true);
+
+            Assert.That(config.ServiceApiKey, Is.EqualTo("from-json"));
+        }
+
+        [Test(Description = "Applies provider values to generated configs when no JSON file exists.")]
+        public void GeneratedConfig_ReceivesValuesFromConfiguration()
+        {
+            var configDict = new Dictionary<string, string?>
+            {
+                ["SecretConfig:ServiceApiKey"] = "from-provider"
+            };
+
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(configDict)
+                .Build();
+
+            var manager = CreateManager(configuration);
+
+            var config = (SecretConfig)manager.GetConfiguration(
+                typeof(SecretConfig),
+                "SecretConfig",
+                getCopy: true);
+
+            Assert.That(config.ServiceApiKey, Is.EqualTo("from-provider"));
+            Assert.That(config.ConfigState, Is.EqualTo(ConfigState.Generated));
+        }
+
+        [Test(Description = "Later configuration providers override earlier ones (env-like behavior).")]
+        public void LaterProvidersOverrideEarlierOnes()
+        {
+            var json = @"{
+                        ""NormalSetting"": ""from-json"",
+                        ""ServiceApiKey"": ""SecretConfig:ServiceApiKey""
+                        }";
+            File.WriteAllText(Path.Combine(_tempDir, "SecretConfig.json"), json);
+
+            var appsettings = new Dictionary<string, string?>
+            {
+                ["SecretConfig:ServiceApiKey"] = "from-appsettings"
+            };
+            var env = new Dictionary<string, string?>
+            {
+                ["SecretConfig:ServiceApiKey"] = "from-env"
+            };
+
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(appsettings) // simulates appsettings.json
+                .AddInMemoryCollection(env)        // simulates env vars overriding it
+                .Build();
+
+            var manager = CreateManager(configuration);
+
+            var config = (SecretConfig)manager.GetConfiguration(
+                typeof(SecretConfig),
+                "SecretConfig",
+                getCopy: true);
+
+            Assert.That(config.ServiceApiKey, Is.EqualTo("from-env"));
+        }
+
         [TearDown]
         public void Cleanup()
         {
             Directory.Delete(_fullConfigDir, true);
+
+            if (Directory.Exists(_tempDir))
+            {
+                Directory.Delete(_tempDir, recursive: true);
+            }
         }
     }
 }

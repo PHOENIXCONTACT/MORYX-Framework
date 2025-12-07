@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -88,6 +89,12 @@ namespace Moryx.Runtime.Kernel
             if (!Directory.Exists(configDirectory))
                 Directory.CreateDirectory(configDirectory);
             configManager.ConfigDirectory = configDirectory;
+
+            // NEW: hook up IConfiguration from the host
+            var configuration = serviceProvider.GetService<IConfiguration>();
+            if (configuration != null)
+                configManager.Configuration = configuration;
+
             return configManager;
         }
     }
