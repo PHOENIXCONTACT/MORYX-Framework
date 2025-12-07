@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Resources;
 using Moq;
 using Moryx.Model.Repositories;
@@ -115,7 +116,7 @@ namespace Moryx.Resources.Management.Tests
             Assert.That(instance.References.Count, Is.EqualTo(3), "Possible parts not set");
         }
 
-        private ResourceRelationAccessor RelationAccessor(long id,
+        private static ResourceRelationAccessor RelationAccessor(long id,
             ResourceRelationType relationType = ResourceRelationType.ParentChild,
             ResourceReferenceRole role = ResourceReferenceRole.Target,
             string relationName = null)
@@ -128,7 +129,7 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test(Description = "Save modified bidirectional references")]
-        public void SaveBidirectionalReferences()
+        public async Task SaveBidirectionalReferences()
         {
             // Arrange
             var instance = new ReferenceResource { Id = 1 };
@@ -155,13 +156,13 @@ namespace Moryx.Resources.Management.Tests
             var mocks = SetupDbMocks(relations);
 
             // Act
-            var newResources = _linker.SaveReferences(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
+            var newResources = await _linker.SaveReferencesAsync(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
 
             // Assert
             Assert.Multiple(() =>
             {
                 // Resources were created
-                Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.Create(), Times.Exactly(2)), "Linker did not detect the new resources");
+                Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.CreateAsync(), Times.Exactly(2)), "Linker did not detect the new resources");
                 Assert.That(newResources, Has.Count.EqualTo(2));
                 Assert.That(newResources[0], Is.EqualTo(newResource));
                 Assert.That(newResources[1], Is.EqualTo(newCollectionResource));
@@ -173,10 +174,10 @@ namespace Moryx.Resources.Management.Tests
                 // Relations were created
                 Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.Extension), Times.Exactly(2)), "Linker did not create relations for references");
                 Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.ParentChild), Times.Exactly(2)), "Linker did not create relations for collection references");
-                Assert.That(2, Is.EqualTo(relations.Where(r => r.RelationType == (int)ResourceRelationType.ParentChild).Count()));
-                Assert.That(2, Is.EqualTo(relations.Where(r => r.RelationType == (int)ResourceRelationType.Extension).Count()));
+                Assert.That(2, Is.EqualTo(relations.Count(r => r.RelationType == (int)ResourceRelationType.ParentChild)));
+                Assert.That(2, Is.EqualTo(relations.Count(r => r.RelationType == (int)ResourceRelationType.Extension)));
                 // Relation sources and targets were set
-                Assert.That(4, Is.EqualTo(relations.Where(r => r.Source.Id == instance.Id).Count()));
+                Assert.That(4, Is.EqualTo(relations.Count(r => r.Source.Id == instance.Id)));
                 Assert.DoesNotThrow(() => relations.Single(r => r.Target.Id == resource.Id));
                 Assert.DoesNotThrow(() => relations.Single(r => r.Target.Id == collectionResource.Id));
                 Assert.DoesNotThrow(() => relations.Single(r => r.Target.Name == newResource.Name));
@@ -185,7 +186,7 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test(Description = "Save modified references of a resource")]
-        public void SaveReferences()
+        public async Task SaveReferences()
         {
             // Arrange
             var instance = new ReferenceResource { Id = 1 };
@@ -233,14 +234,14 @@ namespace Moryx.Resources.Management.Tests
             var mocks = SetupDbMocks(relations);
 
             // Act
-            var newResources = _linker.SaveReferences(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
+            var newResources = await _linker.SaveReferencesAsync(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
 
             // Assert
             Assert.That(newResources.Count, Is.EqualTo(1));
             Assert.That(newResources[0], Is.EqualTo(ref3));
             Assert.That(ref5.Children.Contains(instance), "Backlink sync failed for parent ref5");
 
-            Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.Create(), Times.Once), "Linker did not detect the new resource");
+            Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.CreateAsync(), Times.Once), "Linker did not detect the new resource");
             Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.PossibleExchangeablePart), Times.Once), "Linker did not create relation for ref3 in References");
             Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.ParentChild), Times.Once), "Linker did not create relation for parent ref5");
             Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Once), "Linker did not remove relation 1-3");
@@ -258,7 +259,7 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test(Description = "Multiple references of the same relation type should not interfere with each other")]
-        public void ReferenceInterferenceOnSave()
+        public async Task ReferenceInterferenceOnSave()
         {
             // Arrange
             var instance = new InterferenceResource() { Id = 1 };
@@ -288,7 +289,7 @@ namespace Moryx.Resources.Management.Tests
             var mocks = SetupDbMocks(relations);
 
             // Act
-            _linker.SaveReferences(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
+            await _linker.SaveReferencesAsync(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
 
             // Assert
             Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 2)), Times.Never), "Linker did remove relation 1-2");
@@ -296,7 +297,7 @@ namespace Moryx.Resources.Management.Tests
             Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Never), "Linker did remove relation 1-4");
         }
 
-        private ResourceRelationEntity Relation(long id, long otherId,
+        private static ResourceRelationEntity Relation(long id, long otherId,
             ResourceRelationType relationType = ResourceRelationType.ParentChild,
             ResourceReferenceRole role = ResourceReferenceRole.Target,
             string relationName = null)
@@ -314,7 +315,7 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test(Description = "Extend children and make sure the parent is set")]
-        public void SetParentWhenAddingChild()
+        public async Task SetParentWhenAddingChild()
         {
             // Arrange
             // Create resources
@@ -329,7 +330,7 @@ namespace Moryx.Resources.Management.Tests
 
             // Act
             parent.Children.Add(child);
-            _linker.SaveReferences(mocks.Item1.Object, parent, new ResourceEntity { Id = 1 });
+            await _linker.SaveReferencesAsync(mocks.Item1.Object, parent, new ResourceEntity { Id = 1 });
 
             // Assert
             Assert.That(parent.Children.Contains(child), "Child was not set");
@@ -337,7 +338,7 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test(Description = "Extend children and make sure the parent is set")]
-        public void ClearParentWhenRemovingChild()
+        public async Task ClearParentWhenRemovingChild()
         {
             // Arrange
             // Create resources
@@ -359,7 +360,7 @@ namespace Moryx.Resources.Management.Tests
 
             // Act
             parent.Children.Remove(child);
-            _linker.SaveReferences(mocks.Item1.Object, parent, new ResourceEntity { Id = 1 });
+            await _linker.SaveReferencesAsync(mocks.Item1.Object, parent, new ResourceEntity { Id = 1 });
 
             // Assert
             Assert.That(parent.Children.Contains(child), Is.False, "Child was not removed");
@@ -367,7 +368,7 @@ namespace Moryx.Resources.Management.Tests
         }
 
         [Test(Description = "Change parent and make sure children are updated")]
-        public void SyncChildrenOnParentModification()
+        public async Task SyncChildrenOnParentModification()
         {
             // Arrange
             // Create resources
@@ -392,7 +393,7 @@ namespace Moryx.Resources.Management.Tests
 
             // Act
             child.Parent = parent2;
-            _linker.SaveReferences(mocks.Item1.Object, child, new ResourceEntity { Id = 3 });
+            await _linker.SaveReferencesAsync(mocks.Item1.Object, child, new ResourceEntity { Id = 3 });
 
             // Assert
             Assert.That(parent1.Children, Does.Not.Contain(child), "Child was not removed");
@@ -441,9 +442,9 @@ namespace Moryx.Resources.Management.Tests
 
             // Assert
             if (isNull || isEmpty)
-                Assert.Throws<ValidationException>(() => _linker.SaveReferences(dbMocks.Item1.Object, instance, new ResourceEntity()));
+                Assert.ThrowsAsync<ValidationException>(() => _linker.SaveReferencesAsync(dbMocks.Item1.Object, instance, new ResourceEntity()));
             else
-                Assert.DoesNotThrow(() => _linker.SaveReferences(dbMocks.Item1.Object, instance, new ResourceEntity()));
+                Assert.DoesNotThrowAsync(() => _linker.SaveReferencesAsync(dbMocks.Item1.Object, instance, new ResourceEntity()));
         }
 
         private static Tuple<Mock<IUnitOfWork>, Mock<IResourceRelationRepository>, Mock<IResourceRepository>> SetupDbMocks(List<ResourceRelationEntity> relations)
@@ -464,7 +465,7 @@ namespace Moryx.Resources.Management.Tests
             var resRepo = new Mock<IResourceRepository>();
             resRepo.Setup(r => r.GetByKey(It.Is<long>(id => id > 0))).Returns<long>(id => new ResourceEntity { Id = id });
             resRepo.Setup(r => r.GetByKey(It.Is<long>(id => id == 0))).Returns((ResourceEntity)null);
-            resRepo.Setup(r => r.Create()).Returns(() => new ResourceEntity());
+            resRepo.Setup(r => r.CreateAsync()).ReturnsAsync(() => new ResourceEntity());
 
             var uowMock = new Mock<IUnitOfWork>();
             uowMock.Setup(u => u.GetRepository<IResourceRelationRepository>()).Returns(relRepo.Object);

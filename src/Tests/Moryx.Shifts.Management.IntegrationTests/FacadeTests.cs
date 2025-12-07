@@ -9,16 +9,16 @@ namespace Moryx.Shifts.Management.IntegrationTests
     internal class FacadeTests : TestBase
     {
         [SetUp]
-        public override void SetUp()
+        public override Task SetUp()
         {
             base.SetUp();
-            _env.StartTestModule();
+            return _env.StartTestModuleAsync();
         }
 
         [TearDown]
-        public override void TearDown()
+        public override Task TearDown()
         {
-            base.TearDown();
+            return base.TearDown();
         }
 
         #region Shift Types

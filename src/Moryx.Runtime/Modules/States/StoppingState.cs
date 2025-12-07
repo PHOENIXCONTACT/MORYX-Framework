@@ -10,16 +10,16 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        protected override void OnStopping()
+        protected override async Task OnStopping()
         {
             try
             {
-                Context.Stop();
+                await Context.StopAsync();
             }
             catch (Exception ex)
             {
                 Context.ReportError(ex);
-                NextState(StateRunningFailure);
+                await NextStateAsync(StateRunningFailure);
             }
         }
     }
@@ -31,8 +31,9 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        protected override void OnStopping()
+        protected override Task OnStopping()
         {
+            return Task.CompletedTask;
         }
     }
 
@@ -45,38 +46,41 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        public override void OnEnter()
+        public override async Task OnEnterAsync()
         {
-            OnStopping();
+            await OnStopping();
 
             try
             {
                 // Regardless of the previous state we need to destruct the container
                 Context.Destruct();
-                NextState(StateStopped);
+                await NextStateAsync(StateStopped);
             }
             catch (Exception ex)
             {
                 Context.ReportError(ex);
-                NextState(StateInitializedFailure);
+                await NextStateAsync(StateInitializedFailure);
             }
         }
 
-        protected abstract void OnStopping();
+        protected abstract Task OnStopping();
 
-        public override void Initialize()
+        public override Task Initialize()
         {
             // Nothing to do here
+            return Task.CompletedTask;
         }
 
-        public override void Start()
+        public override Task Start()
         {
             // Not possible here
+            return Task.CompletedTask;
         }
 
-        public override void Stop()
+        public override Task Stop()
         {
             // We are already stopping
+            return Task.CompletedTask;
         }
     }
 }

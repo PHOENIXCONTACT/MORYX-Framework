@@ -34,7 +34,7 @@ namespace Moryx.Tests
             CtoATriggered = true;
         }
 
-        public void SetState(IState state)
+        void IStateContext.SetState(StateBase state)
         {
             State = (MyStateBase)state;
         }

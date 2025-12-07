@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using Moryx.Configuration;
 using Moryx.Serialization;
 
-namespace Moryx.Tests.Configuration
+namespace Moryx.Runtime.Kernel.Tests.Configuration.Transformer
 {
     /// <summary>
     /// Testconfig enum

@@ -9,7 +9,7 @@ namespace Moryx.AbstractionLayer.Resources
     /// <summary>
     /// Major component managing the resource graph
     /// </summary>
-    internal interface IResourceManager : IInitializablePlugin
+    internal interface IResourceManager : IAsyncInitializablePlugin
     {
         /// <summary>
         /// Executes the resource initializer

@@ -66,14 +66,14 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
     }
 
     [Test(Description = "Do not show cyclic nodes in the UI")]
-    public void DoNotShowDirectCyclicNodesInTheUi()
+    public async Task DoNotShowDirectCyclicNodesInTheUi()
     {
         //Arrange
         SetupDirectCyclicNodes();
         SetupDriver();
 
         var wait = new AutoResetEvent(false);
-        _driver.StateChanged += (sender, e) =>
+        _driver.StateChanged += (_, e) =>
         {
             if (e.Classification == StateClassification.Running)
             {
@@ -85,7 +85,7 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
         };
 
         //Act
-        ((IPlugin)_driver).Start();
+        await ((IAsyncPlugin)_driver).StartAsync();
 
         //Assert
         Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), Is.True, "Driver was not running");
@@ -113,14 +113,14 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
     }
 
     [Test(Description = "Do not show cyclic nodes in the UI")]
-    public void DoNotShowIndirectCyclicNodesInTheUi()
+    public async Task DoNotShowIndirectCyclicNodesInTheUi()
     {
         //Arrange
         SetupIndirectCyclicNodes();
         SetupDriver();
 
         var wait = new AutoResetEvent(false);
-        _driver.StateChanged += (sender, e) =>
+        _driver.StateChanged += (_, e) =>
         {
             if (e.Classification == StateClassification.Running)
             {
@@ -128,7 +128,7 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
                 var node = (OpcUaObjectDisplayNode)_driver.Nodes[0];
                 Assert.That(_driver.Nodes.Count, Is.EqualTo(1), "Number of browsed nodes doesn't fit");
                 Assert.That(node.BrowseName, Is.EqualTo("browsename1"));
-                ;
+
                 Assert.That(node.Nodes.Count, Is.EqualTo(1), "Number of subnodes doesn't fit");
                 Assert.That(node.Nodes[0].BrowseName, Is.EqualTo("browsename2"));
                 Assert.DoesNotThrow(() => JsonSerializer.Serialize(_driver.Nodes));
@@ -137,7 +137,7 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
         };
 
         //Act
-        ((IPlugin)_driver).Start();
+        await ((IAsyncPlugin)_driver).StartAsync();
 
         //Assert
         Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), Is.True, "Driver was not running");
@@ -181,14 +181,14 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
     }
 
     [Test(Description = "If a node exists on different branches (is not cyclic), then it should be resolved")]
-    public void ShowSameNodeOnDifferentBranch()
+    public async Task ShowSameNodeOnDifferentBranch()
     {
         //Arrange
         SetupReoccuringNodes();
         SetupDriver();
 
         var wait = new AutoResetEvent(false);
-        _driver.StateChanged += (sender, e) =>
+        _driver.StateChanged += (_, e) =>
         {
             if (e.Classification == StateClassification.Running)
             {
@@ -202,7 +202,7 @@ public class HandlingCyclicNodesTests : OpcUaTestBase
         };
 
         //Act
-        ((IPlugin)_driver).Start();
+        await ((IAsyncPlugin)_driver).StartAsync();
 
         //Assert
         Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), Is.True, "Driver was not running");

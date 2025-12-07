@@ -41,7 +41,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             // Extend container
             Container
@@ -60,12 +60,13 @@ namespace Moryx.Products.Management
             Container.LoadComponents<IProductLinkStrategy>();
             Container.LoadComponents<IProductRecipeStrategy>();
             Container.LoadComponents<IPropertyMapper>();
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             // Start Manager
             Container.Resolve<IProductStorage>().Start();
@@ -73,15 +74,17 @@ namespace Moryx.Products.Management
 
             // Activate facades
             ActivateFacade(_productManagement);
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             // Deactivate facades
             DeactivateFacade(_productManagement);
+            return Task.CompletedTask;
         }
 
         private readonly ProductManagementFacade _productManagement = new();

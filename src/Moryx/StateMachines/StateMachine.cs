@@ -127,7 +127,7 @@ namespace Moryx.StateMachines
         }
 
         /// <summary>
-        /// Forces a given state state on the given StateMachine.
+        /// Forces a given state on the given StateMachine.
         /// </summary>
         /// <param name="current">The current StateMachine</param>
         /// <param name="forceState">The target state to be forced</param>
@@ -143,18 +143,18 @@ namespace Moryx.StateMachines
         /// }
         /// </code>
         /// </example>
-        public static void Force(StateBase current, int forceState)
+        public static void Force(SyncStateBase current, int forceState)
         {
             Force(current, forceState, true, true);
         }
 
         /// <summary>
-        /// Forces a given state state on the given StateMachine.
+        /// Forces a given state on the given StateMachine.
         /// </summary>
         /// <param name="current">The current StateMachine</param>
         /// <param name="forceState">The target state to be forced</param>
-        /// <param name="exitCurrent">If <c>true</c> <see cref="IState.OnExit"/> will be called before force.</param>
-        /// <param name="enterForced">If <c>true</c> <see cref="IState.OnEnter"/> will be called on forced state.</param>
+        /// <param name="exitCurrent">If <c>true</c> <see cref="SyncStateBase.OnExit"/> will be called before force.</param>
+        /// <param name="enterForced">If <c>true</c> <see cref="SyncStateBase.OnEnter"/> will be called on forced state.</param>
         /// <example>
         /// This sample shows how to force a state
         /// <code>
@@ -167,9 +167,55 @@ namespace Moryx.StateMachines
         /// }
         /// </code>
         /// </example>
-        public static void Force(StateBase current, int forceState, bool exitCurrent, bool enterForced)
+        public static void Force(SyncStateBase current, int forceState, bool exitCurrent, bool enterForced)
         {
             current.Force(forceState, exitCurrent, enterForced);
+        }
+
+        /// <summary>
+        /// Forces a given state on the given StateMachine.
+        /// </summary>
+        /// <param name="current">The current StateMachine</param>
+        /// <param name="forceState">The target state to be forced</param>
+        /// <example>
+        /// This sample shows how to force a state
+        /// <code>
+        /// public class SomeComponent : IStateContext
+        /// {
+        ///     public Task Sample()
+        ///     {
+        ///         return StateMachine.ForceAsync(context.State, MyStateBase.StateA);
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        public static Task ForceAsync(AsyncStateBase current, int forceState)
+        {
+            return ForceAsync(current, forceState, true, true);
+        }
+
+        /// <summary>
+        /// Forces a given state on the given StateMachine.
+        /// </summary>
+        /// <param name="current">The current StateMachine</param>
+        /// <param name="forceState">The target state to be forced</param>
+        /// <param name="exitCurrent">If <c>true</c> <see cref="AsyncStateBase.OnExitAsync"/> will be called before force.</param>
+        /// <param name="enterForced">If <c>true</c> <see cref="AsyncStateBase.OnEnterAsync"/> will be called on forced state.</param>
+        /// <example>
+        /// This sample shows how to force a state
+        /// <code>
+        /// public class SomeComponent : IStateContext
+        /// {
+        ///     public Task Sample()
+        ///     {
+        ///         return StateMachine.ForceAsync(context.State, MyStateBase.StateA, exitCurrent: true, enterForced: false);
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        public static Task ForceAsync(AsyncStateBase current, int forceState, bool exitCurrent, bool enterForced)
+        {
+            return current.ForceAsync(forceState, exitCurrent, enterForced);
         }
 
         /// <summary>
@@ -177,7 +223,7 @@ namespace Moryx.StateMachines
         /// and provide fluent API
         /// </summary>
         /// <typeparam name="TContext"></typeparam>
-        public struct TypedContextWrapper<TContext>
+        public readonly struct TypedContextWrapper<TContext>
             where TContext : IStateContext
         {
             private readonly TContext _context;
@@ -200,9 +246,22 @@ namespace Moryx.StateMachines
             /// <exception cref="InvalidOperationException">Thrown if types are registered more than one time.</exception>
             /// <exception cref="ArgumentException">Given base class is not abstract.</exception>
             public void With<TStateBase>()
-                where TStateBase : StateBase
+                where TStateBase : SyncStateBase
             {
-                StateBase.Create<TStateBase>(_context, _key);
+                SyncStateBase.Create(typeof(TStateBase), _context, _key);
+            }
+
+            /// <summary>
+            /// Finalize the state machine creation by defining the state machine type.
+            /// </summary>
+            /// <typeparam name="TStateBase">Type of state machine base class</typeparam>
+            /// <exception cref="InvalidOperationException">Thrown if 0 or more states are flagged as initial.</exception>
+            /// <exception cref="InvalidOperationException">Thrown if types are registered more than one time.</exception>
+            /// <exception cref="ArgumentException">Given base class is not abstract.</exception>
+            public Task WithAsync<TStateBase>()
+                where TStateBase : AsyncStateBase
+            {
+                return AsyncStateBase.CreateAsync(typeof(TStateBase), _context, _key);
             }
 
             /// <summary>
@@ -214,7 +273,19 @@ namespace Moryx.StateMachines
             /// <exception cref="ArgumentException">Given base class is not abstract.</exception>
             public void With(Type stateType)
             {
-                StateBase.Create(stateType, _context, _key);
+                SyncStateBase.Create(stateType, _context, _key);
+            }
+
+            /// <summary>
+            /// Finalize the state machine creation by defining the state machine type.
+            /// </summary>
+            /// <param name="stateType">Type of state machine base class</param>
+            /// <exception cref="InvalidOperationException">Thrown if 0 or more states are flagged as initial.</exception>
+            /// <exception cref="InvalidOperationException">Thrown if types are registered more than one time.</exception>
+            /// <exception cref="ArgumentException">Given base class is not abstract.</exception>
+            public Task WithAsync(Type stateType)
+            {
+                return AsyncStateBase.CreateAsync(stateType, _context, _key);
             }
         }
     }

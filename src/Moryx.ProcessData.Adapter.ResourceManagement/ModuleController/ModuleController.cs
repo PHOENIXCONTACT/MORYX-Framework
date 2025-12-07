@@ -38,22 +38,25 @@ namespace Moryx.ProcessData.Adapter.ResourceManagement
         }
 
         /// <inheritdoc />
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             Container.SetInstance(ResourceManagement)
                 .SetInstance(ProcessDataMonitor);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             Container.Resolve<ResourceManagementAdapter>().Start();
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             Container.Resolve<ResourceManagementAdapter>().Stop();
+            return Task.CompletedTask;
         }
     }
 }

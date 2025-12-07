@@ -35,12 +35,12 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Start all components and modules to begin execution
         /// </summary>
-        void Start();
+        Task StartAsync();
 
         /// <summary>
         /// Stop execution, dispose components and return to clean state
         /// </summary>
-        void Stop();
+        Task StopAsync();
 
         /// <summary>
         /// Event raised when the current state changes

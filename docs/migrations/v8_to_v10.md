@@ -1,5 +1,115 @@
 # MORYX 8.x to 10.x
 
+## Async life-cycle
+
+### Changes in StateBase
+
+We now provide a full async implementation of the `StateBase`. To keep constistent naming, the `StateBase` was splitted to `SyncStateBase` and `AsyncStateBase`.
+Due to the reduction of unneccessary interfaces, `IState` was removed and `StateBase` will be used in e.g. `IStateContext` now.
+
+The `StateMachine` class was extended by `WithAsync()` and `ForceAsync()`. The `AsyncStateBase` provides async all the way: `NextStateAsync()`, `OnEnterAsync()`, `OnExitAsync`.\
+**Upgrade hint:** Replace `StateBase<TContext>` by `SyncStateBase<TContext>`.
+
+The same convention was applied to `DriverState`. It was renamed to `SyncDriverState` and a new implementation `AsyncDriverState` was added with full async support.\
+**Upgrade hint:** Replace `DriverState<TContext>` by `SyncDriverState<TContext>`.
+
+### Server Module lifecycle refactored to async methods
+
+The lifecycle methods of ServerModules have been migrated from void to async Task to enable modern asynchronous programming with async/await.
+Since there was no native async context for lifecycle methods, asynchronous calls must be synchronized to preserve the existing start/stop behavior.
+The runtime now supports asynchronous initialization, startup, and shutdown processes (e.g., loading entities from a database during startup).
+
+**Changes in ServerModuleBase:**
+
+- `OnInitialize()` -> `OnInitializeAsync()`
+- `OnStart()` -> `OnStartAsync()`
+- `OnStop()` -> `OnStopAsync()`
+
+````cs
+protected override Task OnInitializeAsync()
+{
+    return Task.CompletedTask;
+}
+
+protected override async Task OnStartAsync()
+{
+    var asyncFoo = Container.Resolve<IAsyncFoo>();
+    await asyncFoo.StartAsync();
+}
+
+protected override async Task OnStopAsync()
+{
+    var asyncFoo = Container.Resolve<IAsyncFoo>();
+    await asyncFoo.StopAsync();
+}
+````
+
+**Changes in IModuleManager:**
+
+- `StartModules()` -> `StartModulesAsync()`
+- `StopModules()` -> `StopModulesAsync()`
+- `InitalizeModule(IServerModule module)` -> `InitalizeModuleAsync(IServerModule module)`
+- `StartModule(IServerModule module)` -> `StartModuleAsync(IServerModule module)`
+- `StopModule(IServerModule module)` -> `StopModuleAsync(IServerModule module)`
+- `ReincarnateModule(IServerModule module)` -> `ReincarnateModuleAsync(IServerModule module)`
+
+The `Main` method in `Program.cs` must be updated to a Task-based signature.
+
+````cs
+public static async Task Main(string[] args)
+{
+    AppDomainBuilder.LoadAssemblies();
+
+    [...]
+
+    var moduleManager = host.Services.GetRequiredService<IModuleManager>();
+    await moduleManager.StartModulesAsync();
+
+    await host.RunAsync();
+
+    await moduleManager.StopModulesAsync();
+}
+````
+
+Note: For projects using top-level statements you can use the new async methods without any further actions.
+
+### Resource lifecycle refactored to async methods
+
+Same as done in ServerModules has been done for Resources. The ResourceManagement now supports asynchronous initialization, startup, and shutdown processes.
+
+**Changes in Resource**:
+
+- `OnInitialize()` -> `OnInitializeAsync()`
+- `OnStart()` -> `OnStartAsync()`
+- `OnStop()` -> `OnStopAsync()`
+
+````cs
+protected override Task OnInitializeAsync()
+{
+    return base.OnStartAsync();
+}
+
+protected override Task OnStartAsync()
+{
+    return base.OnStartAsync();
+}
+
+protected override Task OnStopAsync()
+{
+    return base.OnStopAsync();
+}
+````
+
+**Changes in IResourceGraph**
+
+- `Save(IResource resource)` -> `SaveAsync(IResource resource)`
+- `Destroy(IResource resource)` -> `DestroyAsync(IResource resource)`
+- `Destroy(IResource resource, bool permanent)` -> `DestroyAsync(IResource resource, bool permanent)`
+
+**Changes in IResourceManagement**
+
+- Modification methods are now using async Task.
+
 ## WorkerSupport / VisualInstructions
 
 The WorkerSupport Module `Moryx.ControlSystem.WorkerSupport` was renamed to `Moryx.VisualInstructions.Controller` to match all namespaces. Also the Resource project was renamed from `Moryx.Resources.AssemblyInstruction` to `Moryx.Resources.VisualInstructions`.
@@ -19,6 +129,7 @@ VisualInstructions has an own separate namespace now.
 In *Moryx.Factory* **6.3** and **8.1** we introduced the new result object and optional extended APIs. The result object solved issues caused by localization of the different results. With **Moryx 10** we remove all old APIs based on strings.
 
 ### Replaced `IVisualInstructions` with `VisualInstructionParameters`
+
 The interface was only used in `VisualInstructionParameters` which can and is being used as a base class in most cases anyway.
 Hence, `IVisualInstructions` is removed in favor of a more extendable base class.
 
@@ -42,12 +153,16 @@ The `ProcessEngineContext` was added to the `ProcessEngineAttached` to provide t
 - ResourceRelationType.PossibleExchangablePart -> ResourceRelationType.PossibleExchangeablePart
 - MqttDriver.BrokerURL -> MqttDriver.BrokerUrl
 - IResourceManagement.GetAllResources -> IResourceManagement.GetResourcesUnsafe
-- IResourceManagement.Create -> IResourceManagement.CreateUnsafe
-- IResourceManagement.Read -> IResourceManagement.ReadUnsafe
-- IResourceManagement.Modify -> IResourceManagement.ModifyUnsafe
+- IResourceManagement.Create -> IResourceManagement.CreateUnsafeAsync
+- IResourceManagement.Read -> IResourceManagement.ReadUnsafeAsync
+- IResourceManagement.Modify -> IResourceManagement.ModifyUnsafeAsync
 - ProcessContext -> ProcessWorkplanContext
 - OperationClassification -> OperationStateClassification
 - OperationClassification.Loading -> OperationStateClassification.Assigning
+- IAsyncInitializable.Initialize -> IAsyncInitializable.InitializeAsync
+- IAsyncPlugin.Start -> IAsyncPlugin.StartAsync
+- IAsyncPlugin.Stop -> IAsyncPlugin.StopAsync
+- DriverState -> SyncDriverState
 - IControlSystemBound.ControlSystemAttached -> ICell.ProcessEngineAttached
 - IControlSystemBound.ControlSystemDetached -> ICell.ProcessEngineDetached
 
@@ -61,6 +176,7 @@ Several interfaces have been removed to streamline the codebase and reduce compl
 - `IConfig`: Replaced with base-class `ConfigBase`
 - `IDatabaseConfig`: Replaced with base-class `DatabaseConfig`
 - `IControlSystemBound`: Merged with `ICell`
+- `IState`: Replace with base-class `StateBase`
 
 ## Method Signature Changes
 

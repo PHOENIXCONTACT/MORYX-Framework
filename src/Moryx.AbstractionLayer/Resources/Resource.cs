@@ -16,7 +16,7 @@ namespace Moryx.AbstractionLayer.Resources
     /// Base class for all resources to reduce boilerplate code
     /// </summary>
     [DataContract, EntrySerialize(EntrySerializeMode.Never)]
-    public abstract class Resource : ILoggingComponent, IResource, IInitializablePlugin, IDisposable, IPersistentObject
+    public abstract class Resource : ILoggingComponent, IResource, IAsyncInitializablePlugin, IDisposable, IPersistentObject
     {
         #region Dependencies
 
@@ -64,44 +64,47 @@ namespace Moryx.AbstractionLayer.Resources
         public IReferences<Resource> Children { get; set; }
 
         /// <inheritdoc />
-        void IInitializable.Initialize()
+        Task IAsyncInitializable.InitializeAsync()
         {
             var loggerName = Name?.Replace(".", "_"); // replace . with _ because of logger child structure
             Logger = Logger?.GetChild(loggerName, GetType());
-            OnInitialize();
+            return OnInitializeAsync();
         }
 
         /// <summary>
         /// Resource specific implementation of <see cref="IInitializable.Initialize"/>
         /// </summary>
-        protected virtual void OnInitialize()
+        protected virtual Task OnInitializeAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        void IPlugin.Start()
+        Task IAsyncPlugin.StartAsync()
         {
-            OnStart();
+            return OnStartAsync();
         }
 
         /// <summary>
         /// Resource specific implementation of <see cref="IPlugin.Start"/>
         /// </summary>
-        protected virtual void OnStart()
+        protected virtual Task OnStartAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        void IPlugin.Stop()
+        Task IAsyncPlugin.StopAsync()
         {
-            OnStop();
+            return OnStopAsync();
         }
 
         /// <summary>
         /// Resource specific implementation of <see cref="IPlugin.Stop"/>
         /// </summary>
-        protected virtual void OnStop()
+        protected virtual Task OnStopAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />

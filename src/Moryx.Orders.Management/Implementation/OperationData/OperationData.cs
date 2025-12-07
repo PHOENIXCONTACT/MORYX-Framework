@@ -56,7 +56,7 @@ namespace Moryx.Orders.Management
             _jobs = new List<Job>();
         }
 
-        void IStateContext.SetState(IState state)
+        void IStateContext.SetState(StateBase state)
         {
             // ReSharper disable InconsistentlySynchronizedField
             _state = (OperationDataStateBase)state;

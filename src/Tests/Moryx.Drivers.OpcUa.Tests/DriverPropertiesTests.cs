@@ -12,9 +12,9 @@ namespace Moryx.Drivers.OpcUa.Tests;
 public class DriverPropertiesTests : OpcUaTestBase
 {
     [SetUp]
-    public void Setup()
+    public async Task Setup()
     {
-        BasicSetup();
+        await BasicSetup();
         var appConfigFactoryMock = new Mock<ApplicationConfigurationFactory>();
         appConfigFactoryMock
             .Setup(f => f.Create(It.IsAny<ILogger>(), It.IsAny<string>()))
@@ -29,9 +29,9 @@ public class DriverPropertiesTests : OpcUaTestBase
         //Arrange
         _driver.OpcUaServerUrl = "";
 
-        void action() => _driver.TryConnect(true).GetAwaiter().GetResult();
+        void Action() => _driver.TryConnect(true).GetAwaiter().GetResult();
 
         //Assert
-        Assert.DoesNotThrow(action);
+        Assert.DoesNotThrow(Action);
     }
 }

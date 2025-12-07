@@ -3,6 +3,7 @@
 
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -23,22 +24,25 @@ namespace Moryx.Runtime.Tests.Modules
 
         public ManualResetEvent WaitEvent { get; set; }
 
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             WaitEvent = new ManualResetEvent(false);
+            return Task.CompletedTask;
         }
 
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
+            return Task.CompletedTask;
         }
 
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             Container.Resolve<IParallelOperations>().ExecuteParallel(delegate
             {
                 WaitEvent.WaitOne();
                 throw new Exception("Test");
             });
+            return Task.CompletedTask;
         }
     }
 }

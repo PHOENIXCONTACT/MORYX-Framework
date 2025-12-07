@@ -14,7 +14,7 @@ namespace Moryx.AbstractionLayer.Drivers
         /// <inheritdoc />
         public IDriverState CurrentState { get; private set; }
 
-        void IStateContext.SetState(IState state)
+        void IStateContext.SetState(StateBase state)
         {
             CurrentState = (IDriverState)state;
             StateChanged?.Invoke(this, CurrentState);

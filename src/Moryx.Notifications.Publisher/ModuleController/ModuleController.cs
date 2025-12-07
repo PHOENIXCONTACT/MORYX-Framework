@@ -43,7 +43,7 @@ namespace Moryx.Notifications.Publisher
         }
 
         /// <inheritdoc />
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             // Register global components
             Container.ActivateDbContexts(DbContextManager);
@@ -57,22 +57,25 @@ namespace Moryx.Notifications.Publisher
 
             // Initialize components
             Container.Resolve<INotificationManager>().Initialize();
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             Container.Resolve<INotificationManager>().Start();
 
             ActivateFacade(_notificationPublisherFacade);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             DeactivateFacade(_notificationPublisherFacade);
 
             Container.Resolve<INotificationManager>().Stop();
+            return Task.CompletedTask;
         }
 
         private readonly NotificationPublisherFacade _notificationPublisherFacade = new();

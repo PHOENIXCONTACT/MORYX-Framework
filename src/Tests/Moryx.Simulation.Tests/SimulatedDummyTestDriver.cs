@@ -37,9 +37,9 @@ namespace Moryx.Simulation.Tests
 
         public virtual IEnumerable<ICell> Usages => [Cell];
 
-        protected override void OnStart()
+        protected override async Task OnStartAsync()
         {
-            base.OnStart();
+            await base.OnStartAsync();
 
             SimulatedState = SimulationState.Idle;
         }
@@ -85,7 +85,7 @@ namespace Moryx.Simulation.Tests
         public virtual event EventHandler<SimulationState> SimulatedStateChanged;
     }
 
-    public class DummyDriverState : DriverState<SimulatedDummyTestDriver>
+    public class DummyDriverState : SyncDriverState<SimulatedDummyTestDriver>
     {
         [StateDefinition(typeof(FakeDriverState), IsInitial = true)]
         public int InitialState = 0;

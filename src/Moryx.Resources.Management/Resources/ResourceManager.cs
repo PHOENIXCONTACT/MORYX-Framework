@@ -100,54 +100,55 @@ namespace Moryx.Resources.Management
         private ResourceStartupPhase _startup;
 
         /// <summary>
-        /// Fallback lock object if a new instance is saved BEFORE having the wrapper as a lock object
+        /// Semaphore for thread-safe saving of resources.
         /// </summary>
-        private readonly object _fallbackLock = new();
+        private readonly SemaphoreSlim _saveLock = new(1, 1);
 
         /// <summary>
         /// Look-up of resources that failed during init or start and are excluded from certain calls
         /// </summary>
-        private List<Resource> _failedResources = [];
+        private readonly List<Resource> _failedResources = [];
 
         /// <summary>
         /// Configured resource initializers
         /// </summary>
-        private IResourceInitializer[] _inizializers;
+        private IResourceInitializer[] _initializers;
 
         #endregion
 
         #region LifeCycle
 
-        public void Initialize()
+        public async Task InitializeAsync()
         {
             // Set delegates on graph
-            Graph.SaveDelegate = Save;
+            Graph.SaveDelegate = SaveAsync;
             Graph.DestroyDelegate = Destroy;
 
             _startup = ResourceStartupPhase.LoadResources;
             using (var uow = UowFactory.Create())
             {
                 // Create all objects
-                var allResources = ResourceEntityAccessor.FetchResourceTemplates(uow);
+                var allResources = await ResourceEntityAccessor.FetchResourceTemplates(uow);
                 if (allResources.Count > 0)
-                    LoadResources(allResources);
+                    await LoadResources(allResources);
             }
 
             _startup = ResourceStartupPhase.Initializing;
+
             // initialize resources
-            Parallel.ForEach(Graph.GetAll(), InitializeResource);
+            await Parallel.ForEachAsync(Graph.GetAll(), InitializeResource);
+
             _startup = ResourceStartupPhase.Initialized;
         }
 
         /// <summary>
         /// Handles the initialization of the resource
         /// </summary>
-        /// <param name="resource"></param>
-        private void InitializeResource(Resource resource)
+        private async ValueTask InitializeResource(Resource resource, CancellationToken cancellationToken)
         {
             try
             {
-                ((IInitializable)resource).Initialize();
+                await ((IAsyncInitializable)resource).InitializeAsync();
             }
             catch (Exception e)
             {
@@ -161,12 +162,11 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Starts a resource and handles in case of failure.
         /// </summary>
-        /// <param name="resource"></param>
-        private void StartResource(Resource resource)
+        private async ValueTask StartResource(Resource resource, CancellationToken cancellationToken)
         {
             try
             {
-                ((IPlugin)resource).Start();
+                await ((IAsyncPlugin)resource).StartAsync();
             }
             catch (Exception e)
             {
@@ -177,10 +177,10 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Load and link all resources from the database
         /// </summary>
-        private void LoadResources(ICollection<ResourceEntityAccessor> allResources)
+        private async Task LoadResources(ICollection<ResourceEntityAccessor> allResources)
         {
             // Create resource objects on multiple threads
-            Parallel.ForEach(allResources, InstantiateResource);
+            await Parallel.ForEachAsync(allResources, InstantiateResource);
 
             // Link them to each other
             Parallel.ForEach(allResources, LinkReferences);
@@ -193,12 +193,12 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Instantiate object from entity based template
         /// </summary>
-        private void InstantiateResource(ResourceEntityAccessor template)
+        private async ValueTask InstantiateResource(ResourceEntityAccessor template, CancellationToken cancellationToken)
         {
             try
             {
                 var resource = template.Instantiate(TypeController, Graph);
-                AddResource(resource, false);
+                await AddResource(resource, false);
             }
             catch (Exception e)
             {
@@ -209,7 +209,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Add resource to all collections and register to the <see cref="Resource.Changed"/> event
         /// </summary>
-        private void AddResource(Resource instance, bool registerEvents)
+        private async Task AddResource(Resource instance, bool registerEvents)
         {
             // Add instance to the graph
             var resource = Graph.Add(instance);
@@ -225,13 +225,13 @@ namespace Moryx.Resources.Management
                     break;
                 case ResourceStartupPhase.Initializing:
                 case ResourceStartupPhase.Initialized:
-                    // Resources those are created during the initialize of a resource are automatically initialized also.
-                    InitializeResource(resource);
+                    // Resources those are created during the initialization of a resource are automatically initialized also.
+                    await InitializeResource(resource, CancellationToken.None);
                     break;
                 case ResourceStartupPhase.Starting:
                 case ResourceStartupPhase.Started:
                     // Resources those are created during the start of a resource are automatically initialized and started also.
-                    InitializeAndStart(resource);
+                    await InitializeAndStart(resource);
                     break;
                 case ResourceStartupPhase.Stopping:
                 case ResourceStartupPhase.Stopped:
@@ -248,10 +248,10 @@ namespace Moryx.Resources.Management
         /// Initialize and start the current resource
         /// </summary>
         /// <param name="resource">Current resource</param>
-        private void InitializeAndStart(Resource resource)
+        private async Task InitializeAndStart(Resource resource)
         {
-            InitializeResource(resource);
-            StartResource(resource);
+            await InitializeResource(resource, CancellationToken.None);
+            await StartResource(resource, CancellationToken.None);
         }
 
         /// <summary>
@@ -280,11 +280,11 @@ namespace Moryx.Resources.Management
 
         /// <summary>
         /// Event handler when a resource was modified and the changes need to
-        /// written to storage
+        /// be written to storage
         /// </summary>
         private void OnResourceChanged(object sender, EventArgs eventArgs)
         {
-            Save((Resource)sender);
+            _ = Task.Run(() => SaveAsync((Resource)sender));
         }
 
         /// <summary>
@@ -295,27 +295,27 @@ namespace Moryx.Resources.Management
             ResourceLinker.LinkReferences(entityAccessor.Instance, entityAccessor.Relations);
         }
 
-        public void Start()
+        public async Task StartAsync()
         {
             // Create configured resource initializers
-            _inizializers = (from importerConfig in Config.Initializers
+            _initializers = (from importerConfig in Config.Initializers
                 select InitializerFactory.Create(importerConfig)).ToArray();
 
             // start resources
             _startup = ResourceStartupPhase.Starting;
-            Parallel.ForEach(Graph.GetAll().Except(_failedResources), StartResource);
+            await Parallel.ForEachAsync(Graph.GetAll().Except(_failedResources), StartResource);
             _startup = ResourceStartupPhase.Started;
         }
 
-        public void Stop()
+        public async Task StopAsync()
         {
             _startup = ResourceStartupPhase.Stopping;
 
-            Parallel.ForEach(Graph.GetAll(), resource =>
+            await Parallel.ForEachAsync(Graph.GetAll(), async (resource, _) =>
             {
                 try
                 {
-                    ((IPlugin)resource).Stop();
+                    await ((IAsyncPlugin)resource).StopAsync();
                     UnregisterEvents(resource);
                 }
                 catch (Exception e)
@@ -329,27 +329,29 @@ namespace Moryx.Resources.Management
 
         #endregion
 
-        public void Save(Resource resource)
+        public async Task SaveAsync(Resource resource)
         {
-            lock (Graph.GetResource(resource.Id) ?? _fallbackLock)
+            await _saveLock.WaitAsync();
+
+            try
             {
                 var isNew = resource.Id == 0;
 
                 using var uow = UowFactory.Create();
                 var newResources = new HashSet<Resource>();
 
-                var saveResult = ResourceEntityAccessor.SaveToEntity(uow, resource);
+                var saveResult = await ResourceEntityAccessor.SaveToEntity(uow, resource);
                 var entity = saveResult;
                 if (uow.IsLinked(resource))
                     newResources.Add(resource);
 
                 var references = new Dictionary<Resource, ResourceEntity>();
-                var newInstances = ResourceLinker.SaveReferences(uow, resource, entity, references);
+                var newInstances = await ResourceLinker.SaveReferencesAsync(uow, resource, entity, references);
                 newResources.AddRange(newInstances);
 
                 try
                 {
-                    uow.SaveChanges();
+                    await uow.SaveChangesAsync();
                     resource.Id = entity.Id;
                     foreach (var instance in newResources)
                     {
@@ -366,12 +368,16 @@ namespace Moryx.Resources.Management
                 }
 
                 foreach (var instance in newResources)
-                    AddResource(instance, true);
+                    await AddResource(instance, true);
 
                 if (!isNew)
                 {
                     RaiseResourceChanged(resource);
                 }
+            }
+            finally
+            {
+                _saveLock.Release();
             }
         }
 
@@ -383,31 +389,42 @@ namespace Moryx.Resources.Management
             var instance = args.Parent;
             var property = args.CollectionProperty;
 
-            lock (Graph.GetResource(instance.Id)) // Unlike Save AutoSave collections are ALWAYS part of the Graph
+            _ = Task.Run(async () =>
             {
-                using var uow = UowFactory.Create();
-                var newResources = ResourceLinker.SaveSingleCollection(uow, instance, property);
+                await _saveLock.WaitAsync();
 
                 try
                 {
-                    uow.SaveChanges();
+                    using var uow = UowFactory.Create();
+                    var newResources = await ResourceLinker.SaveSingleCollectionAsync(uow, instance, property);
+
+                    try
+                    {
+                        await uow.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(LogLevel.Error, ex, "Error saving collection {2} on resource {0}-{1}!", instance.Id, instance.Name, property.Name);
+                        throw;
+                    }
+
+                    foreach (var newResource in newResources)
+                    {
+                        await AddResource(newResource, true);
+                    }
+
+                    RaiseResourceChanged(instance);
                 }
-                catch (Exception ex)
+                finally
                 {
-                    Logger.Log(LogLevel.Error, ex, "Error saving collection {2} on resource {0}-{1}!", instance.Id, instance.Name, property.Name);
-                    throw;
+                    _saveLock.Release();
                 }
-
-                foreach (var newResource in newResources)
-                    AddResource(newResource, true);
-
-                RaiseResourceChanged(instance);
-            }
+            });
         }
 
         public Task<ResourceInitializerResult> ExecuteInitializer(string initializerName, object parameters)
         {
-            var initializer = _inizializers.First(i => i.Name == initializerName);
+            var initializer = _initializers.First(i => i.Name == initializerName);
             return ExecuteInitializer(initializer, parameters);
         }
 
@@ -421,7 +438,7 @@ namespace Moryx.Resources.Management
             if (!result.Saved)
             {
                 using var uow = UowFactory.Create();
-                ResourceLinker.SaveRoots(uow, result.InitializedResources);
+                await ResourceLinker.SaveRootsAsync(uow, result.InitializedResources);
                 await uow.SaveChangesAsync();
             }
 
@@ -430,10 +447,10 @@ namespace Moryx.Resources.Management
 
         #region IResourceCreator
 
-        public bool Destroy(IResource resource, bool permanent)
+        public async Task<bool> Destroy(IResource resource, bool permanent)
         {
             var instance = (Resource)resource;
-            ((IPlugin)resource).Stop();
+            await ((IAsyncPlugin)resource).StopAsync();
 
             // Load entity and relations to disconnect resource and remove from database
             using (var uow = UowFactory.Create())
@@ -443,8 +460,8 @@ namespace Moryx.Resources.Management
 
                 // Fetch entity and relations
                 // Update properties on the references and get rid of relation entities
-                var entity = resourceRepository.GetByKey(instance.Id);
-                var relations = ResourceRelationAccessor.FromEntity(uow, entity);
+                var entity = await resourceRepository.GetByKeyAsync(instance.Id);
+                var relations = await ResourceRelationAccessor.FromEntity(uow, entity);
                 foreach (var relation in relations)
                 {
                     var reference = Graph.Get(relation.ReferenceId);
@@ -457,7 +474,7 @@ namespace Moryx.Resources.Management
 
                 resourceRepository.Remove(entity, permanent);
 
-                uow.SaveChanges();
+                await uow.SaveChangesAsync();
             }
 
             // Unregister from all events to avoid memory leaks

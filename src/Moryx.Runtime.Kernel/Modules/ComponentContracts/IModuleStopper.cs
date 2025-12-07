@@ -11,11 +11,11 @@ namespace Moryx.Runtime.Kernel
         /// Stop this plugin and all required dependencies
         /// </summary>
         /// <param name="module"></param>
-        void Stop(IServerModule module);
+        Task StopAsync(IServerModule module);
 
         /// <summary>
         /// Stop all services
         /// </summary>
-        void StopAll();
+        Task StopAllAsync();
     }
 }

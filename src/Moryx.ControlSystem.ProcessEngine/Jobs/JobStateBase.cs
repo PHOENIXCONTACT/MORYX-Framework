@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace Moryx.ControlSystem.ProcessEngine.Jobs
 {
-    internal abstract class JobStateBase : StateBase<JobDataBase>, IJobState
+    internal abstract class JobStateBase : SyncStateBase<JobDataBase>, IJobState
     {
         internal const int CompletedKey = 999;
         internal const int InitialKey = 0;

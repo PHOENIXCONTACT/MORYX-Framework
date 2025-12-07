@@ -46,16 +46,19 @@ namespace Moryx.Runtime.Kernel.Modules
         {
         }
 
-        public void Initialize()
+        public Task InitializeAsync()
         {
+            return Task.CompletedTask;
         }
 
-        public void Start()
+        public Task StartAsync()
         {
+            return Task.CompletedTask;
         }
 
-        public void Stop()
+        public Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
         public Type RepresentedService { get; private set; }

@@ -21,14 +21,12 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
     {
         private readonly IModuleManager _moduleManager;
         private readonly IConfigManager _configManager;
-        private readonly IParallelOperations _parallelOperations;
         private readonly IServiceProvider _serviceProvider;
 
-        public ModulesController(IModuleManager moduleManager, IConfigManager configManager, IParallelOperations parallelOperations, IServiceProvider serviceProvider)
+        public ModulesController(IModuleManager moduleManager, IConfigManager configManager, IServiceProvider serviceProvider)
         {
             _moduleManager = moduleManager;
             _configManager = configManager;
-            _parallelOperations = parallelOperations;
             _serviceProvider = serviceProvider;
         }
 
@@ -99,7 +97,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             if (module == null)
                 return NotFound($"Module with name \"{moduleName}\" could not be found");
 
-            _moduleManager.StartModule(module);
+            _moduleManager.StartModuleAsync(module);
             return Ok();
         }
 
@@ -111,7 +109,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             if (module == null)
                 return NotFound($"Module with name \"{moduleName}\" could not be found");
 
-            _moduleManager.StopModule(module);
+            _moduleManager.StopModuleAsync(module);
             return Ok();
         }
 
@@ -123,7 +121,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             if (module == null)
                 return NotFound($"Module with name \"{moduleName}\" could not be found");
 
-            _parallelOperations.ExecuteParallel(_moduleManager.ReincarnateModule, module);
+            Task.Run(() => _moduleManager.ReincarnateModuleAsync(module));
             return Ok();
         }
 
@@ -160,7 +158,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             foreach (var notification in notifications)
                 module.AcknowledgeNotification(notification);
 
-            _moduleManager.InitializeModule(module);
+            _moduleManager.InitializeModuleAsync(module);
             return Ok();
         }
 
@@ -209,7 +207,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
 
                 if (request.UpdateMode == ConfigUpdateMode.SaveAndReincarnate)
                     // This has to be done parallel so we can also reincarnate the Maintenance itself
-                    _parallelOperations.ExecuteParallel(() => _moduleManager.ReincarnateModule(module));
+                    Task.Run(() => _moduleManager.ReincarnateModuleAsync(module));
                 return Ok();
             }
             catch (Exception ex)
@@ -305,7 +303,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
         private IServerModule GetModuleFromManager(string moduleName)
             => _moduleManager.AllModules.FirstOrDefault(m => m.Name == moduleName);
 
-        private static AssemblyModel ConvertAssembly(IInitializable service)
+        private static AssemblyModel ConvertAssembly(IAsyncInitializable service)
         {
             var assembly = service.GetType().Assembly;
             var assemblyName = assembly.GetName();

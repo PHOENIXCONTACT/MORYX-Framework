@@ -38,22 +38,25 @@ namespace Moryx.ProcessData.Adapter.OrderManagement
         }
 
         /// <inheritdoc />
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             Container.SetInstance(OrderManagement)
                 .SetInstance(ProcessDataMonitor);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             Container.Resolve<OrderManagementAdapter>().Start();
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             Container.Resolve<OrderManagementAdapter>().Stop();
+            return Task.CompletedTask;
         }
     }
 }

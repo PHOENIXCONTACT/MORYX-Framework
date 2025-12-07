@@ -75,7 +75,7 @@ namespace Moryx.ControlSystem.ProcessEngine
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             Container.RegisterNotifications();
 
@@ -97,12 +97,13 @@ namespace Moryx.ControlSystem.ProcessEngine
             Container.LoadComponents<IJobScheduler>();
 
             Container.Resolve<ComponentOrchestration>().Initialize();
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             // Activate facade
             ActivateFacade(_jobManagementFacade);
@@ -111,12 +112,14 @@ namespace Moryx.ControlSystem.ProcessEngine
 
             // Resolve component orchestration and start all components in the correct order
             Container.Resolve<ComponentOrchestration>().Start();
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             // Resolve component orchestration and stop all components in the correct order
             Container.Resolve<ComponentOrchestration>().Stop();
@@ -125,6 +128,7 @@ namespace Moryx.ControlSystem.ProcessEngine
             DeactivateFacade(_jobManagementFacade);
             DeactivateFacade(_notificationSourceFacade);
             DeactivateFacade(_processControlFacade);
+            return Task.CompletedTask;
         }
 
         #endregion
