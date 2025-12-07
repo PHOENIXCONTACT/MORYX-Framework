@@ -40,6 +40,12 @@ namespace Moryx.Serialization
         [DataMember]
         public Entry Parameters { get; set; }
 
+        /// <summary>
+        /// True if the method is awaitable by <see cref="Task"/>
+        /// </summary>
+        [DataMember]
+        public bool IsAsync { get; set; }
+
         /// <see cref="ICloneable"/>
         public object Clone()
         {
@@ -56,7 +62,8 @@ namespace Moryx.Serialization
             {
                 Name = Name,
                 DisplayName = DisplayName,
-                Description = Description
+                Description = Description,
+                IsAsync =  IsAsync
             };
 
             if (deep)

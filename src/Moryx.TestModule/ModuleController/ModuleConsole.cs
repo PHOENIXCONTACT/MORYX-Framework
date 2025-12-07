@@ -97,5 +97,11 @@ namespace Moryx.TestModule
             var jsonTest = Container.Resolve<JsonTest>();
             jsonTest.Start();
         }
+
+        [EntrySerialize, Description("Executes the async method")]
+        public Task<string> AsyncTest()
+        {
+            return Task.FromResult("Test");
+        }
     }
 }
