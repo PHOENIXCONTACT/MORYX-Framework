@@ -135,7 +135,7 @@ namespace Moryx.Benchmarking.Setups
             var recipe = recipeRepo.Create();
             recipe.Name = "Recipe-Steps:" + stepCount;
             recipe.Classification = (int)RecipeClassification.Alternative;
-            recipe.Type = typeof(ProductionRecipe).FullName;
+            recipe.TypeName = typeof(ProductionRecipe).FullName;
             recipe.State = (int)RecipeState.Released;
             recipe.Workplan = workplanEntity;
             recipe.Product = product;

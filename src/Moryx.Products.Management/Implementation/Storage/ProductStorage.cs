@@ -30,29 +30,31 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Recipe types
         /// </summary>
-        public IReadOnlyList<Type> RecipeTypes => RecipeInformation.Select(rs => rs.Value.Strategy.TargetType).ToList();
+        public IReadOnlyList<Type> RecipeTypes => _recipeInformation.Select(rs => rs.Value.Strategy.TargetType).ToList();
 
         /// <summary>
         /// Optimized constructor delegate for the different product types
         /// Custom strategies for each product type
         /// </summary>
-        public IReadOnlyList<Type> ProductTypes => TypeInformation.Where(ts => ts.Value.Strategy != null)
+        public IReadOnlyList<Type> ProductTypes => _typeInformation.Where(ts => ts.Value.Strategy != null)
             .Select(ts => ts.Value.Strategy.TargetType).ToList();
 
-        protected IDictionary<string, ProductTypeInformation> TypeInformation { get; }
-            = new Dictionary<string, ProductTypeInformation>();
+        /// <summary>
+        /// Map of product types and their type information
+        /// </summary>
+        private readonly IDictionary<string, ProductTypeInformation> _typeInformation = new Dictionary<string, ProductTypeInformation>();
 
         /// <summary>
         /// Constructors for recipes
         /// Strategies for the different recipe types
         /// </summary>
-        protected IDictionary<string, ConstructorStrategyInformation<IProductRecipe, ProductRecipeConfiguration, IProductRecipeStrategy>> RecipeInformation { get; }
-            = new Dictionary<string, ConstructorStrategyInformation<IProductRecipe, ProductRecipeConfiguration, IProductRecipeStrategy>>();
+        private readonly IDictionary<string, ConstructorStrategyInformation<IProductRecipe, ProductRecipeConfiguration, IProductRecipeStrategy>> _recipeInformation =
+            new Dictionary<string, ConstructorStrategyInformation<IProductRecipe, ProductRecipeConfiguration, IProductRecipeStrategy>>();
 
         /// <summary>
         /// Map of custom strategies for each product instance
         /// </summary>
-        protected IDictionary<string, IProductInstanceStrategy> InstanceStrategies { get; } = new Dictionary<string, IProductInstanceStrategy>();
+        private readonly IDictionary<string, IProductInstanceStrategy> _instanceStrategies = new Dictionary<string, IProductInstanceStrategy>();
 
         /// <summary>
         /// Override with your merge factory
@@ -84,44 +86,47 @@ namespace Moryx.Products.Management
             var types = ReflectionTool.GetPublicClasses<ProductType>();
             foreach (var type in types)
             {
-                TypeInformation.TryAdd(type.FullName, new ProductTypeInformation(type));
+                _typeInformation.TryAdd(type.FullName, new ProductTypeInformation(type));
             }
 
             foreach (var config in Config.TypeStrategies)
             {
                 var strategy = StrategyFactory.CreateTypeStrategy(config);
-                if (!TypeInformation.ContainsKey(config.TargetType))
-                    TypeInformation.Add(config.TargetType, new ProductTypeInformation(strategy.TargetType));
-                TypeInformation[config.TargetType].Strategy = strategy;
-                TypeInformation[config.TargetType].Constructor = ReflectionTool.ConstructorDelegate<ProductType>(strategy.TargetType);
+                if (!_typeInformation.ContainsKey(config.TargetType))
+                    _typeInformation.Add(config.TargetType, new ProductTypeInformation(strategy.TargetType));
+                _typeInformation[config.TargetType].Strategy = strategy;
+                _typeInformation[config.TargetType].Constructor = ReflectionTool.ConstructorDelegate<ProductType>(strategy.TargetType);
             }
 
             // Create instance strategies
             foreach (var config in Config.InstanceStrategies)
             {
                 var strategy = StrategyFactory.CreateInstanceStrategy(config);
-                InstanceStrategies[config.TargetType] = strategy;
+                _instanceStrategies[config.TargetType] = strategy;
             }
 
             // Create link strategies
             foreach (var config in Config.LinkStrategies)
             {
-                if (!TypeInformation.ContainsKey(config.TargetType))
+                if (!_typeInformation.TryGetValue(config.TargetType, out var typeInfo))
                     continue;
-                var typeInfo = TypeInformation[config.TargetType];
+
                 var strategy = StrategyFactory.CreateLinkStrategy(config);
                 if (!typeInfo.PartLinksInformation.ContainsKey(config.PartName))
                     typeInfo.PartLinksInformation.Add(config.PartName, new ConstructorStrategyInformation<ProductPartLink, ProductLinkConfiguration, IProductLinkStrategy>());
+
                 var partLinkInfo = typeInfo.PartLinksInformation[config.PartName];
                 partLinkInfo.Strategy = strategy;
 
                 var property = strategy.TargetType.GetProperty(config.PartName);
                 var linkType = property.PropertyType;
+
                 // Extract element type from collections
                 if (typeof(IEnumerable<ProductPartLink>).IsAssignableFrom(linkType))
                 {
                     linkType = linkType.GetGenericArguments()[0];
                 }
+
                 // Build generic type
                 if (linkType.IsInterface && linkType.IsGenericType)
                 {
@@ -136,10 +141,11 @@ namespace Moryx.Products.Management
             foreach (var config in Config.RecipeStrategies)
             {
                 var strategy = StrategyFactory.CreateRecipeStrategy(config);
-                if (!RecipeInformation.ContainsKey(config.TargetType))
-                    RecipeInformation.Add(config.TargetType, new ConstructorStrategyInformation<IProductRecipe, ProductRecipeConfiguration, IProductRecipeStrategy>());
-                RecipeInformation[config.TargetType].Strategy = strategy;
-                RecipeInformation[config.TargetType].Constructor = ReflectionTool.ConstructorDelegate<IProductRecipe>(strategy.TargetType);
+                if (!_recipeInformation.ContainsKey(config.TargetType))
+                    _recipeInformation.Add(config.TargetType, new ConstructorStrategyInformation<IProductRecipe, ProductRecipeConfiguration, IProductRecipeStrategy>());
+
+                _recipeInformation[config.TargetType].Strategy = strategy;
+                _recipeInformation[config.TargetType].Constructor = ReflectionTool.ConstructorDelegate<IProductRecipe>(strategy.TargetType);
             }
         }
 
@@ -155,35 +161,31 @@ namespace Moryx.Products.Management
         /// <inheritdoc />
         public IProductRecipe LoadRecipe(long recipeId)
         {
-            using (var uow = Factory.Create())
-            {
-                var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
-                var recipeEntity = recipeRepo.GetByKey(recipeId);
-                return recipeEntity != null ? LoadRecipe(uow, recipeEntity) : null;
-            }
+            using var uow = Factory.Create();
+            var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
+            var recipeEntity = recipeRepo.GetByKey(recipeId);
+            return recipeEntity != null ? LoadRecipe(uow, recipeEntity) : null;
         }
 
         /// <inheritdoc />
         public IReadOnlyList<IProductRecipe> LoadRecipes(long productId, RecipeClassification classifications)
         {
-            using (var uow = Factory.Create())
-            {
-                var repo = uow.GetRepository<IProductTypeRepository>();
-                var productEntity = repo.GetByKey(productId);
-                if (productEntity == null)
-                    return null;
+            using var uow = Factory.Create();
+            var repo = uow.GetRepository<IProductTypeRepository>();
+            var productEntity = repo.GetByKey(productId);
+            if (productEntity == null)
+                return null;
 
-                var classificationMask = (int)classifications;
-                var recipeEntities = (from recipeEntity in uow.GetRepository<IProductRecipeRepository>().Linq.Active()
-                                      let classificationValue = recipeEntity.Classification
-                                      where recipeEntity.ProductId == productId
-                                      where classificationValue >= 0 // We never return clones in this query
-                                      where (classificationValue & classificationMask) == classificationValue
+            var classificationMask = (int)classifications;
+            var recipeEntities = (from recipeEntity in uow.GetRepository<IProductRecipeRepository>().Linq.Active()
+                let classificationValue = recipeEntity.Classification
+                where recipeEntity.ProductId == productId
+                where classificationValue >= 0 // We never return clones in this query
+                where (classificationValue & classificationMask) == classificationValue
 
-                                      select recipeEntity).ToArray();
+                select recipeEntity).ToArray();
 
-                return recipeEntities.Select(entity => LoadRecipe(uow, entity)).ToArray();
-            }
+            return recipeEntities.Select(entity => LoadRecipe(uow, entity)).ToArray();
         }
 
         /// <summary>
@@ -191,81 +193,65 @@ namespace Moryx.Products.Management
         /// </summary>
         private IProductRecipe LoadRecipe(IUnitOfWork uow, ProductRecipeEntity recipeEntity)
         {
-            var productRecipe = RecipeInformation[recipeEntity.Type].Constructor();
+            var productRecipe = _recipeInformation[recipeEntity.TypeName].Constructor();
 
             RecipeStorage.CopyToRecipe(recipeEntity, productRecipe);
             productRecipe.Product = LoadType(uow, productRecipe.Product.Id);
 
-            RecipeInformation[recipeEntity.Type].Strategy.LoadRecipe(recipeEntity, productRecipe);
+            _recipeInformation[recipeEntity.TypeName].Strategy.LoadRecipe(recipeEntity, productRecipe);
 
             return productRecipe;
         }
 
-        ///
+        /// <inheritdoc/>
         public long SaveRecipe(IProductRecipe recipe)
         {
-            using (var uow = Factory.Create())
-            {
-                var entity = SaveRecipe(uow, recipe);
-                uow.SaveChanges();
-                recipe.Id = entity.Id;
+            using var uow = Factory.Create();
+            var entity = SaveRecipe(uow, recipe);
+            uow.SaveChanges();
+            recipe.Id = entity.Id;
 
-                return recipe.Id;
+            return recipe.Id;
+        }
+
+        /// <inheritdoc />
+        public void SaveRecipes(IReadOnlyList<IProductRecipe> recipes)
+        {
+            using var uow = Factory.Create();
+
+            // Save changes to recipes
+            foreach (var recipe in recipes)
+            {
+                SaveRecipe(uow, recipe);
             }
+
+            uow.SaveChanges();
         }
 
         /// <summary>
         /// Saves <see cref="ProductRecipe"/> to database and return the <see cref="ProductRecipeEntity"/>
         /// </summary>
-        protected ProductRecipeEntity SaveRecipe(IUnitOfWork uow, IProductRecipe recipe)
+        private ProductRecipeEntity SaveRecipe(IUnitOfWork uow, IProductRecipe recipe)
         {
             var entity = RecipeStorage.ToRecipeEntity(uow, recipe);
 
-            RecipeInformation[recipe.GetType().FullName].Strategy.SaveRecipe(recipe, entity);
+            _recipeInformation[recipe.RecipeTypeName()].Strategy.SaveRecipe(recipe, entity);
 
             return entity;
         }
 
         /// <inheritdoc />
-        public void SaveRecipes(long productId, ICollection<IProductRecipe> recipes)
-        {
-            using (var uow = Factory.Create())
-            {
-                // Prepare required repos
-                var prodRepo = uow.GetRepository<IProductTypeRepository>();
-                var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
-
-                // Save changes to recipes
-                foreach (var recipe in recipes)
-                {
-                    SaveRecipe(uow, recipe);
-                }
-
-                var prod = prodRepo.GetByKey(productId);
-
-                // Find deleted ones and remove from db
-                var deleted = from dbRecipe in prod.Recipes
-                              where recipes.All(r => r.Id != dbRecipe.Id)
-                              select dbRecipe;
-                recipeRepo.RemoveRange(deleted);
-
-                uow.SaveChanges();
-            }
-        }
-
-        /// <inheritdoc />
         public void RemoveRecipe(long recipeId)
         {
-            using (var uow = Factory.Create())
-            {
-                // Prepare required repos
-                var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
+            using var uow = Factory.Create();
 
-                var deletedRecipe = recipeRepo.GetByKey(recipeId);
-                recipeRepo.Remove(deletedRecipe);
+            // Prepare required repos
+            var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
 
-                uow.SaveChanges();
-            }
+            var deletedRecipe = recipeRepo.GetByKey(recipeId);
+            recipeRepo.Remove(deletedRecipe);
+
+            uow.SaveChanges();
         }
 
         #endregion
@@ -285,7 +271,7 @@ namespace Moryx.Products.Management
                     productsQuery = productsQuery.Where(p => p.TypeName == query.Type);
                 else
                 {
-                    var baseType = TypeInformation[query.Type].Type;
+                    var baseType = _typeInformation[query.Type].Type;
                     var allTypes = ReflectionTool.GetPublicClasses<ProductType>(type =>
                     {
                         // Check if any interface matches
@@ -299,11 +285,11 @@ namespace Moryx.Products.Management
                     productsQuery = productsQuery.Where(p => allTypes.Contains(p.TypeName));
                 }
 
-                // Filter by type properties properties
+                // Filter by type properties
                 if (query.PropertyFilters != null)
                 {
                     var targetTypeName = query.Type.Split(',')[0];
-                    var typeSearch = TypeInformation[targetTypeName].Strategy;
+                    var typeSearch = _typeInformation[targetTypeName].Strategy;
                     var targetType = typeSearch.TargetType;
                     // Make generic method for the target type
                     var genericMethod = typeof(IProductTypeStrategy).GetMethod(nameof(IProductTypeStrategy.TransformSelector));
@@ -357,17 +343,14 @@ namespace Moryx.Products.Management
                 productsQuery = productsQuery.Where(p => p.Recipes.Count == 0);
 
             // Apply selector
-            switch (query.Selector)
+            productsQuery = query.Selector switch
             {
-                case Selector.Parent:
-                    productsQuery = productsQuery.SelectMany(p => p.Parents).Where(p => p.Parent.Deleted == null)
-                        .Select(link => link.Parent);
-                    break;
-                case Selector.Parts:
-                    productsQuery = productsQuery.SelectMany(p => p.Parts).Where(p => p.Parent.Deleted == null)
-                        .Select(link => link.Child);
-                    break;
-            }
+                Selector.Parent => productsQuery.SelectMany(p => p.Parents)
+                    .Where(p => p.Parent.Deleted == null).Select(link => link.Parent),
+                Selector.Parts => productsQuery.SelectMany(p => p.Parts)
+                    .Where(p => p.Parent.Deleted == null).Select(link => link.Child),
+                _ => productsQuery
+            };
 
             // Include current version
             //productsQuery = productsQuery.Include(p => p.CurrentVersion);
@@ -376,10 +359,8 @@ namespace Moryx.Products.Management
             var products = productsQuery.OrderBy(p => p.TypeName)
                 .ThenBy(p => p.Identifier)
                 .ThenBy(p => p.Revision).ToList();
-            return products.Where(p => TypeInformation.ContainsKey(p.TypeName)).Select(p =>
-            {
-                return TypeInformation[p.TypeName].CreateTypeFromEntity(p);
-            }).ToList();
+            return products.Where(p => _typeInformation.ContainsKey(p.TypeName))
+                .Select(p => _typeInformation[p.TypeName].CreateTypeFromEntity(p)).ToList();
         }
 
         private static Expression ConvertPropertyFilter(Type targetType, PropertyFilter filter)
@@ -413,34 +394,32 @@ namespace Moryx.Products.Management
 
         public IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector)
         {
-            using (var uow = Factory.Create())
+            using var uow = Factory.Create();
+            var repo = uow.GetRepository<IProductTypeRepository>();
+            var matchingStrategies = _typeInformation.Values.Where(v => v.Strategy != null).Select(p => p.Strategy)
+                .Where(i => typeof(TType).IsAssignableFrom(i.TargetType)).ToList();
+
+            IQueryable<ProductTypeEntity> query = null;
+            foreach (var typeStrategy in matchingStrategies)
             {
-                var repo = uow.GetRepository<IProductTypeRepository>();
-                var matchingStrategies = TypeInformation.Values.Where(v => v.Strategy != null).Select(p => p.Strategy)
-                    .Where(i => typeof(TType).IsAssignableFrom(i.TargetType)).ToList();
-
-                IQueryable<ProductTypeEntity> query = null;
-                foreach (var typeStrategy in matchingStrategies)
-                {
-                    var columnExpression = typeStrategy.TransformSelector(selector);
-                    var queryFilter = AsVersionExpression(columnExpression);
-                    query = query == null
-                        ? repo.Linq.Where(queryFilter) // Create query
-                        : query.Union(repo.Linq.Where(queryFilter)); // Append query
-                }
-
-                // No query or no result => Nothing to do
-                List<ProductTypeEntity> entities;
-                if (query == null || (entities = query.ToList()).Count == 0)
-                    return Array.Empty<TType>();
-
-                var loadedProducts = new Dictionary<long, ProductType>();
-                var instances = entities.Select(entity => Transform(uow, entity, false, loadedProducts)).OfType<TType>().ToArray();
-                // Final check against compiled expression
-                var compiledSelector = selector.Compile();
-                // Only return matches against compiled expression
-                return instances.Where(compiledSelector.Invoke).ToArray();
+                var columnExpression = typeStrategy.TransformSelector(selector);
+                var queryFilter = AsVersionExpression(columnExpression);
+                query = query == null
+                    ? repo.Linq.Where(queryFilter) // Create query
+                    : query.Union(repo.Linq.Where(queryFilter)); // Append query
             }
+
+            // No query or no result => Nothing to do
+            List<ProductTypeEntity> entities;
+            if (query == null || (entities = query.ToList()).Count == 0)
+                return Array.Empty<TType>();
+
+            var loadedProducts = new Dictionary<long, ProductType>();
+            var instances = entities.Select(entity => Transform(uow, entity, false, loadedProducts)).OfType<TType>().ToArray();
+            // Final check against compiled expression
+            var compiledSelector = selector.Compile();
+            // Only return matches against compiled expression
+            return instances.Where(compiledSelector.Invoke).ToArray();
         }
 
         /// <inheritdoc />
@@ -481,21 +460,20 @@ namespace Moryx.Products.Management
             return product != null ? Transform(uow, product, true) : null;
         }
 
-        private ProductType Transform(IUnitOfWork uow, ProductTypeEntity typeEntity, bool full, IDictionary<long, ProductType> loadedProducts = null, ProductPartLink parentLink = null)
+        private ProductType Transform(IUnitOfWork uow, ProductTypeEntity typeEntity, bool full, IDictionary<long, ProductType> loadedProducts = null)
         {
             // Build cache if this wasn't done before
-            if (loadedProducts == null)
-                loadedProducts = new Dictionary<long, ProductType>();
+            loadedProducts ??= new Dictionary<long, ProductType>();
 
             // Take converted product from dictionary if we already transformed it
-            if (loadedProducts.ContainsKey(typeEntity.Id))
-                return loadedProducts[typeEntity.Id];
+            if (loadedProducts.TryGetValue(typeEntity.Id, out var loadedProduct))
+                return loadedProduct;
 
             // Strategy to load product and its parts
-            var strategy = TypeInformation[typeEntity.TypeName].Strategy;
+            var strategy = _typeInformation[typeEntity.TypeName].Strategy;
 
             // Load product
-            var product = TypeInformation[typeEntity.TypeName].Constructor();
+            var product = _typeInformation[typeEntity.TypeName].Constructor();
             product.Id = typeEntity.Id;
             product.Name = typeEntity.Name;
             product.State = (ProductState)typeEntity.CurrentVersion.State;
@@ -520,7 +498,7 @@ namespace Moryx.Products.Management
             // Let's get nasty!
             // Load children
             var type = productType.GetType();
-            foreach (var partLink in TypeInformation[type.FullName].PartLinksInformation.Values)
+            foreach (var partLink in _typeInformation[productType.ProductTypeName()].PartLinksInformation.Values)
             {
                 var part = partLink.Strategy;
                 object value = null;
@@ -533,7 +511,7 @@ namespace Moryx.Products.Management
                         var link = partLink.Constructor();
                         link.Id = linkEntity.Id;
                         part.LoadPartLink(linkEntity, link);
-                        link.Product = (ProductType)Transform(uow, linkEntity.Child, true, loadedProducts, link);
+                        link.Product = (ProductType)Transform(uow, linkEntity.Child, true, loadedProducts);
                         value = link;
                     }
                 }
@@ -546,7 +524,7 @@ namespace Moryx.Products.Management
                         var link = partLink.Constructor();
                         link.Id = linkEntity.Id;
                         part.LoadPartLink(linkEntity, link);
-                        link.Product = (ProductType)Transform(uow, linkEntity.Child, true, loadedProducts, link);
+                        link.Product = (ProductType)Transform(uow, linkEntity.Child, true, loadedProducts);
                         links.Add(link);
                     }
                     value = links;
@@ -564,25 +542,23 @@ namespace Moryx.Products.Management
         /// </summary>
         public long SaveType(ProductType modifiedInstance)
         {
-            using (var uow = Factory.Create())
+            using var uow = Factory.Create();
+            var productSaverContext = new ProductPartsSaverContext(uow);
+            var entity = SaveProduct(productSaverContext, modifiedInstance);
+
+            uow.SaveChanges();
+            modifiedInstance.Id = entity.Id;
+            foreach (var item in productSaverContext.PersistentObjectCache)
             {
-                var productSaverContext = new ProductPartsSaverContext(uow);
-                var entity = SaveProduct(productSaverContext, modifiedInstance);
-
-                uow.SaveChanges();
-                modifiedInstance.Id = entity.Id;
-                foreach (var item in productSaverContext.PersistentObjectCache)
-                {
-                    item.Key.Id = item.Value.Id;
-                }
-
-                return entity.Id;
+                item.Key.Id = item.Value.Id;
             }
+
+            return entity.Id;
         }
 
         private ProductTypeEntity SaveProduct(ProductPartsSaverContext saverContext, ProductType modifiedProductType)
         {
-            var strategy = TypeInformation[modifiedProductType.GetType().FullName].Strategy
+            var strategy = _typeInformation[modifiedProductType.ProductTypeName()].Strategy
                 ?? throw new InvalidOperationException($"Cannot save product of type {modifiedProductType.GetType().FullName}. No {nameof(IProductTypeStrategy)} is configured for this type in the {nameof(ModuleConfig)}");
 
             //TODO use uow directly instead of repo if that is possible
@@ -596,7 +572,7 @@ namespace Moryx.Products.Management
             // If entity does not exist or was deleted, create a new one
             if (entities.All(p => p.Deleted != null))
             {
-                typeEntity = repo.Create(identity.Identifier, identity.Revision, modifiedProductType.Name, modifiedProductType.GetType().FullName);
+                typeEntity = repo.Create(identity.Identifier, identity.Revision, modifiedProductType.Name, modifiedProductType.ProductTypeName());
                 saverContext.UnitOfWork.LinkEntityToBusinessObject(modifiedProductType, typeEntity);
             }
             else
@@ -621,7 +597,7 @@ namespace Moryx.Products.Management
             var type = modifiedProductType.GetType();
 
             var linkRepo = saverContext.GetRepository<IPartLinkRepository>();
-            foreach (var partLinkInfo in TypeInformation[type.FullName].GetAllPartLinks(modifiedProductType))
+            foreach (var partLinkInfo in _typeInformation[modifiedProductType.ProductTypeName()].GetAllPartLinks(modifiedProductType))
             {
                 var linkStrategy = partLinkInfo.ProductLinkStrategy;
                 if (partLinkInfo.Type == PartLinkType.single)
@@ -699,6 +675,7 @@ namespace Moryx.Products.Management
 
             if (link.Product.Id == 0)
                 return SaveProduct(saverContext, link.Product);
+
             return saverContext.UnitOfWork.GetEntity<ProductTypeEntity>(link.Product);
         }
 
@@ -724,12 +701,10 @@ namespace Moryx.Products.Management
 
         public IReadOnlyList<ProductInstance> LoadInstances(params long[] id)
         {
-            using (var uow = Factory.Create())
-            {
-                var repo = uow.GetRepository<IProductInstanceRepository>();
-                var entities = repo.GetByKeys(id);
-                return TransformInstances(uow, entities);
-            }
+            using var uow = Factory.Create();
+            var repo = uow.GetRepository<IProductInstanceRepository>();
+            var entities = repo.GetByKeys(id);
+            return TransformInstances(uow, entities);
         }
 
         public IReadOnlyList<ProductInstance> LoadInstances(ProductType productType)
@@ -743,77 +718,71 @@ namespace Moryx.Products.Management
             {
                 return LoadInstancesByType(selector, member, value).ToList();
             }
-            else
-            {
-                return LoadWithStrategy(selector);
-            }
+
+            return LoadWithStrategy(selector);
         }
 
         private IReadOnlyList<TInstance> LoadInstancesByType<TInstance>(Expression<Func<TInstance, bool>> selector, MemberInfo typeProperty, object value)
         {
-            using (var uow = Factory.Create())
+            using var uow = Factory.Create();
+            Expression<Func<ProductInstanceEntity, bool>> instanceSelector;
+            // Select by type or type id
+            if (typeProperty == null || typeProperty.Name == nameof(ProductType.Id))
             {
-                Expression<Func<ProductInstanceEntity, bool>> instanceSelector;
-                // Select by type or type id
-                if (typeProperty == null || typeProperty.Name == nameof(ProductType.Id))
-                {
-                    var productTypeId = (value as ProductType)?.Id ?? (long)value;
-                    instanceSelector = i => i.ProductId == productTypeId;
-                }
-                else if (typeProperty.Name == nameof(ProductType.Name))
-                {
-                    var productName = (string)value;
-                    instanceSelector = i => i.Product.Name == productName;
-                }
-                else if (typeProperty.Name == nameof(ProductType.Identity))
-                {
-                    var productIdentity = (ProductIdentity)value;
-                    instanceSelector = i => i.Product.Identifier == productIdentity.Identifier && i.Product.Revision == productIdentity.Revision;
-                }
-                else
-                {
-                    // TODO: Filter by type specific properties
-                    Logger.LogWarning("You tried to load an instance filtering a property ({0}) of the custom type {1}. " +
-                        "This is not supported yet and will always return a negative result.", typeProperty.Name, typeProperty.ReflectedType.Name);
-                    var productType = typeProperty.ReflectedType;
-                    instanceSelector = i => false;
-                }
-
-                var repo = uow.GetRepository<IProductInstanceRepository>();
-                var entities = repo.Linq.Where(instanceSelector).ToList();
-
-                return TransformInstances(uow, entities).OfType<TInstance>().ToList();
+                var productTypeId = (value as ProductType)?.Id ?? (long)value;
+                instanceSelector = i => i.ProductId == productTypeId;
             }
+            else if (typeProperty.Name == nameof(ProductType.Name))
+            {
+                var productName = (string)value;
+                instanceSelector = i => i.Product.Name == productName;
+            }
+            else if (typeProperty.Name == nameof(ProductType.Identity))
+            {
+                var productIdentity = (ProductIdentity)value;
+                instanceSelector = i => i.Product.Identifier == productIdentity.Identifier && i.Product.Revision == productIdentity.Revision;
+            }
+            else
+            {
+                // TODO: Filter by type specific properties
+                Logger.LogWarning("You tried to load an instance filtering a property ({0}) of the custom type {1}. " +
+                                  "This is not supported yet and will always return a negative result.", typeProperty.Name, typeProperty.ReflectedType.Name);
+                var productType = typeProperty.ReflectedType;
+                instanceSelector = i => false;
+            }
+
+            var repo = uow.GetRepository<IProductInstanceRepository>();
+            var entities = repo.Linq.Where(instanceSelector).ToList();
+
+            return TransformInstances(uow, entities).OfType<TInstance>().ToList();
         }
 
-        public IReadOnlyList<TInstance> LoadWithStrategy<TInstance>(Expression<Func<TInstance, bool>> selector)
+        private IReadOnlyList<TInstance> LoadWithStrategy<TInstance>(Expression<Func<TInstance, bool>> selector)
         {
-            using (var uow = Factory.Create())
+            using var uow = Factory.Create();
+            var repo = uow.GetRepository<IProductInstanceRepository>();
+            var matchingStrategies = _instanceStrategies.Values
+                .Where(i => typeof(TInstance).IsAssignableFrom(i.TargetType));
+
+            IQueryable<ProductInstanceEntity> query = null;
+            foreach (var instanceStrategy in matchingStrategies)
             {
-                var repo = uow.GetRepository<IProductInstanceRepository>();
-                var matchingStrategies = InstanceStrategies.Values
-                   .Where(i => typeof(TInstance).IsAssignableFrom(i.TargetType));
-
-                IQueryable<ProductInstanceEntity> query = null;
-                foreach (var instanceStrategy in matchingStrategies)
-                {
-                    var queryFilter = instanceStrategy.TransformSelector(selector);
-                    query = query == null
-                        ? repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>() // Create query
-                        : query.Union(repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>()); // Append query
-                }
-
-                // No query or no result => Nothing to do
-                List<ProductInstanceEntity> entities;
-                if (query == null || (entities = query.ToList()).Count == 0)
-                    return Array.Empty<TInstance>();
-
-                var instances = TransformInstances(uow, entities).OfType<TInstance>().ToArray();
-                // Final check against compiled expression
-                var compiledSelector = selector.Compile();
-                // Only return matches against compiled expression
-                return instances.Where(compiledSelector.Invoke).ToArray();
+                var queryFilter = instanceStrategy.TransformSelector(selector);
+                query = query == null
+                    ? repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>() // Create query
+                    : query.Union(repo.Linq.Where(queryFilter).Cast<ProductInstanceEntity>()); // Append query
             }
+
+            // No query or no result => Nothing to do
+            List<ProductInstanceEntity> entities;
+            if (query == null || (entities = query.ToList()).Count == 0)
+                return Array.Empty<TInstance>();
+
+            var instances = TransformInstances(uow, entities).OfType<TInstance>().ToArray();
+            // Final check against compiled expression
+            var compiledSelector = selector.Compile();
+            // Only return matches against compiled expression
+            return instances.Where(compiledSelector.Invoke).ToArray();
         }
 
         /// <summary>
@@ -858,7 +827,7 @@ namespace Moryx.Products.Management
             var productType = productInstance.Type;
 
             // Check if instances of this type are persisted
-            var strategy = InstanceStrategies[productInstance.GetType().FullName];
+            var strategy = _instanceStrategies[productInstance.ProductInstanceTypeName()];
             if (strategy.SkipInstances)
                 return;
 
@@ -876,7 +845,7 @@ namespace Moryx.Products.Management
             // Load and populate parts
             foreach (var partGroup in partGroups)
             {
-                var linkStrategy = TypeInformation[productType.GetType().FullName].PartLinksInformation[partGroup.Key.Name].Strategy;
+                var linkStrategy = _typeInformation[productType.ProductTypeName()].PartLinksInformation[partGroup.Key.Name].Strategy;
                 if (linkStrategy.PartCreation == PartSourceStrategy.FromPartLink && partEntityGroups.ContainsKey(partGroup.Key.Name))
                 {
                     // Update all parts that are also present as entities
@@ -949,7 +918,7 @@ namespace Moryx.Products.Management
         private ProductInstanceEntity SaveInstance(IUnitOfWork uow, ProductInstance productInstance)
         {
             // Check if this type is persisted
-            var strategy = InstanceStrategies[productInstance.GetType().FullName];
+            var strategy = _instanceStrategies[productInstance.ProductInstanceTypeName()];
             if (strategy.SkipInstances)
                 return null;
 
@@ -977,40 +946,30 @@ namespace Moryx.Products.Management
             return archived;
         }
 
-        public ProductType CreateTypeInstance(string typeName)
-        {
-            if (!TypeInformation.ContainsKey(typeName))
-                return null;
-            var typeInfo = TypeInformation[typeName];
-            if (typeInfo.Constructor == null)
-                return null;
-            return typeInfo.Constructor();
-        }
-
         public IProductRecipe CreateRecipe(string recipeType)
         {
-            if (!RecipeInformation.ContainsKey(recipeType))
+            if (!_recipeInformation.TryGetValue(recipeType, out var recipeInfo))
                 return null;
-            var recipeInfo = RecipeInformation[recipeType];
+
             if (recipeInfo.Constructor == null)
                 return null;
+
             return recipeInfo.Constructor();
         }
 
         public ProductTypeWrapper GetTypeWrapper(string typeName)
         {
-            if (!TypeInformation.ContainsKey(typeName))
+            if (!_typeInformation.TryGetValue(typeName, out var typeInfo))
                 return null;
-            return TypeInformation[typeName].GetTypeWrapper();
+
+            return typeInfo.GetTypeWrapper();
         }
 
         public void CheckDatabase()
         {
-            using (var uow = Factory.Create())
-            {
-                uow.DbContext.Database.OpenConnection();
-                uow.DbContext.Database.CloseConnection();
-            }
+            using var uow = Factory.Create();
+            uow.DbContext.Database.OpenConnection();
+            uow.DbContext.Database.CloseConnection();
         }
 
         #endregion

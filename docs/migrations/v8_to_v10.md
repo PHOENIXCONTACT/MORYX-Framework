@@ -126,15 +126,15 @@ Plugins which has been moved to async lifecycle:
 
 Some APIs of the `IOperationPool`:
 
-- `Operation Get(Guid identifier)` -> `Task<Operation> GetAsync(Guid identifier)`
-- `Operation Get(string orderNumber, string operationNumber)` -> `Task<Operation> GetAsync(string orderNumber, string operationNumber)`
+- `Operation Get(Guid identifier)` -> `Task<Operation> Get(Guid identifier)`
+- `Operation Get(string orderNumber, string operationNumber)` -> `Task<Operation> Get(string orderNumber, string operationNumber)`
 
 Some APIs of the `IOrderManagement`-facade:
 
-- `Operation GetOperation(Guid identifier)` -> `Task<Operation> GetOperationAsync(Guid identifier)`
-- `Operation GetOperation(string orderNumber, string operationNumber)` -> `Task<Operation> GetOperationAsync(string orderNumber, string operationNumber)`
-- `Operation AddOperation(OperationCreationContext context)` -> `Task<Operation> AddOperationAsync(OperationCreationContext context)`
-- `Operation AddOperation(OperationCreationContext context, IOperationSource source)` -> `Task<Operation> AddOperationAsync(OperationCreationContext context, IOperationSource source)`
+- `Operation GetOperation(Guid identifier)` -> `Task<Operation> GetOperation(Guid identifier)`
+- `Operation GetOperation(string orderNumber, string operationNumber)` -> `Task<Operation> GetOperation(string orderNumber, string operationNumber)`
+- `Operation AddOperation(OperationCreationContext context)` -> `Task<Operation> AddOperation(OperationCreationContext context)`
+- `Operation AddOperation(OperationCreationContext context, IOperationSource source)` -> `Task<Operation> AddOperation(OperationCreationContext context, IOperationSource source)`
 
 ## WorkerSupport / VisualInstructions
 
@@ -226,6 +226,7 @@ With MORYX 10, several changes have been made to the data model to improve perfo
 
 - Removed `TypeName` from ProcessEntity. It was not used.
 - Combined `Classname`, `Namespace` in `TypeName` of `WorkplanStepEntity` and removed `Assembly`
+- Renamed `Type` to `TypeName` in `RecipeEntity
 
 ## Launcher
 
@@ -279,7 +280,11 @@ The API of `IResourceInitializer` was adjusted
 - Its now possible to execute initializers from the facade
 - The initializers are registered transient by default.
 
-## Product importer
+## Modules-Products
+
+- Removed `productId` from `SaveRecipes` of `IProductStorage` and changed argument to `IReadOnlyList`
+
+### Product importer
 
 - Introduced `ProductImporterAttribute` for harmonized registration of importers.
 - The importers are registered transient by default.
@@ -312,3 +317,8 @@ Features:
 * Support unsubscribing from Topics, by removing or changing the resource
 * Support changing the broker without restarting the Resource Management, by a) providing a Reconnect method and b) handling changes to the relevant properties
 * Support diagnostic tracing of message contents, before and after deserialization
+
+## EntryConvert
+
+- Supports async invocation of methods now by `InvokeMethodAsync`. Synchronous methods are executed synchronously.
+- The synchronous `InvokeMethod` does now support async methods too. They are executed synchronously.

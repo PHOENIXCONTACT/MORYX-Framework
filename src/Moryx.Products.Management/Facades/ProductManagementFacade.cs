@@ -12,11 +12,8 @@ using Moryx.Workplans;
 
 namespace Moryx.Products.Management
 {
-    internal class ProductManagementFacade : IFacadeControl, IProductManagement
+    internal class ProductManagementFacade : FacadeBase, IProductManagement
     {
-        // Use this delegate in every call for clean health state management
-        public Action ValidateHealthState { get; set; }
-
         #region Dependencies
 
         public IProductManager ProductManager { get; set; }
@@ -27,23 +24,24 @@ namespace Moryx.Products.Management
 
         public IWorkplans Workplans { get; set; }
 
-        public ModuleConfig Config { get; set; }
-
         public IModuleLogger Logger { get; set; }
 
         #endregion
 
-        public void Activate()
+        public override void Activate()
         {
+            base.Activate();
+
             ProductManager.TypeChanged += OnTypeChanged;
             RecipeManagement.RecipeChanged += OnRecipeChanged;
-
         }
 
-        public void Deactivate()
+        public override void Deactivate()
         {
             ProductManager.TypeChanged -= OnTypeChanged;
             RecipeManagement.RecipeChanged -= OnRecipeChanged;
+
+            base.Deactivate();
         }
 
         public string Name => ModuleController.ModuleName;
@@ -111,7 +109,7 @@ namespace Moryx.Products.Management
         public ProductType Duplicate(ProductType template, ProductIdentity newIdentity)
         {
             ValidateHealthState();
-            return ProductManager.Duplicate((ProductType)template, newIdentity);
+            return ProductManager.Duplicate(template, newIdentity);
         }
 
         public long SaveType(ProductType modifiedInstance)
@@ -159,6 +157,12 @@ namespace Moryx.Products.Management
             ReplaceOrigin(recipe);
 
             return recipeId;
+        }
+
+        public void SaveRecipes(IReadOnlyList<IProductRecipe> recipes)
+        {
+            ValidateHealthState();
+            RecipeManagement.Save(recipes);
         }
 
         public Workplan LoadWorkplan(long workplanId)
@@ -227,7 +231,7 @@ namespace Moryx.Products.Management
                 throw ex;
             }
 
-            return (ProductInstance)instances.SingleOrDefault(); ;
+            return (ProductInstance)instances.SingleOrDefault();
         }
 
         public TInstance GetInstance<TInstance>(Expression<Func<TInstance, bool>> selector)

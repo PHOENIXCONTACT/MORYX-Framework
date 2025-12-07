@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Threading.Tasks;
 using Moryx.Serialization;
 
 namespace Moryx.Tests
@@ -129,18 +130,45 @@ namespace Moryx.Tests
     public class EntrySerialize_Methods : EntrySerialize_InheritedBase
     {
         [EntrySerialize]
-        public void InvocablePublic() { }
+        public void InvocablePublic()
+        {
+
+        }
 
         [EntrySerialize]
-        public void InvocablePublic(int intValue, string stringValue1, string stringValue2 = "testing value") { }
+        public void InvocablePublic(int intValue, string stringValue1, string stringValue2 = "testing value")
+        {
+
+        }
 
         [EntrySerialize]
-        internal void InvocableInternal() { }
+        internal void InvocableInternal()
+        {
+
+        }
 
         [EntrySerialize]
-        protected void NonInvocableProtected() { }
+        protected void NonInvocableProtected()
+        {
+
+        }
 
         [EntrySerialize]
-        private void NonInvocablePrivate() { }
+        private void NonInvocablePrivate()
+        {
+
+        }
+
+        [EntrySerialize]
+        public Task AsyncWithoutResult()
+        {
+            return Task.CompletedTask;
+        }
+
+        [EntrySerialize]
+        public Task<string> AsyncWithStringResult()
+        {
+            return Task.FromResult("Test");
+        }
     }
 }

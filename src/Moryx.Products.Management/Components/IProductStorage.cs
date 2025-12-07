@@ -67,7 +67,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Save multiple recipes at once
         /// </summary>
-        void SaveRecipes(long productId, ICollection<IProductRecipe> recipes);
+        void SaveRecipes(IReadOnlyList<IProductRecipe> recipes);
 
         /// <summary>
         /// Load types using filter expression
