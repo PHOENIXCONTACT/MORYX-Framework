@@ -10,6 +10,7 @@ using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.StateMachines;
 using Moryx.Threading;
+using Moryx.Tools;
 
 namespace Moryx.Runtime.Modules
 {
@@ -75,17 +76,9 @@ namespace Moryx.Runtime.Modules
         /// </summary>
         public IModuleContainerFactory ContainerFactory { get; }
 
-        async Task IAsyncInitializable.InitializeAsync()
+        Task IAsyncInitializable.InitializeAsync()
         {
-            await _stateLockSemaphore.WaitAsync();
-            try
-            {
-                await _state.Initialize();
-            }
-            finally
-            {
-                _stateLockSemaphore.Release();
-            }
+            return _stateLockSemaphore.ExecuteAsync(() => _state.Initialize());
         }
         async Task IServerModuleStateContext.InitializeAsync()
         {
@@ -122,17 +115,9 @@ namespace Moryx.Runtime.Modules
             Notifications.Clear();
         }
 
-        async Task IServerModule.StartAsync()
+        Task IServerModule.StartAsync()
         {
-            await _stateLockSemaphore.WaitAsync();
-            try
-            {
-                await _state.Start();
-            }
-            finally
-            {
-                _stateLockSemaphore.Release();
-            }
+            return _stateLockSemaphore.ExecuteAsync(() => _state.Start());
         }
 
         async Task IServerModuleStateContext.StartAsync()
@@ -152,17 +137,9 @@ namespace Moryx.Runtime.Modules
             }
         }
 
-        async Task IServerModule.StopAsync()
+        Task IServerModule.StopAsync()
         {
-            await _stateLockSemaphore.WaitAsync();
-            try
-            {
-                await _state.Stop();
-            }
-            finally
-            {
-                _stateLockSemaphore.Release();
-            }
+            return _stateLockSemaphore.ExecuteAsync(() => _state.Stop());
         }
 
         async Task IServerModuleStateContext.StopAsync()
