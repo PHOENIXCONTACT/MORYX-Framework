@@ -162,9 +162,37 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             var senderResource = (IResource)sender;
             Logger.Log(LogLevel.Warning, "Process {0} was reported as broken by {1}-{2}", process.Id, senderResource.Id, senderResource.Name);
 
-            var processData = ActivityPool.GetProcess(process.Id);
+            HandleProcessReport(process.Id, ProcessState.Aborting);
+        }
+
+        /// <summary>
+        /// Updates the states of the given <paramref name="processId"/>
+        /// </summary>
+        /// <param name="processId">The process to update</param>
+        /// <param name="state">the new state of the process</param>
+        private void HandleProcessReport(long processId, ProcessState state)
+        {
+            var processData = ActivityPool.GetProcess(processId);
             if (processData != null)
-                ActivityPool.UpdateProcess(processData, ProcessState.Aborting);
+            {
+                ActivityPool.UpdateProcess(processData, state);
+            }
+        }
+
+        public void Report(IProcess process, ReportAction action)
+        {
+            Logger.Log(LogLevel.Warning, "Process {id} was reported as {action}", process.Id, action);
+            switch (action)
+            {
+                case ReportAction.Broken:
+                    HandleProcessReport(process.Id, ProcessState.Aborting);
+                    return;
+                case ReportAction.Removed:
+                    HandleProcessReport(process.Id, ProcessState.RemoveBroken);
+                    return;
+                default:
+                    break;
+            }
         }
 
         /// <summary>
@@ -176,9 +204,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             var senderResource = (IResource)sender;
             Logger.Log(LogLevel.Warning, "Process {0} was reported as failed by {1}-{2}", process?.Id, senderResource.Id, senderResource.Name);
 
-            var processData = ActivityPool.GetProcess(process.Id);
-            if (processData != null)
-                ActivityPool.UpdateProcess(processData, ProcessState.Failure);
+            HandleProcessReport(process.Id, ProcessState.Failure);
         }
 
         /// <summary>

@@ -13,17 +13,17 @@ using Moryx.Threading;
 
 namespace Moryx.ControlSystem.ProcessEngine
 {
-    internal class ProcessControlFacade : IProcessControl, IFacadeControl
+    internal class ProcessControlFacade : FacadeBase, IProcessControl
     {
         #region Dependencies
-
-        public Action ValidateHealthState { get; set; }
 
         public IActivityPool ActivityPool { get; set; }
 
         public IActivityDataPool ActivityDataPool { get; set; }
 
         public IProcessArchive ProcessArchive { get; set; }
+
+        public ProcessRemoval ProcessRemoval { get; set; }
 
         public IModuleLogger Logger { get; set; }
 
@@ -45,17 +45,22 @@ namespace Moryx.ControlSystem.ProcessEngine
 
         #endregion
 
-        public void Activate()
+        public override void Activate()
         {
+            base.Activate();
             ActivityPool.ProcessUpdated += ParallelOperations.DecoupleListener<ProcessUpdatedEventArgs>(OnProcessChanged);
             ActivityPool.ActivityUpdated += ParallelOperations.DecoupleListener<ActivityUpdatedEventArgs>(OnActivityChanged);
         }
 
-        public void Deactivate()
+        public override void Deactivate()
         {
             ActivityPool.ProcessUpdated -= ParallelOperations.RemoveListener<ProcessUpdatedEventArgs>(OnProcessChanged);
             ActivityPool.ActivityUpdated -= ParallelOperations.RemoveListener<ActivityUpdatedEventArgs>(OnActivityChanged);
+            base.Deactivate();
         }
+
+        public IProcess GetProcess(long processId)
+            => RunningProcesses.FirstOrDefault(x => x.Id == processId);
 
         public IReadOnlyList<IProcess> GetProcesses(ProductInstance productInstance)
         {
@@ -73,6 +78,12 @@ namespace Moryx.ControlSystem.ProcessEngine
         {
             ValidateHealthState();
             return ActivityDataPool.GetByActivity(activity)?.Targets ?? Array.Empty<ICell>();
+        }
+
+        public void Report(IProcess process, ReportAction action)
+        {
+            ValidateHealthState();
+            ProcessRemoval.Report(process, action);
         }
 
         private void OnProcessChanged(object sender, ProcessUpdatedEventArgs args)

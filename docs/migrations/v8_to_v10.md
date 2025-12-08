@@ -296,3 +296,9 @@ Features:
 
 - Supports async invocation of methods now by `InvokeMethodAsync`. Synchronous methods are executed synchronously.
 - The synchronous `InvokeMethod` does now support async methods too. They are executed synchronously.
+
+
+## Merged `IProcessControlReporting` into `IProcessControl`
+
+The `IProcessControlReporting` interface has been merged into `IProcessControl`. All reporting-related methods and the `ReportAction` enum are now part of `IProcessControl`. Remove usages of `IProcessControlReporting` and update your code to use the unified `IProcessControl` interface.
+
