@@ -47,7 +47,7 @@ namespace Moryx.Orders.Management.Tests
             _dispatcher = new SingleJobOperationDispatcher
             {
                 JobManagement = _jobManagementMock.Object,
-                ParallelOperations = new NotSoParallelOps(),
+                ParallelOperations = new NotSoParallelOps()
             };
 
             _jobHandler = new JobHandler

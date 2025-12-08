@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Moq;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
@@ -95,21 +96,15 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             _processArchive.Start();
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            _processArchive.Dispose();
-        }
-
         [Test]
-        public void GetProcessesByInstance()
+        public async Task GetProcessesByInstance()
         {
             // Arrange
             var jobs = CreateJobEntities();
             CreateTestData(jobs, CreateProcessEntities(jobs));
 
             // Act
-            var processes = _processArchive.GetProcesses(new DummyProductInstance { Id = 42 });
+            var processes = await _processArchive.GetProcesses(new DummyProductInstance { Id = 42 });
 
             // Assert
             Assert.That(processes.Count, Is.EqualTo(1));

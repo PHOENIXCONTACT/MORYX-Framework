@@ -94,7 +94,7 @@ public class ProcessEngineController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [Route("instance/{productInstanceId}")]
     [Authorize(Policy = ProcessPermissions.CanView)]
-    public ActionResult<JobProcessModel[]> GetProcesses(long productInstanceId)
+    public async Task<ActionResult<JobProcessModel[]>> GetProcesses(long productInstanceId)
     {
         var productInstance = _productManagement.GetInstance(productInstanceId);
         if (productInstance == null)
@@ -102,7 +102,7 @@ public class ProcessEngineController : ControllerBase
             return NotFound($"No product instace corresponding to the Id {productInstanceId} found");
         }
 
-        var processes = _processControl.GetProcesses(productInstance);
+        var processes = await _processControl.GetProcesses(productInstance);
 
         return ConvertProcesses(processes);
     }

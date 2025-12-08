@@ -57,7 +57,7 @@ namespace Moryx.ControlSystem.ProcessEngine
             ActivityPool.ActivityUpdated -= ParallelOperations.RemoveListener<ActivityUpdatedEventArgs>(OnActivityChanged);
         }
 
-        public IReadOnlyList<IProcess> GetProcesses(ProductInstance productInstance)
+        public Task<IReadOnlyList<IProcess>> GetProcesses(ProductInstance productInstance)
         {
             ValidateHealthState();
             return ProcessArchive.GetProcesses(productInstance);

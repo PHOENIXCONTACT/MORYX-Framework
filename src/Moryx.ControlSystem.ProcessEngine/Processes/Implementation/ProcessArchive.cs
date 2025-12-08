@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
+using Microsoft.EntityFrameworkCore;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
@@ -54,55 +55,47 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         {
         }
 
-        public void Dispose()
+        public async Task<IReadOnlyList<IProcess>> GetProcesses(ProductInstance productInstance)
         {
-        }
+            using var uow = UnitOfWorkFactory.Create();
+            var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
-        public IReadOnlyList<IProcess> GetProcesses(ProductInstance productInstance)
-        {
-            using (var uow = UnitOfWorkFactory.Create())
+            var query = await (from processEntity in processRepo.Linq
+                where processEntity.ReferenceId == productInstance.Id
+                select new { processEntity.Id, processEntity.Job.RecipeId }).ToListAsync();
+
+            var processes = new List<IProcess>();
+            foreach (var match in query)
             {
-                var processRepo = uow.GetRepository<IProcessEntityRepository>();
-
-                var query = (from processEntity in processRepo.Linq
-                             where processEntity.ReferenceId == productInstance.Id
-                             select new { processEntity.Id, processEntity.Job.RecipeId }).ToList();
-
-                var processes = new List<IProcess>();
-                foreach (var match in query)
-                {
-                    var recipe = (IProductionRecipe)ProductManagement.LoadRecipe(match.RecipeId);
-                    var process = (ProductionProcess)recipe.CreateProcess();
-                    process.Id = match.Id;
-                    process.ProductInstance = productInstance;
-                    var context = new ProcessWorkplanContext(process);
-                    var taskMap = recipe.Workplan.Steps
-                        .Select(step => step.CreateInstance(context))
-                        .OfType<ITask>().ToDictionary(task => task.Id, task => task);
-                    ProcessStorage.FillActivities(uow, process, taskMap);
-                    processes.Add(process);
-                }
-
-                return processes;
+                var recipe = (IProductionRecipe)ProductManagement.LoadRecipe(match.RecipeId);
+                var process = (ProductionProcess)recipe.CreateProcess();
+                process.Id = match.Id;
+                process.ProductInstance = productInstance;
+                var context = new ProcessWorkplanContext(process);
+                var taskMap = recipe.Workplan.Steps
+                    .Select(step => step.CreateInstance(context))
+                    .OfType<ITask>().ToDictionary(task => task.Id, task => task);
+                ProcessStorage.FillActivities(uow, process, taskMap);
+                processes.Add(process);
             }
+
+            return processes;
         }
 
         public IEnumerable<IProcessChunk> GetProcesses(RequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
         {
             // Access database to find all jobs in this time frame
-            using (var uow = UnitOfWorkFactory.Create())
-            {
-                var relevantJobs = GetJobs(uow, filterType, start, end, jobIds);
-                if (relevantJobs.Count == 0)
-                    yield break;
+            using var uow = UnitOfWorkFactory.Create();
+            var relevantJobs = GetJobs(uow, filterType, start, end, jobIds);
+            if (relevantJobs.Count == 0)
+                yield break;
 
-                foreach (var relevantJob in relevantJobs)
-                {
-                    // See if we have the job cached
-                    yield return JobList.Get(relevantJob.Id) is IProductionJobData job
-                        ? new JobDataChunk(job, start, end)
-                        : GetFromStorage(uow, relevantJob, start, end);
-                }
+            foreach (var relevantJob in relevantJobs)
+            {
+                // See if we have the job cached
+                yield return JobList.Get(relevantJob.Id) is IProductionJobData job
+                    ? new JobDataChunk(job, start, end)
+                    : GetFromStorage(uow, relevantJob, start, end);
             }
         }
 

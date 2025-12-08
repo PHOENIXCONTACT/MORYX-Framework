@@ -21,7 +21,7 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Retrieve all processes for a product instance
         /// </summary>
-        IReadOnlyList<IProcess> GetProcesses(ProductInstance productInstance);
+        Task<IReadOnlyList<IProcess>> GetProcesses(ProductInstance productInstance);
 
         /// <summary>
         /// Possible targets for the process, defined by currently open activities

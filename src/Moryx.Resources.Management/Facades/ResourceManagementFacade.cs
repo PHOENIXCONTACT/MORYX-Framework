@@ -116,13 +116,13 @@ namespace Moryx.Resources.Management
 
         #endregion
 
-        public async Task<long> CreateUnsafeAsync(Type resourceType, Func<Resource, Task> initializer)
+        public async Task<long> CreateUnsafe(Type resourceType, Func<Resource, Task> initializer)
         {
             ValidateHealthState();
 
             var resource = ResourceGraph.Instantiate(resourceType.ResourceType());
             await initializer(resource);
-            await ResourceGraph.SaveAsync(resource);
+            await ResourceGraph.Save(resource);
             return resource.Id;
         }
 
@@ -137,7 +137,7 @@ namespace Moryx.Resources.Management
             return result;
         }
 
-        public async Task ModifyUnsafeAsync(long id, Func<Resource, Task<bool>> modifier)
+        public async Task ModifyUnsafe(long id, Func<Resource, Task<bool>> modifier)
         {
             ValidateHealthState();
 
@@ -147,7 +147,7 @@ namespace Moryx.Resources.Management
 
             var result = await modifier(resource);
             if (result)
-                await ResourceGraph.SaveAsync(resource);
+                await ResourceGraph.Save(resource);
         }
 
         public async Task<bool> DeleteAsync(long id)
@@ -158,7 +158,7 @@ namespace Moryx.Resources.Management
             if (resource == null)
                 return false;
 
-            return await ResourceGraph.DestroyAsync(resource);
+            return await ResourceGraph.Destroy(resource);
         }
 
         public IEnumerable<TResource> GetResourcesUnsafe<TResource>(Func<TResource, bool> predicate)

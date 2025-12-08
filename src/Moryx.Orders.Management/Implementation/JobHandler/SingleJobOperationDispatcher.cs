@@ -4,6 +4,7 @@
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
 using Moryx.Orders.Dispatcher;
+using Moryx.Threading;
 using Moryx.Tools;
 
 namespace Moryx.Orders.Management
@@ -14,6 +15,11 @@ namespace Moryx.Orders.Management
     [Plugin(LifeCycle.Singleton, typeof(IOperationDispatcher), Name = nameof(SingleJobOperationDispatcher))]
     public class SingleJobOperationDispatcher : OperationDispatcherBase
     {
+        /// <summary>
+        /// ParallelOperations injected by the container
+        /// </summary>
+        public IParallelOperations ParallelOperations { get; set; }
+
         /// <inheritdoc />
         public override async Task Dispatch(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts)
         {

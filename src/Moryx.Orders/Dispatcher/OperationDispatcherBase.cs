@@ -20,11 +20,6 @@ namespace Moryx.Orders.Dispatcher
         public IJobManagement JobManagement { get; set; }
 
         /// <summary>
-        /// ParallelOperations injected by the container
-        /// </summary>
-        public IParallelOperations ParallelOperations { get; set; }
-
-        /// <summary>
         /// Config of this dispatcher implementation
         /// </summary>
         public TConf Config { get; set; }

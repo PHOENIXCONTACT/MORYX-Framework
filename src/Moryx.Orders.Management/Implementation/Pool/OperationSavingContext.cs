@@ -6,6 +6,7 @@ using Moryx.Orders.Management.Model;
 
 namespace Moryx.Orders.Management;
 
+/// <inheritdoc/>
 internal class OperationSavingContext : IOperationSavingContext
 {
     private readonly IUnitOfWorkFactory<OrdersContext> _unitOfWorkFactory;
@@ -15,7 +16,8 @@ internal class OperationSavingContext : IOperationSavingContext
         _unitOfWorkFactory = unitOfWorkFactory;
     }
 
-    async Task IOperationSavingContext.SaveOperation(IOperationData operationData)
+    /// <inheritdoc/>
+    public async Task SaveOperation(IOperationData operationData)
     {
         // Only save the operation of the classification is more than just ready
         // Initial or ready operations have not to be stored because they can be created again any time from the ERP system
@@ -38,7 +40,8 @@ internal class OperationSavingContext : IOperationSavingContext
         await uow.SaveChangesAsync();
     }
 
-    async Task IOperationSavingContext.RemoveOperation(IOperationData operationData)
+    /// <inheritdoc/>
+    public async Task RemoveOperation(IOperationData operationData)
     {
         using var uow = _unitOfWorkFactory.Create();
         OperationStorage.RemoveOperation(uow, operationData);

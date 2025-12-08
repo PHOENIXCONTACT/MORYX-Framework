@@ -17,51 +17,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Moryx.Orders.Management
 {
-    internal static class SemaphoreSlimExtensions
-    {
-        extension(SemaphoreSlim semaphore)
-        {
-            public async Task ExecuteSafeAsync(Func<Task> criticalFunc)
-            {
-                await semaphore.WaitAsync();
-                try
-                {
-                    await criticalFunc();
-                }
-                finally
-                {
-                    semaphore.Release();
-                }
-            }
-
-            public TResult ExecuteSafe<TResult>(Func<TResult> criticalFunc)
-            {
-                semaphore.Wait();
-                try
-                {
-                    return criticalFunc();
-                }
-                finally
-                {
-                    semaphore.Release();
-                }
-            }
-
-            public void ExecuteSafe(Action criticalFunc)
-            {
-                semaphore.Wait();
-                try
-                {
-                    criticalFunc();
-                }
-                finally
-                {
-                    semaphore.Release();
-                }
-            }
-        }
-    }
-
     /// <summary>
     /// Business object for operation data
     /// </summary>
@@ -301,7 +256,7 @@ namespace Moryx.Orders.Management
         {
             Log(LogLevel.Information, "Starting assignment");
 
-            return _stateLock.ExecuteSafeAsync(() => _state.Assign());
+            return _stateLock.ExecuteAsync(() => _state.Assign());
         }
 
         /// <inheritdoc cref="IOperationData"/>
@@ -310,7 +265,7 @@ namespace Moryx.Orders.Management
             if (success)
                 Operation.CreationContext = null;
 
-            return _stateLock.ExecuteSafeAsync(() => _state.AssignCompleted(success));
+            return _stateLock.ExecuteAsync(() => _state.AssignCompleted(success));
         }
 
         internal async Task HandleAssignCompleted(bool success)
@@ -338,7 +293,7 @@ namespace Moryx.Orders.Management
         {
             Log(LogLevel.Information, "Aborting operation");
 
-            return _stateLock.ExecuteSafeAsync(() => _state.Abort());
+            return _stateLock.ExecuteAsync(() => _state.Abort());
         }
 
         internal async Task HandleAbort()
@@ -390,7 +345,7 @@ namespace Moryx.Orders.Management
         public async Task Resume()
         {
             // Restore on state
-            await _stateLock.ExecuteSafeAsync(() => _state.Resume());
+            await _stateLock.ExecuteAsync(() => _state.Resume());
         }
 
         /// <inheritdoc cref="IOperationData"/>
@@ -414,7 +369,7 @@ namespace Moryx.Orders.Management
             Log(LogLevel.Information, "The target amount of the operation will be adjusted by amount {amount} by user {user}",
                 amount, user.Identifier);
 
-            await _stateLock.ExecuteSafeAsync(() =>
+            await _stateLock.ExecuteAsync(() =>
             {
                 if (amount >= 0)
                 {
@@ -475,7 +430,7 @@ namespace Moryx.Orders.Management
             Log(LogLevel.Debug, "Operation will be interrupted by user {0}",
                 user.Identifier);
 
-            return _stateLock.ExecuteSafeAsync(() => _state.Interrupt(user));
+            return _stateLock.ExecuteAsync(() => _state.Interrupt(user));
         }
 
         /// <summary>
@@ -526,13 +481,13 @@ namespace Moryx.Orders.Management
                 throw new ArgumentException(error);
             }
 
-            return _stateLock.ExecuteSafeAsync(() => _state.Report(report));
+            return _stateLock.ExecuteAsync(() => _state.Report(report));
         }
 
         /// <inheritdoc cref="IOperationData"/>
         public AdviceContext GetAdviceContext()
         {
-            var adviceContext = _stateLock.ExecuteSafe(() => _state.GetAdviceContext());
+            var adviceContext = _stateLock.Execute(() => _state.GetAdviceContext());
 
             return adviceContext;
         }
@@ -568,7 +523,7 @@ namespace Moryx.Orders.Management
             if (orderAdvice == null && pickPartAdvice == null)
                 ThrowError("Advices of type " + advice.GetType().Name + " cannot be handled.");
 
-            return _stateLock.ExecuteSafeAsync(() => _state.Advice(advice));
+            return _stateLock.ExecuteAsync(() => _state.Advice(advice));
         }
 
         internal async Task HandleAdvice(OperationAdvice advice)
@@ -623,7 +578,7 @@ namespace Moryx.Orders.Management
         /// <inheritdoc cref="IOperationData"/>
         public ReportContext GetReportContext()
         {
-            var reportContext = _stateLock.ExecuteSafe(() => _state.GetReportContext());
+            var reportContext = _stateLock.Execute(() => _state.GetReportContext());
             return reportContext;
         }
 
@@ -705,7 +660,7 @@ namespace Moryx.Orders.Management
         {
             UpdateProgress();
 
-            await _stateLock.ExecuteSafeAsync(() => _state.ProgressChanged(job));
+            await _stateLock.ExecuteAsync(() => _state.ProgressChanged(job));
 
             ProgressChanged?.Invoke(this, new OperationEventArgs(this));
         }
@@ -715,7 +670,7 @@ namespace Moryx.Orders.Management
         {
             UpdateProgress();
 
-            await _stateLock.ExecuteSafeAsync(() => _state.JobsUpdated(args));
+            await _stateLock.ExecuteAsync(() => _state.JobsUpdated(args));
         }
 
         internal Task DispatchJob()
