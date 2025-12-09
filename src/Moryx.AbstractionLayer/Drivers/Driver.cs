@@ -9,7 +9,7 @@ namespace Moryx.AbstractionLayer.Drivers
     /// <summary>
     /// Base class for devices to reduce boilerplate code
     /// </summary>
-    public abstract class Driver : Resource, IDriver, IStateContext
+    public abstract class Driver : Resource, IDriver, IStateContext, IAsyncStateContext
     {
         /// <inheritdoc />
         public IDriverState CurrentState { get; private set; }
@@ -22,43 +22,30 @@ namespace Moryx.AbstractionLayer.Drivers
             OnStateChanged();
         }
 
-        /// <summary>
-        /// Will be called after the state change
-        /// </summary>
-        protected virtual void OnStateChanged()
-        {
-        }
-
-        /// <inheritdoc />
-        public event EventHandler<IDriverState> StateChanged;
-    }
-
-    /// <summary>
-    /// Base class for devices to reduce boilerplate code
-    /// </summary>
-    public abstract class AsyncDriver : Resource, IDriver, IAsyncStateContext
-    {
-        /// <inheritdoc />
-        public IDriverState CurrentState { get; private set; }
-
         Task IAsyncStateContext.SetStateAsync(StateBase state)
         {
             CurrentState = (IDriverState)state;
             StateChanged?.Invoke(this, CurrentState);
 
-            return OnStateChanged();
+            return OnStateChangedAsync();
         }
 
         /// <summary>
-        /// Will be called after the state change
+        /// Will be called after the state change when <see cref="SyncStateBase"/> is useed
         /// </summary>
-        protected virtual Task OnStateChanged()
+        protected virtual void OnStateChanged()
+        {
+        }
+
+        /// <summary>
+        /// Will be called after the state change when <see cref="AsyncStateBase"/> is used
+        /// </summary>
+        protected virtual Task OnStateChangedAsync()
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
         public event EventHandler<IDriverState> StateChanged;
-
     }
 }
