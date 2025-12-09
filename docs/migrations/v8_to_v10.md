@@ -247,6 +247,7 @@ The `ProcessEngineContext` was added to the `ProcessEngineAttached` to provide t
 - DriverState -> SyncDriverState
 - IControlSystemBound.ControlSystemAttached -> ICell.ProcessEngineAttached
 - IControlSystemBound.ControlSystemDetached -> ICell.ProcessEngineDetached
+- IProcessControl.GetProcesses -> IProcessControl.GetArchivedProcesses
 
 ## Reduction of interfaces
 
@@ -339,6 +340,7 @@ The API of `IResourceInitializer` was adjusted
 ## Modules-ProcessEngine
 
 - Removed API from IJobManagement: `JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement)`
+- Added `IAsyncEnumerable<IProcessChunk> GetArchivedProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)` to `IProcessControl`
 
 ## Modules-Products
 

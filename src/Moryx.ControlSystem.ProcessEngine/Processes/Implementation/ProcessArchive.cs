@@ -11,6 +11,7 @@ using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Model;
+using Moryx.ControlSystem.Processes;
 using Moryx.Model.Repositories;
 using ProcessContext = Moryx.ControlSystem.ProcessEngine.Model.ProcessContext;
 
@@ -82,7 +83,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             return processes;
         }
 
-        public IEnumerable<IProcessChunk> GetProcesses(RequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
+        public async IAsyncEnumerable<IProcessChunk> GetProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
         {
             // Access database to find all jobs in this time frame
             using var uow = UnitOfWorkFactory.Create();
@@ -93,30 +94,32 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             foreach (var relevantJob in relevantJobs)
             {
                 // See if we have the job cached
-                yield return JobList.Get(relevantJob.Id) is IProductionJobData job
+                var chunk = JobList.Get(relevantJob.Id) is IProductionJobData job
                     ? new JobDataChunk(job, start, end)
-                    : GetFromStorage(uow, relevantJob, start, end);
+                    : await GetFromStorage(uow, relevantJob, start, end);
+
+                yield return chunk;
             }
         }
 
         /// <summary>
         /// Get all jobs that are relevant for the request
         /// </summary>
-        private IReadOnlyList<JobEntity> GetJobs(IUnitOfWork uow, RequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
+        private IReadOnlyList<JobEntity> GetJobs(IUnitOfWork uow, ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
         {
             var jobRepo = uow.GetRepository<IJobEntityRepository>();
 
             var all = jobRepo.Linq.Where(j => j.RecipeProvider == ProductManagement.Name); // Filter only production jobs
-            if (filterType.HasFlag(RequestFilter.Jobs))
-                all = all.Where(j => jobIds.Contains(j.Id));
-            if (filterType.HasFlag(RequestFilter.Timed))
+            if (filterType.HasFlag(ProcessRequestFilter.Jobs))
+                all = all.Where(j => ((IEnumerable<long>)jobIds).Contains(j.Id));
+            if (filterType.HasFlag(ProcessRequestFilter.Timed))
                 all = all.Where(job => job.Created >= start && job.Created <= end // Job began within the time frame
                                     || job.Updated >= start && job.Updated <= end // Job changed within the time frame
                                     || job.Created <= start && job.Updated >= end); // Job exceeds time frame
             return all.ToList();
         }
 
-        private IProcessChunk GetFromStorage(IUnitOfWork uow, JobEntity jobEntity, DateTime start, DateTime end)
+        private async Task<IProcessChunk> GetFromStorage(IUnitOfWork uow, JobEntity jobEntity, DateTime start, DateTime end)
         {
             var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
@@ -129,22 +132,23 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             };
             // Fetch all relevant processes for this job
             // This looks like partial Copy&Paste, but we need to optimize the s**t out of this
-            var query = (from processEntity in processRepo.Linq
+            var query = await (from processEntity in processRepo.Linq
                          where processEntity.State >= (int)ProcessState.Success && processEntity.JobId == job.Id && processEntity.Activities.Any()
                          let firstActivity = processEntity.Activities.OrderBy(a => a.Started).FirstOrDefault()
                          let lastActivity = processEntity.Activities.OrderByDescending(a => a.Started).FirstOrDefault()
                          where firstActivity.Started >= start && firstActivity.Started <= end // Process started in the time frame
                             || lastActivity.Completed >= start && lastActivity.Completed <= end // Process ended in the time frame
                             || firstActivity.Started <= start && lastActivity.Completed >= end // Process spans over time frame
-                         select new { processEntity.Id, processEntity.ReferenceId }).ToList();
+                         select new { processEntity.Id, processEntity.ReferenceId }).ToListAsync();
             var processes = new IProcess[query.Count];
 
             // Prepare fake process and task map
             var fakeProcess = recipe.CreateProcess();
-            var context = new AbstractionLayer.Processes.ProcessWorkplanContext(fakeProcess);
+            var context = new ProcessWorkplanContext(fakeProcess);
             var taskMap = recipe.Workplan.Steps
                 .Select(step => step.CreateInstance(context))
                 .OfType<ITask>().ToDictionary(task => task.Id, task => task);
+
             // Complete objects with missing values
             for (var index = 0; index < query.Count; index++)
             {
@@ -161,7 +165,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// Struct that represents a chunk of the full query response
         /// </summary>
-        internal class JobDataChunk : IProcessChunk
+        private class JobDataChunk : IProcessChunk
         {
             private readonly WeakReference<IProductionJobData> _jobData;
 

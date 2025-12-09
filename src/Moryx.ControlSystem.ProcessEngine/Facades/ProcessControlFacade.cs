@@ -57,10 +57,16 @@ namespace Moryx.ControlSystem.ProcessEngine
             ActivityPool.ActivityUpdated -= ParallelOperations.RemoveListener<ActivityUpdatedEventArgs>(OnActivityChanged);
         }
 
-        public Task<IReadOnlyList<IProcess>> GetProcesses(ProductInstance productInstance)
+        public Task<IReadOnlyList<IProcess>> GetArchivedProcesses(ProductInstance productInstance)
         {
             ValidateHealthState();
             return ProcessArchive.GetProcesses(productInstance);
+        }
+
+        public IAsyncEnumerable<IProcessChunk> GetArchivedProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
+        {
+            ValidateHealthState();
+            return ProcessArchive.GetProcesses(filterType, start, end, jobIds);
         }
 
         public IReadOnlyList<ICell> Targets(IProcess process)

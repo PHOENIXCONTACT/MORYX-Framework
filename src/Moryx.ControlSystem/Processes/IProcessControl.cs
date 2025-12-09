@@ -19,9 +19,19 @@ namespace Moryx.ControlSystem.Processes
         IReadOnlyList<IProcess> RunningProcesses { get; }
 
         /// <summary>
-        /// Retrieve all processes for a product instance
+        /// Retrieve all archived processes for a product instance
         /// </summary>
-        Task<IReadOnlyList<IProcess>> GetProcesses(ProductInstance productInstance);
+        /// <param name="productInstance">Product instance to select the processes</param>
+        Task<IReadOnlyList<IProcess>> GetArchivedProcesses(ProductInstance productInstance);
+
+        /// <summary>
+        /// Retrieve all archived processes in a certain range
+        /// </summary>
+        /// <param name="filterType">Type of filtering</param>
+        /// <param name="start">Start time</param>
+        /// <param name="end">End time</param>
+        /// <param name="jobIds">Optional filter with job ids</param>
+        IAsyncEnumerable<IProcessChunk> GetArchivedProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds);
 
         /// <summary>
         /// Possible targets for the process, defined by currently open activities

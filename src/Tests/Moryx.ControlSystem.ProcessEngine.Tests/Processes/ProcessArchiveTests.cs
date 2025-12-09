@@ -17,6 +17,7 @@ using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs.Production;
 using Moryx.ControlSystem.ProcessEngine.Model;
 using Moryx.ControlSystem.ProcessEngine.Processes;
+using Moryx.ControlSystem.Processes;
 using Moryx.ControlSystem.TestTools;
 using Moryx.ControlSystem.TestTools.Tasks;
 using Moryx.Model.Repositories;
@@ -114,7 +115,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         [TestCase("1.1.2000 00:00:00", "1.1.2000 00:00:01", 0, 0, 0, Description = "Get no processes")]
         [TestCase("1.1.2000 01:15:00", "1.1.2000 01:20:00", 1, 1, 0, Description = "Get 1 Process")]
         [TestCase("1.1.2000 01:10:01", "1.1.2000 01:40:00", 3, 1, 0, Description = "Get 3 Processes")]
-        public void GetProcessesTest(string start, string end,
+        public async Task GetProcessesTest(string start, string end,
                                      int expectedJobCount,
                                      int expectedProcessCountJob1,
                                      int expectedProcessCountJob2)
@@ -127,7 +128,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             var endDate = DateTime.Parse(end, _culture);
 
             // Act
-            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, startDate, endDate, []).ToList();
+            var chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed, startDate, endDate, []).ToListAsync();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(expectedJobCount));
@@ -144,7 +145,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         }
 
         [Test]
-        public void AddingNotCompletedJobToCacheTest()
+        public async Task AddingNotCompletedJobToCacheTest()
         {
             // Arrange
             var jobs = CreateJobEntities();
@@ -152,23 +153,25 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
             // Act
             _jobListMock.Raise(j => j.StateChanged += null, _jobListMock.Object,
-                                new ProductionJobData(new DummyRecipe(),
-                                new JobEntity
-                                {
-                                    Id = 10,
-                                    Amount = 10,
-                                    Created = new DateTime(2000, 1, 1, 1, 50, 0),
-                                    Updated = new DateTime(2000, 1, 1, 1, 59, 0)
-                                }));
+                new ProductionJobData(new DummyRecipe(), new JobEntity
+                    {
+                        Id = 10,
+                        Amount = 10,
+                        Created = new DateTime(2000, 1, 1, 1, 50, 0),
+                        Updated = new DateTime(2000, 1, 1, 1, 59, 0)
+                    }));
 
-            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, new DateTime(2000, 1, 1, 1, 50, 0), new DateTime(2000, 1, 1, 1, 59, 0), []).ToList();
+            var chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed,
+                start: new DateTime(2000, 1, 1, 1, 50, 0),
+                end: new DateTime(2000, 1, 1, 1, 59, 0),
+                jobIds: []).ToListAsync();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(0));
         }
 
         [Test]
-        public void AddingCompletedJobToCacheTest()
+        public async Task AddingCompletedJobToCacheTest()
         {
             var now = DateTime.Now;
             var nowStart = now;
@@ -215,7 +218,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Act
             _jobListMock.Raise(j => j.StateChanged += null, _jobListMock.Object, jobData);
 
-            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, nowStart, nowEnd, []).ToList();
+            var chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed, nowStart, nowEnd, []).ToListAsync();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(1));
@@ -227,7 +230,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             stateMock.SetupGet(s => s.Classification).Returns(JobClassification.Completed);
             _jobListMock.Raise(jl => jl.StateChanged += null, _jobListMock.Object, new JobStateEventArgs(jobData, null, stateMock.Object));
 
-            chunks = _processArchive.GetProcesses(RequestFilter.Timed, nowStart, nowEnd, []).ToList();
+            chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed, nowStart, nowEnd, []).ToListAsync();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(1));
