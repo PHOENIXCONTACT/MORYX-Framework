@@ -19,6 +19,13 @@ namespace Moryx.ControlSystem.Processes
         IReadOnlyList<IProcess> RunningProcesses { get; }
 
         /// <summary>
+        /// Get the running process with the given <paramref name="processId"/>
+        /// </summary>
+        /// <param name="processId">Id of the running process</param>
+        /// <returns><see cref="IProcess"/></returns>
+        IProcess GetProcess(long processId);
+
+        /// <summary>
         /// Retrieve all processes for a product instance
         /// </summary>
         IReadOnlyList<IProcess> GetProcesses(ProductInstance productInstance);
@@ -32,6 +39,13 @@ namespace Moryx.ControlSystem.Processes
         /// Possible cells that can execute the activity
         /// </summary>
         IReadOnlyList<ICell> Targets(IActivity activity);
+
+        /// <summary>
+        /// Report a specific <see cref="ReportAction"/> to have been executed on the <paramref name="process"/>
+        /// </summary>
+        /// <param name="process">The process to report</param>
+        /// <param name="action">The action to perform</param>
+        void Report(IProcess process, ReportAction action);
 
         /// <summary>
         /// A process has changed
