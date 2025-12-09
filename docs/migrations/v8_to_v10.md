@@ -336,6 +336,10 @@ The API of `IResourceInitializer` was adjusted
 - Its now possible to execute initializers from the facade
 - The initializers are registered transient by default.
 
+## Modules-ProcessEngine
+
+- Removed API from IJobManagement: `JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement)`
+
 ## Modules-Products
 
 - Removed `productId` from `SaveRecipes` of `IProductStorage` and changed argument to `IReadOnlyList`

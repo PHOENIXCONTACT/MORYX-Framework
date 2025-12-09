@@ -114,8 +114,6 @@ namespace Moryx.ControlSystem.ProcessEngine
             };
         }
 
-        public JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement) => Evaluate(recipe, amount);
-
         private void HandleCapabilitiesChanged(object sender, ICapabilities e)
         {
             _capabilitiesDecoupler.Enqueue(e);

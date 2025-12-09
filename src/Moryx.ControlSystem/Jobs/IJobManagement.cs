@@ -19,14 +19,6 @@ namespace Moryx.ControlSystem.Jobs
         JobEvaluation Evaluate(IProductRecipe recipe, int amount);
 
         /// <summary>
-        /// Estimate effort to produce the given amount of a certain product
-        /// including estimations for setup and material refill based on the
-        /// given ResourceManagement. This estimation may change. Capabilities are
-        /// changed to their state after setup
-        /// </summary>
-        JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement);
-
-        /// <summary>
         /// Creates multiple jobs at once
         /// </summary>
         Task<IReadOnlyList<Job>> Add(JobCreationContext context);
