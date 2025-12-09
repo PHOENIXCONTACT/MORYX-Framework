@@ -165,6 +165,7 @@ The `ProcessEngineContext` was added to the `ProcessEngineAttached` to provide t
 - DriverState -> SyncDriverState
 - IControlSystemBound.ControlSystemAttached -> ICell.ProcessEngineAttached
 - IControlSystemBound.ControlSystemDetached -> ICell.ProcessEngineDetached
+- ProductQuery.Type -> ProductQuery.TypeName
 
 ## Reduction of interfaces
 
@@ -257,6 +258,9 @@ The API of `IResourceInitializer` was adjusted
 ## Modules-Products
 
 - Removed `productId` from `SaveRecipes` of `IProductStorage` and changed argument to `IReadOnlyList`
+- `ProductState` and `ProductInstanceState` are now Flags-Enum.
+- Introduced `ProductState.Generated` to classify a product as generated for internal use
+- Added support to query by required product state
 
 ### Product importer
 
