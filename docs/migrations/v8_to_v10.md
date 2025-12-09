@@ -258,6 +258,14 @@ The API of `IResourceInitializer` was adjusted
 
 - Removed `productId` from `SaveRecipes` of `IProductStorage` and changed argument to `IReadOnlyList`
 
+**`IProductManagement`**
+
+- APIs (LoadType, Duplicate) are using `IIdentity` instead of `ProductIdentity` but in MORYX 10.0, only `ProductIdentity` is supported.
+
+**`IProductStorage`**
+
+- API `LoadType` is using `IIdentity` instead of `ProductIdentity` but in MORYX 10.0, only `ProductIdentity` is supported.
+
 ### Product importer
 
 - Introduced `ProductImporterAttribute` for harmonized registration of importers.
