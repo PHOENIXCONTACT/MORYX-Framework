@@ -12,14 +12,12 @@ namespace Moryx.Orders.Management.Tests
         private readonly IModuleLogger _logger;
         private readonly IJobHandler _jobHandler;
         private readonly IOperationAssignment _operationAssignment;
-        private readonly INotificationAdapter _notificationAdapter;
 
-        public OperationFactoryMock(IModuleLogger logger, IJobHandler jobHandler, IOperationAssignment operationAssignment, INotificationAdapter notificationAdapter)
+        public OperationFactoryMock(IModuleLogger logger, IJobHandler jobHandler, IOperationAssignment operationAssignment)
         {
             _logger = logger;
             _jobHandler = jobHandler;
             _operationAssignment = operationAssignment;
-            _notificationAdapter = notificationAdapter;
         }
 
         public IOperationData Create()
@@ -29,8 +27,7 @@ namespace Moryx.Orders.Management.Tests
                 Logger = _logger,
                 JobHandler = _jobHandler,
                 OperationAssignment = _operationAssignment,
-                CountStrategy = new DoNotReplaceScrapStrategy(),
-                NotificationAdapter = _notificationAdapter
+                CountStrategy = new DoNotReplaceScrapStrategy()
             };
         }
 

@@ -32,18 +32,6 @@ namespace Moryx.Orders.Management
         {
         }
 
-        public override void OnEnter()
-        {
-            base.OnEnter();
-            Context.ShowAmountReachedNotification();
-        }
-
-        public override void OnExit()
-        {
-            Context.AcknowledgeAmountReachedNotification();
-            base.OnExit();
-        }
-
         public override void IncreaseTargetBy(int amount, User user)
         {
             if (Context.ReachableAmount < Context.TargetAmount + amount)

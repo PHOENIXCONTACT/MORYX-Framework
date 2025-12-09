@@ -258,6 +258,10 @@ The API of `IResourceInitializer` was adjusted
 
 - Removed `productId` from `SaveRecipes` of `IProductStorage` and changed argument to `IReadOnlyList`
 
+## Modules-Orders
+
+- Removed **Amount Reached Notification** from OperationData. **Upgrade hint:** Replace by custom module, to add notifications for certain modules.
+
 ### Product importer
 
 - Introduced `ProductImporterAttribute` for harmonized registration of importers.

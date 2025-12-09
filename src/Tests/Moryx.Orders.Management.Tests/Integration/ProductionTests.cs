@@ -151,9 +151,7 @@ namespace Moryx.Orders.Management.Tests
                 LoggerProvider = new OperationLoggerProvider()
             };
 
-            var notificationAdapter = new Mock<INotificationAdapter>();
-
-            var operationFactory = new OperationFactoryMock(logger, jobHandler, assignment, notificationAdapter.Object);
+            var operationFactory = new OperationFactoryMock(logger, jobHandler, assignment);
             _operationDataPool.OperationFactory = operationFactory;
 
             productAssignment.Initialize(new ProductAssignmentConfig());
