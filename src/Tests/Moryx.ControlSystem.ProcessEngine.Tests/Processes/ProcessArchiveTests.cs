@@ -236,53 +236,116 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             Assert.That(process.ProductInstance, Is.InstanceOf<DummyProductInstance>());
         }
 
-        private void CreateTestData(IEnumerable<JobEntity> jobs, IEnumerable<ProcessEntity> processes)
+        private void CreateTestData(IReadOnlyList<JobEntity> jobs, IReadOnlyList<ProcessEntity> processes)
         {
             var queryableJobEntityMock = new Mock<IQueryable<JobEntity>>();
-            SetupIQueryable(queryableJobEntityMock, jobs.AsQueryable());
+            SetupIQueryable(queryableJobEntityMock, jobs);
             _jobRepo.Setup(j => j.Linq).Returns(queryableJobEntityMock.Object);
 
             var queryableProcessEntityMock = new Mock<IQueryable<ProcessEntity>>();
-            SetupIQueryable(queryableProcessEntityMock, processes.AsQueryable());
+            SetupIQueryable(queryableProcessEntityMock, processes);
             _processRepo.Setup(j => j.Linq).Returns(queryableProcessEntityMock.Object);
         }
 
-        private JobEntity[] CreateJobEntities()
+        private static JobEntity[] CreateJobEntities()
         {
             return
             [
-                new JobEntity { Id = 1, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 0, 0), Updated = new DateTime(2000, 1, 1, 1, 10, 0)},
-                new JobEntity { Id = 2, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 15, 0), Updated = new DateTime(2000, 1, 1, 1, 20, 0)},
-                new JobEntity { Id = 3, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 30, 0), Updated = new DateTime(2000, 1, 1, 1, 40, 0)},
-                new JobEntity { Id = 4, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 25, 0), Updated = new DateTime(2000, 1, 1, 1, 40, 0)},
+                new JobEntity
+                {
+                    Id = 1, Amount = 10,
+                    Created = new DateTime(2000, 1, 1, 1, 0, 0),
+                    Updated = new DateTime(2000, 1, 1, 1, 10, 0)
+                },
+                new JobEntity
+                {
+                    Id = 2,
+                    Amount = 10,
+                    Created = new DateTime(2000, 1, 1, 1, 15, 0),
+                    Updated = new DateTime(2000, 1, 1, 1, 20, 0)
+                },
+                new JobEntity
+                {
+                    Id = 3,
+                    Amount = 10,
+                    Created = new DateTime(2000, 1, 1, 1, 30, 0),
+                    Updated = new DateTime(2000, 1, 1, 1, 40, 0)
+                },
+                new JobEntity
+                {
+                    Id = 4,
+                    Amount = 10,
+                    Created = new DateTime(2000, 1, 1, 1, 25, 0),
+                    Updated = new DateTime(2000, 1, 1, 1, 40, 0)
+                },
             ];
         }
 
-        private ProcessEntity[] CreateProcessEntities(JobEntity[] jobs)
+        private static ProcessEntity[] CreateProcessEntities(JobEntity[] jobs)
         {
             return
             [
                 // Job 1
-                new ProcessEntity { JobId = jobs[0].Id, Job = jobs[0],
-                    Activities = new List<ActivityEntity> { new() { Started = new DateTime(2000, 1, 1, 1, 0, 1), Completed = new DateTime(2000, 1, 1, 1, 0, 2) } }, State = (int)ProcessState.Success },
-                new ProcessEntity { Id = 1337, JobId = jobs[0].Id, Job = jobs[0], ReferenceId = 42,
+                new ProcessEntity
+                {
+                    JobId = jobs[0].Id, Job = jobs[0],
                     Activities = new List<ActivityEntity>
                     {
-                        new() {
+                        new()
+                        {
+                            Started = new DateTime(2000, 1, 1, 1, 0, 1),
+                            Completed = new DateTime(2000, 1, 1, 1, 0, 2)
+                        }
+                    },
+                    State = (int)ProcessState.Success
+                },
+                new ProcessEntity
+                {
+                    Id = 1337,
+                    JobId = jobs[0].Id,
+                    Job = jobs[0],
+                    ReferenceId = 42,
+                    Activities = new List<ActivityEntity>
+                    {
+                        new()
+                        {
                             TaskId = 1,
                             Started = new DateTime(2000, 1, 1, 1, 0, 3),
                             Completed = new DateTime(2000, 1, 1, 1, 0, 9)
                         }
-                    }, State = (int)ProcessState.Success },
+                    },
+                    State = (int)ProcessState.Success
+                },
 
                 // Job 2
-                new ProcessEntity { JobId = jobs[1].Id, Job = jobs[1], Activities = new List<ActivityEntity> { new() { Started = new DateTime(2000, 1, 1, 1, 15, 1), Completed = new DateTime(2000, 1, 1, 1, 15, 2) } }, State = (int)ProcessState.Failure }
+                new ProcessEntity
+                {
+                    JobId = jobs[1].Id,
+                    Job = jobs[1],
+                    Activities = new List<ActivityEntity>
+                    {
+                        new()
+                        {
+                            Started = new DateTime(2000, 1, 1, 1, 15, 1),
+                            Completed = new DateTime(2000, 1, 1, 1, 15, 2)
+                        }
+                    },
+                    State = (int)ProcessState.Failure
+                }
             ];
         }
 
-        public static void SetupIQueryable<T>(Mock<T> mock, IQueryable queryable)
-            where T : class, IQueryable
+        public static void SetupIQueryable<T, TEntity>(Mock<T> mock, IReadOnlyList<TEntity> entities)
+            where T : class, IQueryable<TEntity>
         {
+            IAsyncEnumerable<TEntity> asyncEnumerable = entities.ToAsyncEnumerable();
+            IAsyncEnumerator<TEntity> asyncEnumerator = asyncEnumerable.GetAsyncEnumerator();
+
+            var asyncEnumerableMock = mock.As<IAsyncEnumerable<TEntity>>();
+            asyncEnumerableMock.Setup(e => e.GetAsyncEnumerator()).Returns(() => asyncEnumerator);
+
+            var queryable = entities.AsQueryable();
+
             mock.Setup(r => r.GetEnumerator()).Returns(queryable.GetEnumerator());
             mock.Setup(r => r.Provider).Returns(queryable.Provider);
             mock.Setup(r => r.ElementType).Returns(queryable.ElementType);
