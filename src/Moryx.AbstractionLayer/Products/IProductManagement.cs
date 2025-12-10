@@ -28,7 +28,7 @@ namespace Moryx.AbstractionLayer.Products
         /// Load product type by identity
         /// </summary>
         /// <exception cref="ProductNotFoundException">Thrown when the product with the given id doesn't exist.</exception>
-        ProductType LoadType(ProductIdentity identity);
+        ProductType LoadType(IIdentity identity);
 
         /// <summary>
         /// Event raised when a product type changed
@@ -39,7 +39,7 @@ namespace Moryx.AbstractionLayer.Products
         /// Duplicate a product under a new identity
         /// </summary>
         /// <exception cref="IdentityConflictException">Thrown when the new identity causes conflicts</exception>
-        ProductType Duplicate(ProductType template, ProductIdentity newIdentity);
+        ProductType Duplicate(ProductType template, IIdentity newIdentity);
 
         /// <summary>
         /// Save a product type

@@ -94,7 +94,7 @@ namespace Moryx.Products.Management
             return type;
         }
 
-        public ProductType LoadType(ProductIdentity identity)
+        public ProductType LoadType(IIdentity identity)
         {
             ValidateHealthState();
             return ProductManager.LoadType(identity);
@@ -106,7 +106,7 @@ namespace Moryx.Products.Management
         }
         public event EventHandler<ProductType> TypeChanged;
 
-        public ProductType Duplicate(ProductType template, ProductIdentity newIdentity)
+        public ProductType Duplicate(ProductType template, IIdentity newIdentity)
         {
             ValidateHealthState();
             return ProductManager.Duplicate(template, newIdentity);

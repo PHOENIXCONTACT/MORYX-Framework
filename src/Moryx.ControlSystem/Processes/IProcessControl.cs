@@ -19,19 +19,16 @@ namespace Moryx.ControlSystem.Processes
         IReadOnlyList<IProcess> RunningProcesses { get; }
 
         /// <summary>
-        /// Retrieve all archived processes for a product instance
+        /// Get the running process with the given <paramref name="processId"/>
         /// </summary>
-        /// <param name="productInstance">Product instance to select the processes</param>
-        Task<IReadOnlyList<IProcess>> GetArchivedProcesses(ProductInstance productInstance);
+        /// <param name="processId">Id of the running process</param>
+        /// <returns><see cref="IProcess"/></returns>
+        IProcess GetProcess(long processId);
 
         /// <summary>
-        /// Retrieve all archived processes in a certain range
+        /// Retrieve all processes for a product instance
         /// </summary>
-        /// <param name="filterType">Type of filtering</param>
-        /// <param name="start">Start time</param>
-        /// <param name="end">End time</param>
-        /// <param name="jobIds">Optional filter with job ids</param>
-        IAsyncEnumerable<IProcessChunk> GetArchivedProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds);
+        IReadOnlyList<IProcess> GetProcesses(ProductInstance productInstance);
 
         /// <summary>
         /// Possible targets for the process, defined by currently open activities
@@ -42,6 +39,13 @@ namespace Moryx.ControlSystem.Processes
         /// Possible cells that can execute the activity
         /// </summary>
         IReadOnlyList<ICell> Targets(IActivity activity);
+
+        /// <summary>
+        /// Report a specific <see cref="ReportAction"/> to have been executed on the <paramref name="process"/>
+        /// </summary>
+        /// <param name="process">The process to report</param>
+        /// <param name="action">The action to perform</param>
+        void Report(IProcess process, ReportAction action);
 
         /// <summary>
         /// A process has changed
