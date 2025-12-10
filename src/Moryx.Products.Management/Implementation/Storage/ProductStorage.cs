@@ -266,17 +266,17 @@ namespace Moryx.Products.Management
             var productsQuery = query.IncludeDeleted ? baseSet : baseSet.Active();
 
             // Filter by type
-            if (!string.IsNullOrEmpty(query.Type))
+            if (!string.IsNullOrEmpty(query.TypeName))
             {
                 if (query.ExcludeDerivedTypes)
-                    productsQuery = productsQuery.Where(p => p.TypeName == query.Type);
+                    productsQuery = productsQuery.Where(p => p.TypeName == query.TypeName);
                 else
                 {
-                    var baseType = _typeInformation[query.Type].Type;
+                    var baseType = _typeInformation[query.TypeName].Type;
                     var allTypes = ReflectionTool.GetPublicClasses<ProductType>(type =>
                     {
                         // Check if any interface matches
-                        if (type.GetInterface(query.Type) != null)
+                        if (type.GetInterface(query.TypeName) != null)
                             return true;
                         // Check if type or base type matches
                         if (baseType == null)
@@ -286,10 +286,16 @@ namespace Moryx.Products.Management
                     productsQuery = productsQuery.Where(p => allTypes.Contains(p.TypeName));
                 }
 
+                // Filter by product state
+                if (query.RequiredState.HasValue)
+                {
+                    productsQuery = productsQuery.Where(p => ((ProductState)p.CurrentVersion.State).HasFlag(query.RequiredState.Value));
+                }
+
                 // Filter by type properties
                 if (query.PropertyFilters != null)
                 {
-                    var targetTypeName = query.Type.Split(',')[0];
+                    var targetTypeName = query.TypeName.Split(',')[0];
                     var typeSearch = _typeInformation[targetTypeName].Strategy;
                     var targetType = typeSearch.TargetType;
                     // Make generic method for the target type

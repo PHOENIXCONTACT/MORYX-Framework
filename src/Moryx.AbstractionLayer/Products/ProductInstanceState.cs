@@ -4,33 +4,35 @@
 namespace Moryx.AbstractionLayer.Products
 {
     /// <summary>
-    /// The state of an Article. This will not occupy more than 4 Bits. Other enums can be added by bit-shifting
+    /// The state of an <see cref="ProductInstance"/>.
+    /// This will not occupy more than 4 Bits. Other enums can be added by bit-shifting
     /// </summary>
-    public enum ProductInstanceState : byte
+    [Flags]
+    public enum ProductInstanceState : int
     {
         /// <summary>
         /// Initial state
         /// </summary>
-        Unset,
+        Unset = 1 << 0,
 
         /// <summary>
         /// The instance is currently in production
         /// </summary>
-        InProduction,
+        InProduction = 1 << 1,
 
         /// <summary>
         /// The production on this instance was paused
         /// </summary>
-        Paused,
+        Paused = 1 << 2,
 
         /// <summary>
         /// The production process succeeded.
         /// </summary>
-        Success,
+        Success = 1 << 3,
 
         /// <summary>
         /// The production process failed.
         /// </summary>
-        Failure
+        Failure = 1 << 4,
     }
 }
