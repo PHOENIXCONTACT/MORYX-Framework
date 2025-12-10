@@ -7,11 +7,11 @@ namespace Moryx.Identity.AccessManagement.Identity
 {
     public interface IPasswordResetService
     {
-        Task<PasswordReset> GetPasswordReset(string userId);
+        Task<PasswordReset> GetPasswordResetAsync(string userId);
 
-        Task<PasswordReset> GeneratePasswordReset(string userId);
+        Task<PasswordReset> GeneratePasswordResetAsync(string userId);
 
-        Task RemovePasswordReset(PasswordReset passwordReset);
+        Task RemovePasswordResetAsync(PasswordReset passwordReset);
     }
 }
 

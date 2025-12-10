@@ -95,7 +95,7 @@ namespace Moryx.Orders.Management.Tests
                 Id = 2
             };
 
-            _jobManagementMock.Setup(j => j.Add(It.IsAny<JobCreationContext>()))
+            _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>()))
                 .ReturnsAsync([newJob]);
 
             // Act
@@ -127,7 +127,7 @@ namespace Moryx.Orders.Management.Tests
             };
 
             JobCreationContext createdContext = null;
-            _jobManagementMock.Setup(j => j.Add(It.IsAny<JobCreationContext>())).ReturnsAsync(delegate (JobCreationContext context)
+            _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>())).ReturnsAsync(delegate (JobCreationContext context)
             {
                 createdContext = context;
                 return [newJob];

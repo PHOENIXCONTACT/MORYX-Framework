@@ -257,7 +257,7 @@ private void ForceMachine()
     StateMachine.Force(context.State, MyStateBase.StateA);
 }
 
-private async Task ForceMachine()
+private async Task ForceMachineAsync()
 {
     await StateMachine.ForceAsync(context.State, MyAsyncStateBase.StateA);
 }
@@ -272,7 +272,7 @@ private void ForceMachine()
     StateMachine.Force(context.State, MyStateBase.StateA, exitCurrent: true, enterForced: false);
 }
 
-private async Task ForceMachine()
+private async Task ForceMachineAsync()
 {
     await StateMachine.ForceAsync(context.State, MyAsyncStateBase.StateA, exitCurrent: true, enterForced: false);
 }

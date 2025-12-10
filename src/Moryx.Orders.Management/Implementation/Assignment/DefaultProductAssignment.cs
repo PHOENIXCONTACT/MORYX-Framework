@@ -11,7 +11,7 @@ namespace Moryx.Orders.Management.Assignment
     internal class DefaultProductAssignment : ProductAssignmentBase<ProductAssignmentConfig>
     {
         /// <inheritdoc />
-        public override Task<ProductType> SelectProduct(Operation operation, IOperationLogger operationLogger)
+        public override Task<ProductType> SelectProductAsync(Operation operation, IOperationLogger operationLogger)
         {
             var productIdentity = (ProductIdentity)operation.Product.Identity;
             var product = ProductManagement.LoadType(productIdentity);

@@ -46,15 +46,15 @@ namespace Moryx.Orders.Dispatcher
         }
 
         /// <inheritdoc />
-        public abstract Task Dispatch(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts);
+        public abstract Task DispatchAsync(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts);
 
         /// <inheritdoc />
-        public abstract Task Complete(Operation operation);
+        public abstract Task CompleteAsync(Operation operation);
 
         /// <summary>
         /// Update method when a jobs progress has changed
         /// </summary>
-        public virtual Task JobProgressChanged(Operation operation, Job job)
+        public virtual Task JobProgressChangedAsync(Operation operation, Job job)
         {
             return Task.CompletedTask;
         }
@@ -62,7 +62,7 @@ namespace Moryx.Orders.Dispatcher
         /// <summary>
         /// Update method which ensures that an operationData is present and executed with parallelOperations
         /// </summary>
-        public virtual Task JobStateChanged(Operation operation, JobStateChangedEventArgs eventArgs)
+        public virtual Task JobStateChangedAsync(Operation operation, JobStateChangedEventArgs eventArgs)
         {
             return Task.CompletedTask;
         }
@@ -70,9 +70,9 @@ namespace Moryx.Orders.Dispatcher
         /// <summary>
         /// Adds a job to operation data
         /// </summary>
-        protected async Task AddJobs(Operation operation, JobCreationContext context)
+        protected async Task AddJobsAsync(Operation operation, JobCreationContext context)
         {
-            var newJobs = await JobManagement.Add(context);
+            var newJobs = await JobManagement.AddAsync(context);
             JobsDispatched?.Invoke(this, new JobDispatchedEventArgs(operation, newJobs));
         }
 

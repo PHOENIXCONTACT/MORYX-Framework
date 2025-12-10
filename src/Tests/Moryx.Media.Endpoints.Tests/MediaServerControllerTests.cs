@@ -108,7 +108,7 @@ namespace Moryx.Media.Endpoints.Tests
             // Arrange
             var targetGuid = Guid.NewGuid();
             var contentAddingInfo = new ContentAddingInfo { Descriptor = new ContentDescriptor(targetGuid) };
-            _mediaServerMock.Setup(ms => ms.AddMaster(It.IsAny<string>(), It.IsAny<Stream>()))
+            _mediaServerMock.Setup(ms => ms.AddMasterAsync(It.IsAny<string>(), It.IsAny<Stream>()))
                 .Returns(() => Task.FromResult(contentAddingInfo));
 
             using var stream = File.OpenRead(Path.Combine(_testContentPath, fileName));
@@ -134,7 +134,7 @@ namespace Moryx.Media.Endpoints.Tests
             // Arrange
             var targetGuid = Guid.NewGuid();
             var contentAddingInfo = new ContentAddingInfo { Descriptor = new ContentDescriptor(targetGuid) };
-            _mediaServerMock.Setup(ms => ms.AddMaster(It.IsAny<string>(), It.IsAny<Stream>()))
+            _mediaServerMock.Setup(ms => ms.AddMasterAsync(It.IsAny<string>(), It.IsAny<Stream>()))
                 .Returns(() => Task.FromResult(contentAddingInfo));
 
             // smuggling a txt file as a jpg should not work
@@ -161,7 +161,7 @@ namespace Moryx.Media.Endpoints.Tests
             // Arrange
             var targetGuid = Guid.NewGuid();
             var contentAddingInfo = new ContentAddingInfo { Descriptor = new ContentDescriptor(targetGuid) };
-            _mediaServerMock.Setup(ms => ms.AddMaster(It.IsAny<string>(), It.IsAny<Stream>()))
+            _mediaServerMock.Setup(ms => ms.AddMasterAsync(It.IsAny<string>(), It.IsAny<Stream>()))
                 .Returns(() => Task.FromResult(contentAddingInfo));
             _mediaServerMock
                 .Setup(ms => ms.GetSupportedFileTypes())
@@ -189,7 +189,7 @@ namespace Moryx.Media.Endpoints.Tests
             // Arrange
             var targetGuid = Guid.NewGuid();
             var contentAddingInfo = new ContentAddingInfo { Descriptor = new ContentDescriptor(targetGuid) };
-            _mediaServerMock.Setup(ms => ms.AddMaster(It.IsAny<string>(), It.IsAny<Stream>()))
+            _mediaServerMock.Setup(ms => ms.AddMasterAsync(It.IsAny<string>(), It.IsAny<Stream>()))
                 .Returns(() => Task.FromResult(contentAddingInfo));
             _mediaServerMock.SetupSupportedTypes(".mp4");
 
@@ -221,7 +221,7 @@ namespace Moryx.Media.Endpoints.Tests
             var targetGuid = Guid.NewGuid();
             var contentAddingInfo = new ContentAddingInfo { Descriptor = new ContentDescriptor(targetGuid) };
             _mediaServerMock.Setup(ms => ms.Get(It.Is<Guid>(g => g == contentGuid))).Returns(new ContentDescriptor(contentGuid));
-            _mediaServerMock.Setup(ms => ms.AddVariant(It.Is<Guid>(g => g == contentGuid), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Stream>()))
+            _mediaServerMock.Setup(ms => ms.AddVariantAsync(It.Is<Guid>(g => g == contentGuid), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Stream>()))
                 .Returns(() => Task.FromResult(contentAddingInfo));
 
             using var stream = File.OpenRead(Path.Combine(_testContentPath, fileName));

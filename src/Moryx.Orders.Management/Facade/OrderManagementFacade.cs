@@ -134,7 +134,7 @@ namespace Moryx.Orders.Management
             return filtered.Select(o => o.Operation).ToArray();
         }
 
-        public async Task<Operation> GetOperation(string orderNumber, string operationNumber)
+        public async Task<Operation> GetOperationAsync(string orderNumber, string operationNumber)
         {
             ValidateHealthState();
 
@@ -142,7 +142,7 @@ namespace Moryx.Orders.Management
             return operationData?.Operation;
         }
 
-        public async Task<Operation> GetOperation(Guid identifier)
+        public async Task<Operation> GetOperationAsync(Guid identifier)
         {
             ValidateHealthState();
 
@@ -150,12 +150,12 @@ namespace Moryx.Orders.Management
             return operationData?.Operation;
         }
 
-        public Task<Operation> AddOperation(OperationCreationContext context)
+        public Task<Operation> AddOperationAsync(OperationCreationContext context)
         {
-            return AddOperation(context, new NullOperationSource());
+            return AddOperationAsync(context, new NullOperationSource());
         }
 
-        public async Task<Operation> AddOperation(OperationCreationContext context, IOperationSource source)
+        public async Task<Operation> AddOperationAsync(OperationCreationContext context, IOperationSource source)
         {
             ValidateHealthState();
 
@@ -189,12 +189,12 @@ namespace Moryx.Orders.Management
             return OperationManager.GetBeginContext(operationData);
         }
 
-        public Task BeginOperation(Operation operation, int amount)
+        public Task BeginOperationAsync(Operation operation, int amount)
         {
-            return BeginOperation(operation, amount, UserManagement.DefaultUser);
+            return BeginOperationAsync(operation, amount, UserManagement.DefaultUser);
         }
 
-        public Task BeginOperation(Operation operation, int amount, User user)
+        public Task BeginOperationAsync(Operation operation, int amount, User user)
         {
             ValidateHealthState();
 
@@ -202,7 +202,7 @@ namespace Moryx.Orders.Management
             return OperationManager.Adjust(operationData, user, amount);
         }
 
-        public Task AbortOperation(Operation operation)
+        public Task AbortOperationAsync(Operation operation)
         {
             ValidateHealthState();
 
@@ -210,7 +210,7 @@ namespace Moryx.Orders.Management
             return OperationManager.Abort(operationData);
         }
 
-        public Task SetOperationSortOrder(int sortOrder, Operation operation)
+        public Task SetOperationSortOrderAsync(int sortOrder, Operation operation)
         {
             ValidateHealthState();
 
@@ -218,7 +218,7 @@ namespace Moryx.Orders.Management
             return operationData.SetSortOrder(sortOrder);
         }
 
-        public Task UpdateSource(IOperationSource source, Operation operation)
+        public Task UpdateSourceAsync(IOperationSource source, Operation operation)
         {
             ValidateHealthState();
 
@@ -238,7 +238,7 @@ namespace Moryx.Orders.Management
             return reportContext;
         }
 
-        public Task ReportOperation(Operation operation, OperationReport report)
+        public Task ReportOperationAsync(Operation operation, OperationReport report)
         {
             ValidateHealthState();
 
@@ -257,7 +257,7 @@ namespace Moryx.Orders.Management
             return OperationManager.GetInterruptContext(operationData);
         }
 
-        public Task InterruptOperation(Operation operation, User user)
+        public Task InterruptOperationAsync(Operation operation, User user)
         {
             ValidateHealthState();
 
@@ -277,7 +277,7 @@ namespace Moryx.Orders.Management
             return operationData;
         }
 
-        public Task Reload(Operation operation)
+        public Task ReloadAsync(Operation operation)
         {
             ValidateHealthState();
 
@@ -292,7 +292,7 @@ namespace Moryx.Orders.Management
             return operationData.GetAdviceContext();
         }
 
-        public async Task<AdviceResult> TryAdvice(Operation operation, OperationAdvice advice)
+        public async Task<AdviceResult> TryAdviceAsync(Operation operation, OperationAdvice advice)
         {
             ValidateHealthState();
 
@@ -321,11 +321,11 @@ namespace Moryx.Orders.Management
             return operationLogger.Messages;
         }
 
-        public Task<IReadOnlyList<IProductRecipe>> GetAssignableRecipes(ProductIdentity identity)
+        public Task<IReadOnlyList<IProductRecipe>> GetAssignableRecipesAsync(ProductIdentity identity)
         {
             ValidateHealthState();
 
-            return RecipeAssignment.PossibleRecipes(identity);
+            return RecipeAssignment.PossibleRecipesAsync(identity);
         }
 
         public event EventHandler<OperationStartedEventArgs> OperationStarted;

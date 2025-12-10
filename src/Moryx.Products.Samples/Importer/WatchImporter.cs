@@ -14,7 +14,7 @@ namespace Moryx.Products.Samples
     {
         public IProductStorage Storage { get; set; }
 
-        protected override Task<ProductImporterResult> Import(ProductImportContext context, SpecializedWatchImportParameters parameters)
+        protected override Task<ProductImporterResult> ImportAsync(ProductImportContext context, SpecializedWatchImportParameters parameters)
         {
             var product = new WatchType
             {

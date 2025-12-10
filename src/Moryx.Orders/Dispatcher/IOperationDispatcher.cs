@@ -15,22 +15,22 @@ namespace Moryx.Orders.Dispatcher
         /// A new job will be added to the <see cref="IJobManagement"/> and to the given operation.
         /// The new job will be moved to the bottom of all jobs of the given operation
         /// </summary>
-        Task Dispatch(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts);
+        Task DispatchAsync(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts);
 
         /// <summary>
         /// Will complete all jobs of the given operation
         /// </summary>
-        Task Complete(Operation operation);
+        Task CompleteAsync(Operation operation);
 
         /// <summary>
         /// Update method when a jobs progress has changed
         /// </summary>
-        Task JobProgressChanged(Operation operation, Job job);
+        Task JobProgressChangedAsync(Operation operation, Job job);
 
         /// <summary>
         /// Update method which ensures that an operationData is present and executed with parallelOperations
         /// </summary>
-        Task JobStateChanged(Operation operation, JobStateChangedEventArgs eventArgs);
+        Task JobStateChangedAsync(Operation operation, JobStateChangedEventArgs eventArgs);
 
         /// <summary>
         /// Event which will be raised if a job was dispatched

@@ -15,13 +15,13 @@ namespace Moryx.Orders.Advice
         /// </summary>
         /// <param name="operation">Operation of the advice</param>
         /// <param name="advice">Order advice information</param>
-        Task<AdviceResult> Advice(Operation operation, OrderAdvice advice);
+        Task<AdviceResult> AdviceAsync(Operation operation, OrderAdvice advice);
 
         /// <summary>
         /// Advice an pick part
         /// </summary>
         /// <param name="operation">Operation of the advice</param>
         /// <param name="advice">Pick part advice information</param>
-        Task<AdviceResult> Advice(Operation operation, PickPartAdvice advice);
+        Task<AdviceResult> AdviceAsync(Operation operation, PickPartAdvice advice);
     }
 }

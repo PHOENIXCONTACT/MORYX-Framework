@@ -56,13 +56,13 @@ namespace Moryx.ControlSystem.ProcessEngine
             return ActivityDataPool.Processes.Select(p => p.Process).Where(predicate).ToArray();
         }
 
-        public Task<IReadOnlyList<IProcess>> GetArchivedProcesses(ProductInstance productInstance)
+        public Task<IReadOnlyList<IProcess>> GetArchivedProcessesAsync(ProductInstance productInstance)
         {
             ValidateHealthState();
             return ProcessArchive.GetProcesses(productInstance);
         }
 
-        public IAsyncEnumerable<IProcessChunk> GetArchivedProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
+        public IAsyncEnumerable<IProcessChunk> GetArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
         {
             ValidateHealthState();
             return ProcessArchive.GetProcesses(filterType, start, end, jobIds);

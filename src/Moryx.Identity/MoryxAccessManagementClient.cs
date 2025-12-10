@@ -64,7 +64,7 @@ namespace Moryx.Identity
         /// <param name="token">The token.</param>
         /// <param name="refreshToken">The refresh token.</param>
         /// <returns>The refreshed authentication tokens.</returns>
-        public async Task<AuthResult> GetRefreshedTokens(string token, string refreshToken)
+        public async Task<AuthResult> GetRefreshedTokensAsync(string token, string refreshToken)
         {
             try
             {
@@ -73,7 +73,7 @@ namespace Moryx.Identity
                 var result = await _memoryCache.GetOrCreateAsync<AuthResult>(token + refreshToken, async cache =>
                 {
                     cache.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10);
-                    return await GetRefreshedTokensAsync(token, refreshToken);
+                    return await GetRefreshedTokensFromClient(token, refreshToken);
                 });
 
                 _logger?.LogDebug("Retrieved a new token");
@@ -85,7 +85,7 @@ namespace Moryx.Identity
             }
         }
 
-        private async Task<AuthResult> GetRefreshedTokensAsync(string token, string refreshToken)
+        private async Task<AuthResult> GetRefreshedTokensFromClient(string token, string refreshToken)
         {
             var uri = _options.CurrentValue.RefreshTokenUri;
 
@@ -130,7 +130,7 @@ namespace Moryx.Identity
         /// <param name="refreshToken">The refresh token.</param>
         /// <param name="requiredPolicy">The required policy.</param>
         /// <returns>The permissions associated with <paramref name="token"/>.</returns>
-        public async Task<IEnumerable<string>> GetPermissions(string token, string refreshToken, string requiredPolicy = "")
+        public async Task<IEnumerable<string>> GetPermissionsAsync(string token, string refreshToken, string requiredPolicy = "")
         {
             var uri = requiredPolicy == "" ? _options.CurrentValue.RequestUri : _options.CurrentValue.RequestUri + "?filter=" + requiredPolicy;
 

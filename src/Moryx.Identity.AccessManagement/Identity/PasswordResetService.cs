@@ -7,7 +7,7 @@ using Moryx.Identity.AccessManagement.Data;
 
 namespace Moryx.Identity.AccessManagement.Identity
 {
-    public class PasswordResetService : IPasswordResetService
+    internal class PasswordResetService : IPasswordResetService
     {
         private readonly MoryxIdentitiesDbContext _dbContext;
 
@@ -16,12 +16,12 @@ namespace Moryx.Identity.AccessManagement.Identity
             _dbContext = dbContext;
         }
 
-        public async Task<PasswordReset> GetPasswordReset(string userId)
+        public async Task<PasswordReset> GetPasswordResetAsync(string userId)
         {
             return await _dbContext.PasswordResets.FirstOrDefaultAsync(pr => pr.UserId == userId);
         }
 
-        public async Task<PasswordReset> GeneratePasswordReset(string userId)
+        public async Task<PasswordReset> GeneratePasswordResetAsync(string userId)
         {
             var passwordReset = new PasswordReset
             {
@@ -35,7 +35,7 @@ namespace Moryx.Identity.AccessManagement.Identity
             return passwordReset;
         }
 
-        public async Task RemovePasswordReset(PasswordReset passwordReset)
+        public async Task RemovePasswordResetAsync(PasswordReset passwordReset)
         {
             _dbContext.PasswordResets.Remove(passwordReset);
             await _dbContext.SaveChangesAsync();

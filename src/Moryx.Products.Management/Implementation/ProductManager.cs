@@ -131,7 +131,7 @@ namespace Moryx.Products.Management
         {
             var importer = _importers.First(i => i.Name == importerName);
             var context = new ProductImportContext();
-            var result = await importer.Import(context, parameters);
+            var result = await importer.ImportAsync(context, parameters);
 
             HandleResult(result);
 
@@ -154,7 +154,7 @@ namespace Moryx.Products.Management
             _runningImports.Add(context.Session, session);
 
             var importer = _importers.First(i => i.Name == importerName);
-            var task = importer.Import(context, parameters);
+            var task = importer.ImportAsync(context, parameters);
             task.ContinueWith(session.TaskCompleted);
 
             // Wait for the task unless it is long running

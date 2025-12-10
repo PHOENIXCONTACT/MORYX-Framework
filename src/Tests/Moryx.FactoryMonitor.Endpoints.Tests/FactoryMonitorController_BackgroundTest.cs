@@ -19,7 +19,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
         {
             // Arrange
             var newBackgroundUrl = @"https://media.istockphoto.com/id/849023956/photo/robot-assembly-line-in-car-factory.jpg?s=612x612&w=0&k=20&c=K39t_WpWlKB6I3iJco72kiscOxYdXl1ons-0VSf8yyo=";
-            _resourceManagementMock.Setup(rm => rm.ModifyUnsafe((long)_manufactoringFactoryId, (Func<Resource, Task<bool>>)It.IsAny<Func<Resource, Task<bool>>>()))
+            _resourceManagementMock.Setup(rm => rm.ModifyUnsafeAsync((long)_manufactoringFactoryId, (Func<Resource, Task<bool>>)It.IsAny<Func<Resource, Task<bool>>>()))
                 .Callback(() =>
                 {
                     _manufactoringFactory.BackgroundUrl = newBackgroundUrl;
@@ -31,7 +31,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             //Assert
             Assert.That(((OkResult)endPointResult).StatusCode, Is.EqualTo(200));
             Assert.That(_manufactoringFactory.BackgroundUrl, Is.EqualTo(newBackgroundUrl));
-            _resourceManagementMock.Verify(rm => rm.ModifyUnsafe((long)_manufactoringFactoryId, (Func<Resource, Task<bool>>)It.IsAny<Func<Resource, Task<bool>>>()), Times.Once);
+            _resourceManagementMock.Verify(rm => rm.ModifyUnsafeAsync((long)_manufactoringFactoryId, (Func<Resource, Task<bool>>)It.IsAny<Func<Resource, Task<bool>>>()), Times.Once);
         }
 
     }

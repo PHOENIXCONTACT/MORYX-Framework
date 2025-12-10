@@ -102,7 +102,7 @@ public class ProcessEngineController : ControllerBase
             return NotFound($"No product instace corresponding to the Id {productInstanceId} found");
         }
 
-        var processes = await _processControl.GetArchivedProcesses(productInstance);
+        var processes = await _processControl.GetArchivedProcessesAsync(productInstance);
 
         return ConvertProcesses(processes);
     }

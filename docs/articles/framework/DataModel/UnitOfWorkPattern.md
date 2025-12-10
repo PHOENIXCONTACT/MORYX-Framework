@@ -11,15 +11,15 @@ The main goal of the unit of work pattern is the easy support of transactional d
 
 ## Repository Pattern
 
-If you are unfamiliar with the Repository and Unit of Work pattern we recommend you start with an explanation of your choice from the Web. 
+If you are unfamiliar with the Repository and Unit of Work pattern we recommend you start with an explanation of your choice from the Web.
 
 As the logic in MORYX is separated in modules each of them might need their own database to execute its tasks.
-With a growing number of modules you will, however, find that a disadvantage of the pattern in general is that you have to write a lot of boiler plate code to access your data. 
+With a growing number of modules you will, however, find that a disadvantage of the pattern in general is that you have to write a lot of boiler plate code to access your data.
 This leads to typical problems of boiler plate code: It needs to be maintained and may consists of bugs.
 
 ## The MORYX way
 
-The MORYX framework follows another strategy: You don't need to implement an own UnitOfWork class because MORYX has a generic one for your DbContext and the repositories are generated at runtime. So no code needs to be maintained. 
+The MORYX framework follows another strategy: You don't need to implement an own UnitOfWork class because MORYX has a generic one for your DbContext and the repositories are generated at runtime. So no code needs to be maintained.
 Also have a look at the [repository proxy builder](RepositoryProxyBuilder.md) for more information on how the code generation works.
 
 Let's have a look at an example implementation. How do you define the UnitOfWork and Repository approach in the MORYX framework?
@@ -40,7 +40,7 @@ And here is how you use it.
 // Injected
 public IUnitOfWorkFactory<PersonContext> UnitOfWorkFactory { get; set; }
 
-public async Task WriteSomethingToDB()
+public async Task WriteSomethingToDbAsync()
 {
     using var uow = UnitOfWorkFactory.Create()
 
@@ -60,22 +60,22 @@ public async Task WriteSomethingToDB()
     await uow.SaveChangesAsync();
 }
 
-public async Task UseExtensionMethodsToFurtherSimplifyYouLife(Person person)
+public async Task UseExtensionMethodsToFurtherSimplifyYouLifeAsync(Person person)
 {
-    // Create an entity for the existing business object 
+    // Create an entity for the existing business object
     var personEntity = UnitOfWorkFactory.CreateEntity<PersonEntity>(person)
-    
+
     // Make sure ID updates for the entity are reflected in the business object.
     // Usually this is only needed for new business objects
     var personEntity = UnitOfWorkFactory.GetEntity<PersonEntity>(person)
-    
 
-    // Find the existing entity that belongs to the business object 
+
+    // Find the existing entity that belongs to the business object
     var personEntity = UnitOfWorkFactory.FindEntity<PersonEntity>(person)
-    
-    // Find the existing entity or create a new one for the business object 
+
+    // Find the existing entity or create a new one for the business object
     var personEntity = UnitOfWorkFactory.GetEntity<PersonEntity>(person)
-    
+
     // Do something more...
 
     // Save it
@@ -83,6 +83,6 @@ public async Task UseExtensionMethodsToFurtherSimplifyYouLife(Person person)
 }
 ````
 
-As you can see you just need to write the most important things. 
+As you can see you just need to write the most important things.
 The magic of the runtime code generation takes care of the rest.
 For a complete example please read the [CodeFirst tutorial](/docs/tutorials/data-model/CodeFirst.md).

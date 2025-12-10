@@ -18,26 +18,26 @@ namespace Moryx.Identity.AccessManagement
         /// </summary>
         /// <param name="user">The user for which the token should be generated</param>
         /// <returns>The authentication result including the authentication token</returns>
-        Task<AuthResult> GenerateToken(MoryxUser user);
+        Task<AuthResult> GenerateTokenAsync(MoryxUser user);
 
         /// <summary>
         /// Verifies the provided token and generates a refresh token
         /// </summary>
         /// <param name="tokenRequest">The token to be verified</param>
         /// <returns>The authentication result including the refresh token</returns>
-        Task<AuthResult> VerifyAndGenerateRefreshToken(TokenRequest tokenRequest);
+        Task<AuthResult> VerifyAndGenerateRefreshTokenAsync(TokenRequest tokenRequest);
 
         /// <summary>
         /// Deletes the current refresh token associated with the provided JWT.
         /// </summary>
         /// <param name="token">The JWT whose refresh token should be deleted.</param>
-        Task InvalidateRefreshToken(string token);
+        Task InvalidateRefreshTokenAsync(string token);
 
         /// <summary>
         /// Deletes the refresh tokens for the provided user.
         /// </summary>
         /// <param name="user">The user which tokens should be deleted.</param>
-        Task InvalidateRefreshTokens(MoryxUser user);
+        Task InvalidateRefreshTokensAsync(MoryxUser user);
 
         /// <summary>
         /// Determins if the given <paramref name="token"/> is a valid authentication token
@@ -50,7 +50,7 @@ namespace Moryx.Identity.AccessManagement
         /// Returns all claims which are assigned to at least one of the given <paramref name="roles"/>.
         /// </summary>
         /// <param name="roles">All roles to be taken into account in the enumeration</param>
-        Task<IEnumerable<Claim>> GetAllPermissionClaims(IList<string> roles);
+        Task<IEnumerable<Claim>> GetAllPermissionClaimsAsync(IList<string> roles);
     }
 }
 

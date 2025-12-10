@@ -15,7 +15,7 @@ using Moryx.Identity.Models;
 namespace Moryx.Identity.AccessManagement
 {
     /// <inheritdoc/>
-    public class TokenService : ITokenService
+    internal class TokenService : ITokenService
     {
         private readonly JwtSettings _jwtSettings;
         private readonly TokenValidationParameters _tokenValidationParameters;
@@ -50,7 +50,7 @@ namespace Moryx.Identity.AccessManagement
         }
 
         /// <inheritdoc/>
-        public async Task<AuthResult> GenerateToken(MoryxUser user)
+        public async Task<AuthResult> GenerateTokenAsync(MoryxUser user)
         {
             var claims = new List<Claim> {
                 new(JwtRegisteredClaimNames.Sub, user.Id),
@@ -111,12 +111,12 @@ namespace Moryx.Identity.AccessManagement
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Claim>> GetAllPermissionClaims(IList<string> roles)
+        public async Task<IEnumerable<Claim>> GetAllPermissionClaimsAsync(IList<string> roles)
         {
             var allPermissions = new List<Permission>();
             foreach (var role in roles)
             {
-                var permissions = await _permissionManager.FindForRole(role);
+                var permissions = await _permissionManager.FindForRoleAsync(role);
                 allPermissions.AddRange(permissions);
             }
 
@@ -128,7 +128,7 @@ namespace Moryx.Identity.AccessManagement
         }
 
         /// <inheritdoc/>
-        public async Task<AuthResult> VerifyAndGenerateRefreshToken(TokenRequest tokenRequest)
+        public async Task<AuthResult> VerifyAndGenerateRefreshTokenAsync(TokenRequest tokenRequest)
         {
             var validateLifetime = _tokenValidationParameters.ValidateLifetime;
             try
@@ -180,7 +180,7 @@ namespace Moryx.Identity.AccessManagement
                 await _dbContext.SaveChangesAsync();
 
                 var dbUser = await _userManager.FindByIdAsync(storedRefreshToken.UserId);
-                return await GenerateToken(dbUser);
+                return await GenerateTokenAsync(dbUser);
             }
             catch
             {
@@ -205,7 +205,7 @@ namespace Moryx.Identity.AccessManagement
         }
 
         /// <inheritdoc />
-        public async Task InvalidateRefreshToken(string token)
+        public async Task InvalidateRefreshTokenAsync(string token)
         {
             var securityToken = _jwtTokenHandler.ReadJwtToken(token);
             var refreshToken = await _dbContext.RefreshTokens.Where(token => token.JwtId == securityToken.Id).SingleOrDefaultAsync();
@@ -217,7 +217,7 @@ namespace Moryx.Identity.AccessManagement
         }
 
         /// <inheritdoc />
-        public async Task InvalidateRefreshTokens(MoryxUser user)
+        public async Task InvalidateRefreshTokensAsync(MoryxUser user)
         {
             var refreshTokens = await _dbContext.RefreshTokens.Where(token => token.UserId == user.Id).ToListAsync();
             _dbContext.RefreshTokens.RemoveRange(refreshTokens);

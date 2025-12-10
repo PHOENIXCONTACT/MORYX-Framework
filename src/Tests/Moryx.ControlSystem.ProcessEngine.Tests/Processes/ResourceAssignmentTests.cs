@@ -45,7 +45,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Create our multi purpose selector that does nothing per default
             _selectorMock = new Mock<ICellSelector>();
             _selectorMock
-                .Setup(s => s.SelectCells(It.IsAny<IActivity>(), It.IsAny<IReadOnlyList<ICell>>()))
+                .Setup(s => s.SelectCellsAsync(It.IsAny<IActivity>(), It.IsAny<IReadOnlyList<ICell>>()))
                 .ReturnsAsync((IActivity _, IReadOnlyList<ICell> cells) => cells);
             var config = new CellSelectorConfig();
             var factoryMock = new Mock<ICellSelectorFactory>();
@@ -279,7 +279,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         {
             // Arrange
             _selectorMock
-                .Setup(s => s.SelectCells(It.IsAny<IActivity>(), It.IsAny<IReadOnlyList<ICell>>()))
+                .Setup(s => s.SelectCellsAsync(It.IsAny<IActivity>(), It.IsAny<IReadOnlyList<ICell>>()))
                 .ReturnsAsync((IActivity _, IReadOnlyList<ICell> cells) => cells.Reverse().ToList());
             _resourceManagementMock.Setup(s => s.GetResources<ICell>(It.IsAny<ICapabilities>()))
                 .Returns(new List<ICell> { _productionCellMock.Object, _mountCellMock.Object });
@@ -301,7 +301,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         {
             // Arrange
             _selectorMock
-                .Setup(s => s.SelectCells(It.IsAny<IActivity>(), It.IsAny<IReadOnlyList<ICell>>()))
+                .Setup(s => s.SelectCellsAsync(It.IsAny<IActivity>(), It.IsAny<IReadOnlyList<ICell>>()))
                 .ReturnsAsync((IActivity _, IReadOnlyList<ICell> cells) => cells.Take(1).ToList());
             _resourceManagementMock.Setup(s => s.GetResources<ICell>(It.IsAny<ICapabilities>()))
                 .Returns(new List<ICell> { _productionCellMock.Object, _mountCellMock.Object });
@@ -322,7 +322,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         {
             // Arrange
             _selectorMock
-                .Setup(s => s.SelectCells(It.IsAny<IActivity>(), It.IsAny<IReadOnlyList<ICell>>()))
+                .Setup(s => s.SelectCellsAsync(It.IsAny<IActivity>(), It.IsAny<IReadOnlyList<ICell>>()))
                 .ReturnsAsync((IActivity _, IReadOnlyList<ICell> cells) => cells.Concat([_mountCellMock.Object]).ToList());
             _resourceManagementMock.Setup(s => s.GetResources<ICell>(It.IsAny<ICapabilities>()))
                 .Returns(new List<ICell> { _productionCellMock.Object });

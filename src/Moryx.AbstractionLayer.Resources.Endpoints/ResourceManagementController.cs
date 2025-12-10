@@ -113,7 +113,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             Entry entry = null;
             try
             {
-                await _resourceManagement.ModifyUnsafe(id, r =>
+                await _resourceManagement.ModifyUnsafeAsync(id, r =>
                 {
                     entry = EntryConvert.InvokeMethod(r.Descriptor, new MethodEntry { Name = method, Parameters = parameters }, _serialization);
                     return Task.FromResult(true);
@@ -174,7 +174,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         {
             try
             {
-                var id = await _resourceManagement.CreateUnsafe(_resourceTypeTree[type].ResourceType, resource =>
+                var id = await _resourceManagement.CreateUnsafeAsync(_resourceTypeTree[type].ResourceType, resource =>
                 {
                     EntryConvert.InvokeMethod(resource, method, _serialization);
                     return Task.CompletedTask;
@@ -201,14 +201,14 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                 return Conflict($"The resource '{model.Id}' already exists.");
             try
             {
-                var id = await _resourceManagement.CreateUnsafe(_resourceTypeTree[model.Type].ResourceType, async (r) =>
+                var id = await _resourceManagement.CreateUnsafeAsync(_resourceTypeTree[model.Type].ResourceType, async (r) =>
                 {
                     var resourcesToSave = new HashSet<long>();
                     var resourceCache = new Dictionary<long, Resource>();
                     await FromModel(model, resourcesToSave, resourceCache, r);
                     foreach (var resource in resourcesToSave.Skip(1))
                     {
-                        await _resourceManagement.ModifyUnsafe(resource, r => Task.FromResult(true));
+                        await _resourceManagement.ModifyUnsafeAsync(resource, r => Task.FromResult(true));
                     }
                 });
 
@@ -241,7 +241,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                     resource = (Resource)Activator.CreateInstance(_resourceTypeTree[model.Type].ResourceType);
                 else if (model.Id == 0)
                 {
-                    var id = await _resourceManagement.CreateUnsafe(_resourceTypeTree[model.Type].ResourceType, r => Task.CompletedTask);
+                    var id = await _resourceManagement.CreateUnsafeAsync(_resourceTypeTree[model.Type].ResourceType, r => Task.CompletedTask);
                     resource = _resourceManagement.ReadUnsafe(id, r => r);
                 }
                 else
@@ -355,12 +355,12 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
 
             try
             {
-                _resourceManagement.ModifyUnsafe(id, async (r) =>
+                _resourceManagement.ModifyUnsafeAsync(id, async (r) =>
                 {
                     var resourcesToSave = new HashSet<long>();
                     var resourceCache = new Dictionary<long, Resource>();
                     await FromModel(model, resourcesToSave, resourceCache, r);
-                    resourcesToSave.ForEach(id => _resourceManagement.ModifyUnsafe(id, _ => Task.FromResult(true)));
+                    resourcesToSave.ForEach(id => _resourceManagement.ModifyUnsafeAsync(id, _ => Task.FromResult(true)));
                     return true;
                 });
             }

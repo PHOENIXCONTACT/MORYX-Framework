@@ -188,7 +188,7 @@ namespace Moryx.Orders.Management.Tests
             _productManagementMock.Setup(p => p.GetRecipes(_product, RecipeClassification.Default)).Returns([_recipe]);
 
             // Prepare jobs
-            _jobManagementMock.Setup(j => j.Add(It.IsAny<JobCreationContext>()))
+            _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>()))
                 .ReturnsAsync((JobCreationContext creationContext) =>
                 [
                     new Job(_recipe, (int)creationContext.Templates.Single().Amount)
@@ -234,7 +234,7 @@ namespace Moryx.Orders.Management.Tests
 
             // Assert
             // A job should be dispatched
-            Assert.DoesNotThrow(() => _jobManagementMock.Verify(j => j.Add(It.IsAny<JobCreationContext>()), Times.Once));
+            Assert.DoesNotThrow(() => _jobManagementMock.Verify(j => j.AddAsync(It.IsAny<JobCreationContext>()), Times.Once));
             Assert.That(operation.Jobs.Count, Is.EqualTo(1));
 
             var job = operation.Jobs.Single();

@@ -118,7 +118,7 @@ namespace Moryx.Products.Management
             return ProductManager.SaveType(modifiedInstance);
         }
 
-        public Task<ProductImportResult> Import(string importerName, object parameters)
+        public Task<ProductImportResult> ImportAsync(string importerName, object parameters)
         {
             ValidateHealthState();
             return ProductManager.Import(importerName, parameters);

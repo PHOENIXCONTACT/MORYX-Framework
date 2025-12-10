@@ -28,7 +28,7 @@ namespace Moryx.Orders.Management.Tests
         public async Task ValidateNull()
         {
             // Act
-            var result = await _nullOperationValidation.Validate(null, _operationLogger);
+            var result = await _nullOperationValidation.ValidateAsync(null, _operationLogger);
 
             //Assert
             Assert.That(result, "There should be a successful validation");
@@ -38,7 +38,7 @@ namespace Moryx.Orders.Management.Tests
         public async Task ValidateCreationContextNull()
         {
             // Act
-            var result = await _nullOperationValidation.ValidateCreationContext(null);
+            var result = await _nullOperationValidation.ValidateCreationContextAsync(null);
 
             // Assert
             Assert.That(result, "There should be a successful validation");

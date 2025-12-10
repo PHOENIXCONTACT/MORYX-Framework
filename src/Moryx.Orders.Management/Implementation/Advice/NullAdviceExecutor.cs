@@ -31,7 +31,7 @@ namespace Moryx.Orders.Management.Advice
         }
 
         /// <inheritdoc />
-        public Task<AdviceResult> Advice(Operation operation, OrderAdvice advice)
+        public Task<AdviceResult> AdviceAsync(Operation operation, OrderAdvice advice)
         {
             return Task.FromResult(new AdviceResult(advice, -1)
             {
@@ -40,7 +40,7 @@ namespace Moryx.Orders.Management.Advice
         }
 
         /// <inheritdoc />
-        public Task<AdviceResult> Advice(Operation operation, PickPartAdvice advice)
+        public Task<AdviceResult> AdviceAsync(Operation operation, PickPartAdvice advice)
         {
             return Task.FromResult(new AdviceResult(advice, -1)
             {
