@@ -142,7 +142,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 if (process is ProductionProcess prodProcess)
                 {
                     if (processData.ReferenceId > 0) // Only load article if the process already has one!
-                        prodProcess.ProductInstance = ProductManagement.GetInstance(processData.ReferenceId);
+                        prodProcess.ProductInstance = ProductManagement.GetInstanceAsync(processData.ReferenceId).GetAwaiter().GetResult();
                     else // Otherwise provide a prepared, unsaved instance
                         prodProcess.ProductInstance = ((IProductRecipe)prodProcess.Recipe).Target.CreateInstance();
                 }

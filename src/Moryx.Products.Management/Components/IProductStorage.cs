@@ -17,68 +17,73 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Get products by query
         /// </summary>
-        IReadOnlyList<ProductType> LoadTypes(ProductQuery query);
+        Task<IReadOnlyList<ProductType>> LoadTypesAsync(ProductQuery query);
 
         /// <summary>
         /// Load product instance by id
         /// </summary>
-        ProductType LoadType(long id);
+        Task<ProductType> LoadTypeAsync(long id);
 
         /// <summary>
         /// Load product by identity. This method supports loading a products latest revision
         /// </summary>
-        ProductType LoadType(IIdentity identity);
+        Task<ProductType> LoadTypeAsync(IIdentity identity);
 
         /// <summary>
         /// Save a type to the storage
         /// </summary>
-        long SaveType(ProductType modifiedInstance);
+        Task<long> SaveTypeAsync(ProductType modifiedInstance);
 
         /// <summary>
         /// Get instances by id
         /// </summary>
         /// <returns>The instance with the id when it exists.</returns>
-        IReadOnlyList<ProductInstance> LoadInstances(params long[] id);
+        Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(params long[] id);
 
         /// <summary>
         /// Load instances using filter expression
         /// </summary>
-        IReadOnlyList<TInstance> LoadInstances<TInstance>(Expression<Func<TInstance, bool>> selector);
+        Task<IReadOnlyList<TInstance>> LoadInstancesAsync<TInstance>(Expression<Func<TInstance, bool>> selector);
+
+        /// <summary>
+        /// Load instances using ProductType
+        /// </summary>
+        Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(ProductType productType);
 
         /// <summary>
         /// Updates the database from the instance
         /// </summary>
-        void SaveInstances(ProductInstance[] productInstance);
+        Task SaveInstancesAsync(ProductInstance[] productInstance);
 
         /// <summary>
         /// Loads a recipe from the storage
         /// </summary>
-        IProductRecipe LoadRecipe(long recipeId);
+        Task<IProductRecipe> LoadRecipeAsync(long recipeId);
 
         /// <summary>
         /// Loads all recipes from the storage.
         /// </summary>
-        IReadOnlyList<IProductRecipe> LoadRecipes(long productId, RecipeClassification classification);
+        Task<IReadOnlyList<IProductRecipe>> LoadRecipesAsync(long productId, RecipeClassification classification);
 
         /// <summary>
         /// Saves the recipe of the product
         /// </summary>
-        long SaveRecipe(IProductRecipe recipe);
+        Task<long> SaveRecipeAsync(IProductRecipe recipe);
 
         /// <summary>
         /// Save multiple recipes at once
         /// </summary>
-        void SaveRecipes(IReadOnlyList<IProductRecipe> recipes);
+        Task SaveRecipesAsync(IReadOnlyList<IProductRecipe> recipes);
 
         /// <summary>
         /// Load types using filter expression
         /// </summary>
-        IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
+        Task<IReadOnlyList<TType>> LoadTypesAsync<TType>(Expression<Func<TType, bool>> selector);
 
         /// <summary>
         /// Remove recipe by given recipeId
         /// </summary>
-        void RemoveRecipe(long recipeId);
+        Task RemoveRecipeAsync(long recipeId);
 
         /// <summary>
         ///
@@ -98,7 +103,7 @@ namespace Moryx.Products.Management
         /// Checks database's connection by making an initial attempt
         /// </summary>
         /// <returns></returns>
-        void CheckDatabase();
+        Task CheckDatabase();
     }
 
 }

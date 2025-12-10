@@ -3,6 +3,7 @@
 
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using Moq;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Model.InMemory;
@@ -27,7 +28,7 @@ namespace Moryx.Products.IntegrationTests
             _factory = new UnitOfWorkFactory<SqliteProductsContext>(new InMemoryDbContextManager("RecipeStorageTests"));
 
             var storageMock = new Mock<IProductStorage>();
-            storageMock.Setup(sm => sm.LoadRecipe(It.IsAny<long>())).Returns(new ProductionRecipe());
+            storageMock.Setup(sm => sm.LoadRecipeAsync(It.IsAny<long>())).ReturnsAsync(new ProductionRecipe());
 
             _recipeManagement = new RecipeManagement()
             {
@@ -37,7 +38,7 @@ namespace Moryx.Products.IntegrationTests
         }
 
         [Test]
-        public void FullCycle()
+        public async Task FullCycle()
         {
             // Arrange
             var workplan = CreateWorkplan();
@@ -45,13 +46,13 @@ namespace Moryx.Products.IntegrationTests
             // Act
             Workplan loaded, loaded2;
             long id1, id2;
-            id1 = _recipeManagement.SaveWorkplan(workplan);
-            loaded = _recipeManagement.LoadWorkplan(id1);
+            id1 = await _recipeManagement.SaveWorkplanAsync(workplan);
+            loaded = await _recipeManagement.LoadWorkplanAsync(id1);
 
             loaded.Name = "Modified";
 
-            id2 = _recipeManagement.SaveWorkplan(loaded);
-            loaded2 = _recipeManagement.LoadWorkplan(id2);
+            id2 = await _recipeManagement.SaveWorkplanAsync(loaded);
+            loaded2 = await _recipeManagement.LoadWorkplanAsync(id2);
 
             // Assert
             Assert.That(id1, Is.Not.EqualTo(id2));

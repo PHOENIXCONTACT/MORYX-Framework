@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Products.Management;
@@ -44,7 +45,7 @@ namespace Moryx.Products.IntegrationTests
         }
 
         [SetUp]
-        public void PrepareStorage()
+        public async Task PrepareStorage()
         {
             // prepare in memory products db
             _factory = BuildUnitOfWorkFactory();
@@ -56,7 +57,7 @@ namespace Moryx.Products.IntegrationTests
 
             using var uow = _factory.Create();
             var entity = RecipeStorage.ToWorkplanEntity(uow, workplan);
-            uow.SaveChanges();
+            await uow.SaveChangesAsync();
             _workplanId = entity.Id;
 
             var strategyFactory = CreateStrategyFactory();
@@ -406,7 +407,7 @@ namespace Moryx.Products.IntegrationTests
         }
 
         [Test]
-        public void PartLinksWithTheSameIdentifierAreOnlySavedOnce()
+        public async Task PartLinksWithTheSameIdentifierAreOnlySavedOnce()
         {
             //Arrange
             var watch = new WatchType
@@ -438,7 +439,7 @@ namespace Moryx.Products.IntegrationTests
             };
 
             //Act
-            _storage.SaveType(watch);
+            await _storage.SaveTypeAsync(watch);
             var minuteNeedle = watch.Needles.Find(t => t.Role == NeedleRole.Minutes);
             var secondsNeedle = watch.Needles.Find(t => t.Role == NeedleRole.Seconds);
 
@@ -449,13 +450,13 @@ namespace Moryx.Products.IntegrationTests
         }
 
         [Test]
-        public void SaveWatchProduct()
+        public async Task SaveWatchProduct()
         {
             // Arrange
             var watch = SetupProduct("Jaques Lemans", string.Empty);
 
             // Act
-            var savedWatchId = _storage.SaveType(watch);
+            var savedWatchId = await _storage.SaveTypeAsync(watch);
 
             // Assert
             using (var uow = _factory.Create())
@@ -470,16 +471,16 @@ namespace Moryx.Products.IntegrationTests
         }
 
         [Test]
-        public void SaveNewWatchProductVersion()
+        public async Task SaveNewWatchProductVersion()
         {
             // Arrange
             var watch = SetupProduct("Jaques Lemans", string.Empty);
 
             // Act
             // TODO: Looks like this act section didn't match the assertions
-            _storage.SaveType(watch);
+            await _storage.SaveTypeAsync(watch);
             watch.Weight = 234.56;
-            var savedWatchId = _storage.SaveType(watch);
+            var savedWatchId = await _storage.SaveTypeAsync(watch);
 
             // Assert
             using (var uow = _factory.Create())
@@ -511,15 +512,15 @@ namespace Moryx.Products.IntegrationTests
         }
 
         [Test]
-        public void GetWatchProduct()
+        public async Task GetWatchProduct()
         {
             // Arrange
             var watch = SetupProduct("Jaques Lemans", string.Empty);
             var watchface = (WatchFaceType)watch.WatchFace.Product;
 
             // Act
-            var savedWatchId = _storage.SaveType(watch);
-            var loadedWatch = (WatchType)_storage.LoadType(savedWatchId);
+            var savedWatchId = await _storage.SaveTypeAsync(watch);
+            var loadedWatch = (WatchType)await _storage.LoadTypeAsync(savedWatchId);
 
             // Assert
             Assert.That(loadedWatch, Is.Not.Null, "Failed to load from database");
@@ -532,7 +533,7 @@ namespace Moryx.Products.IntegrationTests
 
         [Test(Description = "This test saves a product with a null string property and saves it again. " +
                             "The bug was, that the HasChanged of the ColumnMapper throws an NullReferenceException")]
-        public void LoadAndSaveTypeWithNullString()
+        public async Task LoadAndSaveTypeWithNullString()
         {
             // Arrange
             var watchfaceWithString = new WatchFaceType
@@ -543,18 +544,15 @@ namespace Moryx.Products.IntegrationTests
                 Brand = null //That's important for this test
             };
 
-            var savedId = _storage.SaveType(watchfaceWithString);
-            var loaded = (WatchFaceType)_storage.LoadType(savedId);
+            var savedId = await _storage.SaveTypeAsync(watchfaceWithString);
+            var loaded = (WatchFaceType)await _storage.LoadTypeAsync(savedId);
 
             // Act & Assert
-            Assert.DoesNotThrow(delegate
-            {
-                _storage.SaveType(loaded);
-            }, "Save should not fail with null string property");
+            Assert.DoesNotThrowAsync(() => _storage.SaveTypeAsync(loaded), "Save should not fail with null string property");
         }
 
         [Test(Description = "Loads recipes by the classification flags enum")]
-        public void LoadRecipesByClassification()
+        public async Task LoadRecipesByClassification()
         {
             // Arrange
             var watch = new WatchType
@@ -563,19 +561,19 @@ namespace Moryx.Products.IntegrationTests
                 Identity = new ProductIdentity("8899665", 1),
             };
 
-            _storage.SaveType(watch);
+            await _storage.SaveTypeAsync(watch);
 
-            CreateRecipe(RecipeClassification.Default);
-            CreateRecipe(RecipeClassification.Alternative);
-            CreateRecipe(RecipeClassification.Alternative);
-            CreateRecipe(RecipeClassification.Part);
+            await CreateRecipe(RecipeClassification.Default);
+            await CreateRecipe(RecipeClassification.Alternative);
+            await CreateRecipe(RecipeClassification.Alternative);
+            await CreateRecipe(RecipeClassification.Part);
 
             // Act
-            var defaults = _storage.LoadRecipes(watch.Id, RecipeClassification.Default);
-            var alternatives = _storage.LoadRecipes(watch.Id, RecipeClassification.Alternative);
-            var defaultsAndAlternatives = _storage.LoadRecipes(watch.Id, RecipeClassification.Default | RecipeClassification.Alternative);
-            var parts = _storage.LoadRecipes(watch.Id, RecipeClassification.Part);
-            var all = _storage.LoadRecipes(watch.Id, RecipeClassification.CloneFilter);
+            var defaults = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.Default);
+            var alternatives = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.Alternative);
+            var defaultsAndAlternatives = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.Default | RecipeClassification.Alternative);
+            var parts = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.Part);
+            var all = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.CloneFilter);
 
             // Assert
             Assert.That(defaults.Count, Is.EqualTo(1));
@@ -583,8 +581,9 @@ namespace Moryx.Products.IntegrationTests
             Assert.That(defaultsAndAlternatives.Count, Is.EqualTo(3));
             Assert.That(parts.Count, Is.EqualTo(1));
             Assert.That(all.Count, Is.EqualTo(4));
+            return;
 
-            void CreateRecipe(RecipeClassification classification)
+            Task CreateRecipe(RecipeClassification classification)
             {
                 var recipe = new WatchProductRecipe
                 {
@@ -593,13 +592,13 @@ namespace Moryx.Products.IntegrationTests
                     Name = classification + ": TestRecipe",
                     Workplan = new Workplan { Id = _workplanId }
                 };
-                _storage.SaveRecipe(recipe);
+                return _storage.SaveRecipeAsync(recipe);
             }
         }
 
         [Test(Description = "This test saves a product with a property which should not be saved. " +
                             "The NullPropertyMapper ignores this property at load and save.")]
-        public void LoadAndSaveTypeWithNullPropertyMapper()
+        public async Task LoadAndSaveTypeWithNullPropertyMapper()
         {
             // Arrange
             var watchfaceWithString = new WatchFaceType
@@ -612,8 +611,8 @@ namespace Moryx.Products.IntegrationTests
             };
 
             // Act
-            var savedId = _storage.SaveType(watchfaceWithString);
-            var loaded = (WatchFaceType)_storage.LoadType(savedId);
+            var savedId = await _storage.SaveTypeAsync(watchfaceWithString);
+            var loaded = (WatchFaceType)await _storage.LoadTypeAsync(savedId);
 
             // Assert
             Assert.That(loaded.Color, Is.EqualTo(0));
@@ -621,18 +620,18 @@ namespace Moryx.Products.IntegrationTests
 
         [TestCase(true, Description = "Get the latest revision of an existing product")]
         [TestCase(false, Description = "Try to get the latest revision of a not-existing product")]
-        public void LoadLatestRevision(bool exists)
+        public async Task LoadLatestRevision(bool exists)
         {
             const string newName = "Jaques Lemans XS";
 
             // Arrange
             var watch = SetupProduct("Jaques Lemans", string.Empty);
-            _storage.SaveType(watch);
+            await _storage.SaveTypeAsync(watch);
             watch = SetupProduct(newName, string.Empty, 42);
-            _storage.SaveType(watch);
+            await _storage.SaveTypeAsync(watch);
 
             // Act
-            var loadedWatch = (WatchType)_storage.LoadType(ProductIdentity.AsLatestRevision(exists ? WatchMaterial : "1234"));
+            var loadedWatch = (WatchType)await _storage.LoadTypeAsync(ProductIdentity.AsLatestRevision(exists ? WatchMaterial : "1234"));
 
             // Assert
             if (exists)
@@ -648,30 +647,30 @@ namespace Moryx.Products.IntegrationTests
         }
 
         [Test(Description = "Request products by query - multiple tests")]
-        public void GetProductByQuery()
+        public async Task GetProductByQuery()
         {
             // Arrange
             var watch = SetupProduct("Jaques Lemans", string.Empty);
-            _storage.SaveType(watch);
+            await _storage.SaveTypeAsync(watch);
             watch = SetupProduct("Jaques Lemans", string.Empty, 17);
-            _storage.SaveType(watch);
+            await _storage.SaveTypeAsync(watch);
 
             // Act
-            var all = _storage.LoadTypes(new ProductQuery());
-            var latestRevision = _storage.LoadTypes(new ProductQuery { RevisionFilter = RevisionFilter.Latest });
-            var byType = _storage.LoadTypes(new ProductQuery { TypeName = typeof(NeedleType).FullName });
-            var allRevision = _storage.LoadTypes(new ProductQuery { Identifier = WatchMaterial });
-            var latestByType = _storage.LoadTypes(new ProductQuery
+            var all = await _storage.LoadTypesAsync(new ProductQuery());
+            var latestRevision = await _storage.LoadTypesAsync(new ProductQuery { RevisionFilter = RevisionFilter.Latest });
+            var byType = await _storage.LoadTypesAsync(new ProductQuery { TypeName = typeof(NeedleType).FullName });
+            var allRevision = await _storage.LoadTypesAsync(new ProductQuery { Identifier = WatchMaterial });
+            var latestByType = await _storage.LoadTypesAsync(new ProductQuery
             {
                 TypeName = typeof(WatchType).FullName,
                 RevisionFilter = RevisionFilter.Latest
             });
-            var usages = _storage.LoadTypes(new ProductQuery
+            var usages = await _storage.LoadTypesAsync(new ProductQuery
             {
                 Identifier = "24",
                 Selector = Selector.Parent
             });
-            var needles = _storage.LoadTypes(new ProductQuery
+            var needles = await _storage.LoadTypesAsync(new ProductQuery
             {
                 Name = "needle",
                 RevisionFilter = RevisionFilter.Latest
@@ -687,18 +686,18 @@ namespace Moryx.Products.IntegrationTests
         }
 
         [Test(Description = "Request products by query with a required state")]
-        public void GetProductsByQueryRequiredState()
+        public async Task GetProductsByQueryRequiredState()
         {
             // Arrange
             const string identifierPrefix = "123";
             var watch = SetupProduct("Rolex GMT-Master II", identifierPrefix, 1, ProductState.Released | ProductState.Generated);
-            _storage.SaveType(watch);
+            await _storage.SaveTypeAsync(watch);
 
             var anotherWatch = SetupProduct("G-SHOCK GM-5600BWD-1", "5600", 1, ProductState.Released);
-            _storage.SaveType(anotherWatch);
+            await _storage.SaveTypeAsync(anotherWatch);
 
             // Act
-            var generated = _storage.LoadTypes(new ProductQuery
+            var generated = await _storage.LoadTypesAsync(new ProductQuery
             {
                 TypeName = typeof(WatchType).FullName,
                 RequiredState = ProductState.Generated
@@ -711,7 +710,7 @@ namespace Moryx.Products.IntegrationTests
         }
 
         [Test]
-        public void GetProductByExpression()
+        public async Task GetProductByExpression()
         {
             // Arrange
             var watchface = new DisplayWatchFaceType
@@ -720,12 +719,12 @@ namespace Moryx.Products.IntegrationTests
                 Identity = new ProductIdentity("4742", 0),
                 Resolution = 180
             };
-            _storage.SaveType(watchface);
+            await _storage.SaveTypeAsync(watchface);
 
             // Act
-            var loaded = _storage.LoadTypes<DisplayWatchFaceType>(wf => wf.Resolution == 180);
-            var loaded2 = _storage.LoadTypes<DisplayWatchFaceType>(wf => wf.Resolution > 150);
-            var loaded3 = _storage.LoadTypes(new ProductQuery
+            var loaded = await _storage.LoadTypesAsync<DisplayWatchFaceType>(wf => wf.Resolution == 180);
+            var loaded2 = await _storage.LoadTypesAsync<DisplayWatchFaceType>(wf => wf.Resolution > 150);
+            var loaded3 = await _storage.LoadTypesAsync(new ProductQuery
             {
                 TypeName = typeof(DisplayWatchFaceType).FullName,
                 PropertyFilters =
@@ -752,7 +751,7 @@ namespace Moryx.Products.IntegrationTests
         }
 
         [Test]
-        public void ShouldReturnNoProductsForWildcardInName()
+        public async Task ShouldReturnNoProductsForWildcardInName()
         {
             // Arrange
             var productMgr = new ProductManager
@@ -761,10 +760,10 @@ namespace Moryx.Products.IntegrationTests
                 Storage = _storage
             };
             var watch = SetupProduct("Jaques Lemans", string.Empty);
-            _storage.SaveType(watch);
+            await _storage.SaveTypeAsync(watch);
 
             // Act
-            var needles = productMgr.LoadTypes(new ProductQuery
+            var needles = await productMgr.LoadTypes(new ProductQuery
             {
                 Name = "*needle",
                 RevisionFilter = RevisionFilter.Latest
@@ -775,7 +774,7 @@ namespace Moryx.Products.IntegrationTests
         }
 
         [Test]
-        public void IdentifierQueryShouldNotBeCaseSensitive()
+        public async Task IdentifierQueryShouldNotBeCaseSensitive()
         {
             // Arrange
             var productMgr = new ProductManager
@@ -784,10 +783,10 @@ namespace Moryx.Products.IntegrationTests
                 Storage = _storage
             };
             var watch = SetupProduct("Jaques Lemans", string.Empty);
-            _storage.SaveType(watch);
+            await _storage.SaveTypeAsync(watch);
 
             // Act
-            var products = productMgr.LoadTypes(new ProductQuery
+            var products = await productMgr.LoadTypes(new ProductQuery
             {
                 Identifier = "b*",
                 RevisionFilter = RevisionFilter.Latest
@@ -800,7 +799,7 @@ namespace Moryx.Products.IntegrationTests
         [TestCase(false, false, Description = "Duplicate product with valid id")]
         //[TestCase(false, true, Description = "Duplicate product, but identity already taken")]
         //[TestCase(true, false, Description = "Duplicate product but with template missmatch")]
-        public void DuplicateProduct(bool crossTypeIdentifier, bool revisionTaken)
+        public async Task DuplicateProduct(bool crossTypeIdentifier, bool revisionTaken)
         {
             // Arrange
             var productMgr = new ProductManager
@@ -810,7 +809,7 @@ namespace Moryx.Products.IntegrationTests
             };
             productMgr.TypeChanged += (sender, product) => { };
             var watch = SetupProduct("Jaques Lemans", "321");
-            _storage.SaveType(watch);
+            await _storage.SaveTypeAsync(watch);
             var recipe = new WatchProductRecipe
             {
                 Product = watch,
@@ -818,7 +817,7 @@ namespace Moryx.Products.IntegrationTests
                 Name = "TestRecipe",
                 Workplan = new Workplan { Id = _workplanId }
             };
-            _storage.SaveRecipe(recipe);
+            await _storage.SaveRecipeAsync(recipe);
 
             // Act (& Assert)
             WatchType duplicate = null;
@@ -827,21 +826,21 @@ namespace Moryx.Products.IntegrationTests
                 var newIdentity = crossTypeIdentifier
                     ? new ProductIdentity("3214711", 7)
                     : new ProductIdentity("321" + WatchMaterial, 5);
-                var ex = Assert.Throws<IdentityConflictException>(() =>
+                var ex = Assert.ThrowsAsync<IdentityConflictException>(async () =>
                 {
-                    duplicate = (WatchType)productMgr.Duplicate(watch, newIdentity);
+                    duplicate = (WatchType)await productMgr.Duplicate(watch, newIdentity);
                 });
                 Assert.That(ex.InvalidTemplate, Is.EqualTo(crossTypeIdentifier));
                 return;
             }
 
-            Assert.DoesNotThrow(() =>
+            Assert.DoesNotThrowAsync(async () =>
             {
-                duplicate = (WatchType)productMgr.Duplicate(watch,
+                duplicate = (WatchType)await productMgr.Duplicate(watch,
                     new ProductIdentity("654" + WatchMaterial, 1));
             });
 
-            var recipeDuplicates = _storage.LoadRecipes(duplicate.Id, RecipeClassification.CloneFilter);
+            var recipeDuplicates = await _storage.LoadRecipesAsync(duplicate.Id, RecipeClassification.CloneFilter);
 
             // Assert
             Assert.That(duplicate.WatchFace.Product.Id, Is.EqualTo(watch.WatchFace.Product.Id));
@@ -854,7 +853,7 @@ namespace Moryx.Products.IntegrationTests
 
         [TestCase(true, Description = "Remove a product that is still used")]
         [TestCase(false, Description = "Remove a product that is not used")]
-        public void RemoveProduct(bool stillUsed)
+        public async Task RemoveProduct(bool stillUsed)
         {
             // Arrange
             var productMgr = new ProductManager
@@ -863,21 +862,21 @@ namespace Moryx.Products.IntegrationTests
                 Storage = _storage
             };
             var watch = SetupProduct("Jaques Lemans", "567");
-            _storage.SaveType(watch);
+            await _storage.SaveTypeAsync(watch);
 
             // Act
             bool result;
             if (stillUsed)
-                result = productMgr.DeleteType(watch.WatchFace.Product.Id);
+                result = await productMgr.DeleteType(watch.WatchFace.Product.Id);
             else
-                result = productMgr.DeleteType(watch.Id);
+                result = await productMgr.DeleteType(watch.Id);
 
             // Assert
             Assert.That(!result, Is.EqualTo(stillUsed));
             if (stillUsed)
                 return;
 
-            var matches = productMgr.LoadTypes(new ProductQuery
+            var matches = await productMgr.LoadTypes(new ProductQuery
             {
                 RevisionFilter = RevisionFilter.Specific,
                 Revision = 5,
@@ -887,20 +886,20 @@ namespace Moryx.Products.IntegrationTests
         }
 
         [Test]
-        public void SaveAndLoadInstance()
+        public async Task SaveAndLoadInstance()
         {
             // Arrange
             var watch = SetupProduct("TestWatch", string.Empty);
-            _storage.SaveType(watch);
+            await _storage.SaveTypeAsync(watch);
             // Reload from storage for partlink ids if the object exists
-            watch = (WatchType)_storage.LoadType(watch.Id);
+            watch = (WatchType)await _storage.LoadTypeAsync(watch.Id);
 
             // Act
             var instance = (WatchInstance)watch.CreateInstance();
             instance.TimeSet = true;
             instance.DeliveryDate = DateTime.Now;
             instance.Identity = new BatchIdentity("12345");
-            _storage.SaveInstances([instance]);
+            await _storage.SaveInstancesAsync([instance]);
 
             // Assert
             using (var uow = _factory.Create())
@@ -918,19 +917,19 @@ namespace Moryx.Products.IntegrationTests
             }
 
             // Act
-            var watchCopy = (WatchInstance)_storage.LoadInstances(instance.Id)[0];
+            var watchCopy = (WatchInstance)(await _storage.LoadInstancesAsync(instance.Id))[0];
             var identity = instance.Identity;
-            var byIdentity = _storage.LoadInstances<IIdentifiableObject>(w => identity.Equals(w.Identity));
-            var byDateTime = _storage.LoadInstances<WatchInstance>(i => i.DeliveryDate < DateTime.Now);
-            var byBool = _storage.LoadInstances<WatchInstance>(i => i.TimeSet);
-            var byType = _storage.LoadInstances(watch);
-            var byType1 = _storage.LoadInstances<WatchInstance>(i => i.Type == watch);
-            var byType2 = _storage.LoadInstances<WatchInstance>(i => i.Type.Equals(watch));
-            var byType3 = _storage.LoadInstances<WatchInstance>(i => watch.Equals(i.Type));
-            var byType4 = _storage.LoadInstances<WatchInstance>(i => i.Type.Name == "TestWatch");
-            var byType5 = _storage.LoadInstances<WatchInstance>(i => watch == i.Type);
+            var byIdentity = await _storage.LoadInstancesAsync<IIdentifiableObject>(w => identity.Equals(w.Identity));
+            var byDateTime = await _storage.LoadInstancesAsync<WatchInstance>(i => i.DeliveryDate < DateTime.Now);
+            var byBool = await _storage.LoadInstancesAsync<WatchInstance>(i => i.TimeSet);
+            var byType = await _storage.LoadInstancesAsync(watch);
+            var byType1 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type == watch);
+            var byType2 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type.Equals(watch));
+            var byType3 = await _storage.LoadInstancesAsync<WatchInstance>(i => watch.Equals(i.Type));
+            var byType4 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type.Name == "TestWatch");
+            var byType5 = await _storage.LoadInstancesAsync<WatchInstance>(i => watch == i.Type);
             identity = watch.Identity;
-            var byType6 = _storage.LoadInstances<WatchInstance>(i => i.Type.Identity == identity);
+            var byType6 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type.Identity == identity);
 
             // Assert
             Assert.That(watchCopy, Is.Not.Null);

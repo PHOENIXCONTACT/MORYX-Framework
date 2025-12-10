@@ -30,16 +30,16 @@ namespace Moryx.ControlSystem.SetupProvider
 
         public string Name => "SetupProvider";
 
-        public IRecipe LoadRecipe(long id)
+        public Task<IRecipe> LoadRecipeAsync(long id)
         {
             ValidateHealthState();
 
             // TODO: Setup restore --> SetupRecipes are not saved
-            return new SetupRecipe
+            return Task.FromResult<IRecipe>(new SetupRecipe
             {
                 Id = id,
                 Origin = this
-            };
+            });
         }
 
         public ISetupRecipe RequiredSetup(SetupExecution execution, IProductionRecipe recipe, ISetupTarget targetSystem)

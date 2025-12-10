@@ -140,7 +140,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             try
             {
                 // Resolve recipe
-                var recipe = (IWorkplanRecipe)foundProvider.LoadRecipe(entity.RecipeId);
+                var recipe = (IWorkplanRecipe)foundProvider.LoadRecipeAsync(entity.RecipeId).GetAwaiter().GetResult();
                 // Create job data from entity
                 return JobFactory.Restore(entity, recipe);
             }
@@ -184,7 +184,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             if (provider is not IProductManagement)
                 throw new InvalidOperationException("Only jobs based on product recipes can be reloaded");
 
-            result.DelayedRecipe = provider.LoadRecipe(result.RecipeId);
+            result.DelayedRecipe = provider.LoadRecipeAsync(result.RecipeId).GetAwaiter().GetResult();
             return result;
         }
 

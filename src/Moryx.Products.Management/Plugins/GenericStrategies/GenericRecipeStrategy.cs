@@ -32,14 +32,16 @@ namespace Moryx.Products.Management
             EntityMapper.Initialize(TargetType, Config);
         }
 
-        public override void SaveRecipe(IProductRecipe source, IGenericColumns target)
+        public override Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target)
         {
             EntityMapper.WriteValue(source, target);
+            return Task.CompletedTask;
         }
 
-        public override void LoadRecipe(IGenericColumns source, IProductRecipe target)
+        public override Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target)
         {
             EntityMapper.ReadValue(source, target);
+            return Task.CompletedTask;
         }
     }
 }

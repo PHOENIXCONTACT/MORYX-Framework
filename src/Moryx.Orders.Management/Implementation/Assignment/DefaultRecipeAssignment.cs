@@ -20,13 +20,13 @@ namespace Moryx.Orders.Management.Assignment
             if (operation.CreationContext != null &&
                 operation.CreationContext.RecipePreselection != 0)
             {
-                var recipe = ProductManagement.LoadRecipe(operation.CreationContext.RecipePreselection);
+                var recipe = ProductManagement.LoadRecipeAsync(operation.CreationContext.RecipePreselection);
                 return [(IProductRecipe)recipe];
             }
 
             if (operation.Recipes.Any() && operation.Recipes.First() is IRecipe template && template.TemplateId != 0)
             {
-                var recipe = ProductManagement.LoadRecipe(template.TemplateId);
+                var recipe = ProductManagement.LoadRecipeAsync(template.TemplateId);
                 return [(IProductRecipe)recipe];
             }
 

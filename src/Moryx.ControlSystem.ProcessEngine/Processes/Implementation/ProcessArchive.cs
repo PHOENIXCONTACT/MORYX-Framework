@@ -55,7 +55,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         {
         }
 
-        public Task<IReadOnlyList<IProcess>> GetProcesses(ProductInstance productInstance)
+        public async Task<IReadOnlyList<IProcess>> GetProcesses(ProductInstance productInstance)
         {
             using var uow = UnitOfWorkFactory.Create();
             var processRepo = uow.GetRepository<IProcessEntityRepository>();
@@ -67,7 +67,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             var processes = new List<IProcess>();
             foreach (var match in query)
             {
-                var recipe = (IProductionRecipe)ProductManagement.LoadRecipe(match.RecipeId);
+                var recipe = (IProductionRecipe)await ProductManagement.LoadRecipeAsync(match.RecipeId);
                 var process = (ProductionProcess)recipe.CreateProcess();
                 process.Id = match.Id;
                 process.ProductInstance = productInstance;
@@ -79,7 +79,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 processes.Add(process);
             }
 
-            return Task.FromResult((IReadOnlyList<IProcess>)processes);
+            return processes;
         }
 
         public async IAsyncEnumerable<IProcessChunk> GetProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
@@ -118,12 +118,12 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             return all.ToList();
         }
 
-        private Task<IProcessChunk> GetFromStorage(IUnitOfWork uow, JobEntity jobEntity, DateTime start, DateTime end)
+        private async Task<IProcessChunk> GetFromStorage(IUnitOfWork uow, JobEntity jobEntity, DateTime start, DateTime end)
         {
             var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
             // Otherwise load it on the fly
-            var recipe = (IWorkplanRecipe)ProductManagement.LoadRecipe(jobEntity.RecipeId);
+            var recipe = (IWorkplanRecipe)await ProductManagement.LoadRecipeAsync(jobEntity.RecipeId);
             var job = new Job(recipe, jobEntity.Amount)
             {
                 Id = jobEntity.Id,
@@ -153,12 +153,12 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             {
                 var process = (ProductionProcess)recipe.CreateProcess();
                 process.Id = query[index].Id;
-                process.ProductInstance = ProductManagement.GetInstance(query[index].ReferenceId);
+                process.ProductInstance = await ProductManagement.GetInstanceAsync(query[index].ReferenceId);
                 ProcessStorage.FillActivities(uow, process, taskMap);
                 processes[index] = process;
             }
 
-            return Task.FromResult((IProcessChunk)new ReadonlyProcessChunk(job, processes));
+            return new ReadonlyProcessChunk(job, processes);
         }
 
         /// <summary>

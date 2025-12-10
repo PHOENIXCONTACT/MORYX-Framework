@@ -85,7 +85,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 case ProcessState.CleaningUp:
                 case ProcessState.Restored:
                     if (processData.Process is ProductionProcess)
-                        ParallelOperations.ExecuteParallel(LoadArticle, processData);
+                        ParallelOperations.ExecuteParallel(LoadProductInstance, processData);
                     break;
                 case ProcessState.Interrupted:
                     // Interrupted processes are saved synchronous for secure shutdown
@@ -180,7 +180,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                     else
                     {
                         // Replace prepared instance with existing one
-                        LoadArticle(processData, activity.InstanceIdentity);
+                        LoadProductInstance(processData, activity.InstanceIdentity);
                     }
                     break;
                 case InstanceModificationType.Created:
@@ -193,11 +193,11 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// Load article by reference id
         /// </summary>
-        private void LoadArticle(ProcessData processData)
+        private void LoadProductInstance(ProcessData processData)
         {
             var prodProcess = (ProductionProcess)processData.Process;
             if (processData.ReferenceId > 0) // Only load article if the process already has one!
-                prodProcess.ProductInstance = ProductManagement.GetInstance(processData.ReferenceId);
+                prodProcess.ProductInstance = ProductManagement.GetInstanceAsync(processData.ReferenceId).GetAwaiter().GetResult();
             else // Otherwise provide a prepared, unsaved instance
                 prodProcess.ProductInstance = ((IProductRecipe)prodProcess.Recipe).Target.CreateInstance();
 
@@ -211,9 +211,9 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// Reload article instance by identifier and assign to process
         /// </summary>
-        private void LoadArticle(ProcessData processData, IIdentity identity)
+        private void LoadProductInstance(ProcessData processData, IIdentity identity)
         {
-            var productInstance = ProductManagement.GetInstance(identity);
+            var productInstance = ProductManagement.GetInstanceAsync(identity).GetAwaiter().GetResult();
             var prodProcess = (ProductionProcess)processData.Process;
             processData.Rework = productInstance.State == ProductInstanceState.Failure;
             prodProcess.ProductInstance = productInstance;
@@ -228,7 +228,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             var prodProcess = (ProductionProcess)processData.Process;
             var productInstance = prodProcess.ProductInstance;
 
-            ProductManagement.SaveInstance(productInstance);
+            ProductManagement.SaveInstanceAsync(productInstance);
 
             // Update ReferenceId
             processData.ReferenceId = productInstance.Id;

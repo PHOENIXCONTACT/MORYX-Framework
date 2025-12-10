@@ -65,9 +65,9 @@ namespace Moryx.Products.Management
         public abstract Expression<Func<IGenericColumns, bool>> TransformSelector<TInstance>(Expression<Func<TInstance, bool>> selector);
 
         /// <inheritdoc />
-        public abstract void SaveInstance(ProductInstance source, IGenericColumns target);
+        public abstract Task SaveInstanceAsync(ProductInstance source, IGenericColumns target);
 
         /// <inheritdoc />
-        public abstract void LoadInstance(IGenericColumns source, ProductInstance target);
+        public abstract Task LoadInstanceAsync(IGenericColumns source, ProductInstance target);
     }
 }

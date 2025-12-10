@@ -22,19 +22,23 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override void SaveType(ProductType source, IGenericColumns target)
+        public override Task SaveTypeAsync(ProductType source, IGenericColumns target)
         {
             var watch = (WatchType)source;
             target.Float1 = watch.Weight;
             target.Float2 = watch.Price;
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public override void LoadType(IGenericColumns source, ProductType target)
+        public override Task LoadTypeAsync(IGenericColumns source, ProductType target)
         {
             var watch = (WatchType)target;
             watch.Weight = source.Float1;
             watch.Price = source.Float2;
+
+            return Task.CompletedTask;
         }
 
         public override Expression<Func<IGenericColumns, bool>> TransformSelector<TProduct>(Expression<Func<TProduct, bool>> selector)
@@ -53,19 +57,23 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override void SaveInstance(ProductInstance source, IGenericColumns target)
+        public override Task SaveInstanceAsync(ProductInstance source, IGenericColumns target)
         {
             var watch = (WatchInstance)source;
             target.Integer1 = watch.TimeSet ? 1 : 0;
             target.Integer2 = watch.DeliveryDate.ToBinary();
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public override void LoadInstance(IGenericColumns source, ProductInstance target)
+        public override Task LoadInstanceAsync(IGenericColumns source, ProductInstance target)
         {
             var watch = (WatchInstance)target;
             watch.TimeSet = source.Integer1 == 1;
             watch.DeliveryDate = DateTime.FromBinary(source.Integer2);
+
+            return Task.CompletedTask;
         }
     }
 
@@ -73,16 +81,20 @@ namespace Moryx.Products.Samples
     [Plugin(LifeCycle.Transient, typeof(IProductLinkStrategy), Name = nameof(NeedleLinkStrategy))]
     public class NeedleLinkStrategy : LinkStrategyBase
     {
-        public override void LoadPartLink(IGenericColumns linkEntity, ProductPartLink target)
+        public override Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target)
         {
             var link = (NeedlePartLink)target;
             link.Role = (NeedleRole)linkEntity.Integer1;
+
+            return Task.CompletedTask;
         }
 
-        public override void SavePartLink(ProductPartLink source, IGenericColumns target)
+        public override Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target)
         {
             var link = (NeedlePartLink)source;
             target.Integer1 = (int)link.Role;
+
+            return Task.CompletedTask;
         }
     }
 }

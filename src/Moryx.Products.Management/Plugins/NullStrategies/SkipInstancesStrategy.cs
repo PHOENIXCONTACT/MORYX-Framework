@@ -37,15 +37,17 @@ namespace Moryx.Products.Management.NullStrategies
         }
 
         /// <inheritdoc />
-        public sealed override void SaveInstance(ProductInstance source, IGenericColumns target)
+        public sealed override Task SaveInstanceAsync(ProductInstance source, IGenericColumns target)
         {
             // Not necessary
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public sealed override void LoadInstance(IGenericColumns source, ProductInstance target)
+        public sealed override Task LoadInstanceAsync(IGenericColumns source, ProductInstance target)
         {
             // Nothing
+            return Task.CompletedTask;
         }
     }
 }

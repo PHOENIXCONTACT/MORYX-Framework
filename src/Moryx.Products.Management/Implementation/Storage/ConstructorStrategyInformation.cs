@@ -1,14 +1,14 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Reflection;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Modules;
-using System.Reflection;
 using Moryx.Products.Management.Model;
 
-namespace Moryx.Products.Management.Implementation.Storage
+namespace Moryx.Products.Management
 {
-    internal class ConstructorStrategyInformation<TObject, TConfiguration, TStrategy> where TConfiguration : IPluginConfig where TStrategy : IConfiguredPlugin<TConfiguration>
+    internal class ConstructorStrategyInformation<TObject, TConfiguration, TStrategy> where TConfiguration : IPluginConfig where TStrategy : IConfiguredInitializable<TConfiguration>
     {
         public string Identifier { get; set; }
         public Func<TObject> Constructor { get; set; }

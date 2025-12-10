@@ -239,7 +239,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Select the best strategy based on the <see cref="StrategyConfigurationAttribute"/>
         /// </summary>
-        private Type SelectStrategy(IEnumerable<Type> strategies, Type targetType)
+        private static Type SelectStrategy(IEnumerable<Type> strategies, Type targetType)
         {
             Type currentMatch = null;
             var currentCompliance = StrategyConfigurationAttribute.BadCompliance;

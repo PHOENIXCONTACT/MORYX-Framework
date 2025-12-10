@@ -14,7 +14,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
     {
         public string Name => nameof(TemporarySetupProvider);
 
-        public IRecipe LoadRecipe(long id)
+        public Task<IRecipe> LoadRecipeAsync(long id)
         {
             var setup = new SetupRecipe
             {
@@ -25,7 +25,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
                 Workplan = new Workplan(),
                 Classification = RecipeClassification.Default
             };
-            return setup;
+            return Task.FromResult<IRecipe>(setup);
         }
 
         public ISetupRecipe CreateTemporary(IProductionRecipe recipe)

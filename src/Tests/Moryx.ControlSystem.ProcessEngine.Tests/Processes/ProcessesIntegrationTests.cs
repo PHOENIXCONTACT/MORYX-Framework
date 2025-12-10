@@ -72,7 +72,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
             // Prepare ProductManagement mock
             _productManagementMock = new Mock<IProductManagement>();
-            _productManagementMock.Setup(p => p.CreateInstance(It.IsAny<DummyProductType>(), It.IsAny<bool>())).Returns(new DummyProductInstance());
+            _productManagementMock.Setup(p => p.CreateInstanceAsync(It.IsAny<DummyProductType>(), It.IsAny<bool>())).ReturnsAsync(new DummyProductInstance());
         }
 
         [SetUp]

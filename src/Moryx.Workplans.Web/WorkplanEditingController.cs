@@ -25,13 +25,13 @@ namespace Moryx.Workplans.Endpoint
         }
 
         [HttpGet("steps")]
-        public ActionResult<WorkplanStepRecipe[]> AvailableSteps()
+        public async Task<ActionResult<WorkplanStepRecipe[]>> AvailableSteps()
         {
-            var workplans = _workplans.LoadAllWorkplans();
+            var workplans = await _workplans.LoadAllWorkplansAsync();
 
             var recipeSteps = _workplanEditing.AvailableSteps
               .Where(step => ModelConverter.ToClassification(step) != WorkplanNodeClassification.Subworkplan)
-              .Select(step => WorkplanStepRecipe.FromStepType(step));
+              .Select(WorkplanStepRecipe.FromStepType);
 
             var subWorkplans = _workplanEditing.AvailableSteps
               .Where(step => ModelConverter.ToClassification(step) == WorkplanNodeClassification.Subworkplan)
@@ -52,10 +52,10 @@ namespace Moryx.Workplans.Endpoint
 
         [HttpPost("sessions")]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
-        public ActionResult<WorkplanSessionModel> EditWorkplan([FromBody] OpenSessionRequest openSession)
+        public async Task<ActionResult<WorkplanSessionModel>> EditWorkplan([FromBody] OpenSessionRequest openSession)
         {
             var workplan = openSession.WorkplanId > 0
-                ? _workplans.LoadWorkplan(openSession.WorkplanId)
+                ? await _workplans.LoadWorkplanAsync(openSession.WorkplanId)
                 : CreateNew();
             if (workplan == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.WorkplanEditingController_SessionNotFound });
@@ -137,7 +137,7 @@ namespace Moryx.Workplans.Endpoint
         {
             var session = _workplanEditing.OpenSession(sessionId);
             UpdateSession(sessionModel, session);
-            _workplans.SaveWorkplan(session.Workplan);
+            _workplans.SaveWorkplanAsync(session.Workplan);
             return ModelConverter.ConvertSession(session);
         }
 
@@ -161,7 +161,7 @@ namespace Moryx.Workplans.Endpoint
 
             if (recipe.Classification == WorkplanNodeClassification.Subworkplan)
             {
-                var workplan = _workplans.LoadWorkplan(recipe.SubworkplanId);
+                var workplan = _workplans.LoadWorkplanAsync(recipe.SubworkplanId);
                 step = (IWorkplanStep)Activator.CreateInstance(stepType, workplan);
             }
             else if (recipe.Constructor == null)
