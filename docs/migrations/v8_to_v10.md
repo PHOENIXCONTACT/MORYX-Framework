@@ -190,6 +190,7 @@ Additionally, the APIs of these components have been updated to return `Task` or
 
 **`IProcessControl`-facade:**
 
+- `IReadOnlyList<IProcess> RunningProcesses` -> `IReadOnlyList<IProcess> GetRunningProcesses`
 - `IReadOnlyList<IProcess> GetProcesses` -> `Task<IReadOnlyList<IProcess>> GetArchivedProcesses`
 
 ## WorkerSupport / VisualInstructions

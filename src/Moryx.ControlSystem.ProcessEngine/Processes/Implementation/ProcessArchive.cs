@@ -61,9 +61,9 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             using var uow = UnitOfWorkFactory.Create();
             var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
-            var query = await (from processEntity in processRepo.Linq
+            var query = (from processEntity in processRepo.Linq
                 where processEntity.ReferenceId == productInstance.Id
-                select new { processEntity.Id, processEntity.Job.RecipeId }).ToListAsync();
+                select new { processEntity.Id, processEntity.Job.RecipeId }).ToList(); // TODO use ToListAsync and fix tests
 
             var processes = new List<IProcess>();
             foreach (var match in query)
@@ -132,14 +132,14 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             };
             // Fetch all relevant processes for this job
             // This looks like partial Copy&Paste, but we need to optimize the s**t out of this
-            var query = await (from processEntity in processRepo.Linq
+            var query = (from processEntity in processRepo.Linq
                          where processEntity.State >= (int)ProcessState.Success && processEntity.JobId == job.Id && processEntity.Activities.Any()
                          let firstActivity = processEntity.Activities.OrderBy(a => a.Started).FirstOrDefault()
                          let lastActivity = processEntity.Activities.OrderByDescending(a => a.Started).FirstOrDefault()
                          where firstActivity.Started >= start && firstActivity.Started <= end // Process started in the time frame
                             || lastActivity.Completed >= start && lastActivity.Completed <= end // Process ended in the time frame
                             || firstActivity.Started <= start && lastActivity.Completed >= end // Process spans over time frame
-                         select new { processEntity.Id, processEntity.ReferenceId }).ToListAsync();
+                         select new { processEntity.Id, processEntity.ReferenceId }).ToList(); // TODO use ToListAsync and fix tests
             var processes = new IProcess[query.Count];
 
             // Prepare fake process and task map

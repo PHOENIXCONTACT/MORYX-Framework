@@ -31,20 +31,6 @@ namespace Moryx.ControlSystem.ProcessEngine
 
         #endregion
 
-        #region Fields and Properties
-
-        /// <inheritdoc />
-        public IReadOnlyList<IProcess> RunningProcesses
-        {
-            get
-            {
-                ValidateHealthState();
-                return ActivityDataPool.Processes.Select(p => p.Process).ToArray();
-            }
-        }
-
-        #endregion
-
         public override void Activate()
         {
             base.Activate();
@@ -59,11 +45,18 @@ namespace Moryx.ControlSystem.ProcessEngine
             base.Deactivate();
         }
 
-        public Task<IReadOnlyList<IProcess>> GetArchivedProcesses(ProductInstance productInstance)
-        public IProcess GetProcess(long processId)
-            => RunningProcesses.FirstOrDefault(x => x.Id == processId);
+        public IReadOnlyList<IProcess> GetRunningProcesses()
+        {
+            return GetRunningProcesses(_ => true);
+        }
 
-        public IReadOnlyList<IProcess> GetProcesses(ProductInstance productInstance)
+        public IReadOnlyList<IProcess> GetRunningProcesses(Func<IProcess, bool> predicate)
+        {
+            ValidateHealthState();
+            return ActivityDataPool.Processes.Select(p => p.Process).Where(predicate).ToArray();
+        }
+
+        public Task<IReadOnlyList<IProcess>> GetArchivedProcesses(ProductInstance productInstance)
         {
             ValidateHealthState();
             return ProcessArchive.GetProcesses(productInstance);

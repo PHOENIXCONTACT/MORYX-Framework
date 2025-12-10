@@ -14,21 +14,20 @@ namespace Moryx.ControlSystem.Processes
     public interface IProcessControl
     {
         /// <summary>
-        /// Processes currently executed by the process controller
+        /// Returns processes currently executed by the process controller
         /// </summary>
-        IReadOnlyList<IProcess> RunningProcesses { get; }
+        IReadOnlyList<IProcess> GetRunningProcesses();
 
         /// <summary>
-        /// Get the running process with the given <paramref name="processId"/>
+        /// Returns processes currently executed by the process controller
         /// </summary>
-        /// <param name="processId">Id of the running process</param>
-        /// <returns><see cref="IProcess"/></returns>
-        IProcess GetProcess(long processId);
+        /// <param name="predicate">Filter for the processes</param>
+        IReadOnlyList<IProcess> GetRunningProcesses(Func<IProcess, bool> predicate);
 
         /// <summary>
         /// Retrieve all processes for a product instance
         /// </summary>
-        IReadOnlyList<IProcess> GetProcesses(ProductInstance productInstance);
+        Task<IReadOnlyList<IProcess>> GetArchivedProcesses(ProductInstance productInstance);
 
         /// <summary>
         /// Possible targets for the process, defined by currently open activities

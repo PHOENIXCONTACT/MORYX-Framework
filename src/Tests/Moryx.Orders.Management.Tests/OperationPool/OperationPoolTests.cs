@@ -200,7 +200,8 @@ namespace Moryx.Orders.Management.Tests
             using var uow = _unitOfWorkFactory.Create();
 
             var orderRepo = uow.GetRepository<IOrderEntityRepository>();
-            var orderEntity = orderRepo.Create("12345678");
+            var orderEntity = await orderRepo.CreateAsync();
+            orderEntity.Number = "12345678";
 
             var orderData = OperationStorage.LoadOrder(orderEntity);
             _operationDataMock.SetupGet(op => op.OrderData).Returns(() => orderData);

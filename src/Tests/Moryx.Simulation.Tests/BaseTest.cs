@@ -58,7 +58,7 @@ namespace Moryx.Simulation.Tests
 
             _processControlMock.Setup(pc => pc.Targets(It.IsAny<IProcess>()))
                 .Returns([_assemblyCell, _anotherAssemblyCell]);
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([]);
+            _processControlMock.Setup(pc => pc.GetRunningProcesses()).Returns([]);
 
             //resource management
             _resourceManagementMock = new Mock<IResourceManagement>();
@@ -101,7 +101,7 @@ namespace Moryx.Simulation.Tests
         {
             ((AssemblyTestCell)cell).TestInit();
             var process = new ProductionProcess { Id = processId };
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([process]);
+            _processControlMock.Setup(pc => pc.GetRunningProcesses()).Returns([process]);
             CreateActivity(activity, process, cell);
 
         }
