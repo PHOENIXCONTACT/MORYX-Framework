@@ -73,7 +73,8 @@ namespace Moryx.Orders.Management.Tests
         {
             // Arrange
             using var uow = _unitOfWorkFactory.Create();
-            var orderEntity = uow.GetRepository<IOrderEntityRepository>().Create("314725836");
+            var orderEntity = await uow.GetRepository<IOrderEntityRepository>().CreateAsync();
+            orderEntity.Number = "314725836";
             var operationEntity = await uow.GetRepository<IOperationEntityRepository>().CreateAsync();
             operationEntity.Order = orderEntity;
             operationEntity.Number = "0010";
@@ -99,7 +100,8 @@ namespace Moryx.Orders.Management.Tests
         {
             // Arrange
             using var uow = _unitOfWorkFactory.Create();
-            var orderEntity = uow.GetRepository<IOrderEntityRepository>().Create("12345678");
+            var orderEntity = await uow.GetRepository<IOrderEntityRepository>().CreateAsync();
+            orderEntity.Number = "12345678";
 
             var orderData = OperationStorage.LoadOrder(orderEntity);
             _operationDataMock.SetupGet(op => op.OrderData).Returns(() => orderData);
@@ -137,7 +139,8 @@ namespace Moryx.Orders.Management.Tests
         {
             // Arrange
             using var uow = _unitOfWorkFactory.Create();
-            var orderEntity = uow.GetRepository<IOrderEntityRepository>().Create("12345678");
+            var orderEntity = await uow.GetRepository<IOrderEntityRepository>().CreateAsync();
+            orderEntity.Number = "12345678";
             var productPartRepo = uow.GetRepository<IProductPartEntityRepository>();
             var productPart1 = productPartRepo.Create("Test1", "1234", 4, "PinÃ¶ckel");
             var productPart2 = productPartRepo.Create("Test2", "5678", 2, "Tucken");
@@ -306,7 +309,8 @@ namespace Moryx.Orders.Management.Tests
 
             using (var uow = _unitOfWorkFactory.Create())
             {
-                var orderEntity = uow.GetRepository<IOrderEntityRepository>().Create(orderNumber);
+                var orderEntity = await uow.GetRepository<IOrderEntityRepository>().CreateAsync();
+                orderEntity.Number = orderNumber;
 
                 var orderData = OperationStorage.LoadOrder(orderEntity);
                 _operationDataMock.SetupGet(op => op.OrderData).Returns(() => orderData);

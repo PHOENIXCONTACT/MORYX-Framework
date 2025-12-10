@@ -31,7 +31,7 @@ namespace Moryx.AbstractionLayer.Drivers
         }
 
         /// <summary>
-        /// Will be called after the state change when <see cref="SyncStateBase"/> is useed
+        /// Will be called after the state change when <see cref="SyncStateBase"/> is used
         /// </summary>
         protected virtual void OnStateChanged()
         {

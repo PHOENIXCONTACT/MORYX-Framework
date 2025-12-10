@@ -4,7 +4,7 @@
 namespace Moryx.Orders.Management;
 
 /// <summary>
-/// API for the <see cref="OperationData"/> to save itself
+/// API for the <see cref="OperationData"/> to save and remove itself
 /// </summary>
 internal interface IOperationSavingContext
 {

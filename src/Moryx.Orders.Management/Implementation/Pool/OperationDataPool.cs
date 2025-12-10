@@ -353,7 +353,5 @@ namespace Moryx.Orders.Management
         public event EventHandler<OperationEventArgs> OperationUpdated;
 
         #endregion
-
-
     }
 }

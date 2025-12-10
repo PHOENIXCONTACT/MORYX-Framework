@@ -9,14 +9,14 @@ Modern applications increasingly rely on asynchronous programming to improve res
 To address these challenges, MORYX has been updated to support fully asynchronous lifecycle methods (`async Task`) across Modules and Plugins. This change enables:
 
 - Non-blocking startup and shutdown processes.
-- Safe asynchronous operations** inside lifecycle methods, such as loading data, communicating with external services, or performing computations asynchronously.
+- Safe asynchronous operations inside lifecycle methods, such as loading data, communicating with external services, or performing computations asynchronously.
 - Improved scalability and responsiveness of MORYX, particularly in large or complex deployments.
 
 By aligning with modern .NET asynchronous programming patterns, this migration ensures that Modules and Plugins can safely and efficiently leverage `async/await`, providing a foundation for more robust and maintainable applications.
 
 Previously, lifecycle methods in Modules and Plugins were synchronous (`void`) and had no native support for asynchronous operations. This required all asynchronous calls to be manually synchronized to maintain consistent start/stop behavior.
 
-With MORYX 1ß:
+With MORYX 10:
 
 - Initialization, startup, and shutdown processes now support `async Task`.
 - Modules and Plugins can perform non-blocking asynchronous operations safely during lifecycle events.
@@ -95,7 +95,7 @@ Note: For projects using top-level statements you can use the new async methods 
 
 ### Async Lifecycle Support for ResourceManagement
 
-The ResourceManagement have been updated to support **asynchronous lifecycle methods**, including initialization, startup, and shutdown processes.
+The ResourceManagement has been updated to support **asynchronous lifecycle methods**, including initialization, startup, and shutdown processes.
 
 **Changes in Resource**:
 
@@ -133,7 +133,7 @@ Additionally, the APIs of these components have been updated to return `Task` or
 
 ### Async Lifecycle Support for OrderManagement
 
-The OrderManagement have been updated to support **asynchronous lifecycle methods**, including initialization, startup, and shutdown processes.
+The OrderManagement has been updated to support **asynchronous lifecycle methods**, including initialization, startup, and shutdown processes.
 
 The following plugins have been migrated to the **async lifecycle**:
 
@@ -176,11 +176,11 @@ Additionally, the APIs of these components have been updated to return `Task` or
 
 ### Async Lifecycle Support for ProcessEngine
 
-The ProcessEngine have been updated to support **asynchronous lifecycle methods**, including initialization, startup, and shutdown processes.
+The ProcessEngine has been updated to support **asynchronous lifecycle methods**, including initialization, startup, and shutdown processes.
 
 The following plugins have been migrated to the **async lifecycle**:
 
--
+- `ICellSelector`
 
 Additionally, the APIs of these components have been updated to return `Task` or `Task<T>` to reflect asynchronous behavior.
 
@@ -190,7 +190,7 @@ Additionally, the APIs of these components have been updated to return `Task` or
 
 **`IProcessControl`-facade:**
 
-- `IReadOnlyList<IProcess> GetProcesses` -> `Task<IReadOnlyList<IProcess>> GetProcesses`
+- `IReadOnlyList<IProcess> GetProcesses` -> `Task<IReadOnlyList<IProcess>> GetArchivedProcesses`
 
 ## WorkerSupport / VisualInstructions
 
