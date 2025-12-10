@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Runtime.CompilerServices;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
@@ -28,20 +29,20 @@ namespace Moryx.Orders.Management
             return orderData;
         }
 
-        public static OrderEntity SaveOrder(IUnitOfWork uow, IOrderData orderData)
+        public static async Task<OrderEntity> SaveOrder(IUnitOfWork uow, IOrderData orderData)
         {
-            var orderEntity = uow.GetEntity<OrderEntity>((IPersistentObject)orderData);
+            var orderEntity = await uow.GetEntityAsync<OrderEntity>((IPersistentObject)orderData);
             orderEntity.Number = orderData.Order.Number;
             orderEntity.Type = orderData.Order.Type;
 
             return orderEntity;
         }
 
-        public static OperationEntity SaveOperation(IUnitOfWork uow, IOperationData operationData)
+        public static async Task<OperationEntity> SaveOperation(IUnitOfWork uow, IOperationData operationData)
         {
             var operationRepo = uow.GetRepository<IOperationEntityRepository>();
             var entity = operationRepo.Linq.FirstOrDefault(o => o.Identifier.Equals(operationData.Identifier)) ??
-                         operationRepo.Create();
+                         await operationRepo.CreateAsync();
 
             entity.AssignState = (int)operationData.AssignState;
             entity.State = operationData.State.Key;
@@ -78,7 +79,7 @@ namespace Moryx.Orders.Management
             var missingRecipeReferences = currentRecipeReferences.Except(dbRecipeReferences);
             foreach (var missingRecipe in missingRecipeReferences)
             {
-                var recipeReferenceEntity = recipeReferenceRepo.Create();
+                var recipeReferenceEntity = await recipeReferenceRepo.CreateAsync();
                 recipeReferenceEntity.RecipeId = missingRecipe;
                 recipeReferenceEntity.Operation = entity;
             }
@@ -96,7 +97,7 @@ namespace Moryx.Orders.Management
             var missingJobReferences = currentJobReferences.Except(dbJobReferences);
             foreach (var missingJob in missingJobReferences)
             {
-                var jobReferenceEntity = jobReferenceRepo.Create();
+                var jobReferenceEntity = await jobReferenceRepo.CreateAsync();
                 jobReferenceEntity.JobId = missingJob;
                 jobReferenceEntity.Operation = entity;
             }
@@ -104,7 +105,7 @@ namespace Moryx.Orders.Management
             // Reports
             foreach (var report in operation.Reports.Where(r => ((IPersistentObject)r).Id == 0))
             {
-                var reportEntity = uow.CreateEntity<OperationReportEntity>(report);
+                var reportEntity = await uow.CreateEntityAsync<OperationReportEntity>(report);
 
                 reportEntity.SuccessCount = report.SuccessCount;
                 reportEntity.FailureCount = report.FailureCount;
@@ -120,7 +121,7 @@ namespace Moryx.Orders.Management
             // Advices
             foreach (var advice in operation.Advices.Where(a => ((IPersistentObject)a).Id == 0))
             {
-                var adviceEntity = uow.CreateEntity<OperationAdviceEntity>(advice);
+                var adviceEntity = await uow.CreateEntityAsync<OperationAdviceEntity>(advice);
                 adviceEntity.ToteBoxNumber = advice.ToteBoxNumber;
                 adviceEntity.Operation = entity;
 
@@ -139,7 +140,7 @@ namespace Moryx.Orders.Management
             var partRepo = uow.GetRepository<IProductPartEntityRepository>();
             foreach (var part in operation.Parts.Where(p => ((IPersistentObject)p).Id == 0))
             {
-                var partEntity = uow.CreateEntity<ProductPartEntity>(part);
+                var partEntity = await uow.CreateEntityAsync<ProductPartEntity>(part);
 
                 partEntity.Name = part.Name;
                 partEntity.Number = part.Identity.Identifier;
@@ -252,13 +253,19 @@ namespace Moryx.Orders.Management
             operationRepo.Remove(entity);
         }
 
-        private static DateTime ConvertToUtc(DateTime dateTime)
+        private static DateTime ConvertToUtc(DateTime dateTime, [CallerArgumentExpression(nameof(dateTime))]string member = "")
         {
-            if (dateTime.Kind == DateTimeKind.Utc)
-                return dateTime;
-            if (dateTime.Kind == DateTimeKind.Local)
-                return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.Local);
-            throw new ArgumentException($"Provided {nameof(DateTime)} is neither UTC nor Local Time");
+            switch (dateTime.Kind)
+            {
+                case DateTimeKind.Utc:
+                    return dateTime;
+                case DateTimeKind.Local:
+                    return TimeZoneInfo.ConvertTimeToUtc(dateTime, TimeZoneInfo.Local);
+                case DateTimeKind.Unspecified:
+                    return dateTime;
+                default:
+                    throw new ArgumentOutOfRangeException($"Provided {nameof(DateTime)} for {member} is neither UTC nor Local Time");
+            }
         }
     }
 }

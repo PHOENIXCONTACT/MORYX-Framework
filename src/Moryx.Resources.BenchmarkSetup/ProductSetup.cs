@@ -132,7 +132,6 @@ namespace Moryx.Benchmarking.Setups
             var workplanEntity = RecipeStorage.ToWorkplanEntity(openContext, workplan);
 
             // Create recipe
-            recipeRepo.Create();
             var recipe = recipeRepo.Create();
             recipe.Name = "Recipe-Steps:" + stepCount;
             recipe.Classification = (int)RecipeClassification.Alternative;

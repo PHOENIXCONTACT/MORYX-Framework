@@ -90,7 +90,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <inheritdoc/>
         public void Start()
         {
-            _selectors.ForEach(s => s.Start());
+            _selectors.ForEach(s => s.StartAsync().Wait());
         }
 
         /// <inheritdoc/>
@@ -103,7 +103,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         {
             try
             {
-                selector.Stop();
+                selector.StopAsync().Wait();
             }
             catch (Exception e)
             {
@@ -239,7 +239,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             var selectedCells = possibleResources;
             foreach (var selector in _selectors)
             {
-                var selectionIteration = selector.SelectCells(activityData.Activity, selectedCells);
+                var selectionIteration = selector.SelectCells(activityData.Activity, selectedCells).GetAwaiter().GetResult();
                 // Validate selection
                 if (selectionIteration.Any(c => !possibleResources.Contains(c)))
                 {

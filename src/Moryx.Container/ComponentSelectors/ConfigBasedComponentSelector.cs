@@ -41,13 +41,43 @@ namespace Moryx.Container
 
                 var config = additionalArguments["config"];
                 var configType = config.GetType();
-                var genericPluginApi = typeof(IConfiguredInitializable<>).MakeGenericType(configType);
 
-                var initMethod = genericPluginApi.GetMethod(nameof(IConfiguredInitializable<IPluginConfig>.Initialize),
-                    [configType]);
-                initMethod.Invoke(instance, [config]);
+                var componentInterfaces = componentType.GetInterfaces();
+
+                // Invoke Initialize for IConfiguredInitializable<>
+                var isConfiguredInitializable = componentInterfaces
+                    .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IConfiguredInitializable<>));
+
+                if (isConfiguredInitializable)
+                {
+                    var genericPluginApi = typeof(IConfiguredInitializable<>).MakeGenericType(configType);
+
+                    var initMethod = genericPluginApi.GetMethod(nameof(IConfiguredInitializable<>.Initialize),
+                        [configType]);
+                    initMethod!.Invoke(instance, [config]);
+                    return instance;
+                }
+
+                // Invoke Initialize for IAsyncConfiguredInitializable<>
+                var isAsyncConfiguredInitializable = componentInterfaces
+                    .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAsyncConfiguredInitializable<>));
+
+                if (isAsyncConfiguredInitializable)
+                {
+                    var genericPluginApi = typeof(IAsyncConfiguredInitializable<>).MakeGenericType(configType);
+
+                    var initMethod = genericPluginApi.GetMethod(nameof(IAsyncConfiguredInitializable<>.InitializeAsync),
+                        [configType]);
+
+                    var task = (Task)initMethod!.Invoke(instance, [config])!;
+                    task.GetAwaiter().GetResult();
+
+                    return instance;
+                }
+
                 return instance;
             });
+
             return createFunc;
         }
     }

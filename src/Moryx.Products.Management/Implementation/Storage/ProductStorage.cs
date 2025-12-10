@@ -16,6 +16,7 @@ using static Moryx.Products.Management.ProductExpressionHelpers;
 using Moryx.Logging;
 using Moryx.Products.Management.Implementation.Storage;
 using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.Products.Management.Model;
 
 namespace Moryx.Products.Management
@@ -442,12 +443,17 @@ namespace Moryx.Products.Management
         }
 
         /// <inheritdoc />
-        public ProductType LoadType(ProductIdentity identity)
+        public ProductType LoadType(IIdentity identity)
         {
+            if (identity is not ProductIdentity productIdentity)
+            {
+                throw new NotSupportedException($"Identity of type {identity.GetType()} is not supported. Only {nameof(ProductIdentity)} is supported.");
+            }
+
             using var uow = Factory.Create();
             var productRepo = uow.GetRepository<IProductTypeRepository>();
 
-            var revision = identity.Revision;
+            var revision = productIdentity.Revision;
             // If the latest revision was requested, replace it with the highest current revision
             if (revision == ProductIdentity.LatestRevision)
             {
@@ -550,7 +556,7 @@ namespace Moryx.Products.Management
         {
             using var uow = Factory.Create();
             var productSaverContext = new ProductPartsSaverContext(uow);
-            var entity = SaveProduct(productSaverContext, modifiedInstance);
+            var entity = SaveType(productSaverContext, modifiedInstance);
 
             uow.SaveChanges();
             modifiedInstance.Id = entity.Id;
@@ -562,23 +568,28 @@ namespace Moryx.Products.Management
             return entity.Id;
         }
 
-        private ProductTypeEntity SaveProduct(ProductPartsSaverContext saverContext, ProductType modifiedProductType)
+        private ProductTypeEntity SaveType(ProductPartsSaverContext saverContext, ProductType modifiedProductType)
         {
+            var identity = modifiedProductType.Identity;
+            if (identity is not ProductIdentity productIdentity)
+            {
+                throw new NotSupportedException($"Identity of type {identity.GetType()} is not supported. Only {nameof(ProductIdentity)} is supported.");
+            }
+
             var strategy = _typeInformation[modifiedProductType.ProductTypeName()].Strategy
                 ?? throw new InvalidOperationException($"Cannot save product of type {modifiedProductType.GetType().FullName}. No {nameof(IProductTypeStrategy)} is configured for this type in the {nameof(ModuleConfig)}");
 
             //TODO use uow directly instead of repo if that is possible
             // Get or create entity
             var repo = saverContext.GetRepository<IProductTypeRepository>();
-            var identity = (ProductIdentity)modifiedProductType.Identity;
             ProductTypeEntity typeEntity;
             var entities = repo.Linq
-                .Where(p => p.Identifier == identity.Identifier && p.Revision == identity.Revision)
+                .Where(p => p.Identifier == productIdentity.Identifier && p.Revision == productIdentity.Revision)
                 .ToList();
             // If entity does not exist or was deleted, create a new one
             if (entities.All(p => p.Deleted != null))
             {
-                typeEntity = repo.Create(identity.Identifier, identity.Revision, modifiedProductType.Name, modifiedProductType.ProductTypeName());
+                typeEntity = repo.Create(productIdentity.Identifier, productIdentity.Revision, modifiedProductType.Name, modifiedProductType.ProductTypeName());
                 saverContext.UnitOfWork.LinkEntityToBusinessObject(modifiedProductType, typeEntity);
             }
             else
@@ -680,7 +691,7 @@ namespace Moryx.Products.Management
             }
 
             if (link.Product.Id == 0)
-                return SaveProduct(saverContext, link.Product);
+                return SaveType(saverContext, link.Product);
 
             return saverContext.UnitOfWork.GetEntity<ProductTypeEntity>(link.Product);
         }

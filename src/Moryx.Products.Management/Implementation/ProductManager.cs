@@ -3,6 +3,7 @@
 
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
@@ -62,7 +63,7 @@ namespace Moryx.Products.Management
             return Storage.LoadType(id);
         }
 
-        public ProductType LoadType(ProductIdentity identity)
+        public ProductType LoadType(IIdentity identity)
         {
             return Storage.LoadType(identity);
         }
@@ -85,12 +86,17 @@ namespace Moryx.Products.Management
             return wrapper.Constructor();
         }
 
-        public ProductType Duplicate(ProductType template, ProductIdentity newIdentity)
+        public ProductType Duplicate(ProductType template, IIdentity newIdentity)
         {
+            if (newIdentity is not ProductIdentity newProductIdentity)
+            {
+                throw new NotSupportedException($"Identity of type {newIdentity.GetType()} is not supported. Only {nameof(ProductIdentity)} is supported.");
+            }
+
             // Fetch existing products for identity validation
             var existing = LoadTypes(new ProductQuery { Identifier = newIdentity.Identifier });
             // Check if the same revision already exists
-            if (existing.Any(e => ((ProductIdentity)e.Identity).Revision == newIdentity.Revision))
+            if (existing.Any(e => ((ProductIdentity)e.Identity).Revision == newProductIdentity.Revision))
                 throw new IdentityConflictException();
             // If there are any products for this identifier, the source object must be one of them
             if (existing.Any() && template.Identity.Identifier != newIdentity.Identifier)

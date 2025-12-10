@@ -19,7 +19,7 @@ namespace Moryx.Orders.Management.Tests
         private InternalOperation _operation;
 
         [SetUp]
-        public void SetUp()
+        public Task SetUp()
         {
             _adviceExecutorMock = new Mock<IAdviceExecutor>();
             _config = new ModuleConfig();
@@ -41,7 +41,7 @@ namespace Moryx.Orders.Management.Tests
             _adviceExecutorMock.Setup(e => e.Advice(_operation, It.IsAny<PickPartAdvice>()))
                 .ReturnsAsync((Operation _, PickPartAdvice advice) => new AdviceResult(advice));
 
-            _adviceManager.Start();
+            return _adviceManager.StartAsync();
         }
 
         [Test(Description = "Executor should handle order advices")]

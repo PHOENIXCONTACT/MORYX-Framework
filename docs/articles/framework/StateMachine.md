@@ -163,7 +163,7 @@ Same sample as `AsyncStateBase`:
 ````cs
 public abstract class MyAsyncStateBase : AsyncStateBase<MyContext>
 {
-    protected MyAsyncStateBase(MyContext context, StateMap stateMap)
+    protected MyAsyncStateBase(MyAsyncContext context, StateMap stateMap)
         : base(context, stateMap)
     {
     }

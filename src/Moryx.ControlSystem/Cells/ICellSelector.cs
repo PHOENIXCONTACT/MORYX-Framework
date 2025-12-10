@@ -9,12 +9,12 @@ namespace Moryx.ControlSystem.Cells
     /// <summary>
     /// Plugin interface for the resource selector
     /// </summary>
-    public interface ICellSelector : IConfiguredPlugin<CellSelectorConfig>
+    public interface ICellSelector : IAsyncConfiguredPlugin<CellSelectorConfig>
     {
         /// <summary>
         /// Sort or filter the available resources for an activity to determine
         /// the target resources
         /// </summary>
-        IReadOnlyList<ICell> SelectCells(IActivity activity, IReadOnlyList<ICell> availableCells);
+        Task<IReadOnlyList<ICell>> SelectCells(IActivity activity, IReadOnlyList<ICell> availableCells);
     }
 }

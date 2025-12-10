@@ -19,19 +19,22 @@ namespace Moryx.Orders.Management.Assignment
         protected PartsAssignmentConfig Config { get; private set; }
 
         /// <inheritdoc/>
-        public void Initialize(PartsAssignmentConfig config)
+        public Task InitializeAsync(PartsAssignmentConfig config)
         {
             Config = config;
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public void Start()
+        public Task StartAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public void Stop()
+        public Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>

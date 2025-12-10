@@ -26,7 +26,7 @@ namespace Moryx.ControlSystem.Processes.Endpoints
                 Rework = false,
                 State = InferProcessState(activities),
                 Started = activities.Where(a => a.Tracing?.Started != null).Select(a => a.Tracing.Started).Min() ?? DateTime.MinValue,
-                IsRunning = processControl.RunningProcesses.Any(p => p.Id == process.Id),
+                IsRunning = processControl.GetRunningProcesses().Any(p => p.Id == process.Id),
                 Completed = activities.Where(a => a.Tracing?.Completed != null).Select(a => a.Tracing.Completed).Max() ?? DateTime.MinValue,
                 Activities = activities.Select(a => ConvertActivity(a, processControl, resourceManagement)).ToArray()
             };

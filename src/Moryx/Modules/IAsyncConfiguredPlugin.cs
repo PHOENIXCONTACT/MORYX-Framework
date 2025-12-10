@@ -7,13 +7,9 @@ namespace Moryx.Modules
     /// This generic interface is intended for all plugins that require a configuration for their initialization to work properly.
     /// This configuration is passed to the plugin via the Initialize(TConf config) method.
     /// </summary>
-    public interface IAsyncConfiguredPlugin<in T> : IPlugin
+    public interface IAsyncConfiguredPlugin<in T> : IAsyncPlugin, IAsyncConfiguredInitializable<T>
         where T : IPluginConfig
     {
-        /// <summary>
-        /// Initialize this component with its config
-        /// </summary>
-        /// <param name="config">Config of this module plugin</param>
-        Task Initialize(T config);
+
     }
 }

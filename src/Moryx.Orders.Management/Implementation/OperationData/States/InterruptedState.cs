@@ -30,25 +30,25 @@ namespace Moryx.Orders.Management
             return Context.HandleReportContext();
         }
 
-        public override void IncreaseTargetBy(int amount, User user)
+        public override async Task IncreaseTargetBy(int amount, User user)
         {
             // If partial amount is equal to zero we are instantly amount reached
-            NextState(amount == 0 ? StateAmountReached : StateRunning);
-            Context.HandleIncreaseTargetBy(amount);
+            await NextStateAsync(amount == 0 ? StateAmountReached : StateRunning);
+            await Context.HandleIncreaseTargetBy(amount);
             Context.HandleStarted(user);
         }
 
-        public override void Report(OperationReport report)
+        public override async Task Report(OperationReport report)
         {
             switch (report.ConfirmationType)
             {
                 case ConfirmationType.Final:
-                    NextState(StateCompleted);
-                    Context.HandleCompleted(report);
+                    await NextStateAsync(StateCompleted);
+                    await Context.HandleCompleted(report);
                     break;
                 case ConfirmationType.Partial:
                     // ReSharper disable once ExplicitCallerInfoArgument
-                    InvalidState(nameof(Report) + "(partial)");
+                    await InvalidStateAsync(nameof(Report) + "(partial)");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(report.ConfirmationType), report.ConfirmationType, null);
@@ -60,20 +60,20 @@ namespace Moryx.Orders.Management
             return Context.HandleAdviceContext();
         }
 
-        public override void Advice(OperationAdvice advice)
+        public override Task Advice(OperationAdvice advice)
         {
-            Context.HandleAdvice(advice);
+            return Context.HandleAdvice(advice);
         }
 
-        public override void Assign()
+        public override async Task Assign()
         {
-            NextState(StateInterruptedAssign);
+            await NextStateAsync(StateInterruptedAssign);
             Context.HandleReassign();
         }
 
-        public override void Resume()
+        public override Task Resume()
         {
-
+            return Task.CompletedTask;
         }
     }
 }

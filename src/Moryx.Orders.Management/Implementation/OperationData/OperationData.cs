@@ -21,9 +21,11 @@ namespace Moryx.Orders.Management
     /// Business object for operation data
     /// </summary>
     [Component(LifeCycle.Transient, typeof(IOperationData))]
-    internal class OperationData : IOperationData, IStateContext, ILoggingComponent, INotificationSender
+    internal class OperationData : IOperationData, IAsyncStateContext, ILoggingComponent, INotificationSender
     {
-        private readonly object _stateLock = new();
+        private readonly IOperationSavingContext _savingContext;
+
+        private readonly SemaphoreSlim _stateLock = new(1, 1);
 
         private readonly List<OperationReport> _reports;
         private readonly List<OperationAdvice> _advices;
@@ -48,21 +50,24 @@ namespace Moryx.Orders.Management
 
         #endregion
 
-        public OperationData()
+        public OperationData(IOperationSavingContext savingContext)
         {
+            _savingContext = savingContext;
             Operation = new InternalOperation();
             _reports = new List<OperationReport>();
             _advices = new List<OperationAdvice>();
-            _jobs = new List<Job>();
+            _jobs = [];
         }
 
-        void IStateContext.SetState(StateBase state)
+        async Task IAsyncStateContext.SetStateAsync(StateBase state)
         {
             // ReSharper disable InconsistentlySynchronizedField
             _state = (OperationDataStateBase)state;
 
             Operation.State = _state.GetFullClassification();
             Operation.StateDisplayName = _state.GetType().GetDisplayName();
+
+            await _savingContext.SaveOperation(this);
 
             Updated?.Invoke(this, new OperationEventArgs(this));
         }
@@ -87,32 +92,15 @@ namespace Moryx.Orders.Management
         /// <inheritdoc cref="IOperationData"/>
         public ProductType Product => Operation.Product;
 
-        private int _sortOrder;
-        /// <inheritdoc cref="IOperationData"/>
-        public int SortOrder
-        {
-            get => _sortOrder;
-            set
-            {
-                if (_sortOrder == value)
-                    return;
-
-                _sortOrder = value;
-                Operation.SortOrder = value;
-                Updated?.Invoke(this, new OperationEventArgs(this));
-            }
-        }
-
         public IOrderData OrderData { get; set; }
 
-        private OperationAssignState _assignState;
         /// <inheritdoc />
         public OperationAssignState AssignState
         {
-            get => _assignState;
+            get;
             set
             {
-                _assignState = value;
+                field = value;
                 //Update the state of the internal operation
                 if (_state is not null)
                     Operation.State = _state.GetFullClassification();
@@ -139,9 +127,9 @@ namespace Moryx.Orders.Management
         internal int ReachableAmount => CountStrategy.ReachableAmount(Operation);
 
         /// <inheritdoc />
-        public IOperationData Initialize(OperationCreationContext context, IOrderData orderData, IOperationSource source)
+        public async Task<IOperationData> Initialize(OperationCreationContext context, IOrderData orderData, IOperationSource source)
         {
-            StateMachine.Initialize(this).With<OperationDataStateBase>();
+            await StateMachine.InitializeAsync(this).WithAsync<OperationDataStateBase>();
             _dispatchHandler = new DispatchHandler(this);
 
             AssignState = OperationAssignState.Initial;
@@ -190,7 +178,7 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc />
-        public IOperationData Initialize(OperationEntity entity, IOrderData orderData)
+        public async Task<IOperationData> Initialize(OperationEntity entity, IOrderData orderData)
         {
             _dispatchHandler = new DispatchHandler(this);
 
@@ -199,9 +187,22 @@ namespace Moryx.Orders.Management
 
             OperationStorage.RestoreOperationData(this, entity);
 
-            StateMachine.Reload(this, entity.State).With<OperationDataStateBase>();
+            await StateMachine.ReloadAsync(this, entity.State).WithAsync<OperationDataStateBase>();
 
             return this;
+        }
+
+        /// <inheritdoc />
+        public async Task SetSortOrder(int sortOrder)
+        {
+            if (sortOrder == Operation.SortOrder)
+                return;
+
+            Operation.SortOrder = sortOrder;
+
+            await _savingContext.SaveOperation(this);
+
+            Updated?.Invoke(this, new OperationEventArgs(this));
         }
 
         /// <summary>
@@ -235,7 +236,7 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc cref="IOperationData"/>
-        public void AddJob(Job job)
+        public async Task AddJob(Job job)
         {
             Log(LogLevel.Information, "Job {0} was added", job.Id);
 
@@ -246,34 +247,34 @@ namespace Moryx.Orders.Management
             }
 
             UpdateProgress();
+            await _savingContext.SaveOperation(this);
             Updated?.Invoke(this, new OperationEventArgs(this));
         }
 
         /// <inheritdoc cref="IOperationData"/>
-        public void Assign()
+        public Task Assign()
         {
             Log(LogLevel.Information, "Starting assignment");
 
-            lock (_stateLock)
-                _state.Assign();
+            return _stateLock.ExecuteAsync(() => _state.Assign());
         }
 
         /// <inheritdoc cref="IOperationData"/>
-        public void AssignCompleted(bool success)
+        public Task AssignCompleted(bool success)
         {
             if (success)
                 Operation.CreationContext = null;
 
-            lock (_stateLock)
-                _state.AssignCompleted(success);
+            return _stateLock.ExecuteAsync(() => _state.AssignCompleted(success));
         }
 
-        internal void HandleAssignCompleted(bool success)
+        internal async Task HandleAssignCompleted(bool success)
         {
             Log(success ? LogLevel.Information : LogLevel.Warning, "Assignment completed and was {0}",
                 success ? "successful" : "not successful");
 
             AssignState = success ? OperationAssignState.Assigned : OperationAssignState.Failed;
+            await _savingContext.SaveOperation(this);
             Updated?.Invoke(this, new OperationEventArgs(this));
         }
 
@@ -288,17 +289,17 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc cref="IOperationData"/>
-        public void Abort()
+        public Task Abort()
         {
             Log(LogLevel.Information, "Aborting operation");
 
-            lock (_stateLock)
-                _state.Abort();
+            return _stateLock.ExecuteAsync(() => _state.Abort());
         }
 
-        internal void HandleAbort()
+        internal async Task HandleAbort()
         {
             Aborted?.Invoke(this, new OperationEventArgs(this));
+            await _savingContext.RemoveOperation(this);
         }
 
         /// <inheritdoc cref="IOperationData"/>
@@ -312,6 +313,7 @@ namespace Moryx.Orders.Management
 
             // Send update
             UpdateProgress();
+            await _savingContext.SaveOperation(this);
             Updated?.Invoke(this, new OperationEventArgs(this));
         }
 
@@ -340,11 +342,10 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc cref="IOperationData"/>
-        public void Resume()
+        public async Task Resume()
         {
             // Restore on state
-            lock (_stateLock)
-                _state.Resume();
+            await _stateLock.ExecuteAsync(() => _state.Resume());
         }
 
         /// <inheritdoc cref="IOperationData"/>
@@ -363,28 +364,28 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc cref="IOperationData"/>
-        public void Adjust(int amount, User user)
+        public async Task Adjust(int amount, User user)
         {
             Log(LogLevel.Information, "The target amount of the operation will be adjusted by amount {amount} by user {user}",
                 amount, user.Identifier);
 
-            lock (_stateLock)
+            await _stateLock.ExecuteAsync(() =>
             {
                 if (amount >= 0)
                 {
-                    _state.IncreaseTargetBy(amount, user);
+                    return _state.IncreaseTargetBy(amount, user);
                 }
                 else
                 {
-                    _state.DecreaseTargetBy(amount, user);
+                    return _state.DecreaseTargetBy(amount, user);
                 }
-            }
+            });
         }
 
         /// <summary>
         /// Calculates the current amount and dispatches a job
         /// </summary>
-        internal void HandleIncreaseTargetBy(int partialAmount)
+        internal async Task HandleIncreaseTargetBy(int partialAmount)
         {
             // Save the first start time of the production
             Operation.Start ??= DateTime.Now;
@@ -394,21 +395,23 @@ namespace Moryx.Orders.Management
             if (partialAmount > 0)
             {
                 Operation.TargetAmount += partialAmount;
+                await _savingContext.SaveOperation(this);
                 Updated?.Invoke(this, new OperationEventArgs(this));
             }
 
-            DispatchJob();
+            await DispatchJob();
         }
 
         /// <summary>
         /// Calculates the new target amount, completes the current jobs and
         /// dispatches a job if necessary
         /// </summary>
-        internal void HandleDecreaseTargetBy(int amount)
+        internal async Task HandleDecreaseTargetBy(int amount)
         {
             Operation.TargetAmount += amount;
-            JobHandler.Complete(this);
-            DispatchJob();
+            await JobHandler.Complete(this);
+            await DispatchJob();
+            await _savingContext.SaveOperation(this);
             Updated?.Invoke(this, new OperationEventArgs(this));
         }
 
@@ -422,31 +425,31 @@ namespace Moryx.Orders.Management
 
         /// <param name="user"></param>
         /// <inheritdoc cref="IOperationData"/>
-        public void Interrupt(User user)
+        public Task Interrupt(User user)
         {
             Log(LogLevel.Debug, "Operation will be interrupted by user {0}",
                 user.Identifier);
 
-            lock (_stateLock)
-                _state.Interrupt(user);
+            return _stateLock.ExecuteAsync(() => _state.Interrupt(user));
         }
 
         /// <summary>
         /// Will complete all jobs and executes a partial report
         /// </summary>
-        internal void HandleManualInterrupting()
+        internal Task HandleManualInterrupting()
         {
-            JobHandler.Complete(this);
+            return JobHandler.Complete(this);
         }
 
         /// <summary>
         /// Will handle manual interrupts. The interrupt was triggered by the user.
         /// Will throw the <see cref="Interrupted"/> event
         /// </summary>
-        internal void HandleManualInterrupted()
+        internal async Task HandleManualInterrupted()
         {
             Operation.TargetAmount = ReachableAmount;
 
+            await _savingContext.SaveOperation(this);
             Updated?.Invoke(this, new OperationEventArgs(this));
             Interrupted?.Invoke(this, new OperationEventArgs(this));
         }
@@ -455,16 +458,18 @@ namespace Moryx.Orders.Management
         /// Will handle the interrupt if all jobs are completed
         /// Will be called by the state machine
         /// </summary>
-        internal void HandleInterrupted()
+        internal async Task HandleInterrupted()
         {
             Operation.TargetAmount = ReachableAmount;
+
+            await _savingContext.SaveOperation(this);
 
             Updated?.Invoke(this, new OperationEventArgs(this));
             Interrupted?.Invoke(this, new OperationEventArgs(this));
         }
 
         /// <inheritdoc cref="IOperationData"/>
-        public void Report(OperationReport report)
+        public Task Report(OperationReport report)
         {
             Log(LogLevel.Information, "Operation will be reported with SuccessCount {0} and FailureCount {1} by user {2}",
                 report.SuccessCount, report.FailureCount, report.User.Identifier);
@@ -476,16 +481,13 @@ namespace Moryx.Orders.Management
                 throw new ArgumentException(error);
             }
 
-            lock (_stateLock)
-                _state.Report(report);
+            return _stateLock.ExecuteAsync(() => _state.Report(report));
         }
 
         /// <inheritdoc cref="IOperationData"/>
         public AdviceContext GetAdviceContext()
         {
-            AdviceContext adviceContext;
-            lock (_stateLock)
-                adviceContext = _state.GetAdviceContext();
+            var adviceContext = _stateLock.Execute(() => _state.GetAdviceContext());
 
             return adviceContext;
         }
@@ -499,7 +501,7 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc cref="IOperationData"/>
-        public void Advice(OperationAdvice advice)
+        public Task Advice(OperationAdvice advice)
         {
             Log(LogLevel.Information, "Operation will be adviced for ToteBoxNumber {0}", advice.ToteBoxNumber);
 
@@ -521,11 +523,10 @@ namespace Moryx.Orders.Management
             if (orderAdvice == null && pickPartAdvice == null)
                 ThrowError("Advices of type " + advice.GetType().Name + " cannot be handled.");
 
-            lock (_stateLock)
-                _state.Advice(advice);
+            return _stateLock.ExecuteAsync(() => _state.Advice(advice));
         }
 
-        internal void HandleAdvice(OperationAdvice advice)
+        internal async Task HandleAdvice(OperationAdvice advice)
         {
             lock (_advices)
             {
@@ -533,6 +534,7 @@ namespace Moryx.Orders.Management
                 Operation.Advices = _advices.ToArray();
             }
 
+            await _savingContext.SaveOperation(this);
             Updated?.Invoke(this, new OperationEventArgs(this));
             Adviced?.Invoke(this, new AdviceEventArgs(this, advice));
         }
@@ -540,7 +542,7 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Will throw the <see cref="Completed"/> event
         /// </summary>
-        internal void HandleCompleted(OperationReport report)
+        internal async Task HandleCompleted(OperationReport report)
         {
             Operation.End = DateTime.Now;
 
@@ -550,6 +552,8 @@ namespace Moryx.Orders.Management
                 Operation.Reports = _reports.ToArray();
             }
 
+            await _savingContext.SaveOperation(this);
+
             Updated?.Invoke(this, new OperationEventArgs(this));
             Completed?.Invoke(this, new ReportEventArgs(this, report));
         }
@@ -557,13 +561,15 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Will throw the <see cref="PartialReport"/> event
         /// </summary>
-        internal void HandlePartialReport(OperationReport report)
+        internal async Task HandlePartialReport(OperationReport report)
         {
             lock (_reports)
             {
                 _reports.Add(report);
                 Operation.Reports = _reports.ToArray();
             }
+
+            await _savingContext.SaveOperation(this);
 
             Updated?.Invoke(this, new OperationEventArgs(this));
             PartialReport?.Invoke(this, new ReportEventArgs(this, report));
@@ -572,10 +578,7 @@ namespace Moryx.Orders.Management
         /// <inheritdoc cref="IOperationData"/>
         public ReportContext GetReportContext()
         {
-            ReportContext reportContext;
-            lock (_stateLock)
-                reportContext = _state.GetReportContext();
-
+            var reportContext = _stateLock.Execute(() => _state.GetReportContext());
             return reportContext;
         }
 
@@ -610,21 +613,25 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc cref="IOperationData"/>
-        public void AssignRecipes(IReadOnlyList<IProductRecipe> recipes)
+        public async Task AssignRecipes(IReadOnlyList<IProductRecipe> recipes)
         {
             // Replaces the recipes with the given new list
             Operation.Recipes.Clear();
             Operation.Recipes.AddRange(recipes);
 
+            await _savingContext.SaveOperation(this);
+
             Updated?.Invoke(this, new OperationEventArgs(this));
         }
 
-        public void RecipeChanged(IProductRecipe productRecipe)
+        public async Task RecipeChanged(IProductRecipe productRecipe)
         {
             if (productRecipe.TemplateId == 0)
             {
                 AssignState |= OperationAssignState.Changed;
                 Log(LogLevel.Debug, "Template changed. AssignState is now 'Changed'");
+
+                Updated?.Invoke(this, new OperationEventArgs(this));
             }
             else
             {
@@ -637,45 +644,46 @@ namespace Moryx.Orders.Management
 
                 Operation.Recipes.Remove(affectedRecipe);
                 Operation.Recipes.Add(productRecipe);
+
+                await _savingContext.SaveOperation(this);
+
                 Updated?.Invoke(this, new OperationEventArgs(this));
 
                 // Complete running jobs to stop the production of the outdated recipe
                 // New jobs will be dispatched automatically with the new recipes
-                JobHandler.Complete(this);
+                await JobHandler.Complete(this);
             }
-
-            Updated?.Invoke(this, new OperationEventArgs(this));
         }
 
         /// <inheritdoc cref="IOperationData"/>
-        public void JobProgressChanged(Job job)
+        public async Task JobProgressChanged(Job job)
         {
             UpdateProgress();
 
-            lock (_stateLock)
-                _state.ProgressChanged(job);
+            await _stateLock.ExecuteAsync(() => _state.ProgressChanged(job));
 
             ProgressChanged?.Invoke(this, new OperationEventArgs(this));
         }
 
         /// <inheritdoc cref="IOperationData"/>
-        public void JobStateChanged(JobStateChangedEventArgs args)
+        public async Task JobStateChanged(JobStateChangedEventArgs args)
         {
             UpdateProgress();
 
-            lock (_stateLock)
-                _state.JobsUpdated(args);
+            await _stateLock.ExecuteAsync(() => _state.JobsUpdated(args));
         }
 
-        internal void DispatchJob()
+        internal Task DispatchJob()
         {
-            _dispatchHandler.TryDispatch();
+            return _dispatchHandler.TryDispatch();
         }
 
         /// <inheritdoc />
-        public void UpdateSource(IOperationSource source)
+        public async Task UpdateSource(IOperationSource source)
         {
             Operation.Source = source;
+
+            await _savingContext.SaveOperation(this);
             Updated?.Invoke(this, new OperationEventArgs(this));
         }
 
@@ -762,7 +770,7 @@ namespace Moryx.Orders.Management
             private readonly OperationData _operationData;
             private readonly ICountStrategy _countStrategy;
             private readonly IJobHandler _jobHandler;
-            private readonly object _dispatchLock = new();
+            private readonly Lock _dispatchLock = new();
 
             private bool _isDispatching;
             private bool _isDispatchingRequested;
@@ -774,7 +782,7 @@ namespace Moryx.Orders.Management
                 _jobHandler = operationData.JobHandler;
             }
 
-            public void TryDispatch()
+            public async Task TryDispatch()
             {
                 lock (_dispatchLock)
                 {
@@ -794,17 +802,17 @@ namespace Moryx.Orders.Management
                 {
                     _operationData.Log(LogLevel.Error, "There is nothing to dispatch. Check the {0}.", _countStrategy.GetType().Name);
 
-                    TryRequestedDispatches();
+                    await TryRequestedDispatches();
                     return;
                 }
 
                 _operationData.Log(LogLevel.Debug, "At least one job should be dispatched");
 
-                _jobHandler.Dispatch(_operationData, missingAmounts);
-                TryRequestedDispatches();
+                await _jobHandler.Dispatch(_operationData, missingAmounts);
+                await TryRequestedDispatches();
             }
 
-            private void TryRequestedDispatches()
+            private async Task TryRequestedDispatches()
             {
                 lock (_dispatchLock)
                 {
@@ -817,7 +825,7 @@ namespace Moryx.Orders.Management
                     _isDispatchingRequested = false;
                 }
 
-                TryDispatch();
+                await TryDispatch();
             }
         }
 

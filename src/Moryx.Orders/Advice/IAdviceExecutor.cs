@@ -8,13 +8,8 @@ namespace Moryx.Orders.Advice
     /// <summary>
     /// API for an advice executor. The executor applies an advice of pick parts or orders to an sub system
     /// </summary>
-    public interface IAdviceExecutor : IConfiguredPlugin<AdviceExecutorConfig>
+    public interface IAdviceExecutor : IAsyncConfiguredPlugin<AdviceExecutorConfig>
     {
-        /// <summary>
-        /// Indicator if the advice need user action or can be done automatically
-        /// </summary>
-        bool RequiresUserAction { get; }
-
         /// <summary>
         /// Advice an order
         /// </summary>

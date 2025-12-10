@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
+using Moryx.Modules;
 using Moryx.Orders.Assignment;
 using Moryx.Orders.Dispatcher;
 using Moryx.Orders.Management.Advice;
@@ -10,7 +11,7 @@ using Moryx.Orders.Management.Assignment;
 namespace Moryx.Orders.Management
 {
     [Component(LifeCycle.Singleton)]
-    internal class ComponentOrchestration
+    internal class ComponentOrchestration : IAsyncPlugin
     {
         #region Dependencies
 
@@ -40,61 +41,62 @@ namespace Moryx.Orders.Management
 
         #endregion
 
-        public void Start()
+        public async Task StartAsync()
         {
             // --Initialize Assignment
-            ProductAssignment.Initialize(Config.ProductAssignment);
-            PartsAssignment.Initialize(Config.PartsAssignment);
-            RecipeAssignment.Initialize(Config.RecipeAssignment);
-            OperationValidation.Initialize(Config.OperationValidation);
-            DocumentLoader.Initialize(Config.Documents.DocumentLoader);
+            await ProductAssignment.InitializeAsync(Config.ProductAssignment);
+            await PartsAssignment.InitializeAsync(Config.PartsAssignment);
+            await RecipeAssignment.InitializeAsync(Config.RecipeAssignment);
+            await OperationValidation.InitializeAsync(Config.OperationValidation);
+            await DocumentLoader.InitializeAsync(Config.Documents.DocumentLoader);
 
             // --Initialize dispatcher
-            OperationDispatcher.Initialize(Config.OperationDispatcher);
+            await OperationDispatcher.InitializeAsync(Config.OperationDispatcher);
 
             // --Start Advice
-            AdviceManager.Start();
+            await AdviceManager.StartAsync();
 
             // --Start Assignment
-            ProductAssignment.Start();
-            PartsAssignment.Start();
-            RecipeAssignment.Start();
-            OperationValidation.Start();
-            DocumentLoader.Start();
+            await ProductAssignment.StartAsync();
+            await PartsAssignment.StartAsync();
+            await RecipeAssignment.StartAsync();
+            await OperationValidation.StartAsync();
+            await DocumentLoader.StartAsync();
             OperationAssignment.Start();
 
             // --Start Job handler and dispatcher
-            OperationDispatcher.Start();
+            await OperationDispatcher.StartAsync();
             JobHandler.Start();
 
             // --Start pool
-            OperationDataPool.Start();
+            await OperationDataPool.StartAsync();
 
             // --Start Effort Calculator
             EffortCalculator.Start();
         }
 
-        public void Stop()
+        public async Task StopAsync()
         {
             // --Stop Effort Calculator
             EffortCalculator.Stop();
 
             // --Stop Job handler and dispatcher
             JobHandler.Stop();
-            OperationDispatcher.Stop();
+            await OperationDispatcher.StopAsync();
 
             // --Stop Assignment
             OperationAssignment.Stop();
-            OperationValidation.Stop();
-            RecipeAssignment.Stop();
-            PartsAssignment.Stop();
-            ProductAssignment.Stop();
+            await DocumentLoader.StopAsync();
+            await OperationValidation.StopAsync();
+            await RecipeAssignment.StopAsync();
+            await PartsAssignment.StopAsync();
+            await ProductAssignment.StopAsync();
 
             // --Stop Advice
-            AdviceManager.Stop();
+            await AdviceManager.StopAsync();
 
             // --Stop pool
-            OperationDataPool.Stop();
+            await OperationDataPool.StopAsync();
         }
     }
 }

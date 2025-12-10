@@ -1,8 +1,10 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
+using Moryx.Logging;
 using Moryx.Orders.Dispatcher;
 using Moryx.Threading;
 
@@ -31,6 +33,11 @@ namespace Moryx.Orders.Management
         /// </summary>
         public IOperationDispatcher Dispatcher { get; set; }
 
+        /// <summary>
+        /// Logger for this component
+        /// </summary>
+        public IModuleLogger Logger { get; set; }
+
         /// <inheritdoc />
         public void Start()
         {
@@ -49,24 +56,38 @@ namespace Moryx.Orders.Management
             JobManagement.ProgressChanged -= ParallelOperations.RemoveListener<Job>(OnJobProgressChanged);
         }
 
-        private void OnJobsDispatched(object sender, JobDispatchedEventArgs e)
+        private async void OnJobsDispatched(object sender, JobDispatchedEventArgs eventArgs)
         {
-            var operationData = OperationDataPool.Get(e.Operation);
+            try
+            {
+                var operationData = OperationDataPool.Get(eventArgs.Operation);
 
-            foreach (var addedJob in e.Jobs)
-                operationData.AddJob(addedJob);
+                foreach (var addedJob in eventArgs.Jobs)
+                    await operationData.AddJob(addedJob);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Error during adding jobs to operation {operationIdentifier}.", eventArgs.Operation.Identifier);
+            }
         }
 
-        private void OnJobProgressChanged(object sender, Job job)
+        private async void OnJobProgressChanged(object sender, Job job)
         {
-            var operationData = OperationDataPool.GetAll(op => op.Operation.Jobs.Any(j => j.Id == job.Id)).FirstOrDefault();
+            try
+            {
+                var operationData = OperationDataPool.GetAll(op => op.Operation.Jobs.Any(j => j.Id == job.Id)).FirstOrDefault();
 
-            // If operation was found and currently not dispatching, we can throw updates
-            if (operationData == null)
-                return;
+                // If operation was found and currently not dispatching, we can throw updates
+                if (operationData == null)
+                    return;
 
-            operationData.JobProgressChanged(job);
-            Dispatcher.JobProgressChanged(operationData.Operation, job);
+                await operationData.JobProgressChanged(job);
+                await Dispatcher.JobProgressChanged(operationData.Operation, job);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Error during job progress change of job {jobId}.", job.Id);
+            }
         }
 
         /// <summary>
@@ -74,28 +95,35 @@ namespace Moryx.Orders.Management
         /// If no operation was found on the pool which refers to the job,
         /// the update will be ignored.
         /// </summary>
-        private void OnJobStateChanged(object sender, JobStateChangedEventArgs eventArgs)
+        private async void OnJobStateChanged(object sender, JobStateChangedEventArgs eventArgs)
         {
-            var operationData = OperationDataPool.GetAll(op => op.Operation.Jobs.Any(job => job == eventArgs.Job)).FirstOrDefault();
+            try
+            {
+                var operationData = OperationDataPool.GetAll(op => op.Operation.Jobs.Any(job => job == eventArgs.Job)).FirstOrDefault();
 
-            // If operation was found and currently not dispatching, we can throw updates
-            if (operationData == null)
-                return;
+                // If operation was found and currently not dispatching, we can throw updates
+                if (operationData == null)
+                    return;
 
-            operationData.JobStateChanged(eventArgs);
-            Dispatcher.JobStateChanged(operationData.Operation, eventArgs);
+                await operationData.JobStateChanged(eventArgs);
+                await Dispatcher.JobStateChanged(operationData.Operation, eventArgs);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Error during job state change of job {jobId}.", eventArgs.Job.Id);
+            }
         }
 
         /// <inheritdoc />
-        public void Dispatch(IOperationData operationData, IReadOnlyList<DispatchContext> dispatchContexts)
+        public Task Dispatch(IOperationData operationData, IReadOnlyList<DispatchContext> dispatchContexts)
         {
-            Dispatcher.Dispatch(operationData.Operation, dispatchContexts);
+            return Dispatcher.Dispatch(operationData.Operation, dispatchContexts);
         }
 
         /// <inheritdoc />
-        public void Complete(IOperationData operationData)
+        public Task Complete(IOperationData operationData)
         {
-            Dispatcher.Complete(operationData.Operation);
+            return Dispatcher.Complete(operationData.Operation);
         }
 
         /// <inheritdoc />

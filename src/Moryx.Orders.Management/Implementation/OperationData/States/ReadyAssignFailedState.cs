@@ -18,21 +18,21 @@ namespace Moryx.Orders.Management
         {
         }
 
-        public override void Assign()
+        public override async Task Assign()
         {
-            NextState(StateReadyAssign);
+            await NextStateAsync(StateReadyAssign);
             Context.HandleReassign();
         }
 
-        public override void Resume()
+        public override Task Resume()
         {
-            NextState(StateReady);
+            return NextStateAsync(StateReady);
         }
 
-        public override void Abort()
+        public override async Task Abort()
         {
-            NextState(StateAborted);
-            Context.HandleAbort();
+            await NextStateAsync(StateAborted);
+            await Context.HandleAbort();
         }
     }
 }

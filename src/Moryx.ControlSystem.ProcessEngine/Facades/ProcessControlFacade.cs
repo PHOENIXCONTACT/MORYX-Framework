@@ -13,11 +13,9 @@ using Moryx.Threading;
 
 namespace Moryx.ControlSystem.ProcessEngine
 {
-    internal class ProcessControlFacade : IProcessControl, IFacadeControl
+    internal class ProcessControlFacade : FacadeBase, IProcessControl
     {
         #region Dependencies
-
-        public Action ValidateHealthState { get; set; }
 
         public IActivityPool ActivityPool { get; set; }
 
@@ -25,42 +23,49 @@ namespace Moryx.ControlSystem.ProcessEngine
 
         public IProcessArchive ProcessArchive { get; set; }
 
+        public ProcessRemoval ProcessRemoval { get; set; }
+
         public IModuleLogger Logger { get; set; }
 
         public IParallelOperations ParallelOperations { get; set; }
 
         #endregion
 
-        #region Fields and Properties
-
-        /// <inheritdoc />
-        public IReadOnlyList<IProcess> RunningProcesses
+        public override void Activate()
         {
-            get
-            {
-                ValidateHealthState();
-                return ActivityDataPool.Processes.Select(p => p.Process).ToArray();
-            }
-        }
-
-        #endregion
-
-        public void Activate()
-        {
+            base.Activate();
             ActivityPool.ProcessUpdated += ParallelOperations.DecoupleListener<ProcessUpdatedEventArgs>(OnProcessChanged);
             ActivityPool.ActivityUpdated += ParallelOperations.DecoupleListener<ActivityUpdatedEventArgs>(OnActivityChanged);
         }
 
-        public void Deactivate()
+        public override void Deactivate()
         {
             ActivityPool.ProcessUpdated -= ParallelOperations.RemoveListener<ProcessUpdatedEventArgs>(OnProcessChanged);
             ActivityPool.ActivityUpdated -= ParallelOperations.RemoveListener<ActivityUpdatedEventArgs>(OnActivityChanged);
+            base.Deactivate();
         }
 
-        public IReadOnlyList<IProcess> GetProcesses(ProductInstance productInstance)
+        public IReadOnlyList<IProcess> GetRunningProcesses()
+        {
+            return GetRunningProcesses(_ => true);
+        }
+
+        public IReadOnlyList<IProcess> GetRunningProcesses(Func<IProcess, bool> predicate)
+        {
+            ValidateHealthState();
+            return ActivityDataPool.Processes.Select(p => p.Process).Where(predicate).ToArray();
+        }
+
+        public Task<IReadOnlyList<IProcess>> GetArchivedProcesses(ProductInstance productInstance)
         {
             ValidateHealthState();
             return ProcessArchive.GetProcesses(productInstance);
+        }
+
+        public IAsyncEnumerable<IProcessChunk> GetArchivedProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
+        {
+            ValidateHealthState();
+            return ProcessArchive.GetProcesses(filterType, start, end, jobIds);
         }
 
         public IReadOnlyList<ICell> Targets(IProcess process)
@@ -73,6 +78,12 @@ namespace Moryx.ControlSystem.ProcessEngine
         {
             ValidateHealthState();
             return ActivityDataPool.GetByActivity(activity)?.Targets ?? Array.Empty<ICell>();
+        }
+
+        public void Report(IProcess process, ReportAction action)
+        {
+            ValidateHealthState();
+            ProcessRemoval.Report(process, action);
         }
 
         private void OnProcessChanged(object sender, ProcessUpdatedEventArgs args)
