@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq.Expressions;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Modules;
@@ -26,7 +27,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Load product by identity. This method supports loading a products latest revision
         /// </summary>
-        ProductType LoadType(ProductIdentity identity);
+        ProductType LoadType(IIdentity identity);
 
         /// <summary>
         /// Save a type to the storage
