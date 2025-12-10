@@ -8,7 +8,7 @@ namespace Moryx.Products.Management.Model;
 
 public class ProductInstanceEntity : EntityBase, IGenericColumns
 {
-    public virtual long State { get; set; }
+    public virtual int State { get; set; }
 
     public virtual long ProductId { get; set; }
 
