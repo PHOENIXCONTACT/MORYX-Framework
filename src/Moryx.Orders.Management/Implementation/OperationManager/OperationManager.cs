@@ -26,9 +26,9 @@ namespace Moryx.Orders.Management
         public IOperationDataPool OperationDataPool { get; set; }
 
         /// <inheritdoc />
-        public void Assign(IOperationData operationData)
+        public Task Assign(IOperationData operationData)
         {
-            operationData.Assign();
+            return operationData.Assign();
         }
 
         /// <inheritdoc />
@@ -88,7 +88,6 @@ namespace Moryx.Orders.Management
                 restrictions.Add(new BeginRestriction(canBegin: true, canReduce: true, operationData.Operation.Progress.SuccessCount,
                     Strings.OperationManager_OverDeliveryNotice, RestrictionSeverity.Info));
             }
-            ;
         }
 
         private void AddExternalRestrictions(IList<BeginRestriction> restrictions, IOperationData operationData)
@@ -105,14 +104,14 @@ namespace Moryx.Orders.Management
             GetReportContext(operationData, ReportType.Interrupt);
 
         /// <inheritdoc />
-        public void Adjust(IOperationData operationData, User user, int amount)
+        public Task Adjust(IOperationData operationData, User user, int amount)
         {
             if (!user.SignedIn)
             {
                 throw new InvalidOperationException("User for the begin of the operation was not signed in.");
             }
 
-            operationData.Adjust(amount, user);
+            return operationData.Adjust(amount, user);
         }
 
         private ReportContext GetReportContext(IOperationData operationData, ReportType reportType)
@@ -146,24 +145,24 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc />
-        public void Report(IOperationData operationData, OperationReport report)
+        public Task Report(IOperationData operationData, OperationReport report)
         {
             if (!report.User.SignedIn)
                 throw new InvalidOperationException("User for the report of the operation was not signed in.");
 
-            operationData.Report(report);
+            return operationData.Report(report);
         }
 
         /// <inheritdoc />
-        public void Interrupt(IOperationData operationData, User user)
+        public Task Interrupt(IOperationData operationData, User user)
         {
-            operationData.Interrupt(user);
+            return operationData.Interrupt(user);
         }
 
         /// <inheritdoc />
-        public void Abort(IOperationData operationData)
+        public Task Abort(IOperationData operationData)
         {
-            operationData.Abort();
+            return operationData.Abort();
         }
 
         public event EventHandler<BeginRequestEventArgs> BeginRequest;

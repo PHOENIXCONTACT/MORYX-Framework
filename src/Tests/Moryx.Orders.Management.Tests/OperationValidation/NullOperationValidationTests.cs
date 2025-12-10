@@ -16,12 +16,12 @@ namespace Moryx.Orders.Management.Tests
         private IOperationLogger _operationLogger;
 
         [SetUp]
-        public void SetUp()
+        public Task SetUp()
         {
             var operationLoggerMock = new Mock<IOperationLogger>();
             _operationLogger = operationLoggerMock.Object;
             _nullOperationValidation = new NullOperationValidation();
-            _nullOperationValidation.Initialize(new OperationValidationConfig());
+            return _nullOperationValidation.InitializeAsync(new OperationValidationConfig());
         }
 
         [Test(Description = "Validates that null is a valid parameter when calling validate.")]
@@ -35,10 +35,13 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Validate that null is a valid parameter when calling the Validation of CreationContext.")]
-        public void ValidateCreationContextNull()
+        public async Task ValidateCreationContextNull()
         {
-            //Assert
-            Assert.That(_nullOperationValidation.ValidateCreationContext(null), "There should be a successful validation");
+            // Act
+            var result = await _nullOperationValidation.ValidateCreationContext(null);
+
+            // Assert
+            Assert.That(result, "There should be a successful validation");
         }
     }
 }

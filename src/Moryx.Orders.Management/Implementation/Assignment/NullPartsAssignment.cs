@@ -13,18 +13,21 @@ namespace Moryx.Orders.Management.Assignment
     public class NullPartsAssignment : IPartsAssignment
     {
         /// <inheritdoc />
-        public void Initialize(PartsAssignmentConfig config)
+        public Task InitializeAsync(PartsAssignmentConfig config)
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public void Start()
+        public Task StartAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public void Stop()
+        public Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>

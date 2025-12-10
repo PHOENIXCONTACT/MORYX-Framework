@@ -56,7 +56,7 @@ namespace Moryx.ControlSystem.Simulator
             ResourceManagement.ResourceRemoved += OnResourceRemoved;
 
             // Sync any activities we might have missed
-            var activities = ProcessControl.RunningProcesses
+            var activities = ProcessControl.GetRunningProcesses()
                 .SelectMany(p => p.GetActivities(a => a.Result == null))
                 .ToList();
 
@@ -76,7 +76,7 @@ namespace Moryx.ControlSystem.Simulator
         {
             var driver = (ISimulationDriver)sender;
             var cell = driver.Usages.FirstOrDefault();
-            var runningProcesses = ProcessControl.RunningProcesses.ToList();
+            var runningProcesses = ProcessControl.GetRunningProcesses();
 
             if (newState == SimulationState.Offline || newState > SimulationState.Idle)
                 return;
@@ -84,7 +84,7 @@ namespace Moryx.ControlSystem.Simulator
             IActivity nextActivity;
             lock (_movements)
             {
-                nextActivity = ProcessControl.RunningProcesses
+                nextActivity = ProcessControl.GetRunningProcesses() // TODO use GetRunningProcesses(predicate) and fix tests
                     .Where(p => _movements.All(m => m.Process.Id != p.Id)) // No processes in transit
                     .Select(p => new
                     {

@@ -70,7 +70,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             var resourceChangedModels = new List<ResourceChangedModel>();
             var orderModels = new List<OrderModel>();
 
-            var activities = _processControl.RunningProcesses
+            var activities = _processControl.GetRunningProcesses()
                 .Select(p => p.CurrentActivity())
                 .Where(a => a is not null && a.Tracing is not null);
             var converter = new Converter(_serialization);
@@ -280,7 +280,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         {
             var cellLocation = _resourceManager.GetResource<IMachineLocation>(l => l.Id == location.Id);
 
-            await _resourceManager.ModifyUnsafeAsync(cellLocation, r =>
+            await _resourceManager.ModifyUnsafe(cellLocation, r =>
             {
                 var machineLocation = (IMachineLocation)r;
                 machineLocation.Position = new Position { PositionX = location.PositionX, PositionY = location.PositionY };
@@ -304,7 +304,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             var manufacturingConfig = _resourceManager.GetResources<IManufacturingFactory>().SingleOrDefault(f => f.Id == resourceId);
             if (manufacturingConfig is null)
                 return NotFound("The resource to be modified could not be found");
-            await _resourceManager.ModifyUnsafeAsync(manufacturingConfig.Id, r =>
+            await _resourceManager.ModifyUnsafe(manufacturingConfig.Id, r =>
             {
                 ((IManufacturingFactory)r).BackgroundUrl = url;
                 return Task.FromResult(true);
@@ -350,7 +350,7 @@ namespace Moryx.FactoryMonitor.Endpoints
                 var bareOrigin = (MachineLocation)_resourceManager.ReadUnsafe(originCellLocation, bare => bare);
                 var bareDestination = (MachineLocation)_resourceManager.ReadUnsafe(destinationCellLocation, bare => bare);
 
-                await _resourceManager.CreateUnsafeAsync(typeof(TransportPath), resource =>
+                await _resourceManager.CreateUnsafe(typeof(TransportPath), resource =>
                 {
                     var newPath = (TransportPath)resource;
                     newPath.Name = $"{originCellLocation.Name}=>{destinationCellLocation.Name}";
@@ -363,7 +363,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             }
             else
             {
-                await _resourceManager.ModifyUnsafeAsync(destinationPath, r =>
+                await _resourceManager.ModifyUnsafe(destinationPath, r =>
                 {
                     ((ITransportPath)r).WayPoints = path;
                     return Task.FromResult(true);
@@ -384,7 +384,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             if (cellLocation is null)
                 return NotFound();
 
-            await _resourceManager.ModifyUnsafeAsync(cellLocation, r =>
+            await _resourceManager.ModifyUnsafe(cellLocation, r =>
             {
                 ((IMachineLocation)r).SpecificIcon = string.IsNullOrEmpty(settings.Icon) ? ((IMachineLocation)r).SpecificIcon : settings.Icon;
                 ((IMachineLocation)r).Image = string.IsNullOrEmpty(settings.Image) ? ((IMachineLocation)r).Image : settings.Image;

@@ -27,20 +27,23 @@ namespace Moryx.Orders.Management.Assignment
         private RegexOperationValidationConfig _config;
 
         /// <inheritdoc />
-        public void Initialize(OperationValidationConfig config)
+        public Task InitializeAsync(OperationValidationConfig config)
         {
             _config = (RegexOperationValidationConfig)config;
             _operationNumberRegex = new Regex(_config.RegularExpression);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual void Start()
+        public virtual Task StartAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual void Stop()
+        public virtual Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
@@ -66,7 +69,7 @@ namespace Moryx.Orders.Management.Assignment
         }
 
         /// <inheritdoc />
-        public virtual bool ValidateCreationContext(OrderCreationContext orderContext)
+        public virtual Task<bool> ValidateCreationContext(OrderCreationContext orderContext)
         {
             foreach (var operation in orderContext.Operations)
             {
@@ -74,10 +77,10 @@ namespace Moryx.Orders.Management.Assignment
                                        ValidateOperationAmount(operation.TotalAmount);
 
                 if (validationResult == false)
-                    return false;
+                    return Task.FromResult(false);
             }
 
-            return true;
+            return Task.FromResult(true);
         }
 
         /// <summary>

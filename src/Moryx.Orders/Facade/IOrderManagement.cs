@@ -21,22 +21,22 @@ namespace Moryx.Orders
         /// <summary>
         /// Will return the operation with the given identifier
         /// </summary>
-        Operation GetOperation(Guid identifier);
+        Task<Operation> GetOperation(Guid identifier);
 
         /// <summary>
         /// Will return the operation with the given order and operation numbers
         /// </summary>
-        Operation GetOperation(string orderNumber, string operationNumber);
+        Task<Operation> GetOperation(string orderNumber, string operationNumber);
 
         /// <summary>
         /// Will add a new operation to the pool.
         /// </summary>
-        Operation AddOperation(OperationCreationContext context);
+        Task<Operation> AddOperation(OperationCreationContext context);
 
         /// <summary>
         /// Will add a new operation to the pool.
         /// </summary>
-        Operation AddOperation(OperationCreationContext context, IOperationSource source);
+        Task<Operation> AddOperation(OperationCreationContext context, IOperationSource source);
 
         /// <summary>
         /// Returns a report context of the given operation
@@ -46,23 +46,23 @@ namespace Moryx.Orders
         /// <summary>
         /// Begins the given operation
         /// </summary>
-        void BeginOperation(Operation operation, int amount);
+        Task BeginOperation(Operation operation, int amount);
 
         /// <summary>
         /// Begins the given operation
         /// </summary>
-        void BeginOperation(Operation operation, int amount, User user);
+        Task BeginOperation(Operation operation, int amount, User user);
 
         /// <summary>
         /// Aborts the given operation if it was not started before
         /// </summary>
         /// <param name="operation"></param>
-        void AbortOperation(Operation operation);
+        Task AbortOperation(Operation operation);
 
         /// <summary>
         /// Sets the sort order of the given operation
         /// </summary>
-        void SetOperationSortOrder(int sortOrder, Operation operation);
+        Task SetOperationSortOrder(int sortOrder, Operation operation);
 
         /// <summary>
         /// Returns a report context of the given operation
@@ -72,7 +72,7 @@ namespace Moryx.Orders
         /// <summary>
         /// Processes a report for the given operation
         /// </summary>
-        void ReportOperation(Operation operation, OperationReport report);
+        Task ReportOperation(Operation operation, OperationReport report);
 
         /// <summary>
         /// Returns a report context of the given operation to interrupt the operation
@@ -82,12 +82,12 @@ namespace Moryx.Orders
         /// <summary>
         /// Processes a interrupt for the given operation
         /// </summary>
-        void InterruptOperation(Operation operation, User user);
+        Task InterruptOperation(Operation operation, User user);
 
         /// <summary>
         /// Updates the operation source
         /// </summary>
-        void UpdateSource(IOperationSource source, Operation operation);
+        Task UpdateSource(IOperationSource source, Operation operation);
 
         /// <summary>
         /// Will be raised if the progress of an operation was changed
@@ -138,7 +138,7 @@ namespace Moryx.Orders
         /// Assigns or updates operation related information like the corresponding product or recipes on the existing operation instance.
         /// </summary>
         /// <param name="operation">The <see cref="Operation"/> assign.</param>
-        void Reload(Operation operation);
+        Task Reload(Operation operation);
 
         /// <summary>
         /// Returns an <see cref="AdviceContext"/> of the given <paramref name="operation"/> to advice the operation

@@ -16,13 +16,14 @@ namespace Moryx.Orders.Management
 
         public override bool CanAdvice => true;
 
-        public override void Resume()
+        public override Task Resume()
         {
+            return Task.CompletedTask;
         }
 
-        public override void Advice(OperationAdvice advice)
+        public override Task Advice(OperationAdvice advice)
         {
-            Context.HandleAdvice(advice);
+            return Context.HandleAdvice(advice);
         }
     }
 }

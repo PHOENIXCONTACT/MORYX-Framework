@@ -23,24 +23,17 @@ namespace Moryx.Orders.Management.Advice
 
         #endregion
 
-        #region Fields and Properties
-
         /// <inheritdoc />
-        public bool RequiresUserAction => AdviceExecutor.RequiresUserAction;
-
-        #endregion
-
-        /// <inheritdoc />
-        public void Start()
+        public async Task StartAsync()
         {
-            AdviceExecutor.Initialize(ModuleConfig.Advice.AdviceExecutor);
-            AdviceExecutor.Start();
+            await AdviceExecutor.InitializeAsync(ModuleConfig.Advice.AdviceExecutor);
+            await AdviceExecutor.StartAsync();
         }
 
         /// <inheritdoc />
-        public void Stop()
+        public Task StopAsync()
         {
-            AdviceExecutor.Stop();
+            return AdviceExecutor.StopAsync();
         }
 
         /// <inheritdoc />

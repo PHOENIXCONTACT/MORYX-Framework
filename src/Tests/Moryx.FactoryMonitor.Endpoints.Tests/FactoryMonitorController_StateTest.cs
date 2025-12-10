@@ -109,7 +109,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 
             _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<IProcess>()))
                 .Returns<IProcess>(p => _activityTargets.Where(pair => pair.Key.Process == p).SelectMany(pair => pair.Value).ToList());
-            _processFacadeMock.SetupGet(pm => pm.RunningProcesses).Returns([process]);
+            _processFacadeMock.Setup(pm => pm.GetRunningProcesses()).Returns([process]);
             //Act
 
             Task.Run(async () =>

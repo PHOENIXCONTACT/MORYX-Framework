@@ -34,20 +34,23 @@ namespace Moryx.Orders.Assignment
         protected TConfig Config { get; private set; }
 
         /// <inheritdoc cref="IProductAssignment"/>
-        public void Initialize(ProductAssignmentConfig config)
+        public virtual Task InitializeAsync(ProductAssignmentConfig config)
         {
             Config = (TConfig)config;
             Logger = Logger.GetChild(Config.PluginName, GetType());
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc cref="IProductAssignment"/>
-        public void Start()
+        public virtual Task StartAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public void Stop()
+        public virtual Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>

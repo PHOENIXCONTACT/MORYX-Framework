@@ -15,7 +15,7 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Starts the assignment of the operation
         /// </summary>
-        void Assign(IOperationData operationData);
+        Task Assign(IOperationData operationData);
 
         /// <summary>
         /// Returns the begin context of the operation
@@ -25,7 +25,7 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Begins the given operation
         /// </summary>
-        void Adjust(IOperationData operationData, User user, int amount);
+        Task Adjust(IOperationData operationData, User user, int amount);
 
         /// <summary>
         /// Returns the current possible reporting context
@@ -35,7 +35,7 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Reports the given operation
         /// </summary>
-        void Report(IOperationData operationData, OperationReport report);
+        Task Report(IOperationData operationData, OperationReport report);
 
         /// <summary>
         /// Returns the current possible reporting context
@@ -45,12 +45,12 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Interrupts the given operation
         /// </summary>
-        void Interrupt(IOperationData operationData, User user);
+        Task Interrupt(IOperationData operationData, User user);
 
         /// <summary>
         /// Aborts the given operation
         /// </summary>
-        void Abort(IOperationData operationData);
+        Task Abort(IOperationData operationData);
 
         /// <summary>
         /// Event which will be raised when the <see cref="BeginContext"/> of an operation is requested

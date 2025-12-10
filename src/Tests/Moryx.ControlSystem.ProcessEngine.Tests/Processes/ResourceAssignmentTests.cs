@@ -46,13 +46,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             _selectorMock = new Mock<ICellSelector>();
             _selectorMock
                 .Setup(s => s.SelectCells(It.IsAny<IActivity>(), It.IsAny<IReadOnlyList<ICell>>()))
-                .Returns<IActivity, IReadOnlyList<ICell>>((ad, cells) => cells);
+                .ReturnsAsync((IActivity _, IReadOnlyList<ICell> cells) => cells);
             var config = new CellSelectorConfig();
             var factoryMock = new Mock<ICellSelectorFactory>();
             factoryMock.Setup(f => f.Create(It.IsAny<CellSelectorConfig>()))
-                .Returns<CellSelectorConfig>(c => _selectorMock.Object);
+                .Returns<CellSelectorConfig>(_ => _selectorMock.Object);
 
-            var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, s, e) => { });
+            var logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (_, _, _) => { });
             _resourceAssignment = new ResourceAssignment()
             {
                 ActivityPool = DataPool,
@@ -61,7 +61,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 NotificationAdapter = _notificationAdapterMock.Object,
                 ModuleConfig = new ModuleConfig
                 {
-                    ResourceSelectors = new List<CellSelectorConfig> { config }
+                    ResourceSelectors = [config]
                 },
                 SelectorFactory = factoryMock.Object
             };
@@ -73,7 +73,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         public void DestoryResourceAssignment()
         {
             _resourceAssignment.Stop();
-            ((IDisposable)_resourceAssignment).Dispose();
+            _resourceAssignment.Dispose();
             _resourceManagementMock = null;
             DestroyList();
         }
@@ -133,7 +133,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             Notification someNotification = null;
             _notificationAdapterMock
                 .Setup(na => na.Publish(It.IsAny<INotificationSender>(), It.IsAny<Notification>()))
-                .Callback<INotificationSender, Notification>((sender, notification) => someNotification = notification);
+                .Callback<INotificationSender, Notification>((_, notification) => someNotification = notification);
             _notificationAdapterMock
                 .Setup(na => na.GetPublished(It.IsAny<INotificationSender>(), activityData))
                 .Returns([someNotification]);
@@ -218,7 +218,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             Notification someNotification = null;
             _notificationAdapterMock
                 .Setup(na => na.Publish(It.IsAny<INotificationSender>(), It.IsAny<Notification>()))
-                .Callback<INotificationSender, Notification>((sender, notification) => someNotification = notification);
+                .Callback<INotificationSender, Notification>((_, notification) => someNotification = notification);
             _notificationAdapterMock
                 .Setup(na => na.GetPublished(It.IsAny<INotificationSender>(), activityData))
                 .Returns([someNotification]);
@@ -280,7 +280,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Arrange
             _selectorMock
                 .Setup(s => s.SelectCells(It.IsAny<IActivity>(), It.IsAny<IReadOnlyList<ICell>>()))
-                .Returns<IActivity, IReadOnlyList<ICell>>((ad, cells) => cells.Reverse().ToList());
+                .ReturnsAsync((IActivity _, IReadOnlyList<ICell> cells) => cells.Reverse().ToList());
             _resourceManagementMock.Setup(s => s.GetResources<ICell>(It.IsAny<ICapabilities>()))
                 .Returns(new List<ICell> { _productionCellMock.Object, _mountCellMock.Object });
 
@@ -302,7 +302,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Arrange
             _selectorMock
                 .Setup(s => s.SelectCells(It.IsAny<IActivity>(), It.IsAny<IReadOnlyList<ICell>>()))
-                .Returns<IActivity, IReadOnlyList<ICell>>((ad, cells) => cells.Take(1).ToList());
+                .ReturnsAsync((IActivity _, IReadOnlyList<ICell> cells) => cells.Take(1).ToList());
             _resourceManagementMock.Setup(s => s.GetResources<ICell>(It.IsAny<ICapabilities>()))
                 .Returns(new List<ICell> { _productionCellMock.Object, _mountCellMock.Object });
 
@@ -323,7 +323,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Arrange
             _selectorMock
                 .Setup(s => s.SelectCells(It.IsAny<IActivity>(), It.IsAny<IReadOnlyList<ICell>>()))
-                .Returns<IActivity, IReadOnlyList<ICell>>((ad, cells) => cells.Concat([_mountCellMock.Object]).ToList());
+                .ReturnsAsync((IActivity _, IReadOnlyList<ICell> cells) => cells.Concat([_mountCellMock.Object]).ToList());
             _resourceManagementMock.Setup(s => s.GetResources<ICell>(It.IsAny<ICapabilities>()))
                 .Returns(new List<ICell> { _productionCellMock.Object });
 
