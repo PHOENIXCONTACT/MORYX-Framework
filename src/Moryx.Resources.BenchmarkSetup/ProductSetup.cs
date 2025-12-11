@@ -37,8 +37,10 @@ namespace Moryx.Benchmarking.Setups
         /// <summary>
         /// Execute setup in this context
         /// </summary>
-        /// <param name="openContext">Context for db access</param><param name="setupData">Any data for the setup, excel or sql etc</param>
-        public Task ExecuteAsync(IUnitOfWork openContext, string setupData)
+        /// <param name="openContext">Context for db access</param>
+        /// <param name="setupData">Any data for the setup, excel or sql etc</param>
+        /// <param name="cancellationToken"></param>
+        public Task ExecuteAsync(IUnitOfWork openContext, string setupData, CancellationToken cancellationToken)
         {
             var prodRepo = openContext.GetRepository<IProductTypeRepository>();
             var propRepo = openContext.GetRepository<IProductPropertiesRepository>();

@@ -35,6 +35,7 @@ namespace Moryx.Model
         /// </summary>
         /// <param name="openContext">Context for db access</param>
         /// <param name="setupData">Any data for the setup, excel or sql etc</param>
-        Task ExecuteAsync(IUnitOfWork openContext, string setupData);
+        /// <param name="cancellationToken"></param>
+        Task ExecuteAsync(IUnitOfWork openContext, string setupData, CancellationToken cancellationToken);
     }
 }
