@@ -159,16 +159,16 @@ namespace Moryx.Products.Management
         #region Recipes
 
         /// <inheritdoc />
-        public async Task<IProductRecipe> LoadRecipeAsync(long recipeId)
+        public async Task<IProductRecipe> LoadRecipeAsync(long recipeId, CancellationToken cancellationToken = default)
         {
             using var uow = Factory.Create();
             var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
             var recipeEntity = recipeRepo.GetByKey(recipeId);
-            return recipeEntity != null ? await LoadRecipe(uow, recipeEntity) : null;
+            return recipeEntity != null ? await LoadRecipe(uow, recipeEntity, cancellationToken) : null;
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyList<IProductRecipe>> LoadRecipesAsync(long productId, RecipeClassification classifications)
+        public async Task<IReadOnlyList<IProductRecipe>> LoadRecipesAsync(long productId, RecipeClassification classifications, CancellationToken cancellationToken = default)
         {
             using var uow = Factory.Create();
             var repo = uow.GetRepository<IProductTypeRepository>();
@@ -185,7 +185,7 @@ namespace Moryx.Products.Management
 
                 select recipeEntity).ToArray();
 
-            var loadRecipeTasks = recipeEntities.Select(async (entity) => await LoadRecipe(uow, entity)).ToArray();
+            var loadRecipeTasks = recipeEntities.Select(async (entity) => await LoadRecipe(uow, entity, cancellationToken)).ToArray();
             var results = await Task.WhenAll(loadRecipeTasks);
             return results;
         }
@@ -193,20 +193,20 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Load recipe object from entity.
         /// </summary>
-        private async Task<IProductRecipe> LoadRecipe(IUnitOfWork uow, ProductRecipeEntity recipeEntity)
+        private async Task<IProductRecipe> LoadRecipe(IUnitOfWork uow, ProductRecipeEntity recipeEntity, CancellationToken cancellationToken)
         {
             var productRecipe = _recipeInformation[recipeEntity.TypeName].Constructor();
 
             RecipeStorage.CopyToRecipe(recipeEntity, productRecipe);
-            productRecipe.Product = await LoadType(uow, productRecipe.Product.Id);
+            productRecipe.Product = await LoadType(uow, productRecipe.Product.Id, cancellationToken);
 
-            await _recipeInformation[recipeEntity.TypeName].Strategy.LoadRecipeAsync(recipeEntity, productRecipe);
+            await _recipeInformation[recipeEntity.TypeName].Strategy.LoadRecipeAsync(recipeEntity, productRecipe, cancellationToken);
 
             return productRecipe;
         }
 
         /// <inheritdoc/>
-        public async Task<long> SaveRecipeAsync(IProductRecipe recipe)
+        public async Task<long> SaveRecipeAsync(IProductRecipe recipe, CancellationToken cancellationToken = default)
         {
             using var uow = Factory.Create();
             var entity = await SaveRecipe(uow, recipe);
@@ -217,7 +217,7 @@ namespace Moryx.Products.Management
         }
 
         /// <inheritdoc />
-        public async Task SaveRecipesAsync(IReadOnlyList<IProductRecipe> recipes)
+        public async Task SaveRecipesAsync(IReadOnlyList<IProductRecipe> recipes, CancellationToken cancellationToken = default)
         {
             using var uow = Factory.Create();
 
@@ -243,7 +243,7 @@ namespace Moryx.Products.Management
         }
 
         /// <inheritdoc />
-        public Task RemoveRecipeAsync(long recipeId)
+        public Task RemoveRecipeAsync(long recipeId, CancellationToken cancellationToken = default)
         {
             using var uow = Factory.Create();
 
@@ -262,7 +262,7 @@ namespace Moryx.Products.Management
 
         #region Load product
 
-        public Task<IReadOnlyList<ProductType>> LoadTypesAsync(ProductQuery query)
+        public Task<IReadOnlyList<ProductType>> LoadTypesAsync(ProductQuery query, CancellationToken cancellationToken = default)
         {
             using var uow = Factory.Create();
             var baseSet = uow.GetRepository<IProductTypeRepository>().Linq;
@@ -405,7 +405,7 @@ namespace Moryx.Products.Management
             return Expression.Lambda(expressionBody, productExpression);
         }
 
-        public async Task<IReadOnlyList<TType>> LoadTypesAsync<TType>(Expression<Func<TType, bool>> selector)
+        public async Task<IReadOnlyList<TType>> LoadTypesAsync<TType>(Expression<Func<TType, bool>> selector, CancellationToken cancellationToken = default)
         {
             using var uow = Factory.Create();
             var repo = uow.GetRepository<IProductTypeRepository>();
@@ -429,7 +429,7 @@ namespace Moryx.Products.Management
 
             var loadedProducts = new Dictionary<long, ProductType>();
 
-            var transformed = entities.Select(entity => Transform(uow, entity, false, loadedProducts));
+            var transformed = entities.Select(entity => Transform(uow, entity, false, cancellationToken, loadedProducts));
             var instances = (await Task.WhenAll(transformed)).OfType<TType>().ToArray();
 
 
@@ -441,20 +441,20 @@ namespace Moryx.Products.Management
         }
 
         /// <inheritdoc />
-        public Task<ProductType> LoadTypeAsync(long id)
+        public Task<ProductType> LoadTypeAsync(long id, CancellationToken cancellationToken = default)
         {
             using var uow = Factory.Create();
-            return LoadType(uow, id);
+            return LoadType(uow, id, cancellationToken);
         }
 
-        private Task<ProductType> LoadType(IUnitOfWork uow, long id)
+        private Task<ProductType> LoadType(IUnitOfWork uow, long id, CancellationToken cancellationToken)
         {
             var product = uow.GetRepository<IProductTypeRepository>().GetByKey(id);
-            return product != null ? Transform(uow, product, true) : null;
+            return product != null ? Transform(uow, product, true, cancellationToken) : null;
         }
 
         /// <inheritdoc />
-        public async Task<ProductType> LoadTypeAsync(IIdentity identity)
+        public async Task<ProductType> LoadTypeAsync(IIdentity identity, CancellationToken cancellationToken = default)
         {
             if (identity is not ProductIdentity productIdentity)
             {
@@ -480,10 +480,10 @@ namespace Moryx.Products.Management
 
             var product = uow.GetRepository<IProductTypeRepository>().Linq.Active()
                 .FirstOrDefault(p => p.Identifier == identity.Identifier && p.Revision == revision);
-            return product != null ? await Transform(uow, product, true) : null;
+            return product != null ? await Transform(uow, product, true, cancellationToken) : null;
         }
 
-        private async Task<ProductType> Transform(IUnitOfWork uow, ProductTypeEntity typeEntity, bool full, IDictionary<long, ProductType> loadedProducts = null)
+        private async Task<ProductType> Transform(IUnitOfWork uow, ProductTypeEntity typeEntity, bool full, CancellationToken cancellationToken, IDictionary<long, ProductType> loadedProducts = null)
         {
             // Build cache if this wasn't done before
             loadedProducts ??= new Dictionary<long, ProductType>();
@@ -501,11 +501,11 @@ namespace Moryx.Products.Management
             product.Name = typeEntity.Name;
             product.State = (ProductState)typeEntity.CurrentVersion.State;
             product.Identity = new ProductIdentity(typeEntity.Identifier, typeEntity.Revision);
-            await strategy.LoadTypeAsync(typeEntity.CurrentVersion, product);
+            await strategy.LoadTypeAsync(typeEntity.CurrentVersion, product, cancellationToken);
 
             // Don't load parts and parent for partial view
             if (full)
-                await LoadParts(uow, typeEntity, product, loadedProducts);
+                await LoadParts(uow, typeEntity, product, loadedProducts, cancellationToken);
 
             // Assign instance to dictionary of loaded products
             loadedProducts[typeEntity.Id] = product;
@@ -516,7 +516,8 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Load all parts of the product
         /// </summary>
-        private async Task LoadParts(IUnitOfWork uow, ProductTypeEntity typeEntity, ProductType productType, IDictionary<long, ProductType> loadedProducts)
+        private async Task LoadParts(IUnitOfWork uow, ProductTypeEntity typeEntity, ProductType productType, IDictionary<long, ProductType> loadedProducts,
+            CancellationToken cancellationToken)
         {
             // Let's get nasty!
             // Load children
@@ -534,7 +535,7 @@ namespace Moryx.Products.Management
                         var link = partLink.Constructor();
                         link.Id = linkEntity.Id;
                         await part.LoadPartLinkAsync(linkEntity, link);
-                        link.Product = await Transform(uow, linkEntity.Child, true, loadedProducts);
+                        link.Product = await Transform(uow, linkEntity.Child, true, cancellationToken, loadedProducts);
                         value = link;
                     }
                 }
@@ -547,7 +548,7 @@ namespace Moryx.Products.Management
                         var link = partLink.Constructor();
                         link.Id = linkEntity.Id;
                         await part.LoadPartLinkAsync(linkEntity, link);
-                        link.Product = await Transform(uow, linkEntity.Child, true, loadedProducts);
+                        link.Product = await Transform(uow, linkEntity.Child, true, cancellationToken, loadedProducts);
                         links.Add(link);
                     }
                     value = links;
@@ -563,11 +564,11 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Save a product to the database
         /// </summary>
-        public async Task<long> SaveTypeAsync(ProductType modifiedInstance)
+        public async Task<long> SaveTypeAsync(ProductType modifiedInstance, CancellationToken cancellationToken = default)
         {
             using var uow = Factory.Create();
             var productSaverContext = new ProductPartsSaverContext(uow);
-            var entity = await SaveType(productSaverContext, modifiedInstance);
+            var entity = await SaveType(productSaverContext, modifiedInstance, cancellationToken);
 
             uow.SaveChanges();
             modifiedInstance.Id = entity.Id;
@@ -579,7 +580,7 @@ namespace Moryx.Products.Management
             return entity.Id;
         }
 
-        private async Task<ProductTypeEntity> SaveType(ProductPartsSaverContext saverContext, ProductType modifiedProductType)
+        private async Task<ProductTypeEntity> SaveType(ProductPartsSaverContext saverContext, ProductType modifiedProductType, CancellationToken cancellationToken)
         {
             var identity = modifiedProductType.Identity;
             if (identity is not ProductIdentity productIdentity)
@@ -618,7 +619,7 @@ namespace Moryx.Products.Management
                 typeEntity.SetCurrentVersion(version);
             }
             saverContext.PersistentObjectCache.Add(modifiedProductType, typeEntity);
-            await strategy.SaveTypeAsync(modifiedProductType, typeEntity.CurrentVersion);
+            await strategy.SaveTypeAsync(modifiedProductType, typeEntity.CurrentVersion, cancellationToken);
             saverContext.EntityCache.Add(new ProductIdentity(typeEntity.Identifier, typeEntity.Revision), typeEntity);
 
             // And nasty again!
@@ -638,7 +639,7 @@ namespace Moryx.Products.Management
                         saverContext.UnitOfWork.LinkEntityToBusinessObject(link, linkEntity);
                         linkEntity.Parent = typeEntity;
                         await linkStrategy.SavePartLinkAsync(link, linkEntity);
-                        linkEntity.Child = await GetPartEntity(saverContext, link);
+                        linkEntity.Child = await GetPartEntity(saverContext, link, cancellationToken);
                         saverContext.PersistentObjectCache.Add(link, linkEntity);
 
                     }
@@ -650,7 +651,7 @@ namespace Moryx.Products.Management
                     else if (linkEntity != null && link != null) // link was modified
                     {
                         await linkStrategy.SavePartLinkAsync(link, linkEntity);
-                        linkEntity.Child = await GetPartEntity(saverContext, link);
+                        linkEntity.Child = await GetPartEntity(saverContext, link, cancellationToken);
                         //                 linkEntity.Id = linkEntity.Child.Id;
                     }
                     // else: link was null and is still null
@@ -683,7 +684,7 @@ namespace Moryx.Products.Management
                             linkEntity = typeEntity.Parts.First(p => p.Id == link.Id);
                         }
                         await linkStrategy.SavePartLinkAsync(link, linkEntity);
-                        linkEntity.Child = await GetPartEntity(saverContext, link);
+                        linkEntity.Child = await GetPartEntity(saverContext, link, cancellationToken);
                         saverContext.PersistentObjectCache.Add(link, linkEntity);
                     }
                 }
@@ -692,7 +693,7 @@ namespace Moryx.Products.Management
             return typeEntity;
         }
 
-        private async Task<ProductTypeEntity> GetPartEntity(ProductPartsSaverContext saverContext, ProductPartLink link)
+        private async Task<ProductTypeEntity> GetPartEntity(ProductPartsSaverContext saverContext, ProductPartLink link, CancellationToken cancellationToken)
         {
             if (saverContext.EntityCache.ContainsKey((ProductIdentity)link.Product.Identity))
             {
@@ -702,7 +703,7 @@ namespace Moryx.Products.Management
             }
 
             if (link.Product.Id == 0)
-                return await SaveType(saverContext, link.Product);
+                return await SaveType(saverContext, link.Product, cancellationToken);
 
             return saverContext.UnitOfWork.GetEntity<ProductTypeEntity>(link.Product);
         }
@@ -727,34 +728,35 @@ namespace Moryx.Products.Management
 
         #region Get instances
 
-        public async Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(params long[] id)
+        public async Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(long[] ids, CancellationToken cancellationToken = default)
         {
             using var uow = Factory.Create();
             var repo = uow.GetRepository<IProductInstanceRepository>();
-            var entities = repo.GetByKeys(id);
+            var entities = repo.GetByKeys(ids);
 
-            var results = await TransformInstances(uow, entities);
+            var results = await TransformInstances(uow, entities, cancellationToken);
 
             return results;
         }
 
-        public Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(ProductType productType)
+        public Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(ProductType productType, CancellationToken cancellationToken = default)
         {
-            return LoadInstancesAsync<ProductInstance>(pi => pi.Type == productType);
+            return LoadInstancesAsync<ProductInstance>(pi => pi.Type == productType, cancellationToken);
         }
 
-        public async Task<IReadOnlyList<TInstance>> LoadInstancesAsync<TInstance>(Expression<Func<TInstance, bool>> selector)
+        public async Task<IReadOnlyList<TInstance>> LoadInstancesAsync<TInstance>(Expression<Func<TInstance, bool>> selector, CancellationToken cancellationToken = default)
         {
             if (IsTypeQuery(selector, out var member, out var value))
             {
-                return (await LoadInstancesByType(selector, member, value)).ToArray();
+                return (await LoadInstancesByType(selector, member, value, cancellationToken)).ToArray();
             }
 
-            var result = await LoadWithStrategy(selector);
+            var result = await LoadWithStrategy(selector, cancellationToken);
             return result;
         }
 
-        private async Task<IReadOnlyList<TInstance>> LoadInstancesByType<TInstance>(Expression<Func<TInstance, bool>> selector, MemberInfo typeProperty, object value)
+        private async Task<IReadOnlyList<TInstance>> LoadInstancesByType<TInstance>(Expression<Func<TInstance, bool>> selector, MemberInfo typeProperty,
+            object value, CancellationToken cancellationToken)
         {
             using var uow = Factory.Create();
             Expression<Func<ProductInstanceEntity, bool>> instanceSelector;
@@ -786,10 +788,10 @@ namespace Moryx.Products.Management
             var repo = uow.GetRepository<IProductInstanceRepository>();
             var entities = repo.Linq.Where(instanceSelector).ToList();
 
-            return (await TransformInstances(uow, entities)).OfType<TInstance>().ToList();
+            return (await TransformInstances(uow, entities, cancellationToken)).OfType<TInstance>().ToList();
         }
 
-        private async Task<IReadOnlyList<TInstance>> LoadWithStrategy<TInstance>(Expression<Func<TInstance, bool>> selector)
+        private async Task<IReadOnlyList<TInstance>> LoadWithStrategy<TInstance>(Expression<Func<TInstance, bool>> selector, CancellationToken cancellationToken)
         {
             using var uow = Factory.Create();
             var repo = uow.GetRepository<IProductInstanceRepository>();
@@ -810,7 +812,7 @@ namespace Moryx.Products.Management
             if (query == null || (entities = query.ToList()).Count == 0)
                 return Array.Empty<TInstance>();
 
-            var instances = (await TransformInstances(uow, entities)).OfType<TInstance>().ToArray();
+            var instances = (await TransformInstances(uow, entities, cancellationToken)).OfType<TInstance>().ToArray();
             // Final check against compiled expression
             var compiledSelector = selector.Compile();
             // Only return matches against compiled expression
@@ -820,7 +822,8 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Transform entities to business objects
         /// </summary>
-        private async Task<ProductInstance[]> TransformInstances(IUnitOfWork uow, ICollection<ProductInstanceEntity> entities)
+        private async Task<ProductInstance[]> TransformInstances(IUnitOfWork uow, ICollection<ProductInstanceEntity> entities,
+            CancellationToken cancellationToken)
         {
             var results = new ProductInstance[entities.Count];
 
@@ -829,7 +832,7 @@ namespace Moryx.Products.Management
             var requiredProducts = entities.Select(e => e.ProductId).Distinct();
             foreach (var productId in requiredProducts)
             {
-                productMap[productId] = await LoadType(uow, productId);
+                productMap[productId] = await LoadType(uow, productId, cancellationToken);
             }
 
             // Create product instance using the type and fill properties
@@ -839,7 +842,7 @@ namespace Moryx.Products.Management
                 var product = productMap[entity.ProductId];
                 var instance = product.CreateInstance();
 
-                await TransformInstance(uow, entity, instance);
+                await TransformInstance(uow, entity, instance, cancellationToken);
 
                 results[index++] = instance;
             }
@@ -850,7 +853,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Recursive function to transform entities into objects
         /// </summary>
-        private async Task TransformInstance(IUnitOfWork uow, ProductInstanceEntity entity, ProductInstance productInstance)
+        private async Task TransformInstance(IUnitOfWork uow, ProductInstanceEntity entity, ProductInstance productInstance, CancellationToken cancellationToken)
         {
             productInstance.Id = entity.Id;
             productInstance.State = (ProductInstanceState)entity.State;
@@ -864,7 +867,7 @@ namespace Moryx.Products.Management
                 return;
 
             // Transform entity to instance
-            await strategy.LoadInstanceAsync(entity, productInstance);
+            await strategy.LoadInstanceAsync(entity, productInstance, cancellationToken);
 
             // Group all parts of the instance by the property they belong to
             var partLinks = ReflectionTool.GetReferences<ProductPartLink>(productType)
@@ -891,14 +894,14 @@ namespace Moryx.Products.Management
                             continue;
                         }
                         var part = partGroup.Value.First(p => p.PartLink.Id == partEntity.PartLinkEntityId);
-                        await TransformInstance(uow, partEntity, part);
+                        await TransformInstance(uow, partEntity, part, cancellationToken);
                     }
                 }
                 else if (linkStrategy.PartCreation == PartSourceStrategy.FromEntities)
                 {
                     // Load part using the entity and assign PartLink afterwards
                     var partCollection = partEntityGroups[partGroup.Key.Name].ToList();
-                    var partArticles = await TransformInstances(uow, partCollection);
+                    var partArticles = await TransformInstances(uow, partCollection, cancellationToken);
                     for (var index = 0; index < partArticles.Length; index++)
                     {
                         partArticles[index].PartLink = partLinks.Find(pl => pl?.Id == partCollection[index].PartLinkEntityId.Value);
@@ -929,13 +932,13 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Updates the database from the product instance
         /// </summary>
-        public async Task SaveInstancesAsync(ProductInstance[] productInstances)
+        public async Task SaveInstancesAsync(ProductInstance[] productInstances, CancellationToken cancellationToken = default)
         {
             using var uow = Factory.Create();
 
             // Write all to entity objects
             foreach (var instance in productInstances)
-                await SaveInstance(uow, instance);
+                await SaveInstance(uow, instance, cancellationToken);
 
             // Save transaction
             uow.SaveChanges();
@@ -944,10 +947,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Base implementation to save an instance hierarchy.
         /// </summary>
-        /// <param name="uow">An open unit of work</param>
-        /// <param name="productInstance">The instance to save</param>
-        /// <returns>The instance entity.</returns>
-        private async Task<ProductInstanceEntity> SaveInstance(IUnitOfWork uow, ProductInstance productInstance)
+        private async Task<ProductInstanceEntity> SaveInstance(IUnitOfWork uow, ProductInstance productInstance, CancellationToken cancellationToken)
         {
             // Check if this type is persisted
             var strategy = _instanceStrategies[productInstance.ProductInstanceTypeName()];
@@ -958,7 +958,7 @@ namespace Moryx.Products.Management
             var archived = uow.GetEntity<ProductInstanceEntity>(productInstance);
             archived.State = (int)productInstance.State;
             archived.ProductId = productInstance.Type.Id;
-            await strategy.SaveInstanceAsync(productInstance, archived);
+            await strategy.SaveInstanceAsync(productInstance, archived, cancellationToken);
 
             // Save its parts if they have a dedicated archive
             var partsContainer = ReflectionTool.GetReferences<ProductInstance>(productInstance);
@@ -966,7 +966,7 @@ namespace Moryx.Products.Management
             {
                 foreach (var part in partGroup)
                 {
-                    var partEntity = await SaveInstance(uow, part);
+                    var partEntity = await SaveInstance(uow, part, cancellationToken);
                     if (partEntity == null) // Parts are null when they are skipped
                         continue;
 
@@ -999,7 +999,7 @@ namespace Moryx.Products.Management
             return typeInfo.GetTypeWrapper();
         }
 
-        public Task CheckDatabase()
+        public Task CheckDatabase(CancellationToken cancellationToken = default)
         {
             using var uow = Factory.Create();
             uow.DbContext.Database.OpenConnection();

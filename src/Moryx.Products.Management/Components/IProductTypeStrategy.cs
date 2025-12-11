@@ -26,12 +26,12 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Write product properties to database generic columns
         /// </summary>
-        Task SaveTypeAsync(ProductType source, IGenericColumns target);
+        Task SaveTypeAsync(ProductType source, IGenericColumns target, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Load product from database information
         /// </summary>
-        Task LoadTypeAsync(IGenericColumns source, ProductType target);
+        Task LoadTypeAsync(IGenericColumns source, ProductType target, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Transform a product class selector to a database compatible expression

@@ -39,7 +39,7 @@ namespace Moryx.Products.Management
             productRecipe.Product = new ProductReference(recipeEntity.ProductId);
 
             if (productRecipe is IWorkplanRecipe workplanRecipe)
-                workplanRecipe.Workplan = LoadWorkplanAsync(recipeEntity.Workplan);
+                workplanRecipe.Workplan = LoadWorkplan(recipeEntity.Workplan);
         }
 
         /// <summary>
@@ -66,17 +66,17 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Loads a workplan from database
         /// </summary>
-        public static Task<Workplan> LoadWorkplanAsync(IUnitOfWork uow, long id)
+        public static Task<Workplan> LoadWorkplanAsync(IUnitOfWork uow, long id, CancellationToken cancellationToken = default)
         {
             var workplanEntity = uow.GetRepository<IWorkplanRepository>().GetByKey(id);
-            var result = workplanEntity == null ? null : LoadWorkplanAsync(workplanEntity);
+            var result = workplanEntity == null ? null : LoadWorkplan(workplanEntity);
             return Task.FromResult(result);
         }
 
         /// <summary>
         /// Convert a workplan entity to a <see cref="Workplan"/> instance
         /// </summary>
-        private static Workplan LoadWorkplanAsync(WorkplanEntity workplanEntity)
+        private static Workplan LoadWorkplan(WorkplanEntity workplanEntity)
         {
             // Load connectors and steps
             var connectors = LoadConnectors(workplanEntity);
@@ -147,7 +147,7 @@ namespace Moryx.Products.Management
 
                 // Restore Subworkplan if necessary
                 if (step is ISubworkplanStep subworkplanStep)
-                    subworkplanStep.Workplan = LoadWorkplanAsync(stepEntity.SubWorkplan);
+                    subworkplanStep.Workplan = LoadWorkplan(stepEntity.SubWorkplan);
 
                 // Link inputs and outputs
                 step.Inputs = RestoreReferences(stepEntity, ConnectorRole.Input, connectors);

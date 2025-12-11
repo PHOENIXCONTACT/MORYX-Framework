@@ -30,9 +30,9 @@ namespace Moryx.Products.Management
         }
 
         /// <inheritdoc />
-        public abstract Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target);
+        public abstract Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target, CancellationToken cancellationToken = default);
 
         /// <inheritdoc />
-        public abstract Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target);
+        public abstract Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target, CancellationToken cancellationToken = default);
     }
 }

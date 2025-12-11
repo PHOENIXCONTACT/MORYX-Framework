@@ -917,7 +917,7 @@ namespace Moryx.Products.IntegrationTests
             }
 
             // Act
-            var watchCopy = (WatchInstance)(await _storage.LoadInstancesAsync(instance.Id))[0];
+            var watchCopy = (WatchInstance)(await _storage.LoadInstancesAsync([instance.Id]))[0];
             var identity = instance.Identity;
             var byIdentity = await _storage.LoadInstancesAsync<IIdentifiableObject>(w => identity.Equals(w.Identity));
             var byDateTime = await _storage.LoadInstancesAsync<WatchInstance>(i => i.DeliveryDate < DateTime.Now);

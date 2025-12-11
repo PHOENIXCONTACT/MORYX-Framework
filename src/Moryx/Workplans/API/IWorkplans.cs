@@ -12,30 +12,36 @@ namespace Moryx.Workplans
         /// Saves workplan and return database id
         /// </summary>
         /// <param name="workplan">Workplan instance</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>Database id of workplan</returns>
-        Task<long> SaveWorkplanAsync(Workplan workplan);
+        Task<long> SaveWorkplanAsync(Workplan workplan, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Loads the workplan
         /// </summary>
         /// <param name="workplanId">Workplan id</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>Instance of workplan</returns>
-        Task<Workplan> LoadWorkplanAsync(long workplanId);
+        Task<Workplan> LoadWorkplanAsync(long workplanId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Load all workplans managed by the module
         /// </summary>
-        Task<IReadOnlyList<Workplan>> LoadAllWorkplansAsync();
+        /// <param name="cancellationToken"></param>
+        Task<IReadOnlyList<Workplan>> LoadAllWorkplansAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Deletes workplan if in new state
         /// </summary>
         /// <param name="workplanId">Workplan id</param>
-        Task<bool> DeleteWorkplanAsync(long workplanId);
+        /// <param name="cancellationToken"></param>
+        Task<bool> DeleteWorkplanAsync(long workplanId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Load previous versions of the workplan
         /// </summary>
-        Task<IReadOnlyList<Workplan>> LoadVersionsAsync(long workplanId);
+        /// <param name="workplanId">Workplan id</param>
+        /// <param name="cancellationToken"></param>
+        Task<IReadOnlyList<Workplan>> LoadVersionsAsync(long workplanId, CancellationToken cancellationToken = default);
     }
 }

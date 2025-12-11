@@ -22,7 +22,7 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override Task SaveTypeAsync(ProductType source, IGenericColumns target)
+        public override Task SaveTypeAsync(ProductType source, IGenericColumns target, CancellationToken cancellationToken = default)
         {
             var watch = (WatchType)source;
             target.Float1 = watch.Weight;
@@ -32,7 +32,7 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override Task LoadTypeAsync(IGenericColumns source, ProductType target)
+        public override Task LoadTypeAsync(IGenericColumns source, ProductType target, CancellationToken cancellationToken = default)
         {
             var watch = (WatchType)target;
             watch.Weight = source.Float1;
@@ -57,7 +57,7 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override Task SaveInstanceAsync(ProductInstance source, IGenericColumns target)
+        public override Task SaveInstanceAsync(ProductInstance source, IGenericColumns target, CancellationToken cancellationToken = default)
         {
             var watch = (WatchInstance)source;
             target.Integer1 = watch.TimeSet ? 1 : 0;
@@ -67,7 +67,7 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override Task LoadInstanceAsync(IGenericColumns source, ProductInstance target)
+        public override Task LoadInstanceAsync(IGenericColumns source, ProductInstance target, CancellationToken cancellationToken = default)
         {
             var watch = (WatchInstance)target;
             watch.TimeSet = source.Integer1 == 1;

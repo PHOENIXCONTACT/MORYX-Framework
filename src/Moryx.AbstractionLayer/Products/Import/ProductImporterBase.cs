@@ -87,7 +87,7 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Import products using given parameters
         /// </summary>
-        Task<ProductImporterResult> IProductImporter.ImportAsync(ProductImportContext context, object parameters)
+        Task<ProductImporterResult> IProductImporter.ImportAsync(ProductImportContext context, object parameters, CancellationToken cancellationToken = default)
         {
             var result = ImportAsync(context, (TParameters)parameters);
             Parameters = GenerateParameters();

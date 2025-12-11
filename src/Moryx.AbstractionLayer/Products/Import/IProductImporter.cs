@@ -33,6 +33,6 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Import products using given parameters
         /// </summary>
-        Task<ProductImporterResult> ImportAsync(ProductImportContext context, object parameters);
+        Task<ProductImporterResult> ImportAsync(ProductImportContext context, object parameters, CancellationToken cancellationToken = default);
     }
 }

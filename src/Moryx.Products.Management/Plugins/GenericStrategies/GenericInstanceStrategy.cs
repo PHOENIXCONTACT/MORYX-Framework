@@ -37,13 +37,13 @@ namespace Moryx.Products.Management
             return EntityMapper.TransformSelector(selector);
         }
 
-        public override Task SaveInstanceAsync(ProductInstance source, IGenericColumns target)
+        public override Task SaveInstanceAsync(ProductInstance source, IGenericColumns target, CancellationToken cancellationToken = default)
         {
             EntityMapper.WriteValue(source, target);
             return Task.CompletedTask;
         }
 
-        public override Task LoadInstanceAsync(IGenericColumns source, ProductInstance target)
+        public override Task LoadInstanceAsync(IGenericColumns source, ProductInstance target, CancellationToken cancellationToken = default)
         {
             EntityMapper.ReadValue(source, target);
             return Task.CompletedTask;
