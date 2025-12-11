@@ -60,7 +60,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             CreateList();
 
             _productManagementMock = new Mock<IProductManagement>();
-            _productManagementMock.Setup(p => p.GetInstance(It.IsAny<long>())).Returns(() => new DummyProductInstance());
+            _productManagementMock.Setup(p => p.GetInstanceAsync(It.IsAny<long>())).ReturnsAsync(() => new DummyProductInstance());
 
             _storage = new ProcessStorage { UnitOfWorkFactory = _unitOfWorkFactory };
             _storage.Start();
@@ -99,7 +99,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Arrange
             var process = PrepareProcessData(processType);
             process.State = triggerState;
-            _productManagementMock.Setup(p => p.GetInstance(It.IsAny<long>())).Returns<long>(id => new DummyProductInstance { Id = id });
+            _productManagementMock.Setup(p => p.GetInstanceAsync(It.IsAny<long>())).ReturnsAsync((long id) => new DummyProductInstance { Id = id });
 
             // Act
             DataPool.AddProcess(process);
@@ -119,7 +119,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 var instance = ((ProductionProcess)process.Process).ProductInstance;
                 Assert.That(instance, Is.Not.Null);
                 if (triggerState == ProcessState.Ready)
-                    _productManagementMock.Verify(p => p.SaveInstance(It.IsAny<DummyProductInstance>()), Times.Once, "There should be a SaveInstance call");
+                    _productManagementMock.Verify(p => p.SaveInstanceAsync(It.IsAny<DummyProductInstance>()), Times.Once, "There should be a SaveInstance call");
 
             }
         }
@@ -146,7 +146,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             }
             Assert.DoesNotThrow(delegate
             {
-                _productManagementMock.Verify(p => p.SaveInstance(It.IsAny<DummyProductInstance>()), Times.Once, "There should be a SaveInstance call");
+                _productManagementMock.Verify(p => p.SaveInstanceAsync(It.IsAny<DummyProductInstance>()), Times.Once, "There should be a SaveInstance call");
             });
         }
 
@@ -162,7 +162,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             DataPool.UpdateProcess(process, processState);
 
             // Assert
-            Assert.DoesNotThrow(() => _productManagementMock.Verify(p => p.SaveInstance(It.IsAny<DummyProductInstance>()), Times.Never, "There should be no SaveArticle call"));
+            Assert.DoesNotThrow(() => _productManagementMock.Verify(p => p.SaveInstanceAsync(It.IsAny<DummyProductInstance>()), Times.Never, "There should be no SaveArticle call"));
         }
 
         [TestCase(4, ProcessTypes.Process, ActivityState.ResultReceived, Description = "Test if the process is not a production process.")]
@@ -199,12 +199,12 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             {
                 if (processType < ProcessTypes.ProductionProcessWithInstanceUnsaved || activityState < ActivityState.ResultReceived)
                 {
-                    _productManagementMock.Verify(p => p.SaveInstance(It.IsAny<ProductInstance>()), Times.Never,
+                    _productManagementMock.Verify(p => p.SaveInstanceAsync(It.IsAny<ProductInstance>()), Times.Never,
                         "There should be no SaveArticle call if the Activity is not completed");
                 }
                 if (processType == ProcessTypes.ProductionProcessWithInstanceUnsaved && activityState == ActivityState.ResultReceived)
                 {
-                    _productManagementMock.Verify(p => p.SaveInstance(It.Is<ProductInstance>(a => a.Id == articleId)), Times.Once,
+                    _productManagementMock.Verify(p => p.SaveInstanceAsync(It.Is<ProductInstance>(a => a.Id == articleId)), Times.Once,
                         "There should be a SaveArticle call with the article id: " + articleId);
                 }
             });
@@ -228,7 +228,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             Assert.That(process.Rework, Is.True);
             Assert.DoesNotThrow(delegate
             {
-                _productManagementMock.Verify(p => p.SaveInstance(It.IsAny<ProductInstance>()), Times.Once, "There should be one SaveArticle call");
+                _productManagementMock.Verify(p => p.SaveInstanceAsync(It.IsAny<ProductInstance>()), Times.Once, "There should be one SaveArticle call");
             });
         }
 
@@ -237,8 +237,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         public void LoadArticleByIdentity(bool rework)
         {
             // Arrange
-            _productManagementMock.Setup(p => p.GetInstance(It.IsAny<IIdentity>()))
-                .Returns<IIdentity>(id => new IdentityDummyInstance { Identity = id, State = rework ? ProductInstanceState.Failure : ProductInstanceState.InProduction });
+            _productManagementMock.Setup(p => p.GetInstanceAsync(It.IsAny<IIdentity>()))
+                .ReturnsAsync((IIdentity id) => new IdentityDummyInstance { Identity = id, State = rework ? ProductInstanceState.Failure : ProductInstanceState.InProduction });
             var process = PrepareProcessData(ProcessTypes.ProductionProcess);
             DataPool.AddProcess(process);
 
@@ -257,7 +257,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             Assert.That(article.Identity, Is.EqualTo(identity));
             Assert.DoesNotThrow(delegate
             {
-                _productManagementMock.Verify(p => p.GetInstance(It.IsAny<IIdentity>()), Times.Once, "There should be one GetArticle call");
+                _productManagementMock.Verify(p => p.GetInstanceAsync(It.IsAny<IIdentity>()), Times.Once, "There should be one GetArticle call");
             });
         }
 

@@ -51,14 +51,14 @@ namespace Moryx.Orders.Assignment
         }
 
         /// <inheritdoc />
-        public virtual Task<IReadOnlyList<IProductRecipe>> PossibleRecipesAsync(ProductIdentity identity)
+        public virtual async Task<IReadOnlyList<IProductRecipe>> PossibleRecipesAsync(ProductIdentity identity)
         {
-            var product = ProductManagement.LoadType(identity);
+            var product = await ProductManagement.LoadTypeAsync(identity);
             if (product == null)
-                return Task.FromResult<IReadOnlyList<IProductRecipe>>(Array.Empty<IProductRecipe>());
+                return Array.Empty<IProductRecipe>();
 
-            var recipes = ProductManagement.GetRecipes(product, RecipeClassification.Default | RecipeClassification.Alternative);
-            return Task.FromResult(recipes);
+            var recipes = await ProductManagement.GetRecipesAsync(product, RecipeClassification.Default | RecipeClassification.Alternative);
+            return recipes;
         }
 
         /// <summary>
@@ -75,12 +75,12 @@ namespace Moryx.Orders.Assignment
         /// Default implementation to assign the current recipe to the operation
         /// Will use the given product
         /// </summary>
-        protected Task<IProductRecipe> LoadDefaultRecipeAsync(ProductType sourceProduct)
+        protected async Task<IProductRecipe> LoadDefaultRecipeAsync(ProductType sourceProduct)
         {
-            var defaultRecipe = ProductManagement.GetRecipes(sourceProduct, RecipeClassification.Default)
+            var defaultRecipe = (await ProductManagement.GetRecipesAsync(sourceProduct, RecipeClassification.Default))
                 .SingleOrDefault();
 
-            return Task.FromResult(defaultRecipe);
+            return defaultRecipe;
         }
     }
 }

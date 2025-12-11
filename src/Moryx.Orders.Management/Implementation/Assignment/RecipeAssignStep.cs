@@ -77,7 +77,7 @@ namespace Moryx.Orders.Management.Assignment
             }
 
             // Save recipes
-            processed.ForEach(r => ProductManagement.SaveRecipe(r));
+            processed.ForEach(r => ProductManagement.SaveRecipeAsync(r));
 
             // Add processed to operation
             operationData.AssignRecipes(processed);
@@ -94,7 +94,7 @@ namespace Moryx.Orders.Management.Assignment
             if (operation.Recipes.All(r => r is RecipeReference))
             {
                 // Existing recipe -> restore
-                var restored = operation.Recipes.Select(reference => (IProductRecipe)ProductManagement.LoadRecipe(reference.Id))
+                var restored = operation.Recipes.Select(reference => (IProductRecipe)ProductManagement.LoadRecipeAsync(reference.Id))
                     .ToArray();
 
                 // Clear references

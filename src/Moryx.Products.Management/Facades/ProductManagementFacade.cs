@@ -8,6 +8,7 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Logging;
 using Moryx.Runtime.Modules;
+using Moryx.Tools;
 using Moryx.Workplans;
 
 namespace Moryx.Products.Management
@@ -73,28 +74,28 @@ namespace Moryx.Products.Management
             }
         }
 
-        public IReadOnlyList<ProductType> LoadTypes(ProductQuery query)
+        public Task<IReadOnlyList<ProductType>> LoadTypesAsync(ProductQuery query)
         {
             ValidateHealthState();
             return ProductManager.LoadTypes(query);
         }
 
-        public IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector)
+        public Task<IReadOnlyList<TType>> LoadTypesAsync<TType>(Expression<Func<TType, bool>> selector)
         {
             ValidateHealthState();
             return ProductManager.LoadTypes(selector);
         }
 
-        public ProductType LoadType(long id)
+        public async Task<ProductType> LoadTypeAsync(long id)
         {
             ValidateHealthState();
-            var type = ProductManager.LoadType(id);
+            var type = await ProductManager.LoadType(id);
             if (type == null)
                 throw new ProductNotFoundException(id);
             return type;
         }
 
-        public ProductType LoadType(IIdentity identity)
+        public Task<ProductType> LoadTypeAsync(IIdentity identity)
         {
             ValidateHealthState();
             return ProductManager.LoadType(identity);
@@ -106,13 +107,13 @@ namespace Moryx.Products.Management
         }
         public event EventHandler<ProductType> TypeChanged;
 
-        public ProductType Duplicate(ProductType template, IIdentity newIdentity)
+        public Task<ProductType> DuplicateAsync(ProductType template, IIdentity newIdentity)
         {
             ValidateHealthState();
             return ProductManager.Duplicate(template, newIdentity);
         }
 
-        public long SaveType(ProductType modifiedInstance)
+        public Task<long> SaveTypeAsync(ProductType modifiedInstance)
         {
             ValidateHealthState();
             return ProductManager.SaveType(modifiedInstance);
@@ -124,23 +125,28 @@ namespace Moryx.Products.Management
             return ProductManager.Import(importerName, parameters);
         }
 
-        public IRecipe LoadRecipe(long id)
+        public async Task<IRecipe> LoadRecipeAsync(long id)
         {
             ValidateHealthState();
-            var recipe = RecipeManagement.Get(id);
+            var recipe = await RecipeManagement.Get(id);
 
             ValidateRecipe(recipe);
 
-            return ReplaceOrigin(recipe);
+            ReplaceOrigin(recipe);
+
+            return recipe;
         }
 
-        public IReadOnlyList<IProductRecipe> GetRecipes(ProductType productType, RecipeClassification classification)
+        public async Task<IReadOnlyList<IProductRecipe>> GetRecipesAsync(ProductType productType, RecipeClassification classification)
         {
             ValidateHealthState();
-            var recipes = RecipeManagement.GetRecipes(productType, classification);
+            var recipes =await RecipeManagement.GetRecipes(productType, classification);
             if (recipes == null)
                 return null;
-            return recipes.Select(ReplaceOrigin).ToArray();
+
+            recipes.ForEach(ReplaceOrigin);
+
+            return recipes;
         }
 
         private void OnRecipeChanged(object sender, IRecipe recipe)
@@ -150,79 +156,79 @@ namespace Moryx.Products.Management
         }
         public event EventHandler<IRecipe> RecipeChanged;
 
-        public long SaveRecipe(IProductRecipe recipe)
+        public async Task<long> SaveRecipeAsync(IProductRecipe recipe)
         {
             ValidateHealthState();
-            var recipeId = RecipeManagement.Save(recipe);
+            var recipeId = await RecipeManagement.Save(recipe);
             ReplaceOrigin(recipe);
 
             return recipeId;
         }
 
-        public void SaveRecipes(IReadOnlyList<IProductRecipe> recipes)
+        public Task SaveRecipesAsync(IReadOnlyList<IProductRecipe> recipes)
         {
             ValidateHealthState();
-            RecipeManagement.Save(recipes);
+            return RecipeManagement.Save(recipes);
         }
 
-        public Workplan LoadWorkplan(long workplanId)
+        public async Task<Workplan> LoadWorkplanAsync(long workplanId)
         {
             ValidateHealthState();
-            var wp = Workplans.LoadWorkplan(workplanId);
+            var wp = await Workplans.LoadWorkplanAsync(workplanId);
             if (wp == null)
                 throw new KeyNotFoundException($"No workplan with id '{workplanId}' found!");
             return wp;
         }
 
-        public IReadOnlyList<Workplan> LoadAllWorkplans()
+        public Task<IReadOnlyList<Workplan>> LoadAllWorkplansAsync()
         {
             ValidateHealthState();
-            return Workplans.LoadAllWorkplans();
+            return Workplans.LoadAllWorkplansAsync();
         }
 
-        public bool DeleteWorkplan(long workplanId)
+        public Task<bool> DeleteWorkplanAsync(long workplanId)
         {
             ValidateHealthState();
-            return Workplans.DeleteWorkplan(workplanId);
+            return Workplans.DeleteWorkplanAsync(workplanId);
         }
 
-        public IReadOnlyList<Workplan> LoadVersions(long workplanId)
+        public Task<IReadOnlyList<Workplan>> LoadVersionsAsync(long workplanId)
         {
             ValidateHealthState();
-            return Workplans.LoadVersions(workplanId);
+            return Workplans.LoadVersionsAsync(workplanId);
         }
 
-        public long SaveWorkplan(Workplan workplan)
+        public Task<long> SaveWorkplanAsync(Workplan workplan)
         {
             ValidateHealthState();
-            return Workplans.SaveWorkplan(workplan);
+            return Workplans.SaveWorkplanAsync(workplan);
         }
 
-        public ProductInstance CreateInstance(ProductType productType)
+        public Task<ProductInstance> CreateInstanceAsync(ProductType productType)
         {
             ValidateHealthState();
             return ProductManager.CreateInstance(productType, false);
         }
 
-        public ProductInstance CreateInstance(ProductType productType, bool save)
+        public Task<ProductInstance> CreateInstanceAsync(ProductType productType, bool save)
         {
             ValidateHealthState();
             return ProductManager.CreateInstance(productType, save);
         }
 
-        public ProductInstance GetInstance(long id)
+        public async Task<ProductInstance> GetInstanceAsync(long id)
         {
             ValidateHealthState();
-            return ProductManager.GetInstances(id).SingleOrDefault();
+            return (await ProductManager.GetInstances(id)).SingleOrDefault();
         }
 
-        public ProductInstance GetInstance(IIdentity identity)
+        public async Task<ProductInstance> GetInstanceAsync(IIdentity identity)
         {
             ValidateHealthState();
 
             ArgumentNullException.ThrowIfNull(identity);
 
-            var instances = ProductManager
+            var instances = await ProductManager
                 .GetInstances<IIdentifiableObject>(i => identity.Equals(i.Identity));
             if (instances.Count > 1)
             {
@@ -234,29 +240,29 @@ namespace Moryx.Products.Management
             return (ProductInstance)instances.SingleOrDefault();
         }
 
-        public TInstance GetInstance<TInstance>(Expression<Func<TInstance, bool>> selector)
+        public async Task<TInstance> GetInstanceAsync<TInstance>(Expression<Func<TInstance, bool>> selector)
             where TInstance : ProductInstance
         {
             ValidateHealthState();
 
             ArgumentNullException.ThrowIfNull(selector);
 
-            return ProductManager.GetInstances(selector).SingleOrDefault();
+            return (await ProductManager.GetInstances(selector)).SingleOrDefault();
         }
 
-        public void SaveInstance(ProductInstance productInstance)
+        public Task SaveInstanceAsync(ProductInstance productInstance)
         {
             ValidateHealthState();
-            ProductManager.SaveInstances(productInstance);
+            return ProductManager.SaveInstances(productInstance);
         }
 
-        public void SaveInstances(ProductInstance[] productInstance)
+        public Task SaveInstancesAsync(ProductInstance[] productInstance)
         {
             ValidateHealthState();
-            ProductManager.SaveInstances(productInstance);
+            return ProductManager.SaveInstances(productInstance);
         }
 
-        public IReadOnlyList<ProductInstance> GetInstances(long[] ids)
+        public Task<IReadOnlyList<ProductInstance>> GetInstancesAsync(long[] ids)
         {
             ValidateHealthState();
 
@@ -265,7 +271,7 @@ namespace Moryx.Products.Management
             return ProductManager.GetInstances(ids);
         }
 
-        public IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
+        public Task<IReadOnlyList<TInstance>> GetInstancesAsync<TInstance>(Expression<Func<TInstance, bool>> selector)
             where TInstance : ProductInstance
         {
             ValidateHealthState();
@@ -281,22 +287,22 @@ namespace Moryx.Products.Management
                 throw new ArgumentException("Recipe could not be found");
         }
 
-        private TRecipe ReplaceOrigin<TRecipe>(TRecipe recipe) where TRecipe : IRecipe
+        private void ReplaceOrigin<TRecipe>(TRecipe recipe)
+            where TRecipe : IRecipe
         {
             recipe.Origin = this;
-            return recipe;
         }
 
-        public bool DeleteProduct(long id)
+        public Task<bool> DeleteProductAsync(long id)
         {
             ValidateHealthState();
             return ProductManager.DeleteType(id);
         }
 
-        public void RemoveRecipe(long recipeId)
+        public Task RemoveRecipeAsync(long recipeId)
         {
             ValidateHealthState();
-            RecipeManagement.Remove(recipeId);
+            return RecipeManagement.Remove(recipeId);
         }
 
         public IProductRecipe CreateRecipe(string recipeType)

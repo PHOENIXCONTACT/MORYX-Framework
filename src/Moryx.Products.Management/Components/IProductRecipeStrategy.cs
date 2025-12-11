@@ -10,7 +10,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// Interface for plugins that can convert recipes
     /// </summary>
-    public interface IProductRecipeStrategy : IConfiguredPlugin<ProductRecipeConfiguration>
+    public interface IProductRecipeStrategy : IConfiguredInitializable<ProductRecipeConfiguration>
     {
         /// <summary>
         /// Target type of this strategy
@@ -20,11 +20,11 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Write recipe properties to database generic columns
         /// </summary>
-        void SaveRecipe(IProductRecipe source, IGenericColumns target);
+        Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target);
 
         /// <summary>
         /// Load recipe from database information
         /// </summary>
-        void LoadRecipe(IGenericColumns source, IProductRecipe target);
+        Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target);
     }
 }

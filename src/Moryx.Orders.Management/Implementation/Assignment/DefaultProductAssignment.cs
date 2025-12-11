@@ -14,9 +14,7 @@ namespace Moryx.Orders.Management.Assignment
         public override Task<ProductType> SelectProductAsync(Operation operation, IOperationLogger operationLogger)
         {
             var productIdentity = (ProductIdentity)operation.Product.Identity;
-            var product = ProductManagement.LoadType(productIdentity);
-
-            return Task.FromResult(product);
+            return ProductManagement.LoadTypeAsync(productIdentity);
         }
     }
 }

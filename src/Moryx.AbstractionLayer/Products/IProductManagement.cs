@@ -16,19 +16,19 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Get product types based on a query
         /// </summary>
-        IReadOnlyList<ProductType> LoadTypes(ProductQuery query);
+        Task<IReadOnlyList<ProductType>> LoadTypesAsync(ProductQuery query);
 
         /// <summary>
         /// Load product type by id
         /// </summary>
         /// <exception cref="ProductNotFoundException">Thrown when the product with the given id doesn't exist.</exception>
-        ProductType LoadType(long id);
+        Task<ProductType> LoadTypeAsync(long id);
 
         /// <summary>
         /// Load product type by identity
         /// </summary>
         /// <exception cref="ProductNotFoundException">Thrown when the product with the given id doesn't exist.</exception>
-        ProductType LoadType(IIdentity identity);
+        Task<ProductType> LoadTypeAsync(IIdentity identity);
 
         /// <summary>
         /// Event raised when a product type changed
@@ -39,12 +39,12 @@ namespace Moryx.AbstractionLayer.Products
         /// Duplicate a product under a new identity
         /// </summary>
         /// <exception cref="IdentityConflictException">Thrown when the new identity causes conflicts</exception>
-        ProductType Duplicate(ProductType template, IIdentity newIdentity);
+        Task<ProductType> DuplicateAsync(ProductType template, IIdentity newIdentity);
 
         /// <summary>
         /// Save a product type
         /// </summary>
-        long SaveType(ProductType modifiedInstance);
+        Task<long> SaveTypeAsync(ProductType modifiedInstance);
 
         /// <summary>
         /// All importers and their parameters currently configured in the machine
@@ -59,24 +59,24 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Retrieves the current recipe for this product
         /// </summary>
-        IReadOnlyList<IProductRecipe> GetRecipes(ProductType productType, RecipeClassification classification);
+        Task<IReadOnlyList<IProductRecipe>> GetRecipesAsync(ProductType productType, RecipeClassification classification);
 
         /// <summary>
         /// Saves given recipe to the storage
         /// </summary>
-        long SaveRecipe(IProductRecipe recipe);
+        Task<long> SaveRecipeAsync(IProductRecipe recipe);
 
         /// <summary>
         /// Saves given recipe to the storage
         /// </summary>
-        void SaveRecipes(IReadOnlyList<IProductRecipe> recipes);
+        Task SaveRecipesAsync(IReadOnlyList<IProductRecipe> recipes);
 
         /// <summary>
         /// Create an product instance of given product
         /// </summary>
         /// <param name="productType">Product to instantiate</param>
         /// <returns>Unsaved instance</returns>
-        ProductInstance CreateInstance(ProductType productType);
+        Task<ProductInstance> CreateInstanceAsync(ProductType productType);
 
         /// <summary>
         /// Create an product instance of given product
@@ -84,55 +84,55 @@ namespace Moryx.AbstractionLayer.Products
         /// <param name="productType">Product type to instantiate</param>
         /// <param name="save">Flag if new instance should already be saved</param>
         /// <returns>New instance</returns>
-        ProductInstance CreateInstance(ProductType productType, bool save);
+        Task<ProductInstance> CreateInstanceAsync(ProductType productType, bool save);
 
         /// <summary>
         /// Get an product instance with the given id.
         /// </summary>
         /// <param name="id">The id for the product instance which should be searched for.</param>
         /// <returns>The product instance with the id when it exists.</returns>
-        ProductInstance GetInstance(long id);
+        Task<ProductInstance> GetInstanceAsync(long id);
 
         /// <summary>
         /// Get an instance with this identity
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="identity"/> is null</exception>
         /// <exception cref="InvalidOperationException">Thrown when there is more than one product with the given <paramref name="identity"/></exception>
-        ProductInstance GetInstance(IIdentity identity);
+        Task<ProductInstance> GetInstanceAsync(IIdentity identity);
 
         /// <summary>
         /// Get only instances that match a certain condition, similar to SingleOrDefault
         /// </summary>
-        TInstance GetInstance<TInstance>(Expression<Func<TInstance, bool>> selector)
+        Task<TInstance> GetInstanceAsync<TInstance>(Expression<Func<TInstance, bool>> selector)
             where TInstance : ProductInstance;
 
         /// <summary>
         /// Updates the database from the product instance
         /// </summary>
-        void SaveInstance(ProductInstance productInstance);
+        Task SaveInstanceAsync(ProductInstance productInstance);
 
         /// <summary>
         /// Updates the database from the product instance
         /// </summary>
-        void SaveInstances(ProductInstance[] productInstances);
+        Task SaveInstancesAsync(ProductInstance[] productInstances);
 
         /// <summary>
         /// Get instances with the given ids.
         /// </summary>
         /// <param name="ids">The IDs of instances that should be loaded</param>
         /// <returns>The instance with the id when it exists.</returns>
-        IReadOnlyList<ProductInstance> GetInstances(long[] ids);
+        Task<IReadOnlyList<ProductInstance>> GetInstancesAsync(long[] ids);
 
         /// <summary>
         /// Get all instances that match a certain
         /// </summary>
-        IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
+        Task<IReadOnlyList<TInstance>> GetInstancesAsync<TInstance>(Expression<Func<TInstance, bool>> selector)
             where TInstance : ProductInstance;
 
         /// <summary>
         /// Load types using filter expression
         /// </summary>
-        IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
+        Task<IReadOnlyList<TType>> LoadTypesAsync<TType>(Expression<Func<TType, bool>> selector);
 
         /// <summary>
         /// List of available product types
@@ -147,12 +147,12 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Delete a product by its id
         /// </summary>
-        bool DeleteProduct(long id);
+        Task<bool> DeleteProductAsync(long id);
 
         /// <summary>
         /// Remove Recipe by given id
         /// </summary>
-        void RemoveRecipe(long recipeId);
+        Task RemoveRecipeAsync(long recipeId);
 
         /// <summary>
         /// Create instance of a recipe

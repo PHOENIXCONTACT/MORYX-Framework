@@ -9,7 +9,7 @@ using Moryx.Products.Management.Model;
 namespace Moryx.Products.Management
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [ExpectedConfig(typeof(GenericLinkConfiguration))]
     [StrategyConfiguration(typeof(ProductPartLink), DerivedTypes = true)]
@@ -39,14 +39,18 @@ namespace Moryx.Products.Management
             EntityMapper.Initialize(linkType, Config);
         }
 
-        public override void LoadPartLink(IGenericColumns linkEntity, ProductPartLink target)
+        public override Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target)
         {
             EntityMapper.ReadValue(linkEntity, target);
+
+            return Task.CompletedTask;
         }
 
-        public override void SavePartLink(ProductPartLink source, IGenericColumns target)
+        public override Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target)
         {
             EntityMapper.WriteValue(source, target);
+
+            return Task.CompletedTask;
         }
     }
 }

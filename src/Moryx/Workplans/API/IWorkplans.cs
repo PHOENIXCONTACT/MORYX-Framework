@@ -13,29 +13,29 @@ namespace Moryx.Workplans
         /// </summary>
         /// <param name="workplan">Workplan instance</param>
         /// <returns>Database id of workplan</returns>
-        long SaveWorkplan(Workplan workplan);
+        Task<long> SaveWorkplanAsync(Workplan workplan);
 
         /// <summary>
         /// Loads the workplan
         /// </summary>
         /// <param name="workplanId">Workplan id</param>
         /// <returns>Instance of workplan</returns>
-        Workplan LoadWorkplan(long workplanId);
+        Task<Workplan> LoadWorkplanAsync(long workplanId);
 
         /// <summary>
         /// Load all workplans managed by the module
         /// </summary>
-        IReadOnlyList<Workplan> LoadAllWorkplans();
+        Task<IReadOnlyList<Workplan>> LoadAllWorkplansAsync();
 
         /// <summary>
         /// Deletes workplan if in new state
         /// </summary>
         /// <param name="workplanId">Workplan id</param>
-        bool DeleteWorkplan(long workplanId);
+        Task<bool> DeleteWorkplanAsync(long workplanId);
 
         /// <summary>
         /// Load previous versions of the workplan
         /// </summary>
-        IReadOnlyList<Workplan> LoadVersions(long workplanId);
+        Task<IReadOnlyList<Workplan>> LoadVersionsAsync(long workplanId);
     }
 }

@@ -26,10 +26,10 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
 
         [HttpGet]
         [Authorize(Policy = WorkplanPermissions.CanView)]
-        public WorkplanModel[] GetAllWorkplans()
+        public async Task<ActionResult<WorkplanModel[]>> GetAllWorkplans()
         {
             var workplans = new List<WorkplanModel>();
-            foreach (var w in _workplans.LoadAllWorkplans())
+            foreach (var w in await _workplans.LoadAllWorkplansAsync())
                 workplans.Add(ProductConverter.ConvertWorkplan(w));
             return workplans.ToArray();
         }
@@ -37,12 +37,12 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
-        public ActionResult<long> SaveWorkplan(WorkplanModel model)
+        public async Task<ActionResult<long>> SaveWorkplan(WorkplanModel model)
         {
             if (model == null)
                 return BadRequest($"Model was null");
             var workplan = ProductConverter.ConvertWorkplanBack(model);
-            return _workplans.SaveWorkplan(workplan);
+            return await _workplans.SaveWorkplanAsync(workplan);
         }
 
         [HttpGet]
@@ -51,11 +51,11 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}/versions")]
         [Authorize(Policy = WorkplanPermissions.CanView)]
-        public ActionResult<WorkplanModel[]> GetVersions(long id)
+        public async Task<ActionResult<WorkplanModel[]>> GetVersions(long id)
         {
             if (id == 0)
                 return BadRequest($"Workplan id was 0");
-            var versions = _workplans.LoadVersions(id);
+            var versions = await _workplans.LoadVersionsAsync(id);
             if (versions == null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.WorkplanController_WorkplanNotFound, id) });
             var model = new List<WorkplanModel>();
@@ -72,11 +72,11 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}")]
         [Authorize(Policy = WorkplanPermissions.CanView)]
-        public ActionResult<WorkplanModel> GetWorkplan(long id)
+        public async Task<ActionResult<WorkplanModel>> GetWorkplan(long id)
         {
             if (id == 0)
                 return BadRequest($"Workplan id was 0");
-            var workplan = _workplans.LoadWorkplan(id);
+            var workplan = await _workplans.LoadWorkplanAsync(id);
             if (workplan == null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.WorkplanController_WorkplanNotFound, id) });
             return ProductConverter.ConvertWorkplan(workplan);
@@ -87,11 +87,12 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}")]
         [Authorize(Policy = WorkplanPermissions.CanDelete)]
-        public ActionResult DeleteWorkplan(long id)
+        public async Task<ActionResult> DeleteWorkplan(long id)
         {
-            if (_workplans.LoadWorkplan(id) == null)
+            var workplan = await _workplans.LoadWorkplanAsync(id);
+            if (workplan == null)
                 return NotFound();
-            _workplans.DeleteWorkplan(id);
+            await _workplans.DeleteWorkplanAsync(id);
             return Ok();
         }
 
@@ -99,13 +100,17 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("{id}")]
         [Authorize(Policy = WorkplanPermissions.CanEdit)]
-        public ActionResult<long> UpdateWorkplan(WorkplanModel model)
+        public async Task<ActionResult<long>> UpdateWorkplan(WorkplanModel model)
         {
             if (model == null)
                 return BadRequest($"Workplan id was 0");
-            if (_workplans.LoadWorkplan(model.Id) == null)
+
+            var workplan = await _workplans.LoadWorkplanAsync(model.Id);
+
+            if (workplan== null)
                 return BadRequest($"Workplan with id {model.Id} does not exist");
-            return _workplans.SaveWorkplan(ProductConverter.ConvertWorkplanBack(model));
+
+            return await _workplans.SaveWorkplanAsync(ProductConverter.ConvertWorkplanBack(model));
         }
 
     }

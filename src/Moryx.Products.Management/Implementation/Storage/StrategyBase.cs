@@ -5,7 +5,7 @@ using Moryx.Modules;
 
 namespace Moryx.Products.Management
 {
-    public class StrategyBase<TConfig, TConfigBase> : IConfiguredPlugin<TConfigBase>
+    public class StrategyBase<TConfig, TConfigBase> : IConfiguredInitializable<TConfigBase>
         where TConfigBase : IProductStrategyConfiguration, IPluginConfig
         where TConfig : TConfigBase
     {
@@ -26,20 +26,6 @@ namespace Moryx.Products.Management
         public virtual void Initialize(TConfigBase config)
         {
             Config = (TConfig)config;
-        }
-
-        /// <summary>
-        /// Start the strategy
-        /// </summary>
-        public virtual void Start()
-        {
-        }
-
-        /// <summary>
-        /// Stop the strategy
-        /// </summary>
-        public virtual void Stop()
-        {
         }
     }
 }

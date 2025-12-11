@@ -37,42 +37,43 @@ namespace Moryx.Products.Management
 
         #endregion
 
-        public void Start()
+        public async Task StartAsync()
         {
-            Storage.CheckDatabase();
+            await Storage.CheckDatabase();
             _importers = (from importerConfig in Config.Importers
                           select ImportFactory.Create(importerConfig)).ToList();
         }
 
-        public void Stop()
+        public Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
-        public IReadOnlyList<ProductType> LoadTypes(ProductQuery query)
+        public Task<IReadOnlyList<ProductType>> LoadTypes(ProductQuery query)
         {
-            return Storage.LoadTypes(query);
+            return Storage.LoadTypesAsync(query);
         }
 
-        public IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector)
+        public Task<IReadOnlyList<TType>> LoadTypes<TType>(Expression<Func<TType, bool>> selector)
         {
-            return Storage.LoadTypes(selector);
+            return Storage.LoadTypesAsync(selector);
         }
 
-        public ProductType LoadType(long id)
+        public Task<ProductType> LoadType(long id)
         {
-            return Storage.LoadType(id);
+            return Storage.LoadTypeAsync(id);
         }
 
-        public ProductType LoadType(IIdentity identity)
+        public Task<ProductType> LoadType(IIdentity identity)
         {
-            return Storage.LoadType(identity);
+            return Storage.LoadTypeAsync(identity);
         }
 
-        public long SaveType(ProductType modifiedInstance)
+        public async Task<long> SaveType(ProductType modifiedInstance)
         {
-            var saved = Storage.SaveType(modifiedInstance);
+            var saved = await Storage.SaveTypeAsync(modifiedInstance);
             //reload the object for correct references
-            var loadedType = Storage.LoadType(saved);
+            var loadedType = await Storage.LoadTypeAsync(saved);
             RaiseProductChanged(loadedType);
 
             return saved;
@@ -86,7 +87,7 @@ namespace Moryx.Products.Management
             return wrapper.Constructor();
         }
 
-        public ProductType Duplicate(ProductType template, IIdentity newIdentity)
+        public async Task<ProductType> Duplicate(ProductType template, IIdentity newIdentity)
         {
             if (newIdentity is not ProductIdentity newProductIdentity)
             {
@@ -94,7 +95,7 @@ namespace Moryx.Products.Management
             }
 
             // Fetch existing products for identity validation
-            var existing = LoadTypes(new ProductQuery { Identifier = newIdentity.Identifier });
+            var existing = await LoadTypes(new ProductQuery { Identifier = newIdentity.Identifier });
             // Check if the same revision already exists
             if (existing.Any(e => ((ProductIdentity)e.Identity).Revision == newProductIdentity.Revision))
                 throw new IdentityConflictException();
@@ -103,13 +104,13 @@ namespace Moryx.Products.Management
                 throw new IdentityConflictException(true);
 
             // Reset database id, assign identity and save
-            var duplicate = Storage.LoadType(template.Id);
+            var duplicate = await Storage.LoadTypeAsync(template.Id);
             duplicate.Id = 0;
             duplicate.Identity = newIdentity;
-            duplicate.Id = Storage.SaveType(duplicate);
+            duplicate.Id = await Storage.SaveTypeAsync(duplicate);
 
             // Load all recipes and create clones
-            foreach (var recipe in Storage.LoadRecipes(template.Id, RecipeClassification.CloneFilter))
+            foreach (var recipe in await Storage.LoadRecipesAsync(template.Id, RecipeClassification.CloneFilter))
             {
                 // Clone
                 var clone = (IProductRecipe)recipe.Clone();
@@ -120,7 +121,7 @@ namespace Moryx.Products.Management
                 // Update product revision
                 clone.Product = duplicate;
 
-                Storage.SaveRecipe(clone);
+                await Storage.SaveRecipeAsync(clone);
             }
 
             RaiseProductChanged(duplicate);
@@ -144,7 +145,7 @@ namespace Moryx.Products.Management
                 return;
 
             foreach (var product in result.ImportedTypes)
-                SaveType(product);
+                SaveType(product).GetAwaiter().GetResult(); // TODO save async
         }
 
         public ImportState ImportParallel(string importerName, object parameters)
@@ -170,7 +171,7 @@ namespace Moryx.Products.Management
             return _runningImports[session];
         }
 
-        public bool DeleteType(long productId)
+        public Task<bool> DeleteType(long productId)
         {
             using (var uow = Factory.Create())
             {
@@ -184,41 +185,41 @@ namespace Moryx.Products.Management
                                    }).FirstOrDefault();
                 // No match, nothing removed!
                 if (queryResult == null)
-                    return false;
+                    return Task.FromResult(false);
 
                 // If products would be affected by the removal, we do not remove it
                 if (queryResult.parentCount >= 1)
-                    return false;
+                    return Task.FromResult(false);
 
                 // No products affected, so we can remove the product
                 productRepo.Remove(queryResult.entity);
                 uow.SaveChanges();
 
-                return true;
+                return Task.FromResult(true);
             }
         }
 
-        public ProductInstance CreateInstance(ProductType productType, bool save)
+        public async Task<ProductInstance> CreateInstance(ProductType productType, bool save)
         {
             var instance = productType.CreateInstance();
             if (save)
-                SaveInstances(instance);
+                await SaveInstances(instance);
             return instance;
         }
 
-        public void SaveInstances(params ProductInstance[] productInstances)
+        public Task SaveInstances(params ProductInstance[] productInstances)
         {
-            Storage.SaveInstances(productInstances);
+            return Storage.SaveInstancesAsync(productInstances);
         }
 
-        public IReadOnlyList<ProductInstance> GetInstances(long[] ids)
+        public Task<IReadOnlyList<ProductInstance>> GetInstances(long[] ids)
         {
-            return Storage.LoadInstances(ids);
+            return Storage.LoadInstancesAsync(ids);
         }
 
-        public IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
+        public Task<IReadOnlyList<TInstance>> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
         {
-            return Storage.LoadInstances(selector);
+            return Storage.LoadInstancesAsync(selector);
         }
 
         private void RaiseProductChanged(ProductType productType)

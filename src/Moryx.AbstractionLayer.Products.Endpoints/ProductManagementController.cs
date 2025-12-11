@@ -68,7 +68,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var recipeTypes = _productManagement.RecipeTypes;
             var typeModels = new List<RecipeDefinitionModel>();
             foreach (var recipeType in recipeTypes)
-                typeModels.Add(_productConverter.ConvertRecipeType(recipeType));
+                typeModels.Add(ProductConverter.ConvertRecipeType(recipeType));
             return typeModels.ToArray();
         }
 
@@ -89,7 +89,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var importedTypes = (await _productManagement.ImportAsync(importerName, parameters)).ImportedTypes;
             var modelList = new List<ProductModel>();
             foreach (var t in importedTypes)
-                modelList.Add(_productConverter.ConvertProduct(t, false));
+                modelList.Add(await _productConverter.ConvertProduct(t, false));
             return modelList.ToArray();
         }
 
@@ -110,7 +110,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("types")]
         [Authorize(Policy = ProductPermissions.CanEditType)]
-        public ActionResult<long> SaveType(ProductModel newTypeModel)
+        public async Task<ActionResult<long>> SaveType(ProductModel newTypeModel)
         {
             if (newTypeModel == null)
                 return BadRequest($"Modified type was null");
@@ -119,8 +119,8 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             if (type == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.ProductManagementController_TypeNotFound });
             var productType = (ProductType)Activator.CreateInstance(type);
-            var newType = _productConverter.ConvertProductBack(newTypeModel, productType);
-            return _productManagement.SaveType(newType);
+            var newType = await _productConverter.ConvertProductBack(newTypeModel, productType);
+            return await _productManagement.SaveTypeAsync(newType);
         }
 
         [HttpGet]
@@ -129,15 +129,15 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("types")]
         [Authorize(Policy = ProductPermissions.CanViewTypes)]
-        public ActionResult<ProductModel[]> GetTypeByIdentity(string identity = null)
+        public async Task<ActionResult<ProductModel[]>> GetTypeByIdentity(string identity = null)
         {
             if (identity == null)
             {
-                var products = _productManagement.LoadTypes(new ProductQuery { Selector = Selector.Direct, ExcludeDerivedTypes = false })
+                var products = (await _productManagement.LoadTypesAsync(new ProductQuery { Selector = Selector.Direct, ExcludeDerivedTypes = false }))
                    .ToList();
                 var productModels = new List<ProductModel>();
                 foreach (var p in products)
-                    productModels.Add(_productConverter.ConvertProduct(p, false));
+                    productModels.Add(await _productConverter.ConvertProduct(p, false));
                 return productModels.ToArray();
             }
 
@@ -145,22 +145,25 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             if (identityArray.Length != 2)
                 return BadRequest($"Identity has wrong format. Must be identifier-revision");
             var productIdentity = new ProductIdentity(identityArray[0], Convert.ToInt16(identityArray[1]));
-            var productType = _productManagement.LoadType(productIdentity);
+            var productType = await _productManagement.LoadTypeAsync(productIdentity);
             if (productType == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.ProductManagementController_TypeNotFound });
-            return new ProductModel[] { _productConverter.ConvertProduct(productType, false) };
+            return new ProductModel[]
+            {
+                await _productConverter.ConvertProduct(productType, false)
+            };
         }
 
         [HttpPost]
         [Route("types/query")]
         [Authorize(Policy = ProductPermissions.CanViewTypes)]
-        public ActionResult<ProductModel[]> GetTypes(ProductQuery query)
+        public async Task<ActionResult<ProductModel[]>> GetTypes(ProductQuery query)
         {
-            var productTypes = _productManagement.LoadTypes(query);
+            var productTypes = await _productManagement.LoadTypesAsync(query);
             var productModels = new List<ProductModel>();
             foreach (var t in productTypes)
             {
-                productModels.Add(_productConverter.ConvertProduct(t, false));
+                productModels.Add(await _productConverter.ConvertProduct(t, false));
             }
             return productModels.ToArray();
         }
@@ -171,21 +174,21 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("types/{id}")]
         [Authorize(Policy = ProductPermissions.CanViewTypes)]
-        public ActionResult<ProductModel> GetTypeById(long id)
+        public async Task<ActionResult<ProductModel>> GetTypeById(long id)
         {
             if (id == 0)
                 return BadRequest($"Id was 0");
             ProductType productType = null;
             try
             {
-                productType = _productManagement.LoadType(id);
+                productType = await _productManagement.LoadTypeAsync(id);
             }
             catch (ProductNotFoundException)
             {
             }
             if (productType == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.ProductManagementController_TypeNotFound });
-            return _productConverter.ConvertProduct(productType, false);
+            return await _productConverter.ConvertProduct(productType, false);
         }
 
         [HttpDelete]
@@ -193,9 +196,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("types/{id}")]
         [Authorize(Policy = ProductPermissions.CanDeleteType)]
-        public ActionResult<bool> DeleteType(long id)
+        public async Task<ActionResult<bool>> DeleteType(long id)
         {
-            var result = _productManagement.DeleteProduct(id);
+            var result = await _productManagement.DeleteProductAsync(id);
             if (!result)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.ProductManagementController_TypeNotFound });
             return result;
@@ -206,15 +209,15 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("types/{id}")]
         [Authorize(Policy = ProductPermissions.CanEditType)]
-        public ActionResult<long> UpdateType(long id, ProductModel modifiedType)
+        public async Task<ActionResult<long>> UpdateType(long id, ProductModel modifiedType)
         {
             if (modifiedType == null)
                 return BadRequest($"Modified product type was null");
-            var type = _productManagement.LoadType(id);
+            var type = await _productManagement.LoadTypeAsync(id);
             if (type == null)
                 return BadRequest($"No product type with id {modifiedType.Id} was found");
-            type = _productConverter.ConvertProductBack(modifiedType, (ProductType)type);
-            return _productManagement.SaveType(type);
+            type = await _productConverter.ConvertProductBack(modifiedType, (ProductType)type);
+            return await _productManagement.SaveTypeAsync(type);
         }
 
         [HttpPost]
@@ -224,9 +227,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [Route("types/{id}")]
         [Authorize(Policy = ProductPermissions.CanDuplicateType)]
-        public ActionResult<ProductModel> Duplicate(long id, [FromBody] string newIdentity)
+        public async Task<ActionResult<ProductModel>> Duplicate(long id, [FromBody] string newIdentity)
         {
-            var template = _productManagement.LoadType(id);
+            var template = await _productManagement.LoadTypeAsync(id);
             if (template == null)
                 return BadRequest($"Producttype with id {id} not found");
             var identityArray = WebUtility.HtmlEncode(newIdentity).Split('-');
@@ -236,7 +239,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             ProductType newProductType;
             try
             {
-                newProductType = _productManagement.Duplicate(template, identity);
+                newProductType = await _productManagement.DuplicateAsync(template, identity);
             }
             catch (IdentityConflictException ex)
             {
@@ -244,7 +247,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             }
             if (newProductType == null)
                 return BadRequest($"Error while duplicating");
-            return _productConverter.ConvertProduct(newProductType, false);
+            return await _productConverter.ConvertProduct(newProductType, false);
         }
 
         [HttpGet]
@@ -252,12 +255,12 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("types/{id}/recipes/{classification}")]
         [Authorize(Policy = ProductPermissions.CanViewTypes)]
-        public ActionResult<RecipeModel[]> GetRecipes(long id, int classification)
+        public async Task<ActionResult<RecipeModel[]>> GetRecipes(long id, int classification)
         {
-            var productType = _productManagement.LoadType(id);
+            var productType = await _productManagement.LoadTypeAsync(id);
             if (productType == null)
                 return BadRequest($"ProductType is null");
-            var recipes = _productManagement.GetRecipes(productType, (RecipeClassification)classification);
+            var recipes = await _productManagement.GetRecipesAsync(productType, (RecipeClassification)classification);
             var recipeModels = new List<RecipeModel>();
             foreach (var recipe in recipes)
                 recipeModels.Add(_productConverter.ConvertRecipe(recipe));
@@ -272,11 +275,11 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("instances/{id}")]
         [Authorize(Policy = ProductPermissions.CanViewInstances)]
-        public ActionResult<ProductInstanceModel> GetInstance(long id)
+        public async Task<ActionResult<ProductInstanceModel>> GetInstance(long id)
         {
             if (id == 0)
                 return BadRequest($"Id was 0");
-            var productInstance = _productManagement.GetInstance(id);
+            var productInstance = await _productManagement.GetInstanceAsync(id);
             if (productInstance == null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductManagementController_InstanceNotFound, id) });
             return _productConverter.ConvertProductInstance(productInstance);
@@ -285,9 +288,9 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [HttpGet]
         [Route("instances")]
         [Authorize(Policy = ProductPermissions.CanViewInstances)]
-        public ActionResult<ProductInstanceModel[]> GetInstances([FromQuery] long[] ids)
+        public async Task<ActionResult<ProductInstanceModel[]>> GetInstances([FromQuery] long[] ids)
         {
-            var instances = _productManagement.GetInstances(ids);
+            var instances = await _productManagement.GetInstancesAsync(ids);
             var modelList = new List<ProductInstanceModel>();
             foreach (var instance in instances)
                 modelList.Add(_productConverter.ConvertProductInstance(instance));
@@ -299,13 +302,13 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("instances")]
         [Authorize(Policy = ProductPermissions.CanCreateInstances)]
-        public ActionResult<ProductInstanceModel> CreateInstance(string identifier, short revision, bool save)
+        public async Task<ActionResult<ProductInstanceModel>> CreateInstance(string identifier, short revision, bool save)
         {
             var identity = new ProductIdentity(WebUtility.HtmlEncode(identifier), revision);
-            var productType = _productManagement.LoadType(identity);
+            var productType = await _productManagement.LoadTypeAsync(identity);
             if (productType == null)
                 return BadRequest($"Product type not found");
-            var instance = _productManagement.CreateInstance(productType, save);
+            var instance = await _productManagement.CreateInstanceAsync(productType, save);
             return _productConverter.ConvertProductInstance(instance);
         }
 
@@ -314,7 +317,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("instances")]
         [Authorize(Policy = ProductPermissions.CanCreateInstances)]
-        public ActionResult SaveInstance(ProductInstanceModel instanceModel)
+        public async Task<ActionResult> SaveInstance(ProductInstanceModel instanceModel)
         {
             if (instanceModel == null)
                 return BadRequest($"Instance model was empty");
@@ -324,7 +327,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductManagementController_InstanceNotFound, "null") });
             var productType = (ProductType)Activator.CreateInstance(type);
             var productInstance = _productConverter.ConvertProductInstanceBack(instanceModel, productType);
-            _productManagement.SaveInstance(productInstance);
+            await _productManagement.SaveInstanceAsync(productInstance);
             return Ok();
         }
 
@@ -336,11 +339,11 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("recipes/{id}")]
         [Authorize(Policy = ProductPermissions.CanViewTypes)]
-        public ActionResult<RecipeModel> GetRecipe(long id)
+        public async Task<ActionResult<RecipeModel>> GetRecipe(long id)
         {
             if (id == 0)
                 return BadRequest($"Id was 0");
-            var recipe = _productManagement.LoadRecipe(id);
+            var recipe = await _productManagement.LoadRecipeAsync(id);
             if (recipe == null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductManagementController_RecipeNotFound, id) });
             return _productConverter.ConvertRecipe(recipe);
@@ -352,7 +355,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("recipes")]
         [Authorize(Policy = ProductPermissions.CanCreateAndEditRecipes)]
-        public ActionResult<long> SaveRecipe(RecipeModel recipe)
+        public async Task<ActionResult<long>> SaveRecipe(RecipeModel recipe)
         {
             if (recipe == null)
                 return BadRequest($"Recipe was null");
@@ -361,7 +364,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             if (type == null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductManagementController_RecipeNotFound, "null") });
             var productRecipe = (IProductRecipe)Activator.CreateInstance(type);
-            return _productManagement.SaveRecipe(_productConverter.ConvertRecipeBack(recipe, productRecipe, null));
+            return await _productManagement.SaveRecipeAsync(await _productConverter.ConvertRecipeBack(recipe, productRecipe, null));
         }
 
         [HttpPut]
@@ -370,18 +373,18 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("recipes/{id}")]
         [Authorize(Policy = ProductPermissions.CanCreateAndEditRecipes)]
-        public ActionResult<long> UpdateRecipe(long id, RecipeModel recipeModel)
+        public async Task<ActionResult<long>> UpdateRecipe(long id, RecipeModel recipeModel)
         {
             if (recipeModel == null)
                 return BadRequest($"Recipe was null");
-            var recipe = _productManagement.LoadRecipe(id);
+            var recipe = await _productManagement.LoadRecipeAsync(id);
             if (recipe == null)
                 return BadRequest($"Recipe with id {id} not found");
             var productRecipe = recipe as IProductRecipe;
             if (productRecipe == null)
                 return BadRequest($"Recipe with id {id} wasn't a IProductRecipe but a {nameof(recipe.GetType)}");
-            var productionRecipe = _productConverter.ConvertRecipeBack(recipeModel, productRecipe, null);
-            return _productManagement.SaveRecipe(productionRecipe);
+            var productionRecipe = await _productConverter.ConvertRecipeBack(recipeModel, productRecipe, null);
+            return await _productManagement.SaveRecipeAsync(productionRecipe);
         }
 
         [HttpGet("recipe/construct/{recipeType}")]

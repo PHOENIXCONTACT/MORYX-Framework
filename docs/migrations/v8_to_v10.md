@@ -193,6 +193,20 @@ Additionally, the APIs of these components have been updated to return `Task` or
 - `IReadOnlyList<IProcess> RunningProcesses` -> `IReadOnlyList<IProcess> GetRunningProcesses`
 - `IReadOnlyList<IProcess> GetProcesses` -> `Task<IReadOnlyList<IProcess>> GetArchivedProcessesAsync`
 
+### Async Lifecycle Support for ProductManagement
+
+The ProductManagement has been updated to support **asynchronous lifecycle methods**, including initialization, startup, and shutdown processes.
+
+Additionally, the APIs of these components have been updated to return `Task` or `Task<T>` to reflect asynchronous behavior.
+
+**`IProductManagement`-facade:**
+
+All methods loading ProductTypes, ProductInstances, Recipes or Workplans are now returning `Task<T>` and got the `Async`-suffix.
+
+**`ProductStorage`:**
+
+- All strategies of the ProductStorage must now return `Task` and the methods got the `Async`-suffix.
+
 ### Other Async Related changes
 
 All public or protected APIs which are Task-based are renamed to use `Async` suffix.

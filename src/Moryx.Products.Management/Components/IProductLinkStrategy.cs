@@ -10,7 +10,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// Interface to easily access
     /// </summary>
-    public interface IProductLinkStrategy : IConfiguredPlugin<ProductLinkConfiguration>
+    public interface IProductLinkStrategy : IConfiguredInitializable<ProductLinkConfiguration>
     {
         /// <summary>
         /// Target type of this strategy
@@ -30,16 +30,16 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Load typed object and set on product
         /// </summary>
-        void LoadPartLink(IGenericColumns linkEntity, ProductPartLink target);
+        Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target);
 
         /// <summary>
         /// Save part link
         /// </summary>
-        void SavePartLink(ProductPartLink source, IGenericColumns target);
+        Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target);
 
         /// <summary>
         /// A link between two products was removed, remove the link as well
         /// </summary>
-        void DeletePartLink(IReadOnlyList<IGenericColumns> deprecatedEntities);
+        Task DeletePartLinkAsync(IReadOnlyList<IGenericColumns> deprecatedEntities);
     }
 }

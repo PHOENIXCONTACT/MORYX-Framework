@@ -11,7 +11,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// Management component
     /// </summary>
-    internal interface IProductManager : IPlugin
+    internal interface IProductManager : IAsyncPlugin
     {
         /// <summary>
         /// Returns all available product importers
@@ -21,22 +21,22 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Returns all products on this machine
         /// </summary>
-        IReadOnlyList<ProductType> LoadTypes(ProductQuery query);
+        Task<IReadOnlyList<ProductType>> LoadTypes(ProductQuery query);
 
         /// <summary>
         /// Load types using filter expression
         /// </summary>
-        IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
+        Task<IReadOnlyList<TType>> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
 
         /// <summary>
         /// Load product instance by id
         /// </summary>
-        ProductType LoadType(long id);
+        Task<ProductType> LoadType(long id);
 
         /// <summary>
         /// Load product by identity
         /// </summary>
-        ProductType LoadType(IIdentity identity);
+        Task<ProductType> LoadType(IIdentity identity);
 
         /// <summary>
         /// Create a new product for the given group type
@@ -51,12 +51,12 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Save a product to the database
         /// </summary>
-        long SaveType(ProductType modifiedInstance);
+        Task<long> SaveType(ProductType modifiedInstance);
 
         /// <summary>
         /// Create revision of this product with provided revision number
         /// </summary>
-        ProductType Duplicate(ProductType source, IIdentity identity);
+        Task<ProductType> Duplicate(ProductType source, IIdentity identity);
 
         /// <summary>
         /// Import the given file as a product to the database
@@ -80,7 +80,7 @@ namespace Moryx.Products.Management
         /// </summary>
         /// <param name="productId">Id of the product that is deprecated and should be deleted.</param>
         /// <returns><value>True</value> if the product was removed, <value>false</value> otherwise</returns>
-        bool DeleteType(long productId);
+        Task<bool> DeleteType(long productId);
 
         /// <summary>
         /// Create an instance of given product
@@ -88,24 +88,24 @@ namespace Moryx.Products.Management
         /// <param name="productType">Product to instantiate</param>
         /// <param name="save">Flag if new instance should already be saved</param>
         /// <returns>New instance</returns>
-        ProductInstance CreateInstance(ProductType productType, bool save);
+        Task<ProductInstance> CreateInstance(ProductType productType, bool save);
 
         /// <summary>
         /// Updates the database from the instance
         /// </summary>
-        void SaveInstances(params ProductInstance[] productInstances);
+        Task SaveInstances(params ProductInstance[] productInstances);
 
         /// <summary>
         /// Get instances with the given ids.
         /// </summary>
         /// <param name="ids">The IDs of instances that should be loaded</param>
         /// <returns>The instance with the id when it exists.</returns>
-        IReadOnlyList<ProductInstance> GetInstances(params long[] ids);
+        Task<IReadOnlyList<ProductInstance>> GetInstances(params long[] ids);
 
         /// <summary>
         /// Get all instances that match a certain expression
         /// </summary>
-        IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector);
+        Task<IReadOnlyList<TInstance>> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector);
 
         /// <summary>
         /// Return type wrapper to a type

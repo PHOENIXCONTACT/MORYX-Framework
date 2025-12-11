@@ -42,14 +42,16 @@ namespace Moryx.Products.Management
             return EntityMapper.HasChanged(dbProperties, current);
         }
 
-        public override void SaveType(ProductType source, IGenericColumns target)
+        public override Task SaveTypeAsync(ProductType source, IGenericColumns target)
         {
             EntityMapper.WriteValue(source, target);
+            return Task.CompletedTask;
         }
 
-        public override void LoadType(IGenericColumns source, ProductType target)
+        public override Task LoadTypeAsync(IGenericColumns source, ProductType target)
         {
             EntityMapper.ReadValue(source, target);
+            return Task.CompletedTask;
         }
     }
 }

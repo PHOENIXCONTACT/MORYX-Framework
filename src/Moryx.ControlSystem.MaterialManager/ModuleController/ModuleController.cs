@@ -68,8 +68,7 @@ namespace Moryx.ControlSystem.MaterialManager
         protected override Task OnStartAsync()
         {
             // Start material manager
-            Container.Resolve<IMaterialManager>().Start();
-            return Task.CompletedTask;
+            return Container.Resolve<IMaterialManager>().StartAsync();
         }
 
         /// <summary>
@@ -77,8 +76,7 @@ namespace Moryx.ControlSystem.MaterialManager
         /// </summary>
         protected override Task OnStopAsync()
         {
-            Container.Resolve<IMaterialManager>().Stop();
-            return Task.CompletedTask;
+            return Container.Resolve<IMaterialManager>().StopAsync();
         }
 
         #endregion

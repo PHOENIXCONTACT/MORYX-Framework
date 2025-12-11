@@ -66,15 +66,14 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override Task OnStartAsync()
+        protected override async Task OnStartAsync()
         {
             // Start Manager
             Container.Resolve<IProductStorage>().Start();
-            Container.Resolve<IProductManager>().Start();
+            await Container.Resolve<IProductManager>().StartAsync();
 
             // Activate facades
             ActivateFacade(_productManagement);
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -84,7 +83,9 @@ namespace Moryx.Products.Management
         {
             // Deactivate facades
             DeactivateFacade(_productManagement);
-            return Task.CompletedTask;
+
+            Container.Resolve<IProductStorage>().Stop();
+            return Container.Resolve<IProductManager>().StopAsync();
         }
 
         private readonly ProductManagementFacade _productManagement = new();

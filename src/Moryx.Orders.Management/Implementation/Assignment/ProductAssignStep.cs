@@ -37,25 +37,25 @@ namespace Moryx.Orders.Management.Assignment
             return true;
         }
 
-        public Task<bool> RestoreStep(IOperationData operationData, IOperationLogger operationLogger)
+        public async Task<bool> RestoreStep(IOperationData operationData, IOperationLogger operationLogger)
         {
             if (operationData.Product == null)
-                return Task.FromResult(false);
+                return false;
 
             var productId = operationData.Product.Id;
 
             ProductType product = null;
             if (productId != 0)
-                product = ProductManagement.LoadType(operationData.Product.Id);
+                product = await ProductManagement.LoadTypeAsync(operationData.Product.Id);
 
             if (product == null)
             {
                 operationLogger.Log(LogLevel.Warning, Strings.ProductAssignStep_Selection_Failed);
-                return Task.FromResult(false);
+                return false;
             }
 
             operationData.AssignProduct(product);
-            return Task.FromResult(true);
+            return true;
         }
     }
 }

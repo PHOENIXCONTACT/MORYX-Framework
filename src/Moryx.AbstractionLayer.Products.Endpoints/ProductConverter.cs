@@ -13,7 +13,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
 {
     internal class ProductConverter
     {
-        private IProductManagement _productManagement;
+        private readonly IProductManagement _productManagement;
 
         // Null object pattern for identity
         private static readonly ProductIdentity EmptyIdentity = new(string.Empty, 0);
@@ -48,7 +48,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             };
         }
 
-        public RecipeDefinitionModel ConvertRecipeType(Type recipeType)
+        public static RecipeDefinitionModel ConvertRecipeType(Type recipeType)
         {
             return new()
             {
@@ -57,7 +57,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 HasWorkplans = typeof(IWorkplanRecipe).IsAssignableFrom(recipeType)
             };
         }
-        public ProductModel ConvertProduct(ProductType productType, bool flat)
+        public async Task<ProductModel> ConvertProduct(ProductType productType, bool flat)
         {
 
             // Base object
@@ -81,16 +81,16 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             converted.Properties = EntryConvert.EncodeObject(productType, _productSerialization);
 
             // Recipes
-            var recipes = _productManagement.GetRecipes(productType, RecipeClassification.CloneFilter);
+            var recipes = await _productManagement.GetRecipesAsync(productType, RecipeClassification.CloneFilter);
             converted.Recipes = recipes.Select(ConvertRecipe).ToArray();
 
             // Parts
-            ConvertParts(productType, properties, converted);
+            await ConvertParts(productType, properties, converted);
 
             return converted;
         }
 
-        private void ConvertParts(ProductType productType, IEnumerable<PropertyInfo> properties, ProductModel converted)
+        private async Task ConvertParts(ProductType productType, IEnumerable<PropertyInfo> properties, ProductModel converted)
         {
             var connectors = new List<PartConnector>();
             foreach (var property in properties)
@@ -100,7 +100,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 if (typeof(ProductPartLink).IsAssignableFrom(property.PropertyType))
                 {
                     var link = (ProductPartLink)property.GetValue(productType);
-                    var partModel = ConvertPart(link);
+                    var partModel = await ConvertPart(link);
                     var connector = new PartConnector
                     {
                         Name = property.Name,
@@ -121,9 +121,15 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                         Name = property.Name,
                         DisplayName = displayName,
                         Type = FetchProductType(linkType),
-                        Parts = links?.Select(ConvertPart).ToArray(),
                         PropertyTemplates = EntryConvert.EncodeClass(linkType, _productSerialization)
                     };
+
+                    var convertPartTasks = links?.Select(ConvertPart);
+                    if (convertPartTasks != null)
+                    {
+                        connector.Parts = await Task.WhenAll(convertPartTasks);
+                    }
+
                     connectors.Add(connector);
                 }
             }
@@ -156,7 +162,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return null;
         }
 
-        private PartModel ConvertPart(ProductPartLink link)
+        private async Task<PartModel> ConvertPart(ProductPartLink link)
         {
             // No link, no DTO!
             if (link is null || link.Product is null)
@@ -165,13 +171,13 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var part = new PartModel
             {
                 Id = link.Id,
-                Product = ConvertProduct(link.Product, true),
+                Product = await ConvertProduct(link.Product, true),
                 Properties = EntryConvert.EncodeObject(link, _productSerialization)
             };
             return part;
         }
 
-        public ProductType ConvertProductBack(ProductModel source, ProductType converted)
+        public async Task<ProductType> ConvertProductBack(ProductModel source, ProductType converted)
         {
             // Copy base values
             converted.Identity = new ProductIdentity(source.Identifier, source.Revision);
@@ -189,14 +195,14 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                     productRecipe = (IProductRecipe)Activator.CreateInstance(type);
                 }
                 else
-                    productRecipe = (IProductRecipe)_productManagement.LoadRecipe(recipeModel.Id);
+                    productRecipe = (IProductRecipe)await _productManagement.LoadRecipeAsync(recipeModel.Id);
 
                 ConvertRecipeBack(recipeModel, productRecipe, converted);
                 recipes.Add(productRecipe);
             }
             if (recipes.Any())
                 foreach (var recipe in recipes)
-                    _productManagement.SaveRecipe(recipe);
+                    await _productManagement.SaveRecipeAsync(recipe);
 
             // Product is flat
             if (source.Properties is null)
@@ -205,10 +211,10 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             // Delete recipes
             if (converted.Id != 0)
             {
-                var recipesOfProduct = _productManagement.GetRecipes(converted, RecipeClassification.CloneFilter);
+                var recipesOfProduct = await _productManagement.GetRecipesAsync(converted, RecipeClassification.CloneFilter);
                 foreach (var recipe in recipesOfProduct)
                     if (recipes.FirstOrDefault(r => r.Id == recipe.Id) == null)
-                        _productManagement.RemoveRecipe(recipe.Id);
+                        await _productManagement.RemoveRecipeAsync(recipe.Id);
             }
 
             // Copy extended properties
@@ -232,7 +238,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                             .MakeGenericType(prop.PropertyType.GetGenericArguments().First()));
                         prop.SetValue(converted, value);
                     }
-                    UpdateCollection((IList)value, partConnector.Parts);
+                    await UpdateCollection((IList)value, partConnector.Parts);
                 }
                 else if (partConnector.Parts.Length == 1)
                 {
@@ -241,7 +247,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                         value = Activator.CreateInstance(prop.PropertyType);
                         prop.SetValue(converted, value);
                     }
-                    UpdateReference((ProductPartLink)value, partConnector.Parts[0]);
+                    await UpdateReference((ProductPartLink)value, partConnector.Parts[0]);
                 }
                 else if (partConnector.Parts.Length == 0)
                 {
@@ -252,7 +258,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return converted;
         }
 
-        private void UpdateCollection(IList value, IEnumerable<PartModel> parts)
+        private async Task UpdateCollection(IList value, IEnumerable<PartModel> parts)
         {
             // Track which part links are still represented by the models
             var oldParts = new List<ProductPartLink>(value.OfType<ProductPartLink>());
@@ -271,12 +277,12 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 if (oldPartMatch == null)
                 {
                     oldPartMatch = (ProductPartLink)Activator.CreateInstance(elemType);
-                    oldPartMatch.Product = _productManagement.LoadType(partModel.Product.Id);
+                    oldPartMatch.Product = await _productManagement.LoadTypeAsync(partModel.Product.Id);
                     value.Add(oldPartMatch);
                 }
                 //modified reference
                 else if (oldPartMatch.Product.Id != partModel.Product.Id)
-                    oldPartMatch.Product = _productManagement.LoadType(partModel.Product.Id);
+                    oldPartMatch.Product = await _productManagement.LoadTypeAsync(partModel.Product.Id);
                 else
                     // existing unchanged partlink: do not delete at the end
                     oldParts.Remove(oldPartMatch);
@@ -289,10 +295,10 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 value.Remove(part);
         }
 
-        private void UpdateReference(ProductPartLink value, PartModel part)
+        private async Task UpdateReference(ProductPartLink value, PartModel part)
         {
             EntryConvert.UpdateInstance(value, part.Properties);
-            value.Product = part.Product is null ? null : _productManagement.LoadType(part.Product.Id);
+            value.Product = part.Product is null ? null : await _productManagement.LoadTypeAsync(part.Product.Id);
         }
 
         public RecipeModel ConvertRecipe(IRecipe recipe) => ConvertRecipe(recipe, _recipeSerialization);
@@ -339,7 +345,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             return converted;
         }
 
-        public IProductRecipe ConvertRecipeBack(RecipeModel recipe, IProductRecipe productRecipe, ProductType productType)
+        public async Task<IProductRecipe> ConvertRecipeBack(RecipeModel recipe, IProductRecipe productRecipe, ProductType productType)
         {
             productRecipe.Name = recipe.Name;
             productRecipe.Revision = recipe.Revision;
@@ -348,7 +354,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             // Only load workplan if it changed
             var workplanRecipe = productRecipe as IWorkplanRecipe;
             if (workplanRecipe != null && workplanRecipe.Workplan?.Id != recipe.WorkplanModel.Id)
-                workplanRecipe.Workplan = _productManagement.LoadWorkplan(recipe.WorkplanModel.Id);
+                workplanRecipe.Workplan = await _productManagement.LoadWorkplanAsync(recipe.WorkplanModel.Id);
 
             if (productRecipe.Product == null)
             {
@@ -426,6 +432,5 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
                 State = model.State
             };
         }
-
     }
 }

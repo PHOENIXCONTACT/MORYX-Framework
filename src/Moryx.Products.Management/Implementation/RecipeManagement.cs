@@ -22,42 +22,42 @@ namespace Moryx.Products.Management
 
         #endregion
 
-        public IProductRecipe Get(long recipeId)
+        public Task<IProductRecipe> Get(long recipeId)
         {
-            var recipe = Storage.LoadRecipe(recipeId);
+            var recipe = Storage.LoadRecipeAsync(recipeId);
             if (recipe == null)
                 throw new RecipeNotFoundException(recipeId);
 
             return recipe;
         }
 
-        public IReadOnlyList<IProductRecipe> GetRecipes(ProductType productType, RecipeClassification classification)
+        public Task<IReadOnlyList<IProductRecipe>> GetRecipes(ProductType productType, RecipeClassification classification)
         {
-            return Storage.LoadRecipes(productType.Id, classification);
+            return Storage.LoadRecipesAsync(productType.Id, classification);
         }
 
-        public void Save(IReadOnlyList<IProductRecipe> recipes)
+        public async Task Save(IReadOnlyList<IProductRecipe> recipes)
         {
-            Storage.SaveRecipes(recipes);
+            await Storage.SaveRecipesAsync(recipes);
             foreach (var recipe in recipes)
             {
                 RaiseRecipeChanged(recipe);
             }
         }
 
-        public long Save(IProductRecipe recipe)
+        public async Task<long> Save(IProductRecipe recipe)
         {
-            var saved = Storage.SaveRecipe(recipe);
+            var saved = await Storage.SaveRecipeAsync(recipe);
             RaiseRecipeChanged(recipe);
             return saved;
         }
 
-        public void Remove(long recipeId)
+        public Task Remove(long recipeId)
         {
-            Storage.RemoveRecipe(recipeId);
+            return Storage.RemoveRecipeAsync(recipeId);
         }
 
-        public IReadOnlyList<Workplan> LoadAllWorkplans()
+        public Task<IReadOnlyList<Workplan>> LoadAllWorkplansAsync()
         {
             using var uow = ModelFactory.Create();
             var repo = uow.GetRepository<IWorkplanRepository>();
@@ -69,16 +69,17 @@ namespace Moryx.Products.Management
                                  Version = entity.Version,
                                  State = (WorkplanState)entity.State
                              }).ToArray();
-            return workplans;
+
+            return Task.FromResult<IReadOnlyList<Workplan>>(workplans);
         }
 
-        public Workplan LoadWorkplan(long workplanId)
+        public Task<Workplan> LoadWorkplanAsync(long workplanId)
         {
             using var uow = ModelFactory.Create();
-            return RecipeStorage.LoadWorkplan(uow, workplanId);
+            return RecipeStorage.LoadWorkplanAsync(uow, workplanId);
         }
 
-        public IReadOnlyList<Workplan> LoadVersions(long workplanId)
+        public Task<IReadOnlyList<Workplan>> LoadVersionsAsync(long workplanId)
         {
             using var uow = ModelFactory.Create();
 
@@ -88,7 +89,7 @@ namespace Moryx.Products.Management
 
             var currentVersion = workplanRepo.GetByKey(workplanId);
             if (currentVersion == null)
-                return versions;
+                return Task.FromResult<IReadOnlyList<Workplan>>(versions);
 
             // Convert current version
             versions.Add(new Workplan
@@ -146,10 +147,10 @@ namespace Moryx.Products.Management
             // Sort the versions
             versions = versions.OrderBy(v => v.Version).ToList();
 
-            return versions;
+            return Task.FromResult<IReadOnlyList<Workplan>>(versions);
         }
 
-        public long SaveWorkplan(Workplan workplan)
+        public async Task<long> SaveWorkplanAsync(Workplan workplan)
         {
             using var uow = ModelFactory.Create();
             var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
@@ -170,23 +171,23 @@ namespace Moryx.Products.Management
 
             foreach (var recipeEntity in affectedRecipes)
             {
-                var recipe = Storage.LoadRecipe(recipeEntity.Id);
+                var recipe = await Storage.LoadRecipeAsync(recipeEntity.Id);
                 RaiseRecipeChanged(recipe);
             }
 
             return entity.Id;
         }
 
-        public bool DeleteWorkplan(long workplanId)
+        public Task<bool> DeleteWorkplanAsync(long workplanId)
         {
             using var uow = ModelFactory.Create();
             var repo = uow.GetRepository<IWorkplanRepository>();
             var workplan = repo.GetByKey(workplanId);
             if (workplan == null)
-                return false;
+                return Task.FromResult(false);
             repo.Remove(workplan);
             uow.SaveChanges();
-            return true;
+            return Task.FromResult(true);
         }
 
         private void RaiseRecipeChanged(IRecipe recipe)

@@ -11,7 +11,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// Strategy for loading and saving product instances
     /// </summary>
-    public interface IProductInstanceStrategy : IConfiguredPlugin<ProductInstanceConfiguration>
+    public interface IProductInstanceStrategy : IConfiguredInitializable<ProductInstanceConfiguration>
     {
         /// <summary>
         /// Target type of this strategy
@@ -31,11 +31,11 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Save instance to database
         /// </summary>
-        void SaveInstance(ProductInstance source, IGenericColumns target);
+        Task SaveInstanceAsync(ProductInstance source, IGenericColumns target);
 
         /// <summary>
         /// Load additional instance properties from entity and write them to the business object
         /// </summary>
-        void LoadInstance(IGenericColumns source, ProductInstance target);
+        Task LoadInstanceAsync(IGenericColumns source, ProductInstance target);
     }
 }

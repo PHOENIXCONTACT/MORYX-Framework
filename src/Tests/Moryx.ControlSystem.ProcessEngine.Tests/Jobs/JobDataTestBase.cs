@@ -35,7 +35,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             _recipe.Id = 42;
             _recipe.Origin = recipeProviderMock.Object;
 
-            recipeProviderMock.Setup(r => r.LoadRecipe(_recipe.Id)).Returns(_recipe);
+            recipeProviderMock.Setup(r => r.LoadRecipeAsync(_recipe.Id)).ReturnsAsync(_recipe);
         }
 
         [SetUp]

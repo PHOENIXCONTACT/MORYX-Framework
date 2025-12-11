@@ -21,6 +21,7 @@ namespace Moryx.Products.Management
     public abstract class RecipeStrategyBase<TConfig> : StrategyBase<TConfig, ProductRecipeConfiguration>, IProductRecipeStrategy
         where TConfig : ProductRecipeConfiguration
     {
+        /// <inheritdoc />
         public override void Initialize(ProductRecipeConfiguration config)
         {
             base.Initialize(config);
@@ -29,9 +30,9 @@ namespace Moryx.Products.Management
         }
 
         /// <inheritdoc />
-        public abstract void SaveRecipe(IProductRecipe source, IGenericColumns target);
+        public abstract Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target);
 
         /// <inheritdoc />
-        public abstract void LoadRecipe(IGenericColumns source, IProductRecipe target);
+        public abstract Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target);
     }
 }
