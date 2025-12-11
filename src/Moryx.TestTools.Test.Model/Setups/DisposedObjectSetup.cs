@@ -19,7 +19,7 @@ namespace Moryx.TestTools.Test.Model
 
         public string SupportedFileRegex => string.Empty;
 
-        public async Task Execute(IUnitOfWork openContext, string setupData)
+        public async Task ExecuteAsync(IUnitOfWork openContext, string setupData)
         {
             // If the caller wouldn't await this method, 
             // the DbContext might be disposed before it's

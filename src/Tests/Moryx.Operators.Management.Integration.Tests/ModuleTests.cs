@@ -23,31 +23,31 @@ internal class ModuleTests : TestsBase
     }
 
     [Test]
-    public void Start_WhenModuleIsStopped_StartsModule()
+    public async Task Start_WhenModuleIsStopped_StartsModule()
     {
         // Arrange
-        _env.StopTestModule();
+        await _env.StopTestModuleAsync();
 
         // Act
-        var module = _env.StartTestModule();
+        var module = await _env.StartTestModuleAsync();
 
         // Assert
         Assert.That(module.State, Is.EqualTo(ServerModuleState.Running));
     }
 
     [Test]
-    public void Stop_WhenModuleIsRunning_StopsModule()
+    public async Task Stop_WhenModuleIsRunning_StopsModule()
     {
         // Arrange
         // Act
-        var module = _env.StopTestModule();
+        var module = await _env.StopTestModuleAsync();
 
         // Assert
         Assert.That(module.State, Is.EqualTo(ServerModuleState.Stopped));
     }
 
     [Test]
-    public void Start_WhenDatabaseIsFilled_StartsModule()
+    public async Task Start_WhenDatabaseIsFilled_StartsModule()
     {
         // Arrange
         _operatorsFacade.AddOperator(Operator);
@@ -57,8 +57,8 @@ internal class ModuleTests : TestsBase
         _skillsFacade.CreateSkill(SkillCreationContext);
 
         // Act
-        _env.StopTestModule();
-        var module = _env.StartTestModule();
+        await _env.StopTestModuleAsync();
+        var module = await _env.StartTestModuleAsync();
 
         // Assert
         Assert.Multiple(() =>
@@ -77,10 +77,10 @@ internal class ModuleTests : TestsBase
     }
 
     [Test]
-    public void AnyMethod_WhenFacadeNotActivated_ThrowsHealthStateException()
+    public async Task AnyMethod_WhenFacadeNotActivated_ThrowsHealthStateException()
     {
         // Arrange
-        _env.StopTestModule();
+        await _env.StopTestModuleAsync();
 
         // Act
         // Assert

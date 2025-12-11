@@ -2,7 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Globalization;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Drivers;
@@ -43,7 +45,7 @@ namespace Moryx.Drivers.Mqtt.Tests
             //Setup mock for MQTT-Client
             _mockClient = new Mock<IMqttClient>();
             var options = new MqttClientOptionsBuilder()
-                .WithClientId(_driver.Id.ToString())
+                .WithClientId(_driver.Id.ToString(CultureInfo.InvariantCulture))
                 .WithTcpServer(_driver.BrokerUrl, _driver.Port)
                 .Build();
             _mockClient.Setup(m => m.ConnectAsync(It.IsAny<MqttClientOptions>(), It.IsAny<CancellationToken>()))
@@ -51,29 +53,29 @@ namespace Moryx.Drivers.Mqtt.Tests
         }
 
         [Test(Description = $"After stopping the driver it should be Offline")]
-        public void Stop_Always_EndsInDisconnectedState()
+        public async Task Stop_Always_EndsInDisconnectedState()
         {
             //Arrange
             _driver.InitializeForTest(_mockClient.Object);
-            ((IPlugin)_driver).Start();
+            await ((IAsyncPlugin)_driver).StartAsync();
 
             //Act
-            ((IPlugin)_driver).Stop();
+            await ((IAsyncPlugin)_driver).StopAsync();
 
             //Assert I
             Assert.That(_driver.CurrentState.Classification, Is.EqualTo(StateClassification.Offline));
         }
 
         [Test(Description = $"After restarting the driver it should be Initializing")]
-        public void Start_AfterStop_LeadsToConnectingToBrokerState()
+        public async Task Start_AfterStop_LeadsToConnectingToBrokerState()
         {
             //Arrange
             _driver.InitializeForTest(_mockClient.Object);
-            ((IPlugin)_driver).Start();
+            await ((IAsyncPlugin)_driver).StartAsync();
 
             //Act
-            ((IPlugin)_driver).Stop();
-            ((IPlugin)_driver).Start();
+            await ((IAsyncPlugin)_driver).StopAsync();
+            await ((IAsyncPlugin)_driver).StartAsync();
 
             //Assert I
             Assert.That(_driver.CurrentState.Classification, Is.EqualTo(StateClassification.Initializing));

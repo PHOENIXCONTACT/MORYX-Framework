@@ -38,22 +38,25 @@ namespace Moryx.ProcessData.Adapter.NotificationPublisher
         }
 
         /// <inheritdoc />
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             Container.SetInstance(NotificationPublisher)
                 .SetInstance(ProcessDataMonitor);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             Container.Resolve<NotificationPublisherAdapter>().Start();
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             Container.Resolve<NotificationPublisherAdapter>().Stop();
+            return Task.CompletedTask;
         }
     }
 }

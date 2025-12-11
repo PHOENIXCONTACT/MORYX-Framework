@@ -8,7 +8,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Moryx.Benchmarking\Moryx.Benchmarking.csproj" />
 		<ProjectReference Include="..\Moryx.Notifications\Moryx.Notifications.csproj" />
-		<ProjectReference Include="..\Moryx.Resources.AssemblyInstruction\Moryx.Resources.AssemblyInstruction.csproj" />
+		<ProjectReference Include="..\Moryx.Resources.VisualInstructions\Moryx.Resources.VisualInstructions.csproj" />
 	</ItemGroup>
 
 </Project>

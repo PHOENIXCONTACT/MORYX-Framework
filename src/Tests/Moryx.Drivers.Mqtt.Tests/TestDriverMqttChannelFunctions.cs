@@ -2,9 +2,11 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.Products;
@@ -42,7 +44,7 @@ namespace Moryx.Drivers.Mqtt.Tests
         public TestDriverMqttChannelFunctions(MqttProtocolVersion version) => _version = version;
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             ReflectionTool.TestMode = true;
             _driver = CreateMqttDriver();
@@ -50,7 +52,7 @@ namespace Moryx.Drivers.Mqtt.Tests
 
             //Initialize MqttDriver
             _driver.InitializeForTest(_mockClient.Object);
-            ((IPlugin)_driver).Start();
+            await ((IAsyncPlugin)_driver).StartAsync();
             _driver.OnConnected(new MqttClientConnectedEventArgs(new MqttClientConnectResult())).Wait();
 
             //Setup test topic-Resources
@@ -59,14 +61,14 @@ namespace Moryx.Drivers.Mqtt.Tests
                 Identifier = "test",
                 MessageName = nameof(BoolMqttMessage),
             };
-            SetupTopic(_topicBoolMqtt);
+            await SetupTopic(_topicBoolMqtt);
 
             _topicPlaceholder = new MqttTopicJson
             {
                 MessageName = nameof(MessageForPlaceholderMessages),
                 Identifier = "abc/{PcName}/fsd/{AdapterNumber}",
             };
-            SetupTopic(_topicPlaceholder);
+            await SetupTopic(_topicPlaceholder);
 
             _placeholderMessages = new MessageForPlaceholderMessages
             {
@@ -103,14 +105,14 @@ namespace Moryx.Drivers.Mqtt.Tests
             return mock;
         }
 
-        private void SetupTopic(MqttTopic topic)
+        private async Task SetupTopic(MqttTopic topic)
         {
             topic.Parent = _driver;
             topic.ParallelOperations = new NotSoParallelOps();
             topic.Logger = new ModuleLogger("Dummy", new NullLoggerFactory());
             _driver.Channels.Add(topic);
-            ((IInitializable)topic).Initialize();
-            ((IPlugin)topic).Start();
+            await ((IAsyncInitializable)topic).InitializeAsync();
+            await((IAsyncPlugin)topic).StartAsync();
         }
 
         [Test(Description = "Find Channel with one parameter")]
@@ -120,7 +122,6 @@ namespace Moryx.Drivers.Mqtt.Tests
             Assert.That(c != null);
             Assert.That(c.Identifier.Equals(_topicBoolMqtt.Identifier));
         }
-
 
         [Test(Description = "Return null, if identifier does not exist")]
         public void Channel_NotFindChannel_IdentifierDoesNotExist()
@@ -153,7 +154,7 @@ namespace Moryx.Drivers.Mqtt.Tests
         }
 
         [Test(Description = "After a MqttTopic is added to a MqttDriver, the driver subscribes to the topic")]
-        public void AfterAddingATopicDriverSubscribesToIt()
+        public async Task AfterAddingATopicDriverSubscribesToIt()
         {
             //Arrange
             var topic = new MqttTopicIByteSerializable
@@ -161,14 +162,14 @@ namespace Moryx.Drivers.Mqtt.Tests
                 Identifier = "test1",
                 MessageName = nameof(BoolMqttMessage)
             };
-            SetupTopic(topic);
+            await SetupTopic(topic);
 
             _mockClient.Setup(m => m.SubscribeAsync(It.IsAny<MqttClientSubscribeOptions>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new MqttClientSubscribeResult(0, Array.Empty<MqttClientSubscribeResultItem>(), "", Array.Empty<MqttUserProperty>()))
                 .Callback<MqttClientSubscribeOptions, CancellationToken>((options, token) =>
                     CheckAddedTopic(options, topic.Identifier));
             //Act
-            ((IPlugin)topic).Start();
+            await ((IAsyncPlugin)topic).StartAsync();
 
             //Assert I
             _mockClient.Verify(m => m.SubscribeAsync(It.IsAny<MqttClientSubscribeOptions>(),
@@ -201,18 +202,21 @@ namespace Moryx.Drivers.Mqtt.Tests
             "+/+/asd")]
         [TestCase("{PcName}/{Value.Value}/asd", nameof(MessageForPlaceholderMessages), true,
             "+/+/asd")]
-        public void TopicSetIdentifier_IdentifierCanOnlyBeSetToMqttConformTopics(
+        public async Task TopicSetIdentifier_IdentifierCanOnlyBeSetToMqttConformTopics(
             string newTopic, string messageName, bool shouldBeSet, string subscribedTopic = "")
         {
             //Arrange
             if (subscribedTopic.Equals(""))
+            {
                 subscribedTopic = newTopic;
+            }
+
             var topic = new MqttTopicJson
             {
                 MessageName = messageName,
                 Identifier = "text",
             };
-            SetupTopic(topic);
+            await SetupTopic(topic);
             _mockClient.Setup(m => m.SubscribeAsync(It.IsAny<MqttClientSubscribeOptions>(), CancellationToken.None))
                 .ReturnsAsync(new MqttClientSubscribeResult(0, Array.Empty<MqttClientSubscribeResultItem>(), "", Array.Empty<MqttUserProperty>()))
                 .Callback<MqttClientSubscribeOptions, CancellationToken>((options, token) =>
@@ -240,15 +244,18 @@ namespace Moryx.Drivers.Mqtt.Tests
             };
             var topic = _driver.Identifier + _topicPlaceholder.Identifier
                 .Replace("{PcName}", _placeholderMessages.PcName)
-                .Replace("{AdapterNumber}", _placeholderMessages.AdapterNumber.ToString())
+                .Replace("{AdapterNumber}", _placeholderMessages.AdapterNumber.ToString(CultureInfo.InvariantCulture))
                 .Replace("{ClassProperty.Test}", _placeholderMessages.ClassProperty.Test);
             var wait = new AutoResetEvent(false);
             _topicPlaceholder.Received += (sender, eventArgs) => { wait.Set(); };
             _topicPlaceholder.Received += OnPlaceholderMessageReceived;
 
             //Act
-            _driver.Receive(topic,
-                Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(msg)));
+            _driver.Receive(new MqttApplicationMessage()
+            {
+                Topic = topic,
+                PayloadSegment = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(msg))
+            });
 
             //Assert 1
             Assert.That(wait.WaitOne(TimeSpan.FromSeconds(TIMEOUT)), "Received Event was not raised");
@@ -290,9 +297,9 @@ namespace Moryx.Drivers.Mqtt.Tests
             MessageForPlaceholderMessages msg, string topicIdentifier)
         {
             var topic = _driver.Identifier + topicIdentifier.Replace("{PcName}", msg.PcName)
-                .Replace("{AdapterNumber}", msg.AdapterNumber.ToString())
-                .Replace("{Value}", msg.Value.ToString())
-                .Replace("{Identity.Revision}", msg.Identity.Revision.ToString())
+                .Replace("{AdapterNumber}", msg.AdapterNumber.ToString(CultureInfo.InvariantCulture))
+                .Replace("{Value}", msg.Value.ToString(CultureInfo.InvariantCulture))
+                .Replace("{Identity.Revision}", msg.Identity.Revision.ToString(CultureInfo.InvariantCulture))
                 .Replace("{Identity.Identifier}", msg.Identity.Identifier);
             Assert.That(topic, Is.EqualTo(applicationMessage.Topic), "topic was wrongly built, placeholders weren't replaced with the right values");
         }
@@ -312,7 +319,7 @@ namespace Moryx.Drivers.Mqtt.Tests
         [TestCase("sdf/+/sd", "sdf/qw/sd")]
         [TestCase("sdf/#/asd", "sdf/fof/sdf/asd")]
         [TestCase("sdf/#/asd", "sdf/fof/asd")]
-        public void SendMessageContainingWildcards(string topicResource, string topicMsg)
+        public async Task SendMessageContainingWildcards(string topicResource, string topicMsg)
         {
             var msg = new BoolMqttMessage { Identifier = topicMsg };
             var mqttTopic = new MqttTopicIByteSerializable
@@ -320,14 +327,14 @@ namespace Moryx.Drivers.Mqtt.Tests
                 Identifier = topicResource,
                 MessageName = msg.GetType().Name,
             };
-            SetupTopic(mqttTopic);
+            await SetupTopic(mqttTopic);
             _mockClient.Setup(m => m.PublishAsync(It.IsAny<MqttApplicationMessage>(),
                 CancellationToken.None)).Callback<MqttApplicationMessage, CancellationToken>(
                 (applicationMessage, token) =>
                     CheckMessageSentWithWildcards(applicationMessage, topicMsg));
 
             //Act
-            mqttTopic.Send(msg);
+            await mqttTopic.SendAsync(msg);
 
             //Assert
             _mockClient.Verify(m => m.PublishAsync(It.IsAny<MqttApplicationMessage>(),
@@ -345,7 +352,7 @@ namespace Moryx.Drivers.Mqtt.Tests
         [TestCase("sdf/+", "sdf/+")]
         [TestCase("sdf/+", "sdf/sdwe/sdfa")]
         [TestCase("sdf/+", "sdf")]
-        public void SendMessageContainingWildcards_MessageCannotBeSent_WrongIdentifierInMessage(
+        public async Task SendMessageContainingWildcards_MessageCannotBeSent_WrongIdentifierInMessage(
             string topicResource, string topicMsg)
         {
             //Arrange
@@ -355,14 +362,14 @@ namespace Moryx.Drivers.Mqtt.Tests
                 Identifier = topicResource,
                 MessageName = msg.GetType().Name,
             };
-            SetupTopic(mqttTopic);
+            await SetupTopic(mqttTopic);
 
             //Act + Assert
             Assert.Throws<ArgumentException>(() => mqttTopic.Send(msg));
         }
 
         [Test]
-        public void SendMessageContainingWildcards_MessageCannotBeSent_WrongMessageType()
+        public async Task SendMessageContainingWildcards_MessageCannotBeSent_WrongMessageType()
         {
             //Arrange
             var msg = new BoolByteSerializableMessage();
@@ -371,7 +378,7 @@ namespace Moryx.Drivers.Mqtt.Tests
                 Identifier = "sdf/+",
                 MessageName = msg.GetType().Name,
             };
-            SetupTopic(mqttTopic);
+            await SetupTopic(mqttTopic);
 
             //Act + Assert
             Assert.Throws<ArgumentException>(() => mqttTopic.Send(msg));
@@ -413,22 +420,25 @@ namespace Moryx.Drivers.Mqtt.Tests
         }
 
         [Test]
-        public void ReceiveIdentifierMessage_SetActualReceivedTopicAsIdentifier()
+        public async Task ReceiveIdentifierMessage_SetActualReceivedTopicAsIdentifier()
         {
             var mqttTopic = new MqttTopicIByteSerializable
             {
                 Identifier = "sdf/+",
                 MessageName = nameof(BoolMqttMessage)
             };
-            SetupTopic(mqttTopic);
+            await SetupTopic(mqttTopic);
             var msg = new BoolMqttMessage { Message = true };
             mqttTopic.Received += CheckReceivedIIdentifierMessage;
             var wait = new AutoResetEvent(false);
             mqttTopic.Received += (sender, eventArgs) => { wait.Set(); };
 
             //Act
-            _driver.Receive(_driver.Identifier + TOPIC,
-                Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(msg)));
+            _driver.Receive(new MqttApplicationMessage()
+            {
+                Topic = _driver.Identifier + TOPIC,
+                PayloadSegment = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(msg))
+            });
 
             //Assert 1
             Assert.That(wait.WaitOne(TimeSpan.FromSeconds(TIMEOUT)), "Received Event was not raised");

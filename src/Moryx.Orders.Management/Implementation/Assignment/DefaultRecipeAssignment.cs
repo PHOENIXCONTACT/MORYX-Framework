@@ -15,7 +15,7 @@ namespace Moryx.Orders.Management.Assignment
     public class DefaultRecipeAssignment : RecipeAssignmentBase<RecipeAssignmentConfig>
     {
         /// <inheritdoc />
-        public override async Task<IReadOnlyList<IProductRecipe>> SelectRecipes(Operation operation, IOperationLogger operationLogger)
+        public override async Task<IReadOnlyList<IProductRecipe>> SelectRecipesAsync(Operation operation, IOperationLogger operationLogger)
         {
             if (operation.CreationContext != null &&
                 operation.CreationContext.RecipePreselection != 0)
@@ -30,11 +30,11 @@ namespace Moryx.Orders.Management.Assignment
                 return [(IProductRecipe)recipe];
             }
 
-            return [await LoadDefaultRecipe(operation.Product)];
+            return [await LoadDefaultRecipeAsync(operation.Product)];
         }
 
         /// <inheritdoc />
-        public override Task<bool> ProcessRecipe(IProductRecipe clone, Operation operation, IOperationLogger operationLogger)
+        public override Task<bool> ProcessRecipeAsync(IProductRecipe clone, Operation operation, IOperationLogger operationLogger)
         {
             // Copy values from known recipe types
 

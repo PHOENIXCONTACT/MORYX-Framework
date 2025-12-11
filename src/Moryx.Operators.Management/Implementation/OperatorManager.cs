@@ -5,6 +5,7 @@ using Moryx.Container;
 using Moryx.Model.Repositories;
 using Moryx.Operators.Management.Model;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Model;
 
 namespace Moryx.Operators.Management;
 
@@ -86,7 +87,9 @@ internal class OperatorManager : IOperatorManager
     {
         using var uow = UnitOfWorkFactory.Create();
         var operatorRepo = uow.GetRepository<IOperatorEntityRepository>();
-        var restored = operatorRepo.GetAll().Select(e => OperatorStorage.Load(e, ResourceManagement));
+        var restored = operatorRepo.Linq.Active().ToArray()
+            .Select(e => OperatorStorage.Load(e, ResourceManagement));
+
         _operators.AddRange(restored);
     }
 

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Resources.AssemblyInstruction;
+using Moryx.Resources.VisualInstructions;
 
 namespace Moryx.Resources.Benchmarking
 {
@@ -15,7 +15,7 @@ namespace Moryx.Resources.Benchmarking
 
         public override string Description => $"Creates a ring of {CellCount} Benchmark resources";
 
-        public override Task<ResourceInitializerResult> Execute(IResourceGraph graph, object parameters)
+        public override Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters)
         {
             // Create Reporter
             var reporter = graph.Instantiate<BenchmarkReporter>();

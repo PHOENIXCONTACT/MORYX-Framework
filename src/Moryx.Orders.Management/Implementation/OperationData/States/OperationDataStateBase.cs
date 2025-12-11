@@ -8,7 +8,7 @@ using Moryx.Users;
 
 namespace Moryx.Orders.Management
 {
-    internal abstract class OperationDataStateBase : StateBase<OperationData>, IOperationState
+    internal abstract class OperationDataStateBase : AsyncStateBase<OperationData>, IOperationState
     {
         public const int CompletedKey = 80;
 
@@ -43,20 +43,17 @@ namespace Moryx.Orders.Management
             Classification = classification;
         }
 
-        public virtual void Assign()
-        {
-            InvalidState();
-        }
+        public virtual Task Assign() => InvalidStateAsync();
 
-        public virtual void AssignCompleted(bool success) => InvalidState();
+        public virtual Task AssignCompleted(bool success) => InvalidStateAsync();
 
-        public virtual void Resume() => InvalidState();
+        public virtual Task Resume() => InvalidStateAsync();
 
-        public virtual void Abort() => InvalidState();
+        public virtual Task Abort() => InvalidStateAsync();
 
-        public virtual void IncreaseTargetBy(int amount, User user) => InvalidState();
+        public virtual Task IncreaseTargetBy(int amount, User user) => InvalidStateAsync();
 
-        public virtual void DecreaseTargetBy(int amount, User user) => InvalidState();
+        public virtual Task DecreaseTargetBy(int amount, User user) => InvalidStateAsync();
 
         public virtual void Dispatched() => InvalidState();
 
@@ -72,20 +69,21 @@ namespace Moryx.Orders.Management
             return null;
         }
 
-        public virtual void Interrupt(User user) => InvalidState();
+        public virtual Task Interrupt(User user) => InvalidStateAsync();
 
-        public virtual void Report(OperationReport report) => InvalidState();
+        public virtual Task Report(OperationReport report) => InvalidStateAsync();
 
-        public virtual void Advice(OperationAdvice advice) => InvalidState();
+        public virtual Task Advice(OperationAdvice advice) => InvalidStateAsync();
 
-        public virtual void JobsUpdated(JobStateChangedEventArgs args) => InvalidState();
+        public virtual Task JobsUpdated(JobStateChangedEventArgs args) => InvalidStateAsync();
 
         public virtual void UpdateRecipe(IRecipe recipe) => InvalidState();
 
         public virtual void UpdateRecipes(IReadOnlyList<IProductRecipe> recipes) => InvalidState();
 
-        public virtual void ProgressChanged(Job job)
+        public virtual Task ProgressChanged(Job job)
         {
+            return Task.CompletedTask;
         }
 
         public OperationStateClassification GetFullClassification()

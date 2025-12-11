@@ -70,7 +70,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             var resourceChangedModels = new List<ResourceChangedModel>();
             var orderModels = new List<OrderModel>();
 
-            var activities = _processControl.RunningProcesses
+            var activities = _processControl.GetRunningProcesses()
                 .Select(p => p.CurrentActivity())
                 .Where(a => a is not null && a.Tracing is not null);
             var converter = new Converter(_serialization);
@@ -276,15 +276,15 @@ namespace Moryx.FactoryMonitor.Endpoints
         /// </summary>
         /// <returns><see cref="CellLocationModel"/></returns>
         [HttpPost("move-cell")]
-        public ActionResult<CellLocationModel> MoveCell(CellLocationModel location)
+        public async Task<ActionResult<CellLocationModel>> MoveCell(CellLocationModel location)
         {
             var cellLocation = _resourceManager.GetResource<IMachineLocation>(l => l.Id == location.Id);
 
-            _resourceManager.ModifyUnsafe(cellLocation, r =>
+            await _resourceManager.ModifyUnsafeAsync(cellLocation, r =>
             {
                 var machineLocation = (IMachineLocation)r;
                 machineLocation.Position = new Position { PositionX = location.PositionX, PositionY = location.PositionY };
-                return true;
+                return Task.FromResult(true);
             });
             return Ok(location);
         }
@@ -296,7 +296,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult ChangeBackground(long resourceId, string url)
+        public async Task<ActionResult> ChangeBackground(long resourceId, string url)
         {
             if (string.IsNullOrEmpty(url))
                 return UnprocessableEntity($"The provided {nameof(url)} is invalid");
@@ -304,10 +304,10 @@ namespace Moryx.FactoryMonitor.Endpoints
             var manufacturingConfig = _resourceManager.GetResources<IManufacturingFactory>().SingleOrDefault(f => f.Id == resourceId);
             if (manufacturingConfig is null)
                 return NotFound("The resource to be modified could not be found");
-            _resourceManager.ModifyUnsafe(manufacturingConfig.Id, r =>
+            await _resourceManager.ModifyUnsafeAsync(manufacturingConfig.Id, r =>
             {
                 ((IManufacturingFactory)r).BackgroundUrl = url;
-                return true;
+                return Task.FromResult(true);
             });
             manufacturingConfig.BackgroundUrl = url;
             return Ok();
@@ -316,7 +316,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         /// <summary>
         /// Return the properties settings of a cell as a Dictionary, with the property as the key.
         /// </summary>
-        /// <param name="id">Identifier of the Cell</param>
+        /// <param name="identifier">Identifier of the Cell</param>
         [HttpGet("cell-properties/{identifier}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -338,7 +338,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         /// </summary>
         /// <param name="route"> Model of the route</param>
         [HttpPost("traceroute")]
-        public ActionResult TraceRoute(TransportRouteModel route)
+        public async Task<ActionResult> TraceRoute(TransportRouteModel route)
         {
             var path = route.Paths.ToList();
             var originCellLocation = _resourceManager.GetResource<IMachineLocation>(l => l.Machine.Id == route.IdCellOfOrigin);
@@ -350,7 +350,7 @@ namespace Moryx.FactoryMonitor.Endpoints
                 var bareOrigin = (MachineLocation)_resourceManager.ReadUnsafe(originCellLocation, bare => bare);
                 var bareDestination = (MachineLocation)_resourceManager.ReadUnsafe(destinationCellLocation, bare => bare);
 
-                _resourceManager.CreateUnsafe(typeof(TransportPath), resource =>
+                await _resourceManager.CreateUnsafeAsync(typeof(TransportPath), resource =>
                 {
                     var newPath = (TransportPath)resource;
                     newPath.Name = $"{originCellLocation.Name}=>{destinationCellLocation.Name}";
@@ -358,14 +358,15 @@ namespace Moryx.FactoryMonitor.Endpoints
                     newPath.Destination = bareDestination;
                     newPath.WayPoints = path.Select(x => new Position { PositionX = x.PositionX, PositionY = x.PositionY }).ToList();
                     bareOrigin.Children.Add(newPath);
+                    return Task.CompletedTask;
                 });
             }
             else
             {
-                _resourceManager.ModifyUnsafe(destinationPath, r =>
+                await _resourceManager.ModifyUnsafeAsync(destinationPath, r =>
                 {
                     ((ITransportPath)r).WayPoints = path;
-                    return true;
+                    return Task.FromResult(true);
                 });
             }
             return Ok();
@@ -376,18 +377,18 @@ namespace Moryx.FactoryMonitor.Endpoints
         /// </summary>
         /// <param name="settings"> Model of the settings (icon,image)</param>
         [HttpPut("cell-settings/{id}")]
-        public ActionResult CellSettings(long id, CellSettingsModel settings)
+        public async Task<ActionResult> CellSettings(long id, CellSettingsModel settings)
         {
             var cellLocation = _resourceManager.GetResource<IMachineLocation>(l => l.Machine?.Id == id);
 
             if (cellLocation is null)
                 return NotFound();
 
-            _resourceManager.ModifyUnsafe(cellLocation, r =>
+            await _resourceManager.ModifyUnsafeAsync(cellLocation, r =>
             {
                 ((IMachineLocation)r).SpecificIcon = string.IsNullOrEmpty(settings.Icon) ? ((IMachineLocation)r).SpecificIcon : settings.Icon;
                 ((IMachineLocation)r).Image = string.IsNullOrEmpty(settings.Image) ? ((IMachineLocation)r).Image : settings.Image;
-                return true;
+                return Task.FromResult(true);
             });
             return Ok();
         }

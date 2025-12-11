@@ -14,14 +14,11 @@ namespace Moryx.Runtime.Kernel
     {
         #region Fields and Properties
 
-        /// <inheritdoc />
-        public string Name => "Kernel";
+        private readonly IModuleDependencyManager _dependencyManager;
 
-        private IModuleDependencyManager _dependencyManager;
-
-        private IModuleStarter _moduleStarter;
-        private IModuleStopper _moduleStopper;
-        private ModuleManagerConfig _config;
+        private readonly IModuleStarter _moduleStarter;
+        private readonly IModuleStopper _moduleStopper;
+        private readonly ModuleManagerConfig _config;
 
         #endregion
 
@@ -66,57 +63,57 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// Start all modules in cascading order
         /// </summary>
-        public void StartModules()
+        public Task StartModulesAsync()
         {
-            _moduleStarter.StartAll();
+            return _moduleStarter.StartAllAsync();
         }
 
         /// <summary>
         /// Stop all modules in cascading order
         /// </summary>
-        public void StopModules()
+        public Task StopModulesAsync()
         {
-            _moduleStopper.StopAll();
+            return _moduleStopper.StopAllAsync();
         }
 
         /// <summary>
         /// Initialize a server module
         /// </summary>
         /// <param name="module"></param>
-        public void InitializeModule(IServerModule module)
+        public Task InitializeModuleAsync(IServerModule module)
         {
-            _moduleStarter.Initialize(module);
+            return _moduleStarter.InitializeAsync(module);
         }
 
         /// <summary>
         /// Start a specific module and all its dependencies
         /// </summary>
         /// <param name="module">Module to start</param>
-        public void StartModule(IServerModule module)
+        public Task StartModuleAsync(IServerModule module)
         {
-            _moduleStarter.Start(module);
+            return _moduleStarter.StartAsync(module);
         }
 
         /// <summary>
         /// Stop a specific module
         /// </summary>
         /// <param name="module">Module to stop</param>
-        public void StopModule(IServerModule module)
+        public Task StopModuleAsync(IServerModule module)
         {
-            _moduleStopper.Stop(module);
+            return _moduleStopper.StopAsync(module);
         }
 
         /// <summary>
         /// Restart the module and all of its dependencies
         /// </summary>
         /// <param name="module"></param>
-        public void ReincarnateModule(IServerModule module)
+        public async Task ReincarnateModuleAsync(IServerModule module)
         {
             // Stop execution
-            _moduleStopper.Stop(module);
+            await _moduleStopper.StopAsync(module);
 
             // Start all desired
-            _moduleStarter.Start(module);
+            await _moduleStarter.StartAsync(module);
         }
 
         /// <summary>

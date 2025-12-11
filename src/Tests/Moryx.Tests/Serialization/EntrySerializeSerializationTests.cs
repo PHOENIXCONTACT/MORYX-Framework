@@ -5,7 +5,7 @@ using System.Linq;
 using Moryx.Serialization;
 using NUnit.Framework;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.Serialization
 {
     [TestFixture]
     public class EntrySerializeSerializationTests

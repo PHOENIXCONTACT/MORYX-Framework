@@ -5,6 +5,7 @@ using System;
 using System.Buffers;
 using System.Linq.Expressions;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.TestTools;
@@ -37,7 +38,7 @@ namespace Moryx.Drivers.Mqtt.Tests
         public TestDriverMqttIByteSerializable(MqttProtocolVersion version) => _version = version;
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             ReflectionTool.TestMode = true;
 
@@ -53,8 +54,8 @@ namespace Moryx.Drivers.Mqtt.Tests
                 MessageName = nameof(BoolByteSerializableMessage)
             };
 
-            ((IInitializable)_topicBoolMqtt).Initialize();
-            ((IInitializable)_topicBoolIByteSerializable).Initialize();
+            await ((IAsyncInitializable)_topicBoolMqtt).InitializeAsync();
+            await ((IAsyncInitializable)_topicBoolIByteSerializable).InitializeAsync();
 
             _driver = new MqttDriver
             {
@@ -73,7 +74,7 @@ namespace Moryx.Drivers.Mqtt.Tests
                 .ReturnsAsync(new MqttClientSubscribeResult(0, Array.Empty<MqttClientSubscribeResultItem>(), "", Array.Empty<MqttUserProperty>()));
 
             _driver.InitializeForTest(_mockClient.Object);
-            ((IPlugin)_driver).Start();
+            await ((IAsyncPlugin)_driver).StartAsync();
             _driver.OnConnected(new MqttClientConnectedEventArgs(new MqttClientConnectResult())).Wait();
             _topicBoolMqtt.Parent = _driver;
             _topicBoolIByteSerializable.Parent = _driver;
@@ -173,11 +174,16 @@ namespace Moryx.Drivers.Mqtt.Tests
             _topicBoolMqtt.Received += (sender, eventArgs) => { topicReceivedMessage.Set(); };
 
             //Act
-            _driver.Receive(_driver.Identifier + _topicBoolMqtt.Identifier, new BoolMqttMessage
-            {
-                Message = MESSAGE_VALUE,
-                Identifier = _topicBoolMqtt.Identifier
-            }.ToBytes());
+            _driver.Receive(
+                new MqttApplicationMessage()
+                {
+                    Topic = _driver.Identifier + _topicBoolMqtt.Identifier,
+                    PayloadSegment = new BoolMqttMessage
+                    {
+                        Message = MESSAGE_VALUE,
+                        Identifier = _topicBoolMqtt.Identifier
+                    }.ToBytes()
+                });
 
             //Assert 1
             Assert.That(driverReceivedMessage.WaitOne(TimeSpan.FromSeconds(TIMEOUT)), "Received Event on driver was not raised");
@@ -201,7 +207,11 @@ namespace Moryx.Drivers.Mqtt.Tests
             _topicBoolIByteSerializable.Received += OnReceivedIByteSerializMessage;
 
             //Act
-            _driver.Receive(_driver.Identifier + _topicBoolIByteSerializable.Identifier, (new BoolByteSerializableMessage { Message = MESSAGE_VALUE }).ToBytes());
+            _driver.Receive(new MqttApplicationMessage()
+            {
+                Topic = _driver.Identifier + _topicBoolIByteSerializable.Identifier,
+                PayloadSegment = new BoolByteSerializableMessage { Message = MESSAGE_VALUE }.ToBytes()
+            });
 
             //Assert 1
             Assert.That(wait.WaitOne(TimeSpan.FromSeconds(TIMEOUT)), "Received Event was not raised");
@@ -224,7 +234,11 @@ namespace Moryx.Drivers.Mqtt.Tests
             _driver.Received += (sender, eventArgs) => { wait.Set(); };
 
             //Act
-            _driver.Receive(_driver.Identifier + "shouldNotBeFound", msg.ToBytes());
+            _driver.Receive(new MqttApplicationMessage()
+            {
+                Topic = _driver.Identifier + "shouldNotBeFound",
+                PayloadSegment = msg.ToBytes()
+            });
 
             //Assert
             Assert.That(!wait.WaitOne(TimeSpan.FromSeconds(TIMEOUT)), "Received Event was raised, although topic is not the driver's child");

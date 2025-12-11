@@ -7,7 +7,7 @@ using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.TestTools;
 using Moryx.ControlSystem.TestTools;
-using Moryx.ControlSystem.VisualInstructions;
+using Moryx.VisualInstructions;
 using NUnit.Framework;
 using Moryx.ControlSystem.Assemble;
 using Moryx.ControlSystem.TestTools.Identity;

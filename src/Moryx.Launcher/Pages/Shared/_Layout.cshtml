@@ -20,7 +20,7 @@
         Context.Response.Cookies.Append(".AspNetCore.Culture", "c=en-US|uic=en-US");
     }
 
-    var modules = (await _navigator.GetModuleItems(Context)).OrderBy(wmi => wmi.SortIndex);
+    var modules = (await _navigator.GetModuleItemsAsync(Context)).OrderBy(wmi => wmi.SortIndex);
 }
 
 <!DOCTYPE html>

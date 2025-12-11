@@ -52,16 +52,14 @@ The NotificationPublisher then provides you with desired notification access.
 
 ````cs
 ...
-protected override void OnInitialize()
-{
-    [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
-    public INotificationPublisher NotificationPublisher { get; set; }
+[RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
+public INotificationPublisher NotificationPublisher { get; set; }
 
-    protected override void OnInitialize()
-    {
-        // Register required facade
-        Container.SetInstance(NotificationPublisher);
-    }
+protected override Task OnInitializeAsync()
+{
+    // Register required facade
+    Container.SetInstance(NotificationPublisher);
+    ...
 }
 ...
 
@@ -76,12 +74,11 @@ It is necessary to register some components to the local container of the Server
 
 ````cs
 ...
-protected override void OnInitialize()
+protected override Task OnInitializeAsync()
 {
   ...
   Container.RegisterNotifications();
   ...
-
 }
 ...
 
@@ -104,11 +101,11 @@ The ServerModule is now able to publish notifications to the `NotificationPublis
 
 ### Publish a Notification
 
-After enabling the ServerModule to handle notifications, each plugin can publish a notification. It is necessary to inject and use the `INotificationAdapter`. 
-The `INotificationAdapter` gets the notifications and handles the publishing over the facade to the `NotificationPublisher`. 
+After enabling the ServerModule to handle notifications, each plugin can publish a notification. It is necessary to inject and use the `INotificationAdapter`.
+The `INotificationAdapter` gets the notifications and handles the publishing over the facade to the `NotificationPublisher`.
 It is also responsible to hold the notifications if the `NotificationPublisher` is not available and synchronize after the `NotificationPublisher` is available again.
-Inside of a plugin it is just necessary to implement the interface `INotificationSender` and register to the `INotificationAdapter`. 
-Then the plugin can publish notification as often as necessary. 
+Inside of a plugin it is just necessary to implement the interface `INotificationSender` and register to the `INotificationAdapter`.
+Then the plugin can publish notification as often as necessary.
 The following code snippet shows an example for how a notification publishing plugin could look like.
 
 ````cs
@@ -140,7 +137,7 @@ public class MyPlugin : IModulePlugin, INotificationSender
 
 #### Marking a notification as not acknowledgeable
 
-Some notifications should not be acknowledged by the user because the notification is acknowledged by the system automatically. 
+Some notifications should not be acknowledged by the user because the notification is acknowledged by the system automatically.
 So you need to define if the notification can be acknowledged by the user.
 Please note that all notifications are non acknowledgeable by default.
 

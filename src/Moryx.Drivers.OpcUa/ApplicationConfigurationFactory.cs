@@ -1,6 +1,8 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
+using Moryx.Drivers.OpcUa.Exceptions;
 using Opc.Ua;
 using Opc.Ua.Configuration;
 
@@ -40,7 +42,7 @@ internal class ApplicationConfigurationFactory
         var haveAppCertificate = await application.CheckApplicationInstanceCertificate(false, 0);
         if (!haveAppCertificate)
         {
-            throw new Exception("Application instance certificate invalid!");
+            throw new InvalidCertificateException("Application instance certificate invalid!");
         }
         else
         {

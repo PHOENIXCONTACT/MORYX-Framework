@@ -9,6 +9,7 @@ using Moryx.AbstractionLayer.Workplans;
 using Moryx.Model;
 using Moryx.Model.Repositories;
 using Moryx.Products.Management.Model;
+using Moryx.Tools;
 using Moryx.Workplans;
 using Moryx.Workplans.WorkplanSteps;
 using Newtonsoft.Json;
@@ -20,6 +21,8 @@ namespace Moryx.Products.Management
     /// </summary>
     public static class RecipeStorage
     {
+        private static readonly Lazy<Dictionary<string, Type>> _stepTypes = new(LoadStepTypes);
+
         /// <summary>
         /// Copy properties to recipe
         /// </summary>
@@ -46,7 +49,7 @@ namespace Moryx.Products.Management
         {
             var entity = uow.GetEntity<ProductRecipeEntity>(recipe);
 
-            entity.Type = recipe.GetType().FullName;
+            entity.TypeName = recipe.RecipeTypeName();
             entity.Revision = recipe.Revision;
             entity.Name = recipe.Name;
             entity.TemplateId = recipe.TemplateId;
@@ -114,8 +117,9 @@ namespace Moryx.Products.Management
 
             foreach (var stepEntity in workplan.Steps)
             {
-                var fullName = $"{stepEntity.NameSpace}.{stepEntity.Classname}, {stepEntity.Assembly}";
-                var type = Type.GetType(fullName, true, true);
+                if (!_stepTypes.Value.TryGetValue(stepEntity.TypeName, out var type))
+                    throw new TypeLoadException($"Step type {stepEntity.TypeName} not found.");
+
                 // Create instance using public and private constructors
                 var step = (WorkplanStepBase)Activator.CreateInstance(type, true);
                 step.Id = stepEntity.StepId;
@@ -124,7 +128,7 @@ namespace Moryx.Products.Management
 
                 // Restore output descriptions
                 step.OutputDescriptions = new OutputDescription[stepEntity.OutputDescriptions.Count];
-                for (int index = 0; index < step.OutputDescriptions.Length; index++)
+                for (var index = 0; index < step.OutputDescriptions.Length; index++)
                 {
                     var descriptionEntity = stepEntity.OutputDescriptions.First(ode => ode.Index == index);
                     var description = new OutputDescription
@@ -277,12 +281,20 @@ namespace Moryx.Products.Management
                 if (stepEntity == null)
                 {
                     var stepType = step.GetType();
-                    var assemblyName = stepType.Assembly.GetName().Name;
-                    stepEntity = stepRepo.Create(step.Id, step.Name, assemblyName, stepType.Namespace, stepType.Name, step.Position.X, step.Position.Y);
+                    stepEntity = stepRepo.Create();
+                    stepEntity.StepId = step.Id;
+                    stepEntity.Name = step.Name;
+                    stepEntity.TypeName = step.WorkplanStepTypeName();
+                    stepEntity.Name = stepType.Name;
+                    stepEntity.PositionX = step.Position.X;
+                    stepEntity.PositionY = step.Position.Y;
+
                     workplanEntity.Steps.Add(stepEntity);
                 }
                 else
+                {
                     stepEntity.Name = step.Name;
+                }
 
                 // Update all output descriptions
                 for (var index = 0; index < step.OutputDescriptions.Length; index++)
@@ -382,5 +394,12 @@ namespace Moryx.Products.Management
             connectorRepo.RemoveRange(removedConnectors);
         }
 
+        /// <summary>
+        /// Loads possible step types from app domain
+        /// </summary>
+        private static Dictionary<string, Type> LoadStepTypes()
+        {
+            return ReflectionTool.GetPublicClasses<WorkplanStepBase>().ToDictionary(t => t.FullName, t => t);
+        }
     }
 }

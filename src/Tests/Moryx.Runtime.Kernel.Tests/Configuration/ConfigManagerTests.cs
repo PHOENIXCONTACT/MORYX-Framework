@@ -4,10 +4,9 @@
 using System.IO;
 using System.Linq;
 using Moryx.Configuration;
-using Moryx.Runtime.Kernel;
 using NUnit.Framework;
 
-namespace Moryx.Tests.Configuration
+namespace Moryx.Runtime.Kernel.Tests.Configuration
 {
     [TestFixture]
     public class ConfigManagerTests
@@ -15,7 +14,7 @@ namespace Moryx.Tests.Configuration
         private const string ConfigDir = "Configs";
 
         private string _fullConfigDir;
-        private IConfigManager _configManager;
+        private ConfigManager _configManager;
 
         [SetUp]
         public void Setup()

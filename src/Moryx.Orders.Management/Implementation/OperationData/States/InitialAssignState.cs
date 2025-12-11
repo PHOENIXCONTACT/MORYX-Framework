@@ -16,20 +16,22 @@ namespace Moryx.Orders.Management
         {
         }
 
-        public override void Assign()
+        public override Task Assign()
         {
             // Is already creating
+            return Task.CompletedTask;
         }
 
-        public override void AssignCompleted(bool success)
+        public override async Task AssignCompleted(bool success)
         {
-            Context.HandleAssignCompleted(success);
-            NextState(success ? StateReady : StateInitialAssignFailed);
+            await Context.HandleAssignCompleted(success);
+            await NextStateAsync(success ? StateReady : StateInitialAssignFailed);
         }
 
-        public override void Abort()
+        public override Task Abort()
         {
             // cannot be aborted, but should also not throw an error
+            return Task.CompletedTask;
         }
     }
 }

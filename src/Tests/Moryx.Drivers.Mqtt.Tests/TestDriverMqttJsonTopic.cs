@@ -6,6 +6,7 @@ using System.Buffers;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.TestTools;
@@ -39,7 +40,7 @@ namespace Moryx.Drivers.Mqtt.Tests
         public TestDriverMqttJsonTopic(MqttProtocolVersion version) => _version = version;
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             ReflectionTool.TestMode = true;
 
@@ -47,7 +48,7 @@ namespace Moryx.Drivers.Mqtt.Tests
             {
                 Identifier = "JsonMqttCamel",
                 MessageName = nameof(JsonMessageTest),
-                Format = JsonFormat.camelCase
+                Format = JsonFormat.CamelCase
             };
             _mqttTopicPascal = new MqttTopicJson()
             {
@@ -55,8 +56,8 @@ namespace Moryx.Drivers.Mqtt.Tests
                 MessageName = nameof(JsonMessageTest)
             };
 
-            ((IInitializable)_mqttTopicCamel).Initialize();
-            ((IInitializable)_mqttTopicPascal).Initialize();
+            await ((IAsyncInitializable)_mqttTopicCamel).InitializeAsync();
+            await ((IAsyncInitializable)_mqttTopicPascal).InitializeAsync();
 
             _driver = new MqttDriver
             {
@@ -75,7 +76,7 @@ namespace Moryx.Drivers.Mqtt.Tests
                 .ReturnsAsync(new MqttClientSubscribeResult(0, Array.Empty<MqttClientSubscribeResultItem>(), "", Array.Empty<MqttUserProperty>()));
 
             _driver.InitializeForTest(_mockClient.Object);
-            ((IPlugin)_driver).Start();
+            await ((IAsyncPlugin)_driver).StartAsync();
             _driver.OnConnected(new MqttClientConnectedEventArgs(new MqttClientConnectResult())).Wait();
             _mqttTopicCamel.Parent = _driver;
             _mqttTopicPascal.Parent = _driver;
@@ -157,8 +158,18 @@ namespace Moryx.Drivers.Mqtt.Tests
             });
 
             //Act
-            _driver.Receive(_driver.Identifier + _mqttTopicPascal.Identifier, Encoding.ASCII.GetBytes(pascalJson));
-            _driver.Receive(_driver.Identifier + _mqttTopicCamel.Identifier, Encoding.ASCII.GetBytes(camelJson));
+            _driver.Receive(
+                new MqttApplicationMessage()
+                {
+                    Topic = _driver.Identifier + _mqttTopicPascal.Identifier,
+                    PayloadSegment = Encoding.ASCII.GetBytes(pascalJson)
+                });
+            _driver.Receive(
+                new MqttApplicationMessage()
+                {
+                    Topic = _driver.Identifier + _mqttTopicCamel.Identifier,
+                    PayloadSegment = Encoding.ASCII.GetBytes(camelJson)
+                });
 
             //Assert 1
             Assert.That(waitCamel.WaitOne(TimeSpan.FromSeconds(TIMEOUT)), "Received Event was not raised");

@@ -6,7 +6,7 @@ using System.Linq;
 using Moryx.Serialization;
 using NUnit.Framework;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.Serialization
 {
     /// <summary>
     /// Unit tests for different clone mechanism

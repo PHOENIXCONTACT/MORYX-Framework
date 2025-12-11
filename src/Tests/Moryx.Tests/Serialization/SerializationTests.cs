@@ -12,7 +12,7 @@ using Moryx.Configuration;
 using Moryx.Serialization;
 using NUnit.Framework;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.Serialization
 {
     /// <summary>
     /// Unit tests for the static <see cref="EntryConvert"/> class
@@ -51,10 +51,7 @@ namespace Moryx.Tests
             var doubles = encoded.SubEntries[1];
             Assert.That(doubles.Value.Possible[0].Key, Is.EqualTo(nameof(EntryValueType.Double)));
             Assert.That(doubles.Prototypes.Count, Is.EqualTo(1));
-            if (possibleValues)
-                Assert.That(doubles.Prototypes[0].Value.Possible.Length, Is.EqualTo(3));
-            else
-                Assert.That(doubles.Prototypes[0].Value.Possible, Is.Null);
+            Assert.That(doubles.Prototypes[0].Value.Possible.Length, Is.EqualTo(3));
 
             var enums = encoded.SubEntries[2];
             Assert.That(enums.Value.Possible.Length, Is.EqualTo(3));
@@ -998,6 +995,47 @@ namespace Moryx.Tests
 
             Assert.That(dummyDecoded.Number, Is.EqualTo(1001));
             Assert.That(dummyDecoded.SingleClass.Foo, Is.EqualTo(1.1234f));
+        }
+
+        [Test]
+        public void AllowedEnumValuesTest()
+        {
+            // Arrange
+            var encoded = EntryConvert.EncodeClass(typeof(AllowedDeniedValuesClass));
+
+            // Assert
+            Assert.That(encoded.SubEntries[0].Value.Possible, Has.Exactly(2).Items);
+
+            string[] expected = [nameof(DummyEnum.ValueA), nameof(DummyEnum.ValueB)];
+            var possibles = encoded.SubEntries[0].Value.Possible.Select(p => p.Key);
+            Assert.That(possibles, Is.SupersetOf(expected));
+        }
+
+        [Test]
+        public void DeniedEnumValuesTest()
+        {
+            // Arrange
+            var encoded = EntryConvert.EncodeClass(typeof(AllowedDeniedValuesClass));
+
+            // Assert
+            Assert.That(encoded.SubEntries[1].Value.Possible, Has.Exactly(2).Items);
+
+            string[] expected = [nameof(DummyEnum.ValueA), nameof(DummyEnum.ValueB)];
+            var possibles = encoded.SubEntries[0].Value.Possible.Select(p => p.Key);
+            Assert.That(possibles, Is.SupersetOf(expected));
+        }
+
+        [Test]
+        public void AllowedIntValuesTest()
+        {
+            // Arrange
+            var encoded = EntryConvert.EncodeClass(typeof(AllowedDeniedValuesClass));
+
+            // Assert
+            Assert.That(encoded.SubEntries[2].Value.Possible, Has.Exactly(3).Items);
+            string[] expected = ["1", "5", "20"];
+            var possibles = encoded.SubEntries[2].Value.Possible.Select(p => p.Key);
+            Assert.That(possibles, Is.SupersetOf(expected));
         }
 
         private static Entry CreateTestEntry()

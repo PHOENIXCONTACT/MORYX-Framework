@@ -37,28 +37,28 @@ namespace Moryx.Model.Tests
         [Test]
         public async Task SqliteCreateDatabaseShouldWork()
         {
-            var result = await _configurator.TestConnection(_dbConfig);
+            var result = await _configurator.TestConnectionAsync(_dbConfig);
             Assert.That(result, Is.EqualTo(TestConnectionResult.ConnectionOkDbDoesNotExist));
 
-            var isCreated = await _configurator.CreateDatabase(_dbConfig);
+            var isCreated = await _configurator.CreateDatabaseAsync(_dbConfig);
 
             Assert.That(isCreated);
             Assert.That(File.Exists(_dataSource));
 
             //remove the database
-            await _configurator.DeleteDatabase(_dbConfig);
+            await _configurator.DeleteDatabaseAsync(_dbConfig);
         }
 
         [Test]
         public async Task SqliteDeleteDatabaseShouldWork()
         {
-            var connectionResult = await _configurator.TestConnection(_dbConfig);
+            var connectionResult = await _configurator.TestConnectionAsync(_dbConfig);
             Assert.That(connectionResult, Is.EqualTo(TestConnectionResult.ConnectionOkDbDoesNotExist));
 
-            var isCreated = await _configurator.CreateDatabase(_dbConfig);
+            var isCreated = await _configurator.CreateDatabaseAsync(_dbConfig);
             Assert.That(isCreated);
 
-            await _configurator.DeleteDatabase(_dbConfig);
+            await _configurator.DeleteDatabaseAsync(_dbConfig);
             Assert.That(!File.Exists(_dataSource));
         }
         [TearDown]
@@ -66,7 +66,7 @@ namespace Moryx.Model.Tests
         {
             if (File.Exists(_dataSource))
                 //remove the database
-                _configurator.DeleteDatabase(_dbConfig).Wait();
+                _configurator.DeleteDatabaseAsync(_dbConfig).Wait();
         }
     }
 }

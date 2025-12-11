@@ -35,15 +35,16 @@ namespace Moryx.TestModule
         #region State transition
 
         /// <inheritdoc />
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             Container.ActivateDbContexts(ContextManager);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStart()
+        protected override async Task OnStartAsync()
         {
-            Thread.Sleep(Config.SleepTime); // Just for system testing.
+            await Task.Delay(Config.SleepTime); // Just for system testing.
 
             var plugin = Container.Resolve<ITestPlugin>("TestPlugin");
             plugin.Start();
@@ -54,12 +55,13 @@ namespace Moryx.TestModule
 
         /// <inheritdoc />
 
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             Thread.Sleep(Config.SleepTime); // Just for system testing.
 
             // Deactivate facades
             DeactivateFacade(_testModule);
+            return Task.CompletedTask;
         }
         #endregion
 

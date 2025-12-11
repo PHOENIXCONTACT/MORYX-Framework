@@ -43,11 +43,6 @@ namespace Moryx.ControlSystem.ProcessEngine
 
         #endregion
 
-        public void Initialize()
-        {
-            // Called to make sure the component orchestration resolves all internal components first
-        }
-
         public void Start()
         {
             JobStorage.Start();

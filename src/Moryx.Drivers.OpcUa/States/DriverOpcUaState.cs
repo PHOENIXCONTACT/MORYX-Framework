@@ -7,7 +7,7 @@ using Opc.Ua.Client;
 
 namespace Moryx.Drivers.OpcUa.States;
 
-internal abstract class DriverOpcUaState(OpcUaDriver context, StateBase.StateMap stateMap, StateClassification classification) : DriverState<OpcUaDriver>(context, stateMap, classification)
+internal abstract class DriverOpcUaState(OpcUaDriver context, StateBase.StateMap stateMap, StateClassification classification) : SyncDriverState<OpcUaDriver>(context, stateMap, classification)
 {
     public override void Connect()
     {

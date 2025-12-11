@@ -5,7 +5,7 @@ using Moryx.StateMachines;
 
 namespace Moryx.Communication.Sockets
 {
-    internal abstract class ServerStateBase : StateBase<TcpListenerConnection>
+    internal abstract class ServerStateBase : SyncStateBase<TcpListenerConnection>
     {
         public BinaryConnectionState CurrentState { get; }
 

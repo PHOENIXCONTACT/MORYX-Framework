@@ -36,5 +36,15 @@ namespace Moryx.Drivers.Mqtt.States
         {
             Context.SubscribeTopicAsync(topic).Wait();
         }
+
+        internal override void TriedConnecting(bool successful)
+        {
+            if (successful)
+            {
+                return;
+            }
+
+            base.TriedConnecting(successful);
+        }
     }
 }

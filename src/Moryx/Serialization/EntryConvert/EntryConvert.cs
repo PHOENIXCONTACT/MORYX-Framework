@@ -385,7 +385,7 @@ namespace Moryx.Serialization
         /// </summary>
         public static MethodEntry EncodeMethod(MethodBase method, ICustomSerialization serialization)
         {
-            return new MethodEntry
+            var methodEntry = new MethodEntry
             {
                 Name = method.Name,
                 IsConstructor = method.IsConstructor,
@@ -399,6 +399,14 @@ namespace Moryx.Serialization
                     SubEntries = method.GetParameters().Select(p => ConvertParameter(p, serialization)).ToList()
                 }
             };
+
+            // Constructors have no return type
+            if (method is MethodInfo methodInfo)
+            {
+                methodEntry.IsAsync = IsAsyncMethod(methodInfo);
+            }
+
+            return methodEntry;
         }
 
         /// <summary>
@@ -749,21 +757,66 @@ namespace Moryx.Serialization
 
         /// <summary>
         /// Invoke a method on the target object using custom customSerialization
+        /// Async methods are executed asynchronous
         /// </summary>
-        public static Entry InvokeMethod(object target, MethodEntry methodEntry, ICustomSerialization customSerialization)
+        public static Task<Entry> InvokeMethodAsync(object target, MethodEntry methodEntry)
+        {
+            return InvokeMethodAsync(target, methodEntry, Serialization);
+        }
+
+        /// <summary>
+        /// Invoke a method on the target object using custom customSerialization
+        /// Async methods are executed asynchronous
+        /// </summary>
+        public static async Task<Entry> InvokeMethodAsync(object target, MethodEntry methodEntry, ICustomSerialization customSerialization)
         {
             var method = target.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .FirstOrDefault(m => m.Name == methodEntry.Name && (m.IsPublic || m.IsAssembly) && ParametersProvided(m.GetParameters(), methodEntry));
             if (method == null)
             {
-                throw new MissingMethodException();
+                throw new MissingMethodException($"Method {methodEntry.Name} not found on target {target.GetType().Name}!");
             }
 
             var arguments = ConvertArguments(method, methodEntry, customSerialization);
+            object invokeResult = null;
 
-            var result = method.Invoke(target, arguments);
-            return result == null ? null : EncodeObject(result, customSerialization);
+            // Also part of MethodEntry but be safer than sorry
+            var isAsync = IsAsyncMethod(method);
+            if (isAsync)
+            {
+                var task = (Task)method.Invoke(target, arguments)!;
+                await task;
+
+                var returnType = method.ReturnType;
+                if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
+                {
+                    // Extract T from Task<T>
+                    var resultProperty = returnType.GetProperty(nameof(Task<>.Result));
+                    invokeResult = resultProperty!.GetValue(task);
+                }
+            }
+            else
+            {
+                invokeResult = method.Invoke(target, arguments);
+            }
+
+            return invokeResult == null ? null : EncodeObject(invokeResult, customSerialization);
         }
+
+        /// <summary>
+        /// Invoke a method on the target object using custom customSerialization
+        /// Async methods are synchronized
+        /// </summary>
+        public static Entry InvokeMethod(object target, MethodEntry methodEntry, ICustomSerialization customSerialization)
+        {
+            return InvokeMethodAsync(target, methodEntry, customSerialization).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Checks if the return type of the method is a task
+        /// </summary>
+        private static bool IsAsyncMethod(MethodInfo method) =>
+            typeof(Task).IsAssignableFrom(method.ReturnType);
 
         /// <summary>
         /// Check if all parameters are provided by the given <see cref="MethodEntry"/>

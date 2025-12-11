@@ -28,7 +28,7 @@ For simulation driver to work, you need `Moryx.Simulation.ISimulationDriver`.
         SimulationState SimulatedState { get; }
 
         /// <summary>
-        /// Cells that reference this simulation driver 
+        /// Cells that reference this simulation driver
         /// and expect process events from it
         /// </summary>
         IEnumerable<ICell> Usages { get; }
@@ -77,7 +77,8 @@ For simulation driver to work, you need `Moryx.Simulation.ISimulationDriver`.
 ```
 
 So here is an example of how your mock driver can implement `Moryx.Simulation.ISimulationDriver`:
-``` csharp
+
+````cs
     [ResourceRegistration]
     public class TestMockDriver : Driver, IMessageDriver<object>,ISimulationDriver {
 
@@ -105,9 +106,10 @@ So here is an example of how your mock driver can implement `Moryx.Simulation.IS
 
         public IEnumerable<ICell> Usages => new[] { Cell };
 
-        protected override void OnStart()
+        protected override async Task OnStartAsync()
         {
-            base.OnStart();
+            await base.OnStartAsync();
+
             // initial simulated state of the driver
             SimulatedState = SimulationState.Idle;
         }
@@ -159,7 +161,8 @@ So here is an example of how your mock driver can implement `Moryx.Simulation.IS
 
         //... rest of your codes//
     }
-```
+````
+
 Note: The `Send()` method might differ from cell to cell.You can override the `Send()` and do your implementation of what needs to happend when your "mock" driver receives something from the cell. In case your driver doesn't have a `send()` method, you can use your own method and react upon the type of message you received just like described inside the `TestMockDriver.Send()` method above.
 
  # How does my Cell use my `MockDriver` ?
@@ -167,7 +170,7 @@ Note: The `Send()` method might differ from cell to cell.You can override the `S
 In your cell definition/Class you can use the following example based on the type of driver you're trying to simulate. Let's say we are trying to "mock" an `MQTT driver` since Moryx MQTT driver inherit from `IMessageDriver<object>` in your cell you can have the following case:
 ```csharp
     // SolderingCell.cs
-    
+
    [ResourceRegistration]
     public class SolderingCell : Cell
     {
@@ -253,6 +256,6 @@ Moryx will take care of the relationship once you assign the driver to the cell.
                     break;
             }
         }
-        
+
     //... rest of the codes//
  ```

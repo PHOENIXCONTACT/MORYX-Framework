@@ -23,18 +23,11 @@ namespace Moryx.Orders.Management
         {
         }
 
-        public override void IncreaseTargetBy(int amount, User user)
+        public override async Task IncreaseTargetBy(int amount, User user)
         {
-            if (amount == 0)
-            {
-                NextState(StateAmountReached);
-                Context.HandleIncreaseTargetBy(amount);
-            }
-            else
-            {
-                NextState(StateRunning);
-                Context.HandleIncreaseTargetBy(amount);
-            }
+            await NextStateAsync(amount == 0 ? StateAmountReached : StateRunning);
+
+            await Context.HandleIncreaseTargetBy(amount);
 
             Context.HandleStarted(user);
         }
@@ -44,17 +37,17 @@ namespace Moryx.Orders.Management
             return Context.HandleReportContext();
         }
 
-        public override void Report(OperationReport report)
+        public override async Task Report(OperationReport report)
         {
             switch (report.ConfirmationType)
             {
                 case ConfirmationType.Partial:
                     // ReSharper disable once ExplicitCallerInfoArgument
-                    InvalidState(nameof(Report) + "(partial)");
+                    await InvalidStateAsync(nameof(Report) + "(partial)");
                     break;
                 case ConfirmationType.Final:
-                    NextState(StateCompleted);
-                    Context.HandleCompleted(report);
+                    await NextStateAsync(StateCompleted);
+                    await Context.HandleCompleted(report);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -66,25 +59,25 @@ namespace Moryx.Orders.Management
             return Context.HandleAdviceContext();
         }
 
-        public override void Advice(OperationAdvice advice)
+        public override Task Advice(OperationAdvice advice)
         {
-            Context.HandleAdvice(advice);
+            return Context.HandleAdvice(advice);
         }
 
-        public override void Resume()
+        public override Task Resume()
         {
-
+            return Task.CompletedTask;
         }
 
-        public override void Abort()
+        public override async Task Abort()
         {
-            NextState(StateAborted);
-            Context.HandleAbort();
+            await NextStateAsync(StateAborted);
+            await Context.HandleAbort();
         }
 
-        public override void Assign()
+        public override async Task Assign()
         {
-            NextState(StateReadyAssign);
+            await NextStateAsync(StateReadyAssign);
             Context.HandleReassign();
         }
     }

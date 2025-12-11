@@ -11,6 +11,7 @@ using Moryx.Benchmarking;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.VisualInstructions;
+using Moryx.VisualInstructions;
 using Moryx.Notifications;
 using Moryx.Serialization;
 
@@ -19,7 +20,6 @@ namespace Moryx.Resources.Benchmarking
     [ResourceRegistration]
     [DisplayName("Benchmark Resource")]
     public class BenchmarkResource : Cell, IBenchmarkResource, INotificationSender
-
     {
         #region Config
 
@@ -68,9 +68,9 @@ namespace Moryx.Resources.Benchmarking
         public int StepId { get; set; }
 
         /// <inheritdoc />
-        protected override void OnInitialize()
+        protected override async Task OnInitializeAsync()
         {
-            base.OnInitialize();
+            await base.OnInitializeAsync();
 
             Capabilities = new BenchmarkCapabilities(StepId);
         }

@@ -6,6 +6,7 @@ using System.Buffers;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.TestTools;
@@ -38,7 +39,7 @@ namespace Moryx.Drivers.Mqtt.Tests
         public TestDriverMqttPrimitiveDatatypeTopic(MqttProtocolVersion version) => _version = version;
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             ReflectionTool.TestMode = true;
 
@@ -56,8 +57,8 @@ namespace Moryx.Drivers.Mqtt.Tests
                 MessageType = typeof(string)
             };
 
-            ((IInitializable)_mqttTopicInt).Initialize();
-            ((IInitializable)_mqttTopicString).Initialize();
+            await ((IAsyncInitializable)_mqttTopicInt).InitializeAsync();
+            await ((IAsyncInitializable)_mqttTopicString).InitializeAsync();
 
             _driver = new MqttDriver
             {
@@ -76,7 +77,7 @@ namespace Moryx.Drivers.Mqtt.Tests
                 .ReturnsAsync(new MqttClientSubscribeResult(0, Array.Empty<MqttClientSubscribeResultItem>(), "", Array.Empty<MqttUserProperty>()));
 
             _driver.InitializeForTest(_mockClient.Object);
-            ((IPlugin)_driver).Start();
+            await ((IAsyncPlugin)_driver).StartAsync();
             _driver.OnConnected(new MqttClientConnectedEventArgs(new MqttClientConnectResult())).Wait();
             _mqttTopicInt.Parent = _driver;
             _mqttTopicString.Parent = _driver;
@@ -157,8 +158,11 @@ namespace Moryx.Drivers.Mqtt.Tests
             _mqttTopicInt.Received += OnReceivedIntMessage;
 
             //Act
-            _driver.Receive(_driver.Identifier + _mqttTopicInt.Identifier,
-                BitConverter.GetBytes(MESSAGE_VALUE_INT));
+            _driver.Receive(new MqttApplicationMessage()
+            {
+                Topic = _driver.Identifier + _mqttTopicInt.Identifier,
+                PayloadSegment = BitConverter.GetBytes(MESSAGE_VALUE_INT)
+            });
 
             //Assert 1
             Assert.That(wait.WaitOne(TimeSpan.FromSeconds(TIMEOUT)), "Received Event was not raised");
@@ -180,8 +184,11 @@ namespace Moryx.Drivers.Mqtt.Tests
             _mqttTopicString.Received += OnReceivedStringMessage;
 
             //Act
-            _driver.Receive(_driver.Identifier + _mqttTopicString.Identifier,
-                Encoding.ASCII.GetBytes(MESSAGE_VALUE_STRING));
+            _driver.Receive(new MqttApplicationMessage()
+            {
+                Topic = _driver.Identifier + _mqttTopicString.Identifier,
+                PayloadSegment = Encoding.ASCII.GetBytes(MESSAGE_VALUE_STRING)
+            });
 
             //Assert 1
             Assert.That(wait.WaitOne(TimeSpan.FromSeconds(TIMEOUT)), "Received Event was not raised");

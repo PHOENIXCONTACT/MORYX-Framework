@@ -96,21 +96,22 @@ namespace Moryx.AbstractionLayer.TestTools.Resources
         }
 
         /// <inheritdoc />
-        public bool Destroy(IResource resource)
+        public Task<bool> DestroyAsync(IResource resource)
         {
             (resource as IDisposable)?.Dispose();
-            return true;
+            return Task.FromResult(true);
         }
 
         /// <inheritdoc />
-        public bool Destroy(IResource resource, bool permanent)
+        public Task<bool> DestroyAsync(IResource resource, bool permanent)
         {
-            return Destroy(resource);
+            return DestroyAsync(resource);
         }
 
         /// <inheritdoc />
-        public void Save(IResource resource)
+        public Task SaveAsync(IResource resource)
         {
+            return Task.CompletedTask;
         }
 
         private void SetReferenceCollections(Resource instance)

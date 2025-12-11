@@ -22,9 +22,9 @@
     <ProjectReference Include="..\Moryx.ControlSystem.ProcessEngine\Moryx.ControlSystem.ProcessEngine.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.Processes.Endpoints\Moryx.ControlSystem.Processes.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx.ControlSystem.SetupProvider\Moryx.ControlSystem.SetupProvider.csproj" />
-    <ProjectReference Include="..\Moryx.ControlSystem.VisualInstructions.Endpoints\Moryx.ControlSystem.VisualInstructions.Endpoints.csproj" />
-    <ProjectReference Include="..\Moryx.ControlSystem.WorkerSupport.Web\Moryx.ControlSystem.WorkerSupport.Web.csproj" />
-    <ProjectReference Include="..\Moryx.ControlSystem.WorkerSupport\Moryx.ControlSystem.WorkerSupport.csproj" />
+    <ProjectReference Include="..\Moryx.VisualInstructions.Endpoints\Moryx.VisualInstructions.Endpoints.csproj" />
+    <ProjectReference Include="..\Moryx.VisualInstructions.Web\Moryx.VisualInstructions.Web.csproj" />
+    <ProjectReference Include="..\Moryx.VisualInstructions.Controller\Moryx.VisualInstructions.Controller.csproj" />
     <ProjectReference Include="..\Moryx.Drivers.Mqtt\Moryx.Drivers.Mqtt.csproj" />
     <ProjectReference Include="..\Moryx.Drivers.OpcUa\Moryx.Drivers.OpcUa.csproj" />
     <ProjectReference Include="..\Moryx.Drivers.Simulation\Moryx.Drivers.Simulation.csproj" />
@@ -45,7 +45,7 @@
     <ProjectReference Include="..\Moryx.Orders.Management\Moryx.Orders.Management.csproj" />
     <ProjectReference Include="..\Moryx.Orders.Web\Moryx.Orders.Web.csproj" />
     <ProjectReference Include="..\Moryx.Products.Web\Moryx.Products.Web.csproj" />
-    <ProjectReference Include="..\Moryx.Resources.AssemblyInstruction\Moryx.Resources.AssemblyInstruction.csproj" />
+    <ProjectReference Include="..\Moryx.Resources.VisualInstructions\Moryx.Resources.VisualInstructions.csproj" />
     <ProjectReference Include="..\Moryx.Resources.Web\Moryx.Resources.Web.csproj" />
     <ProjectReference Include="..\Moryx.Runtime.Endpoints\Moryx.Runtime.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx.Runtime.Kernel\Moryx.Runtime.Kernel.csproj" />

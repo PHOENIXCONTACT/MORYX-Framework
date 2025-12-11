@@ -14,20 +14,24 @@ using Moryx.Threading;
 using Moryx.Tools;
 using Moryx.Drivers.Mqtt.Properties;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
+using Moryx.Drivers.Mqtt.Messages;
+using System.Buffers;
+using System.Text.Json;
 
 namespace Moryx.Drivers.Mqtt
 {
+
     /// <summary>
     /// Base class for MQTT topics a MQTT Driver can subscribe.
     /// </summary>
     [ResourceRegistration]
     public abstract class MqttTopic : Resource, IMessageChannel
     {
-        /// <summary>
-        /// Event raised, when a message is received
-        /// </summary>
-        public event EventHandler<object> Received;
 
+        /// <summary>
+        /// Injected service, used for scheduling tasks
+        /// </summary>
         public IParallelOperations ParallelOperations { get; set; }
 
         #region Properties
@@ -79,6 +83,20 @@ namespace Moryx.Drivers.Mqtt
             }
         }
 
+        /// <summary>
+        /// Determines if the topic can be written to, read from or both
+        /// </summary>
+        [DataMember, EntrySerialize]
+        [Display(Name = nameof(Strings.MqttTopic_TopicType), Description = nameof(Strings.MqttTopic_TopicType_Description), ResourceType = typeof(Strings))]
+        public TopicType TopicType { get; set; }
+
+        /// <summary>
+        /// "Determines if the decoded message is stored as part of the diagnostics span for debugging purposes
+        /// </summary>
+        [DataMember, EntrySerialize]
+        [Display(Name = nameof(Strings.MqttTopic_TraceDecodedMessage), Description = nameof(Strings.MqttTopic_TraceDecodedMessage_Description), ResourceType = typeof(Strings))]
+        public bool TraceDecodedMessage { get; set; }
+
         private (TopicValidationResult result, string errorMessage) ValidateTopicString(string value)
         {
             if (value is null)
@@ -119,8 +137,21 @@ namespace Moryx.Drivers.Mqtt
         [Display(Name = nameof(Strings.MqttTopic_ResponseTopic), Description = nameof(Strings.MqttTopic_ResponseTopic_Description), ResourceType = typeof(Strings))]
         public string ResponseTopic { get; set; }
 
+        /// <summary>
+        /// Marks if messages send by this topic should be marked as retained by default.
+        /// Messages can implment IRetainAware to overwrite the default.
+        /// </summary>
+        [EntrySerialize, DataMember]
+        [Display(Name = nameof(Strings.MqttTopic_Retain), Description = nameof(Strings.MqttTopic_Retain_Description), ResourceType = typeof(Strings))]
+        public bool Retain { get; set; }
+
         private void ReportToDriverThatTopicChanged(TopicChanged args)
         {
+            if (TopicType == TopicType.PublishOnly) // TODO check for changes in topic type too
+            {
+                return;
+            }
+
             MqttDriver.OnTopicChanged(args.OldTopic, args.NewTopic);
         }
 
@@ -137,12 +168,16 @@ namespace Moryx.Drivers.Mqtt
         }
 
         private string _topicName;
+        /// <summary>
+        /// cached regex of the topic identifier
+        /// </summary>
         protected internal Regex RegexTopic;
 
         /// <summary>
         /// corresponding topic to be subscribed
         /// placeholders are replaced with +
         /// </summary>
+        [EntrySerialize]
         public string SubscribedTopic => _subscribedTopic;
 
         private string _subscribedTopic;
@@ -158,18 +193,36 @@ namespace Moryx.Drivers.Mqtt
         public Type MessageType { get; set; }
 
         /// <summary>
+        /// Output the type name of the resolved MessageType.
+        /// This allows the user to check if the Type resolution has succeeded.
+        /// </summary>
+        [EntrySerialize]
+        public string ResolveTypeName => MessageType?.FullName ?? "Unresolved";
+
+        /// <summary>
         /// Driver, who subscribes this topic.
         /// </summary>
         public IDriver Driver => MqttDriver;
+
+        /// <summary>
+        /// Typed reference to the parent
+        /// </summary>
         protected MqttDriver MqttDriver => (MqttDriver)Parent;
 
         #endregion
 
         /// <inheritdoc />
-        protected override void OnStart()
+        protected override async Task OnStartAsync()
         {
-            base.OnStart();
+            await base.OnStartAsync();
             MqttDriver?.NewTopicAdded(SubscribedTopic);
+        }
+
+        /// <inheritdoc />
+        protected override Task OnStopAsync()
+        {
+            MqttDriver?.ExistingTopicRemoved(SubscribedTopic);
+            return base.OnStopAsync();
         }
 
         /// <inheritdoc />
@@ -182,7 +235,7 @@ namespace Moryx.Drivers.Mqtt
         internal abstract Task OnSend(object payload, CancellationToken cancellationToken);
 
         //This method has to call MqttDriver.OnReceive
-        internal abstract void OnReceived(string receivedTopic, byte[] messageAsBytes);
+        internal abstract void OnReceived(string receivedTopic, ReadOnlySequence<byte> messageAsBytes, string responseTopic = null, bool retain = false);
 
         /// <summary>
         ///
@@ -204,20 +257,21 @@ namespace Moryx.Drivers.Mqtt
         }
 
         /// <summary>
-        /// log-function, which adjusts logMessages so that they can be logged without format exceptions
+        /// Event raised, when a message is received
         /// </summary>
-        /// <param name="level"></param>
-        /// <param name="logMessage"></param>
-        protected void Log(LogLevel level, string logMessage)
-        {
-            logMessage = logMessage.Replace("{", @"{{").Replace("}", @"}}");
-            Logger.Log(level, logMessage);
-        }
+        public event EventHandler<object> Received;
     }
 
     /// <inheritdoc cref="MqttTopic" />
     public abstract class MqttTopic<TMessage> : MqttTopic, IMessageChannel
     {
+        private static readonly ActivitySource _activitySource = new ActivitySource("Moryx.Drivers.Mqtt.MqttTopic");
+
+        /// <summary>
+        /// Activity source used for tracing messages handled by this topic. Can be overwritten by other implementations
+        /// </summary>
+        protected virtual ActivitySource ActivitySource => _activitySource;
+
         /// <summary>
         /// Constructor for MessageType
         /// </summary>
@@ -242,8 +296,7 @@ namespace Moryx.Drivers.Mqtt
                             var prop = type.GetProperty(placeholder);
                             if (prop == null)
                             {
-                                Log(LogLevel.Information, "MessageType " + type.Name + " does not contain" +
-                                                   " a property with the name " + placeholder);
+                                Logger.Log(LogLevel.Information, "MessageType {typeName} does not contain a property with the name {placeholder}", type.Name, placeholder);
                                 return;
                             }
                         }
@@ -268,31 +321,21 @@ namespace Moryx.Drivers.Mqtt
         /// <inheritdoc />
         public override void Send(object payload)
         {
-            if (payload is TMessage send)
-            {
-                MqttDriver.Send(payload);;
-            }
-            else
+            SendAsync(payload).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc />
+        public override async Task SendAsync(object payload, CancellationToken cancellationToken = default)
+        {
+            if (payload is not TMessage)
             {
                 Logger.Log(LogLevel.Error, "Message {0} has the wrong Type. It is {1} instead of {2}",
                     payload, payload.GetType(), typeof(TMessage));
                 throw new ArgumentException("Message " + payload + " has the wrong Type. It is " + payload.GetType() + " instead of " + typeof(TMessage));
             }
+
+            await MqttDriver.SendInternalAsync(this, payload, cancellationToken);
         }
-
-        /// <inheritdoc />
-        public override Task SendAsync(object payload, CancellationToken cancellationToken = default)
-        {
-            if (payload is TMessage send)
-            {
-                return MqttDriver.SendAsync(payload, cancellationToken);
-            }
-
-            Logger.Log(LogLevel.Error, "Message {0} has the wrong Type. It is {1} instead of {2}",
-                payload, payload.GetType(), typeof(TMessage));
-            throw new ArgumentException("Message " + payload + " has the wrong Type. It is " + payload.GetType() + " instead of " + typeof(TMessage));
-        }
-
 
         internal override Task OnSend(object payload, CancellationToken cancellationToken)
         {
@@ -329,17 +372,51 @@ namespace Moryx.Drivers.Mqtt
             }
 
             topic = MqttDriver.Identifier + topic;
-            return MqttDriver.OnSend(new MqttMessageTopic(ResponseTopic, topic), msg, cancellationToken);
+            var retain = payload is IRetainAwareMessage ram && ram.Retain.HasValue
+                ? ram.Retain.Value
+                : Retain;
+            return MqttDriver.OnSendAsync(
+                new MqttMessageTopic(ResponseTopic, topic, retain),
+                msg, cancellationToken);
         }
 
-        internal override void OnReceived(string receivedTopic, byte[] messageAsBytes)
+        internal override void OnReceived(string receivedTopic, ReadOnlySequence<byte> messageAsBytes, string responseTopic, bool retain)
         {
-            if (MessageType != null)
+            TMessage msg;
+            using (var span = ActivitySource.StartActivity("parsing", ActivityKind.Internal, parentContext: default, tags: new Dictionary<string, object>{
+                { "topic.name", Name },
+                { "topic.id", Id },
+                { "topic.type", MessageName }
+            }))
             {
-                var msg = Deserialize(messageAsBytes);
+                if (MessageType == null)
+                {
+                    Logger.Log(LogLevel.Error, "Message was received, but no MessageType was set.");
+                    span.SetStatus(ActivityStatusCode.Error, "MessageType not set");
+                    return;
+                }
+                try
+                {
+                    msg = Deserialize(messageAsBytes);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, "Failed to deserialize message");
+                    span?.AddException(ex);
+                    return;
+                }
+
                 if (msg is IIdentifierMessage identMessage)
                 {
                     identMessage.Identifier = receivedTopic;
+                }
+                if (responseTopic is not null && msg is IRespondableMessage respondable)
+                {
+                    respondable.ResponseIdentifier = responseTopic;
+                }
+                if (msg is IRetainAwareMessage retainAware)
+                {
+                    retainAware.Retain = retain;
                 }
 
                 var groupNames = RegexTopic.GetGroupNames();
@@ -355,24 +432,31 @@ namespace Moryx.Drivers.Mqtt
                             var placeholderValue = placeholderValues[i].ToString();
                             if (!resolver.Update(msg, placeholderValue))
                             {
-                                Logger.Log(LogLevel.Error, "Placeholder " + placeholderName + " cannot be filled. " +
-                                                           "MessageType " + typeof(TMessage).Name + " may not contain a " +
-                                                           "matching property");
+                                Logger.Log(LogLevel.Error, "Placeholder {placeholderName} cannot be filled. MessageType {typeName} may not contain a matching property", placeholderName, MessageType.Name);
                             }
                         }
                     }
                     else
                     {
-                        Logger.Log(LogLevel.Warning, "Number of found Placeholders does not match of number of possible " +
-                                                    "corresponding values");
+                        Logger.Log(LogLevel.Warning, "Number of found Placeholders does not match of number of possible corresponding values");
+                    }
+
+                    if (TraceDecodedMessage && span is not null)
+                    {
+                        span.AddTag("message.decoded", JsonSerializer.Serialize(msg));
                     }
                 }
+            }
+
+            using (var span = ActivitySource.StartActivity("PublishReceived",
+                ActivityKind.Internal, parentContext: default, tags: new Dictionary<string, object>{
+                { "topic.name", Name },
+                { "topic.id", Id },
+                { "topic.type", MessageName }
+            }))
+            {
                 RaiseReceived(msg);
                 MqttDriver.OnReceived(msg);
-            }
-            else
-            {
-                Logger.Log(LogLevel.Error, "Message was received, but not MessageType was set.");
             }
         }
 
@@ -381,13 +465,13 @@ namespace Moryx.Drivers.Mqtt
         /// </summary>
         /// <param name="payload"></param>
         /// <returns></returns>
-        protected internal abstract byte[] Serialize(object payload);
+        protected abstract byte[] Serialize(object payload);
 
         /// <summary>
         /// deserializes received byte-array to an object of TMessage
         /// </summary>
-        /// <param name="messageAsBytes"></param>
+        /// <param name="payload"></param>
         /// <returns></returns>
-        protected internal abstract TMessage Deserialize(byte[] messageAsBytes);
+        protected abstract TMessage Deserialize(ReadOnlySequence<byte> payload);
     }
 }

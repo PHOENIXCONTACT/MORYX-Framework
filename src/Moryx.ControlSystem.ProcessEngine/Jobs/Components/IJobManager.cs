@@ -23,8 +23,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         bool AwaitBoot(int timeoutSec);
 
         /// <summary>
-        /// The job manager can accepts internal jobs before it is started/after it is stopped, but 
-        /// relies on other components to be already/still running for that. To prevent undefined 
+        /// The job manager can accepts internal jobs before it is started/after it is stopped, but
+        /// relies on other components to be already/still running for that. To prevent undefined
         /// behaviour of the module, we provide this flag to be used e.g. by the facade.
         /// </summary>
         bool AcceptingExternalJobs { get; }
@@ -32,7 +32,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// <summary>
         /// Adds multiple jobs at once for the jobList queue
         /// </summary>
-        IReadOnlyList<IProductionJobData> Add(JobCreationContext context);
+        Task<IReadOnlyList<IProductionJobData>> Add(JobCreationContext context);
     }
 }
 

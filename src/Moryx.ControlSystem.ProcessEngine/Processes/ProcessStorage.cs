@@ -288,11 +288,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             }
             else
             {
-                entity = processRepository.Create();
-                entity.Id = processData.Id;
-                entity.TypeName = processData.Process.GetType().Name;
-                entity.State = (int)processData.State;
-                entity.JobId = processData.Job.Id;
+                // Do not use Repository.Create here because id is self-generated.
+                entity = uow.DbContext.Processes.Add(new ProcessEntity
+                {
+                    Id = processData.Id,
+                    State = (int)processData.State,
+                    JobId = processData.Job.Id,
+                }).Entity;
             }
             entity.State = (int)processData.State;
             entity.Rework = processData.Rework;
@@ -327,7 +329,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                     uow.DbContext.Processes.Add(new ProcessEntity
                     {
                         Id = processData.Id,
-                        TypeName = processData.Process.GetType().Name,
                         JobId = processData.Job.Id,
                         State = (int)processData.State,
                         Rework = processData.Rework,
@@ -361,11 +362,15 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             }
             else
             {
-                dbActivity = activityRepo.Create();
-                dbActivity.Id = activity.Id;
-                dbActivity.TaskId = activityData.Task.Id;
-                dbActivity.ResourceId = activityData.Resource.Id;
-                dbActivity.ProcessId = activityData.ProcessData.Id;
+                // Do not use Repository.Create here because id is self-generated.
+                dbActivity = new()
+                {
+                    Id = activity.Id,
+                    TaskId = activityData.Task.Id,
+                    ResourceId = activityData.Resource.Id,
+                    ProcessId = activityData.ProcessData.Id,
+                };
+                uow.DbContext.Activities.Add(dbActivity);
             }
 
             // UpdateList tracing info

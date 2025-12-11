@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.ControlSystem.Capabilities;
-using Moryx.ControlSystem.VisualInstructions;
+using Moryx.VisualInstructions;
 
 namespace Moryx.ControlSystem.Activities
 {

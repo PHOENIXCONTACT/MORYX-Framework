@@ -9,15 +9,40 @@ namespace Moryx.AbstractionLayer.Drivers
     /// <summary>
     /// Base class for devices to reduce boilerplate code
     /// </summary>
-    public abstract class Driver : Resource, IDriver, IStateContext
+    public abstract class Driver : Resource, IDriver, IStateContext, IAsyncStateContext
     {
         /// <inheritdoc />
         public IDriverState CurrentState { get; private set; }
 
-        void IStateContext.SetState(IState state)
+        void IStateContext.SetState(StateBase state)
         {
             CurrentState = (IDriverState)state;
             StateChanged?.Invoke(this, CurrentState);
+
+            OnStateChanged();
+        }
+
+        Task IAsyncStateContext.SetStateAsync(StateBase state)
+        {
+            CurrentState = (IDriverState)state;
+            StateChanged?.Invoke(this, CurrentState);
+
+            return OnStateChangedAsync();
+        }
+
+        /// <summary>
+        /// Will be called after the state change when <see cref="SyncStateBase"/> is used
+        /// </summary>
+        protected virtual void OnStateChanged()
+        {
+        }
+
+        /// <summary>
+        /// Will be called after the state change when <see cref="AsyncStateBase"/> is used
+        /// </summary>
+        protected virtual Task OnStateChangedAsync()
+        {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />

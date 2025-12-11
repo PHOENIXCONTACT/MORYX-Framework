@@ -114,8 +114,6 @@ namespace Moryx.ControlSystem.ProcessEngine
             };
         }
 
-        public JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement) => Evaluate(recipe, amount);
-
         private void HandleCapabilitiesChanged(object sender, ICapabilities e)
         {
             _capabilitiesDecoupler.Enqueue(e);
@@ -127,7 +125,7 @@ namespace Moryx.ControlSystem.ProcessEngine
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<Job> Add(JobCreationContext context)
+        public async Task<IReadOnlyList<Job>> AddAsync(JobCreationContext context)
         {
             if (!JobManager.AcceptingExternalJobs)
                 throw new HealthStateException(ServerModuleState.Stopping);
@@ -135,7 +133,7 @@ namespace Moryx.ControlSystem.ProcessEngine
             context.Templates.ForEach(t => ValidateRecipe(t.Recipe));
 
             // Move to JobManager
-            var jobDatas = JobManager.Add(context);
+            var jobDatas = await JobManager.Add(context);
 
             return jobDatas.Select(jd => jd.Job).ToList();
         }

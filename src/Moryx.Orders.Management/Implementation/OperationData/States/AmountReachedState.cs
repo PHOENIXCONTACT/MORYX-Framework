@@ -32,32 +32,32 @@ namespace Moryx.Orders.Management
         {
         }
 
-        public override void OnEnter()
+        public override Task OnEnterAsync()
         {
-            base.OnEnter();
             Context.ShowAmountReachedNotification();
+            return Task.CompletedTask;
         }
 
-        public override void OnExit()
+        public override Task OnExitAsync()
         {
             Context.AcknowledgeAmountReachedNotification();
-            base.OnExit();
+            return Task.CompletedTask;
         }
 
-        public override void IncreaseTargetBy(int amount, User user)
+        public override async Task IncreaseTargetBy(int amount, User user)
         {
             if (Context.ReachableAmount < Context.TargetAmount + amount)
             {
-                NextState(StateRunning);
+                await NextStateAsync(StateRunning);
             }
 
-            Context.HandleIncreaseTargetBy(amount);
+            await Context.HandleIncreaseTargetBy(amount);
         }
 
-        public override void Interrupt(User user)
+        public override async Task Interrupt(User user)
         {
-            NextState(StateInterrupted);
-            Context.HandleManualInterrupted();
+            await NextStateAsync(StateInterrupted);
+            await Context.HandleManualInterrupted();
         }
 
         public override ReportContext GetReportContext()
@@ -65,16 +65,16 @@ namespace Moryx.Orders.Management
             return Context.HandleReportContext();
         }
 
-        public override void Report(OperationReport report)
+        public override async Task Report(OperationReport report)
         {
             switch (report.ConfirmationType)
             {
                 case ConfirmationType.Final:
-                    NextState(StateCompleted);
-                    Context.HandleCompleted(report);
+                    await NextStateAsync(StateCompleted);
+                    await Context.HandleCompleted(report);
                     break;
                 case ConfirmationType.Partial:
-                    Context.HandlePartialReport(report);
+                    await Context.HandlePartialReport(report);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(report.ConfirmationType), report.ConfirmationType, null);
@@ -86,28 +86,30 @@ namespace Moryx.Orders.Management
             return Context.HandleAdviceContext();
         }
 
-        public override void Advice(OperationAdvice advice)
+        public override Task Advice(OperationAdvice advice)
         {
-            Context.HandleAdvice(advice);
+            return Context.HandleAdvice(advice);
         }
 
-        public override void Assign()
+        public override async Task Assign()
         {
-            NextState(StateAmountReachedAssign);
+            await NextStateAsync(StateAmountReachedAssign);
             Context.HandleReassign();
         }
 
-        public override void Resume()
+        public override Task Resume()
         {
-
+            return Task.CompletedTask;
         }
 
-        public override void JobsUpdated(JobStateChangedEventArgs args)
+        public override Task JobsUpdated(JobStateChangedEventArgs args)
         {
             var debug = $"Recieved a job update after switching to the '{nameof(AmountReachedState)}'. " +
                 $"The update is ignored, as the operation has already recieved the latest values when switching states.";
 
             (Context as ILoggingComponent)?.Logger.Log(LogLevel.Debug, debug);
+
+            return Task.CompletedTask;
         }
     }
 }

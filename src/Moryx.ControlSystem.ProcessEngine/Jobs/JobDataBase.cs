@@ -285,7 +285,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         }
 
         /// <inheritdoc />
-        void IStateContext.SetState(IState state)
+        void IStateContext.SetState(StateBase state)
         {
             // ReSharper disable once InconsistentlySynchronizedField
             // No lock required. Locked before state change.

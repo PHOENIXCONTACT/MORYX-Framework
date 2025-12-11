@@ -37,27 +37,30 @@ namespace Moryx.Workplans.Editing
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             Container.ActivateDbContexts(DbContextManager);
+            return Task.CompletedTask;
         }
 
         /// <summary>
         ///     Code executed after OnInitialize
         /// </summary>
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             Container.Resolve<IWorkplanEditor>().Start();
 
             ActivateFacade(_facade);
+            return Task.CompletedTask;
         }
 
         /// <summary>
         ///     Code executed when service is stopped
         /// </summary>
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             DeactivateFacade(_facade);
+            return Task.CompletedTask;
         }
 
         private readonly WorkplanFacade _facade = new();

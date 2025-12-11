@@ -9,6 +9,7 @@ using Moryx.Tools;
 using NUnit.Framework;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests
 {
@@ -17,27 +18,27 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
     public class FactoryMonitorController_RouteTest : BaseTest
     {
         [Test]
-        public void TraceRoute_Create()
+        public async Task TraceRoute_Create()
         {
-            // Arange
+            // Arrange
             long expectedId = 10;
             _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_assemblyCellLocation.Id, It.IsAny<Func<Resource, Resource>>()))
                 .Returns(new MachineLocation { Id = _assemblyCellLocation.Id });
             _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_solderingCellLocation.Id, It.IsAny<Func<Resource, Resource>>()))
                 .Returns(new MachineLocation { Id = _solderingCellLocation.Id });
-            _resourceManagementMock.Setup(rm => rm.CreateUnsafe(typeof(TransportPath), It.IsAny<Action<Resource>>()))
-                .Returns(expectedId);
+            _resourceManagementMock.Setup(rm => rm.CreateUnsafeAsync(typeof(TransportPath), It.IsAny<Func<Resource, Task>>()))
+                .ReturnsAsync(expectedId);
 
             //Act
-            var endPointResult = _factoryMonitor.TraceRoute(_transportPathModel);
+            var endPointResult = await _factoryMonitor.TraceRoute(_transportPathModel);
 
             //Assert
             Assert.That(((OkResult)endPointResult).StatusCode, Is.EqualTo(200));
-            _resourceManagementMock.Verify(rm => rm.CreateUnsafe(typeof(TransportPath), It.IsAny<Action<Resource>>()), Times.Once, "The resource was not created!");
+            _resourceManagementMock.Verify(rm => rm.CreateUnsafeAsync(typeof(TransportPath), It.IsAny<Func<Resource, Task>>()), Times.Once, "The resource was not created!");
         }
 
         [Test]
-        public void TraceRoute_Not_Found()
+        public async Task TraceRoute_Not_Found()
         {
             long expectedId = 10;
             // Arrange
@@ -48,11 +49,11 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
                         Id = expectedId
                     } ]);
             //Act
-            var endPointResult = _factoryMonitor.TraceRoute(_transportPathModel);
+            var endPointResult = await _factoryMonitor.TraceRoute(_transportPathModel);
 
             //Assert
             Assert.That(((OkResult)endPointResult).StatusCode, Is.EqualTo(200));
-            _resourceManagementMock.Verify(rm => rm.ModifyUnsafe(expectedId, It.IsAny<Func<Resource, bool>>()), Times.Once, "The resource was not updated!");
+            _resourceManagementMock.Verify(rm => rm.ModifyUnsafeAsync(expectedId, It.IsAny<Func<Resource, Task<bool>>>()), Times.Once, "The resource was not updated!");
 
             _solderingCellLocation.Destinations.Clear();
         }
@@ -60,7 +61,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
         [Test]
         public void GetRoutes()
         {
-            // Arange
+            // Arrange
             _solderingCellLocation.Destinations.AddRange([ new TransportPath
                     {
                         Destination = _solderingCellLocation,

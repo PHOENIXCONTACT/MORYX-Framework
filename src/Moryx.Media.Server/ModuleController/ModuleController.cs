@@ -41,15 +41,16 @@ namespace Moryx.Media.Server
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             Container.LoadComponents<IPreviewCreator>();
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             Container.SetInstance(ConfigManager);
 
@@ -62,14 +63,16 @@ namespace Moryx.Media.Server
             contentManager.Start();
 
             ActivateFacade(_mediaServer);
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             DeactivateFacade(_mediaServer);
+            return Task.CompletedTask;
         }
 
         #endregion

@@ -15,7 +15,7 @@ A good starting point is a github project where a community of developers provid
 
 *The state pattern is a behavioral software design pattern that implements a state machine in an object-oriented way. With the state pattern, a state machine is implemented by implementing each individual state as a derived class of the state pattern interface, and implementing state transitions by invoking methods defined by the pattern's superclass. The state pattern can be interpreted as a strategy pattern which is able to switch the current strategy through invocations of methods defined in the pattern's interface.* (Please read the [wikipedia article](https://en.wikipedia.org/wiki/State_pattern) carefully.)
 
-The MORYX Core provides some base classes and interfaces in the [Moryx.StateMachines](/src/Moryx/StateMachines)-Namespace. The general interface of a state context is the [IStateContext](/src/Moryx/StateMachines/IStateContext.cs). It represents the context object of the state machine and provides a `SetState` method to provide the next state. The base interface of a state is the [IState](/src/Moryx/StateMachines/IState.cs). All states should derive from this interface. It provides actions like `OnEnter` and `Onexit` to indicate the entering and exiting of a state. For the [IState](/src/Moryx/StateMachines/IState.cs) a base class exists. The base class will handle all the actions of the state machine.
+The MORYX Core provides some base classes and interfaces in the [Moryx.StateMachines](/src/Moryx/StateMachines)-Namespace. The general interface of a state context is the [IStateContext](/src/Moryx/StateMachines/IStateContext.cs). It represents the context object of the state machine and provides a `SetState` method to provide the next state. The base class of a state is the [SyncStateBase](/src/Moryx/StateMachines/SyncStateBase.cs) or [AsyncStateBase](/src/Moryx/StateMachines/AsyncStateBase.cs). All states should derive from one of these classes. They provides actions like `OnEnter`/`OnEnterAsync` and `OnExit`/`OnExitAsync` to indicate the entering and exiting of a state. The base class will handle all the actions of the state machine.
 
 In the past we implemented the states by hand. A base state implemented a `NextState()` method which created a new state depending on the given argument. This leaded to big switch- or if-blocks. With every state change a new object instance was created which extended the workload of the garbage collector. To reduce the amount of boilerplate code we implemented a dictionary with the state name as key and a creation delegate as value to create a state like this: `var state = Map[name]`.
 This was nice because the instantiation of states was done only when the state machine was created. The problem with this idea was that it leads to Copy/Paste and much manual work for big state machines. If some state had been changed, the map had to be changed too.
@@ -60,7 +60,7 @@ public class MyContext : IStateContext
     private MyStateBase _state;
     private int _currentValue;
 
-    void IStateContext.SetState(IState state)
+    void IStateContext.SetState(StateBase state)
     {
         _state = (MyStateBase)state;
     }
@@ -92,14 +92,14 @@ public class MyContext : IStateContext
 }
 ````
 
-The base class of the state should derive from `StateBase<TContext>` while `TContext` is a type of [IStateContext](/src/Moryx/StateMachines/IStateContext.cs). With the given type the `abstract class` is fully typed.
+The base class of the state should derive from `SyncStateBase<TContext>` or `AsyncStateBase<TContext>` while `TContext` is a type of [IStateContext](/src/Moryx/StateMachines/IStateContext.cs). With the given type the `abstract class` is fully typed.
 
 The states are defined for the base class by adding the Attributes [StateDefinitionAttribute](/src/Moryx/StateMachines/StateDefinitionAttribute.cs) above the `protected const int` Definition. The attribute defines the type of the regarding state. Additionally it have a property to set the initial state of the machine. Only one state can be the initial.
 
 Every transition of the state machine must be provided as a `virtual`-Method which will be overwritten by the specialized state.
 
 ````cs
-public abstract class MyStateBase : StateBase<MyContext>
+public abstract class MyStateBase : SyncStateBase<MyContext>
 {
     protected MyStateBase(MyContext context, StateMap stateMap)
         : base(context, stateMap)
@@ -139,9 +139,7 @@ internal sealed class AState : MyStateBase
         Context.HandleAtoB();
     }
 }
-````
 
-````cs
 internal sealed class BState : MyStateBase
 {
     public BState(MyContext context, StateMap stateMap) : base(context, stateMap)
@@ -158,7 +156,61 @@ internal sealed class BState : MyStateBase
 
 The parameters of the constructor will be given to the base.
 
-The `NextState()`-Method is implemented as a `virtual` method in the base class. It will select the next state using the internal state map and executes the `IState.OnExit()` by leaving the state and `IState.OnEnter()` by entering the next state.
+The `NextState()`-Method is implemented as a `virtual` method in the base class. It will select the next state using the internal state map and executes the `SyncStateBase.OnExit()` by leaving the state and `SyncStateBase.OnEnter()` by entering the next state.
+
+Same sample as `AsyncStateBase`:
+
+````cs
+public abstract class MyAsyncStateBase : AsyncStateBase<MyContext>
+{
+    protected MyAsyncStateBase(MyAsyncContext context, StateMap stateMap)
+        : base(context, stateMap)
+    {
+    }
+
+    public virtual Task AtoBAsync()
+    {
+        return InvalidStateAsync();
+    }
+
+    public virtual Task BtoAAsync()
+    {
+        return InvalidStateAsync();
+    }
+
+    [StateDefinition(typeof(AState), IsInitial = true)]
+    protected const int StateA = 10;
+
+    [StateDefinition(typeof(BState))]
+    protected const int StateB = 20;
+}
+
+internal sealed class AAsyncState : MyAsyncStateBase
+{
+    public AAsyncState(MyContext context, StateMap stateMap) : base(context, stateMap)
+    {
+    }
+
+    public override async Task AtoBAsync()
+    {
+        await NextStateAsync(StateB);
+        await Context.HandleAtoBAsync();
+    }
+}
+
+internal sealed class BAsyncState : MyAsyncStateBase
+{
+    public BAsyncState(MyContext context, StateMap stateMap) : base(context, stateMap)
+    {
+    }
+
+    public override async Task BtoAAsync()
+    {
+        await NextStateAsync(StateA);
+        await Context.HandleBtoAAsync();
+    }
+}
+````
 
 **initialize the machine**
 
@@ -168,6 +220,11 @@ The state machine will be initialized with the static helper class [StateMachine
 private void InitializeMachine()
 {
     StateMachine.Initialize(this).With<MyStateBase>();
+}
+
+private async Task InitializeMachineAsync()
+{
+    await StateMachine.Initialize(this).WithAsync<MyAsyncStateBase>();
 }
 ````
 
@@ -180,12 +237,12 @@ Additionally a `stateKey` can be given to the method.
 private void ReloadMachine()
 {
     // Get the key of current state
-    var key = StateMachine.GetKey(_stat);
+    var key = _state.Key;
 
     // ... save key to db or somewhere else
 
     // Reload the state with the saved key
-    StateMachine.Reload<MyStateBase>(this, key);
+    StateMachine.Reload(this, key).With<MyStateBase>();
 }
 ````
 
@@ -199,15 +256,25 @@ private void ForceMachine()
 {
     StateMachine.Force(context.State, MyStateBase.StateA);
 }
+
+private async Task ForceMachineAsync()
+{
+    await StateMachine.ForceAsync(context.State, MyAsyncStateBase.StateA);
+}
 ````
 
-The default overload of `Force` does not call `OnExit` of the given state nor calling the `OnEnter` of the forced state.
+The default overload of `Force`/`ForceAsync` does not call `OnExit`/`OnExitAsync` of the given state nor calling the `OnEnter`/`OnEnterAsync` of the forced state.
 A specialized overload for this can be used:
 
 ````cs
 private void ForceMachine()
 {
     StateMachine.Force(context.State, MyStateBase.StateA, exitCurrent: true, enterForced: false);
+}
+
+private async Task ForceMachineAsync()
+{
+    await StateMachine.ForceAsync(context.State, MyAsyncStateBase.StateA, exitCurrent: true, enterForced: false);
 }
 ````
 

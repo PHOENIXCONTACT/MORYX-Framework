@@ -10,24 +10,27 @@ namespace Moryx.Orders.Management.Tests
     internal class OperationFactoryMock : IOperationFactory
     {
         private readonly IModuleLogger _logger;
+        private readonly ModuleConfig _moduleConfig;
         private readonly IJobHandler _jobHandler;
         private readonly IOperationAssignment _operationAssignment;
         private readonly INotificationAdapter _notificationAdapter;
 
-        public OperationFactoryMock(IModuleLogger logger, IJobHandler jobHandler, IOperationAssignment operationAssignment, INotificationAdapter notificationAdapter)
+        public OperationFactoryMock(IModuleLogger logger, ModuleConfig moduleConfig, IJobHandler jobHandler, IOperationAssignment operationAssignment, INotificationAdapter notificationAdapter)
         {
             _logger = logger;
+            _moduleConfig = moduleConfig;
             _jobHandler = jobHandler;
             _operationAssignment = operationAssignment;
             _notificationAdapter = notificationAdapter;
         }
 
-        public IOperationData Create()
+        public IOperationData Create(IOperationSavingContext savingContext)
         {
-            return new OperationData
+            return new OperationData(savingContext)
             {
                 Logger = _logger,
                 JobHandler = _jobHandler,
+                ModuleConfig = _moduleConfig,
                 OperationAssignment = _operationAssignment,
                 CountStrategy = new DoNotReplaceScrapStrategy(),
                 NotificationAdapter = _notificationAdapter

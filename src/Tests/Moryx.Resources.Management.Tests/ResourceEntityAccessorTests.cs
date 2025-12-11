@@ -9,6 +9,7 @@ using Moryx.Model.Repositories;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Moryx.Resources.Management.Model;
 
 namespace Moryx.Resources.Management.Tests
@@ -84,7 +85,7 @@ namespace Moryx.Resources.Management.Tests
 
         [TestCase(false, Description = "Updates an existing ResourceEntity")]
         [TestCase(true, Description = "Creates a new ResourceEntity")]
-        public void SaveEntityReturnsAValidResource(bool createNew)
+        public async Task SaveEntityReturnsAValidResource(bool createNew)
         {
             // Arrange
             var id = createNew ? 0 : 10;
@@ -101,8 +102,8 @@ namespace Moryx.Resources.Management.Tests
             };
 
             var repoMock = new Mock<IRepository<ResourceEntity>>();
-            repoMock.Setup(r => r.Create()).Returns(entity);
-            repoMock.Setup(r => r.GetByKey(It.IsAny<long>())).Returns(entity);
+            repoMock.Setup(r => r.CreateAsync()).ReturnsAsync(entity);
+            repoMock.Setup(r => r.GetByKeyAsync(It.IsAny<long>())).ReturnsAsync(entity);
 
             var unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock.Setup(uow => uow.GetRepository<IRepository<ResourceEntity>>()).Returns(repoMock.Object);
@@ -117,7 +118,7 @@ namespace Moryx.Resources.Management.Tests
             var extensionDataJson = JsonConvert.SerializeObject(resource, JsonSettings.Minimal);
 
             // Act
-            var resourceEntity = ResourceEntityAccessor.SaveToEntity(unitOfWorkMock.Object, resource);
+            var resourceEntity = await ResourceEntityAccessor.SaveToEntity(unitOfWorkMock.Object, resource);
 
             // Assert
             Assert.That(resourceEntity, Is.Not.Null);

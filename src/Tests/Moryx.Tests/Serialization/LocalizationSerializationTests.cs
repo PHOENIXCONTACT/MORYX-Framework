@@ -6,10 +6,9 @@ using System.Linq;
 using System.Resources;
 using System.Threading;
 using Moryx.Serialization;
-using Moryx.Tests.Serialization;
 using NUnit.Framework;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.Serialization
 {
     [TestFixture]
     public class LocalizationSerializationTests

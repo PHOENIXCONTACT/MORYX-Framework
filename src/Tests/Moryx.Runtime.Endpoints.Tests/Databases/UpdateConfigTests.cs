@@ -30,18 +30,21 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
             _configuratorType = typeof(SqliteModelConfigurator);
         }
 
-        [Test]
-        public void LeavingDatabaseEmptyDefaultsToContextNamePasses()
+        [Test(Description = "Leaving Database property empty leads to filling with DbContext type name")]
+        public void LeavingDatabaseEmptyDefaultsToDbContextName()
         {
+            // Arrange
             var config = SqliteConfigModel()
                 .WithDefaults();
 
+            // Act
             var result = _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config);
 
+            // Assert
             var updatedConfig = GetUpdatedConfig();
             Assert.That(result, Is.EqualTo(typeof(TestModelContext)));
             Assert.That(updatedConfig.ConfiguratorTypename, Does.Contain(_configuratorType.FullName));
-            Assert.That(updatedConfig.ConnectionSettings.Database, Is.EqualTo("TestModelContext"));
+            Assert.That(updatedConfig.ConnectionSettings.Database, Is.EqualTo(nameof(TestModelContext)));
             Assert.That(updatedConfig.ConnectionSettings.ConnectionString, Is.EqualTo("Data Source=.\\db-filename.db"));
         }
 
@@ -100,17 +103,20 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
             Assert.That(updatedConfig.ConnectionSettings.ConnectionString, Is.EqualTo("Data Source=.\\MyDatabase.db"));
         }
 
-        [Test]
-        public void UsingDatabasePlaceholderWithoutProvidingDatabasenameDefaultsToContextname()
+        [Test(Description = "Using <DatabaseName> placeholder in ConnectionString without setting Database property, leads to filling with DbContext type name.")]
+        public void UsingDatabasePlaceholderWithoutDatabaseNameDefaultsToDbContextName()
         {
+            // Arrange
             var config = SqliteConfigModel()
                 .WithDatabase("")
                 .WithConnectionString("Data Source=.\\<DatabaseName>.db");
 
+            // Act
             _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config);
-            var updatedConfig = GetUpdatedConfig();
 
-            Assert.That(updatedConfig.ConnectionSettings.ConnectionString, Is.EqualTo("Data Source=.\\TestModelContext.db"));
+            // Assert
+            var updatedConfig = GetUpdatedConfig();
+            Assert.That(updatedConfig.ConnectionSettings.ConnectionString, Is.EqualTo($"Data Source=.\\{nameof(TestModelContext)}.db"));
         }
 
         private static DatabaseConfigModel SqliteConfigModel()

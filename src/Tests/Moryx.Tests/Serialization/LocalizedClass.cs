@@ -3,9 +3,8 @@
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Moryx.Tests.Serialization;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.Serialization
 {
     [Display(Name = nameof(strings.ClassName), ResourceType = typeof(strings))]
     public class LocalizedClass

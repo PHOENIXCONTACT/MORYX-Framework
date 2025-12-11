@@ -31,14 +31,18 @@ namespace Moryx.Products.Management
             return recipe;
         }
 
-        public IReadOnlyList<IProductRecipe> GetAllByProduct(ProductType productType)
-        {
-            return Storage.LoadRecipes(productType.Id, RecipeClassification.CloneFilter);
-        }
-
         public IReadOnlyList<IProductRecipe> GetRecipes(ProductType productType, RecipeClassification classification)
         {
             return Storage.LoadRecipes(productType.Id, classification);
+        }
+
+        public void Save(IReadOnlyList<IProductRecipe> recipes)
+        {
+            Storage.SaveRecipes(recipes);
+            foreach (var recipe in recipes)
+            {
+                RaiseRecipeChanged(recipe);
+            }
         }
 
         public long Save(IProductRecipe recipe)
@@ -46,13 +50,6 @@ namespace Moryx.Products.Management
             var saved = Storage.SaveRecipe(recipe);
             RaiseRecipeChanged(recipe);
             return saved;
-        }
-
-        public void Save(long productId, ICollection<IProductRecipe> recipes)
-        {
-            Storage.SaveRecipes(productId, recipes);
-            foreach (var recipe in recipes)
-                RaiseRecipeChanged(recipe);
         }
 
         public void Remove(long recipeId)
