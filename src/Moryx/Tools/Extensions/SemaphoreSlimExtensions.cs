@@ -31,9 +31,9 @@ public static class SemaphoreSlimExtensions
         /// <c>finally</c> block. It improves readability and reduces boilerplate
         /// when protecting asynchronous critical sections.
         /// </remarks>
-        public async Task ExecuteAsync(Func<Task> criticalFunc)
+        public async Task ExecuteAsync(Func<Task> criticalFunc, CancellationToken cancellationToken = default)
         {
-            await semaphore.WaitAsync();
+            await semaphore.WaitAsync(cancellationToken);
             try
             {
                 await criticalFunc();
@@ -62,9 +62,9 @@ public static class SemaphoreSlimExtensions
         /// <c>finally</c> block. It improves readability and reduces boilerplate
         /// when protecting asynchronous critical sections.
         /// </remarks>
-        public async Task<T> ExecuteAsync<T>(Func<Task<T>> criticalFunc)
+        public async Task<T> ExecuteAsync<T>(Func<Task<T>> criticalFunc, CancellationToken cancellationToken = default)
         {
-            await semaphore.WaitAsync();
+            await semaphore.WaitAsync(cancellationToken);
             try
             {
                 return await criticalFunc();
