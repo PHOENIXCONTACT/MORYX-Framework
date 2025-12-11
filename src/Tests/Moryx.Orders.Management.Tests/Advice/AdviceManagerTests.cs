@@ -19,7 +19,7 @@ namespace Moryx.Orders.Management.Tests
         private InternalOperation _operation;
 
         [SetUp]
-        public void SetUp()
+        public Task SetUp()
         {
             _adviceExecutorMock = new Mock<IAdviceExecutor>();
             _config = new ModuleConfig();
@@ -35,13 +35,13 @@ namespace Moryx.Orders.Management.Tests
                 ModuleConfig = _config
             };
 
-            _adviceExecutorMock.Setup(e => e.Advice(_operation, It.IsAny<OrderAdvice>()))
+            _adviceExecutorMock.Setup(e => e.AdviceAsync(_operation, It.IsAny<OrderAdvice>()))
                 .ReturnsAsync((Operation _, OrderAdvice advice) => new AdviceResult(advice));
 
-            _adviceExecutorMock.Setup(e => e.Advice(_operation, It.IsAny<PickPartAdvice>()))
+            _adviceExecutorMock.Setup(e => e.AdviceAsync(_operation, It.IsAny<PickPartAdvice>()))
                 .ReturnsAsync((Operation _, PickPartAdvice advice) => new AdviceResult(advice));
 
-            _adviceManager.Start();
+            return _adviceManager.StartAsync();
         }
 
         [Test(Description = "Executor should handle order advices")]
@@ -54,7 +54,7 @@ namespace Moryx.Orders.Management.Tests
             await _adviceManager.OrderAdvice(_operationDataMock.Object, "123456789", 10);
 
             // Assert
-            _adviceExecutorMock.Verify(e => e.Advice(_operation, It.IsAny<OrderAdvice>()),
+            _adviceExecutorMock.Verify(e => e.AdviceAsync(_operation, It.IsAny<OrderAdvice>()),
                 Times.Once, "There should be an OrderAdvice handled by the Executor");
             _operationDataMock.Verify(o => o.Advice(It.IsAny<OrderAdvice>()), Times.Once,
                 "There should be an order advice at the OperationData");
@@ -75,7 +75,7 @@ namespace Moryx.Orders.Management.Tests
             _adviceManager.PickPartAdvice(_operationDataMock.Object, "123456789", part);
 
             // Assert
-            _adviceExecutorMock.Verify(e => e.Advice(_operation, It.IsAny<PickPartAdvice>()),
+            _adviceExecutorMock.Verify(e => e.AdviceAsync(_operation, It.IsAny<PickPartAdvice>()),
                 Times.Once, "There should be a PickPartAdvice handled by the Executor");
             _operationDataMock.Verify(o => o.Advice(It.IsAny<PickPartAdvice>()), Times.Once,
                 "There should be a pick part advice at the OperationData");
@@ -91,7 +91,7 @@ namespace Moryx.Orders.Management.Tests
             _adviceManager.OrderAdvice(_operationDataMock.Object, "123456789", 10);
 
             // Assert
-            _adviceExecutorMock.Verify(e => e.Advice(_operation, It.IsAny<OrderAdvice>()),
+            _adviceExecutorMock.Verify(e => e.AdviceAsync(_operation, It.IsAny<OrderAdvice>()),
                 Times.Never, "There should be no OrderAdvice handled by the Executor");
             _operationDataMock.Verify(o => o.Advice(It.IsAny<OrderAdvice>()), Times.Once,
                 "There should be an order advice at the OperationData");

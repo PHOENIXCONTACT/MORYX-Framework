@@ -47,7 +47,7 @@ public class PrototypeImporter : ProductImporterBase<PrototypeImporterConfig, Wa
         return currentParameters;
     }
 
-    protected override Task<ProductImporterResult> Import(WatchImportParameters parameters)
+    protected override Task<ProductImporterResult> ImportAsync(WatchImportParameters parameters)
     {
         Product product = null;
         switch (parameters.ProductType)
@@ -104,7 +104,7 @@ public class FileImporter : ProductImporterBase<FileImporterConfig>
         return new FileImportParameters { FileExtension = ".mjb" };
     }
 
-    protected override Task<ProductImporterResult> Import(FileImportParameters parameters)
+    protected override Task<ProductImporterResult> ImportAsync(FileImportParameters parameters)
     {
         using (var stream = parameters.ReadFile())
         {

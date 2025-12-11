@@ -6,6 +6,7 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Runtime.Modules;
 using System;
+using System.Threading.Tasks;
 using Moryx.Runtime.Kernel.Tests.Dummies;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
@@ -24,17 +25,17 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
         IFacadeA IFacadeContainer<IFacadeA>.Facade => _aFacade;
         public IFacadeA Facade { get; private set; }
 
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             throw new NotImplementedException();
         }
 
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             throw new NotImplementedException();
         }
 
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             throw new NotImplementedException();
         }

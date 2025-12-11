@@ -11,6 +11,6 @@ namespace Moryx.StateMachines
         /// <summary>
         /// Update state on context
         /// </summary>
-        void SetState(IState state);
+        void SetState(StateBase state);
     }
 }

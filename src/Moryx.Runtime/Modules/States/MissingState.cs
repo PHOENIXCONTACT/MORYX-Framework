@@ -5,7 +5,7 @@ namespace Moryx.Runtime.Modules.States
 {
     /// <summary>
     /// Missing state , indicating that the server is missing.
-    /// Usefull for modules that are missing.
+    /// Useful for modules that are missing.
     /// </summary>
     internal class MissingState : ServerModuleStateBase
     {
@@ -16,19 +16,22 @@ namespace Moryx.Runtime.Modules.States
         {
         }
 
-        public override void Initialize()
+        public override Task Initialize()
         {
             // Nothing to do here
+            return Task.CompletedTask;
         }
 
-        public override void Start()
+        public override Task Start()
         {
             // Nothing to do here
+            return Task.CompletedTask;
         }
 
-        public override void Stop()
+        public override Task Stop()
         {
             // Nothing to do here
+            return Task.CompletedTask;
         }
     }
 }

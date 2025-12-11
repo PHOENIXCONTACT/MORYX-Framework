@@ -11,21 +11,20 @@ using Opc.Ua.Client;
 
 namespace Moryx.Drivers.OpcUa.Tests;
 
-//TODO: Remove all state based tests - States are internals of the driver. The driver should be tested from outside.
-
 [TestFixture]
 public class NodeHandlingTests : OpcUaTestBase
 {
     private const string Value = "value";
+
     [SetUp]
-    public void Setup()
+    public async Task Setup()
     {
-        BasicSetup();
+        await BasicSetup();
         _driver._session = _sessionMock.Object;
     }
 
     [Test(Description = "Number of nodes browsed fits")]
-    public void TestBrowsingNodes()
+    public async Task TestBrowsingNodes()
     {
         //Arrange
         uint subscriptionId = 12;
@@ -44,7 +43,7 @@ public class NodeHandlingTests : OpcUaTestBase
             }
         };
         //Act
-        ((IPlugin)_driver).Start();
+        await ((IAsyncPlugin)_driver).StartAsync();
 
         //Assert I
         _sessionMock.Verify(s => s.AddSubscription(It.IsAny<Subscription>()), "Subscription was not added to the session");
@@ -64,7 +63,7 @@ public class NodeHandlingTests : OpcUaTestBase
     }
 
     [Test(Description = "Properties of the nodes are updated after browsing")]
-    public void TestUpdatingNodeAfterBrowsing()
+    public async Task TestUpdatingNodeAfterBrowsing()
     {
         //Arrange
         var expectedNode = _rootNodes.First();
@@ -82,7 +81,7 @@ public class NodeHandlingTests : OpcUaTestBase
             }
         };
         //Act
-        ((IPlugin)_driver).Start();
+        await ((IAsyncPlugin)_driver).StartAsync();
 
         //Assert I
         Assert.That(node, Is.Not.Null);
@@ -103,7 +102,7 @@ public class NodeHandlingTests : OpcUaTestBase
     }
 
     [Test(Description = "Subscribe monitored items after browsing")]
-    public void TestSubscribingMonitoredItemsAfterBrowsing()
+    public async Task TestSubscribingMonitoredItemsAfterBrowsing()
     {
         //Arrange
         var expectedNode = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
@@ -117,9 +116,9 @@ public class NodeHandlingTests : OpcUaTestBase
             }
         };
 
-        //Act          
+        //Act
         channel.Received += DoSomething;
-        ((IPlugin)_driver).Start();
+        await ((IAsyncPlugin)_driver).StartAsync();
 
         //Assert I
         MonitoredItemCreateResultCollection results2;
@@ -135,7 +134,7 @@ public class NodeHandlingTests : OpcUaTestBase
     }
 
     [Test(Description = "Nodes can only be subscribed ones")]
-    public void TestNodesCanOnlyBeSubscribedOnes()
+    public async Task TestNodesCanOnlyBeSubscribedOnes()
     {
         var expectedNode = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
         var channel = _driver.Channel(expectedNode.Value.NodeId.ToString());
@@ -148,9 +147,9 @@ public class NodeHandlingTests : OpcUaTestBase
             }
         };
 
-        //Act          
+        //Act
         channel.Received += DoSomething;
-        ((IPlugin)_driver).Start();
+        await ((IAsyncPlugin)_driver).StartAsync();
         _driver.SubscribeNode(channel.Identifier);
 
         //Assert I
@@ -162,7 +161,7 @@ public class NodeHandlingTests : OpcUaTestBase
     }
 
     [Test(Description = "Test received events from the driver and the channel, when subscription changed")]
-    public void TestSubcribedValueChanges()
+    public async Task TestSubcribedValueChanges()
     {
         // Arrange
         var expectedNode = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
@@ -200,7 +199,7 @@ public class NodeHandlingTests : OpcUaTestBase
             Assert.That(e.Key, Is.EqualTo(node.NodeId.ToString()));
         };
 
-        ((IPlugin)_driver).Start();
+        await ((IAsyncPlugin)_driver).StartAsync();
         _driver.SubscribeNode(node.Identifier);
 
         // Act
@@ -220,13 +219,13 @@ public class NodeHandlingTests : OpcUaTestBase
     }
 
     [Test(Description = "Use Aliases for node Ids")]
-    public void TestUseNodeIdAliases()
+    public async Task TestUseNodeIdAliases()
     {
         //Arrange
         const string alias = "whatever";
         var nodeId = NodeId.ToExpandedNodeId(_rootNodes.First().Key, _namespaceTable);
         _driver._nodeIdAliasDictionary.Add(alias, nodeId.ToString());
-        ((IPlugin)_driver).Start();
+        await ((IAsyncPlugin)_driver).StartAsync();
 
         //Act
         var channel = _driver.Channel(alias);

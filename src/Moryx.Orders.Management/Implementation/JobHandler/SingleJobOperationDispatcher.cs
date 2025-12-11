@@ -4,6 +4,7 @@
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
 using Moryx.Orders.Dispatcher;
+using Moryx.Threading;
 using Moryx.Tools;
 
 namespace Moryx.Orders.Management
@@ -14,8 +15,13 @@ namespace Moryx.Orders.Management
     [Plugin(LifeCycle.Singleton, typeof(IOperationDispatcher), Name = nameof(SingleJobOperationDispatcher))]
     public class SingleJobOperationDispatcher : OperationDispatcherBase
     {
+        /// <summary>
+        /// ParallelOperations injected by the container
+        /// </summary>
+        public IParallelOperations ParallelOperations { get; set; }
+
         /// <inheritdoc />
-        public override void Dispatch(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts)
+        public override async Task DispatchAsync(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts)
         {
             // Wait until all jobs are completing to avoid separate jobs for every scrap
             var allCompleting = operation.Jobs.All(j => j.Classification >= JobClassification.Completing);
@@ -32,21 +38,23 @@ namespace Moryx.Orders.Management
 
             try
             {
-                AddJobs(operation, creationContext);
+                await AddJobsAsync(operation, creationContext);
             }
             catch (KeyNotFoundException)
             {
                 // Positioning failed, because reference already completed
                 creationContext.Append();
-                AddJobs(operation, creationContext);
+                await AddJobsAsync(operation, creationContext);
             }
         }
 
         /// <inheritdoc />
-        public override void Complete(Operation operation)
+        public override Task CompleteAsync(Operation operation)
         {
             var jobs = operation.Jobs.Where(j => j.Classification < JobClassification.Completing);
             ParallelOperations.ExecuteParallel(() => jobs.ForEach(job => JobManagement.Complete(job)));
+
+            return Task.CompletedTask;
         }
     }
 }

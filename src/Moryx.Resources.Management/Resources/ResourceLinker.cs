@@ -27,12 +27,12 @@ namespace Moryx.Resources.Management
         public IResourceGraph Graph { get; set; }
 
         /// <inheritdoc />
-        public IReadOnlyList<Resource> SaveRoots(IUnitOfWork uow, IReadOnlyList<Resource> instances)
+        public async Task<IReadOnlyList<Resource>> SaveRootsAsync(IUnitOfWork uow, IReadOnlyList<Resource> instances)
         {
             var context = new ReferenceSaverContext(uow, Graph);
             foreach (var instance in instances)
             {
-                SaveReferences(context, instance);
+                await SaveReferences(context, instance);
             }
             return context.EntityCache.Keys.ToArray();
         }
@@ -43,7 +43,7 @@ namespace Moryx.Resources.Management
             var resourceType = resource.GetType();
             var referenceProperties = ReferenceProperties(resourceType, false).ToList();
             // Create delegate once to optimize memory usage
-            var resolverDelegate = new Func<ResourceRelationAccessor, Resource>(ResolveRefernceWithGraph);
+            var resolverDelegate = new Func<ResourceRelationAccessor, Resource>(ResolveReferenceWithGraph);
             foreach (var property in referenceProperties)
             {
                 var matches = MatchingRelations(relations, property).ToList();
@@ -81,20 +81,20 @@ namespace Moryx.Resources.Management
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<Resource> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity, Dictionary<Resource, ResourceEntity> dict = null)
+        public async Task<IReadOnlyList<Resource>> SaveReferencesAsync(IUnitOfWork uow, Resource instance, ResourceEntity entity, Dictionary<Resource, ResourceEntity> dict = null)
         {
             var context = new ReferenceSaverContext(uow, Graph, instance, entity);
-            SaveReferences(context, instance, dict);
+            await SaveReferences(context, instance, dict);
             return context.EntityCache.Keys.Where(i => i.Id == 0).ToList();
         }
 
-        private void SaveReferences(ReferenceSaverContext context, Resource instance, Dictionary<Resource, ResourceEntity> dict = null)
+        private async Task SaveReferences(ReferenceSaverContext context, Resource instance, Dictionary<Resource, ResourceEntity> dict = null)
         {
-            var entity = GetOrCreateEntity(context, instance);
+            var entity = await GetOrCreateEntity(context, instance);
             if (dict != null)
                 dict.Add(instance, entity);
 
-            var referenceAccessors = ResourceRelationAccessor.FromEntity(context.UnitOfWork, entity)
+            var referenceAccessors = (await ResourceRelationAccessor.FromEntity(context.UnitOfWork, entity))
                 .Union(ResourceRelationAccessor.FromQueryable(context.CreatedRelations.AsQueryable(), entity))
                 .ToList();
 
@@ -106,13 +106,13 @@ namespace Moryx.Resources.Management
                 if (typeof(IEnumerable<IResource>).IsAssignableFrom(referenceProperty.PropertyType))
                 {
                     // Save a collection reference
-                    var created = UpdateCollectionReference(context, entity, instance, referenceProperty, typeMatches);
+                    var created = await UpdateCollectionReference(context, entity, instance, referenceProperty, typeMatches);
                     createdResources.AddRange(created);
                 }
                 else
                 {
                     // Save a single reference
-                    var createdResource = UpdateSingleReference(context, entity, instance, referenceProperty, typeMatches);
+                    var createdResource = await UpdateSingleReference(context, entity, instance, referenceProperty, typeMatches);
                     if (createdResource != null)
                         createdResources.Add(createdResource);
                 }
@@ -120,22 +120,22 @@ namespace Moryx.Resources.Management
 
             // Recursively save references for new resources
             foreach (var resource in createdResources)
-                SaveReferences(context, resource, dict);
+                await SaveReferences(context, resource, dict);
         }
 
         /// <inheritdoc />
-        public IReadOnlyList<Resource> SaveSingleCollection(IUnitOfWork uow, Resource instance, PropertyInfo property)
+        public async Task<IReadOnlyList<Resource>> SaveSingleCollectionAsync(IUnitOfWork uow, Resource instance, PropertyInfo property)
         {
             var entity = uow.GetEntity<ResourceEntity>(instance);
-            var relations = ResourceRelationAccessor.FromEntity(uow, entity);
+            var relations = await ResourceRelationAccessor.FromEntity(uow, entity);
 
             var context = new ReferenceSaverContext(uow, Graph, instance, entity);
             var matches = MatchingRelations(relations, property);
             var typeMatches = TypeFilter(matches, property, context.ResolveReferencedResource).ToList();
-            var created = UpdateCollectionReference(context, entity, instance, property, typeMatches);
+            var created = await UpdateCollectionReference(context, entity, instance, property, typeMatches);
 
             foreach (var resource in created)
-                SaveReferences(context, resource);
+                await SaveReferences(context, resource);
 
             return context.EntityCache.Keys.Where(i => i.Id == 0).ToList();
         }
@@ -148,7 +148,7 @@ namespace Moryx.Resources.Management
         /// [ResourceReference(ResourceRelationType.TransportRoute, ResourceReferenceRole.Source)]
         /// public Resource FriendResource { get; set; }
         /// </example>
-        private Resource UpdateSingleReference(ReferenceSaverContext context, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationAccessor> matches)
+        private async Task<Resource> UpdateSingleReference(ReferenceSaverContext context, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationAccessor> matches)
         {
             var relationRepo = context.UnitOfWork.GetRepository<IResourceRelationRepository>();
 
@@ -203,7 +203,7 @@ namespace Moryx.Resources.Management
             }
 
             // Set source and target of the relation depending on the reference roles
-            var referencedEntity = GetOrCreateEntity(context, referencedResource);
+            var referencedEntity = await GetOrCreateEntity(context, referencedResource);
             UpdateRelationEntity(entity, referencedEntity, relEntity, referenceAtt);
 
             // Return referenced resource if it is new
@@ -218,7 +218,7 @@ namespace Moryx.Resources.Management
         /// [ResourceReference(ResourceRelationType.TransportRoute, ResourceReferenceRole.Source)]
         /// public IReferences&lt;Resource&gt; FriendResources { get; set; }
         /// </example>
-        private IEnumerable<Resource> UpdateCollectionReference(ReferenceSaverContext context, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationAccessor> relationTemplates)
+        private async Task<IEnumerable<Resource>> UpdateCollectionReference(ReferenceSaverContext context, ResourceEntity entity, Resource resource, PropertyInfo referenceProperty, IReadOnlyList<ResourceRelationAccessor> relationTemplates)
         {
             var relationRepo = context.UnitOfWork.GetRepository<IResourceRelationRepository>();
             var referenceAtt = referenceProperty.GetCustomAttribute<ResourceReferenceAttribute>();
@@ -246,7 +246,7 @@ namespace Moryx.Resources.Management
             {
                 var relEntity = CreateRelationForProperty(context, relationRepo, referenceAtt);
                 SetOnTarget(createdReference, resource, referenceAtt, relEntity);
-                var referencedEntity = GetOrCreateEntity(context, createdReference);
+                var referencedEntity = await GetOrCreateEntity(context, createdReference);
                 UpdateRelationEntity(entity, referencedEntity, relEntity, referenceAtt);
             }
 
@@ -274,13 +274,11 @@ namespace Moryx.Resources.Management
         private static IEnumerable<IResource> ExtractAllFromProperty(object propertyValue)
         {
             // Check if it is a single reference
-            var asResource = propertyValue as IResource;
-            if (asResource != null)
+            if (propertyValue is IResource asResource)
                 return [asResource];
 
             // Otherwise it must be a collection
-            var asEnumerable = propertyValue as IEnumerable;
-            if (asEnumerable != null)
+            if (propertyValue is IEnumerable asEnumerable)
                 return asEnumerable.Cast<IResource>();
 
             return [];
@@ -335,7 +333,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Remove the reference to the resource on a target object
         /// </summary>
-        private void ClearOnTarget(Resource target, Resource value, ResourceReferenceAttribute referenceAtt)
+        private static void ClearOnTarget(Resource target, Resource value, ResourceReferenceAttribute referenceAtt)
         {
             var prop = FindBackLink(target, value, referenceAtt);
             if (prop == null)
@@ -355,11 +353,11 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Get or create an entity for a resource instance
         /// </summary>
-        private static ResourceEntity GetOrCreateEntity(ReferenceSaverContext context, Resource instance)
+        private static async Task<ResourceEntity> GetOrCreateEntity(ReferenceSaverContext context, Resource instance)
         {
             // First check if the context contains an entity for the instance
-            if (context.EntityCache.ContainsKey(instance))
-                return context.EntityCache[instance];
+            if (context.EntityCache.TryGetValue(instance, out var cached))
+                return cached;
 
             ResourceEntity entity;
             if (instance.Id > 0)
@@ -368,7 +366,7 @@ namespace Moryx.Resources.Management
             }
             else
             {
-                entity = ResourceEntityAccessor.SaveToEntity(context.UnitOfWork, instance);
+                entity = await ResourceEntityAccessor.SaveToEntity(context.UnitOfWork, instance);
                 context.ResourceLookup[entity] = instance;
             }
 
@@ -496,7 +494,7 @@ namespace Moryx.Resources.Management
         /// </summary>
         /// <param name="relation"></param>
         /// <returns></returns>
-        private Resource ResolveRefernceWithGraph(ResourceRelationAccessor relation) => Graph.Get(relation.ReferenceId);
+        private Resource ResolveReferenceWithGraph(ResourceRelationAccessor relation) => Graph.Get(relation.ReferenceId);
 
         /// <summary>
         /// Context for the recursive save references structure

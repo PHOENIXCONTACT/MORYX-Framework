@@ -34,7 +34,7 @@ namespace Moryx.Model.Sqlite
         }
 
         /// <inheritdoc />
-        public override Task DeleteDatabase(DatabaseConfig config)
+        public override Task DeleteDatabaseAsync(DatabaseConfig config)
         {
             SqliteConnection.ClearAllPools();
 
@@ -60,7 +60,7 @@ namespace Moryx.Model.Sqlite
         }
 
         /// <inheritdoc />
-        public override Task<TestConnectionResult> TestConnection(DatabaseConfig config)
+        public override Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config)
         {
             var dbFilePath = GetFilePath(config);
             var directory = Path.GetDirectoryName(dbFilePath);
@@ -85,7 +85,7 @@ namespace Moryx.Model.Sqlite
         }
 
         /// <inheritdoc />
-        public override Task<bool> CreateDatabase(DatabaseConfig config)
+        public override Task<bool> CreateDatabaseAsync(DatabaseConfig config)
         {
             if (!CheckDatabaseConfig(config))
             {
@@ -100,7 +100,7 @@ namespace Moryx.Model.Sqlite
             };
             config.ConnectionSettings.ConnectionString = connectionStringBuilder.ConnectionString;
 
-            return base.CreateDatabase(config);
+            return base.CreateDatabaseAsync(config);
         }
 
         /// <inheritdoc />

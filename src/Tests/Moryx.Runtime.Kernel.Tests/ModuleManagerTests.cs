@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Moryx.Configuration;
 using Moryx.Logging;
 using Moryx.Runtime.Kernel.Tests.ModuleMocks;
@@ -45,7 +46,7 @@ namespace Moryx.Runtime.Kernel.Tests
         }
 
         [Test]
-        public void FacadeCollectionInjection()
+        public async Task FacadeCollectionInjection()
         {
             // Arrange
             var dependent = new ModuleC();
@@ -57,7 +58,7 @@ namespace Moryx.Runtime.Kernel.Tests
             ]);
 
             // Act
-            moduleManager.StartModules();
+            await moduleManager.StartModulesAsync();
 
             // Assert
             Assert.That(dependent.Facades, Is.Not.Null, "No facade injected");
@@ -65,7 +66,7 @@ namespace Moryx.Runtime.Kernel.Tests
         }
 
         [Test]
-        public void FacadeCollectionNoEntry()
+        public async Task FacadeCollectionNoEntry()
         {
             // Arrange
             var dependent = new ModuleC();
@@ -74,7 +75,7 @@ namespace Moryx.Runtime.Kernel.Tests
             ]);
 
             // Act
-            moduleManager.StartModules();
+            await moduleManager.StartModulesAsync();
 
             // Assert
             Assert.That(dependent.Facades, Is.Not.Null, "No facade injected");
@@ -82,7 +83,7 @@ namespace Moryx.Runtime.Kernel.Tests
         }
 
         [Test]
-        public void FacadeCollectionSingleEntry()
+        public async Task FacadeCollectionSingleEntry()
         {
             // Arrange
             var dependent = new ModuleC();
@@ -92,7 +93,7 @@ namespace Moryx.Runtime.Kernel.Tests
             ]);
 
             // Act
-            moduleManager.StartModules();
+            await moduleManager.StartModulesAsync();
 
             // Assert
             Assert.That(dependent.Facades, Is.Not.Null, "No facade injected");
@@ -100,7 +101,7 @@ namespace Moryx.Runtime.Kernel.Tests
         }
 
         [Test]
-        public void FacadeInjection()
+        public async Task FacadeInjection()
         {
             // Arrange
             var dependency = new ModuleA();
@@ -111,14 +112,14 @@ namespace Moryx.Runtime.Kernel.Tests
             ]);
 
             // Act
-            moduleManager.StartModules();
+            await moduleManager.StartModulesAsync();
 
             // Assert
             Assert.That(depend.Dependency, Is.Not.Null, "Facade not injected correctly");
         }
 
         [Test]
-        public void ShouldExcludeMissingFacadeAndItsDependents()
+        public async Task ShouldExcludeMissingFacadeAndItsDependents()
         {
             // Arrange
             var moduleManager = CreateObjectUnderTest([
@@ -129,7 +130,7 @@ namespace Moryx.Runtime.Kernel.Tests
             ]);
 
             // Act
-            moduleManager.StartModules();
+            await moduleManager.StartModulesAsync();
 
             // Assert
             Assert.That(moduleManager.AllModules.Count(), Is.EqualTo(4));
@@ -139,7 +140,7 @@ namespace Moryx.Runtime.Kernel.Tests
         }
 
         [Test]
-        public void ShouldExcludeWhenInCollection()
+        public async Task ShouldExcludeWhenInCollection()
         {
             // Arrange
             var moduleManager = CreateObjectUnderTest([
@@ -149,7 +150,7 @@ namespace Moryx.Runtime.Kernel.Tests
             ]);
 
             // Act
-            moduleManager.StartModules();
+            await moduleManager.StartModulesAsync();
 
             // Assert
             Assert.That(moduleManager.AllModules.Count(), Is.EqualTo(3));
@@ -159,7 +160,7 @@ namespace Moryx.Runtime.Kernel.Tests
         }
 
         [Test]
-        public void ShouldIncludeMissingFacadeInDependencyList()
+        public async Task ShouldIncludeMissingFacadeInDependencyList()
         {
             // Arrange
             var moduleBUsingA = new ModuleBUsingA();
@@ -170,7 +171,7 @@ namespace Moryx.Runtime.Kernel.Tests
             ]);
 
             // Act
-            moduleManager.StartModules();
+            await moduleManager.StartModulesAsync();
 
             // Assert
             Assert.That(moduleManager.AllModules.Count(), Is.EqualTo(3));
@@ -179,25 +180,23 @@ namespace Moryx.Runtime.Kernel.Tests
         }
 
         [Test]
-        public void ShouldInitializeTheModule()
+        public async Task ShouldInitializeTheModule()
         {
             // Arrange
             var mockModule = new Mock<IServerModule>();
-
             var moduleManager = CreateObjectUnderTest([mockModule.Object]);
-            //moduleManager.Initialize();
 
             // Act
-            moduleManager.InitializeModule(mockModule.Object);
+            await moduleManager.InitializeModuleAsync(mockModule.Object);
 
             // Assert
-            mockModule.Verify(mock => mock.Initialize());
+            mockModule.Verify(mock => mock.InitializeAsync());
         }
 
         [Test]
-        public void ShouldStartAllModules()
+        public async Task ShouldStartAllModules()
         {
-            // Argange
+            // Arrange
             var mockModule1 = new Mock<IServerModule>();
             var mockModule2 = new Mock<IServerModule>();
 
@@ -207,58 +206,58 @@ namespace Moryx.Runtime.Kernel.Tests
             ]);
 
             // Act
-            moduleManager.StartModules();
+            await moduleManager.StartModulesAsync();
 
             // Assert
             Thread.Sleep(3000); // Give the thread pool some time
 
-            mockModule1.Verify(mock => mock.Initialize(), Times.Exactly(2));
-            mockModule1.Verify(mock => mock.Start());
+            mockModule1.Verify(mock => mock.InitializeAsync(), Times.Exactly(2));
+            mockModule1.Verify(mock => mock.StartAsync());
 
-            mockModule2.Verify(mock => mock.Initialize(), Times.Exactly(2));
-            mockModule2.Verify(mock => mock.Start());
+            mockModule2.Verify(mock => mock.InitializeAsync(), Times.Exactly(2));
+            mockModule2.Verify(mock => mock.StartAsync());
         }
 
         [Test]
-        public void ShouldStartOneModule()
+        public async Task ShouldStartOneModule()
         {
-            // Argange
+            // Arrange
             var mockModule = new Mock<IServerModule>();
 
             var moduleManager = CreateObjectUnderTest([mockModule.Object]);
 
             // Act
-            moduleManager.StartModule(mockModule.Object);
+            await moduleManager.StartModuleAsync(mockModule.Object);
 
             Thread.Sleep(1);
 
             // Assert
-            mockModule.Verify(mock => mock.Initialize());
-            mockModule.Verify(mock => mock.Start());
+            mockModule.Verify(mock => mock.InitializeAsync());
+            mockModule.Verify(mock => mock.StartAsync());
         }
 
         [Test]
-        public void ShouldStopModulesAndDeregisterFromEvents()
+        public async Task ShouldStopModulesAndDeregisterFromEvents()
         {
-            // Argange
+            // Arrange
             var mockModule1 = new Mock<IServerModule>();
             var mockModule2 = new Mock<IServerModule>();
 
             var moduleManager = CreateObjectUnderTest([mockModule1.Object, mockModule2.Object]);
-            moduleManager.StartModules();
+            await moduleManager.StartModulesAsync();
 
             // Act
-            moduleManager.StopModules();
+            await moduleManager.StopModulesAsync();
 
             // Assert
-            mockModule1.Verify(mock => mock.Stop());
-            mockModule2.Verify(mock => mock.Stop());
+            mockModule1.Verify(mock => mock.StopAsync());
+            mockModule2.Verify(mock => mock.StopAsync());
         }
 
         [Test]
         public void ShouldObserveModuleStatesAfterInitialize()
         {
-            // Argange
+            // Arrange
             var mockModule = new Mock<IServerModule>();
             var eventFired = false;
 
@@ -273,14 +272,14 @@ namespace Moryx.Runtime.Kernel.Tests
         }
 
         [Test]
-        public void CheckLifeCycleBoundActivatedCountIs1()
+        public async Task CheckLifeCycleBoundActivatedCountIs1()
         {
-            // Argange
+            // Arrange
             var module = CreateLifeCycleBoundFacadeTestModuleUnderTest();
             var moduleManager = CreateObjectUnderTest([module]);
 
             // Act
-            moduleManager.StartModules();
+            await moduleManager.StartModulesAsync();
 
             WaitForTimeboxed(() => module.State == ServerModuleState.Running);
 
@@ -289,18 +288,18 @@ namespace Moryx.Runtime.Kernel.Tests
         }
 
         [Test]
-        public void CheckLifeCycleBoundDeactivatedCountIs1()
+        public async Task CheckLifeCycleBoundDeactivatedCountIs1()
         {
-            // Argange
+            // Arrange
             var module = CreateLifeCycleBoundFacadeTestModuleUnderTest();
             var moduleManager = CreateObjectUnderTest([module]);
 
             // Act
-            moduleManager.StartModules();
+            await moduleManager.StartModulesAsync();
 
             WaitForTimeboxed(() => module.State == ServerModuleState.Running);
 
-            moduleManager.StopModules();
+            await moduleManager.StopModulesAsync();
 
             WaitForTimeboxed(() => module.State == ServerModuleState.Stopped);
 

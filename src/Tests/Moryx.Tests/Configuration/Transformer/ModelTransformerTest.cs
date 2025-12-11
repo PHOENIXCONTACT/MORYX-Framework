@@ -9,7 +9,7 @@ using Moryx.Serialization;
 using NUnit.Framework;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
-namespace Moryx.Tests.Configuration.Transformer
+namespace Moryx.Tests.Configuration
 {
     /// <summary>
     /// Test for the config to model and model to config transformer

@@ -24,7 +24,7 @@ internal abstract class TestsBase
         _resourceManagementMock = MoryxTestEnvironment.CreateModuleMock<IResourceManagement>();
         _resourceManagementMock.Setup(r => r.GetResources<IOperatorAssignable>()).Returns([FirstResourceMock.Object, SecondResourceMock.Object]);
         _env = new MoryxTestEnvironment(typeof(ModuleController), [_resourceManagementMock], _config);
-        _env.StartTestModule();
+        _env.StartTestModuleAsync();
     }
 
     #region Operator Test Tools

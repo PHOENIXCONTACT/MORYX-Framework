@@ -18,9 +18,9 @@ namespace Moryx.Resources.Samples
         [PluginConfigs(typeof(IBinaryConnection))]
         public BinaryConnectionConfig TcpConfig { get; set; }
 
-        protected override void OnInitialize()
+        protected override async Task OnInitializeAsync()
         {
-            base.OnInitialize();
+            await base.OnInitializeAsync();
 
             var connection = ConnectionFactory.Create(TcpConfig, null);
         }

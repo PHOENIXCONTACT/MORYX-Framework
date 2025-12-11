@@ -105,7 +105,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         [Route("{id}/invoke/{method}")]
         [Authorize(Policy = ResourcePermissions.CanInvokeMethod)]
-        public ActionResult<Entry> InvokeMethod(long id, string method, Entry parameters)
+        public async Task<ActionResult<Entry>> InvokeMethod(long id, string method, Entry parameters)
         {
             if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
@@ -113,10 +113,10 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             Entry entry = null;
             try
             {
-                _resourceManagement.ModifyUnsafe(id, r =>
+                await _resourceManagement.ModifyUnsafeAsync(id, r =>
                 {
                     entry = EntryConvert.InvokeMethod(r.Descriptor, new MethodEntry { Name = method, Parameters = parameters }, _serialization);
-                    return true;
+                    return Task.FromResult(true);
                 });
             }
             catch (MissingMethodException)
@@ -137,16 +137,16 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         [Route("types/{type}")]
         [Authorize(Policy = ResourcePermissions.CanAdd)]
-        public ActionResult<ResourceModel> ConstructWithParameters(string type, string method = null, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] Entry arguments = null)
+        public Task<ActionResult<ResourceModel>> ConstructWithParameters(string type, string method = null, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] Entry arguments = null)
         {
             var trustedType = WebUtility.HtmlEncode(type);
             if (method is null)
                 return Construct(trustedType);
-            else
-                return Construct(trustedType, new MethodEntry { Name = method, Parameters = arguments });
+
+            return Construct(trustedType, new MethodEntry { Name = method, Parameters = arguments });
         }
 
-        private ActionResult<ResourceModel> Construct(string type)
+        private async Task<ActionResult<ResourceModel>> Construct(string type)
         {
             Resource resource;
             try
@@ -155,7 +155,10 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             }
             catch (Exception)
             {
-                return NotFound(new MoryxExceptionResponse { Title = Strings.ResourceManagementController_ResourceNotFound });
+                return NotFound(new MoryxExceptionResponse
+                {
+                    Title = Strings.ResourceManagementController_ResourceNotFound
+                });
             }
 
             ValueProviderExecutor.Execute(resource, new ValueProviderExecutorSettings()
@@ -167,11 +170,15 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             return model;
         }
 
-        private ActionResult<ResourceModel> Construct(string type, MethodEntry method)
+        private async Task<ActionResult<ResourceModel>> Construct(string type, MethodEntry method)
         {
             try
             {
-                var id = _resourceManagement.CreateUnsafe(_resourceTypeTree[type].ResourceType, r => EntryConvert.InvokeMethod(r, method, _serialization));
+                var id = await _resourceManagement.CreateUnsafeAsync(_resourceTypeTree[type].ResourceType, resource =>
+                {
+                    EntryConvert.InvokeMethod(resource, method, _serialization);
+                    return Task.CompletedTask;
+                });
                 return GetDetails(id);
             }
             catch (Exception e)
@@ -188,18 +195,21 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize(Policy = ResourcePermissions.CanAdd)]
-        public ActionResult<ResourceModel> Save(ResourceModel model)
+        public async Task<ActionResult<ResourceModel>> Save(ResourceModel model)
         {
             if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == model.Id).Any())
                 return Conflict($"The resource '{model.Id}' already exists.");
             try
             {
-                var id = _resourceManagement.CreateUnsafe(_resourceTypeTree[model.Type].ResourceType, r =>
+                var id = await _resourceManagement.CreateUnsafeAsync(_resourceTypeTree[model.Type].ResourceType, async (r) =>
                 {
                     var resourcesToSave = new HashSet<long>();
                     var resourceCache = new Dictionary<long, Resource>();
-                    FromModel(model, resourcesToSave, resourceCache, r);
-                    resourcesToSave.Skip(1).ForEach(id => _resourceManagement.ModifyUnsafe(id, r => true));
+                    await FromModel(model, resourcesToSave, resourceCache, r);
+                    foreach (var resource in resourcesToSave.Skip(1))
+                    {
+                        await _resourceManagement.ModifyUnsafeAsync(resource, r => Task.FromResult(true));
+                    }
                 });
 
                 return GetDetails(id);
@@ -215,7 +225,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// <summary>
         /// Convert ResourceModel back to resource and/or update its properties
         /// </summary>
-        private Resource FromModel(ResourceModel model, HashSet<long> resourcesToSave, Dictionary<long, Resource> cache, Resource resource = null)
+        private async Task<Resource> FromModel(ResourceModel model, HashSet<long> resourcesToSave, Dictionary<long, Resource> cache, Resource resource = null)
         {
             // Break recursion if we converted this instance already
             // Try to load by real id first
@@ -231,11 +241,11 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                     resource = (Resource)Activator.CreateInstance(_resourceTypeTree[model.Type].ResourceType);
                 else if (model.Id == 0)
                 {
-                    var id = _resourceManagement.CreateUnsafe(_resourceTypeTree[model.Type].ResourceType, r => { });
-                    resource = _resourceManagement.ReadUnsafe<Resource>(id, resource => resource);
+                    var id = await _resourceManagement.CreateUnsafeAsync(_resourceTypeTree[model.Type].ResourceType, r => Task.CompletedTask);
+                    resource = _resourceManagement.ReadUnsafe(id, r => r);
                 }
                 else
-                    resource = _resourceManagement.ReadUnsafe<Resource>(model.Id, resource => resource);
+                    resource = _resourceManagement.ReadUnsafe(model.Id, r => r);
 
             // Write to cache because following calls might only have an empty reference
             if (model.Id == 0)
@@ -259,7 +269,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             EntryConvert.UpdateInstance(resource.Descriptor, model.Properties, _serialization);
 
             // Set all other references
-            UpdateReferences(resource, resourcesToSave, cache, model);
+            await UpdateReferences(resource, resourcesToSave, cache, model);
 
             return resource;
         }
@@ -267,7 +277,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         /// <summary>
         /// Updates the references of a resource
         /// </summary>
-        private void UpdateReferences(Resource instance, HashSet<long> resourcesToSave, Dictionary<long, Resource> cache, ResourceModel model)
+        private async Task UpdateReferences(Resource instance, HashSet<long> resourcesToSave, Dictionary<long, Resource> cache, ResourceModel model)
         {
             var type = instance.GetType();
             foreach (var reference in model.References)
@@ -287,7 +297,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                         if (targetModel.Id == 0 || collection.All(r => r.Id != targetModel.Id))
                         {
                             // New reference added to the collection
-                            target = FromModel(targetModel, resourcesToSave, cache);
+                            target = await FromModel(targetModel, resourcesToSave, cache);
                             collection.Add(target);
                             resourcesToSave.Add(target.Id);
                         }
@@ -295,7 +305,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                         {
                             // Element already exists in the collection
                             target = (Resource)collection.First(r => r.Id == targetModel.Id);
-                            FromModel(targetModel, resourcesToSave, cache, target);
+                            await FromModel(targetModel, resourcesToSave, cache, target);
                         }
                     }
                     // Remove deleted items
@@ -318,9 +328,9 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
                     if (targetModel == null)
                         target = null;
                     else if (targetModel.Id == value?.Id)
-                        target = FromModel(targetModel, resourcesToSave, cache, value);
+                        target = await FromModel(targetModel, resourcesToSave, cache, value);
                     else
-                        target = FromModel(targetModel, resourcesToSave, cache);
+                        target = await FromModel(targetModel, resourcesToSave, cache);
 
                     if (target != value)
                     {
@@ -345,12 +355,12 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
 
             try
             {
-                _resourceManagement.ModifyUnsafe(id, r =>
+                _resourceManagement.ModifyUnsafeAsync(id, async (r) =>
                 {
                     var resourcesToSave = new HashSet<long>();
                     var resourceCache = new Dictionary<long, Resource>();
-                    FromModel(model, resourcesToSave, resourceCache, r);
-                    resourcesToSave.ForEach(id => _resourceManagement.ModifyUnsafe(id, r => true));
+                    await FromModel(model, resourcesToSave, resourceCache, r);
+                    resourcesToSave.ForEach(id => _resourceManagement.ModifyUnsafeAsync(id, _ => Task.FromResult(true)));
                     return true;
                 });
             }
@@ -371,12 +381,12 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
         [ProducesResponseType(StatusCodes.Status417ExpectationFailed)]
         [Route("{id}")]
         [Authorize(Policy = ResourcePermissions.CanDelete)]
-        public ActionResult Remove(long id)
+        public async Task<ActionResult> Remove(long id)
         {
             if (_resourceManagement.GetResourcesUnsafe<IResource>(r => r.Id == id) is null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ResourceNotFoundException_ById_Message, id) });
 
-            var deleted = _resourceManagement.Delete(id);
+            var deleted = await _resourceManagement.DeleteAsync(id);
             if (!deleted)
                 return Conflict($"Unable to delete {id}");
 

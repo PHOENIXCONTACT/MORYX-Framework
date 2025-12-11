@@ -17,14 +17,14 @@ namespace Moryx.Products.Management
         IProductRecipe Get(long recipeId);
 
         /// <summary>
-        /// Will load all recipes by the given product
-        /// </summary>
-        IReadOnlyList<IProductRecipe> GetAllByProduct(ProductType productType);
-
-        /// <summary>
-        /// Retrieves a recipe for the product
+        /// Retrieves recipes for the product
         /// </summary>
         IReadOnlyList<IProductRecipe> GetRecipes(ProductType productType, RecipeClassification classifications);
+
+        /// <summary>
+        /// Saves multiple recipes
+        /// </summary>
+        void Save(IReadOnlyList<IProductRecipe> recipes);
 
         /// <summary>
         /// A recipe was changed, give users the chance to update their reference
@@ -35,11 +35,6 @@ namespace Moryx.Products.Management
         /// Save recipe to DB
         /// </summary>
         long Save(IProductRecipe instance);
-
-        /// <summary>
-        /// Saves multiple recipes
-        /// </summary>
-        void Save(long productId, ICollection<IProductRecipe> recipes);
 
         /// <summary>
         /// Remove the recipe by the given identifier

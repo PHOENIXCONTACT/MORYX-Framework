@@ -26,7 +26,7 @@ namespace Moryx.Orders.Management.Assignment
 
         public async Task<bool> AssignStep(IOperationData operationData, IOperationLogger operationLogger)
         {
-            var product = await ProductAssignment.SelectProduct(operationData.Operation, operationLogger);
+            var product = await ProductAssignment.SelectProductAsync(operationData.Operation, operationLogger);
             if (product == null)
             {
                 operationLogger.Log(LogLevel.Error, Strings.ProductAssignStep_Selection_Failed);

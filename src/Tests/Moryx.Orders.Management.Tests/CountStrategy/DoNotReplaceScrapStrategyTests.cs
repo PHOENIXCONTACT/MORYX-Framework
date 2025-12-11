@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
@@ -25,14 +26,14 @@ namespace Moryx.Orders.Management.Tests
         [Description("Do not return missing amounts even if scrap parts were reworked")]
         [TestCase(0, 4)]
         [TestCase(4, 0)]
-        public void NoMissingAmountIfPartsReworked(int failureCount, int runningCount)
+        public async Task NoMissingAmountIfPartsReworked(int failureCount, int runningCount)
         {
             // Arrange
-            var operationData = CreateOperationData();
+            var operationData = await CreateOperationData();
             var operation = operationData.Operation;
 
             operation.TotalAmount = 10;
-            operationData.AddJob(new OperationDataTestBase.TestJob(new ProductRecipe(), 10)
+            await operationData.AddJob(new OperationDataTestBase.TestJob(new ProductRecipe(), 10)
             {
                 Classification = JobClassification.Completing,
                 SuccessCount = 6,
@@ -59,15 +60,15 @@ namespace Moryx.Orders.Management.Tests
         [TestCase(10, 6, 2, 0, 2, JobClassification.Completing, 8, false, false, 2, 0, Description = "Validate data: Completing production without reworked parts")]
         [TestCase(10, 9, 0, 5, 1, JobClassification.Completing, 9, false, false, 1, 0, Description = "Validate data: Completing production with reworked parts but no scrap")]
         [TestCase(10, 9, 0, 9, 1, JobClassification.Completing, 9, false, false, 1, 0, Description = "Validate data: Completing production with completely reworked parts")]
-        public void ValidateData(int targetAmount, int success, int failure, int reworked, int running, JobClassification classification,
+        public async Task ValidateData(int targetAmount, int success, int failure, int reworked, int running, JobClassification classification,
             int expReachable, bool expCanReach, bool expReached, int expMissing, int expPending)
         {
             // Arrange
-            var operationData = CreateOperationData();
+            var operationData = await CreateOperationData();
             var operation = operationData.Operation;
 
             operation.TargetAmount = targetAmount;
-            operationData.AddJob(new OperationDataTestBase.TestJob(new ProductRecipe(), targetAmount)
+            await operationData.AddJob(new OperationDataTestBase.TestJob(new ProductRecipe(), targetAmount)
             {
                 Classification = classification,
                 SuccessCount = success,
@@ -97,16 +98,16 @@ namespace Moryx.Orders.Management.Tests
             Assert.That(operationData.Operation.Progress.PendingCount, Is.EqualTo(expPending));
         }
 
-        private OperationData CreateOperationData()
+        private async Task<OperationData> CreateOperationData()
         {
-            var operationData = new OperationData
+            var operationData = new OperationData(new NullOperationSavingContext())
             {
                 OrderData = new OrderData(),
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 CountStrategy = _countStrategy,
             };
 
-            operationData.Initialize(new OperationCreationContext(), new OrderData(), new NullOperationSource());
+            await operationData.Initialize(new OperationCreationContext(), new OrderData(), new NullOperationSource());
             operationData.Operation.Recipes.Add(new DummyRecipe());
             return operationData;
         }

@@ -18,19 +18,19 @@ internal class IAttendanceManagementTests : TestsBase
     }
 
     [TearDown]
-    public void TearDown()
+    public Task TearDown()
     {
-        _env.StopTestModule();
+        return _env.StopTestModuleAsync();
     }
 
     [Test]
-    public void Start_WithConfiguredDefaultOperator_CreatesDefaultOperator()
+    public async Task Start_WithConfiguredDefaultOperator_CreatesDefaultOperator()
     {
         // Arrange
         // Act
         _config.DefaultOperator = _defaultOperatorIdentifier;
-        _env.StopTestModule();
-        _env.StartTestModule();
+        await _env.StopTestModuleAsync();
+        await _env.StartTestModuleAsync();
 
         // Assert
         Assert.Multiple(() =>
@@ -42,16 +42,16 @@ internal class IAttendanceManagementTests : TestsBase
     }
 
     [Test]
-    public void Start_WithExistingDefaultOperator_LeavesUnchanged()
+    public async Task Start_WithExistingDefaultOperator_LeavesUnchanged()
     {
         // Arrange
         _config.DefaultOperator = _defaultOperatorIdentifier;
-        _env.StopTestModule();
-        _env.StartTestModule();
+        await _env.StopTestModuleAsync();
+        await _env.StartTestModuleAsync();
 
         // Act
-        _env.StopTestModule();
-        _env.StartTestModule();
+        await _env.StopTestModuleAsync();
+        await _env.StartTestModuleAsync();
 
         // Assert
         Assert.DoesNotThrow(() => _facade.Operators.Single(o => o.Identifier == _defaultOperatorIdentifier));

@@ -10,21 +10,21 @@ namespace Moryx.Orders.Assignment
     /// <summary>
     /// Will be to assign recipes to the operation based on existing data.
     /// </summary>
-    public interface IRecipeAssignment : IConfiguredPlugin<RecipeAssignmentConfig>
+    public interface IRecipeAssignment : IAsyncConfiguredPlugin<RecipeAssignmentConfig>
     {
         /// <summary>
         /// Returns the possible recipes for the given product identity
         /// </summary>
-        Task<IReadOnlyList<IProductRecipe>> PossibleRecipes(ProductIdentity identity);
+        Task<IReadOnlyList<IProductRecipe>> PossibleRecipesAsync(ProductIdentity identity);
 
         /// <summary>
         /// Select a recipe for the current operation
         /// </summary>
-        Task<IReadOnlyList<IProductRecipe>> SelectRecipes(Operation operation, IOperationLogger operationLogger);
+        Task<IReadOnlyList<IProductRecipe>> SelectRecipesAsync(Operation operation, IOperationLogger operationLogger);
 
         /// <summary>
         /// Assigns the recipe to the operation
         /// </summary>
-        Task<bool> ProcessRecipe(IProductRecipe clone, Operation operation, IOperationLogger operationLogger);
+        Task<bool> ProcessRecipeAsync(IProductRecipe clone, Operation operation, IOperationLogger operationLogger);
     }
 }

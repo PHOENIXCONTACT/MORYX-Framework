@@ -26,13 +26,13 @@ namespace Moryx.Orders.Management
         {
         }
 
-        public override void IncreaseTargetBy(int amount, User user)
+        public override async Task IncreaseTargetBy(int amount, User user)
         {
-            NextState(StateRunning);
-            Context.HandleIncreaseTargetBy(amount);
+            await NextStateAsync(StateRunning);
+            await Context.HandleIncreaseTargetBy(amount);
         }
 
-        public override void DecreaseTargetBy(int amount, User user)
+        public override Task DecreaseTargetBy(int amount, User user)
             => Context.HandleDecreaseTargetBy(amount);
 
         public override ReportContext GetReportContext()
@@ -40,31 +40,31 @@ namespace Moryx.Orders.Management
             return Context.HandleReportContext();
         }
 
-        public override void Report(OperationReport report)
+        public override async Task Report(OperationReport report)
         {
             switch (report.ConfirmationType)
             {
                 case ConfirmationType.Partial:
-                    Context.HandlePartialReport(report);
+                    await Context.HandlePartialReport(report);
                     break;
                 case ConfirmationType.Final:
                     // ReSharper disable once ExplicitCallerInfoArgument
-                    InvalidState(nameof(Report) + "(final)");
+                    await InvalidStateAsync(nameof(Report) + "(final)");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        public override void JobsUpdated(JobStateChangedEventArgs args)
+        public override async Task JobsUpdated(JobStateChangedEventArgs args)
         {
             if (args.CurrentState < JobClassification.Completed)
                 return;
 
             if (Context.Operation.Jobs.All(j => j.Classification == JobClassification.Completed))
             {
-                NextState(StateInterrupted);
-                Context.HandleInterrupted();
+                await NextStateAsync(StateInterrupted);
+                await Context.HandleInterrupted();
             }
         }
 
@@ -73,17 +73,17 @@ namespace Moryx.Orders.Management
             return Context.HandleAdviceContext();
         }
 
-        public override void Advice(OperationAdvice advice)
+        public override Task Advice(OperationAdvice advice)
         {
-            Context.HandleAdvice(advice);
+            return Context.HandleAdvice(advice);
         }
 
-        public override void Resume()
+        public override async Task Resume()
         {
             if (Context.Operation.Jobs.All(j => j.Classification == JobClassification.Completed))
             {
-                NextState(StateInterrupted);
-                Context.HandleInterrupted();
+                await NextStateAsync(StateInterrupted);
+                await Context.HandleInterrupted();
             }
         }
     }

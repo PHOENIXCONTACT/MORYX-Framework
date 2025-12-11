@@ -20,7 +20,7 @@ internal class IOperatorManagementTests : TestsBase
     [TearDown]
     public void TearDown()
     {
-        _env.StopTestModule();
+        _env.StopTestModuleAsync();
     }
 
     [Test]
@@ -60,8 +60,8 @@ internal class IOperatorManagementTests : TestsBase
         // Arrange
         // Act
         _facade.AddOperator(Operator);
-        _env.StopTestModule();
-        _env.StartTestModule();
+        _env.StopTestModuleAsync();
+        _env.StartTestModuleAsync();
 
         // Assert
         Assert.That(ObjectsAreEqual(_facade.Operators.Single(), Operator));
@@ -137,8 +137,8 @@ internal class IOperatorManagementTests : TestsBase
 
         // Act
         _facade.UpdateOperator(UpdatedOperator);
-        _env.StopTestModule();
-        _env.StartTestModule();
+        _env.StopTestModuleAsync();
+        _env.StartTestModuleAsync();
 
         // Assert
         Assert.That(ObjectsAreEqual(_facade.Operators.Single(), UpdatedOperator));
@@ -201,8 +201,8 @@ internal class IOperatorManagementTests : TestsBase
 
         // Act
         _facade.DeleteOperator(Operator.Identifier);
-        _env.StopTestModule();
-        _env.StartTestModule();
+        _env.StopTestModuleAsync();
+        _env.StartTestModuleAsync();
 
         // Assert
         Assert.That(_facade.Operators, Has.Count.EqualTo(0));

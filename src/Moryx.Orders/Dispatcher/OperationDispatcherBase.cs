@@ -20,11 +20,6 @@ namespace Moryx.Orders.Dispatcher
         public IJobManagement JobManagement { get; set; }
 
         /// <summary>
-        /// ParallelOperations injected by the container
-        /// </summary>
-        public IParallelOperations ParallelOperations { get; set; }
-
-        /// <summary>
         /// Config of this dispatcher implementation
         /// </summary>
         public TConf Config { get; set; }
@@ -32,49 +27,53 @@ namespace Moryx.Orders.Dispatcher
         #endregion
 
         /// <inheritdoc />
-        public void Initialize(OperationDispatcherConfig config)
+        public Task InitializeAsync(OperationDispatcherConfig config)
         {
             Config = (TConf)config;
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual void Start()
+        public virtual Task StartAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual void Stop()
+        public virtual Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public abstract void Dispatch(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts);
+        public abstract Task DispatchAsync(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts);
 
         /// <inheritdoc />
-        public abstract void Complete(Operation operation);
+        public abstract Task CompleteAsync(Operation operation);
 
         /// <summary>
         /// Update method when a jobs progress has changed
         /// </summary>
-        public virtual void JobProgressChanged(Operation operation, Job job)
+        public virtual Task JobProgressChangedAsync(Operation operation, Job job)
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Update method which ensures that an operationData is present and executed with parallelOperations
         /// </summary>
-        public virtual void JobStateChanged(Operation operation, JobStateChangedEventArgs eventArgs)
+        public virtual Task JobStateChangedAsync(Operation operation, JobStateChangedEventArgs eventArgs)
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Adds a job to operation data
         /// </summary>
-        protected void AddJobs(Operation operation, JobCreationContext context)
+        protected async Task AddJobsAsync(Operation operation, JobCreationContext context)
         {
-            var newJobs = JobManagement.Add(context);
+            var newJobs = await JobManagement.AddAsync(context);
             JobsDispatched?.Invoke(this, new JobDispatchedEventArgs(operation, newJobs));
-
         }
 
         /// <inheritdoc />

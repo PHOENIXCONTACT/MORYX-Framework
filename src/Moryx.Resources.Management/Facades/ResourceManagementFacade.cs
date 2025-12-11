@@ -116,15 +116,16 @@ namespace Moryx.Resources.Management
 
         #endregion
 
-        public long CreateUnsafe(Type resourceType, Action<Resource> initializer)
+        public async Task<long> CreateUnsafeAsync(Type resourceType, Func<Resource, Task> initializer)
         {
             ValidateHealthState();
 
             var resource = ResourceGraph.Instantiate(resourceType.ResourceType());
-            initializer(resource);
-            ResourceGraph.Save(resource);
+            await initializer(resource);
+            await ResourceGraph.SaveAsync(resource);
             return resource.Id;
         }
+
 
         public TResult ReadUnsafe<TResult>(long id, Func<Resource, TResult> accessor)
         {
@@ -136,7 +137,7 @@ namespace Moryx.Resources.Management
             return result;
         }
 
-        public void ModifyUnsafe(long id, Func<Resource, bool> modifier)
+        public async Task ModifyUnsafeAsync(long id, Func<Resource, Task<bool>> modifier)
         {
             ValidateHealthState();
 
@@ -144,12 +145,12 @@ namespace Moryx.Resources.Management
             if (resource == null)
                 throw new KeyNotFoundException($"No resource with Id {id} found!");
 
-            var result = modifier(resource);
+            var result = await modifier(resource);
             if (result)
-                ResourceGraph.Save(resource);
+                await ResourceGraph.SaveAsync(resource);
         }
 
-        public bool Delete(long id)
+        public async Task<bool> DeleteAsync(long id)
         {
             ValidateHealthState();
 
@@ -157,7 +158,7 @@ namespace Moryx.Resources.Management
             if (resource == null)
                 return false;
 
-            return ResourceGraph.Destroy(resource);
+            return await ResourceGraph.DestroyAsync(resource);
         }
 
         public IEnumerable<TResource> GetResourcesUnsafe<TResource>(Func<TResource, bool> predicate)
@@ -167,14 +168,14 @@ namespace Moryx.Resources.Management
             return ResourceGraph.GetResources(predicate);
         }
 
-        public Task ExecuteInitializer(string initializerName, object parameters)
+        public Task ExecuteInitializerAsync(string initializerName, object parameters)
         {
             ValidateHealthState();
 
             return ResourceManager.ExecuteInitializer(initializerName, parameters);
         }
 
-        public async Task ExecuteInitializer(ResourceInitializerConfig initializerConfig, object parameters)
+        public async Task ExecuteInitializerAsync(ResourceInitializerConfig initializerConfig, object parameters)
         {
             ValidateHealthState();
 

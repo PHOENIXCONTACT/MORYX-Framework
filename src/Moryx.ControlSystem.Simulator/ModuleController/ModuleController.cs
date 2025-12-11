@@ -45,28 +45,31 @@ namespace Moryx.ControlSystem.Simulator
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             // Register required modules
             Container
                 .SetInstance(ResourceManagement)
                 .SetInstance(ProcessControl);
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             Container.Resolve<IProcessSimulator>().Start();
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             Container.Resolve<IProcessSimulator>().Stop();
+            return Task.CompletedTask;
         }
 
         #endregion

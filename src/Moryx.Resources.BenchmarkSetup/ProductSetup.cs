@@ -38,13 +38,13 @@ namespace Moryx.Benchmarking.Setups
         /// Execute setup in this context
         /// </summary>
         /// <param name="openContext">Context for db access</param><param name="setupData">Any data for the setup, excel or sql etc</param>
-        public Task Execute(IUnitOfWork openContext, string setupData)
+        public Task ExecuteAsync(IUnitOfWork openContext, string setupData)
         {
             var prodRepo = openContext.GetRepository<IProductTypeRepository>();
             var propRepo = openContext.GetRepository<IProductPropertiesRepository>();
 
             // Create product
-            var prod = prodRepo.Create("123456", 1, "DummyProduct", "BenchmarkProduct");
+            var prod = prodRepo.Create("123456", 1, "DummyProduct", typeof(BenchmarkProduct).FullName);
             var prop = propRepo.Create();
             prod.SetCurrentVersion(prop);
 
@@ -132,11 +132,10 @@ namespace Moryx.Benchmarking.Setups
             var workplanEntity = RecipeStorage.ToWorkplanEntity(openContext, workplan);
 
             // Create recipe
-            recipeRepo.Create();
             var recipe = recipeRepo.Create();
             recipe.Name = "Recipe-Steps:" + stepCount;
             recipe.Classification = (int)RecipeClassification.Alternative;
-            recipe.Type = nameof(ProductionRecipe);
+            recipe.TypeName = typeof(ProductionRecipe).FullName;
             recipe.State = (int)RecipeState.Released;
             recipe.Workplan = workplanEntity;
             recipe.Product = product;

@@ -370,7 +370,7 @@ namespace Moryx.Products.IntegrationTests
             return strategyFactory;
         }
 
-        private static WatchType SetupProduct(string watchName, string identifierPrefix, short revision = 5)
+        private static WatchType SetupProduct(string watchName, string identifierPrefix, short revision = 5, ProductState state = ProductState.Created)
         {
             var watchface = new WatchFaceType
             {
@@ -398,7 +398,8 @@ namespace Moryx.Products.IntegrationTests
                 Identity = new ProductIdentity(identifierPrefix + WatchMaterial, revision),
                 WatchFace = new ProductPartLink<WatchFaceTypeBase> { Product = watchface },
                 Needles = needles,
-                Weight = 123.45
+                Weight = 123.45,
+                State = state
             };
 
             return watch;
@@ -646,7 +647,7 @@ namespace Moryx.Products.IntegrationTests
             }
         }
 
-        [Test]
+        [Test(Description = "Request products by query - multiple tests")]
         public void GetProductByQuery()
         {
             // Arrange
@@ -658,11 +659,11 @@ namespace Moryx.Products.IntegrationTests
             // Act
             var all = _storage.LoadTypes(new ProductQuery());
             var latestRevision = _storage.LoadTypes(new ProductQuery { RevisionFilter = RevisionFilter.Latest });
-            var byType = _storage.LoadTypes(new ProductQuery { Type = typeof(NeedleType).FullName });
+            var byType = _storage.LoadTypes(new ProductQuery { TypeName = typeof(NeedleType).FullName });
             var allRevision = _storage.LoadTypes(new ProductQuery { Identifier = WatchMaterial });
             var latestByType = _storage.LoadTypes(new ProductQuery
             {
-                Type = typeof(WatchType).FullName,
+                TypeName = typeof(WatchType).FullName,
                 RevisionFilter = RevisionFilter.Latest
             });
             var usages = _storage.LoadTypes(new ProductQuery
@@ -685,6 +686,30 @@ namespace Moryx.Products.IntegrationTests
             Assert.That(needles.Count, Is.GreaterThanOrEqualTo(3));
         }
 
+        [Test(Description = "Request products by query with a required state")]
+        public void GetProductsByQueryRequiredState()
+        {
+            // Arrange
+            const string identifierPrefix = "123";
+            var watch = SetupProduct("Rolex GMT-Master II", identifierPrefix, 1, ProductState.Released | ProductState.Generated);
+            _storage.SaveType(watch);
+
+            var anotherWatch = SetupProduct("G-SHOCK GM-5600BWD-1", "5600", 1, ProductState.Released);
+            _storage.SaveType(anotherWatch);
+
+            // Act
+            var generated = _storage.LoadTypes(new ProductQuery
+            {
+                TypeName = typeof(WatchType).FullName,
+                RequiredState = ProductState.Generated
+            });
+
+            // Assert
+            Assert.That(generated, Is.Not.Null);
+            Assert.That(generated.Count, Is.EqualTo(1));
+            Assert.That(generated[0].Identity.Identifier, Is.EqualTo(identifierPrefix + WatchMaterial));
+        }
+
         [Test]
         public void GetProductByExpression()
         {
@@ -702,7 +727,7 @@ namespace Moryx.Products.IntegrationTests
             var loaded2 = _storage.LoadTypes<DisplayWatchFaceType>(wf => wf.Resolution > 150);
             var loaded3 = _storage.LoadTypes(new ProductQuery
             {
-                Type = typeof(DisplayWatchFaceType).FullName,
+                TypeName = typeof(DisplayWatchFaceType).FullName,
                 PropertyFilters =
                 [
                     new()

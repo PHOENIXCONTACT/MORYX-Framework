@@ -12,11 +12,11 @@ namespace Moryx.Drivers.OpcUa.Tests;
 public class HandlingWriteAndRead : OpcUaTestBase
 {
     [SetUp]
-    public void Setup()
+    public async Task Setup()
     {
-        BasicSetup();
+        await BasicSetup();
         _driver._session = _sessionMock.Object;
-        ((IPlugin)_driver).Start();
+        await ((IAsyncPlugin)_driver).StartAsync();
     }
 
     [Test]

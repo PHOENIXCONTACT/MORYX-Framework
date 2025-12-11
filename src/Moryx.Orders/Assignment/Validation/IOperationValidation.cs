@@ -8,16 +8,16 @@ namespace Moryx.Orders.Assignment
     /// <summary>
     /// Will be used to validate the complete operation after finishing the creation
     /// </summary>
-    public interface IOperationValidation : IConfiguredPlugin<OperationValidationConfig>
+    public interface IOperationValidation : IAsyncConfiguredPlugin<OperationValidationConfig>
     {
         /// <summary>
         /// Validates the given operation
         /// </summary>
-        Task<bool> Validate(Operation operation, IOperationLogger operationLogger);
+        Task<bool> ValidateAsync(Operation operation, IOperationLogger operationLogger);
 
         /// <summary>
         /// Validates the given creation context
         /// </summary>
-        bool ValidateCreationContext(OrderCreationContext orderContext);
+        Task<bool> ValidateCreationContextAsync(OrderCreationContext orderContext);
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.Buffers;
 using System.Linq.Expressions;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.TestTools;
@@ -37,7 +38,7 @@ namespace Moryx.Drivers.Mqtt.Tests
         public TestDriverMqttIByteSerializable(MqttProtocolVersion version) => _version = version;
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             ReflectionTool.TestMode = true;
 
@@ -53,8 +54,8 @@ namespace Moryx.Drivers.Mqtt.Tests
                 MessageName = nameof(BoolByteSerializableMessage)
             };
 
-            ((IInitializable)_topicBoolMqtt).Initialize();
-            ((IInitializable)_topicBoolIByteSerializable).Initialize();
+            await ((IAsyncInitializable)_topicBoolMqtt).InitializeAsync();
+            await ((IAsyncInitializable)_topicBoolIByteSerializable).InitializeAsync();
 
             _driver = new MqttDriver
             {
@@ -73,7 +74,7 @@ namespace Moryx.Drivers.Mqtt.Tests
                 .ReturnsAsync(new MqttClientSubscribeResult(0, Array.Empty<MqttClientSubscribeResultItem>(), "", Array.Empty<MqttUserProperty>()));
 
             _driver.InitializeForTest(_mockClient.Object);
-            ((IPlugin)_driver).Start();
+            await ((IAsyncPlugin)_driver).StartAsync();
             _driver.OnConnected(new MqttClientConnectedEventArgs(new MqttClientConnectResult())).Wait();
             _topicBoolMqtt.Parent = _driver;
             _topicBoolIByteSerializable.Parent = _driver;

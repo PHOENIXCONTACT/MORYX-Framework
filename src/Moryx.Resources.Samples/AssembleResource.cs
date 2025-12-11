@@ -23,9 +23,9 @@ namespace Moryx.Resources.Samples
         [ResourceReference(ResourceRelationType.Extension)]
         public IVisualInstructor Instructor { get; set; }
 
-        protected override void OnInitialize()
+        protected override async Task OnInitializeAsync()
         {
-            base.OnInitialize();
+            await base.OnInitializeAsync();
 
             if (Setup == null)
             {

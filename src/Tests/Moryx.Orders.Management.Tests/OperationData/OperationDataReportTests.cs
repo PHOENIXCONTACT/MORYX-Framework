@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Moq;
 using Moryx.ControlSystem.Jobs;
 using NUnit.Framework;
@@ -13,10 +14,10 @@ namespace Moryx.Orders.Management.Tests
     public class OperationDataReportTests : OperationDataTestBase
     {
         [Test(Description = "Reporting amounts less than 0 should fail. Will test SuccessCount and FailureCount.")]
-        public void ReportAmountsLessThanZero()
+        public async Task ReportAmountsLessThanZero()
         {
             // Arrange
-            var operationData = GetRunningOperation(10, false, 10, 10);
+            var operationData = await GetRunningOperation(10, false, 10, 10);
 
             // Act - Assert: SuccessCount < 0
             var report = new OperationReport(ConfirmationType.Partial, -1, 5, User);
@@ -35,10 +36,10 @@ namespace Moryx.Orders.Management.Tests
                                                           "Partial reporting should be not possible")]
         [TestCase(ConfirmationType.Final, Description = "Tests the final reporting while the operation is ready. " +
                                                         "After the report, the operation should be completed.")]
-        public void ReportWhileReady(ConfirmationType confirmationType)
+        public async Task ReportWhileReady(ConfirmationType confirmationType)
         {
             // Arrange
-            var operationData = GetReadyOperation(10, false, 10, 10);
+            var operationData = await GetReadyOperation(10, false, 10, 10);
 
             var completedRaised = false;
             operationData.Completed += (_, _) => completedRaised = true;
@@ -50,12 +51,12 @@ namespace Moryx.Orders.Management.Tests
             {
                 case ConfirmationType.Partial:
                     // Act - Assert
-                    Assert.Throws<InvalidOperationException>(() => operationData.Report(report), "A partial report is not possible for a Ready OperationData.");
+                    Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Report(report), "A partial report is not possible for a Ready OperationData.");
                     Assert.That(completedRaised, Is.False);
                     break;
                 case ConfirmationType.Final:
                     // Act
-                    operationData.Report(report);
+                    await operationData.Report(report);
 
                     // Assert
                     // Check possible actions
@@ -72,10 +73,10 @@ namespace Moryx.Orders.Management.Tests
                                                           "Should succeed.")]
         [TestCase(ConfirmationType.Final, Description = "Tests the final reporting while the operation is running. " +
                                                         "Final reporting should be not possible")]
-        public void ReportWhileRunningByReport(ConfirmationType confirmationType)
+        public async Task ReportWhileRunningByReport(ConfirmationType confirmationType)
         {
             // Arrange
-            var operationData = GetRunningOperation(10, false, 10, 10);
+            var operationData = await GetRunningOperation(10, false, 10, 10);
             var partialReportRaised = false;
             operationData.PartialReport += (_, _) => partialReportRaised = true;
 
@@ -85,14 +86,14 @@ namespace Moryx.Orders.Management.Tests
             {
                 case ConfirmationType.Partial:
                     // Act
-                    operationData.Report(report);
+                    await operationData.Report(report);
 
                     // Assert
                     Assert.That(partialReportRaised);
                     break;
                 case ConfirmationType.Final:
                     // Act - Assert
-                    Assert.Throws<InvalidOperationException>(() => operationData.Report(report), "A final report is not possible for a running OperationData");
+                    Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Report(report), "A final report is not possible for a running OperationData");
 
                     Assert.That(partialReportRaised, Is.False);
                     break;
@@ -103,10 +104,10 @@ namespace Moryx.Orders.Management.Tests
                                                           "Should succeed.")]
         [TestCase(ConfirmationType.Final, Description = "Tests the final reporting while the operation is interrupting. " +
                                                         "Final reporting should be not possible")]
-        public void ReportWhileInterruptingByReport(ConfirmationType confirmationType)
+        public async Task ReportWhileInterruptingByReport(ConfirmationType confirmationType)
         {
             // Arrange
-            var operationData = GetInterruptingOperation(10, false, 10, 10);
+            var operationData = await GetInterruptingOperation(10, false, 10, 10);
             var partialReportRaised = false;
             operationData.PartialReport += (_, _) => partialReportRaised = true;
 
@@ -116,14 +117,14 @@ namespace Moryx.Orders.Management.Tests
             {
                 case ConfirmationType.Partial:
                     // Act
-                    operationData.Report(report);
+                    await operationData.Report(report);
 
                     // Assert
                     Assert.That(partialReportRaised);
                     break;
                 case ConfirmationType.Final:
                     // Act - Assert
-                    Assert.Throws<InvalidOperationException>(() => operationData.Report(report), "A final report is not possible for a running OperationData");
+                    Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Report(report), "A final report is not possible for a running OperationData");
 
                     Assert.That(partialReportRaised, Is.False);
                     break;
@@ -131,13 +132,13 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Tests interrupting the running operation.")]
-        public void ReportWhileRunningByInterrupt()
+        public async Task ReportWhileRunningByInterrupt()
         {
             // Arrange
-            var operationData = GetRunningOperation(10, false, 10, 10);
+            var operationData = await GetRunningOperation(10, false, 10, 10);
 
             // Act
-            operationData.Interrupt(User);
+            await operationData.Interrupt(User);
 
             // Assert
             // Raise partial report
@@ -148,10 +149,10 @@ namespace Moryx.Orders.Management.Tests
                                                                        "Partial report should be possible. The operation should be interrupted.")]
         [TestCase(ConfirmationType.Final, true, false, Description = "Tests reporting the amount reached operation. " +
                                                                      "By final reporting, the operation will be completed.")]
-        public void ReportWhileAmountReachedByReport(ConfirmationType confirmationType, bool expectedCompleted, bool expectedPartialReport)
+        public async Task ReportWhileAmountReachedByReport(ConfirmationType confirmationType, bool expectedCompleted, bool expectedPartialReport)
         {
             // Arrange
-            var operationData = GetAmountReachedOperation(10, false, 10, 10);
+            var operationData = await GetAmountReachedOperation(10, false, 10, 10);
 
             var partialReportRaised = false;
             operationData.PartialReport += (_, _) => partialReportRaised = true;
@@ -161,7 +162,7 @@ namespace Moryx.Orders.Management.Tests
 
             // Act
             var report = new OperationReport(confirmationType, 5, 5, User);
-            operationData.Report(report);
+            await operationData.Report(report);
 
             // Assert
             Assert.That(partialReportRaised, Is.EqualTo(expectedPartialReport));
@@ -171,10 +172,10 @@ namespace Moryx.Orders.Management.Tests
         [TestCase(ConfirmationType.Partial, Description = "Tests reporting the interrupted operation. Partial report should not be possible")]
         [TestCase(ConfirmationType.Final, Description = "Tests reporting the interrupted operation. " +
                                                         "By final reporting, the operation will be completed.")]
-        public void ReportWhileInterruptedByReport(ConfirmationType confirmationType)
+        public async Task ReportWhileInterruptedByReport(ConfirmationType confirmationType)
         {
             // Arrange
-            var operationData = GetInterruptedOperation(10, false, 10, 10);
+            var operationData = await GetInterruptedOperation(10, false, 10, 10);
 
             var partialReportRaised = false;
             operationData.PartialReport += (_, _) => partialReportRaised = true;
@@ -188,13 +189,13 @@ namespace Moryx.Orders.Management.Tests
             {
                 case ConfirmationType.Partial:
                     // Act - Assert
-                    Assert.Throws<InvalidOperationException>(() => operationData.Report(report), "No partial report possible for an interrupted OperationData");
+                    Assert.ThrowsAsync<InvalidOperationException>(() => operationData.Report(report), "No partial report possible for an interrupted OperationData");
                     Assert.That(partialReportRaised, Is.False);
                     Assert.That(completedRaised, Is.False);
                     break;
                 case ConfirmationType.Final:
                     // Act
-                    operationData.Report(report);
+                    await operationData.Report(report);
 
                     // Assert
                     Assert.That(partialReportRaised, Is.False);
@@ -205,10 +206,10 @@ namespace Moryx.Orders.Management.Tests
 
         [Test(Description = "Reporting is not possible while creating the operation. " +
                             "Requesting the report context is not possible.")]
-        public void GetReportContextThrowsWhileCreating()
+        public async Task GetReportContextThrowsWhileCreating()
         {
             // Arrange
-            var operationData = InitializeOperationData(10, false, 11, 9);
+            var operationData = await InitializeOperationData(10, false, 11, 9);
 
             // Act - Assert
             Assert.That(operationData.State.CanPartialReport, Is.False);
@@ -224,7 +225,7 @@ namespace Moryx.Orders.Management.Tests
             Assert.Throws<InvalidOperationException>(() => operationData.GetReportContext());
 
             // Arrange
-            operationData.AssignCompleted(false);
+            await operationData.AssignCompleted(false);
 
             // Act - Assert
             Assert.That(operationData.State.CanPartialReport, Is.False);
@@ -234,10 +235,10 @@ namespace Moryx.Orders.Management.Tests
 
         [Test(Description = "Reporting is not possible while operation is completed. " +
                             "Requesting the report context is not possible.")]
-        public void GetReportContextThrowsWhileCompleted()
+        public async Task GetReportContextThrowsWhileCompleted()
         {
             // Arrange
-            var operationData = GetCompletedOperation(10, false, 11, 9);
+            var operationData = await GetCompletedOperation(10, false, 11, 9);
 
             // Act - Assert
             Assert.That(operationData.State.CanPartialReport, Is.False);
@@ -246,10 +247,10 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Validates the report context while the operation is ready")]
-        public void ValidateReportContextWhileReady()
+        public async Task ValidateReportContextWhileReady()
         {
             // Arrange
-            var operationData = GetReadyOperation(10, false, 11, 9);
+            var operationData = await GetReadyOperation(10, false, 11, 9);
 
             // Act
             var reportContext = operationData.GetReportContext();
@@ -262,10 +263,10 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Validates the report context while the operation is running")]
-        public void ValidateReportContextWhileRunning()
+        public async Task ValidateReportContextWhileRunning()
         {
             // Arrange
-            var operationData = GetRunningOperation(10, false, 11, 9);
+            var operationData = await GetRunningOperation(10, false, 11, 9);
 
             // Act
             var reportContext = operationData.GetReportContext();
@@ -278,10 +279,10 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Validates the report context while the operation amount is reached")]
-        public void ValidateReportContextWhileAmountReached()
+        public async Task ValidateReportContextWhileAmountReached()
         {
             // Arrange
-            var operationData = GetAmountReachedOperation(10, false, 11, 9);
+            var operationData = await GetAmountReachedOperation(10, false, 11, 9);
 
             // Act
             var reportContext = operationData.GetReportContext();
@@ -294,10 +295,10 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Validates the report context while the operation is interrupted")]
-        public void ValidateReportContextWhileInterrupted()
+        public async Task ValidateReportContextWhileInterrupted()
         {
             // Arrange
-            var operationData = GetInterruptedOperation(10, false, 11, 9);
+            var operationData = await GetInterruptedOperation(10, false, 11, 9);
 
             // Act
             var reportContext = operationData.GetReportContext();
@@ -310,10 +311,10 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Validates the report context if the operation have an unstarted job.")]
-        public void ValidateReportContextWithUnstartedJob()
+        public async Task ValidateReportContextWithUnstartedJob()
         {
             // Arrange
-            var operationData = GetRunningOperation(10, false, 11, 9);
+            var operationData = await GetRunningOperation(10, false, 11, 9);
 
             // Act
             var reportContext = operationData.GetReportContext();
@@ -331,17 +332,17 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Validates the report context if the operation have a producing job.")]
-        public void ValidateReportContextWithStartedJob()
+        public async Task ValidateReportContextWithStartedJob()
         {
             // Arrange
-            var operationData = GetRunningOperation(10, false, 11, 9);
+            var operationData = await GetRunningOperation(10, false, 11, 9);
 
             var initialJob = operationData.Operation.Jobs.First();
             initialJob.Classification = JobClassification.Running;
             initialJob.SuccessCount = 3;
             initialJob.FailureCount = 2;
             initialJob.ReworkedCount = 0;
-            operationData.JobProgressChanged(initialJob);
+            await operationData.JobProgressChanged(initialJob);
 
             // Act
             var reportContext = operationData.GetReportContext();
@@ -354,17 +355,17 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Validates the report context if the operation have a producing job and also a job with reworked parts.")]
-        public void ValidateReportContextWithStartedReworkJob()
+        public async Task ValidateReportContextWithStartedReworkJob()
         {
             // Arrange
-            var operationData = GetRunningOperation(10, false, 11, 9);
+            var operationData = await GetRunningOperation(10, false, 11, 9);
 
             var initialJob = operationData.Operation.Jobs.First();
             initialJob.Classification = JobClassification.Running;
             initialJob.SuccessCount = 5;
             initialJob.FailureCount = 2;
             initialJob.ReworkedCount = 3; // one more that FailureCount to check if result will be 0
-            operationData.JobProgressChanged(initialJob);
+            await operationData.JobProgressChanged(initialJob);
 
             // Act
             var reportContext = operationData.GetReportContext();
@@ -377,10 +378,10 @@ namespace Moryx.Orders.Management.Tests
         }
 
         [Test(Description = "Validates the report context if the operation have already a reports")]
-        public void ValidateReportContextWithStartedJobAfterReport()
+        public async Task ValidateReportContextWithStartedJobAfterReport()
         {
             // Arrange
-            var operationData = GetRunningOperation(10, false, 11, 9);
+            var operationData = await GetRunningOperation(10, false, 11, 9);
 
             var initialJob = operationData.Operation.Jobs.First();
             initialJob.Classification = JobClassification.Running;
@@ -389,7 +390,7 @@ namespace Moryx.Orders.Management.Tests
             initialJob.ReworkedCount = 0;
 
             var report = new OperationReport(ConfirmationType.Partial, 3, 2, User);
-            operationData.Report(report);
+            await operationData.Report(report);
 
             // Act
             var reportContext = operationData.GetReportContext();

@@ -16,12 +16,12 @@ namespace Moryx.Orders.Management
         /// A new job will be added to the <see cref="IJobManagement"/> and to the given operation.
         /// The new job will be moved to the bottom of all jobs of the given operation
         /// </summary>
-        void Dispatch(IOperationData operationData, IReadOnlyList<DispatchContext> dispatchContexts);
+        Task Dispatch(IOperationData operationData, IReadOnlyList<DispatchContext> dispatchContexts);
 
         /// <summary>
         /// Will complete all jobs of the given operation
         /// </summary>
-        void Complete(IOperationData operationData);
+        Task Complete(IOperationData operationData);
 
         /// <summary>
         /// Will load all given jobs by their id from the <see cref="IJobManagement"/>

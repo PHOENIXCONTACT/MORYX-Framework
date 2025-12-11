@@ -5,7 +5,7 @@ using Moryx.StateMachines;
 
 namespace Moryx.Collections
 {
-    internal abstract class QueueStateBase : StateBase<IDelayQueueContext>
+    internal abstract class QueueStateBase : SyncStateBase<IDelayQueueContext>
     {
         protected QueueStateBase(IDelayQueueContext context, StateMap stateMap) : base(context, stateMap)
         {

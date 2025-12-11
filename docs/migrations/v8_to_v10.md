@@ -1,5 +1,202 @@
 # MORYX 8.x to 10.x
 
+## Async life-cycle
+
+**Background**
+
+Modern applications increasingly rely on asynchronous programming to improve responsiveness, scalability, and resource efficiency. Traditional synchronous lifecycle methods (`void`) in Modules and Plugins often block threads, especially during I/O-bound operations such as database access, file loading, or network calls. This can lead to performance bottlenecks and limited scalability.
+
+To address these challenges, MORYX has been updated to support fully asynchronous lifecycle methods (`async Task`) across Modules and Plugins. This change enables:
+
+- Non-blocking startup and shutdown processes.
+- Safe asynchronous operations inside lifecycle methods, such as loading data, communicating with external services, or performing computations asynchronously.
+- Improved scalability and responsiveness of MORYX, particularly in large or complex deployments.
+
+By aligning with modern .NET asynchronous programming patterns, this migration ensures that Modules and Plugins can safely and efficiently leverage `async/await`, providing a foundation for more robust and maintainable applications.
+
+Previously, lifecycle methods in Modules and Plugins were synchronous (`void`) and had no native support for asynchronous operations. This required all asynchronous calls to be manually synchronized to maintain consistent start/stop behavior.
+
+With MORYX 10:
+
+- Initialization, startup, and shutdown processes now support `async Task`.
+- Modules and Plugins can perform non-blocking asynchronous operations safely during lifecycle events.
+- The runtime ensures proper sequencing and state management even with asynchronous calls.
+
+This change brings Modules and Plugins in line with modern .NET asynchronous programming patterns, improving responsiveness and scalability of the system.
+
+### Changes in `StateBase`
+
+We now provide a full async implementation of the `StateBase`. To keep consistent naming, the `StateBase` was split to `SyncStateBase` and `AsyncStateBase`.
+Due to the reduction of unnecessary interfaces, `IState` was removed and `StateBase` will be used in e.g. `IStateContext` now.
+
+The `StateMachine` class was extended by `WithAsync()` and `ForceAsync()`. The `AsyncStateBase` provides async all the way: `NextStateAsync()`, `OnEnterAsync()`, `OnExitAsync`.\
+**Upgrade hint:** Replace `StateBase<TContext>` by `SyncStateBase<TContext>`.
+
+The same convention was applied to `DriverState`. It was renamed to `SyncDriverState` and a new implementation `AsyncDriverState` was added with full async support.\
+**Upgrade hint:** Replace `DriverState<TContext>` by `SyncDriverState<TContext>`.
+
+### Server Module lifecycle refactored to async methods
+
+The lifecycle methods of ServerModules have been migrated from void to `async Task` to enable modern asynchronous programming with async/await.
+
+**Changes in ServerModuleBase:**
+
+- `OnInitialize()` -> `OnInitializeAsync()`
+- `OnStart()` -> `OnStartAsync()`
+- `OnStop()` -> `OnStopAsync()`
+
+````cs
+protected override Task OnInitializeAsync()
+{
+    return Task.CompletedTask;
+}
+
+protected override async Task OnStartAsync()
+{
+    var asyncFoo = Container.Resolve<IAsyncFoo>();
+    await asyncFoo.StartAsync();
+}
+
+protected override async Task OnStopAsync()
+{
+    var asyncFoo = Container.Resolve<IAsyncFoo>();
+    await asyncFoo.StopAsync();
+}
+````
+
+**Changes in IModuleManager:**
+
+- `StartModules()` -> `StartModulesAsync()`
+- `StopModules()` -> `StopModulesAsync()`
+- `InitalizeModule(IServerModule module)` -> `InitalizeModuleAsync(IServerModule module)`
+- `StartModule(IServerModule module)` -> `StartModuleAsync(IServerModule module)`
+- `StopModule(IServerModule module)` -> `StopModuleAsync(IServerModule module)`
+- `ReincarnateModule(IServerModule module)` -> `ReincarnateModuleAsync(IServerModule module)`
+
+The `Main` method in `Program.cs` must be updated to a Task-based signature.
+
+````cs
+public static async Task Main(string[] args)
+{
+    AppDomainBuilder.LoadAssemblies();
+
+    [...]
+
+    var moduleManager = host.Services.GetRequiredService<IModuleManager>();
+    await moduleManager.StartModulesAsync();
+
+    await host.RunAsync();
+
+    await moduleManager.StopModulesAsync();
+}
+````
+
+Note: For projects using top-level statements you can use the new async methods without any further actions.
+
+### Async Lifecycle Support for ResourceManagement
+
+The ResourceManagement has been updated to support **asynchronous lifecycle methods**, including initialization, startup, and shutdown processes.
+
+**Changes in Resource**:
+
+- `OnInitialize()` -> `OnInitializeAsync()`
+- `OnStart()` -> `OnStartAsync()`
+- `OnStop()` -> `OnStopAsync()`
+
+````cs
+protected override Task OnInitializeAsync()
+{
+    return base.OnStartAsync();
+}
+
+protected override Task OnStartAsync()
+{
+    return base.OnStartAsync();
+}
+
+protected override Task OnStopAsync()
+{
+    return base.OnStopAsync();
+}
+````
+
+Additionally, the APIs of these components have been updated to return `Task` or `Task<T>` to reflect asynchronous behavior.
+
+**`IResourceGraph`**
+
+- `void Save` -> `Task SaveAsync`
+- `bool Destroy` -> `Task<bool> DestroyAsync`
+
+**`IResourceManagement`-facade:**
+
+- Modification methods are now using async Task.
+
+### Async Lifecycle Support for OrderManagement
+
+The OrderManagement has been updated to support **asynchronous lifecycle methods**, including initialization, startup, and shutdown processes.
+
+The following plugins have been migrated to the **async lifecycle**:
+
+- `IAdviceExecutor`
+- `IDocumentLoader`
+- `IPartsAssignment`
+- `IProductAssignment`
+- `IRecipeAssignment`
+- `IOperationValidation`
+- `IOperationDispatcher`
+
+Additionally, the APIs of these components have been updated to return `Task` or `Task<T>` to reflect asynchronous behavior.
+
+**`IOrderManagement`-facade:**
+
+- `Operation GetOperation` -> `Task<Operation> GetOperationAsync`
+- `Operation AddOperation` -> `Task<Operation> AddOperationAsync`
+- `void BeginOperation` -> `Task BeginOperationAsync`
+- `void AbortOperation` -> `Task AbortOperationAsync`
+- `void SetOperationSortOrder` -> `Task SetOperationSortOrderAsync`
+- `void UpdateSource` -> `Task UpdateSourceAsync`
+- `void ReportOperation` -> `Task ReportOperationAsync`
+- `void InterruptOperation` -> `Task InterruptOperationAsync`
+- `void Reload` -> `Task ReloadAsync`
+
+**`IOperationPool`:**
+
+- `Operation Get` -> `Task<Operation> GetAsync`
+
+**`IAdviceExecutor`**
+
+`bool ValidateCreationContext` -> `Task<bool> ValidateCreationContextAsync`
+
+**`IOperationDispatcher`**
+
+- `void Dispatch` -> `Task DispatchAsync`
+- `void Complete` -> `Task CompleteAsync`
+- `void JobProgressChanged` -> `Task JobProgressChangedAsync`
+- `void JobStateChanged` -> `Task JobStateChangedAsync`
+
+### Async Lifecycle Support for ProcessEngine
+
+The ProcessEngine has been updated to support **asynchronous lifecycle methods**, including initialization, startup, and shutdown processes.
+
+The following plugins have been migrated to the **async lifecycle**:
+
+- `ICellSelector`
+
+Additionally, the APIs of these components have been updated to return `Task` or `Task<T>` to reflect asynchronous behavior.
+
+**`IJobManagement`-facade:**
+
+- `void Add` -> `Task AddAsync`
+
+**`IProcessControl`-facade:**
+
+- `IReadOnlyList<IProcess> RunningProcesses` -> `IReadOnlyList<IProcess> GetRunningProcesses`
+- `IReadOnlyList<IProcess> GetProcesses` -> `Task<IReadOnlyList<IProcess>> GetArchivedProcessesAsync`
+
+### Other Async Related changes
+
+All public or protected APIs which are Task-based are renamed to use `Async` suffix.
+
 ## WorkerSupport / VisualInstructions
 
 The WorkerSupport Module `Moryx.ControlSystem.WorkerSupport` was renamed to `Moryx.VisualInstructions.Controller` to match all namespaces. Also the Resource project was renamed from `Moryx.Resources.AssemblyInstruction` to `Moryx.Resources.VisualInstructions`.
@@ -19,6 +216,7 @@ VisualInstructions has an own separate namespace now.
 In *Moryx.Factory* **6.3** and **8.1** we introduced the new result object and optional extended APIs. The result object solved issues caused by localization of the different results. With **Moryx 10** we remove all old APIs based on strings.
 
 ### Replaced `IVisualInstructions` with `VisualInstructionParameters`
+
 The interface was only used in `VisualInstructionParameters` which can and is being used as a base class in most cases anyway.
 Hence, `IVisualInstructions` is removed in favor of a more extendable base class.
 
@@ -34,7 +232,7 @@ The methods `ControlSystemAttached` and `ControlSystemDetached` were renamed to 
 
 The `ProcessEngineContext` was added to the `ProcessEngineAttached` to provide the `Cell` a possibility to gather information from the process engine. The class is empty in 10.0 because it defines only the API. Features are implemented in the next feature-releases of MORYX 10.x.
 
-## Renamings and Typo-Fixes
+## Renaming and Typo-Fixes
 
 - TcpClientConfig.IpAdress -> TcpClientConfig.IpAddress
 - TcpListenerConfig.IpAdress -> TcpListenerConfig.IpAddress
@@ -42,14 +240,20 @@ The `ProcessEngineContext` was added to the `ProcessEngineAttached` to provide t
 - ResourceRelationType.PossibleExchangablePart -> ResourceRelationType.PossibleExchangeablePart
 - MqttDriver.BrokerURL -> MqttDriver.BrokerUrl
 - IResourceManagement.GetAllResources -> IResourceManagement.GetResourcesUnsafe
-- IResourceManagement.Create -> IResourceManagement.CreateUnsafe
+- IResourceManagement.Create -> IResourceManagement.CreateUnsafeAsync
 - IResourceManagement.Read -> IResourceManagement.ReadUnsafe
-- IResourceManagement.Modify -> IResourceManagement.ModifyUnsafe
+- IResourceManagement.Modify -> IResourceManagement.ModifyUnsafeAsync
 - ProcessContext -> ProcessWorkplanContext
 - OperationClassification -> OperationStateClassification
 - OperationClassification.Loading -> OperationStateClassification.Assigning
+- IAsyncInitializable.Initialize -> IAsyncInitializable.InitializeAsync
+- IAsyncPlugin.Start -> IAsyncPlugin.StartAsync
+- IAsyncPlugin.Stop -> IAsyncPlugin.StopAsync
+- DriverState -> SyncDriverState
 - IControlSystemBound.ControlSystemAttached -> ICell.ProcessEngineAttached
 - IControlSystemBound.ControlSystemDetached -> ICell.ProcessEngineDetached
+- ProductQuery.Type -> ProductQuery.TypeName
+- IProcessControl.GetProcesses -> IProcessControl.GetArchivedProcessesAsync
 
 ## Reduction of interfaces
 
@@ -61,6 +265,7 @@ Several interfaces have been removed to streamline the codebase and reduce compl
 - `IConfig`: Replaced with base-class `ConfigBase`
 - `IDatabaseConfig`: Replaced with base-class `DatabaseConfig`
 - `IControlSystemBound`: Merged with `ICell`
+- `IState`: Replace with base-class `StateBase`
 
 ## Method Signature Changes
 
@@ -84,6 +289,7 @@ With MORYX 10, several changes have been made to the data model to improve perfo
 
 - Removed `TypeName` from ProcessEntity. It was not used.
 - Combined `Classname`, `Namespace` in `TypeName` of `WorkplanStepEntity` and removed `Assembly`
+- Renamed `Type` to `TypeName` in `RecipeEntity
 
 ## Launcher
 
@@ -132,12 +338,32 @@ All driver APIs have been reworked to use TPL async/await instead of callbacks f
 
 The API of `IResourceInitializer` was adjusted
 
-- `Initialize` is now returning async task
+- `Initialize` renamed to `InitializeAsync` and now returns async task
 - Introduced `ResourceInitializerResult` object for extensibility and option to save
 - Its now possible to execute initializers from the facade
 - The initializers are registered transient by default.
 
-## Product importer
+## Modules-ProcessEngine
+
+- Removed API from IJobManagement: `JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement)`
+- Added `IAsyncEnumerable<IProcessChunk> GetArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)` to `IProcessControl`
+
+## Modules-Products
+
+- Removed `productId` from `SaveRecipes` of `IProductStorage` and changed argument to `IReadOnlyList`
+- `ProductState` and `ProductInstanceState` are now Flags-Enum.
+- Introduced `ProductState.Generated` to classify a product as generated for internal use
+- Added support to query by required product state
+
+**`IProductManagement`**
+
+- APIs (LoadType, Duplicate) are using `IIdentity` instead of `ProductIdentity` but in MORYX 10.0, only `ProductIdentity` is supported.
+
+**`IProductStorage`**
+
+- API `LoadType` is using `IIdentity` instead of `ProductIdentity` but in MORYX 10.0, only `ProductIdentity` is supported.
+
+### Product importer
 
 - Introduced `ProductImporterAttribute` for harmonized registration of importers.
 - The importers are registered transient by default.
@@ -173,7 +399,9 @@ Features:
 
 ## EntryConvert
 
-Added support for `AllowedValuesAttribute` and `DeniedValuesAttribute`. Refer to EntryConvert [PossibleValues-docs](/docs/articles/framework/Serialization/PossibleValues.md).
+- Supports async invocation of methods now by `InvokeMethodAsync`. Synchronous methods are executed synchronously.
+- The synchronous `InvokeMethod` does now support async methods too. They are executed synchronously.
+- Added support for `AllowedValuesAttribute` and `DeniedValuesAttribute`. Refer to EntryConvert [PossibleValues-docs](/docs/articles/framework/Serialization/PossibleValues.md).
 
 Added support for additional ValidationAttributes in EntryConvert:
 
@@ -187,3 +415,7 @@ Removed `PrimitiveValuesAttribute`, use `AllowedValuesAttribute` of .NET instead
 
 - Renamed `EntryUnitType.File` to `EntryUnitType.FilePath`
 - Renamed `EntryUnitType.Directory` to `EntryUnitType.DirectoryPath`
+
+## Merged `IProcessControlReporting` into `IProcessControl`
+
+The `IProcessControlReporting` interface has been merged into `IProcessControl`. All reporting-related methods and the `ReportAction` enum are now part of `IProcessControl`. Remove usages of `IProcessControlReporting` and update your code to use the unified `IProcessControl` interface.

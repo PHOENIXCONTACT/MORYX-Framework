@@ -18,7 +18,7 @@ namespace Moryx.Shifts.Management.IntegrationTests
         protected static Mock<IOperatorManagement> _operatorManagementMock;
         protected MoryxTestEnvironment _env;
 
-        public virtual void SetUp()
+        public virtual Task SetUp()
         {
             ReflectionTool.TestMode = true;
             var config = new ModuleConfig();
@@ -27,11 +27,13 @@ namespace Moryx.Shifts.Management.IntegrationTests
             _env = new MoryxTestEnvironment(typeof(ModuleController),
                 [_resourceManagementMock, _operatorManagementMock], config);
             _facade = _env.GetTestModule<IShiftManagement>();
+
+            return Task.CompletedTask;
         }
 
-        public virtual void TearDown()
+        public virtual Task TearDown()
         {
-            _env.StopTestModule();
+            return _env.StopTestModuleAsync();
         }
 
         #region Test tools 

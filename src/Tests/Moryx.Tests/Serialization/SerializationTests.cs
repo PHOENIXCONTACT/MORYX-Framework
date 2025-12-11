@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using Moryx.Configuration;
 using Moryx.Serialization;
+using Moryx.Tests.Serialization;
 using NUnit.Framework;
 
 namespace Moryx.Tests.Serialization
@@ -51,10 +52,7 @@ namespace Moryx.Tests.Serialization
             var doubles = encoded.SubEntries[1];
             Assert.That(doubles.Value.Possible[0], Is.EqualTo(nameof(EntryValueType.Double)));
             Assert.That(doubles.Prototypes.Count, Is.EqualTo(1));
-            if (possibleValues)
-                Assert.That(doubles.Prototypes[0].Value.Possible.Length, Is.EqualTo(3));
-            else
-                Assert.That(doubles.Prototypes[0].Value.Possible, Is.Null);
+            Assert.That(doubles.Prototypes[0].Value.Possible.Length, Is.EqualTo(3));
 
             var enums = encoded.SubEntries[2];
             Assert.That(enums.Value.Possible.Length, Is.EqualTo(3));

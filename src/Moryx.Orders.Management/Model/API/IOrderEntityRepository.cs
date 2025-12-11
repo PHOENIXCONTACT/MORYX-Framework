@@ -8,9 +8,6 @@ namespace Moryx.Orders.Management.Model
 {
     public interface IOrderEntityRepository : IRepository<OrderEntity>
     {
-        OrderEntity GetByNumber(string number);
-
-        OrderEntity Create(string number);
     }
 }
 

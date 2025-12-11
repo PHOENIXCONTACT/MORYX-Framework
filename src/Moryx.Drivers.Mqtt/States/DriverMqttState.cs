@@ -6,7 +6,7 @@ using Moryx.StateMachines;
 
 namespace Moryx.Drivers.Mqtt.States
 {
-    internal abstract class DriverMqttState : DriverState<MqttDriver>
+    internal abstract class DriverMqttState : SyncDriverState<MqttDriver>
     {
         protected DriverMqttState(MqttDriver context, StateMap stateMap, StateClassification classification) : base(context, stateMap, classification)
         {
