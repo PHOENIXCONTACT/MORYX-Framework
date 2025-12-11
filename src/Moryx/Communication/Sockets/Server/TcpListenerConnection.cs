@@ -244,7 +244,7 @@ namespace Moryx.Communication.Sockets
         }
 
         /// <inheritdoc />
-        public Task SendAsync(BinaryMessage message)
+        public Task SendAsync(BinaryMessage message, CancellationToken cancellationToken = default)
         {
             lock (_stateLock)
                 return _state.SendAsync(message);

@@ -119,12 +119,12 @@ namespace Moryx.Communication.Serial
         }
 
         /// <inheritdoc />
-        public async Task SendAsync(BinaryMessage message)
+        public async Task SendAsync(BinaryMessage message, CancellationToken cancellationToken = default)
         {
             // Create bytes from message
             var bytes = _validator.Interpreter.SerializeMessage(message);
-            await _serialPort.BaseStream.WriteAsync(bytes, 0, bytes.Length);
-            await _serialPort.BaseStream.FlushAsync();
+            await _serialPort.BaseStream.WriteAsync(bytes, 0, bytes.Length, cancellationToken);
+            await _serialPort.BaseStream.FlushAsync(cancellationToken);
         }
 
         private void OnDataReceived(object sender, SerialDataReceivedEventArgs serialDataReceivedEventArgs)
