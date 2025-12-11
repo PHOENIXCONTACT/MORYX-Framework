@@ -35,7 +35,7 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
     }
 
     /// <inheritdoc />
-    public override async Task DeleteDatabaseAsync(DatabaseConfig config)
+    public override async Task DeleteDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
     {
         var settings = (SqlServerDatabaseConnectionSettings)config.ConnectionSettings;
 
@@ -48,8 +48,8 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
         await using var command = CreateCommand(sqlCommandText, connection);
 
         // Open connection
-        await connection.OpenAsync();
-        await command.ExecuteNonQueryAsync();
+        await connection.OpenAsync(cancellationToken);
+        await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
     private static SqlConnectionStringBuilder CreateConnectionStringBuilder(DatabaseConfig config, bool includeModel = true)

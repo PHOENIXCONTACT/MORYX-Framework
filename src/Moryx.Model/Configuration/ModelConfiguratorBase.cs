@@ -61,25 +61,25 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config)
+        public virtual async Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(config.ConnectionSettings.Database))
                 return TestConnectionResult.ConfigurationError;
 
             // Simple ef independent database connection
-            var connectionResult = await TestDatabaseConnection(config);
+            var connectionResult = await TestDatabaseConnection(config, cancellationToken);
             if (!connectionResult)
                 return TestConnectionResult.ConnectionError;
 
             await using var context = CreateContext(config);
 
             // Ef dependent database connection
-            var canConnect = await context.Database.CanConnectAsync();
+            var canConnect = await context.Database.CanConnectAsync(cancellationToken);
             if (!canConnect)
                 return TestConnectionResult.ConnectionOkDbDoesNotExist;
 
             // If connection is ok, test migrations
-            var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).ToArray();
+            var pendingMigrations = (await context.Database.GetPendingMigrationsAsync(cancellationToken: cancellationToken)).ToArray();
             if (pendingMigrations.Any())
                 return TestConnectionResult.PendingMigrations;
 
@@ -87,7 +87,7 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<bool> CreateDatabaseAsync(DatabaseConfig config)
+        public virtual async Task<bool> CreateDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
             // Check is database is configured
             if (!CheckDatabaseConfig(config))
@@ -97,7 +97,7 @@ namespace Moryx.Model.Configuration
 
             await using var context = CreateMigrationContext(config);
 
-            return await CreateDatabaseAsync(config, context);
+            return await CreateDatabaseAsync(config, context, cancellationToken);
         }
 
         /// <summary>
@@ -107,14 +107,14 @@ namespace Moryx.Model.Configuration
         /// <param name="config">Config for testing the connection</param>
         /// <param name="context">Database context</param>
         /// <returns></returns>
-        protected async Task<bool> CreateDatabaseAsync(DatabaseConfig config, DbContext context)
+        protected async Task<bool> CreateDatabaseAsync(DatabaseConfig config, DbContext context, CancellationToken cancellationToken)
         {
             //Will create the database if it does not already exist. Applies any pending migrations for the context to the database.
-            await context.Database.MigrateAsync();
+            await context.Database.MigrateAsync(cancellationToken: cancellationToken);
 
             // Create connection to our new database
             var connection = CreateConnection(config);
-            await connection.OpenAsync();
+            await connection.OpenAsync(cancellationToken);
 
             // Creation done -> close connection
             await connection.CloseAsync();
@@ -123,12 +123,12 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<DatabaseMigrationSummary> MigrateDatabaseAsync(DatabaseConfig config)
+        public virtual async Task<DatabaseMigrationSummary> MigrateDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
             var result = new DatabaseMigrationSummary();
 
             await using var context = CreateMigrationContext(config);
-            var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).ToArray();
+            var pendingMigrations = (await context.Database.GetPendingMigrationsAsync(cancellationToken: cancellationToken)).ToArray();
 
             if (pendingMigrations.Length == 0)
             {
@@ -142,7 +142,7 @@ namespace Moryx.Model.Configuration
 
             try
             {
-                await context.Database.MigrateAsync();
+                await context.Database.MigrateAsync(cancellationToken: cancellationToken);
                 result.Result = MigrationResult.Migrated;
                 result.ExecutedMigrations = pendingMigrations;
                 Logger.Log(LogLevel.Information, "Database migration for database '{0}' was successful. Executed migrations: {1}",
@@ -158,21 +158,21 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<IReadOnlyList<string>> AvailableMigrationsAsync(DatabaseConfig config)
+        public virtual async Task<IReadOnlyList<string>> AvailableMigrationsAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
             await using var context = CreateMigrationContext(config);
-            return await AvailableMigrationsAsync(context);
+            return await AvailableMigrationsAsync(context, cancellationToken);
         }
 
         /// <summary>
         /// Retrieves all names of available updates
         /// </summary>
         /// <returns></returns>
-        protected async Task<IReadOnlyList<string>> AvailableMigrationsAsync(DbContext context)
+        protected async Task<IReadOnlyList<string>> AvailableMigrationsAsync(DbContext context, CancellationToken cancellationToken)
         {
             try
             {
-                var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
+                var pendingMigrations = await context.Database.GetPendingMigrationsAsync(cancellationToken);
 
                 return pendingMigrations.ToArray();
             }
@@ -183,21 +183,21 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<IReadOnlyList<string>> AppliedMigrationsAsync(DatabaseConfig config)
+        public virtual async Task<IReadOnlyList<string>> AppliedMigrationsAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
             await using var context = CreateMigrationContext(config);
-            return await AppliedMigrationsAsync(context);
+            return await AppliedMigrationsAsync(context, cancellationToken);
         }
 
         /// <summary>
         /// Retrieves all names of installed updates
         /// </summary>
         /// <returns></returns>
-        protected async Task<IReadOnlyList<string>> AppliedMigrationsAsync(DbContext context)
+        protected async Task<IReadOnlyList<string>> AppliedMigrationsAsync(DbContext context, CancellationToken cancellationToken)
         {
             try
             {
-                var appliedMigrations = await context.Database.GetAppliedMigrationsAsync();
+                var appliedMigrations = await context.Database.GetAppliedMigrationsAsync(cancellationToken);
 
                 return appliedMigrations.ToArray();
             }
@@ -228,12 +228,12 @@ namespace Moryx.Model.Configuration
         public abstract DbContextOptions BuildDbContextOptions(DatabaseConfig config);
 
         /// <inheritdoc />
-        public abstract Task DeleteDatabaseAsync(DatabaseConfig config);
+        public abstract Task DeleteDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Generally tests the connection to the database
         /// </summary>
-        private async Task<bool> TestDatabaseConnection(DatabaseConfig config)
+        private async Task<bool> TestDatabaseConnection(DatabaseConfig config, CancellationToken cancellationToken)
         {
             if (!CheckDatabaseConfig(config))
                 return false;
@@ -241,7 +241,7 @@ namespace Moryx.Model.Configuration
             using var conn = CreateConnection(config, false);
             try
             {
-                await conn.OpenAsync();
+                await conn.OpenAsync(cancellationToken);
                 return true;
             }
             catch(Exception e)
