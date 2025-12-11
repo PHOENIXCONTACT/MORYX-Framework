@@ -23,7 +23,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// Create wrapper for process object
         /// </summary>
         /// <param name="process"></param>
-        public ProcessData(IProcess process)
+        public ProcessData(Process process)
         {
             Process = process;
         }
@@ -68,10 +68,10 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// The process this data belongs to
         /// </summary>
-        public IProcess Process { get; }
+        public Process Process { get; }
 
         /// <summary>
-        /// Short cut property to <see cref="IProcess.Recipe"/>
+        /// Short cut property to <see cref="Process.Recipe"/>
         /// </summary>
         public IRecipe Recipe
         {

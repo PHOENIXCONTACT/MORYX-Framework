@@ -163,7 +163,7 @@ Same sample as `AsyncStateBase`:
 ````cs
 public abstract class MyAsyncStateBase : AsyncStateBase<MyContext>
 {
-    protected MyAsyncStateBase(MyContext context, StateMap stateMap)
+    protected MyAsyncStateBase(MyAsyncContext context, StateMap stateMap)
         : base(context, stateMap)
     {
     }
@@ -257,7 +257,7 @@ private void ForceMachine()
     StateMachine.Force(context.State, MyStateBase.StateA);
 }
 
-private async Task ForceMachine()
+private async Task ForceMachineAsync()
 {
     await StateMachine.ForceAsync(context.State, MyAsyncStateBase.StateA);
 }
@@ -272,7 +272,7 @@ private void ForceMachine()
     StateMachine.Force(context.State, MyStateBase.StateA, exitCurrent: true, enterForced: false);
 }
 
-private async Task ForceMachine()
+private async Task ForceMachineAsync()
 {
     await StateMachine.ForceAsync(context.State, MyAsyncStateBase.StateA, exitCurrent: true, enterForced: false);
 }

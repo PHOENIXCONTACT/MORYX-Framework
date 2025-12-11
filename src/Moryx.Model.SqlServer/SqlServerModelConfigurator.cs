@@ -35,7 +35,7 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
     }
 
     /// <inheritdoc />
-    public override async Task DeleteDatabase(DatabaseConfig config)
+    public override async Task DeleteDatabaseAsync(DatabaseConfig config)
     {
         var settings = (SqlServerDatabaseConnectionSettings)config.ConnectionSettings;
 

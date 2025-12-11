@@ -40,7 +40,7 @@ namespace Moryx.Orders.Management.Assignment
             var operation = operationData.Operation;
 
             // Select recipes
-            var selectedRecipes = await RecipeAssignment.SelectRecipes(operation, operationLogger);
+            var selectedRecipes = await RecipeAssignment.SelectRecipesAsync(operation, operationLogger);
             if (!selectedRecipes.Any() || selectedRecipes.Any(r => r == null))
             {
                 operationLogger.Log(LogLevel.Error, Strings.RecipeAssignStep_Selection_Failed);
@@ -48,12 +48,12 @@ namespace Moryx.Orders.Management.Assignment
             }
 
             // Process recipes
-            var processed = new List<IProductionRecipe>(selectedRecipes.Count);
+            var processed = new List<ProductionRecipe>(selectedRecipes.Count);
             foreach (var selected in selectedRecipes)
             {
                 // Clone recipe
-                var clone = (IProductionRecipe)selected.Clone();
-                var successfullyProcessed = await RecipeAssignment.ProcessRecipe(clone, operation, operationLogger);
+                var clone = (ProductionRecipe)selected.Clone();
+                var successfullyProcessed = await RecipeAssignment.ProcessRecipeAsync(clone, operation, operationLogger);
 
                 if (!successfullyProcessed)
                 {

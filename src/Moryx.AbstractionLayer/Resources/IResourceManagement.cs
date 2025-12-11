@@ -135,12 +135,12 @@ namespace Moryx.AbstractionLayer.Resources
         /// <summary>
         /// Executes a preconfigured initializer with the given configuration
         /// </summary>
-        Task ExecuteInitializer(string initializerName, object parameters);
+        Task ExecuteInitializerAsync(string initializerName, object parameters);
 
         /// <summary>
         /// Executes a resource initializer with the given configuration
         /// </summary>
-        Task ExecuteInitializer(ResourceInitializerConfig initializerConfig, object parameters);
+        Task ExecuteInitializerAsync(ResourceInitializerConfig initializerConfig, object parameters);
 
         /// <summary>
         /// Event raised when a resource was added at runtime

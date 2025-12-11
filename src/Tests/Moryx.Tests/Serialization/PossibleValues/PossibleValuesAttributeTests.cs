@@ -7,7 +7,7 @@ using Moryx.Serialization;
 using Moryx.Tools;
 using NUnit.Framework;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.Serialization
 {
     [TestFixture]
     public class PossibleValuesAttributeTests

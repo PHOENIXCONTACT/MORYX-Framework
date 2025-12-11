@@ -15,6 +15,6 @@ namespace Moryx.ControlSystem.Setups
         /// Determine the necessary changes to produce a given recipe 
         /// </summary>
         /// <returns><value>null</value> if no setup is required, otherwise a setup recipe with a reconfiguration workplan</returns>
-        ISetupRecipe RequiredSetup(SetupExecution execution, IProductionRecipe recipe, ISetupTarget targetSystem);
+        SetupRecipe RequiredSetup(SetupExecution execution, ProductionRecipe recipe, ISetupTarget targetSystem);
     }
 }

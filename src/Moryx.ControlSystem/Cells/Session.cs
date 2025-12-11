@@ -53,7 +53,7 @@ namespace Moryx.ControlSystem.Cells
         /// <summary>
         /// Id of the process the cell is working on
         /// </summary>
-        public IProcess Process
+        public Process Process
         {
             get => _context.Process;
             internal set => _context.Process = value;
@@ -131,7 +131,7 @@ namespace Moryx.ControlSystem.Cells
         /// with a new session context and marks the activity as failed.
         /// </summary>
         /// <param name="unknown"></param>
-        public static UnknownActivityAborted WrapUnknownActivity(IActivity unknown)
+        public static UnknownActivityAborted WrapUnknownActivity(Activity unknown)
         {
             var wrapper = StartSession(ActivityClassification.Unknown, ReadyToWorkType.Unset, unknown.Process.Id)
                 .CompleteSequence(null, false, []);
@@ -160,7 +160,7 @@ namespace Moryx.ControlSystem.Cells
 
             public Guid SessionId;
 
-            public IProcess Process;
+            public Process Process;
 
             public ProcessReference Reference;
 

@@ -15,7 +15,6 @@ using ProcessContext = Moryx.ControlSystem.ProcessEngine.Model.ProcessContext;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.Logging;
-using Moryx.ControlSystem.ProcessEngine.Jobs.Components;
 using Moryx.Threading;
 
 namespace Moryx.ControlSystem.ProcessEngine.Jobs
@@ -339,8 +338,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
             public QueryJob() : base(null, 0)
             {
-                RunningProcesses = Array.Empty<IProcess>();
-                AllProcesses = Array.Empty<IProcess>();
+                RunningProcesses = Array.Empty<Process>();
+                AllProcesses = Array.Empty<Process>();
             }
         }
     }

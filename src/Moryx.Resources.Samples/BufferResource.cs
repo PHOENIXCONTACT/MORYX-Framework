@@ -28,11 +28,11 @@ namespace Moryx.Resources.Samples
         }
 
         [EntrySerialize, DisplayName("Remove Value")]
-        public int RemoveValue(string name)
+        public async Task<int> RemoveValueAsync(string name)
         {
             var value = Values.FirstOrDefault(v => v.Name == name);
             if (value != null)
-                Graph.DestroyAsync(value, true).Wait();
+                await Graph.DestroyAsync(value, true);
             return Values.Count;
         }
     }

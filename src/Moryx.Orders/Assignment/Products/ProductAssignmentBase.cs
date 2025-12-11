@@ -34,26 +34,29 @@ namespace Moryx.Orders.Assignment
         protected TConfig Config { get; private set; }
 
         /// <inheritdoc cref="IProductAssignment"/>
-        public void Initialize(ProductAssignmentConfig config)
+        public virtual Task InitializeAsync(ProductAssignmentConfig config)
         {
             Config = (TConfig)config;
             Logger = Logger.GetChild(Config.PluginName, GetType());
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc cref="IProductAssignment"/>
-        public void Start()
+        public virtual Task StartAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public void Stop()
+        public virtual Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Will be called while creating an operation to load the product for the new operation
         /// The origin of the product MUST be the <see cref="ProductManagement"/>
         /// </summary>
-        public abstract Task<ProductType> SelectProduct(Operation operation, IOperationLogger operationLogger);
+        public abstract Task<ProductType> SelectProductAsync(Operation operation, IOperationLogger operationLogger);
     }
 }

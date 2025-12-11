@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace Moryx.Serialization
@@ -11,6 +12,12 @@ namespace Moryx.Serialization
     [DataContract]
     public class EntryValidation : ICloneable
     {
+        /// <summary>
+        /// Logical data types that may appear
+        /// </summary>
+        [DataMember]
+        public DataType DataType { get; set; }
+
         /// <summary>
         /// Minimum value or minimal length of strings
         /// </summary>
@@ -36,7 +43,7 @@ namespace Moryx.Serialization
         public bool IsRequired { get; set; }
 
         /// <summary>
-        /// Creates a new <see cref="EntryValidation"/> instance initializing <see cref="EntryValidation.Maximum"/> 
+        /// Creates a new <see cref="EntryValidation"/> instance initializing <see cref="EntryValidation.Maximum"/>
         /// and <see cref="EntryValidation.Minimum"/> validation to the largest possible range.
         /// </summary>
         public EntryValidation()
@@ -62,7 +69,8 @@ namespace Moryx.Serialization
                 Minimum = Minimum,
                 Maximum = Maximum,
                 Regex = Regex,
-                IsRequired = IsRequired
+                IsRequired = IsRequired,
+                DataType = DataType
             };
             return copy;
         }

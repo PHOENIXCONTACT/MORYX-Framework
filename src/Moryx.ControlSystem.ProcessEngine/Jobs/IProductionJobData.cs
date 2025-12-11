@@ -13,7 +13,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// <summary>
         /// Current recipe of this job
         /// </summary>
-        new IProductionRecipe Recipe { get; }
+        new ProductionRecipe Recipe { get; }
 
         /// <summary>
         /// Number of successful processes

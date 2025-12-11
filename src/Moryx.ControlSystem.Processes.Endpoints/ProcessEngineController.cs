@@ -80,7 +80,7 @@ public class ProcessEngineController : ControllerBase
     [Authorize(Policy = ProcessPermissions.CanView)]
     public ActionResult<JobProcessModel[]> GetRunningProcesses()
     {
-        var processes = _processControl.RunningProcesses;
+        var processes = _processControl.GetRunningProcesses();
         if (processes == null)
         {
             return Array.Empty<JobProcessModel>();
@@ -94,7 +94,7 @@ public class ProcessEngineController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [Route("instance/{productInstanceId}")]
     [Authorize(Policy = ProcessPermissions.CanView)]
-    public ActionResult<JobProcessModel[]> GetProcesses(long productInstanceId)
+    public async Task<ActionResult<JobProcessModel[]>> GetProcesses(long productInstanceId)
     {
         var productInstance = _productManagement.GetInstance(productInstanceId);
         if (productInstance == null)
@@ -102,12 +102,12 @@ public class ProcessEngineController : ControllerBase
             return NotFound($"No product instace corresponding to the Id {productInstanceId} found");
         }
 
-        var processes = _processControl.GetProcesses(productInstance);
+        var processes = await _processControl.GetArchivedProcessesAsync(productInstance);
 
         return ConvertProcesses(processes);
     }
 
-    private JobProcessModel[] ConvertProcesses(IReadOnlyList<IProcess> processes)
+    private JobProcessModel[] ConvertProcesses(IReadOnlyList<Process> processes)
     {
         var modelList = new List<JobProcessModel>();
 
@@ -125,7 +125,7 @@ public class ProcessEngineController : ControllerBase
     [Authorize(Policy = ProcessPermissions.CanView)]
     public ActionResult<JobProcessModel> GetProcess(long id)
     {
-        var process = _processControl.RunningProcesses.Where(p => p.Id == id).FirstOrDefault();
+        var process = _processControl.GetRunningProcesses(p => p.Id == id).FirstOrDefault();
         if (process == null)
         {
             return NotFound(new MoryxExceptionResponse { Title = Strings.ProcessEngineController_ProcessNotFoundExceptionMessage });
@@ -141,7 +141,7 @@ public class ProcessEngineController : ControllerBase
     [Authorize(Policy = ProcessPermissions.CanView)]
     public ActionResult<ProcessActivityModel[]> GetActivities(long id)
     {
-        var process = _processControl.RunningProcesses.Where(p => p.Id == id).FirstOrDefault();
+        var process = _processControl.GetRunningProcesses(p => p.Id == id).FirstOrDefault();
         if (process == null)
         {
             return NotFound(new MoryxExceptionResponse { Title = Strings.ProcessEngineController_ProcessNotFoundExceptionMessage });
@@ -164,7 +164,7 @@ public class ProcessEngineController : ControllerBase
     [Authorize(Policy = ProcessPermissions.CanView)]
     public ActionResult<ActivityResourceModel[]> GetTargets(long id)
     {
-        var process = _processControl.RunningProcesses.Where(p => p.Id == id).FirstOrDefault();
+        var process = _processControl.GetRunningProcesses(p => p.Id == id).FirstOrDefault();
         if (process == null)
         {
             return NotFound(new MoryxExceptionResponse { Title = Strings.ProcessEngineController_ProcessNotFoundExceptionMessage });
@@ -186,13 +186,13 @@ public class ProcessEngineController : ControllerBase
     [Authorize(Policy = ProcessPermissions.CanView)]
     public ActionResult<ActivityResourceModel[]> GetTargets(long id, long activityId)
     {
-        var process = _processControl.RunningProcesses.Where(p => p.Id == id).FirstOrDefault();
+        var process = _processControl.GetRunningProcesses(p => p.Id == id).FirstOrDefault();
         if (process == null)
         {
             return NotFound(new MoryxExceptionResponse { Title = Strings.ProcessEngineController_ProcessNotFoundExceptionMessage });
         }
 
-        var activity = process.GetActivities().Where(a => a.Id == activityId).FirstOrDefault();
+        var activity = process.GetActivities(a => a.Id == activityId).FirstOrDefault();
         if (activity == null)
         {
             return NotFound(new MoryxExceptionResponse { Title = Strings.ProcessEngineController_ActivityNotFoundExceptionMessage });

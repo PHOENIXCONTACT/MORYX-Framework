@@ -10,6 +10,7 @@ using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Model;
+using Moryx.ControlSystem.Processes;
 using Moryx.Model.Repositories;
 using ProcessContext = Moryx.ControlSystem.ProcessEngine.Model.ProcessContext;
 
@@ -54,76 +55,70 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         {
         }
 
-        public void Dispose()
+        public Task<IReadOnlyList<Process>> GetProcesses(ProductInstance productInstance)
         {
-        }
+            using var uow = UnitOfWorkFactory.Create();
+            var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
-        public IReadOnlyList<IProcess> GetProcesses(ProductInstance productInstance)
-        {
-            using (var uow = UnitOfWorkFactory.Create())
+            var query = (from processEntity in processRepo.Linq
+                where processEntity.ReferenceId == productInstance.Id
+                select new { processEntity.Id, processEntity.Job.RecipeId }).ToList(); // TODO use ToListAsync and fix tests
+
+            var processes = new List<Process>();
+            foreach (var match in query)
             {
-                var processRepo = uow.GetRepository<IProcessEntityRepository>();
-
-                var query = (from processEntity in processRepo.Linq
-                             where processEntity.ReferenceId == productInstance.Id
-                             select new { processEntity.Id, processEntity.Job.RecipeId }).ToList();
-
-                var processes = new List<IProcess>();
-                foreach (var match in query)
-                {
-                    var recipe = (IProductionRecipe)ProductManagement.LoadRecipe(match.RecipeId);
-                    var process = (ProductionProcess)recipe.CreateProcess();
-                    process.Id = match.Id;
-                    process.ProductInstance = productInstance;
-                    var context = new ProcessWorkplanContext(process);
-                    var taskMap = recipe.Workplan.Steps
-                        .Select(step => step.CreateInstance(context))
-                        .OfType<ITask>().ToDictionary(task => task.Id, task => task);
-                    ProcessStorage.FillActivities(uow, process, taskMap);
-                    processes.Add(process);
-                }
-
-                return processes;
+                var recipe = (ProductionRecipe)ProductManagement.LoadRecipe(match.RecipeId);
+                var process = (ProductionProcess)recipe.CreateProcess();
+                process.Id = match.Id;
+                process.ProductInstance = productInstance;
+                var context = new ProcessWorkplanContext(process);
+                var taskMap = recipe.Workplan.Steps
+                    .Select(step => step.CreateInstance(context))
+                    .OfType<ITask>().ToDictionary(task => task.Id, task => task);
+                ProcessStorage.FillActivities(uow, process, taskMap);
+                processes.Add(process);
             }
+
+            return Task.FromResult<IReadOnlyList<Process>>(processes);
         }
 
-        public IEnumerable<IProcessChunk> GetProcesses(RequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
+        public async IAsyncEnumerable<IProcessChunk> GetProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
         {
             // Access database to find all jobs in this time frame
-            using (var uow = UnitOfWorkFactory.Create())
-            {
-                var relevantJobs = GetJobs(uow, filterType, start, end, jobIds);
-                if (relevantJobs.Count == 0)
-                    yield break;
+            using var uow = UnitOfWorkFactory.Create();
+            var relevantJobs = GetJobs(uow, filterType, start, end, jobIds);
+            if (relevantJobs.Count == 0)
+                yield break;
 
-                foreach (var relevantJob in relevantJobs)
-                {
-                    // See if we have the job cached
-                    yield return JobList.Get(relevantJob.Id) is IProductionJobData job
-                        ? new JobDataChunk(job, start, end)
-                        : GetFromStorage(uow, relevantJob, start, end);
-                }
+            foreach (var relevantJob in relevantJobs)
+            {
+                // See if we have the job cached
+                var chunk = JobList.Get(relevantJob.Id) is IProductionJobData job
+                    ? new JobDataChunk(job, start, end)
+                    : await GetFromStorage(uow, relevantJob, start, end);
+
+                yield return chunk;
             }
         }
 
         /// <summary>
         /// Get all jobs that are relevant for the request
         /// </summary>
-        private IReadOnlyList<JobEntity> GetJobs(IUnitOfWork uow, RequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
+        private IReadOnlyList<JobEntity> GetJobs(IUnitOfWork uow, ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
         {
             var jobRepo = uow.GetRepository<IJobEntityRepository>();
 
             var all = jobRepo.Linq.Where(j => j.RecipeProvider == ProductManagement.Name); // Filter only production jobs
-            if (filterType.HasFlag(RequestFilter.Jobs))
-                all = all.Where(j => jobIds.Contains(j.Id));
-            if (filterType.HasFlag(RequestFilter.Timed))
+            if (filterType.HasFlag(ProcessRequestFilter.Jobs))
+                all = all.Where(j => ((IEnumerable<long>)jobIds).Contains(j.Id));
+            if (filterType.HasFlag(ProcessRequestFilter.Timed))
                 all = all.Where(job => job.Created >= start && job.Created <= end // Job began within the time frame
                                     || job.Updated >= start && job.Updated <= end // Job changed within the time frame
                                     || job.Created <= start && job.Updated >= end); // Job exceeds time frame
             return all.ToList();
         }
 
-        private IProcessChunk GetFromStorage(IUnitOfWork uow, JobEntity jobEntity, DateTime start, DateTime end)
+        private Task<IProcessChunk> GetFromStorage(IUnitOfWork uow, JobEntity jobEntity, DateTime start, DateTime end)
         {
             var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
@@ -143,15 +138,16 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                          where firstActivity.Started >= start && firstActivity.Started <= end // Process started in the time frame
                             || lastActivity.Completed >= start && lastActivity.Completed <= end // Process ended in the time frame
                             || firstActivity.Started <= start && lastActivity.Completed >= end // Process spans over time frame
-                         select new { processEntity.Id, processEntity.ReferenceId }).ToList();
-            var processes = new IProcess[query.Count];
+                         select new { processEntity.Id, processEntity.ReferenceId }).ToList(); // TODO use ToListAsync and fix tests
+            var processes = new Process[query.Count];
 
             // Prepare fake process and task map
             var fakeProcess = recipe.CreateProcess();
-            var context = new AbstractionLayer.Processes.ProcessWorkplanContext(fakeProcess);
+            var context = new ProcessWorkplanContext(fakeProcess);
             var taskMap = recipe.Workplan.Steps
                 .Select(step => step.CreateInstance(context))
                 .OfType<ITask>().ToDictionary(task => task.Id, task => task);
+
             // Complete objects with missing values
             for (var index = 0; index < query.Count; index++)
             {
@@ -162,13 +158,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 processes[index] = process;
             }
 
-            return new ReadonlyProcessChunk(job, processes);
+            return Task.FromResult<IProcessChunk>(new ReadonlyProcessChunk(job, processes));
         }
 
         /// <summary>
         /// Struct that represents a chunk of the full query response
         /// </summary>
-        internal class JobDataChunk : IProcessChunk
+        private class JobDataChunk : IProcessChunk
         {
             private readonly WeakReference<IProductionJobData> _jobData;
 
@@ -208,7 +204,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             }
 
             /// <inheritdoc />
-            public IEnumerator<IProcess> GetEnumerator()
+            public IEnumerator<Process> GetEnumerator()
             {
                 return new JobDataProcessIterator(TryGetJob().AllProcesses, _start, _end);
             }
@@ -216,7 +212,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             /// <summary>
             /// Iterator for <see cref="IJobData.RunningProcesses"/> that is not affected by collection changes
             /// </summary>
-            private class JobDataProcessIterator : IEnumerator<IProcess>
+            private class JobDataProcessIterator : IEnumerator<Process>
             {
                 private int _currentIndex = -1;
 
@@ -255,7 +251,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 {
                 }
 
-                public IProcess Current => _currentProcess.Process;
+                public Process Current => _currentProcess.Process;
 
                 object IEnumerator.Current => _currentProcess.Process;
             }
@@ -263,9 +259,9 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
 
         internal class ReadonlyProcessChunk : IProcessChunk
         {
-            private readonly IReadOnlyList<IProcess> _processes;
+            private readonly IReadOnlyList<Process> _processes;
 
-            public ReadonlyProcessChunk(Job job, IReadOnlyList<IProcess> processes)
+            public ReadonlyProcessChunk(Job job, IReadOnlyList<Process> processes)
             {
                 _processes = processes;
                 Job = job;
@@ -273,7 +269,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
 
             public Job Job { get; }
 
-            public IEnumerator<IProcess> GetEnumerator()
+            public IEnumerator<Process> GetEnumerator()
             {
                 return _processes.GetEnumerator();
             }

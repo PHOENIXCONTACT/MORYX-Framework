@@ -13,6 +13,6 @@ namespace Moryx.ControlSystem.Cells
         /// <summary>
         /// Complete the current sequence
         /// </summary>
-        SequenceCompleted CompleteSequence(IProcess process, bool processActive, params long[] nextCells);
+        SequenceCompleted CompleteSequence(Process process, bool processActive, params long[] nextCells);
     }
 }

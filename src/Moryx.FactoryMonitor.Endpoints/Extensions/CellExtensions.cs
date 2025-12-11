@@ -60,7 +60,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
 
         public static ActivityChangedModel GetActivityChangedModel(
             this ICell cell,
-            IActivity activity,
+            Activity activity,
             List<OrderModel> orderModels)
         {
             var activityChangedModel = Converter.ToActivityChangedModel(cell);

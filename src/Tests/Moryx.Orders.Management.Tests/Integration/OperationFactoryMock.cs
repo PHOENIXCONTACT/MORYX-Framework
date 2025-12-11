@@ -20,9 +20,9 @@ namespace Moryx.Orders.Management.Tests
             _operationAssignment = operationAssignment;
         }
 
-        public IOperationData Create()
+        public IOperationData Create(IOperationSavingContext savingContext)
         {
-            return new OperationData
+            return new OperationData(savingContext)
             {
                 Logger = _logger,
                 JobHandler = _jobHandler,

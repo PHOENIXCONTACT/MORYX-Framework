@@ -47,7 +47,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
             if (!passwordCorrect)
                 return ReturnIndexWithError(returnUrl);
 
-            var tokenResult = await _tokenService.GenerateToken(user);
+            var tokenResult = await _tokenService.GenerateTokenAsync(user);
             HttpContext.Response.Cookies.SetJwtCookie(tokenResult, user);
 
             if (!string.IsNullOrEmpty(returnUrl))
@@ -88,7 +88,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
         public IActionResult Logout()
         {
             var token = Request.Cookies[MoryxIdentityDefaults.JWT_COOKIE_NAME];
-            _tokenService.InvalidateRefreshToken(token).Wait();
+            _tokenService.InvalidateRefreshTokenAsync(token).Wait();
             HttpContext.Response.Cookies.RemoveJwtCookie(_configuration["CookieDomain"]);
             return RedirectToAction("Index", "Home");
         }
@@ -114,7 +114,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
                 return View("ResetView", resetModel);
             }
 
-            var pwReset = await _pwResetService.GetPasswordReset(user.Id);
+            var pwReset = await _pwResetService.GetPasswordResetAsync(user.Id);
             if (pwReset == null || !pwReset.ResetToken.Equals(resetModel.ResetToken, StringComparison.OrdinalIgnoreCase))
             {
                 ViewBag.ErrorMessage = "Invalid reset password token";
@@ -134,7 +134,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
                 ViewBag.ErrorMessage = addPasswordResult.Errors.First().Description;
                 return View("ResetView", resetModel);
             }
-            await _pwResetService.RemovePasswordReset(pwReset);
+            await _pwResetService.RemovePasswordResetAsync(pwReset);
             await _userManager.UpdateAsync(user);
 
             var returnUrl = Request?.Query["returnUrl"].FirstOrDefault();

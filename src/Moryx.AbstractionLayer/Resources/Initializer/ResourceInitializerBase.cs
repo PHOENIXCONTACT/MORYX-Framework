@@ -36,27 +36,31 @@ namespace Moryx.AbstractionLayer.Resources
         public abstract string Description { get; }
 
         /// <inheritdoc />
-        public void Initialize(ResourceInitializerConfig config)
+        public Task InitializeAsync(ResourceInitializerConfig config)
         {
             // Get child logger
             Logger = Logger.GetChild(Name, GetType());
 
             // Cast configuration
             Config = (TConfig)config;
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        void IPlugin.Start()
+        public virtual Task StartAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        void IPlugin.Stop()
+        public virtual Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public abstract Task<ResourceInitializerResult> Execute(IResourceGraph graph, object parameters);
+        public abstract Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters);
 
         /// <summary>
         /// Creates an <see cref="ResourceInitializerResult"/> within a completed task

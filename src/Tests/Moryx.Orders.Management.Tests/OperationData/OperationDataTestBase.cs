@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.TestTools;
 using Moryx.Logging;
@@ -65,8 +66,8 @@ namespace Moryx.Orders.Management.Tests
         {
             public TestJob(IRecipe recipe, int amount) : base(recipe, amount)
             {
-                RunningProcesses = new List<IProcess>();
-                AllProcesses = new List<IProcess>();
+                RunningProcesses = new List<Process>();
+                AllProcesses = new List<Process>();
             }
 
             public TestJob SetRunning(int amount)
@@ -75,10 +76,10 @@ namespace Moryx.Orders.Management.Tests
                 return this;
             }
 
-            public IReadOnlyList<IProcess> PredictedFailures { get; set; } = new List<IProcess>();
+            public IReadOnlyList<Process> PredictedFailures { get; set; } = new List<Process>();
         }
 
-        internal IOperationData InitializeOperationData(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
+        internal async Task<IOperationData> InitializeOperationData(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
         {
             var orderData = new OrderData();
             orderData.Order.Number = "30022215533";
@@ -98,7 +99,7 @@ namespace Moryx.Orders.Management.Tests
             };
 
             var operationData = GetOperationDataInstance(replaceScrap);
-            operationData.Initialize(operationContext, orderData, new NullOperationSource());
+            await operationData.Initialize(operationContext, orderData, new NullOperationSource());
             operationData.Operation.Recipes.Add(new DummyRecipe { Id = 1 });
 
             return operationData;
@@ -112,7 +113,7 @@ namespace Moryx.Orders.Management.Tests
                 Number = "300000042"
             });
 
-            return new OperationData
+            return new OperationData(new NullOperationSavingContext())
             {
                 Logger = Logger,
                 OperationAssignment = AssignmentMock.Object,
@@ -125,62 +126,62 @@ namespace Moryx.Orders.Management.Tests
             };
         }
 
-        internal IOperationData GetReadyOperation(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
+        internal async Task<IOperationData> GetReadyOperation(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
         {
-            var operationData = InitializeOperationData(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
-            operationData.Assign();
-            operationData.AssignCompleted(true);
+            var operationData = await InitializeOperationData(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
+            await operationData.Assign();
+            await operationData.AssignCompleted(true);
 
             return operationData;
         }
 
-        internal IOperationData GetRunningOperation(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
+        internal async Task<IOperationData> GetRunningOperation(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
         {
-            var operationData = GetReadyOperation(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
-            operationData.Adjust(10, User);
+            var operationData = await GetReadyOperation(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
+            await operationData.Adjust(10, User);
 
             return operationData;
         }
 
-        internal IOperationData GetInterruptingOperation(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
+        internal async Task<IOperationData> GetInterruptingOperation(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
         {
-            var operationData = GetRunningOperation(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
+            var operationData = await GetRunningOperation(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
 
-            operationData.Interrupt(User);
+            await operationData.Interrupt(User);
 
             return operationData;
         }
 
-        internal IOperationData GetAmountReachedOperation(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
+        internal async Task<IOperationData> GetAmountReachedOperation(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
         {
-            var operationData = GetRunningOperation(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
+            var operationData = await GetRunningOperation(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
 
             // Reach amount
             var job = operationData.Operation.Jobs.First();
             job.Classification = JobClassification.Completed;
             job.SuccessCount = 10;
-            operationData.JobStateChanged(new JobStateChangedEventArgs(job, JobClassification.Completing, JobClassification.Completed));
+            await operationData.JobStateChanged(new JobStateChangedEventArgs(job, JobClassification.Completing, JobClassification.Completed));
 
             return operationData;
         }
 
-        internal IOperationData GetInterruptedOperation(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
+        internal async Task<IOperationData> GetInterruptedOperation(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
         {
-            var operationData = GetAmountReachedOperation(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
+            var operationData = await GetAmountReachedOperation(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
 
             // Interrupt
-            operationData.Interrupt(User);
+            await operationData.Interrupt(User);
 
             return operationData;
         }
 
-        internal IOperationData GetCompletedOperation(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
+        internal async Task<IOperationData> GetCompletedOperation(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)
         {
-            var operationData = GetAmountReachedOperation(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
+            var operationData = await GetAmountReachedOperation(amount, replaceScrap, overDeliveryAmount, underDeliveryAmount);
 
             // Final report
             var report = new OperationReport(ConfirmationType.Final, 5, 5, User);
-            operationData.Report(report);
+            await operationData.Report(report);
 
             return operationData;
         }

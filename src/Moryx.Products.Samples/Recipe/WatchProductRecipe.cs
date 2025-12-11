@@ -38,7 +38,7 @@ namespace Moryx.Products.Samples.Recipe
         /// <summary>
         /// Create a <see cref="ProductionProcess"/> for this recipe
         /// </summary>
-        public override IProcess CreateProcess() =>
+        public override Process CreateProcess() =>
             new ProductionProcess { Recipe = this };
     }
 

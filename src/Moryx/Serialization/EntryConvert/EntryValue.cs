@@ -39,7 +39,7 @@ namespace Moryx.Serialization
         /// Possible values for this entry
         /// </summary>
         [DataMember]
-        public string[] Possible { get; set; }
+        public EntryPossible[] Possible { get; set; }
 
         /// <summary>
         /// Indicates wether the field is read only
@@ -84,11 +84,18 @@ namespace Moryx.Serialization
 
                 if (Possible != null)
                 {
-                    var tempPossible = new string[Possible.Length];
+                    var tempPossible = new EntryPossible[Possible.Length];
                     for (var i = 0; i < Possible.Length; i++)
                     {
                         var value = Possible[i];
-                        tempPossible[i] = value;
+                        tempPossible[i] = value != null
+                            ? new EntryPossible
+                            {
+                                Key = value.Key,
+                                DisplayName = value.DisplayName,
+                                Description = value.Description
+                            }
+                            : null;
                     }
                     copy.Possible = tempPossible;
                 }

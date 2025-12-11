@@ -77,7 +77,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("importers/{importerName}")]
         [Authorize(Policy = ProductPermissions.CanImport)]
-        public ActionResult<ProductModel[]> Import(string importerName, Entry importParameters)
+        public async Task<ActionResult<ProductModel[]>> Import(string importerName, Entry importParameters)
         {
             if (importParameters == null)
                 return BadRequest($"Import parameters were null");
@@ -86,7 +86,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             {
                 return BadRequest($"Importer with the name {importerName} was not found or had no parameters");
             }
-            var importedTypes = _productManagement.Import(importerName, parameters).Result.ImportedTypes;
+            var importedTypes = (await _productManagement.ImportAsync(importerName, parameters)).ImportedTypes;
             var modelList = new List<ProductModel>();
             foreach (var t in importedTypes)
                 modelList.Add(_productConverter.ConvertProduct(t, false));

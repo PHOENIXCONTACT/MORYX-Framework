@@ -57,6 +57,53 @@ namespace Moryx.StateMachines
 
         /// <summary>
         /// Prepare fluent API to create a state machine. Call <see cref="TypedContextWrapper{TContext}.With{TState}()"/>
+        /// to finalize the operation. It will start in the state marked as <see cref="StateDefinitionAttribute.IsInitial"/>.
+        /// </summary>
+        /// <param name="context">Context of the state machine</param>
+        /// <typeparam name="TContext">Type of the context class</typeparam>
+        /// <exception cref="InvalidOperationException">Thrown if 0 or more states are flagged as initial.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if types are registered more than one time.</exception>
+        /// <exception cref="ArgumentException">Given base class is not abstract.</exception>
+        /// <example>
+        /// This sample shows how to define states in the state base
+        /// <code>
+        /// internal abstract class MyAsyncStateBase : AsyncStateBase{MyContext}
+        /// {
+        ///     protected MyAsyncStateBase(MyAsyncContext context, StateMap stateMap) : base(context, stateMap)
+        ///     {
+        ///     }
+        ///
+        ///     [StateDefinition(typeof(AState), IsInitial = true)]
+        ///     protected const int StateA = 10;
+        ///
+        ///     [StateDefinition(typeof(BState))]
+        ///     protected const int StateB = 20;
+        ///
+        /// }
+        /// </code>
+        /// </example>
+        /// <example>
+        /// This sample shows how to create the state machine instance
+        /// <code>
+        /// public class SomeComponent : IAsyncStateContext
+        /// {
+        ///     public async Task SampleAsync()
+        ///     {
+        ///         // Initialize a state machine
+        ///         await StateMachine.InitializeAsync(this).WithAsync&lt;MyStateBase&gt;();
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        public static TypedContextWrapper<TContext> InitializeAsync<TContext>(TContext context)
+            where TContext : IAsyncStateContext
+
+        {
+            return new TypedContextWrapper<TContext>(context, null);
+        }
+
+        /// <summary>
+        /// Prepare fluent API to create a state machine. Call <see cref="TypedContextWrapper{TContext}.With{TState}()"/>
         /// to finalize the operation.
         /// </summary>
         /// <param name="context">Context of the state machine</param>
@@ -106,6 +153,62 @@ namespace Moryx.StateMachines
         /// </example>
         public static TypedContextWrapper<TContext> Reload<TContext>(TContext context, int state)
             where TContext : IStateContext
+
+        {
+            return new TypedContextWrapper<TContext>(context, state);
+        }
+
+        /// <summary>
+        /// Prepare fluent API to create a state machine. Call <see cref="TypedContextWrapper{TContext}.WithAsync{TState}()"/>
+        /// to finalize the operation.
+        /// </summary>
+        /// <param name="context">Context of the state machine</param>
+        /// <param name="state">Key of the state that is reloaded</param>
+        /// <typeparam name="TContext">Type of the context class</typeparam>
+        ///  <exception cref="InvalidOperationException">Thrown if 0 or more states are flagged as initial.</exception>
+        ///  <exception cref="InvalidOperationException">Thrown if types are registered more than one time.</exception>
+        ///  <exception cref="ArgumentException">Given base class is not abstract.</exception>
+        ///  <example>
+        ///  This sample shows how to define states in the state base
+        ///  <code>
+        ///  internal abstract class MyAsyncStateBase : AsyncStateBase{MyContext}
+        ///  {
+        ///      protected MyStateBase(MyAsyncContext context, StateMap stateMap) : base(context, stateMap)
+        ///      {
+        ///      }
+        ///
+        ///      [StateDefinition(typeof(AState), IsInitial = true)]
+        ///      protected const int StateA = 10;
+        ///
+        ///      [StateDefinition(typeof(BState))]
+        ///      protected const int StateB = 20;
+        /// }
+        /// </code>
+        /// </example>
+        /// <example>
+        /// This sample shows how reload a state machine
+        /// <code>
+        /// public class SomeComponent : IStateContext
+        /// {
+        ///     public async Task SampleAsync()
+        ///     {
+        ///         // Initialize a state machine
+        ///         await StateMachine.InitializeAsync(this).WithAsync&lt;MyStateBase&gt;();
+        ///         await _state.GoToAnotherState();
+        ///
+        ///         // Get the key of the other state
+        ///         var key = StateMachine.GetKey(_stat);
+        ///
+        ///         // ... save key to db or somewhere else
+        ///
+        ///         // Reload the state with the saved key
+        ///         await StateMachine.ReloadAsync(this, key).WithAsync&lt;MyStateBase&gt;();
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        public static TypedContextWrapper<TContext> ReloadAsync<TContext>(TContext context, int state)
+            where TContext : IAsyncStateContext
 
         {
             return new TypedContextWrapper<TContext>(context, state);
@@ -182,9 +285,9 @@ namespace Moryx.StateMachines
         /// <code>
         /// public class SomeComponent : IStateContext
         /// {
-        ///     public Task Sample()
+        ///     public async Task SampleAsync()
         ///     {
-        ///         return StateMachine.ForceAsync(context.State, MyStateBase.StateA);
+        ///         await StateMachine.ForceAsync(context.State, MyStateBase.StateA);
         ///     }
         /// }
         /// </code>
@@ -206,9 +309,9 @@ namespace Moryx.StateMachines
         /// <code>
         /// public class SomeComponent : IStateContext
         /// {
-        ///     public Task Sample()
+        ///     public async Task SampleAsync()
         ///     {
-        ///         return StateMachine.ForceAsync(context.State, MyStateBase.StateA, exitCurrent: true, enterForced: false);
+        ///         await StateMachine.ForceAsync(context.State, MyStateBase.StateA, exitCurrent: true, enterForced: false);
         ///     }
         /// }
         /// </code>
@@ -224,7 +327,6 @@ namespace Moryx.StateMachines
         /// </summary>
         /// <typeparam name="TContext"></typeparam>
         public readonly struct TypedContextWrapper<TContext>
-            where TContext : IStateContext
         {
             private readonly TContext _context;
             private readonly int? _key;
@@ -248,7 +350,7 @@ namespace Moryx.StateMachines
             public void With<TStateBase>()
                 where TStateBase : SyncStateBase
             {
-                SyncStateBase.Create(typeof(TStateBase), _context, _key);
+                SyncStateBase.Create(typeof(TStateBase), (IStateContext)_context, _key);
             }
 
             /// <summary>
@@ -261,7 +363,7 @@ namespace Moryx.StateMachines
             public Task WithAsync<TStateBase>()
                 where TStateBase : AsyncStateBase
             {
-                return AsyncStateBase.CreateAsync(typeof(TStateBase), _context, _key);
+                return AsyncStateBase.CreateAsync(typeof(TStateBase), (IAsyncStateContext)_context, _key);
             }
 
             /// <summary>
@@ -273,7 +375,7 @@ namespace Moryx.StateMachines
             /// <exception cref="ArgumentException">Given base class is not abstract.</exception>
             public void With(Type stateType)
             {
-                SyncStateBase.Create(stateType, _context, _key);
+                SyncStateBase.Create(stateType, (IStateContext)_context, _key);
             }
 
             /// <summary>
@@ -285,7 +387,7 @@ namespace Moryx.StateMachines
             /// <exception cref="ArgumentException">Given base class is not abstract.</exception>
             public Task WithAsync(Type stateType)
             {
-                return AsyncStateBase.CreateAsync(stateType, _context, _key);
+                return AsyncStateBase.CreateAsync(stateType, (IAsyncStateContext)_context, _key);
             }
         }
     }

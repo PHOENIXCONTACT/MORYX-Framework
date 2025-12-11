@@ -9,6 +9,11 @@ namespace Moryx.StateMachines;
 public abstract class SyncStateBase : StateBase
 {
     /// <summary>
+    /// Context of the state machine
+    /// </summary>
+    protected new IStateContext Context => (IStateContext)base.Context;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="StateBase"/> class.
     /// </summary>
     /// <param name="context">Context of the state machine</param>

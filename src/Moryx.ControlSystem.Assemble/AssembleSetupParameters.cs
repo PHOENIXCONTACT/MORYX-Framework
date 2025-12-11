@@ -24,7 +24,7 @@ namespace Moryx.ControlSystem.Assemble
         public ICapabilities RequiredCapabilities { get; set; }
 
         /// <inheritdoc />
-        protected override void Populate(IProcess process, Parameters instance)
+        protected override void Populate(Process process, Parameters instance)
         {
             base.Populate(process, instance);
             var parameters = (AssembleSetupParameters)instance;
@@ -48,7 +48,7 @@ namespace Moryx.ControlSystem.Assemble
         public object Value { get; set; }
 
         /// <inheritdoc />
-        protected override void Populate(IProcess process, Parameters instance)
+        protected override void Populate(Process process, Parameters instance)
         {
             base.Populate(process, instance);
             var parameters = (AssembleDescriptorSetupParameters)instance;

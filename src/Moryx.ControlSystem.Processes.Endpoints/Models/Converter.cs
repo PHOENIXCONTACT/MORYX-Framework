@@ -15,7 +15,7 @@ namespace Moryx.ControlSystem.Processes.Endpoints
     /// </summary>
     internal static class Converter
     {
-        internal static JobProcessModel ConvertProcess(IProcess process, IProcessControl processControl, IResourceManagement resourceManagement)
+        internal static JobProcessModel ConvertProcess(Process process, IProcessControl processControl, IResourceManagement resourceManagement)
         {
             var activities = process.GetActivities().ToList();
             return new()
@@ -26,13 +26,13 @@ namespace Moryx.ControlSystem.Processes.Endpoints
                 Rework = false,
                 State = InferProcessState(activities),
                 Started = activities.Where(a => a.Tracing?.Started != null).Select(a => a.Tracing.Started).Min() ?? DateTime.MinValue,
-                IsRunning = processControl.RunningProcesses.Any(p => p.Id == process.Id),
+                IsRunning = processControl.GetRunningProcesses().Any(p => p.Id == process.Id),
                 Completed = activities.Where(a => a.Tracing?.Completed != null).Select(a => a.Tracing.Completed).Max() ?? DateTime.MinValue,
                 Activities = activities.Select(a => ConvertActivity(a, processControl, resourceManagement)).ToArray()
             };
         }
 
-        private static ProcessProgress InferProcessState(List<IActivity> activities)
+        private static ProcessProgress InferProcessState(List<Activity> activities)
         {
             if (activities == null || activities.Count == 0)
                 return ProcessProgress.Ready;
@@ -51,7 +51,7 @@ namespace Moryx.ControlSystem.Processes.Endpoints
         /// <param name="processControl"></param>
         /// <param name="resourceManagement"></param>
         /// <returns></returns>
-        public static ProcessActivityModel ConvertActivity(IActivity activity, IProcessControl processControl, IResourceManagement resourceManagement) => new()
+        public static ProcessActivityModel ConvertActivity(Activity activity, IProcessControl processControl, IResourceManagement resourceManagement) => new()
         {
             Id = activity.Id,
             Type = activity.GetType().Name,
@@ -71,20 +71,20 @@ namespace Moryx.ControlSystem.Processes.Endpoints
             }).ToArray()
         };
 
-        private static ActivityResourceModel ConvertResource(IActivity activity, IResourceManagement resourceManagement)
+        private static ActivityResourceModel ConvertResource(Activity activity, IResourceManagement resourceManagement)
         {
             var resourceId = activity.Tracing?.ResourceId ?? -1;
             var resource = resourceManagement.GetResource<IResource>(resourceId);
             return (resource is null) ? null : new() { Name = resource.Name, Id = resourceId };
         }
 
-        private static string InferResultName(IActivity activity, long? resultNumber)
+        private static string InferResultName(Activity activity, long? resultNumber)
         {
             var attr = activity.GetType().GetCustomAttribute<ActivityResultsAttribute>();
             return (resultNumber is null || attr is null) ? null : Enum.GetName(attr.ResultEnum, resultNumber);
         }
 
-        private static ActivityClassification InferActivityClassification(IActivity activity)
+        private static ActivityClassification InferActivityClassification(Activity activity)
         {
             if (activity.Process is ProductionProcess)
                 return ActivityClassification.Production;
@@ -93,7 +93,7 @@ namespace Moryx.ControlSystem.Processes.Endpoints
             return ActivityClassification.Unknown;
         }
 
-        private static string InferActivityState(IActivity activity)
+        private static string InferActivityState(Activity activity)
         {
             if (activity.Result != null)
                 return ActivityProgress.Completed.ToString();

@@ -47,7 +47,7 @@ namespace Moryx.Orders.Management.Tests
             _dispatcher = new SingleJobOperationDispatcher
             {
                 JobManagement = _jobManagementMock.Object,
-                ParallelOperations = new NotSoParallelOps(),
+                ParallelOperations = new NotSoParallelOps()
             };
 
             _jobHandler = new JobHandler
@@ -95,7 +95,8 @@ namespace Moryx.Orders.Management.Tests
                 Id = 2
             };
 
-            _jobManagementMock.Setup(j => j.Add(It.IsAny<JobCreationContext>())).Returns([newJob]);
+            _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>()))
+                .ReturnsAsync([newJob]);
 
             // Act
             _jobHandler.Dispatch(_operationData, [new DispatchContext(new DummyRecipe(), amount)]);
@@ -126,7 +127,7 @@ namespace Moryx.Orders.Management.Tests
             };
 
             JobCreationContext createdContext = null;
-            _jobManagementMock.Setup(j => j.Add(It.IsAny<JobCreationContext>())).Returns(delegate (JobCreationContext context)
+            _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>())).ReturnsAsync(delegate (JobCreationContext context)
             {
                 createdContext = context;
                 return [newJob];

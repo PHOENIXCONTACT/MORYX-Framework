@@ -13,7 +13,7 @@ namespace Moryx.Orders
         /// <summary>
         /// Default constructor with the needed information for the dispatching
         /// </summary>
-        public DispatchContext(IProductionRecipe recipe, uint amount)
+        public DispatchContext(ProductionRecipe recipe, uint amount)
         {
             Recipe = recipe;
             Amount = amount;
@@ -22,7 +22,7 @@ namespace Moryx.Orders
         /// <summary>
         /// Recipe which should be used for the dispatching
         /// </summary>
-        public IProductionRecipe Recipe { get; }
+        public ProductionRecipe Recipe { get; }
 
         /// <summary>
         /// The amount which should be dispatched

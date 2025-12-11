@@ -70,7 +70,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             var resourceChangedModels = new List<ResourceChangedModel>();
             var orderModels = new List<OrderModel>();
 
-            var activities = _processControl.RunningProcesses
+            var activities = _processControl.GetRunningProcesses()
                 .Select(p => p.CurrentActivity())
                 .Where(a => a is not null && a.Tracing is not null);
             var converter = new Converter(_serialization);

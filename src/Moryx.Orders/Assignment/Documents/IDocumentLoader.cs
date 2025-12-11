@@ -9,11 +9,11 @@ namespace Moryx.Orders.Assignment
     /// <summary>
     /// Plugin to load the needed documents
     /// </summary>
-    public interface IDocumentLoader : IConfiguredPlugin<DocumentLoaderConfig>
+    public interface IDocumentLoader : IAsyncConfiguredPlugin<DocumentLoaderConfig>
     {
         /// <summary>
         /// Load document information for the given operation
         /// </summary>
-        Task<IReadOnlyList<Document>> Load(Operation operation);
+        Task<IReadOnlyList<Document>> LoadAsync(Operation operation);
     }
 }

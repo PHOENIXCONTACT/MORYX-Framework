@@ -158,7 +158,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
         private class FaultyParameters : AssignIdentityParameters
         {
-            protected override void Populate(IProcess process, Parameters instance)
+            protected override void Populate(Process process, Parameters instance)
             {
                 throw new InvalidOperationException();
             }

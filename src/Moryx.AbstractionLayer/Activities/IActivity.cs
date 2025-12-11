@@ -17,6 +17,11 @@ namespace Moryx.AbstractionLayer.Activities
         long Id { get; }
 
         /// <summary>
+        /// Name of the activity
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// Parameters of the activity
         /// </summary>
         IParameters Parameters { get; set; }
@@ -24,7 +29,7 @@ namespace Moryx.AbstractionLayer.Activities
         /// <summary>
         /// The execution process this activity belongs to.
         /// </summary>
-        IProcess Process { get; set; }
+        Process Process { get; set; }
 
         /// <summary>
         /// All activity trace information

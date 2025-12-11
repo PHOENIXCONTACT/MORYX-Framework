@@ -64,7 +64,7 @@ namespace Moryx.Identity
             var decodedJwt = _jwtTokenHandler.ReadJwtToken(token);
             if (decodedJwt.ValidTo < DateTime.UtcNow)
             {
-                var refreshResult = await _client.GetRefreshedTokens(token, refreshToken);
+                var refreshResult = await _client.GetRefreshedTokensAsync(token, refreshToken);
                 if (refreshResult is null || !refreshResult.Success)
                     return AuthenticateResult.Fail("Token is expired and could not be refreshed");
                 token = refreshResult.Token;
@@ -91,7 +91,7 @@ namespace Moryx.Identity
             if (distinctPolicies.Count() == 1)
                 requiredPolicy = distinctPolicies.First();
 
-            var permissions = await _client.GetPermissions(token, refreshToken, requiredPolicy);
+            var permissions = await _client.GetPermissionsAsync(token, refreshToken, requiredPolicy);
             if (permissions == null)
                 return AuthenticateResult.Fail("Retrieving Permissions failed");
 

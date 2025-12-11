@@ -168,14 +168,14 @@ namespace Moryx.Resources.Management
             return ResourceGraph.GetResources(predicate);
         }
 
-        public Task ExecuteInitializer(string initializerName, object parameters)
+        public Task ExecuteInitializerAsync(string initializerName, object parameters)
         {
             ValidateHealthState();
 
             return ResourceManager.ExecuteInitializer(initializerName, parameters);
         }
 
-        public async Task ExecuteInitializer(ResourceInitializerConfig initializerConfig, object parameters)
+        public async Task ExecuteInitializerAsync(ResourceInitializerConfig initializerConfig, object parameters)
         {
             ValidateHealthState();
 

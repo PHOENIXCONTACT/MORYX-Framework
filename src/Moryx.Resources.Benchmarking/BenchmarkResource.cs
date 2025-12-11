@@ -14,6 +14,7 @@ using Moryx.ControlSystem.VisualInstructions;
 using Moryx.VisualInstructions;
 using Moryx.Notifications;
 using Moryx.Serialization;
+using Activity = Moryx.AbstractionLayer.Activities.Activity;
 
 namespace Moryx.Resources.Benchmarking
 {
@@ -110,7 +111,7 @@ namespace Moryx.Resources.Benchmarking
         }
 
         /// <inheritdoc />
-        public override void ProcessAborting(IActivity affectedActivity)
+        public override void ProcessAborting(Activity affectedActivity)
         {
             VisualInstructor.Clear(_instructionId);
         }

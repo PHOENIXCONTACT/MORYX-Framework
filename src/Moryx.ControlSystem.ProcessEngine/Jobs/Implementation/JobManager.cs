@@ -34,7 +34,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// <summary>
         /// Job scheduler used by this job manager
         /// </summary>
-        private IJobScheduler _scheduler { get; set; }
+        private IJobScheduler _scheduler;
 
         /// <summary>
         /// Indicator if job processing is active
@@ -106,8 +106,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             var timeout = timeoutSec * 1000;
 
             // Stopwatch to abort the loop after configured timeout. That should be enough to restore the last state
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
+            var stopWatch = Stopwatch.StartNew();
 
             // Loop until all previously running jobs are resumed
             while (stopWatch.ElapsedMilliseconds < timeout && JobList.Any(j => j.Classification < JobClassification.Running && j.RunningProcesses.Count > 0))
@@ -119,7 +118,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             return stopWatch.ElapsedMilliseconds > timeout;
         }
 
-        public IReadOnlyList<IProductionJobData> Add(JobCreationContext context)
+        public async Task<IReadOnlyList<IProductionJobData>> Add(JobCreationContext context)
         {
             // Split the given templates into chunks within our process limitation
             var jobDatas = new List<IProductionJobData>();
@@ -130,17 +129,17 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
                 {
                     // Replace endless jobs with max size jobs
                     var jobSize = (amount < IdShiftGenerator.MaxAmount & amount > 0) ? amount : IdShiftGenerator.MaxAmount;
-                    var jobData = (IProductionJobData)JobDataFactory.Create((IProductionRecipe)template.Recipe, jobSize);
+                    var jobData = (IProductionJobData)JobDataFactory.Create((ProductionRecipe)template.Recipe, jobSize);
                     jobDatas.Add(jobData);
                     amount -= jobSize;
                 } while (amount > 0);
             }
 
-            // Enqueue adding to job list
-            // ToDo: Make add method async and await execution
+            // Enqueue adding to job list and wait for completion
             var tcs = new TaskCompletionSource();
             _taskQueue.Enqueue(() => AddJobs(jobDatas, context.Position, tcs));
-            tcs.Task.Wait();
+
+            await tcs.Task;
 
             // Now schedule the scheduling
             if (_running)

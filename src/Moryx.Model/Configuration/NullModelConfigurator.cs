@@ -32,37 +32,37 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public Task<TestConnectionResult> TestConnection(DatabaseConfig config)
+        public Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task<bool> CreateDatabase(DatabaseConfig config)
+        public Task<bool> CreateDatabaseAsync(DatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<string>> AvailableMigrations(DatabaseConfig config)
+        public Task<IReadOnlyList<string>> AvailableMigrationsAsync(DatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<string>> AppliedMigrations(DatabaseConfig config)
+        public Task<IReadOnlyList<string>> AppliedMigrationsAsync(DatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task<DatabaseMigrationSummary> MigrateDatabase(DatabaseConfig config)
+        public Task<DatabaseMigrationSummary> MigrateDatabaseAsync(DatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task DeleteDatabase(DatabaseConfig config)
+        public Task DeleteDatabaseAsync(DatabaseConfig config)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }

@@ -17,15 +17,15 @@ namespace Moryx.AbstractionLayer.Activities
         private Func<Parameters> _instanceDelegate;
 
         private static ProcessBindingResolverFactory _resolverFactory;
-        private IProcess _process;
+        private Process _process;
 
         /// <summary>
         /// Singleton resolver factory for process parameter binding
         /// </summary>
-        protected static ProcessBindingResolverFactory ResolverFactory => _resolverFactory ?? (_resolverFactory = new ProcessBindingResolverFactory());
+        protected static ProcessBindingResolverFactory ResolverFactory => _resolverFactory ??= new ProcessBindingResolverFactory();
 
         /// <see cref="IParameters"/>
-        public IParameters Bind(IProcess process)
+        public IParameters Bind(Process process)
         {
             // We are already bound to this process
             if (_process == process)
@@ -49,6 +49,6 @@ namespace Moryx.AbstractionLayer.Activities
         /// </summary>
         /// <param name="instance">New instance of this type</param>
         /// <param name="process">Process to bind to</param>
-        protected abstract void Populate(IProcess process, Parameters instance);
+        protected abstract void Populate(Process process, Parameters instance);
     }
 }

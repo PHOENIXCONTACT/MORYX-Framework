@@ -30,7 +30,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
             NextState(StateCompleted);
         }
 
-        public override void UpdateSetup(ISetupRecipe newRecipe)
+        public override void UpdateSetup(SetupRecipe newRecipe)
         {
             if (newRecipe == null)
             {

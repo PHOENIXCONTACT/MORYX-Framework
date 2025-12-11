@@ -96,7 +96,6 @@ namespace Moryx.ControlSystem.ProcessEngine
             Container.LoadComponents<ISetupTrigger>();
             Container.LoadComponents<IJobScheduler>();
 
-            Container.Resolve<ComponentOrchestration>().Initialize();
             return Task.CompletedTask;
         }
 
@@ -128,6 +127,7 @@ namespace Moryx.ControlSystem.ProcessEngine
             DeactivateFacade(_jobManagementFacade);
             DeactivateFacade(_notificationSourceFacade);
             DeactivateFacade(_processControlFacade);
+
             return Task.CompletedTask;
         }
 

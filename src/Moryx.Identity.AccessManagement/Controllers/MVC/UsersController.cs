@@ -35,7 +35,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
         {
             var user = await _userManager.FindByIdAsync(userId);
             var userModel = ModelConverter.GetUserUpdateModelFromUser(user);
-            var pwReset = await _pwResetService.GetPasswordReset(userId);
+            var pwReset = await _pwResetService.GetPasswordResetAsync(userId);
             if (pwReset != null)
                 userModel.PasswordResetToken = pwReset.ResetToken;
             return View(userModel);
@@ -47,11 +47,11 @@ namespace Moryx.Identity.AccessManagement.Controllers
             if (user == null)
                 return NotFound(model.UserName);
 
-            var oldPwReset = await _pwResetService.GetPasswordReset(user.Id);
+            var oldPwReset = await _pwResetService.GetPasswordResetAsync(user.Id);
             if (oldPwReset != null)
-                await _pwResetService.RemovePasswordReset(oldPwReset);
+                await _pwResetService.RemovePasswordResetAsync(oldPwReset);
 
-            await _pwResetService.GeneratePasswordReset(user.Id);
+            await _pwResetService.GeneratePasswordResetAsync(user.Id);
             return RedirectToAction("Edit", new { userId = user.Id });
 
         }

@@ -39,7 +39,7 @@ namespace Moryx.AbstractionLayer.Tests
             return activityMock;
         }
 
-        private static IProcess CreateProcess()
+        private static ProductionProcess CreateProcess()
         {
             return new ProductionProcess
             {

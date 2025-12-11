@@ -129,7 +129,7 @@ namespace Moryx.Media.Endpoints
             {
                 var trustedFileName = WebUtility.HtmlEncode(Path.GetFileName(formFile.FileName));
 
-                var resultData = await _mediaServer.AddMaster(trustedFileName, formFile.OpenReadStream());
+                var resultData = await _mediaServer.AddMasterAsync(trustedFileName, formFile.OpenReadStream());
                 if (resultData.Result != ContentAddingResult.Ok)
                 {
                     return Conflict($"{trustedFileName} file already exists.");
@@ -166,7 +166,7 @@ namespace Moryx.Media.Endpoints
             {
                 var trustedFileName = WebUtility.HtmlEncode(Path.GetFileName(formFile.FileName));
 
-                var resultData = await _mediaServer.AddVariant(parsedGuid, variantName, trustedFileName, formFile.OpenReadStream());
+                var resultData = await _mediaServer.AddVariantAsync(parsedGuid, variantName, trustedFileName, formFile.OpenReadStream());
                 var resultGuid = resultData.Descriptor.Id;
                 if (resultData.Result != ContentAddingResult.Ok)
                 {

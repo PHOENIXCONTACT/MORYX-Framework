@@ -124,7 +124,7 @@ namespace Moryx.Serialization
             if (defaultAttribute != null)
                 entryValue.Default = defaultAttribute.Value.ToString();
             else if (entryValue.Possible != null && entryValue.Possible.Length >= 1)
-                entryValue.Default = entryValue.Possible[0];
+                entryValue.Default = entryValue.Possible[0].Key;
             else if (property.PropertyType.IsValueType)
             {
                 var underlyingType = Nullable.GetUnderlyingType(property.PropertyType);

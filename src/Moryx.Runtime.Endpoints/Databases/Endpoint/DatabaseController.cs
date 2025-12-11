@@ -94,7 +94,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             if (!IsConfigValid(updatedConfig))
                 return BadConfigValues();
 
-            var result = await targetConfigurator.TestConnection(updatedConfig);
+            var result = await targetConfigurator.TestConnectionAsync(updatedConfig);
 
             return new TestConnectionResponse { Result = result };
         }
@@ -103,7 +103,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         [Authorize(Policy = RuntimePermissions.DatabaseCanCreate)]
         public ActionResult<InvocationResponse> CreateAll()
         {
-            var bulkResult = BulkOperation(mc => mc.CreateDatabase(mc.Config), "Creation");
+            var bulkResult = BulkOperation(mc => mc.CreateDatabaseAsync(mc.Config), "Creation");
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
@@ -121,7 +121,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
 
             try
             {
-                var creationResult = await targetConfigurator.CreateDatabase(updatedConfig);
+                var creationResult = await targetConfigurator.CreateDatabaseAsync(updatedConfig);
                 return creationResult
                     ? new InvocationResponse()
                     : throw new Exception("Cannot create database. May be the database already exists or was misconfigured.");
@@ -143,7 +143,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         [Authorize(Policy = RuntimePermissions.DatabaseCanErase)]
         public ActionResult<InvocationResponse> EraseAll()
         {
-            var bulkResult = BulkOperation(mc => mc.DeleteDatabase(mc.Config), "Deletion");
+            var bulkResult = BulkOperation(mc => mc.DeleteDatabaseAsync(mc.Config), "Deletion");
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
@@ -161,7 +161,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
 
             try
             {
-                targetConfigurator.DeleteDatabase(updatedConfig);
+                targetConfigurator.DeleteDatabaseAsync(updatedConfig);
                 return new InvocationResponse();
             }
             catch (Exception ex)
@@ -182,7 +182,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             if (!IsConfigValid(config))
                 return BadConfigValues();
 
-            return await targetConfigurator.MigrateDatabase(config);
+            return await targetConfigurator.MigrateDatabaseAsync(config);
         }
 
         [HttpPost("{targetModel}/setup")]
@@ -209,7 +209,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
             // ReSharper disable once SuspiciousTypeConversion.Global
             try
             {
-                await setupExecutor.Execute(config, targetSetup, request.Setup.SetupData);
+                await setupExecutor.ExecuteAsync(config, targetSetup, request.Setup.SetupData);
                 return new InvocationResponse();
             }
             catch (Exception ex)
@@ -327,7 +327,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         {
             try
             {
-                var availableMigrations = await configurator.AvailableMigrations(dbConfig);
+                var availableMigrations = await configurator.AvailableMigrationsAsync(dbConfig);
                 return availableMigrations.Select(migration => new DbMigrationsModel
                 {
                     Name = migration
@@ -343,7 +343,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Endpoint
         {
             try
             {
-                var appliedMigrations = await configurator.AppliedMigrations(dbConfig);
+                var appliedMigrations = await configurator.AppliedMigrationsAsync(dbConfig);
                 return appliedMigrations.Select(migration => new DbMigrationsModel
                 {
                     Name = migration

@@ -35,7 +35,7 @@ namespace Moryx.Orders.Management.Tests
         private InternalOperation _operation;
 
         [SetUp]
-        public void SetUp()
+        public async Task SetUp()
         {
             var operationLoggerMock = new Mock<IOperationLogger>();
             _operationLogger = operationLoggerMock.Object;
@@ -55,7 +55,7 @@ namespace Moryx.Orders.Management.Tests
             _operationData = _operationDataMock.Object;
 
             _jobManagementMock = new Mock<IJobManagement>();
-            _jobManagementMock.Setup(j => j.Evaluate(It.IsAny<IProductionRecipe>(), It.IsAny<int>()))
+            _jobManagementMock.Setup(j => j.Evaluate(It.IsAny<ProductionRecipe>(), It.IsAny<int>()))
                 .Returns(new JobEvaluation
                 {
                     WorkplanErrors = new List<string>()
@@ -69,7 +69,7 @@ namespace Moryx.Orders.Management.Tests
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 ProductManagement = _productManagementMock.Object
             };
-            productAssignment.Start();
+            await productAssignment.StartAsync();
 
             _productAssignStep = new ProductAssignStep
             {
@@ -84,7 +84,7 @@ namespace Moryx.Orders.Management.Tests
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 ProductManagement = _productManagementMock.Object
             };
-            recipeAssignment.Start();
+            await recipeAssignment.StartAsync();
 
             _recipeAssignStep = new RecipeAssignStep
             {

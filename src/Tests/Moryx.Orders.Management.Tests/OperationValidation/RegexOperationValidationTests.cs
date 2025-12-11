@@ -19,13 +19,13 @@ namespace Moryx.Orders.Management.Tests
         private InternalOperation _operation;
 
         [SetUp]
-        public void SetUp()
+        public async Task SetUp()
         {
             var operationLoggerMock = new Mock<IOperationLogger>();
             _operationLogger = operationLoggerMock.Object;
 
             _regexOperationValidation = new RegexOperationValidation();
-            _regexOperationValidation.Initialize(new RegexOperationValidationConfig());
+            await _regexOperationValidation.InitializeAsync(new RegexOperationValidationConfig());
 
             _operation = new InternalOperation
             {
@@ -46,7 +46,7 @@ namespace Moryx.Orders.Management.Tests
             _operation.Number = number;
 
             // Act
-            var result = await _regexOperationValidation.Validate(_operation, _operationLogger);
+            var result = await _regexOperationValidation.ValidateAsync(_operation, _operationLogger);
 
             // Assert
             Assert.That(result, "There should be a successful validation");
@@ -63,7 +63,7 @@ namespace Moryx.Orders.Management.Tests
             _operation.Number = number;
 
             // Act
-            var result = await _regexOperationValidation.Validate(_operation, _operationLogger);
+            var result = await _regexOperationValidation.ValidateAsync(_operation, _operationLogger);
 
             // Assert
             Assert.That(result, Is.False, "There should be an unsuccessful validation");
@@ -76,7 +76,7 @@ namespace Moryx.Orders.Management.Tests
             _operation.TotalAmount = 1;
 
             // Act
-            var result = await _regexOperationValidation.Validate(_operation, _operationLogger);
+            var result = await _regexOperationValidation.ValidateAsync(_operation, _operationLogger);
 
             // Assert
             Assert.That(result, "There should be a successful validation");
@@ -90,7 +90,7 @@ namespace Moryx.Orders.Management.Tests
             _operation.TotalAmount = totalAmount;
 
             // Act
-            var result = await _regexOperationValidation.Validate(_operation, _operationLogger);
+            var result = await _regexOperationValidation.ValidateAsync(_operation, _operationLogger);
 
             // Assert
             Assert.That(result, Is.False, "There should be an unsuccessful validation");
@@ -100,7 +100,7 @@ namespace Moryx.Orders.Management.Tests
         public async Task ValidateRecipeExists()
         {
             // Act
-            var result = await _regexOperationValidation.Validate(_operation, _operationLogger);
+            var result = await _regexOperationValidation.ValidateAsync(_operation, _operationLogger);
 
             // Assert
             Assert.That(result, "There should be a successful validation");
@@ -113,21 +113,24 @@ namespace Moryx.Orders.Management.Tests
             _operation.Recipes = new List<IProductRecipe>();
 
             // Act
-            var result = await _regexOperationValidation.Validate(_operation, _operationLogger);
+            var result = await _regexOperationValidation.ValidateAsync(_operation, _operationLogger);
 
             // Assert
             Assert.That(result, Is.False, "There should be an unsuccessful validation");
         }
 
         [Test(Description = "Test that a CreationContext without OperationContext is valid.")]
-        public void ValidateOrderCreationContextWithoutOperationContext()
+        public async Task ValidateOrderCreationContextWithoutOperationContext()
         {
+            // Act
+            var result = await _regexOperationValidation.ValidateCreationContextAsync(_orderCreationContext);
+
             // Assert
-            Assert.That(_regexOperationValidation.ValidateCreationContext(_orderCreationContext), "There should be a successful validation");
+            Assert.That(result, "There should be a successful validation");
         }
 
         [Test(Description = "Test that a CreationContext with a OperationContext has valid number and amount values.")]
-        public void ValidateOrderCreationContextWithValidOperationContext()
+        public async Task ValidateOrderCreationContextWithValidOperationContext()
         {
             // Arrange
             _orderCreationContext.Operations.Add(new OperationCreationContext
@@ -136,13 +139,16 @@ namespace Moryx.Orders.Management.Tests
                 TotalAmount = 10,
             });
 
+            // Act
+            var result = await _regexOperationValidation.ValidateCreationContextAsync(_orderCreationContext);
+
             // Assert
-            Assert.That(_regexOperationValidation.ValidateCreationContext(_orderCreationContext), "There should be a successful validation");
+            Assert.That(result, "There should be a successful validation");
         }
 
         [TestCase("00107", 10, Description = "Test that will prove that a OperationContext number with 5 characters is not valid.")]
         [TestCase("0010", 0, Description = "Test that will prove that a OperationContext amount of 0 is not valid.")]
-        public void ValidateOrderCreationContextWithBadOperationContext(string number, int amount)
+        public async Task ValidateOrderCreationContextWithBadOperationContext(string number, int amount)
         {
             // Arrange
             _orderCreationContext.Operations.Add(new OperationCreationContext
@@ -151,8 +157,11 @@ namespace Moryx.Orders.Management.Tests
                 TotalAmount = amount,
             });
 
+            // Act
+            var result = await _regexOperationValidation.ValidateCreationContextAsync(_orderCreationContext);
+
             // Assert
-            Assert.That(_regexOperationValidation.ValidateCreationContext(_orderCreationContext), Is.False, "There should be an unsuccessful validation");
+            Assert.That(result, Is.False, "There should be an unsuccessful validation");
         }
     }
 }

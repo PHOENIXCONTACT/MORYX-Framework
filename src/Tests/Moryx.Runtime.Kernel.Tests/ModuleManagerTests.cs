@@ -7,13 +7,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moryx.Configuration;
 using Moryx.Logging;
-using Moryx.Runtime.Kernel.Tests.Dummys;
 using Moryx.Runtime.Kernel.Tests.ModuleMocks;
 using Moryx.Runtime.Modules;
 using Moq;
 using Moryx.Tools;
 using NUnit.Framework;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moryx.Runtime.Kernel.Tests.Dummies;
 
 namespace Moryx.Runtime.Kernel.Tests
 {
@@ -262,7 +262,7 @@ namespace Moryx.Runtime.Kernel.Tests
             var eventFired = false;
 
             var moduleManager = CreateObjectUnderTest([mockModule.Object]);
-            moduleManager.ModuleStateChanged += (sender, args) => eventFired = true;
+            moduleManager.ModuleStateChanged += (_, _) => eventFired = true;
 
             // Act
             mockModule.Raise(mock => mock.StateChanged += null, mockModule.Object, new ModuleStateChangedEventArgs());

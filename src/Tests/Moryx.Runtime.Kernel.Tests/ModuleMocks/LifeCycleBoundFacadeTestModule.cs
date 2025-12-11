@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Runtime.Kernel.Tests.Dummys;
+using Moryx.Runtime.Kernel.Tests.Dummies;
 using Moryx.Runtime.Kernel.Tests.ModuleMocks.Facade;
 using Moryx.Runtime.Modules;
 

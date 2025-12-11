@@ -28,16 +28,16 @@ namespace Moryx.Orders.Management
         {
         }
 
-        public override void IncreaseTargetBy(int amount, User user)
+        public override Task IncreaseTargetBy(int amount, User user)
             => Context.HandleIncreaseTargetBy(amount);
 
-        public override void DecreaseTargetBy(int amount, User user)
+        public override Task DecreaseTargetBy(int amount, User user)
             => Context.HandleDecreaseTargetBy(amount);
 
-        public override void Interrupt(User user)
+        public override async Task Interrupt(User user)
         {
-            NextState(StateInterrupting);
-            Context.HandleManualInterrupting();
+            await NextStateAsync(StateInterrupting);
+            await Context.HandleManualInterrupting();
         }
 
         public override ReportContext GetReportContext()
@@ -45,16 +45,16 @@ namespace Moryx.Orders.Management
             return Context.HandleReportContext();
         }
 
-        public override void Report(OperationReport report)
+        public override async Task Report(OperationReport report)
         {
             switch (report.ConfirmationType)
             {
                 case ConfirmationType.Partial:
-                    Context.HandlePartialReport(report);
+                    await Context.HandlePartialReport(report);
                     break;
                 case ConfirmationType.Final:
                     // ReSharper disable once ExplicitCallerInfoArgument
-                    InvalidState(nameof(Report) + "(final)");
+                    await InvalidStateAsync(nameof(Report) + "(final)");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -66,39 +66,39 @@ namespace Moryx.Orders.Management
             return Context.HandleAdviceContext();
         }
 
-        public override void Advice(OperationAdvice advice)
+        public override Task Advice(OperationAdvice advice)
         {
-            Context.HandleAdvice(advice);
+            return Context.HandleAdvice(advice);
         }
 
-        public override void JobsUpdated(JobStateChangedEventArgs args)
+        public override Task JobsUpdated(JobStateChangedEventArgs args)
         {
-            EvaluateJobs();
+            return EvaluateJobs();
         }
 
-        public override void ProgressChanged(Job job)
+        public override Task ProgressChanged(Job job)
         {
-            EvaluateJobs();
+            return EvaluateJobs();
         }
 
-        public override void Resume()
+        public override async Task Resume()
         {
-            EvaluateJobs();
+            await EvaluateJobs();
         }
 
-        private void EvaluateJobs()
+        private async Task EvaluateJobs()
         {
             var jobs = Context.Operation.Jobs;
             var allCompleted = jobs.All(j => j.Classification == JobClassification.Completed);
             if (allCompleted && Context.AmountReached)
             {
-                NextState(StateAmountReached);
+                await NextStateAsync(StateAmountReached);
                 return;
             }
 
             if (!Context.CanReachAmount)
             {
-                Context.DispatchJob();
+                await Context.DispatchJob();
             }
         }
     }

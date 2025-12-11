@@ -1,6 +1,4 @@
-<Project>
-  <Import Project=".build\Common.props" Condition="'$(IsPackable)' == 'true'" />
-  
+<Project>  
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -17,10 +15,5 @@
 
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
-
-	<!-- Package refereces for all projects if IsPackable=true -->
-	<ItemGroup Condition="'$(IsPackable)' == 'true'">
-		<PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
-	</ItemGroup>
 
 </Project>

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Moq;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
@@ -16,6 +17,7 @@ using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs.Production;
 using Moryx.ControlSystem.ProcessEngine.Model;
 using Moryx.ControlSystem.ProcessEngine.Processes;
+using Moryx.ControlSystem.Processes;
 using Moryx.ControlSystem.TestTools;
 using Moryx.ControlSystem.TestTools.Tasks;
 using Moryx.Model.Repositories;
@@ -48,13 +50,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 new MountTask{Id = 1}
             ]);
 
-            var recipeMock = new Mock<IProductionRecipe>();
-            recipeMock.Setup(r => r.CreateProcess()).Returns(new ProductionProcess { Recipe = recipeMock.Object });
-            recipeMock.Setup(r => r.Workplan).Returns(_workplanMock.Object);
-            recipeMock.Setup(r => r.DisabledSteps).Returns(new List<long>());
+            var recipe = new ProductionRecipe
+            {
+                Workplan = _workplanMock.Object,
+            };
 
             var productManagementMock = new Mock<IProductManagement>();
-            productManagementMock.Setup(p => p.LoadRecipe(It.IsAny<long>())).Returns(recipeMock.Object);
+            productManagementMock.Setup(p => p.LoadRecipe(It.IsAny<long>())).Returns(recipe);
             productManagementMock.Setup(p => p.GetInstance(It.IsAny<long>())).Returns(new DummyProductInstance { Type = new DummyProductType() });
 
             _jobListMock = new Mock<IJobDataList>();
@@ -95,21 +97,15 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             _processArchive.Start();
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            _processArchive.Dispose();
-        }
-
         [Test]
-        public void GetProcessesByInstance()
+        public async Task GetProcessesByInstance()
         {
             // Arrange
             var jobs = CreateJobEntities();
             CreateTestData(jobs, CreateProcessEntities(jobs));
 
             // Act
-            var processes = _processArchive.GetProcesses(new DummyProductInstance { Id = 42 });
+            var processes = await _processArchive.GetProcesses(new DummyProductInstance { Id = 42 });
 
             // Assert
             Assert.That(processes.Count, Is.EqualTo(1));
@@ -119,7 +115,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         [TestCase("1.1.2000 00:00:00", "1.1.2000 00:00:01", 0, 0, 0, Description = "Get no processes")]
         [TestCase("1.1.2000 01:15:00", "1.1.2000 01:20:00", 1, 1, 0, Description = "Get 1 Process")]
         [TestCase("1.1.2000 01:10:01", "1.1.2000 01:40:00", 3, 1, 0, Description = "Get 3 Processes")]
-        public void GetProcessesTest(string start, string end,
+        public async Task GetProcessesTest(string start, string end,
                                      int expectedJobCount,
                                      int expectedProcessCountJob1,
                                      int expectedProcessCountJob2)
@@ -132,7 +128,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             var endDate = DateTime.Parse(end, _culture);
 
             // Act
-            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, startDate, endDate, []).ToList();
+            var chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed, startDate, endDate, []).ToListAsync();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(expectedJobCount));
@@ -149,7 +145,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         }
 
         [Test]
-        public void AddingNotCompletedJobToCacheTest()
+        public async Task AddingNotCompletedJobToCacheTest()
         {
             // Arrange
             var jobs = CreateJobEntities();
@@ -157,23 +153,25 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
             // Act
             _jobListMock.Raise(j => j.StateChanged += null, _jobListMock.Object,
-                                new ProductionJobData(new DummyRecipe(),
-                                new JobEntity
-                                {
-                                    Id = 10,
-                                    Amount = 10,
-                                    Created = new DateTime(2000, 1, 1, 1, 50, 0),
-                                    Updated = new DateTime(2000, 1, 1, 1, 59, 0)
-                                }));
+                new ProductionJobData(new DummyRecipe(), new JobEntity
+                    {
+                        Id = 10,
+                        Amount = 10,
+                        Created = new DateTime(2000, 1, 1, 1, 50, 0),
+                        Updated = new DateTime(2000, 1, 1, 1, 59, 0)
+                    }));
 
-            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, new DateTime(2000, 1, 1, 1, 50, 0), new DateTime(2000, 1, 1, 1, 59, 0), []).ToList();
+            var chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed,
+                start: new DateTime(2000, 1, 1, 1, 50, 0),
+                end: new DateTime(2000, 1, 1, 1, 59, 0),
+                jobIds: []).ToListAsync();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(0));
         }
 
         [Test]
-        public void AddingCompletedJobToCacheTest()
+        public async Task AddingCompletedJobToCacheTest()
         {
             var now = DateTime.Now;
             var nowStart = now;
@@ -220,7 +218,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Act
             _jobListMock.Raise(j => j.StateChanged += null, _jobListMock.Object, jobData);
 
-            var chunks = _processArchive.GetProcesses(RequestFilter.Timed, nowStart, nowEnd, []).ToList();
+            var chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed, nowStart, nowEnd, []).ToListAsync();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(1));
@@ -232,7 +230,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             stateMock.SetupGet(s => s.Classification).Returns(JobClassification.Completed);
             _jobListMock.Raise(jl => jl.StateChanged += null, _jobListMock.Object, new JobStateEventArgs(jobData, null, stateMock.Object));
 
-            chunks = _processArchive.GetProcesses(RequestFilter.Timed, nowStart, nowEnd, []).ToList();
+            chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed, nowStart, nowEnd, []).ToListAsync();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(1));
@@ -241,53 +239,116 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             Assert.That(process.ProductInstance, Is.InstanceOf<DummyProductInstance>());
         }
 
-        private void CreateTestData(IEnumerable<JobEntity> jobs, IEnumerable<ProcessEntity> processes)
+        private void CreateTestData(IReadOnlyList<JobEntity> jobs, IReadOnlyList<ProcessEntity> processes)
         {
             var queryableJobEntityMock = new Mock<IQueryable<JobEntity>>();
-            SetupIQueryable(queryableJobEntityMock, jobs.AsQueryable());
+            SetupIQueryable(queryableJobEntityMock, jobs);
             _jobRepo.Setup(j => j.Linq).Returns(queryableJobEntityMock.Object);
 
             var queryableProcessEntityMock = new Mock<IQueryable<ProcessEntity>>();
-            SetupIQueryable(queryableProcessEntityMock, processes.AsQueryable());
+            SetupIQueryable(queryableProcessEntityMock, processes);
             _processRepo.Setup(j => j.Linq).Returns(queryableProcessEntityMock.Object);
         }
 
-        private JobEntity[] CreateJobEntities()
+        private static JobEntity[] CreateJobEntities()
         {
             return
             [
-                new JobEntity { Id = 1, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 0, 0), Updated = new DateTime(2000, 1, 1, 1, 10, 0)},
-                new JobEntity { Id = 2, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 15, 0), Updated = new DateTime(2000, 1, 1, 1, 20, 0)},
-                new JobEntity { Id = 3, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 30, 0), Updated = new DateTime(2000, 1, 1, 1, 40, 0)},
-                new JobEntity { Id = 4, Amount = 10, Created = new DateTime(2000, 1, 1, 1, 25, 0), Updated = new DateTime(2000, 1, 1, 1, 40, 0)},
+                new JobEntity
+                {
+                    Id = 1, Amount = 10,
+                    Created = new DateTime(2000, 1, 1, 1, 0, 0),
+                    Updated = new DateTime(2000, 1, 1, 1, 10, 0)
+                },
+                new JobEntity
+                {
+                    Id = 2,
+                    Amount = 10,
+                    Created = new DateTime(2000, 1, 1, 1, 15, 0),
+                    Updated = new DateTime(2000, 1, 1, 1, 20, 0)
+                },
+                new JobEntity
+                {
+                    Id = 3,
+                    Amount = 10,
+                    Created = new DateTime(2000, 1, 1, 1, 30, 0),
+                    Updated = new DateTime(2000, 1, 1, 1, 40, 0)
+                },
+                new JobEntity
+                {
+                    Id = 4,
+                    Amount = 10,
+                    Created = new DateTime(2000, 1, 1, 1, 25, 0),
+                    Updated = new DateTime(2000, 1, 1, 1, 40, 0)
+                },
             ];
         }
 
-        private ProcessEntity[] CreateProcessEntities(JobEntity[] jobs)
+        private static ProcessEntity[] CreateProcessEntities(JobEntity[] jobs)
         {
             return
             [
                 // Job 1
-                new ProcessEntity { JobId = jobs[0].Id, Job = jobs[0],
-                    Activities = new List<ActivityEntity> { new() { Started = new DateTime(2000, 1, 1, 1, 0, 1), Completed = new DateTime(2000, 1, 1, 1, 0, 2) } }, State = (int)ProcessState.Success },
-                new ProcessEntity { Id = 1337, JobId = jobs[0].Id, Job = jobs[0], ReferenceId = 42,
+                new ProcessEntity
+                {
+                    JobId = jobs[0].Id, Job = jobs[0],
                     Activities = new List<ActivityEntity>
                     {
-                        new() {
+                        new()
+                        {
+                            Started = new DateTime(2000, 1, 1, 1, 0, 1),
+                            Completed = new DateTime(2000, 1, 1, 1, 0, 2)
+                        }
+                    },
+                    State = (int)ProcessState.Success
+                },
+                new ProcessEntity
+                {
+                    Id = 1337,
+                    JobId = jobs[0].Id,
+                    Job = jobs[0],
+                    ReferenceId = 42,
+                    Activities = new List<ActivityEntity>
+                    {
+                        new()
+                        {
                             TaskId = 1,
                             Started = new DateTime(2000, 1, 1, 1, 0, 3),
                             Completed = new DateTime(2000, 1, 1, 1, 0, 9)
                         }
-                    }, State = (int)ProcessState.Success },
+                    },
+                    State = (int)ProcessState.Success
+                },
 
                 // Job 2
-                new ProcessEntity { JobId = jobs[1].Id, Job = jobs[1], Activities = new List<ActivityEntity> { new() { Started = new DateTime(2000, 1, 1, 1, 15, 1), Completed = new DateTime(2000, 1, 1, 1, 15, 2) } }, State = (int)ProcessState.Failure }
+                new ProcessEntity
+                {
+                    JobId = jobs[1].Id,
+                    Job = jobs[1],
+                    Activities = new List<ActivityEntity>
+                    {
+                        new()
+                        {
+                            Started = new DateTime(2000, 1, 1, 1, 15, 1),
+                            Completed = new DateTime(2000, 1, 1, 1, 15, 2)
+                        }
+                    },
+                    State = (int)ProcessState.Failure
+                }
             ];
         }
 
-        public static void SetupIQueryable<T>(Mock<T> mock, IQueryable queryable)
-            where T : class, IQueryable
+        public static void SetupIQueryable<T, TEntity>(Mock<T> mock, IReadOnlyList<TEntity> entities)
+            where T : class, IQueryable<TEntity>
         {
+            IAsyncEnumerable<TEntity> asyncEnumerable = entities.ToAsyncEnumerable();
+            IAsyncEnumerator<TEntity> asyncEnumerator = asyncEnumerable.GetAsyncEnumerator();
+
+            var asyncEnumerableMock = mock.As<IAsyncEnumerable<TEntity>>();
+            asyncEnumerableMock.Setup(e => e.GetAsyncEnumerator()).Returns(() => asyncEnumerator);
+
+            var queryable = entities.AsQueryable();
+
             mock.Setup(r => r.GetEnumerator()).Returns(queryable.GetEnumerator());
             mock.Setup(r => r.Provider).Returns(queryable.Provider);
             mock.Setup(r => r.ElementType).Returns(queryable.ElementType);

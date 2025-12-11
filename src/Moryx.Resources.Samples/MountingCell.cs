@@ -24,14 +24,11 @@ namespace Moryx.Resources.Samples
         {
             await base.OnInitializeAsync();
 
-            Driver.Received += new HandlerMap<object>($"{Id}-{Name}")
-                .Register<object>(OnPlcMessage)
-                .ReceivedHandler;
+            Driver.Received += OnDriverMessageReceived;
         }
 
-        private static void OnPlcMessage(object sender, object message)
+        private void OnDriverMessageReceived(object sender, object e)
         {
-            // Handler that also uses the sender
         }
 
         [EntrySerialize]

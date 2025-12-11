@@ -13,6 +13,6 @@ namespace Moryx.ControlSystem.Jobs
         /// <summary>
         /// Processes that are predicted to fail based on workplan and current progress
         /// </summary>
-        IReadOnlyList<IProcess> PredictedFailures { get; }
+        IReadOnlyList<Process> PredictedFailures { get; }
     }
 }

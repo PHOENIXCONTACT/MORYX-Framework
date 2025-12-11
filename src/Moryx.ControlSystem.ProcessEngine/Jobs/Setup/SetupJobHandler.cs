@@ -89,7 +89,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
 
             if (RequiresSetupCreation(productionJob))
             {
-                ISetupRecipe prepareRecipe;
+                SetupRecipe prepareRecipe;
                 try
                 {
                     prepareRecipe = SetupProvider?.RequiredSetup(SetupExecution.BeforeProduction, productionJob.Recipe, new CurrentResourceTarget(ResourceManagement));
@@ -108,7 +108,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
 
             if (RequiresCleanUpCreation(newJobs, productionJob))
             {
-                ISetupRecipe cleanupRecipe;
+                SetupRecipe cleanupRecipe;
                 try
                 {
                     // Clean-up is evaluated just in time, so we only create a temporary recipe
@@ -282,7 +282,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
 
             // Fetch current recipe and check if setup is complete
             var currentRecipe = setupJob.Recipe;
-            var retryRecipe = SetupProvider?.RequiredSetup(currentRecipe.Execution, (IProductionRecipe)currentRecipe.TargetRecipe, new CurrentResourceTarget(ResourceManagement));
+            var retryRecipe = SetupProvider?.RequiredSetup(currentRecipe.Execution, (ProductionRecipe)currentRecipe.TargetRecipe, new CurrentResourceTarget(ResourceManagement));
             setupJob.UpdateSetup(retryRecipe);
         }
 
@@ -304,7 +304,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
             // Check if the previous job is a setup targeting the completed job
             // Clean-up jobs don't need to be aborted. They are updated when started by the scheduler
             if (JobList.Previous(jobData) is ISetupJobData previous
-                && previous.Recipe is ISetupRecipe setupRecipe
+                && previous.Recipe is SetupRecipe setupRecipe
                 && setupRecipe.Execution == SetupExecution.BeforeProduction
                 && previous.Classification < JobClassification.Completing
                 && previous.Recipe.TargetRecipe.Id == jobData.Recipe.Id)

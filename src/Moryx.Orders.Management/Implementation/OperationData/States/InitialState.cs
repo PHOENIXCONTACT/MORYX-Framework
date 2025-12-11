@@ -18,9 +18,9 @@ namespace Moryx.Orders.Management
         {
         }
 
-        public override void Assign()
+        public override async Task Assign()
         {
-            NextState(StateInitialAssign);
+            await NextStateAsync(StateInitialAssign);
             Context.HandleAssign();
         }
     }

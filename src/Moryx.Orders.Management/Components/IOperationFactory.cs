@@ -8,7 +8,7 @@ namespace Moryx.Orders.Management
     [PluginFactory]
     internal interface IOperationFactory
     {
-        IOperationData Create();
+        IOperationData Create(IOperationSavingContext savingContext);
 
         void Destroy(IOperationData operationData);
     }

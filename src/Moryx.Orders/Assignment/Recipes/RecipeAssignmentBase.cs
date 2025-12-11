@@ -31,24 +31,27 @@ namespace Moryx.Orders.Assignment
         protected TConfig Config { get; private set; }
 
         /// <inheritdoc cref="IProductAssignment"/>
-        public void Initialize(RecipeAssignmentConfig config)
+        public virtual Task InitializeAsync(RecipeAssignmentConfig config)
         {
             Config = (TConfig)config;
             Logger = Logger.GetChild(Config.PluginName, GetType());
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public void Start()
+        public virtual Task StartAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public void Stop()
+        public virtual Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task<IReadOnlyList<IProductRecipe>> PossibleRecipes(ProductIdentity identity)
+        public virtual Task<IReadOnlyList<IProductRecipe>> PossibleRecipesAsync(ProductIdentity identity)
         {
             var product = ProductManagement.LoadType(identity);
             if (product == null)
@@ -61,18 +64,18 @@ namespace Moryx.Orders.Assignment
         /// <summary>
         /// Select a recipe for the current operation
         /// </summary>
-        public abstract Task<IReadOnlyList<IProductRecipe>> SelectRecipes(Operation operation, IOperationLogger operationLogger);
+        public abstract Task<IReadOnlyList<IProductRecipe>> SelectRecipesAsync(Operation operation, IOperationLogger operationLogger);
 
         /// <summary>
         /// Assigns the recipe to the operation
         /// </summary>
-        public abstract Task<bool> ProcessRecipe(IProductRecipe clone, Operation operation, IOperationLogger operationLogger);
+        public abstract Task<bool> ProcessRecipeAsync(IProductRecipe clone, Operation operation, IOperationLogger operationLogger);
 
         /// <summary>
         /// Default implementation to assign the current recipe to the operation
         /// Will use the given product
         /// </summary>
-        protected Task<IProductRecipe> LoadDefaultRecipe(ProductType sourceProduct)
+        protected Task<IProductRecipe> LoadDefaultRecipeAsync(ProductType sourceProduct)
         {
             var defaultRecipe = ProductManagement.GetRecipes(sourceProduct, RecipeClassification.Default)
                 .SingleOrDefault();

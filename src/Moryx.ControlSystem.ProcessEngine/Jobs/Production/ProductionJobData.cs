@@ -20,7 +20,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
         #region Fields and Properties
 
         /// <inheritdoc />
-        public new IProductionRecipe Recipe => (IProductionRecipe)base.Recipe;
+        public new ProductionRecipe Recipe => (ProductionRecipe)base.Recipe;
 
         /// <inheritdoc cref="IJobData"/>
         public int SuccessCount { get; private set; }
@@ -55,13 +55,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
         #endregion
 
         /// <inheritdoc />
-        public ProductionJobData(IProductionRecipe recipe, int amount) : base(recipe, amount)
+        public ProductionJobData(ProductionRecipe recipe, int amount) : base(recipe, amount)
         {
             StateMachine.Initialize(this).With<ProductionJobStateBase>();
         }
 
         /// <inheritdoc />
-        public ProductionJobData(IProductionRecipe recipe, JobEntity entity) : base(recipe, entity)
+        public ProductionJobData(ProductionRecipe recipe, JobEntity entity) : base(recipe, entity)
         {
             Started = entity.Created;
 

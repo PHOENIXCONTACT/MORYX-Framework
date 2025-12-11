@@ -17,7 +17,7 @@ namespace Moryx.Products.Management.Importers
     public class DefaultImporter : ProductImporterBase<ProductImporterConfig, DefaultImporterParameters>
     {
         /// <inheritdoc />
-        protected override Task<ProductImporterResult> Import(ProductImportContext context, DefaultImporterParameters parameters)
+        protected override Task<ProductImporterResult> ImportAsync(ProductImportContext context, DefaultImporterParameters parameters)
         {
             var productType = (ProductType)TypeTool.CreateInstance<ProductType>(parameters.ProductType);
             productType.Identity = new ProductIdentity(parameters.Identifier, parameters.Revision);

@@ -14,24 +14,42 @@ namespace Moryx.ControlSystem.Processes
     public interface IProcessControl
     {
         /// <summary>
-        /// Processes currently executed by the process controller
+        /// Returns processes currently executed by the process controller
         /// </summary>
-        IReadOnlyList<IProcess> RunningProcesses { get; }
+        IReadOnlyList<Process> GetRunningProcesses();
 
         /// <summary>
-        /// Retrieve all processes for a product instance
+        /// Returns processes currently executed by the process controller
         /// </summary>
-        IReadOnlyList<IProcess> GetProcesses(ProductInstance productInstance);
+        /// <param name="predicate">Filter for the processes</param>
+        IReadOnlyList<Process> GetRunningProcesses(Func<Process, bool> predicate);
+
+        /// <summary>
+        /// Retrieve all archived processes for a product instance
+        /// </summary>
+        Task<IReadOnlyList<Process>> GetArchivedProcessesAsync(ProductInstance productInstance);
+
+        /// <summary>
+        /// Retrieve all archived  processes in a certain range
+        /// </summary>
+        IAsyncEnumerable<IProcessChunk> GetArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds);
 
         /// <summary>
         /// Possible targets for the process, defined by currently open activities
         /// </summary>
-        IReadOnlyList<ICell> Targets(IProcess process);
+        IReadOnlyList<ICell> Targets(Process process);
 
         /// <summary>
         /// Possible cells that can execute the activity
         /// </summary>
-        IReadOnlyList<ICell> Targets(IActivity activity);
+        IReadOnlyList<ICell> Targets(Activity activity);
+
+        /// <summary>
+        /// Report a specific <see cref="ReportAction"/> to have been executed on the <paramref name="process"/>
+        /// </summary>
+        /// <param name="process">The process to report</param>
+        /// <param name="action">The action to perform</param>
+        void Report(Process process, ReportAction action);
 
         /// <summary>
         /// A process has changed

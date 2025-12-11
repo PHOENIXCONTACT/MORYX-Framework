@@ -9,11 +9,16 @@ namespace Moryx.StateMachines;
 public abstract class AsyncStateBase : StateBase
 {
     /// <summary>
+    /// Context of the state machine
+    /// </summary>
+    protected new IAsyncStateContext Context => (IAsyncStateContext)base.Context;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="StateBase"/> class.
     /// </summary>
     /// <param name="context">Context of the state machine</param>
     /// <param name="stateMap">Map of states to objects</param>
-    protected AsyncStateBase(IStateContext context, StateMap stateMap) : base(context, stateMap)
+    protected AsyncStateBase(IAsyncStateContext context, StateMap stateMap) : base(context, stateMap)
     {
     }
 
@@ -48,7 +53,7 @@ public abstract class AsyncStateBase : StateBase
         await OnExitAsync();
 
         // Set next state
-        Context.SetState(next);
+        await Context.SetStateAsync(next);
 
         // Enter the next state
         await ((AsyncStateBase)next).OnEnterAsync();
@@ -72,7 +77,7 @@ public abstract class AsyncStateBase : StateBase
             await OnExitAsync();
 
         // Set next state
-        Context.SetState(nextState);
+        await Context.SetStateAsync(nextState);
 
         // If requested, enter forced state
         if (enterForced)
@@ -83,7 +88,7 @@ public abstract class AsyncStateBase : StateBase
     /// Create a state machine of the given base type and will set it on the given context
     /// Will internally called by the <see cref="StateMachine"/> wrapper class
     /// </summary>
-    internal static Task CreateAsync(Type stateBaseType, IStateContext context, int? initialKey)
+    internal static async Task CreateAsync(Type stateBaseType, IAsyncStateContext context, int? initialKey)
     {
         if (!typeof(AsyncStateBase).IsAssignableFrom(stateBaseType))
             throw new InvalidOperationException($"Only states inherited from {nameof(AsyncStateBase)} are supported!");
@@ -92,8 +97,8 @@ public abstract class AsyncStateBase : StateBase
         if (initialState == null)
             throw new ArgumentException($"Initial state does not inherit from {nameof(AsyncStateBase)}");
 
-        context.SetState(initialState);
-        return initialState.OnEnterAsync();
+        await context.SetStateAsync(initialState);
+        await initialState.OnEnterAsync();
     }
 }
 
@@ -102,7 +107,7 @@ public abstract class AsyncStateBase : StateBase
 /// </summary>
 /// <typeparam name="TContext">Typed context</typeparam>
 public abstract class AsyncStateBase<TContext> : AsyncStateBase
-    where TContext : IStateContext
+    where TContext : IAsyncStateContext
 {
     /// <summary>
     /// Context of the state machine

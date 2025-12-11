@@ -31,7 +31,7 @@ namespace Moryx.VisualInstructions
         protected VisualInstructionBinder InstructionBinder { get; private set; }
 
         /// <inheritdoc />
-        protected override void Populate(IProcess process, Parameters instance)
+        protected override void Populate(Process process, Parameters instance)
         {
             var parameters = (VisualInstructionParameters)instance;
 

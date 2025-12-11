@@ -34,7 +34,7 @@ namespace Moryx.Identity.AccessManagement
         /// Returns a list of <see cref="Permission"/>s that are assigne the the role with the specified role name.
         /// </summary>
         /// <param name="roleName">The name of the role the permissions should be retrieved for.</param>
-        Task<IList<Permission>> FindForRole(string roleName);
+        Task<IList<Permission>> FindForRoleAsync(string roleName);
 
         /// <summary>
         /// Assigns the given <paramref name="permissions"/> to the role with the specified role name.
