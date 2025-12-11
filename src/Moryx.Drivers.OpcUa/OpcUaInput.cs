@@ -37,11 +37,11 @@ internal class OpcUaInput : IInput
     /// <param name="key">Full NodeId</param>
     /// <returns>If node doesn't exists or there was an error, when trying to read
     /// the node, the return value will be null</returns>
-    public object this[string key] => GetValue(key);
+    public object this[string key] => GetValue(key).GetAwaiter().GetResult();
 
-    private object GetValue(string key)
+    private Task<object> GetValue(string key)
     {
-        return _driver.ReadNode(key);
+        return _driver.ReadNodeAsync(key);
     }
 
     /// <inheritdoc/>

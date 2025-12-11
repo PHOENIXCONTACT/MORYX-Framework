@@ -160,7 +160,7 @@ public class OpcUaNode : IMessageChannel
             _logger?.Log(LogLevel.Error, "It is tried to read the value of node {NodeId}, but the node is no variable node", NodeId);
             return;
         }
-        _driver.WriteNode(Identifier, payload);
+        _driver.WriteNodeAsync(Identifier, payload).GetAwaiter().GetResult();
     }
 
     /// <summary>

@@ -487,9 +487,10 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     }
 
     /// <inheritdoc/>
-    public void AddSubscription(OpcUaNode node)
+    public Task AddSubscription(OpcUaNode node, CancellationToken token = default)
     {
         State.AddSubscription(node);
+        return Task.CompletedTask;
     }
 
     internal void SaveSubscriptionToBeAdded(OpcUaNode node)
@@ -809,17 +810,13 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         State.WriteNode(node, payload);
     }
 
-    /// <inheritdoc/>
-    public void WriteNode(string nodeId, object payload)
-    {
-        var node = State.GetNode(nodeId);
-        WriteNode(node, payload);
-    }
-
     /// <inheritdoc />
     public Task WriteNodeAsync(string nodeId, object payload, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var node = State.GetNode(nodeId);
+        WriteNode(node, payload);
+
+        return Task.CompletedTask;
     }
 
     internal void OnWriteNode(OpcUaNode node, object payload)
@@ -844,16 +841,12 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             }
         }
     }
-    /// <inheritdoc/>
-    public object ReadNode(string nodeId)
-    {
-        return ReadNodeDataValue(nodeId).Result.Value;
-    }
 
     /// <inheritdoc />
     public Task<object> ReadNodeAsync(string nodeId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var dataValue = ReadNodeDataValue(nodeId).Result.Value;
+        return Task.FromResult(dataValue);
     }
 
     private DataValueResult ReadNodeDataValue(string nodeId)
@@ -919,7 +912,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             return;
         }
 
-        WriteNode(node.Identifier, msg.Payload);
+        WriteNodeAsync(node.Identifier, msg.Payload).GetAwaiter().GetResult();
 
     }
 
@@ -1051,12 +1044,14 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
     /// <inheritdoc/>
     [EntrySerialize]
-    public void RebrowseNodes()
+    public Task RebrowseNodes(CancellationToken cancellationToken = default)
     {
         lock (_stateLock)
         {
             State.RebrowseNodes();
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -1109,7 +1104,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                     continue;
                 }
 
-                var value = ReadNode(subSubNode.NodeId.ToString()).ToString();
+                var value = ReadNodeAsync(subSubNode.NodeId.ToString()).GetAwaiter().GetResult().ToString();
                 if (property.PropertyType == typeof(int))
                 {
                     property.SetValue(deviceType, int.Parse(value, CultureInfo.InvariantCulture));

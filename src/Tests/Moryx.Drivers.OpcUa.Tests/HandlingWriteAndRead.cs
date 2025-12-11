@@ -57,7 +57,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
     }
 
     [Test]
-    public void TestRead()
+    public async Task TestRead()
     {
         //Arrange
         var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
@@ -65,7 +65,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
         SetupRead(resultValue);
 
         //Act
-        var value = _driver.ReadNode(node.NodeId.ToString());
+        var value = await _driver.ReadNodeAsync(node.NodeId.ToString());
 
         //Assert
         _sessionMock.Verify(s => s.ReadValue(It.IsAny<NodeId>()));

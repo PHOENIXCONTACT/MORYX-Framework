@@ -25,7 +25,7 @@ internal class OpcUaOutput(OpcUaDriver driver) : IOutput
     /// <returns></returns>
     public object this[string key]
     {
-        get => GetValue(key);
+        get => GetValue(key).GetAwaiter().GetResult();
         set => SetValue(key, value);
     }
 
@@ -40,9 +40,9 @@ internal class OpcUaOutput(OpcUaDriver driver) : IOutput
         driver.WriteNode(node, value);
     }
 
-    private object GetValue(string key)
+    private Task<object> GetValue(string key)
     {
-        return driver.ReadNode(key);
+        return driver.ReadNodeAsync(key);
     }
 
     /// <inheritdoc/>
