@@ -4,6 +4,7 @@
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
+using Moryx.ControlSystem.ProcessEngine.Jobs.Production;
 using Moryx.ControlSystem.ProcessEngine.Model;
 using Moryx.ControlSystem.Recipes;
 
@@ -14,9 +15,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         T Create<T>(IWorkplanRecipe recipe, int amount)
             where T : IJobData;
 
-        IProductionJobData Create(JobTemplate template);
-
-        IJobData Create(IWorkplanRecipe recipe, int amount);
+        IJobData Create(JobTemplate template, int adjustedAmount);
 
         IJobData Restore(JobEntity entity, IWorkplanRecipe recipe);
 
@@ -30,48 +29,31 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
         public T Create<T>(IWorkplanRecipe recipe, int amount) where T : IJobData
         {
-            return (T)Create(recipe, amount);
+            return recipe switch
+            {
+                ProductionRecipe => (T)InternalFactory.CreateProductionJob(recipe, amount),
+                SetupRecipe => (T)InternalFactory.CreateSetupJob(recipe),
+                _ => throw new InvalidOperationException("Cannot find job type for template of type: " + recipe.GetType().FullName),
+            };
         }
 
-        public IProductionJobData Create(JobTemplate template)
+        public IJobData Create(JobTemplate template, int adjustedAmount)
         {
-            return Create<IProductionJobData>((ProductionRecipe)template.Recipe, (int)template.Amount);
-        }
-
-        public IJobData Create(IWorkplanRecipe recipe, int amount)
-        {
-            IJobData jobData = null;
-
-            if (recipe is ProductionRecipe)
-                jobData = InternalFactory.CreateProductionJob(recipe, amount);
-
-            if (recipe is SetupRecipe)
-                jobData = InternalFactory.CreateSetupJob(recipe);
-
-            ValidateCreatedJob(jobData, recipe);
-
-            return jobData;
+            return template switch
+            {
+                PreallocatedJobTemplate preallocated => InternalFactory.CreatePreallocatedJob(preallocated.Recipe, adjustedAmount, preallocated.AllocationToken),
+                _ => InternalFactory.CreateProductionJob(template.Recipe, adjustedAmount),
+            };
         }
 
         public IJobData Restore(JobEntity entity, IWorkplanRecipe recipe)
         {
-            IJobData jobData = null;
-
-            if (recipe is ProductionRecipe)
-                jobData = InternalFactory.CreateProductionJob(recipe, entity);
-
-            if (recipe is SetupRecipe)
-                jobData = InternalFactory.CreateSetupJob(recipe, entity);
-
-            ValidateCreatedJob(jobData, recipe);
-
-            return jobData;
-        }
-
-        private static void ValidateCreatedJob(IJobData jobData, IWorkplanRecipe recipe)
-        {
-            if (jobData == null)
-                throw new InvalidOperationException("Cannot find job type for recipe of type: " + recipe.GetType().FullName);
+            return recipe switch
+            {
+                ProductionRecipe => InternalFactory.CreateProductionJob(recipe, entity),
+                SetupRecipe => InternalFactory.CreateSetupJob(recipe, entity),
+                _ => throw new InvalidOperationException("Cannot find job type for template of type: " + recipe.GetType().FullName),
+            };
         }
 
         public void Destroy(IJobData jobData) => InternalFactory.Destroy(jobData);
@@ -87,6 +69,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         ISetupJobData CreateSetupJob(IWorkplanRecipe recipe);
 
         ISetupJobData CreateSetupJob(IWorkplanRecipe recipe, JobEntity entity);
+
+        IPreallocatedJobData CreatePreallocatedJob(IWorkplanRecipe recipe, int amount, AllocationToken allocationToken);
 
         void Destroy(IJobData jobData);
     }

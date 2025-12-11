@@ -3,7 +3,6 @@
 
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
-using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
 using Moryx.Logging;
@@ -129,7 +128,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
                 {
                     // Replace endless jobs with max size jobs
                     var jobSize = (amount < IdShiftGenerator.MaxAmount & amount > 0) ? amount : IdShiftGenerator.MaxAmount;
-                    var jobData = (IProductionJobData)JobDataFactory.Create((ProductionRecipe)template.Recipe, jobSize);
+                    var jobData = (IProductionJobData)JobDataFactory.Create(template, jobSize);
                     jobDatas.Add(jobData);
                     amount -= jobSize;
                 } while (amount > 0);
