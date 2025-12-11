@@ -40,7 +40,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// Load all completed activities of the process
         /// </summary>
-        void FillActivities(IUnitOfWork uow, IProcess process, IDictionary<long, ITask> taskMap);
+        void FillActivities(IUnitOfWork uow, Process process, IDictionary<long, ITask> taskMap);
 
         /// <summary>
         /// Load tracing object from database

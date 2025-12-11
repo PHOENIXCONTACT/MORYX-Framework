@@ -41,7 +41,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             throw new NotImplementedException();
         }
 
-        public void ProcessAborting(IActivity affectedActivity)
+        public void ProcessAborting(Activity affectedActivity)
         {
             throw new NotImplementedException();
         }

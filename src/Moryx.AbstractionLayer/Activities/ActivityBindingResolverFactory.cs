@@ -10,7 +10,7 @@ namespace Moryx.AbstractionLayer.Activities
 {
     /// <summary>
     /// Default factory that can create resolvers based on activities for
-    /// <see cref="IActivity"/>, <see cref="ProductType"/>, <see cref="ProductInstance"/>, <see cref="Process"/> and <see cref="IRecipe"/>.
+    /// <see cref="Activity"/>, <see cref="ProductType"/>, <see cref="ProductInstance"/>, <see cref="Process"/> and <see cref="IRecipe"/>.
     /// It also creates a resolver for unknown keys.
     /// </summary>
     public class ActivityBindingResolverFactory : ProcessBindingResolverFactory
@@ -23,17 +23,17 @@ namespace Moryx.AbstractionLayer.Activities
                 case "Activity":
                     return new NullResolver();
                 case "Tracing":
-                    return new DelegateResolver(source => ((IActivity)source).Tracing);
+                    return new DelegateResolver(source => ((Activity)source).Tracing);
                 case "Process":
-                    return new DelegateResolver(source => ((IActivity)source).Process);
+                    return new DelegateResolver(source => ((Activity)source).Process);
                 case "Recipe":
-                    return new DelegateResolver(source => ((IActivity)source).Process.Recipe);
+                    return new DelegateResolver(source => ((Activity)source).Process.Recipe);
                 case "Product":
                 case "ProductType":
                     return new ProductResolver(baseKey);
                 case "Article":
                 case "ProductInstance":
-                    return new DelegateResolver(source => (((IActivity)source).Process as ProductionProcess)?.ProductInstance);
+                    return new DelegateResolver(source => (((Activity)source).Process as ProductionProcess)?.ProductInstance);
                 default:
                     return null;
             }

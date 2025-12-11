@@ -185,7 +185,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             ActivityUpdated?.Invoke(this, new ActivityUpdatedEventArgs(activityData.Activity, progress));
         }
 
-        public ActivityData GetByActivity(IActivity wrapped)
+        public ActivityData GetByActivity(Activity wrapped)
         {
             // Performance optimized nested locking
             _activitiesLock.EnterReadLock();
@@ -260,7 +260,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             }
         }
 
-        public ProcessData GetProcess(IProcess process)
+        public ProcessData GetProcess(Process process)
         {
             lock (_runningProcesses)
             {
@@ -279,7 +279,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         public event EventHandler<ActivityEventArgs> ActivityChanged;
 
         #region IActivityPool
-        IReadOnlyList<IProcess> IActivityPool.Processes
+        IReadOnlyList<Process> IActivityPool.Processes
         {
             get
             {
@@ -290,24 +290,24 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             }
         }
 
-        IProcess IActivityPool.GetProcess(long id)
+        Process IActivityPool.GetProcess(long id)
         {
             return GetProcess(id)?.Process;
         }
 
-        public IReadOnlyList<IActivity> GetByCondition(Func<IActivity, bool> predicate)
+        public IReadOnlyList<Activity> GetByCondition(Func<Activity, bool> predicate)
         {
             var matches = GetByCondition(ad => predicate(ad.Activity));
             return FastExtraction(matches, ad => ad.Activity);
         }
 
-        IReadOnlyList<IActivity> IActivityPool.GetAllOpen()
+        IReadOnlyList<Activity> IActivityPool.GetAllOpen()
         {
             var open = GetAllOpen();
             return FastExtraction(open, ad => ad.Activity);
         }
 
-        public IReadOnlyList<IActivity> GetAllOpen(IProcess process)
+        public IReadOnlyList<Activity> GetAllOpen(Process process)
         {
             var wrapper = GetProcess(process);
             var open = GetAllOpen(wrapper);

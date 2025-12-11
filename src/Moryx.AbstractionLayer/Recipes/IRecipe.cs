@@ -43,7 +43,7 @@ namespace Moryx.AbstractionLayer.Recipes
         /// <summary>
         /// Create process that can execute this recipe
         /// </summary>
-        IProcess CreateProcess();
+        Process CreateProcess();
 
         /// <summary>
         /// Creates a clone of the current recipe

@@ -10,6 +10,6 @@ namespace Moryx.ControlSystem.SetupProvider
 {
     internal interface ISetupManager : IPlugin
     {
-        ISetupRecipe RequiredSetup(SetupExecution execution, IProductionRecipe recipe, ISetupTarget targetSystem);
+        SetupRecipe RequiredSetup(SetupExecution execution, ProductionRecipe recipe, ISetupTarget targetSystem);
     }
 }

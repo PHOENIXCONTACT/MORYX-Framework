@@ -20,7 +20,7 @@ SetupEvaluation Evaluate(IProductRecipe recipe);
 
 For example if you want to indicate a manual material change with modified capabilities, it would look like the example below
 ```cs
-public override SetupEvaluation Evaluate(IProductionRecipe recipe)
+public override SetupEvaluation Evaluate(ProductionRecipe recipe)
 {
     return SetupEvaluation.Provide(new InsertHousingCapabilities{ Identifier = recipe.Product.Housing.Identitiy}, SetupClassification.Manual | SetupClassification.MaterialChange);
 }
@@ -29,7 +29,7 @@ public override SetupEvaluation Evaluate(IProductionRecipe recipe)
 Because of defined implicit casts it is also possible to directly return `bool` or `SetupClassification` instead of the evaluation object.
 
 ```cs
-IWorkplanStep CreateStep(IProductionRecipe recipe);
+IWorkplanStep CreateStep(ProductionRecipe recipe);
 ```
 
 Provided that `Evaluate` indicates the need for a machine change, this method creates a `WorkplanStep` to alter a target resource in a way that it provides the necessary capabilities afterwards.
@@ -60,7 +60,7 @@ internal class WatchFaceMountSetupTrigger : SetupTriggerBase<WatchFaceMountSetup
 {
     public override SetupExecution Execution => SetupExecution.BeforeProduction;
 
-    public override SetupEvaluation Evaluate(IProductionRecipe recipe)
+    public override SetupEvaluation Evaluate(ProductionRecipe recipe)
     {
         if (!((WatchRecipe)recipe).Target.Type.Equals(nameof(WatchProduct)))
             return false;

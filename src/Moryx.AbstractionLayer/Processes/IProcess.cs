@@ -8,7 +8,7 @@ using Moryx.AbstractionLayer.Recipes;
 namespace Moryx.AbstractionLayer.Processes
 {
     /// <summary>
-    /// Defines how activities should be loaded from a <see cref="IProcess"/>
+    /// Defines how activities should be loaded from a <see cref="Process"/>
     /// </summary>
     public enum ActivitySelectionType
     {
@@ -48,31 +48,31 @@ namespace Moryx.AbstractionLayer.Processes
         /// <summary>
         /// The current and the finished activities of this process.
         /// </summary>
-        IEnumerable<IActivity> GetActivities();
+        IEnumerable<Activity> GetActivities();
 
         /// <summary>
         /// The current and the finished activities of this process filtered by the given function.
         /// </summary>
-        IEnumerable<IActivity> GetActivities(Func<IActivity, bool> predicate);
+        IEnumerable<Activity> GetActivities(Func<Activity, bool> predicate);
 
         /// <summary>
         /// Get an activity using the given selection type.
         /// </summary>
-        IActivity GetActivity(ActivitySelectionType selectionType);
+        Activity GetActivity(ActivitySelectionType selectionType);
 
         /// <summary>
         /// Get an activity using the given selection type that complies to the given predicate.
         /// </summary>
-        IActivity GetActivity(ActivitySelectionType selectionType, Func<IActivity, bool> predicate);
+        Activity GetActivity(ActivitySelectionType selectionType, Func<Activity, bool> predicate);
 
         /// <summary>
         /// Add an activity to the list
         /// </summary>
-        void AddActivity(IActivity toAdd);
+        void AddActivity(Activity toAdd);
 
         /// <summary>
         /// Remove an activity from the list
         /// </summary>
-        void RemoveActivity(IActivity toRemove);
+        void RemoveActivity(Activity toRemove);
     }
 }

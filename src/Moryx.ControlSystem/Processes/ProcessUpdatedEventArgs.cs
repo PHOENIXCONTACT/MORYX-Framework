@@ -37,7 +37,7 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Process reference
         /// </summary>
-        public IProcess Process { get; }
+        public Process Process { get; }
 
         /// <summary>
         ///  Current progress
@@ -47,7 +47,7 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Initialize a new event args instance
         /// </summary>
-        public ProcessUpdatedEventArgs(IProcess process, ProcessProgress progress)
+        public ProcessUpdatedEventArgs(Process process, ProcessProgress progress)
         {
             Process = process;
             Progress = progress;

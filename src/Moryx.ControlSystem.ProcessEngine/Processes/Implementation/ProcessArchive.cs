@@ -55,7 +55,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         {
         }
 
-        public Task<IReadOnlyList<IProcess>> GetProcesses(ProductInstance productInstance)
+        public Task<IReadOnlyList<Process>> GetProcesses(ProductInstance productInstance)
         {
             using var uow = UnitOfWorkFactory.Create();
             var processRepo = uow.GetRepository<IProcessEntityRepository>();
@@ -64,10 +64,10 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 where processEntity.ReferenceId == productInstance.Id
                 select new { processEntity.Id, processEntity.Job.RecipeId }).ToList(); // TODO use ToListAsync and fix tests
 
-            var processes = new List<IProcess>();
+            var processes = new List<Process>();
             foreach (var match in query)
             {
-                var recipe = (IProductionRecipe)ProductManagement.LoadRecipe(match.RecipeId);
+                var recipe = (ProductionRecipe)ProductManagement.LoadRecipe(match.RecipeId);
                 var process = (ProductionProcess)recipe.CreateProcess();
                 process.Id = match.Id;
                 process.ProductInstance = productInstance;
@@ -79,7 +79,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 processes.Add(process);
             }
 
-            return Task.FromResult((IReadOnlyList<IProcess>)processes);
+            return Task.FromResult<IReadOnlyList<Process>>(processes);
         }
 
         public async IAsyncEnumerable<IProcessChunk> GetProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
@@ -139,7 +139,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                             || lastActivity.Completed >= start && lastActivity.Completed <= end // Process ended in the time frame
                             || firstActivity.Started <= start && lastActivity.Completed >= end // Process spans over time frame
                          select new { processEntity.Id, processEntity.ReferenceId }).ToList(); // TODO use ToListAsync and fix tests
-            var processes = new IProcess[query.Count];
+            var processes = new Process[query.Count];
 
             // Prepare fake process and task map
             var fakeProcess = recipe.CreateProcess();
@@ -158,7 +158,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 processes[index] = process;
             }
 
-            return Task.FromResult((IProcessChunk)new ReadonlyProcessChunk(job, processes));
+            return Task.FromResult<IProcessChunk>(new ReadonlyProcessChunk(job, processes));
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             }
 
             /// <inheritdoc />
-            public IEnumerator<IProcess> GetEnumerator()
+            public IEnumerator<Process> GetEnumerator()
             {
                 return new JobDataProcessIterator(TryGetJob().AllProcesses, _start, _end);
             }
@@ -212,7 +212,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             /// <summary>
             /// Iterator for <see cref="IJobData.RunningProcesses"/> that is not affected by collection changes
             /// </summary>
-            private class JobDataProcessIterator : IEnumerator<IProcess>
+            private class JobDataProcessIterator : IEnumerator<Process>
             {
                 private int _currentIndex = -1;
 
@@ -251,7 +251,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 {
                 }
 
-                public IProcess Current => _currentProcess.Process;
+                public Process Current => _currentProcess.Process;
 
                 object IEnumerator.Current => _currentProcess.Process;
             }
@@ -259,9 +259,9 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
 
         internal class ReadonlyProcessChunk : IProcessChunk
         {
-            private readonly IReadOnlyList<IProcess> _processes;
+            private readonly IReadOnlyList<Process> _processes;
 
-            public ReadonlyProcessChunk(Job job, IReadOnlyList<IProcess> processes)
+            public ReadonlyProcessChunk(Job job, IReadOnlyList<Process> processes)
             {
                 _processes = processes;
                 Job = job;
@@ -269,7 +269,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
 
             public Job Job { get; }
 
-            public IEnumerator<IProcess> GetEnumerator()
+            public IEnumerator<Process> GetEnumerator()
             {
                 return _processes.GetEnumerator();
             }

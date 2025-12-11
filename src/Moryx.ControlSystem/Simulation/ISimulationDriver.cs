@@ -18,7 +18,7 @@ namespace Moryx.ControlSystem.Simulation
         SimulationState SimulatedState { get; }
 
         /// <summary>
-        /// Cells that reference this simulation driver 
+        /// Cells that reference this simulation driver
         /// and expect process events from it
         /// </summary>
         IEnumerable<ICell> Usages { get; }
@@ -28,7 +28,7 @@ namespace Moryx.ControlSystem.Simulation
         /// physical cell is ready to execute the next step.
         /// </summary>
         /// <param name="activity">The activity objects gives access to all relevant information</param>
-        void Ready(IActivity activity);
+        void Ready(Activity activity);
 
         /// <summary>
         /// Send a result to the cell about the activity that just finished
@@ -55,6 +55,6 @@ namespace Moryx.ControlSystem.Simulation
         /// <summary>
         /// Activity the result is for
         /// </summary>
-        public IActivity Activity { get; set; }
+        public Activity Activity { get; set; }
     }
 }

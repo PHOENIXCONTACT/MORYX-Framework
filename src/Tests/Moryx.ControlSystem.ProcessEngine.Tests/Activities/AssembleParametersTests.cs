@@ -44,7 +44,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Activities
             Assert.That(resolveAssemble.Instructions[0].Content, Is.EqualTo("The name of this Product was Hugonotte"));
         }
 
-        private static IProcess DummyProcess()
+        private static ProductionProcess DummyProcess()
         {
             var product = new DummyProductType
             {

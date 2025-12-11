@@ -42,8 +42,8 @@ namespace Moryx.Simulation.Tests
                    _simulationDriverTestMock.Raise(dr => dr.SimulatedStateChanged += null, _simulationDriverTestMock.Object, SimulationState.Idle);
                });
 
-            _simulationDriverTestMock.Setup(dr => dr.Ready(It.IsAny<IActivity>()))
-               .Callback<IActivity>(message =>
+            _simulationDriverTestMock.Setup(dr => dr.Ready(It.IsAny<Activity>()))
+               .Callback<Activity>(message =>
                {
                    _simulationDriverTestMock.Setup(dr => dr.SimulatedState)
                    .Returns(SimulationState.Requested);
@@ -71,7 +71,7 @@ namespace Moryx.Simulation.Tests
         [Test]
         public async Task Driver_Should_SendMessage()
         {
-            //Arrange     
+            //Arrange
             var activity = new AssemblyActivity();
             Arrange(3, _assemblyCell, activity);
             _processControlMock.Raise(p => p.ActivityUpdated += null, new ActivityUpdatedEventArgs(activity, ActivityProgress.Ready));
@@ -81,7 +81,7 @@ namespace Moryx.Simulation.Tests
             //Act
             await _assemblyCell.Driver.SendAsync(new AssembleProductMessage());
 
-            //Assert 
+            //Assert
             _simulationDriverTestMock.Verify(dr => dr.SendAsync(It.IsAny<AssembleProductMessage>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -95,8 +95,8 @@ namespace Moryx.Simulation.Tests
             //Act
             _processControlMock.Raise(p => p.ActivityUpdated += null, new ActivityUpdatedEventArgs(activity, ActivityProgress.Ready));
 
-            //Assert 
-            _simulationDriverTestMock.Verify(dr => dr.Ready(It.IsAny<IActivity>()), Times.Once);
+            //Assert
+            _simulationDriverTestMock.Verify(dr => dr.Ready(It.IsAny<Activity>()), Times.Once);
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace Moryx.Simulation.Tests
             _processControlMock.Raise(x => x.ActivityUpdated += null, new ActivityUpdatedEventArgs(activity, ActivityProgress.Running));
             Thread.Sleep(4000);
 
-            //Assert 
+            //Assert
             _simulationDriverTestMock.Verify(dr => dr.Result(It.IsAny<SimulationResult>()), Times.Once);
         }
 

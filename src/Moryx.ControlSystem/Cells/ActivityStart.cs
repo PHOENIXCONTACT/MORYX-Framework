@@ -11,7 +11,7 @@ namespace Moryx.ControlSystem.Cells
     /// </summary>
     public class ActivityStart : Session
     {
-        internal ActivityStart(Session currentSession, IActivity activity)
+        internal ActivityStart(Session currentSession, Activity activity)
             : base(currentSession)
         {
             Activity = activity;
@@ -22,7 +22,7 @@ namespace Moryx.ControlSystem.Cells
         /// <summary>
         /// Startable activity created by the production controller
         /// </summary>
-        public IActivity Activity { get; }
+        public Activity Activity { get; }
 
         /// <summary>
         /// Creates the activity result message if the activity already has an result

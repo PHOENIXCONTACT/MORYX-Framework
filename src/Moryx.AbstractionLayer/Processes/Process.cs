@@ -11,17 +11,17 @@ namespace Moryx.AbstractionLayer.Processes
     /// </summary>
     public class Process : IProcess
     {
-        private readonly List<IActivity> _activities = [];
+        private readonly List<Activity> _activities = [];
         private readonly ReaderWriterLockSlim _activitiesLock = new(LockRecursionPolicy.SupportsRecursion);
 
         /// <inheritdoc />
-        public long Id { get; set; }
+        public virtual long Id { get; set; }
 
         /// <inheritdoc />
         public IRecipe Recipe { get; set; }
 
         /// <inheritdoc />
-        public IEnumerable<IActivity> GetActivities()
+        public virtual IEnumerable<Activity> GetActivities()
         {
             _activitiesLock.EnterReadLock();
 
@@ -33,11 +33,11 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public IEnumerable<IActivity> GetActivities(Func<IActivity, bool> predicate)
+        public virtual IEnumerable<Activity> GetActivities(Func<Activity, bool> predicate)
         {
             _activitiesLock.EnterReadLock();
 
-            IActivity[] result;
+            Activity[] result;
 
             if (predicate == null)
                 result = _activities.ToArray();
@@ -50,7 +50,7 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public IActivity GetActivity(ActivitySelectionType selectionType)
+        public virtual Activity GetActivity(ActivitySelectionType selectionType)
         {
             _activitiesLock.EnterReadLock();
 
@@ -62,11 +62,11 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public IActivity GetActivity(ActivitySelectionType selectionType, Func<IActivity, bool> predicate)
+        public virtual Activity GetActivity(ActivitySelectionType selectionType, Func<Activity, bool> predicate)
         {
             _activitiesLock.EnterReadLock();
 
-            IActivity result = null;
+            Activity result = null;
 
             var tmpList = predicate != null ? _activities.Where(predicate) : _activities;
 
@@ -92,7 +92,7 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public void AddActivity(IActivity toAdd)
+        public virtual void AddActivity(Activity toAdd)
         {
             _activitiesLock.EnterWriteLock();
 
@@ -102,7 +102,7 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public void RemoveActivity(IActivity toRemove)
+        public virtual void RemoveActivity(Activity toRemove)
         {
             _activitiesLock.EnterWriteLock();
 

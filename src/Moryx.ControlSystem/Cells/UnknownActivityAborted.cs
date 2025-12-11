@@ -11,7 +11,7 @@ namespace Moryx.ControlSystem.Cells
     /// </summary>
     public class UnknownActivityAborted : ActivityCompleted
     {
-        internal UnknownActivityAborted(IActivity aborted, Session wrapper)
+        internal UnknownActivityAborted(Activity aborted, Session wrapper)
             : base(aborted, wrapper)
         {
             aborted.Fail();
@@ -21,6 +21,6 @@ namespace Moryx.ControlSystem.Cells
         /// <summary>
         /// Activity that was aborted
         /// </summary>
-        public IActivity AbortedActivity { get; }
+        public Activity AbortedActivity { get; }
     }
 }

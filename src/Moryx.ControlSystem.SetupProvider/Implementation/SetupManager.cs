@@ -52,7 +52,7 @@ namespace Moryx.ControlSystem.SetupProvider
         {
         }
 
-        public ISetupRecipe RequiredSetup(SetupExecution execution, IProductionRecipe recipe, ISetupTarget targetSystem)
+        public SetupRecipe RequiredSetup(SetupExecution execution, ProductionRecipe recipe, ISetupTarget targetSystem)
         {
             // Determine the triggers
             var triggers = new List<ISetupTrigger>();
@@ -138,7 +138,7 @@ namespace Moryx.ControlSystem.SetupProvider
             return setupRecipe;
         }
 
-        private SetupEvaluation TryEvaluate(ISetupTrigger trigger, IProductionRecipe recipe)
+        private SetupEvaluation TryEvaluate(ISetupTrigger trigger, ProductionRecipe recipe)
         {
             try
             {
@@ -152,7 +152,7 @@ namespace Moryx.ControlSystem.SetupProvider
             }
         }
 
-        private IReadOnlyList<IWorkplanStep> TryCreateSteps(ISetupTrigger trigger, IProductionRecipe recipe)
+        private IReadOnlyList<IWorkplanStep> TryCreateSteps(ISetupTrigger trigger, ProductionRecipe recipe)
         {
             try
             {

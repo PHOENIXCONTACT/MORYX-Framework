@@ -37,11 +37,11 @@ namespace Moryx.ControlSystem.Jobs.Endpoints
                 DisplayState = job.StateDisplayName
             };
 
-            if (job.Recipe is IProductionRecipe)
+            if (job.Recipe is ProductionRecipe)
             {
                 model.ProductionJob = new ProductionJobModel
                 {
-                    ProductIdentity = (job.Recipe as IProductionRecipe)?.Target.Identity.ToString(),
+                    ProductIdentity = (job.Recipe as ProductionRecipe)?.Target.Identity.ToString(),
                     Amount = job.Amount,
                     SuccessCount = job.SuccessCount,
                     FailureCount = job.FailureCount,
@@ -51,7 +51,7 @@ namespace Moryx.ControlSystem.Jobs.Endpoints
 
                 model.CanComplete = job.Classification < JobClassification.Completing;
             }
-            else if (job.Recipe is ISetupRecipe setupRecipe)
+            else if (job.Recipe is SetupRecipe setupRecipe)
             {
                 var process = job.RunningProcesses.FirstOrDefault();
                 model.SetupJob = new SetupJobModel

@@ -9,7 +9,7 @@ namespace Moryx.AbstractionLayer.Recipes
     /// <summary>
     /// Recipe which contains a workplan and product
     /// </summary>
-    public class ProductionRecipe : WorkplanRecipe, IProductionRecipe
+    public class ProductionRecipe : WorkplanRecipe, IProductRecipe
     {
         /// <inheritdoc />
         public ProductType Product { get; set; }
@@ -36,7 +36,7 @@ namespace Moryx.AbstractionLayer.Recipes
         /// <summary>
         /// Create a <see cref="ProductionProcess"/> for this recipe
         /// </summary>
-        public override IProcess CreateProcess() =>
+        public override Process CreateProcess() =>
             new ProductionProcess { Recipe = this };
 
         /// <inheritdoc />

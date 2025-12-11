@@ -95,10 +95,10 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
                     {
                         var setupJobDataMock = new Mock<ISetupJobData>();
                         setupJobDataMock.SetupGet(j => j.Amount).Returns(amount);
-                        setupJobDataMock.SetupGet(j => j.Recipe).Returns((ISetupRecipe)recipe);
+                        setupJobDataMock.SetupGet(j => j.Recipe).Returns((SetupRecipe)recipe);
                         setupJobDataMock.SetupGet(j => j.Classification).Returns(JobClassification.Waiting);
-                        setupJobDataMock.Setup(j => j.UpdateSetup(It.IsAny<ISetupRecipe>())).Callback(
-                            (ISetupRecipe newRecipe) => { setupJobDataMock.SetupGet(j => j.Recipe).Returns(newRecipe); });
+                        setupJobDataMock.Setup(j => j.UpdateSetup(It.IsAny<SetupRecipe>())).Callback(
+                            (SetupRecipe newRecipe) => { setupJobDataMock.SetupGet(j => j.Recipe).Returns(newRecipe); });
 
                         var jobDataMock = setupJobDataMock.As<IJobData>();
                         jobDataMock.SetupGet(j => j.Recipe).Returns(() => setupJobDataMock.Object.Recipe);
@@ -109,8 +109,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
                     });
 
             _providerMock = new Mock<ISetupProvider>();
-            _providerMock.Setup(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.IsAny<IProductionRecipe>(), It.IsAny<ISetupTarget>()))
-                .Returns<SetupExecution, IProductionRecipe, ISetupTarget>(ProvideSetup);
+            _providerMock.Setup(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.IsAny<ProductionRecipe>(), It.IsAny<ISetupTarget>()))
+                .Returns<SetupExecution, ProductionRecipe, ISetupTarget>(ProvideSetup);
 
             _resourceManagerMock = new Mock<IResourceManagement>();
             _resourceManagerMock
@@ -118,9 +118,9 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
                 .Returns([]);
         }
 
-        private ISetupRecipe ProvideSetup(SetupExecution execution, IProductionRecipe recipe, ISetupTarget target)
+        private SetupRecipe ProvideSetup(SetupExecution execution, ProductionRecipe recipe, ISetupTarget target)
         {
-            var testRecipe = (ITestRecipe)recipe;
+            var testRecipe = (TestRecipe)recipe;
             if (execution == SetupExecution.BeforeProduction && target.Cells(new TestSetupCapabilities { SetupState = testRecipe.SetupState }).Count == 0)
             {
                 var workplan = new Workplan();
@@ -164,7 +164,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             // Arrange
             var manager = CreateSetupManager();
             AdjustCurrentResourceCapabilities(0);
-            var recipe = CreateRecipe(1783, 42).Object;
+            var recipe = CreateRecipe(1783, 42);
             var productionJob = CreateProductionJob("Lucky Luke", recipe).Object;
             _jobList.Add(productionJob);
             var schedulableLinkedList = new LinkedList<IJobData>(new List<IJobData> { productionJob });
@@ -173,7 +173,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             manager.Handle(schedulableLinkedList);
 
             // Assert
-            Assert.That((schedulableLinkedList.First().Recipe as ISetupRecipe)?.SetupClassification, Is.EqualTo(SetupClassification.Unspecified),
+            Assert.That((schedulableLinkedList.First().Recipe as SetupRecipe)?.SetupClassification, Is.EqualTo(SetupClassification.Unspecified),
                 "The dependency is not SetupType.Prepare.");
             Assert.That(schedulableLinkedList.Count, Is.EqualTo(3), "The job list contains more or less than 2 jobs.");
         }
@@ -183,11 +183,11 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
         public void InterruptProductionJobOnSetupProviderException()
         {
             // Arrange
-            _providerMock.Setup(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.IsAny<IProductionRecipe>(), It.IsAny<ISetupTarget>()))
+            _providerMock.Setup(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.IsAny<ProductionRecipe>(), It.IsAny<ISetupTarget>()))
                 .Throws(() => new Exception());
             var manager = CreateSetupManager();
             AdjustCurrentResourceCapabilities(0);
-            var recipe = CreateRecipe(1783, 42).Object;
+            var recipe = CreateRecipe(1783, 42);
             var productionJobMock = CreateProductionJob("Lucky Luke", recipe);
             var productionJob = productionJobMock.Object;
             _jobList.Add(productionJob);
@@ -210,7 +210,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             AdjustCurrentResourceCapabilities(42);
             manager.Start();
 
-            var recipe = CreateRecipe(1783, 42).Object;
+            var recipe = CreateRecipe(1783, 42);
             var productionJobData = CreateProductionJob("Lucky Luke", recipe).Object;
             _jobList.Add(productionJobData);
             var schedulableLinkedList = new LinkedList<IJobData>(new List<IJobData> { productionJobData });
@@ -219,7 +219,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             manager.Handle(schedulableLinkedList);
 
             // Assert
-            var setupRecipe = (ISetupRecipe)schedulableLinkedList.Last().Recipe;
+            var setupRecipe = (SetupRecipe)schedulableLinkedList.Last().Recipe;
             Assert.That(setupRecipe.Execution, Is.EqualTo(SetupExecution.AfterProduction), "The dependency is not SetupType.Unspecified.");
             // After requesting a new recipe, it becomes complete
             _setupJobs[0].SetupGet(j => j.RecipeRequired).Returns(true);
@@ -242,13 +242,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
         public void InterruptProductionJobOnCleanUpProviderException()
         {
             // Arrange
-            _providerMock.Setup(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.IsAny<IProductionRecipe>(), It.IsAny<ISetupTarget>()))
+            _providerMock.Setup(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.IsAny<ProductionRecipe>(), It.IsAny<ISetupTarget>()))
                 .Throws(() => new Exception());
             var manager = CreateSetupManager();
             AdjustCurrentResourceCapabilities(42);
             manager.Start();
 
-            var recipe = CreateRecipe(1783, 42).Object;
+            var recipe = CreateRecipe(1783, 42);
             var productionJobMock = CreateProductionJob("Lucky Luke", recipe);
             var productionJobData = productionJobMock.Object;
             _jobList.Add(productionJobData);
@@ -268,11 +268,11 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             // Arrange
             var manager = CreateSetupManager();
 
-            var recipeJoe = CreateRecipe(1783, 100).Object;
+            var recipeJoe = CreateRecipe(1783, 100);
             var productionJoeJobData = CreateProductionJob("Joe Dalton", recipeJoe).Object;
             var schedulableLinkedList = new LinkedList<IJobData>(new List<IJobData> { productionJoeJobData });
             _jobList.Add(productionJoeJobData);
-            var recipeAverell = CreateRecipe(1784, 100).Object;
+            var recipeAverell = CreateRecipe(1784, 100);
             var productionAverellJobData = CreateProductionJob("Averell Dalton", recipeAverell).Object;
             _jobList.Add(productionAverellJobData);
 
@@ -315,18 +315,18 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
         public void ContinueHandlingOfOtherJobsAfterException()
         {
             // Arrange
-            _providerMock.Setup(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.Is<IProductionRecipe>(r => r.Id == 1783), It.IsAny<ISetupTarget>()))
+            _providerMock.Setup(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.Is<ProductionRecipe>(r => r.Id == 1783), It.IsAny<ISetupTarget>()))
                 .Throws<Exception>();
-            _providerMock.Setup(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.Is<IProductionRecipe>(r => r.Id == 1784), It.IsAny<ISetupTarget>()))
-                .Returns<SetupExecution, IProductionRecipe, ISetupTarget>(ProvideSetup);
+            _providerMock.Setup(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.Is<ProductionRecipe>(r => r.Id == 1784), It.IsAny<ISetupTarget>()))
+                .Returns<SetupExecution, ProductionRecipe, ISetupTarget>(ProvideSetup);
             var manager = CreateSetupManager();
 
-            var recipeJoe = CreateRecipe(1783, 100).Object;
+            var recipeJoe = CreateRecipe(1783, 100);
             var productionJoeJobDataMock = CreateProductionJob("Joe Dalton", recipeJoe);
             var productionJoeJobData = productionJoeJobDataMock.Object;
             var schedulableLinkedList = new LinkedList<IJobData>(new List<IJobData> { productionJoeJobData });
             _jobList.Add(productionJoeJobData);
-            var recipeAverell = CreateRecipe(1784, 100).Object;
+            var recipeAverell = CreateRecipe(1784, 100);
             var productionAverellJobDataMock = CreateProductionJob("Averell Dalton", recipeAverell);
             var productionAverellJobData = productionAverellJobDataMock.Object;
             _jobList.Add(productionAverellJobData);
@@ -340,7 +340,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             // Joe Dalton
             productionJoeJobDataMock.Verify(j => j.Interrupt(), Times.Once(), "The job for which no setup could be created should be interrupted");
 
-            // Averell Dalton 
+            // Averell Dalton
             Assert.That(schedulableLinkedList.Count, Is.EqualTo(3), "The job for which no clean up could be created should be removed and for " +
                 "the other clean up and prepare should be created");
             // Prepare Setup Job.
@@ -358,14 +358,14 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
         public void TwoJobsSameRecipeNoDoubleRecipe()
         {
             // Arrange
-            SetupJobHandler manager = CreateSetupManager();
+            var manager = CreateSetupManager();
 
-            var recipe = CreateRecipe(1783, 42).Object;
+            var recipe = CreateRecipe(1783, 42);
             var productionJackJobData = CreateProductionJob("Jack Dalton", recipe).Object;
             var productionWilliamJobData = CreateProductionJob("William Dalton", recipe).Object;
             _jobList.Add(productionJackJobData);
             _jobList.Add(productionWilliamJobData);
-            LinkedList<IJobData> schedulableLinkedList = new LinkedList<IJobData>(_jobList);
+            var schedulableLinkedList = new LinkedList<IJobData>(_jobList);
 
             // Act - Pass jobs to setup manager
             manager.Handle(schedulableLinkedList);
@@ -381,18 +381,18 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
         public void TwoJobsSameRecipeOnlyOneHandledOnException()
         {
             // Arrange
-            _providerMock.Setup(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.IsAny<IProductionRecipe>(), It.IsAny<ISetupTarget>()))
+            _providerMock.Setup(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.IsAny<ProductionRecipe>(), It.IsAny<ISetupTarget>()))
                 .Throws(() => new Exception());
             var manager = CreateSetupManager();
 
-            var recipe = CreateRecipe(1783, 42).Object;
+            var recipe = CreateRecipe(1783, 42);
             var productionJackJobDataMock = CreateProductionJob("Jack Dalton", recipe);
             var productionJackJobData = productionJackJobDataMock.Object;
             var productionWilliamJobDataMock = CreateProductionJob("William Dalton", recipe);
             var productionWilliamJobData = productionWilliamJobDataMock.Object;
             _jobList.Add(productionJackJobData);
             _jobList.Add(productionWilliamJobData);
-            LinkedList<IJobData> schedulableLinkedList = new LinkedList<IJobData>(_jobList);
+            var schedulableLinkedList = new LinkedList<IJobData>(_jobList);
 
             // Act - Pass jobs to setup manager
             manager.Handle(schedulableLinkedList);
@@ -404,7 +404,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
                 $"The job {nameof(productionJackJobData)} for which no setup could be created should be interrupted");
             productionWilliamJobDataMock.Verify(j => j.Interrupt(), Times.Once(),
                 $"The job {nameof(productionWilliamJobData)} for which no setup could be created should be interrupted");
-            _providerMock.Verify(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.IsAny<IProductionRecipe>(), It.IsAny<ISetupTarget>()), Times.Once,
+            _providerMock.Verify(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.IsAny<ProductionRecipe>(), It.IsAny<ISetupTarget>()), Times.Once,
                 "After a job with a recipe caused an exception in the setup provider no other job of that recipe should be handled.");
         }
 
@@ -427,19 +427,19 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
 
         private static IEnumerable<TestCaseData> SchedulableJobs()
         {
-            var recipe = CreateRecipe(1783, 42).Object;
+            var recipe = CreateRecipe(1783, 42);
             var productionJackJobData = CreateProductionJob("Jack Dalton", recipe, JobClassification.Waiting).Object;
             var productionWilliamJobData = CreateProductionJob("William Dalton", recipe, JobClassification.Idle).Object;
             var jobs = new List<IJobData> { productionJackJobData, productionWilliamJobData };
 
-            bool[] _setupsMap = [true, false, false];
-            bool[] _cleanupsMap = [false, false, true];
-            yield return new TestCaseData(jobs, new LinkedList<IJobData>([productionJackJobData]), _setupsMap, _cleanupsMap)
+            bool[] setupsMap = [true, false, false];
+            bool[] cleanupsMap = [false, false, true];
+            yield return new TestCaseData(jobs, new LinkedList<IJobData>([productionJackJobData]), setupsMap, cleanupsMap)
                 .SetDescription("A job should get a clean-up, even if the next one has the same recipe but is not schedulable");
 
-            _setupsMap = [true, false, false, false];
-            _cleanupsMap = [false, false, false, true];
-            yield return new TestCaseData(jobs, new LinkedList<IJobData>(jobs), _setupsMap, _cleanupsMap)
+            setupsMap = [true, false, false, false];
+            cleanupsMap = [false, false, false, true];
+            yield return new TestCaseData(jobs, new LinkedList<IJobData>(jobs), setupsMap, cleanupsMap)
                 .SetDescription("A job should not get a clean-up, if the next one has the same recipe but and is schedulable");
         }
 
@@ -449,7 +449,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             // Arrange
             var manager = CreateSetupManager();
 
-            var recipe = CreateRecipe(1783, 42).Object;
+            var recipe = CreateRecipe(1783, 42);
             var productionJackJobData = CreateProductionJob("Jack Dalton", recipe).Object;
 
             var schedulableLinkedList = new LinkedList<IJobData>(new List<IJobData> { productionJackJobData });
@@ -476,7 +476,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
         {
             // Arrange
             var manager = CreateSetupManager();
-            var recipe = CreateRecipe(1783, 42).Object;
+            var recipe = CreateRecipe(1783, 42);
             var jobData = CreateProductionJob("Ran-Tan-Plan", recipe).Object;
 
             var schedulableLinkedList = new LinkedList<IJobData>(new List<IJobData> { jobData });
@@ -484,9 +484,9 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
 
             _setupJobs[0].SetupGet(r => r.RecipeRequired).Returns(failed);
 
-            ISetupRecipe newCreatedRecipe = null;
-            _setupJobs[0].Setup(s => s.UpdateSetup(It.IsAny<ISetupRecipe>()))
-                .Callback((ISetupRecipe newRecipe) => { newCreatedRecipe = newRecipe; });
+            SetupRecipe newCreatedRecipe = null;
+            _setupJobs[0].Setup(s => s.UpdateSetup(It.IsAny<SetupRecipe>()))
+                .Callback((SetupRecipe newRecipe) => { newCreatedRecipe = newRecipe; });
 
             manager.Start();
 
@@ -499,13 +499,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             // Assert
             if (failed)
             {
-                _setupJobs[0].Verify(s => s.UpdateSetup(It.IsAny<ISetupRecipe>()), Times.Once);
+                _setupJobs[0].Verify(s => s.UpdateSetup(It.IsAny<SetupRecipe>()), Times.Once);
                 Assert.That(newCreatedRecipe, Is.Not.Null);
                 Assert.That(newCreatedRecipe.SetupClassification, Is.EqualTo(SetupClassification.Unspecified));
             }
             else
             {
-                _setupJobs[0].Verify(s => s.UpdateSetup(It.IsAny<ISetupRecipe>()), Times.Never);
+                _setupJobs[0].Verify(s => s.UpdateSetup(It.IsAny<SetupRecipe>()), Times.Never);
                 Assert.That(newCreatedRecipe, Is.Null);
             }
         }
@@ -521,7 +521,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             if (!hasPrepare)
                 AdjustCurrentResourceCapabilities(42);
             var recipe = CreateRecipe(1783, 42);
-            var jobData = CreateProductionJob("Ran-Tan-Plan", recipe.Object);
+            var jobData = CreateProductionJob("Ran-Tan-Plan", recipe);
             _jobList.Add(jobData.Object);
 
             manager.Start();
@@ -557,7 +557,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
 
             // Assert
             if (needsCleanup)
-                _setupJobs[hasPrepare ? 1 : 0].Verify(j => j.UpdateSetup(It.IsNotNull<ISetupRecipe>()), Times.Once);
+                _setupJobs[hasPrepare ? 1 : 0].Verify(j => j.UpdateSetup(It.IsNotNull<SetupRecipe>()), Times.Once);
             else
                 _setupJobs[hasPrepare ? 1 : 0].Verify(j => j.UpdateSetup(null), Times.Once);
             if (hasPrepare)
@@ -570,7 +570,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             // Arrange
             var manager = CreateSetupManager();
             var recipe = CreateRecipe(1787, 42);
-            var jobData = CreateProductionJob("Completing", recipe.Object);
+            var jobData = CreateProductionJob("Completing", recipe);
             _jobList.Add(jobData.Object);
 
             manager.Start();
@@ -583,7 +583,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             jobData.SetupGet(j => j.Classification).Returns(JobClassification.Completing);
 
             // Replacement job AFTER the clean-up
-            var replaceScrap = CreateProductionJob("Completing", recipe.Object);
+            var replaceScrap = CreateProductionJob("Completing", recipe);
             _jobList.Add(replaceScrap.Object);
 
             // Act
@@ -600,7 +600,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             // Arrange
             var manager = CreateSetupManager();
             var recipe = CreateRecipe(1787, 42);
-            var jobData = CreateProductionJob("Completing", recipe.Object);
+            var jobData = CreateProductionJob("Completing", recipe);
 
             manager.Start();
 
@@ -611,7 +611,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
             _jobList.Add(linkedList.Last.Value);
 
             // Replacement job BEFORE the clean-up
-            var replaceScrap = CreateProductionJob("Replacement", recipe.Object);
+            var replaceScrap = CreateProductionJob("Replacement", recipe);
             _jobList.Insert(0, replaceScrap.Object);
 
             // Act
@@ -654,18 +654,17 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
         }
 
         /// <summary>
-        /// Creates an <see cref="IProductRecipe"/>. The implementation also implements <see cref="ITestRecipe"/>
-        /// for special test handling
+        /// Creates an <see cref="TestRecipe"/> for special test handling
         /// </summary>
-        private static Mock<IProductionRecipe> CreateRecipe(long id, int state)
+        private static TestRecipe CreateRecipe(long id, int state)
         {
-            var productRecipeMock = new Mock<IProductionRecipe>();
-            productRecipeMock.SetupGet(r => r.Id).Returns(id);
+            var recipe = new TestRecipe
+            {
+                Id = id,
+                SetupState = state
+            };
 
-            var testRecipeMock = productRecipeMock.As<ITestRecipe>();
-            testRecipeMock.SetupGet(s => s.SetupState).Returns(state);
-
-            return productRecipeMock;
+            return recipe;
         }
 
         /// <summary>
@@ -674,9 +673,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
         /// <param name="name">name of the JobData to identify it.</param>
         /// <param name="recipe">The Recipe which should be assigned.</param>
         /// <returns>A new <see cref="IProductionJobData"/></returns>
-        private static Mock<IProductionJobData> CreateProductionJob(string name, IProductionRecipe recipe, JobClassification classification = JobClassification.Waiting)
+        private static Mock<IProductionJobData> CreateProductionJob(string name, TestRecipe recipe, JobClassification classification = JobClassification.Waiting)
         {
-            var dependenciesList = new List<IJobData>();
             var productionJobData = new Mock<IProductionJobData> { Name = name };
             productionJobData.SetupGet(j => j.Classification).Returns(classification);
             productionJobData.SetupGet(r => r.Recipe).Returns(recipe);
@@ -711,7 +709,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
 
             if (setupClassification != null)
             {
-                Assert.That(((ISetupRecipe)currentNode.Value.Recipe).SetupClassification, Is.EqualTo(setupClassification), $"The Recipe is not {setupClassification}.");
+                Assert.That(((SetupRecipe)currentNode.Value.Recipe).SetupClassification, Is.EqualTo(setupClassification), $"The Recipe is not {setupClassification}.");
             }
             Assert.That(matchingJob, Is.EqualTo(currentNode.Value), "The Job at this position is not the one we thought it is.");
 

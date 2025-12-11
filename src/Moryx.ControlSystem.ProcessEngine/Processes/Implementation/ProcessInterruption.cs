@@ -13,7 +13,7 @@ using ProcessContext = Moryx.ControlSystem.ProcessEngine.Model.ProcessContext;
 namespace Moryx.ControlSystem.ProcessEngine.Processes
 {
     /// <summary>
-    /// This pool listener waits till all <see cref="IActivity"/> of a <see cref="IProcess"/> in state
+    /// This pool listener waits till all <see cref="Activity"/> of a <see cref="Process"/> in state
     /// <see cref="ProcessState.Stopping"/> have completed and then sets the state to <see cref="ProcessState.Interrupted"/>.
     /// </summary>
     [Component(LifeCycle.Singleton, typeof(IActivityPoolListener))]

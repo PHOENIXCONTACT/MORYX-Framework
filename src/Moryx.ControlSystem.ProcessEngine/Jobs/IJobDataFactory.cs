@@ -35,17 +35,17 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
         public IProductionJobData Create(JobTemplate template)
         {
-            return Create<IProductionJobData>((IProductionRecipe)template.Recipe, (int)template.Amount);
+            return Create<IProductionJobData>((ProductionRecipe)template.Recipe, (int)template.Amount);
         }
 
         public IJobData Create(IWorkplanRecipe recipe, int amount)
         {
             IJobData jobData = null;
 
-            if (recipe is IProductionRecipe)
+            if (recipe is ProductionRecipe)
                 jobData = InternalFactory.CreateProductionJob(recipe, amount);
 
-            if (recipe is ISetupRecipe)
+            if (recipe is SetupRecipe)
                 jobData = InternalFactory.CreateSetupJob(recipe);
 
             ValidateCreatedJob(jobData, recipe);
@@ -57,10 +57,10 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         {
             IJobData jobData = null;
 
-            if (recipe is IProductionRecipe)
+            if (recipe is ProductionRecipe)
                 jobData = InternalFactory.CreateProductionJob(recipe, entity);
 
-            if (recipe is ISetupRecipe)
+            if (recipe is SetupRecipe)
                 jobData = InternalFactory.CreateSetupJob(recipe, entity);
 
             ValidateCreatedJob(jobData, recipe);

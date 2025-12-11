@@ -87,7 +87,7 @@ namespace Moryx.Resources.Benchmarking
         }
 
         /// <inheritdoc />
-        public override void ProcessAborting(IActivity affectedActivity)
+        public override void ProcessAborting(Activity affectedActivity)
         {
             VisualInstructor.Clear(_instructionId);
             CompleteActivity(1, _currentSession);
