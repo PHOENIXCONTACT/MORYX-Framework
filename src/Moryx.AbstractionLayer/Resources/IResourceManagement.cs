@@ -91,7 +91,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// Because the returned objects are the originals, the API consumer is responsible for keeping and watching the life-cycle.
         /// Use with extreme caution. Do not keep the instance in memory for later usage.
         /// </remarks>
-        Task<long> CreateUnsafeAsync(Type resourceType, Func<Resource, Task> initializer);
+        Task<long> CreateUnsafeAsync(Type resourceType, Func<Resource, Task> initializer, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Read data from a resource
@@ -114,6 +114,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// </summary>
         /// <param name="id">Id of the resource</param>
         /// <param name="modifier">Modifier delegate, must return <value>true</value> in order to save changes</param>
+        /// <param name="cancellationToken"></param>
         /// <remarks>
         /// The <param name="modifier"></param> action uses the actual resource instance, not wrapped by proxy.
         /// As a result, all internal members, including properties and
@@ -125,22 +126,22 @@ namespace Moryx.AbstractionLayer.Resources
         /// Because the returned objects are the originals, the API consumer is responsible for keeping and watching the life-cycle.
         /// Use with extreme caution. Do not keep the instance in memory for later usage.
         /// </remarks>
-        Task ModifyUnsafeAsync(long id, Func<Resource, Task<bool>> modifier);
+        Task ModifyUnsafeAsync(long id, Func<Resource, Task<bool>> modifier, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Create and initialize a resource
         /// </summary>
-        Task<bool> DeleteAsync(long id);
+        Task<bool> DeleteAsync(long id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Executes a preconfigured initializer with the given configuration
         /// </summary>
-        Task ExecuteInitializerAsync(string initializerName, object parameters);
+        Task ExecuteInitializerAsync(string initializerName, object parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Executes a resource initializer with the given configuration
         /// </summary>
-        Task ExecuteInitializerAsync(ResourceInitializerConfig initializerConfig, object parameters);
+        Task ExecuteInitializerAsync(ResourceInitializerConfig initializerConfig, object parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Event raised when a resource was added at runtime

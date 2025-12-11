@@ -70,16 +70,16 @@ namespace Moryx.AbstractionLayer.Resources
         /// <summary>
         /// Write changes on this object to the database
         /// </summary>
-        Task SaveAsync(IResource resource);
+        Task SaveAsync(IResource resource, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Remove resource, but only flag it deleted
         /// </summary>
-        Task<bool> DestroyAsync(IResource resource);
+        Task<bool> DestroyAsync(IResource resource, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Remove a resource permanently and irreversible
         /// </summary>
-        Task<bool> DestroyAsync(IResource resource, bool permanent);
+        Task<bool> DestroyAsync(IResource resource, bool permanent, CancellationToken cancellationToken = default);
     }
 }

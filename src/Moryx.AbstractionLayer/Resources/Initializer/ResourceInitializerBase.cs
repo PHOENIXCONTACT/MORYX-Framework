@@ -61,7 +61,7 @@ namespace Moryx.AbstractionLayer.Resources
         }
 
         /// <inheritdoc />
-        public abstract Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters);
+        public abstract Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Creates an <see cref="ResourceInitializerResult"/> within a completed task
