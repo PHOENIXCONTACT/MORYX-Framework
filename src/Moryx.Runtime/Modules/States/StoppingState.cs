@@ -10,7 +10,7 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        protected override async Task OnStopping()
+        protected override async Task OnStopping(CancellationToken cancellationToken)
         {
             try
             {
@@ -19,7 +19,7 @@ namespace Moryx.Runtime.Modules
             catch (Exception ex)
             {
                 Context.ReportError(ex);
-                await NextStateAsync(StateRunningFailure);
+                await NextStateAsync(StateRunningFailure, cancellationToken);
             }
         }
     }
@@ -31,7 +31,7 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        protected override Task OnStopping()
+        protected override Task OnStopping(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
@@ -46,24 +46,24 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        public override async Task OnEnterAsync()
+        public override async Task OnEnterAsync(CancellationToken cancellationToken)
         {
-            await OnStopping();
+            await OnStopping(cancellationToken);
 
             try
             {
                 // Regardless of the previous state we need to destruct the container
                 Context.Destruct();
-                await NextStateAsync(StateStopped);
+                await NextStateAsync(StateStopped, cancellationToken);
             }
             catch (Exception ex)
             {
                 Context.ReportError(ex);
-                await NextStateAsync(StateInitializedFailure);
+                await NextStateAsync(StateInitializedFailure, cancellationToken);
             }
         }
 
-        protected abstract Task OnStopping();
+        protected abstract Task OnStopping(CancellationToken cancellationToken);
 
         public override Task Initialize()
         {

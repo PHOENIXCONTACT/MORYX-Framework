@@ -22,12 +22,12 @@ namespace Moryx.AbstractionLayer.Drivers
             OnStateChanged();
         }
 
-        Task IAsyncStateContext.SetStateAsync(StateBase state)
+        Task IAsyncStateContext.SetStateAsync(StateBase state, CancellationToken cancellationToken)
         {
             CurrentState = (IDriverState)state;
             StateChanged?.Invoke(this, CurrentState);
 
-            return OnStateChangedAsync();
+            return OnStateChangedAsync(cancellationToken);
         }
 
         /// <summary>
@@ -40,7 +40,8 @@ namespace Moryx.AbstractionLayer.Drivers
         /// <summary>
         /// Will be called after the state change when <see cref="AsyncStateBase"/> is used
         /// </summary>
-        protected virtual Task OnStateChangedAsync()
+        /// <param name="cancellationToken"></param>
+        protected virtual Task OnStateChangedAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

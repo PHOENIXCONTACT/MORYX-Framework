@@ -11,5 +11,5 @@ public interface IAsyncStateContext
     /// <summary>
     /// Update state on context
     /// </summary>
-    Task SetStateAsync(StateBase state);
+    Task SetStateAsync(StateBase state, CancellationToken cancellationToken);
 }

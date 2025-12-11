@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Moryx.Tests.AsyncTestMachine
@@ -11,7 +12,7 @@ namespace Moryx.Tests.AsyncTestMachine
         {
         }
 
-        public override Task OnEnterAsync()
+        public override Task OnEnterAsync(CancellationToken cancellationToken)
         {
             Context.AEntered = true;
             return Task.CompletedTask;

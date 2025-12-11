@@ -11,7 +11,7 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        public override async Task OnEnterAsync()
+        public override async Task OnEnterAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -20,7 +20,7 @@ namespace Moryx.Runtime.Modules
             catch (Exception ex)
             {
                 Context.ReportError(ex);
-                await NextStateAsync(StateRunningFailure);
+                await NextStateAsync(StateRunningFailure, cancellationToken);
             }
         }
 

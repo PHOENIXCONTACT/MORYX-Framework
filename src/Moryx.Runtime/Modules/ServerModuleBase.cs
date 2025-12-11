@@ -280,7 +280,7 @@ namespace Moryx.Runtime.Modules
 
         private readonly SemaphoreSlim _stateLockSemaphore = new(1, 1);
 
-        Task IAsyncStateContext.SetStateAsync(StateBase state)
+        Task IAsyncStateContext.SetStateAsync(StateBase state, CancellationToken cancellationToken)
         {
             var oldState = _state?.Classification ?? ServerModuleState.Stopped;
 

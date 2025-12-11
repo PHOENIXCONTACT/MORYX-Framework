@@ -12,17 +12,17 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        public override async Task OnEnterAsync()
+        public override async Task OnEnterAsync(CancellationToken cancellationToken)
         {
             try
             {
                 await Context.StartAsync();
-                await NextStateAsync(StateRunning);
+                await NextStateAsync(StateRunning, cancellationToken);
             }
             catch (Exception ex)
             {
                 Context.ReportError(ex);
-                await NextStateAsync(StateRunningFailure);
+                await NextStateAsync(StateRunningFailure, cancellationToken);
             }
         }
 

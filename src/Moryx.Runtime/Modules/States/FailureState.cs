@@ -45,7 +45,7 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        public override async Task OnEnterAsync()
+        public override async Task OnEnterAsync(CancellationToken cancellationToken)
         {
             await OnFailure();
 

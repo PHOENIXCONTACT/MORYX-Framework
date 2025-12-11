@@ -32,13 +32,13 @@ namespace Moryx.Orders.Management
         {
         }
 
-        public override Task OnEnterAsync()
+        public override Task OnEnterAsync(CancellationToken cancellationToken)
         {
             Context.ShowAmountReachedNotification();
             return Task.CompletedTask;
         }
 
-        public override Task OnExitAsync()
+        public override Task OnExitAsync(CancellationToken cancellationToken)
         {
             Context.AcknowledgeAmountReachedNotification();
             return Task.CompletedTask;

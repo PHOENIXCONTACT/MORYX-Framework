@@ -59,7 +59,7 @@ namespace Moryx.Orders.Management
             _jobs = [];
         }
 
-        async Task IAsyncStateContext.SetStateAsync(StateBase state)
+        async Task IAsyncStateContext.SetStateAsync(StateBase state, CancellationToken cancellationToken)
         {
             // ReSharper disable InconsistentlySynchronizedField
             _state = (OperationDataStateBase)state;
