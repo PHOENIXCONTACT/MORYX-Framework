@@ -134,7 +134,7 @@ namespace Moryx.Orders.Management
             return filtered.Select(o => o.Operation).ToArray();
         }
 
-        public async Task<Operation> GetOperationAsync(string orderNumber, string operationNumber)
+        public async Task<Operation> GetOperationAsync(string orderNumber, string operationNumber, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
@@ -142,7 +142,7 @@ namespace Moryx.Orders.Management
             return operationData?.Operation;
         }
 
-        public async Task<Operation> GetOperationAsync(Guid identifier)
+        public async Task<Operation> GetOperationAsync(Guid identifier, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
@@ -150,12 +150,12 @@ namespace Moryx.Orders.Management
             return operationData?.Operation;
         }
 
-        public Task<Operation> AddOperationAsync(OperationCreationContext context)
+        public Task<Operation> AddOperationAsync(OperationCreationContext context, CancellationToken cancellationToken = default)
         {
-            return AddOperationAsync(context, new NullOperationSource());
+            return AddOperationAsync(context, new NullOperationSource(), cancellationToken);
         }
 
-        public async Task<Operation> AddOperationAsync(OperationCreationContext context, IOperationSource source)
+        public async Task<Operation> AddOperationAsync(OperationCreationContext context, IOperationSource source, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
@@ -189,12 +189,12 @@ namespace Moryx.Orders.Management
             return OperationManager.GetBeginContext(operationData);
         }
 
-        public Task BeginOperationAsync(Operation operation, int amount)
+        public Task BeginOperationAsync(Operation operation, int amount, CancellationToken cancellationToken = default)
         {
-            return BeginOperationAsync(operation, amount, UserManagement.DefaultUser);
+            return BeginOperationAsync(operation, amount, UserManagement.DefaultUser, cancellationToken);
         }
 
-        public Task BeginOperationAsync(Operation operation, int amount, User user)
+        public Task BeginOperationAsync(Operation operation, int amount, User user, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
@@ -202,7 +202,7 @@ namespace Moryx.Orders.Management
             return OperationManager.Adjust(operationData, user, amount);
         }
 
-        public Task AbortOperationAsync(Operation operation)
+        public Task AbortOperationAsync(Operation operation, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
@@ -210,7 +210,7 @@ namespace Moryx.Orders.Management
             return OperationManager.Abort(operationData);
         }
 
-        public Task SetOperationSortOrderAsync(int sortOrder, Operation operation)
+        public Task SetOperationSortOrderAsync(int sortOrder, Operation operation, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
@@ -218,7 +218,7 @@ namespace Moryx.Orders.Management
             return operationData.SetSortOrder(sortOrder);
         }
 
-        public Task UpdateSourceAsync(IOperationSource source, Operation operation)
+        public Task UpdateSourceAsync(IOperationSource source, Operation operation, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
@@ -238,7 +238,7 @@ namespace Moryx.Orders.Management
             return reportContext;
         }
 
-        public Task ReportOperationAsync(Operation operation, OperationReport report)
+        public Task ReportOperationAsync(Operation operation, OperationReport report, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
@@ -257,7 +257,7 @@ namespace Moryx.Orders.Management
             return OperationManager.GetInterruptContext(operationData);
         }
 
-        public Task InterruptOperationAsync(Operation operation, User user)
+        public Task InterruptOperationAsync(Operation operation, User user, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
@@ -277,7 +277,7 @@ namespace Moryx.Orders.Management
             return operationData;
         }
 
-        public Task ReloadAsync(Operation operation)
+        public Task ReloadAsync(Operation operation, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
@@ -292,7 +292,7 @@ namespace Moryx.Orders.Management
             return operationData.GetAdviceContext();
         }
 
-        public async Task<AdviceResult> TryAdviceAsync(Operation operation, OperationAdvice advice)
+        public async Task<AdviceResult> TryAdviceAsync(Operation operation, OperationAdvice advice, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
@@ -321,11 +321,11 @@ namespace Moryx.Orders.Management
             return operationLogger.Messages;
         }
 
-        public Task<IReadOnlyList<IProductRecipe>> GetAssignableRecipesAsync(ProductIdentity identity)
+        public Task<IReadOnlyList<IProductRecipe>> GetAssignableRecipesAsync(ProductIdentity identity, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
-            return RecipeAssignment.PossibleRecipesAsync(identity);
+            return RecipeAssignment.PossibleRecipesAsync(identity, cancellationToken);
         }
 
         public event EventHandler<OperationStartedEventArgs> OperationStarted;

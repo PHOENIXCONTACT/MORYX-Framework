@@ -41,7 +41,8 @@ namespace Moryx.Orders.Management.Assignment
         /// Will be called while creating an operation to load the part list for
         /// the new operation from the <see cref="ProductType"/> itself.
         /// </summary>
-        public Task<IReadOnlyList<ProductPart>> LoadPartsAsync(Operation operation, IOperationLogger operationLogger)
+        public Task<IReadOnlyList<ProductPart>> LoadPartsAsync(Operation operation, IOperationLogger operationLogger,
+            CancellationToken cancellationToken = default)
         {
             if (operation.Product is null)
             {

@@ -80,13 +80,13 @@ namespace Moryx.Orders.Management.Assignment
             processed.ForEach(r => ProductManagement.SaveRecipeAsync(r));
 
             // Add processed to operation
-            operationData.AssignRecipes(processed);
+            await operationData.AssignRecipes(processed);
 
             return true;
         }
 
         /// <inheritdoc />
-        public Task<bool> RestoreStep(IOperationData operationData, IOperationLogger operationLogger)
+        public async Task<bool> RestoreStep(IOperationData operationData, IOperationLogger operationLogger)
         {
             var operation = operationData.Operation;
 
@@ -94,8 +94,9 @@ namespace Moryx.Orders.Management.Assignment
             if (operation.Recipes.All(r => r is RecipeReference))
             {
                 // Existing recipe -> restore
-                var restored = operation.Recipes.Select(reference => (IProductRecipe)ProductManagement.LoadRecipeAsync(reference.Id))
-                    .ToArray();
+                var recipeTasks = operation.Recipes.Select(reference => ProductManagement.LoadRecipeAsync(reference.Id));
+                var restored = (await Task.WhenAll(recipeTasks))
+                    .Cast<IProductRecipe>().ToArray();
 
                 // Clear references
                 operation.Recipes.Clear();
@@ -103,12 +104,12 @@ namespace Moryx.Orders.Management.Assignment
                 // Add restored
                 operation.Recipes.AddRange(restored);
 
-                return Task.FromResult(true);
+                return true;
             }
 
             operationLogger.Log(LogLevel.Error, Strings.RecipeAssignStep_Restore_Failed);
 
-            return Task.FromResult(false);
+            return false;
         }
 
         /// <summary>

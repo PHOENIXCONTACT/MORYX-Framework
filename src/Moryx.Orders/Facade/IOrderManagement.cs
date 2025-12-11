@@ -21,22 +21,22 @@ namespace Moryx.Orders
         /// <summary>
         /// Will return the operation with the given identifier
         /// </summary>
-        Task<Operation> GetOperationAsync(Guid identifier);
+        Task<Operation> GetOperationAsync(Guid identifier, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Will return the operation with the given order and operation numbers
         /// </summary>
-        Task<Operation> GetOperationAsync(string orderNumber, string operationNumber);
+        Task<Operation> GetOperationAsync(string orderNumber, string operationNumber, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Will add a new operation to the pool.
         /// </summary>
-        Task<Operation> AddOperationAsync(OperationCreationContext context);
+        Task<Operation> AddOperationAsync(OperationCreationContext context, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Will add a new operation to the pool.
         /// </summary>
-        Task<Operation> AddOperationAsync(OperationCreationContext context, IOperationSource source);
+        Task<Operation> AddOperationAsync(OperationCreationContext context, IOperationSource source, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns a report context of the given operation
@@ -46,23 +46,24 @@ namespace Moryx.Orders
         /// <summary>
         /// Begins the given operation
         /// </summary>
-        Task BeginOperationAsync(Operation operation, int amount);
+        Task BeginOperationAsync(Operation operation, int amount, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Begins the given operation
         /// </summary>
-        Task BeginOperationAsync(Operation operation, int amount, User user);
+        Task BeginOperationAsync(Operation operation, int amount, User user, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Aborts the given operation if it was not started before
         /// </summary>
         /// <param name="operation"></param>
-        Task AbortOperationAsync(Operation operation);
+        /// <param name="cancellationToken"></param>
+        Task AbortOperationAsync(Operation operation, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Sets the sort order of the given operation
         /// </summary>
-        Task SetOperationSortOrderAsync(int sortOrder, Operation operation);
+        Task SetOperationSortOrderAsync(int sortOrder, Operation operation, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns a report context of the given operation
@@ -72,7 +73,7 @@ namespace Moryx.Orders
         /// <summary>
         /// Processes a report for the given operation
         /// </summary>
-        Task ReportOperationAsync(Operation operation, OperationReport report);
+        Task ReportOperationAsync(Operation operation, OperationReport report, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns a report context of the given operation to interrupt the operation
@@ -82,12 +83,12 @@ namespace Moryx.Orders
         /// <summary>
         /// Processes a interrupt for the given operation
         /// </summary>
-        Task InterruptOperationAsync(Operation operation, User user);
+        Task InterruptOperationAsync(Operation operation, User user, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Updates the operation source
         /// </summary>
-        Task UpdateSourceAsync(IOperationSource source, Operation operation);
+        Task UpdateSourceAsync(IOperationSource source, Operation operation, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Will be raised if the progress of an operation was changed
@@ -138,7 +139,8 @@ namespace Moryx.Orders
         /// Assigns or updates operation related information like the corresponding product or recipes on the existing operation instance.
         /// </summary>
         /// <param name="operation">The <see cref="Operation"/> assign.</param>
-        Task ReloadAsync(Operation operation);
+        /// <param name="cancellationToken"></param>
+        Task ReloadAsync(Operation operation, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns an <see cref="AdviceContext"/> of the given <paramref name="operation"/> to advice the operation
@@ -151,7 +153,7 @@ namespace Moryx.Orders
         /// </summary>
         /// <param name="operation">The <see cref="Operation"/> to advice.</param>
         /// <param name="advice">The <see cref="OperationAdvice"/> to apply on the <see cref="Operation"/>.</param>
-        Task<AdviceResult> TryAdviceAsync(Operation operation, OperationAdvice advice);
+        Task<AdviceResult> TryAdviceAsync(Operation operation, OperationAdvice advice, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns an array of <see cref="OperationLogMessage"/>s corresponding to the operation.
@@ -162,6 +164,6 @@ namespace Moryx.Orders
         /// <summary>
         /// Returns a set of recipes this OrderManagement can assign to an Operation corresponding to the <paramref name="identity"/>.
         /// </summary>
-        Task<IReadOnlyList<IProductRecipe>> GetAssignableRecipesAsync(ProductIdentity identity);
+        Task<IReadOnlyList<IProductRecipe>> GetAssignableRecipesAsync(ProductIdentity identity, CancellationToken cancellationToken = default);
     }
 }

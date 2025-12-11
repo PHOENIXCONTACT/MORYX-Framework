@@ -51,25 +51,27 @@ namespace Moryx.Orders.Assignment
         }
 
         /// <inheritdoc />
-        public virtual async Task<IReadOnlyList<IProductRecipe>> PossibleRecipesAsync(ProductIdentity identity)
+        public virtual async Task<IReadOnlyList<IProductRecipe>> PossibleRecipesAsync(ProductIdentity identity, CancellationToken cancellationToken = default)
         {
-            var product = await ProductManagement.LoadTypeAsync(identity);
+            var product = await ProductManagement.LoadTypeAsync(identity, cancellationToken);
             if (product == null)
                 return Array.Empty<IProductRecipe>();
 
-            var recipes = await ProductManagement.GetRecipesAsync(product, RecipeClassification.Default | RecipeClassification.Alternative);
+            var recipes = await ProductManagement.GetRecipesAsync(product, RecipeClassification.Default | RecipeClassification.Alternative, cancellationToken);
             return recipes;
         }
 
         /// <summary>
         /// Select a recipe for the current operation
         /// </summary>
-        public abstract Task<IReadOnlyList<IProductRecipe>> SelectRecipesAsync(Operation operation, IOperationLogger operationLogger);
+        public abstract Task<IReadOnlyList<IProductRecipe>> SelectRecipesAsync(Operation operation, IOperationLogger operationLogger,
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Assigns the recipe to the operation
         /// </summary>
-        public abstract Task<bool> ProcessRecipeAsync(IProductRecipe clone, Operation operation, IOperationLogger operationLogger);
+        public abstract Task<bool> ProcessRecipeAsync(IProductRecipe clone, Operation operation, IOperationLogger operationLogger,
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Default implementation to assign the current recipe to the operation

@@ -262,10 +262,10 @@ namespace Moryx.Orders.Management
         IReadOnlyList<Operation> IOperationPool.GetAll(Func<Operation, bool> filter) =>
             GetAll(data => filter(data.Operation)).Select(data => data.Operation).ToArray();
 
-        async Task<Operation> IOperationPool.GetAsync(Guid identifier) =>
+        async Task<Operation> IOperationPool.GetAsync(Guid identifier, CancellationToken cancellationToken = default) =>
             (await Get(identifier))?.Operation;
 
-        async Task<Operation> IOperationPool.GetAsync(string orderNumber, string operationNumber) =>
+        async Task<Operation> IOperationPool.GetAsync(string orderNumber, string operationNumber, CancellationToken cancellationToken = default) =>
             (await Get(orderNumber, operationNumber))?.Operation;
 
         IReadOnlyList<Order> IOperationPool.GetOrders() =>

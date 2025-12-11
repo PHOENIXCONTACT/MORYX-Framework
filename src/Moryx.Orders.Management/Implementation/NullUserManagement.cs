@@ -5,7 +5,6 @@ using Moryx.Users;
 
 namespace Moryx.Orders.Management
 {
-
     internal class NullUserManagement : IUserManagement
     {
         public IReadOnlyList<User> Users { get; } = Array.Empty<User>();

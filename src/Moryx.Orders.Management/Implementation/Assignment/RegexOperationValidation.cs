@@ -47,7 +47,7 @@ namespace Moryx.Orders.Management.Assignment
         }
 
         /// <inheritdoc />
-        public Task<bool> ValidateAsync(Operation operation, IOperationLogger operationLogger)
+        public Task<bool> ValidateAsync(Operation operation, IOperationLogger operationLogger, CancellationToken cancellationToken = default)
         {
             var numberResult = ValidateOperationNumber(operation.Number);
             var amountResult = ValidateOperationAmount(operation.TotalAmount);
@@ -69,7 +69,7 @@ namespace Moryx.Orders.Management.Assignment
         }
 
         /// <inheritdoc />
-        public virtual Task<bool> ValidateCreationContextAsync(OrderCreationContext orderContext)
+        public virtual Task<bool> ValidateCreationContextAsync(OrderCreationContext orderContext, CancellationToken cancellationToken = default)
         {
             foreach (var operation in orderContext.Operations)
             {
