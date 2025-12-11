@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.ObjectModel;
+using Moryx.Serialization;
 
 namespace Moryx.Tools
 {

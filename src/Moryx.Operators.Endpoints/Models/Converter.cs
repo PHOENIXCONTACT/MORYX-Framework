@@ -53,7 +53,7 @@ internal static class Converter
 
         // Only serialize prototypes for detail view
         model.Capabilities.Prototypes = [.. _capabilitiyPrototypes.Values];
-        model.Capabilities.Value.Possible = [.. _capabilitiyPrototypes.Keys.Select(t => t.Name)];
+        model.Capabilities.Value.Possible = [.. _capabilitiyPrototypes.Keys.Select(t => new EntryPossible { Key = t.Name, DisplayName = t.Name })];
         return model;
     }
 

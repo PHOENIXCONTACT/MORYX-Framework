@@ -402,6 +402,7 @@ Features:
 - Supports async invocation of methods now by `InvokeMethodAsync`. Synchronous methods are executed synchronously.
 - The synchronous `InvokeMethod` does now support async methods too. They are executed synchronously.
 - Added support for `AllowedValuesAttribute` and `DeniedValuesAttribute`. Refer to EntryConvert [PossibleValues-docs](/docs/articles/framework/Serialization/PossibleValues.md).
+- EntryConvert now uses `EntryPossible[]` instead of `string[]` for `EntryValue.Possible`; each item contains `Key`, `DisplayName` and `Description`.
 
 Added support for additional ValidationAttributes in EntryConvert:
 

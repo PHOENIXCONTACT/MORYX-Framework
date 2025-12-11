@@ -67,7 +67,7 @@ namespace Moryx.Serialization
         }
 
         /// <see cref="ICustomSerialization"/>
-        public virtual string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        public virtual EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             // Element type for collections
             var isCollection = EntryConvert.IsCollection(memberType);
@@ -77,12 +77,12 @@ namespace Moryx.Serialization
             // Enum names, member name for collections, allowed values or null
             if (memberType.IsEnum)
             {
-                return GetPossibleEnumNames(memberType, attributeProvider);
+                return EntryPossible.FromStrings(GetPossibleEnumNames(memberType, attributeProvider));
             }
 
             if (isCollection)
             {
-                return [memberType.Name];
+                return EntryPossible.FromStrings([memberType.Name]);
             }
 
             var allowedValuesAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
@@ -90,14 +90,14 @@ namespace Moryx.Serialization
             {
                 var allowedValues = allowedValuesAttribute.Values.Where(v => v != null && v.GetType() == memberType)
                     .Select(v => v.ToString());
-                return allowedValues.ToArray();
+                return EntryPossible.FromStrings(allowedValues.ToArray());
             }
 
             return null;
         }
 
         /// <see cref="ICustomSerialization"/>
-        public virtual string[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        public virtual EntryPossible[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             var elementType = EntryConvert.ElementType(memberType);
             return PossibleValues(elementType, attributeProvider);
