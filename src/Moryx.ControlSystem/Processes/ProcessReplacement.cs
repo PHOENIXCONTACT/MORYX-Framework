@@ -11,62 +11,56 @@ namespace Moryx.ControlSystem.Processes
     /// Base class for process replacements that either represent an empty slot
     /// or unknown physical state
     /// </summary>
-    public abstract class ProcessReplacement : IProcess
+    public abstract class ProcessReplacement : Process
     {
+        private readonly long _processId;
+
         /// <summary>
         /// Create process replacement with write protected id
         /// </summary>
         protected ProcessReplacement(long processId)
         {
-            IdValue = processId;
+            _processId = processId;
         }
 
-        /// <summary>
-        /// Read-only value of the process
-        /// </summary>
-        protected long IdValue { get; }
-
         /// <inheritdoc />
-        public long Id
+        public override long Id
         {
-            get => IdValue;
+            get => _processId;
             set => throw new NotSupportedException("Changing replacement id is not supported!");
         }
 
         /// <inheritdoc />
-        public IRecipe Recipe { get; set; }
-
-        /// <inheritdoc />
-        public IEnumerable<IActivity> GetActivities()
+        public override IEnumerable<Activity> GetActivities()
         {
             return [];
         }
 
         /// <inheritdoc />
-        public IEnumerable<IActivity> GetActivities(Func<IActivity, bool> predicate)
+        public override IEnumerable<Activity> GetActivities(Func<Activity, bool> predicate)
         {
             return [];
         }
 
         /// <inheritdoc />
-        public IActivity GetActivity(ActivitySelectionType selectionType)
+        public override Activity GetActivity(ActivitySelectionType selectionType)
         {
             return null;
         }
 
         /// <inheritdoc />
-        public IActivity GetActivity(ActivitySelectionType selectionType, Func<IActivity, bool> predicate)
+        public override Activity GetActivity(ActivitySelectionType selectionType, Func<Activity, bool> predicate)
         {
             return null;
         }
 
         /// <inheritdoc />
-        public void AddActivity(IActivity toAdd)
+        public override void AddActivity(Activity toAdd)
         {
         }
 
         /// <inheritdoc />
-        public void RemoveActivity(IActivity toRemove)
+        public override void RemoveActivity(Activity toRemove)
         {
         }
     }

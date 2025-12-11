@@ -15,7 +15,7 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Process on this position
         /// </summary>
-        IProcess Process { get; }
+        Process Process { get; }
 
         /// <summary>
         /// Identifier of this position. It is not necessarily a unique
@@ -52,7 +52,7 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Event raised when the reference <see cref="Process"/> was changed
         /// </summary>
-        event EventHandler<IProcess> ProcessChanged;
+        event EventHandler<Process> ProcessChanged;
 
         /// <summary>
         /// Event raised when the position was reset

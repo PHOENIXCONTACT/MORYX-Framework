@@ -67,7 +67,7 @@ namespace Moryx.Resources.Benchmarking
             return Task.CompletedTask;
         }
 
-        public void Ready(IActivity activity)
+        public void Ready(Activity activity)
         {
             SimulatedState = SimulationState.Requested;
 

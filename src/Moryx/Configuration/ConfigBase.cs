@@ -11,7 +11,7 @@ namespace Moryx.Configuration
     /// Base implementation of a config handled by <see cref="IConfigManager"/>
     /// </summary>
     [DataContract]
-    public class ConfigBase : UpdatableEntry, IInitializable
+    public class ConfigBase : UpdatableEntry, IConfig
     {
         /// <summary>
         /// Current state of the config object

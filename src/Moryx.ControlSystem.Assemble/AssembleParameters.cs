@@ -35,7 +35,7 @@ namespace Moryx.ControlSystem.Assemble
         }
 
         /// <inheritdoc />
-        protected override void Populate(IProcess process, Parameters instance)
+        protected override void Populate(Process process, Parameters instance)
         {
             base.Populate(process, instance);
             var parameters = (AssembleParameters)instance;

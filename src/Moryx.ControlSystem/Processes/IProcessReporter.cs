@@ -15,11 +15,11 @@ namespace Moryx.ControlSystem.Processes
         /// Event raised, when execution of the process failed outside
         /// of defined activity results
         /// </summary>
-        event EventHandler<IProcess> ProcessBroken;
+        event EventHandler<Process> ProcessBroken;
 
         /// <summary>
         /// Event raised when the process failed and was already removed from the system
         /// </summary>
-        event EventHandler<IProcess> ProcessRemoved;
+        event EventHandler<Process> ProcessRemoved;
     }
 }

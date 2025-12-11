@@ -32,7 +32,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
 
         }
 
-        public override void UpdateSetup(ISetupRecipe newRecipe)
+        public override void UpdateSetup(SetupRecipe newRecipe)
         {
             // Ignore: We get a new setup upon retry
         }

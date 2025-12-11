@@ -215,7 +215,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         }
 
         /// <inheritdoc />
-        public void FillActivities(IUnitOfWork uow, IProcess process, IDictionary<long, ITask> taskMap)
+        public void FillActivities(IUnitOfWork uow, Process process, IDictionary<long, ITask> taskMap)
         {
             var repo = uow.GetRepository<IActivityEntityRepository>();
             var dbActivities = repo.GetCompleted(process.Id).ToList();
@@ -391,7 +391,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// </summary>
         /// <param name="source">Data source</param>
         /// <param name="target">Entity target</param>
-        private void SaveTracing(IActivity source, ActivityEntity target)
+        private void SaveTracing(Activity source, ActivityEntity target)
         {
             // Fetch tracing type cache and save reference on target
             var tracingType = _tracingWrappers.First(tt => tt.TypeCheck(source.Tracing));

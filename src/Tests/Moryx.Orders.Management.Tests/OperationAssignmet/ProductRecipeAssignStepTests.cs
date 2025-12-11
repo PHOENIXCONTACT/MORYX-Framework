@@ -55,7 +55,7 @@ namespace Moryx.Orders.Management.Tests
             _operationData = _operationDataMock.Object;
 
             _jobManagementMock = new Mock<IJobManagement>();
-            _jobManagementMock.Setup(j => j.Evaluate(It.IsAny<IProductionRecipe>(), It.IsAny<int>()))
+            _jobManagementMock.Setup(j => j.Evaluate(It.IsAny<ProductionRecipe>(), It.IsAny<int>()))
                 .Returns(new JobEvaluation
                 {
                     WorkplanErrors = new List<string>()

@@ -10,10 +10,9 @@ using System.Linq;
 using System.Text;
 using Moryx.Configuration;
 using Moryx.Serialization;
-using Moryx.Tests.Serialization;
 using NUnit.Framework;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.Serialization
 {
     /// <summary>
     /// Unit tests for the static <see cref="EntryConvert"/> class
@@ -50,18 +49,15 @@ namespace Moryx.Tests
 
             // Assert
             var doubles = encoded.SubEntries[1];
-            Assert.That(doubles.Value.Possible[0], Is.EqualTo(nameof(EntryValueType.Double)));
+            Assert.That(doubles.Value.Possible[0].Key, Is.EqualTo(nameof(EntryValueType.Double)));
             Assert.That(doubles.Prototypes.Count, Is.EqualTo(1));
-            if (possibleValues)
-                Assert.That(doubles.Prototypes[0].Value.Possible.Length, Is.EqualTo(3));
-            else
-                Assert.That(doubles.Prototypes[0].Value.Possible, Is.Null);
+            Assert.That(doubles.Prototypes[0].Value.Possible.Length, Is.EqualTo(3));
 
             var enums = encoded.SubEntries[2];
             Assert.That(enums.Value.Possible.Length, Is.EqualTo(3));
             Assert.That(enums.Prototypes.Count, Is.EqualTo(3));
             for (int i = 0; i < 3; i++)
-                Assert.That(enums.Prototypes[i].Value.Current, Is.EqualTo(enums.Value.Possible[i]));
+                Assert.That(enums.Prototypes[i].Value.Current, Is.EqualTo(enums.Value.Possible[i].Key));
         }
 
         [Test]
@@ -505,7 +501,7 @@ namespace Moryx.Tests
                     newInstance.DisplayName = (prefill + i).ToString();
                     // change "Value"
                     newInstance.SubEntries[0].Value.Current = (prefill + i).ToString("F2", defaultSerialization.FormatProvider);
-                    newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2];
+                    newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2].Key;
 
                     colEntry.SubEntries.Add(newInstance);
                 }
@@ -516,7 +512,7 @@ namespace Moryx.Tests
                 {
                     var newInstance = colEntry.Prototypes[0].Instantiate();
                     newInstance.SubEntries[0].Value.Current = (prefill + i).ToString();
-                    newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2];
+                    newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[2].Key;
                     colEntry.SubEntries.Add(newInstance);
                 }
             }
@@ -572,7 +568,7 @@ namespace Moryx.Tests
                     entry.DisplayName = "1" + entry.SubEntries[0].Value.Current;
                     // change "Value"
                     entry.SubEntries[0].Value.Current = "1" + entry.SubEntries[0].Value.Current;
-                    entry.SubEntries[1].Value.Current = entry.SubEntries[1].Value.Possible[2];
+                    entry.SubEntries[1].Value.Current = entry.SubEntries[1].Value.Possible[2].Key;
                 }
 
                 EntryConvert.UpdateInstance(obj, encoded);
@@ -592,7 +588,7 @@ namespace Moryx.Tests
                 foreach (var entry in colEntry.SubEntries)
                 {
                     entry.SubEntries[0].Value.Current = "1" + entry.SubEntries[0].Value.Current;
-                    entry.SubEntries[1].Value.Current = entry.SubEntries[1].Value.Possible[2];
+                    entry.SubEntries[1].Value.Current = entry.SubEntries[1].Value.Possible[2].Key;
                 }
                 EntryConvert.UpdateInstance(obj, encoded);
 
@@ -673,7 +669,7 @@ namespace Moryx.Tests
             // Act
             encoded.SubEntries[0].Value.Current = "10";
             encoded.SubEntries[1].Value.Current = "Thomas";
-            encoded.SubEntries[3].SubEntries[1].Value.Current = encoded.SubEntries[3].SubEntries[1].Value.Possible[2];
+            encoded.SubEntries[3].SubEntries[1].Value.Current = encoded.SubEntries[3].SubEntries[1].Value.Possible[2].Key;
             for (var i = 4; i < 7; i++)
             {
                 var colEntry = encoded.SubEntries[i];
@@ -681,7 +677,7 @@ namespace Moryx.Tests
                 {
                     var newInstance = colEntry.Prototypes[0].Instantiate();
                     newInstance.SubEntries[0].Value.Current = j.ToString("F2", defaultSerialization.FormatProvider);
-                    newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[1];
+                    newInstance.SubEntries[1].Value.Current = newInstance.SubEntries[1].Value.Possible[1].Key;
                     colEntry.SubEntries.Add(newInstance);
                 }
 
@@ -999,6 +995,47 @@ namespace Moryx.Tests
 
             Assert.That(dummyDecoded.Number, Is.EqualTo(1001));
             Assert.That(dummyDecoded.SingleClass.Foo, Is.EqualTo(1.1234f));
+        }
+
+        [Test]
+        public void AllowedEnumValuesTest()
+        {
+            // Arrange
+            var encoded = EntryConvert.EncodeClass(typeof(AllowedDeniedValuesClass));
+
+            // Assert
+            Assert.That(encoded.SubEntries[0].Value.Possible, Has.Exactly(2).Items);
+
+            string[] expected = [nameof(DummyEnum.ValueA), nameof(DummyEnum.ValueB)];
+            var possibles = encoded.SubEntries[0].Value.Possible.Select(p => p.Key);
+            Assert.That(possibles, Is.SupersetOf(expected));
+        }
+
+        [Test]
+        public void DeniedEnumValuesTest()
+        {
+            // Arrange
+            var encoded = EntryConvert.EncodeClass(typeof(AllowedDeniedValuesClass));
+
+            // Assert
+            Assert.That(encoded.SubEntries[1].Value.Possible, Has.Exactly(2).Items);
+
+            string[] expected = [nameof(DummyEnum.ValueA), nameof(DummyEnum.ValueB)];
+            var possibles = encoded.SubEntries[0].Value.Possible.Select(p => p.Key);
+            Assert.That(possibles, Is.SupersetOf(expected));
+        }
+
+        [Test]
+        public void AllowedIntValuesTest()
+        {
+            // Arrange
+            var encoded = EntryConvert.EncodeClass(typeof(AllowedDeniedValuesClass));
+
+            // Assert
+            Assert.That(encoded.SubEntries[2].Value.Possible, Has.Exactly(3).Items);
+            string[] expected = ["1", "5", "20"];
+            var possibles = encoded.SubEntries[2].Value.Possible.Select(p => p.Key);
+            Assert.That(possibles, Is.SupersetOf(expected));
         }
 
         private static Entry CreateTestEntry()

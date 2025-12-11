@@ -8,7 +8,7 @@ namespace Moryx.ControlSystem.Recipes
     /// <summary>
     /// Interface for recipes which based on an order/operation
     /// </summary>
-    public interface IOrderBasedRecipe : IProductionRecipe
+    public interface IOrderBasedRecipe : IRecipe
     {
         /// <summary>
         /// Order number

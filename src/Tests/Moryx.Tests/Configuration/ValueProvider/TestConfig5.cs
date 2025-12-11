@@ -4,7 +4,7 @@
 using System;
 using System.ComponentModel;
 
-namespace Moryx.Runtime.Kernel.Tests.Configuration.ValueProvider
+namespace Moryx.Tests.Configuration.ValueProvider
 {
     internal class ClassWithoutParamLessCtor
     {

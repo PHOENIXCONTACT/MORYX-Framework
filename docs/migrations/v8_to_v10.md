@@ -259,13 +259,21 @@ The `ProcessEngineContext` was added to the `ProcessEngineAttached` to provide t
 
 Several interfaces have been removed to streamline the codebase and reduce complexity. The following interfaces are no longer available:
 
-- `IProductType`: Replaced with base-class `ProductType`
-- `IProductInstance`: Replaced with base-class `ProductInstance`
-- `IProductPartLink`: Replaced with base-class `ProductPartLink`
-- `IConfig`: Replaced with base-class `ConfigBase`
 - `IDatabaseConfig`: Replaced with base-class `DatabaseConfig`
 - `IControlSystemBound`: Merged with `ICell`
+- `INamedTask`: Merged into `ITask`
+- `IProductionRecipe`: Replaced with class `ProductionRecipe`
+- `ISetupRecipe`: Replaced with class `SetupRecipe`
 - `IState`: Replace with base-class `StateBase`
+-
+The following interfaces are still existent for api extensions but the base class is used in whole code base:
+
+- `IActivity`: Replaced with class `Activity`
+- `IProcess`: Replaced with class `Process`
+- `IProductType`: Replaced with class `ProductType`
+- `IProductInstance`: Replaced with class `ProductInstance`
+- `IProductPartLink`: Replaced with class `ProductPartLink`
+- `IConfig`: Replaced with class `ConfigBase`
 
 ## Method Signature Changes
 
@@ -311,6 +319,7 @@ These feature were infrequently used and has been removed to simplify the codeba
 - PortConfig: Used for old wcf services. Deprecated since ASP.NET Core.
 - ProxyConfig.Port: Use the full address instead. It contains also http/https, domain and port
 - EntryToModelConverter: This component was used in WPF UIs to map an entry to a view model and vice versa. This is not used anymore and brings no benefit to the platform.
+- `HandlerMap` was removed from code. I was a good helper for .NET Framework. Since `switch` supports [pattern matching in C#7.0](https://devblogs.microsoft.com/dotnet/new-features-in-c-7-0/#switch-statements-with-patterns) this is not required anymore.
 
 ## Moved classes and namespaces
 
@@ -401,6 +410,21 @@ Features:
 
 - Supports async invocation of methods now by `InvokeMethodAsync`. Synchronous methods are executed synchronously.
 - The synchronous `InvokeMethod` does now support async methods too. They are executed synchronously.
+- Added support for `AllowedValuesAttribute` and `DeniedValuesAttribute`. Refer to EntryConvert [PossibleValues-docs](/docs/articles/framework/Serialization/PossibleValues.md).
+- EntryConvert now uses `EntryPossible[]` instead of `string[]` for `EntryValue.Possible`; each item contains `Key`, `DisplayName` and `Description`.
+
+Added support for additional ValidationAttributes in EntryConvert:
+
+- LengthAttribute: Sets the `EntryValidation.Minumum` and `EntryValidation.Maximum`
+- DataTypeAttribute: Sets the `EntryValidation.DataType`
+- Base64StringAttribute: Sets the new `EntryUnitType.Base64`
+
+Removed `PrimitiveValuesAttribute`, use `AllowedValuesAttribute` of .NET instead.
+
+### API Changes
+
+- Renamed `EntryUnitType.File` to `EntryUnitType.FilePath`
+- Renamed `EntryUnitType.Directory` to `EntryUnitType.DirectoryPath`
 
 ## Merged `IProcessControlReporting` into `IProcessControl`
 

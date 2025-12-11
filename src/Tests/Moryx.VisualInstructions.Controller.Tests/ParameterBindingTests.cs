@@ -254,7 +254,7 @@ namespace Moryx.VisualInstructions.Controller.Tests
 
             public ProductType Target { get; set; }
 
-            protected override void Populate(IProcess process, Parameters instance)
+            protected override void Populate(Process process, Parameters instance)
             {
                 if (_resolver == null)
                     _resolver = ResolverFactory.Create(Part);
@@ -264,7 +264,7 @@ namespace Moryx.VisualInstructions.Controller.Tests
             }
         }
 
-        private static IProcess DummyProcess()
+        private static ProductionProcess DummyProcess()
         {
             var product = new DummyProduct()
             {

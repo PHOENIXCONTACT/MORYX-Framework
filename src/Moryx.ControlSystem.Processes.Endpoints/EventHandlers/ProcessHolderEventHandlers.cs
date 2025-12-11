@@ -10,7 +10,7 @@ namespace Moryx.ControlSystem.Processes.Endpoints.EventHandlers;
 internal class ProcessHolderEventHandlers
 {
 
-    public static EventHandler<IResource> OnResourceRemoved(EventHandler<IProcess> processChanged, EventHandler groupChanged)
+    public static EventHandler<IResource> OnResourceRemoved(EventHandler<Process> processChanged, EventHandler groupChanged)
     {
         return new EventHandler<IResource>((obj, e) =>
         {
@@ -82,10 +82,10 @@ internal class ProcessHolderEventHandlers
         });
     }
 
-    public static EventHandler<IProcess> OnProcessChanged(
+    public static EventHandler<Process> OnProcessChanged(
         Channel<ProcessHolderGroupChangedEventArg> groupChannel)
     {
-        return new EventHandler<IProcess>((obj, process) =>
+        return new EventHandler<Process>((obj, process) =>
         {
             if (obj is IProcessHolderPosition position)
             {

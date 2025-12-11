@@ -69,8 +69,8 @@ namespace Moryx.Orders.Management.Tests
         {
             public TestJob(IRecipe recipe, int amount) : base(recipe, amount)
             {
-                RunningProcesses = new List<IProcess>();
-                AllProcesses = new List<IProcess>();
+                RunningProcesses = new List<Process>();
+                AllProcesses = new List<Process>();
             }
 
             public TestJob SetRunning(int amount)
@@ -79,7 +79,7 @@ namespace Moryx.Orders.Management.Tests
                 return this;
             }
 
-            public IReadOnlyList<IProcess> PredictedFailures { get; set; } = new List<IProcess>();
+            public IReadOnlyList<Process> PredictedFailures { get; set; } = new List<Process>();
         }
 
         internal async Task<IOperationData> InitializeOperationData(int amount, bool replaceScrap, int overDeliveryAmount, int underDeliveryAmount)

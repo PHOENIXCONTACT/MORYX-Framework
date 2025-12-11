@@ -58,16 +58,16 @@ namespace Moryx.Configuration
         }
 
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
-        public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        public override EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
-            var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
+            var possibleValuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             // Possible values for primitive collections only apply to members
-            if (valuesAttribute == null || IsPrimitiveCollection(memberType))
+            if (possibleValuesAttribute == null || IsPrimitiveCollection(memberType))
                 return base.PossibleValues(memberType, attributeProvider);
 
             // Use attribute
-            var values = valuesAttribute.GetValues(Container, ServiceProvider);
-            return values?.Distinct().ToArray();
+            var values = possibleValuesAttribute.GetValues(Container, ServiceProvider);
+            return EntryPossible.FromStrings(values?.Distinct());
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Moryx.Configuration
         }
 
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
-        public override string[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        public override EntryPossible[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             if (valuesAttribute == null)
@@ -93,7 +93,7 @@ namespace Moryx.Configuration
 
             // Use attribute
             var values = valuesAttribute.GetValues(Container, ServiceProvider);
-            return values?.Distinct().ToArray();
+            return EntryPossible.FromStrings(values?.Distinct());
         }
 
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>

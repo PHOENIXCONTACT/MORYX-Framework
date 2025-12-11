@@ -40,7 +40,7 @@ namespace Moryx.ControlSystem.Cells
         /// </summary>
         /// <param name="process"></param>
         /// <returns></returns>
-        public bool Matches(IProcess process)
+        public bool Matches(Process process)
         {
             if (_processId != IrrelevantId)
                 return _processId == process.Id;

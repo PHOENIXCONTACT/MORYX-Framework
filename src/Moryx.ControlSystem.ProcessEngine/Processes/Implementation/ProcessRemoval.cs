@@ -157,7 +157,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// A process failed outside of defined activity results, but remained in the machine
         /// </summary>
-        private void OnProcessBroken(object sender, IProcess process)
+        private void OnProcessBroken(object sender, Process process)
         {
             var senderResource = (IResource)sender;
             Logger.Log(LogLevel.Warning, "Process {0} was reported as broken by {1}-{2}", process.Id, senderResource.Id, senderResource.Name);
@@ -179,7 +179,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             }
         }
 
-        public void Report(IProcess process, ReportAction action)
+        public void Report(Process process, ReportAction action)
         {
             Logger.Log(LogLevel.Warning, "Process {id} was reported as {action}", process.Id, action);
             switch (action)
@@ -199,7 +199,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// A process was physically removed. Therefore all activities belonging to this process need to be aborted,
         /// and the process itself should be marked as a failure.
         /// </summary>
-        private void OnProcessRemoved(object sender, IProcess process)
+        private void OnProcessRemoved(object sender, Process process)
         {
             var senderResource = (IResource)sender;
             Logger.Log(LogLevel.Warning, "Process {0} was reported as failed by {1}-{2}", process?.Id, senderResource.Id, senderResource.Name);
@@ -228,6 +228,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         {
             public long Id => -1;
 
+            public string Name => nameof(ProcessFixUpTask);
+
             public Type ActivityType => typeof(ProcessFixupActivity);
 
             private readonly VisualInstructionParameters _parameters;
@@ -247,7 +249,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 };
             }
 
-            public IActivity CreateActivity(IProcess process)
+            public Activity CreateActivity(Process process)
             {
                 var activity = new ProcessFixupActivity
                 {

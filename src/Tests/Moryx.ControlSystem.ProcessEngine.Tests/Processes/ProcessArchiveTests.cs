@@ -50,13 +50,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
                 new MountTask{Id = 1}
             ]);
 
-            var recipeMock = new Mock<IProductionRecipe>();
-            recipeMock.Setup(r => r.CreateProcess()).Returns(new ProductionProcess { Recipe = recipeMock.Object });
-            recipeMock.Setup(r => r.Workplan).Returns(_workplanMock.Object);
-            recipeMock.Setup(r => r.DisabledSteps).Returns(new List<long>());
+            var recipe = new ProductionRecipe
+            {
+                Workplan = _workplanMock.Object,
+            };
 
             var productManagementMock = new Mock<IProductManagement>();
-            productManagementMock.Setup(p => p.LoadRecipeAsync(It.IsAny<long>())).ReturnsAsync(recipeMock.Object);
+            productManagementMock.Setup(p => p.LoadRecipeAsync(It.IsAny<long>())).ReturnsAsync(recipe);
             productManagementMock.Setup(p => p.GetInstanceAsync(It.IsAny<long>())).ReturnsAsync(new DummyProductInstance { Type = new DummyProductType() });
 
             _jobListMock = new Mock<IJobDataList>();

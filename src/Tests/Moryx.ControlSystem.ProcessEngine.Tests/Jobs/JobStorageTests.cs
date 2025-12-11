@@ -36,7 +36,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             var recipeProviderMock = new Mock<IRecipeProvider>();
             var productMock = recipeProviderMock.As<IProductManagement>(); // Is has to be a RecipeProvider and also a ProductManagement
             recipeProviderMock.SetupGet(r => r.Name).Returns("FooProvider");
-            recipeProviderMock.Setup(m => m.LoadRecipeAsync(It.IsAny<long>())).ReturnsAsync(new Mock<IProductionRecipe>().Object);
+            recipeProviderMock.Setup(m => m.LoadRecipeAsync(It.IsAny<long>())).ReturnsAsync(new Mock<ProductionRecipe>().Object);
 
             _recipeProvider = recipeProviderMock.Object;
 
@@ -177,7 +177,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
                 mock.SetupGet(m => m.Id).Returns(() => managedMock.Object.Id);
                 mock.SetupGet(m => m.Amount).Returns(i);
                 mock.SetupGet(m => m.RecipeProvider).Returns(_recipeProvider);
-                mock.SetupGet(m => m.Recipe).Returns(new Mock<IProductionRecipe>().Object);
+                mock.SetupGet(m => m.Recipe).Returns(new Mock<ProductionRecipe>().Object);
                 mock.SetupGet(m => m.State).Returns(new Mock<IJobState>().Object);
 
                 jobs.Add(mock.Object);

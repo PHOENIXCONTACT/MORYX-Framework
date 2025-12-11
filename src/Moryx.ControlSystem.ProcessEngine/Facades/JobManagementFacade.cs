@@ -105,7 +105,7 @@ namespace Moryx.ControlSystem.ProcessEngine
         public JobEvaluation Evaluate(IProductRecipe recipe, int amount)
         {
             ValidateHealthState();
-            if (recipe is not IProductionRecipe prodRecipe)
+            if (recipe is not ProductionRecipe prodRecipe)
                 throw new ArgumentException($"Process engine only supports {nameof(ProductionRecipe)}", nameof(recipe));
 
             return new JobEvaluation
@@ -172,8 +172,8 @@ namespace Moryx.ControlSystem.ProcessEngine
             if (recipe.Origin == null)
                 throw new ArgumentException("Origin must not be null on recipe", nameof(recipe));
 
-            var productionRecipe = recipe as IProductionRecipe
-                ?? throw new NotSupportedException("Process engine only supports 'IProductionRecipe'!");
+            var productionRecipe = recipe as ProductionRecipe
+                ?? throw new NotSupportedException("Process engine only supports 'ProductionRecipe'!");
 
             var errors = WorkplanValidation.Validate(productionRecipe.Workplan);
             if (errors.Count > 0)

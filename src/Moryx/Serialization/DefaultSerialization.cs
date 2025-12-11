@@ -4,6 +4,7 @@
 using System.Collections;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Reflection;
 using Moryx.Configuration;
 using Moryx.Tools;
@@ -66,21 +67,37 @@ namespace Moryx.Serialization
         }
 
         /// <see cref="ICustomSerialization"/>
-        public virtual string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        public virtual EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             // Element type for collections
             var isCollection = EntryConvert.IsCollection(memberType);
             if (isCollection)
                 memberType = EntryConvert.ElementType(memberType);
 
-            // Enum names, member name or null
-            return memberType.IsEnum
-                ? Enum.GetNames(memberType)
-                : isCollection ? [memberType.Name] : null;
+            // Enum names, member name for collections, allowed values or null
+            if (memberType.IsEnum)
+            {
+                return EntryPossible.FromStrings(GetPossibleEnumNames(memberType, attributeProvider));
+            }
+
+            if (isCollection)
+            {
+                return EntryPossible.FromStrings([memberType.Name]);
+            }
+
+            var allowedValuesAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
+            if (allowedValuesAttribute != null)
+            {
+                var allowedValues = allowedValuesAttribute.Values.Where(v => v != null && v.GetType() == memberType)
+                    .Select(v => v.ToString());
+                return EntryPossible.FromStrings(allowedValues.ToArray());
+            }
+
+            return null;
         }
 
         /// <see cref="ICustomSerialization"/>
-        public virtual string[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        public virtual EntryPossible[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
             var elementType = EntryConvert.ElementType(memberType);
             return PossibleValues(elementType, attributeProvider);
@@ -98,28 +115,36 @@ namespace Moryx.Serialization
             // Iterate over attributes reading all validation rules
             foreach (var attribute in validationAttributes)
             {
-                if (attribute is MinLengthAttribute minAttribute)
+                switch (attribute)
                 {
-                    validation.Minimum = minAttribute.Length;
+                    case MinLengthAttribute minAttribute:
+                        validation.Minimum = minAttribute.Length;
+                        break;
+                    case MaxLengthAttribute maxAttribute:
+                        validation.Maximum = maxAttribute.Length;
+                        break;
+                    case RangeAttribute rangeAttribute:
+                        validation.Minimum = Convert.ToDouble(rangeAttribute.Minimum, CultureInfo.CurrentCulture);
+                        validation.Maximum = Convert.ToDouble(rangeAttribute.Maximum, CultureInfo.CurrentCulture);
+                        break;
+                    case RegularExpressionAttribute regexAttribute:
+                        validation.Regex = regexAttribute.Pattern;
+                        break;
+                    case StringLengthAttribute strLength:
+                        validation.Minimum = strLength.MinimumLength;
+                        validation.Maximum = strLength.MaximumLength;
+                        break;
+                    case RequiredAttribute:
+                        validation.IsRequired = true;
+                        break;
+                    case LengthAttribute lengthAttribute:
+                        validation.Minimum = lengthAttribute.MinimumLength;
+                        validation.Maximum = lengthAttribute.MaximumLength;
+                        break;
+                    case DataTypeAttribute dataTypeAttribute:
+                        validation.DataType = dataTypeAttribute.DataType;
+                        break;
                 }
-                else if (attribute is MaxLengthAttribute maxAttribute)
-                {
-                    validation.Maximum = maxAttribute.Length;
-                }
-                else if (attribute is RangeAttribute rangeAttribute)
-                {
-                    validation.Minimum = Convert.ToDouble(rangeAttribute.Minimum);
-                    validation.Maximum = Convert.ToDouble(rangeAttribute.Maximum);
-                }
-                else if (attribute is RegularExpressionAttribute regexAttribute)
-                    validation.Regex = regexAttribute.Pattern;
-                else if (attribute is StringLengthAttribute strLength)
-                {
-                    validation.Minimum = strLength.MinimumLength;
-                    validation.Maximum = strLength.MaximumLength;
-                }
-                else if (attribute is RequiredAttribute)
-                    validation.IsRequired = true;
             }
 
             return validation;
@@ -259,14 +284,20 @@ namespace Moryx.Serialization
                 switch (fileAttr.Type)
                 {
                     case FileSystemPathType.File:
-                        unitType = EntryUnitType.File;
+                        unitType = EntryUnitType.FilePath;
                         break;
                     case FileSystemPathType.Directory:
-                        unitType = EntryUnitType.Directory;
+                        unitType = EntryUnitType.DirectoryPath;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+            }
+
+            var base64Attr = property.GetCustomAttribute<Base64StringAttribute>();
+            if (base64Attr != null)
+            {
+                unitType = EntryUnitType.Base64;
             }
 
             return unitType;
@@ -321,11 +352,37 @@ namespace Moryx.Serialization
         /// </summary>
         /// <param name="property">The property to inspect for attributes.</param>
         /// <returns>True if the property has the Flags attribute; otherwise, false.</returns>
-        private bool HasFlagsAttribute(ICustomAttributeProvider property)
+        private static bool HasFlagsAttribute(ICustomAttributeProvider property)
         {
             return property is PropertyInfo propertyInfo &&
                    propertyInfo.PropertyType.IsEnum &&
                    propertyInfo.PropertyType.GetCustomAttributes(typeof(System.FlagsAttribute), false).Any();
+        }
+
+        /// <summary>
+        /// Returns the possible enum names.
+        /// Depending on the <see cref="AllowedValuesAttribute"/> and <see cref="DeniedValuesAttribute"/>
+        /// </summary>
+        private static string[] GetPossibleEnumNames(Type memberType, ICustomAttributeProvider attributeProvider)
+        {
+            var enumNames = Enum.GetNames(memberType);
+            var allowedValuesAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
+            if (allowedValuesAttribute != null)
+            {
+                var allowedEnumNames = allowedValuesAttribute.Values.Where(v => v != null && enumNames.Contains(v.ToString()))
+                    .Select(v => v.ToString());
+                return allowedEnumNames.Distinct().ToArray();
+            }
+
+            var deniedValuesAttribute = attributeProvider.GetCustomAttribute<DeniedValuesAttribute>();
+            if (deniedValuesAttribute != null)
+            {
+                var deniedEnumNames = deniedValuesAttribute.Values.Where(v => v != null)
+                    .Select(v => v.ToString());
+                return enumNames.Except(deniedEnumNames).ToArray();
+            }
+
+            return enumNames;
         }
     }
 }

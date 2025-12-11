@@ -338,8 +338,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
 
             public QueryJob() : base(null, 0)
             {
-                RunningProcesses = Array.Empty<IProcess>();
-                AllProcesses = Array.Empty<IProcess>();
+                RunningProcesses = Array.Empty<Process>();
+                AllProcesses = Array.Empty<Process>();
             }
         }
     }

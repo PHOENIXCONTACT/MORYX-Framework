@@ -7,20 +7,9 @@ using Moryx.AbstractionLayer.Processes;
 namespace Moryx.AbstractionLayer.Workplans
 {
     /// <summary>
-    /// Additional interface for named tasks
-    /// </summary>
-    public interface INamedTask : ITask
-    {
-        /// <summary>
-        /// Name of the task
-        /// </summary>
-        string Name { get; }
-    }
-
-    /// <summary>
     /// Task transition interface
     /// </summary>
-    public interface ITaskTransition : ITask, INamedTask
+    public interface ITaskTransition : ITask
     {
 
     }
@@ -36,6 +25,11 @@ namespace Moryx.AbstractionLayer.Workplans
         long Id { get; }
 
         /// <summary>
+        /// Name of the task
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// Type of activity created by this task
         /// </summary>
         Type ActivityType { get; }
@@ -45,7 +39,7 @@ namespace Moryx.AbstractionLayer.Workplans
         /// </summary>
         /// <returns>the new IActivity object</returns>
         /// <exception cref="ArgumentException">if the params object's type does not match to activity.</exception>
-        IActivity CreateActivity(IProcess process);
+        Activity CreateActivity(Process process);
 
         /// <summary>
         /// Complete task

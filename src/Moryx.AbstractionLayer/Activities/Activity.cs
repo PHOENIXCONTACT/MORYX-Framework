@@ -14,10 +14,10 @@ namespace Moryx.AbstractionLayer.Activities
     {
         #region Activity definition
 
-        ///
+        /// <inheritdoc />
         public abstract ProcessRequirement ProcessRequirement { get; }
 
-        ///
+        /// <inheritdoc />
         public abstract ICapabilities RequiredCapabilities { get; }
 
         /// <summary>
@@ -29,16 +29,16 @@ namespace Moryx.AbstractionLayer.Activities
 
         #region Members
 
-        ///
+        /// <inheritdoc />
         public long Id { get; set; }
 
-        ///
-        public IProcess Process { get; set; }
+        /// <inheritdoc />
+        public Process Process { get; set; }
 
-        ///
+        /// <inheritdoc />
         public Tracing Tracing { get; set; }
 
-        ///
+        /// <inheritdoc />
         public ActivityResult Result { get; set; }
 
         /// <summary>
@@ -118,14 +118,16 @@ namespace Moryx.AbstractionLayer.Activities
             Tracing = new TTracing();
         }
 
-        ///
+        /// <inheritdoc />
         public new TParam Parameters
         {
             get => (TParam)base.Parameters;
             set => base.Parameters = value;
         }
 
-        ///
+        /// <summary>
+        /// All activity trace information
+        /// </summary>
         public new TTracing Tracing
         {
             get => (TTracing)base.Tracing;

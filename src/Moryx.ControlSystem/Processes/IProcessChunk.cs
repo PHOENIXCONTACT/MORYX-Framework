@@ -9,7 +9,7 @@ namespace Moryx.ControlSystem.Processes;
 /// <summary>
 /// Interface for a filtered set of processes
 /// </summary>
-public interface IProcessChunk : IEnumerable<IProcess>
+public interface IProcessChunk : IEnumerable<Process>
 {
     /// <summary>
     /// Job the processes in this chunk belong to

@@ -4,10 +4,10 @@
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
-using Moryx.Runtime.Kernel.Tests.Dummys;
 using Moryx.Runtime.Modules;
 using System;
 using System.Threading.Tasks;
+using Moryx.Runtime.Kernel.Tests.Dummies;
 
 namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
 {

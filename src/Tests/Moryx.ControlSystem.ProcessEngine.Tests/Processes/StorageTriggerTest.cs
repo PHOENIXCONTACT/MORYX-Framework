@@ -268,7 +268,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
         private ProcessData PrepareProcessData(ProcessTypes processType, long instanceId = 1)
         {
-            IProcess process;
+            Process process;
             var recipe = new ProductRecipe
             {
                 Product = new DummyProductType

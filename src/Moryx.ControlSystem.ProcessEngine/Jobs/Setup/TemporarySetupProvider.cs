@@ -28,7 +28,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
             return Task.FromResult<IRecipe>(setup);
         }
 
-        public ISetupRecipe CreateTemporary(IProductionRecipe recipe)
+        public SetupRecipe CreateTemporary(ProductionRecipe recipe)
         {
             var setup = new SetupRecipe
             {

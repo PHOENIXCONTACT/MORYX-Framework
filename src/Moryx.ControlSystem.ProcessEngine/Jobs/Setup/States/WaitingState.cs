@@ -42,7 +42,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
             }
         }
 
-        public override void UpdateSetup(ISetupRecipe newRecipe)
+        public override void UpdateSetup(SetupRecipe newRecipe)
         {
             if (newRecipe == null)
                 // Empty recipe means setup is no longer necessary

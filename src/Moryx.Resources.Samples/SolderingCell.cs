@@ -28,7 +28,7 @@ namespace Moryx.Resources.Samples
 
     public interface IStation : IResource
     {
-        void ProcessActivity(IActivity sa);
+        void ProcessActivity(Activity sa);
     }
 
     public abstract class Station : Resource, IStation
@@ -36,7 +36,7 @@ namespace Moryx.Resources.Samples
         [ResourceReference(ResourceRelationType.CurrentExchangeablePart, ResourceReferenceRole.Source)]
         public SolderingCell BackRef { get; set; }
 
-        public abstract void ProcessActivity(IActivity sa);
+        public abstract void ProcessActivity(Activity sa);
     }
 
     [ResourceRegistration]
@@ -45,7 +45,7 @@ namespace Moryx.Resources.Samples
         [ResourceReference(ResourceRelationType.TransportRoute)]
         public SolderingStation NextStation { get; set; }
 
-        public override void ProcessActivity(IActivity sa)
+        public override void ProcessActivity(Activity sa)
         {
             NextStation?.ProcessActivity(sa);
         }
@@ -54,7 +54,7 @@ namespace Moryx.Resources.Samples
     [ResourceRegistration]
     public class SolderingStation : Station
     {
-        public override void ProcessActivity(IActivity sa)
+        public override void ProcessActivity(Activity sa)
         {
         }
     }

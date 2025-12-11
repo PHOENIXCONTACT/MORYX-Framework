@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Threading;
 using Moryx.Configuration;
-using Moryx.Runtime.Kernel.Tests.Dummys;
+using Moryx.Runtime.Kernel.Tests.Dummies;
 using NUnit.Framework;
 
 namespace Moryx.Runtime.Kernel.Tests.Configuration

@@ -48,7 +48,7 @@ namespace Moryx.ControlSystem.TestTools.Activities
         public string TargetBinding { get; set; }
 
         /// <inheritdoc />
-        protected override void Populate(IProcess process, Parameters instance)
+        protected override void Populate(Process process, Parameters instance)
         {
             var parameters = (AssignIdentityParameters)instance;
 

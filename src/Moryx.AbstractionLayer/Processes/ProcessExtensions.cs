@@ -16,7 +16,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// See also: <seealso cref="NextActivities"/>
         /// </summary>
         /// <returns>Last activity of the process that is prepared</returns>
-        public static IActivity NextActivity(this IProcess process)
+        public static Activity NextActivity(this IProcess process)
         {
             return process.GetActivity(ActivitySelectionType.LastOrDefault, activity => activity.Tracing?.Started == null);
         }
@@ -24,7 +24,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// <summary>
         /// Get all prepared activities that will be dispatched as soon as a ready to work was send.
         /// </summary>
-        public static IEnumerable<IActivity> NextActivities(this IProcess process)
+        public static IEnumerable<Activity> NextActivities(this IProcess process)
         {
             return process.GetActivities(activity => activity.Tracing?.Started == null);
         }
@@ -35,7 +35,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// See also: <seealso cref="CurrentActivities"/>
         /// </summary>
         /// <returns>Last activity of the process that is running</returns>
-        public static IActivity CurrentActivity(this IProcess process)
+        public static Activity CurrentActivity(this IProcess process)
         {
             return process.GetActivity(ActivitySelectionType.LastOrDefault, activity => activity.Tracing?.Started != null && activity.Result == null);
         }
@@ -43,7 +43,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// <summary>
         /// Get all current running activities of the process.
         /// </summary>
-        public static IEnumerable<IActivity> CurrentActivities(this IProcess process)
+        public static IEnumerable<Activity> CurrentActivities(this IProcess process)
         {
             return process.GetActivities(activity => activity.Tracing?.Started != null && activity.Result == null);
         }
@@ -51,7 +51,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// <summary>
         /// Get last completed activity
         /// </summary>
-        public static IActivity LastActivity(this IProcess process)
+        public static Activity LastActivity(this IProcess process)
         {
             return process.GetActivity(ActivitySelectionType.LastOrDefault, a => a.Result != null);
         }
@@ -59,7 +59,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// <summary>
         /// Get last activity of a certain type
         /// </summary>
-        public static IActivity LastActivity(this IProcess process, string typeName)
+        public static Activity LastActivity(this IProcess process, string typeName)
         {
             return process.GetActivity(ActivitySelectionType.LastOrDefault, a => a.GetType().Name == typeName);
         }
@@ -70,7 +70,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// </summary>
         /// <typeparam name="TActivity">Type of the activity</typeparam>
         /// <param name="process">Extended instance of <see cref="IProcess"/></param>
-        public static IActivity LastActivity<TActivity>(this IProcess process) where TActivity : IActivity
+        public static Activity LastActivity<TActivity>(this IProcess process) where TActivity : IActivity
         {
             return process.LastActivity<TActivity>(false);
         }
@@ -82,7 +82,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// <typeparam name="TActivity">Type of the activity</typeparam>
         /// <param name="process">Extended instance of <see cref="IProcess"/></param>
         /// <param name="exact">If <c>true</c> only the exact type will be considered.</param>
-        public static IActivity LastActivity<TActivity>(this IProcess process, bool exact) where TActivity : IActivity
+        public static Activity LastActivity<TActivity>(this IProcess process, bool exact) where TActivity : IActivity
         {
             return process.GetActivity(ActivitySelectionType.LastOrDefault, a => !exact && a is TActivity || exact && a.GetType() == typeof(TActivity));
         }

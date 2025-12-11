@@ -16,7 +16,10 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
         {
             RequiredWasCalled = true;
 
-            return SetupEvaluation.Provide(new TestSetupCapabilities { SetupState = ((ITestRecipe)recipe).SetupState });
+            return SetupEvaluation.Provide(new TestSetupCapabilities
+            {
+                SetupState = ((TestRecipe)recipe).SetupState
+            });
         }
 
         public override IReadOnlyList<IWorkplanStep> CreateSteps(IProductRecipe recipe)

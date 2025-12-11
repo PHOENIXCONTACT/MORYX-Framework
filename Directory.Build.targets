@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
+  <Import Project=".build\Common.props" Condition="'$(IsPackable)' == 'true'" />
+
+  <!-- Package refereces for all projects if IsPackable=true -->
+  <ItemGroup Condition="'$(IsPackable)' == 'true'">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+  </ItemGroup>
+  
 	<ItemGroup>
 		<!-- Asp.Net Core Framework dependency -->
 		<FrameworkReference Update="Microsoft.AspNetCore.App" Version="$(dotnetVersion)" />

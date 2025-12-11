@@ -21,7 +21,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
 {
     public class JobDataTestBase
     {
-        private IProductionRecipe _recipe;
+        private ProductionRecipe _recipe;
         internal Mock<IJobDispatcher> DispatcherMock { get; private set; }
         internal Mock<INotificationAdapter> NotificationAdapterMock { get; private set; }
         public Mock<IModuleLogger> LoggerMock { get; private set; }

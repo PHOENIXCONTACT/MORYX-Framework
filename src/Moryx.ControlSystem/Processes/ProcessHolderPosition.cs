@@ -50,7 +50,7 @@ namespace Moryx.ControlSystem.Processes
         #endregion
 
         /// <inheritdoc />
-        public IProcess Process
+        public Process Process
         {
             get;
             private set;
@@ -111,7 +111,7 @@ namespace Moryx.ControlSystem.Processes
         /// Assign new process to holder position and write to database
         /// </summary>
         /// <param name="process"></param>
-        public void AssignProcess(IProcess process)
+        public void AssignProcess(Process process)
         {
             if (Process == process)
                 return;
@@ -169,7 +169,7 @@ namespace Moryx.ControlSystem.Processes
         }
 
         /// <inheritdoc />
-        public event EventHandler<IProcess> ProcessChanged;
+        public event EventHandler<Process> ProcessChanged;
 
         /// <inheritdoc />
         public event EventHandler ResetExecuted;

@@ -236,7 +236,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             recipe.Origin = _recipeProvider;
 
             var job = recipeType == RecipeType.Production
-                ? (IJobData)new ProductionJobData((IProductionRecipe)recipe, 10)
+                ? (IJobData)new ProductionJobData((ProductionRecipe)recipe, 10)
                 : new SetupJobData(recipe) { NotificationAdapter = _notificationAdapterMock.Object };
 
             job.ProgressChanged += delegate { };

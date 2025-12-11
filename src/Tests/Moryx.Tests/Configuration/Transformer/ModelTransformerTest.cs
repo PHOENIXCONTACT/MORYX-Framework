@@ -9,7 +9,7 @@ using Moryx.Serialization;
 using NUnit.Framework;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 
-namespace Moryx.Runtime.Kernel.Tests.Configuration.Transformer
+namespace Moryx.Tests.Configuration
 {
     /// <summary>
     /// Test for the config to model and model to config transformer
@@ -116,7 +116,7 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration.Transformer
                         var args = propertyInfo.PropertyType.GenericTypeArguments;
                         Assert.That(args.Length, Is.EqualTo(1), "There are more  generic arguments then expected.");
                         Assert.That(entry.Value.Possible.Length, Is.EqualTo(1), "There are more possible vaule entries then expected!");
-                        Assert.That(args[0].Name, Is.EqualTo(entry.Value.Possible[0]), "List should contain the generic type name in the list of possible values.");
+                        Assert.That(args[0].Name, Is.EqualTo(entry.Value.Possible[0].Key), "List should contain the generic type name in the list of possible values.");
                     }
                     else
                     {
@@ -133,7 +133,7 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration.Transformer
                             foundPropertyWithValuesAttribute = true;
                             foreach (var value in possibleValuesAttribute.GetValues(null, null))
                             {
-                                Assert.That(entry.Value.Possible, Does.Contain(value),
+                                Assert.That(entry.Value.Possible?.Select(p => p.Key), Does.Contain(value),
                                     "The value is not in the list of possible values!");
                             }
                         }

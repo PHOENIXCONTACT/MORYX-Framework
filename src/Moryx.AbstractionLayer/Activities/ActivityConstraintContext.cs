@@ -19,7 +19,7 @@ public class ActivityConstraintContext : IConstraintContext
     /// <summary>
     /// Process for the constraint to be checked
     /// </summary>
-    public IProcess Process => Activity.Process;
+    public Process Process => Activity.Process;
 
     /// <summary>
     /// Creates a new instance of the <see cref="ActivityConstraintContext"/>

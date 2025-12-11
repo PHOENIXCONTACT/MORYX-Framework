@@ -14,7 +14,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// <summary>
         /// Create process context for process
         /// </summary>
-        public ProcessWorkplanContext(IProcess process)
+        public ProcessWorkplanContext(Process process)
         {
             Process = process;
         }
@@ -22,7 +22,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// <summary>
         /// Process the workplan is executed on
         /// </summary>
-        public IProcess Process { get; }
+        public Process Process { get; }
 
         /// <inheritdoc />
         public virtual bool IsDisabled(IWorkplanStep step)

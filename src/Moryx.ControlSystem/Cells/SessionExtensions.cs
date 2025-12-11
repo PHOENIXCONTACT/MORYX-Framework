@@ -34,7 +34,7 @@ namespace Moryx.ControlSystem.Cells
 
         /// <summary>
         /// Modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
-        /// on the <see cref="IProcess"/> of the <paramref name="session"/> using the given
+        /// on the <see cref="Process"/> of the <paramref name="session"/> using the given
         /// <paramref name="setter"/>.
         /// </summary>
         /// <typeparam name="TInstance">The expected type of the product instance</typeparam>
@@ -47,17 +47,17 @@ namespace Moryx.ControlSystem.Cells
         /// ]]>
         /// </code>
         /// </example>
-        /// <exception cref="InvalidCastException">Thrown if the <see cref="IProcess"/> of the
+        /// <exception cref="InvalidCastException">Thrown if the <see cref="Process"/> of the
         /// <paramref name="session"/> does not hold a product instance of type <typeparamref name="TInstance"/>
         /// </exception>
-        /// <exception cref="InvalidOperationException">Thrown if the <see cref="IProcess"/> of the
+        /// <exception cref="InvalidOperationException">Thrown if the <see cref="Process"/> of the
         /// <paramref name="session"/> is no <see cref="ProductionProcess"/></exception>
         public static TInstance ModifyProductInstance<TInstance>(this Session session, Action<TInstance> setter)
             where TInstance : ProductInstance => session.Process.ModifyProductInstance(setter);
 
         /// <summary>
         /// Tries to modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
-        /// on the <see cref="IProcess"/> of the <paramref name="session"/> using the given
+        /// on the <see cref="Process"/> of the <paramref name="session"/> using the given
         /// <paramref name="setter"/>. Returns false, if the
         /// operation could not be executed.
         /// </summary>
@@ -112,11 +112,11 @@ namespace Moryx.ControlSystem.Cells
         /// <param name="session">The session to get the <see cref="ProductType"/> from</param>
         /// <returns>
         /// The target <see cref="ProductType"/> in the session, if it belongs to a <see cref="ProductionProcess"/>
-        /// or holds an <see cref="ISetupRecipe"/> with a <typeparamref name="TProductType"/>; Otherwise returns null.
+        /// or holds an <see cref="SetupRecipe"/> with a <typeparamref name="TProductType"/>; Otherwise returns null.
         /// </returns>
         public static TProductType GetProductType<TProductType>(this Session session) where TProductType : ProductType
         {
-            if (session.Process.Recipe is ISetupRecipe setupRecipe)
+            if (session.Process.Recipe is SetupRecipe setupRecipe)
                 return setupRecipe.TargetRecipe.Target as TProductType;
 
             if (session.Process.Recipe is IProductRecipe prodcutRecipe)

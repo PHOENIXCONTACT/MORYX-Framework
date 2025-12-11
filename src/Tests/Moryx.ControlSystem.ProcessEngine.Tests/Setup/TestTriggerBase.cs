@@ -49,7 +49,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
     {
         public TestSetupCapabilities TargetCapabilities { get; set; }
 
-        protected override void Populate(IProcess process, Parameters instance)
+        protected override void Populate(Process process, Parameters instance)
         {
             var parameters = (TestSetupParameters)instance;
             parameters.TargetCapabilities = TargetCapabilities;

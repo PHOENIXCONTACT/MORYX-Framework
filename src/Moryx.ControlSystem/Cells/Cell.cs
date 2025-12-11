@@ -42,7 +42,10 @@ namespace Moryx.ControlSystem.Cells
         public abstract void StartActivity(ActivityStart activityStart);
 
         /// <inheritdoc />
-        public virtual void ProcessAborting(IActivity affectedActivity) { }
+        public virtual void ProcessAborting(Activity affectedActivity)
+        {
+
+        }
 
         /// <inheritdoc />
         public abstract void SequenceCompleted(SequenceCompleted completed);

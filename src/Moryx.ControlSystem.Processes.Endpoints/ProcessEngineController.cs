@@ -107,7 +107,7 @@ public class ProcessEngineController : ControllerBase
         return ConvertProcesses(processes);
     }
 
-    private JobProcessModel[] ConvertProcesses(IReadOnlyList<IProcess> processes)
+    private JobProcessModel[] ConvertProcesses(IReadOnlyList<Process> processes)
     {
         var modelList = new List<JobProcessModel>();
 

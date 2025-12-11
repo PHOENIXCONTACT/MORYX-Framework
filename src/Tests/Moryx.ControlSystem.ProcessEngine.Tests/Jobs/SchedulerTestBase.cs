@@ -20,7 +20,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
         protected IJobScheduler JobScheduler;
         protected Mock<IJobList> JobListMock;
 
-        protected IProductionRecipe Recipe;
+        protected ProductionRecipe Recipe;
 
         protected Job ScheduledJob;
 
