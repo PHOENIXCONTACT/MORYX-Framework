@@ -15,11 +15,11 @@ namespace Moryx.Modules
         /// <summary>
         /// Start internal execution of active and/or periodic functionality.
         /// </summary>
-        Task Start();
+        Task StartAsync();
 
         /// <summary>
         /// Stops internal execution of active and/or periodic functionality.
         /// </summary>
-        Task Stop();
+        Task StopAsync();
     }
 }

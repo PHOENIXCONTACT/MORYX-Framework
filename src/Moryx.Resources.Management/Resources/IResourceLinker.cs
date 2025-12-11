@@ -17,7 +17,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Saves all roots to the database
         /// </summary>
-        IReadOnlyList<Resource> SaveRoots(IUnitOfWork uow, IReadOnlyList<Resource> instances);
+        Task<IReadOnlyList<Resource>> SaveRootsAsync(IUnitOfWork uow, IReadOnlyList<Resource> instances);
 
         /// <summary>
         /// Link all reference properties of an instance using the relation information
@@ -31,13 +31,13 @@ namespace Moryx.Resources.Management
         /// in relations on the fly.
         /// </summary>
         /// <returns>Found new instances</returns>
-        IReadOnlyList<Resource> SaveReferences(IUnitOfWork uow, Resource instance, ResourceEntity entity, Dictionary<Resource, ResourceEntity> partsDict = null);
+        Task<IReadOnlyList<Resource>> SaveReferencesAsync(IUnitOfWork uow, Resource instance, ResourceEntity entity, Dictionary<Resource, ResourceEntity> partsDict = null);
 
         /// <summary>
         /// Save changes to a single collection
         /// </summary>
         /// <returns>Found new instances</returns>
-        IReadOnlyList<Resource> SaveSingleCollection(IUnitOfWork uow, Resource instance, PropertyInfo property);
+        Task<IReadOnlyList<Resource>> SaveSingleCollectionAsync(IUnitOfWork uow, Resource instance, PropertyInfo property);
 
         /// <summary>
         /// Remove all links to the deleted instance on the reference

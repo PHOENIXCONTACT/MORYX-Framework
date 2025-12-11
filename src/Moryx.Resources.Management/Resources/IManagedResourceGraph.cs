@@ -37,11 +37,11 @@ namespace Moryx.Resources.Management
         /// In order to still be able to save and destroy resources, these delegates exist. 
         /// Events are also no alternatives, since there would be problems with the return values
         /// </summary>
-        Action<Resource> SaveDelegate { get; set; }
+        Func<Resource, Task> SaveDelegate { get; set; }
 
         /// <summary>
         /// TODO: Find a better way
         /// </summary>
-        Func<Resource, bool, bool> DestroyDelegate { get; set; }
+        Func<Resource, bool, Task<bool>> DestroyDelegate { get; set; }
     }
 }

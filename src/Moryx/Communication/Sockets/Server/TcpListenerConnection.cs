@@ -144,7 +144,7 @@ namespace Moryx.Communication.Sockets
             }
         }
 
-        void IStateContext.SetState(IState state)
+        void IStateContext.SetState(StateBase state)
         {
             // ReSharper disable once InconsistentlySynchronizedField
             _state = (ServerStateBase)state;

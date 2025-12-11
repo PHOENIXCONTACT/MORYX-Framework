@@ -212,17 +212,17 @@ namespace Moryx.Drivers.Mqtt
         #endregion
 
         /// <inheritdoc />
-        protected override void OnStart()
+        protected override async Task OnStartAsync()
         {
-            base.OnStart();
+            await base.OnStartAsync();
             MqttDriver?.NewTopicAdded(SubscribedTopic);
         }
 
         /// <inheritdoc />
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
-            base.OnStop();
             MqttDriver?.ExistingTopicRemoved(SubscribedTopic);
+            return base.OnStopAsync();
         }
 
         /// <inheritdoc />
@@ -265,12 +265,12 @@ namespace Moryx.Drivers.Mqtt
     /// <inheritdoc cref="MqttTopic" />
     public abstract class MqttTopic<TMessage> : MqttTopic, IMessageChannel
     {
-        private static readonly System.Diagnostics.ActivitySource _activitySource = new System.Diagnostics.ActivitySource("Moryx.Drivers.Mqtt.MqttTopic");
+        private static readonly ActivitySource _activitySource = new ActivitySource("Moryx.Drivers.Mqtt.MqttTopic");
 
         /// <summary>
         /// Activity source used for tracing messages handled by this topic. Can be overwritten by other implementations
         /// </summary>
-        protected virtual System.Diagnostics.ActivitySource ActivitySource => _activitySource;
+        protected virtual ActivitySource ActivitySource => _activitySource;
 
         /// <summary>
         /// Constructor for MessageType
@@ -375,7 +375,7 @@ namespace Moryx.Drivers.Mqtt
             var retain = payload is IRetainAwareMessage ram && ram.Retain.HasValue
                 ? ram.Retain.Value
                 : Retain;
-            return MqttDriver.OnSend(
+            return MqttDriver.OnSendAsync(
                 new MqttMessageTopic(ResponseTopic, topic, retain),
                 msg, cancellationToken);
         }

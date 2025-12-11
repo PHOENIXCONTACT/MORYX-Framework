@@ -17,7 +17,7 @@ namespace Moryx.Resources.Samples.Initializer
         public override string Description => "Creates a sample machine and two cells";
 
         /// <inheritdoc />
-        public override Task<ResourceInitializerResult> Execute(IResourceGraph graph, object parameters)
+        public override Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters)
         {
             var machine = graph.Instantiate<Machine>();
             machine.Name = Config.MachineName;

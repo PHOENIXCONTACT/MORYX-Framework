@@ -49,17 +49,17 @@ namespace Moryx.Resources.Benchmarking
         [DataMember, EntrySerialize] public int StepId { get; set; }
 
         /// <inheritdoc />
-        protected override void OnInitialize()
+        protected override async Task OnInitializeAsync()
         {
-            base.OnInitialize();
+            await base.OnInitializeAsync();
 
             Capabilities = new BenchmarkCapabilities(StepId);
         }
 
         /// <inheritdoc />
-        protected override void OnStart()
+        protected override async Task OnStartAsync()
         {
-            base.OnStart();
+            await base.OnStartAsync();
 
             ParallelOperations.ScheduleExecution(LogValues, ReportInterval, ReportInterval);
         }

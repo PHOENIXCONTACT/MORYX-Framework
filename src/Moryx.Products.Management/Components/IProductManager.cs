@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Linq.Expressions;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Modules;
 
@@ -35,7 +36,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Load product by identity
         /// </summary>
-        ProductType LoadType(ProductIdentity identity);
+        ProductType LoadType(IIdentity identity);
 
         /// <summary>
         /// Create a new product for the given group type
@@ -55,7 +56,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Create revision of this product with provided revision number
         /// </summary>
-        ProductType Duplicate(ProductType source, ProductIdentity identity);
+        ProductType Duplicate(ProductType source, IIdentity identity);
 
         /// <summary>
         /// Import the given file as a product to the database

@@ -100,7 +100,7 @@ namespace Moryx.Orders.Management.Assignment
             }
             finally
             {
-                operationData.AssignCompleted(result);
+                await operationData.AssignCompleted(result);
             }
         }
 
@@ -121,7 +121,7 @@ namespace Moryx.Orders.Management.Assignment
             }
             finally
             {
-                operationData.AssignCompleted(result);
+                await operationData.AssignCompleted(result);
             }
         }
 

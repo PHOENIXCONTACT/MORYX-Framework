@@ -50,7 +50,7 @@ namespace Moryx.ProcessData.Endpoints.Services
                 Name = m.Name
             }).ToList();
 
-            _moduleManager.ReincarnateModule(ProcessDataMonitor());
+            _moduleManager.ReincarnateModuleAsync(ProcessDataMonitor());
 
             return listener.ToDto();
         }

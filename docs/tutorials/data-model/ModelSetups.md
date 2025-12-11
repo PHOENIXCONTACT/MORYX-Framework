@@ -42,7 +42,7 @@ First we have to take care of the properties required by the Runtime. They are n
 When the setup gets executed, MORYX will create a `IUnitOfWork` and provides it within the `Execute` method. Here everything can be done for setting up the database:
 
 ````cs
-public Task Execute(IUnitOfWork openContext, string setupData)
+public Task ExecuteAsync(IUnitOfWork openContext, string setupData)
 {
 }
 ````
@@ -74,7 +74,7 @@ Kathrin Cole
 A setup parsing the file and creating the entity might look likes this:
 
 ````cs
-public async Task Execute(IUnitOfWork uow, string setupData)
+public async Task ExecuteAsync(IUnitOfWork uow, string setupData)
 {
     var employeeRepo = uow.GetRepository<IEmployeeRepository>();
     var addressRepo = uow.GetRepository<IAddressRepository>();

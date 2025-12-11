@@ -99,13 +99,13 @@ namespace Moryx.Model.Repositories
         Task<T> AddAsync(T entity);
 
         /// <summary>
-        /// Add multiple entities to to context at one time
+        /// Add multiple entities to the context at one time
         /// </summary>
         /// <param name="entities">Entities that shall be added</param>
         IEnumerable<T> AddRange(IEnumerable<T> entities);
 
         /// <summary>
-        /// Add multiple entities to to context at one time
+        /// Add multiple entities to the context at one time
         /// </summary>
         /// <param name="entities">Entities that shall be added</param>
         Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities);
@@ -117,7 +117,7 @@ namespace Moryx.Model.Repositories
         T Remove(T entity);
 
         /// <summary>
-        /// Remove the entity and specifiy whether to remove permanent or
+        /// Remove the entity and specify whether to remove permanent or
         /// simply flag it as deleted if possible.
         /// </summary>
         T Remove(T entity, bool permanent);

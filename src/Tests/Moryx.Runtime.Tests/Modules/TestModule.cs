@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Container;
@@ -33,7 +34,7 @@ namespace Moryx.Runtime.Tests.Modules
 
         public TestConfig MyConfig => Config;
 
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             LastInvoke = InvokedMethod.Initialize;
             switch (CurrentMode)
@@ -43,9 +44,11 @@ namespace Moryx.Runtime.Tests.Modules
                 case TestMode.SystemException:
                     throw new Exception("I am done here!");
             }
+
+            return Task.CompletedTask;
         }
 
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             LastInvoke = InvokedMethod.Start;
             RetryCount++;
@@ -56,9 +59,10 @@ namespace Moryx.Runtime.Tests.Modules
                 case TestMode.SystemException:
                     throw new Exception("I am done here!");
             }
+            return Task.CompletedTask;
         }
 
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             LastInvoke = InvokedMethod.Stop;
             switch (CurrentMode)
@@ -68,6 +72,7 @@ namespace Moryx.Runtime.Tests.Modules
                 case TestMode.SystemException:
                     throw new Exception("I am done here!");
             }
+            return Task.CompletedTask;
         }
     }
 }

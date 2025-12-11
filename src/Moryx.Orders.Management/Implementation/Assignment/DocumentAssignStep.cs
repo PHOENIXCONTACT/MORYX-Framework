@@ -58,7 +58,7 @@ namespace Moryx.Orders.Management.Assignment
             IReadOnlyList<Document> availableDocuments;
             try
             {
-                availableDocuments = await DocumentLoader.Load(operation);
+                availableDocuments = await DocumentLoader.LoadAsync(operation);
             }
             catch (Exception e)
             {

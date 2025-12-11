@@ -5,9 +5,9 @@
     <ng-template #header_info>
       <div>
         <h2 class="header-information-title">
-          {{ identifier() }}&nbsp;{{ currentProduct()?.name }}
+          {{ identifier() }}&nbsp;{{ currentProduct().name }}
         </h2>
-        <p class="header-subtitle">{{ currentProduct()?.state }}</p>
+        <p class="header-subtitle">{{ currentProduct().state }}</p>
       </div>
     </ng-template>
     <ng-template #form>

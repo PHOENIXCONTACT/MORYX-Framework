@@ -19,7 +19,7 @@ namespace Moryx.TestTools.Test.Model
 
         public string SupportedFileRegex => string.Empty;
 
-        public async Task Execute(IUnitOfWork openContext, string setupData)
+        public async Task ExecuteAsync(IUnitOfWork openContext, string setupData)
         {
             var carRepo = openContext.GetRepository<ICarEntityRepository>();
             var wheelRepo = openContext.GetRepository<IWheelEntityRepository>();

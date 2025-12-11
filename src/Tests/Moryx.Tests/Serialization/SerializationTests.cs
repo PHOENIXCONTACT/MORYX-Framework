@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using Moryx.Configuration;
 using Moryx.Serialization;
+using Moryx.Tests.Serialization;
 using NUnit.Framework;
 
 namespace Moryx.Tests

@@ -176,7 +176,7 @@ namespace Moryx.ProcessData.Endpoints.Services
                 ValueTarget = b.ValueTarget
             }));
 
-            _moduleManager.ReincarnateModule(module);
+            _moduleManager.ReincarnateModuleAsync(module);
 
             return new ConfiguredBindings { Bindings = bindings };
         }

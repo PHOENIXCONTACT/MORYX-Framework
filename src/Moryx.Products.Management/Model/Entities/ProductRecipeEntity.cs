@@ -8,7 +8,7 @@ namespace Moryx.Products.Management.Model;
 
 public class ProductRecipeEntity : ModificationTrackedEntityBase, IGenericColumns
 {
-    public virtual string Type { get; set; }
+    public virtual string TypeName { get; set; }
 
     public virtual string Name { get; set; }
 

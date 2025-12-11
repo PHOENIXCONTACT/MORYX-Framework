@@ -8,7 +8,7 @@ namespace Moryx.Workplans
     /// <summary>
     /// State pattern for the engine
     /// </summary>
-    internal abstract class EngineState : StateBase<WorkplanEngine>
+    internal abstract class EngineState : SyncStateBase<WorkplanEngine>
     {
         protected EngineState(WorkplanEngine context, StateMap stateMap) : base(context, stateMap)
         {

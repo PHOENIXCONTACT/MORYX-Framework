@@ -28,7 +28,7 @@ namespace Moryx.AbstractionLayer.Products
         /// Load product type by identity
         /// </summary>
         /// <exception cref="ProductNotFoundException">Thrown when the product with the given id doesn't exist.</exception>
-        ProductType LoadType(ProductIdentity identity);
+        ProductType LoadType(IIdentity identity);
 
         /// <summary>
         /// Event raised when a product type changed
@@ -39,7 +39,7 @@ namespace Moryx.AbstractionLayer.Products
         /// Duplicate a product under a new identity
         /// </summary>
         /// <exception cref="IdentityConflictException">Thrown when the new identity causes conflicts</exception>
-        ProductType Duplicate(ProductType template, ProductIdentity newIdentity);
+        ProductType Duplicate(ProductType template, IIdentity newIdentity);
 
         /// <summary>
         /// Save a product type
@@ -54,7 +54,7 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Import product types for the given parameters with the named importer
         /// </summary>
-        Task<ProductImportResult> Import(string importerName, object parameters);
+        Task<ProductImportResult> ImportAsync(string importerName, object parameters);
 
         /// <summary>
         /// Retrieves the current recipe for this product
@@ -65,6 +65,11 @@ namespace Moryx.AbstractionLayer.Products
         /// Saves given recipe to the storage
         /// </summary>
         long SaveRecipe(IProductRecipe recipe);
+
+        /// <summary>
+        /// Saves given recipe to the storage
+        /// </summary>
+        void SaveRecipes(IReadOnlyList<IProductRecipe> recipes);
 
         /// <summary>
         /// Create an product instance of given product

@@ -65,7 +65,7 @@ public class HandleContinuationPoint : OpcUaTestBase
     }
 
     [Test]
-    public void TestContinuationPoint()
+    public async Task TestContinuationPoint()
     {
         //Arrange
         var byteArray = new byte[] { 0, 1 };
@@ -94,7 +94,7 @@ public class HandleContinuationPoint : OpcUaTestBase
         };
 
         //Act
-        ((IPlugin)_driver).Start();
+        await ((IAsyncPlugin)_driver).StartAsync();
 
         //Assert
         Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), Is.True, "Driver was not running");

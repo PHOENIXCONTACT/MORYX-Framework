@@ -26,25 +26,28 @@ namespace Moryx.ProcessData.Monitor
         }
 
         /// <inheritdoc />
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             Container.SetInstance(ConfigManager);
 
             Container.LoadComponents<IProcessDataListener>();
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             Container.Resolve<IProcessDataCollector>().Start();
             ActivateFacade(_processDataMonitorFacade);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             Container.Resolve<IProcessDataCollector>().Stop();
             DeactivateFacade(_processDataMonitorFacade);
+            return Task.CompletedTask;
         }
 
         private readonly ProcessDataMonitorFacade _processDataMonitorFacade = new();

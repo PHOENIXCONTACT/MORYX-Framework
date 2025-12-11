@@ -37,9 +37,9 @@ namespace Moryx.Resources.Benchmarking
 
         public IEnumerable<ICell> Usages => [Cell];
 
-        protected override void OnStart()
+        protected override async Task OnStartAsync()
         {
-            base.OnStart();
+            await base.OnStartAsync();
 
             SimulatedState = SimulationState.Idle;
         }
@@ -84,7 +84,7 @@ namespace Moryx.Resources.Benchmarking
         public event EventHandler<SimulationState> SimulatedStateChanged;
     }
 
-    public class FakeDriverState : DriverState<SimulatedFakeDriver>
+    public class FakeDriverState : SyncDriverState<SimulatedFakeDriver>
     {
         [StateDefinition(typeof(FakeDriverState), IsInitial = true)]
         public int InitialState = 0;

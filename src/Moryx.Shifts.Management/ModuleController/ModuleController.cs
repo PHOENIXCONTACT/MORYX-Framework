@@ -46,30 +46,33 @@ namespace Moryx.Shifts.Management
         public IDbContextManager DbContextManager { get; }
 
         /// <inheritdoc />
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             Container
                 .ActivateDbContexts(DbContextManager)
                 .SetInstance(ResourceManagement)
                 .SetInstance(OperatorManagement);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
             Container.Resolve<IShiftStorage>().Start();
             Container.Resolve<IShiftManager>().Start();
 
             ActivateFacade(_facade);
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
             DeactivateFacade(_facade);
 
             Container.Resolve<IShiftManager>().Stop();
             Container.Resolve<IShiftStorage>().Stop();
+            return Task.CompletedTask;
         }
 
         private readonly ShiftManagementFacade _facade = new();

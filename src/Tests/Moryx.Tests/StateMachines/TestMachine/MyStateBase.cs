@@ -5,7 +5,7 @@ using Moryx.StateMachines;
 
 namespace Moryx.Tests
 {
-    public abstract class MyStateBase : StateBase<MyContext>
+    public abstract class MyStateBase : SyncStateBase<MyContext>
     {
         protected MyStateBase(MyContext context, StateMap stateMap) : base(context, stateMap)
         {

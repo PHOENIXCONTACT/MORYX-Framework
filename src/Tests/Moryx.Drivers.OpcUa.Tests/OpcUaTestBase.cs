@@ -65,7 +65,7 @@ public class OpcUaTestBase
         return [node1, node2, node3];
     }
 
-    public void BasicSetup()
+    protected Task BasicSetup()
     {
         ReflectionTool.TestMode = true;
         var nextRefs = CreateNodes(_namespaceTable);
@@ -117,10 +117,10 @@ public class OpcUaTestBase
         _sessionMock.Setup(s => s.CreateMonitoredItems(null, It.IsAny<uint>(), It.IsAny<TimestampsToReturn>(),
             It.IsAny<MonitoredItemCreateRequestCollection>(), out results, out diagnosticInfos));
 
-        CreateDriver();
+        return CreateDriver();
     }
 
-    protected void CreateDriver()
+    protected Task CreateDriver()
     {
         _driver = new OpcUaDriver()
         {
@@ -128,8 +128,7 @@ public class OpcUaTestBase
             SamplingInterval = 1000,
             Logger = new ModuleLogger("Dummy", new NullLoggerFactory())
         };
-        ((IInitializable)_driver).Initialize();
-
+        return ((IAsyncInitializable)_driver).InitializeAsync();
     }
 
 }

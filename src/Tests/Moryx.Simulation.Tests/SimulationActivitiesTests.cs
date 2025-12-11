@@ -173,7 +173,7 @@ namespace Moryx.Simulation.Tests
             _processMock.SetupGet(x => x.Id).Returns(processId);
             _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<Activity, bool>>()))
                 .Returns(completedActivity);
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
+            _processControlMock.Setup(pc => pc.GetRunningProcesses()).Returns([_processMock.Object]);
 
             // Act
             _processSimulator.Start();
@@ -199,7 +199,7 @@ namespace Moryx.Simulation.Tests
             _processMock.SetupGet(x => x.Id).Returns(processId);
             _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<Activity, bool>>()));
 
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
+            _processControlMock.Setup(pc => pc.GetRunningProcesses()).Returns([_processMock.Object]);
             CreateActivity(readyActivity, _processMock.Object, [_anotherAssemblyCell]);
 
             // Act
@@ -226,8 +226,8 @@ namespace Moryx.Simulation.Tests
                 .Returns([runningActivity]);
 
             _processMock.SetupGet(x => x.Id).Returns(processId);
-            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<Activity, bool>>()));
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
+            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()));
+            _processControlMock.Setup(pc => pc.GetRunningProcesses()).Returns([_processMock.Object]);
 
             // Act
             _processSimulator.Start();
@@ -251,8 +251,8 @@ namespace Moryx.Simulation.Tests
                 .Returns([readyActivity]);
 
             _processMock.SetupGet(x => x.Id).Returns(processId);
-            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<Activity, bool>>()));
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
+            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()));
+            _processControlMock.Setup(pc => pc.GetRunningProcesses()).Returns([_processMock.Object]);
 
             var exception = new Exception("Test");
             _assemblyDriverMock.Setup(d => d.Ready(It.IsAny<Activity>())).Throws(exception);
@@ -280,8 +280,8 @@ namespace Moryx.Simulation.Tests
                 .Returns([runningActivity]);
 
             _processMock.SetupGet(x => x.Id).Returns(processId);
-            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<Activity, bool>>()));
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
+            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()));
+            _processControlMock.Setup(pc => pc.GetRunningProcesses()).Returns([_processMock.Object]);
 
             var exception = new Exception("Test");
             _assemblyDriverMock.Setup(d => d.Result(It.IsAny<SimulationResult>())).Throws(exception);
@@ -306,12 +306,12 @@ namespace Moryx.Simulation.Tests
                 .Returns([activity1, activity2])
                 .Returns([activity1, activity2]);
 
-            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<Activity, bool>>()))
+            _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<IActivity, bool>>()))
                 .Returns(activity2);
 
             _processMock.SetupGet(x => x.Id).Returns(processId);
 
-            _processControlMock.Setup(pc => pc.RunningProcesses).Returns([_processMock.Object]);
+            _processControlMock.Setup(pc => pc.GetRunningProcesses()).Returns([_processMock.Object]);
             CreateActivity(activity1, _processMock.Object, [cell2, cell1]);
             CreateActivity(activity2, _processMock.Object, [cell1, cell2]);
         }

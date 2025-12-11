@@ -13,24 +13,27 @@ namespace Moryx.Orders.Management.Assignment
     public class NullPartsAssignment : IPartsAssignment
     {
         /// <inheritdoc />
-        public void Initialize(PartsAssignmentConfig config)
+        public Task InitializeAsync(PartsAssignmentConfig config)
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public void Start()
+        public Task StartAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public void Stop()
+        public Task StopAsync()
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Always returns an empty parts list
         /// </summary>
-        public Task<IEnumerable<ProductPart>> LoadParts(Operation operation, IOperationLogger operationLogger)
-            => Task.FromResult(operation.Parts ?? Enumerable.Empty<ProductPart>());
+        public Task<IReadOnlyList<ProductPart>> LoadPartsAsync(Operation operation, IOperationLogger operationLogger)
+            => Task.FromResult(operation.Parts ?? (IReadOnlyList<ProductPart>)Enumerable.Empty<ProductPart>());
     }
 }

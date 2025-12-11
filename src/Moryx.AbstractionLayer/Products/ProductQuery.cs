@@ -22,7 +22,7 @@ namespace Moryx.AbstractionLayer.Products
         /// Product types to filter by
         /// </summary>
         [DataMember]
-        public string Type { get; set; }
+        public string TypeName { get; set; }
 
         /// <summary>
         /// When filtering by type exclude derived types and only return specific matches
@@ -35,6 +35,11 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         [DataMember]
         public string Identifier { get; set; }
+
+        /// <summary>
+        /// State of the product
+        /// </summary>
+        public ProductState? RequiredState { get; set; }
 
         /// <summary>
         /// Revisions to filter

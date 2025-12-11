@@ -76,7 +76,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
 
                 if (userCreateResult.Succeeded)
                 {
-                    await _tokenService.GenerateToken(user);
+                    await _tokenService.GenerateTokenAsync(user);
                     return Ok();
                 }
 
@@ -126,7 +126,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
                     });
                 }
 
-                var jwtToken = await _tokenService.GenerateToken(user);
+                var jwtToken = await _tokenService.GenerateTokenAsync(user);
                 HttpContext.Response.Cookies.SetJwtCookie(jwtToken, user);
 
                 var userModel = ModelConverter.GetUserModelFromUser(user);
@@ -157,7 +157,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
                     return NotFound("User not found");
 
                 var token = Request.Cookies[MoryxIdentityDefaults.JWT_COOKIE_NAME];
-                await _tokenService.InvalidateRefreshToken(token);
+                await _tokenService.InvalidateRefreshTokenAsync(token);
 
                 return base.SignOut();
             }
@@ -184,7 +184,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
                 Token = Request.Cookies[MoryxIdentityDefaults.JWT_COOKIE_NAME]
             };
 
-            var result = await _tokenService.VerifyAndGenerateRefreshToken(tokenRequest);
+            var result = await _tokenService.VerifyAndGenerateRefreshTokenAsync(tokenRequest);
             if (!result.Success)
                 return BadRequest(result);
 
@@ -231,7 +231,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
 
             filter ??= "";
             var roles = await _userManager.GetRolesAsync(user);
-            var permissionClaims = await _tokenService.GetAllPermissionClaims(roles);
+            var permissionClaims = await _tokenService.GetAllPermissionClaimsAsync(roles);
             var permissions = permissionClaims.Select(p => p.Value).Where(p => p.StartsWith(filter)).ToArray();
 
             return Ok(permissions);
@@ -516,7 +516,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
             }
 
             // Removes the refresh token that belongs to the user first. Otherwise we violate a constraint.
-            await _tokenService.InvalidateRefreshTokens(user);
+            await _tokenService.InvalidateRefreshTokensAsync(user);
             var result = await _userManager.DeleteAsync(user);
 
             if (result.Succeeded)

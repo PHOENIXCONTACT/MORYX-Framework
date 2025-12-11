@@ -65,7 +65,7 @@ namespace Moryx.Collections
             StateMachine.Initialize<IDelayQueueContext>(this).With<QueueStateBase>();
         }
 
-        void IStateContext.SetState(IState state)
+        void IStateContext.SetState(StateBase state)
         {
             // ReSharper disable once InconsistentlySynchronizedField
             // All state changes will be do in locked block

@@ -8,7 +8,7 @@ namespace Moryx.Orders.Management
     /// <summary>
     /// The one and only and mighty and fabulous order pool
     /// </summary>
-    internal interface IOperationDataPool : IPlugin
+    internal interface IOperationDataPool : IAsyncPlugin
     {
         /// <summary>
         /// Returns all operations which are added to the pool
@@ -23,12 +23,12 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Will return the operation with the given id
         /// </summary>
-        IOperationData Get(Guid identifier);
+        Task<IOperationData> Get(Guid identifier);
 
         /// <summary>
         /// Will return the operation with the given order and operation numbers
         /// </summary>
-        IOperationData Get(string orderNumber, string operationNumber);
+        Task<IOperationData> Get(string orderNumber, string operationNumber);
 
         /// <summary>
         /// Will return the operation data object by the given operation
@@ -43,7 +43,7 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Will add a new operation to the pool.
         /// </summary>
-        IOperationData Add(OperationCreationContext context, IOperationSource source);
+        Task<IOperationData> Add(OperationCreationContext context, IOperationSource source);
 
         /// <summary>
         /// Raised if an operation was updated

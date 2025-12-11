@@ -13,7 +13,7 @@ namespace Moryx.Model
     public enum TestConnectionResult
     {
         /// <summary>
-        /// Anything that belongs to a non existent or wrong configuration
+        /// Anything that belongs to a non-existent or wrong configuration
         /// </summary>
         ConfigurationError,
 
@@ -71,35 +71,35 @@ namespace Moryx.Model
         /// <summary>
         /// Test connection for config
         /// </summary>
-        Task<TestConnectionResult> TestConnection(DatabaseConfig config);
+        Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config);
 
         /// <summary>
         /// Create a new database for this model with given config
         /// </summary>
-        Task<bool> CreateDatabase(DatabaseConfig config);
+        Task<bool> CreateDatabaseAsync(DatabaseConfig config);
 
         /// <summary>
         /// Retrieves all names of available updates
         /// </summary>
         /// <returns></returns>
-        Task<IReadOnlyList<string>> AvailableMigrations(DatabaseConfig config);
+        Task<IReadOnlyList<string>> AvailableMigrationsAsync(DatabaseConfig config);
 
         /// <summary>
         /// Retrieves all names of installed updates
         /// </summary>
         /// <returns></returns>
-        Task<IReadOnlyList<string>> AppliedMigrations(DatabaseConfig config);
+        Task<IReadOnlyList<string>> AppliedMigrationsAsync(DatabaseConfig config);
 
         /// <summary>
         ///
         /// </summary>
-        Task<DatabaseMigrationSummary> MigrateDatabase(DatabaseConfig config);
+        Task<DatabaseMigrationSummary> MigrateDatabaseAsync(DatabaseConfig config);
 
         /// <summary>
         /// Delete this database
         /// </summary>
         /// <param name="config"></param>
         /// <returns></returns>
-        Task DeleteDatabase(DatabaseConfig config);
+        Task DeleteDatabaseAsync(DatabaseConfig config);
     }
 }

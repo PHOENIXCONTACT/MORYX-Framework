@@ -1,30 +1,25 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Threading.Tasks;
 using Moryx.Serialization;
 using NUnit.Framework;
 
 namespace Moryx.Tests
 {
     /// <summary>
-    /// Unit tests for the static <see cref="EntryToModelConverter"/> class
+    /// Unit tests for <see cref="EntryConvert"/> method invocation
     /// </summary>
     [TestFixture]
     public class EntryConvertInvokeMethodTests
     {
-        private readonly EntrySerialize_Methods _sut;
-
-        public EntryConvertInvokeMethodTests()
-        {
-            _sut = new EntrySerialize_Methods();
-            //_serialization = new EntrySerializeSerialization();
-        }
+        private readonly EntrySerialize_Methods _sut = new();
 
         [Test]
         public void PublicMethodsWillBeInvoked()
         {
             // Act
-            var entry = EntryConvert.InvokeMethod(_sut, NoParamsMethodEntry("InvocablePublic"));
+            var entry = EntryConvert.InvokeMethod(_sut, NoParamsMethodEntry(nameof(EntrySerialize_Methods.InvocablePublic)));
 
             // Assert
             Assert.That(entry, Is.Null);
@@ -34,7 +29,7 @@ namespace Moryx.Tests
         public void InternalMethodsWillBeInvoked()
         {
             // Act
-            var entry = EntryConvert.InvokeMethod(_sut, NoParamsMethodEntry("InvocableInternal"));
+            var entry = EntryConvert.InvokeMethod(_sut, NoParamsMethodEntry(nameof(EntrySerialize_Methods.InvocableInternal)));
 
             // Assert
             Assert.That(entry, Is.Null);
@@ -56,8 +51,77 @@ namespace Moryx.Tests
                 () => EntryConvert.InvokeMethod(_sut, NoParamsMethodEntry("NonInvocablePrivate")));
         }
 
-        private MethodEntry NoParamsMethodEntry(string name)
-            => new()
-            { Name = name, Parameters = new() { } };
+        [Test(Description = "Async method without result invoked synchronous")]
+        public void AsyncMethodWithoutResultInvokedSynchronous()
+        {
+            // Arrange
+            var parameters = NoParamsAsyncMethodEntry(nameof(EntrySerialize_Methods.AsyncWithoutResult));
+
+            // Act
+            var entry = EntryConvert.InvokeMethod(_sut, parameters);
+
+            // Assert
+            Assert.That(entry, Is.Null);
+        }
+
+        [Test(Description = "Async method with result invoked synchronous")]
+        public void AsyncMethodWithResultInvokedSynchronous()
+        {
+            // Arrange
+            var parameters = NoParamsAsyncMethodEntry(nameof(EntrySerialize_Methods.AsyncWithStringResult));
+
+            // Act
+            var entry = EntryConvert.InvokeMethod(_sut, parameters);
+
+            // Assert
+            Assert.That(entry, Is.Not.Null);
+            Assert.That(entry.Value.Current, Is.EqualTo("Test"));
+        }
+
+        [Test(Description = "Async method without result invoked async")]
+        public async Task AsyncMethodWithoutResultInvokedAsync()
+        {
+            // Arrange
+            var parameters = NoParamsAsyncMethodEntry(nameof(EntrySerialize_Methods.AsyncWithoutResult));
+
+            // Act
+            var entry = await EntryConvert.InvokeMethodAsync(_sut, parameters);
+
+            // Assert
+            Assert.That(entry, Is.Null);
+        }
+
+        [Test(Description = "Async method with result invoked async")]
+        public async Task AsyncMethodWithResultInvokedAsync()
+        {
+            // Arrange
+            var parameters = NoParamsAsyncMethodEntry(nameof(EntrySerialize_Methods.AsyncWithStringResult));
+
+            // Act
+            var entry = await EntryConvert.InvokeMethodAsync(_sut, parameters);
+
+            // Assert
+            Assert.That(entry, Is.Not.Null);
+            Assert.That(entry.Value.Current, Is.EqualTo("Test"));
+        }
+
+        private static MethodEntry NoParamsAsyncMethodEntry(string name)
+        {
+            return new MethodEntry
+            {
+                Name = name,
+                Parameters = new Entry(),
+                IsAsync = true
+            };
+        }
+
+        private static MethodEntry NoParamsMethodEntry(string name)
+        {
+            return new MethodEntry
+            {
+                Name = name,
+                Parameters = new Entry()
+            };
+        }
     }
 }

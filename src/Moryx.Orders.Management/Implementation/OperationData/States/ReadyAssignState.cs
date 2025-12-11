@@ -16,20 +16,21 @@ namespace Moryx.Orders.Management
         {
         }
 
-        public override void AssignCompleted(bool success)
+        public override async Task AssignCompleted(bool success)
         {
-            Context.HandleAssignCompleted(success);
-            NextState(success ? StateReady : StateReadyAssignFailed);
+            await Context.HandleAssignCompleted(success);
+            await NextStateAsync(success ? StateReady : StateReadyAssignFailed);
         }
 
-        public override void Resume()
+        public override Task Resume()
         {
-            NextState(StateReady);
+            return NextStateAsync(StateReady);
         }
 
-        public override void Abort()
+        public override Task Abort()
         {
             // Cannot abort here
+            return Task.CompletedTask;
         }
     }
 }

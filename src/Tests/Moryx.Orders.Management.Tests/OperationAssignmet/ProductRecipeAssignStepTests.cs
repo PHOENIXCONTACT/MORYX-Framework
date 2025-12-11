@@ -35,7 +35,7 @@ namespace Moryx.Orders.Management.Tests
         private InternalOperation _operation;
 
         [SetUp]
-        public void SetUp()
+        public async Task SetUp()
         {
             var operationLoggerMock = new Mock<IOperationLogger>();
             _operationLogger = operationLoggerMock.Object;
@@ -69,7 +69,7 @@ namespace Moryx.Orders.Management.Tests
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 ProductManagement = _productManagementMock.Object
             };
-            productAssignment.Start();
+            await productAssignment.StartAsync();
 
             _productAssignStep = new ProductAssignStep
             {
@@ -84,7 +84,7 @@ namespace Moryx.Orders.Management.Tests
                 Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 ProductManagement = _productManagementMock.Object
             };
-            recipeAssignment.Start();
+            await recipeAssignment.StartAsync();
 
             _recipeAssignStep = new RecipeAssignStep
             {

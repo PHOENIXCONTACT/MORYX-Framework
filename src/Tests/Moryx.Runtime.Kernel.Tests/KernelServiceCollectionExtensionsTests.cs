@@ -1,6 +1,9 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Moryx.Container;
@@ -8,8 +11,6 @@ using Moryx.Runtime.Kernel.Tests.ModuleMocks;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
 using NUnit.Framework;
-using System.IO;
-using System.Linq;
 
 namespace Moryx.Runtime.Kernel.Tests
 {
@@ -85,7 +86,7 @@ namespace Moryx.Runtime.Kernel.Tests
         }
 
         [Test]
-        public void StartAndStopAllModules()
+        public async Task StartAndStopAllModules()
         {
             // Arrange
             var moduleManagerMock = new Mock<IModuleManager>();
@@ -94,17 +95,17 @@ namespace Moryx.Runtime.Kernel.Tests
             var moduleManager = provider.GetRequiredService<IModuleManager>();
 
             // Act
-            moduleManager.StartModules();
+            await moduleManager.StartModulesAsync();
 
             // Assert
-            moduleManagerMock.Verify(m => m.StartModules(), Times.Once);
+            moduleManagerMock.Verify(m => m.StartModulesAsync(), Times.Once);
             moduleManagerMock.VerifyNoOtherCalls();
 
             // Act
-            moduleManager.StopModules();
+            await moduleManager.StopModulesAsync();
 
             // Assert
-            moduleManagerMock.Verify(m => m.StopModules(), Times.Once);
+            moduleManagerMock.Verify(m => m.StopModulesAsync(), Times.Once);
         }
     }
 }

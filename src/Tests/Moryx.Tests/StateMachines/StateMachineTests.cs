@@ -11,7 +11,7 @@ namespace Moryx.Tests
     public class StateMachineTests
     {
         [Test(Description = "Test the initial state. Throws an exception if the wrong state was selected.")]
-        public void Inital()
+        public void Initial()
         {
             //Arrange
             var context = CreateContext();

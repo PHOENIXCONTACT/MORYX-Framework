@@ -10,6 +10,7 @@ using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.StateMachines;
 using Moryx.Threading;
+using Moryx.Tools;
 
 namespace Moryx.Runtime.Modules
 {
@@ -55,13 +56,13 @@ namespace Moryx.Runtime.Modules
             LoggerFactory = loggerFactory;
             Logger = LoggerFactory.CreateLogger(GetType().Namespace);
 
-            StateMachine.Initialize((IServerModuleStateContext)this).With<ServerModuleStateBase>();
+            StateMachine.InitializeAsync((IServerModuleStateContext)this).WithAsync<ServerModuleStateBase>().Wait();
         }
 
         #region ValidateHealthState
 
         /// <summary>
-        /// Does a validaton of the health state. Only states indicating <see cref="ServerModuleState.Running"/> will not
+        /// Does a validation of the health state. Only states indicating <see cref="ServerModuleState.Running"/> will not
         /// throw an <see cref="HealthStateException"/>
         /// </summary>
         protected void ValidateHealthState() => _state.ValidateHealthState();
@@ -75,17 +76,16 @@ namespace Moryx.Runtime.Modules
         /// </summary>
         public IModuleContainerFactory ContainerFactory { get; }
 
-        void IInitializable.Initialize()
+        Task IAsyncInitializable.InitializeAsync()
         {
-            lock (_stateLock)
-                _state.Initialize();
+            return _stateLockSemaphore.ExecuteAsync(() => _state.Initialize());
         }
-        void IServerModuleStateContext.Initialize()
+        async Task IServerModuleStateContext.InitializeAsync()
         {
             // Activate logging
             var logger = new ModuleLogger(GetType().Namespace, LoggerFactory, Notifications.AddFromLogStream);
 
-            Logger.Log(LogLevel.Information, "{0} is initializing...", Name);
+            Logger.Log(LogLevel.Information, "{name} is initializing...", Name);
 
             // Get config and parse for container settings
             Config = ConfigManager.GetConfiguration<TConf>();
@@ -100,11 +100,11 @@ namespace Moryx.Runtime.Modules
                 .SetInstance<IModuleLogger>(logger, "ModuleLogger")
                 .SetInstance<ILogger>(logger, "Logger");
 
-            OnInitialize();
+            await OnInitializeAsync();
 
             // Execute SubInitializer
-            var subInits = Container.ResolveAll<ISubInitializer>() ?? [];
-            foreach (var subInitializer in subInits)
+            var subInitializers = Container.ResolveAll<ISubInitializer>() ?? [];
+            foreach (var subInitializer in subInitializers)
             {
                 subInitializer.Initialize(Container);
             }
@@ -115,17 +115,16 @@ namespace Moryx.Runtime.Modules
             Notifications.Clear();
         }
 
-        void IServerModule.Start()
+        Task IServerModule.StartAsync()
         {
-            lock (_stateLock)
-                _state.Start();
+            return _stateLockSemaphore.ExecuteAsync(() => _state.Start());
         }
 
-        void IServerModuleStateContext.Start()
+        async Task IServerModuleStateContext.StartAsync()
         {
             Logger.Log(LogLevel.Information, "{0} is starting...", Name);
 
-            OnStart();
+            await OnStartAsync();
 
             Logger.Log(LogLevel.Information, "{0} started!", Name);
         }
@@ -138,17 +137,16 @@ namespace Moryx.Runtime.Modules
             }
         }
 
-        void IServerModule.Stop()
+        Task IServerModule.StopAsync()
         {
-            lock (_stateLock)
-                _state.Stop();
+            return _stateLockSemaphore.ExecuteAsync(() => _state.Stop());
         }
 
-        void IServerModuleStateContext.Stop()
+        async Task IServerModuleStateContext.StopAsync()
         {
             Logger.Log(LogLevel.Information, "{0} is stopping...", Name);
 
-            OnStop();
+            await OnStopAsync();
 
             Logger.Log(LogLevel.Information, "{0} stopped!", Name);
         }
@@ -222,7 +220,7 @@ namespace Moryx.Runtime.Modules
             if (typeof(Array).IsAssignableFrom(propType))
                 return container.ResolveAll(propType.GetElementType());
 
-            var strategyName = Strategies.ContainsKey(propType) ? Strategies[propType] : null;
+            var strategyName = Strategies.TryGetValue(propType, out var strategy) ? strategy : null;
             return strategyName == null ? Container.Resolve(propType)
                                         : Container.Resolve(propType, strategyName);
         }
@@ -248,17 +246,17 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again.
         /// </summary>
-        protected abstract void OnInitialize();
+        protected abstract Task OnInitializeAsync();
 
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected abstract void OnStart();
+        protected abstract Task OnStartAsync();
 
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected abstract void OnStop();
+        protected abstract Task OnStopAsync();
 
         #endregion
 
@@ -280,15 +278,17 @@ namespace Moryx.Runtime.Modules
 
         private ServerModuleStateBase _state;
 
-        private readonly object _stateLock = new();
+        private readonly SemaphoreSlim _stateLockSemaphore = new(1, 1);
 
-        void IStateContext.SetState(IState state)
+        Task IAsyncStateContext.SetStateAsync(StateBase state)
         {
             var oldState = _state?.Classification ?? ServerModuleState.Stopped;
 
             _state = (ServerModuleStateBase)state;
 
             StateChange(oldState, State);
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -319,7 +319,7 @@ namespace Moryx.Runtime.Modules
                     }
                     catch (Exception ex)
                     {
-                        Logger?.Log(LogLevel.Warning, ex, "Failed to notify listener of state change");
+                        Logger.Log(LogLevel.Warning, ex, "Failed to notify listener of state change");
                     }
                 }, caller);
             }

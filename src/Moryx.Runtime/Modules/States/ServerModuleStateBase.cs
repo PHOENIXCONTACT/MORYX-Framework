@@ -5,7 +5,7 @@ using Moryx.StateMachines;
 
 namespace Moryx.Runtime.Modules
 {
-    internal abstract class ServerModuleStateBase : StateBase<IServerModuleStateContext>
+    internal abstract class ServerModuleStateBase : AsyncStateBase<IServerModuleStateContext>
     {
         public abstract ServerModuleState Classification { get; }
 
@@ -13,19 +13,19 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        public virtual void Initialize()
+        public virtual Task Initialize()
         {
-            InvalidState();
+            return InvalidStateAsync();
         }
 
-        public virtual void Start()
+        public virtual Task Start()
         {
-            InvalidState();
+            return InvalidStateAsync();
         }
 
-        public virtual void Stop()
+        public virtual Task Stop()
         {
-            InvalidState();
+            return InvalidStateAsync();
         }
 
         public virtual void ValidateHealthState()

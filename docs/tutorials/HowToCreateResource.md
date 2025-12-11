@@ -68,7 +68,7 @@ namespace Moryx.Resources.Samples.DriverTutorial
 The implementation of the `ExampleResource` derives from the [Resource](../../src/Moryx.AbstractionLayer/Resources/Resource.cs) base class. It also implements the `IResource` interface. This is enough to use your resource definition within MORYX. If your resource relies on dependency injection like logging it is important to add the [ResourceRegistration attribute](../../src/Moryx.AbstractionLayer/Resources/Attributes/ResourceRegistrationAttribute.cs). MORYX can now identify this class as a resource. Properties or methods with the Attribute `EntrySerialize` will be shown in the UI. The Attribute `DataMember` marks all properties saved in the database. Additional attributes like `DisplayName` and `Description` are used within the Resource UI.
 
 ## Configure Relations between Resources
-Resources can reference other resources. When for example a cell communicates with a PLC via a Driver, the Driver has to be referenced in the Cell. Every Resource has the References `Children` and `Parent` by default. In order to overwrite 
+Resources can reference other resources. When for example a cell communicates with a PLC via a Driver, the Driver has to be referenced in the Cell. Every Resource has the References `Children` and `Parent` by default. In order to overwrite
 References use the attribute `ReferenceOverride`. New References can be added using the attribute `ResourceReference`. For the different ResourceRelationTypes take a look [here](../../src/Moryx.AbstractionLayer/Resources/ResourceRelationType.cs).
 
 ```C#
@@ -96,31 +96,27 @@ If you want to use the new resource from a custom module, you need to request th
         [RequiredModuleApi(IsOptional = false, IsStartDependency = true)]
         public IResourceManagement ResourceManagement { get; set; }
 
-        public override string Name
-        {
-           ///
-        }
+        public override string Name => "CustomModule";
 
-        #region state transition
-        protected override void OnInitialize()
+        protected override Task OnInitializeAsync()
         {
             //pass the component to the inner container
             Container.SetInstance(ResourceManagement);
 
             ResourceManagement.CapabilitiesChanged += ExampleResourceCapabilityChanged;
+
+            return Task.CompletedTask;
         }
 
-        protected override void OnStart()
+        protected override Task OnStartAsync()
         {
-            ///
+            return Task.CompletedTask;
         }
 
-        protected override void OnStop()
+        protected override Task OnStopAsync()
         {
-           ///
+            return Task.CompletedTask;
         }
-        #endregion
-
     }
 ````
 

@@ -27,6 +27,22 @@ namespace Moryx.Model
         }
 
         /// <summary>
+        /// Get or create an entity for a business object async
+        /// </summary>
+        /// <param name="unitOfWork">An open database unit of work</param>
+        /// <param name="obj">The business object</param>
+        /// <typeparam name="TEntity">The entity type to use</typeparam>
+        public static async Task<TEntity> GetEntityAsync<TEntity>(this IUnitOfWork unitOfWork, IPersistentObject obj)
+            where TEntity : class, IEntity
+        {
+            var entity = unitOfWork.FindEntity<TEntity>(obj);
+
+            entity ??= await unitOfWork.CreateEntityAsync<TEntity>(obj);
+
+            return entity;
+        }
+
+        /// <summary>
         /// Get an entity for a business object or return null
         /// </summary>
         /// <param name="unitOfWork">An open database unit of work</param>
@@ -37,6 +53,21 @@ namespace Moryx.Model
         {
             var repository = unitOfWork.GetRepository<IRepository<TEntity>>();
             var entity = repository.GetByKey(obj.Id);
+
+            return entity;
+        }
+
+        /// <summary>
+        /// Get an entity for a business object async or return null
+        /// </summary>
+        /// <param name="unitOfWork">An open database unit of work</param>
+        /// <param name="obj">The business object</param>
+        /// <typeparam name="TEntity">The entity type to use</typeparam>
+        public static async Task<TEntity> FindEntityAsync<TEntity>(this IUnitOfWork unitOfWork, IPersistentObject obj)
+            where TEntity : class, IEntity
+        {
+            var repository = unitOfWork.GetRepository<IRepository<TEntity>>();
+            var entity = await repository.GetByKeyAsync(obj.Id);
 
             return entity;
         }
@@ -58,5 +89,21 @@ namespace Moryx.Model
             return entity;
         }
 
+        /// <summary>
+        /// Create an entity for a business object async
+        /// </summary>
+        /// <param name="unitOfWork">An open database unit of work</param>
+        /// <param name="obj">The business object</param>
+        /// <typeparam name="TEntity">The entity type to use</typeparam>
+        public static async Task<TEntity> CreateEntityAsync<TEntity>(this IUnitOfWork unitOfWork, IPersistentObject obj)
+            where TEntity : class, IEntity
+        {
+            var repository = unitOfWork.GetRepository<IRepository<TEntity>>();
+
+            var entity = await repository.CreateAsync();
+            unitOfWork.LinkEntityToBusinessObject(obj, entity);
+
+            return entity;
+        }
     }
 }

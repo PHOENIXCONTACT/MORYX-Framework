@@ -61,7 +61,7 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<TestConnectionResult> TestConnection(DatabaseConfig config)
+        public virtual async Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config)
         {
             if (string.IsNullOrWhiteSpace(config.ConnectionSettings.Database))
                 return TestConnectionResult.ConfigurationError;
@@ -87,7 +87,7 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<bool> CreateDatabase(DatabaseConfig config)
+        public virtual async Task<bool> CreateDatabaseAsync(DatabaseConfig config)
         {
             // Check is database is configured
             if (!CheckDatabaseConfig(config))
@@ -97,7 +97,7 @@ namespace Moryx.Model.Configuration
 
             await using var context = CreateMigrationContext(config);
 
-            return await CreateDatabase(config, context);
+            return await CreateDatabaseAsync(config, context);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Moryx.Model.Configuration
         /// <param name="config">Config for testing the connection</param>
         /// <param name="context">Database context</param>
         /// <returns></returns>
-        protected async Task<bool> CreateDatabase(DatabaseConfig config, DbContext context)
+        protected async Task<bool> CreateDatabaseAsync(DatabaseConfig config, DbContext context)
         {
             //Will create the database if it does not already exist. Applies any pending migrations for the context to the database.
             await context.Database.MigrateAsync();
@@ -123,7 +123,7 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<DatabaseMigrationSummary> MigrateDatabase(DatabaseConfig config)
+        public virtual async Task<DatabaseMigrationSummary> MigrateDatabaseAsync(DatabaseConfig config)
         {
             var result = new DatabaseMigrationSummary();
 
@@ -158,17 +158,17 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<IReadOnlyList<string>> AvailableMigrations(DatabaseConfig config)
+        public virtual async Task<IReadOnlyList<string>> AvailableMigrationsAsync(DatabaseConfig config)
         {
             await using var context = CreateMigrationContext(config);
-            return await AvailableMigrations(context);
+            return await AvailableMigrationsAsync(context);
         }
 
         /// <summary>
         /// Retrieves all names of available updates
         /// </summary>
         /// <returns></returns>
-        protected async Task<IReadOnlyList<string>> AvailableMigrations(DbContext context)
+        protected async Task<IReadOnlyList<string>> AvailableMigrationsAsync(DbContext context)
         {
             try
             {
@@ -183,17 +183,17 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public virtual async Task<IReadOnlyList<string>> AppliedMigrations(DatabaseConfig config)
+        public virtual async Task<IReadOnlyList<string>> AppliedMigrationsAsync(DatabaseConfig config)
         {
             await using var context = CreateMigrationContext(config);
-            return await AppliedMigrations(context);
+            return await AppliedMigrationsAsync(context);
         }
 
         /// <summary>
         /// Retrieves all names of installed updates
         /// </summary>
         /// <returns></returns>
-        public async Task<IReadOnlyList<string>> AppliedMigrations(DbContext context)
+        protected async Task<IReadOnlyList<string>> AppliedMigrationsAsync(DbContext context)
         {
             try
             {
@@ -228,7 +228,7 @@ namespace Moryx.Model.Configuration
         public abstract DbContextOptions BuildDbContextOptions(DatabaseConfig config);
 
         /// <inheritdoc />
-        public abstract Task DeleteDatabase(DatabaseConfig config);
+        public abstract Task DeleteDatabaseAsync(DatabaseConfig config);
 
         /// <summary>
         /// Generally tests the connection to the database

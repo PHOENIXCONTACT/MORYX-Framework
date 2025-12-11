@@ -21,7 +21,7 @@ internal class ISkillManagementTests : TestsBase
     [TearDown]
     public void TearDown()
     {
-        _env.StopTestModule();
+        _env.StopTestModuleAsync();
     }
 
     [Test]
@@ -33,8 +33,8 @@ internal class ISkillManagementTests : TestsBase
         _facade.CreateSkill(ExpiredSkillCreationContext);
 
         // Act
-        _env.StopTestModule();
-        _env.StartTestModule();
+        _env.StopTestModuleAsync();
+        _env.StartTestModuleAsync();
 
         // Assert
         Assert.That(ObjectsAreEqual(_facade.Skills.Single(), Skill));
