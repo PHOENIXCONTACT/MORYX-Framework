@@ -64,17 +64,17 @@ namespace Moryx.AbstractionLayer.Resources
         public IReferences<Resource> Children { get; set; }
 
         /// <inheritdoc />
-        Task IAsyncInitializable.InitializeAsync()
+        Task IAsyncInitializable.InitializeAsync(CancellationToken cancellationToken)
         {
             var loggerName = Name?.Replace(".", "_"); // replace . with _ because of logger child structure
             Logger = Logger?.GetChild(loggerName, GetType());
-            return OnInitializeAsync();
+            return OnInitializeAsync(cancellationToken);
         }
 
         /// <summary>
         /// Resource specific implementation of <see cref="IInitializable.Initialize"/>
         /// </summary>
-        protected virtual Task OnInitializeAsync()
+        protected virtual Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

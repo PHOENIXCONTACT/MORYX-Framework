@@ -229,10 +229,11 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     }
 
     #region Lifecycle
+
     /// <inheritdoc/>
-    protected override async Task OnInitializeAsync()
+    protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
     {
-        await base.OnInitializeAsync();
+        await base.OnInitializeAsync(cancellationToken);
 
         Input = new OpcUaInput(this);
         Output = new OpcUaOutput(this);

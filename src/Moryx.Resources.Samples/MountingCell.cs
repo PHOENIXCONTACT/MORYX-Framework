@@ -20,9 +20,9 @@ namespace Moryx.Resources.Samples
         [ResourceReference(ResourceRelationType.Driver)]
         public IMessageDriver Driver { get; set; }
 
-        protected override async Task OnInitializeAsync()
+        protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
         {
-            await base.OnInitializeAsync();
+            await base.OnInitializeAsync(cancellationToken);
 
             Driver.Received += OnDriverMessageReceived;
         }

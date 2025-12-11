@@ -16,6 +16,7 @@ namespace Moryx.Modules
         /// Initialize this component and prepare it for incoming tasks. This must only involve preparation and must not start
         /// any active functionality and/or periodic execution of logic.
         /// </summary>
-        Task InitializeAsync();
+        /// <param name="cancellationToken"></param>
+        Task InitializeAsync(CancellationToken cancellationToken = default);
     }
 }

@@ -345,9 +345,9 @@ namespace Moryx.Resources.Management.Tests
             [ResourceReference(ResourceRelationType.Extension, AutoSave = true)]
             public IReferences<IResource> References { get; set; }
 
-            protected override async Task OnInitializeAsync()
+            protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
             {
-                await base.OnInitializeAsync();
+                await base.OnInitializeAsync(cancellationToken);
                 InitializeCalls++;
             }
 
@@ -373,9 +373,9 @@ namespace Moryx.Resources.Management.Tests
         {
             public ICapabilities Capabilities { get; private set; }
 
-            protected override async Task OnInitializeAsync()
+            protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
             {
-                await base.OnInitializeAsync();
+                await base.OnInitializeAsync(cancellationToken);
                 Capabilities = new TestCapabilities();
             }
 

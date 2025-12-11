@@ -37,14 +37,14 @@ namespace Moryx.Products.Management
 
         #endregion
 
-        public async Task StartAsync()
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             await Storage.CheckDatabase();
             _importers = (from importerConfig in Config.Importers
                           select ImportFactory.Create(importerConfig)).ToList();
         }
 
-        public Task StopAsync()
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }

@@ -49,9 +49,9 @@ namespace Moryx.Resources.Benchmarking
         [DataMember, EntrySerialize] public int StepId { get; set; }
 
         /// <inheritdoc />
-        protected override async Task OnInitializeAsync()
+        protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
         {
-            await base.OnInitializeAsync();
+            await base.OnInitializeAsync(cancellationToken);
 
             Capabilities = new BenchmarkCapabilities(StepId);
         }

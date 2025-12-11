@@ -76,7 +76,7 @@ namespace Moryx.Runtime.Modules
         /// </summary>
         public IModuleContainerFactory ContainerFactory { get; }
 
-        Task IAsyncInitializable.InitializeAsync()
+        Task IAsyncInitializable.InitializeAsync(CancellationToken cancellationToken)
         {
             return _stateLockSemaphore.ExecuteAsync(() => _state.Initialize());
         }

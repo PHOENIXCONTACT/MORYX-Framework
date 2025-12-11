@@ -46,7 +46,7 @@ namespace Moryx.Runtime.Kernel.Modules
         {
         }
 
-        public Task InitializeAsync()
+        public Task InitializeAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }

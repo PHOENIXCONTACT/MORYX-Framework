@@ -9,7 +9,7 @@ namespace Moryx.Simulation.Tests
     {
         public void TestInit()
         {
-            OnInitializeAsync();
+            OnInitializeAsync(CancellationToken.None).GetAwaiter().GetResult();
         }
     }
 }

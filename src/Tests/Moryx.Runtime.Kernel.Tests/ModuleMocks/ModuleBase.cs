@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Moryx.Container;
 using Moryx.Modules;
@@ -28,7 +29,8 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
         /// Initialize this component and prepare it for incoming taks. This must only involve preparation and must not start
         /// any active functionality and/or periodic execution of logic.
         /// </summary>
-        public Task InitializeAsync()
+        /// <param name="cancellationToken"></param>
+        public Task InitializeAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }

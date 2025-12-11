@@ -29,7 +29,7 @@ namespace Moryx.ControlSystem.MaterialManager
         public IModuleLogger Logger { get; set; }
 
         /// <inheritdoc />
-        public async Task StartAsync()
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             var containers = ResourceManagement.GetResources<IMaterialContainer>().ToList();
             foreach (var container in containers)
@@ -40,7 +40,7 @@ namespace Moryx.ControlSystem.MaterialManager
         }
 
         /// <inheritdoc />
-        public Task StopAsync()
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
             var containers = ResourceManagement.GetResources<IMaterialContainer>().ToList();
             foreach (var container in containers)

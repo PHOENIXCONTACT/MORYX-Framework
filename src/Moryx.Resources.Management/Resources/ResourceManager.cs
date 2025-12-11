@@ -118,7 +118,7 @@ namespace Moryx.Resources.Management
 
         #region LifeCycle
 
-        public async Task InitializeAsync()
+        public async Task InitializeAsync(CancellationToken cancellationToken = default)
         {
             // Set delegates on graph
             Graph.SaveDelegate = SaveAsync;
@@ -136,7 +136,7 @@ namespace Moryx.Resources.Management
             _startup = ResourceStartupPhase.Initializing;
 
             // initialize resources
-            await Parallel.ForEachAsync(Graph.GetAll(), InitializeResource);
+            await Parallel.ForEachAsync(Graph.GetAll(), cancellationToken, InitializeResource);
 
             _startup = ResourceStartupPhase.Initialized;
         }
@@ -148,7 +148,7 @@ namespace Moryx.Resources.Management
         {
             try
             {
-                await ((IAsyncInitializable)resource).InitializeAsync();
+                await ((IAsyncInitializable)resource).InitializeAsync(cancellationToken);
             }
             catch (Exception e)
             {

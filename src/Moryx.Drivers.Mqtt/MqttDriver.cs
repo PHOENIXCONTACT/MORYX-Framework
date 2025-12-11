@@ -228,9 +228,9 @@ public class MqttDriver : Driver, IMessageDriver
     #region Lifecycle
 
     /// <inheritdoc />
-    protected override async Task OnInitializeAsync()
+    protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
     {
-        await base.OnInitializeAsync();
+        await base.OnInitializeAsync(cancellationToken);
 
         var factory = new MqttClientFactory();
         _mqttClient = factory.CreateMqttClient();
