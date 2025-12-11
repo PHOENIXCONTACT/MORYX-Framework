@@ -41,11 +41,11 @@ namespace Moryx.Orders.Management.Assignment
         /// Will be called while creating an operation to load the part list for
         /// the new operation from the <see cref="ProductType"/> itself.
         /// </summary>
-        public Task<IEnumerable<ProductPart>> LoadParts(Operation operation, IOperationLogger operationLogger)
+        public Task<IReadOnlyList<ProductPart>> LoadPartsAsync(Operation operation, IOperationLogger operationLogger)
         {
             if (operation.Product is null)
             {
-                return Task.FromResult(Enumerable.Empty<ProductPart>());
+                return Task.FromResult((IReadOnlyList<ProductPart>)Array.Empty<ProductPart>());
             }
 
             var countedParts = new Dictionary<ProductType, uint>();
@@ -59,8 +59,9 @@ namespace Moryx.Orders.Management.Assignment
                 Classification = PartClassification.Unknown,
                 StagingIndicator = StagingIndicator.NotRelevant, // Unknown here
                 Quantity = pt.Value
-            });
-            return Task.FromResult(result);
+            }).ToArray();
+
+            return Task.FromResult((IReadOnlyList<ProductPart>)result);
         }
 
         private static void IterateProductParts(ProductType product, Dictionary<ProductType, uint> countedParts)

@@ -96,7 +96,7 @@ namespace Moryx.Orders.Management.Tests
         {
             // Arrange
             var operationLoggerMock = new Mock<IOperationLogger>();
-            _documentLoaderMock.Setup(l => l.Load(_operation)).ReturnsAsync(
+            _documentLoaderMock.Setup(l => l.LoadAsync(_operation)).ReturnsAsync(
             [
                 new FileSystemDocument("29025550", 0, Path.Combine(_savePath, "29025550-00.txt"))
                 {

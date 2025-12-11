@@ -487,7 +487,7 @@ public class MqttDriver : Driver, IMessageDriver
     /// <param name="message">The message to be published</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task OnSend(MqttMessageTopic messageTopic, byte[] message, CancellationToken cancellationToken)
+    public async Task OnSendAsync(MqttMessageTopic messageTopic, byte[] message, CancellationToken cancellationToken)
     {
         using var span = _activitySource.StartActivity("Send",
             ActivityKind.Producer, parentContext: default, tags: new Dictionary<string, object>() {

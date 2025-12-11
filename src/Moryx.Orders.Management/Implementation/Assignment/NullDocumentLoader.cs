@@ -33,7 +33,7 @@ namespace Moryx.Orders.Management.Assignment
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<Document>> Load(Operation operation)
+        public Task<IReadOnlyList<Document>> LoadAsync(Operation operation)
             => Task.FromResult(EmptyDocuments);
     }
 }

@@ -124,8 +124,8 @@ Additionally, the APIs of these components have been updated to return `Task` or
 
 **`IResourceGraph`**
 
-- `void Save` -> `Task Save`
-- `bool Destroy` -> `Task<bool> Destroy`
+- `void Save` -> `Task SaveAsync`
+- `bool Destroy` -> `Task<bool> DestroyAsync`
 
 **`IResourceManagement`-facade:**
 
@@ -149,30 +149,30 @@ Additionally, the APIs of these components have been updated to return `Task` or
 
 **`IOrderManagement`-facade:**
 
-- `Operation GetOperation` -> `Task<Operation> GetOperation`
-- `Operation AddOperation` -> `Task<Operation> AddOperation`
-- `void BeginOperation` -> `Task BeginOperation`
-- `void AbortOperation` -> `Task AbortOperation`
-- `void SetOperationSortOrder` -> `Task SetOperationSortOrder`
-- `void UpdateSource` -> `Task UpdateSource`
-- `void ReportOperation` -> `Task ReportOperation`
-- `void InterruptOperation` -> `Task InterruptOperation`
-- `void Reload` -> `Task Reload`
+- `Operation GetOperation` -> `Task<Operation> GetOperationAsync`
+- `Operation AddOperation` -> `Task<Operation> AddOperationAsync`
+- `void BeginOperation` -> `Task BeginOperationAsync`
+- `void AbortOperation` -> `Task AbortOperationAsync`
+- `void SetOperationSortOrder` -> `Task SetOperationSortOrderAsync`
+- `void UpdateSource` -> `Task UpdateSourceAsync`
+- `void ReportOperation` -> `Task ReportOperationAsync`
+- `void InterruptOperation` -> `Task InterruptOperationAsync`
+- `void Reload` -> `Task ReloadAsync`
 
 **`IOperationPool`:**
 
-- `Operation Get` -> `Task<Operation> Get`
+- `Operation Get` -> `Task<Operation> GetAsync`
 
 **`IAdviceExecutor`**
 
-`bool ValidateCreationContext` -> `Task<bool> ValidateCreationContext`
+`bool ValidateCreationContext` -> `Task<bool> ValidateCreationContextAsync`
 
 **`IOperationDispatcher`**
 
-- `void Dispatch` -> `Task Dispatch`
-- `void Complete` -> `Task Complete`
-- `void JobProgressChanged` -> `Task JobProgressChanged`
-- `void JobStateChanged` -> `Task JobStateChanged`
+- `void Dispatch` -> `Task DispatchAsync`
+- `void Complete` -> `Task CompleteAsync`
+- `void JobProgressChanged` -> `Task JobProgressChangedAsync`
+- `void JobStateChanged` -> `Task JobStateChangedAsync`
 
 ### Async Lifecycle Support for ProcessEngine
 
@@ -186,12 +186,16 @@ Additionally, the APIs of these components have been updated to return `Task` or
 
 **`IJobManagement`-facade:**
 
-- `void Add` -> `Task Add`
+- `void Add` -> `Task AddAsync`
 
 **`IProcessControl`-facade:**
 
 - `IReadOnlyList<IProcess> RunningProcesses` -> `IReadOnlyList<IProcess> GetRunningProcesses`
-- `IReadOnlyList<IProcess> GetProcesses` -> `Task<IReadOnlyList<IProcess>> GetArchivedProcesses`
+- `IReadOnlyList<IProcess> GetProcesses` -> `Task<IReadOnlyList<IProcess>> GetArchivedProcessesAsync`
+
+### Other Async Related changes
+
+All public or protected APIs which are Task-based are renamed to use `Async` suffix.
 
 ## WorkerSupport / VisualInstructions
 
@@ -236,9 +240,9 @@ The `ProcessEngineContext` was added to the `ProcessEngineAttached` to provide t
 - ResourceRelationType.PossibleExchangablePart -> ResourceRelationType.PossibleExchangeablePart
 - MqttDriver.BrokerURL -> MqttDriver.BrokerUrl
 - IResourceManagement.GetAllResources -> IResourceManagement.GetResourcesUnsafe
-- IResourceManagement.Create -> IResourceManagement.CreateUnsafe
+- IResourceManagement.Create -> IResourceManagement.CreateUnsafeAsync
 - IResourceManagement.Read -> IResourceManagement.ReadUnsafe
-- IResourceManagement.Modify -> IResourceManagement.ModifyUnsafe
+- IResourceManagement.Modify -> IResourceManagement.ModifyUnsafeAsync
 - ProcessContext -> ProcessWorkplanContext
 - OperationClassification -> OperationStateClassification
 - OperationClassification.Loading -> OperationStateClassification.Assigning
@@ -249,7 +253,7 @@ The `ProcessEngineContext` was added to the `ProcessEngineAttached` to provide t
 - IControlSystemBound.ControlSystemAttached -> ICell.ProcessEngineAttached
 - IControlSystemBound.ControlSystemDetached -> ICell.ProcessEngineDetached
 - ProductQuery.Type -> ProductQuery.TypeName
-- IProcessControl.GetProcesses -> IProcessControl.GetArchivedProcesses
+- IProcessControl.GetProcesses -> IProcessControl.GetArchivedProcessesAsync
 
 ## Reduction of interfaces
 
@@ -334,7 +338,7 @@ All driver APIs have been reworked to use TPL async/await instead of callbacks f
 
 The API of `IResourceInitializer` was adjusted
 
-- `Initialize` is now returning async task
+- `Initialize` renamed to `InitializeAsync` and now returns async task
 - Introduced `ResourceInitializerResult` object for extensibility and option to save
 - Its now possible to execute initializers from the facade
 - The initializers are registered transient by default.
@@ -342,7 +346,7 @@ The API of `IResourceInitializer` was adjusted
 ## Modules-ProcessEngine
 
 - Removed API from IJobManagement: `JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement)`
-- Added `IAsyncEnumerable<IProcessChunk> GetArchivedProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)` to `IProcessControl`
+- Added `IAsyncEnumerable<IProcessChunk> GetArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)` to `IProcessControl`
 
 ## Modules-Products
 
@@ -398,8 +402,6 @@ Features:
 - Supports async invocation of methods now by `InvokeMethodAsync`. Synchronous methods are executed synchronously.
 - The synchronous `InvokeMethod` does now support async methods too. They are executed synchronously.
 
-
 ## Merged `IProcessControlReporting` into `IProcessControl`
 
 The `IProcessControlReporting` interface has been merged into `IProcessControl`. All reporting-related methods and the `ReportAction` enum are now part of `IProcessControl`. Remove usages of `IProcessControlReporting` and update your code to use the unified `IProcessControl` interface.
-

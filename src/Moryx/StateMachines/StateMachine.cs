@@ -87,7 +87,7 @@ namespace Moryx.StateMachines
         /// <code>
         /// public class SomeComponent : IAsyncStateContext
         /// {
-        ///     public async Task Sample()
+        ///     public async Task SampleAsync()
         ///     {
         ///         // Initialize a state machine
         ///         await StateMachine.InitializeAsync(this).WithAsync&lt;MyStateBase&gt;();
@@ -190,7 +190,7 @@ namespace Moryx.StateMachines
         /// <code>
         /// public class SomeComponent : IStateContext
         /// {
-        ///     public async Task Sample()
+        ///     public async Task SampleAsync()
         ///     {
         ///         // Initialize a state machine
         ///         await StateMachine.InitializeAsync(this).WithAsync&lt;MyStateBase&gt;();
@@ -202,7 +202,7 @@ namespace Moryx.StateMachines
         ///         // ... save key to db or somewhere else
         ///
         ///         // Reload the state with the saved key
-        ///         await StateMachine.Reload(this, key).WithAsync&lt;MyStateBase&gt;();
+        ///         await StateMachine.ReloadAsync(this, key).WithAsync&lt;MyStateBase&gt;();
         ///     }
         /// }
         /// </code>
@@ -285,7 +285,7 @@ namespace Moryx.StateMachines
         /// <code>
         /// public class SomeComponent : IStateContext
         /// {
-        ///     public async Task Sample()
+        ///     public async Task SampleAsync()
         ///     {
         ///         await StateMachine.ForceAsync(context.State, MyStateBase.StateA);
         ///     }
@@ -309,7 +309,7 @@ namespace Moryx.StateMachines
         /// <code>
         /// public class SomeComponent : IStateContext
         /// {
-        ///     public async Task Sample()
+        ///     public async Task SampleAsync()
         ///     {
         ///         await StateMachine.ForceAsync(context.State, MyStateBase.StateA, exitCurrent: true, enterForced: false);
         ///     }

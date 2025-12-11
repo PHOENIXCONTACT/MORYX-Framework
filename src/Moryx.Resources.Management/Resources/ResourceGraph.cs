@@ -139,17 +139,17 @@ namespace Moryx.Resources.Management
             return Instantiate(type) as TResource;
         }
 
-        public Task Save(IResource resource)
+        public Task SaveAsync(IResource resource)
         {
             return SaveDelegate((Resource)resource);
         }
 
-        public Task<bool> Destroy(IResource resource)
+        public Task<bool> DestroyAsync(IResource resource)
         {
-            return Destroy(resource, false);
+            return DestroyAsync(resource, false);
         }
 
-        public Task<bool> Destroy(IResource resource, bool permanent)
+        public Task<bool> DestroyAsync(IResource resource, bool permanent)
         {
             return DestroyDelegate((Resource)resource, permanent);
         }

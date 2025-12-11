@@ -52,7 +52,7 @@ namespace Moryx.Launcher
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyList<ModuleItem>> GetModuleItems(HttpContext context)
+        public async Task<IReadOnlyList<ModuleItem>> GetModuleItemsAsync(HttpContext context)
         {
             // Filter pages
             var pageActionDescriptors = _endpointsDataSource.Endpoints.SelectMany(endpoint => endpoint.Metadata)
@@ -67,7 +67,7 @@ namespace Moryx.Launcher
                 var token = context.Request.Cookies[MoryxIdentityDefaults.JWT_COOKIE_NAME];
                 var refreshToken = context.Request.Cookies[MoryxIdentityDefaults.REFRESH_TOKEN_COOKIE_NAME];
 
-                var permissions = await _client.GetPermissions(token, refreshToken);
+                var permissions = await _client.GetPermissionsAsync(token, refreshToken);
                 compiledPageActionDescriptors = compiledPageActionDescriptors.Where(cpad =>
                 {
                     var requiredPolicy = (cpad.EndpointMetadata.SingleOrDefault(a => a is AuthorizeAttribute) as AuthorizeAttribute)?.Policy;

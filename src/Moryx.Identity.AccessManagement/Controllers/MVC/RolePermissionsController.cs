@@ -30,7 +30,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
             model.RoleId = roleId;
             model.RoleName = role.Name;
 
-            var rolePermissions = await _permissionManager.FindForRole(role.Name);
+            var rolePermissions = await _permissionManager.FindForRoleAsync(role.Name);
 
             var rolePermissionValues = rolePermissions.Select(a => a.Name).ToList();
             var authorizedPermissions = allPermissions.Intersect(rolePermissionValues).ToList();
@@ -53,7 +53,7 @@ namespace Moryx.Identity.AccessManagement.Controllers
         {
             try
             {
-                var permissions = await _permissionManager.FindForRole(model.RoleName);
+                var permissions = await _permissionManager.FindForRoleAsync(model.RoleName);
                 await _permissionManager.RemoveFromRoleAsync(model.RoleName, permissions);
 
                 var selectedPermissions = model.Permissions.Where(a => a.Selected).Select(p => p.Value).ToList();

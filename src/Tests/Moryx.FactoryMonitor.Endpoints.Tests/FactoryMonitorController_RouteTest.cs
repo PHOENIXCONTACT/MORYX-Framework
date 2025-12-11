@@ -26,7 +26,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
                 .Returns(new MachineLocation { Id = _assemblyCellLocation.Id });
             _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_solderingCellLocation.Id, It.IsAny<Func<Resource, Resource>>()))
                 .Returns(new MachineLocation { Id = _solderingCellLocation.Id });
-            _resourceManagementMock.Setup(rm => rm.CreateUnsafe(typeof(TransportPath), It.IsAny<Func<Resource, Task>>()))
+            _resourceManagementMock.Setup(rm => rm.CreateUnsafeAsync(typeof(TransportPath), It.IsAny<Func<Resource, Task>>()))
                 .ReturnsAsync(expectedId);
 
             //Act
@@ -34,7 +34,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 
             //Assert
             Assert.That(((OkResult)endPointResult).StatusCode, Is.EqualTo(200));
-            _resourceManagementMock.Verify(rm => rm.CreateUnsafe(typeof(TransportPath), It.IsAny<Func<Resource, Task>>()), Times.Once, "The resource was not created!");
+            _resourceManagementMock.Verify(rm => rm.CreateUnsafeAsync(typeof(TransportPath), It.IsAny<Func<Resource, Task>>()), Times.Once, "The resource was not created!");
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 
             //Assert
             Assert.That(((OkResult)endPointResult).StatusCode, Is.EqualTo(200));
-            _resourceManagementMock.Verify(rm => rm.ModifyUnsafe(expectedId, It.IsAny<Func<Resource, Task<bool>>>()), Times.Once, "The resource was not updated!");
+            _resourceManagementMock.Verify(rm => rm.ModifyUnsafeAsync(expectedId, It.IsAny<Func<Resource, Task<bool>>>()), Times.Once, "The resource was not updated!");
 
             _solderingCellLocation.Destinations.Clear();
         }

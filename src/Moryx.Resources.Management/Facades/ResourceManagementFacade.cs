@@ -116,13 +116,13 @@ namespace Moryx.Resources.Management
 
         #endregion
 
-        public async Task<long> CreateUnsafe(Type resourceType, Func<Resource, Task> initializer)
+        public async Task<long> CreateUnsafeAsync(Type resourceType, Func<Resource, Task> initializer)
         {
             ValidateHealthState();
 
             var resource = ResourceGraph.Instantiate(resourceType.ResourceType());
             await initializer(resource);
-            await ResourceGraph.Save(resource);
+            await ResourceGraph.SaveAsync(resource);
             return resource.Id;
         }
 
@@ -137,7 +137,7 @@ namespace Moryx.Resources.Management
             return result;
         }
 
-        public async Task ModifyUnsafe(long id, Func<Resource, Task<bool>> modifier)
+        public async Task ModifyUnsafeAsync(long id, Func<Resource, Task<bool>> modifier)
         {
             ValidateHealthState();
 
@@ -147,7 +147,7 @@ namespace Moryx.Resources.Management
 
             var result = await modifier(resource);
             if (result)
-                await ResourceGraph.Save(resource);
+                await ResourceGraph.SaveAsync(resource);
         }
 
         public async Task<bool> DeleteAsync(long id)
@@ -158,7 +158,7 @@ namespace Moryx.Resources.Management
             if (resource == null)
                 return false;
 
-            return await ResourceGraph.Destroy(resource);
+            return await ResourceGraph.DestroyAsync(resource);
         }
 
         public IEnumerable<TResource> GetResourcesUnsafe<TResource>(Func<TResource, bool> predicate)
@@ -168,14 +168,14 @@ namespace Moryx.Resources.Management
             return ResourceGraph.GetResources(predicate);
         }
 
-        public Task ExecuteInitializer(string initializerName, object parameters)
+        public Task ExecuteInitializerAsync(string initializerName, object parameters)
         {
             ValidateHealthState();
 
             return ResourceManager.ExecuteInitializer(initializerName, parameters);
         }
 
-        public async Task ExecuteInitializer(ResourceInitializerConfig initializerConfig, object parameters)
+        public async Task ExecuteInitializerAsync(ResourceInitializerConfig initializerConfig, object parameters)
         {
             ValidateHealthState();
 

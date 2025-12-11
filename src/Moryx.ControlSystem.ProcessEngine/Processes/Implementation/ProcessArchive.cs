@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
-using Microsoft.EntityFrameworkCore;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
@@ -56,7 +55,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         {
         }
 
-        public async Task<IReadOnlyList<IProcess>> GetProcesses(ProductInstance productInstance)
+        public Task<IReadOnlyList<IProcess>> GetProcesses(ProductInstance productInstance)
         {
             using var uow = UnitOfWorkFactory.Create();
             var processRepo = uow.GetRepository<IProcessEntityRepository>();
@@ -80,7 +79,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 processes.Add(process);
             }
 
-            return processes;
+            return Task.FromResult((IReadOnlyList<IProcess>)processes);
         }
 
         public async IAsyncEnumerable<IProcessChunk> GetProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
@@ -119,7 +118,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             return all.ToList();
         }
 
-        private async Task<IProcessChunk> GetFromStorage(IUnitOfWork uow, JobEntity jobEntity, DateTime start, DateTime end)
+        private Task<IProcessChunk> GetFromStorage(IUnitOfWork uow, JobEntity jobEntity, DateTime start, DateTime end)
         {
             var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
@@ -159,7 +158,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 processes[index] = process;
             }
 
-            return new ReadonlyProcessChunk(job, processes);
+            return Task.FromResult((IProcessChunk)new ReadonlyProcessChunk(job, processes));
         }
 
         /// <summary>

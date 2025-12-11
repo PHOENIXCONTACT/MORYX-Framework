@@ -99,7 +99,7 @@ namespace Moryx.TestModule
         }
 
         [EntrySerialize, Description("Executes the async method")]
-        public Task<string> AsyncTest()
+        public Task<string> TestAsync()
         {
             return Task.FromResult("Test");
         }

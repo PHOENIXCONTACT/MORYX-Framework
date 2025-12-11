@@ -46,7 +46,7 @@ namespace Moryx.Orders.Management.Tests
             _operation.Number = number;
 
             // Act
-            var result = await _regexOperationValidation.Validate(_operation, _operationLogger);
+            var result = await _regexOperationValidation.ValidateAsync(_operation, _operationLogger);
 
             // Assert
             Assert.That(result, "There should be a successful validation");
@@ -63,7 +63,7 @@ namespace Moryx.Orders.Management.Tests
             _operation.Number = number;
 
             // Act
-            var result = await _regexOperationValidation.Validate(_operation, _operationLogger);
+            var result = await _regexOperationValidation.ValidateAsync(_operation, _operationLogger);
 
             // Assert
             Assert.That(result, Is.False, "There should be an unsuccessful validation");
@@ -76,7 +76,7 @@ namespace Moryx.Orders.Management.Tests
             _operation.TotalAmount = 1;
 
             // Act
-            var result = await _regexOperationValidation.Validate(_operation, _operationLogger);
+            var result = await _regexOperationValidation.ValidateAsync(_operation, _operationLogger);
 
             // Assert
             Assert.That(result, "There should be a successful validation");
@@ -90,7 +90,7 @@ namespace Moryx.Orders.Management.Tests
             _operation.TotalAmount = totalAmount;
 
             // Act
-            var result = await _regexOperationValidation.Validate(_operation, _operationLogger);
+            var result = await _regexOperationValidation.ValidateAsync(_operation, _operationLogger);
 
             // Assert
             Assert.That(result, Is.False, "There should be an unsuccessful validation");
@@ -100,7 +100,7 @@ namespace Moryx.Orders.Management.Tests
         public async Task ValidateRecipeExists()
         {
             // Act
-            var result = await _regexOperationValidation.Validate(_operation, _operationLogger);
+            var result = await _regexOperationValidation.ValidateAsync(_operation, _operationLogger);
 
             // Assert
             Assert.That(result, "There should be a successful validation");
@@ -113,7 +113,7 @@ namespace Moryx.Orders.Management.Tests
             _operation.Recipes = new List<IProductRecipe>();
 
             // Act
-            var result = await _regexOperationValidation.Validate(_operation, _operationLogger);
+            var result = await _regexOperationValidation.ValidateAsync(_operation, _operationLogger);
 
             // Assert
             Assert.That(result, Is.False, "There should be an unsuccessful validation");
@@ -123,7 +123,7 @@ namespace Moryx.Orders.Management.Tests
         public async Task ValidateOrderCreationContextWithoutOperationContext()
         {
             // Act
-            var result = await _regexOperationValidation.ValidateCreationContext(_orderCreationContext);
+            var result = await _regexOperationValidation.ValidateCreationContextAsync(_orderCreationContext);
 
             // Assert
             Assert.That(result, "There should be a successful validation");
@@ -140,7 +140,7 @@ namespace Moryx.Orders.Management.Tests
             });
 
             // Act
-            var result = await _regexOperationValidation.ValidateCreationContext(_orderCreationContext);
+            var result = await _regexOperationValidation.ValidateCreationContextAsync(_orderCreationContext);
 
             // Assert
             Assert.That(result, "There should be a successful validation");
@@ -158,7 +158,7 @@ namespace Moryx.Orders.Management.Tests
             });
 
             // Act
-            var result = await _regexOperationValidation.ValidateCreationContext(_orderCreationContext);
+            var result = await _regexOperationValidation.ValidateCreationContextAsync(_orderCreationContext);
 
             // Assert
             Assert.That(result, Is.False, "There should be an unsuccessful validation");

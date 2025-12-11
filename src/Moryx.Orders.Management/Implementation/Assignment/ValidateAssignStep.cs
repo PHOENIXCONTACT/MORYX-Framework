@@ -21,7 +21,7 @@ namespace Moryx.Orders.Management.Assignment
 
         public Task<bool> AssignStep(IOperationData operationData, IOperationLogger operationLogger)
         {
-            return OperationValidation.Validate(operationData.Operation, operationLogger);
+            return OperationValidation.ValidateAsync(operationData.Operation, operationLogger);
         }
 
         public Task<bool> RestoreStep(IOperationData operationData, IOperationLogger operationLogger)

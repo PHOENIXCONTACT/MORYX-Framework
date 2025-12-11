@@ -9,7 +9,7 @@ using Moryx.Identity.AccessManagement.Data;
 namespace Moryx.Identity.AccessManagement
 {
     /// <inheritdoc/>
-    public class PermissionManager : IPermissionManager
+    internal class PermissionManager : IPermissionManager
     {
         private readonly MoryxRoleManager _roleManager;
         private readonly MoryxIdentitiesDbContext _identitiesDbContext;
@@ -63,10 +63,10 @@ namespace Moryx.Identity.AccessManagement
         }
 
         /// <inheritdoc/>
-        public Task<IList<Permission>> FindForRole(string roleName)
+        public Task<IList<Permission>> FindForRoleAsync(string roleName)
         {
             if (roleName == Roles.SuperAdmin)
-                return GetSuperAdminPermissions();
+                return GetSuperAdminPermissionsAsync();
 
             var role = _roleManager.Roles
                 .Include(r => r.Permissions)
@@ -148,7 +148,7 @@ namespace Moryx.Identity.AccessManagement
             return IdentityResult.Success;
         }
 
-        private async Task<IList<Permission>> GetSuperAdminPermissions()
+        private async Task<IList<Permission>> GetSuperAdminPermissionsAsync()
         {
             var allPermissions = await _identitiesDbContext.Permissions.ToArrayAsync();
             return allPermissions;

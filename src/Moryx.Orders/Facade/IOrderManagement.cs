@@ -21,22 +21,22 @@ namespace Moryx.Orders
         /// <summary>
         /// Will return the operation with the given identifier
         /// </summary>
-        Task<Operation> GetOperation(Guid identifier);
+        Task<Operation> GetOperationAsync(Guid identifier);
 
         /// <summary>
         /// Will return the operation with the given order and operation numbers
         /// </summary>
-        Task<Operation> GetOperation(string orderNumber, string operationNumber);
+        Task<Operation> GetOperationAsync(string orderNumber, string operationNumber);
 
         /// <summary>
         /// Will add a new operation to the pool.
         /// </summary>
-        Task<Operation> AddOperation(OperationCreationContext context);
+        Task<Operation> AddOperationAsync(OperationCreationContext context);
 
         /// <summary>
         /// Will add a new operation to the pool.
         /// </summary>
-        Task<Operation> AddOperation(OperationCreationContext context, IOperationSource source);
+        Task<Operation> AddOperationAsync(OperationCreationContext context, IOperationSource source);
 
         /// <summary>
         /// Returns a report context of the given operation
@@ -46,23 +46,23 @@ namespace Moryx.Orders
         /// <summary>
         /// Begins the given operation
         /// </summary>
-        Task BeginOperation(Operation operation, int amount);
+        Task BeginOperationAsync(Operation operation, int amount);
 
         /// <summary>
         /// Begins the given operation
         /// </summary>
-        Task BeginOperation(Operation operation, int amount, User user);
+        Task BeginOperationAsync(Operation operation, int amount, User user);
 
         /// <summary>
         /// Aborts the given operation if it was not started before
         /// </summary>
         /// <param name="operation"></param>
-        Task AbortOperation(Operation operation);
+        Task AbortOperationAsync(Operation operation);
 
         /// <summary>
         /// Sets the sort order of the given operation
         /// </summary>
-        Task SetOperationSortOrder(int sortOrder, Operation operation);
+        Task SetOperationSortOrderAsync(int sortOrder, Operation operation);
 
         /// <summary>
         /// Returns a report context of the given operation
@@ -72,7 +72,7 @@ namespace Moryx.Orders
         /// <summary>
         /// Processes a report for the given operation
         /// </summary>
-        Task ReportOperation(Operation operation, OperationReport report);
+        Task ReportOperationAsync(Operation operation, OperationReport report);
 
         /// <summary>
         /// Returns a report context of the given operation to interrupt the operation
@@ -82,12 +82,12 @@ namespace Moryx.Orders
         /// <summary>
         /// Processes a interrupt for the given operation
         /// </summary>
-        Task InterruptOperation(Operation operation, User user);
+        Task InterruptOperationAsync(Operation operation, User user);
 
         /// <summary>
         /// Updates the operation source
         /// </summary>
-        Task UpdateSource(IOperationSource source, Operation operation);
+        Task UpdateSourceAsync(IOperationSource source, Operation operation);
 
         /// <summary>
         /// Will be raised if the progress of an operation was changed
@@ -138,7 +138,7 @@ namespace Moryx.Orders
         /// Assigns or updates operation related information like the corresponding product or recipes on the existing operation instance.
         /// </summary>
         /// <param name="operation">The <see cref="Operation"/> assign.</param>
-        Task Reload(Operation operation);
+        Task ReloadAsync(Operation operation);
 
         /// <summary>
         /// Returns an <see cref="AdviceContext"/> of the given <paramref name="operation"/> to advice the operation
@@ -151,7 +151,7 @@ namespace Moryx.Orders
         /// </summary>
         /// <param name="operation">The <see cref="Operation"/> to advice.</param>
         /// <param name="advice">The <see cref="OperationAdvice"/> to apply on the <see cref="Operation"/>.</param>
-        Task<AdviceResult> TryAdvice(Operation operation, OperationAdvice advice);
+        Task<AdviceResult> TryAdviceAsync(Operation operation, OperationAdvice advice);
 
         /// <summary>
         /// Returns an array of <see cref="OperationLogMessage"/>s corresponding to the operation.
@@ -162,6 +162,6 @@ namespace Moryx.Orders
         /// <summary>
         /// Returns a set of recipes this OrderManagement can assign to an Operation corresponding to the <paramref name="identity"/>.
         /// </summary>
-        Task<IReadOnlyList<IProductRecipe>> GetAssignableRecipes(ProductIdentity identity);
+        Task<IReadOnlyList<IProductRecipe>> GetAssignableRecipesAsync(ProductIdentity identity);
     }
 }

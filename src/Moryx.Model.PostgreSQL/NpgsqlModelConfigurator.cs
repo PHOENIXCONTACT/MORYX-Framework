@@ -34,7 +34,7 @@ namespace Moryx.Model.PostgreSQL
         }
 
         /// <inheritdoc />
-        public override async Task DeleteDatabase(DatabaseConfig config)
+        public override async Task DeleteDatabaseAsync(DatabaseConfig config)
         {
             var settings = (NpgsqlDatabaseConnectionSettings)config.ConnectionSettings;
 
@@ -92,11 +92,11 @@ namespace Moryx.Model.PostgreSQL
         }
 
         /// <inheritdoc/>
-        public override Task<TestConnectionResult> TestConnection(DatabaseConfig config)
+        public override Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config)
         {
             // Using the "postgres" database to check the server's availability.
             // might lead to edge-case when "postgres" database has been deleted.
-            return base.TestConnection(CreateTestDatabaseConfig(config));
+            return base.TestConnectionAsync(CreateTestDatabaseConfig(config));
         }
 
         /// <inheritdoc />

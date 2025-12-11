@@ -54,7 +54,7 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Import product types for the given parameters with the named importer
         /// </summary>
-        Task<ProductImportResult> Import(string importerName, object parameters);
+        Task<ProductImportResult> ImportAsync(string importerName, object parameters);
 
         /// <summary>
         /// Retrieves the current recipe for this product

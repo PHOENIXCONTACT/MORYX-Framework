@@ -13,6 +13,6 @@ namespace Moryx.Orders.Assignment
         /// <summary>
         /// Will be called while creating an operation to load the part list for the new operation
         /// </summary>
-        Task<IEnumerable<ProductPart>> LoadParts(Operation operation, IOperationLogger operationLogger);
+        Task<IReadOnlyList<ProductPart>> LoadPartsAsync(Operation operation, IOperationLogger operationLogger);
     }
 }
