@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
+using System.Runtime.CompilerServices;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
@@ -55,7 +56,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         {
         }
 
-        public async Task<IReadOnlyList<Process>> GetProcesses(ProductInstance productInstance)
+        public async Task<IReadOnlyList<Process>> GetProcesses(ProductInstance productInstance, CancellationToken cancellationToken)
         {
             using var uow = UnitOfWorkFactory.Create();
             var processRepo = uow.GetRepository<IProcessEntityRepository>();
@@ -82,7 +83,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             return processes;
         }
 
-        public async IAsyncEnumerable<IProcessChunk> GetProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
+        public async IAsyncEnumerable<IProcessChunk> GetProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds,
+            [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             // Access database to find all jobs in this time frame
             using var uow = UnitOfWorkFactory.Create();
@@ -95,7 +97,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
                 // See if we have the job cached
                 var chunk = JobList.Get(relevantJob.Id) is IProductionJobData job
                     ? new JobDataChunk(job, start, end)
-                    : await GetFromStorage(uow, relevantJob, start, end);
+                    : await GetFromStorage(uow, relevantJob, start, end, cancellationToken);
 
                 yield return chunk;
             }
@@ -118,7 +120,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             return all.ToList();
         }
 
-        private async Task<IProcessChunk> GetFromStorage(IUnitOfWork uow, JobEntity jobEntity, DateTime start, DateTime end)
+        private async Task<IProcessChunk> GetFromStorage(IUnitOfWork uow, JobEntity jobEntity, DateTime start, DateTime end, CancellationToken cancellationToken)
         {
             var processRepo = uow.GetRepository<IProcessEntityRepository>();
 
