@@ -4,7 +4,7 @@
 using System.IO;
 using System.Text;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.Serialization
 {
     public class MemoryStreamDummy
     {

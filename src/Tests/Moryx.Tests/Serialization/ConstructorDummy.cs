@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.Serialization
 {
     public class ConstructorDummy
     {

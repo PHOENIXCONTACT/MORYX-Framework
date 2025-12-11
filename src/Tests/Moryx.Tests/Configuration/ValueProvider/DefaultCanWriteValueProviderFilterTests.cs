@@ -4,7 +4,7 @@
 using Moryx.Configuration;
 using NUnit.Framework;
 
-namespace Moryx.Runtime.Kernel.Tests.Configuration.ValueProvider
+namespace Moryx.Tests.Configuration.ValueProvider
 {
     [TestFixture]
     public class DefaultCanWriteValueProviderFilterTests

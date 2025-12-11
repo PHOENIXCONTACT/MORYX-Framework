@@ -19,14 +19,18 @@ namespace Moryx.Serialization
         /// <summary>
         /// Unit file
         /// </summary>
-        File,
+        FilePath,
         /// <summary>
         /// Unit directory
         /// </summary>
-        Directory,
+        DirectoryPath,
         /// <summary>
         /// Unit with <see cref="System.FlagsAttribute"/>
         /// </summary>
         Flags,
+        /// <summary>
+        /// Unit is a base64 string
+        /// </summary>
+        Base64
     }
 }

@@ -14,7 +14,7 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration
         private const string ConfigDir = "Configs";
 
         private string _fullConfigDir;
-        private IConfigManager _configManager;
+        private ConfigManager _configManager;
 
         [SetUp]
         public void Setup()

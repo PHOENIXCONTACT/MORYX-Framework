@@ -60,13 +60,13 @@ namespace Moryx.Configuration
         /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
         public override string[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
         {
-            var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
+            var possibleValuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
             // Possible values for primitive collections only apply to members
-            if (valuesAttribute == null || IsPrimitiveCollection(memberType))
+            if (possibleValuesAttribute == null || IsPrimitiveCollection(memberType))
                 return base.PossibleValues(memberType, attributeProvider);
 
             // Use attribute
-            var values = valuesAttribute.GetValues(Container, ServiceProvider);
+            var values = possibleValuesAttribute.GetValues(Container, ServiceProvider);
             return values?.Distinct().ToArray();
         }
 

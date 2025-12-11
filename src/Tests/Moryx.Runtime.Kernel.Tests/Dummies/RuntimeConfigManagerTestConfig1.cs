@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 
-namespace Moryx.Runtime.Kernel.Tests.Dummys
+namespace Moryx.Runtime.Kernel.Tests.Dummies
 {
     /// <summary>
     /// Testenum

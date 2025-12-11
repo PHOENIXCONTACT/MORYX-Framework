@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Moryx.Serialization;
 using NUnit.Framework;
 
-namespace Moryx.Tests
+namespace Moryx.Tests.Serialization
 {
     /// <summary>
     /// Unit tests for <see cref="EntryConvert"/> method invocation

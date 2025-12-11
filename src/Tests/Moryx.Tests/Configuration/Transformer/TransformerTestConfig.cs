@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using Moryx.Configuration;
 using Moryx.Serialization;
 
-namespace Moryx.Runtime.Kernel.Tests.Configuration.Transformer
+namespace Moryx.Tests.Configuration
 {
     /// <summary>
     /// Testconfig enum
@@ -87,7 +87,6 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration.Transformer
         /// Gets or sets a string value.
         /// </summary>
         [DefaultValue(StringFieldDefault)]
-        [PrimitiveValues("String1", "String2", "String3")]
         [Description("StringField Test description")]
         [DisplayName(StringFieldDisplayName)]
         [Required, MinLength(3), MaxLength(10), Password]
@@ -110,7 +109,6 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration.Transformer
         /// Gets or sets a double value.
         /// </summary>
         [DefaultValue(DoubleFieldDefault)]
-        [PrimitiveValues(0.0, 0.1, 0.2)]
         [Description("DoubleField Test description")]
         public double DoubleField { get; set; }
 

@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 
-namespace Moryx.Runtime.Kernel.Tests.Configuration.ValueProvider
+namespace Moryx.Tests.Configuration.ValueProvider
 {
     public class TestConfig1 : ConfigBase
     {
