@@ -269,6 +269,7 @@ Several interfaces have been removed to streamline the codebase and reduce compl
 The following interfaces are still existent for api extensions but the base class is used in whole code base:
 
 - `IActivity`: Replaced with class `Activity`
+- `IProcess`: Replaced with class `Process`
 - `IProductType`: Replaced with class `ProductType`
 - `IProductInstance`: Replaced with class `ProductInstance`
 - `IProductPartLink`: Replaced with class `ProductPartLink`

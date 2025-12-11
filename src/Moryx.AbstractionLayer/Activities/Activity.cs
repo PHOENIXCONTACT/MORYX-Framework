@@ -33,7 +33,7 @@ namespace Moryx.AbstractionLayer.Activities
         public long Id { get; set; }
 
         /// <inheritdoc />
-        public IProcess Process { get; set; }
+        public Process Process { get; set; }
 
         /// <inheritdoc />
         public Tracing Tracing { get; set; }

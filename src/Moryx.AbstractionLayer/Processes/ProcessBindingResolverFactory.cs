@@ -24,7 +24,7 @@ namespace Moryx.AbstractionLayer.Processes
                 case "Process":
                     return new NullResolver();
                 case "Recipe":
-                    return new DelegateResolver(source => ((IProcess)source).Recipe);
+                    return new DelegateResolver(source => ((Process)source).Recipe);
                 case "Product":
                 case "ProductType":
                     return new ProductResolver(baseKey);
@@ -46,8 +46,8 @@ namespace Moryx.AbstractionLayer.Processes
             if (lastActivity.Success)
             {
                 return lastActivity.Groups["typed"].Success
-                    ? resolver.Extend(new DelegateResolver(source => (source as IProcess)?.LastActivity(lastActivity.Groups["name"].Value)))
-                    : resolver.Extend(new DelegateResolver(source => (source as IProcess)?.LastActivity()));
+                    ? resolver.Extend(new DelegateResolver(source => (source as Process)?.LastActivity(lastActivity.Groups["name"].Value)))
+                    : resolver.Extend(new DelegateResolver(source => (source as Process)?.LastActivity()));
             }
 
             resolver = resolver.Extend(new PartLinkShortCut());
@@ -141,7 +141,7 @@ namespace Moryx.AbstractionLayer.Processes
         {
             switch (source)
             {
-                case IProcess process:
+                case Process process:
                 {
                     var product = (process.Recipe as IProductRecipe)?.Product;
                     return product;

@@ -34,7 +34,7 @@ namespace Moryx.ControlSystem.Cells
 
         /// <summary>
         /// Modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
-        /// on the <see cref="IProcess"/> of the <paramref name="session"/> using the given
+        /// on the <see cref="Process"/> of the <paramref name="session"/> using the given
         /// <paramref name="setter"/>.
         /// </summary>
         /// <typeparam name="TInstance">The expected type of the product instance</typeparam>
@@ -47,17 +47,17 @@ namespace Moryx.ControlSystem.Cells
         /// ]]>
         /// </code>
         /// </example>
-        /// <exception cref="InvalidCastException">Thrown if the <see cref="IProcess"/> of the
+        /// <exception cref="InvalidCastException">Thrown if the <see cref="Process"/> of the
         /// <paramref name="session"/> does not hold a product instance of type <typeparamref name="TInstance"/>
         /// </exception>
-        /// <exception cref="InvalidOperationException">Thrown if the <see cref="IProcess"/> of the
+        /// <exception cref="InvalidOperationException">Thrown if the <see cref="Process"/> of the
         /// <paramref name="session"/> is no <see cref="ProductionProcess"/></exception>
         public static TInstance ModifyProductInstance<TInstance>(this Session session, Action<TInstance> setter)
             where TInstance : ProductInstance => session.Process.ModifyProductInstance(setter);
 
         /// <summary>
         /// Tries to modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
-        /// on the <see cref="IProcess"/> of the <paramref name="session"/> using the given
+        /// on the <see cref="Process"/> of the <paramref name="session"/> using the given
         /// <paramref name="setter"/>. Returns false, if the
         /// operation could not be executed.
         /// </summary>

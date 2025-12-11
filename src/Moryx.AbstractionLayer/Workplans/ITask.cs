@@ -39,7 +39,7 @@ namespace Moryx.AbstractionLayer.Workplans
         /// </summary>
         /// <returns>the new IActivity object</returns>
         /// <exception cref="ArgumentException">if the params object's type does not match to activity.</exception>
-        Activity CreateActivity(IProcess process);
+        Activity CreateActivity(Process process);
 
         /// <summary>
         /// Complete task

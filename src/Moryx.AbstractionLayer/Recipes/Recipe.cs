@@ -55,7 +55,7 @@ namespace Moryx.AbstractionLayer.Recipes
         public IRecipeProvider Origin { get; set; }
 
         /// <inheritdoc />
-        public virtual IProcess CreateProcess()
+        public virtual Process CreateProcess()
         {
             return new Process { Recipe = this };
         }

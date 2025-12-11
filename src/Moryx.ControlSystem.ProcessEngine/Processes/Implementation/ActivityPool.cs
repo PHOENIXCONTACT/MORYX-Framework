@@ -260,7 +260,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             }
         }
 
-        public ProcessData GetProcess(IProcess process)
+        public ProcessData GetProcess(Process process)
         {
             lock (_runningProcesses)
             {
@@ -279,7 +279,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         public event EventHandler<ActivityEventArgs> ActivityChanged;
 
         #region IActivityPool
-        IReadOnlyList<IProcess> IActivityPool.Processes
+        IReadOnlyList<Process> IActivityPool.Processes
         {
             get
             {
@@ -290,7 +290,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             }
         }
 
-        IProcess IActivityPool.GetProcess(long id)
+        Process IActivityPool.GetProcess(long id)
         {
             return GetProcess(id)?.Process;
         }
@@ -307,7 +307,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             return FastExtraction(open, ad => ad.Activity);
         }
 
-        public IReadOnlyList<Activity> GetAllOpen(IProcess process)
+        public IReadOnlyList<Activity> GetAllOpen(Process process)
         {
             var wrapper = GetProcess(process);
             var open = GetAllOpen(wrapper);

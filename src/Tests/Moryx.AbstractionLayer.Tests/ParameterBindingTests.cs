@@ -91,7 +91,7 @@ namespace Moryx.AbstractionLayer.Tests
 
             private IBindingResolver _resolver;
 
-            protected override void Populate(IProcess process, Parameters instance)
+            protected override void Populate(Process process, Parameters instance)
             {
                 var parameters = (InsertPartParameters)instance;
 
@@ -102,7 +102,7 @@ namespace Moryx.AbstractionLayer.Tests
             }
         }
 
-        private static IProcess DummyProcess()
+        private static ProductionProcess DummyProcess()
         {
             var product = new DummyType()
             {

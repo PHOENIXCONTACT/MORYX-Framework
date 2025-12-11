@@ -40,7 +40,7 @@ namespace Moryx.AbstractionLayer.Recipes
         }
 
         /// <inheritdoc />
-        public IProcess CreateProcess()
+        public Process CreateProcess()
         {
             throw new InvalidOperationException($"{nameof(RecipeReference)} cannot create processes.");
         }

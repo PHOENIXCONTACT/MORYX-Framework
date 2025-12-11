@@ -9,7 +9,7 @@ namespace Moryx.ControlSystem.Simulator
 {
     internal class ProcessMovement
     {
-        public IProcess Process { get; set; }
+        public Process Process { get; set; }
 
         public Activity NextActivity { get; set; }
 

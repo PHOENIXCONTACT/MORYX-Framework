@@ -16,18 +16,18 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Returns processes currently executed by the process controller
         /// </summary>
-        IReadOnlyList<IProcess> GetRunningProcesses();
+        IReadOnlyList<Process> GetRunningProcesses();
 
         /// <summary>
         /// Returns processes currently executed by the process controller
         /// </summary>
         /// <param name="predicate">Filter for the processes</param>
-        IReadOnlyList<IProcess> GetRunningProcesses(Func<IProcess, bool> predicate);
+        IReadOnlyList<Process> GetRunningProcesses(Func<Process, bool> predicate);
 
         /// <summary>
         /// Retrieve all archived processes for a product instance
         /// </summary>
-        Task<IReadOnlyList<IProcess>> GetArchivedProcessesAsync(ProductInstance productInstance);
+        Task<IReadOnlyList<Process>> GetArchivedProcessesAsync(ProductInstance productInstance);
 
         /// <summary>
         /// Retrieve all archived  processes in a certain range
@@ -37,7 +37,7 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Possible targets for the process, defined by currently open activities
         /// </summary>
-        IReadOnlyList<ICell> Targets(IProcess process);
+        IReadOnlyList<ICell> Targets(Process process);
 
         /// <summary>
         /// Possible cells that can execute the activity
@@ -49,7 +49,7 @@ namespace Moryx.ControlSystem.Processes
         /// </summary>
         /// <param name="process">The process to report</param>
         /// <param name="action">The action to perform</param>
-        void Report(IProcess process, ReportAction action);
+        void Report(Process process, ReportAction action);
 
         /// <summary>
         /// A process has changed

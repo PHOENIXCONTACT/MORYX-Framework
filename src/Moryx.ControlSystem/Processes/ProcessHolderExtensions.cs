@@ -191,7 +191,7 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Assign a <paramref name="process"/> to this position
         /// </summary>
-        public static void Mount(this IProcessHolderPosition position, IProcess process)
+        public static void Mount(this IProcessHolderPosition position, Process process)
             => position.Mount(new MountInformation(process, null));
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Assign <paramref name="process"/> and <paramref name="session"/> to this position
         /// </summary>
-        public static void Mount(this IProcessHolderPosition position, IProcess process, Session session)
+        public static void Mount(this IProcessHolderPosition position, Process process, Session session)
             => position.Mount(new MountInformation(process, session));
 
         #endregion

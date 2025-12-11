@@ -8,7 +8,7 @@ using Moryx.AbstractionLayer.Recipes;
 namespace Moryx.AbstractionLayer.Processes
 {
     /// <summary>
-    /// Defines how activities should be loaded from a <see cref="IProcess"/>
+    /// Defines how activities should be loaded from a <see cref="Process"/>
     /// </summary>
     public enum ActivitySelectionType
     {

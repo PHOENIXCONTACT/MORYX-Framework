@@ -53,7 +53,7 @@ namespace Moryx.ControlSystem.Cells
         /// <summary>
         /// Id of the process the cell is working on
         /// </summary>
-        public IProcess Process
+        public Process Process
         {
             get => _context.Process;
             internal set => _context.Process = value;
@@ -160,7 +160,7 @@ namespace Moryx.ControlSystem.Cells
 
             public Guid SessionId;
 
-            public IProcess Process;
+            public Process Process;
 
             public ProcessReference Reference;
 

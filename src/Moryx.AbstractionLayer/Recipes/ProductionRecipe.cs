@@ -36,7 +36,7 @@ namespace Moryx.AbstractionLayer.Recipes
         /// <summary>
         /// Create a <see cref="ProductionProcess"/> for this recipe
         /// </summary>
-        public override IProcess CreateProcess() =>
+        public override Process CreateProcess() =>
             new ProductionProcess { Recipe = this };
 
         /// <inheritdoc />

@@ -25,7 +25,7 @@ namespace Moryx.ControlSystem.Cells
         /// <summary>
         /// Complete the current sequence to await new ready to work
         /// </summary>
-        public SequenceCompleted CompleteSequence(IProcess process, bool processActive, params long[] nextCells)
+        public SequenceCompleted CompleteSequence(Process process, bool processActive, params long[] nextCells)
         {
             // Ignore process as its still set
             return new SequenceCompleted(this, processActive, nextCells);

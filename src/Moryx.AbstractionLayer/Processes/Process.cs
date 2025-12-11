@@ -15,13 +15,13 @@ namespace Moryx.AbstractionLayer.Processes
         private readonly ReaderWriterLockSlim _activitiesLock = new(LockRecursionPolicy.SupportsRecursion);
 
         /// <inheritdoc />
-        public long Id { get; set; }
+        public virtual long Id { get; set; }
 
         /// <inheritdoc />
         public IRecipe Recipe { get; set; }
 
         /// <inheritdoc />
-        public IEnumerable<Activity> GetActivities()
+        public virtual IEnumerable<Activity> GetActivities()
         {
             _activitiesLock.EnterReadLock();
 
@@ -33,7 +33,7 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public IEnumerable<Activity> GetActivities(Func<Activity, bool> predicate)
+        public virtual IEnumerable<Activity> GetActivities(Func<Activity, bool> predicate)
         {
             _activitiesLock.EnterReadLock();
 
@@ -50,7 +50,7 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public Activity GetActivity(ActivitySelectionType selectionType)
+        public virtual Activity GetActivity(ActivitySelectionType selectionType)
         {
             _activitiesLock.EnterReadLock();
 
@@ -62,7 +62,7 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public Activity GetActivity(ActivitySelectionType selectionType, Func<Activity, bool> predicate)
+        public virtual Activity GetActivity(ActivitySelectionType selectionType, Func<Activity, bool> predicate)
         {
             _activitiesLock.EnterReadLock();
 
@@ -92,7 +92,7 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public void AddActivity(Activity toAdd)
+        public virtual void AddActivity(Activity toAdd)
         {
             _activitiesLock.EnterWriteLock();
 
@@ -102,7 +102,7 @@ namespace Moryx.AbstractionLayer.Processes
         }
 
         /// <inheritdoc />
-        public void RemoveActivity(Activity toRemove)
+        public virtual void RemoveActivity(Activity toRemove)
         {
             _activitiesLock.EnterWriteLock();
 

@@ -92,7 +92,7 @@ namespace Moryx.AbstractionLayer.Workplans
         /// Create activity instance from transition
         /// </summary>
         /// <returns>the new IActivity object</returns>
-        public Activity CreateActivity(IProcess process)
+        public Activity CreateActivity(Process process)
         {
             // Create activity
             var activity = new TActivity

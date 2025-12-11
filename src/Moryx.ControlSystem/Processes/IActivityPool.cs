@@ -19,12 +19,12 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Get all processes from the pool
         /// </summary>
-        IReadOnlyList<IProcess> Processes { get; }
+        IReadOnlyList<Process> Processes { get; }
 
         /// <summary>
         /// Get process by id
         /// </summary>
-        IProcess GetProcess(long id);
+        Process GetProcess(long id);
 
         /// <summary>
         /// Find an activity that meets certain criteria
@@ -40,7 +40,7 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// All open activities managed by the pool of a certain process
         /// </summary>
-        IReadOnlyList<Activity> GetAllOpen(IProcess process);
+        IReadOnlyList<Activity> GetAllOpen(Process process);
 
         /// <summary>
         /// Raised if an process changed its state.

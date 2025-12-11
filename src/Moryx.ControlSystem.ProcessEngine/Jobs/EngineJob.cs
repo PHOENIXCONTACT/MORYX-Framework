@@ -6,6 +6,7 @@ using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
 using Moryx.Tools;
+using Process = Moryx.AbstractionLayer.Processes.Process;
 
 namespace Moryx.ControlSystem.ProcessEngine.Jobs
 {
@@ -15,18 +16,18 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
     [DebuggerDisplay(nameof(EngineJob) + " <Id: {" + nameof(Id) + "}, Recipe: {" + nameof(Recipe) + "}, Classification: {" + nameof(Classification) + "}>")]
     internal class EngineJob : Job, IPredictiveJob
     {
-        public List<IProcess> Running { get; set; }
+        public List<Process> Running { get; set; }
 
-        public List<IProcess> PredictedFailures { get; set; }
+        public List<Process> PredictedFailures { get; set; }
 
-        public List<IProcess> TotalProcesses { get; set; }
+        public List<Process> TotalProcesses { get; set; }
 
         public EngineJob(IRecipe recipe, int amount) : base(recipe, amount)
         {
             // Prepare both process lists
-            PredictedFailures = new ProcessList<IProcess>();
-            RunningProcesses = Running = new ProcessList<IProcess>(32);
-            AllProcesses = TotalProcesses = new ProcessList<IProcess>(amount);
+            PredictedFailures = new ProcessList<Process>();
+            RunningProcesses = Running = new ProcessList<Process>(32);
+            AllProcesses = TotalProcesses = new ProcessList<Process>(amount);
         }
 
         public void UpdateRecipe(IRecipe recipe) => Recipe = recipe;
@@ -36,6 +37,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             StateDisplayName = jobState.GetType().GetDisplayName();
         }
 
-        IReadOnlyList<IProcess> IPredictiveJob.PredictedFailures => PredictedFailures;
+        IReadOnlyList<Process> IPredictiveJob.PredictedFailures => PredictedFailures;
     }
 }

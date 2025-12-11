@@ -13,7 +13,7 @@ namespace Moryx.AbstractionLayer.Activities
     public sealed class NullActivityParameters : IParameters
     {
         /// <see cref="IParameters"/>
-        public IParameters Bind(IProcess process)
+        public IParameters Bind(Process process)
         {
             return this;
         }

@@ -15,7 +15,7 @@ namespace Moryx.ControlSystem.Processes.Endpoints
     /// </summary>
     internal static class Converter
     {
-        internal static JobProcessModel ConvertProcess(IProcess process, IProcessControl processControl, IResourceManagement resourceManagement)
+        internal static JobProcessModel ConvertProcess(Process process, IProcessControl processControl, IResourceManagement resourceManagement)
         {
             var activities = process.GetActivities().ToList();
             return new()

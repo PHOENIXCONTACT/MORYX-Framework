@@ -29,7 +29,7 @@ namespace Moryx.AbstractionLayer.Activities
         /// <summary>
         /// The execution process this activity belongs to.
         /// </summary>
-        IProcess Process { get; set; }
+        Process Process { get; set; }
 
         /// <summary>
         /// All activity trace information

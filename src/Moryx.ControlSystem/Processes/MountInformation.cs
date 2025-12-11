@@ -14,7 +14,7 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Gets the process to transfer.
         /// </summary>
-        public IProcess Process { get; }
+        public Process Process { get; }
 
         /// <summary>
         /// Gets the session to transfer.
@@ -26,7 +26,7 @@ namespace Moryx.ControlSystem.Processes
         /// </summary>
         /// <param name="process">The process.</param>
         /// <param name="session">The session.</param>
-        public MountInformation(IProcess process, Session session)
+        public MountInformation(Process process, Session session)
         {
             Process = process;
             Session = session;

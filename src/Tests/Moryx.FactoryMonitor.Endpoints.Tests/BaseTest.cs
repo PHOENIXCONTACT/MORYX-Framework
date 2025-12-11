@@ -115,7 +115,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
                 .Returns(converter.ToResourceChangedModel(_manufactoringFactory));
             //process
             _processFacadeMock.Setup(pm => pm.GetRunningProcesses())
-                .Returns(Array.Empty<IProcess>());
+                .Returns(Array.Empty<Process>());
             _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<Activity>()))
                 .Returns<Activity>(a => _activityTargets.ContainsKey(a) ? _activityTargets[a] : Array.Empty<ICell>());
 

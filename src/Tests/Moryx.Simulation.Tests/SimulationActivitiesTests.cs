@@ -14,15 +14,15 @@ namespace Moryx.Simulation.Tests
 {
     internal class SimulationActivitiesTests : BaseTest
     {
-        Mock<SimulatedDummyTestDriver> _assemblyDriverMock;
-        Mock<SimulatedDummyTestDriver> _anotherAssemblyDriverMock;
-        Mock<IProcess> _processMock;
+        private Mock<SimulatedDummyTestDriver> _assemblyDriverMock;
+        private Mock<SimulatedDummyTestDriver> _anotherAssemblyDriverMock;
+        private Mock<Process> _processMock;
 
         [SetUp]
         public override void Setup()
         {
             base.Setup();
-            _processMock = new Mock<IProcess>();
+            _processMock = new Mock<Process>();
 
             _assemblyDriverMock = new Mock<SimulatedDummyTestDriver>() { DefaultValue = DefaultValue.Mock };
             _anotherAssemblyDriverMock = new Mock<SimulatedDummyTestDriver>() { DefaultValue = DefaultValue.Mock };
@@ -102,7 +102,7 @@ namespace Moryx.Simulation.Tests
             _resourceManagementMock.Setup(rm => rm.GetResourcesUnsafe(It.IsAny<Func<ISimulationDriver, bool>>()))
                 .Returns([_assemblyDriverMock.Object, _anotherAssemblyDriverMock.Object]);
 
-            _processControlMock.SetupSequence(pc => pc.Targets(It.IsAny<IProcess>()))
+            _processControlMock.SetupSequence(pc => pc.Targets(It.IsAny<Process>()))
                  .Returns([_assemblyCell, _anotherAssemblyCell])
                  .Returns(Array.Empty<ICell>())
                  .Returns([_assemblyCell, _anotherAssemblyCell])
@@ -316,7 +316,7 @@ namespace Moryx.Simulation.Tests
             CreateActivity(activity2, _processMock.Object, [cell1, cell2]);
         }
 
-        private Activity CreateActivity(Activity activity, IProcess process, ICell[] cells)
+        private Activity CreateActivity(Activity activity, Process process, ICell[] cells)
         {
             activity.Process = process;
             process.AddActivity(activity);

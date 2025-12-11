@@ -50,7 +50,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
             [System.ComponentModel.DataAnnotations.Range(0, 7)]
             public int Invalid { get; set; } = 42;
 
-            protected override void Populate(IProcess process, Parameters instance)
+            protected override void Populate(Process process, Parameters instance)
             {
             }
         }

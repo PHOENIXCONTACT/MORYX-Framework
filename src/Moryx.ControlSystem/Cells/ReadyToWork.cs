@@ -61,7 +61,7 @@ namespace Moryx.ControlSystem.Cells
         /// <summary>
         /// Creates the SequenceCompleted message
         /// </summary>
-        public SequenceCompleted CompleteSequence(IProcess process, bool processActive, params long[] nextCells)
+        public SequenceCompleted CompleteSequence(Process process, bool processActive, params long[] nextCells)
         {
             return new SequenceCompleted(this, processActive, nextCells) { Process = process };
         }

@@ -202,7 +202,7 @@ namespace Moryx.ControlSystem.Simulator
             }
         }
 
-        private void SimulateMovement(Activity activity, IProcess process, ISimulationDriver movementTarget)
+        private void SimulateMovement(Activity activity, Process process, ISimulationDriver movementTarget)
         {
             Logger.LogDebug("Simulating movement to driver {0}-{1} for activity '{2}'.",
                         movementTarget.Id, movementTarget.Name, activity.ToString());

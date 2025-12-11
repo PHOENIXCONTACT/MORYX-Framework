@@ -215,7 +215,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         }
 
         /// <inheritdoc />
-        public void FillActivities(IUnitOfWork uow, IProcess process, IDictionary<long, ITask> taskMap)
+        public void FillActivities(IUnitOfWork uow, Process process, IDictionary<long, ITask> taskMap)
         {
             var repo = uow.GetRepository<IActivityEntityRepository>();
             var dbActivities = repo.GetCompleted(process.Id).ToList();

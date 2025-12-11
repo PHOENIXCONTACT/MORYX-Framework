@@ -56,7 +56,7 @@ namespace Moryx.Simulation.Tests
             _processControlMock.Setup(pc => pc.Targets(It.IsAny<Activity>()))
                 .Returns<Activity>(a => _activityTargets.TryGetValue(a, out IReadOnlyList<ICell>? value) ? value : []);
 
-            _processControlMock.Setup(pc => pc.Targets(It.IsAny<IProcess>()))
+            _processControlMock.Setup(pc => pc.Targets(It.IsAny<Process>()))
                 .Returns([_assemblyCell, _anotherAssemblyCell]);
             _processControlMock.Setup(pc => pc.GetRunningProcesses()).Returns([]);
 
