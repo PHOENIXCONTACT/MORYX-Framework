@@ -80,29 +80,31 @@ namespace Moryx.AbstractionLayer.Resources
         }
 
         /// <inheritdoc />
-        Task IAsyncPlugin.StartAsync()
+        Task IAsyncPlugin.StartAsync(CancellationToken cancellationToken)
         {
-            return OnStartAsync();
+            return OnStartAsync(cancellationToken);
         }
 
         /// <summary>
         /// Resource specific implementation of <see cref="IPlugin.Start"/>
         /// </summary>
-        protected virtual Task OnStartAsync()
+        /// <param name="cancellationToken"></param>
+        protected virtual Task OnStartAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        Task IAsyncPlugin.StopAsync()
+        Task IAsyncPlugin.StopAsync(CancellationToken cancellationToken)
         {
-            return OnStopAsync();
+            return OnStopAsync(cancellationToken);
         }
 
         /// <summary>
         /// Resource specific implementation of <see cref="IPlugin.Stop"/>
         /// </summary>
-        protected virtual Task OnStopAsync()
+        /// <param name="cancellationToken"></param>
+        protected virtual Task OnStopAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

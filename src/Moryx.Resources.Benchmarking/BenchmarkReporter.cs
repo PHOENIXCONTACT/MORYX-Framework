@@ -56,10 +56,11 @@ namespace Moryx.Resources.Benchmarking
             Capabilities = new BenchmarkCapabilities(StepId);
         }
 
+        /// <param name="cancellationToken"></param>
         /// <inheritdoc />
-        protected override async Task OnStartAsync()
+        protected override async Task OnStartAsync(CancellationToken cancellationToken)
         {
-            await base.OnStartAsync();
+            await base.OnStartAsync(cancellationToken);
 
             ParallelOperations.ScheduleExecution(LogValues, ReportInterval, ReportInterval);
         }

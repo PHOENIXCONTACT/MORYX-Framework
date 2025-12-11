@@ -39,13 +39,13 @@ namespace Moryx.Orders.Assignment
         }
 
         /// <inheritdoc />
-        public virtual Task StartAsync()
+        public virtual Task StartAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task StopAsync()
+        public virtual Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }

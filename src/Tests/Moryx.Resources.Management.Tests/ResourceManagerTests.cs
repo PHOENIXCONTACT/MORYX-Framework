@@ -351,16 +351,16 @@ namespace Moryx.Resources.Management.Tests
                 InitializeCalls++;
             }
 
-            protected override async Task OnStartAsync()
+            protected override async Task OnStartAsync(CancellationToken cancellationToken)
             {
-                await base.OnStartAsync();
+                await base.OnStartAsync(cancellationToken);
                 StartCalls++;
             }
 
-            protected override Task OnStopAsync()
+            protected override Task OnStopAsync(CancellationToken cancellationToken)
             {
                 StopCalls++;
-                return base.OnStopAsync();
+                return base.OnStopAsync(cancellationToken);
             }
 
             public void RaiseChanged()

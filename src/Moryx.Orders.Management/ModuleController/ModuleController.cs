@@ -95,7 +95,7 @@ namespace Moryx.Orders.Management
             Container.LoadComponents<ICountStrategy>();
             Container.LoadComponents<IOperationDispatcher>();
             Container.LoadComponents<IAdviceExecutor>();
-            
+
             return Task.CompletedTask;
         }
 

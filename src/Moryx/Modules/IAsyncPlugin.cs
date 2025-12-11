@@ -15,11 +15,13 @@ namespace Moryx.Modules
         /// <summary>
         /// Start internal execution of active and/or periodic functionality.
         /// </summary>
-        Task StartAsync();
+        /// <param name="cancellationToken"></param>
+        Task StartAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Stops internal execution of active and/or periodic functionality.
         /// </summary>
-        Task StopAsync();
+        /// <param name="cancellationToken"></param>
+        Task StopAsync(CancellationToken cancellationToken = default);
     }
 }

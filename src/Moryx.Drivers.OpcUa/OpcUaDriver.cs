@@ -243,16 +243,18 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         ServerStatus = ServerState.Unknown;
     }
 
+    /// <param name="cancellationToken"></param>
     /// <inheritdoc/>
-    protected override async Task OnStartAsync()
+    protected override async Task OnStartAsync(CancellationToken cancellationToken)
     {
-        await base.OnStartAsync();
+        await base.OnStartAsync(cancellationToken);
         ApplicationConfigurationFactory.ApplicationName += " " + Identifier;
         Connect();
     }
 
+    /// <param name="cancellationToken"></param>
     /// <inheritdoc/>
-    protected override Task OnStopAsync()
+    protected override Task OnStopAsync(CancellationToken cancellationToken)
     {
         State.Disconnect();
         return Task.CompletedTask;

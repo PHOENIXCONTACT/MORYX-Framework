@@ -48,13 +48,14 @@ namespace Moryx.AbstractionLayer.Resources
         }
 
         /// <inheritdoc />
-        public virtual Task StartAsync()
+        public virtual Task StartAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
+        /// <param name="cancellationToken"></param>
         /// <inheritdoc />
-        public virtual Task StopAsync()
+        public virtual Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }

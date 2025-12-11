@@ -34,7 +34,7 @@ namespace Moryx.Orders.Management
 
         #endregion
 
-        public async Task StartAsync()
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             _savingContext = new OperationSavingContext(UnitOfWorkFactory);
 
@@ -56,7 +56,7 @@ namespace Moryx.Orders.Management
                 await operationData.Resume();
         }
 
-        public Task StopAsync()
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
             _lock.EnterWriteLock();
 

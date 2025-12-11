@@ -14,12 +14,12 @@ namespace Moryx.Orders.Management.Assignment
             return Task.CompletedTask;
         }
 
-        public Task StartAsync()
+        public Task StartAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
-        public Task StopAsync()
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }

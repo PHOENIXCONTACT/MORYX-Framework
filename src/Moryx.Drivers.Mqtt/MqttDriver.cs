@@ -254,20 +254,22 @@ public class MqttDriver : Driver, IMessageDriver
         StateMachine.Initialize(this).With<DriverMqttState>();
     }
 
+    /// <param name="cancellationToken"></param>
     /// <inheritdoc />
-    protected override async Task OnStartAsync()
+    protected override async Task OnStartAsync(CancellationToken cancellationToken)
     {
-        await base.OnStartAsync();
+        await base.OnStartAsync(cancellationToken);
 
         State.Connect();
     }
 
+    /// <param name="cancellationToken"></param>
     /// <inheritdoc />
-    protected override Task OnStopAsync()
+    protected override Task OnStopAsync(CancellationToken cancellationToken)
     {
         State.Disconnect();
 
-        return base.OnStopAsync();
+        return base.OnStopAsync(cancellationToken);
     }
 
     /// <inheritdoc />

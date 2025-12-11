@@ -166,7 +166,7 @@ namespace Moryx.Resources.Management
         {
             try
             {
-                await ((IAsyncPlugin)resource).StartAsync();
+                await ((IAsyncPlugin)resource).StartAsync(cancellationToken);
             }
             catch (Exception e)
             {
@@ -295,7 +295,7 @@ namespace Moryx.Resources.Management
             ResourceLinker.LinkReferences(entityAccessor.Instance, entityAccessor.Relations);
         }
 
-        public async Task StartAsync()
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             // Create configured resource initializers
             _initializers = (from importerConfig in Config.Initializers
@@ -303,19 +303,19 @@ namespace Moryx.Resources.Management
 
             // start resources
             _startup = ResourceStartupPhase.Starting;
-            await Parallel.ForEachAsync(Graph.GetAll().Except(_failedResources), StartResource);
+            await Parallel.ForEachAsync(Graph.GetAll().Except(_failedResources), cancellationToken, StartResource);
             _startup = ResourceStartupPhase.Started;
         }
 
-        public async Task StopAsync()
+        public async Task StopAsync(CancellationToken cancellationToken = default)
         {
             _startup = ResourceStartupPhase.Stopping;
 
-            await Parallel.ForEachAsync(Graph.GetAll(), async (resource, _) =>
+            await Parallel.ForEachAsync(Graph.GetAll(), cancellationToken, async (resource, cancelToken) =>
             {
                 try
                 {
-                    await ((IAsyncPlugin)resource).StopAsync();
+                    await ((IAsyncPlugin)resource).StopAsync(cancelToken);
                     UnregisterEvents(resource);
                 }
                 catch (Exception e)
