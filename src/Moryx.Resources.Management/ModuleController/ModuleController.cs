@@ -42,7 +42,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             // Extend container
             Container.RegisterNotifications();
@@ -67,17 +67,17 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override async Task OnStartAsync()
+        protected override async Task OnStartAsync(CancellationToken cancellationToken)
         {
             // Start type controller for resource and proxy creation
             Container.Resolve<IResourceTypeController>().Start();
 
             // Load manager to boot resources
             var resourceManager = Container.Resolve<IResourceManager>();
-            await resourceManager.InitializeAsync();
+            await resourceManager.InitializeAsync(cancellationToken);
 
             // Boot up manager
-            await resourceManager.StartAsync();
+            await resourceManager.StartAsync(cancellationToken);
 
             // Activate external facade to register events
             ActivateFacade(_resourceTypeTreeFacade);
@@ -88,14 +88,14 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected override async Task OnStopAsync()
+        protected override async Task OnStopAsync(CancellationToken cancellationToken)
         {
             // Tear down facades
             DeactivateFacade(_notificationSourceFacade);
             DeactivateFacade(_resourceManagementFacade);
             DeactivateFacade(_resourceTypeTreeFacade);
             var resourceManager = Container.Resolve<IResourceManager>();
-            await resourceManager.StopAsync();
+            await resourceManager.StopAsync(cancellationToken);
         }
 
         private readonly ResourceManagementFacade _resourceManagementFacade = new();

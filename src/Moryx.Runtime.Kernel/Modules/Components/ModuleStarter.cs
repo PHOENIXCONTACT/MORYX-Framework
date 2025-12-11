@@ -2,8 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
-using Moryx.Runtime.Kernel.Modules;
 using Moryx.Runtime.Modules;
+using Moryx.Tools;
 
 namespace Moryx.Runtime.Kernel
 {
@@ -22,31 +22,31 @@ namespace Moryx.Runtime.Kernel
         }
 
         /// <inheritdoc />
-        public Task InitializeAsync(IServerModule module)
+        public Task InitializeAsync(IServerModule module, CancellationToken cancellationToken)
         {
             if (!AvailableModules.Contains(module))
                 return Task.CompletedTask; // Module not executable
 
-            return module.InitializeAsync();
+            return module.InitializeAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task StartAsync(IServerModule module)
+        public async Task StartAsync(IServerModule module, CancellationToken cancellationToken)
         {
             if (!AvailableModules.Contains(module))
                 return; // Module not executable
 
-            await module.InitializeAsync();
+            await module.InitializeAsync(cancellationToken);
 
-            await StartModule(module);
+            await StartModule(module, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task StartAllAsync()
+        public async Task StartAllAsync(CancellationToken cancellationToken)
         {
             foreach (var module in AvailableModules)
             {
-                await module.InitializeAsync();
+                await module.InitializeAsync(cancellationToken);
             }
 
             // Find root server modules and convert all others to waiting services
@@ -58,11 +58,11 @@ namespace Moryx.Runtime.Kernel
 
             foreach (var module in depTree.RootModules.Where(ShouldBeStarted).Select(branch => branch.RepresentedModule))
             {
-                await StartModule(module);
+                await StartModule(module, cancellationToken);
             }
         }
 
-        private async Task StartModule(IServerModule module)
+        private async Task StartModule(IServerModule module, CancellationToken cancellationToken)
         {
             // Check for any failed dependencies
             var hasFailedDependencies = _dependencyManager.GetDependencyBranch(module).Dependencies
@@ -80,21 +80,21 @@ namespace Moryx.Runtime.Kernel
 
             if (awaitingDependencies.Length != 0)
             {
-                await EnqueueServiceAndStartDependencies(awaitingDependencies, module);
+                await EnqueueServiceAndStartDependencies(awaitingDependencies, module, cancellationToken);
             }
             else
             {
-                _ = Task.Run(async () => await ExecuteModuleStart(module));
+                _ = Task.Run(async () => await ExecuteModuleStart(module, cancellationToken), cancellationToken);
             }
         }
 
-        private async Task ExecuteModuleStart(IServerModule module)
+        private async Task ExecuteModuleStart(IServerModule module, CancellationToken cancellationToken)
         {
-            // Should be caught by ServerModuleBase but better be safe than sorry 
+            // Should be caught by ServerModuleBase but better be safe than sorry
             try
             {
-                await module.InitializeAsync();
-                await module.StartAsync();
+                await module.InitializeAsync(cancellationToken);
+                await module.StartAsync(cancellationToken);
             }
             catch (Exception ex)
             {
@@ -102,19 +102,18 @@ namespace Moryx.Runtime.Kernel
             }
 
             // Forward result
-            await ModuleChangedState(module, module.State);
+            await ModuleChangedState(module, module.State, cancellationToken);
         }
 
 
-        private async Task ModuleChangedState(IServerModule module, ServerModuleState newState)
+        private async Task ModuleChangedState(IServerModule module, ServerModuleState newState, CancellationToken cancellationToken)
         {
             // Check if it switched to running
             if (!newState.HasFlag(ServerModuleState.Running))
                 return;
 
             // Now we start every service waiting on this service to return
-            await _waitingModulesSemaphore.WaitAsync();
-            try
+            await _waitingModulesSemaphore.ExecuteAsync(async () =>
             {
                 if (!WaitingModules.TryGetValue(module, out var value))
                     return;
@@ -123,16 +122,12 @@ namespace Moryx.Runtime.Kernel
                 foreach (var waitingModule in value.ToArray())
                 {
                     value.Remove(waitingModule);
-                    await StartModule(waitingModule);
+                    await StartModule(waitingModule, cancellationToken);
                 }
 
                 // We remove this service for now after we started every dependent
                 WaitingModules.Remove(module);
-            }
-            finally
-            {
-                _waitingModulesSemaphore.Release();
-            }
+            }, cancellationToken);
         }
 
         private void ConvertBranch(IModuleDependency branch)
@@ -144,12 +139,12 @@ namespace Moryx.Runtime.Kernel
             }
         }
 
-        private async Task EnqueueServiceAndStartDependencies(IEnumerable<IServerModule> dependencies, IServerModule waitingService)
+        private async Task EnqueueServiceAndStartDependencies(IEnumerable<IServerModule> dependencies, IServerModule waitingService, CancellationToken cancellationToken)
         {
             foreach (var dependency in dependencies)
             {
                 AddWaitingModule(dependency, waitingService);
-                await StartAsync(dependency);
+                await StartAsync(dependency, cancellationToken);
             }
         }
 

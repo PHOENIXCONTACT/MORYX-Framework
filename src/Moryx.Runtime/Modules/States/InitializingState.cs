@@ -15,7 +15,7 @@ namespace Moryx.Runtime.Modules
         {
             try
             {
-                await Context.InitializeAsync();
+                await Context.InitializeAsync(cancellationToken);
                 await NextStateAsync(StateReady, cancellationToken);
             }
             catch (Exception ex)
@@ -24,19 +24,19 @@ namespace Moryx.Runtime.Modules
                 await NextStateAsync(StateInitializedFailure, cancellationToken);
             }
         }
-        public override Task Initialize()
+        public override Task Initialize(CancellationToken cancellationToken)
         {
             // Nothing to do here
             return Task.CompletedTask;
         }
 
-        public override Task Start()
+        public override Task Start(CancellationToken cancellationToken)
         {
             // Nothing to do here
             return Task.CompletedTask;
         }
 
-        public override Task Stop()
+        public override Task Stop(CancellationToken cancellationToken)
         {
             // Nothing to do here
             return Task.CompletedTask;

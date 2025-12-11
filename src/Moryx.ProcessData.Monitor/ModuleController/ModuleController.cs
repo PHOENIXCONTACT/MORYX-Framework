@@ -26,7 +26,7 @@ namespace Moryx.ProcessData.Monitor
         }
 
         /// <inheritdoc />
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             Container.SetInstance(ConfigManager);
 
@@ -35,7 +35,7 @@ namespace Moryx.ProcessData.Monitor
         }
 
         /// <inheritdoc />
-        protected override Task OnStartAsync()
+        protected override Task OnStartAsync(CancellationToken cancellationToken)
         {
             Container.Resolve<IProcessDataCollector>().Start();
             ActivateFacade(_processDataMonitorFacade);
@@ -43,7 +43,7 @@ namespace Moryx.ProcessData.Monitor
         }
 
         /// <inheritdoc />
-        protected override Task OnStopAsync()
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             Container.Resolve<IProcessDataCollector>().Stop();
             DeactivateFacade(_processDataMonitorFacade);

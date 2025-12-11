@@ -38,7 +38,7 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
         /// <summary>
         /// Start all components and modules to begin execution
         /// </summary>
-        public Task StartAsync()
+        public Task StartAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
@@ -46,7 +46,7 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
         /// <summary>
         /// Stop execution, dispose components and return to clean state
         /// </summary>
-        public Task StopAsync()
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }

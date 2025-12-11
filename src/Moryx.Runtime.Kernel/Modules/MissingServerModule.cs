@@ -5,7 +5,7 @@ using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Runtime.Modules;
 
-namespace Moryx.Runtime.Kernel.Modules
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Class representing a missing module in the application
@@ -51,12 +51,12 @@ namespace Moryx.Runtime.Kernel.Modules
             return Task.CompletedTask;
         }
 
-        public Task StartAsync()
+        public Task StartAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
-        public Task StopAsync()
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }

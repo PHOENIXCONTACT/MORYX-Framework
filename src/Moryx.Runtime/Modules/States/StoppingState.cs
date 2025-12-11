@@ -14,7 +14,7 @@ namespace Moryx.Runtime.Modules
         {
             try
             {
-                await Context.StopAsync();
+                await Context.StopAsync(cancellationToken);
             }
             catch (Exception ex)
             {
@@ -65,19 +65,19 @@ namespace Moryx.Runtime.Modules
 
         protected abstract Task OnStopping(CancellationToken cancellationToken);
 
-        public override Task Initialize()
+        public override Task Initialize(CancellationToken cancellationToken)
         {
             // Nothing to do here
             return Task.CompletedTask;
         }
 
-        public override Task Start()
+        public override Task Start(CancellationToken cancellationToken)
         {
             // Not possible here
             return Task.CompletedTask;
         }
 
-        public override Task Stop()
+        public override Task Stop(CancellationToken cancellationToken)
         {
             // We are already stopping
             return Task.CompletedTask;

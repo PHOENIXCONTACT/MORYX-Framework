@@ -43,7 +43,7 @@ namespace Moryx.Notifications.Publisher
         }
 
         /// <inheritdoc />
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             // Register global components
             Container.ActivateDbContexts(DbContextManager);
@@ -61,7 +61,7 @@ namespace Moryx.Notifications.Publisher
         }
 
         /// <inheritdoc />
-        protected override Task OnStartAsync()
+        protected override Task OnStartAsync(CancellationToken cancellationToken)
         {
             Container.Resolve<INotificationManager>().Start();
 
@@ -70,7 +70,7 @@ namespace Moryx.Notifications.Publisher
         }
 
         /// <inheritdoc />
-        protected override Task OnStopAsync()
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             DeactivateFacade(_notificationPublisherFacade);
 

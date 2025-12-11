@@ -41,7 +41,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             // Extend container
             Container
@@ -66,7 +66,8 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override async Task OnStartAsync()
+        /// <param name="cancellationToken"></param>
+        protected override async Task OnStartAsync(CancellationToken cancellationToken)
         {
             // Start Manager
             Container.Resolve<IProductStorage>().Start();
@@ -79,7 +80,8 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected override Task OnStopAsync()
+        /// <param name="cancellationToken"></param>
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             // Deactivate facades
             DeactivateFacade(_productManagement);

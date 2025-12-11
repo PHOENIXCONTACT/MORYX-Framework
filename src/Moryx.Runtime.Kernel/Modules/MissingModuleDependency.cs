@@ -3,7 +3,7 @@
 
 using Moryx.Runtime.Modules;
 
-namespace Moryx.Runtime.Kernel.Modules
+namespace Moryx.Runtime.Kernel
 {
     /// <summary>
     /// Class representing a missing module dependency
