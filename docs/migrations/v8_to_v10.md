@@ -207,6 +207,32 @@ All methods loading ProductTypes, ProductInstances, Recipes or Workplans are now
 
 - All strategies of the ProductStorage must now return `Task` and the methods got the `Async`-suffix.
 
+### ConfigBasedComponentSelector async support
+
+The `ConfigBasedComponentSelector` was extended to support async initialization of the selected component. If the component implements `IAsyncConfiguredInitializable`, its `InitializeAsync` method will be called during selection. It is not required that the `Create` method returns a task, the `InitializeAsync` will run synchronously after creation. If it returns a Task, it will await its completion.
+
+The following sample shows the new possibilities of the `ConfigBasedComponentSelector`:
+
+````cs
+public interface ISample : IAsyncConfiguredInitializable<SampleConfig>;
+
+[PluginFactory(typeof(IConfigBasedComponentSelector))]
+internal interface ISampleFactory
+{
+    // InitializeAsync will be called synchronously after creation using CancellationToken.None
+    ISample Create(SampleConfig config);
+
+    // InitializeAsync will be called synchronously after creation with passing cancellationToken
+    ISample Create(SampleConfig config, CancellationToken cancellationToken);
+
+    // InitializeAsync will be called asynchronously after creation using CancellationToken.None
+    Task<ISample> Create(SampleConfig config);
+
+    // InitializeAsync will be called asynchronously after creation with passing cancellationToken
+    Task<ISample> Create(SampleConfig config, CancellationToken cancellationToken);
+}
+````
+
 ### Other Async Related changes
 
 - All public or protected APIs which are Task-based are renamed to use `Async` suffix. (Internal APIs are excluded from this rule but will be adjusted over time)

@@ -32,7 +32,7 @@ namespace Moryx.Resources.Management
             {
                 try
                 {
-                    var initializer = InitializerFactory.Create(config, CancellationToken.None);
+                    var initializer = InitializerFactory.Create(config, CancellationToken.None).GetAwaiter().GetResult();
                     ResourceManager.ExecuteInitializer(initializer, null).Wait();
                     InitializerFactory.Destroy(initializer);
                 }

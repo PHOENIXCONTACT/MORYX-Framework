@@ -298,8 +298,22 @@ namespace Moryx.Resources.Management
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             // Create configured resource initializers
-            _initializers = (from importerConfig in Config.Initializers
-                select InitializerFactory.Create(importerConfig, cancellationToken)).ToArray();
+            var initializers = new List<IResourceInitializer>(Config.Initializers.Count);
+            foreach (var importerConfig in Config.Initializers)
+            {
+                try
+                {
+                    var initializer = await InitializerFactory.Create(importerConfig, cancellationToken);
+                    initializers.Add(initializer);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            }
+
+            _initializers = initializers.ToArray();
 
             // start resources
             _startup = ResourceStartupPhase.Starting;

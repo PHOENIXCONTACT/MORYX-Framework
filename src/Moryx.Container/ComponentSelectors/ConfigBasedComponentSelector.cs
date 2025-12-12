@@ -46,7 +46,14 @@ namespace Moryx.Container
                 var config = additionalArguments[ConfigParameterName];
                 var configType = config.GetType();
 
-                var componentInterfaces = componentType.GetInterfaces();
+                var targetComponentType = componentType;
+                var isAsync = componentType.IsGenericType && componentType.GetGenericTypeDefinition() == typeof(Task<>);
+                if (isAsync)
+                {
+                    targetComponentType = componentType.GetGenericArguments()[0];
+                }
+
+                var componentInterfaces = targetComponentType.GetInterfaces();
 
                 // Invoke Initialize for IConfiguredInitializable<>
                 var isConfiguredInitializable = componentInterfaces
@@ -54,8 +61,8 @@ namespace Moryx.Container
 
                 if (isConfiguredInitializable)
                 {
-                    ExecuteInitialize(componentType, configType, instance, config, kernel);
-                    return instance;
+                    ExecuteInitialize(targetComponentType, configType, instance, config, kernel);
+                    return isAsync ? ToTypedTask(targetComponentType, Task.FromResult(instance)) : instance;
                 }
 
                 // Invoke Initialize for IAsyncConfiguredInitializable<>
@@ -64,7 +71,21 @@ namespace Moryx.Container
 
                 if (isAsyncConfiguredInitializable)
                 {
-                    ExecuteInitializeAsync(componentType, additionalArguments, configType, instance, config, kernel);
+                    var initializeTask = ExecuteInitializeAsync(targetComponentType, additionalArguments, configType, instance, config, kernel);
+
+                    if (isAsync)
+                    {
+
+                        var t = Task.Run(async () =>
+                        {
+                            await initializeTask;
+                            return instance;
+                        });
+
+                        return ToTypedTask(targetComponentType, t);
+                    }
+
+                    initializeTask.GetAwaiter().GetResult();
                     return instance;
                 }
 
@@ -91,7 +112,7 @@ namespace Moryx.Container
             }
         }
 
-        private static void ExecuteInitializeAsync(Type componentType, Arguments additionalArguments, Type configType,
+        private static Task ExecuteInitializeAsync(Type componentType, Arguments additionalArguments, Type configType,
             object instance, object config, IKernelInternal kernel)
         {
             var genericPluginApi = typeof(IAsyncConfiguredInitializable<>).MakeGenericType(configType);
@@ -107,13 +128,38 @@ namespace Moryx.Container
 
             try
             {
-                var task = (Task)initMethod!.Invoke(instance, [config, cancellationToken])!;
-                task.GetAwaiter().GetResult();
+                return (Task)initMethod!.Invoke(instance, [config, cancellationToken])!;
             }
             catch (Exception e)
             {
                 kernel.Logger.Error(() => string.Format(CultureInfo.InvariantCulture, "Error during async initialization of component {0} with config {1}: {2}",
                     componentType.FullName, configType.FullName, e));
+                return Task.FromException(e);
+            }
+        }
+
+        private static object ToTypedTask(Type targetComponentType, Task<object> originalTask)
+        {
+            // This allows to cast to a generic Task even if the type is only known at runtime.
+            var helperMethod = typeof(TaskHelperClass)
+                .GetMethod(nameof(TaskHelperClass.CastTaskResult))!
+                .MakeGenericMethod(targetComponentType);
+
+            var typedTask = helperMethod.Invoke(null, [originalTask]);
+            return typedTask;
+        }
+
+        private class TaskHelperClass
+        {
+            public static Task<T> CastTaskResult<T>(Task<object> task)
+            {
+                return Inner();
+
+                async Task<T> Inner()
+                {
+                    var result = await task.ConfigureAwait(false);
+                    return (T)result; // safe cast at runtime
+                }
             }
         }
     }
