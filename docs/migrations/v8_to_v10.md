@@ -374,6 +374,8 @@ These feature were infrequently used and has been removed to simplify the codeba
 ## Modules-Orders
 
 - Removed report from interrupt of an operation. Reporting during an interruption doesn't add any value. The quantity for the report can only be predicted and will be inaccurate if something goes wrong or is reworked during the interruption.
+- Facade Renaming:
+  - `GetOperationAsync` -> `LoadOperationAsync`
 
 ## Reworked driver APIs
 

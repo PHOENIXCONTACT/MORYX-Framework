@@ -134,7 +134,7 @@ namespace Moryx.Orders.Management
             return filtered.Select(o => o.Operation).ToArray();
         }
 
-        public async Task<Operation> GetOperationAsync(string orderNumber, string operationNumber, CancellationToken cancellationToken = default)
+        public async Task<Operation> LoadOperationAsync(string orderNumber, string operationNumber, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
@@ -142,7 +142,7 @@ namespace Moryx.Orders.Management
             return operationData?.Operation;
         }
 
-        public async Task<Operation> GetOperationAsync(Guid identifier, CancellationToken cancellationToken = default)
+        public async Task<Operation> LoadOperationAsync(Guid identifier, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
