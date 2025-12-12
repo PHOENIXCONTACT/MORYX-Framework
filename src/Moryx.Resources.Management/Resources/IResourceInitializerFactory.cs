@@ -15,7 +15,7 @@ namespace Moryx.Resources.Management
         /// <summary>
         /// Creates an <see cref="IResourceInitializer"/> with the given config
         /// </summary>
-        IResourceInitializer Create(ResourceInitializerConfig config);
+        IResourceInitializer Create(ResourceInitializerConfig config, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Destroys an <see cref="IResourceInitializer"/>

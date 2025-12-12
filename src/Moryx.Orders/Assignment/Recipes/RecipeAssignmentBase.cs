@@ -31,7 +31,7 @@ namespace Moryx.Orders.Assignment
         protected TConfig Config { get; private set; }
 
         /// <inheritdoc cref="IProductAssignment"/>
-        public virtual Task InitializeAsync(RecipeAssignmentConfig config)
+        public virtual Task InitializeAsync(RecipeAssignmentConfig config, CancellationToken cancellationToken = default)
         {
             Config = (TConfig)config;
             Logger = Logger.GetChild(Config.PluginName, GetType());

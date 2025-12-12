@@ -24,7 +24,7 @@ namespace Moryx.ControlSystem.Cells
         protected TConfig Config { get; private set; }
 
         /// <inheritdoc />
-        public virtual Task InitializeAsync(CellSelectorConfig config)
+        public virtual Task InitializeAsync(CellSelectorConfig config, CancellationToken cancellationToken = default)
         {
             Config = (TConfig)config;
             return Task.CompletedTask;

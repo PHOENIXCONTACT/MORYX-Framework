@@ -19,7 +19,7 @@ namespace Moryx.Orders.Management.Assignment
         protected PartsAssignmentConfig Config { get; private set; }
 
         /// <inheritdoc/>
-        public Task InitializeAsync(PartsAssignmentConfig config)
+        public Task InitializeAsync(PartsAssignmentConfig config, CancellationToken cancellationToken = default)
         {
             Config = config;
             return Task.CompletedTask;

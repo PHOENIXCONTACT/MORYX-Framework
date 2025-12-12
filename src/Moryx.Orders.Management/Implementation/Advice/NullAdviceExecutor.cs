@@ -13,7 +13,7 @@ namespace Moryx.Orders.Management.Advice
     internal class NullAdviceExecutor : IAdviceExecutor
     {
         /// <inheritdoc />
-        public Task InitializeAsync(AdviceExecutorConfig config)
+        public Task InitializeAsync(AdviceExecutorConfig config, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }

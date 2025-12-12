@@ -179,7 +179,7 @@ namespace Moryx.Resources.Management
         {
             ValidateHealthState();
 
-            var initializer = InitializerFactory.Create(initializerConfig);
+            var initializer = InitializerFactory.Create(initializerConfig, cancellationToken);
 
             var result = await ResourceManager.ExecuteInitializer(initializer, parameters);
 

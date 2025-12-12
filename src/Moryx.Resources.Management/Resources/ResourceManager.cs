@@ -299,7 +299,7 @@ namespace Moryx.Resources.Management
         {
             // Create configured resource initializers
             _initializers = (from importerConfig in Config.Initializers
-                select InitializerFactory.Create(importerConfig)).ToArray();
+                select InitializerFactory.Create(importerConfig, cancellationToken)).ToArray();
 
             // start resources
             _startup = ResourceStartupPhase.Starting;

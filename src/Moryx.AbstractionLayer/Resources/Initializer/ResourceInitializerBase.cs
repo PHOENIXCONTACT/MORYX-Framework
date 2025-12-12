@@ -36,7 +36,7 @@ namespace Moryx.AbstractionLayer.Resources
         public abstract string Description { get; }
 
         /// <inheritdoc />
-        public Task InitializeAsync(ResourceInitializerConfig config)
+        public Task InitializeAsync(ResourceInitializerConfig config, CancellationToken cancellationToken = default)
         {
             // Get child logger
             Logger = Logger.GetChild(Name, GetType());

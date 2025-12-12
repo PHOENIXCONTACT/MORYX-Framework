@@ -27,7 +27,7 @@ namespace Moryx.Orders.Management.Assignment
         private RegexOperationValidationConfig _config;
 
         /// <inheritdoc />
-        public Task InitializeAsync(OperationValidationConfig config)
+        public Task InitializeAsync(OperationValidationConfig config, CancellationToken cancellationToken = default)
         {
             _config = (RegexOperationValidationConfig)config;
             _operationNumberRegex = new Regex(_config.RegularExpression);

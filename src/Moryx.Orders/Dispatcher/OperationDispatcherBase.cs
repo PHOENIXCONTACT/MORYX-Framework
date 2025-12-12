@@ -27,7 +27,7 @@ namespace Moryx.Orders.Dispatcher
         #endregion
 
         /// <inheritdoc />
-        public Task InitializeAsync(OperationDispatcherConfig config)
+        public Task InitializeAsync(OperationDispatcherConfig config, CancellationToken cancellationToken = default)
         {
             Config = (TConf)config;
             return Task.CompletedTask;

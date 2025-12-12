@@ -13,7 +13,7 @@ namespace Moryx.Orders.Management.Assignment
     public class NullPartsAssignment : IPartsAssignment
     {
         /// <inheritdoc />
-        public Task InitializeAsync(PartsAssignmentConfig config)
+        public Task InitializeAsync(PartsAssignmentConfig config, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
