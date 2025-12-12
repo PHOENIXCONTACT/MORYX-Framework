@@ -87,9 +87,9 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Import products using given parameters
         /// </summary>
-        Task<ProductImporterResult> IProductImporter.ImportAsync(ProductImportContext context, object parameters, CancellationToken cancellationToken = default)
+        Task<ProductImporterResult> IProductImporter.ImportAsync(ProductImportContext context, object parameters, CancellationToken cancellationToken)
         {
-            var result = ImportAsync(context, (TParameters)parameters);
+            var result = ImportAsync(context, (TParameters)parameters, cancellationToken);
             Parameters = GenerateParameters();
             return result;
         }
@@ -97,6 +97,6 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Import products using typed parameters
         /// </summary>
-        protected abstract Task<ProductImporterResult> ImportAsync(ProductImportContext context, TParameters parameters);
+        protected abstract Task<ProductImporterResult> ImportAsync(ProductImportContext context, TParameters parameters, CancellationToken cancellationToken);
     }
 }

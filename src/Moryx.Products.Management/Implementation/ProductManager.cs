@@ -39,7 +39,7 @@ namespace Moryx.Products.Management
 
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
-            await Storage.CheckDatabase();
+            await Storage.CheckDatabase(cancellationToken);
             _importers = (from importerConfig in Config.Importers
                           select ImportFactory.Create(importerConfig)).ToList();
         }
@@ -132,7 +132,7 @@ namespace Moryx.Products.Management
         {
             var importer = _importers.First(i => i.Name == importerName);
             var context = new ProductImportContext();
-            var result = await importer.ImportAsync(context, parameters);
+            var result = await importer.ImportAsync(context, parameters, CancellationToken.None);
 
             HandleResult(result);
 
@@ -155,7 +155,7 @@ namespace Moryx.Products.Management
             _runningImports.Add(context.Session, session);
 
             var importer = _importers.First(i => i.Name == importerName);
-            var task = importer.ImportAsync(context, parameters);
+            var task = importer.ImportAsync(context, parameters, CancellationToken.None);
             task.ContinueWith(session.TaskCompleted);
 
             // Wait for the task unless it is long running

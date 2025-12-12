@@ -36,7 +36,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// <param name="facade">Extended facade</param>
         /// <param name="proxy">Resource proxy reference</param>
         /// <param name="modifier">Modifier delegate, must return <value>true</value> in order to save changes</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <remarks>
         /// The <param name="modifier"></param> action uses the actual resource instance, not wrapped by proxy.
         /// As a result, all internal members, including properties and
@@ -61,7 +61,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// <param name="proxy">Resource proxy reference</param>
         /// <param name="modifier">Modifier delegate, must return <value>true</value> in order to save changes</param>
         /// <param name="context">Additional context, used within the <param cref="modifier"/></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <remarks>
         /// The <param name="modifier"></param> action uses the actual resource instance, not wrapped by proxy.
         /// As a result, all internal members, including properties and
@@ -95,7 +95,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// </remarks>
         /// <param name="facade">Extended facade</param>
         /// <param name="initializer">Initializer delegate for the resource</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         public static Task<long> CreateUnsafeAsync<TResource>(this IResourceManagement facade, Func<TResource, Task> initializer,
             CancellationToken cancellationToken = default)
             where TResource : Resource

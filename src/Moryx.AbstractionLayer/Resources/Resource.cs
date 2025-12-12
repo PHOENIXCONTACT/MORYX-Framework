@@ -88,7 +88,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// <summary>
         /// Resource specific implementation of <see cref="IPlugin.Start"/>
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         protected virtual Task OnStartAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
@@ -103,7 +103,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// <summary>
         /// Resource specific implementation of <see cref="IPlugin.Stop"/>
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         protected virtual Task OnStopAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;

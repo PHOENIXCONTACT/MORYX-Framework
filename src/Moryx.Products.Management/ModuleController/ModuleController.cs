@@ -66,7 +66,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         protected override async Task OnStartAsync(CancellationToken cancellationToken)
         {
             // Start Manager
@@ -80,7 +80,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             // Deactivate facades

@@ -30,16 +30,16 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Load typed object and set on product
         /// </summary>
-        Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target);
+        Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target, CancellationToken cancellationToken);
 
         /// <summary>
         /// Save part link
         /// </summary>
-        Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target);
+        Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target, CancellationToken cancellationToken);
 
         /// <summary>
         /// A link between two products was removed, remove the link as well
         /// </summary>
-        Task DeletePartLinkAsync(IReadOnlyList<IGenericColumns> deprecatedEntities);
+        Task DeletePartLinkAsync(IReadOnlyList<IGenericColumns> deprecatedEntities, CancellationToken cancellationToken);
     }
 }

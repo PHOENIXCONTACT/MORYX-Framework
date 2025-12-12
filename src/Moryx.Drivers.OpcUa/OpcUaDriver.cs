@@ -244,7 +244,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         ServerStatus = ServerState.Unknown;
     }
 
-    /// <param name="cancellationToken"></param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <inheritdoc/>
     protected override async Task OnStartAsync(CancellationToken cancellationToken)
     {
@@ -253,7 +253,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         Connect();
     }
 
-    /// <param name="cancellationToken"></param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <inheritdoc/>
     protected override Task OnStopAsync(CancellationToken cancellationToken)
     {

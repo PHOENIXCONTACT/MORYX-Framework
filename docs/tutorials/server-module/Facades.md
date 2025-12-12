@@ -40,13 +40,13 @@ public class ModuleController: ServerModuleFacadeControllerBase<ModuleConfig>,
     private readonly Facade _facade = new Facade();
     IFacade IFacadeContainer<IFacade>.Facade => _facade;
 
-    protected override async Task OnStartAsync()
+    protected override async Task OnStartAsync(CancellationToken cancellationToken)
     {
         await base.OnStartAsync();
         ActivateFacade(_facade);
     }
 
-    protected override Task OnStopAsync()
+    protected override Task OnStopAsync(CancellationToken cancellationToken)
     {
         DeactivateFacade(_facade);
         return base.OnStopAsync();

@@ -39,7 +39,7 @@ namespace Moryx.Benchmarking.Setups
         /// </summary>
         /// <param name="openContext">Context for db access</param>
         /// <param name="setupData">Any data for the setup, excel or sql etc</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         public Task ExecuteAsync(IUnitOfWork openContext, string setupData, CancellationToken cancellationToken)
         {
             var prodRepo = openContext.GetRepository<IProductTypeRepository>();

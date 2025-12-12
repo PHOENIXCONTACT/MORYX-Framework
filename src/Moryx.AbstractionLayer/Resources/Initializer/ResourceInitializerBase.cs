@@ -53,7 +53,7 @@ namespace Moryx.AbstractionLayer.Resources
             return Task.CompletedTask;
         }
 
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <inheritdoc />
         public virtual Task StopAsync(CancellationToken cancellationToken = default)
         {

@@ -84,7 +84,7 @@ namespace Moryx.Model.Repositories
         /// Create a new instance but specify, if it should be added to the context
         /// </summary>
         /// <param name="addToContext"><value>True</value>Instance is added to the context. <value>False</value>Instance is not added to the context</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         Task<T> CreateAsync(bool addToContext, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Moryx.Model.Repositories
         /// Adds an entity to the context
         /// </summary>
         /// <param name="entity">Entity that shall be added</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         Task<T> AddAsync(T entity, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Moryx.Model.Repositories
         /// Add multiple entities to the context at one time
         /// </summary>
         /// <param name="entities">Entities that shall be added</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
 
         /// <summary>

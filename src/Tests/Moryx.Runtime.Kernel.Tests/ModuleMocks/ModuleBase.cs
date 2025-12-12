@@ -29,7 +29,7 @@ namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
         /// Initialize this component and prepare it for incoming taks. This must only involve preparation and must not start
         /// any active functionality and/or periodic execution of logic.
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         public Task InitializeAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;

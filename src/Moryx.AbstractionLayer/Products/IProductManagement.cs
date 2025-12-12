@@ -75,7 +75,7 @@ namespace Moryx.AbstractionLayer.Products
         /// Create an product instance of given product
         /// </summary>
         /// <param name="productType">Product to instantiate</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <returns>Unsaved instance</returns>
         Task<ProductInstance> CreateInstanceAsync(ProductType productType, CancellationToken cancellationToken = default);
 
@@ -84,7 +84,7 @@ namespace Moryx.AbstractionLayer.Products
         /// </summary>
         /// <param name="productType">Product type to instantiate</param>
         /// <param name="save">Flag if new instance should already be saved</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <returns>New instance</returns>
         Task<ProductInstance> CreateInstanceAsync(ProductType productType, bool save, CancellationToken cancellationToken = default);
 
@@ -92,7 +92,7 @@ namespace Moryx.AbstractionLayer.Products
         /// Get an product instance with the given id.
         /// </summary>
         /// <param name="id">The id for the product instance which should be searched for.</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <returns>The product instance with the id when it exists.</returns>
         Task<ProductInstance> GetInstanceAsync(long id, CancellationToken cancellationToken = default);
 
@@ -123,7 +123,7 @@ namespace Moryx.AbstractionLayer.Products
         /// Get instances with the given ids.
         /// </summary>
         /// <param name="ids">The IDs of instances that should be loaded</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <returns>The instance with the id when it exists.</returns>
         Task<IReadOnlyList<ProductInstance>> GetInstancesAsync(long[] ids, CancellationToken cancellationToken = default);
 

@@ -20,6 +20,7 @@ public static class SemaphoreSlimExtensions
         /// function, and guarantees that the semaphore is released afterwards.
         /// </summary>
         /// <param name="criticalFunc">The asynchronous operation to execute inside the lock.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <returns>
         /// A <see cref="Task"/> that represents the asynchronous operation.
         /// The task completes when the function has finished executing and the semaphore

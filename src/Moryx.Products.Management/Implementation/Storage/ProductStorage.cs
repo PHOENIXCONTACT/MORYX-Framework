@@ -534,7 +534,7 @@ namespace Moryx.Products.Management
                     {
                         var link = partLink.Constructor();
                         link.Id = linkEntity.Id;
-                        await part.LoadPartLinkAsync(linkEntity, link);
+                        await part.LoadPartLinkAsync(linkEntity, link, cancellationToken);
                         link.Product = await Transform(uow, linkEntity.Child, true, cancellationToken, loadedProducts);
                         value = link;
                     }
@@ -547,7 +547,7 @@ namespace Moryx.Products.Management
                     {
                         var link = partLink.Constructor();
                         link.Id = linkEntity.Id;
-                        await part.LoadPartLinkAsync(linkEntity, link);
+                        await part.LoadPartLinkAsync(linkEntity, link, cancellationToken);
                         link.Product = await Transform(uow, linkEntity.Child, true, cancellationToken, loadedProducts);
                         links.Add(link);
                     }
@@ -638,19 +638,19 @@ namespace Moryx.Products.Management
                         linkEntity = linkRepo.Create(linkStrategy.PropertyName);
                         saverContext.UnitOfWork.LinkEntityToBusinessObject(link, linkEntity);
                         linkEntity.Parent = typeEntity;
-                        await linkStrategy.SavePartLinkAsync(link, linkEntity);
+                        await linkStrategy.SavePartLinkAsync(link, linkEntity, cancellationToken);
                         linkEntity.Child = await GetPartEntity(saverContext, link, cancellationToken);
                         saverContext.PersistentObjectCache.Add(link, linkEntity);
 
                     }
                     else if (linkEntity != null && link == null) // link was removed
                     {
-                        await linkStrategy.DeletePartLinkAsync([linkEntity]);
+                        await linkStrategy.DeletePartLinkAsync([linkEntity], cancellationToken);
                         linkRepo.Remove(linkEntity);
                     }
                     else if (linkEntity != null && link != null) // link was modified
                     {
-                        await linkStrategy.SavePartLinkAsync(link, linkEntity);
+                        await linkStrategy.SavePartLinkAsync(link, linkEntity, cancellationToken);
                         linkEntity.Child = await GetPartEntity(saverContext, link, cancellationToken);
                         //                 linkEntity.Id = linkEntity.Child.Id;
                     }
@@ -665,7 +665,7 @@ namespace Moryx.Products.Management
                                     where link.PropertyName == linkStrategy.PropertyName
                                     where links.All(l => l.Id != link.Id)
                                     select link).ToArray();
-                    await linkStrategy.DeletePartLinkAsync(toDelete);
+                    await linkStrategy.DeletePartLinkAsync(toDelete, cancellationToken);
                     linkRepo.RemoveRange(toDelete);
 
                     // Save those currently active
@@ -683,7 +683,7 @@ namespace Moryx.Products.Management
                         {
                             linkEntity = typeEntity.Parts.First(p => p.Id == link.Id);
                         }
-                        await linkStrategy.SavePartLinkAsync(link, linkEntity);
+                        await linkStrategy.SavePartLinkAsync(link, linkEntity, cancellationToken);
                         linkEntity.Child = await GetPartEntity(saverContext, link, cancellationToken);
                         saverContext.PersistentObjectCache.Add(link, linkEntity);
                     }

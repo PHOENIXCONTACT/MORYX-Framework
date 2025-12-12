@@ -38,6 +38,7 @@ namespace Moryx.Products.Management
         /// <inheritdoc />
         public abstract Task SaveTypeAsync(ProductType source, IGenericColumns target, CancellationToken cancellationToken);
 
+        /// <inheritdoc />
         public abstract Expression<Func<IGenericColumns, bool>> TransformSelector<TProduct>(Expression<Func<TProduct, bool>> selector);
     }
 }

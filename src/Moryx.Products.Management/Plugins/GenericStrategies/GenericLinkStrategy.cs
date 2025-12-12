@@ -39,14 +39,14 @@ namespace Moryx.Products.Management
             EntityMapper.Initialize(linkType, Config);
         }
 
-        public override Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target)
+        public override Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target, CancellationToken cancellationToken)
         {
             EntityMapper.ReadValue(linkEntity, target);
 
             return Task.CompletedTask;
         }
 
-        public override Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target)
+        public override Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target, CancellationToken cancellationToken)
         {
             EntityMapper.WriteValue(source, target);
 

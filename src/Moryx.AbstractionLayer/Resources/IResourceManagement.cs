@@ -114,7 +114,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// </summary>
         /// <param name="id">Id of the resource</param>
         /// <param name="modifier">Modifier delegate, must return <value>true</value> in order to save changes</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <remarks>
         /// The <param name="modifier"></param> action uses the actual resource instance, not wrapped by proxy.
         /// As a result, all internal members, including properties and

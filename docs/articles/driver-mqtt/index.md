@@ -29,7 +29,7 @@ public class ExampleResource: IResource{
 
     private IMessageChannel<IConvertible> _channel;
 
-    protected override async Task OnInitializeAsync()
+    protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
     {
         await base.OnInitializeAsync();
 
@@ -57,7 +57,7 @@ public class MqttSensorResource : PublicResource
 {
     public IMessageChannel<IConvertible> SensorTopic { get; set; }
 
-    protected override async Task OnInitializeAsync()
+    protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
     {
         await base.OnInitializeAsync();
 

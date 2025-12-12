@@ -56,7 +56,7 @@ namespace Moryx.Resources.Benchmarking
             Capabilities = new BenchmarkCapabilities(StepId);
         }
 
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <inheritdoc />
         protected override async Task OnStartAsync(CancellationToken cancellationToken)
         {

@@ -27,21 +27,21 @@ namespace Moryx.Runtime.Modules
         /// Start a specific module and all its dependencies
         /// </summary>
         /// <param name="module">Module to start</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         Task StartModuleAsync(IServerModule module, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Stop a specific modules
         /// </summary>
         /// <param name="module">Module to stop</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         Task StopModuleAsync(IServerModule module, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Restart the module and all of its dependecies
         /// </summary>
         /// <param name="module"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         Task ReincarnateModuleAsync(IServerModule module, CancellationToken cancellationToken = default);
 
         /// <summary>

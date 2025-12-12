@@ -50,7 +50,7 @@ namespace Moryx.Resources.Management
 
             // Register imports
             Container
-                .SetInstance((IConfigManager)ConfigManager);
+                .SetInstance(ConfigManager);
 
             // Register for communication
             Container.Register<IBinaryConnectionFactory>();

@@ -27,13 +27,13 @@ namespace Moryx.TestTools.Test.Model
             CarEntity lastCar = null;
             for (var i = 0; i < 1; i++)
             {
-                var carEntity = await carRepo.CreateAsync();
+                var carEntity = await carRepo.CreateAsync(cancellationToken);
                 carEntity.Name = "Car " + i;
                 carEntity.Price = i + 100;
 
                 async Task CreateWheel(WheelType wheelType)
                 {
-                    var wheelEntity = await wheelRepo.CreateAsync();
+                    var wheelEntity = await wheelRepo.CreateAsync(cancellationToken);
                     wheelEntity.WheelType = wheelType;
                     wheelEntity.Car = carEntity;
                 }

@@ -40,7 +40,7 @@ namespace Moryx.AbstractionLayer.Drivers
         /// <summary>
         /// Will be called after the state change when <see cref="AsyncStateBase"/> is used
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         protected virtual Task OnStateChangedAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;

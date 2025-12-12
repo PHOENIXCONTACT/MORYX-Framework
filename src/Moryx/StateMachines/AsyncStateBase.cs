@@ -42,7 +42,7 @@ public abstract class AsyncStateBase : StateBase
     /// Jump to next state async
     /// </summary>
     /// <param name="state">Number of the next state</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     protected virtual async Task NextStateAsync(int state, CancellationToken cancellationToken = default)
     {
         if (!Map.TryGetValue(state, out var next))

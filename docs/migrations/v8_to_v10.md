@@ -46,18 +46,18 @@ The lifecycle methods of ServerModules have been migrated from void to `async Ta
 - `OnStop()` -> `OnStopAsync()`
 
 ````cs
-protected override Task OnInitializeAsync()
+protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 {
     return Task.CompletedTask;
 }
 
-protected override async Task OnStartAsync()
+protected override async Task OnStartAsync(CancellationToken cancellationToken)
 {
     var asyncFoo = Container.Resolve<IAsyncFoo>();
     await asyncFoo.StartAsync();
 }
 
-protected override async Task OnStopAsync()
+protected override async Task OnStopAsync(CancellationToken cancellationToken)
 {
     var asyncFoo = Container.Resolve<IAsyncFoo>();
     await asyncFoo.StopAsync();
@@ -104,17 +104,17 @@ The ResourceManagement has been updated to support **asynchronous lifecycle meth
 - `OnStop()` -> `OnStopAsync()`
 
 ````cs
-protected override Task OnInitializeAsync()
+protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 {
     return base.OnStartAsync();
 }
 
-protected override Task OnStartAsync()
+protected override Task OnStartAsync(CancellationToken cancellationToken)
 {
     return base.OnStartAsync();
 }
 
-protected override Task OnStopAsync()
+protected override Task OnStopAsync(CancellationToken cancellationToken)
 {
     return base.OnStopAsync();
 }

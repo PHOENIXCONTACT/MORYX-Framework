@@ -167,7 +167,7 @@ public class OpcUaNode : IMessageChannel
     /// Not implemented yet
     /// </summary>
     /// <param name="payload"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
     public Task SendAsync(object payload, CancellationToken cancellationToken = default)

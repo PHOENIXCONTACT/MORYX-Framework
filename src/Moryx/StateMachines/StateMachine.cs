@@ -280,7 +280,7 @@ namespace Moryx.StateMachines
         /// </summary>
         /// <param name="current">The current StateMachine</param>
         /// <param name="forceState">The target state to be forced</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <example>
         /// This sample shows how to force a state
         /// <code>
@@ -305,7 +305,7 @@ namespace Moryx.StateMachines
         /// <param name="forceState">The target state to be forced</param>
         /// <param name="exitCurrent">If <c>true</c> <see cref="AsyncStateBase.OnExitAsync"/> will be called before force.</param>
         /// <param name="enterForced">If <c>true</c> <see cref="AsyncStateBase.OnEnterAsync"/> will be called on forced state.</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <example>
         /// This sample shows how to force a state
         /// <code>
@@ -384,7 +384,7 @@ namespace Moryx.StateMachines
             /// Finalize the state machine creation by defining the state machine type.
             /// </summary>
             /// <param name="stateType">Type of state machine base class</param>
-            /// <param name="cancellationToken"></param>
+            /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
             /// <exception cref="InvalidOperationException">Thrown if 0 or more states are flagged as initial.</exception>
             /// <exception cref="InvalidOperationException">Thrown if types are registered more than one time.</exception>
             /// <exception cref="ArgumentException">Given base class is not abstract.</exception>

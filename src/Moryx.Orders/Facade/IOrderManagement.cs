@@ -57,7 +57,7 @@ namespace Moryx.Orders
         /// Aborts the given operation if it was not started before
         /// </summary>
         /// <param name="operation"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         Task AbortOperationAsync(Operation operation, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Moryx.Orders
         /// Assigns or updates operation related information like the corresponding product or recipes on the existing operation instance.
         /// </summary>
         /// <param name="operation">The <see cref="Operation"/> assign.</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         Task ReloadAsync(Operation operation, CancellationToken cancellationToken = default);
 
         /// <summary>

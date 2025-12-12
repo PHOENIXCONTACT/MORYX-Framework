@@ -22,7 +22,7 @@ internal class ProcessHolderGroupStream(
     /// Starts the Process Holder Group stream
     /// </summary>
     /// <param name="response">the http response object</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <returns></returns>
     public async Task Start(HttpContext context, CancellationToken cancellationToken)
     {

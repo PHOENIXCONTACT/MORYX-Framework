@@ -15,7 +15,7 @@ namespace Moryx.Orders.Advice
         /// </summary>
         /// <param name="operation">Operation of the advice</param>
         /// <param name="advice">Order advice information</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         Task<AdviceResult> AdviceAsync(Operation operation, OrderAdvice advice, CancellationToken cancellationToken);
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Moryx.Orders.Advice
         /// </summary>
         /// <param name="operation">Operation of the advice</param>
         /// <param name="advice">Pick part advice information</param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         Task<AdviceResult> AdviceAsync(Operation operation, PickPartAdvice advice, CancellationToken cancellationToken);
     }
 }

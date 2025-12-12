@@ -122,7 +122,7 @@ namespace Moryx.Resources.Management
 
             var resource = ResourceGraph.Instantiate(resourceType.ResourceType());
             await initializer(resource);
-            await ResourceGraph.SaveAsync(resource);
+            await ResourceGraph.SaveAsync(resource, cancellationToken);
             return resource.Id;
         }
 
@@ -147,7 +147,7 @@ namespace Moryx.Resources.Management
 
             var result = await modifier(resource);
             if (result)
-                await ResourceGraph.SaveAsync(resource);
+                await ResourceGraph.SaveAsync(resource, cancellationToken);
         }
 
         public async Task<bool> DeleteAsync(long id, CancellationToken cancellationToken = default)
@@ -158,7 +158,7 @@ namespace Moryx.Resources.Management
             if (resource == null)
                 return false;
 
-            return await ResourceGraph.DestroyAsync(resource);
+            return await ResourceGraph.DestroyAsync(resource, cancellationToken);
         }
 
         public IEnumerable<TResource> GetResourcesUnsafe<TResource>(Func<TResource, bool> predicate)

@@ -106,7 +106,7 @@ So here is an example of how your mock driver can implement `Moryx.Simulation.IS
 
         public IEnumerable<ICell> Usages => new[] { Cell };
 
-        protected override async Task OnStartAsync()
+        protected override async Task OnStartAsync(CancellationToken cancellationToken)
         {
             await base.OnStartAsync();
 

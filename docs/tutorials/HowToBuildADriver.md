@@ -83,7 +83,7 @@ public class StateExampleDriver : Driver, IExampleDriver, IStateContext
     private readonly object _stateLock = new object();
 
     /// <seealso cref="IDriver"/>
-    public override async Task OnInitializeAsync()
+    public override async Task OnInitializeAsync(CancellationToken cancellationToken)
     {
         await base.InitializeAsync();
 
@@ -92,7 +92,7 @@ public class StateExampleDriver : Driver, IExampleDriver, IStateContext
 
     ...
 
-    public override async Task OnStartAsync()
+    public override async Task OnStartAsync(CancellationToken cancellationToken)
     {
         await base.OnStartAsync();
 

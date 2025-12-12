@@ -20,6 +20,7 @@ namespace Moryx.Resources.Samples
         [ResourceReference(ResourceRelationType.Driver)]
         public IMessageDriver Driver { get; set; }
 
+        /// <inheritdoc />
         protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             await base.OnInitializeAsync(cancellationToken);
@@ -50,7 +51,6 @@ namespace Moryx.Resources.Samples
 
     public class ManualMountingCell : MountingCell
     {
-
         // Automatically detect relation name based
         public IVisualInstructor Instructor { get; set; }
 

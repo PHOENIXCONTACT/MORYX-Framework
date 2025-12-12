@@ -246,19 +246,19 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again.
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         protected abstract Task OnInitializeAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         protected abstract Task OnStartAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         protected abstract Task OnStopAsync(CancellationToken cancellationToken);
 
         #endregion

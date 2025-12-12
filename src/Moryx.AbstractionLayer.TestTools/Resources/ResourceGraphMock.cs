@@ -105,7 +105,7 @@ namespace Moryx.AbstractionLayer.TestTools.Resources
         /// <inheritdoc />
         public Task<bool> DestroyAsync(IResource resource, bool permanent, CancellationToken cancellationToken = default)
         {
-            return DestroyAsync(resource);
+            return DestroyAsync(resource, cancellationToken);
         }
 
         /// <inheritdoc />
