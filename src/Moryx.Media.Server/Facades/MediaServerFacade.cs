@@ -60,17 +60,17 @@ namespace Moryx.Media.Server.Facades
         }
 
         /// <inheritdoc />
-        public bool RemoveContent(Guid contentId)
+        public bool DeleteContent(Guid contentId)
         {
             ValidateHealthState();
-            return ContentManager.RemoveContent(contentId, MediaConstants.MasterName);
+            return ContentManager.DeleteContent(contentId, MediaConstants.MasterName);
         }
 
         /// <inheritdoc />
-        public bool RemoveVariant(Guid contentId, string variantName)
+        public bool DeleteVariant(Guid contentId, string variantName)
         {
             ValidateHealthState();
-            return ContentManager.RemoveContent(contentId, variantName);
+            return ContentManager.DeleteContent(contentId, variantName);
         }
 
         /// <inheritdoc />

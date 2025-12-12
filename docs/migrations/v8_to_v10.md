@@ -402,6 +402,12 @@ The API of `IResourceInitializer` was adjusted
 - Removed API from IJobManagement: `JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement)`
 - Added `IAsyncEnumerable<IProcessChunk> LoadArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)` to `IProcessControl`
 
+## Modules-Media
+
+- Facade Renaming:
+  - `RemoveContent` -> `DeleteContent`
+  - `RemoveVariant` -> `DeleteVariant`
+
 ## Modules-Products
 
 - Removed `productId` from `SaveRecipes` of `IProductStorage` and changed argument to `IReadOnlyList`

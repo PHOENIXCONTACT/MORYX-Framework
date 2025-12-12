@@ -273,7 +273,7 @@ namespace Moryx.Media.Server.Tests
 
             // Act
             var descriptor = _contentManager.GetDescriptors(0, 1).First();
-            _contentManager.RemoveContent(descriptor.Id, "master");
+            _contentManager.DeleteContent(descriptor.Id, "master");
 
             descriptor = _contentManager.GetDescriptors(0, 1).First();
 

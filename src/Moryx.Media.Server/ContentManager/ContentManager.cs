@@ -244,11 +244,11 @@ namespace Moryx.Media.Server
             return null;
         }
 
-        private bool Remove(ContentDescriptor contentDescriptor)
+        private bool Delete(ContentDescriptor contentDescriptor)
         {
             var variants = contentDescriptor.Variants.ToArray();
             foreach (var variantDescriptor in variants)
-                Remove(contentDescriptor, variantDescriptor);
+                Delete(contentDescriptor, variantDescriptor);
 
             var descriptorFile = Path.Combine(_descriptorDirectory, contentDescriptor.Id.ToString());
             if (File.Exists(descriptorFile))
@@ -259,7 +259,7 @@ namespace Moryx.Media.Server
             return _descriptors.Remove(contentDescriptor) & _descriptorMap.Remove(contentDescriptor.Id);
         }
 
-        private bool Remove(ContentDescriptor contentDescriptor, VariantDescriptor variantDescriptor)
+        private bool Delete(ContentDescriptor contentDescriptor, VariantDescriptor variantDescriptor)
         {
             var hashPath = HashPath.FromHash(variantDescriptor.FileHash);
             hashPath.DeleteFile(Config.StoragePath, Logger);
@@ -273,7 +273,7 @@ namespace Moryx.Media.Server
             return true;
         }
 
-        public bool RemoveContent(Guid contentId, string variantName)
+        public bool DeleteContent(Guid contentId, string variantName)
         {
             var isMaster = variantName == MediaConstants.MasterName;
             var descriptor = GetDescriptor(contentId);
@@ -282,7 +282,7 @@ namespace Moryx.Media.Server
             if (variant == null)
                 return false;
 
-            return isMaster ? Remove(descriptor) : Remove(descriptor, variant);
+            return isMaster ? Delete(descriptor) : Delete(descriptor, variant);
         }
 
         private async Task AddPreview(VariantDescriptor variantDescriptor, Stream previewStream)
