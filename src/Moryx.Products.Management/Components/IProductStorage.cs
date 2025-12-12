@@ -89,9 +89,9 @@ namespace Moryx.Products.Management
         Task<IReadOnlyList<TType>> LoadTypesAsync<TType>(Expression<Func<TType, bool>> selector, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Remove recipe by given recipeId
+        /// Delete recipe by given recipeId
         /// </summary>
-        Task RemoveRecipeAsync(long recipeId, CancellationToken cancellationToken = default);
+        Task DeleteRecipeAsync(long recipeId, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///

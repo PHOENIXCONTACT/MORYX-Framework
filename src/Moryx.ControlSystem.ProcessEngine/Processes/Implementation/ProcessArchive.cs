@@ -155,7 +155,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             {
                 var process = (ProductionProcess)recipe.CreateProcess();
                 process.Id = query[index].Id;
-                process.ProductInstance = await ProductManagement.GetInstanceAsync(query[index].ReferenceId);
+                process.ProductInstance = await ProductManagement.LoadInstanceAsync(query[index].ReferenceId);
                 ProcessStorage.FillActivities(uow, process, taskMap);
                 processes[index] = process;
             }

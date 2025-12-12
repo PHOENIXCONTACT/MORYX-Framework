@@ -198,7 +198,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [Authorize(Policy = ProductPermissions.CanDeleteType)]
         public async Task<ActionResult<bool>> DeleteType(long id)
         {
-            var result = await _productManagement.DeleteProductAsync(id);
+            var result = await _productManagement.DeleteTypeAsync(id);
             if (!result)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.ProductManagementController_TypeNotFound });
             return result;
@@ -239,7 +239,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             ProductType newProductType;
             try
             {
-                newProductType = await _productManagement.DuplicateAsync(template, identity);
+                newProductType = await _productManagement.DuplicateTypeAsync(template, identity);
             }
             catch (IdentityConflictException ex)
             {
@@ -260,7 +260,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             var productType = await _productManagement.LoadTypeAsync(id);
             if (productType == null)
                 return BadRequest($"ProductType is null");
-            var recipes = await _productManagement.GetRecipesAsync(productType, (RecipeClassification)classification);
+            var recipes = await _productManagement.LoadRecipesAsync(productType, (RecipeClassification)classification);
             var recipeModels = new List<RecipeModel>();
             foreach (var recipe in recipes)
                 recipeModels.Add(_productConverter.ConvertRecipe(recipe));
@@ -279,7 +279,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         {
             if (id == 0)
                 return BadRequest($"Id was 0");
-            var productInstance = await _productManagement.GetInstanceAsync(id);
+            var productInstance = await _productManagement.LoadInstanceAsync(id);
             if (productInstance == null)
                 return NotFound(new MoryxExceptionResponse { Title = string.Format(Strings.ProductManagementController_InstanceNotFound, id) });
             return _productConverter.ConvertProductInstance(productInstance);
@@ -290,7 +290,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
         [Authorize(Policy = ProductPermissions.CanViewInstances)]
         public async Task<ActionResult<ProductInstanceModel[]>> GetInstances([FromQuery] long[] ids)
         {
-            var instances = await _productManagement.GetInstancesAsync(ids);
+            var instances = await _productManagement.LoadInstancesAsync(ids);
             var modelList = new List<ProductInstanceModel>();
             foreach (var instance in instances)
                 modelList.Add(_productConverter.ConvertProductInstance(instance));

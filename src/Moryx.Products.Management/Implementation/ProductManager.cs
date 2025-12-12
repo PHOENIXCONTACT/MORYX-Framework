@@ -87,7 +87,7 @@ namespace Moryx.Products.Management
             return wrapper.Constructor();
         }
 
-        public async Task<ProductType> Duplicate(ProductType template, IIdentity newIdentity)
+        public async Task<ProductType> DuplicateType(ProductType template, IIdentity newIdentity)
         {
             if (newIdentity is not ProductIdentity newProductIdentity)
             {
@@ -189,12 +189,12 @@ namespace Moryx.Products.Management
             return Storage.SaveInstancesAsync(productInstances);
         }
 
-        public Task<IReadOnlyList<ProductInstance>> GetInstances(long[] ids)
+        public Task<IReadOnlyList<ProductInstance>> LoadInstances(long[] ids)
         {
             return Storage.LoadInstancesAsync(ids);
         }
 
-        public Task<IReadOnlyList<TInstance>> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
+        public Task<IReadOnlyList<TInstance>> LoadInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
         {
             return Storage.LoadInstancesAsync(selector);
         }

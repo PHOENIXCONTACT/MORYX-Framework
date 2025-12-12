@@ -96,7 +96,7 @@ public class ProcessEngineController : ControllerBase
     [Authorize(Policy = ProcessPermissions.CanView)]
     public async Task<ActionResult<JobProcessModel[]>> GetProcesses(long productInstanceId)
     {
-        var productInstance = await _productManagement.GetInstanceAsync(productInstanceId);
+        var productInstance = await _productManagement.LoadInstanceAsync(productInstanceId);
         if (productInstance == null)
         {
             return NotFound($"No product instace corresponding to the Id {productInstanceId} found");

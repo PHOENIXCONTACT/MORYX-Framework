@@ -19,7 +19,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Retrieves recipes for the product
         /// </summary>
-        Task<IReadOnlyList<IProductRecipe>> GetRecipes(ProductType productType, RecipeClassification classifications);
+        Task<IReadOnlyList<IProductRecipe>> LoadRecipes(ProductType productType, RecipeClassification classifications);
 
         /// <summary>
         /// Saves multiple recipes
@@ -39,7 +39,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Remove the recipe by the given identifier
         /// </summary>
-        Task Remove(long recipeId);
+        Task Delete(long recipeId);
 
         /// <summary>
         /// Create instance of a recipe

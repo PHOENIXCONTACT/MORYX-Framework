@@ -409,6 +409,13 @@ The API of `IResourceInitializer` was adjusted
 - Introduced `ProductState.Generated` to classify a product as generated for internal use
 - Added support to query by required product state
 - Added `DeleteTypeAsync` to `IProductStorage`
+- Facade Renaming:
+  - `DuplicateAsync` -> `DuplicateTypeAsync`
+  - `GetRecipesAsync` -> `LoadRecipesAsync`
+  - `GetInstanceAsync` -> `LoadInstanceAsync`
+  - `GetInstancesAsync` -> `LoadInstancesAsync`
+  - `DeleteProductAsync` -> `DeleteTypeAsync`
+  - `RemoveRecipeAsync` -> `DeleteRecipeAsync`
 
 **`IProductManagement`**
 

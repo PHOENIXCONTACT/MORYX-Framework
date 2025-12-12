@@ -244,7 +244,7 @@ namespace Moryx.Products.Management
         }
 
         /// <inheritdoc />
-        public Task RemoveRecipeAsync(long recipeId, CancellationToken cancellationToken = default)
+        public Task DeleteRecipeAsync(long recipeId, CancellationToken cancellationToken = default)
         {
             using var uow = Factory.Create();
 
