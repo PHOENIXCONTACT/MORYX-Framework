@@ -79,7 +79,7 @@ namespace Moryx.Media.Server
             var previewCreatorFactory = Container.Resolve<IPreviewCreatorFactory>();
             foreach (var creatorConfig in Config.PreviewCreators.Distinct())
             {
-                var module = previewCreatorFactory.Create(creatorConfig);
+                var module = await previewCreatorFactory.Create(creatorConfig, cancellationToken);
                 try
                 {
                     await module.StartAsync(cancellationToken);

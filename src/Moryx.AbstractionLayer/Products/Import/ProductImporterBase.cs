@@ -23,41 +23,29 @@ namespace Moryx.AbstractionLayer.Products
         /// <inheritdoc />
         public virtual bool LongRunning => false;
 
-        /// <summary>
-        /// Parameters of this importer
-        /// </summary>
+        /// <inheritdoc />
         public object Parameters { get; private set; }
 
-        /// <summary>
-        /// Initialize this component with its config
-        /// </summary>
-        /// <param name="config">Config of this module plugin</param>
-        public virtual void Initialize(ProductImporterConfig config)
+        /// <inheritdoc />
+        public virtual Task InitializeAsync(ProductImporterConfig config, CancellationToken cancellationToken = default)
         {
             Config = (TConfig)config;
 
             Parameters = GenerateParameters();
+
+            return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Start internal execution of active and/or periodic functionality.
-        /// </summary>
-        public virtual void Start()
+        /// <inheritdoc />
+        public virtual Task StartAsync(CancellationToken cancellationToken = default)
         {
+            return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Stop internal execution of active and/or periodic functionality.
-        /// </summary>
-        public virtual void Stop()
+        /// <inheritdoc />
+        public virtual Task StopAsync(CancellationToken cancellationToken = default)
         {
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public virtual void Dispose()
-        {
+            return Task.CompletedTask;
         }
 
         /// <summary>

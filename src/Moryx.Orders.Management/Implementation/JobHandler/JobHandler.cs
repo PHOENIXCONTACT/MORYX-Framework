@@ -106,7 +106,7 @@ namespace Moryx.Orders.Management
                     return;
 
                 await operationData.JobStateChanged(eventArgs);
-                await Dispatcher.JobStateChangedAsync(operationData.Operation, eventArgs, default);
+                await Dispatcher.JobStateChangedAsync(operationData.Operation, eventArgs, CancellationToken.None);
             }
             catch (Exception e)
             {
@@ -117,13 +117,13 @@ namespace Moryx.Orders.Management
         /// <inheritdoc />
         public Task Dispatch(IOperationData operationData, IReadOnlyList<DispatchContext> dispatchContexts)
         {
-            return Dispatcher.DispatchAsync(operationData.Operation, dispatchContexts, default);
+            return Dispatcher.DispatchAsync(operationData.Operation, dispatchContexts, CancellationToken.None);
         }
 
         /// <inheritdoc />
         public Task Complete(IOperationData operationData)
         {
-            return Dispatcher.CompleteAsync(operationData.Operation, default);
+            return Dispatcher.CompleteAsync(operationData.Operation, CancellationToken.None);
         }
 
         /// <inheritdoc />

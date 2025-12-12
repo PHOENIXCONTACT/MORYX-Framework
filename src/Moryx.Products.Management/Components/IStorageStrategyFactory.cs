@@ -14,22 +14,22 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Create a new strategy instance
         /// </summary>
-        IProductTypeStrategy CreateTypeStrategy(ProductTypeConfiguration config, CancellationToken cancellationToken);
+        Task<IProductTypeStrategy> CreateTypeStrategy(ProductTypeConfiguration config, CancellationToken cancellationToken);
 
         /// <summary>
         /// Create a new strategy instance
         /// </summary>
-        IProductInstanceStrategy CreateInstanceStrategy(ProductInstanceConfiguration config, CancellationToken cancellationToken);
+        Task<IProductInstanceStrategy> CreateInstanceStrategy(ProductInstanceConfiguration config, CancellationToken cancellationToken);
 
         /// <summary>
         /// Create a new strategy instance
         /// </summary>
-        IProductLinkStrategy CreateLinkStrategy(ProductLinkConfiguration config, CancellationToken cancellationToken);
+        Task<IProductLinkStrategy> CreateLinkStrategy(ProductLinkConfiguration config, CancellationToken cancellationToken);
 
         /// <summary>
         /// Create a new strategy instance
         /// </summary>
-        IProductRecipeStrategy CreateRecipeStrategy(ProductRecipeConfiguration config, CancellationToken cancellationToken);
+        Task<IProductRecipeStrategy> CreateRecipeStrategy(ProductRecipeConfiguration config, CancellationToken cancellationToken);
 
         /// <summary>
         /// Destroy an instance

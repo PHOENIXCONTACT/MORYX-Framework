@@ -279,7 +279,7 @@ namespace Moryx.Products.IntegrationTests
 
             var strategyFactory = new Mock<IStorageStrategyFactory>();
             strategyFactory.Setup(f => f.CreateTypeStrategy(It.IsAny<ProductTypeConfiguration>(), It.IsAny<CancellationToken>()))
-                .Returns((ProductTypeConfiguration config, CancellationToken cancellationToken) =>
+                .Returns(async (ProductTypeConfiguration config, CancellationToken cancellationToken) =>
                 {
                     IProductTypeStrategy strategy = null;
                     switch (config.PluginName)
@@ -298,13 +298,13 @@ namespace Moryx.Products.IntegrationTests
                             break;
                     }
 
-                    strategy.InitializeAsync(config, cancellationToken).GetAwaiter().GetResult();
+                    await strategy.InitializeAsync(config, cancellationToken);
 
                     return strategy;
                 });
 
             strategyFactory.Setup(f => f.CreateInstanceStrategy(It.IsAny<ProductInstanceConfiguration>(), It.IsAny<CancellationToken>()))
-                .Returns((ProductInstanceConfiguration config, CancellationToken cancellationToken) =>
+                .Returns(async (ProductInstanceConfiguration config, CancellationToken cancellationToken) =>
                 {
                     IProductInstanceStrategy strategy = null;
                     switch (config.PluginName)
@@ -323,13 +323,13 @@ namespace Moryx.Products.IntegrationTests
                             break;
                     }
 
-                    strategy.InitializeAsync(config, cancellationToken).GetAwaiter().GetResult();
+                    await strategy.InitializeAsync(config, cancellationToken);
 
                     return strategy;
                 });
 
             strategyFactory.Setup(f => f.CreateLinkStrategy(It.IsAny<ProductLinkConfiguration>(), It.IsAny<CancellationToken>()))
-                .Returns((ProductLinkConfiguration config, CancellationToken cancellationToken) =>
+                .Returns(async (ProductLinkConfiguration config, CancellationToken cancellationToken) =>
                 {
                     IProductLinkStrategy strategy = null;
                     switch (config.PluginName)
@@ -348,13 +348,13 @@ namespace Moryx.Products.IntegrationTests
                             break;
                     }
 
-                    strategy.InitializeAsync(config, cancellationToken).GetAwaiter().GetResult();
+                    await strategy.InitializeAsync(config, cancellationToken);
 
                     return strategy;
                 });
 
             strategyFactory.Setup(f => f.CreateRecipeStrategy(It.IsAny<ProductRecipeConfiguration>(), It.IsAny<CancellationToken>()))
-                .Returns((ProductRecipeConfiguration config, CancellationToken cancellationToken) =>
+                .Returns(async (ProductRecipeConfiguration config, CancellationToken cancellationToken) =>
                 {
                     IProductRecipeStrategy strategy = new GenericRecipeStrategy
                     {
@@ -364,7 +364,7 @@ namespace Moryx.Products.IntegrationTests
                         }
                     };
 
-                    strategy.InitializeAsync(config, cancellationToken).GetAwaiter().GetResult();
+                    await strategy.InitializeAsync(config, cancellationToken);
 
                     return strategy;
                 });

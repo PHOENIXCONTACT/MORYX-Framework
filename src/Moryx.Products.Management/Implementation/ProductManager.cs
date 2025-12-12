@@ -29,7 +29,7 @@ namespace Moryx.Products.Management
 
         #region Fields and Properties
 
-        private IList<IProductImporter> _importers;
+        private IReadOnlyList<IProductImporter> _importers;
 
         public IProductImporter[] Importers => _importers.ToArray();
 
@@ -40,8 +40,8 @@ namespace Moryx.Products.Management
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             await Storage.CheckDatabase(cancellationToken);
-            _importers = (from importerConfig in Config.Importers
-                          select ImportFactory.Create(importerConfig)).ToList();
+            var importes = Config.Importers.Select(importerConfig => ImportFactory.Create(importerConfig, cancellationToken));
+            _importers = await Task.WhenAll(importes);
         }
 
         public Task StopAsync(CancellationToken cancellationToken = default)
