@@ -3,6 +3,7 @@
 
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Operators.Attendances;
 
 namespace Moryx.Operators.Management;
 

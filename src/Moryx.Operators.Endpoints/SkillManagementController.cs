@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Operators.Endpoints.Models;
 using Moryx.Operators.Exceptions;
 using Moryx.Operators.Skills;
 using Moryx.Runtime.Modules;

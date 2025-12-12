@@ -3,7 +3,7 @@
 
 using Moryx.Modules;
 
-namespace Moryx.Workplans.Editing.Components
+namespace Moryx.Workplans.Editing
 {
     internal interface IWorkplanEditor : IPlugin
     {

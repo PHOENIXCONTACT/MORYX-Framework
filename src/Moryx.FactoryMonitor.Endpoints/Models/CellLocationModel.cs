@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.FactoryMonitor.Endpoints.Model
+namespace Moryx.FactoryMonitor.Endpoints.Models
 {
     /// <summary>
     /// Locaiton of the cell inside the factory

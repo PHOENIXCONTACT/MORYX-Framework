@@ -8,6 +8,7 @@ using Moryx.Tools;
 using Moryx.Workplans;
 using System.Collections;
 using System.Reflection;
+using Moryx.AbstractionLayer.Products.Endpoints.Models;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {

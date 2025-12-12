@@ -3,6 +3,7 @@
 
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Moryx.AbstractionLayer.Resources.Endpoints.Models;
 using Moryx.Serialization;
 using Moryx.Tools;
 
@@ -132,7 +133,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints
             if (value == null)
                 return referenceModel;
 
-            // Convert referenced resource objects and possible instance types         
+            // Convert referenced resource objects and possible instance types
             var referenceTargets = (value as IEnumerable<IResource>) ?? [(IResource)value];
             foreach (Resource resource in referenceTargets)
             {

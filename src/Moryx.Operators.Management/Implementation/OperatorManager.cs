@@ -6,6 +6,7 @@ using Moryx.Model.Repositories;
 using Moryx.Operators.Management.Model;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Model;
+using Moryx.Operators.Attendances;
 
 namespace Moryx.Operators.Management;
 

@@ -2,8 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
-using Moryx.Operators.Localizations;
 using System.ComponentModel.DataAnnotations;
+using Moryx.Operators.Properties;
 
 namespace Moryx.Operators.Skills;
 

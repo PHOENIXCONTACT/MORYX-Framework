@@ -2,12 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
-using Moryx.Operators.Extensions;
+using Moryx.Operators.Attendances;
 using Moryx.Operators.Skills;
 using Moryx.Serialization;
 using Moryx.Tools;
 
-namespace Moryx.Operators.Endpoints;
+namespace Moryx.Operators.Endpoints.Models;
 
 internal static class Converter
 {

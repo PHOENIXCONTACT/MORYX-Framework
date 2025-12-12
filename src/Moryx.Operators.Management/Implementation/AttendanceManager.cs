@@ -3,6 +3,7 @@
 
 using Moryx.Container;
 using Moryx.Model.Repositories;
+using Moryx.Operators.Attendances;
 using Moryx.Operators.Management.Model;
 
 namespace Moryx.Operators.Management;

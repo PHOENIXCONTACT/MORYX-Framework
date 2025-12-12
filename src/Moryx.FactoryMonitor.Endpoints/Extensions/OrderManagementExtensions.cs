@@ -1,7 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.FactoryMonitor.Endpoints.Model;
+using Moryx.FactoryMonitor.Endpoints.Models;
 using Moryx.Orders;
 
 namespace Moryx.FactoryMonitor.Endpoints.Extensions
@@ -11,7 +11,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
         public static List<OrderModel> GetOrderModels(this IOrderManagement orderManager, string[] colorPalette)
         {
             var orders = orderManager.GetOperations(x => x.State is OperationStateClassification.Running)
-                .Select(Converter.ToOrderModel).ToList();
+                .Select(Converter.Converter.ToOrderModel).ToList();
 
             // Assign color to order
             for (int i = 0; i < orders.Count; i++)

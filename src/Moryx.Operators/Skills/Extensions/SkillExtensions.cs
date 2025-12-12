@@ -3,7 +3,7 @@
 
 using Moryx.AbstractionLayer.Capabilities;
 
-namespace Moryx.Operators.Skills.Extensions
+namespace Moryx.Operators.Skills
 {
     public static class SkillExtensions
     {

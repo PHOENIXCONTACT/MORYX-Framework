@@ -10,7 +10,6 @@ using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
 using Moryx.ControlSystem.Recipes;
 using Moryx.Factory;
-using Moryx.FactoryMonitor.Endpoints.Model;
 using Moryx.FactoryMonitor.Endpoints.Models;
 
 namespace Moryx.FactoryMonitor.Endpoints.Extensions
@@ -19,7 +18,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
     {
         public static ResourceChangedModel GetResourceChangedModel(
            this ICell cell,
-           Converter converter,
+           Converter.Converter converter,
            IResourceManagement resourceManager,
            Func<IMachineLocation, bool> cellFilter)
         {
@@ -29,7 +28,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             var machineLocation = resourceManager
                 .GetResources(cellFilter)
                 .FirstOrDefault(x => x.Machine?.Id == cell.Id);
-            resourceChangedCellModel.Location = Converter.ToCellLocationModel(machineLocation);
+            resourceChangedCellModel.Location = Converter.Converter.ToCellLocationModel(machineLocation);
             resourceChangedCellModel.CellImageURL = machineLocation.Image;
             resourceChangedCellModel.IconName = machineLocation.SpecificIcon;
             resourceChangedCellModel.FactoryId = GetFactoryId(cell, resourceManager);
@@ -45,7 +44,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
 
         public static CellStateChangedModel GetCellStateChangedModel(this ICell cell, Resource resource)
         {
-            var cellStateChangedModel = Converter.ToCellStateChangedModel(resource);
+            var cellStateChangedModel = Converter.Converter.ToCellStateChangedModel(resource);
             cellStateChangedModel.State = GetCellState(cell);
             return cellStateChangedModel;
         }
@@ -63,7 +62,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             Activity activity,
             List<OrderModel> orderModels)
         {
-            var activityChangedModel = Converter.ToActivityChangedModel(cell);
+            var activityChangedModel = Converter.Converter.ToActivityChangedModel(cell);
             activityChangedModel.Id = activity.Id;
 
             if (activity.Process is ProductionProcess)
@@ -75,7 +74,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             var orderModel = orderModels.
                 SingleOrDefault(o => o.Order == recipe?.OrderNumber && o.Operation == recipe?.OperationNumber);
 
-            activityChangedModel.OrderReferenceModel = Converter.ToOrderReferenceModel(orderModel);
+            activityChangedModel.OrderReferenceModel = Converter.Converter.ToOrderReferenceModel(orderModel);
 
             return activityChangedModel;
         }

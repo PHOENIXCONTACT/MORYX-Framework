@@ -204,11 +204,7 @@ public class MqttDriver : Driver, IMessageDriver
     /// Content of the last will message. Has no effect if HasLastWill is not set
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(
-        Name = "Last will content",
-        Description = "Content of the last will message. Has no effect if HasLastWill is not set",
-        ResourceType = typeof(Strings)
-    )]
+    [Display(Name = "Last will content", Description = "Content of the last will message. Has no effect if HasLastWill is not set")]
     public string LastWillContent { get; set; }
 
     #endregion

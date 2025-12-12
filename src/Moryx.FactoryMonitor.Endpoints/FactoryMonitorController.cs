@@ -17,9 +17,9 @@ using System.Timers;
 using Moryx.FactoryMonitor.Endpoints.Models;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AspNetCore;
+using Moryx.FactoryMonitor.Endpoints.Converter;
 using Moryx.FactoryMonitor.Endpoints.Properties;
 //old models in '.Model' namespace. Only ones still in use: TransoirtRoute- / PathModel & CellSettingsModel
-using Moryx.FactoryMonitor.Endpoints.Model;
 using Moryx.FactoryMonitor.Endpoints.Extensions;
 using Timer = System.Timers.Timer;
 
@@ -73,7 +73,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             var activities = _processControl.GetRunningProcesses()
                 .Select(p => p.CurrentActivity())
                 .Where(a => a is not null && a.Tracing is not null);
-            var converter = new Converter(_serialization);
+            var converter = new Converter.Converter(_serialization);
 
             foreach (var cell in cells)
             {
@@ -98,7 +98,7 @@ namespace Moryx.FactoryMonitor.Endpoints
 
             var factory = _resourceManager.GetRootFactory();
 
-            var model = Converter.ToFactoryStateModel(factory);
+            var model = Converter.Converter.ToFactoryStateModel(factory);
             model.ActivityChangedModels = activityChangedModels;
             model.CellStateChangedModels = cellStateChangedModels;
             model.ResourceChangedModels = resourceChangedModels;
@@ -117,7 +117,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             var cells = _resourceManager.GetResources<IMachineLocation>()
                 .Where(CellFilterBaseOnLocation);
 
-            var converter = new Converter(_serialization);
+            var converter = new Converter.Converter(_serialization);
             return cells.Select(x => new SimpleGraph { Id = x.Id }.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation)).ToList();
         }
 
@@ -130,7 +130,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             // check if there is a factory with the given id
             var factory = _resourceManager.GetResource<IManufacturingFactory>(x => x.Id == factoryId);
             if (factory is null) return NotFound(Strings.FactoryMonitorController_FactoryNotFound_);
-            var converter = new Converter(_serialization);
+            var converter = new Converter.Converter(_serialization);
 
             var root = _resourceManager.GetRootFactory();
             SimpleGraph graph = _resourceManager.ReadUnsafe(factory.Id, e => SimpleGraph.Create(e as ManufacturingFactory));
@@ -214,7 +214,7 @@ namespace Moryx.FactoryMonitor.Endpoints
                 await response.CompleteAsync();
                 return;
             }
-            var converter = new Converter(_serialization);
+            var converter = new Converter.Converter(_serialization);
 
             var resourceEventHandler = new ElapsedEventHandler(async (sender, eventArgs) =>
                 await FactoryMonitorHelper.ResourceUpdated(serializerSettings, _factoryChannel, _resourceManager, CellFilterBaseOnLocation, converter, cancellationToken)); //resource events are substitute with a timer event since there are no such events
@@ -328,7 +328,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             if (cellLocation == null)
                 return NotFound(new MoryxExceptionResponse { Title = "Cell/Resource not found" });
 
-            var converter = new Converter(_serialization);
+            var converter = new Converter.Converter(_serialization);
             var cell = _resourceManager.ReadUnsafe(cellLocation.Machine.Id, r => r);
             return converter.ToResourceChangedModel(cell)?.CellPropertySettings;
         }

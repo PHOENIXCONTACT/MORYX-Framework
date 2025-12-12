@@ -6,8 +6,6 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
 using Moryx.Runtime.Modules;
-using Moryx.Workplans.Editing.Components;
-using Moryx.Workplans.Editing.Facade;
 
 namespace Moryx.Workplans.Editing
 {

@@ -4,10 +4,9 @@
 using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Tools;
-using Moryx.Workplans.Editing.Components;
 using Moryx.Workplans.WorkplanSteps;
 
-namespace Moryx.Workplans.Editing.Implementation
+namespace Moryx.Workplans.Editing
 {
     [Component(LifeCycle.Singleton, typeof(IWorkplanEditor))]
     internal class WorkplanEditor : IWorkplanEditor, IPlugin

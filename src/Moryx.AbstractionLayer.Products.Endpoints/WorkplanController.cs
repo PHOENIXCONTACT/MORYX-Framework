@@ -4,6 +4,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Moryx.AbstractionLayer.Products.Endpoints.Models;
 using Moryx.AbstractionLayer.Products.Endpoints.Properties;
 using Moryx.AspNetCore;
 using Moryx.Workplans;

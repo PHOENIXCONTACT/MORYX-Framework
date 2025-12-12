@@ -5,7 +5,7 @@ using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators.Skills;
 
-namespace Moryx.Operators;
+namespace Moryx.Operators.Attendances;
 
 public interface IOperatorAssignable : IResource
 {

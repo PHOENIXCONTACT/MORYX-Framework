@@ -4,10 +4,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moryx.Media.Endpoints.Model;
 using Moryx.Media.Endpoints.Properties;
 using System.Net;
 using Moryx.AspNetCore;
+using Moryx.Media.Endpoints.Models;
 
 namespace Moryx.Media.Endpoints
 {

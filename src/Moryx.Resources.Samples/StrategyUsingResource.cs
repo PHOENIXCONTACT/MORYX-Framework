@@ -1,13 +1,13 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.Serialization;
-using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
 
-namespace Moryx.Resources.Demo
+namespace Moryx.Resources.Samples
 {
 
     [DependencyRegistration(typeof(IWhiteSpaceRemovingStrategy)), ResourceRegistration]

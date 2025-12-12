@@ -11,7 +11,6 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.AspNetCore;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.Processes.Endpoints.Extensions;
-using Moryx.ControlSystem.Processes.Endpoints.Models;
 using Moryx.ControlSystem.Processes.Endpoints.Properties;
 using Moryx.ControlSystem.Processes.Endpoints.StreamServices;
 using Newtonsoft.Json;

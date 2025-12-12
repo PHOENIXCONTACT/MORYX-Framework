@@ -1,13 +1,12 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Tools;
-using Moryx.Workplans.Editing.Components;
-using Moryx.Workplans.Editing.Properties;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using Moryx.Tools;
+using Moryx.Workplans.Editing.Properties;
 
-namespace Moryx.Workplans.Editing.Implementation
+namespace Moryx.Workplans.Editing
 {
     internal class WorkplanEditingSession : IWorkplanEditingSession
     {
