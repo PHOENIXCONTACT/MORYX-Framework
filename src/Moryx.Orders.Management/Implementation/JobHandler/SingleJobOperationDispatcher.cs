@@ -39,13 +39,13 @@ namespace Moryx.Orders.Management
 
             try
             {
-                await AddJobsAsync(operation, creationContext);
+                await AddJobsAsync(operation, creationContext, cancellationToken);
             }
             catch (KeyNotFoundException)
             {
                 // Positioning failed, because reference already completed
                 creationContext.Append();
-                await AddJobsAsync(operation, creationContext);
+                await AddJobsAsync(operation, creationContext, cancellationToken);
             }
         }
 

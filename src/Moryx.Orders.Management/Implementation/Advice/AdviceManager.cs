@@ -69,7 +69,7 @@ namespace Moryx.Orders.Management.Advice
             }
             else
             {
-                result = await AdviceExecutor.AdviceAsync((Operation)operationData.Operation, (dynamic)advice);
+                result = await AdviceExecutor.AdviceAsync((Operation)operationData.Operation, (dynamic)advice, CancellationToken.None);
             }
 
             if (result.Success)

@@ -77,9 +77,9 @@ namespace Moryx.Orders.Assignment
         /// Default implementation to assign the current recipe to the operation
         /// Will use the given product
         /// </summary>
-        protected async Task<IProductRecipe> LoadDefaultRecipeAsync(ProductType sourceProduct)
+        protected async Task<IProductRecipe> LoadDefaultRecipeAsync(ProductType sourceProduct, CancellationToken cancellationToken)
         {
-            var defaultRecipe = (await ProductManagement.GetRecipesAsync(sourceProduct, RecipeClassification.Default))
+            var defaultRecipe = (await ProductManagement.GetRecipesAsync(sourceProduct, RecipeClassification.Default, cancellationToken))
                 .SingleOrDefault();
 
             return defaultRecipe;

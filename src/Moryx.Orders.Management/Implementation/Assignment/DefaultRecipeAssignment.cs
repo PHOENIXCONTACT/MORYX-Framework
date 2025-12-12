@@ -31,7 +31,7 @@ namespace Moryx.Orders.Management.Assignment
                 return [(IProductRecipe)recipe];
             }
 
-            return [await LoadDefaultRecipeAsync(operation.Product)];
+            return [await LoadDefaultRecipeAsync(operation.Product, cancellationToken)];
         }
 
         /// <inheritdoc />

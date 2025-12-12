@@ -59,7 +59,7 @@ namespace Moryx.Orders.Endpoints
 
         [HttpGet("stream")]
         [ProducesResponseType(typeof(OperationChangedModel), StatusCodes.Status200OK)]
-        public async Task OperationStream(CancellationToken cancelToken)
+        public async Task OperationStream(CancellationToken cancellationToken)
         {
             var response = Response;
             response.Headers["Content-Type"] = "text/event-stream";
@@ -139,12 +139,12 @@ namespace Moryx.Orders.Endpoints
             try
             {
                 // Create infinite loop awaiting changes or cancellation
-                while (!cancelToken.IsCancellationRequested)
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    var changes = await operationsChannel.Reader.ReadAsync(cancelToken);
+                    var changes = await operationsChannel.Reader.ReadAsync(cancellationToken);
 
-                    await response.WriteAsync($"event: {changes.Item1}\n", cancelToken);
-                    await response.WriteAsync($"data: {changes.Item2}\r\r", cancelToken);
+                    await response.WriteAsync($"event: {changes.Item1}\n", cancellationToken);
+                    await response.WriteAsync($"data: {changes.Item2}\r\r", cancellationToken);
                 }
             }
             catch (OperationCanceledException)

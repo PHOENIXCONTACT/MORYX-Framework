@@ -70,9 +70,9 @@ namespace Moryx.Orders.Dispatcher
         /// <summary>
         /// Adds a job to operation data
         /// </summary>
-        protected async Task AddJobsAsync(Operation operation, JobCreationContext context)
+        protected async Task AddJobsAsync(Operation operation, JobCreationContext context, CancellationToken cancellationToken)
         {
-            var newJobs = await JobManagement.AddAsync(context);
+            var newJobs = await JobManagement.AddAsync(context, cancellationToken);
             JobsDispatched?.Invoke(this, new JobDispatchedEventArgs(operation, newJobs));
         }
 
