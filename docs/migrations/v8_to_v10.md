@@ -99,9 +99,9 @@ The ResourceManagement has been updated to support **asynchronous lifecycle meth
 
 **Changes in Resource**:
 
-- `OnInitialize()` -> `OnInitializeAsync()`
-- `OnStart()` -> `OnStartAsync()`
-- `OnStop()` -> `OnStopAsync()`
+- `OnInitialize()` -> `OnInitializeAsync(CancellationToken cancellationToken)`
+- `OnStart()` -> `OnStartAsync(CancellationToken cancellationToken)`
+- `OnStop()` -> `OnStopAsync(CancellationToken cancellationToken)`
 
 ````cs
 protected override Task OnInitializeAsync(CancellationToken cancellationToken)
@@ -209,7 +209,12 @@ All methods loading ProductTypes, ProductInstances, Recipes or Workplans are now
 
 ### Other Async Related changes
 
-All public or protected APIs which are Task-based are renamed to use `Async` suffix.
+- All public or protected APIs which are Task-based are renamed to use `Async` suffix. (Internal APIs are excluded from this rule but will be adjusted over time)
+- All public APIs which are Task base provide a cancellation token parameter to support cancellation of long-running operations.
+  - Plugins of modules use an none optional `CancellationToken` parameter.
+  - Facade methods use an optional `CancellationToken` parameter with default value.
+  - Module internal plugins which are exposed to plugins like `IProductStorage`or `IResourceGraph` use an optional `CancellationToken` parameter with default value.
+- If cancellation is not supported by the component, no `CancellationToken` parameter is provided.
 
 ## WorkerSupport / VisualInstructions
 

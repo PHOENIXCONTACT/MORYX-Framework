@@ -37,10 +37,10 @@ namespace Moryx.Orders.Management.Tests
             };
 
             _adviceExecutorMock.Setup(e => e.AdviceAsync(_operation, It.IsAny<OrderAdvice>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Operation _, OrderAdvice advice) => new AdviceResult(advice));
+                .ReturnsAsync((Operation _, OrderAdvice advice, CancellationToken _) => new AdviceResult(advice));
 
             _adviceExecutorMock.Setup(e => e.AdviceAsync(_operation, It.IsAny<PickPartAdvice>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Operation _, PickPartAdvice advice) => new AdviceResult(advice));
+                .ReturnsAsync((Operation _, PickPartAdvice advice, CancellationToken _) => new AdviceResult(advice));
 
             return _adviceManager.StartAsync();
         }

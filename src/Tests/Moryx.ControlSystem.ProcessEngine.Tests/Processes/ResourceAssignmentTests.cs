@@ -47,7 +47,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             _selectorMock = new Mock<ICellSelector>();
             _selectorMock
                 .Setup(s => s.SelectCellsAsync(It.IsAny<Activity>(), It.IsAny<IReadOnlyList<ICell>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((IActivity _, IReadOnlyList<ICell> cells) => cells);
+                .ReturnsAsync((IActivity _, IReadOnlyList<ICell> cells, CancellationToken _) => cells);
             var config = new CellSelectorConfig();
             var factoryMock = new Mock<ICellSelectorFactory>();
             factoryMock.Setup(f => f.Create(It.IsAny<CellSelectorConfig>()))
@@ -281,7 +281,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Arrange
             _selectorMock
                 .Setup(s => s.SelectCellsAsync(It.IsAny<Activity>(), It.IsAny<IReadOnlyList<ICell>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Activity _, IReadOnlyList<ICell> cells) => cells.Reverse().ToList());
+                .ReturnsAsync((Activity _, IReadOnlyList<ICell> cells, CancellationToken _) => cells.Reverse().ToList());
             _resourceManagementMock.Setup(s => s.GetResources<ICell>(It.IsAny<ICapabilities>()))
                 .Returns(new List<ICell> { _productionCellMock.Object, _mountCellMock.Object });
 
@@ -303,7 +303,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Arrange
             _selectorMock
                 .Setup(s => s.SelectCellsAsync(It.IsAny<Activity>(), It.IsAny<IReadOnlyList<ICell>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Activity _, IReadOnlyList<ICell> cells) => cells.Take(1).ToList());
+                .ReturnsAsync((Activity _, IReadOnlyList<ICell> cells, CancellationToken _) => cells.Take(1).ToList());
             _resourceManagementMock.Setup(s => s.GetResources<ICell>(It.IsAny<ICapabilities>()))
                 .Returns(new List<ICell> { _productionCellMock.Object, _mountCellMock.Object });
 
@@ -324,7 +324,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Arrange
             _selectorMock
                 .Setup(s => s.SelectCellsAsync(It.IsAny<Activity>(), It.IsAny<IReadOnlyList<ICell>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Activity _, IReadOnlyList<ICell> cells) => cells.Concat([_mountCellMock.Object]).ToList());
+                .ReturnsAsync((Activity _, IReadOnlyList<ICell> cells, CancellationToken _) => cells.Concat([_mountCellMock.Object]).ToList());
             _resourceManagementMock.Setup(s => s.GetResources<ICell>(It.IsAny<ICapabilities>()))
                 .Returns(new List<ICell> { _productionCellMock.Object });
 
