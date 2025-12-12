@@ -32,13 +32,13 @@ namespace Moryx.Products.Management
             EntityMapper.Initialize(TargetType, Config);
         }
 
-        public override Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target, CancellationToken cancellationToken = default)
+        public override Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target, CancellationToken cancellationToken)
         {
             EntityMapper.WriteValue(source, target);
             return Task.CompletedTask;
         }
 
-        public override Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target, CancellationToken cancellationToken = default)
+        public override Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target, CancellationToken cancellationToken)
         {
             EntityMapper.ReadValue(source, target);
             return Task.CompletedTask;

@@ -15,6 +15,6 @@ namespace Moryx.Orders.Assignment
         /// Will be called while creating an operation to load the product for the new operation
         /// The origin of the product MUST be the <see cref="IProductManagement"/>
         /// </summary>
-        Task<ProductType> SelectProductAsync(Operation operation, IOperationLogger operationLogger, CancellationToken cancellationToken = default);
+        Task<ProductType> SelectProductAsync(Operation operation, IOperationLogger operationLogger, CancellationToken cancellationToken);
     }
 }

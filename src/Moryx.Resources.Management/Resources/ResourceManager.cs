@@ -430,7 +430,7 @@ namespace Moryx.Resources.Management
 
         public async Task<ResourceInitializerResult> ExecuteInitializer(IResourceInitializer initializer, object parameters)
         {
-            var result = await initializer.ExecuteAsync(Graph, parameters);
+            var result = await initializer.ExecuteAsync(Graph, parameters, CancellationToken.None);
 
             if (result.InitializedResources.Count == 0)
                 throw new InvalidOperationException("ResourceInitializer must return at least one resource");

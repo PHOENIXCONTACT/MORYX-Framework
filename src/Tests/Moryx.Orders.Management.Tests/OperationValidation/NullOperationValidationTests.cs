@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using Moryx.Orders.Assignment;
@@ -28,7 +29,7 @@ namespace Moryx.Orders.Management.Tests
         public async Task ValidateNull()
         {
             // Act
-            var result = await _nullOperationValidation.ValidateAsync(null, _operationLogger);
+            var result = await _nullOperationValidation.ValidateAsync(null, _operationLogger, CancellationToken.None);
 
             //Assert
             Assert.That(result, "There should be a successful validation");
@@ -38,7 +39,7 @@ namespace Moryx.Orders.Management.Tests
         public async Task ValidateCreationContextNull()
         {
             // Act
-            var result = await _nullOperationValidation.ValidateCreationContextAsync(null);
+            var result = await _nullOperationValidation.ValidateCreationContextAsync(null, CancellationToken.None);
 
             // Assert
             Assert.That(result, "There should be a successful validation");

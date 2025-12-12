@@ -46,15 +46,15 @@ namespace Moryx.Orders.Dispatcher
         }
 
         /// <inheritdoc />
-        public abstract Task DispatchAsync(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts, CancellationToken cancellationToken = default);
+        public abstract Task DispatchAsync(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts, CancellationToken cancellationToken);
 
         /// <inheritdoc />
-        public abstract Task CompleteAsync(Operation operation, CancellationToken cancellationToken = default);
+        public abstract Task CompleteAsync(Operation operation, CancellationToken cancellationToken);
 
         /// <summary>
         /// Update method when a jobs progress has changed
         /// </summary>
-        public virtual Task JobProgressChangedAsync(Operation operation, Job job, CancellationToken cancellationToken = default)
+        public virtual Task JobProgressChangedAsync(Operation operation, Job job, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
@@ -62,7 +62,7 @@ namespace Moryx.Orders.Dispatcher
         /// <summary>
         /// Update method which ensures that an operationData is present and executed with parallelOperations
         /// </summary>
-        public virtual Task JobStateChangedAsync(Operation operation, JobStateChangedEventArgs eventArgs, CancellationToken cancellationToken = default)
+        public virtual Task JobStateChangedAsync(Operation operation, JobStateChangedEventArgs eventArgs, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

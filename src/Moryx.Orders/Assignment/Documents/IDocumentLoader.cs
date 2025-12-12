@@ -14,6 +14,6 @@ namespace Moryx.Orders.Assignment
         /// <summary>
         /// Load document information for the given operation
         /// </summary>
-        Task<IReadOnlyList<Document>> LoadAsync(Operation operation, CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<Document>> LoadAsync(Operation operation, CancellationToken cancellationToken);
     }
 }

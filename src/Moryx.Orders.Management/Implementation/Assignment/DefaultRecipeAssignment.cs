@@ -16,7 +16,7 @@ namespace Moryx.Orders.Management.Assignment
     {
         /// <inheritdoc />
         public override async Task<IReadOnlyList<IProductRecipe>> SelectRecipesAsync(Operation operation, IOperationLogger operationLogger,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             if (operation.CreationContext != null &&
                 operation.CreationContext.RecipePreselection != 0)
@@ -36,7 +36,7 @@ namespace Moryx.Orders.Management.Assignment
 
         /// <inheritdoc />
         public override Task<bool> ProcessRecipeAsync(IProductRecipe clone, Operation operation, IOperationLogger operationLogger,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             // Copy values from known recipe types
 

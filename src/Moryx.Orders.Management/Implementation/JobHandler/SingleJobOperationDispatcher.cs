@@ -22,7 +22,7 @@ namespace Moryx.Orders.Management
 
         /// <inheritdoc />
         public override async Task DispatchAsync(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             // Wait until all jobs are completing to avoid separate jobs for every scrap
             var allCompleting = operation.Jobs.All(j => j.Classification >= JobClassification.Completing);
@@ -50,7 +50,7 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc />
-        public override Task CompleteAsync(Operation operation, CancellationToken cancellationToken = default)
+        public override Task CompleteAsync(Operation operation, CancellationToken cancellationToken)
         {
             var jobs = operation.Jobs.Where(j => j.Classification < JobClassification.Completing);
             ParallelOperations.ExecuteParallel(() => jobs.ForEach(job => JobManagement.Complete(job)));

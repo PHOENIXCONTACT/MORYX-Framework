@@ -42,7 +42,7 @@ namespace Moryx.Orders.Management.Assignment
         /// the new operation from the <see cref="ProductType"/> itself.
         /// </summary>
         public Task<IReadOnlyList<ProductPart>> LoadPartsAsync(Operation operation, IOperationLogger operationLogger,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             if (operation.Product is null)
             {

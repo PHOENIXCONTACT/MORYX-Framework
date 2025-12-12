@@ -26,7 +26,7 @@ namespace Moryx.Orders.Management.Assignment
             IEnumerable<ProductPart> parts = null;
             try
             {
-                parts = await PartsAssignment.LoadPartsAsync(operationData.Operation, operationLogger);
+                parts = await PartsAssignment.LoadPartsAsync(operationData.Operation, operationLogger, CancellationToken.None);
             }
             catch (Exception e)
             {

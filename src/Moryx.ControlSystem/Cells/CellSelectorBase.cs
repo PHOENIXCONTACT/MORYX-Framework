@@ -43,6 +43,6 @@ namespace Moryx.ControlSystem.Cells
         }
 
         /// <inheritdoc />
-        public abstract Task<IReadOnlyList<ICell>> SelectCellsAsync(Activity activity, IReadOnlyList<ICell> availableCells);
+        public abstract Task<IReadOnlyList<ICell>> SelectCellsAsync(Activity activity, IReadOnlyList<ICell> availableCells, CancellationToken cancellationToken);
     }
 }

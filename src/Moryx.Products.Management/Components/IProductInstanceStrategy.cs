@@ -31,11 +31,11 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Save instance to database
         /// </summary>
-        Task SaveInstanceAsync(ProductInstance source, IGenericColumns target, CancellationToken cancellationToken = default);
+        Task SaveInstanceAsync(ProductInstance source, IGenericColumns target, CancellationToken cancellationToken);
 
         /// <summary>
         /// Load additional instance properties from entity and write them to the business object
         /// </summary>
-        Task LoadInstanceAsync(IGenericColumns source, ProductInstance target, CancellationToken cancellationToken = default);
+        Task LoadInstanceAsync(IGenericColumns source, ProductInstance target, CancellationToken cancellationToken);
     }
 }

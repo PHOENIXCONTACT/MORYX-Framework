@@ -209,7 +209,7 @@ namespace Moryx.Products.Management
         public async Task<long> SaveRecipeAsync(IProductRecipe recipe, CancellationToken cancellationToken = default)
         {
             using var uow = Factory.Create();
-            var entity = await SaveRecipe(uow, recipe);
+            var entity = await SaveRecipe(uow, recipe, cancellationToken);
             uow.SaveChanges();
             recipe.Id = entity.Id;
 
@@ -224,7 +224,7 @@ namespace Moryx.Products.Management
             // Save changes to recipes
             foreach (var recipe in recipes)
             {
-                await SaveRecipe(uow, recipe);
+                await SaveRecipe(uow, recipe, cancellationToken);
             }
 
             uow.SaveChanges();
@@ -233,11 +233,11 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Saves <see cref="ProductRecipe"/> to database and return the <see cref="ProductRecipeEntity"/>
         /// </summary>
-        private async Task<ProductRecipeEntity> SaveRecipe(IUnitOfWork uow, IProductRecipe recipe)
+        private async Task<ProductRecipeEntity> SaveRecipe(IUnitOfWork uow, IProductRecipe recipe, CancellationToken cancellationToken)
         {
             var entity = RecipeStorage.ToRecipeEntity(uow, recipe);
 
-            await _recipeInformation[recipe.RecipeTypeName()].Strategy.SaveRecipeAsync(recipe, entity);
+            await _recipeInformation[recipe.RecipeTypeName()].Strategy.SaveRecipeAsync(recipe, entity, cancellationToken);
 
             return entity;
         }

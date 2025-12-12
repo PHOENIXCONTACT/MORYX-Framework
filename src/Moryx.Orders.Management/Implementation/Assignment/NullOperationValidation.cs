@@ -24,12 +24,12 @@ namespace Moryx.Orders.Management.Assignment
             return Task.CompletedTask;
         }
 
-        public Task<bool> ValidateCreationContextAsync(OrderCreationContext orderContext, CancellationToken cancellationToken = default)
+        public Task<bool> ValidateCreationContextAsync(OrderCreationContext orderContext, CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
         }
 
-        public Task<bool> ValidateAsync(Operation operation, IOperationLogger operationLogger, CancellationToken cancellationToken = default)
+        public Task<bool> ValidateAsync(Operation operation, IOperationLogger operationLogger, CancellationToken cancellationToken)
         {
             return Task.FromResult(true);
         }

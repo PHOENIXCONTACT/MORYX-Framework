@@ -33,10 +33,10 @@ namespace Moryx.Products.Management
         public abstract bool HasChanged(ProductType current, IGenericColumns dbProperties);
 
         /// <inheritdoc />
-        public abstract Task LoadTypeAsync(IGenericColumns source, ProductType target, CancellationToken cancellationToken = default);
+        public abstract Task LoadTypeAsync(IGenericColumns source, ProductType target, CancellationToken cancellationToken);
 
         /// <inheritdoc />
-        public abstract Task SaveTypeAsync(ProductType source, IGenericColumns target, CancellationToken cancellationToken = default);
+        public abstract Task SaveTypeAsync(ProductType source, IGenericColumns target, CancellationToken cancellationToken);
 
         public abstract Expression<Func<IGenericColumns, bool>> TransformSelector<TProduct>(Expression<Func<TProduct, bool>> selector);
     }

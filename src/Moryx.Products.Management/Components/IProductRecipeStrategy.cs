@@ -20,11 +20,11 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Write recipe properties to database generic columns
         /// </summary>
-        Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target, CancellationToken cancellationToken = default);
+        Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target, CancellationToken cancellationToken);
 
         /// <summary>
         /// Load recipe from database information
         /// </summary>
-        Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target, CancellationToken cancellationToken = default);
+        Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target, CancellationToken cancellationToken);
     }
 }

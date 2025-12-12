@@ -58,6 +58,6 @@ namespace Moryx.Orders.Assignment
         /// The origin of the product MUST be the <see cref="ProductManagement"/>
         /// </summary>
         public abstract Task<ProductType> SelectProductAsync(Operation operation, IOperationLogger operationLogger,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken);
     }
 }

@@ -34,7 +34,7 @@ namespace Moryx.Orders.Management.Assignment
         /// Always returns an empty parts list
         /// </summary>
         public Task<IReadOnlyList<ProductPart>> LoadPartsAsync(Operation operation, IOperationLogger operationLogger,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
             => Task.FromResult(operation.Parts ?? (IReadOnlyList<ProductPart>)Enumerable.Empty<ProductPart>());
     }
 }

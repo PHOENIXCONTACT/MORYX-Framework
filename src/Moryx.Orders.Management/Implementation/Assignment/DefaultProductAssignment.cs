@@ -12,7 +12,7 @@ namespace Moryx.Orders.Management.Assignment
     {
         /// <inheritdoc />
         public override Task<ProductType> SelectProductAsync(Operation operation, IOperationLogger operationLogger,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken)
         {
             var productIdentity = (ProductIdentity)operation.Product.Identity;
             return ProductManagement.LoadTypeAsync(productIdentity, cancellationToken);
