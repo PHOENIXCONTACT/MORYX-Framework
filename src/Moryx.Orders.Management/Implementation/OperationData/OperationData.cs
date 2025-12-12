@@ -19,7 +19,7 @@ namespace Moryx.Orders.Management
     /// Business object for operation data
     /// </summary>
     [Component(LifeCycle.Transient, typeof(IOperationData))]
-    internal class OperationData : IOperationData, IAsyncStateContext, ILoggingComponent, INotificationSender
+    internal class OperationData : IOperationData, IAsyncStateContext, ILoggingComponent
     {
         private readonly IOperationSavingContext _savingContext;
 

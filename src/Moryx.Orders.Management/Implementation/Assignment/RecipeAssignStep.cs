@@ -80,7 +80,7 @@ namespace Moryx.Orders.Management.Assignment
             processed.ForEach(r => ProductManagement.SaveRecipe(r));
 
             // Add processed to operation
-            operationData.AssignRecipes(processed);
+            await operationData.AssignRecipes(processed);
 
             return true;
         }
