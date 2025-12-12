@@ -9,7 +9,7 @@ namespace Moryx.Products.Management
     /// Factory to instantiate <see cref="IProductTypeStrategy"/>
     /// </summary>
     [PluginFactory(typeof(IConfigBasedComponentSelector))]
-    public interface IStorageStrategyFactory
+    internal interface IStorageStrategyFactory
     {
         /// <summary>
         /// Create a new strategy instance
