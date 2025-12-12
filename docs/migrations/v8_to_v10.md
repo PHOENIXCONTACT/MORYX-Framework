@@ -400,7 +400,7 @@ The API of `IResourceInitializer` was adjusted
 ## Modules-ProcessEngine
 
 - Removed API from IJobManagement: `JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement)`
-- Added `IAsyncEnumerable<IProcessChunk> GetArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)` to `IProcessControl`
+- Added `IAsyncEnumerable<IProcessChunk> LoadArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)` to `IProcessControl`
 
 ## Modules-Products
 
