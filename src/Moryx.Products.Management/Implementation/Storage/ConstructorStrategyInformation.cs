@@ -8,7 +8,7 @@ using Moryx.Products.Management.Model;
 
 namespace Moryx.Products.Management
 {
-    internal class ConstructorStrategyInformation<TObject, TConfiguration, TStrategy> where TConfiguration : IPluginConfig where TStrategy : IConfiguredInitializable<TConfiguration>
+    internal class ConstructorStrategyInformation<TObject, TConfiguration, TStrategy> where TConfiguration : IPluginConfig where TStrategy : IAsyncConfiguredInitializable<TConfiguration>
     {
         public string Identifier { get; set; }
         public Func<TObject> Constructor { get; set; }

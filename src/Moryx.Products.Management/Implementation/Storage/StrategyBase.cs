@@ -5,7 +5,7 @@ using Moryx.Modules;
 
 namespace Moryx.Products.Management
 {
-    public class StrategyBase<TConfig, TConfigBase> : IConfiguredInitializable<TConfigBase>
+    public class StrategyBase<TConfig, TConfigBase> : IAsyncConfiguredInitializable<TConfigBase>
         where TConfigBase : IProductStrategyConfiguration, IPluginConfig
         where TConfig : TConfigBase
     {
@@ -22,10 +22,10 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Initialize the strategy
         /// </summary>
-        /// <param name="config"></param>
-        public virtual void Initialize(TConfigBase config)
+        public virtual Task InitializeAsync(TConfigBase config, CancellationToken cancellationToken = default)
         {
             Config = (TConfig)config;
+            return Task.CompletedTask;
         }
     }
 }

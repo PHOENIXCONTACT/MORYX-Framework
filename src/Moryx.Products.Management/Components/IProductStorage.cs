@@ -12,7 +12,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// API for the application specific product storage
     /// </summary>
-    public interface IProductStorage : IPlugin
+    public interface IProductStorage : IAsyncPlugin
     {
         /// <summary>
         /// Get products by query

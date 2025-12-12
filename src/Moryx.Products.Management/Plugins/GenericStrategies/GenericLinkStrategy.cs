@@ -24,9 +24,9 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Initialize the type strategy
         /// </summary>
-        public override void Initialize(ProductLinkConfiguration config)
+        public override async Task InitializeAsync(ProductLinkConfiguration config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             var property = TargetType.GetProperty(PropertyName);
             var linkType = property.PropertyType;

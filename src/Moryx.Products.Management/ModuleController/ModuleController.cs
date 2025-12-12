@@ -70,8 +70,8 @@ namespace Moryx.Products.Management
         protected override async Task OnStartAsync(CancellationToken cancellationToken)
         {
             // Start Manager
-            Container.Resolve<IProductStorage>().Start();
-            await Container.Resolve<IProductManager>().StartAsync();
+            await Container.Resolve<IProductStorage>().StartAsync(cancellationToken);
+            await Container.Resolve<IProductManager>().StartAsync(cancellationToken);
 
             // Activate facades
             ActivateFacade(_productManagement);
@@ -81,13 +81,13 @@ namespace Moryx.Products.Management
         /// Code executed when service is stopped
         /// </summary>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
-        protected override Task OnStopAsync(CancellationToken cancellationToken)
+        protected override async Task OnStopAsync(CancellationToken cancellationToken)
         {
             // Deactivate facades
             DeactivateFacade(_productManagement);
 
-            Container.Resolve<IProductStorage>().Stop();
-            return Container.Resolve<IProductManager>().StopAsync();
+            await Container.Resolve<IProductStorage>().StopAsync(cancellationToken);
+            await Container.Resolve<IProductManager>().StopAsync(cancellationToken);
         }
 
         private readonly ProductManagementFacade _productManagement = new();

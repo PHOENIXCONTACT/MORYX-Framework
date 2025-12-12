@@ -10,7 +10,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// Interface to easily access
     /// </summary>
-    public interface IProductLinkStrategy : IConfiguredInitializable<ProductLinkConfiguration>
+    public interface IProductLinkStrategy : IAsyncConfiguredInitializable<ProductLinkConfiguration>
     {
         /// <summary>
         /// Target type of this strategy

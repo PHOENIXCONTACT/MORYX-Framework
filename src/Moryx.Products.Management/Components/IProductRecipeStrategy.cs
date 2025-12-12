@@ -10,7 +10,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// Interface for plugins that can convert recipes
     /// </summary>
-    public interface IProductRecipeStrategy : IConfiguredInitializable<ProductRecipeConfiguration>
+    public interface IProductRecipeStrategy : IAsyncConfiguredInitializable<ProductRecipeConfiguration>
     {
         /// <summary>
         /// Target type of this strategy

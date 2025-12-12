@@ -11,7 +11,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// Strategy for loading and saving product instances
     /// </summary>
-    public interface IProductInstanceStrategy : IConfiguredInitializable<ProductInstanceConfiguration>
+    public interface IProductInstanceStrategy : IAsyncConfiguredInitializable<ProductInstanceConfiguration>
     {
         /// <summary>
         /// Target type of this strategy

@@ -11,7 +11,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// Strategy methods for a certain product type
     /// </summary>
-    public interface IProductTypeStrategy : IConfiguredInitializable<ProductTypeConfiguration>
+    public interface IProductTypeStrategy : IAsyncConfiguredInitializable<ProductTypeConfiguration>
     {
         /// <summary>
         /// Target type of this strategy

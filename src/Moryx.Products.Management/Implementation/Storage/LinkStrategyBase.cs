@@ -31,9 +31,9 @@ namespace Moryx.Products.Management
         public PartSourceStrategy PartCreation { get; private set; }
 
         /// <inheritdoc />
-        public override void Initialize(ProductLinkConfiguration config)
+        public override async Task InitializeAsync(ProductLinkConfiguration config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             PropertyName = config.PartName;
             PartCreation = config.PartCreation;

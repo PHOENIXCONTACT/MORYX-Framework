@@ -22,9 +22,9 @@ namespace Moryx.Products.Management
         where TConfig : ProductTypeConfiguration
     {
         /// <inheritdoc />
-        public override void Initialize(ProductTypeConfiguration config)
+        public override async Task InitializeAsync(ProductTypeConfiguration config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             TargetType = ReflectionTool.GetPublicClasses<ProductType>(p => p.FullName == config.TargetType).FirstOrDefault();
         }

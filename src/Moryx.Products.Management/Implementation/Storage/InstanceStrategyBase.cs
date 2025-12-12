@@ -54,9 +54,9 @@ namespace Moryx.Products.Management
         }
 
         /// <inheritdoc />
-        public override void Initialize(ProductInstanceConfiguration config)
+        public override async Task InitializeAsync(ProductInstanceConfiguration config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             TargetType = ReflectionTool.GetPublicClasses<ProductInstance>(p => p.FullName == config.TargetType).FirstOrDefault();
         }

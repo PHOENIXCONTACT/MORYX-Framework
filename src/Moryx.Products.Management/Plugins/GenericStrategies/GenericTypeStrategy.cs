@@ -25,9 +25,9 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Initialize the type strategy
         /// </summary>
-        public override void Initialize(ProductTypeConfiguration config)
+        public override async Task InitializeAsync(ProductTypeConfiguration config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             EntityMapper.Initialize(TargetType, Config);
         }

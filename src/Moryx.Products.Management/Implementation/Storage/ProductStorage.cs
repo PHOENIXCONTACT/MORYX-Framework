@@ -80,7 +80,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Start the storage and load the type strategies
         /// </summary>
-        public void Start()
+        public Task StartAsync(CancellationToken cancellationToken = default)
         {
             // Create type strategies
             var types = ReflectionTool.GetPublicClasses<ProductType>();
@@ -91,7 +91,7 @@ namespace Moryx.Products.Management
 
             foreach (var config in Config.TypeStrategies)
             {
-                var strategy = StrategyFactory.CreateTypeStrategy(config);
+                var strategy = StrategyFactory.CreateTypeStrategy(config, cancellationToken);
                 if (!_typeInformation.ContainsKey(config.TargetType))
                     _typeInformation.Add(config.TargetType, new ProductTypeInformation(strategy.TargetType));
                 _typeInformation[config.TargetType].Strategy = strategy;
@@ -101,7 +101,7 @@ namespace Moryx.Products.Management
             // Create instance strategies
             foreach (var config in Config.InstanceStrategies)
             {
-                var strategy = StrategyFactory.CreateInstanceStrategy(config);
+                var strategy = StrategyFactory.CreateInstanceStrategy(config, cancellationToken);
                 _instanceStrategies[config.TargetType] = strategy;
             }
 
@@ -111,7 +111,7 @@ namespace Moryx.Products.Management
                 if (!_typeInformation.TryGetValue(config.TargetType, out var typeInfo))
                     continue;
 
-                var strategy = StrategyFactory.CreateLinkStrategy(config);
+                var strategy = StrategyFactory.CreateLinkStrategy(config, cancellationToken);
                 if (!typeInfo.PartLinksInformation.ContainsKey(config.PartName))
                     typeInfo.PartLinksInformation.Add(config.PartName, new ConstructorStrategyInformation<ProductPartLink, ProductLinkConfiguration, IProductLinkStrategy>());
 
@@ -140,20 +140,23 @@ namespace Moryx.Products.Management
             // Create recipe strategies
             foreach (var config in Config.RecipeStrategies)
             {
-                var strategy = StrategyFactory.CreateRecipeStrategy(config);
+                var strategy = StrategyFactory.CreateRecipeStrategy(config, cancellationToken);
                 if (!_recipeInformation.ContainsKey(config.TargetType))
                     _recipeInformation.Add(config.TargetType, new ConstructorStrategyInformation<IProductRecipe, ProductRecipeConfiguration, IProductRecipeStrategy>());
 
                 _recipeInformation[config.TargetType].Strategy = strategy;
                 _recipeInformation[config.TargetType].Constructor = ReflectionTool.ConstructorDelegate<IProductRecipe>(strategy.TargetType);
             }
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Stop the storage
         /// </summary>
-        public void Stop()
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
+            return Task.CompletedTask;
         }
 
         #region Recipes

@@ -23,9 +23,9 @@ namespace Moryx.Products.Management.NullStrategies
         }
 
         /// <inheritdoc />
-        public override void Initialize(ProductInstanceConfiguration config)
+        public override async Task InitializeAsync(ProductInstanceConfiguration config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             SkipInstances = true;
         }
