@@ -62,7 +62,8 @@ namespace Moryx.ControlSystem.ProcessEngine
             return ProcessArchive.GetProcesses(productInstance, cancellationToken);
         }
 
-        public IAsyncEnumerable<IProcessChunk> GetArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds, CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<IProcessChunk> GetArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds,
+            CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return ProcessArchive.GetProcesses(filterType, start, end, jobIds, cancellationToken);
