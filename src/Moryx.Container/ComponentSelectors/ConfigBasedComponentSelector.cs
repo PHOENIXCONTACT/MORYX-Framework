@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using System.Reflection;
 using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel;
@@ -14,6 +15,9 @@ namespace Moryx.Container
     /// </summary>
     internal class ConfigBasedComponentSelector : DefaultTypedFactoryComponentSelector, IConfigBasedComponentSelector
     {
+        private const string ConfigParameterName = "config";
+        private const string CancellationTokenParameterName = "cancellationToken";
+
         /// <summary>
         /// Read the components name from the <see cref="IPluginConfig.PluginName"/> property.
         /// </summary>
@@ -39,7 +43,7 @@ namespace Moryx.Container
             {
                 var instance = base.BuildFactoryComponent(method, componentName, componentType, additionalArguments)(kernel, policy);
 
-                var config = additionalArguments["config"];
+                var config = additionalArguments[ConfigParameterName];
                 var configType = config.GetType();
 
                 var componentInterfaces = componentType.GetInterfaces();
@@ -50,11 +54,7 @@ namespace Moryx.Container
 
                 if (isConfiguredInitializable)
                 {
-                    var genericPluginApi = typeof(IConfiguredInitializable<>).MakeGenericType(configType);
-
-                    var initMethod = genericPluginApi.GetMethod(nameof(IConfiguredInitializable<>.Initialize),
-                        [configType]);
-                    initMethod!.Invoke(instance, [config]);
+                    ExecuteInitialize(componentType, configType, instance, config, kernel);
                     return instance;
                 }
 
@@ -64,14 +64,7 @@ namespace Moryx.Container
 
                 if (isAsyncConfiguredInitializable)
                 {
-                    var genericPluginApi = typeof(IAsyncConfiguredInitializable<>).MakeGenericType(configType);
-
-                    var initMethod = genericPluginApi.GetMethod(nameof(IAsyncConfiguredInitializable<>.InitializeAsync),
-                        [configType]);
-
-                    var task = (Task)initMethod!.Invoke(instance, [config])!;
-                    task.GetAwaiter().GetResult();
-
+                    ExecuteInitializeAsync(componentType, additionalArguments, configType, instance, config, kernel);
                     return instance;
                 }
 
@@ -79,6 +72,49 @@ namespace Moryx.Container
             });
 
             return createFunc;
+        }
+
+        private static void ExecuteInitialize(Type componentType, Type configType, object instance, object config, IKernelInternal kernel)
+        {
+            var genericPluginApi = typeof(IConfiguredInitializable<>).MakeGenericType(configType);
+
+            try
+            {
+                var initMethod = genericPluginApi.GetMethod(nameof(IConfiguredInitializable<>.Initialize),
+                    [configType]);
+                initMethod!.Invoke(instance, [config]);
+            }
+            catch (Exception e)
+            {
+                kernel.Logger.Error(() => string.Format(CultureInfo.InvariantCulture, "Error during async initialization of component {0} with config {1}: {2}",
+                    componentType.FullName, configType.FullName, e));
+            }
+        }
+
+        private static void ExecuteInitializeAsync(Type componentType, Arguments additionalArguments, Type configType,
+            object instance, object config, IKernelInternal kernel)
+        {
+            var genericPluginApi = typeof(IAsyncConfiguredInitializable<>).MakeGenericType(configType);
+
+            var initMethod = genericPluginApi.GetMethod(nameof(IAsyncConfiguredInitializable<>.InitializeAsync),
+                [configType, typeof(CancellationToken)]);
+
+            var cancellationToken = CancellationToken.None;
+            if (additionalArguments.Contains(CancellationTokenParameterName))
+            {
+                cancellationToken = (CancellationToken)additionalArguments[CancellationTokenParameterName];
+            }
+
+            try
+            {
+                var task = (Task)initMethod!.Invoke(instance, [config, cancellationToken])!;
+                task.GetAwaiter().GetResult();
+            }
+            catch (Exception e)
+            {
+                kernel.Logger.Error(() => string.Format(CultureInfo.InvariantCulture, "Error during async initialization of component {0} with config {1}: {2}",
+                    componentType.FullName, configType.FullName, e));
+            }
         }
     }
 }

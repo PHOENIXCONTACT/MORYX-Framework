@@ -14,5 +14,6 @@ public interface IAsyncConfiguredInitializable<in T>
     /// Initialize this component with its config
     /// </summary>
     /// <param name="config">Config of this component</param>
-    Task InitializeAsync(T config);
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    Task InitializeAsync(T config, CancellationToken cancellationToken = default);
 }
