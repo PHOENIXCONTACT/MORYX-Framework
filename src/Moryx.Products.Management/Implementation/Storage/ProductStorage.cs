@@ -1009,6 +1009,32 @@ namespace Moryx.Products.Management
             return Task.CompletedTask;
         }
 
+        public Task<bool> DeleteTypeAsync(long productId, CancellationToken cancellationToken = default)
+        {
+            using var uow = Factory.Create();
+            var productRepo = uow.GetRepository<IProductTypeRepository>();
+            var queryResult = (from entity in productRepo.Linq
+                where entity.Id == productId
+                select new
+                {
+                    entity,
+                    parentCount = entity.Parents.Count
+                }).FirstOrDefault();
+            // No match, nothing removed!
+            if (queryResult == null)
+                return Task.FromResult(false);
+
+            // If products would be affected by the removal, we do not remove it
+            if (queryResult.parentCount >= 1)
+                return Task.FromResult(false);
+
+            // No products affected, so we can remove the product
+            productRepo.Remove(queryResult.entity);
+            uow.SaveChanges();
+
+            return Task.FromResult(true);
+        }
+
         #endregion
 
         private class ProductPartsSaverContext

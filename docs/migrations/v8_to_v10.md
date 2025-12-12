@@ -408,6 +408,7 @@ The API of `IResourceInitializer` was adjusted
 - `ProductState` and `ProductInstanceState` are now Flags-Enum.
 - Introduced `ProductState.Generated` to classify a product as generated for internal use
 - Added support to query by required product state
+- Added `DeleteTypeAsync` to `IProductStorage`
 
 **`IProductManagement`**
 
