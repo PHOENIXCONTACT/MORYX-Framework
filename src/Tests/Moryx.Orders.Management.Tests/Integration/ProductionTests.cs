@@ -154,14 +154,7 @@ namespace Moryx.Orders.Management.Tests
                 }
             };
 
-            var notificationAdapter = new Mock<INotificationAdapter>();
-
-            var moduleConfig = new ModuleConfig()
-            {
-                DisableAmountReachedNotification = true
-            };
-
-            var operationFactory = new OperationFactoryMock(logger, moduleConfig, jobHandler, assignment, notificationAdapter.Object);
+            var operationFactory = new OperationFactoryMock(logger, jobHandler, assignment);
             _operationDataPool.OperationFactory = operationFactory;
 
             await productAssignment.InitializeAsync(new ProductAssignmentConfig());

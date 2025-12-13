@@ -386,6 +386,10 @@ The API of `IResourceInitializer` was adjusted
 
 - API `LoadType` is using `IIdentity` instead of `ProductIdentity` but in MORYX 10.0, only `ProductIdentity` is supported.
 
+## Modules-Orders
+
+- Removed **Amount Reached Notification** from OperationData. **Upgrade hint:** Replace by custom module, to add notifications for certain modules.
+
 ### Product importer
 
 - Introduced `ProductImporterAttribute` for harmonized registration of importers.

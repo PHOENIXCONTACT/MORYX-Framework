@@ -6,10 +6,8 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.Logging;
-using Moryx.Notifications;
 using Moryx.Orders.Management.Assignment;
 using Moryx.Orders.Management.Model;
-using Moryx.Orders.Management.Properties;
 using Moryx.StateMachines;
 using Moryx.Tools;
 using Moryx.Users;
@@ -21,7 +19,7 @@ namespace Moryx.Orders.Management
     /// Business object for operation data
     /// </summary>
     [Component(LifeCycle.Transient, typeof(IOperationData))]
-    internal class OperationData : IOperationData, IAsyncStateContext, ILoggingComponent, INotificationSender
+    internal class OperationData : IOperationData, IAsyncStateContext, ILoggingComponent
     {
         private readonly IOperationSavingContext _savingContext;
 
@@ -43,10 +41,6 @@ namespace Moryx.Orders.Management
         public IOperationAssignment OperationAssignment { get; set; }
 
         public ICountStrategy CountStrategy { get; set; }
-
-        public INotificationAdapter NotificationAdapter { get; set; }
-
-        public ModuleConfig ModuleConfig { get; set; }
 
         #endregion
 
@@ -74,8 +68,6 @@ namespace Moryx.Orders.Management
 
         /// <inheritdoc cref="IOperationData"/>
         public InternalOperation Operation { get; }
-
-        string INotificationSender.Identifier => $"{OrderData.Number}-{Number}";
 
         /// <inheritdoc cref="IOperationData"/>
         public Guid Identifier => Operation.Identifier;
@@ -828,31 +820,6 @@ namespace Moryx.Orders.Management
                 await TryDispatch();
             }
         }
-
-        #region Notifications
-
-        void INotificationSender.Acknowledge(Notification notification, object tag)
-        {
-            NotificationAdapter.Acknowledge(this, notification);
-        }
-
-        internal void ShowAmountReachedNotification()
-        {
-            if (ModuleConfig.DisableAmountReachedNotification)
-                return;
-
-            NotificationAdapter.Publish(this, new Notification(Strings.OperationData_AmountReachedNotificationTitle,
-                string.Format(Strings.OperationData_AmountReachedNotificationMessage,
-                    $"{OrderData.Number}-{Number}"), Severity.Info));
-
-        }
-
-        internal void AcknowledgeAmountReachedNotification()
-        {
-            NotificationAdapter.AcknowledgeAll(this);
-        }
-
-        #endregion
     }
 }
 

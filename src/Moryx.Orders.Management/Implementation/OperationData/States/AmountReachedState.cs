@@ -32,18 +32,6 @@ namespace Moryx.Orders.Management
         {
         }
 
-        public override Task OnEnterAsync()
-        {
-            Context.ShowAmountReachedNotification();
-            return Task.CompletedTask;
-        }
-
-        public override Task OnExitAsync()
-        {
-            Context.AcknowledgeAmountReachedNotification();
-            return Task.CompletedTask;
-        }
-
         public override async Task IncreaseTargetBy(int amount, User user)
         {
             if (Context.ReachableAmount < Context.TargetAmount + amount)
