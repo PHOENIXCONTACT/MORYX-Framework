@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Moryx.Container.Tests
 {
     [TestFixture]
-    public class LocalContainerTest
+    public class CastleContainerTests
     {
         private CastleContainer _container;
 
