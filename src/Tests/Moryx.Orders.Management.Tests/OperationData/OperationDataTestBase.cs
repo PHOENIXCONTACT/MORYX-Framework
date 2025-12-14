@@ -30,8 +30,6 @@ namespace Moryx.Orders.Management.Tests
 
         internal Mock<IOperationAssignment> AssignmentMock { get; private set; }
 
-        internal Mock<INotificationAdapter> NotificationAdapterMock { get; private set; }
-
         protected User User { get; private set; }
 
         private int _jobIdCounter;
@@ -42,7 +40,6 @@ namespace Moryx.Orders.Management.Tests
             Logger = new ModuleLogger("Dummy", new NullLoggerFactory(), (l, s, e) => { });
             JobHandlerMock = new Mock<IJobHandler>();
             AssignmentMock = new Mock<IOperationAssignment>();
-            NotificationAdapterMock = new Mock<INotificationAdapter>();
 
             var userMock = new Mock<User>();
             userMock.SetupGet(u => u.Identifier).Returns("1234");
@@ -122,8 +119,6 @@ namespace Moryx.Orders.Management.Tests
                 OperationAssignment = AssignmentMock.Object,
                 JobHandler = JobHandlerMock.Object,
                 CountStrategy = replaceScrap ? new ReplaceScrapStrategy() : new DoNotReplaceScrapStrategy(),
-                NotificationAdapter = NotificationAdapterMock.Object,
-                ModuleConfig = new ModuleConfig()
                 //Order and Operation must be set automatically during OperationData.Initialize!
                 //Removed for OperationDataRestoreTests.RestoreAmountReached()
                 //OrderData = orderdata,
