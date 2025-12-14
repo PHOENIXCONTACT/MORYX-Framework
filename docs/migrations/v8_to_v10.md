@@ -399,6 +399,12 @@ The API of `IResourceInitializer` was adjusted
 
 ## Modules-ProcessEngine
 
+- Clean-ups and unifications on `JobCreationContext`
+  - Removed unused constructor `public JobCreationContext(IProductRecipe recipe)`
+  - Removed unused method `public JobCreationContext Add(ProductionRecipe recipe)`
+  - Replaced uses of `IProductRecipe` with `ProductionRecipe`  
+    _Note: ProcessEngine Module did expect IWorkplanRecipe anyways, so the use of IProductRecipe would have lead to exceptions in the past already._
+  - Transformed `public struct JobTemplate` to `public record JobTemplate` to allow extensions in the future.
 - Removed API from IJobManagement: `JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement)`
 - Added `IAsyncEnumerable<IProcessChunk> GetArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)` to `IProcessControl`
 
