@@ -21,7 +21,8 @@ namespace Moryx.Products.Samples
         /// <summary>
         /// Import a product using given parameters
         /// </summary>
-        protected override Task<ProductImporterResult> ImportAsync(ProductImportContext context, FileImportParameters parameters)
+        protected override Task<ProductImporterResult> ImportAsync(ProductImportContext context, FileImportParameters parameters,
+            CancellationToken cancellationToken)
         {
             using (var stream = parameters.ReadFile())
             {

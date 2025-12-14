@@ -8,8 +8,6 @@ namespace Moryx.Shifts.Management.Model
     public interface IShiftTypeRepository : IRepository<ShiftTypeEntity>
     {
         ShiftTypeEntity CreateFromContext(ShiftTypeCreationContext context);
-
-        Task<ShiftTypeEntity> CreateFromContextAsync(ShiftTypeCreationContext context);
     }
 
     public abstract class ShiftTypeRepository : ModificationTrackedRepository<ShiftTypeEntity>, IShiftTypeRepository
@@ -17,12 +15,6 @@ namespace Moryx.Shifts.Management.Model
         public ShiftTypeEntity CreateFromContext(ShiftTypeCreationContext context)
         {
             return DbSet.Add(From(context)).Entity;
-        }
-
-        public async Task<ShiftTypeEntity> CreateFromContextAsync(ShiftTypeCreationContext context)
-        {
-            var entry = await DbSet.AddAsync(From(context));
-            return entry.Entity;
         }
 
         private static ShiftTypeEntity From(ShiftTypeCreationContext context)

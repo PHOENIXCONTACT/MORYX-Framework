@@ -27,7 +27,7 @@ namespace Moryx.Orders.Management.Assignment
         private RegexOperationValidationConfig _config;
 
         /// <inheritdoc />
-        public Task InitializeAsync(OperationValidationConfig config)
+        public Task InitializeAsync(OperationValidationConfig config, CancellationToken cancellationToken = default)
         {
             _config = (RegexOperationValidationConfig)config;
             _operationNumberRegex = new Regex(_config.RegularExpression);
@@ -35,19 +35,19 @@ namespace Moryx.Orders.Management.Assignment
         }
 
         /// <inheritdoc />
-        public virtual Task StartAsync()
+        public virtual Task StartAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task StopAsync()
+        public virtual Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public Task<bool> ValidateAsync(Operation operation, IOperationLogger operationLogger)
+        public Task<bool> ValidateAsync(Operation operation, IOperationLogger operationLogger, CancellationToken cancellationToken)
         {
             var numberResult = ValidateOperationNumber(operation.Number);
             var amountResult = ValidateOperationAmount(operation.TotalAmount);
@@ -69,7 +69,7 @@ namespace Moryx.Orders.Management.Assignment
         }
 
         /// <inheritdoc />
-        public virtual Task<bool> ValidateCreationContextAsync(OrderCreationContext orderContext)
+        public virtual Task<bool> ValidateCreationContextAsync(OrderCreationContext orderContext, CancellationToken cancellationToken)
         {
             foreach (var operation in orderContext.Operations)
             {

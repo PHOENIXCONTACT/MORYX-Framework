@@ -25,6 +25,6 @@ namespace Moryx.AbstractionLayer.Resources
         /// Within this method, the resource trees should be created
         /// It is only necessary to return the roots
         /// </summary>
-        Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters);
+        Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters, CancellationToken cancellationToken);
     }
 }

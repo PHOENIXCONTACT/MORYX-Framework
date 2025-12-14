@@ -20,9 +20,9 @@ namespace Moryx.Media.Server.Previews
         ];
 
         /// <inheritdoc />
-        public override void Initialize(PreviewCreatorConfig config)
+        public override async Task InitializeAsync(PreviewCreatorConfig config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             var ffmpeg = Path.Combine(Config.FFmpegPath, "ffmpeg.exe");
             if (File.Exists(ffmpeg))
@@ -41,7 +41,7 @@ namespace Moryx.Media.Server.Previews
             SupportedMimeTypes.Contains(mimeType) && !string.IsNullOrEmpty(_ffmpeg);
 
         /// <inheritdoc />
-        public override PreviewJobResult CreatePreview(PreviewJob job)
+        public override Task<PreviewJobResult> CreatePreviewAsync(PreviewJob job, CancellationToken cancellationToken)
         {
             var result = new PreviewJobResult();
 
@@ -68,7 +68,7 @@ namespace Moryx.Media.Server.Previews
             {
                 Logger.Log(LogLevel.Error, "The preview was not created for inexplicable reasons");
                 result.PreviewState = PreviewState.Failed;
-                return result;
+                return Task.FromResult(result);
             }
 
             var ms = new MemoryStream(File.ReadAllBytes(tempPreview));
@@ -79,7 +79,7 @@ namespace Moryx.Media.Server.Previews
             result.Size = ms.Length;
             result.PreviewState = PreviewState.Created;
 
-            return result;
+            return Task.FromResult(result);
         }
     }
 }

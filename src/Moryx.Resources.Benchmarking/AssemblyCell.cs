@@ -17,9 +17,9 @@ namespace Moryx.Resources.Benchmarking
         [ResourceReference(ResourceRelationType.Driver, IsRequired = true)]
         public IMessageDriver Driver { get; set; }
 
-        protected override async Task OnInitializeAsync()
+        protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
         {
-            await base.OnInitializeAsync();
+            await base.OnInitializeAsync(cancellationToken);
 
             Driver.Received += OnMessageReceived;
         }

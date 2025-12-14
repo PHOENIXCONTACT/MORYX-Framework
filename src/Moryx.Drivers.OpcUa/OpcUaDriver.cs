@@ -229,10 +229,11 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     }
 
     #region Lifecycle
+
     /// <inheritdoc/>
-    protected override async Task OnInitializeAsync()
+    protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
     {
-        await base.OnInitializeAsync();
+        await base.OnInitializeAsync(cancellationToken);
 
         Input = new OpcUaInput(this);
         Output = new OpcUaOutput(this);
@@ -243,16 +244,18 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         ServerStatus = ServerState.Unknown;
     }
 
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <inheritdoc/>
-    protected override async Task OnStartAsync()
+    protected override async Task OnStartAsync(CancellationToken cancellationToken)
     {
-        await base.OnStartAsync();
+        await base.OnStartAsync(cancellationToken);
         ApplicationConfigurationFactory.ApplicationName += " " + Identifier;
         Connect();
     }
 
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <inheritdoc/>
-    protected override Task OnStopAsync()
+    protected override Task OnStopAsync(CancellationToken cancellationToken)
     {
         State.Disconnect();
         return Task.CompletedTask;

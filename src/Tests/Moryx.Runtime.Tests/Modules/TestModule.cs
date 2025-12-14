@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
@@ -34,7 +35,7 @@ namespace Moryx.Runtime.Tests.Modules
 
         public TestConfig MyConfig => Config;
 
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             LastInvoke = InvokedMethod.Initialize;
             switch (CurrentMode)
@@ -48,7 +49,7 @@ namespace Moryx.Runtime.Tests.Modules
             return Task.CompletedTask;
         }
 
-        protected override Task OnStartAsync()
+        protected override Task OnStartAsync(CancellationToken cancellationToken)
         {
             LastInvoke = InvokedMethod.Start;
             RetryCount++;
@@ -62,7 +63,7 @@ namespace Moryx.Runtime.Tests.Modules
             return Task.CompletedTask;
         }
 
-        protected override Task OnStopAsync()
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             LastInvoke = InvokedMethod.Stop;
             switch (CurrentMode)

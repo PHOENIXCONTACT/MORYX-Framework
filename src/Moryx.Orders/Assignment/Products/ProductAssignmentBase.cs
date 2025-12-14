@@ -34,7 +34,7 @@ namespace Moryx.Orders.Assignment
         protected TConfig Config { get; private set; }
 
         /// <inheritdoc cref="IProductAssignment"/>
-        public virtual Task InitializeAsync(ProductAssignmentConfig config)
+        public virtual Task InitializeAsync(ProductAssignmentConfig config, CancellationToken cancellationToken = default)
         {
             Config = (TConfig)config;
             Logger = Logger.GetChild(Config.PluginName, GetType());
@@ -42,13 +42,13 @@ namespace Moryx.Orders.Assignment
         }
 
         /// <inheritdoc cref="IProductAssignment"/>
-        public virtual Task StartAsync()
+        public virtual Task StartAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task StopAsync()
+        public virtual Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
@@ -57,6 +57,7 @@ namespace Moryx.Orders.Assignment
         /// Will be called while creating an operation to load the product for the new operation
         /// The origin of the product MUST be the <see cref="ProductManagement"/>
         /// </summary>
-        public abstract Task<ProductType> SelectProductAsync(Operation operation, IOperationLogger operationLogger);
+        public abstract Task<ProductType> SelectProductAsync(Operation operation, IOperationLogger operationLogger,
+            CancellationToken cancellationToken);
     }
 }

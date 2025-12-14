@@ -181,8 +181,8 @@ namespace Moryx.Orders.Management.Tests
             _productManagementMock.Setup(p => p.GetRecipesAsync(_product, RecipeClassification.Default)).ReturnsAsync([_recipe]);
 
             // Prepare jobs
-            _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>()))
-                .ReturnsAsync((JobCreationContext creationContext) =>
+            _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((JobCreationContext creationContext, CancellationToken _) =>
                 [
                     new Job(_recipe, (int)creationContext.Templates.Single().Amount)
                     {

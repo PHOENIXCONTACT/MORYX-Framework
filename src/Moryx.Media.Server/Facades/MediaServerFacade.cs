@@ -25,13 +25,14 @@ namespace Moryx.Media.Server.Facades
             return ContentManager.GetStream(fileDescriptor);
         }
 
-        public Task<ContentAddingInfo> AddMasterAsync(string fileName, Stream contentStream)
+        public Task<ContentAddingInfo> AddMasterAsync(string fileName, Stream contentStream, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return ContentManager.AddMaster(fileName, contentStream);
         }
 
-        public Task<ContentAddingInfo> AddVariantAsync(Guid contentId, string variantName, string fileName, Stream contentStream)
+        public Task<ContentAddingInfo> AddVariantAsync(Guid contentId, string variantName, string fileName, Stream contentStream,
+            CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return ContentManager.AddVariant(contentId, variantName, fileName, contentStream);

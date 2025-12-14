@@ -39,7 +39,7 @@ namespace Moryx.VisualInstructions.Endpoints
         [ProducesResponseType(typeof(InstructionModel[]), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [Authorize(Policy = VisualInstructionsPermissions.CanView)]
-        public async Task InstructionStream(CancellationToken cancelToken)
+        public async Task InstructionStream(CancellationToken cancellationToken)
         {
             var response = Response;
             response.Headers.Add("Content-Type", "text/event-stream");
@@ -74,10 +74,10 @@ namespace Moryx.VisualInstructions.Endpoints
                 WriteIdentifiers(identifier, instructionSetChannel);
 
                 // Create infinite loop awaiting changes or cancellation
-                while (!cancelToken.IsCancellationRequested)
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    var changes = await instructionSetChannel.Reader.ReadAsync(cancelToken);
-                    await response.WriteAsync($"data: {changes}\r\r", cancelToken);
+                    var changes = await instructionSetChannel.Reader.ReadAsync(cancellationToken);
+                    await response.WriteAsync($"data: {changes}\r\r", cancellationToken);
                 }
             }
             catch (OperationCanceledException)

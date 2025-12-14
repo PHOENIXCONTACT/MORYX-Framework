@@ -22,17 +22,17 @@ namespace Moryx.Products.Management
         where TConfig : ProductRecipeConfiguration
     {
         /// <inheritdoc />
-        public override void Initialize(ProductRecipeConfiguration config)
+        public override async Task InitializeAsync(ProductRecipeConfiguration config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             TargetType = ReflectionTool.GetPublicClasses<IProductRecipe>(p => p.FullName == config.TargetType).FirstOrDefault();
         }
 
         /// <inheritdoc />
-        public abstract Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target);
+        public abstract Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target, CancellationToken cancellationToken);
 
         /// <inheritdoc />
-        public abstract Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target);
+        public abstract Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target, CancellationToken cancellationToken);
     }
 }

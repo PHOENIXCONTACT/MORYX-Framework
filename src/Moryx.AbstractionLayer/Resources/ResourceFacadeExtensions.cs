@@ -36,6 +36,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// <param name="facade">Extended facade</param>
         /// <param name="proxy">Resource proxy reference</param>
         /// <param name="modifier">Modifier delegate, must return <value>true</value> in order to save changes</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <remarks>
         /// The <param name="modifier"></param> action uses the actual resource instance, not wrapped by proxy.
         /// As a result, all internal members, including properties and
@@ -47,9 +48,10 @@ namespace Moryx.AbstractionLayer.Resources
         /// Because the returned objects are the originals, the API consumer is responsible for keeping and watching the life-cycle.
         /// Use with extreme caution. Do not keep the instance in memory for later usage.
         /// </remarks>
-        public static Task ModifyUnsafeAsync(this IResourceManagement facade, IResource proxy, Func<Resource, Task<bool>> modifier)
+        public static Task ModifyUnsafeAsync(this IResourceManagement facade, IResource proxy, Func<Resource, Task<bool>> modifier,
+            CancellationToken cancellationToken = default)
         {
-            return facade.ModifyUnsafeAsync(proxy.Id, modifier);
+            return facade.ModifyUnsafeAsync(proxy.Id, modifier, cancellationToken);
         }
 
         /// <summary>
@@ -59,6 +61,7 @@ namespace Moryx.AbstractionLayer.Resources
         /// <param name="proxy">Resource proxy reference</param>
         /// <param name="modifier">Modifier delegate, must return <value>true</value> in order to save changes</param>
         /// <param name="context">Additional context, used within the <param cref="modifier"/></param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <remarks>
         /// The <param name="modifier"></param> action uses the actual resource instance, not wrapped by proxy.
         /// As a result, all internal members, including properties and
@@ -70,9 +73,10 @@ namespace Moryx.AbstractionLayer.Resources
         /// Because the returned objects are the originals, the API consumer is responsible for keeping and watching the life-cycle.
         /// Use with extreme caution. Do not keep the instance in memory for later usage.
         /// </remarks>
-        public static Task ModifyUnsafeAsync<TContext>(this IResourceManagement facade, IResource proxy, Func<Resource, TContext, Task<bool>> modifier, TContext context)
+        public static Task ModifyUnsafeAsync<TContext>(this IResourceManagement facade, IResource proxy, Func<Resource, TContext, Task<bool>> modifier,
+            TContext context, CancellationToken cancellationToken = default)
         {
-            return facade.ModifyUnsafeAsync(proxy.Id, resource => modifier(resource, context));
+            return facade.ModifyUnsafeAsync(proxy.Id, resource => modifier(resource, context), cancellationToken);
         }
 
         /// <summary>
@@ -91,10 +95,12 @@ namespace Moryx.AbstractionLayer.Resources
         /// </remarks>
         /// <param name="facade">Extended facade</param>
         /// <param name="initializer">Initializer delegate for the resource</param>
-        public static Task<long> CreateUnsafeAsync<TResource>(this IResourceManagement facade, Func<TResource, Task> initializer)
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        public static Task<long> CreateUnsafeAsync<TResource>(this IResourceManagement facade, Func<TResource, Task> initializer,
+            CancellationToken cancellationToken = default)
             where TResource : Resource
         {
-            return facade.CreateUnsafeAsync(typeof(TResource), r => initializer((TResource)r));
+            return facade.CreateUnsafeAsync(typeof(TResource), r => initializer((TResource)r), cancellationToken);
         }
     }
 }

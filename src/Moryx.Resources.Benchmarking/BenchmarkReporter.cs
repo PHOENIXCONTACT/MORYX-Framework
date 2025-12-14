@@ -49,17 +49,18 @@ namespace Moryx.Resources.Benchmarking
         [DataMember, EntrySerialize] public int StepId { get; set; }
 
         /// <inheritdoc />
-        protected override async Task OnInitializeAsync()
+        protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
         {
-            await base.OnInitializeAsync();
+            await base.OnInitializeAsync(cancellationToken);
 
             Capabilities = new BenchmarkCapabilities(StepId);
         }
 
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <inheritdoc />
-        protected override async Task OnStartAsync()
+        protected override async Task OnStartAsync(CancellationToken cancellationToken)
         {
-            await base.OnStartAsync();
+            await base.OnStartAsync(cancellationToken);
 
             ParallelOperations.ScheduleExecution(LogValues, ReportInterval, ReportInterval);
         }

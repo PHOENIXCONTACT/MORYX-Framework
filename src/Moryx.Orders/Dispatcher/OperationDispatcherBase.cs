@@ -27,34 +27,34 @@ namespace Moryx.Orders.Dispatcher
         #endregion
 
         /// <inheritdoc />
-        public Task InitializeAsync(OperationDispatcherConfig config)
+        public Task InitializeAsync(OperationDispatcherConfig config, CancellationToken cancellationToken = default)
         {
             Config = (TConf)config;
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task StartAsync()
+        public virtual Task StartAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task StopAsync()
+        public virtual Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public abstract Task DispatchAsync(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts);
+        public abstract Task DispatchAsync(Operation operation, IReadOnlyList<DispatchContext> dispatchContexts, CancellationToken cancellationToken);
 
         /// <inheritdoc />
-        public abstract Task CompleteAsync(Operation operation);
+        public abstract Task CompleteAsync(Operation operation, CancellationToken cancellationToken);
 
         /// <summary>
         /// Update method when a jobs progress has changed
         /// </summary>
-        public virtual Task JobProgressChangedAsync(Operation operation, Job job)
+        public virtual Task JobProgressChangedAsync(Operation operation, Job job, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
@@ -62,7 +62,7 @@ namespace Moryx.Orders.Dispatcher
         /// <summary>
         /// Update method which ensures that an operationData is present and executed with parallelOperations
         /// </summary>
-        public virtual Task JobStateChangedAsync(Operation operation, JobStateChangedEventArgs eventArgs)
+        public virtual Task JobStateChangedAsync(Operation operation, JobStateChangedEventArgs eventArgs, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
@@ -70,9 +70,9 @@ namespace Moryx.Orders.Dispatcher
         /// <summary>
         /// Adds a job to operation data
         /// </summary>
-        protected async Task AddJobsAsync(Operation operation, JobCreationContext context)
+        protected async Task AddJobsAsync(Operation operation, JobCreationContext context, CancellationToken cancellationToken)
         {
-            var newJobs = await JobManagement.AddAsync(context);
+            var newJobs = await JobManagement.AddAsync(context, cancellationToken);
             JobsDispatched?.Invoke(this, new JobDispatchedEventArgs(operation, newJobs));
         }
 

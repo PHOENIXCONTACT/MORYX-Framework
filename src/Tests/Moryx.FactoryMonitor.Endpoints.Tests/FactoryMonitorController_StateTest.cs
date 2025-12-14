@@ -85,7 +85,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
         {
             //Arrange
             var source = new CancellationTokenSource();
-            var cancelToken = source.Token;
+            var cancellationToken = source.Token;
             var process = new Process
             {
                 Id = 1,
@@ -114,7 +114,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
 
             Task.Run(async () =>
             {
-                await _factoryMonitor.FactoryStatesStream(cancelToken);
+                await _factoryMonitor.FactoryStatesStream(cancellationToken);
             });
 
             //assembly activity

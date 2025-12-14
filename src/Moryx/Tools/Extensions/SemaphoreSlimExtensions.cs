@@ -20,6 +20,7 @@ public static class SemaphoreSlimExtensions
         /// function, and guarantees that the semaphore is released afterwards.
         /// </summary>
         /// <param name="criticalFunc">The asynchronous operation to execute inside the lock.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <returns>
         /// A <see cref="Task"/> that represents the asynchronous operation.
         /// The task completes when the function has finished executing and the semaphore
@@ -31,9 +32,9 @@ public static class SemaphoreSlimExtensions
         /// <c>finally</c> block. It improves readability and reduces boilerplate
         /// when protecting asynchronous critical sections.
         /// </remarks>
-        public async Task ExecuteAsync(Func<Task> criticalFunc)
+        public async Task ExecuteAsync(Func<Task> criticalFunc, CancellationToken cancellationToken = default)
         {
-            await semaphore.WaitAsync();
+            await semaphore.WaitAsync(cancellationToken);
             try
             {
                 await criticalFunc();
@@ -62,9 +63,9 @@ public static class SemaphoreSlimExtensions
         /// <c>finally</c> block. It improves readability and reduces boilerplate
         /// when protecting asynchronous critical sections.
         /// </remarks>
-        public async Task<T> ExecuteAsync<T>(Func<Task<T>> criticalFunc)
+        public async Task<T> ExecuteAsync<T>(Func<Task<T>> criticalFunc, CancellationToken cancellationToken = default)
         {
-            await semaphore.WaitAsync();
+            await semaphore.WaitAsync(cancellationToken);
             try
             {
                 return await criticalFunc();

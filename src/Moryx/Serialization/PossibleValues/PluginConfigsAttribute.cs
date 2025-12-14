@@ -67,7 +67,23 @@ namespace Moryx.Serialization
             var possibleValues = new List<Type>();
             if (_exportBaseType)
             {
-                var baseConfig = StrategyService.GetInterface(typeof(IConfiguredInitializable<>).Name).GetGenericArguments()[0];
+                Type targetApi;
+                var configuredInitializable = StrategyService.GetInterface(typeof(IConfiguredInitializable<>).Name);
+                if (configuredInitializable != null)
+                {
+                    targetApi = configuredInitializable;
+                }
+                else
+                {
+                    targetApi = StrategyService.GetInterface(typeof(IAsyncConfiguredInitializable<>).Name);
+                }
+
+                if (targetApi == null)
+                {
+                    return [];
+                }
+
+                var baseConfig = targetApi.GetGenericArguments()[0];
                 if (!baseConfig.IsAbstract)
                     possibleValues.Add(baseConfig);
             }

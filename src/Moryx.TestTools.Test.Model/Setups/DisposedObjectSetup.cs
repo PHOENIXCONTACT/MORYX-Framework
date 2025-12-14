@@ -19,15 +19,15 @@ namespace Moryx.TestTools.Test.Model
 
         public string SupportedFileRegex => string.Empty;
 
-        public async Task ExecuteAsync(IUnitOfWork openContext, string setupData)
+        public async Task ExecuteAsync(IUnitOfWork openContext, string setupData, CancellationToken cancellationToken)
         {
-            // If the caller wouldn't await this method, 
+            // If the caller wouldn't await this method,
             // the DbContext might be disposed before it's
-            // being used in here. 
+            // being used in here.
             // Adding a delay to ensure that the is actually
             // gone then.
-            await Task.Delay(50);
-            await openContext.DbContext.Database.ExecuteSqlRawAsync("SELECT * FROM \"Cars\"");
+            await Task.Delay(50, cancellationToken);
+            await openContext.DbContext.Database.ExecuteSqlRawAsync("SELECT * FROM \"Cars\"", cancellationToken: cancellationToken);
         }
     }
 }

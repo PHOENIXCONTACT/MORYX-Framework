@@ -15,6 +15,6 @@ namespace Moryx.ControlSystem.Cells
         /// Sort or filter the available resources for an activity to determine
         /// the target resources
         /// </summary>
-        Task<IReadOnlyList<ICell>> SelectCellsAsync(Activity activity, IReadOnlyList<ICell> availableCells);
+        Task<IReadOnlyList<ICell>> SelectCellsAsync(Activity activity, IReadOnlyList<ICell> availableCells, CancellationToken cancellationToken);
     }
 }

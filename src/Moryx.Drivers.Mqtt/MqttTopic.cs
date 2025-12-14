@@ -211,18 +211,20 @@ namespace Moryx.Drivers.Mqtt
 
         #endregion
 
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <inheritdoc />
-        protected override async Task OnStartAsync()
+        protected override async Task OnStartAsync(CancellationToken cancellationToken)
         {
-            await base.OnStartAsync();
+            await base.OnStartAsync(cancellationToken);
             MqttDriver?.NewTopicAdded(SubscribedTopic);
         }
 
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <inheritdoc />
-        protected override Task OnStopAsync()
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             MqttDriver?.ExistingTopicRemoved(SubscribedTopic);
-            return base.OnStopAsync();
+            return base.OnStopAsync(cancellationToken);
         }
 
         /// <inheritdoc />

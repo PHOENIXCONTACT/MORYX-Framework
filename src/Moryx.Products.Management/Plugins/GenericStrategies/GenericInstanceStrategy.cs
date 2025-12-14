@@ -25,9 +25,9 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Initialize the type strategy
         /// </summary>
-        public override void Initialize(ProductInstanceConfiguration config)
+        public override async Task InitializeAsync(ProductInstanceConfiguration config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             EntityMapper.Initialize(TargetType, Config);
         }
@@ -37,13 +37,13 @@ namespace Moryx.Products.Management
             return EntityMapper.TransformSelector(selector);
         }
 
-        public override Task SaveInstanceAsync(ProductInstance source, IGenericColumns target)
+        public override Task SaveInstanceAsync(ProductInstance source, IGenericColumns target, CancellationToken cancellationToken)
         {
             EntityMapper.WriteValue(source, target);
             return Task.CompletedTask;
         }
 
-        public override Task LoadInstanceAsync(IGenericColumns source, ProductInstance target)
+        public override Task LoadInstanceAsync(IGenericColumns source, ProductInstance target, CancellationToken cancellationToken)
         {
             EntityMapper.ReadValue(source, target);
             return Task.CompletedTask;

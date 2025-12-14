@@ -190,7 +190,7 @@ To use the context within a MORYX module, you must declare a dependency on `IDbC
 
 public IDbContextManager DbContextManager { get; set; }
 
-protected override Task OnInitializeAsync()
+protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 {
     ...
     Container.ActivateDbContexts(DbContextManager);

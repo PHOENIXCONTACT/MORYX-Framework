@@ -12,33 +12,33 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        public override async Task OnEnterAsync()
+        public override async Task OnEnterAsync(CancellationToken cancellationToken)
         {
             try
             {
-                await Context.StartAsync();
-                await NextStateAsync(StateRunning);
+                await Context.StartAsync(cancellationToken);
+                await NextStateAsync(StateRunning, cancellationToken);
             }
             catch (Exception ex)
             {
                 Context.ReportError(ex);
-                await NextStateAsync(StateRunningFailure);
+                await NextStateAsync(StateRunningFailure, cancellationToken);
             }
         }
 
-        public override Task Initialize()
+        public override Task Initialize(CancellationToken cancellationToken)
         {
             // Nothing to do here
             return Task.CompletedTask;
         }
 
-        public override Task Start()
+        public override Task Start(CancellationToken cancellationToken)
         {
             // We are already starting
             return Task.CompletedTask;
         }
 
-        public override Task Stop()
+        public override Task Stop(CancellationToken cancellationToken)
         {
             // Nothing to do here
             return Task.CompletedTask;

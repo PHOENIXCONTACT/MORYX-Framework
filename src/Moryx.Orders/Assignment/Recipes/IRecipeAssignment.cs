@@ -15,16 +15,18 @@ namespace Moryx.Orders.Assignment
         /// <summary>
         /// Returns the possible recipes for the given product identity
         /// </summary>
-        Task<IReadOnlyList<IProductRecipe>> PossibleRecipesAsync(ProductIdentity identity);
+        Task<IReadOnlyList<IProductRecipe>> PossibleRecipesAsync(ProductIdentity identity, CancellationToken cancellationToken);
 
         /// <summary>
         /// Select a recipe for the current operation
         /// </summary>
-        Task<IReadOnlyList<IProductRecipe>> SelectRecipesAsync(Operation operation, IOperationLogger operationLogger);
+        Task<IReadOnlyList<IProductRecipe>> SelectRecipesAsync(Operation operation, IOperationLogger operationLogger,
+            CancellationToken cancellationToken);
 
         /// <summary>
         /// Assigns the recipe to the operation
         /// </summary>
-        Task<bool> ProcessRecipeAsync(IProductRecipe clone, Operation operation, IOperationLogger operationLogger);
+        Task<bool> ProcessRecipeAsync(IProductRecipe clone, Operation operation, IOperationLogger operationLogger,
+            CancellationToken cancellationToken);
     }
 }

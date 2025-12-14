@@ -76,7 +76,7 @@ namespace Moryx.Orders.Management
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             Container.RegisterNotifications();
             Container.ActivateDbContexts(DbContextManager);
@@ -95,29 +95,29 @@ namespace Moryx.Orders.Management
             Container.LoadComponents<ICountStrategy>();
             Container.LoadComponents<IOperationDispatcher>();
             Container.LoadComponents<IAdviceExecutor>();
-            
+
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override async Task OnStartAsync()
+        protected override async Task OnStartAsync(CancellationToken cancellationToken)
         {
             if (Config.Users.UserRequired && UserManagement is NullUserManagement)
                 throw new InvalidOperationException("UserRequired configured but there is no UserManagement module available");
 
-            await Container.Resolve<ComponentOrchestration>().StartAsync();
+            await Container.Resolve<ComponentOrchestration>().StartAsync(cancellationToken);
 
             ActivateFacade(_orderManagementFacade);
             ActivateFacade(_notificationSourceFacade);
         }
 
         /// <inheritdoc />
-        protected override Task OnStopAsync()
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             DeactivateFacade(_notificationSourceFacade);
             DeactivateFacade(_orderManagementFacade);
 
-            return Container.Resolve<ComponentOrchestration>().StopAsync();
+            return Container.Resolve<ComponentOrchestration>().StopAsync(cancellationToken);
         }
 
         #endregion

@@ -15,31 +15,31 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
 {
     internal static class FactoryMonitorHelper
     {
-        public static async Task OrderStarted(OperationStartedEventArgs orderEventArg, JsonSerializerSettings serializerSettings, Channel<Tuple<string, string>> _factoryChannel, CancellationToken cancelToken)
+        public static async Task OrderStarted(OperationStartedEventArgs orderEventArg, JsonSerializerSettings serializerSettings, Channel<Tuple<string, string>> _factoryChannel, CancellationToken cancellationToken)
         {
             var orderModel = Converter.ToOrderModel(orderEventArg.Operation);
-            await SendOrderUpdate(orderModel, serializerSettings, _factoryChannel, cancelToken);
+            await SendOrderUpdate(orderModel, serializerSettings, _factoryChannel, cancellationToken);
         }
 
-        public static async Task OrderUpdated(OperationChangedEventArgs orderEventArg, JsonSerializerSettings serializerSettings, Channel<Tuple<string, string>> _factoryChannel, CancellationToken cancelToken)
+        public static async Task OrderUpdated(OperationChangedEventArgs orderEventArg, JsonSerializerSettings serializerSettings, Channel<Tuple<string, string>> _factoryChannel, CancellationToken cancellationToken)
         {
-            if (cancelToken.IsCancellationRequested || orderEventArg.Operation.State is not OperationStateClassification.Running) return;
+            if (cancellationToken.IsCancellationRequested || orderEventArg.Operation.State is not OperationStateClassification.Running) return;
 
             var orderReferenceModel = Converter.ToOrderChangedModel(orderEventArg.Operation);
-            await SendOrderUpdate(orderReferenceModel, serializerSettings, _factoryChannel, cancelToken);
+            await SendOrderUpdate(orderReferenceModel, serializerSettings, _factoryChannel, cancellationToken);
         }
 
-        public static async Task SendOrderUpdate(OrderChangedModel orderModel, JsonSerializerSettings serializerSettings, Channel<Tuple<string, string>> _factoryChannel, CancellationToken cancelToken)
+        public static async Task SendOrderUpdate(OrderChangedModel orderModel, JsonSerializerSettings serializerSettings, Channel<Tuple<string, string>> _factoryChannel, CancellationToken cancellationToken)
         {
             var json = JsonConvert.SerializeObject(orderModel, serializerSettings);
-            await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("processes", json), cancelToken);
+            await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("processes", json), cancellationToken);
         }
 
-        public static async Task PublishCellUpdate(CellStateChangedModel cellModel, JsonSerializerSettings serializerSettings, Channel<Tuple<string, string>> _factoryChannel, CancellationToken cancelToken)
+        public static async Task PublishCellUpdate(CellStateChangedModel cellModel, JsonSerializerSettings serializerSettings, Channel<Tuple<string, string>> _factoryChannel, CancellationToken cancellationToken)
         {
-            if (cancelToken.IsCancellationRequested) return;
+            if (cancellationToken.IsCancellationRequested) return;
             var json = JsonConvert.SerializeObject(cellModel, serializerSettings);
-            await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("cellStateChangedModel", json), cancelToken);
+            await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("cellStateChangedModel", json), cancellationToken);
         }
 
         public static async Task ActivityUpdated(
@@ -50,9 +50,9 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             Resource resource,
             Converter converter,
             List<OrderModel> orderModels,
-            CancellationToken cancelToken)
+            CancellationToken cancellationToken)
         {
-            if (cancelToken.IsCancellationRequested || activityEventArg.Progress == ActivityProgress.Ready) return;
+            if (cancellationToken.IsCancellationRequested || activityEventArg.Progress == ActivityProgress.Ready) return;
 
             if (!cells.Any(x => x.Id == activityEventArg.Activity.Tracing.ResourceId)) return;
 
@@ -62,10 +62,10 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             var cellStateChangedModel = (cell as ICell).GetCellStateChangedModel(activityEventArg.Progress, resource);
 
             var json = JsonConvert.SerializeObject(activityChangedModel, serializerSettings);
-            await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("activityChangedModel", json), cancelToken);
+            await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("activityChangedModel", json), cancellationToken);
 
             json = JsonConvert.SerializeObject(cellStateChangedModel, serializerSettings);
-            await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("cellStateChangedModel", json), cancelToken);
+            await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("cellStateChangedModel", json), cancellationToken);
         }
 
         public static async Task ResourceUpdated(
@@ -74,26 +74,26 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             IResourceManagement resourceManager,
             Func<IMachineLocation, bool> cellFilter,
             Converter converter,
-            CancellationToken cancelToken)
+            CancellationToken cancellationToken)
         {
-            if (cancelToken.IsCancellationRequested) return;
+            if (cancellationToken.IsCancellationRequested) return;
 
             var cells = resourceManager.GetResources(cellFilter)
                 .Select(location => location.Machine)
                 .Cast<ICell>();
 
             foreach (var cell in cells)
-                await SendResourceUpdate(cell.GetResourceChangedModel(converter, resourceManager, cellFilter), serializerSettings, _factoryChannel, cancelToken);
+                await SendResourceUpdate(cell.GetResourceChangedModel(converter, resourceManager, cellFilter), serializerSettings, _factoryChannel, cancellationToken);
         }
 
         public static async Task SendResourceUpdate(ResourceChangedModel resourceChangedModel,
             JsonSerializerSettings serializerSettings,
             Channel<Tuple<string, string>> _factoryChannel,
-            CancellationToken cancelToken)
+            CancellationToken cancellationToken)
         {
-            if (cancelToken.IsCancellationRequested) return;
+            if (cancellationToken.IsCancellationRequested) return;
             var json = JsonConvert.SerializeObject(resourceChangedModel, serializerSettings);
-            await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("resourceChangedModel", json), cancelToken);
+            await _factoryChannel.Writer.WriteAsync(new Tuple<string, string>("resourceChangedModel", json), cancellationToken);
         }
 
         public static List<TransportRouteModel> CreateRoutes(IReadOnlyList<IMachineLocation> locations)

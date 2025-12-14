@@ -11,32 +11,32 @@ namespace Moryx.Runtime.Modules
             : base(context, stateMap)
         {
         }
-        public override async Task OnEnterAsync()
+        public override async Task OnEnterAsync(CancellationToken cancellationToken)
         {
             try
             {
-                await Context.InitializeAsync();
-                await NextStateAsync(StateReady);
+                await Context.InitializeAsync(cancellationToken);
+                await NextStateAsync(StateReady, cancellationToken);
             }
             catch (Exception ex)
             {
                 Context.ReportError(ex);
-                await NextStateAsync(StateInitializedFailure);
+                await NextStateAsync(StateInitializedFailure, cancellationToken);
             }
         }
-        public override Task Initialize()
+        public override Task Initialize(CancellationToken cancellationToken)
         {
             // Nothing to do here
             return Task.CompletedTask;
         }
 
-        public override Task Start()
+        public override Task Start(CancellationToken cancellationToken)
         {
             // Nothing to do here
             return Task.CompletedTask;
         }
 
-        public override Task Stop()
+        public override Task Stop(CancellationToken cancellationToken)
         {
             // Nothing to do here
             return Task.CompletedTask;

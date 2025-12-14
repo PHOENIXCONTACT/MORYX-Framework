@@ -52,7 +52,8 @@ namespace Moryx.Resources.Management.Tests
                 .ReturnsAsync(Array.Empty<Resource>());
 
             _initializerMock = new Mock<IResourceInitializer>();
-            _initializerMock.Setup(i => i.ExecuteAsync(It.IsAny<IResourceGraph>(), It.IsAny<object>())).ReturnsAsync(new ResourceInitializerResult { InitializedResources = [_resourceMock]});
+            _initializerMock.Setup(i => i.ExecuteAsync(It.IsAny<IResourceGraph>(), It.IsAny<object>(),It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ResourceInitializerResult { InitializedResources = [_resourceMock]});
             _linkerMock.Setup(l => l.SaveRootsAsync(It.IsAny<IUnitOfWork>(), It.IsAny<IReadOnlyList<Resource>>()))
                 .ReturnsAsync([_resourceMock]);
             _linkerMock.Setup(l => l.SaveReferencesAsync(It.IsAny<IUnitOfWork>(), It.IsAny<Resource>(), It.IsAny<ResourceEntity>(),
@@ -345,22 +346,22 @@ namespace Moryx.Resources.Management.Tests
             [ResourceReference(ResourceRelationType.Extension, AutoSave = true)]
             public IReferences<IResource> References { get; set; }
 
-            protected override async Task OnInitializeAsync()
+            protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
             {
-                await base.OnInitializeAsync();
+                await base.OnInitializeAsync(cancellationToken);
                 InitializeCalls++;
             }
 
-            protected override async Task OnStartAsync()
+            protected override async Task OnStartAsync(CancellationToken cancellationToken)
             {
-                await base.OnStartAsync();
+                await base.OnStartAsync(cancellationToken);
                 StartCalls++;
             }
 
-            protected override Task OnStopAsync()
+            protected override Task OnStopAsync(CancellationToken cancellationToken)
             {
                 StopCalls++;
-                return base.OnStopAsync();
+                return base.OnStopAsync(cancellationToken);
             }
 
             public void RaiseChanged()
@@ -373,9 +374,9 @@ namespace Moryx.Resources.Management.Tests
         {
             public ICapabilities Capabilities { get; private set; }
 
-            protected override async Task OnInitializeAsync()
+            protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
             {
-                await base.OnInitializeAsync();
+                await base.OnInitializeAsync(cancellationToken);
                 Capabilities = new TestCapabilities();
             }
 

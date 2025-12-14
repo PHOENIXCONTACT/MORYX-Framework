@@ -41,7 +41,7 @@ namespace Moryx.Orders.Management
 
         #endregion
 
-        public async Task StartAsync()
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             // --Initialize Assignment
             await ProductAssignment.InitializeAsync(Config.ProductAssignment);
@@ -54,49 +54,49 @@ namespace Moryx.Orders.Management
             await OperationDispatcher.InitializeAsync(Config.OperationDispatcher);
 
             // --Start Advice
-            await AdviceManager.StartAsync();
+            await AdviceManager.StartAsync(cancellationToken);
 
             // --Start Assignment
-            await ProductAssignment.StartAsync();
-            await PartsAssignment.StartAsync();
-            await RecipeAssignment.StartAsync();
-            await OperationValidation.StartAsync();
-            await DocumentLoader.StartAsync();
+            await ProductAssignment.StartAsync(cancellationToken);
+            await PartsAssignment.StartAsync(cancellationToken);
+            await RecipeAssignment.StartAsync(cancellationToken);
+            await OperationValidation.StartAsync(cancellationToken);
+            await DocumentLoader.StartAsync(cancellationToken);
             OperationAssignment.Start();
 
             // --Start Job handler and dispatcher
-            await OperationDispatcher.StartAsync();
+            await OperationDispatcher.StartAsync(cancellationToken);
             JobHandler.Start();
 
             // --Start pool
-            await OperationDataPool.StartAsync();
+            await OperationDataPool.StartAsync(cancellationToken);
 
             // --Start Effort Calculator
             EffortCalculator.Start();
         }
 
-        public async Task StopAsync()
+        public async Task StopAsync(CancellationToken cancellationToken = default)
         {
             // --Stop Effort Calculator
             EffortCalculator.Stop();
 
             // --Stop Job handler and dispatcher
             JobHandler.Stop();
-            await OperationDispatcher.StopAsync();
+            await OperationDispatcher.StopAsync(cancellationToken);
 
             // --Stop Assignment
             OperationAssignment.Stop();
-            await DocumentLoader.StopAsync();
-            await OperationValidation.StopAsync();
-            await RecipeAssignment.StopAsync();
-            await PartsAssignment.StopAsync();
-            await ProductAssignment.StopAsync();
+            await DocumentLoader.StopAsync(cancellationToken);
+            await OperationValidation.StopAsync(cancellationToken);
+            await RecipeAssignment.StopAsync(cancellationToken);
+            await PartsAssignment.StopAsync(cancellationToken);
+            await ProductAssignment.StopAsync(cancellationToken);
 
             // --Stop Advice
-            await AdviceManager.StopAsync();
+            await AdviceManager.StopAsync(cancellationToken);
 
             // --Stop pool
-            await OperationDataPool.StopAsync();
+            await OperationDataPool.StopAsync(cancellationToken);
         }
     }
 }

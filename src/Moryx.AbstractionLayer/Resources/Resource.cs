@@ -64,45 +64,47 @@ namespace Moryx.AbstractionLayer.Resources
         public IReferences<Resource> Children { get; set; }
 
         /// <inheritdoc />
-        Task IAsyncInitializable.InitializeAsync()
+        Task IAsyncInitializable.InitializeAsync(CancellationToken cancellationToken)
         {
             var loggerName = Name?.Replace(".", "_"); // replace . with _ because of logger child structure
             Logger = Logger?.GetChild(loggerName, GetType());
-            return OnInitializeAsync();
+            return OnInitializeAsync(cancellationToken);
         }
 
         /// <summary>
         /// Resource specific implementation of <see cref="IInitializable.Initialize"/>
         /// </summary>
-        protected virtual Task OnInitializeAsync()
+        protected virtual Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        Task IAsyncPlugin.StartAsync()
+        Task IAsyncPlugin.StartAsync(CancellationToken cancellationToken)
         {
-            return OnStartAsync();
+            return OnStartAsync(cancellationToken);
         }
 
         /// <summary>
         /// Resource specific implementation of <see cref="IPlugin.Start"/>
         /// </summary>
-        protected virtual Task OnStartAsync()
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        protected virtual Task OnStartAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        Task IAsyncPlugin.StopAsync()
+        Task IAsyncPlugin.StopAsync(CancellationToken cancellationToken)
         {
-            return OnStopAsync();
+            return OnStopAsync(cancellationToken);
         }
 
         /// <summary>
         /// Resource specific implementation of <see cref="IPlugin.Stop"/>
         /// </summary>
-        protected virtual Task OnStopAsync()
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        protected virtual Task OnStopAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

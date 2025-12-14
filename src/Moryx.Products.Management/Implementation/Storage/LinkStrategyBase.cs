@@ -31,9 +31,9 @@ namespace Moryx.Products.Management
         public PartSourceStrategy PartCreation { get; private set; }
 
         /// <inheritdoc />
-        public override void Initialize(ProductLinkConfiguration config)
+        public override async Task InitializeAsync(ProductLinkConfiguration config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             PropertyName = config.PartName;
             PartCreation = config.PartCreation;
@@ -42,13 +42,13 @@ namespace Moryx.Products.Management
         }
 
         /// <inheritdoc />
-        public abstract Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target);
+        public abstract Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target, CancellationToken cancellationToken);
 
         /// <inheritdoc />
-        public abstract Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target);
+        public abstract Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target, CancellationToken cancellationToken);
 
         /// <inheritdoc />
-        public virtual Task DeletePartLinkAsync(IReadOnlyList<IGenericColumns> deprecatedEntities)
+        public virtual Task DeletePartLinkAsync(IReadOnlyList<IGenericColumns> deprecatedEntities, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

@@ -71,35 +71,33 @@ namespace Moryx.Model
         /// <summary>
         /// Test connection for config
         /// </summary>
-        Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config);
+        Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Create a new database for this model with given config
         /// </summary>
-        Task<bool> CreateDatabaseAsync(DatabaseConfig config);
+        Task<bool> CreateDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Retrieves all names of available updates
         /// </summary>
         /// <returns></returns>
-        Task<IReadOnlyList<string>> AvailableMigrationsAsync(DatabaseConfig config);
+        Task<IReadOnlyList<string>> AvailableMigrationsAsync(DatabaseConfig config, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Retrieves all names of installed updates
         /// </summary>
         /// <returns></returns>
-        Task<IReadOnlyList<string>> AppliedMigrationsAsync(DatabaseConfig config);
+        Task<IReadOnlyList<string>> AppliedMigrationsAsync(DatabaseConfig config, CancellationToken cancellationToken = default);
 
         /// <summary>
-        ///
+        /// Applies all migrations to the database
         /// </summary>
-        Task<DatabaseMigrationSummary> MigrateDatabaseAsync(DatabaseConfig config);
+        Task<DatabaseMigrationSummary> MigrateDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Delete this database
         /// </summary>
-        /// <param name="config"></param>
-        /// <returns></returns>
-        Task DeleteDatabaseAsync(DatabaseConfig config);
+        Task DeleteDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default);
     }
 }

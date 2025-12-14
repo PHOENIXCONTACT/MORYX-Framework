@@ -44,7 +44,7 @@ namespace Moryx.Media
         /// <exception cref="System.IO.PathTooLongException">Thrown when the specified path, file name, or both exceed the system-defined maximum length.</exception>
         /// <exception cref="System.NotSupportedException">Thrown when the stream does not support reading or seeking, or the fileStream does not support writing.</exception>
 
-        Task<ContentAddingInfo> AddMasterAsync(string fileName, Stream contentStream);
+        Task<ContentAddingInfo> AddMasterAsync(string fileName, Stream contentStream, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Adds a new file to the MediaServer. The new file is a variant of the Master-Content.
@@ -55,7 +55,8 @@ namespace Moryx.Media
         /// <exception cref="System.UnauthorizedAccessException">Thrown when path specified a file that is read-only or if the caller does not have the required permission to create this directory.</exception>
         /// <exception cref="System.IO.PathTooLongException">Thrown when the specified path, file name, or both exceed the system-defined maximum length.</exception>
         /// <exception cref="System.NotSupportedException">Thrown when the stream does not support reading or seeking, or the fileStream does not support writing.</exception>
-        Task<ContentAddingInfo> AddVariantAsync(Guid contentId, string variantName, string fileName, Stream contentStream);
+        Task<ContentAddingInfo> AddVariantAsync(Guid contentId, string variantName, string fileName, Stream contentStream,
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Removes the content with the given id from the MediaServer.

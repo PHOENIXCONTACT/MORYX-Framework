@@ -134,7 +134,7 @@ namespace Moryx.Communication.Sockets
         }
 
         /// <inheritdoc />
-        public async Task SendAsync(BinaryMessage message)
+        public async Task SendAsync(BinaryMessage message, CancellationToken cancellationToken = default)
         {
             var bytes = _interpreter.SerializeMessage(message);
 

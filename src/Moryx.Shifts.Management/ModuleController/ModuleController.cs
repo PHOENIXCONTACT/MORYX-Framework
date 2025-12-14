@@ -46,7 +46,7 @@ namespace Moryx.Shifts.Management
         public IDbContextManager DbContextManager { get; }
 
         /// <inheritdoc />
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             Container
                 .ActivateDbContexts(DbContextManager)
@@ -56,7 +56,7 @@ namespace Moryx.Shifts.Management
         }
 
         /// <inheritdoc />
-        protected override Task OnStartAsync()
+        protected override Task OnStartAsync(CancellationToken cancellationToken)
         {
             Container.Resolve<IShiftStorage>().Start();
             Container.Resolve<IShiftManager>().Start();
@@ -66,7 +66,7 @@ namespace Moryx.Shifts.Management
         }
 
         /// <inheritdoc />
-        protected override Task OnStopAsync()
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             DeactivateFacade(_facade);
 

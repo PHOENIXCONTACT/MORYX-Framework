@@ -52,7 +52,7 @@ namespace Moryx.ProcessData.Adapter.ProcessEngine
         }
 
         /// <inheritdoc />
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             Container.SetInstance(ProcessControl)
                 .SetInstance(JobManagement)
@@ -62,14 +62,14 @@ namespace Moryx.ProcessData.Adapter.ProcessEngine
         }
 
         /// <inheritdoc />
-        protected override Task OnStartAsync()
+        protected override Task OnStartAsync(CancellationToken cancellationToken)
         {
             Container.Resolve<ProcessEngineAdapter>().Start();
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override Task OnStopAsync()
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             Container.Resolve<ProcessEngineAdapter>().Stop();
             return Task.CompletedTask;

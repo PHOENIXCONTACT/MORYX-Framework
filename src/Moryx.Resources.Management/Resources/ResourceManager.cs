@@ -118,7 +118,7 @@ namespace Moryx.Resources.Management
 
         #region LifeCycle
 
-        public async Task InitializeAsync()
+        public async Task InitializeAsync(CancellationToken cancellationToken = default)
         {
             // Set delegates on graph
             Graph.SaveDelegate = SaveAsync;
@@ -136,7 +136,7 @@ namespace Moryx.Resources.Management
             _startup = ResourceStartupPhase.Initializing;
 
             // initialize resources
-            await Parallel.ForEachAsync(Graph.GetAll(), InitializeResource);
+            await Parallel.ForEachAsync(Graph.GetAll(), cancellationToken, InitializeResource);
 
             _startup = ResourceStartupPhase.Initialized;
         }
@@ -148,7 +148,7 @@ namespace Moryx.Resources.Management
         {
             try
             {
-                await ((IAsyncInitializable)resource).InitializeAsync();
+                await ((IAsyncInitializable)resource).InitializeAsync(cancellationToken);
             }
             catch (Exception e)
             {
@@ -166,7 +166,7 @@ namespace Moryx.Resources.Management
         {
             try
             {
-                await ((IAsyncPlugin)resource).StartAsync();
+                await ((IAsyncPlugin)resource).StartAsync(cancellationToken);
             }
             catch (Exception e)
             {
@@ -295,27 +295,28 @@ namespace Moryx.Resources.Management
             ResourceLinker.LinkReferences(entityAccessor.Instance, entityAccessor.Relations);
         }
 
-        public async Task StartAsync()
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             // Create configured resource initializers
-            _initializers = (from importerConfig in Config.Initializers
-                select InitializerFactory.Create(importerConfig)).ToArray();
+            var initializersTasks = Config.Initializers.Select(importerConfig => InitializerFactory.Create(importerConfig, cancellationToken));
+
+            _initializers = (await Task.WhenAll(initializersTasks)).ToArray();
 
             // start resources
             _startup = ResourceStartupPhase.Starting;
-            await Parallel.ForEachAsync(Graph.GetAll().Except(_failedResources), StartResource);
+            await Parallel.ForEachAsync(Graph.GetAll().Except(_failedResources), cancellationToken, StartResource);
             _startup = ResourceStartupPhase.Started;
         }
 
-        public async Task StopAsync()
+        public async Task StopAsync(CancellationToken cancellationToken = default)
         {
             _startup = ResourceStartupPhase.Stopping;
 
-            await Parallel.ForEachAsync(Graph.GetAll(), async (resource, _) =>
+            await Parallel.ForEachAsync(Graph.GetAll(), cancellationToken, async (resource, cancelToken) =>
             {
                 try
                 {
-                    await ((IAsyncPlugin)resource).StopAsync();
+                    await ((IAsyncPlugin)resource).StopAsync(cancelToken);
                     UnregisterEvents(resource);
                 }
                 catch (Exception e)
@@ -430,7 +431,7 @@ namespace Moryx.Resources.Management
 
         public async Task<ResourceInitializerResult> ExecuteInitializer(IResourceInitializer initializer, object parameters)
         {
-            var result = await initializer.ExecuteAsync(Graph, parameters);
+            var result = await initializer.ExecuteAsync(Graph, parameters, CancellationToken.None);
 
             if (result.InitializedResources.Count == 0)
                 throw new InvalidOperationException("ResourceInitializer must return at least one resource");

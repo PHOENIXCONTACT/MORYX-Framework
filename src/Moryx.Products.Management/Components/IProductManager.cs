@@ -100,7 +100,7 @@ namespace Moryx.Products.Management
         /// </summary>
         /// <param name="ids">The IDs of instances that should be loaded</param>
         /// <returns>The instance with the id when it exists.</returns>
-        Task<IReadOnlyList<ProductInstance>> GetInstances(params long[] ids);
+        Task<IReadOnlyList<ProductInstance>> GetInstances(long[] ids);
 
         /// <summary>
         /// Get all instances that match a certain expression

@@ -187,7 +187,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         [ProducesResponseType(typeof(ResourceChangedModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(CellStateChangedModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(OrderChangedModel), StatusCodes.Status200OK)]
-        public async Task FactoryStatesStream(CancellationToken cancelToken)
+        public async Task FactoryStatesStream(CancellationToken cancellationToken)
         {
             var response = Response;
             response.Headers.Append("Content-Type", "text/event-stream");
@@ -210,26 +210,26 @@ namespace Moryx.FactoryMonitor.Endpoints
                 .Cast<ICell>().ToList();
             if (_cells.Count == 0)
             {
-                await response.WriteAsync("retry: 5000\n", cancellationToken: cancelToken);
+                await response.WriteAsync("retry: 5000\n", cancellationToken: cancellationToken);
                 await response.CompleteAsync();
                 return;
             }
             var converter = new Converter(_serialization);
 
             var resourceEventHandler = new ElapsedEventHandler(async (sender, eventArgs) =>
-                await FactoryMonitorHelper.ResourceUpdated(serializerSettings, _factoryChannel, _resourceManager, CellFilterBaseOnLocation, converter, cancelToken)); //resource events are substitute with a timer event since there are no such events
+                await FactoryMonitorHelper.ResourceUpdated(serializerSettings, _factoryChannel, _resourceManager, CellFilterBaseOnLocation, converter, cancellationToken)); //resource events are substitute with a timer event since there are no such events
 
             var capabilitiesEventHandler = new EventHandler<ICapabilities>(async (sender, eventArgs) =>
-                await FactoryMonitorHelper.PublishCellUpdate((sender as ICell).GetCellStateChangedModel(_resourceManager.ReadUnsafe((sender as ICell).Id, r => r)), serializerSettings, _factoryChannel, cancelToken));
+                await FactoryMonitorHelper.PublishCellUpdate((sender as ICell).GetCellStateChangedModel(_resourceManager.ReadUnsafe((sender as ICell).Id, r => r)), serializerSettings, _factoryChannel, cancellationToken));
 
             var orderStartedEventHandler = new EventHandler<OperationStartedEventArgs>(async (sender, eventArgs) =>
-                await FactoryMonitorHelper.OrderStarted(eventArgs, serializerSettings, _factoryChannel, cancelToken));
+                await FactoryMonitorHelper.OrderStarted(eventArgs, serializerSettings, _factoryChannel, cancellationToken));
 
             var orderEventHandler = new EventHandler<OperationChangedEventArgs>(async (sender, eventArgs) =>
-                await FactoryMonitorHelper.OrderUpdated(eventArgs, serializerSettings, _factoryChannel, cancelToken));
+                await FactoryMonitorHelper.OrderUpdated(eventArgs, serializerSettings, _factoryChannel, cancellationToken));
 
             var activityEventHandler = new EventHandler<ActivityUpdatedEventArgs>(async (sender, eventArgs) => await
-                FactoryMonitorHelper.ActivityUpdated(eventArgs, serializerSettings, _factoryChannel, _cells, _resourceManager.ReadUnsafe(eventArgs.Activity.Tracing.ResourceId, r => r), converter, _orderManager.GetOrderModels(_colorPalette), cancelToken));
+                FactoryMonitorHelper.ActivityUpdated(eventArgs, serializerSettings, _factoryChannel, _cells, _resourceManager.ReadUnsafe(eventArgs.Activity.Tracing.ResourceId, r => r), converter, _orderManager.GetOrderModels(_colorPalette), cancellationToken));
 
             foreach (var cell in _cells)
             {
@@ -245,12 +245,12 @@ namespace Moryx.FactoryMonitor.Endpoints
             try
             {
                 // Create infinite loop awaiting changes or cancellation
-                while (!cancelToken.IsCancellationRequested)
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    var changes = await _factoryChannel.Reader.ReadAsync(cancelToken);
+                    var changes = await _factoryChannel.Reader.ReadAsync(cancellationToken);
 
-                    await response.WriteAsync($"type: {changes.Item1}\n", cancelToken);
-                    await response.WriteAsync($"data: {changes.Item2}\r\r", cancelToken);
+                    await response.WriteAsync($"type: {changes.Item1}\n", cancellationToken);
+                    await response.WriteAsync($"data: {changes.Item2}\r\r", cancellationToken);
                 }
             }
             finally

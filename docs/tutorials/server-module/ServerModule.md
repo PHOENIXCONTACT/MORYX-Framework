@@ -78,7 +78,7 @@ Now we will register the global components to the internal container of our modu
 /// <summary>
 /// Code executed on start up and after service was stopped and should be started again
 /// </summary>
-protected override Task OnInitializeAsync()
+protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 {
     // Register all imported components
     Container.SetInstances(ResourceManagement, ProductManagement);
@@ -94,7 +94,7 @@ protected override Task OnInitializeAsync()
 After the initialization we have to start the custom plugins of our ServerModule activate facades. We do so in the derived `OnStartAsync` method.
 
 ````cs
-protected override async Task OnStartAsync()
+protected override async Task OnStartAsync(CancellationToken cancellationToken)
 {
     // Activate facades
     ActivateFacade(_playGroundExecution);
@@ -111,7 +111,7 @@ Even the greatest ServerModule must be stopped from time to time. We must overri
 /// <summary>
 /// Code executed when service is stopped
 /// </summary>
-protected override async Task OnStopAsync()
+protected override async Task OnStopAsync(CancellationToken cancellationToken)
 {
     // Deactivate facades
     DeactivateFacade(_playGroundExecution);

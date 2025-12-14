@@ -24,23 +24,26 @@ namespace Moryx.Media.Previews
         /// <summary>
         /// Initializes the preview creator
         /// </summary>
-        /// <param name="config"></param>
-        public virtual void Initialize(PreviewCreatorConfig config)
+        public virtual Task InitializeAsync(PreviewCreatorConfig config, CancellationToken cancellationToken = default)
         {
             Config = (TConf)config;
             Logger = Logger.GetChild(config.PluginName, GetType());
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Starts the preview creator
         /// </summary>
-        public virtual void Start()
+        public virtual Task StartAsync(CancellationToken cancellationToken = default)
         {
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual void Stop()
+        public virtual Task StopAsync(CancellationToken cancellationToken = default)
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -54,8 +57,9 @@ namespace Moryx.Media.Previews
         /// Creates one or more previews
         /// </summary>
         /// <param name="job">Settings and information about the source file</param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public abstract PreviewJobResult CreatePreview(PreviewJob job);
+        public abstract Task<PreviewJobResult> CreatePreviewAsync(PreviewJob job, CancellationToken cancellationToken);
     }
 }
 

@@ -31,7 +31,7 @@ namespace Moryx.Orders.Assignment
         protected TConfig Config { get; private set; }
 
         /// <inheritdoc cref="IProductAssignment"/>
-        public virtual Task InitializeAsync(RecipeAssignmentConfig config)
+        public virtual Task InitializeAsync(RecipeAssignmentConfig config, CancellationToken cancellationToken = default)
         {
             Config = (TConfig)config;
             Logger = Logger.GetChild(Config.PluginName, GetType());
@@ -39,45 +39,47 @@ namespace Moryx.Orders.Assignment
         }
 
         /// <inheritdoc />
-        public virtual Task StartAsync()
+        public virtual Task StartAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task StopAsync()
+        public virtual Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual async Task<IReadOnlyList<IProductRecipe>> PossibleRecipesAsync(ProductIdentity identity)
+        public virtual async Task<IReadOnlyList<IProductRecipe>> PossibleRecipesAsync(ProductIdentity identity, CancellationToken cancellationToken)
         {
-            var product = await ProductManagement.LoadTypeAsync(identity);
+            var product = await ProductManagement.LoadTypeAsync(identity, cancellationToken);
             if (product == null)
                 return Array.Empty<IProductRecipe>();
 
-            var recipes = await ProductManagement.GetRecipesAsync(product, RecipeClassification.Default | RecipeClassification.Alternative);
+            var recipes = await ProductManagement.GetRecipesAsync(product, RecipeClassification.Default | RecipeClassification.Alternative, cancellationToken);
             return recipes;
         }
 
         /// <summary>
         /// Select a recipe for the current operation
         /// </summary>
-        public abstract Task<IReadOnlyList<IProductRecipe>> SelectRecipesAsync(Operation operation, IOperationLogger operationLogger);
+        public abstract Task<IReadOnlyList<IProductRecipe>> SelectRecipesAsync(Operation operation, IOperationLogger operationLogger,
+            CancellationToken cancellationToken);
 
         /// <summary>
         /// Assigns the recipe to the operation
         /// </summary>
-        public abstract Task<bool> ProcessRecipeAsync(IProductRecipe clone, Operation operation, IOperationLogger operationLogger);
+        public abstract Task<bool> ProcessRecipeAsync(IProductRecipe clone, Operation operation, IOperationLogger operationLogger,
+            CancellationToken cancellationToken);
 
         /// <summary>
         /// Default implementation to assign the current recipe to the operation
         /// Will use the given product
         /// </summary>
-        protected async Task<IProductRecipe> LoadDefaultRecipeAsync(ProductType sourceProduct)
+        protected async Task<IProductRecipe> LoadDefaultRecipeAsync(ProductType sourceProduct, CancellationToken cancellationToken)
         {
-            var defaultRecipe = (await ProductManagement.GetRecipesAsync(sourceProduct, RecipeClassification.Default))
+            var defaultRecipe = (await ProductManagement.GetRecipesAsync(sourceProduct, RecipeClassification.Default, cancellationToken))
                 .SingleOrDefault();
 
             return defaultRecipe;

@@ -24,18 +24,18 @@ namespace Moryx.Runtime.Tests.Modules
 
         public ManualResetEvent WaitEvent { get; set; }
 
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             WaitEvent = new ManualResetEvent(false);
             return Task.CompletedTask;
         }
 
-        protected override Task OnStartAsync()
+        protected override Task OnStartAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
-        protected override Task OnStopAsync()
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             Container.Resolve<IParallelOperations>().ExecuteParallel(delegate
             {

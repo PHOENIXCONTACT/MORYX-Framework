@@ -90,7 +90,7 @@ namespace Moryx.ControlSystem.Jobs.Endpoints
 
         [HttpGet("stream")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task ProgressStream(CancellationToken cancelToken)
+        public async Task ProgressStream(CancellationToken cancellationToken)
         {
             var response = Response;
             response.Headers["Content-Type"] = "text/event-stream";
@@ -107,11 +107,11 @@ namespace Moryx.ControlSystem.Jobs.Endpoints
             try
             {
                 // Create infinite loop awaiting changes or cancellation
-                while (!cancelToken.IsCancellationRequested)
+                while (!cancellationToken.IsCancellationRequested)
                 {
                     // Await entry in queue
-                    var streamContent = await jobUpdates.Reader.ReadAsync(cancelToken);
-                    await response.WriteAsync($"data: {streamContent}\r\r", cancelToken);
+                    var streamContent = await jobUpdates.Reader.ReadAsync(cancellationToken);
+                    await response.WriteAsync($"data: {streamContent}\r\r", cancellationToken);
                 }
             }
             catch (OperationCanceledException)

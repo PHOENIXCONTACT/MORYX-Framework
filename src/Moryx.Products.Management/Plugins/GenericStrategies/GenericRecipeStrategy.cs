@@ -25,20 +25,20 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Initialize the type strategy
         /// </summary>
-        public override void Initialize(ProductRecipeConfiguration config)
+        public override async Task InitializeAsync(ProductRecipeConfiguration config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             EntityMapper.Initialize(TargetType, Config);
         }
 
-        public override Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target)
+        public override Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target, CancellationToken cancellationToken)
         {
             EntityMapper.WriteValue(source, target);
             return Task.CompletedTask;
         }
 
-        public override Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target)
+        public override Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target, CancellationToken cancellationToken)
         {
             EntityMapper.ReadValue(source, target);
             return Task.CompletedTask;

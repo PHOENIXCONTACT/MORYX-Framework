@@ -3,7 +3,7 @@
 
 using Moryx.Identity.AccessManagement.Data;
 
-namespace Moryx.Identity.AccessManagement.Identity
+namespace Moryx.Identity.AccessManagement
 {
     public interface IPasswordResetService
     {

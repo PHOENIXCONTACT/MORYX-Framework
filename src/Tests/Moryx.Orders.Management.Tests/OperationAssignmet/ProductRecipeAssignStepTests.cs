@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
@@ -121,7 +122,8 @@ namespace Moryx.Orders.Management.Tests
             _operation.CreationContext = new OperationCreationContext { RecipePreselection = preselection };
             _operation.Recipes = new List<IProductRecipe>();
 
-            _productManagementMock.Setup(m => m.LoadRecipeAsync(preselection)).Returns(() => new DummyRecipe());
+            _productManagementMock.Setup(m => m.LoadRecipeAsync(preselection, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => new DummyRecipe());
 
             // Act
             var recipeAssigned = await _recipeAssignStep.AssignStep(_operationData, _operationLogger);
@@ -142,7 +144,8 @@ namespace Moryx.Orders.Management.Tests
             };
 
             _operation.Recipes = new List<IProductRecipe> { template };
-            _productManagementMock.Setup(m => m.LoadRecipeAsync(preselection)).Returns(() => new DummyRecipe());
+            _productManagementMock.Setup(m => m.LoadRecipeAsync(preselection))
+                .ReturnsAsync(() => new DummyRecipe());
 
             // Act
             var recipeAssigned = await _recipeAssignStep.AssignStep(_operationData, _operationLogger);
@@ -237,8 +240,8 @@ namespace Moryx.Orders.Management.Tests
             _productManagementMock.Setup(m => m.GetRecipesAsync(It.IsAny<ProductType>(), RecipeClassification.Default)).ReturnsAsync([new DummyRecipe()]);
 
             IProductRecipe clonedRecipe = null;
-            _productManagementMock.Setup(m => m.SaveRecipeAsync(It.IsAny<IProductRecipe>())).Callback(
-                delegate (IProductRecipe recipe) { clonedRecipe = recipe; });
+            _productManagementMock.Setup(m => m.SaveRecipeAsync(It.IsAny<IProductRecipe>(), It.IsAny<CancellationToken>())).Callback(
+                delegate (IProductRecipe recipe, CancellationToken _) { clonedRecipe = recipe; });
 
             _operationDataMock.Setup(o => o.AssignRecipes(It.IsAny<IReadOnlyList<IProductRecipe>>())).Callback((IReadOnlyList<IProductRecipe> newRecipes) =>
             {

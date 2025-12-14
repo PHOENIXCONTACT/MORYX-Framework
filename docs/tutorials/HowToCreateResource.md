@@ -98,7 +98,7 @@ If you want to use the new resource from a custom module, you need to request th
 
         public override string Name => "CustomModule";
 
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             //pass the component to the inner container
             Container.SetInstance(ResourceManagement);
@@ -108,12 +108,12 @@ If you want to use the new resource from a custom module, you need to request th
             return Task.CompletedTask;
         }
 
-        protected override Task OnStartAsync()
+        protected override Task OnStartAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
-        protected override Task OnStopAsync()
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

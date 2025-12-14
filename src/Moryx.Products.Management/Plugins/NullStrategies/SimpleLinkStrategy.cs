@@ -14,13 +14,13 @@ namespace Moryx.Products.Management.NullStrategies
     [Plugin(LifeCycle.Transient, typeof(IProductLinkStrategy), Name = nameof(SimpleLinkStrategy))]
     internal class SimpleLinkStrategy : LinkStrategyBase
     {
-        public override Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target)
+        public override Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target, CancellationToken cancellationToken)
         {
             // We have no custom properties
             return Task.CompletedTask;
         }
 
-        public override Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target)
+        public override Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target, CancellationToken cancellationToken)
         {
             // We have no custom properties
             return Task.CompletedTask;

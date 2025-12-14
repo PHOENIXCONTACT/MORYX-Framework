@@ -52,30 +52,30 @@ namespace Moryx.Model.Repositories
             DbSet.FirstOrDefault(e => e.Id == id);
 
         /// <inheritdoc />
-        public virtual Task<T> GetByKeyAsync(long id) =>
-            DbSet.FirstOrDefaultAsync(e => e.Id == id);
+        public virtual Task<T> GetByKeyAsync(long id, CancellationToken cancellationToken = default) =>
+            DbSet.FirstOrDefaultAsync(e => e.Id == id, cancellationToken: cancellationToken);
 
         /// <inheritdoc />
         public virtual ICollection<T> GetAll() =>
             DbSet.ToList();
 
         /// <inheritdoc />
-        public virtual async Task<ICollection<T>> GetAllAsync()
+        public virtual async Task<ICollection<T>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var results = await DbSet.ToListAsync();
+            var results = await DbSet.ToListAsync(cancellationToken: cancellationToken);
             return results;
         }
 
         /// <inheritdoc />
         public virtual ICollection<T> GetByKeys(long[] ids)
         {
-            return DbSet.Where(e => ids.Contains(e.Id)).ToList();
+            return DbSet.Where(e => ((IEnumerable<long>)ids).Contains(e.Id)).ToList();
         }
 
         /// <inheritdoc />
-        public virtual async Task<ICollection<T>> GetByKeysAsync(long[] ids)
+        public virtual async Task<ICollection<T>> GetByKeysAsync(long[] ids, CancellationToken cancellationToken = default)
         {
-            var results = await DbSet.Where(e => ids.Contains(e.Id)).ToListAsync();
+            var results = await DbSet.Where(e => ((IEnumerable<long>)ids).Contains(e.Id)).ToListAsync(cancellationToken: cancellationToken);
             return results;
         }
 
@@ -84,8 +84,8 @@ namespace Moryx.Model.Repositories
             Create(true);
 
         /// <inheritdoc />
-        public Task<T> CreateAsync() =>
-            CreateAsync(true);
+        public Task<T> CreateAsync(CancellationToken cancellationToken = default) =>
+            CreateAsync(true, cancellationToken);
 
         /// <inheritdoc />
         public T Create(bool addToContext)
@@ -98,11 +98,11 @@ namespace Moryx.Model.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<T> CreateAsync(bool addToContext)
+        public async Task<T> CreateAsync(bool addToContext, CancellationToken cancellationToken = default)
         {
             var newInstance = new T();
             if (addToContext)
-                await DbSet.AddAsync(newInstance);
+                await DbSet.AddAsync(newInstance, cancellationToken);
 
             return newInstance;
         }
@@ -115,9 +115,9 @@ namespace Moryx.Model.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<T> AddAsync(T entity)
+        public async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
         {
-            var entry = await DbSet.AddAsync(entity);
+            var entry = await DbSet.AddAsync(entity, cancellationToken);
             return entry.Entity;
         }
 
@@ -130,10 +130,10 @@ namespace Moryx.Model.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities)
+        public async Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
         {
             var entries = entities.ToList();
-            await DbSet.AddRangeAsync(entries);
+            await DbSet.AddRangeAsync(entries, cancellationToken);
             return entries;
         }
 

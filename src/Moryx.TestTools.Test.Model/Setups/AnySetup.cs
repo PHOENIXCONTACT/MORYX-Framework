@@ -19,7 +19,7 @@ namespace Moryx.TestTools.Test.Model
 
         public string SupportedFileRegex => string.Empty;
 
-        public async Task ExecuteAsync(IUnitOfWork openContext, string setupData)
+        public async Task ExecuteAsync(IUnitOfWork openContext, string setupData, CancellationToken cancellationToken)
         {
             var carRepo = openContext.GetRepository<ICarEntityRepository>();
             var wheelRepo = openContext.GetRepository<IWheelEntityRepository>();
@@ -27,13 +27,13 @@ namespace Moryx.TestTools.Test.Model
             CarEntity lastCar = null;
             for (var i = 0; i < 1; i++)
             {
-                var carEntity = await carRepo.CreateAsync();
+                var carEntity = await carRepo.CreateAsync(cancellationToken);
                 carEntity.Name = "Car " + i;
                 carEntity.Price = i + 100;
 
                 async Task CreateWheel(WheelType wheelType)
                 {
-                    var wheelEntity = await wheelRepo.CreateAsync();
+                    var wheelEntity = await wheelRepo.CreateAsync(cancellationToken);
                     wheelEntity.WheelType = wheelType;
                     wheelEntity.Car = carEntity;
                 }
@@ -46,20 +46,20 @@ namespace Moryx.TestTools.Test.Model
                 lastCar = carEntity;
             }
 
-            await openContext.SaveChangesAsync();
+            await openContext.SaveChangesAsync(cancellationToken);
 
             carRepo.Remove(lastCar);
 
-            await openContext.SaveChangesAsync();
+            await openContext.SaveChangesAsync(cancellationToken);
 
-            var allCarsWithLazyWheels = await carRepo.Linq.ToListAsync();
+            var allCarsWithLazyWheels = await carRepo.Linq.ToListAsync(cancellationToken);
 
-            var allCarsWithWheels = await carRepo.Linq.Include(c => c.Wheels).ToListAsync();
+            var allCarsWithWheels = await carRepo.Linq.Include(c => c.Wheels).ToListAsync(cancellationToken);
 
             // All cars with exact name "Car 1"
             var allNamedCar1 = carRepo.Linq.Where(c => c.Name == "Car 1");
 
-            var firstContains = await carRepo.Linq.FirstAsync(c => c.Name.Contains("Car"));
+            var firstContains = await carRepo.Linq.FirstAsync(c => c.Name.Contains("Car"), cancellationToken);
 
             var allContains = carRepo.Linq.Where(c => c.Name.Contains("Car"));
         }

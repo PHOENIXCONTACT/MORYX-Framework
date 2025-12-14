@@ -54,7 +54,7 @@ namespace Moryx.ControlSystem.MaterialManager
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             Container
                 .SetInstance(ResourceManagement)
@@ -65,18 +65,18 @@ namespace Moryx.ControlSystem.MaterialManager
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override Task OnStartAsync()
+        protected override Task OnStartAsync(CancellationToken cancellationToken)
         {
             // Start material manager
-            return Container.Resolve<IMaterialManager>().StartAsync();
+            return Container.Resolve<IMaterialManager>().StartAsync(cancellationToken);
         }
 
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected override Task OnStopAsync()
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
-            return Container.Resolve<IMaterialManager>().StopAsync();
+            return Container.Resolve<IMaterialManager>().StopAsync(cancellationToken);
         }
 
         #endregion

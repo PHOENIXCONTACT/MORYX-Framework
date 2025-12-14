@@ -30,7 +30,8 @@ public abstract class AsyncDriverState<TContext> : AsyncStateBase<TContext>, IDr
     /// <summary>
     /// State transition to connect
     /// </summary>
-    public virtual Task ConnectAsync()
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    public virtual Task ConnectAsync(CancellationToken cancellationToken = default)
     {
         return InvalidStateAsync();
     }
@@ -38,7 +39,8 @@ public abstract class AsyncDriverState<TContext> : AsyncStateBase<TContext>, IDr
     /// <summary>
     /// State transition to disconnect
     /// </summary>
-    public virtual Task DisconnectAsync()
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    public virtual Task DisconnectAsync(CancellationToken cancellationToken = default)
     {
         return InvalidStateAsync();
     }

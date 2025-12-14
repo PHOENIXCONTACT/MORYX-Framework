@@ -12,7 +12,7 @@ namespace Moryx.Media.Server.Previews
         /// <summary>
         /// Create the maintenance module with this name
         /// </summary>
-        IPreviewCreator Create(PreviewCreatorConfig config);
+        Task<IPreviewCreator> Create(PreviewCreatorConfig config, CancellationToken cancellationToken);
 
         /// <summary>
         /// Destroy a module instance

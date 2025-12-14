@@ -76,11 +76,11 @@ namespace Moryx.Runtime.Modules
         /// </summary>
         public IModuleContainerFactory ContainerFactory { get; }
 
-        Task IAsyncInitializable.InitializeAsync()
+        Task IAsyncInitializable.InitializeAsync(CancellationToken cancellationToken)
         {
-            return _stateLockSemaphore.ExecuteAsync(() => _state.Initialize());
+            return _stateLockSemaphore.ExecuteAsync(() => _state.Initialize(cancellationToken), cancellationToken);
         }
-        async Task IServerModuleStateContext.InitializeAsync()
+        async Task IServerModuleStateContext.InitializeAsync(CancellationToken cancellationToken)
         {
             // Activate logging
             var logger = new ModuleLogger(GetType().Namespace, LoggerFactory, Notifications.AddFromLogStream);
@@ -100,7 +100,7 @@ namespace Moryx.Runtime.Modules
                 .SetInstance<IModuleLogger>(logger, "ModuleLogger")
                 .SetInstance<ILogger>(logger, "Logger");
 
-            await OnInitializeAsync();
+            await OnInitializeAsync(cancellationToken);
 
             // Execute SubInitializer
             var subInitializers = Container.ResolveAll<ISubInitializer>() ?? [];
@@ -115,16 +115,16 @@ namespace Moryx.Runtime.Modules
             Notifications.Clear();
         }
 
-        Task IServerModule.StartAsync()
+        Task IServerModule.StartAsync(CancellationToken cancellationToken)
         {
-            return _stateLockSemaphore.ExecuteAsync(() => _state.Start());
+            return _stateLockSemaphore.ExecuteAsync(() => _state.Start(cancellationToken), cancellationToken);
         }
 
-        async Task IServerModuleStateContext.StartAsync()
+        async Task IServerModuleStateContext.StartAsync(CancellationToken cancellationToken)
         {
             Logger.Log(LogLevel.Information, "{0} is starting...", Name);
 
-            await OnStartAsync();
+            await OnStartAsync(cancellationToken);
 
             Logger.Log(LogLevel.Information, "{0} started!", Name);
         }
@@ -137,16 +137,16 @@ namespace Moryx.Runtime.Modules
             }
         }
 
-        Task IServerModule.StopAsync()
+        Task IServerModule.StopAsync(CancellationToken cancellationToken)
         {
-            return _stateLockSemaphore.ExecuteAsync(() => _state.Stop());
+            return _stateLockSemaphore.ExecuteAsync(() => _state.Stop(cancellationToken), cancellationToken);
         }
 
-        async Task IServerModuleStateContext.StopAsync()
+        async Task IServerModuleStateContext.StopAsync(CancellationToken cancellationToken)
         {
             Logger.Log(LogLevel.Information, "{0} is stopping...", Name);
 
-            await OnStopAsync();
+            await OnStopAsync(cancellationToken);
 
             Logger.Log(LogLevel.Information, "{0} stopped!", Name);
         }
@@ -246,17 +246,20 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again.
         /// </summary>
-        protected abstract Task OnInitializeAsync();
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        protected abstract Task OnInitializeAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected abstract Task OnStartAsync();
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        protected abstract Task OnStartAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected abstract Task OnStopAsync();
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        protected abstract Task OnStopAsync(CancellationToken cancellationToken);
 
         #endregion
 
@@ -280,7 +283,7 @@ namespace Moryx.Runtime.Modules
 
         private readonly SemaphoreSlim _stateLockSemaphore = new(1, 1);
 
-        Task IAsyncStateContext.SetStateAsync(StateBase state)
+        Task IAsyncStateContext.SetStateAsync(StateBase state, CancellationToken cancellationToken)
         {
             var oldState = _state?.Classification ?? ServerModuleState.Stopped;
 

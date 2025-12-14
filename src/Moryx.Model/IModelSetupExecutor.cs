@@ -18,6 +18,6 @@ namespace Moryx.Model
         /// <summary>
         /// Executes the given setup
         /// </summary>
-        Task ExecuteAsync(DatabaseConfig config, IModelSetup setup, string setupData);
+        Task ExecuteAsync(DatabaseConfig config, IModelSetup setup, string setupData, CancellationToken cancellationToken = default);
     }
 }

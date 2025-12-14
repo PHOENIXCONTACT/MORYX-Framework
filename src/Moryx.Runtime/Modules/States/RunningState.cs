@@ -11,7 +11,7 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        public override async Task OnEnterAsync()
+        public override async Task OnEnterAsync(CancellationToken cancellationToken)
         {
             try
             {
@@ -20,25 +20,25 @@ namespace Moryx.Runtime.Modules
             catch (Exception ex)
             {
                 Context.ReportError(ex);
-                await NextStateAsync(StateRunningFailure);
+                await NextStateAsync(StateRunningFailure, cancellationToken);
             }
         }
 
-        public override Task Initialize()
+        public override Task Initialize(CancellationToken cancellationToken)
         {
             // Nothing to do here
             return Task.CompletedTask;
         }
 
-        public override Task Start()
+        public override Task Start(CancellationToken cancellationToken)
         {
             // Already started
             return Task.CompletedTask;
         }
 
-        public override Task Stop()
+        public override Task Stop(CancellationToken cancellationToken)
         {
-            return NextStateAsync(StateRunningStopping);
+            return NextStateAsync(StateRunningStopping, cancellationToken);
         }
 
         public override void ValidateHealthState()

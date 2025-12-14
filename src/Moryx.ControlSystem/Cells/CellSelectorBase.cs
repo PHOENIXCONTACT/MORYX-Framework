@@ -24,25 +24,25 @@ namespace Moryx.ControlSystem.Cells
         protected TConfig Config { get; private set; }
 
         /// <inheritdoc />
-        public virtual Task InitializeAsync(CellSelectorConfig config)
+        public virtual Task InitializeAsync(CellSelectorConfig config, CancellationToken cancellationToken = default)
         {
             Config = (TConfig)config;
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task StartAsync()
+        public virtual Task StartAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task StopAsync()
+        public virtual Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public abstract Task<IReadOnlyList<ICell>> SelectCellsAsync(Activity activity, IReadOnlyList<ICell> availableCells);
+        public abstract Task<IReadOnlyList<ICell>> SelectCellsAsync(Activity activity, IReadOnlyList<ICell> availableCells, CancellationToken cancellationToken);
     }
 }

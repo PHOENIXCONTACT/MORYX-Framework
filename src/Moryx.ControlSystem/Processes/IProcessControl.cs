@@ -27,12 +27,12 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Retrieve all archived processes for a product instance
         /// </summary>
-        Task<IReadOnlyList<Process>> GetArchivedProcessesAsync(ProductInstance productInstance);
+        Task<IReadOnlyList<Process>> GetArchivedProcessesAsync(ProductInstance productInstance, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Retrieve all archived  processes in a certain range
         /// </summary>
-        IAsyncEnumerable<IProcessChunk> GetArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds);
+        IAsyncEnumerable<IProcessChunk> GetArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Possible targets for the process, defined by currently open activities

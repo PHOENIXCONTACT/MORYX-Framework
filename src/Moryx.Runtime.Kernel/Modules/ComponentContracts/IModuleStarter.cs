@@ -13,16 +13,16 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// Call initialize on the module
         /// </summary>
-        Task InitializeAsync(IServerModule module);
+        Task InitializeAsync(IServerModule module, CancellationToken cancellationToken);
 
         /// <summary>
         /// Starts a module and all dependencies if necessary
         /// </summary>
-        Task StartAsync(IServerModule module);
+        Task StartAsync(IServerModule module, CancellationToken cancellationToken);
 
         /// <summary>
         /// Starts all modules
         /// </summary>
-        Task StartAllAsync();
+        Task StartAllAsync(CancellationToken cancellationToken);
     }
 }

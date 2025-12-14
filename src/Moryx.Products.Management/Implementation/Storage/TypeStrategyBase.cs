@@ -22,9 +22,9 @@ namespace Moryx.Products.Management
         where TConfig : ProductTypeConfiguration
     {
         /// <inheritdoc />
-        public override void Initialize(ProductTypeConfiguration config)
+        public override async Task InitializeAsync(ProductTypeConfiguration config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             TargetType = ReflectionTool.GetPublicClasses<ProductType>(p => p.FullName == config.TargetType).FirstOrDefault();
         }
@@ -33,11 +33,12 @@ namespace Moryx.Products.Management
         public abstract bool HasChanged(ProductType current, IGenericColumns dbProperties);
 
         /// <inheritdoc />
-        public abstract Task LoadTypeAsync(IGenericColumns source, ProductType target);
+        public abstract Task LoadTypeAsync(IGenericColumns source, ProductType target, CancellationToken cancellationToken);
 
         /// <inheritdoc />
-        public abstract Task SaveTypeAsync(ProductType source, IGenericColumns target);
+        public abstract Task SaveTypeAsync(ProductType source, IGenericColumns target, CancellationToken cancellationToken);
 
+        /// <inheritdoc />
         public abstract Expression<Func<IGenericColumns, bool>> TransformSelector<TProduct>(Expression<Func<TProduct, bool>> selector);
     }
 }

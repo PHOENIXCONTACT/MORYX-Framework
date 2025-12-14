@@ -24,16 +24,16 @@ namespace Moryx.Orders.Management.Advice
         #endregion
 
         /// <inheritdoc />
-        public async Task StartAsync()
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             await AdviceExecutor.InitializeAsync(ModuleConfig.Advice.AdviceExecutor);
-            await AdviceExecutor.StartAsync();
+            await AdviceExecutor.StartAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        public Task StopAsync()
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
-            return AdviceExecutor.StopAsync();
+            return AdviceExecutor.StopAsync(cancellationToken);
         }
 
         /// <inheritdoc />
@@ -69,7 +69,7 @@ namespace Moryx.Orders.Management.Advice
             }
             else
             {
-                result = await AdviceExecutor.AdviceAsync((Operation)operationData.Operation, (dynamic)advice);
+                result = await AdviceExecutor.AdviceAsync((Operation)operationData.Operation, (dynamic)advice, CancellationToken.None);
             }
 
             if (result.Success)

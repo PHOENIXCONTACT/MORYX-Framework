@@ -4,7 +4,6 @@
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Moryx.Identity.AccessManagement.Identity;
 using Moryx.Identity.AccessManagement.Models;
 
 namespace Moryx.Identity.AccessManagement.Controllers

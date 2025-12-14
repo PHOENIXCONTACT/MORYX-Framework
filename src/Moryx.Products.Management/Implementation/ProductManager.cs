@@ -29,7 +29,7 @@ namespace Moryx.Products.Management
 
         #region Fields and Properties
 
-        private IList<IProductImporter> _importers;
+        private IReadOnlyList<IProductImporter> _importers;
 
         public IProductImporter[] Importers => _importers.ToArray();
 
@@ -37,14 +37,14 @@ namespace Moryx.Products.Management
 
         #endregion
 
-        public async Task StartAsync()
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
-            await Storage.CheckDatabase();
-            _importers = (from importerConfig in Config.Importers
-                          select ImportFactory.Create(importerConfig)).ToList();
+            await Storage.CheckDatabase(cancellationToken);
+            var importes = Config.Importers.Select(importerConfig => ImportFactory.Create(importerConfig, cancellationToken));
+            _importers = await Task.WhenAll(importes);
         }
 
-        public Task StopAsync()
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
@@ -132,7 +132,7 @@ namespace Moryx.Products.Management
         {
             var importer = _importers.First(i => i.Name == importerName);
             var context = new ProductImportContext();
-            var result = await importer.ImportAsync(context, parameters);
+            var result = await importer.ImportAsync(context, parameters, CancellationToken.None);
 
             HandleResult(result);
 
@@ -155,7 +155,7 @@ namespace Moryx.Products.Management
             _runningImports.Add(context.Session, session);
 
             var importer = _importers.First(i => i.Name == importerName);
-            var task = importer.ImportAsync(context, parameters);
+            var task = importer.ImportAsync(context, parameters, CancellationToken.None);
             task.ContinueWith(session.TaskCompleted);
 
             // Wait for the task unless it is long running

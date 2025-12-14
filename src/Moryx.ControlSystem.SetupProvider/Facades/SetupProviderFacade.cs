@@ -30,7 +30,7 @@ namespace Moryx.ControlSystem.SetupProvider
 
         public string Name => "SetupProvider";
 
-        public Task<IRecipe> LoadRecipeAsync(long id)
+        public Task<IRecipe> LoadRecipeAsync(long id, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 

@@ -78,11 +78,7 @@ namespace Moryx.Model.Repositories
         }
 
         /// <inheritdoc />
-        public Task SaveChangesAsync() =>
-            SaveChangesAsync(CancellationToken.None);
-
-        /// <inheritdoc />
-        public async Task SaveChangesAsync(CancellationToken cancellationToken)
+        public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             try
             {

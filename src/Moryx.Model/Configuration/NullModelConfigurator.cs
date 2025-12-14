@@ -32,37 +32,37 @@ namespace Moryx.Model.Configuration
         }
 
         /// <inheritdoc />
-        public Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config)
+        public Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task<bool> CreateDatabaseAsync(DatabaseConfig config)
+        public Task<bool> CreateDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<string>> AvailableMigrationsAsync(DatabaseConfig config)
+        public Task<IReadOnlyList<string>> AvailableMigrationsAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<string>> AppliedMigrationsAsync(DatabaseConfig config)
+        public Task<IReadOnlyList<string>> AppliedMigrationsAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task<DatabaseMigrationSummary> MigrateDatabaseAsync(DatabaseConfig config)
+        public Task<DatabaseMigrationSummary> MigrateDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
 
         /// <inheritdoc />
-        public Task DeleteDatabaseAsync(DatabaseConfig config)
+        public Task DeleteDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException("Not supported by " + nameof(NullModelConfigurator));
         }
