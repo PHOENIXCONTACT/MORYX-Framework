@@ -20,23 +20,25 @@ When creating a topic, you have to chose the datatype of the sending and receivi
 
 ## Code Example
 Using the driver:
-```C#
-public class ExampleResource: IResource{
-    IMessageDriver<IIdentifierMessage> Driver {get; set;}
+```cs
+public class ExampleResource: IResource
+{
+    [ResourceReference(ResourceRelationType.Driver)]
+    public IMessageDriver Driver { get; set; }
 
     [DataMember, EntrySerialize]
     public string SensorTopic { get; set; }
 
-    private IMessageChannel<IConvertible> _channel;
+    private IMessageChannel _channel;
 
     protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
     {
-        await base.OnInitializeAsync();
+        await base.OnInitializeAsync(cancellationToken);
 
         // Subscribe all topics, which receive IIdentifiermessage
         Driver.Received += OnDriverReceived;
         // Or just a specific topic with all its messages
-        _channel = Driver.Channel<IByteSerializable>(SensorTopic);
+        _channel = Driver.Channel(SensorTopic);
         _channel.Received += OnSensorReceived;
     }
 
@@ -52,14 +54,14 @@ public class ExampleResource: IResource{
 
 ```
 Using only the topic:
-```C#
+```cs
 public class MqttSensorResource : PublicResource
 {
-    public IMessageChannel<IConvertible> SensorTopic { get; set; }
+    public IMessageChannel SensorTopic { get; set; }
 
     protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
     {
-        await base.OnInitializeAsync();
+        await base.OnInitializeAsync(cancellationToken);
 
         SensorTopic.Received += OnSensorReceived;
     }

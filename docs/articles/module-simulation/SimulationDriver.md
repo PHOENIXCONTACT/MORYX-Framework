@@ -7,7 +7,7 @@ A module like the commercial simulator will call `Ready` and `Result` on your in
 ## Example of simulated driver
 
 So here is an example of how your mock driver can implement `Moryx.ControlSystem.ISimulationDriver`:
-``` csharp
+```cs
     [ResourceRegistration]
     public class TestMockDriver : Driver, IMessageDriver<object>,ISimulationDriver {
 
@@ -37,18 +37,13 @@ So here is an example of how your mock driver can implement `Moryx.ControlSystem
 
         protected override async Task OnStartAsync(CancellationToken cancellationToken)
         {
-            await base.OnStartAsync();
-            
+            await base.OnStartAsync(cancellationToken);
+
             // initial simulated state of the driver
             SimulatedState = SimulationState.Idle;
         }
 
-        public IMessageChannel<TChannel> Channel<TChannel>(string identifier)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IMessageChannel<TSend, TReceive> Channel<TSend, TReceive>(string identifier)
+        public IMessageChannel Channel(string identifier)
         {
             throw new NotImplementedException();
         }

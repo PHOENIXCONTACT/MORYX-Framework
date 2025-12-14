@@ -85,7 +85,7 @@ public class StateExampleDriver : Driver, IExampleDriver, IStateContext
     /// <seealso cref="IDriver"/>
     public override async Task OnInitializeAsync(CancellationToken cancellationToken)
     {
-        await base.InitializeAsync();
+        await base.InitializeAsync(cancellationToken);
 
         StateMachine.Initialize<ExampleStateBase>(this).With<ExampleStateBase>();
     }
@@ -94,7 +94,7 @@ public class StateExampleDriver : Driver, IExampleDriver, IStateContext
 
     public override async Task OnStartAsync(CancellationToken cancellationToken)
     {
-        await base.OnStartAsync();
+        await base.OnStartAsync(cancellationToken);
 
         lock(_stateLock)
             State.Connect();
