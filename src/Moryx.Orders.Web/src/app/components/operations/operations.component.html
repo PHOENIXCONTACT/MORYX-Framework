@@ -381,9 +381,9 @@
               >
                 {{
                   operation.model.classification !==
-                    OperationClassification.Running &&
+                    OperationStateClassification.Running &&
                   operation.model.classification !==
-                    OperationClassification.Interrupting
+                    OperationStateClassification.Interrupting
                     ? (TranslationConstants.OPERATIONS.BEGIN | translate)
                     : (TranslationConstants.OPERATIONS.CHANGE_AMOUNT
                       | translate)

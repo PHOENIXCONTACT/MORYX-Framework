@@ -69,11 +69,6 @@ namespace Moryx.Orders.Management
         Task AddJob(Job job);
 
         /// <summary>
-        /// Updates the operation source
-        /// </summary>
-        Task UpdateSource(IOperationSource source);
-
-        /// <summary>
         /// Initializes a new operation by a creation context
         /// </summary>
         Task<IOperationData> Initialize(OperationCreationContext context, IOrderData orderData, IOperationSource source);
@@ -84,9 +79,9 @@ namespace Moryx.Orders.Management
         Task<IOperationData> Initialize(OperationEntity entity, IOrderData orderData);
 
         /// <summary>
-        /// Sets the sort order
+        /// Updates the operation with the given <see cref="OperationUpdate"/>
         /// </summary>
-        Task SetSortOrder(int sortOrder);
+        Task UpdateAsync(OperationUpdate update, CancellationToken cancellationToken);
 
         /// <summary>
         /// Creates a new operation based on <see cref="IOperationData"/>

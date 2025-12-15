@@ -465,19 +465,20 @@ namespace Moryx.Orders.Endpoints
         #endregion
 
         #region HttpPut
+
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(MoryxExceptionResponse), StatusCodes.Status404NotFound)]
-        [Route("{guid}/position")]
+        [Route("{guid}/update")]
         [Authorize(Policy = OrderPermissions.CanManage)]
-        public async Task<ActionResult> SetOperationSortOrder(Guid guid, [FromBody] int sortOrder)
+        public async Task<ActionResult> UpdateOperation(Guid guid, OperationUpdateModel update)
         {
             var operation = await _orderManagement.LoadOperationAsync(guid);
             if (operation == null)
                 return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
 
-            await _orderManagement.SetOperationSortOrderAsync(sortOrder, operation);
+            await _orderManagement.UpdateOperationAsync(operation, Converter.FromModel(update));
             return Ok();
         }
 

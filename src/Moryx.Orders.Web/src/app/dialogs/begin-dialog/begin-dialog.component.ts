@@ -10,12 +10,11 @@ import { OperatorsService } from 'src/app/services/operators.service';
 import { AssignableOperator } from '../../api/models';
 import { map, Observable, startWith } from 'rxjs';
 import { BeginContext } from '../../api/models';
-import { OperationClassification } from '../../api/models';
+import { OperationStateClassification } from '../../api/models';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -95,7 +94,7 @@ export class BeginDialogComponent implements OnInit {
 
   targetAmountControl: FormControl;
   TranslationConstants = TranslationConstants;
-  OperationClassification = OperationClassification;
+  OperationStateClassification = OperationStateClassification;
 
   providesOperatorSelection: boolean = false;
   operatorFormControl = new FormControl('');

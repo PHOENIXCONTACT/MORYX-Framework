@@ -1,5 +1,5 @@
 import { OperationModel } from '../api/models';
-import { OperationClassification } from '../api/models';
+import { OperationStateClassification } from '../api/models';
 
 export class OperationViewModel{
     model: OperationModel;
@@ -68,7 +68,7 @@ export class OperationViewModel{
     }
 
     get isProducing() {
-        if(this.model.classification === OperationClassification.Running) {
+        if(this.model.classification === OperationStateClassification.Running) {
             if(this.model.progressRunning && this.model.progressRunning > 0) {
                 return true;
             }

@@ -185,15 +185,34 @@ namespace Moryx.Orders.Management
         }
 
         /// <inheritdoc />
-        public async Task SetSortOrder(int sortOrder)
+        public async Task UpdateAsync(OperationUpdate update, CancellationToken cancellationToken)
         {
-            if (sortOrder == Operation.SortOrder)
-                return;
+            if (update.OperationSource != null)
+            {
+                if (update.OperationSource.Type != Operation.Source.Type)
+                {
+                    throw new InvalidOperationException("Type of the operation source cannot be changed");
+                }
 
-            Operation.SortOrder = sortOrder;
+                Operation.Source = update.OperationSource;
+            }
+
+            if (update.SortIndex.HasValue && update.SortIndex.Value != Operation.SortOrder)
+            {
+                Operation.SortOrder = update.SortIndex.Value;
+            }
+
+            if (update.PlannedStart.HasValue)
+            {
+                Operation.PlannedStart = update.PlannedStart.Value;
+            }
+
+            if (update.PlannedEnd.HasValue)
+            {
+                Operation.PlannedEnd = update.PlannedEnd.Value;
+            }
 
             await _savingContext.SaveOperation(this);
-
             Updated?.Invoke(this, new OperationEventArgs(this));
         }
 

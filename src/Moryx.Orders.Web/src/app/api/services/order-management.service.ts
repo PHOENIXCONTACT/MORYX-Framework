@@ -57,8 +57,8 @@ import { Reload$Params } from '../fn/order-management/reload';
 import { ReportContext } from '../models/report-context';
 import { reportOperation } from '../fn/order-management/report-operation';
 import { ReportOperation$Params } from '../fn/order-management/report-operation';
-import { setOperationSortOrder } from '../fn/order-management/set-operation-sort-order';
-import { SetOperationSortOrder$Params } from '../fn/order-management/set-operation-sort-order';
+import { updateOperation } from '../fn/order-management/update-operation';
+import { UpdateOperation$Params } from '../fn/order-management/update-operation';
 
 @Injectable({ providedIn: 'root' })
 export class OrderManagementService extends BaseService {
@@ -552,28 +552,28 @@ export class OrderManagementService extends BaseService {
     );
   }
 
-  /** Path part for operation `setOperationSortOrder()` */
-  static readonly SetOperationSortOrderPath = '/api/moryx/orders/{guid}/position';
+  /** Path part for operation `updateOperation()` */
+  static readonly UpdateOperationPath = '/api/moryx/orders/{guid}/update';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `setOperationSortOrder()` instead.
+   * To access only the response body, use `updateOperation()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  setOperationSortOrder$Response(params: SetOperationSortOrder$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    const obs = setOperationSortOrder(this.http, this.rootUrl, params, context);
+  updateOperation$Response(params: UpdateOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    const obs = updateOperation(this.http, this.rootUrl, params, context);
     return obs;
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `setOperationSortOrder$Response()` instead.
+   * To access the full response (for headers, for example), `updateOperation$Response()` instead.
    *
    * This method sends `application/*+json` and handles request body of type `application/*+json`.
    */
-  setOperationSortOrder(params: SetOperationSortOrder$Params, context?: HttpContext): Observable<void> {
-    const resp = this.setOperationSortOrder$Response(params, context);
+  updateOperation(params: UpdateOperation$Params, context?: HttpContext): Observable<void> {
+    const resp = this.updateOperation$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
     );
