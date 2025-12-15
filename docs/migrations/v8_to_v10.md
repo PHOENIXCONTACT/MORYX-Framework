@@ -233,6 +233,16 @@ internal interface ISampleFactory
 }
 ````
 
+### `Moryx.Drivers.OpcUaDriver`
+
+**`IOpcUaDriver`**
+
+- `AddSubscription` -> `AddSubscriptionAsync`
+- `GetNode` -> `GetNodeAsync`
+- `ReadNode` -> `ReadNodeAsync`
+- `RebrowseNodes` -> `RebrowseNodesAsync`
+- `WriteNode` -> `WriteNodeAsync`
+
 ### Other Async Related changes
 
 - All public or protected APIs which are Task-based are renamed to use `Async` suffix. (Internal APIs are excluded from this rule but will be adjusted over time)
