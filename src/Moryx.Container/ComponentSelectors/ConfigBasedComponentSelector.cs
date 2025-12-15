@@ -31,7 +31,7 @@ namespace Moryx.Container
         }
 
         /// <summary>
-        /// Calls build on base class and than forwards config via initialize to newly created component
+        /// Calls build on base class and then forwards config via initialize to newly created component
         /// </summary>
         /// <param name="method">Invoked factory method - e.g. Create</param>
         /// <param name="componentName">Name of component being constructed</param>
@@ -62,10 +62,19 @@ namespace Moryx.Container
                 if (isConfiguredInitializable)
                 {
                     ExecuteInitialize(targetComponentType, configType, instance, config, kernel);
-                    return isAsync ? ToTypedTask(targetComponentType, Task.FromResult(instance)) : instance;
+                    if (!isAsync)
+                        return instance;
+
+                    // Warn if mixing sync initialize with async factory
+                    kernel.Logger.WarnFormat(CultureInfo.InvariantCulture,
+                        "Component '{0}' with config '{1}' is using " + nameof(IConfiguredInitializable<>) + " but factory uses " + nameof(Task) +
+                        ". Ensure the component lifecycle is fully asynchronous to avoid blocking operations or return instance directly without Task.",
+                        targetComponentType.FullName, configType.FullName);
+
+                    return ToTypedTask(targetComponentType, Task.FromResult(instance));
                 }
 
-                // Invoke Initialize for IAsyncConfiguredInitializable<>
+                // Invoke InitializeAsync for IAsyncConfiguredInitializable<>
                 var isAsyncConfiguredInitializable = componentInterfaces
                     .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAsyncConfiguredInitializable<>));
 
@@ -75,7 +84,6 @@ namespace Moryx.Container
 
                     if (isAsync)
                     {
-
                         var t = Task.Run(async () =>
                         {
                             await initializeTask;
@@ -85,9 +93,21 @@ namespace Moryx.Container
                         return ToTypedTask(targetComponentType, t);
                     }
 
+                    // Warn if mixing async initialize with sync factory
+                    kernel.Logger.WarnFormat(CultureInfo.InvariantCulture,
+                        "Component '{0}' with config '{1}' is using " + nameof(IAsyncConfiguredInitializable<>) + " but factory don't uses " +
+                        nameof(Task) + ". Ensure the component lifecycle is fully asynchronous to avoid blocking operations or use " +
+                        nameof(IConfiguredInitializable<>) + ".",
+                        targetComponentType.FullName, configType.FullName);
+
                     initializeTask.GetAwaiter().GetResult();
                     return instance;
                 }
+
+                kernel.Logger.WarnFormat(CultureInfo.InvariantCulture,
+                    "Component '{0}' with config '{1}' is not using " + nameof(IConfiguredInitializable<>) +
+                    " nor " + nameof(IAsyncConfiguredInitializable<>) + ". Ensure the component lifecycle is properly initialized.",
+                    targetComponentType.FullName, configType.FullName);
 
                 return instance;
             });
@@ -107,8 +127,9 @@ namespace Moryx.Container
             }
             catch (Exception e)
             {
-                kernel.Logger.Error(() => string.Format(CultureInfo.InvariantCulture, "Error during async initialization of component {0} with config {1}: {2}",
-                    componentType.FullName, configType.FullName, e));
+                kernel.Logger.ErrorFormat(e, CultureInfo.InvariantCulture,
+                    "Error during initialization of component {0} with config {1}: {2}",
+                    componentType.FullName, configType.FullName);
             }
         }
 
@@ -132,8 +153,9 @@ namespace Moryx.Container
             }
             catch (Exception e)
             {
-                kernel.Logger.Error(() => string.Format(CultureInfo.InvariantCulture, "Error during async initialization of component {0} with config {1}: {2}",
-                    componentType.FullName, configType.FullName, e));
+                kernel.Logger.ErrorFormat(e, CultureInfo.InvariantCulture,
+                    "Error during async initialization of component {0} with config {1}: {2}",
+                    componentType.FullName, configType.FullName);
                 return Task.FromException(e);
             }
         }

@@ -57,7 +57,7 @@ namespace Moryx.Orders.Assignment
             if (product == null)
                 return Array.Empty<IProductRecipe>();
 
-            var recipes = await ProductManagement.GetRecipesAsync(product, RecipeClassification.Default | RecipeClassification.Alternative, cancellationToken);
+            var recipes = await ProductManagement.LoadRecipesAsync(product, RecipeClassification.Default | RecipeClassification.Alternative, cancellationToken);
             return recipes;
         }
 
@@ -79,7 +79,7 @@ namespace Moryx.Orders.Assignment
         /// </summary>
         protected async Task<IProductRecipe> LoadDefaultRecipeAsync(ProductType sourceProduct, CancellationToken cancellationToken)
         {
-            var defaultRecipe = (await ProductManagement.GetRecipesAsync(sourceProduct, RecipeClassification.Default, cancellationToken))
+            var defaultRecipe = (await ProductManagement.LoadRecipesAsync(sourceProduct, RecipeClassification.Default, cancellationToken))
                 .SingleOrDefault();
 
             return defaultRecipe;

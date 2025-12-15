@@ -82,7 +82,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             // - Expected behavior from the RecipeManagement
             if (recipes.Any())
                 ReflectionTool.TestMode = true;
-            _productManagerMock.Setup(rm => rm.GetRecipesAsync(It.IsAny<ProductType>(), RecipeClassification.CloneFilter))
+            _productManagerMock.Setup(rm => rm.LoadRecipesAsync(It.IsAny<ProductType>(), RecipeClassification.CloneFilter))
                 .ReturnsAsync(recipes);
             _productManagerMock.Setup(rm => rm.LoadRecipeAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((long id, CancellationToken _) => new DummyProductRecipe() { Id = id });
@@ -125,7 +125,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             // - If there are Recipes the RecipeManagement should be called
             if (recipes.Any())
             {
-                _productManagerMock.Verify(rm => rm.GetRecipesAsync(originalProductType, RecipeClassification.CloneFilter));
+                _productManagerMock.Verify(rm => rm.LoadRecipesAsync(originalProductType, RecipeClassification.CloneFilter));
                 _productManagerMock.Verify(rm => rm.SaveRecipeAsync(It.Is<IProductRecipe>(recipe => !HasChangedProperties<IProductRecipe>(recipe, recipes.LastOrDefault()))));
                 if (recipes.First().Id != 0)
                     _productManagerMock.Verify(rm => rm.LoadRecipeAsync(recipes.First().Id));

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moryx.AbstractionLayer.TestTools;
-using Moryx.Drivers.Mqtt.MqttTopics;
+using Moryx.Drivers.Mqtt.Topics;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Tools;

@@ -35,6 +35,14 @@ namespace Moryx.Products.Management
         Task<long> SaveTypeAsync(ProductType modifiedInstance, CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Try to delete a product. If it is still used as a part in other products, it will return <c>false</c>
+        /// </summary>
+        /// <param name="productId">Id of the product that is deprecated and should be deleted.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        /// <returns><value>True</value> if the product was removed, <value>false</value> otherwise</returns>
+        Task<bool> DeleteTypeAsync(long productId, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Get instances by id
         /// </summary>
         /// <returns>The instance with the id when it exists.</returns>
@@ -81,9 +89,9 @@ namespace Moryx.Products.Management
         Task<IReadOnlyList<TType>> LoadTypesAsync<TType>(Expression<Func<TType, bool>> selector, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Remove recipe by given recipeId
+        /// Delete recipe by given recipeId
         /// </summary>
-        Task RemoveRecipeAsync(long recipeId, CancellationToken cancellationToken = default);
+        Task DeleteRecipeAsync(long recipeId, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///

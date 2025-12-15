@@ -39,7 +39,7 @@ namespace Moryx.AbstractionLayer.Products
         /// Duplicate a product under a new identity
         /// </summary>
         /// <exception cref="IdentityConflictException">Thrown when the new identity causes conflicts</exception>
-        Task<ProductType> DuplicateAsync(ProductType template, IIdentity newIdentity, CancellationToken cancellationToken = default);
+        Task<ProductType> DuplicateTypeAsync(ProductType template, IIdentity newIdentity, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Save a product type
@@ -59,7 +59,7 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Retrieves the current recipe for this product
         /// </summary>
-        Task<IReadOnlyList<IProductRecipe>> GetRecipesAsync(ProductType productType, RecipeClassification classification, CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<IProductRecipe>> LoadRecipesAsync(ProductType productType, RecipeClassification classification, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Saves given recipe to the storage
@@ -94,19 +94,19 @@ namespace Moryx.AbstractionLayer.Products
         /// <param name="id">The id for the product instance which should be searched for.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <returns>The product instance with the id when it exists.</returns>
-        Task<ProductInstance> GetInstanceAsync(long id, CancellationToken cancellationToken = default);
+        Task<ProductInstance> LoadInstanceAsync(long id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get an instance with this identity
         /// </summary>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="identity"/> is null</exception>
         /// <exception cref="InvalidOperationException">Thrown when there is more than one product with the given <paramref name="identity"/></exception>
-        Task<ProductInstance> GetInstanceAsync(IIdentity identity, CancellationToken cancellationToken = default);
+        Task<ProductInstance> LoadInstanceAsync(IIdentity identity, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get only instances that match a certain condition, similar to SingleOrDefault
         /// </summary>
-        Task<TInstance> GetInstanceAsync<TInstance>(Expression<Func<TInstance, bool>> selector, CancellationToken cancellationToken = default)
+        Task<TInstance> LoadInstanceAsync<TInstance>(Expression<Func<TInstance, bool>> selector, CancellationToken cancellationToken = default)
             where TInstance : ProductInstance;
 
         /// <summary>
@@ -125,12 +125,12 @@ namespace Moryx.AbstractionLayer.Products
         /// <param name="ids">The IDs of instances that should be loaded</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <returns>The instance with the id when it exists.</returns>
-        Task<IReadOnlyList<ProductInstance>> GetInstancesAsync(long[] ids, CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(long[] ids, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get all instances that match a certain
         /// </summary>
-        Task<IReadOnlyList<TInstance>> GetInstancesAsync<TInstance>(Expression<Func<TInstance, bool>> selector, CancellationToken cancellationToken = default)
+        Task<IReadOnlyList<TInstance>> LoadInstancesAsync<TInstance>(Expression<Func<TInstance, bool>> selector, CancellationToken cancellationToken = default)
             where TInstance : ProductInstance;
 
         /// <summary>
@@ -151,12 +151,12 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Delete a product by its id
         /// </summary>
-        Task<bool> DeleteProductAsync(long id, CancellationToken cancellationToken = default);
+        Task<bool> DeleteTypeAsync(long productTypeId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Remove Recipe by given id
         /// </summary>
-        Task RemoveRecipeAsync(long recipeId, CancellationToken cancellationToken = default);
+        Task DeleteRecipeAsync(long recipeId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Create instance of a recipe

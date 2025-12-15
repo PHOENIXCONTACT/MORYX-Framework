@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.Shifts.Endpoints
+namespace Moryx.Shifts.Endpoints.Models
 {
     /// <summary>
     /// Class representing a shift assignment.

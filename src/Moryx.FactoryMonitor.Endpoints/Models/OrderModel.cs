@@ -2,9 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
-using Moryx.FactoryMonitor.Endpoints.Models;
 
-namespace Moryx.FactoryMonitor.Endpoints.Model
+namespace Moryx.FactoryMonitor.Endpoints.Models
 {
     /// <summary>
     /// Initial order model to display in the UI

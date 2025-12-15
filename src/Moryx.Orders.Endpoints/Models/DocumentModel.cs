@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.Orders.Endpoints
+namespace Moryx.Orders.Endpoints.Models
 {
     [DataContract]
     public class DocumentModel

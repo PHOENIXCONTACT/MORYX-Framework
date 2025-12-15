@@ -4,10 +4,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moryx.Media.Endpoints.Model;
 using Moryx.Media.Endpoints.Properties;
 using System.Net;
 using Moryx.AspNetCore;
+using Moryx.Media.Endpoints.Models;
 
 namespace Moryx.Media.Endpoints
 {
@@ -196,7 +196,7 @@ namespace Moryx.Media.Endpoints
             if (!Guid.TryParse(guid, out var parsedGuid))
                 return BadRequest();
 
-            if (!_mediaServer.RemoveContent(parsedGuid))
+            if (!_mediaServer.DeleteContent(parsedGuid))
                 return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
 
             return Ok();
@@ -213,7 +213,7 @@ namespace Moryx.Media.Endpoints
             if (!Guid.TryParse(guid, out var parsedGuid))
                 return BadRequest();
 
-            if (!_mediaServer.RemoveVariant(parsedGuid, variantName))
+            if (!_mediaServer.DeleteVariant(parsedGuid, variantName))
                 return NotFound(new MoryxExceptionResponse { Title = Strings.MediaServerController_MediaNotFound });
 
             return Ok();

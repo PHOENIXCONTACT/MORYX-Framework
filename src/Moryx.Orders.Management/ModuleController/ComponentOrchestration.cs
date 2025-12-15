@@ -31,8 +31,6 @@ namespace Moryx.Orders.Management
 
         public IOperationDataPool OperationDataPool { get; set; }
 
-        public IEffortCalculator EffortCalculator { get; set; }
-
         public IDocumentLoader DocumentLoader { get; set; }
 
         public IAdviceManager AdviceManager { get; set; }
@@ -44,14 +42,14 @@ namespace Moryx.Orders.Management
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             // --Initialize Assignment
-            await ProductAssignment.InitializeAsync(Config.ProductAssignment);
-            await PartsAssignment.InitializeAsync(Config.PartsAssignment);
-            await RecipeAssignment.InitializeAsync(Config.RecipeAssignment);
-            await OperationValidation.InitializeAsync(Config.OperationValidation);
-            await DocumentLoader.InitializeAsync(Config.Documents.DocumentLoader);
+            await ProductAssignment.InitializeAsync(Config.ProductAssignment, cancellationToken);
+            await PartsAssignment.InitializeAsync(Config.PartsAssignment, cancellationToken);
+            await RecipeAssignment.InitializeAsync(Config.RecipeAssignment, cancellationToken);
+            await OperationValidation.InitializeAsync(Config.OperationValidation, cancellationToken);
+            await DocumentLoader.InitializeAsync(Config.Documents.DocumentLoader, cancellationToken);
 
             // --Initialize dispatcher
-            await OperationDispatcher.InitializeAsync(Config.OperationDispatcher);
+            await OperationDispatcher.InitializeAsync(Config.OperationDispatcher, cancellationToken);
 
             // --Start Advice
             await AdviceManager.StartAsync(cancellationToken);
@@ -70,16 +68,10 @@ namespace Moryx.Orders.Management
 
             // --Start pool
             await OperationDataPool.StartAsync(cancellationToken);
-
-            // --Start Effort Calculator
-            EffortCalculator.Start();
         }
 
         public async Task StopAsync(CancellationToken cancellationToken = default)
         {
-            // --Stop Effort Calculator
-            EffortCalculator.Stop();
-
             // --Stop Job handler and dispatcher
             JobHandler.Stop();
             await OperationDispatcher.StopAsync(cancellationToken);

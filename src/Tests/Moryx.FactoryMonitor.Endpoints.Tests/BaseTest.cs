@@ -7,7 +7,6 @@ using Moryx.AbstractionLayer.TestTools.Resources;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
 using Moryx.Factory;
-using Moryx.FactoryMonitor.Endpoints.Model;
 using Moryx.FactoryMonitor.Endpoints.Models;
 using Moryx.FactoryMonitor.Endpoints.Tests.Resources;
 using Moryx.Orders;
@@ -16,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
+using Moryx.FactoryMonitor.Endpoints.Converter;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests
 {
@@ -47,7 +47,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Tests
             // positions
             _assemblyCellposition = new Position { PositionX = 0.5, PositionY = 0.7 };
             _solderingCellPosition = new Position { PositionX = 0.3, PositionY = 0.5 };
-            var converter = new Converter(new CellSerialization());
+            var converter = new Converter.Converter(new CellSerialization());
 
             //manufacturing resource
             _manufactoringFactory = _graph.Instantiate<ManufacturingFactory>();

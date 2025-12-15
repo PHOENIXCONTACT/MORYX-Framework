@@ -21,12 +21,12 @@ namespace Moryx.Orders
         /// <summary>
         /// Will return the operation with the given identifier
         /// </summary>
-        Task<Operation> GetOperationAsync(Guid identifier, CancellationToken cancellationToken = default);
+        Task<Operation> LoadOperationAsync(Guid identifier, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Will return the operation with the given order and operation numbers
         /// </summary>
-        Task<Operation> GetOperationAsync(string orderNumber, string operationNumber, CancellationToken cancellationToken = default);
+        Task<Operation> LoadOperationAsync(string orderNumber, string operationNumber, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Will add a new operation to the pool.

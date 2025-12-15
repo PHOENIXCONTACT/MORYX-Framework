@@ -47,7 +47,7 @@ namespace Moryx.Media.Server
         /// <summary>
         /// Removes the content with the given name and id from the MediaServer.
         /// </summary>
-        bool RemoveContent(Guid contentId, string variantName);
+        bool DeleteContent(Guid contentId, string variantName);
 
         /// <summary>
         /// List of file types allowed to be uploaded

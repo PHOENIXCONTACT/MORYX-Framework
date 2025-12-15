@@ -197,7 +197,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         {
             var prodProcess = (ProductionProcess)processData.Process;
             if (processData.ReferenceId > 0) // Only load article if the process already has one!
-                prodProcess.ProductInstance = ProductManagement.GetInstanceAsync(processData.ReferenceId).GetAwaiter().GetResult();
+                prodProcess.ProductInstance = ProductManagement.LoadInstanceAsync(processData.ReferenceId).GetAwaiter().GetResult();
             else // Otherwise provide a prepared, unsaved instance
                 prodProcess.ProductInstance = ((IProductRecipe)prodProcess.Recipe).Target.CreateInstance();
 
@@ -213,7 +213,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// </summary>
         private void LoadProductInstance(ProcessData processData, IIdentity identity)
         {
-            var productInstance = ProductManagement.GetInstanceAsync(identity).GetAwaiter().GetResult();
+            var productInstance = ProductManagement.LoadInstanceAsync(identity).GetAwaiter().GetResult();
             var prodProcess = (ProductionProcess)processData.Process;
             processData.Rework = productInstance.State == ProductInstanceState.Failure;
             prodProcess.ProductInstance = productInstance;

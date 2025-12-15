@@ -8,6 +8,7 @@ using Moryx.Container;
 using Moryx.Model;
 using Moryx.Runtime.Modules;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Operators.Attendances;
 using Moryx.Operators.Skills;
 
 namespace Moryx.Operators.Management;

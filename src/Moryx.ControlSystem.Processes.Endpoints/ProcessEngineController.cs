@@ -11,7 +11,6 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.AspNetCore;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.Processes.Endpoints.Extensions;
-using Moryx.ControlSystem.Processes.Endpoints.Models;
 using Moryx.ControlSystem.Processes.Endpoints.Properties;
 using Moryx.ControlSystem.Processes.Endpoints.StreamServices;
 using Newtonsoft.Json;
@@ -96,13 +95,13 @@ public class ProcessEngineController : ControllerBase
     [Authorize(Policy = ProcessPermissions.CanView)]
     public async Task<ActionResult<JobProcessModel[]>> GetProcesses(long productInstanceId)
     {
-        var productInstance = await _productManagement.GetInstanceAsync(productInstanceId);
+        var productInstance = await _productManagement.LoadInstanceAsync(productInstanceId);
         if (productInstance == null)
         {
             return NotFound($"No product instace corresponding to the Id {productInstanceId} found");
         }
 
-        var processes = await _processControl.GetArchivedProcessesAsync(productInstance);
+        var processes = await _processControl.LoadArchivedProcessesAsync(productInstance);
 
         return ConvertProcesses(processes);
     }

@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators;
 using Moryx.Runtime.Modules;
-using Moryx.Shifts.Extensions;
 using System.ComponentModel.DataAnnotations;
-using Moryx.Shifts.Endpoints.Localizations;
+using Moryx.Shifts.Endpoints.Models;
+using Moryx.Shifts.Endpoints.Properties;
 
 namespace Moryx.Shifts.Endpoints
 {

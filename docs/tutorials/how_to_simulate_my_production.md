@@ -80,8 +80,8 @@ So here is an example of how your mock driver can implement `Moryx.Simulation.IS
 
 ````cs
     [ResourceRegistration]
-    public class TestMockDriver : Driver, IMessageDriver<object>,ISimulationDriver {
-
+    public class TestMockDriver : Driver, IMessageDriver, ISimulationDriver
+    {
         public bool HasChannels => false;
 
         public IDriver Driver => this;
@@ -108,18 +108,13 @@ So here is an example of how your mock driver can implement `Moryx.Simulation.IS
 
         protected override async Task OnStartAsync(CancellationToken cancellationToken)
         {
-            await base.OnStartAsync();
+            await base.OnStartAsync(cancellationToken);
 
             // initial simulated state of the driver
             SimulatedState = SimulationState.Idle;
         }
 
-        public IMessageChannel<TChannel> Channel<TChannel>(string identifier)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IMessageChannel<TSend, TReceive> Channel<TSend, TReceive>(string identifier)
+        public IMessageChannel Channel(string identifier)
         {
             throw new NotImplementedException();
         }
@@ -167,7 +162,7 @@ Note: The `Send()` method might differ from cell to cell.You can override the `S
 
  # How does my Cell use my `MockDriver` ?
 
-In your cell definition/Class you can use the following example based on the type of driver you're trying to simulate. Let's say we are trying to "mock" an `MQTT driver` since Moryx MQTT driver inherit from `IMessageDriver<object>` in your cell you can have the following case:
+In your cell definition/Class you can use the following example based on the type of driver you're trying to simulate. Let's say we are trying to "mock" an `MQTT driver` since Moryx MQTT driver inherit from `IMessageDriver` in your cell you can have the following case:
 ```csharp
     // SolderingCell.cs
 
@@ -177,7 +172,7 @@ In your cell definition/Class you can use the following example based on the typ
         //... rest of your codes//
 
         [ResourceReference(ResourceRelationType.Driver, IsRequired = true)]
-        public IMessageDriver<object> Driver { get; set; }
+        public IMessageDriver Driver { get; set; }
 
         //... rest of your codes//
     }

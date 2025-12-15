@@ -31,7 +31,7 @@ namespace Moryx.Products.Management
             return recipe;
         }
 
-        public Task<IReadOnlyList<IProductRecipe>> GetRecipes(ProductType productType, RecipeClassification classification)
+        public Task<IReadOnlyList<IProductRecipe>> LoadRecipes(ProductType productType, RecipeClassification classification)
         {
             return Storage.LoadRecipesAsync(productType.Id, classification);
         }
@@ -52,9 +52,9 @@ namespace Moryx.Products.Management
             return saved;
         }
 
-        public Task Remove(long recipeId)
+        public Task Delete(long recipeId)
         {
-            return Storage.RemoveRecipeAsync(recipeId);
+            return Storage.DeleteRecipeAsync(recipeId);
         }
 
         public Task<IReadOnlyList<Workplan>> LoadAllWorkplansAsync(CancellationToken cancellationToken = default)

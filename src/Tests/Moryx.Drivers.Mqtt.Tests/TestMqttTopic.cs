@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using Moryx.Drivers.Mqtt.MqttTopics;
+using Moryx.Drivers.Mqtt.Topics;
 using NUnit.Framework;
 
 namespace Moryx.Drivers.Mqtt.Tests

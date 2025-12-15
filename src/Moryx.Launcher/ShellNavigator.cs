@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Moryx.Asp.Integration;
 using Moryx.Configuration;
 using Moryx.Identity;
+using Moryx.Modules;
 using Moryx.Tools;
 
 namespace Moryx.Launcher

@@ -13,6 +13,7 @@ using Moryx.Runtime.Modules;
 using Moryx.Configuration;
 using System.Runtime.Serialization;
 using System.ComponentModel.DataAnnotations;
+using Moryx.AbstractionLayer.Resources.Endpoints.Models;
 using Moryx.AbstractionLayer.Resources.Endpoints.Properties;
 using Moryx.AspNetCore;
 

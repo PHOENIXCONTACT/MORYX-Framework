@@ -28,7 +28,6 @@ namespace Moryx.Drivers.Mqtt
     [ResourceRegistration]
     public abstract class MqttTopic : Resource, IMessageChannel
     {
-
         /// <summary>
         /// Injected service, used for scheduling tasks
         /// </summary>

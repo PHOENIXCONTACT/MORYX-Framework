@@ -87,7 +87,7 @@ namespace Moryx.Products.Management
             return wrapper.Constructor();
         }
 
-        public async Task<ProductType> Duplicate(ProductType template, IIdentity newIdentity)
+        public async Task<ProductType> DuplicateType(ProductType template, IIdentity newIdentity)
         {
             if (newIdentity is not ProductIdentity newProductIdentity)
             {
@@ -173,30 +173,7 @@ namespace Moryx.Products.Management
 
         public Task<bool> DeleteType(long productId)
         {
-            using (var uow = Factory.Create())
-            {
-                var productRepo = uow.GetRepository<IProductTypeRepository>();
-                var queryResult = (from entity in productRepo.Linq
-                                   where entity.Id == productId
-                                   select new
-                                   {
-                                       entity,
-                                       parentCount = entity.Parents.Count
-                                   }).FirstOrDefault();
-                // No match, nothing removed!
-                if (queryResult == null)
-                    return Task.FromResult(false);
-
-                // If products would be affected by the removal, we do not remove it
-                if (queryResult.parentCount >= 1)
-                    return Task.FromResult(false);
-
-                // No products affected, so we can remove the product
-                productRepo.Remove(queryResult.entity);
-                uow.SaveChanges();
-
-                return Task.FromResult(true);
-            }
+            return Storage.DeleteTypeAsync(productId);
         }
 
         public async Task<ProductInstance> CreateInstance(ProductType productType, bool save)
@@ -212,12 +189,12 @@ namespace Moryx.Products.Management
             return Storage.SaveInstancesAsync(productInstances);
         }
 
-        public Task<IReadOnlyList<ProductInstance>> GetInstances(long[] ids)
+        public Task<IReadOnlyList<ProductInstance>> LoadInstances(long[] ids)
         {
             return Storage.LoadInstancesAsync(ids);
         }
 
-        public Task<IReadOnlyList<TInstance>> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
+        public Task<IReadOnlyList<TInstance>> LoadInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
         {
             return Storage.LoadInstancesAsync(selector);
         }

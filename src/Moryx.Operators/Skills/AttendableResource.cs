@@ -3,13 +3,14 @@
 
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Operators.Localizations;
 using Moryx.Serialization;
 using Moryx.Tools;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
+using Moryx.Operators.Attendances;
+using Moryx.Operators.Properties;
 
 namespace Moryx.Operators.Skills;
 

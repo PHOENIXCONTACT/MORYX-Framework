@@ -3,8 +3,8 @@
 
 using Moryx.Logging;
 using Moryx.Runtime.Modules;
-using Moryx.Workplans.Editing.Components;
-namespace Moryx.Workplans.Editing.Facade
+
+namespace Moryx.Workplans.Editing
 {
     internal class WorkplanFacade : IFacadeControl, IWorkplanEditing
     {

@@ -58,7 +58,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
             var productManagementMock = new Mock<IProductManagement>();
             productManagementMock.Setup(p => p.LoadRecipeAsync(It.IsAny<long>())).ReturnsAsync(recipe);
-            productManagementMock.Setup(p => p.GetInstanceAsync(It.IsAny<long>())).ReturnsAsync(new DummyProductInstance { Type = new DummyProductType() });
+            productManagementMock.Setup(p => p.LoadInstanceAsync(It.IsAny<long>())).ReturnsAsync(new DummyProductInstance { Type = new DummyProductType() });
 
             _jobListMock = new Mock<IJobDataList>();
 

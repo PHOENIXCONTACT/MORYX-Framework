@@ -178,7 +178,7 @@ namespace Moryx.Orders.Management.Tests
             _recipe = new DummyRecipe { Id = 1 };
 
             _productManagementMock.Setup(p => p.LoadTypeAsync(_productIdentity)).ReturnsAsync(_product);
-            _productManagementMock.Setup(p => p.GetRecipesAsync(_product, RecipeClassification.Default)).ReturnsAsync([_recipe]);
+            _productManagementMock.Setup(p => p.LoadRecipesAsync(_product, RecipeClassification.Default)).ReturnsAsync([_recipe]);
 
             // Prepare jobs
             _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>(), It.IsAny<CancellationToken>()))

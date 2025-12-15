@@ -4,7 +4,7 @@
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators;
 
-namespace Moryx.Shifts.Endpoints
+namespace Moryx.Shifts.Endpoints.Models
 {
     internal static class Extensions
     {

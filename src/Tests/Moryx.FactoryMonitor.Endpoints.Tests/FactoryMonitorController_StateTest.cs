@@ -7,7 +7,6 @@ using Moq;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
-using Moryx.FactoryMonitor.Endpoints.Model;
 using Moryx.FactoryMonitor.Endpoints.Models;
 using Newtonsoft.Json;
 using NUnit.Framework;

@@ -829,7 +829,7 @@ namespace Moryx.Products.IntegrationTests
                     : new ProductIdentity("321" + WatchMaterial, 5);
                 var ex = Assert.ThrowsAsync<IdentityConflictException>(async () =>
                 {
-                    duplicate = (WatchType)await productMgr.Duplicate(watch, newIdentity);
+                    duplicate = (WatchType)await productMgr.DuplicateType(watch, newIdentity);
                 });
                 Assert.That(ex.InvalidTemplate, Is.EqualTo(crossTypeIdentifier));
                 return;
@@ -837,7 +837,7 @@ namespace Moryx.Products.IntegrationTests
 
             Assert.DoesNotThrowAsync(async () =>
             {
-                duplicate = (WatchType)await productMgr.Duplicate(watch,
+                duplicate = (WatchType)await productMgr.DuplicateType(watch,
                     new ProductIdentity("654" + WatchMaterial, 1));
             });
 

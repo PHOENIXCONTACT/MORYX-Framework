@@ -8,6 +8,7 @@ using Moryx.Tools;
 using Moryx.Workplans;
 using System.Collections;
 using System.Reflection;
+using Moryx.AbstractionLayer.Products.Endpoints.Models;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints
 {
@@ -81,7 +82,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             converted.Properties = EntryConvert.EncodeObject(productType, _productSerialization);
 
             // Recipes
-            var recipes = await _productManagement.GetRecipesAsync(productType, RecipeClassification.CloneFilter);
+            var recipes = await _productManagement.LoadRecipesAsync(productType, RecipeClassification.CloneFilter);
             converted.Recipes = recipes.Select(ConvertRecipe).ToArray();
 
             // Parts
@@ -211,10 +212,10 @@ namespace Moryx.AbstractionLayer.Products.Endpoints
             // Delete recipes
             if (converted.Id != 0)
             {
-                var recipesOfProduct = await _productManagement.GetRecipesAsync(converted, RecipeClassification.CloneFilter);
+                var recipesOfProduct = await _productManagement.LoadRecipesAsync(converted, RecipeClassification.CloneFilter);
                 foreach (var recipe in recipesOfProduct)
                     if (recipes.FirstOrDefault(r => r.Id == recipe.Id) == null)
-                        await _productManagement.RemoveRecipeAsync(recipe.Id);
+                        await _productManagement.DeleteRecipeAsync(recipe.Id);
             }
 
             // Copy extended properties

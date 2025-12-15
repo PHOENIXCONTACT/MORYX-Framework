@@ -4,7 +4,7 @@
 using System.Runtime.Serialization;
 using Moryx.Serialization;
 
-namespace Moryx.Notifications.Endpoints
+namespace Moryx.Notifications.Endpoints.Models
 {
     /// <summary>
     /// Data transfer object for the notification

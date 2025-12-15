@@ -43,7 +43,6 @@ namespace Moryx.Media
         /// <exception cref="System.UnauthorizedAccessException">Thrown when path specified a file that is read-only or if the caller does not have the required permission to create this directory.</exception>
         /// <exception cref="System.IO.PathTooLongException">Thrown when the specified path, file name, or both exceed the system-defined maximum length.</exception>
         /// <exception cref="System.NotSupportedException">Thrown when the stream does not support reading or seeking, or the fileStream does not support writing.</exception>
-
         Task<ContentAddingInfo> AddMasterAsync(string fileName, Stream contentStream, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -66,8 +65,7 @@ namespace Moryx.Media
         /// <exception cref="System.Security.SecurityException">Thrown when the caller does not have the required permission.</exception>
         /// <exception cref="System.UnauthorizedAccessException">Thrown when path specified a file that is read-only or if the caller does not have the required permission to delete this directory.</exception>
         /// <exception cref="System.IO.PathTooLongException">Thrown when the specified path, file name, or both exceed the system-defined maximum length.</exception>
-
-        bool RemoveContent(Guid contentId);
+        bool DeleteContent(Guid contentId);
 
         /// <summary>
         /// Removes the varient with the given name and id from the MediaServer.
@@ -78,7 +76,7 @@ namespace Moryx.Media
         /// <exception cref="System.UnauthorizedAccessException">Thrown when path specified a file that is read-only or if the caller does not have the required permission to delete this directory.</exception>
         /// <exception cref="System.IO.PathTooLongException">Thrown when the specified path, file name, or both exceed the system-defined maximum length.</exception>
 
-        bool RemoveVariant(Guid contentId, string variantName);
+        bool DeleteVariant(Guid contentId, string variantName);
 
         /// <summary>
         /// List of file types allowed to be uploaded

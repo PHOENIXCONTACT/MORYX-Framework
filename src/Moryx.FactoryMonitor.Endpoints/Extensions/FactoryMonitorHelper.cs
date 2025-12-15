@@ -5,7 +5,6 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Processes;
 using Moryx.Factory;
-using Moryx.FactoryMonitor.Endpoints.Model;
 using Moryx.FactoryMonitor.Endpoints.Models;
 using Moryx.Orders;
 using Newtonsoft.Json;
@@ -17,7 +16,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
     {
         public static async Task OrderStarted(OperationStartedEventArgs orderEventArg, JsonSerializerSettings serializerSettings, Channel<Tuple<string, string>> _factoryChannel, CancellationToken cancellationToken)
         {
-            var orderModel = Converter.ToOrderModel(orderEventArg.Operation);
+            var orderModel = Converter.Converter.ToOrderModel(orderEventArg.Operation);
             await SendOrderUpdate(orderModel, serializerSettings, _factoryChannel, cancellationToken);
         }
 
@@ -25,7 +24,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
         {
             if (cancellationToken.IsCancellationRequested || orderEventArg.Operation.State is not OperationStateClassification.Running) return;
 
-            var orderReferenceModel = Converter.ToOrderChangedModel(orderEventArg.Operation);
+            var orderReferenceModel = Converter.Converter.ToOrderChangedModel(orderEventArg.Operation);
             await SendOrderUpdate(orderReferenceModel, serializerSettings, _factoryChannel, cancellationToken);
         }
 
@@ -48,7 +47,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             Channel<Tuple<string, string>> _factoryChannel,
             List<ICell> cells,
             Resource resource,
-            Converter converter,
+            Converter.Converter converter,
             List<OrderModel> orderModels,
             CancellationToken cancellationToken)
         {
@@ -73,7 +72,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             Channel<Tuple<string, string>> _factoryChannel,
             IResourceManagement resourceManager,
             Func<IMachineLocation, bool> cellFilter,
-            Converter converter,
+            Converter.Converter converter,
             CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested) return;
@@ -104,10 +103,10 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             {
                 var result = location.Destinations.Select(x => new TransportPathModel
                 {
-                    Destination = Converter.ToCellLocationModel(x.Destination),
-                    Origin = Converter.ToCellLocationModel(x.Origin),
+                    Destination = Converter.Converter.ToCellLocationModel(x.Destination),
+                    Origin = Converter.Converter.ToCellLocationModel(x.Origin),
                     WayPoints = x.WayPoints
-                })?.Select(t => Converter.ToTransportRouteModel(t)).ToList();
+                })?.Select(t => Converter.Converter.ToTransportRouteModel(t)).ToList();
 
                 if (result is not null)
                     routes.AddRange(result);

@@ -3,7 +3,7 @@
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Operators.Extensions;
+namespace Moryx.Operators.Attendances;
 
 public static class IResourceManagementExtensions
 {

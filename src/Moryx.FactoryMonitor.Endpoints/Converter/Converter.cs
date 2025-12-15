@@ -2,15 +2,14 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
+using Moryx.ControlSystem.Cells;
 using Moryx.Factory;
+using Moryx.FactoryMonitor.Endpoints.Models;
+using Moryx.Orders;
 using Moryx.Serialization;
 using Moryx.Tools;
-using Moryx.FactoryMonitor.Endpoints.Models;
-using Moryx.FactoryMonitor.Endpoints.Model;
-using Moryx.Orders;
-using Moryx.ControlSystem.Cells;
 
-namespace Moryx.FactoryMonitor.Endpoints
+namespace Moryx.FactoryMonitor.Endpoints.Converter
 {
     /// <summary>
     /// Provide convertion for resources and models

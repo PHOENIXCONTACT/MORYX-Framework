@@ -374,6 +374,8 @@ These feature were infrequently used and has been removed to simplify the codeba
 ## Modules-Orders
 
 - Removed report from interrupt of an operation. Reporting during an interruption doesn't add any value. The quantity for the report can only be predicted and will be inaccurate if something goes wrong or is reworked during the interruption.
+- Facade Renaming:
+  - `GetOperationAsync` -> `LoadOperationAsync`
 
 ## Reworked driver APIs
 
@@ -406,7 +408,13 @@ The API of `IResourceInitializer` was adjusted
     _Note: ProcessEngine Module did expect IWorkplanRecipe anyways, so the use of IProductRecipe would have lead to exceptions in the past already._
   - Transformed `public struct JobTemplate` to `public record JobTemplate` to allow extensions in the future.
 - Removed API from IJobManagement: `JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement)`
-- Added `IAsyncEnumerable<IProcessChunk> GetArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)` to `IProcessControl`
+- Added `IAsyncEnumerable<IProcessChunk> LoadArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)` to `IProcessControl`
+
+## Modules-Media
+
+- Facade Renaming:
+  - `RemoveContent` -> `DeleteContent`
+  - `RemoveVariant` -> `DeleteVariant`
 
 ## Modules-Products
 
@@ -414,6 +422,14 @@ The API of `IResourceInitializer` was adjusted
 - `ProductState` and `ProductInstanceState` are now Flags-Enum.
 - Introduced `ProductState.Generated` to classify a product as generated for internal use
 - Added support to query by required product state
+- Added `DeleteTypeAsync` to `IProductStorage`
+- Facade Renaming:
+  - `DuplicateAsync` -> `DuplicateTypeAsync`
+  - `GetRecipesAsync` -> `LoadRecipesAsync`
+  - `GetInstanceAsync` -> `LoadInstanceAsync`
+  - `GetInstancesAsync` -> `LoadInstancesAsync`
+  - `DeleteProductAsync` -> `DeleteTypeAsync`
+  - `RemoveRecipeAsync` -> `DeleteRecipeAsync`
 
 **`IProductManagement`**
 
