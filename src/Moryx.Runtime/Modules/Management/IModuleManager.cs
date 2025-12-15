@@ -11,36 +11,38 @@ namespace Moryx.Runtime.Modules
         /// <summary>
         /// Start all modules in cascading order
         /// </summary>
-        Task StartModulesAsync();
+        Task StartModulesAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Stop all modules in cascading order
         /// </summary>
-        Task StopModulesAsync();
+        Task StopModulesAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Initialize a server module
         /// </summary>
-        /// <param name="module"></param>
-        Task InitializeModuleAsync(IServerModule module);
+        Task InitializeModuleAsync(IServerModule module, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Start a specific module and all its dependencies
         /// </summary>
         /// <param name="module">Module to start</param>
-        Task StartModuleAsync(IServerModule module);
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        Task StartModuleAsync(IServerModule module, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Stop a specific modules
         /// </summary>
         /// <param name="module">Module to stop</param>
-        Task StopModuleAsync(IServerModule module);
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        Task StopModuleAsync(IServerModule module, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Restart the module and all of its dependecies
         /// </summary>
         /// <param name="module"></param>
-        Task ReincarnateModuleAsync(IServerModule module);
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        Task ReincarnateModuleAsync(IServerModule module, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// All modules managed by the service manager
@@ -66,7 +68,7 @@ namespace Moryx.Runtime.Modules
         IModuleDependencyTree DependencyTree { get; }
 
         /// <summary>
-        /// Get or set a services behaviour using 
+        /// Get or set a services behaviour using
         /// </summary>
         /// <typeparam name="T">Type of behaviour</typeparam>
         IBehaviourAccess<T> BehaviourAccess<T>(IServerModule module);

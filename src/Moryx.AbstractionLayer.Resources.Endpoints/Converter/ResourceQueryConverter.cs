@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Reflection;
+using Moryx.AbstractionLayer.Resources.Endpoints.Models;
 using Moryx.Serialization;
 
 namespace Moryx.AbstractionLayer.Resources.Endpoints

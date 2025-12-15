@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Moryx.Identity.AccessManagement.Data;
-using Moryx.Identity.AccessManagement.Identity;
 using Moryx.Identity.AccessManagement.Settings;
 
 namespace Moryx.Identity.AccessManagement

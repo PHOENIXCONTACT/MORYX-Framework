@@ -54,9 +54,9 @@ namespace Moryx.Products.Management
         }
 
         /// <inheritdoc />
-        public override void Initialize(ProductInstanceConfiguration config)
+        public override async Task InitializeAsync(ProductInstanceConfiguration config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             TargetType = ReflectionTool.GetPublicClasses<ProductInstance>(p => p.FullName == config.TargetType).FirstOrDefault();
         }
@@ -65,9 +65,9 @@ namespace Moryx.Products.Management
         public abstract Expression<Func<IGenericColumns, bool>> TransformSelector<TInstance>(Expression<Func<TInstance, bool>> selector);
 
         /// <inheritdoc />
-        public abstract Task SaveInstanceAsync(ProductInstance source, IGenericColumns target);
+        public abstract Task SaveInstanceAsync(ProductInstance source, IGenericColumns target, CancellationToken cancellationToken);
 
         /// <inheritdoc />
-        public abstract Task LoadInstanceAsync(IGenericColumns source, ProductInstance target);
+        public abstract Task LoadInstanceAsync(IGenericColumns source, ProductInstance target, CancellationToken cancellationToken);
     }
 }

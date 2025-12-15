@@ -36,7 +36,7 @@ namespace Moryx.ControlSystem.SetupProvider
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             // Register plugins for the setup management
             Container.LoadComponents<ISetupTrigger>();
@@ -47,7 +47,7 @@ namespace Moryx.ControlSystem.SetupProvider
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override Task OnStartAsync()
+        protected override Task OnStartAsync(CancellationToken cancellationToken)
         {
 
             // Resolve component orchestration and start all components in the correct order
@@ -61,7 +61,7 @@ namespace Moryx.ControlSystem.SetupProvider
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected override Task OnStopAsync()
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             // Deactivate facade
             DeactivateFacade(_setupProviderFacade);

@@ -65,7 +65,7 @@ namespace Moryx.Media.Server.Previews
                 var creator = PickCreator(job);
                 if (creator != null)
                 {
-                    var result = creator.CreatePreview(job);
+                    var result = creator.CreatePreviewAsync(job, CancellationToken.None).GetAwaiter().GetResult();
                     PreviewJobCompleted?.Invoke(job, result);
                 }
                 else

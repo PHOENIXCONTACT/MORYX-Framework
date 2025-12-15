@@ -1,7 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Media.Endpoints.Model;
+using Moryx.Media.Endpoints.Models;
 
 namespace Moryx.Media.Endpoints
 {

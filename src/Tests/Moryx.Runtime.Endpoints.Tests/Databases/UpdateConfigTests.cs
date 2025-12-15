@@ -3,14 +3,14 @@
 
 using Microsoft.Extensions.Logging;
 using Moryx.Model;
-using Moryx.Runtime.Endpoints.Databases.Endpoint.Services;
 using Moryx.Runtime.Kernel;
 using Moryx.TestTools.Test.Model;
 using System;
-using Moryx.Runtime.Endpoints.Databases.Endpoint.Models;
 using Moryx.Model.Sqlite;
+using Moryx.Runtime.Endpoints.Databases.Exceptions;
+using Moryx.Runtime.Endpoints.Databases.Models;
+using Moryx.Runtime.Endpoints.Databases.Services;
 using NUnit.Framework;
-using Moryx.Runtime.Endpoints.Databases.Endpoint.Exceptions;
 
 namespace Moryx.Runtime.Endpoints.Tests.Databases
 {

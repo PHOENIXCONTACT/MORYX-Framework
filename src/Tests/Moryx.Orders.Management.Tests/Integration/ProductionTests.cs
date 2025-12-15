@@ -154,14 +154,7 @@ namespace Moryx.Orders.Management.Tests
                 }
             };
 
-            var notificationAdapter = new Mock<INotificationAdapter>();
-
-            var moduleConfig = new ModuleConfig()
-            {
-                DisableAmountReachedNotification = true
-            };
-
-            var operationFactory = new OperationFactoryMock(logger, moduleConfig, jobHandler, assignment, notificationAdapter.Object);
+            var operationFactory = new OperationFactoryMock(logger, jobHandler, assignment);
             _operationDataPool.OperationFactory = operationFactory;
 
             await productAssignment.InitializeAsync(new ProductAssignmentConfig());
@@ -185,11 +178,11 @@ namespace Moryx.Orders.Management.Tests
             _recipe = new DummyRecipe { Id = 1 };
 
             _productManagementMock.Setup(p => p.LoadTypeAsync(_productIdentity)).ReturnsAsync(_product);
-            _productManagementMock.Setup(p => p.GetRecipesAsync(_product, RecipeClassification.Default)).ReturnsAsync([_recipe]);
+            _productManagementMock.Setup(p => p.LoadRecipesAsync(_product, RecipeClassification.Default)).ReturnsAsync([_recipe]);
 
             // Prepare jobs
-            _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>()))
-                .ReturnsAsync((JobCreationContext creationContext) =>
+            _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((JobCreationContext creationContext, CancellationToken _) =>
                 [
                     new Job(_recipe, (int)creationContext.Templates.Single().Amount)
                     {

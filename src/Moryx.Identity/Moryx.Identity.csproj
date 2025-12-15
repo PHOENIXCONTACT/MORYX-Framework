@@ -12,4 +12,7 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
     <PackageReference Include="Microsoft.Extensions.Http.Polly" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx\Moryx.csproj" />
+  </ItemGroup>
 </Project>

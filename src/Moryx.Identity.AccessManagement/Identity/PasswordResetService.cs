@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Identity.AccessManagement.Data;
 
-namespace Moryx.Identity.AccessManagement.Identity
+namespace Moryx.Identity.AccessManagement
 {
     internal class PasswordResetService : IPasswordResetService
     {

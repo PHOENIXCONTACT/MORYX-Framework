@@ -13,25 +13,25 @@ namespace Moryx.Orders.Management.Advice
     internal class NullAdviceExecutor : IAdviceExecutor
     {
         /// <inheritdoc />
-        public Task InitializeAsync(AdviceExecutorConfig config)
+        public Task InitializeAsync(AdviceExecutorConfig config, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public Task StartAsync()
+        public Task StartAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public Task StopAsync()
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public Task<AdviceResult> AdviceAsync(Operation operation, OrderAdvice advice)
+        public Task<AdviceResult> AdviceAsync(Operation operation, OrderAdvice advice, CancellationToken cancellationToken)
         {
             return Task.FromResult(new AdviceResult(advice, -1)
             {
@@ -40,7 +40,7 @@ namespace Moryx.Orders.Management.Advice
         }
 
         /// <inheritdoc />
-        public Task<AdviceResult> AdviceAsync(Operation operation, PickPartAdvice advice)
+        public Task<AdviceResult> AdviceAsync(Operation operation, PickPartAdvice advice, CancellationToken cancellationToken)
         {
             return Task.FromResult(new AdviceResult(advice, -1)
             {

@@ -11,7 +11,7 @@ namespace Moryx.Products.Management
     /// <summary>
     /// Strategy methods for a certain product type
     /// </summary>
-    public interface IProductTypeStrategy : IConfiguredInitializable<ProductTypeConfiguration>
+    public interface IProductTypeStrategy : IAsyncConfiguredInitializable<ProductTypeConfiguration>
     {
         /// <summary>
         /// Target type of this strategy
@@ -26,12 +26,12 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Write product properties to database generic columns
         /// </summary>
-        Task SaveTypeAsync(ProductType source, IGenericColumns target);
+        Task SaveTypeAsync(ProductType source, IGenericColumns target, CancellationToken cancellationToken);
 
         /// <summary>
         /// Load product from database information
         /// </summary>
-        Task LoadTypeAsync(IGenericColumns source, ProductType target);
+        Task LoadTypeAsync(IGenericColumns source, ProductType target, CancellationToken cancellationToken);
 
         /// <summary>
         /// Transform a product class selector to a database compatible expression

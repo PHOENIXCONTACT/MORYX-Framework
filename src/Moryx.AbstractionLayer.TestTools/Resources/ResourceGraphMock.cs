@@ -96,20 +96,20 @@ namespace Moryx.AbstractionLayer.TestTools.Resources
         }
 
         /// <inheritdoc />
-        public Task<bool> DestroyAsync(IResource resource)
+        public Task<bool> DestroyAsync(IResource resource, CancellationToken cancellationToken = default)
         {
             (resource as IDisposable)?.Dispose();
             return Task.FromResult(true);
         }
 
         /// <inheritdoc />
-        public Task<bool> DestroyAsync(IResource resource, bool permanent)
+        public Task<bool> DestroyAsync(IResource resource, bool permanent, CancellationToken cancellationToken = default)
         {
-            return DestroyAsync(resource);
+            return DestroyAsync(resource, cancellationToken);
         }
 
         /// <inheritdoc />
-        public Task SaveAsync(IResource resource)
+        public Task SaveAsync(IResource resource, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }

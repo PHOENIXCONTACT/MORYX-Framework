@@ -52,7 +52,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
 
         public VisualizableItemModel ToVisualItemModel(IResourceManagement resourceManager,
             ILogger<FactoryMonitorController> logger,
-            Converter converter,
+            Converter.Converter converter,
             Func<IMachineLocation, bool> filter)
         {
             VisualizableItemModel result = resourceManager.ReadUnsafe(Id, e =>
@@ -65,7 +65,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
                 switch (resourceAtThisLocation)
                 {
                     case ManufacturingFactory factory:
-                        model = Converter.ToFactoryStateModel(factory);
+                        model = Converter.Converter.ToFactoryStateModel(factory);
                         break;
                     case Cell cell:
                         model = cell.GetResourceChangedModel(converter, resourceManager, filter);
@@ -76,7 +76,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
                 }
                 model.IconName = displayableItemLocation.SpecificIcon;
                 model.Id = resourceAtThisLocation?.Id ?? 0;
-                model.Location = Converter.ToCellLocationModel(displayableItemLocation);
+                model.Location = Converter.Converter.ToCellLocationModel(displayableItemLocation);
                 return model;
             });
 

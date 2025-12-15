@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Moryx.Identity.AccessManagement.Identity;
 using Moryx.Identity.AccessManagement.Models;
 
 namespace Moryx.Identity.AccessManagement.Controllers

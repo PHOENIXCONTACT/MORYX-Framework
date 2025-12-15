@@ -4,6 +4,7 @@
 using Moq;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Operators.Attendances;
 using Moryx.Operators.Skills;
 using Moryx.TestTools.IntegrationTest;
 using Moryx.Tools;

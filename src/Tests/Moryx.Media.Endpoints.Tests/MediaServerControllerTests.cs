@@ -248,7 +248,7 @@ namespace Moryx.Media.Endpoints.Tests
         {
             // Arrange
             var parsedAvailableGuid = Guid.Parse(availableGuid);
-            _mediaServerMock.Setup(ms => ms.RemoveContent(It.Is<Guid>(g => g == parsedAvailableGuid))).Returns(true);
+            _mediaServerMock.Setup(ms => ms.DeleteContent(It.Is<Guid>(g => g == parsedAvailableGuid))).Returns(true);
 
             // Act
             var actionResult = _controller.RemoveContent(requestedGuid);
@@ -264,7 +264,7 @@ namespace Moryx.Media.Endpoints.Tests
         {
             // Arrange
             var parsedAvailableGuid = Guid.Parse(availableGuid);
-            _mediaServerMock.Setup(ms => ms.RemoveVariant(It.Is<Guid>(g => g == parsedAvailableGuid), It.IsAny<string>())).Returns(true);
+            _mediaServerMock.Setup(ms => ms.DeleteVariant(It.Is<Guid>(g => g == parsedAvailableGuid), It.IsAny<string>())).Returns(true);
 
             // Act
             var actionResult = _controller.RemoveVariant(requestedGuid, "TestVariantName");

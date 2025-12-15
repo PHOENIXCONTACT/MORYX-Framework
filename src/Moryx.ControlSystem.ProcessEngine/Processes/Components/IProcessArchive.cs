@@ -16,7 +16,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <summary>
         /// Retrieve all processes for a product instance
         /// </summary>
-        Task<IReadOnlyList<Process>> GetProcesses(ProductInstance productInstance);
+        Task<IReadOnlyList<Process>> GetProcesses(ProductInstance productInstance, CancellationToken cancellationToken);
 
         /// <summary>
         /// Retrieve all processes in a certain range
@@ -25,6 +25,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
         /// <param name="start">Start time</param>
         /// <param name="end">End time</param>
         /// <param name="jobIds">Optional filter with job ids</param>
-        IAsyncEnumerable<IProcessChunk> GetProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds);
+        IAsyncEnumerable<IProcessChunk> GetProcesses(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds, CancellationToken cancellationToken);
     }
 }

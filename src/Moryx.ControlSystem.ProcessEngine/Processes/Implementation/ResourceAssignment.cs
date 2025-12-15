@@ -239,7 +239,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes
             var selectedCells = possibleResources;
             foreach (var selector in _selectors)
             {
-                var selectionIteration = selector.SelectCellsAsync(activityData.Activity, selectedCells).GetAwaiter().GetResult();
+                var selectionIteration = selector.SelectCellsAsync(activityData.Activity, selectedCells, CancellationToken.None).GetAwaiter().GetResult();
                 // Validate selection
                 if (selectionIteration.Any(c => !possibleResources.Contains(c)))
                 {

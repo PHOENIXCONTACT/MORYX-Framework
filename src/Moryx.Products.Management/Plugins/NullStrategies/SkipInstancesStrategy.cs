@@ -23,9 +23,9 @@ namespace Moryx.Products.Management.NullStrategies
         }
 
         /// <inheritdoc />
-        public override void Initialize(ProductInstanceConfiguration config)
+        public override async Task InitializeAsync(ProductInstanceConfiguration config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             SkipInstances = true;
         }
@@ -37,14 +37,14 @@ namespace Moryx.Products.Management.NullStrategies
         }
 
         /// <inheritdoc />
-        public sealed override Task SaveInstanceAsync(ProductInstance source, IGenericColumns target)
+        public sealed override Task SaveInstanceAsync(ProductInstance source, IGenericColumns target, CancellationToken cancellationToken)
         {
             // Not necessary
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public sealed override Task LoadInstanceAsync(IGenericColumns source, ProductInstance target)
+        public sealed override Task LoadInstanceAsync(IGenericColumns source, ProductInstance target, CancellationToken cancellationToken)
         {
             // Nothing
             return Task.CompletedTask;

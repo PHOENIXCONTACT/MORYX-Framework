@@ -759,16 +759,17 @@ namespace Moryx.Serialization
         /// Invoke a method on the target object using custom customSerialization
         /// Async methods are executed asynchronous
         /// </summary>
-        public static Task<Entry> InvokeMethodAsync(object target, MethodEntry methodEntry)
+        public static Task<Entry> InvokeMethodAsync(object target, MethodEntry methodEntry, CancellationToken cancellationToken = default)
         {
-            return InvokeMethodAsync(target, methodEntry, Serialization);
+            return InvokeMethodAsync(target, methodEntry, Serialization, cancellationToken);
         }
 
         /// <summary>
         /// Invoke a method on the target object using custom customSerialization
         /// Async methods are executed asynchronous
         /// </summary>
-        public static async Task<Entry> InvokeMethodAsync(object target, MethodEntry methodEntry, ICustomSerialization customSerialization)
+        public static async Task<Entry> InvokeMethodAsync(object target, MethodEntry methodEntry, ICustomSerialization customSerialization,
+            CancellationToken cancellationToken = default)
         {
             var method = target.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .FirstOrDefault(m => m.Name == methodEntry.Name && (m.IsPublic || m.IsAssembly) && ParametersProvided(m.GetParameters(), methodEntry));
@@ -784,6 +785,7 @@ namespace Moryx.Serialization
             var isAsync = IsAsyncMethod(method);
             if (isAsync)
             {
+                // TODO check cancellationToken usage and pass it to invoked method if possible
                 var task = (Task)method.Invoke(target, arguments)!;
                 await task;
 

@@ -125,7 +125,7 @@ namespace Moryx.ControlSystem.ProcessEngine
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyList<Job>> AddAsync(JobCreationContext context)
+        public async Task<IReadOnlyList<Job>> AddAsync(JobCreationContext context, CancellationToken cancellationToken = default)
         {
             if (!JobManager.AcceptingExternalJobs)
                 throw new HealthStateException(ServerModuleState.Stopping);

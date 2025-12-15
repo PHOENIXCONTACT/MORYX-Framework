@@ -21,7 +21,7 @@ namespace Moryx.ControlSystem.Jobs
         /// <summary>
         /// Creates multiple jobs at once
         /// </summary>
-        Task<IReadOnlyList<Job>> AddAsync(JobCreationContext context);
+        Task<IReadOnlyList<Job>> AddAsync(JobCreationContext context, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Returns a job by the given id

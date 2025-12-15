@@ -29,7 +29,7 @@ namespace Moryx.Products.Management
 
         #region Fields and Properties
 
-        private IList<IProductImporter> _importers;
+        private IReadOnlyList<IProductImporter> _importers;
 
         public IProductImporter[] Importers => _importers.ToArray();
 
@@ -37,14 +37,14 @@ namespace Moryx.Products.Management
 
         #endregion
 
-        public async Task StartAsync()
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
-            await Storage.CheckDatabase();
-            _importers = (from importerConfig in Config.Importers
-                          select ImportFactory.Create(importerConfig)).ToList();
+            await Storage.CheckDatabase(cancellationToken);
+            var importes = Config.Importers.Select(importerConfig => ImportFactory.Create(importerConfig, cancellationToken));
+            _importers = await Task.WhenAll(importes);
         }
 
-        public Task StopAsync()
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
@@ -87,7 +87,7 @@ namespace Moryx.Products.Management
             return wrapper.Constructor();
         }
 
-        public async Task<ProductType> Duplicate(ProductType template, IIdentity newIdentity)
+        public async Task<ProductType> DuplicateType(ProductType template, IIdentity newIdentity)
         {
             if (newIdentity is not ProductIdentity newProductIdentity)
             {
@@ -132,7 +132,7 @@ namespace Moryx.Products.Management
         {
             var importer = _importers.First(i => i.Name == importerName);
             var context = new ProductImportContext();
-            var result = await importer.ImportAsync(context, parameters);
+            var result = await importer.ImportAsync(context, parameters, CancellationToken.None);
 
             HandleResult(result);
 
@@ -155,7 +155,7 @@ namespace Moryx.Products.Management
             _runningImports.Add(context.Session, session);
 
             var importer = _importers.First(i => i.Name == importerName);
-            var task = importer.ImportAsync(context, parameters);
+            var task = importer.ImportAsync(context, parameters, CancellationToken.None);
             task.ContinueWith(session.TaskCompleted);
 
             // Wait for the task unless it is long running
@@ -173,30 +173,7 @@ namespace Moryx.Products.Management
 
         public Task<bool> DeleteType(long productId)
         {
-            using (var uow = Factory.Create())
-            {
-                var productRepo = uow.GetRepository<IProductTypeRepository>();
-                var queryResult = (from entity in productRepo.Linq
-                                   where entity.Id == productId
-                                   select new
-                                   {
-                                       entity,
-                                       parentCount = entity.Parents.Count
-                                   }).FirstOrDefault();
-                // No match, nothing removed!
-                if (queryResult == null)
-                    return Task.FromResult(false);
-
-                // If products would be affected by the removal, we do not remove it
-                if (queryResult.parentCount >= 1)
-                    return Task.FromResult(false);
-
-                // No products affected, so we can remove the product
-                productRepo.Remove(queryResult.entity);
-                uow.SaveChanges();
-
-                return Task.FromResult(true);
-            }
+            return Storage.DeleteTypeAsync(productId);
         }
 
         public async Task<ProductInstance> CreateInstance(ProductType productType, bool save)
@@ -212,12 +189,12 @@ namespace Moryx.Products.Management
             return Storage.SaveInstancesAsync(productInstances);
         }
 
-        public Task<IReadOnlyList<ProductInstance>> GetInstances(long[] ids)
+        public Task<IReadOnlyList<ProductInstance>> LoadInstances(long[] ids)
         {
             return Storage.LoadInstancesAsync(ids);
         }
 
-        public Task<IReadOnlyList<TInstance>> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
+        public Task<IReadOnlyList<TInstance>> LoadInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
         {
             return Storage.LoadInstancesAsync(selector);
         }

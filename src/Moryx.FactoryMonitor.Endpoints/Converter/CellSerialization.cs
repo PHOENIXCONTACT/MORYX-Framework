@@ -1,14 +1,14 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Reflection;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Factory;
 using Moryx.Serialization;
-using System.Reflection;
 
-namespace Moryx.FactoryMonitor.Endpoints
+namespace Moryx.FactoryMonitor.Endpoints.Converter
 {
     /// <summary>
     /// Cell serialization class

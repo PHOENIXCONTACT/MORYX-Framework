@@ -36,7 +36,7 @@ namespace Moryx.AbstractionLayer.Resources
         public abstract string Description { get; }
 
         /// <inheritdoc />
-        public Task InitializeAsync(ResourceInitializerConfig config)
+        public Task InitializeAsync(ResourceInitializerConfig config, CancellationToken cancellationToken = default)
         {
             // Get child logger
             Logger = Logger.GetChild(Name, GetType());
@@ -48,19 +48,20 @@ namespace Moryx.AbstractionLayer.Resources
         }
 
         /// <inheritdoc />
-        public virtual Task StartAsync()
+        public virtual Task StartAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        /// <inheritdoc />
+        public virtual Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task StopAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        /// <inheritdoc />
-        public abstract Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters);
+        public abstract Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters, CancellationToken cancellationToken);
 
         /// <summary>
         /// Creates an <see cref="ResourceInitializerResult"/> within a completed task

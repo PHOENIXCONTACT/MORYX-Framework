@@ -17,11 +17,8 @@ namespace Moryx.Runtime.Kernel
             _logger = logger;
         }
 
-        /// <summary>
-        /// Stop this plugin and all required dependencies
-        /// </summary>
-        /// <param name="module"></param>
-        public async Task StopAsync(IServerModule module)
+        /// <inheritdoc/>
+        public async Task StopAsync(IServerModule module, CancellationToken cancellationToken)
         {
             if (!AvailableModules.Contains(module))
                 return;
@@ -34,13 +31,13 @@ namespace Moryx.Runtime.Kernel
             {
                 // We will enqueue the service to make sure it is restarted later on
                 AddWaitingModule(module, dependingService);
-                await StopAsync(dependingService);
+                await StopAsync(dependingService, cancellationToken);
             }
 
             // Since stop is synchronous we don't need an event
             try
             {
-                await module.StopAsync();
+                await module.StopAsync(cancellationToken);
             }
             catch
             {
@@ -48,15 +45,13 @@ namespace Moryx.Runtime.Kernel
             }
         }
 
-        /// <summary>
-        /// Stop all services
-        /// </summary>
-        public async Task StopAllAsync()
+        /// <inheritdoc/>
+        public async Task StopAllAsync(CancellationToken cancellationToken)
         {
             // Determine all leaves of the dependency tree
             foreach (var module in AvailableModules)
             {
-                await StopAsync(module);
+                await StopAsync(module, cancellationToken);
             }
         }
     }

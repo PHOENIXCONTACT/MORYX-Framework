@@ -19,20 +19,20 @@ namespace Moryx.Orders.Management.Assignment
         protected PartsAssignmentConfig Config { get; private set; }
 
         /// <inheritdoc/>
-        public Task InitializeAsync(PartsAssignmentConfig config)
+        public Task InitializeAsync(PartsAssignmentConfig config, CancellationToken cancellationToken = default)
         {
             Config = config;
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public Task StartAsync()
+        public Task StartAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public Task StopAsync()
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
@@ -41,7 +41,8 @@ namespace Moryx.Orders.Management.Assignment
         /// Will be called while creating an operation to load the part list for
         /// the new operation from the <see cref="ProductType"/> itself.
         /// </summary>
-        public Task<IReadOnlyList<ProductPart>> LoadPartsAsync(Operation operation, IOperationLogger operationLogger)
+        public Task<IReadOnlyList<ProductPart>> LoadPartsAsync(Operation operation, IOperationLogger operationLogger,
+            CancellationToken cancellationToken)
         {
             if (operation.Product is null)
             {

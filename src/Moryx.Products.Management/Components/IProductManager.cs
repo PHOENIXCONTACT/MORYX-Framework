@@ -56,7 +56,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Create revision of this product with provided revision number
         /// </summary>
-        Task<ProductType> Duplicate(ProductType source, IIdentity identity);
+        Task<ProductType> DuplicateType(ProductType source, IIdentity identity);
 
         /// <summary>
         /// Import the given file as a product to the database
@@ -100,12 +100,12 @@ namespace Moryx.Products.Management
         /// </summary>
         /// <param name="ids">The IDs of instances that should be loaded</param>
         /// <returns>The instance with the id when it exists.</returns>
-        Task<IReadOnlyList<ProductInstance>> GetInstances(params long[] ids);
+        Task<IReadOnlyList<ProductInstance>> LoadInstances(long[] ids);
 
         /// <summary>
         /// Get all instances that match a certain expression
         /// </summary>
-        Task<IReadOnlyList<TInstance>> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector);
+        Task<IReadOnlyList<TInstance>> LoadInstances<TInstance>(Expression<Func<TInstance, bool>> selector);
 
         /// <summary>
         /// Return type wrapper to a type

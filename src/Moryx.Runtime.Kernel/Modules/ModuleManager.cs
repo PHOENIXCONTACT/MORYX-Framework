@@ -8,7 +8,7 @@ using Moryx.Runtime.Modules;
 namespace Moryx.Runtime.Kernel
 {
     /// <summary>
-    /// Manages all the modules on the server side. 
+    /// Manages all the modules on the server side.
     /// </summary>
     public class ModuleManager : IModuleManager
     {
@@ -25,7 +25,7 @@ namespace Moryx.Runtime.Kernel
         #region IModuleManager
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public ModuleManager(IEnumerable<IServerModule> modules, IConfigManager configManager, ILogger<ModuleManager> logger)
         {
@@ -60,60 +60,44 @@ namespace Moryx.Runtime.Kernel
             AllModules = allModules;
         }
 
-        /// <summary>
-        /// Start all modules in cascading order
-        /// </summary>
-        public Task StartModulesAsync()
+        /// <inheritdoc/>
+        public Task StartModulesAsync(CancellationToken cancellationToken = default)
         {
-            return _moduleStarter.StartAllAsync();
+            return _moduleStarter.StartAllAsync(cancellationToken);
         }
 
-        /// <summary>
-        /// Stop all modules in cascading order
-        /// </summary>
-        public Task StopModulesAsync()
+        /// <inheritdoc/>
+        public Task StopModulesAsync(CancellationToken cancellationToken = default)
         {
-            return _moduleStopper.StopAllAsync();
+            return _moduleStopper.StopAllAsync(cancellationToken);
         }
 
-        /// <summary>
-        /// Initialize a server module
-        /// </summary>
-        /// <param name="module"></param>
-        public Task InitializeModuleAsync(IServerModule module)
+        /// <inheritdoc/>
+        public Task InitializeModuleAsync(IServerModule module, CancellationToken cancellationToken = default)
         {
-            return _moduleStarter.InitializeAsync(module);
+            return _moduleStarter.InitializeAsync(module, cancellationToken);
         }
 
-        /// <summary>
-        /// Start a specific module and all its dependencies
-        /// </summary>
-        /// <param name="module">Module to start</param>
-        public Task StartModuleAsync(IServerModule module)
+        /// <inheritdoc/>
+        public Task StartModuleAsync(IServerModule module, CancellationToken cancellationToken = default)
         {
-            return _moduleStarter.StartAsync(module);
+            return _moduleStarter.StartAsync(module, cancellationToken);
         }
 
-        /// <summary>
-        /// Stop a specific module
-        /// </summary>
-        /// <param name="module">Module to stop</param>
-        public Task StopModuleAsync(IServerModule module)
+        /// <inheritdoc/>
+        public Task StopModuleAsync(IServerModule module, CancellationToken cancellationToken = default)
         {
-            return _moduleStopper.StopAsync(module);
+            return _moduleStopper.StopAsync(module, cancellationToken);
         }
 
-        /// <summary>
-        /// Restart the module and all of its dependencies
-        /// </summary>
-        /// <param name="module"></param>
-        public async Task ReincarnateModuleAsync(IServerModule module)
+        /// <inheritdoc/>
+        public async Task ReincarnateModuleAsync(IServerModule module, CancellationToken cancellationToken = default)
         {
             // Stop execution
-            await _moduleStopper.StopAsync(module);
+            await _moduleStopper.StopAsync(module, cancellationToken);
 
             // Start all desired
-            await _moduleStarter.StartAsync(module);
+            await _moduleStarter.StartAsync(module, cancellationToken);
         }
 
         /// <summary>
@@ -122,7 +106,7 @@ namespace Moryx.Runtime.Kernel
         public IEnumerable<IServerModule> AllModules { get; private set; }
 
         /// <summary>
-        /// Inform the listeners about module state changes. 
+        /// Inform the listeners about module state changes.
         /// </summary>
         public event EventHandler<ModuleStateChangedEventArgs> ModuleStateChanged;
 
@@ -144,7 +128,7 @@ namespace Moryx.Runtime.Kernel
         public IModuleDependencyTree DependencyTree => _dependencyManager.GetDependencyTree();
 
         /// <summary>
-        /// Get or set a services behaviour using 
+        /// Get or set a services behaviour using
         /// </summary>
         /// <typeparam name="T">Type of behaviour</typeparam>
         public IBehaviourAccess<T> BehaviourAccess<T>(IServerModule plugin)

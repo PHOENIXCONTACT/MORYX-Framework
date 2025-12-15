@@ -25,13 +25,14 @@ namespace Moryx.Media.Server.Facades
             return ContentManager.GetStream(fileDescriptor);
         }
 
-        public Task<ContentAddingInfo> AddMasterAsync(string fileName, Stream contentStream)
+        public Task<ContentAddingInfo> AddMasterAsync(string fileName, Stream contentStream, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return ContentManager.AddMaster(fileName, contentStream);
         }
 
-        public Task<ContentAddingInfo> AddVariantAsync(Guid contentId, string variantName, string fileName, Stream contentStream)
+        public Task<ContentAddingInfo> AddVariantAsync(Guid contentId, string variantName, string fileName, Stream contentStream,
+            CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return ContentManager.AddVariant(contentId, variantName, fileName, contentStream);
@@ -59,17 +60,17 @@ namespace Moryx.Media.Server.Facades
         }
 
         /// <inheritdoc />
-        public bool RemoveContent(Guid contentId)
+        public bool DeleteContent(Guid contentId)
         {
             ValidateHealthState();
-            return ContentManager.RemoveContent(contentId, MediaConstants.MasterName);
+            return ContentManager.DeleteContent(contentId, MediaConstants.MasterName);
         }
 
         /// <inheritdoc />
-        public bool RemoveVariant(Guid contentId, string variantName)
+        public bool DeleteVariant(Guid contentId, string variantName)
         {
             ValidateHealthState();
-            return ContentManager.RemoveContent(contentId, variantName);
+            return ContentManager.DeleteContent(contentId, variantName);
         }
 
         /// <inheritdoc />

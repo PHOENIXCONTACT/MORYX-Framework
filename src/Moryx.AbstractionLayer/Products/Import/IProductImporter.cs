@@ -8,7 +8,7 @@ namespace Moryx.AbstractionLayer.Products
     /// <summary>
     /// Interface for plugins that can import products from file
     /// </summary>
-    public interface IProductImporter : IConfiguredPlugin<ProductImporterConfig>
+    public interface IProductImporter : IAsyncConfiguredPlugin<ProductImporterConfig>
     {
         /// <summary>
         /// Name of the importer
@@ -33,6 +33,6 @@ namespace Moryx.AbstractionLayer.Products
         /// <summary>
         /// Import products using given parameters
         /// </summary>
-        Task<ProductImporterResult> ImportAsync(ProductImportContext context, object parameters);
+        Task<ProductImporterResult> ImportAsync(ProductImportContext context, object parameters, CancellationToken cancellationToken);
     }
 }

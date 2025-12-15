@@ -13,11 +13,11 @@ namespace Moryx.Orders.Assignment
         /// <summary>
         /// Validates the given operation
         /// </summary>
-        Task<bool> ValidateAsync(Operation operation, IOperationLogger operationLogger);
+        Task<bool> ValidateAsync(Operation operation, IOperationLogger operationLogger, CancellationToken cancellationToken);
 
         /// <summary>
         /// Validates the given creation context
         /// </summary>
-        Task<bool> ValidateCreationContextAsync(OrderCreationContext orderContext);
+        Task<bool> ValidateCreationContextAsync(OrderCreationContext orderContext, CancellationToken cancellationToken);
     }
 }

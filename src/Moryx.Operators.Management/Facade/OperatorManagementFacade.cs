@@ -3,8 +3,9 @@
 
 using System.Collections.Immutable;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Operators.Attendances;
 using Moryx.Operators.Exceptions;
-using Moryx.Operators.Management.Localizations;
+using Moryx.Operators.Management.Properties;
 using Moryx.Operators.Skills;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;

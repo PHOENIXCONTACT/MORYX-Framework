@@ -22,7 +22,7 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override Task SaveTypeAsync(ProductType source, IGenericColumns target)
+        public override Task SaveTypeAsync(ProductType source, IGenericColumns target, CancellationToken cancellationToken)
         {
             var watch = (WatchType)source;
             target.Float1 = watch.Weight;
@@ -32,7 +32,7 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override Task LoadTypeAsync(IGenericColumns source, ProductType target)
+        public override Task LoadTypeAsync(IGenericColumns source, ProductType target, CancellationToken cancellationToken)
         {
             var watch = (WatchType)target;
             watch.Weight = source.Float1;
@@ -57,7 +57,7 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override Task SaveInstanceAsync(ProductInstance source, IGenericColumns target)
+        public override Task SaveInstanceAsync(ProductInstance source, IGenericColumns target, CancellationToken cancellationToken)
         {
             var watch = (WatchInstance)source;
             target.Integer1 = watch.TimeSet ? 1 : 0;
@@ -67,7 +67,7 @@ namespace Moryx.Products.Samples
         }
 
         /// <inheritdoc />
-        public override Task LoadInstanceAsync(IGenericColumns source, ProductInstance target)
+        public override Task LoadInstanceAsync(IGenericColumns source, ProductInstance target, CancellationToken cancellationToken)
         {
             var watch = (WatchInstance)target;
             watch.TimeSet = source.Integer1 == 1;
@@ -81,7 +81,7 @@ namespace Moryx.Products.Samples
     [Plugin(LifeCycle.Transient, typeof(IProductLinkStrategy), Name = nameof(NeedleLinkStrategy))]
     public class NeedleLinkStrategy : LinkStrategyBase
     {
-        public override Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target)
+        public override Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target, CancellationToken cancellationToken)
         {
             var link = (NeedlePartLink)target;
             link.Role = (NeedleRole)linkEntity.Integer1;
@@ -89,7 +89,7 @@ namespace Moryx.Products.Samples
             return Task.CompletedTask;
         }
 
-        public override Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target)
+        public override Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target, CancellationToken cancellationToken)
         {
             var link = (NeedlePartLink)source;
             target.Integer1 = (int)link.Role;

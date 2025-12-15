@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
@@ -81,13 +82,17 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             // - Expected behavior from the RecipeManagement
             if (recipes.Any())
                 ReflectionTool.TestMode = true;
-            _productManagerMock.Setup(rm => rm.GetRecipesAsync(It.IsAny<ProductType>(), RecipeClassification.CloneFilter)).ReturnsAsync(recipes);
-            _productManagerMock.Setup(rm => rm.LoadRecipeAsync(It.IsAny<long>())).ReturnsAsync((long id) => new DummyProductRecipe() { Id = id });
+            _productManagerMock.Setup(rm => rm.LoadRecipesAsync(It.IsAny<ProductType>(), RecipeClassification.CloneFilter))
+                .ReturnsAsync(recipes);
+            _productManagerMock.Setup(rm => rm.LoadRecipeAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((long id, CancellationToken _) => new DummyProductRecipe() { Id = id });
+
             // - Create target ProductType object
             var targetDummyProductType = (DummyProductType)Activator.CreateInstance(originalProductType.GetType());
             targetDummyProductType.Id = 42;
             // - Expected behavior from the RecipeManagement
-            _productManagerMock.Setup(pm => pm.LoadTypeAsync(It.IsAny<long>())).ReturnsAsync((long id) => new DummyProductType() { Id = id });
+            _productManagerMock.Setup(pm => pm.LoadTypeAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((long id, CancellationToken _) => new DummyProductType() { Id = id });
             // - Product PartsShould only by included with their id if they already exist
             var originalProductTypeWithParts = originalProductType as DummyProductTypeWithParts;
             if (originalProductTypeWithParts is not null && originalProductTypeWithParts.ProductPartLink is not null)
@@ -120,7 +125,7 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             // - If there are Recipes the RecipeManagement should be called
             if (recipes.Any())
             {
-                _productManagerMock.Verify(rm => rm.GetRecipesAsync(originalProductType, RecipeClassification.CloneFilter));
+                _productManagerMock.Verify(rm => rm.LoadRecipesAsync(originalProductType, RecipeClassification.CloneFilter));
                 _productManagerMock.Verify(rm => rm.SaveRecipeAsync(It.Is<IProductRecipe>(recipe => !HasChangedProperties<IProductRecipe>(recipe, recipes.LastOrDefault()))));
                 if (recipes.First().Id != 0)
                     _productManagerMock.Verify(rm => rm.LoadRecipeAsync(recipes.First().Id));
@@ -211,8 +216,8 @@ namespace Moryx.AbstractionLayer.Products.Endpoints.Tests
             var originalWorkplanRecipe = originalRecipe as DummyProductWorkplanRecipe;
             if (originalWorkplanRecipe is not null)
             {
-                _productManagerMock.Setup(pm => pm.LoadWorkplanAsync(It.IsAny<long>()))
-                    .ReturnsAsync((long id) => new DummyWorkplan() { Id = id });
+                _productManagerMock.Setup(pm => pm.LoadWorkplanAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                    .ReturnsAsync((long id, CancellationToken _) => new DummyWorkplan { Id = id });
             }
             // - Create target object
             var targetDummyRecipe = (DummyProductRecipe)Activator.CreateInstance(originalRecipe.GetType());

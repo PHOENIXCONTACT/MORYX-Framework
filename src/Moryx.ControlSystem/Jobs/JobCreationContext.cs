@@ -1,6 +1,8 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+#nullable enable
+
 using System.Diagnostics;
 using Moryx.AbstractionLayer.Recipes;
 
@@ -19,21 +21,14 @@ namespace Moryx.ControlSystem.Jobs
         }
 
         /// <summary>
-        /// Context for an default job
+        /// Context for a <see cref="Job"/> based on a <see cref="JobTemplate"/> using the given <paramref name="recipe"/> and <paramref name="amount"/>
         /// </summary>
-        public JobCreationContext(IProductRecipe recipe, uint amount)
+        public JobCreationContext(ProductionRecipe recipe, uint amount)
         {
             _templates.Add(new JobTemplate(recipe, amount));
         }
 
-        /// <summary>
-        /// Context for an default job
-        /// </summary>
-        public JobCreationContext(IProductRecipe recipe) : this(recipe, 0)
-        {
-        }
-
-        private readonly List<JobTemplate> _templates = new();
+        private readonly List<JobTemplate> _templates = [];
         /// <summary>
         /// Recipe for the job to produce
         /// </summary>
@@ -45,23 +40,12 @@ namespace Moryx.ControlSystem.Jobs
         public JobPosition Position { get; private set; }
 
         /// <summary>
-        /// Add another job to the context
-        /// </summary>
-        public JobCreationContext Add(ProductionRecipe recipe)
-        {
-            return Add(recipe, 0);
-        }
-
-        /// <summary>
-        /// Add another job to the context
+        /// Add another <see cref="JobTemplate"/> to this <see cref="JobCreationContext"/> based on the
+        /// given <paramref name="recipe"/> and <paramref name="amount"/>
         /// </summary>
         public JobCreationContext Add(ProductionRecipe recipe, uint amount)
         {
-            if (recipe == null)
-                throw new ArgumentNullException(nameof(recipe), "Recipe should not be null");
-
             _templates.Add(new JobTemplate(recipe, amount));
-
             return this;
         }
 
@@ -104,15 +88,15 @@ namespace Moryx.ControlSystem.Jobs
     }
 
     /// <summary>
-    /// Single job template that shall be created by the job creation context
+    /// Single job template for a <see cref="Job"/>
     /// </summary>
-    [DebuggerDisplay("JobTemplate: <Recipe: {" + nameof(Recipe) + "}, Amount: {" + nameof(Amount) + "}>")]
-    public struct JobTemplate
+    [DebuggerDisplay(nameof(JobTemplate) + ": <Recipe: {" + nameof(Recipe) + "}, Amount: {" + nameof(Amount) + "}>")]
+    public record JobTemplate
     {
         /// <summary>
         /// Create a new job template from recipe and amount
         /// </summary>
-        internal JobTemplate(IProductRecipe recipe, uint amount)
+        internal JobTemplate(ProductionRecipe recipe, uint amount)
         {
             Recipe = recipe;
             Amount = amount;
@@ -121,7 +105,7 @@ namespace Moryx.ControlSystem.Jobs
         /// <summary>
         /// Recipe of the new job
         /// </summary>
-        public IProductRecipe Recipe { get; }
+        public ProductionRecipe Recipe { get; }
 
         /// <summary>
         /// Amount of the new job

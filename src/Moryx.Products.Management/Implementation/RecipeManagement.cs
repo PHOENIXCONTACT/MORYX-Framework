@@ -31,7 +31,7 @@ namespace Moryx.Products.Management
             return recipe;
         }
 
-        public Task<IReadOnlyList<IProductRecipe>> GetRecipes(ProductType productType, RecipeClassification classification)
+        public Task<IReadOnlyList<IProductRecipe>> LoadRecipes(ProductType productType, RecipeClassification classification)
         {
             return Storage.LoadRecipesAsync(productType.Id, classification);
         }
@@ -52,12 +52,12 @@ namespace Moryx.Products.Management
             return saved;
         }
 
-        public Task Remove(long recipeId)
+        public Task Delete(long recipeId)
         {
-            return Storage.RemoveRecipeAsync(recipeId);
+            return Storage.DeleteRecipeAsync(recipeId);
         }
 
-        public Task<IReadOnlyList<Workplan>> LoadAllWorkplansAsync()
+        public Task<IReadOnlyList<Workplan>> LoadAllWorkplansAsync(CancellationToken cancellationToken = default)
         {
             using var uow = ModelFactory.Create();
             var repo = uow.GetRepository<IWorkplanRepository>();
@@ -73,13 +73,13 @@ namespace Moryx.Products.Management
             return Task.FromResult<IReadOnlyList<Workplan>>(workplans);
         }
 
-        public Task<Workplan> LoadWorkplanAsync(long workplanId)
+        public Task<Workplan> LoadWorkplanAsync(long workplanId, CancellationToken cancellationToken = default)
         {
             using var uow = ModelFactory.Create();
-            return RecipeStorage.LoadWorkplanAsync(uow, workplanId);
+            return RecipeStorage.LoadWorkplanAsync(uow, workplanId, cancellationToken);
         }
 
-        public Task<IReadOnlyList<Workplan>> LoadVersionsAsync(long workplanId)
+        public Task<IReadOnlyList<Workplan>> LoadVersionsAsync(long workplanId, CancellationToken cancellationToken = default)
         {
             using var uow = ModelFactory.Create();
 
@@ -150,7 +150,7 @@ namespace Moryx.Products.Management
             return Task.FromResult<IReadOnlyList<Workplan>>(versions);
         }
 
-        public async Task<long> SaveWorkplanAsync(Workplan workplan)
+        public async Task<long> SaveWorkplanAsync(Workplan workplan, CancellationToken cancellationToken = default)
         {
             using var uow = ModelFactory.Create();
             var recipeRepo = uow.GetRepository<IProductRecipeRepository>();
@@ -178,7 +178,7 @@ namespace Moryx.Products.Management
             return entity.Id;
         }
 
-        public Task<bool> DeleteWorkplanAsync(long workplanId)
+        public Task<bool> DeleteWorkplanAsync(long workplanId, CancellationToken cancellationToken = default)
         {
             using var uow = ModelFactory.Create();
             var repo = uow.GetRepository<IWorkplanRepository>();

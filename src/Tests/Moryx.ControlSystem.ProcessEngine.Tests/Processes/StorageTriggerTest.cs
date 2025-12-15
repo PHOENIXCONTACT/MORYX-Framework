@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Threading;
 using Moq;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Processes;
@@ -60,7 +61,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             CreateList();
 
             _productManagementMock = new Mock<IProductManagement>();
-            _productManagementMock.Setup(p => p.GetInstanceAsync(It.IsAny<long>())).ReturnsAsync(() => new DummyProductInstance());
+            _productManagementMock.Setup(p => p.LoadInstanceAsync(It.IsAny<long>())).ReturnsAsync(() => new DummyProductInstance());
 
             _storage = new ProcessStorage { UnitOfWorkFactory = _unitOfWorkFactory };
             _storage.Start();
@@ -99,7 +100,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Arrange
             var process = PrepareProcessData(processType);
             process.State = triggerState;
-            _productManagementMock.Setup(p => p.GetInstanceAsync(It.IsAny<long>())).ReturnsAsync((long id) => new DummyProductInstance { Id = id });
+            _productManagementMock.Setup(p => p.LoadInstanceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((long id, CancellationToken _) => new DummyProductInstance { Id = id });
 
             // Act
             DataPool.AddProcess(process);
@@ -237,8 +239,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
         public void LoadArticleByIdentity(bool rework)
         {
             // Arrange
-            _productManagementMock.Setup(p => p.GetInstanceAsync(It.IsAny<IIdentity>()))
-                .ReturnsAsync((IIdentity id) => new IdentityDummyInstance { Identity = id, State = rework ? ProductInstanceState.Failure : ProductInstanceState.InProduction });
+            _productManagementMock.Setup(p => p.LoadInstanceAsync(It.IsAny<IIdentity>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((IIdentity id, CancellationToken _) => new IdentityDummyInstance { Identity = id, State = rework ? ProductInstanceState.Failure : ProductInstanceState.InProduction });
             var process = PrepareProcessData(ProcessTypes.ProductionProcess);
             DataPool.AddProcess(process);
 
@@ -257,7 +259,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             Assert.That(article.Identity, Is.EqualTo(identity));
             Assert.DoesNotThrow(delegate
             {
-                _productManagementMock.Verify(p => p.GetInstanceAsync(It.IsAny<IIdentity>()), Times.Once, "There should be one GetArticle call");
+                _productManagementMock.Verify(p => p.LoadInstanceAsync(It.IsAny<IIdentity>()), Times.Once, "There should be one GetArticle call");
             });
         }
 

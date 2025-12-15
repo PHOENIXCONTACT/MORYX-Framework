@@ -131,12 +131,6 @@ namespace Moryx.Orders.Management
         /// </summary>
         [DataMember, Description("Limits the maximum number of running operations."), DefaultValue(1)]
         public int MaxRunningOperations { get; set; }
-
-        /// <summary>
-        /// Disables the notification if an operation has reached the 'Amount Reached' state.
-        /// </summary>
-        [DataMember, Description("Disables the notification if an operation has reached the 'Amount Reached' state.")]
-        public bool DisableAmountReachedNotification { get; set; }
     }
 }
 

@@ -5,11 +5,11 @@ using Moryx.Model;
 using Moryx.TestTools.Test.Model;
 using NUnit.Framework;
 using System.Threading.Tasks;
-using Moryx.Runtime.Endpoints.Databases.Endpoint;
 using Moryx.AbstractionLayer.TestTools;
 using System;
 using System.Collections.Generic;
-using Moryx.Runtime.Endpoints.Databases.Endpoint.Models;
+using Moryx.Runtime.Endpoints.Databases;
+using Moryx.Runtime.Endpoints.Databases.Models;
 
 namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
 {

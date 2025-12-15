@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
-using Moryx.Operators.Skills.Extensions;
 
 namespace Moryx.Operators.Skills;
 

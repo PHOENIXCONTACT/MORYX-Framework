@@ -6,8 +6,6 @@ using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
 using Moryx.Runtime.Modules;
-using Moryx.Workplans.Editing.Components;
-using Moryx.Workplans.Editing.Facade;
 
 namespace Moryx.Workplans.Editing
 {
@@ -37,7 +35,7 @@ namespace Moryx.Workplans.Editing
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             Container.ActivateDbContexts(DbContextManager);
             return Task.CompletedTask;
@@ -46,7 +44,7 @@ namespace Moryx.Workplans.Editing
         /// <summary>
         ///     Code executed after OnInitialize
         /// </summary>
-        protected override Task OnStartAsync()
+        protected override Task OnStartAsync(CancellationToken cancellationToken)
         {
             Container.Resolve<IWorkplanEditor>().Start();
 
@@ -57,7 +55,7 @@ namespace Moryx.Workplans.Editing
         /// <summary>
         ///     Code executed when service is stopped
         /// </summary>
-        protected override Task OnStopAsync()
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             DeactivateFacade(_facade);
             return Task.CompletedTask;

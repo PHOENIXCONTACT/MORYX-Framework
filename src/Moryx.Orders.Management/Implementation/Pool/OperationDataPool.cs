@@ -34,7 +34,7 @@ namespace Moryx.Orders.Management
 
         #endregion
 
-        public async Task StartAsync()
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             _savingContext = new OperationSavingContext(UnitOfWorkFactory);
 
@@ -56,7 +56,7 @@ namespace Moryx.Orders.Management
                 await operationData.Resume();
         }
 
-        public Task StopAsync()
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
             _lock.EnterWriteLock();
 
@@ -262,10 +262,10 @@ namespace Moryx.Orders.Management
         IReadOnlyList<Operation> IOperationPool.GetAll(Func<Operation, bool> filter) =>
             GetAll(data => filter(data.Operation)).Select(data => data.Operation).ToArray();
 
-        async Task<Operation> IOperationPool.GetAsync(Guid identifier) =>
+        async Task<Operation> IOperationPool.GetAsync(Guid identifier, CancellationToken cancellationToken) =>
             (await Get(identifier))?.Operation;
 
-        async Task<Operation> IOperationPool.GetAsync(string orderNumber, string operationNumber) =>
+        async Task<Operation> IOperationPool.GetAsync(string orderNumber, string operationNumber, CancellationToken cancellationToken) =>
             (await Get(orderNumber, operationNumber))?.Operation;
 
         IReadOnlyList<Order> IOperationPool.GetOrders() =>

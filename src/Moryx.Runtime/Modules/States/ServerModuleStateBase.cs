@@ -13,17 +13,17 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        public virtual Task Initialize()
+        public virtual Task Initialize(CancellationToken cancellationToken)
         {
             return InvalidStateAsync();
         }
 
-        public virtual Task Start()
+        public virtual Task Start(CancellationToken cancellationToken)
         {
             return InvalidStateAsync();
         }
 
-        public virtual Task Stop()
+        public virtual Task Stop(CancellationToken cancellationToken)
         {
             return InvalidStateAsync();
         }

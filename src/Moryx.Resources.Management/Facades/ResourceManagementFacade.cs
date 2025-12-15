@@ -116,13 +116,13 @@ namespace Moryx.Resources.Management
 
         #endregion
 
-        public async Task<long> CreateUnsafeAsync(Type resourceType, Func<Resource, Task> initializer)
+        public async Task<long> CreateUnsafeAsync(Type resourceType, Func<Resource, Task> initializer, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
             var resource = ResourceGraph.Instantiate(resourceType.ResourceType());
             await initializer(resource);
-            await ResourceGraph.SaveAsync(resource);
+            await ResourceGraph.SaveAsync(resource, cancellationToken);
             return resource.Id;
         }
 
@@ -137,7 +137,7 @@ namespace Moryx.Resources.Management
             return result;
         }
 
-        public async Task ModifyUnsafeAsync(long id, Func<Resource, Task<bool>> modifier)
+        public async Task ModifyUnsafeAsync(long id, Func<Resource, Task<bool>> modifier, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
@@ -147,10 +147,10 @@ namespace Moryx.Resources.Management
 
             var result = await modifier(resource);
             if (result)
-                await ResourceGraph.SaveAsync(resource);
+                await ResourceGraph.SaveAsync(resource, cancellationToken);
         }
 
-        public async Task<bool> DeleteAsync(long id)
+        public async Task<bool> DeleteAsync(long id, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
@@ -158,7 +158,7 @@ namespace Moryx.Resources.Management
             if (resource == null)
                 return false;
 
-            return await ResourceGraph.DestroyAsync(resource);
+            return await ResourceGraph.DestroyAsync(resource, cancellationToken);
         }
 
         public IEnumerable<TResource> GetResourcesUnsafe<TResource>(Func<TResource, bool> predicate)
@@ -168,18 +168,18 @@ namespace Moryx.Resources.Management
             return ResourceGraph.GetResources(predicate);
         }
 
-        public Task ExecuteInitializerAsync(string initializerName, object parameters)
+        public Task ExecuteInitializerAsync(string initializerName, object parameters, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
             return ResourceManager.ExecuteInitializer(initializerName, parameters);
         }
 
-        public async Task ExecuteInitializerAsync(ResourceInitializerConfig initializerConfig, object parameters)
+        public async Task ExecuteInitializerAsync(ResourceInitializerConfig initializerConfig, object parameters, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
-            var initializer = InitializerFactory.Create(initializerConfig);
+            var initializer =await InitializerFactory.Create(initializerConfig, cancellationToken);
 
             var result = await ResourceManager.ExecuteInitializer(initializer, parameters);
 

@@ -9,27 +9,27 @@ namespace Moryx.Products.Management
     /// Factory to instantiate <see cref="IProductTypeStrategy"/>
     /// </summary>
     [PluginFactory(typeof(IConfigBasedComponentSelector))]
-    public interface IStorageStrategyFactory
+    internal interface IStorageStrategyFactory
     {
         /// <summary>
         /// Create a new strategy instance
         /// </summary>
-        IProductTypeStrategy CreateTypeStrategy(ProductTypeConfiguration config);
+        Task<IProductTypeStrategy> CreateTypeStrategy(ProductTypeConfiguration config, CancellationToken cancellationToken);
 
         /// <summary>
         /// Create a new strategy instance
         /// </summary>
-        IProductInstanceStrategy CreateInstanceStrategy(ProductInstanceConfiguration config);
+        Task<IProductInstanceStrategy> CreateInstanceStrategy(ProductInstanceConfiguration config, CancellationToken cancellationToken);
 
         /// <summary>
         /// Create a new strategy instance
         /// </summary>
-        IProductLinkStrategy CreateLinkStrategy(ProductLinkConfiguration config);
+        Task<IProductLinkStrategy> CreateLinkStrategy(ProductLinkConfiguration config, CancellationToken cancellationToken);
 
         /// <summary>
         /// Create a new strategy instance
         /// </summary>
-        IProductRecipeStrategy CreateRecipeStrategy(ProductRecipeConfiguration config);
+        Task<IProductRecipeStrategy> CreateRecipeStrategy(ProductRecipeConfiguration config, CancellationToken cancellationToken);
 
         /// <summary>
         /// Destroy an instance

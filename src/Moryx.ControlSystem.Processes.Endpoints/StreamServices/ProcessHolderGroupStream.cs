@@ -22,9 +22,9 @@ internal class ProcessHolderGroupStream(
     /// Starts the Process Holder Group stream
     /// </summary>
     /// <param name="response">the http response object</param>
-    /// <param name="cancelToken"></param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <returns></returns>
-    public async Task Start(HttpContext context, CancellationToken cancelToken)
+    public async Task Start(HttpContext context, CancellationToken cancellationToken)
     {
         context.Response.Headers.ContentType = "text/event-stream";
 
@@ -57,14 +57,14 @@ internal class ProcessHolderGroupStream(
         try
         {
             // Create infinite loop awaiting changes or cancellation
-            while (!cancelToken.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 // Write groups
-                var groupChangeArgs = await groupChannel.Reader.ReadAsync(cancelToken);
+                var groupChangeArgs = await groupChannel.Reader.ReadAsync(cancellationToken);
                 if (groupChangeArgs != null)
                 {
                     var json = JsonConvert.SerializeObject(groupChangeArgs.Group, _serializerSettings);
-                    await context.Response.WriteAsync($"data: {json}\r\r", cancelToken);
+                    await context.Response.WriteAsync($"data: {json}\r\r", cancellationToken);
                 }
             }
         }

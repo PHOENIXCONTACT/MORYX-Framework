@@ -12,78 +12,86 @@ namespace Moryx.Products.Management
     /// <summary>
     /// API for the application specific product storage
     /// </summary>
-    public interface IProductStorage : IPlugin
+    public interface IProductStorage : IAsyncPlugin
     {
         /// <summary>
         /// Get products by query
         /// </summary>
-        Task<IReadOnlyList<ProductType>> LoadTypesAsync(ProductQuery query);
+        Task<IReadOnlyList<ProductType>> LoadTypesAsync(ProductQuery query, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Load product instance by id
         /// </summary>
-        Task<ProductType> LoadTypeAsync(long id);
+        Task<ProductType> LoadTypeAsync(long id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Load product by identity. This method supports loading a products latest revision
         /// </summary>
-        Task<ProductType> LoadTypeAsync(IIdentity identity);
+        Task<ProductType> LoadTypeAsync(IIdentity identity, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Save a type to the storage
         /// </summary>
-        Task<long> SaveTypeAsync(ProductType modifiedInstance);
+        Task<long> SaveTypeAsync(ProductType modifiedInstance, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Try to delete a product. If it is still used as a part in other products, it will return <c>false</c>
+        /// </summary>
+        /// <param name="productId">Id of the product that is deprecated and should be deleted.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        /// <returns><value>True</value> if the product was removed, <value>false</value> otherwise</returns>
+        Task<bool> DeleteTypeAsync(long productId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get instances by id
         /// </summary>
         /// <returns>The instance with the id when it exists.</returns>
-        Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(params long[] id);
+        Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(long[] ids, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Load instances using filter expression
         /// </summary>
-        Task<IReadOnlyList<TInstance>> LoadInstancesAsync<TInstance>(Expression<Func<TInstance, bool>> selector);
+        Task<IReadOnlyList<TInstance>> LoadInstancesAsync<TInstance>(Expression<Func<TInstance, bool>> selector, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Load instances using ProductType
         /// </summary>
-        Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(ProductType productType);
+        Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(ProductType productType, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Updates the database from the instance
         /// </summary>
-        Task SaveInstancesAsync(ProductInstance[] productInstance);
+        Task SaveInstancesAsync(ProductInstance[] productInstance, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Loads a recipe from the storage
         /// </summary>
-        Task<IProductRecipe> LoadRecipeAsync(long recipeId);
+        Task<IProductRecipe> LoadRecipeAsync(long recipeId, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Loads all recipes from the storage.
         /// </summary>
-        Task<IReadOnlyList<IProductRecipe>> LoadRecipesAsync(long productId, RecipeClassification classification);
+        Task<IReadOnlyList<IProductRecipe>> LoadRecipesAsync(long productId, RecipeClassification classification, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Saves the recipe of the product
         /// </summary>
-        Task<long> SaveRecipeAsync(IProductRecipe recipe);
+        Task<long> SaveRecipeAsync(IProductRecipe recipe, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Save multiple recipes at once
         /// </summary>
-        Task SaveRecipesAsync(IReadOnlyList<IProductRecipe> recipes);
+        Task SaveRecipesAsync(IReadOnlyList<IProductRecipe> recipes, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Load types using filter expression
         /// </summary>
-        Task<IReadOnlyList<TType>> LoadTypesAsync<TType>(Expression<Func<TType, bool>> selector);
+        Task<IReadOnlyList<TType>> LoadTypesAsync<TType>(Expression<Func<TType, bool>> selector, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Remove recipe by given recipeId
+        /// Delete recipe by given recipeId
         /// </summary>
-        Task RemoveRecipeAsync(long recipeId);
+        Task DeleteRecipeAsync(long recipeId, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///
@@ -103,7 +111,7 @@ namespace Moryx.Products.Management
         /// Checks database's connection by making an initial attempt
         /// </summary>
         /// <returns></returns>
-        Task CheckDatabase();
+        Task CheckDatabase(CancellationToken cancellationToken = default);
     }
 
 }

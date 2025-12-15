@@ -280,6 +280,7 @@ namespace Moryx.StateMachines
         /// </summary>
         /// <param name="current">The current StateMachine</param>
         /// <param name="forceState">The target state to be forced</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <example>
         /// This sample shows how to force a state
         /// <code>
@@ -292,9 +293,9 @@ namespace Moryx.StateMachines
         /// }
         /// </code>
         /// </example>
-        public static Task ForceAsync(AsyncStateBase current, int forceState)
+        public static Task ForceAsync(AsyncStateBase current, int forceState, CancellationToken cancellationToken = default)
         {
-            return ForceAsync(current, forceState, true, true);
+            return ForceAsync(current, forceState, true, true, cancellationToken);
         }
 
         /// <summary>
@@ -304,6 +305,7 @@ namespace Moryx.StateMachines
         /// <param name="forceState">The target state to be forced</param>
         /// <param name="exitCurrent">If <c>true</c> <see cref="AsyncStateBase.OnExitAsync"/> will be called before force.</param>
         /// <param name="enterForced">If <c>true</c> <see cref="AsyncStateBase.OnEnterAsync"/> will be called on forced state.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <example>
         /// This sample shows how to force a state
         /// <code>
@@ -316,9 +318,9 @@ namespace Moryx.StateMachines
         /// }
         /// </code>
         /// </example>
-        public static Task ForceAsync(AsyncStateBase current, int forceState, bool exitCurrent, bool enterForced)
+        public static Task ForceAsync(AsyncStateBase current, int forceState, bool exitCurrent, bool enterForced, CancellationToken cancellationToken = default)
         {
-            return current.ForceAsync(forceState, exitCurrent, enterForced);
+            return current.ForceAsync(forceState, exitCurrent, enterForced, cancellationToken);
         }
 
         /// <summary>
@@ -360,10 +362,10 @@ namespace Moryx.StateMachines
             /// <exception cref="InvalidOperationException">Thrown if 0 or more states are flagged as initial.</exception>
             /// <exception cref="InvalidOperationException">Thrown if types are registered more than one time.</exception>
             /// <exception cref="ArgumentException">Given base class is not abstract.</exception>
-            public Task WithAsync<TStateBase>()
+            public Task WithAsync<TStateBase>(CancellationToken cancellationToken = default)
                 where TStateBase : AsyncStateBase
             {
-                return AsyncStateBase.CreateAsync(typeof(TStateBase), (IAsyncStateContext)_context, _key);
+                return AsyncStateBase.CreateAsync(typeof(TStateBase), (IAsyncStateContext)_context, _key, cancellationToken);
             }
 
             /// <summary>
@@ -382,12 +384,13 @@ namespace Moryx.StateMachines
             /// Finalize the state machine creation by defining the state machine type.
             /// </summary>
             /// <param name="stateType">Type of state machine base class</param>
+            /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
             /// <exception cref="InvalidOperationException">Thrown if 0 or more states are flagged as initial.</exception>
             /// <exception cref="InvalidOperationException">Thrown if types are registered more than one time.</exception>
             /// <exception cref="ArgumentException">Given base class is not abstract.</exception>
-            public Task WithAsync(Type stateType)
+            public Task WithAsync(Type stateType, CancellationToken cancellationToken = default)
             {
-                return AsyncStateBase.CreateAsync(stateType, (IAsyncStateContext)_context, _key);
+                return AsyncStateBase.CreateAsync(stateType, (IAsyncStateContext)_context, _key, cancellationToken);
             }
         }
     }

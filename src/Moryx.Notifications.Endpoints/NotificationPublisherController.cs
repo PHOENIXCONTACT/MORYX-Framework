@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AspNetCore;
+using Moryx.Notifications.Endpoints.Models;
 using Moryx.Notifications.Endpoints.Properties;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -59,7 +60,7 @@ namespace Moryx.Notifications.Endpoints
         [HttpGet("stream")]
         [ProducesResponseType(typeof(NotificationModel[]), StatusCodes.Status200OK)]
         [Authorize(Policy = NotificationPermissions.CanView)]
-        public async Task NotificationStream(CancellationToken cancelToken)
+        public async Task NotificationStream(CancellationToken cancellationToken)
         {
             var response = Response;
             response.Headers.Add("Content-Type", "text/event-stream");
@@ -74,17 +75,17 @@ namespace Moryx.Notifications.Endpoints
             try
             {
                 // Create infinite loop awaiting changes or cancellation
-                while (!cancelToken.IsCancellationRequested)
+                while (!cancellationToken.IsCancellationRequested)
                 {
                     // Write notifications
                     var notifications = _notificationPublisher.GetAll()
                         .Select(Converter.ToModel).ToList();
                     var json = JsonConvert.SerializeObject(notifications, _serializerSettings);
 
-                    await response.WriteAsync($"data: {json}\r\r", cancelToken);
+                    await response.WriteAsync($"data: {json}\r\r", cancellationToken);
 
                     // Await task completion
-                    await Task.WhenAny(_notificationTcs.Task, Task.Delay(30000, cancelToken));
+                    await Task.WhenAny(_notificationTcs.Task, Task.Delay(30000, cancellationToken));
 
                     // Create new TCS
                     _notificationTcs = new TaskCompletionSource();

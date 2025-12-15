@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.ControlSystem.Jobs.Endpoints.Models
+namespace Moryx.ControlSystem.Jobs.Endpoints
 {
     [DataContract]
     public class StateChangeModel

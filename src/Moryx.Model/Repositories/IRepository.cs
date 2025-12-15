@@ -40,7 +40,7 @@ namespace Moryx.Model.Repositories
         /// <summary>
         /// Gets the entity with this key asynchronous
         /// </summary>
-        Task<T> GetByKeyAsync(long id);
+        Task<T> GetByKeyAsync(long id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get all entities from the database
@@ -52,7 +52,7 @@ namespace Moryx.Model.Repositories
         /// Get all entities from the database asynchronous
         /// </summary>
         /// <returns>A collection of entities. The result may be empty but not null.</returns>
-        Task<ICollection<T>> GetAllAsync();
+        Task<ICollection<T>> GetAllAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get all entities with this ids
@@ -62,7 +62,7 @@ namespace Moryx.Model.Repositories
         /// <summary>
         /// Get all entities with this ids asynchronous
         /// </summary>
-        Task<ICollection<T>> GetByKeysAsync(long[] ids);
+        Task<ICollection<T>> GetByKeysAsync(long[] ids, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Create a new instance of this type and add it to the context
@@ -72,7 +72,7 @@ namespace Moryx.Model.Repositories
         /// <summary>
         /// Create a new instance of this type and add it to the context
         /// </summary>
-        Task<T> CreateAsync();
+        Task<T> CreateAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Create a new instance but specify, if it should be added to the context
@@ -84,7 +84,8 @@ namespace Moryx.Model.Repositories
         /// Create a new instance but specify, if it should be added to the context
         /// </summary>
         /// <param name="addToContext"><value>True</value>Instance is added to the context. <value>False</value>Instance is not added to the context</param>
-        Task<T> CreateAsync(bool addToContext);
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        Task<T> CreateAsync(bool addToContext, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Adds an entity to the context
@@ -96,7 +97,8 @@ namespace Moryx.Model.Repositories
         /// Adds an entity to the context
         /// </summary>
         /// <param name="entity">Entity that shall be added</param>
-        Task<T> AddAsync(T entity);
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        Task<T> AddAsync(T entity, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Add multiple entities to the context at one time
@@ -108,7 +110,8 @@ namespace Moryx.Model.Repositories
         /// Add multiple entities to the context at one time
         /// </summary>
         /// <param name="entities">Entities that shall be added</param>
-        Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities);
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+        Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Remove entity. ModificationTracked entities will only update the

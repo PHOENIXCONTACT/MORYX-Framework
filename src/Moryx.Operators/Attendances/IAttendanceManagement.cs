@@ -1,7 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Operators;
+namespace Moryx.Operators.Attendances;
 
 /// <summary>
 /// Attandance management to handle sign in and sign out operations of involved operators during the production

@@ -204,11 +204,7 @@ public class MqttDriver : Driver, IMessageDriver
     /// Content of the last will message. Has no effect if HasLastWill is not set
     /// </summary>
     [EntrySerialize, DataMember]
-    [Display(
-        Name = "Last will content",
-        Description = "Content of the last will message. Has no effect if HasLastWill is not set",
-        ResourceType = typeof(Strings)
-    )]
+    [Display(Name = "Last will content", Description = "Content of the last will message. Has no effect if HasLastWill is not set")]
     public string LastWillContent { get; set; }
 
     #endregion
@@ -228,9 +224,9 @@ public class MqttDriver : Driver, IMessageDriver
     #region Lifecycle
 
     /// <inheritdoc />
-    protected override async Task OnInitializeAsync()
+    protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
     {
-        await base.OnInitializeAsync();
+        await base.OnInitializeAsync(cancellationToken);
 
         var factory = new MqttClientFactory();
         _mqttClient = factory.CreateMqttClient();
@@ -254,20 +250,22 @@ public class MqttDriver : Driver, IMessageDriver
         StateMachine.Initialize(this).With<DriverMqttState>();
     }
 
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <inheritdoc />
-    protected override async Task OnStartAsync()
+    protected override async Task OnStartAsync(CancellationToken cancellationToken)
     {
-        await base.OnStartAsync();
+        await base.OnStartAsync(cancellationToken);
 
         State.Connect();
     }
 
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <inheritdoc />
-    protected override Task OnStopAsync()
+    protected override Task OnStopAsync(CancellationToken cancellationToken)
     {
         State.Disconnect();
 
-        return base.OnStopAsync();
+        return base.OnStopAsync(cancellationToken);
     }
 
     /// <inheritdoc />
@@ -464,7 +462,7 @@ public class MqttDriver : Driver, IMessageDriver
     /// </summary>
     /// <param name="topic"></param>
     /// <param name="message"></param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <returns></returns>
     internal async Task SendInternalAsync(MqttTopic topic, object message, CancellationToken cancellationToken = default)
     {
@@ -485,7 +483,7 @@ public class MqttDriver : Driver, IMessageDriver
     /// </summary>
     /// <param name="messageTopic">The topic to publish on</param>
     /// <param name="message">The message to be published</param>
-    /// <param name="cancellationToken"></param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <returns></returns>
     public async Task OnSendAsync(MqttMessageTopic messageTopic, byte[] message, CancellationToken cancellationToken)
     {

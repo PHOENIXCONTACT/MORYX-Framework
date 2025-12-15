@@ -1,7 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Runtime.Modules.States
+namespace Moryx.Runtime.Modules
 {
     /// <summary>
     /// Missing state , indicating that the server is missing.
@@ -16,19 +16,19 @@ namespace Moryx.Runtime.Modules.States
         {
         }
 
-        public override Task Initialize()
+        public override Task Initialize(CancellationToken cancellationToken)
         {
             // Nothing to do here
             return Task.CompletedTask;
         }
 
-        public override Task Start()
+        public override Task Start(CancellationToken cancellationToken)
         {
             // Nothing to do here
             return Task.CompletedTask;
         }
 
-        public override Task Stop()
+        public override Task Stop(CancellationToken cancellationToken)
         {
             // Nothing to do here
             return Task.CompletedTask;

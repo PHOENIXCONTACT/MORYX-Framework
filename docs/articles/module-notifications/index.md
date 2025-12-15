@@ -55,7 +55,7 @@ The NotificationPublisher then provides you with desired notification access.
 [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
 public INotificationPublisher NotificationPublisher { get; set; }
 
-protected override Task OnInitializeAsync()
+protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 {
     // Register required facade
     Container.SetInstance(NotificationPublisher);
@@ -74,7 +74,7 @@ It is necessary to register some components to the local container of the Server
 
 ````cs
 ...
-protected override Task OnInitializeAsync()
+protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 {
   ...
   Container.RegisterNotifications();

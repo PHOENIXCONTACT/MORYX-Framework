@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators.Exceptions;
-using Moryx.Operators.Extensions;
 using Moryx.Operators.Skills;
 using Moryx.Runtime.Modules;
 using System.Net;
+using Moryx.Operators.Attendances;
+using Moryx.Operators.Endpoints.Models;
 
 namespace Moryx.Operators.Endpoints;
 

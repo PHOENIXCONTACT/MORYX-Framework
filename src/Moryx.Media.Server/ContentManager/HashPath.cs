@@ -76,7 +76,7 @@ namespace Moryx.Media.Server
         /// <exception cref="System.UnauthorizedAccessException">Thrown when path specified a file that is read-only or if the caller does not have the required permission to create this directory.</exception>
         /// <exception cref="System.IO.PathTooLongException">Thrown when the specified path, file name, or both exceed the system-defined maximum length.</exception>
         /// <exception cref="System.NotSupportedException">Thrown when the stream does not support reading or seeking, or the fileStream does not support writing.</exception>
-        public async Task SaveStream(Stream stream, string storagePath, Logging.IModuleLogger logger)
+        public async Task SaveStream(Stream stream, string storagePath, IModuleLogger logger)
         {
             var targetPath = DirectoryPath(storagePath);
 

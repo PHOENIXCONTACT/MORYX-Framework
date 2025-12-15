@@ -56,16 +56,17 @@ namespace Moryx.ControlSystem.ProcessEngine
             return ActivityDataPool.Processes.Select(p => p.Process).Where(predicate).ToArray();
         }
 
-        public Task<IReadOnlyList<Process>> GetArchivedProcessesAsync(ProductInstance productInstance)
+        public Task<IReadOnlyList<Process>> LoadArchivedProcessesAsync(ProductInstance productInstance, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
-            return ProcessArchive.GetProcesses(productInstance);
+            return ProcessArchive.GetProcesses(productInstance, cancellationToken);
         }
 
-        public IAsyncEnumerable<IProcessChunk> GetArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)
+        public IAsyncEnumerable<IProcessChunk> LoadArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds,
+            CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
-            return ProcessArchive.GetProcesses(filterType, start, end, jobIds);
+            return ProcessArchive.GetProcesses(filterType, start, end, jobIds, cancellationToken);
         }
 
         public IReadOnlyList<ICell> Targets(Process process)

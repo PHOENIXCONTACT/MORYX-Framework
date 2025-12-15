@@ -3,7 +3,6 @@
 
 using System.Reflection;
 using Microsoft.Extensions.Logging;
-using Moryx.Runtime.Kernel.Modules;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Runtime.Kernel

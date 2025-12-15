@@ -1,6 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Threading;
 using System.Threading.Tasks;
 using Moryx.StateMachines;
 
@@ -38,7 +39,7 @@ namespace Moryx.Tests.AsyncTestMachine
             return Task.CompletedTask;
         }
 
-        public Task SetStateAsync(StateBase state)
+        public Task SetStateAsync(StateBase state, CancellationToken cancellationToken)
         {
             State = (MyAsyncStateBase)state;
             return Task.CompletedTask;

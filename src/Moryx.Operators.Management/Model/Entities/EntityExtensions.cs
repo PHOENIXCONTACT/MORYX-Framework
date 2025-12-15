@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Operators.Attendances;
 
 namespace Moryx.Operators.Management.Model;
 

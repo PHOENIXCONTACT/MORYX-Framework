@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.AbstractionLayer.Resources.Endpoints
+namespace Moryx.AbstractionLayer.Resources.Endpoints.Models
 {
     /// <summary>
     /// Filter object to fetch resources from the server

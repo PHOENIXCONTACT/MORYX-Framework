@@ -167,7 +167,7 @@ public class OpcUaNode : IMessageChannel
     /// Write a value to the Node. At the moment this only works for variable nodes
     /// </summary>
     /// <param name="payload">value, which should be written to the node</param>
-    /// <param name="cancellationToken">Cancellation token</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     public Task SendAsync(object payload, CancellationToken cancellationToken = default)
     {
         if (NodeClass != NodeClass.Variable)

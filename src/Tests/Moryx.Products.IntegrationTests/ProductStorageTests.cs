@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
@@ -239,7 +240,7 @@ namespace Moryx.Products.IntegrationTests
                 ]
             };
 
-            _storage.Start();
+            await _storage.StartAsync();
         }
 
         protected virtual UnitOfWorkFactory<SqliteProductsContext> BuildUnitOfWorkFactory()
@@ -277,8 +278,8 @@ namespace Moryx.Products.IntegrationTests
                 });
 
             var strategyFactory = new Mock<IStorageStrategyFactory>();
-            strategyFactory.Setup(f => f.CreateTypeStrategy(It.IsAny<ProductTypeConfiguration>()))
-                .Returns<ProductTypeConfiguration>(config =>
+            strategyFactory.Setup(f => f.CreateTypeStrategy(It.IsAny<ProductTypeConfiguration>(), It.IsAny<CancellationToken>()))
+                .Returns(async (ProductTypeConfiguration config, CancellationToken cancellationToken) =>
                 {
                     IProductTypeStrategy strategy = null;
                     switch (config.PluginName)
@@ -297,13 +298,13 @@ namespace Moryx.Products.IntegrationTests
                             break;
                     }
 
-                    strategy.Initialize(config);
+                    await strategy.InitializeAsync(config, cancellationToken);
 
                     return strategy;
                 });
 
-            strategyFactory.Setup(f => f.CreateInstanceStrategy(It.IsAny<ProductInstanceConfiguration>()))
-                .Returns<ProductInstanceConfiguration>(config =>
+            strategyFactory.Setup(f => f.CreateInstanceStrategy(It.IsAny<ProductInstanceConfiguration>(), It.IsAny<CancellationToken>()))
+                .Returns(async (ProductInstanceConfiguration config, CancellationToken cancellationToken) =>
                 {
                     IProductInstanceStrategy strategy = null;
                     switch (config.PluginName)
@@ -322,13 +323,13 @@ namespace Moryx.Products.IntegrationTests
                             break;
                     }
 
-                    strategy.Initialize(config);
+                    await strategy.InitializeAsync(config, cancellationToken);
 
                     return strategy;
                 });
 
-            strategyFactory.Setup(f => f.CreateLinkStrategy(It.IsAny<ProductLinkConfiguration>()))
-                .Returns<ProductLinkConfiguration>(config =>
+            strategyFactory.Setup(f => f.CreateLinkStrategy(It.IsAny<ProductLinkConfiguration>(), It.IsAny<CancellationToken>()))
+                .Returns(async (ProductLinkConfiguration config, CancellationToken cancellationToken) =>
                 {
                     IProductLinkStrategy strategy = null;
                     switch (config.PluginName)
@@ -347,13 +348,13 @@ namespace Moryx.Products.IntegrationTests
                             break;
                     }
 
-                    strategy.Initialize(config);
+                    await strategy.InitializeAsync(config, cancellationToken);
 
                     return strategy;
                 });
 
-            strategyFactory.Setup(f => f.CreateRecipeStrategy(It.IsAny<ProductRecipeConfiguration>()))
-                .Returns<ProductRecipeConfiguration>(config =>
+            strategyFactory.Setup(f => f.CreateRecipeStrategy(It.IsAny<ProductRecipeConfiguration>(), It.IsAny<CancellationToken>()))
+                .Returns(async (ProductRecipeConfiguration config, CancellationToken cancellationToken) =>
                 {
                     IProductRecipeStrategy strategy = new GenericRecipeStrategy
                     {
@@ -363,7 +364,7 @@ namespace Moryx.Products.IntegrationTests
                         }
                     };
 
-                    strategy.Initialize(config);
+                    await strategy.InitializeAsync(config, cancellationToken);
 
                     return strategy;
                 });
@@ -828,7 +829,7 @@ namespace Moryx.Products.IntegrationTests
                     : new ProductIdentity("321" + WatchMaterial, 5);
                 var ex = Assert.ThrowsAsync<IdentityConflictException>(async () =>
                 {
-                    duplicate = (WatchType)await productMgr.Duplicate(watch, newIdentity);
+                    duplicate = (WatchType)await productMgr.DuplicateType(watch, newIdentity);
                 });
                 Assert.That(ex.InvalidTemplate, Is.EqualTo(crossTypeIdentifier));
                 return;
@@ -836,7 +837,7 @@ namespace Moryx.Products.IntegrationTests
 
             Assert.DoesNotThrowAsync(async () =>
             {
-                duplicate = (WatchType)await productMgr.Duplicate(watch,
+                duplicate = (WatchType)await productMgr.DuplicateType(watch,
                     new ProductIdentity("654" + WatchMaterial, 1));
             });
 
@@ -917,7 +918,7 @@ namespace Moryx.Products.IntegrationTests
             }
 
             // Act
-            var watchCopy = (WatchInstance)(await _storage.LoadInstancesAsync(instance.Id))[0];
+            var watchCopy = (WatchInstance)(await _storage.LoadInstancesAsync([instance.Id]))[0];
             var identity = instance.Identity;
             var byIdentity = await _storage.LoadInstancesAsync<IIdentifiableObject>(w => identity.Equals(w.Identity));
             var byDateTime = await _storage.LoadInstancesAsync<WatchInstance>(i => i.DeliveryDate < DateTime.Now);

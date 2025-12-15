@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Factory;
-using Moryx.FactoryMonitor.Endpoints.Model;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Moryx.AspNetCore;
+using Moryx.FactoryMonitor.Endpoints.Models;
 
 namespace Moryx.FactoryMonitor.Endpoints.Tests
 {

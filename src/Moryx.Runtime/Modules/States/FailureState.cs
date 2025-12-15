@@ -11,7 +11,7 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        protected override Task OnFailure()
+        protected override Task OnFailure(CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
@@ -23,11 +23,11 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        protected override async Task OnFailure()
+        protected override async Task OnFailure(CancellationToken cancellationToken)
         {
             try
             {
-                await Context.StopAsync();
+                await Context.StopAsync(cancellationToken);
             }
             catch (Exception ex)
             {
@@ -45,9 +45,9 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        public override async Task OnEnterAsync()
+        public override async Task OnEnterAsync(CancellationToken cancellationToken)
         {
-            await OnFailure();
+            await OnFailure(cancellationToken);
 
             try
             {
@@ -61,16 +61,16 @@ namespace Moryx.Runtime.Modules
             }
         }
 
-        protected abstract Task OnFailure();
+        protected abstract Task OnFailure(CancellationToken cancellationToken);
 
-        public override Task Initialize()
+        public override Task Initialize(CancellationToken cancellationToken)
         {
-            return NextStateAsync(StateInitializing);
+            return NextStateAsync(StateInitializing, cancellationToken);
         }
 
-        public override Task Stop()
+        public override Task Stop(CancellationToken cancellationToken)
         {
-            return NextStateAsync(StateStopped);
+            return NextStateAsync(StateStopped, cancellationToken);
         }
     }
 }

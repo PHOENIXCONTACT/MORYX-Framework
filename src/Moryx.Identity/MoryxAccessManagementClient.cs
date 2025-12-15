@@ -8,6 +8,7 @@ using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moryx.Identity.Models;
+using Moryx.Tools;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Retry;
@@ -44,7 +45,6 @@ namespace Moryx.Identity
         /// <summary>
         /// Initializes a new instance of the <see cref="MoryxAccessManagementClient"/>.
         /// </summary>
-        /// <inheritdoc />
         public MoryxAccessManagementClient(IOptionsMonitor<MoryxIdentityOptions> options, IMemoryCache memoryCache, ILogger logger, HttpClient identityClient = null)
         {
             _identityClient = identityClient ?? _identityClient ?? new(_pollyHandler);
@@ -66,10 +66,8 @@ namespace Moryx.Identity
         /// <returns>The refreshed authentication tokens.</returns>
         public async Task<AuthResult> GetRefreshedTokensAsync(string token, string refreshToken)
         {
-            try
+            return await _semaphore.ExecuteAsync(async () =>
             {
-                await _semaphore.WaitAsync();
-
                 var result = await _memoryCache.GetOrCreateAsync<AuthResult>(token + refreshToken, async cache =>
                 {
                     cache.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(10);
@@ -78,11 +76,7 @@ namespace Moryx.Identity
 
                 _logger?.LogDebug("Retrieved a new token");
                 return result;
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
+            });
         }
 
         private async Task<AuthResult> GetRefreshedTokensFromClient(string token, string refreshToken)

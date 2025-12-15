@@ -15,7 +15,7 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Create new importer
         /// </summary>
-        IProductImporter Create(ProductImporterConfig config);
+        Task<IProductImporter> Create(ProductImporterConfig config, CancellationToken cancellationToken);
 
         /// <summary>
         /// Destroy an importer

@@ -2,9 +2,10 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
+using Moryx.AbstractionLayer.Resources;
 using Moryx.Modules;
 
-namespace Moryx.AbstractionLayer.Resources
+namespace Moryx.Resources.Management
 {
     /// <summary>
     /// Major component managing the resource graph

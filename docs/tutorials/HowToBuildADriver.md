@@ -83,18 +83,18 @@ public class StateExampleDriver : Driver, IExampleDriver, IStateContext
     private readonly object _stateLock = new object();
 
     /// <seealso cref="IDriver"/>
-    public override async Task OnInitializeAsync()
+    public override async Task OnInitializeAsync(CancellationToken cancellationToken)
     {
-        await base.InitializeAsync();
+        await base.InitializeAsync(cancellationToken);
 
         StateMachine.Initialize<ExampleStateBase>(this).With<ExampleStateBase>();
     }
 
     ...
 
-    public override async Task OnStartAsync()
+    public override async Task OnStartAsync(CancellationToken cancellationToken)
     {
-        await base.OnStartAsync();
+        await base.OnStartAsync(cancellationToken);
 
         lock(_stateLock)
             State.Connect();

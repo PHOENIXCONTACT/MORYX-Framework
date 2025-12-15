@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.AbstractionLayer.Resources.Endpoints
+namespace Moryx.AbstractionLayer.Resources.Endpoints.Models
 {
     /// <summary>
     /// DTO that represents the reference of one resource with another

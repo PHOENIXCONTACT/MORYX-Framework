@@ -1,7 +1,7 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.FactoryMonitor.Endpoints.Model
+namespace Moryx.FactoryMonitor.Endpoints.Models
 {
     /// <summary>
     /// State of a cell

@@ -3,7 +3,7 @@
 
 using Moryx.Serialization;
 
-namespace Moryx.Notifications.Endpoints
+namespace Moryx.Notifications.Endpoints.Models
 {
     internal static class Converter
     {

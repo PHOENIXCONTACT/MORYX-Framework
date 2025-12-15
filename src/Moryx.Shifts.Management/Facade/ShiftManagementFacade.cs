@@ -2,8 +2,8 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Runtime.Modules;
+using Moryx.Shifts.Management.Properties;
 using Moryx.Threading;
-using Moryx.Shifts.Management.Localizations;
 
 namespace Moryx.Shifts.Management
 {

@@ -13,19 +13,19 @@ namespace Moryx.Orders.Management.Assignment
     public class NullPartsAssignment : IPartsAssignment
     {
         /// <inheritdoc />
-        public Task InitializeAsync(PartsAssignmentConfig config)
+        public Task InitializeAsync(PartsAssignmentConfig config, CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public Task StartAsync()
+        public Task StartAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public Task StopAsync()
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
@@ -33,7 +33,8 @@ namespace Moryx.Orders.Management.Assignment
         /// <summary>
         /// Always returns an empty parts list
         /// </summary>
-        public Task<IReadOnlyList<ProductPart>> LoadPartsAsync(Operation operation, IOperationLogger operationLogger)
+        public Task<IReadOnlyList<ProductPart>> LoadPartsAsync(Operation operation, IOperationLogger operationLogger,
+            CancellationToken cancellationToken)
             => Task.FromResult(operation.Parts ?? (IReadOnlyList<ProductPart>)Enumerable.Empty<ProductPart>());
     }
 }

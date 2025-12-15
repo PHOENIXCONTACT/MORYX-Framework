@@ -24,9 +24,9 @@ namespace Moryx.Products.Management
         /// <summary>
         /// Initialize the type strategy
         /// </summary>
-        public override void Initialize(ProductLinkConfiguration config)
+        public override async Task InitializeAsync(ProductLinkConfiguration config, CancellationToken cancellationToken = default)
         {
-            base.Initialize(config);
+            await base.InitializeAsync(config, cancellationToken);
 
             var property = TargetType.GetProperty(PropertyName);
             var linkType = property.PropertyType;
@@ -39,14 +39,14 @@ namespace Moryx.Products.Management
             EntityMapper.Initialize(linkType, Config);
         }
 
-        public override Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target)
+        public override Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target, CancellationToken cancellationToken)
         {
             EntityMapper.ReadValue(linkEntity, target);
 
             return Task.CompletedTask;
         }
 
-        public override Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target)
+        public override Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target, CancellationToken cancellationToken)
         {
             EntityMapper.WriteValue(source, target);
 

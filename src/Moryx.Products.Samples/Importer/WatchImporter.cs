@@ -14,7 +14,8 @@ namespace Moryx.Products.Samples
     {
         public IProductStorage Storage { get; set; }
 
-        protected override async Task<ProductImporterResult> ImportAsync(ProductImportContext context, SpecializedWatchImportParameters parameters)
+        protected override async Task<ProductImporterResult> ImportAsync(ProductImportContext context, SpecializedWatchImportParameters parameters,
+            CancellationToken cancellationToken)
         {
             var product = new WatchType
             {
@@ -22,7 +23,7 @@ namespace Moryx.Products.Samples
                 Identity = new ProductIdentity(parameters.Identifier, parameters.Revision),
                 WatchFace = new ProductPartLink<WatchFaceTypeBase>
                 {
-                    Product = (WatchFaceType)await Storage.LoadTypeAsync(new ProductIdentity(parameters.WatchfaceIdentifier, ProductIdentity.LatestRevision))
+                    Product = (WatchFaceType)await Storage.LoadTypeAsync(new ProductIdentity(parameters.WatchfaceIdentifier, ProductIdentity.LatestRevision), cancellationToken)
                 },
                 Needles =
                 [
@@ -30,7 +31,7 @@ namespace Moryx.Products.Samples
                     {
                         Role = NeedleRole.Minutes,
                         Product = (NeedleType)await Storage.LoadTypeAsync(new ProductIdentity(parameters.MinuteNeedleIdentifier,
-                            ProductIdentity.LatestRevision))
+                            ProductIdentity.LatestRevision), cancellationToken)
                     }
                 ]
             };

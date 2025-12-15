@@ -120,7 +120,7 @@ public class MoryxHost : BackgroundService
         {
             SetConsoleCtrlHandler(ConsoleCtrlCheck, true);
         }
-        await _moduleManager.StartModulesAsync();
+        await _moduleManager.StartModulesAsync(cancellationToken);
 
         await base.StartAsync(cancellationToken);
 
@@ -141,7 +141,7 @@ public class MoryxHost : BackgroundService
         State = MoryxHostState.Stopping;
         StateChanged?.Invoke(this, State);
 
-        await _moduleManager.StopModulesAsync();
+        await _moduleManager.StopModulesAsync(cancellationToken);
 
         await base.StopAsync(cancellationToken);
 

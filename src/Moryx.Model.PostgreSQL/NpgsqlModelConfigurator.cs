@@ -34,7 +34,7 @@ namespace Moryx.Model.PostgreSQL
         }
 
         /// <inheritdoc />
-        public override async Task DeleteDatabaseAsync(DatabaseConfig config)
+        public override async Task DeleteDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
             var settings = (NpgsqlDatabaseConnectionSettings)config.ConnectionSettings;
 
@@ -47,8 +47,8 @@ namespace Moryx.Model.PostgreSQL
             var command = CreateCommand($"DROP DATABASE \"{settings.Database}\";", connection);
 
             // Open connection
-            await connection.OpenAsync();
-            await command.ExecuteNonQueryAsync();
+            await connection.OpenAsync(cancellationToken);
+            await command.ExecuteNonQueryAsync(cancellationToken);
             await connection.CloseAsync();
         }
 
@@ -92,11 +92,11 @@ namespace Moryx.Model.PostgreSQL
         }
 
         /// <inheritdoc/>
-        public override Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config)
+        public override Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
             // Using the "postgres" database to check the server's availability.
             // might lead to edge-case when "postgres" database has been deleted.
-            return base.TestConnectionAsync(CreateTestDatabaseConfig(config));
+            return base.TestConnectionAsync(CreateTestDatabaseConfig(config), cancellationToken);
         }
 
         /// <inheritdoc />

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Moq;
 using Moryx.AbstractionLayer.Activities;
@@ -57,7 +58,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
 
             var productManagementMock = new Mock<IProductManagement>();
             productManagementMock.Setup(p => p.LoadRecipeAsync(It.IsAny<long>())).ReturnsAsync(recipe);
-            productManagementMock.Setup(p => p.GetInstanceAsync(It.IsAny<long>())).ReturnsAsync(new DummyProductInstance { Type = new DummyProductType() });
+            productManagementMock.Setup(p => p.LoadInstanceAsync(It.IsAny<long>())).ReturnsAsync(new DummyProductInstance { Type = new DummyProductType() });
 
             _jobListMock = new Mock<IJobDataList>();
 
@@ -105,7 +106,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             CreateTestData(jobs, CreateProcessEntities(jobs));
 
             // Act
-            var processes = await _processArchive.GetProcesses(new DummyProductInstance { Id = 42 });
+            var processes = await _processArchive.GetProcesses(new DummyProductInstance { Id = 42 }, CancellationToken.None);
 
             // Assert
             Assert.That(processes.Count, Is.EqualTo(1));
@@ -128,7 +129,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             var endDate = DateTime.Parse(end, _culture);
 
             // Act
-            var chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed, startDate, endDate, []).ToListAsync();
+            var chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed, startDate, endDate, [], CancellationToken.None).ToListAsync();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(expectedJobCount));
@@ -164,7 +165,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             var chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed,
                 start: new DateTime(2000, 1, 1, 1, 50, 0),
                 end: new DateTime(2000, 1, 1, 1, 59, 0),
-                jobIds: []).ToListAsync();
+                jobIds: [], CancellationToken.None).ToListAsync();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(0));
@@ -218,7 +219,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             // Act
             _jobListMock.Raise(j => j.StateChanged += null, _jobListMock.Object, jobData);
 
-            var chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed, nowStart, nowEnd, []).ToListAsync();
+            var chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed, nowStart, nowEnd, [], CancellationToken.None).ToListAsync();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(1));
@@ -230,7 +231,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Processes
             stateMock.SetupGet(s => s.Classification).Returns(JobClassification.Completed);
             _jobListMock.Raise(jl => jl.StateChanged += null, _jobListMock.Object, new JobStateEventArgs(jobData, null, stateMock.Object));
 
-            chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed, nowStart, nowEnd, []).ToListAsync();
+            chunks = await _processArchive.GetProcesses(ProcessRequestFilter.Timed, nowStart, nowEnd, [], CancellationToken.None).ToListAsync();
 
             // Assert
             Assert.That(chunks.Count, Is.EqualTo(1));

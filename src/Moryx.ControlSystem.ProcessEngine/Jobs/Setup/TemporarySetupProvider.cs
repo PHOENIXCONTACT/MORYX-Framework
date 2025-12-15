@@ -14,7 +14,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
     {
         public string Name => nameof(TemporarySetupProvider);
 
-        public Task<IRecipe> LoadRecipeAsync(long id)
+        public Task<IRecipe> LoadRecipeAsync(long id, CancellationToken cancellationToken = default)
         {
             var setup = new SetupRecipe
             {

@@ -12,12 +12,12 @@ namespace Moryx.Runtime.Modules
         {
         }
 
-        public override Task Initialize()
+        public override Task Initialize(CancellationToken cancellationToken)
         {
-            return NextStateAsync(StateInitializing);
+            return NextStateAsync(StateInitializing, cancellationToken);
         }
 
-        public override Task Stop()
+        public override Task Stop(CancellationToken cancellationToken)
         {
             // Stop again does not matter
             return Task.CompletedTask;

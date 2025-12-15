@@ -3,7 +3,7 @@
 
 using Moryx.Serialization;
 
-namespace Moryx.Operators.Endpoints;
+namespace Moryx.Operators.Endpoints.Models;
 
 /// <summary>
 /// Represents the context for creating a skill type.

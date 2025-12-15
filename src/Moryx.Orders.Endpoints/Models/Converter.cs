@@ -7,7 +7,7 @@ using Moryx.Orders.Documents;
 using Moryx.Serialization;
 using Moryx.Users;
 
-namespace Moryx.Orders.Endpoints
+namespace Moryx.Orders.Endpoints.Models
 {
     internal static class Converter
     {

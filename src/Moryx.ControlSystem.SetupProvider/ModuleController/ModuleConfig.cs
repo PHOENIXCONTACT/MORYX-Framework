@@ -19,6 +19,5 @@ namespace Moryx.ControlSystem.SetupProvider
         /// </summary>
         [DataMember, PluginConfigs(typeof(ISetupTrigger))]
         public List<SetupTriggerConfig> SetupTriggers { get; set; }
-
     }
 }

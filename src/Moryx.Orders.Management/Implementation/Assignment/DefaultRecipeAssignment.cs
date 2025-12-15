@@ -15,26 +15,28 @@ namespace Moryx.Orders.Management.Assignment
     public class DefaultRecipeAssignment : RecipeAssignmentBase<RecipeAssignmentConfig>
     {
         /// <inheritdoc />
-        public override async Task<IReadOnlyList<IProductRecipe>> SelectRecipesAsync(Operation operation, IOperationLogger operationLogger)
+        public override async Task<IReadOnlyList<IProductRecipe>> SelectRecipesAsync(Operation operation, IOperationLogger operationLogger,
+            CancellationToken cancellationToken)
         {
             if (operation.CreationContext != null &&
                 operation.CreationContext.RecipePreselection != 0)
             {
-                var recipe = ProductManagement.LoadRecipeAsync(operation.CreationContext.RecipePreselection);
+                var recipe = await ProductManagement.LoadRecipeAsync(operation.CreationContext.RecipePreselection, cancellationToken);
                 return [(IProductRecipe)recipe];
             }
 
             if (operation.Recipes.Any() && operation.Recipes.First() is IRecipe template && template.TemplateId != 0)
             {
-                var recipe = ProductManagement.LoadRecipeAsync(template.TemplateId);
+                var recipe = await ProductManagement.LoadRecipeAsync(template.TemplateId, cancellationToken);
                 return [(IProductRecipe)recipe];
             }
 
-            return [await LoadDefaultRecipeAsync(operation.Product)];
+            return [await LoadDefaultRecipeAsync(operation.Product, cancellationToken)];
         }
 
         /// <inheritdoc />
-        public override Task<bool> ProcessRecipeAsync(IProductRecipe clone, Operation operation, IOperationLogger operationLogger)
+        public override Task<bool> ProcessRecipeAsync(IProductRecipe clone, Operation operation, IOperationLogger operationLogger,
+            CancellationToken cancellationToken)
         {
             // Copy values from known recipe types
 

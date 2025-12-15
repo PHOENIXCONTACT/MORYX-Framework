@@ -34,9 +34,9 @@ namespace Moryx.Drivers.Simulation.InOutDriver
             }
         }
 
-        protected override async Task OnStartAsync()
+        protected override async Task OnStartAsync(CancellationToken cancellationToken)
         {
-            await base.OnStartAsync();
+            await base.OnStartAsync(cancellationToken);
 
             SimulatedOutput.OutputSet += OnOutputSet;
 

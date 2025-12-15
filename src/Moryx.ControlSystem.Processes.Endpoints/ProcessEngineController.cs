@@ -11,7 +11,6 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.AspNetCore;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.Processes.Endpoints.Extensions;
-using Moryx.ControlSystem.Processes.Endpoints.Models;
 using Moryx.ControlSystem.Processes.Endpoints.Properties;
 using Moryx.ControlSystem.Processes.Endpoints.StreamServices;
 using Newtonsoft.Json;
@@ -96,13 +95,13 @@ public class ProcessEngineController : ControllerBase
     [Authorize(Policy = ProcessPermissions.CanView)]
     public async Task<ActionResult<JobProcessModel[]>> GetProcesses(long productInstanceId)
     {
-        var productInstance = await _productManagement.GetInstanceAsync(productInstanceId);
+        var productInstance = await _productManagement.LoadInstanceAsync(productInstanceId);
         if (productInstance == null)
         {
             return NotFound($"No product instace corresponding to the Id {productInstanceId} found");
         }
 
-        var processes = await _processControl.GetArchivedProcessesAsync(productInstance);
+        var processes = await _processControl.LoadArchivedProcessesAsync(productInstance);
 
         return ConvertProcesses(processes);
     }
@@ -210,7 +209,7 @@ public class ProcessEngineController : ControllerBase
     [HttpGet]
     [Route("stream/processes")]
     [ProducesResponseType(typeof(JobProcessModel), StatusCodes.Status200OK)]
-    public async Task ProcessUpdatesStream(CancellationToken cancelToken)
+    public async Task ProcessUpdatesStream(CancellationToken cancellationToken)
     {
         var response = Response;
         response.Headers["Content-Type"] = "text/event-stream";
@@ -230,15 +229,15 @@ public class ProcessEngineController : ControllerBase
         try
         {
             // Create infinite loop awaiting changes or cancellation
-            while (!cancelToken.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 // Write processes
-                var processArgs = await processes.Reader.ReadAsync(cancelToken);
+                var processArgs = await processes.Reader.ReadAsync(cancellationToken);
                 var processModel = Converter.ConvertProcess(processArgs.Process, _processControl, _resourceManagement);
                 processModel.State = processArgs.Progress;
 
                 var json = JsonConvert.SerializeObject(processModel, _serializerSettings);
-                await response.WriteAsync($"data: {json}\r\r", cancelToken);
+                await response.WriteAsync($"data: {json}\r\r", cancellationToken);
             }
         }
         catch (OperationCanceledException)
@@ -262,7 +261,7 @@ public class ProcessEngineController : ControllerBase
     [HttpGet]
     [Route("stream/activities")]
     [ProducesResponseType(typeof(ProcessActivityModel), StatusCodes.Status200OK)]
-    public async Task ActivitiesUpdatesStream(CancellationToken cancelToken)
+    public async Task ActivitiesUpdatesStream(CancellationToken cancellationToken)
     {
         var response = Response;
         response.Headers["Content-Type"] = "text/event-stream";
@@ -278,15 +277,15 @@ public class ProcessEngineController : ControllerBase
         try
         {
             // Create infinite loop awaiting changes or cancellation
-            while (!cancelToken.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 // Write notifications
-                var activityArgs = await activities.Reader.ReadAsync(cancelToken);
+                var activityArgs = await activities.Reader.ReadAsync(cancellationToken);
                 var activityModel = Converter.ConvertActivity(activityArgs.Activity, _processControl, _resourceManagement);
                 activityModel.State = activityArgs.Progress.ToString();
 
                 var json = JsonConvert.SerializeObject(activityModel, _serializerSettings);
-                await response.WriteAsync($"data: {json}\r\r", cancelToken);
+                await response.WriteAsync($"data: {json}\r\r", cancellationToken);
             }
         }
         catch (OperationCanceledException)
@@ -325,10 +324,10 @@ public class ProcessEngineController : ControllerBase
 
     [HttpGet("holders/stream")]
     [ProducesResponseType(typeof(ProcessHolderGroupModel), StatusCodes.Status200OK)]
-    public async Task GroupStream(CancellationToken cancelToken)
+    public async Task GroupStream(CancellationToken cancellationToken)
     {
         var stream = new ProcessHolderGroupStream(_resourceManagement, _serializerSettings);
-        await stream.Start(HttpContext, cancelToken);
+        await stream.Start(HttpContext, cancellationToken);
     }
 
     [HttpPost("holders/groups/{id:int}/reset")]

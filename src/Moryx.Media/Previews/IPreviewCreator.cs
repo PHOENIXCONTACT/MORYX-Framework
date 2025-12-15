@@ -8,7 +8,7 @@ namespace Moryx.Media.Previews
     /// <summary>
     /// Interface that a preview creator has to implement
     /// </summary>
-    public interface IPreviewCreator : IConfiguredPlugin<PreviewCreatorConfig>
+    public interface IPreviewCreator : IAsyncConfiguredPlugin<PreviewCreatorConfig>
     {
         /// <summary>
         /// Indicates whether the given mime type is supported by the implementation
@@ -21,8 +21,9 @@ namespace Moryx.Media.Previews
         /// Creates one previews
         /// </summary>
         /// <param name="job">A job that describes the preview creation</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
         /// <returns>True if preview creation was successful otherwise false</returns>
-        PreviewJobResult CreatePreview(PreviewJob job);
+        Task<PreviewJobResult> CreatePreviewAsync(PreviewJob job, CancellationToken cancellationToken);
     }
 }
 

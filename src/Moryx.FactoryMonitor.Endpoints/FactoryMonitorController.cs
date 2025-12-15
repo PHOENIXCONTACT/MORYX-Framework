@@ -17,9 +17,9 @@ using System.Timers;
 using Moryx.FactoryMonitor.Endpoints.Models;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AspNetCore;
+using Moryx.FactoryMonitor.Endpoints.Converter;
 using Moryx.FactoryMonitor.Endpoints.Properties;
 //old models in '.Model' namespace. Only ones still in use: TransoirtRoute- / PathModel & CellSettingsModel
-using Moryx.FactoryMonitor.Endpoints.Model;
 using Moryx.FactoryMonitor.Endpoints.Extensions;
 using Timer = System.Timers.Timer;
 
@@ -73,7 +73,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             var activities = _processControl.GetRunningProcesses()
                 .Select(p => p.CurrentActivity())
                 .Where(a => a is not null && a.Tracing is not null);
-            var converter = new Converter(_serialization);
+            var converter = new Converter.Converter(_serialization);
 
             foreach (var cell in cells)
             {
@@ -98,7 +98,7 @@ namespace Moryx.FactoryMonitor.Endpoints
 
             var factory = _resourceManager.GetRootFactory();
 
-            var model = Converter.ToFactoryStateModel(factory);
+            var model = Converter.Converter.ToFactoryStateModel(factory);
             model.ActivityChangedModels = activityChangedModels;
             model.CellStateChangedModels = cellStateChangedModels;
             model.ResourceChangedModels = resourceChangedModels;
@@ -117,7 +117,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             var cells = _resourceManager.GetResources<IMachineLocation>()
                 .Where(CellFilterBaseOnLocation);
 
-            var converter = new Converter(_serialization);
+            var converter = new Converter.Converter(_serialization);
             return cells.Select(x => new SimpleGraph { Id = x.Id }.ToVisualItemModel(_resourceManager, _logger, converter, CellFilterBaseOnLocation)).ToList();
         }
 
@@ -130,7 +130,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             // check if there is a factory with the given id
             var factory = _resourceManager.GetResource<IManufacturingFactory>(x => x.Id == factoryId);
             if (factory is null) return NotFound(Strings.FactoryMonitorController_FactoryNotFound_);
-            var converter = new Converter(_serialization);
+            var converter = new Converter.Converter(_serialization);
 
             var root = _resourceManager.GetRootFactory();
             SimpleGraph graph = _resourceManager.ReadUnsafe(factory.Id, e => SimpleGraph.Create(e as ManufacturingFactory));
@@ -187,7 +187,7 @@ namespace Moryx.FactoryMonitor.Endpoints
         [ProducesResponseType(typeof(ResourceChangedModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(CellStateChangedModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(OrderChangedModel), StatusCodes.Status200OK)]
-        public async Task FactoryStatesStream(CancellationToken cancelToken)
+        public async Task FactoryStatesStream(CancellationToken cancellationToken)
         {
             var response = Response;
             response.Headers.Append("Content-Type", "text/event-stream");
@@ -210,26 +210,26 @@ namespace Moryx.FactoryMonitor.Endpoints
                 .Cast<ICell>().ToList();
             if (_cells.Count == 0)
             {
-                await response.WriteAsync("retry: 5000\n", cancellationToken: cancelToken);
+                await response.WriteAsync("retry: 5000\n", cancellationToken: cancellationToken);
                 await response.CompleteAsync();
                 return;
             }
-            var converter = new Converter(_serialization);
+            var converter = new Converter.Converter(_serialization);
 
             var resourceEventHandler = new ElapsedEventHandler(async (sender, eventArgs) =>
-                await FactoryMonitorHelper.ResourceUpdated(serializerSettings, _factoryChannel, _resourceManager, CellFilterBaseOnLocation, converter, cancelToken)); //resource events are substitute with a timer event since there are no such events
+                await FactoryMonitorHelper.ResourceUpdated(serializerSettings, _factoryChannel, _resourceManager, CellFilterBaseOnLocation, converter, cancellationToken)); //resource events are substitute with a timer event since there are no such events
 
             var capabilitiesEventHandler = new EventHandler<ICapabilities>(async (sender, eventArgs) =>
-                await FactoryMonitorHelper.PublishCellUpdate((sender as ICell).GetCellStateChangedModel(_resourceManager.ReadUnsafe((sender as ICell).Id, r => r)), serializerSettings, _factoryChannel, cancelToken));
+                await FactoryMonitorHelper.PublishCellUpdate((sender as ICell).GetCellStateChangedModel(_resourceManager.ReadUnsafe((sender as ICell).Id, r => r)), serializerSettings, _factoryChannel, cancellationToken));
 
             var orderStartedEventHandler = new EventHandler<OperationStartedEventArgs>(async (sender, eventArgs) =>
-                await FactoryMonitorHelper.OrderStarted(eventArgs, serializerSettings, _factoryChannel, cancelToken));
+                await FactoryMonitorHelper.OrderStarted(eventArgs, serializerSettings, _factoryChannel, cancellationToken));
 
             var orderEventHandler = new EventHandler<OperationChangedEventArgs>(async (sender, eventArgs) =>
-                await FactoryMonitorHelper.OrderUpdated(eventArgs, serializerSettings, _factoryChannel, cancelToken));
+                await FactoryMonitorHelper.OrderUpdated(eventArgs, serializerSettings, _factoryChannel, cancellationToken));
 
             var activityEventHandler = new EventHandler<ActivityUpdatedEventArgs>(async (sender, eventArgs) => await
-                FactoryMonitorHelper.ActivityUpdated(eventArgs, serializerSettings, _factoryChannel, _cells, _resourceManager.ReadUnsafe(eventArgs.Activity.Tracing.ResourceId, r => r), converter, _orderManager.GetOrderModels(_colorPalette), cancelToken));
+                FactoryMonitorHelper.ActivityUpdated(eventArgs, serializerSettings, _factoryChannel, _cells, _resourceManager.ReadUnsafe(eventArgs.Activity.Tracing.ResourceId, r => r), converter, _orderManager.GetOrderModels(_colorPalette), cancellationToken));
 
             foreach (var cell in _cells)
             {
@@ -245,12 +245,12 @@ namespace Moryx.FactoryMonitor.Endpoints
             try
             {
                 // Create infinite loop awaiting changes or cancellation
-                while (!cancelToken.IsCancellationRequested)
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    var changes = await _factoryChannel.Reader.ReadAsync(cancelToken);
+                    var changes = await _factoryChannel.Reader.ReadAsync(cancellationToken);
 
-                    await response.WriteAsync($"type: {changes.Item1}\n", cancelToken);
-                    await response.WriteAsync($"data: {changes.Item2}\r\r", cancelToken);
+                    await response.WriteAsync($"type: {changes.Item1}\n", cancellationToken);
+                    await response.WriteAsync($"data: {changes.Item2}\r\r", cancellationToken);
                 }
             }
             finally
@@ -328,7 +328,7 @@ namespace Moryx.FactoryMonitor.Endpoints
             if (cellLocation == null)
                 return NotFound(new MoryxExceptionResponse { Title = "Cell/Resource not found" });
 
-            var converter = new Converter(_serialization);
+            var converter = new Converter.Converter(_serialization);
             var cell = _resourceManager.ReadUnsafe(cellLocation.Machine.Id, r => r);
             return converter.ToResourceChangedModel(cell)?.CellPropertySettings;
         }

@@ -46,14 +46,14 @@ namespace Moryx.Model
         }
 
         /// <inheritdoc />
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             ApplyModificationTracking();
             return base.SaveChangesAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
             ApplyModificationTracking();
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);

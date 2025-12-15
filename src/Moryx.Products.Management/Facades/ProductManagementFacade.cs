@@ -74,19 +74,19 @@ namespace Moryx.Products.Management
             }
         }
 
-        public Task<IReadOnlyList<ProductType>> LoadTypesAsync(ProductQuery query)
+        public Task<IReadOnlyList<ProductType>> LoadTypesAsync(ProductQuery query, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return ProductManager.LoadTypes(query);
         }
 
-        public Task<IReadOnlyList<TType>> LoadTypesAsync<TType>(Expression<Func<TType, bool>> selector)
+        public Task<IReadOnlyList<TType>> LoadTypesAsync<TType>(Expression<Func<TType, bool>> selector, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return ProductManager.LoadTypes(selector);
         }
 
-        public async Task<ProductType> LoadTypeAsync(long id)
+        public async Task<ProductType> LoadTypeAsync(long id, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             var type = await ProductManager.LoadType(id);
@@ -95,7 +95,7 @@ namespace Moryx.Products.Management
             return type;
         }
 
-        public Task<ProductType> LoadTypeAsync(IIdentity identity)
+        public Task<ProductType> LoadTypeAsync(IIdentity identity, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return ProductManager.LoadType(identity);
@@ -107,25 +107,25 @@ namespace Moryx.Products.Management
         }
         public event EventHandler<ProductType> TypeChanged;
 
-        public Task<ProductType> DuplicateAsync(ProductType template, IIdentity newIdentity)
+        public Task<ProductType> DuplicateTypeAsync(ProductType template, IIdentity newIdentity, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
-            return ProductManager.Duplicate(template, newIdentity);
+            return ProductManager.DuplicateType(template, newIdentity);
         }
 
-        public Task<long> SaveTypeAsync(ProductType modifiedInstance)
+        public Task<long> SaveTypeAsync(ProductType modifiedInstance, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return ProductManager.SaveType(modifiedInstance);
         }
 
-        public Task<ProductImportResult> ImportAsync(string importerName, object parameters)
+        public Task<ProductImportResult> ImportAsync(string importerName, object parameters, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return ProductManager.Import(importerName, parameters);
         }
 
-        public async Task<IRecipe> LoadRecipeAsync(long id)
+        public async Task<IRecipe> LoadRecipeAsync(long id, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             var recipe = await RecipeManagement.Get(id);
@@ -137,10 +137,11 @@ namespace Moryx.Products.Management
             return recipe;
         }
 
-        public async Task<IReadOnlyList<IProductRecipe>> GetRecipesAsync(ProductType productType, RecipeClassification classification)
+        public async Task<IReadOnlyList<IProductRecipe>> LoadRecipesAsync(ProductType productType, RecipeClassification classification,
+            CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
-            var recipes =await RecipeManagement.GetRecipes(productType, classification);
+            var recipes = await RecipeManagement.LoadRecipes(productType, classification);
             if (recipes == null)
                 return null;
 
@@ -156,7 +157,7 @@ namespace Moryx.Products.Management
         }
         public event EventHandler<IRecipe> RecipeChanged;
 
-        public async Task<long> SaveRecipeAsync(IProductRecipe recipe)
+        public async Task<long> SaveRecipeAsync(IProductRecipe recipe, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             var recipeId = await RecipeManagement.Save(recipe);
@@ -165,71 +166,71 @@ namespace Moryx.Products.Management
             return recipeId;
         }
 
-        public Task SaveRecipesAsync(IReadOnlyList<IProductRecipe> recipes)
+        public Task SaveRecipesAsync(IReadOnlyList<IProductRecipe> recipes, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return RecipeManagement.Save(recipes);
         }
 
-        public async Task<Workplan> LoadWorkplanAsync(long workplanId)
+        public async Task<Workplan> LoadWorkplanAsync(long workplanId, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
-            var wp = await Workplans.LoadWorkplanAsync(workplanId);
+            var wp = await Workplans.LoadWorkplanAsync(workplanId, cancellationToken);
             if (wp == null)
                 throw new KeyNotFoundException($"No workplan with id '{workplanId}' found!");
             return wp;
         }
 
-        public Task<IReadOnlyList<Workplan>> LoadAllWorkplansAsync()
+        public Task<IReadOnlyList<Workplan>> LoadAllWorkplansAsync(CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
-            return Workplans.LoadAllWorkplansAsync();
+            return Workplans.LoadAllWorkplansAsync(cancellationToken);
         }
 
-        public Task<bool> DeleteWorkplanAsync(long workplanId)
+        public Task<bool> DeleteWorkplanAsync(long workplanId, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
-            return Workplans.DeleteWorkplanAsync(workplanId);
+            return Workplans.DeleteWorkplanAsync(workplanId, cancellationToken);
         }
 
-        public Task<IReadOnlyList<Workplan>> LoadVersionsAsync(long workplanId)
+        public Task<IReadOnlyList<Workplan>> LoadVersionsAsync(long workplanId, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
-            return Workplans.LoadVersionsAsync(workplanId);
+            return Workplans.LoadVersionsAsync(workplanId, cancellationToken);
         }
 
-        public Task<long> SaveWorkplanAsync(Workplan workplan)
+        public Task<long> SaveWorkplanAsync(Workplan workplan, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
-            return Workplans.SaveWorkplanAsync(workplan);
+            return Workplans.SaveWorkplanAsync(workplan, cancellationToken);
         }
 
-        public Task<ProductInstance> CreateInstanceAsync(ProductType productType)
+        public Task<ProductInstance> CreateInstanceAsync(ProductType productType, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return ProductManager.CreateInstance(productType, false);
         }
 
-        public Task<ProductInstance> CreateInstanceAsync(ProductType productType, bool save)
+        public Task<ProductInstance> CreateInstanceAsync(ProductType productType, bool save, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return ProductManager.CreateInstance(productType, save);
         }
 
-        public async Task<ProductInstance> GetInstanceAsync(long id)
+        public async Task<ProductInstance> LoadInstanceAsync(long id, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
-            return (await ProductManager.GetInstances(id)).SingleOrDefault();
+            return (await ProductManager.LoadInstances([id])).SingleOrDefault();
         }
 
-        public async Task<ProductInstance> GetInstanceAsync(IIdentity identity)
+        public async Task<ProductInstance> LoadInstanceAsync(IIdentity identity, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
             ArgumentNullException.ThrowIfNull(identity);
 
             var instances = await ProductManager
-                .GetInstances<IIdentifiableObject>(i => identity.Equals(i.Identity));
+                .LoadInstances<IIdentifiableObject>(i => identity.Equals(i.Identity));
             if (instances.Count > 1)
             {
                 var ex = new InvalidOperationException($"ProductManagement contains more than one {nameof(ProductInstance)} with the identity {identity}.");
@@ -240,45 +241,46 @@ namespace Moryx.Products.Management
             return (ProductInstance)instances.SingleOrDefault();
         }
 
-        public async Task<TInstance> GetInstanceAsync<TInstance>(Expression<Func<TInstance, bool>> selector)
+        public async Task<TInstance> LoadInstanceAsync<TInstance>(Expression<Func<TInstance, bool>> selector, CancellationToken cancellationToken = default)
             where TInstance : ProductInstance
         {
             ValidateHealthState();
 
             ArgumentNullException.ThrowIfNull(selector);
 
-            return (await ProductManager.GetInstances(selector)).SingleOrDefault();
+            return (await ProductManager.LoadInstances(selector)).SingleOrDefault();
         }
 
-        public Task SaveInstanceAsync(ProductInstance productInstance)
+        public Task SaveInstanceAsync(ProductInstance productInstance, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return ProductManager.SaveInstances(productInstance);
         }
 
-        public Task SaveInstancesAsync(ProductInstance[] productInstance)
+        public Task SaveInstancesAsync(ProductInstance[] productInstance, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
             return ProductManager.SaveInstances(productInstance);
         }
 
-        public Task<IReadOnlyList<ProductInstance>> GetInstancesAsync(long[] ids)
+        public Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(long[] ids, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
 
             ArgumentNullException.ThrowIfNull(ids);
 
-            return ProductManager.GetInstances(ids);
+            return ProductManager.LoadInstances(ids);
         }
 
-        public Task<IReadOnlyList<TInstance>> GetInstancesAsync<TInstance>(Expression<Func<TInstance, bool>> selector)
+        public Task<IReadOnlyList<TInstance>> LoadInstancesAsync<TInstance>(Expression<Func<TInstance, bool>> selector,
+            CancellationToken cancellationToken = default)
             where TInstance : ProductInstance
         {
             ValidateHealthState();
 
             ArgumentNullException.ThrowIfNull(selector);
 
-            return ProductManager.GetInstances(selector);
+            return ProductManager.LoadInstances(selector);
         }
 
         private static void ValidateRecipe(IProductRecipe recipe)
@@ -293,16 +295,16 @@ namespace Moryx.Products.Management
             recipe.Origin = this;
         }
 
-        public Task<bool> DeleteProductAsync(long id)
+        public Task<bool> DeleteTypeAsync(long productTypeId, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
-            return ProductManager.DeleteType(id);
+            return ProductManager.DeleteType(productTypeId);
         }
 
-        public Task RemoveRecipeAsync(long recipeId)
+        public Task DeleteRecipeAsync(long recipeId, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
-            return RecipeManagement.Remove(recipeId);
+            return RecipeManagement.Delete(recipeId);
         }
 
         public IProductRecipe CreateRecipe(string recipeType)

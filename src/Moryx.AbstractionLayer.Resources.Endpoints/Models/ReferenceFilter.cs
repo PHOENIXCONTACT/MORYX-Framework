@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.AbstractionLayer.Resources.Endpoints
+namespace Moryx.AbstractionLayer.Resources.Endpoints.Models
 {
     /// <summary>
     /// Enum to classify the current value of the reference property

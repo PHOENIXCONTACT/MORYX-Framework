@@ -8,6 +8,7 @@ using Moryx.Container;
 using Moryx.Model;
 using Moryx.Runtime.Modules;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Operators.Attendances;
 using Moryx.Operators.Skills;
 
 namespace Moryx.Operators.Management;
@@ -44,7 +45,7 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
     public IDbContextManager DbContextManager { get; } = dbContextManager;
 
     /// <inheritdoc />
-    protected override Task OnInitializeAsync()
+    protected override Task OnInitializeAsync(CancellationToken cancellationToken)
     {
         Container
             .ActivateDbContexts(DbContextManager)
@@ -53,7 +54,7 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
     }
 
     /// <inheritdoc />
-    protected override Task OnStartAsync()
+    protected override Task OnStartAsync(CancellationToken cancellationToken)
     {
         Container.Resolve<IOperatorManager>().Start();
         Container.Resolve<IAttendanceManager>().Start();
@@ -65,7 +66,7 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
     }
 
     /// <inheritdoc />
-    protected override Task OnStopAsync()
+    protected override Task OnStopAsync(CancellationToken cancellationToken)
     {
         DeactivateFacade(_facade);
 

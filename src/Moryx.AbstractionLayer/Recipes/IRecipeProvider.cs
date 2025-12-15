@@ -16,7 +16,7 @@ namespace Moryx.AbstractionLayer.Recipes
         /// <summary>
         /// Load recipe by its database id
         /// </summary>
-        Task<IRecipe> LoadRecipeAsync(long id);
+        Task<IRecipe> LoadRecipeAsync(long id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// A recipe was changed, give users the chance to update their reference

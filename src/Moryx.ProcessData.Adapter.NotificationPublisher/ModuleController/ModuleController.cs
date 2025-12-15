@@ -38,7 +38,7 @@ namespace Moryx.ProcessData.Adapter.NotificationPublisher
         }
 
         /// <inheritdoc />
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             Container.SetInstance(NotificationPublisher)
                 .SetInstance(ProcessDataMonitor);
@@ -46,14 +46,14 @@ namespace Moryx.ProcessData.Adapter.NotificationPublisher
         }
 
         /// <inheritdoc />
-        protected override Task OnStartAsync()
+        protected override Task OnStartAsync(CancellationToken cancellationToken)
         {
             Container.Resolve<NotificationPublisherAdapter>().Start();
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        protected override Task OnStopAsync()
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             Container.Resolve<NotificationPublisherAdapter>().Stop();
             return Task.CompletedTask;

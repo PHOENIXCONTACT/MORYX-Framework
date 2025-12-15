@@ -18,13 +18,8 @@ namespace Moryx.Media.Server
     [Description("Manages media")]
     public class ModuleController : ServerModuleBase<ModuleConfig>, IFacadeContainer<IMediaServer>
     {
-        /// <summary>
-        /// The module's name.
-        /// </summary>
-        public const string ModuleName = "MediaServer";
-
         /// <inheritdoc />
-        public override string Name => ModuleName;
+        public override string Name => "MediaServer";
 
         /// <summary>
         /// Create new module instance
@@ -41,7 +36,7 @@ namespace Moryx.Media.Server
         /// <summary>
         /// Code executed on start up and after service was stopped and should be started again
         /// </summary>
-        protected override Task OnInitializeAsync()
+        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
         {
             Container.LoadComponents<IPreviewCreator>();
             return Task.CompletedTask;
@@ -50,11 +45,11 @@ namespace Moryx.Media.Server
         /// <summary>
         /// Code executed after OnInitialize
         /// </summary>
-        protected override Task OnStartAsync()
+        protected override async Task OnStartAsync(CancellationToken cancellationToken)
         {
             Container.SetInstance(ConfigManager);
 
-            StartCreators();
+            await StartCreators(cancellationToken);
 
             var previewService = Container.Resolve<IPreviewService>();
             previewService.Start();
@@ -63,34 +58,36 @@ namespace Moryx.Media.Server
             contentManager.Start();
 
             ActivateFacade(_mediaServer);
-            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Code executed when service is stopped
         /// </summary>
-        protected override Task OnStopAsync()
+        protected override Task OnStopAsync(CancellationToken cancellationToken)
         {
             DeactivateFacade(_mediaServer);
+
+            // TODO stop preview creators
+
             return Task.CompletedTask;
         }
 
         #endregion
 
-        private void StartCreators()
+        private async Task StartCreators(CancellationToken cancellationToken)
         {
-            var moduleFac = Container.Resolve<IPreviewCreatorFactory>();
-            foreach (var moduleConfig in Config.PreviewCreators.Distinct())
+            var previewCreatorFactory = Container.Resolve<IPreviewCreatorFactory>();
+            foreach (var creatorConfig in Config.PreviewCreators.Distinct())
             {
-                var module = moduleFac.Create(moduleConfig);
+                var module = await previewCreatorFactory.Create(creatorConfig, cancellationToken);
                 try
                 {
-                    module.Start();
+                    await module.StartAsync(cancellationToken);
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log(LogLevel.Error, ex, "Failed to start plugin {0}", moduleConfig.PluginName);
-                    throw new Exception("Failed to start module " + moduleConfig.PluginName, ex);
+                    Logger.Log(LogLevel.Error, ex, "Failed to start preview creator {previewCreator}", creatorConfig.PluginName);
+                    throw;
                 }
             }
         }

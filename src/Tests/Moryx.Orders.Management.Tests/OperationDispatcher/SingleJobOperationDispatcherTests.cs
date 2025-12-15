@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.TestTools;
@@ -127,7 +128,8 @@ namespace Moryx.Orders.Management.Tests
             };
 
             JobCreationContext createdContext = null;
-            _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>())).ReturnsAsync(delegate (JobCreationContext context)
+            _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(delegate (JobCreationContext context, CancellationToken _)
             {
                 createdContext = context;
                 return [newJob];
