@@ -216,10 +216,10 @@
   <data name="DocumentAssignStep_Restore_Documents_Failed" xml:space="preserve">
     <value>无法从文件系统中恢复文档！</value>
   </data>
-  <data name="OperationData_AmountReachedNotificationTitle" xml:space="preserve">
+  <data name="OperationNotifications_AmountReachedNotificationTitle" xml:space="preserve">
     <value>操作准备报告</value>
   </data>
-  <data name="OperationData_AmountReachedNotificationMessage" xml:space="preserve">
+  <data name="OperationNotifications_AmountReachedNotificationMessage" xml:space="preserve">
     <value>操作 {0} 已完成最后的部分，准备报告。请报告生产的部分。</value>
   </data>
   <data name="OperationAssignment_Successful" xml:space="preserve">

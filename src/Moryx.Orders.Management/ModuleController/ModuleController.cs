@@ -25,7 +25,7 @@ namespace Moryx.Orders.Management
         IFacadeContainer<INotificationSource>,
         IFacadeContainer<IOrderManagement>
     {
-        private const string ModuleName = "OrderManagement";
+        internal const string ModuleName = "OrderManagement";
 
         /// <summary>
         /// Name of this module

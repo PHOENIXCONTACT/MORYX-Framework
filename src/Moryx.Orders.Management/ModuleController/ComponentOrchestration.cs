@@ -7,6 +7,7 @@ using Moryx.Orders.Assignment;
 using Moryx.Orders.Dispatcher;
 using Moryx.Orders.Management.Advice;
 using Moryx.Orders.Management.Assignment;
+using Moryx.Orders.Management.Notifications;
 
 namespace Moryx.Orders.Management
 {
@@ -34,6 +35,8 @@ namespace Moryx.Orders.Management
         public IDocumentLoader DocumentLoader { get; set; }
 
         public IAdviceManager AdviceManager { get; set; }
+
+        public IOperationNotifications OperationNotifications { get; set; }
 
         public ModuleConfig Config { get; set; }
 
@@ -68,10 +71,16 @@ namespace Moryx.Orders.Management
 
             // --Start pool
             await OperationDataPool.StartAsync(cancellationToken);
+
+            // --Start Notifications
+            OperationNotifications.Start();
         }
 
         public async Task StopAsync(CancellationToken cancellationToken = default)
         {
+            // --Stop Notifications
+            OperationNotifications.Stop();
+
             // --Stop Job handler and dispatcher
             JobHandler.Stop();
             await OperationDispatcher.StopAsync(cancellationToken);

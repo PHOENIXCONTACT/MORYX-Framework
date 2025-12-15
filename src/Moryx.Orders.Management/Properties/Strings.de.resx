@@ -196,10 +196,10 @@
   <data name="DocumentAssignStep_Restore_Documents_Failed" xml:space="preserve">
     <value>Wiederherstellen der Dokumente vom Dateisystem nicht möglich!</value>
   </data>
-  <data name="OperationData_AmountReachedNotificationTitle" xml:space="preserve">
+  <data name="OperationNotifications_AmountReachedNotificationTitle" xml:space="preserve">
 	  <value>Vorgang ist bereit zum melden</value>
   </data>
-  <data name="OperationData_AmountReachedNotificationMessage" xml:space="preserve">
+  <data name="OperationNotifications_AmountReachedNotificationMessage" xml:space="preserve">
 	  <value>Der Vorgang {0} hat die letzten Teile fertiggestellt und ist nun bereit zum abmelden. Bitte melden sie die produzierten Teile.</value>
   </data>
   <data name="OperationAssignment_Successful" xml:space="preserve">
