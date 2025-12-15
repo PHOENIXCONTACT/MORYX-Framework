@@ -17,15 +17,8 @@ public interface IOpcUaDriver : IMessageDriver, IInOutDriver
     /// Subscribes to a variable node. Nothing happens, if the node is not a variable
     /// </summary>
     /// <param name="node">OpcUaNode to be subscribed</param>
-    void AddSubscription(OpcUaNode node);
-
-    /// <summary>
-    /// Read the value of a Node
-    /// </summary>
-    /// <param name="nodeId">NodeId</param>
-    /// <returns>If node doesn't exists or there was an error, when trying to read
-    /// the node, the return value will be null</returns>
-    object ReadNode(string nodeId);
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    Task AddSubscriptionAsync(OpcUaNode node, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Read the value of a Node
@@ -39,27 +32,22 @@ public interface IOpcUaDriver : IMessageDriver, IInOutDriver
     /// <summary>
     /// Rebrowse Nodes
     /// </summary>
-    void RebrowseNodes();
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    Task RebrowseNodesAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Returns an opcUaNode to a string
     /// </summary>
-    /// <param name="nodeId">nodeid</param>
+    /// <param name="nodeId">NodeId of the requested node</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <returns>If node doesn't exists, return value is null</returns>
-    OpcUaNode GetNode(string nodeId);
+    Task<OpcUaNode> GetNodeAsync(string nodeId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Write a value to a node
     /// </summary>
-    /// <param name="nodeId">id of the representing OpcUaNode</param>
-    /// <param name="payload">value to be written to the node</param>
-    void WriteNode(string nodeId, object payload);
-
-    /// <summary>
-    /// Write a value to a node
-    /// </summary>
-    /// <param name="nodeId">id of the representing OpcUaNode</param>
-    /// <param name="payload">value to be written to the node</param>
+    /// <param name="nodeId">Id of the representing OpcUaNode</param>
+    /// <param name="payload">Value to be written to the node</param>
     /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     Task WriteNodeAsync(string nodeId, object payload, CancellationToken cancellationToken = default);
 }

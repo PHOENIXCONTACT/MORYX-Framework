@@ -6,7 +6,7 @@ using Moryx.Drivers.OpcUa.Exceptions;
 using Opc.Ua;
 using Opc.Ua.Configuration;
 
-namespace Moryx.Drivers.OpcUa;
+namespace Moryx.Drivers.OpcUa.Factories;
 
 internal class ApplicationConfigurationFactory
 {
@@ -14,7 +14,7 @@ internal class ApplicationConfigurationFactory
 
     public string ApplicationName { get; set; } = "";
 
-    public virtual async Task<ApplicationConfiguration> Create(ILogger logger, string configPath = null)
+    public virtual async Task<ApplicationConfiguration> Create(ILogger logger, string configPath = null, CancellationToken cancellationToken = default)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         var application = new ApplicationInstance
@@ -29,7 +29,7 @@ internal class ApplicationConfigurationFactory
         var filePath = string.IsNullOrEmpty(configPath) ? defaultPath : configPath;
         try
         {
-            config = await application.LoadApplicationConfiguration(filePath, false);
+            config = await application.LoadApplicationConfigurationAsync(filePath, false, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -39,7 +39,7 @@ internal class ApplicationConfigurationFactory
 
         ApplicationName = config.ApplicationName;
         // check the application certificate
-        var haveAppCertificate = await application.CheckApplicationInstanceCertificate(false, 0);
+        var haveAppCertificate = await application.CheckApplicationInstanceCertificatesAsync(false, 0, cancellationToken);
         if (!haveAppCertificate)
         {
             throw new InvalidCertificateException("Application instance certificate invalid!");

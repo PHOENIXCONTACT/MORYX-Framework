@@ -11,6 +11,7 @@ using Moryx.AbstractionLayer.Drivers.InOut;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
+using Moryx.Drivers.OpcUa.Factories;
 using Moryx.Drivers.OpcUa.Properties;
 using Moryx.Drivers.OpcUa.States;
 using Moryx.Serialization;
@@ -195,6 +196,8 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     //TODO: Internal property just for tests, use xml also in tests
     internal ApplicationConfigurationFactory ApplicationConfigurationFactory { get; set; } = new();
 
+    internal SubscriptionFactory SubscriptionFactory { get; set; } = new();
+
     /// <summary>
     /// Convert an OpcUaNode to an entity to be shown on the UI
     /// </summary>
@@ -291,7 +294,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
         lock (_stateLock)
         {
-            State.OnConnectingCompleted(true);
+            State.OnConnectingCompletedAsync(true).GetAwaiter().GetResult();
         }
     }
 
@@ -310,7 +313,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             builder = new UriBuilder(OpcUaServerUrl);
             builder.Scheme = BuildScheme(builder);
 
-            selectedEndpoint = CoreClientUtils.SelectEndpoint(config,
+            selectedEndpoint = await CoreClientUtils.SelectEndpointAsync(config,
                 builder.Uri.ToString(), UseEncryption);
         }
         catch (Exception e)
@@ -334,7 +337,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
         try
         {
-            _session = await Session.Create(config, endpoint, false, false, ApplicationConfigurationFactory.ApplicationName, 60000, userIdentity, null);
+            _session = await Session.CreateAsync(DefaultSessionFactory.Instance, config, (ITransportWaitingConnection)null, endpoint, false, false, ApplicationConfigurationFactory.ApplicationName, 60000, userIdentity, null);
         }
         catch (Exception ex)
         {
@@ -358,7 +361,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
     private void TryToConnectAgain()
     {
-        State.OnConnectingCompleted(false);
+        State.OnConnectingCompletedAsync(false);
     }
 
     private void ClientKeepAlive(ISession session, KeepAliveEventArgs e)
@@ -374,12 +377,12 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         if (ServiceResult.IsBad(e.Status))
         {
             ServerStatus = ServerState.Unknown;
-            State.OnConnectionLost(e);
+            State.OnConnectionLostAsync(e).GetAwaiter().GetResult();
         }
 
     }
 
-    internal void Reconnect(KeepAliveEventArgs e)
+    internal async Task Reconnect(KeepAliveEventArgs e)
     {
         if (ReconnectionPeriod <= 0)
         {
@@ -425,7 +428,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             _reconnectHandler = null;
             lock (_stateLock)
             {
-                State.OnConnectingCompleted(true);
+                State.OnConnectingCompletedAsync(true).GetAwaiter().GetResult();
             }
         }
     }
@@ -442,7 +445,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         }
 
         _session.KeepAlive -= ClientKeepAlive;
-        _session?.Close();
+        _session?.CloseAsync().GetAwaiter().GetResult();
         _session = null;
     }
 
@@ -455,7 +458,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     }
 
     /// <inheritdoc/>
-    public OpcUaNode GetNode(string nodeId)
+    public Task<OpcUaNode> GetNodeAsync(string nodeId, CancellationToken cancellationToken = default)
     {
         var expandedNodeId = OpcUaNode.CreateExpandedNodeId(GetNodeIdAsString(nodeId));
         if (!_nodesFlat.TryGetValue(expandedNodeId, out var value))
@@ -463,7 +466,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             return null;
         }
 
-        return value;
+        return Task.FromResult(value);
     }
 
     private string GetNodeIdAsString(string identifier)
@@ -490,9 +493,10 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     }
 
     /// <inheritdoc/>
-    public void AddSubscription(OpcUaNode node)
+    public Task AddSubscriptionAsync(OpcUaNode node, CancellationToken cancellationToken = default)
     {
         State.AddSubscription(node);
+        return Task.CompletedTask;
     }
 
     internal void SaveSubscriptionToBeAdded(OpcUaNode node)
@@ -522,26 +526,19 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         _subscription = null;
     }
 
-    internal void SubscribeSavedNodes()
+    internal async Task SubscribeSavedNodesAsync(CancellationToken cancellationToken = default)
     {
-        _subscription = new Subscription(_session.DefaultSubscription)
+        _subscription = SubscriptionFactory.CreateSubscription(new Subscription(_session.DefaultSubscription)
         {
             PublishingEnabled = true,
             PublishingInterval = PublishingInterval,
-            LifetimeCount = 0
-        };
+            LifetimeCount = 0,
+        });
 
         _session.AddSubscription(_subscription);
 
         // Create the subscription on Server side
-        _subscription.Create();
-
-        //Subscribe to ServerStatus
-        //var serverStatusNode = _nodesFlat.Select(x=> x.Value).FirstOrDefault(
-        //    x => x.NodeId.IdType == IdType.Numeric && int.Parse(x.NodeId.Identifier.ToString()) == Variables.Server_ServerStatus
-        //    && x.NodeId.NamespaceIndex == 0);
-        //if (serverStatusNode != null)
-        //    _nodesToBeSubscribed.Add(serverStatusNode);
+        await _subscription.CreateAsync(cancellationToken);
 
         //Subscribe Saved Nodes
         foreach (var node in _nodesToBeSubscribed)
@@ -589,26 +586,26 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             _subscription.AddItem(monitoredItem);
         }
         _nodesToBeSubscribed = [];
-        _subscription.ApplyChanges();
+        await _subscription.ApplyChangesAsync(cancellationToken);
 
-        State.OnSubscriptionsInitialized();
+        await State.OnSubscriptionsInitializedAsync();
     }
 
-    internal void AddSubscriptionToSession(OpcUaNode node)
+    internal Task AddSubscriptionToSession(OpcUaNode node, CancellationToken cancellationToken = default)
     {
         if (node.NodeClass != NodeClass.Variable)
         {
             Logger.Log(LogLevel.Warning, "It was tried to subscribe to the node {NodeId}. But that node is no variable node", node.NodeId);
-            return;
+            return Task.CompletedTask;
         }
         var monitoredItem = CreateMonitoredItem(node);
         if (monitoredItem == null)
         {
-            return;
+            return Task.CompletedTask;
         }
 
         _subscription.AddItem(monitoredItem);
-        _subscription.ApplyChanges();
+        return _subscription.ApplyChangesAsync(cancellationToken);
     }
 
     private MonitoredItem CreateMonitoredItem(OpcUaNode node)
@@ -675,25 +672,25 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
     #region Browse Nodes
 
-    internal void BrowseNodes()
+    internal async Task BrowseNodesAsync()
     {
 
         var namespaceUris = _session.NamespaceUris;
         var nodes = new List<OpcUaNode>();
 
-        BrowseNodes(ObjectIds.RootFolder, namespaceUris, nodes, 0);
+        await BrowseNodesAsync(ObjectIds.RootFolder, namespaceUris, nodes, 0);
         _nodes = nodes;
 
         _savedIds.Clear();
         Nodes = ConvertToDisplayNodes(_nodes);
         lock (_stateLock)
         {
-            State.OnBrowsingNodesCompleted();
+            State.OnBrowsingNodesCompletedAsync();
         }
     }
 
     //todo: Change to BFS
-    private void BrowseNodes(NodeId nodeId, NamespaceTable namespaceTable, List<OpcUaNode> list, int layer, HashSet<string> visitedNodes = null, uint referenceTypes = ReferenceTypes.HierarchicalReferences)
+    private async Task BrowseNodesAsync(NodeId nodeId, NamespaceTable namespaceTable, List<OpcUaNode> list, int layer, HashSet<string> visitedNodes = null, uint referenceTypes = ReferenceTypes.HierarchicalReferences)
     {
         visitedNodes ??= [];
         var branchNodes = new HashSet<string>(visitedNodes);
@@ -704,17 +701,24 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         }
         branchNodes.Add(nodeId.ToString());
 
-        _session.Browse(null, null, nodeId, uint.MaxValue, BrowseDirection.Forward, new NodeId(referenceTypes), true, (uint)NodeClass.Variable | (uint)NodeClass.Object | (uint)NodeClass.Method,
-                out var continuationPoint,
-                out var nextRefs);
+        IList<ReferenceDescriptionCollection> nextRefs;
 
-        nextRefs ??= [];
+        ByteStringCollection continuationPoints;
+
+        (_, continuationPoints, nextRefs, _) = await _session.BrowseAsync(null, null, [nodeId], uint.MaxValue, BrowseDirection.Forward, new NodeId(referenceTypes), true, (uint)NodeClass.Variable | (uint)NodeClass.Object | (uint)NodeClass.Method);
+
+        var continuationPoint = continuationPoints?.FirstOrDefault();
 
         //https://reference.opcfoundation.org/Core/Part4/v104/docs/7.6
         while (continuationPoint != null)
         {
-            _session.BrowseNext(null, false, continuationPoint, out var newContinuationPoint, out var ref3);
-            if (ref3 == null)
+            IList<ReferenceDescriptionCollection> ref3;
+
+            (_, continuationPoints, ref3, _) = await _session.BrowseNextAsync(null, [continuationPoint], false);
+
+            var newContinuationPoint = continuationPoints?.FirstOrDefault();
+
+            if (ref3.Count < 1)
             {
                 if (newContinuationPoint == null)
                 {
@@ -723,15 +727,20 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
                 continue;
             }
-            foreach (var z in ref3)
+            foreach (var z in ref3[0])
             {
-                nextRefs.Add(z);
+                nextRefs[0].Add(z);
             }
 
             continuationPoint = newContinuationPoint;
         }
 
-        foreach (var nextRd in nextRefs)
+        if (nextRefs == null)
+        {
+            return;
+        }
+
+        foreach (var nextRd in nextRefs[0])
         {
             var nextRdNodeId = OpcUaNode.CreateExpandedNodeId(nextRd.NodeId.ToString());
             OpcUaNode node = null;
@@ -764,7 +773,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                     : ReferenceTypes.HasComponent;
 
                 var nodesOfObject = new List<OpcUaNode>();
-                BrowseNodes(ExpandedNodeId.ToNodeId(nextRd.NodeId, namespaceTable), namespaceTable, nodesOfObject, layer + 1, branchNodes, types);
+                await BrowseNodesAsync(ExpandedNodeId.ToNodeId(nextRd.NodeId, namespaceTable), namespaceTable, nodesOfObject, layer + 1, branchNodes, types);
                 node.Nodes = nodesOfObject;
             }
 
@@ -807,25 +816,26 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
     #region Read and write nodes
 
-    internal void WriteNode(OpcUaNode node, object payload)
+    internal Task WriteNode(OpcUaNode node, object payload, CancellationToken cancellationToken = default)
     {
-        State.WriteNode(node, payload);
+        return State.WriteNodeAsync(node, payload, cancellationToken);
     }
 
     /// <inheritdoc/>
     public void WriteNode(string nodeId, object payload)
     {
         var node = State.GetNode(nodeId);
-        WriteNode(node, payload);
+        WriteNode(node, payload).GetAwaiter().GetResult();
     }
 
     /// <inheritdoc />
     public Task WriteNodeAsync(string nodeId, object payload, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var node = State.GetNode(nodeId);
+        return State.WriteNodeAsync(node, payload, cancellationToken);
     }
 
-    internal void OnWriteNode(OpcUaNode node, object payload)
+    internal async Task OnWriteNode(OpcUaNode node, object payload, CancellationToken cancellationToken = default)
     {
 
         var valueToBeWritten = new WriteValue
@@ -837,11 +847,12 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                 Value = payload
             }
         };
-        _session.Write(null, [valueToBeWritten], out var results, out _);
 
-        if (results != null)
+        var writeResult = await _session.WriteAsync(null, [valueToBeWritten], cancellationToken);
+
+        if (writeResult.Results != null)
         {
-            if (results.First().Code != 0)
+            if (writeResult.Results.First().Code != 0)
             {
                 Logger.Log(LogLevel.Warning, "There was an error when trying to write a value to node {NodeId}", node.NodeId);
             }
@@ -850,18 +861,19 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     /// <inheritdoc/>
     public object ReadNode(string nodeId)
     {
-        return ReadNodeDataValue(nodeId).Result.Value;
+        return ReadNodeDataValue(nodeId).GetAwaiter().GetResult().Result.Value;
     }
 
     /// <inheritdoc />
-    public Task<object> ReadNodeAsync(string nodeId, CancellationToken cancellationToken = default)
+    public async Task<object> ReadNodeAsync(string nodeId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var result = await ReadNodeDataValue(nodeId, cancellationToken);
+        return result.Result.Value;
     }
 
-    private DataValueResult ReadNodeDataValue(string nodeId)
+    private async Task<DataValueResult> ReadNodeDataValue(string nodeId, CancellationToken cancellationToken = default)
     {
-        var value = State.ReadValue(nodeId);
+        var value = await State.ReadValueAsync(nodeId, cancellationToken);
         if (!value.Success)
         {
             if (value.Error?.Exception != null)
@@ -873,7 +885,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         return value;
     }
 
-    internal DataValueResult OnReadValueOfNode(string identifier)
+    internal async Task<DataValueResult> OnReadValueOfNode(string identifier, CancellationToken cancellationToken)
     {
         var node = State.GetNode(identifier);
         if (node == null)
@@ -886,7 +898,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         }
 
         var nodeId = ExpandedNodeId.ToNodeId(node.NodeId, _session.NamespaceUris);
-        var value = _session.ReadValue(nodeId);
+        var value = await _session.ReadValueAsync(nodeId, cancellationToken);
         if (StatusCode.IsGood(value.StatusCode))
         {
             return new DataValueResult(value);
@@ -973,8 +985,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     /// </summary>
     /// <param name="identifier"></param>
     /// <param name="valueString"></param>
+    /// <param name="cancellationToken"></param>
     [EntrySerialize]
-    internal void WriteNode(string identifier, string valueString)
+    internal async Task WriteNode(string identifier, string valueString, CancellationToken cancellationToken = default)
     {
         var node = State.GetNode(identifier);
         var errormsg = "When trying to read the value of the node, ";
@@ -990,10 +1003,10 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         }
 
         var nodeId = ExpandedNodeId.ToNodeId(node.NodeId, _session.NamespaceUris);
-        var currentValue = _session.ReadValue(nodeId);
+        var currentValue = await _session.ReadValueAsync(nodeId, cancellationToken);
         var value = CreateValue(currentValue.WrappedValue.TypeInfo.BuiltInType, valueString);
 
-        State.WriteNode(node, value);
+        await State.WriteNodeAsync(node, value, CancellationToken.None);
 
     }
 
@@ -1054,12 +1067,13 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
     /// <inheritdoc/>
     [EntrySerialize]
-    public void RebrowseNodes()
+    public Task RebrowseNodesAsync(CancellationToken cancellationToken = default)
     {
         lock (_stateLock)
         {
-            State.RebrowseNodes();
+            State.RebrowseNodesAsync().GetAwaiter().GetResult();
         }
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -1070,7 +1084,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     internal void SubscribeNode(string identifier)
     {
         var node = State.GetNode(identifier);
-        AddSubscription(node);
+        AddSubscriptionAsync(node);
     }
 
     #endregion
@@ -1124,7 +1138,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             }
 
             DeviceSet.Add(deviceType);
-
         }
     }
 

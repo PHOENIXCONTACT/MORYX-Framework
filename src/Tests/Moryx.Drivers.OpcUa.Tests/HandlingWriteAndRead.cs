@@ -23,7 +23,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
     public void TestSendPrimitiveValue()
     {
         //Arrange
-        var node = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable).Value;
+        var node = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable).Value;
         var msg = new OpcUaMessage()
         {
             Identifier = node.NodeId.ToString(),
@@ -34,9 +34,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
         _driver.Send(msg);
 
         //Assert
-        StatusCodeCollection results2;
-        DiagnosticInfoCollection diagnosticInfos2;
-        _sessionMock.Verify(s => s.Write(null, It.IsAny<WriteValueCollection>(), out results2, out diagnosticInfos2));
+        _sessionMock.Verify(s => s.WriteAsync(null, It.IsAny<WriteValueCollection>(), It.IsAny<CancellationToken>()));
 
     }
 
@@ -44,38 +42,36 @@ public class HandlingWriteAndRead : OpcUaTestBase
     public void TestSetOutput()
     {
         //Arrange
-        var node = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable).Value;
+        var node = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable).Value;
         var value = 5;
 
         //Act
         _driver.Output[node.NodeId.ToString()] = value;
 
         //Assert
-        StatusCodeCollection results2;
-        DiagnosticInfoCollection diagnosticInfos2;
-        _sessionMock.Verify(s => s.Write(null, It.IsAny<WriteValueCollection>(), out results2, out diagnosticInfos2));
+        _sessionMock.Verify(s => s.WriteAsync(null, It.IsAny<WriteValueCollection>(), It.IsAny<CancellationToken>()));
     }
 
     [Test]
     public void TestRead()
     {
         //Arrange
-        var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
+        var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
         var resultValue = 8;
         SetupRead(resultValue);
 
         //Act
-        var value = _driver.ReadNode(node.NodeId.ToString());
+        var value = _driver.ReadNodeAsync(node.NodeId.ToString());
 
         //Assert
-        _sessionMock.Verify(s => s.ReadValue(It.IsAny<NodeId>()));
+        _sessionMock.Verify(s => s.ReadValueAsync(It.IsAny<NodeId>(), It.IsAny<CancellationToken>()));
     }
 
     [Test]
     public void TestGetInput()
     {
         //Arrange
-        var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
+        var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
         var resultValue = 8;
         SetupRead(resultValue);
 
@@ -83,7 +79,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
         var value = _driver.Input[node.NodeId.ToString()];
 
         //Assert
-        _sessionMock.Verify(s => s.ReadValue(It.IsAny<NodeId>()));
+        _sessionMock.Verify(s => s.ReadValueAsync(It.IsAny<NodeId>(), It.IsAny<CancellationToken>()));
         Assert.That(value, Is.EqualTo(resultValue));
     }
 
@@ -91,7 +87,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
     public void TestReadOuput()
     {
         //Arrange
-        var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
+        var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
         var resultValue = 8;
         SetupRead(resultValue);
 
@@ -99,17 +95,17 @@ public class HandlingWriteAndRead : OpcUaTestBase
         var value = _driver.Output[node.NodeId.ToString()];
 
         //Assert
-        _sessionMock.Verify(s => s.ReadValue(It.IsAny<NodeId>()));
+        _sessionMock.Verify(s => s.ReadValueAsync(It.IsAny<NodeId>(), It.IsAny<CancellationToken>()));
         Assert.That(value, Is.EqualTo(resultValue));
     }
 
     private void SetupRead(object resultValue)
     {
-        _sessionMock.Setup(s => s.ReadValue(It.IsAny<NodeId>())).Callback((NodeId nodeId) =>
+        _sessionMock.Setup(s => s.ReadValueAsync(It.IsAny<NodeId>(), It.IsAny<CancellationToken>())).Callback((NodeId nodeId, CancellationToken cancellationToken) =>
         {
             Assert.That(nodeId.Identifier, Is.EqualTo(nodeId.Identifier));
             Assert.That(nodeId.NamespaceIndex, Is.EqualTo(nodeId.NamespaceIndex));
-        }).Returns(new DataValue() { Value = resultValue, StatusCode = 0 });
+        }).ReturnsAsync(new DataValue() { Value = resultValue, StatusCode = 0 });
 
     }
 
@@ -117,7 +113,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
     public void TestFindNode()
     {
         //Arrange
-        var (_, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
+        var (_, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
         var nodeId = OpcUaNode.CreateExpandedNodeId(node.NodeId.ToString());
 
         //Act

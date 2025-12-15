@@ -7,21 +7,21 @@ namespace Moryx.Drivers.OpcUa.States;
 
 internal class RunningState(OpcUaDriver context, StateMachines.StateBase.StateMap stateMap) : DriverOpcUaState(context, stateMap, StateClassification.Running)
 {
-    internal override void RebrowseNodes()
+    internal override async Task RebrowseNodesAsync()
     {
         Context.RemoveSubscription();
         NextState(StateBrowsingNodes);
-        Context.BrowseNodes();
+        await Context.BrowseNodesAsync();
     }
 
     internal override OpcUaNode GetNode(string identifier)
     {
-        return Context.GetNode(identifier);
+        return Context.GetNodeAsync(identifier).GetAwaiter().GetResult();
     }
 
-    internal override DataValueResult ReadValue(string identifier)
+    internal override Task<DataValueResult> ReadValueAsync(string identifier, CancellationToken cancellationToken)
     {
-        return Context.OnReadValueOfNode(identifier);
+        return Context.OnReadValueOfNode(identifier, cancellationToken);
     }
 
     internal override void AddSubscription(OpcUaNode node)
@@ -29,8 +29,8 @@ internal class RunningState(OpcUaDriver context, StateMachines.StateBase.StateMa
         Context.AddSubscriptionToSession(node);
     }
 
-    internal override void WriteNode(OpcUaNode node, object payload)
+    internal override Task WriteNodeAsync(OpcUaNode node, object payload, CancellationToken cancellationToken)
     {
-        Context.OnWriteNode(node, payload);
+        return Context.OnWriteNode(node, payload, cancellationToken);
     }
 }

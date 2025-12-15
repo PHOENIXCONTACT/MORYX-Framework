@@ -8,15 +8,16 @@ namespace Moryx.Drivers.OpcUa.States;
 internal class InitializingSubscriptionsState(OpcUaDriver context, StateMachines.StateBase.StateMap stateMap)
       : DriverOpcUaState(context, stateMap, StateClassification.Initializing)
 {
-    internal override void OnSubscriptionsInitialized()
+    internal override Task OnSubscriptionsInitializedAsync()
     {
         NextState(StateRunning);
         Context.ReadDeviceSet();
+        return Task.CompletedTask;
     }
 
     internal override OpcUaNode GetNode(string identifier)
     {
-        return Context.GetNode(identifier);
+        return Context.GetNodeAsync(identifier).GetAwaiter().GetResult();
     }
 
     internal override void AddSubscription(OpcUaNode node)
@@ -24,10 +25,10 @@ internal class InitializingSubscriptionsState(OpcUaDriver context, StateMachines
         Context.AddSubscriptionToSession(node);
     }
 
-    internal override void RebrowseNodes()
+    internal override async Task RebrowseNodesAsync()
     {
         Context.RemoveSubscription();
         NextState(StateBrowsingNodes);
-        Context.BrowseNodes();
+        await Context.BrowseNodesAsync();
     }
 }

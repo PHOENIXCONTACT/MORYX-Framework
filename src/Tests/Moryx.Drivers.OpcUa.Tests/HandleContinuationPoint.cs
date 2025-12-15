@@ -17,7 +17,7 @@ public class HandleContinuationPoint : OpcUaTestBase
     private ReferenceDescriptionCollection _references;
 
     [SetUp]
-    public void SetUp()
+    public async Task SetUp()
     {
         _references = CreateNodes(_namespaceTable);
 
@@ -34,11 +34,7 @@ public class HandleContinuationPoint : OpcUaTestBase
             prop?.SetValue(sub, _sessionMock.Object);
         });
 
-        uint subscriptionId = 12;
-        double revisedPublishingInterval = 12;
-        uint revisedLifetimeCounter = 5;
-        uint revisedKeepAliveCount = 5;
-        _sessionMock.Setup(s => s.CreateSubscription(
+        _sessionMock.Setup(s => s.CreateSubscriptionAsync(
             null,
             It.IsAny<double>(),
             It.IsAny<uint>(),
@@ -46,21 +42,32 @@ public class HandleContinuationPoint : OpcUaTestBase
             It.IsAny<uint>(),
             It.IsAny<bool>(),
             It.IsAny<byte>(),
-            out subscriptionId,
-            out revisedPublishingInterval,
-            out revisedLifetimeCounter,
-            out revisedKeepAliveCount)).Callback(() =>
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new CreateSubscriptionResponse()
             {
-                subscriptionId = 12;
+                SubscriptionId = 12,
+                RevisedPublishingInterval = 12,
+                RevisedLifetimeCount = 5,
+                RevisedMaxKeepAliveCount = 5
             });
 
         var result = new MonitoredItemCreateResult(0);
         MonitoredItemCreateResultCollection results = [result];
-        DiagnosticInfoCollection diagnosticInfos;
-        _sessionMock.Setup(s => s.CreateMonitoredItems(null, It.IsAny<uint>(), It.IsAny<TimestampsToReturn>(),
-            It.IsAny<MonitoredItemCreateRequestCollection>(), out results, out diagnosticInfos));
+        _sessionMock.Setup(s => s.CreateMonitoredItemsAsync(null, It.IsAny<uint>(), It.IsAny<TimestampsToReturn>(),
+            It.IsAny<MonitoredItemCreateRequestCollection>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new CreateMonitoredItemsResponse() { Results = [result], DiagnosticInfos = [] });
 
-        CreateDriver();
+        _sessionMock
+            .Setup(s => s.SetPublishingModeAsync(null, It.IsAny<bool>(), It.IsAny<UInt32Collection>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new SetPublishingModeResponse()
+            {
+                Results = [StatusCodes.Good],
+                DiagnosticInfos = []
+            });
+
+        var subscriptionFactoryMock = CreateSubscriptionFactoryMock(_sessionMock.Object);
+
+        _driver = await CreateDriver(subscriptionFactoryMock.Object);
         _driver._session = _sessionMock.Object;
     }
 
@@ -68,7 +75,7 @@ public class HandleContinuationPoint : OpcUaTestBase
     public async Task TestContinuationPoint()
     {
         //Arrange
-        var byteArray = new byte[] { 0, 1 };
+        var byteArray = new ByteStringCollection([[0, 1]]);
         var nextRefs1 = new ReferenceDescriptionCollection() { _references[0] };
         var nextRefs2 = new ReferenceDescriptionCollection();
         foreach (var nextRef in _references.GetRange(1, _references.Count - 1))
@@ -76,11 +83,13 @@ public class HandleContinuationPoint : OpcUaTestBase
             nextRefs2.Add(nextRef);
         }
 
-        _sessionMock.Setup(s => s.Browse(null, null, ObjectIds.RootFolder, It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
-           true, It.IsAny<uint>(), out byteArray, out nextRefs1));
+        _sessionMock.Setup(s => s.BrowseAsync(null, null, new List<NodeId> { ObjectIds.RootFolder }, It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
+            true, It.IsAny<uint>())).ReturnsAsync((null, byteArray, [nextRefs1], null));
 
-        byte[]? furtherContinuationPoint = null;
-        _sessionMock.Setup(s => s.BrowseNext(null, false, byteArray, out furtherContinuationPoint, out nextRefs2));
+        ByteStringCollection? furtherContinuationPoint = null;
+        _sessionMock
+            .Setup(s => s.BrowseNextAsync(null, byteArray, false, CancellationToken.None))
+            .ReturnsAsync((null, furtherContinuationPoint, [nextRefs2], null));
 
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>

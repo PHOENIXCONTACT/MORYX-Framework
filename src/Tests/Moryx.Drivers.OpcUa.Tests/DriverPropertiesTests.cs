@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.Logging;
 using Moq;
+using Moryx.Drivers.OpcUa.Factories;
 using NUnit.Framework;
 using Opc.Ua;
 

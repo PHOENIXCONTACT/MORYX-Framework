@@ -11,11 +11,11 @@ internal class DisconnectedState(OpcUaDriver context, StateMachines.StateBase.St
     public override void Connect()
     {
         NextState(StateConnecting);
-        Context.TryConnect(true);
+        Context.TryConnect(true).GetAwaiter().GetResult();
     }
 
-    internal override void OnConnectionLost(KeepAliveEventArgs e)
+    internal override Task OnConnectionLostAsync(KeepAliveEventArgs e)
     {
-        InvalidState();
+        return InvalidStateAsync();
     }
 }

@@ -7,14 +7,15 @@ namespace Moryx.Drivers.OpcUa.States;
 
 internal class BrowsingNodesOnServerState(OpcUaDriver context, StateMachines.StateBase.StateMap stateMap) : DriverOpcUaState(context, stateMap, StateClassification.Initializing)
 {
-    internal override void RebrowseNodes()
+    internal override Task RebrowseNodesAsync()
     {
         // do nothing, since nodes are already browsed
+        return Task.CompletedTask;
     }
 
-    internal override void OnBrowsingNodesCompleted()
+    internal override async Task OnBrowsingNodesCompletedAsync()
     {
         NextState(StateInitializingSubscriptions);
-        Context.SubscribeSavedNodes();
+        await Context.SubscribeSavedNodesAsync();
     }
 }

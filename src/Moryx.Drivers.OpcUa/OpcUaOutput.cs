@@ -31,7 +31,7 @@ internal class OpcUaOutput(OpcUaDriver driver) : IOutput
 
     private void SetValue(string key, object value)
     {
-        var node = driver.GetNode(key);
+        var node = driver.GetNodeAsync(key).GetAwaiter().GetResult();
         if (node == null)
         {
             driver.Logger.Log(LogLevel.Warning, "Node {key} is not known. So the value wasn't written.", key);

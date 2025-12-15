@@ -3,6 +3,8 @@
 
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using Moryx.Drivers.OpcUa.Factories;
+using Moryx.Drivers.OpcUa.Tests.Mocks;
 using Moryx.Logging;
 using Moryx.Modules;
 using Moryx.Tools;
@@ -65,25 +67,25 @@ public class OpcUaTestBase
         return [node1, node2, node3];
     }
 
-    protected Task BasicSetup()
+    public async Task BasicSetup()
     {
         ReflectionTool.TestMode = true;
         var nextRefs = CreateNodes(_namespaceTable);
         var rootRefs = new ReferenceDescriptionCollection { nextRefs[0], nextRefs[2] };
         var ns1Level1Refs = new ReferenceDescriptionCollection { nextRefs[1] };
-
         _sessionMock = new Mock<ISession>();
-        byte[]? byteArray = null;
+        ByteStringCollection? byteArray = null;
         _sessionMock.Setup(s => s.NamespaceUris).Returns(_namespaceTable);
-        _sessionMock.Setup(s => s.AddSubscription(It.IsAny<Subscription>())).Returns(true);
-        _sessionMock.Setup(s => s.Browse(null, null, ObjectIds.RootFolder, It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
-            true, It.IsAny<uint>(), out byteArray, out rootRefs));
-        _sessionMock.Setup(s => s.Browse(null, null, It.Is<NodeId>(node => node.ToString() == "nsu=http://pxcsdf;s=identifier1"), It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
-            true, It.IsAny<uint>(), out byteArray, out ns1Level1Refs));
+        _sessionMock.Setup(s => s.AddSubscription(It.IsAny<Subscription>()))
+            .Returns(true);
+        _sessionMock.Setup(s => s.BrowseAsync(null, null, new List<NodeId> { ObjectIds.RootFolder }, It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
+            true, It.IsAny<uint>())).ReturnsAsync((null, byteArray, [rootRefs], null));
+        _sessionMock.Setup(s => s.BrowseAsync(null, null, It.Is<List<NodeId>>(node => node.First().ToString() == "nsu=http://pxcsdf;s=identifier1"), It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
+            true, It.IsAny<uint>())).ReturnsAsync((null, byteArray, [ns1Level1Refs], null));
 
         var nextRefsDefault = new ReferenceDescriptionCollection();
-        _sessionMock.Setup(s => s.Browse(null, null, It.Is<NodeId>(x => x != ObjectIds.RootFolder), It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
-            true, It.IsAny<uint>(), out byteArray, out nextRefsDefault));
+        _sessionMock.Setup(s => s.BrowseAsync(null, null, It.Is<List<NodeId>>(x => x.First() != ObjectIds.RootFolder), It.IsAny<uint>(), It.IsAny<BrowseDirection>(), ReferenceTypeIds.HierarchicalReferences,
+            true, It.IsAny<uint>())).ReturnsAsync((null, byteArray, [nextRefsDefault], null));
 
         _sessionMock.Setup(s => s.AddSubscription(It.IsAny<Subscription>())).Callback((Subscription sub) =>
         {
@@ -91,11 +93,7 @@ public class OpcUaTestBase
             prop?.SetValue(sub, _sessionMock.Object);
         });
 
-        uint subscriptionId = 12;
-        double revisedPublishingInterval = 12;
-        uint revisedLifetimeCounter = 5;
-        uint revisedKeepAliveCount = 5;
-        _sessionMock.Setup(s => s.CreateSubscription(
+        _sessionMock.Setup(s => s.CreateSubscriptionAsync(
             null,
             It.IsAny<double>(),
             It.IsAny<uint>(),
@@ -103,32 +101,59 @@ public class OpcUaTestBase
             It.IsAny<uint>(),
             It.IsAny<bool>(),
             It.IsAny<byte>(),
-            out subscriptionId,
-            out revisedPublishingInterval,
-            out revisedLifetimeCounter,
-            out revisedKeepAliveCount)).Callback(() =>
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new CreateSubscriptionResponse()
             {
-                subscriptionId = 12;
+                SubscriptionId = 12,
+                RevisedPublishingInterval = 12,
+                RevisedLifetimeCount = 5,
+                RevisedMaxKeepAliveCount = 5
+            });
+
+        _sessionMock.Setup(s => s.SetPublishingModeAsync(null, It.IsAny<bool>(), It.IsAny<UInt32Collection>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new SetPublishingModeResponse()
+            {
+                Results = [StatusCodes.Good],
+                DiagnosticInfos = []
             });
 
         var result = new MonitoredItemCreateResult(0);
         MonitoredItemCreateResultCollection results = [result];
-        DiagnosticInfoCollection diagnosticInfos;
-        _sessionMock.Setup(s => s.CreateMonitoredItems(null, It.IsAny<uint>(), It.IsAny<TimestampsToReturn>(),
-            It.IsAny<MonitoredItemCreateRequestCollection>(), out results, out diagnosticInfos));
+        _sessionMock.Setup(s => s.CreateMonitoredItemsAsync(null, It.IsAny<uint>(), It.IsAny<TimestampsToReturn>(),
+            It.IsAny<MonitoredItemCreateRequestCollection>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new CreateMonitoredItemsResponse() { Results = [result], DiagnosticInfos = [] });
 
-        return CreateDriver();
+        _sessionMock.Setup(s => s.WriteAsync(null, It.IsAny<WriteValueCollection>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new WriteResponse() { Results = new StatusCodeCollection([StatusCodes.Good]), DiagnosticInfos = [] });
+        var subscriptionFactoryMock = CreateSubscriptionFactoryMock(_sessionMock.Object);
+
+        _driver = await CreateDriver(subscriptionFactoryMock.Object);
     }
 
-    protected Task CreateDriver()
+    internal static Mock<SubscriptionFactory> CreateSubscriptionFactoryMock(ISession session)
     {
-        _driver = new OpcUaDriver()
+        var subscriptionFactoryMock = new Mock<SubscriptionFactory>();
+        subscriptionFactoryMock.Setup(f => f.CreateSubscription(It.IsAny<Subscription>()))
+            .Returns<Subscription>((fromSubscription) =>
+            {
+                var subscription = new TestSubscription(fromSubscription);
+                subscription.InjectSession(session);
+                return subscription;
+            });
+        return subscriptionFactoryMock;
+    }
+
+    internal static async Task<OpcUaDriver> CreateDriver(SubscriptionFactory subscriptionFactory)
+    {
+        var driver = new OpcUaDriver()
         {
             PublishingInterval = 1000,
             SamplingInterval = 1000,
             Logger = new ModuleLogger("Dummy", new NullLoggerFactory())
         };
-        return ((IAsyncInitializable)_driver).InitializeAsync();
+        await ((IAsyncInitializablePlugin)driver).InitializeAsync();
+        driver.SubscriptionFactory = subscriptionFactory;
+        return driver;
     }
 
 }

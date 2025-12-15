@@ -27,11 +27,6 @@ public class NodeHandlingTests : OpcUaTestBase
     public async Task TestBrowsingNodes()
     {
         //Arrange
-        uint subscriptionId = 12;
-        double revisedPublishingInterval = 12;
-        uint revisedLifetimeCounter = 5;
-        uint revisedKeepAliveCount = 5;
-
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
@@ -42,22 +37,21 @@ public class NodeHandlingTests : OpcUaTestBase
                 wait.Set();
             }
         };
+
         //Act
         await ((IAsyncPlugin)_driver).StartAsync();
 
         //Assert I
         _sessionMock.Verify(s => s.AddSubscription(It.IsAny<Subscription>()), "Subscription was not added to the session");
-        _sessionMock.Verify(s => s.CreateSubscription(null,
+        _sessionMock.Verify(s => s.CreateSubscriptionAsync(null,
             _driver.PublishingInterval,
             It.IsAny<uint>(),
             It.IsAny<uint>(),
             It.IsAny<uint>(),
             It.IsAny<bool>(),
             It.IsAny<byte>(),
-            out subscriptionId,
-            out revisedPublishingInterval,
-            out revisedLifetimeCounter,
-            out revisedKeepAliveCount), "Subscription was created with the wrong parameters or not created at all");
+            It.IsAny<CancellationToken>()
+            ), "Subscription was created with the wrong parameters or not created at all");
 
         Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), "Driver was not running");
     }
@@ -105,7 +99,7 @@ public class NodeHandlingTests : OpcUaTestBase
     public async Task TestSubscribingMonitoredItemsAfterBrowsing()
     {
         //Arrange
-        var expectedNode = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
+        var expectedNode = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
         var channel = _driver.Channel(expectedNode.Value.NodeId.ToString());
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
@@ -123,8 +117,8 @@ public class NodeHandlingTests : OpcUaTestBase
         //Assert I
         MonitoredItemCreateResultCollection results2;
         DiagnosticInfoCollection diagnosticInfos2;
-        _sessionMock.Verify(s => s.CreateMonitoredItems(null, It.IsAny<uint>(), It.IsAny<TimestampsToReturn>(), It.IsAny<MonitoredItemCreateRequestCollection>()
-            , out results2, out diagnosticInfos2));
+        _sessionMock.Verify(s => s.CreateMonitoredItemsAsync(null, It.IsAny<uint>(), It.IsAny<TimestampsToReturn>(), It.IsAny<MonitoredItemCreateRequestCollection>()
+            , It.IsAny<CancellationToken>()));
         Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), "Driver was not running");
     }
 
@@ -136,7 +130,7 @@ public class NodeHandlingTests : OpcUaTestBase
     [Test(Description = "Nodes can only be subscribed ones")]
     public async Task TestNodesCanOnlyBeSubscribedOnes()
     {
-        var expectedNode = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == Opc.Ua.NodeClass.Variable);
+        var expectedNode = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
         var channel = _driver.Channel(expectedNode.Value.NodeId.ToString());
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
@@ -155,8 +149,8 @@ public class NodeHandlingTests : OpcUaTestBase
         //Assert I
         MonitoredItemCreateResultCollection results2;
         DiagnosticInfoCollection diagnosticInfos2;
-        _sessionMock.Verify(s => s.CreateMonitoredItems(null, It.IsAny<uint>(), It.IsAny<TimestampsToReturn>(), It.IsAny<MonitoredItemCreateRequestCollection>()
-            , out results2, out diagnosticInfos2), Times.Once, "Subscription was done never or several times instead of once");
+        _sessionMock.Verify(s => s.CreateMonitoredItemsAsync(null, It.IsAny<uint>(), It.IsAny<TimestampsToReturn>(), It.IsAny<MonitoredItemCreateRequestCollection>()
+            , It.IsAny<CancellationToken>()), Times.Once, "Subscription was done never or several times instead of once");
         Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), "Driver was not running");
     }
 
