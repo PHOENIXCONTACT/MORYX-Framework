@@ -19,7 +19,7 @@ import '../../extensions/observable.extensions';
 import { OperationViewModel } from '../../models/operation-view-model';
 import { OperationModel } from '../../api/models';
 import { ReportModel } from '../../api/models';
-import { OperationClassification } from '../../api/models';
+import { OperationStateClassification } from '../../api/models';
 import { ReportContext } from '../../api/models';
 import { LogLevel } from '../../api/models';
 import { MediaMatcher } from '@angular/cdk/layout';
@@ -64,7 +64,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
   drawerContent = signal<DrawerContent>(DrawerContent.None);
   selectedOperation = signal<OperationModel | undefined>(undefined);
   TranslationConstants = TranslationConstants;
-  OperationClassification = OperationClassification;
+  OperationStateClassification = OperationStateClassification;
   isLoading = signal<boolean>(true);
   mobileQuery: MediaQueryList;
   private searchTerm = signal<string>('');
@@ -98,7 +98,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
     this.orderManagementService.getOperations().subscribe({
       next: (operationResponse: OperationModel[]) => {
         this.operations.set(operationResponse
-          .filter(operation => operation.classification !== OperationClassification.Completed)
+          .filter(operation => operation.classification !== OperationStateClassification.Completed)
           .map(model => {
             var viewModel = new OperationViewModel(model);
             this.subscribeForMessagesCount(viewModel);
@@ -116,7 +116,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
     this.operationService.operationChanged((updatedOperation: OperationModel) => {
       if (!updatedOperation) return;
       //filter the list after the update of a completed operation
-      if (updatedOperation?.classification === OperationClassification.Completed) {
+      if (updatedOperation?.classification === OperationStateClassification.Completed) {
         this.operations.update(operations => operations.filter(
           operation => operation.model.identifier !== updatedOperation.identifier
         ));

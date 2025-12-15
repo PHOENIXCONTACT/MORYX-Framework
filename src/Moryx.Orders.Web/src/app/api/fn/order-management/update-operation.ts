@@ -7,14 +7,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
+import { OperationUpdateModel } from '../../models/operation-update-model';
 
-export interface SetOperationSortOrder$Params {
+export interface UpdateOperation$Params {
   guid: string;
-      body?: number
+      body?: OperationUpdateModel
 }
 
-export function setOperationSortOrder(http: HttpClient, rootUrl: string, params: SetOperationSortOrder$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-  const rb = new RequestBuilder(rootUrl, setOperationSortOrder.PATH, 'put');
+export function updateOperation(http: HttpClient, rootUrl: string, params: UpdateOperation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+  const rb = new RequestBuilder(rootUrl, updateOperation.PATH, 'put');
   if (params) {
     rb.path('guid', params.guid, {});
     rb.body(params.body, 'application/*+json');
@@ -30,4 +31,4 @@ export function setOperationSortOrder(http: HttpClient, rootUrl: string, params:
   );
 }
 
-setOperationSortOrder.PATH = '/api/moryx/orders/{guid}/position';
+updateOperation.PATH = '/api/moryx/orders/{guid}/update';
