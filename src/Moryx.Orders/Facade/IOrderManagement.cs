@@ -61,11 +61,6 @@ namespace Moryx.Orders
         Task AbortOperationAsync(Operation operation, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Sets the sort order of the given operation
-        /// </summary>
-        Task SetOperationSortOrderAsync(int sortOrder, Operation operation, CancellationToken cancellationToken = default);
-
-        /// <summary>
         /// Returns a report context of the given operation
         /// </summary>
         ReportContext GetReportContext(Operation operation);
@@ -86,9 +81,9 @@ namespace Moryx.Orders
         Task InterruptOperationAsync(Operation operation, User user, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Updates the operation source
+        /// Updates the operation
         /// </summary>
-        Task UpdateSourceAsync(IOperationSource source, Operation operation, CancellationToken cancellationToken = default);
+        Task UpdateOperationAsync(Operation operation, OperationUpdate update, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Will be raised if the progress of an operation was changed

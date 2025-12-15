@@ -210,25 +210,6 @@ namespace Moryx.Orders.Management
             return OperationManager.Abort(operationData);
         }
 
-        public Task SetOperationSortOrderAsync(int sortOrder, Operation operation, CancellationToken cancellationToken = default)
-        {
-            ValidateHealthState();
-
-            var operationData = GetOperationDataSave(operation);
-            return operationData.SetSortOrder(sortOrder);
-        }
-
-        public Task UpdateSourceAsync(IOperationSource source, Operation operation, CancellationToken cancellationToken = default)
-        {
-            ValidateHealthState();
-
-            var operationData = GetOperationDataSave(operation);
-            if (operationData.Operation.Source.Type != source.Type)
-                throw new InvalidOperationException("Type of the operation source cannot be changed");
-
-            return operationData.UpdateSource(source);
-        }
-
         public ReportContext GetReportContext(Operation operation)
         {
             ValidateHealthState();
@@ -266,6 +247,15 @@ namespace Moryx.Orders.Management
 
             var operationData = GetOperationDataSave(operation);
             return OperationManager.Interrupt(operationData, user);
+        }
+
+        public Task UpdateOperationAsync(Operation operation, OperationUpdate update, CancellationToken cancellationToken = default)
+        {
+            var operationData = OperationDataPool.Get(operation);
+            if (operationData == null)
+                throw new ArgumentException($"Operation with identifier {operation.Identifier} not found");
+
+            return operationData.UpdateAsync(update, cancellationToken);
         }
 
         private IOperationData GetOperationDataSave(Operation operation)

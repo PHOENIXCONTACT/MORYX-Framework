@@ -19,6 +19,16 @@ namespace Moryx.Orders.Endpoints.Models
                 return new PickPartAdvice(operation.Parts.FirstOrDefault(p => p.Id == model.PartId), model.ToteBoxNumber);
         }
 
+        internal static OperationUpdate FromModel(OperationUpdateModel model)
+        {
+            return new OperationUpdate
+            {
+                SortIndex = model.SortIndex,
+                PlannedStart = model.PlannedStart,
+                PlannedEnd = model.PlannedEnd,
+            };
+        }
+
         internal static OperationReport FromModel(ReportModel model, IUserManagement userManagement)
         {
             var user = userManagement?.GetUser(model.UserIdentifier);

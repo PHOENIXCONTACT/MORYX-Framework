@@ -376,6 +376,7 @@ These feature were infrequently used and has been removed to simplify the codeba
 - Removed report from interrupt of an operation. Reporting during an interruption doesn't add any value. The quantity for the report can only be predicted and will be inaccurate if something goes wrong or is reworked during the interruption.
 - Facade Renaming:
   - `GetOperationAsync` -> `LoadOperationAsync`
+  - `SetOperationSortOrder` and `UpdateSource` were combined to `UpdateOperationAsync`. It supports both functionalities and included changing `PlannedStart` and `PlannedEnd` as well.
 
 ## Reworked driver APIs
 
@@ -404,7 +405,7 @@ The API of `IResourceInitializer` was adjusted
 - Clean-ups and unifications on `JobCreationContext`
   - Removed unused constructor `public JobCreationContext(IProductRecipe recipe)`
   - Removed unused method `public JobCreationContext Add(ProductionRecipe recipe)`
-  - Replaced uses of `IProductRecipe` with `ProductionRecipe`  
+  - Replaced uses of `IProductRecipe` with `ProductionRecipe`
     _Note: ProcessEngine Module did expect IWorkplanRecipe anyways, so the use of IProductRecipe would have lead to exceptions in the past already._
   - Transformed `public struct JobTemplate` to `public record JobTemplate` to allow extensions in the future.
 - Removed API from IJobManagement: `JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement)`
