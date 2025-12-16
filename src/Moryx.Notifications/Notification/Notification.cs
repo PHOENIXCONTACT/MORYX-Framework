@@ -44,18 +44,16 @@ namespace Moryx.Notifications
         public bool IsAcknowledgable { get; set; }
 
         /// <summary>
-        /// Contains the date and time when this notification has been acknowledged. 
+        /// Contains the date and time when this notification has been acknowledged.
         /// Is Null, if the notification has not yet been acknowledged.
         /// </summary>
-        private DateTime? _acknowledged;
-        /// <inheritdoc />
         public virtual DateTime? Acknowledged
         {
-            get => _acknowledged;
+            get;
             set
             {
-                if (_acknowledged is null)
-                    _acknowledged = value;
+                if (field is null)
+                    field = value;
                 else
                     throw new InvalidOperationException($"Tried to update {nameof(Acknowledged)}.");
             }
@@ -65,15 +63,13 @@ namespace Moryx.Notifications
         /// Who or what acknowledged the notification, if it was acknowledged.
         /// <see cref="Acknowledged"/> shows if the notification has been acknowledged.
         /// </summary>
-        private string _acknowledger;
-        /// <inheritdoc />
         public virtual string Acknowledger
         {
-            get => _acknowledger;
+            get;
             set
             {
-                if (_acknowledger is null)
-                    _acknowledger = value;
+                if (field is null)
+                    field = value;
                 else
                     throw new InvalidOperationException($"Tried to update {nameof(Acknowledger)}.");
             }
@@ -82,15 +78,13 @@ namespace Moryx.Notifications
         /// <summary>
         /// Date of creation
         /// </summary>
-        private DateTime? _created;
-        /// <inheritdoc />
         public virtual DateTime? Created
         {
-            get => _created;
+            get;
             set
             {
-                if (_created is null)
-                    _created = value;
+                if (field is null)
+                    field = value;
                 else
                     throw new InvalidOperationException($"Tried to update {nameof(Created)}.");
             }
