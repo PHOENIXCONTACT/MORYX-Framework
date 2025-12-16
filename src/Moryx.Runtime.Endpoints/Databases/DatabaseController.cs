@@ -103,7 +103,7 @@ namespace Moryx.Runtime.Endpoints.Databases
         [Authorize(Policy = RuntimePermissions.DatabaseCanCreate)]
         public ActionResult<InvocationResponse> CreateAll()
         {
-            var bulkResult = BulkOperation(mc => mc.CreateDatabaseAsync(mc.Config), "Creation");
+            var bulkResult = BulkOperation(async mc => await mc.CreateDatabaseAsync(mc.Config), "Creation");
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
@@ -143,25 +143,29 @@ namespace Moryx.Runtime.Endpoints.Databases
         [Authorize(Policy = RuntimePermissions.DatabaseCanErase)]
         public ActionResult<InvocationResponse> EraseAll()
         {
-            var bulkResult = BulkOperation(mc => mc.DeleteDatabaseAsync(mc.Config), "Deletion");
+            var bulkResult = BulkOperation(async mc => await mc.DeleteDatabaseAsync(mc.Config), "Deletion");
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
         [HttpDelete("{targetModel}")]
         [Authorize(Policy = RuntimePermissions.DatabaseCanErase)]
-        public ActionResult<InvocationResponse> EraseDatabase(string targetModel, DatabaseConfigModel config)
+        public async Task<ActionResult<InvocationResponse>> EraseDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
             if (targetConfigurator == null)
+            {
                 return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
+            }
 
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
             if (!IsConfigValid(updatedConfig))
+            {
                 return BadConfigValues();
+            }
 
             try
             {
-                targetConfigurator.DeleteDatabaseAsync(updatedConfig);
+                await targetConfigurator.DeleteDatabaseAsync(updatedConfig);
                 return new InvocationResponse();
             }
             catch (Exception ex)

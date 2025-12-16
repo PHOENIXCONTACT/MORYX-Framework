@@ -14,6 +14,11 @@ namespace Moryx.Model.Configuration
         public MigrationResult Result { get; set; }
 
         /// <summary>
+        /// Reason, in case an error occured during migration
+        /// </summary>
+        public string[] Errors { get; set; } = [];
+
+        /// <summary>
         /// All updates that were executed
         /// </summary>
         public string[] ExecutedMigrations { get; set; }
