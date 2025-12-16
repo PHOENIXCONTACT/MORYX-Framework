@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -20,7 +20,7 @@ namespace Moryx.Products.Management.Model.Migrations.Sqlite
                 type: "TEXT",
                 nullable: true);
 
-            migrationBuilder.Sql("UPDATE WorkplanSteps SET TypeName = NameSpace || '.' || ClassName;");
+            migrationBuilder.Sql("UPDATE WorkplanSteps SET TypeName = NameSpace || '.' || Classname;");
 
             migrationBuilder.DropColumn(
                 name: "Assembly",

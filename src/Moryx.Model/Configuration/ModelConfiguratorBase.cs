@@ -135,7 +135,7 @@ namespace Moryx.Model.Configuration
             {
                 result.Result = MigrationResult.NoMigrationsAvailable;
                 result.ExecutedMigrations = [];
-                Logger.Log(LogLevel.Warning, "Database migration for database '{0}' was failed. There are no migrations available!",
+                Logger.Log(LogLevel.Warning, "Database migration for database '{0}' failed. There are no migrations available!",
                     config.ConnectionSettings.Database);
 
                 return result;
@@ -152,7 +152,8 @@ namespace Moryx.Model.Configuration
             catch (Exception e)
             {
                 result.Result = MigrationResult.Error;
-                Logger.Log(LogLevel.Error, e, "Database migration for database '{0}' was failed!", config.ConnectionSettings.Database);
+                result.Errors = [.. result.Errors, e.Message];
+                Logger.Log(LogLevel.Error, e, "Database migration for database '{0}' failed!", config.ConnectionSettings.Database);
             }
 
             return result;

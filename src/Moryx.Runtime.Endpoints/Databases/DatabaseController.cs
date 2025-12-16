@@ -25,12 +25,12 @@ namespace Moryx.Runtime.Endpoints.Databases
     {
         private readonly IDbContextManager _dbContextManager;
         private readonly IDatabaseConfigUpdateService _databaseUpdateService;
-        private static readonly string DataDirectory;
+        private static readonly string _dataDirectory;
 
         static DatabaseController()
         {
             var executingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            DataDirectory = Path.Combine(executingDirectory!, "Backups");
+            _dataDirectory = Path.Combine(executingDirectory!, "Backups");
         }
 
         public DatabaseController(IDbContextManager dbContextManager)
@@ -42,7 +42,10 @@ namespace Moryx.Runtime.Endpoints.Databases
         [HttpGet]
         [Authorize(Policy = RuntimePermissions.DatabaseCanView)]
         public async Task<ActionResult<DatabasesResponse>> GetAll()
-            => Ok(new DatabasesResponse { Databases = await Task.WhenAll(_dbContextManager.Contexts.Select(Convert)) });
+        {
+            var allModels = await Task.WhenAll(_dbContextManager.Contexts.Select(ConvertAsync));
+            return Ok(new DatabasesResponse { Databases = allModels });
+        }
 
         [HttpGet("{targetModel}")]
         [Authorize(Policy = RuntimePermissions.DatabaseCanView)]
@@ -52,7 +55,7 @@ namespace Moryx.Runtime.Endpoints.Databases
             if (model == null)
                 return NotFound($"Module with name \"{targetModel}\" could not be found");
 
-            return await Convert(model);
+            return await ConvertAsync(model);
         }
 
         [HttpPost("{targetModel}/config")]
@@ -62,7 +65,7 @@ namespace Moryx.Runtime.Endpoints.Databases
             try
             {
                 var result = _databaseUpdateService.UpdateModel(targetModel, config);
-                return Ok(await Convert(_dbContextManager.Contexts.First(c => TargetModelName(c) == targetModel)));
+                return Ok(await ConvertAsync(_dbContextManager.Contexts.First(c => TargetModelName(c) == targetModel)));
             }
             catch (NotFoundException exception)
             {
@@ -85,7 +88,7 @@ namespace Moryx.Runtime.Endpoints.Databases
             if (targetConfigurator == null)
                 return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
 
-            if (targetConfigurator.GetType() == typeof(NullModelConfigurator))
+            if (targetConfigurator is NullModelConfigurator)
             {
                 return new TestConnectionResponse { Result = TestConnectionResult.ConfigurationError };
             }
@@ -101,9 +104,9 @@ namespace Moryx.Runtime.Endpoints.Databases
 
         [HttpPost("createall")]
         [Authorize(Policy = RuntimePermissions.DatabaseCanCreate)]
-        public ActionResult<InvocationResponse> CreateAll()
+        public async Task<ActionResult<InvocationResponse>> CreateAll()
         {
-            var bulkResult = BulkOperation(mc => mc.CreateDatabaseAsync(mc.Config), "Creation");
+            var bulkResult = await BulkOperationAsync(mc => mc.CreateDatabaseAsync(mc.Config), "Creation");
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
@@ -132,7 +135,7 @@ namespace Moryx.Runtime.Endpoints.Databases
             }
         }
 
-        private DatabaseConfig UpdateConfigFromModel(DatabaseConfig dbConfig, DatabaseConfigModel configModel)
+        private static DatabaseConfig UpdateConfigFromModel(DatabaseConfig dbConfig, DatabaseConfigModel configModel)
         {
             dbConfig.ConfiguratorTypename = configModel.ConfiguratorTypename;
             dbConfig.ConnectionSettings.FromDictionary(configModel.Entries);
@@ -141,27 +144,31 @@ namespace Moryx.Runtime.Endpoints.Databases
 
         [HttpDelete]
         [Authorize(Policy = RuntimePermissions.DatabaseCanErase)]
-        public ActionResult<InvocationResponse> EraseAll()
+        public async Task<ActionResult<InvocationResponse>> EraseAll()
         {
-            var bulkResult = BulkOperation(mc => mc.DeleteDatabaseAsync(mc.Config), "Deletion");
+            var bulkResult = await BulkOperationAsync(mc => mc.DeleteDatabaseAsync(mc.Config), "Deletion");
             return string.IsNullOrEmpty(bulkResult) ? new InvocationResponse() : new InvocationResponse(bulkResult);
         }
 
         [HttpDelete("{targetModel}")]
         [Authorize(Policy = RuntimePermissions.DatabaseCanErase)]
-        public ActionResult<InvocationResponse> EraseDatabase(string targetModel, DatabaseConfigModel config)
+        public async Task<ActionResult<InvocationResponse>> EraseDatabase(string targetModel, DatabaseConfigModel config)
         {
             var targetConfigurator = GetTargetConfigurator(targetModel);
             if (targetConfigurator == null)
+            {
                 return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
+            }
 
             var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
             if (!IsConfigValid(updatedConfig))
+            {
                 return BadConfigValues();
+            }
 
             try
             {
-                targetConfigurator.DeleteDatabaseAsync(updatedConfig);
+                await targetConfigurator.DeleteDatabaseAsync(updatedConfig);
                 return new InvocationResponse();
             }
             catch (Exception ex)
@@ -242,7 +249,7 @@ namespace Moryx.Runtime.Endpoints.Databases
             return _dbContextManager.GetConfigurator(context);
         }
 
-        private async Task<DataModel> Convert(Type contextType)
+        private async Task<DataModel> ConvertAsync(Type contextType)
         {
             var configurator = _dbContextManager.GetConfigurator(contextType);
             if (configurator?.Config == null)
@@ -309,7 +316,7 @@ namespace Moryx.Runtime.Endpoints.Databases
             var setups = allSetups.Where(setup => string.IsNullOrEmpty(setup.SupportedFileRegex))
                                   .Select(ConvertSetup).OrderBy(setup => setup.SortOrder).ToList();
             string[] files;
-            if (!Directory.Exists(DataDirectory) || !(files = Directory.GetFiles(DataDirectory)).Any())
+            if (!Directory.Exists(_dataDirectory) || !(files = Directory.GetFiles(_dataDirectory)).Any())
                 return setups.ToArray();
 
             var fileSetups = allSetups.Where(setup => !string.IsNullOrEmpty(setup.SupportedFileRegex))
@@ -357,7 +364,7 @@ namespace Moryx.Runtime.Endpoints.Databases
 
         private static string TargetModelName(Type contextType) => contextType.FullName;
 
-        private string BulkOperation(Action<IModelConfigurator> operation, string operationName)
+        private async Task<string> BulkOperationAsync(Func<IModelConfigurator, Task> operation, string operationName)
         {
             var result = string.Empty;
             foreach (var contextType in _dbContextManager.Contexts)
@@ -365,7 +372,7 @@ namespace Moryx.Runtime.Endpoints.Databases
                 var configurator = _dbContextManager.GetConfigurator(contextType);
                 try
                 {
-                    operation(configurator);
+                    await operation(configurator);
                 }
                 catch (Exception ex)
                 {
