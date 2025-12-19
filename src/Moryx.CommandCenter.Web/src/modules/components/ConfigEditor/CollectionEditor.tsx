@@ -34,7 +34,7 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
     constructor(props: CollapsibleEntryEditorBasePropModel) {
         super(props);
         this.state = {
-            SelectedEntry: props.Entry.value.possible[0].key,
+            SelectedEntry: props.Entry.value.possible[0]?.key,
             ExpandedEntryNames: [],
             CreatedPrototypesCount: 0
         };
