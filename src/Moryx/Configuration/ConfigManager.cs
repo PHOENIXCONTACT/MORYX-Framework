@@ -2,9 +2,14 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using Moryx.Serialization;
 using Newtonsoft.Json;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Moryx.Configuration
 {
@@ -84,8 +89,8 @@ namespace Moryx.Configuration
                 try
                 {
                     var fileContent = File.ReadAllText(configPath);
-                    config = (IConfig)JsonConvert.DeserializeObject(fileContent, confType, JsonSettings.ReadableReplace);
 
+                    config = (IConfig)JsonConvert.DeserializeObject(Decrypt(fileContent), confType, JsonSettings.ReadableReplace);
                     ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddProviders(ValueProviders));
                 }
                 catch (Exception e)
@@ -99,6 +104,82 @@ namespace Moryx.Configuration
             }
 
             return config;
+        }
+
+        /// <summary>
+        /// Decrypt the file content of encrypted AES string 
+        /// </summary>
+        /// <param name="fileContent">The content which should be decrypted.</param>
+        /// <returns>The decrypted file content.</returns>
+        private string Decrypt(string fileContent)
+        {
+            try
+            {
+                // When the files are in the old non encrypted Format
+                if (fileContent.StartsWith("{\r\n"))
+                {
+                    return fileContent;
+                }
+                string passwd = GetPassword();
+                string salt = GetSalt();
+                if (string.IsNullOrEmpty(passwd) || string.IsNullOrEmpty(salt))
+                {
+                    return fileContent;
+                }
+                using var aes = Aes.Create();
+                var key = new Rfc2898DeriveBytes(passwd, Encoding.UTF8.GetBytes(salt));
+                aes.Key = key.GetBytes(32);
+                aes.IV = key.GetBytes(16);
+
+                var buffer = Convert.FromBase64String(fileContent);
+                using var ms = new MemoryStream(buffer);
+                using var cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Read);
+                using var reader = new StreamReader(cs);
+                return reader.ReadToEnd();
+            }
+            catch (Exception e)
+            {
+                return fileContent;
+            }
+        }
+
+        /// <summary>
+        /// Encrypt the file content to an AES bases encryption.
+        /// </summary>
+        /// <param name="text">The content which should be encrypted</param>
+        /// <returns>Base64 AES encrypted string</returns>
+        private string Encrypt(string text)
+        {
+            try
+            {
+                string passwd = GetPassword();
+                string salt = GetSalt();
+                if (string.IsNullOrEmpty(passwd) || string.IsNullOrEmpty(salt))
+                {
+                    return text;
+                }
+                // Encrypt the serialized json object with an AES encryption so that the config files are 
+                // not readable 
+                using var aes = Aes.Create();
+                var key = new Rfc2898DeriveBytes(passwd, Encoding.UTF8.GetBytes(salt));
+                aes.Key = key.GetBytes(32);
+                aes.IV = key.GetBytes(16);
+
+                using var ms = new MemoryStream();
+                using var cs = new CryptoStream(ms, aes.CreateEncryptor(), CryptoStreamMode.Write);
+                using (var writer = new StreamWriter(cs))
+                {
+                    writer.Write(text);
+                }
+
+                byte[] encryptedBytes = ms.ToArray();
+                return Convert.ToBase64String(encryptedBytes);
+            }
+            catch (Exception e)
+            {
+                return text;
+            }
+            
         }
 
         private IConfig CreateConfig(Type confType, ConfigState state, string loadError)
@@ -123,7 +204,7 @@ namespace Moryx.Configuration
         protected void WriteToFile(object config, string name)
         {
             var text = JsonConvert.SerializeObject(config, JsonSettings.Readable);
-            File.WriteAllText(GetConfigPath(name), text);
+            File.WriteAllText(GetConfigPath(name), Encrypt(text));
         }
 
         private string GetConfigPath(string name)
@@ -140,6 +221,38 @@ namespace Moryx.Configuration
         protected bool ConfigExists(string name)
         {
             return File.Exists(GetConfigPath(name));
+        } 
+        
+        /// <summary>
+        /// Get the password for the encryption.
+        /// </summary>
+        /// <returns></returns>
+        private string GetPassword()
+        {
+            try
+            {
+                return Environment.GetEnvironmentVariable("ENCPW", EnvironmentVariableTarget.Machine);
+            }
+            catch (Exception e)
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Get the salt for the encryption.
+        /// </summary>
+        /// <returns></returns>
+        private string GetSalt()
+        {
+            try
+            {
+                return Environment.GetEnvironmentVariable("ENCSAL", EnvironmentVariableTarget.Machine);
+            }
+            catch (Exception e)
+            {
+                return string.Empty;
+            }
         }
     }
 }
