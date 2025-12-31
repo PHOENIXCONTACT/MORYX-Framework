@@ -50,6 +50,18 @@ namespace Moryx.ControlSystem.Jobs
         }
 
         /// <summary>
+        /// Add another <see cref="PreallocatedJobTemplate"/> to this <see cref="JobCreationContext"/>
+        /// based on the given <paramref name="recipe"/> and <paramref name="amount"/>
+        /// </summary>
+        /// <returns>The <see cref="AllocationToken"/> to monitor and modify the preallocation</returns>
+        public AllocationToken Preallocate(ProductionRecipe recipe, uint amount)
+        {
+            var template = new PreallocatedJobTemplate(recipe, amount);
+            _templates.Add(template);
+            return template.AllocationToken;
+        }
+
+        /// <summary>
         /// Add this job to the end of the list. This is the default behavior
         /// </summary>
         public JobCreationContext Append()
@@ -111,5 +123,25 @@ namespace Moryx.ControlSystem.Jobs
         /// Amount of the new job
         /// </summary>
         public uint Amount { get; }
+    }
+
+    /// <summary>
+    /// Single job template representing a preallocation for a <see cref="Job"/>, which can be monitored via the <see cref="AllocationToken"/>.
+    /// </summary>
+    [DebuggerDisplay(nameof(PreallocatedJobTemplate) + ": <Recipe: {" + nameof(Recipe) + "}, Amount: {" + nameof(Amount) + "}, Allocation Status: {" + nameof(AllocationToken.Status) + "}>")]
+    public record PreallocatedJobTemplate : JobTemplate
+    {
+        /// <summary>
+        /// Create a new job template from recipe and amount
+        /// </summary>
+        internal PreallocatedJobTemplate(ProductionRecipe recipe, uint amount) : base(recipe, amount)
+        {
+            AllocationToken = new AllocationToken(amount);
+        }
+
+        /// <summary>
+        /// Gets the allocation token for this preallocated job
+        /// </summary>
+        public AllocationToken AllocationToken { get; }
     }
 }

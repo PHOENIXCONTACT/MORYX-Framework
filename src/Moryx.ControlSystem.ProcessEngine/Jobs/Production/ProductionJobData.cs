@@ -15,7 +15,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
     /// </summary>
     [DebuggerDisplay(nameof(ProductionJobData) + " <Id: {" + nameof(Id) + "}, State: {" + nameof(State) + "}>")]
     [Component(LifeCycle.Transient, typeof(IProductionJobData))]
-    internal sealed class ProductionJobData : JobDataBase, IProductionJobData
+    internal class ProductionJobData : JobDataBase, IProductionJobData
     {
         #region Fields and Properties
 
