@@ -81,6 +81,7 @@ namespace Moryx.Configuration
         /// <param name="configuration">Object to save</param>
         public static void SaveConfiguration(this IConfigManager configManager, ConfigBase configuration)
         {
+            ArgumentNullException.ThrowIfNull(configuration);
             configManager.SaveConfiguration(configuration, configuration.GetType().FullName, false);
         }
 
@@ -92,6 +93,7 @@ namespace Moryx.Configuration
         /// <param name="liveUpdate">Flag if config should be updated on the currently used object reference</param>
         public static void SaveConfiguration(this IConfigManager configManager, ConfigBase configuration, bool liveUpdate)
         {
+            ArgumentNullException.ThrowIfNull(configuration);
             configManager.SaveConfiguration(configuration, configuration.GetType().FullName, liveUpdate);
         }
 
