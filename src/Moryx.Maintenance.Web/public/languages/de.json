@@ -1,0 +1,48 @@
+{
+  "APP": {
+    "MAINTENANCE_SCHEDULES": "Wartungspläne",
+    "FAILED_LOADING": "Die Verbindung zum Server konnte nicht hergestellt werden. Bitte überprüfen Sie Ihre Netzwerkverbindung oder versuchen Sie es später erneut.",
+    "SNACK_BAR": {
+      "ADDED": "Wartungsplan gespeichert!",
+      "REMOVED": "Wartungsplan entfernt!",
+      "START_SENT": "Befehl 'Wartung starte' gesendet"
+    }
+  },
+  "INTERVALS": {
+    "CYCLES": "Zyklen",
+    "DAYS": "Tage",
+    "HOURS": "Std"
+  },
+  "MAINTENANCES": {
+    "ACTIVE_FILTER": "Aktiv",
+    "INACTIVE_FILTER": "Inaktiv",
+    "ALL_FILTER": "Alle",
+    "MAINTENANCE_INTERVAL": "Wartungsintervall",
+    "EMPTY_STATE_HEADER": "Keine Wartungspläne",
+    "EMPTY_STATE_TEXT": "Fügen Sie ein neues hinzu, indem Sie auf das Pluszeichen klicken.",
+    "EMPTY_STATE_ACKNOLEDGEMENT_HEADER": "Wartungsbestätigungen",
+    "EMPTY_STATE_ACKNOLEDGEMENT_TEXT": "Für den aktuellen Wartungsplan liegen derzeit keine Bestätigungen vor.",
+    "NEXT_MAINTENANCE": "Nächste Wartung",
+    "LAST_MAINTENANCE": "Letzte Wartung",
+    "IN": "In"
+  },
+  "MAINTENANCE": {
+    "HEADER": "Details zum Wartungsplan"
+  },
+  "ACTIONS": {
+    "ACKNOWLEDGEMENTS": "Danksagung",
+    "DELETE": "Löschen",
+    "SAVE": "Speichern",
+    "START_MAINTENANCE": "Wartung starten",
+    "EDIT": "Bearbeiten"
+  },
+  "CONFIRMATION_DIALOG": {
+    "MESSAGE": "Möchten Sie diesen Wartungsplan wirklich löschen?",
+    "HEADER": "Löschen des Wartungsplans",
+    "YES": "Ja",
+    "NO": "Nein"
+  },
+  "DISMISS": "OKAY",
+  "DEFAULT_MESSAGE": "Auf dem Server ist ein Fehler aufgetreten.",
+  "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar. Bitte überprüfen Sie Ihre Internetverbindung oder Proxy-Einstellungen."
+}

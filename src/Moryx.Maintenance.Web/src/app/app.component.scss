@@ -1,0 +1,11 @@
+@use "@moryx/ngx-web-framework/styles/colors.scss" as *; 
+
+:host {
+    height: 100%;
+    overflow-y: hidden;
+    display: block;
+}
+
+.main-content {
+    height: 100%;
+}

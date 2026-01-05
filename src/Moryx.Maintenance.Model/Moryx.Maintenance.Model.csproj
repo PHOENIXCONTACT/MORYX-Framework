@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Moryx.ControlSystem" />
+    <PackageReference Include="Moryx.Resources.Management" />
+    <PackageReference Include="Moryx.Model.PostgreSQL" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.Maintenance\Moryx.Maintenance.csproj" />
+  </ItemGroup>
+</Project>

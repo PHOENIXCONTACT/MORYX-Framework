@@ -1,0 +1,48 @@
+{
+  "APP": {
+    "MAINTENANCE_SCHEDULES": "Maintenance Schedules",
+    "FAILED_LOADING": "The connection to the server could not be established. Please check your network connection or try again later.",
+    "SNACK_BAR": {
+      "ADDED": "Maintenance Schedule Saved! ",
+      "REMOVED": "Maintenance Schedule Removed! ",
+      "START_SENT":"'Start Maintenance' command sent"
+    }
+  },
+  "INTERVALS": {
+    "CYCLES": "Cycles",
+    "DAYS": "Days",
+    "HOURS": "Hours"
+  },
+  "MAINTENANCES": {
+    "ACTIVE_FILTER": "Active",
+    "INACTIVE_FILTER": "Inactive",
+    "ALL_FILTER": "All",
+    "MAINTENANCE_INTERVAL": "Maintenance Interval",
+    "EMPTY_STATE_HEADER": "No Maintenance Schedules",
+    "EMPTY_STATE_TEXT": "Add a new one by clicking the plus sign.",
+    "EMPTY_STATE_ACKNOLEDGEMENT_HEADER": "Maintenance Acknowledgements",
+    "EMPTY_STATE_ACKNOLEDGEMENT_TEXT": "There is currently no acknowledgements for the current Maintenance Schedule.",
+    "NEXT_MAINTENANCE": "Next Maintenance",
+    "LAST_MAINTENANCE": "Last Maintenance",
+    "IN": "In"
+  },
+  "MAINTENANCE": {
+    "HEADER": "Maintenance Schedule Details"
+  },
+  "ACTIONS": {
+    "ACKNOWLEDGEMENTS": "Acknowledgements",
+    "DELETE": "Delete",
+    "SAVE": "Save",
+    "START_MAINTENANCE": "Start Maintenance",
+    "EDIT": "Edit"
+  },
+  "CONFIRMATION_DIALOG": {
+    "MESSAGE": "Are you sure you wanna delete this maintenance Schedule ?",
+    "HEADER": "Deleting Maintenance Schedule",
+    "YES": "Yes",
+    "NO": "No"
+  },
+  "DISMISS": "DISMISS",
+  "DEFAULT_MESSAGE": "Something went wrong on the server.",
+  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings."
+}

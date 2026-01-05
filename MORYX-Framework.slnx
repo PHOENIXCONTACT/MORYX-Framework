@@ -4,6 +4,13 @@
     <Project Path="src/Moryx.Resources.Benchmarking/Moryx.Resources.Benchmarking.csproj" />
     <Project Path="src/Moryx.Resources.BenchmarkSetup/Moryx.Benchmarking.Setups.csproj" />
   </Folder>
+  <Folder Name="/Maintenance/">
+    <Project Path="src/Moryx.Maintenance/Moryx.Maintenance.csproj" />
+    <Project Path="src/Moryx.Maintenance.Endpoints/Moryx.Maintenance.Endpoints.csproj" />
+    <Project Path="src/Moryx.Maintenance.Management/Moryx.Maintenance.Management.csproj" />
+    <Project Path="src/Moryx.Maintenance.Model/Moryx.Maintenance.Model.csproj" />
+    <Project Path="src/Moryx.Maintenance.Web/Moryx.Maintenance.Web.csproj" />
+  </Folder>
   <Folder Name="/CommandCenter/">
     <Project Path="src/Moryx.CommandCenter.Web/Moryx.CommandCenter.Web.csproj" />
   </Folder>

@@ -1,0 +1,17 @@
+<nav class="maintenance-nav-bar nav-bar-content">
+  <div class="title-section">
+    <a mat-icon-button [routerLink]="['/']">
+      <mat-icon>arrow_back</mat-icon>
+    </a>
+   <h3 class="maintenance-title">{{ TranslationConstants.MAINTENANCE.HEADER | translate }}</h3> 
+  </div>
+  <button mat-icon-button (click)="save()"> 
+    <mat-icon>save</mat-icon>    
+</button>
+</nav>
+@if(maintenanceResource.isLoading()){
+<mat-spinner></mat-spinner>
+}@else {
+
+<app-maintenance-form [entry]="maintenance()!" />
+}

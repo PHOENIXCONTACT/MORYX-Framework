@@ -1,0 +1,170 @@
+@use "@moryx/ngx-web-framework/styles/colors.scss" as *;
+@use "@angular/material" as mat;
+
+:host {
+  height: 100%;
+  width: 100%;
+  position: block;
+}
+
+.main-drawer-container {
+  width: 100%;
+  height: calc(100vh - 45px);
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-section {
+  padding: 0px 5px;
+}
+
+.maintenances-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 5px;
+}
+
+.maintenance-card {
+  border: 2px solid rgba(167, 167, 167, 0.1);
+  padding: 8px;
+  width: 250px;
+  border-radius: 5px;
+  background-color: $mat-background-light;
+  font-size: 15px;
+
+  button {
+    margin-top: 8px;
+  }
+
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+.maintenance-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 25px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.maintenance-title-section {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.maintenance-resource-name-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.maintenance-resource-name-title {
+  font-size: 18px;
+  width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: inherit;
+}
+
+.maintenance-element-subtitle {
+  display: flex;
+  gap: 2px;
+  font-weight: lighter;
+  font-size: small;
+}
+
+.warning-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.maintenance-item {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+  gap: 10px;
+}
+
+.maintenance-item-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.maintenance-item-value {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: lighter;
+  font-size: small;
+}
+
+.maintenance-item-name {
+  font-weight: bold;
+}
+
+.maintenance-overdue {
+  border: 2px solid $danger;
+}
+
+.maintenance-warning {
+  border: 2px solid $warning;
+}
+
+.actions {
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  flex-direction: row-reverse;
+}
+
+.menu {
+  width: 25px !important;
+}
+
+.add-maintenance-button {
+  position: absolute;
+  right: 20px;
+  bottom: 50px;
+}
+
+.maintenance-acknowledgement-drawer {
+  width: 500px;
+  padding: 10px;
+  @include mat.sidenav-overrides(
+    (
+      container-background-color: $mat-background-light,
+      container-elevation-shadow: 5px,
+    )
+  );
+}
+
+.acknowledgements-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.acknowledgements-drawer-content {
+  margin-top: 50px;
+}
+
+.selected {
+  border: 3px solid $primary;
+}
+
+.selectable {
+  cursor: pointer;
+}
+
+.not-active {
+  opacity: 0.5;
+}

@@ -1,0 +1,16 @@
+<div class="acknowledgements-container" *ngIf="acknowledgements().length">
+  @for (item of acknowledgements(); track $index) {
+  <div class="acknowledgement-item">
+    <strong>{{ item.created | date : "d MMM y H:mm" }}</strong>
+    <div class="acknowledgement-description">
+      {{ item.description }}
+    </div>
+  </div>
+  }
+</div>
+<div *ngIf="!acknowledgements().length" class="acknowledgements-empty">
+  <empty-state 
+  [title]="TranslationConstants.MAINTENANCES.EMPTY_STATE_ACKNOLEDGEMENT_HEADER | translate " 
+  [message]="TranslationConstants.MAINTENANCES.EMPTY_STATE_ACKNOLEDGEMENT_TEXT | translate"
+  />
+</div>

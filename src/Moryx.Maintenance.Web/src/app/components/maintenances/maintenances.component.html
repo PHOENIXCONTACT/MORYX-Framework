@@ -1,0 +1,161 @@
+<nav class="maintenance-nav-bar">
+  <h3 class="maintenance-title">
+    {{ TranslationConstants.APP.MAINTENANCE_SCHEDULES | translate }}
+  </h3>
+</nav>
+<mat-drawer-container class="main-drawer-container">
+  <a
+    mat-fab
+    aria-label="Add maintenance"
+    class="add-maintenance-button"
+    [routerLink]="['/maintenances/0']"
+    *ngIf="!drawer.opened"
+  >
+    <mat-icon>add</mat-icon>
+  </a>
+  <div class="filter-section">
+    <mat-chip-listbox
+      aria-label="Filter selection"
+      (change)="onSelectedFilterChange($event)"
+    >
+      <mat-chip-option [selected]="selectedFilter() === 'All'">{{
+        TranslationConstants.MAINTENANCES.ALL_FILTER | translate
+      }}</mat-chip-option>
+      <mat-chip-option [selected]="selectedFilter() === 'Active'">{{
+        TranslationConstants.MAINTENANCES.ACTIVE_FILTER | translate
+      }}</mat-chip-option>
+      <mat-chip-option [selected]="selectedFilter() === 'Inactive'">{{
+        TranslationConstants.MAINTENANCES.INACTIVE_FILTER | translate
+      }}</mat-chip-option>
+    </mat-chip-listbox>
+  </div>
+  <div class="maintenances-container" *ngIf="filteredMaintenances().length">
+    @for (maintenance of filteredMaintenances(); track $index) {
+    <div
+      class="maintenance-card"
+      [class.maintenance-overdue]="maintenance.interval.interval.overdue > 0"
+      [class.maintenance-warning]="
+        maintenance.interval.interval.overdue === 0 &&
+        maintenance.interval.interval.elapsed >=
+          maintenance.interval.interval.warning
+      "
+      [class.selected]="
+        drawer.opened &&
+        selectedMaintenance() &&
+        selectedMaintenance()?.id === maintenance.id
+      "
+      [class.selectable]="drawer.opened"
+      [class.not-active]="!maintenance.isActive"
+      (click)="onMaintenanceCardClick(maintenance, drawer)"
+    >
+      <div class="maintenance-header">
+        <div class="maintenance-title-section">
+          @if(maintenance.interval.interval.overdue > 0){
+          <div class="warning-section">
+            <mat-icon>warning</mat-icon>
+          </div>
+          }
+          <div class="maintenance-resource-name-section">
+            <strong class="maintenance-resource-name-title">{{
+              maintenance.resource.name
+            }}</strong>
+            <div class="maintenance-element-subtitle">
+              <span>{{ maintenance.interval.interval.value }}</span>
+              <span>
+                {{ getIntervalString(maintenance.interval.type) | translate }}
+              </span>
+              <span>{{
+                TranslationConstants.MAINTENANCES.MAINTENANCE_INTERVAL
+                  | translate
+              }}</span>
+            </div>
+          </div>
+        </div>
+
+        <button mat-icon-button class="menu" [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="select(maintenance); drawer.open()">
+            {{ TranslationConstants.ACTIONS.ACKNOWLEDGEMENTS | translate }}
+          </button>
+          <a mat-menu-item [routerLink]="[maintenance.id]">{{
+            TranslationConstants.ACTIONS.EDIT | translate
+          }}</a>
+          <button mat-menu-item (click)="onConfirmDelete(maintenance.id)">
+            {{ TranslationConstants.ACTIONS.DELETE | translate }}
+          </button>
+        </mat-menu>
+      </div>
+
+      <div class="maintenance-item">
+        <mat-icon>hourglass_bottom</mat-icon>
+        <div class="maintenance-item-content">
+          <span class="maintenance-item-name">
+            <span>
+              {{ TranslationConstants.MAINTENANCES.IN | translate }}
+              {{
+                maintenance.interval.interval.value -
+                  maintenance.interval.interval.elapsed
+              }}</span
+            >
+            <span>
+              {{ getIntervalString(maintenance.interval.type) | translate }}
+            </span>
+          </span>
+          <span class="maintenance-item-value">{{
+            TranslationConstants.MAINTENANCES.NEXT_MAINTENANCE | translate
+          }}</span>
+        </div>
+      </div>
+      <div class="maintenance-item">
+        <mat-icon>calendar_month</mat-icon>
+        <div class="maintenance-item-content">
+          <span class="maintenance-item-name">{{
+            maintenance.interval.interval.lastMaintenanceDate
+              | date : "mediumDate"
+          }}</span>
+          <span class="maintenance-item-value">{{
+            TranslationConstants.MAINTENANCES.LAST_MAINTENANCE | translate
+          }}</span>
+        </div>
+      </div>
+      <div class="actions">
+        <button
+          mat-flat-button
+          class="main-button"
+          [disabled]="maintenance.maintenanceStarted || !maintenance.isActive"
+          (click)="startMaintenance(maintenance)"
+        >
+          {{ TranslationConstants.ACTIONS.START_MAINTENANCE | translate }}
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+  <empty-state
+    [title]="TranslationConstants.MAINTENANCES.EMPTY_STATE_HEADER | translate"
+    [message]="TranslationConstants.MAINTENANCES.EMPTY_STATE_TEXT | translate"
+    *ngIf="!filteredMaintenances().length"
+  />
+  <mat-drawer
+    #drawer
+    class="maintenance-acknowledgement-drawer"
+    mode="side"
+    position="end"
+  >
+    <section class="acknowledgements-drawer-header">
+      <span>
+        {{ TranslationConstants.ACTIONS.ACKNOWLEDGEMENTS | translate }}
+      </span>
+      <button mat-icon-button (click)="drawer.close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </section>
+    <section class="acknowledgements-drawer-content">
+      <app-acknowledgements
+        [acknowledgements]="selectedMaintenance()?.acknowledgements ?? []"
+      />
+    </section>
+  </mat-drawer>
+</mat-drawer-container>
