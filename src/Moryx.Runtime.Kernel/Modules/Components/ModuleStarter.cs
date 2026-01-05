@@ -56,10 +56,11 @@ namespace Moryx.Runtime.Kernel
                 ConvertBranch(root);
             }
 
-            foreach (var module in depTree.RootModules.Where(ShouldBeStarted).Select(branch => branch.RepresentedModule))
+            var toBeStarted = depTree.RootModules.Where(ShouldBeStarted).Select(branch => branch.RepresentedModule);
+            await Parallel.ForEachAsync(toBeStarted, cancellationToken, async (module, token) =>
             {
-                await StartModule(module, cancellationToken);
-            }
+                await StartModule(module, token);
+            });
         }
 
         private async Task StartModule(IServerModule module, CancellationToken cancellationToken)
@@ -84,7 +85,7 @@ namespace Moryx.Runtime.Kernel
             }
             else
             {
-                _ = Task.Run(async () => await ExecuteModuleStart(module, cancellationToken), cancellationToken);
+                await ExecuteModuleStart(module, cancellationToken);
             }
         }
 
@@ -115,15 +116,15 @@ namespace Moryx.Runtime.Kernel
             // Now we start every service waiting on this service to return
             await _waitingModulesSemaphore.ExecuteAsync(async () =>
             {
-                if (!WaitingModules.TryGetValue(module, out var value))
+                if (!WaitingModules.TryGetValue(module, out var waitingModules))
                     return;
 
                 // To increase boot speed we fork module start if more than one dependent was found
-                foreach (var waitingModule in value.ToArray())
+                await Parallel.ForEachAsync(waitingModules.ToArray(), cancellationToken, async (waitingModule, token) =>
                 {
-                    value.Remove(waitingModule);
-                    await StartModule(waitingModule, cancellationToken);
-                }
+                    waitingModules.Remove(waitingModule);
+                    await StartModule(waitingModule, token);
+                });
 
                 // We remove this service for now after we started every dependent
                 WaitingModules.Remove(module);
@@ -141,11 +142,11 @@ namespace Moryx.Runtime.Kernel
 
         private async Task EnqueueServiceAndStartDependencies(IEnumerable<IServerModule> dependencies, IServerModule waitingService, CancellationToken cancellationToken)
         {
-            foreach (var dependency in dependencies)
+            await Parallel.ForEachAsync(dependencies, cancellationToken, async (dependency, token) =>
             {
                 AddWaitingModule(dependency, waitingService);
-                await StartAsync(dependency, cancellationToken);
-            }
+                await StartAsync(dependency, token);
+            });
         }
 
         private bool ShouldBeStarted(IModuleDependency plugin)

@@ -190,7 +190,7 @@ namespace Moryx.Runtime.Kernel.Tests
             await moduleManager.InitializeModuleAsync(mockModule.Object);
 
             // Assert
-            mockModule.Verify(mock => mock.InitializeAsync());
+            mockModule.Verify(mock => mock.InitializeAsync(It.IsAny<CancellationToken>()));
         }
 
         [Test]
@@ -208,14 +208,11 @@ namespace Moryx.Runtime.Kernel.Tests
             // Act
             await moduleManager.StartModulesAsync();
 
-            // Assert
-            Thread.Sleep(3000); // Give the thread pool some time
+            mockModule1.Verify(mock => mock.InitializeAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
+            mockModule1.Verify(mock => mock.StartAsync(It.IsAny<CancellationToken>()));
 
-            mockModule1.Verify(mock => mock.InitializeAsync(), Times.Exactly(2));
-            mockModule1.Verify(mock => mock.StartAsync());
-
-            mockModule2.Verify(mock => mock.InitializeAsync(), Times.Exactly(2));
-            mockModule2.Verify(mock => mock.StartAsync());
+            mockModule2.Verify(mock => mock.InitializeAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
+            mockModule2.Verify(mock => mock.StartAsync(It.IsAny<CancellationToken>()));
         }
 
         [Test]
@@ -229,11 +226,9 @@ namespace Moryx.Runtime.Kernel.Tests
             // Act
             await moduleManager.StartModuleAsync(mockModule.Object);
 
-            Thread.Sleep(1);
-
             // Assert
-            mockModule.Verify(mock => mock.InitializeAsync());
-            mockModule.Verify(mock => mock.StartAsync());
+            mockModule.Verify(mock => mock.InitializeAsync(It.IsAny<CancellationToken>()));
+            mockModule.Verify(mock => mock.StartAsync(It.IsAny<CancellationToken>()));
         }
 
         [Test]
@@ -250,8 +245,8 @@ namespace Moryx.Runtime.Kernel.Tests
             await moduleManager.StopModulesAsync();
 
             // Assert
-            mockModule1.Verify(mock => mock.StopAsync());
-            mockModule2.Verify(mock => mock.StopAsync());
+            mockModule1.Verify(mock => mock.StopAsync(It.IsAny<CancellationToken>()));
+            mockModule2.Verify(mock => mock.StopAsync(It.IsAny<CancellationToken>()));
         }
 
         [Test]
@@ -281,8 +276,6 @@ namespace Moryx.Runtime.Kernel.Tests
             // Act
             await moduleManager.StartModulesAsync();
 
-            WaitForTimeboxed(() => module.State == ServerModuleState.Running);
-
             // Assert
             Assert.That(module.ActivatedCount, Is.EqualTo(1));
         }
@@ -297,24 +290,10 @@ namespace Moryx.Runtime.Kernel.Tests
             // Act
             await moduleManager.StartModulesAsync();
 
-            WaitForTimeboxed(() => module.State == ServerModuleState.Running);
-
             await moduleManager.StopModulesAsync();
-
-            WaitForTimeboxed(() => module.State == ServerModuleState.Stopped);
 
             // Assert
             Assert.That(module.ActivatedCount, Is.EqualTo(1));
-        }
-
-        private static void WaitForTimeboxed(Func<bool> condition, int maxSeconds = 10)
-        {
-            var i = 0;
-            while (!condition() && (i < maxSeconds))
-            {
-                Thread.Sleep(100);
-                i++;
-            }
         }
     }
 }
