@@ -3,7 +3,7 @@
 
 using Moryx.AbstractionLayer.Recipes;
 
-namespace Moryx.ControlSystem.SetupProvider.Tests
+namespace Moryx.ControlSystem.ProcessEngine.Tests.Setups
 {
     internal class TestRecipe : ProductionRecipe
     {

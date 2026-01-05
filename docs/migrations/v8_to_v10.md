@@ -320,7 +320,7 @@ Several interfaces have been removed to streamline the codebase and reduce compl
 - `IProductionRecipe`: Replaced with class `ProductionRecipe`
 - `ISetupRecipe`: Replaced with class `SetupRecipe`
 - `IState`: Replace with base-class `StateBase`
--
+
 The following interfaces are still existent for api extensions but the base class is used in whole code base:
 
 - `IActivity`: Replaced with class `Activity`
@@ -420,6 +420,32 @@ The API of `IResourceInitializer` was adjusted
   - Transformed `public struct JobTemplate` to `public record JobTemplate` to allow extensions in the future.
 - Removed API from IJobManagement: `JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement)`
 - Added `IAsyncEnumerable<IProcessChunk> LoadArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)` to `IProcessControl`
+
+### Integrated SetupProvider
+
+The module SetupProvider was integrated into the ProcessEngine for many reasons:
+
+- The SetupProvider was a optional dependency of the ProcessEngine but it cannot be meaningfully deployed without the ProcessEngine, the separation is a leaky abstraction. \
+  Merging removes indirection (extra DI registrations, configuration, assembly loading, error handling paths) and simplifies the overall model.
+- High coupling with low autonomy is a signal that the components belong together
+- Fewer NuGet references, less transitive dependency bloat, fewer binding redirects
+- Preconditions that the *SetupProvider should be present* for all features of the ProcessEngine can be enforced as internal invariants rather than scattered runtime checks.
+
+**Upgrade hint:** Move SetupTriggers config-section from the `Moryx.ControlSystem.SetupProvider.ModuleConfig.json` to `Moryx.ControlSystem.ProcessEngine.ModuleConfig.json`
+
+````json
+{
+  "SetupTriggers": [
+    ...
+  ],
+  ...
+}
+
+````
+
+## Modules-SetupProvider
+
+The SetupProvider was integrated into the ProcessEngine module.
 
 ## Modules-Media
 

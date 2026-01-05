@@ -7,6 +7,7 @@ using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs.Setup;
 using Moryx.ControlSystem.ProcessEngine.Processes;
+using Moryx.ControlSystem.ProcessEngine.Setups;
 using Moryx.Logging;
 
 namespace Moryx.ControlSystem.ProcessEngine
@@ -37,7 +38,9 @@ namespace Moryx.ControlSystem.ProcessEngine
 
         public IActivityPoolListener[] PoolListeners { get; set; }
 
-        public ISetupJobHandler SetupManager { get; set; }
+        public ISetupJobHandler SetupJobHandler { get; set; }
+
+        public ISetupManager SetupManager { get; set; }
 
         public IModuleLogger Logger { get; set; }
 
@@ -45,11 +48,13 @@ namespace Moryx.ControlSystem.ProcessEngine
 
         public void Start()
         {
+            SetupManager.Start();
+
             JobStorage.Start();
 
             JobScheduler.Initialize(Config.JobSchedulerConfig);
 
-            SetupManager.Start();
+            SetupJobHandler.Start();
 
             ProcessStorage.Start();
 
@@ -85,7 +90,7 @@ namespace Moryx.ControlSystem.ProcessEngine
                 Logger.LogError(e, "Shutting down process engine caused an exception in {name}", JobScheduler.GetType().Name);
             }
 
-            SetupManager.Stop();
+            SetupJobHandler.Stop();
             JobDispatcher.Stop();
 
             JobManager.Stop();
@@ -100,6 +105,8 @@ namespace Moryx.ControlSystem.ProcessEngine
             JobList.Stop();
 
             JobStorage.Stop();
+
+            SetupManager.Stop();
         }
     }
 }

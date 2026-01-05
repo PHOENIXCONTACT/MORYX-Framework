@@ -24,12 +24,15 @@ namespace Moryx.ControlSystem.ProcessEngine
                  "Job execution is influenced by a jobs constraint and evaluated by dedicated components of the DefaultJobScheduler. " +
                  "Jobs may include but are not limited to production, maintenance and resource configuration.")]
     public class ModuleController : ServerModuleBase<ModuleConfig>,
-        IFacadeContainer<IJobManagement>, IFacadeContainer<INotificationSource>, IFacadeContainer<IProcessControl>
+        IFacadeContainer<IJobManagement>,
+        IFacadeContainer<INotificationSource>,
+        IFacadeContainer<IProcessControl>,
+        IFacadeContainer<ISetupProvider>
     {
         /// <summary>
         /// The module's name.
         /// </summary>
-        public const string ModuleName = "ProcessEngine";
+        private const string ModuleName = "ProcessEngine";
 
         /// <inheritdoc />
         public override string Name => ModuleName;
@@ -55,13 +58,7 @@ namespace Moryx.ControlSystem.ProcessEngine
         /// </summary>
         [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
         public IResourceManagement ResourceManagement { get; set; }
-
-        /// <summary>
-        /// Found recipe providers used to restore recipes links of jobs and processes
-        /// </summary>
-        [RequiredModuleApi(IsStartDependency = true, IsOptional = true)]
-        public ISetupProvider SetupProvider { get; set; }
-
+        
         /// <summary>
         /// Product management to load and save articles instances and products
         /// </summary>
@@ -85,9 +82,9 @@ namespace Moryx.ControlSystem.ProcessEngine
             // Register all imported components
             Container.SetInstance(ResourceManagement)
                 .SetInstance(ProductManagement);
-            // Register optional setup dependency
-            if (SetupProvider != null)
-                Container.SetInstance(SetupProvider);
+
+            // Register plugins for the setup management
+            Container.LoadComponents<ISetupTrigger>();
 
             // Register process plugins
             Container.LoadComponents<ICellSelector>();
@@ -105,6 +102,7 @@ namespace Moryx.ControlSystem.ProcessEngine
         protected override Task OnStartAsync(CancellationToken cancellationToken)
         {
             // Activate facade
+            ActivateFacade(_setupProviderFacade);
             ActivateFacade(_jobManagementFacade);
             ActivateFacade(_notificationSourceFacade);
             ActivateFacade(_processControlFacade);
@@ -127,6 +125,7 @@ namespace Moryx.ControlSystem.ProcessEngine
             DeactivateFacade(_jobManagementFacade);
             DeactivateFacade(_notificationSourceFacade);
             DeactivateFacade(_processControlFacade);
+            DeactivateFacade(_setupProviderFacade);
 
             return Task.CompletedTask;
         }
@@ -144,6 +143,10 @@ namespace Moryx.ControlSystem.ProcessEngine
         private readonly ProcessControlFacade _processControlFacade = new();
 
         IProcessControl IFacadeContainer<IProcessControl>.Facade => _processControlFacade;
+
+        private readonly SetupProviderFacade _setupProviderFacade = new();
+
+        ISetupProvider IFacadeContainer<ISetupProvider>.Facade => _setupProviderFacade;
 
         #endregion
     }

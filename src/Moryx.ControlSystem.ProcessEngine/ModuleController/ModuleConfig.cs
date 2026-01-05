@@ -7,6 +7,7 @@ using Moryx.Configuration;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
+using Moryx.ControlSystem.Setups;
 using Moryx.Notifications;
 using Moryx.Runtime.Configuration;
 using Moryx.Serialization;
@@ -117,6 +118,12 @@ namespace Moryx.ControlSystem.ProcessEngine
         [DataMember, DefaultValue(DefaultSetupJobRetryLimit)]
         [Description("Limit of retries for a failed setup job. Smaller than 0 for infinite.")]
         public int SetupJobRetryLimit { get; set; }
+
+        /// <summary>
+        /// All configured setup triggers for this application
+        /// </summary>
+        [DataMember, PluginConfigs(typeof(ISetupTrigger))]
+        public List<SetupTriggerConfig> SetupTriggers { get; set; }
     }
 
     /// <summary>

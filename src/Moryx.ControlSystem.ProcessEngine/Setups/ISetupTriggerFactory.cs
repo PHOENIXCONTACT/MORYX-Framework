@@ -4,7 +4,7 @@
 using Moryx.Container;
 using Moryx.ControlSystem.Setups;
 
-namespace Moryx.ControlSystem.SetupProvider
+namespace Moryx.ControlSystem.ProcessEngine.Setups
 {
     /// <summary>
     /// Factory to instantiate <see cref="ISetupTrigger"/> implementations

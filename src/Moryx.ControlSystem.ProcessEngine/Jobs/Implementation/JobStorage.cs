@@ -10,6 +10,7 @@ using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs.Setup;
 using Moryx.ControlSystem.ProcessEngine.Model;
 using Moryx.ControlSystem.ProcessEngine.Processes;
+using Moryx.ControlSystem.ProcessEngine.Setups;
 using Moryx.ControlSystem.Setups;
 using ProcessContext = Moryx.ControlSystem.ProcessEngine.Model.ProcessContext;
 using Microsoft.Extensions.Logging;
@@ -40,7 +41,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// <summary>
         /// Setup provider
         /// </summary>
-        public ISetupProvider SetupProvider { get; set; }
+        public ISetupManager SetupManager { get; set; }
 
         /// <summary>
         /// Recipe provider for temporary clean-up
@@ -50,8 +51,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// <summary>
         /// All recipe providers
         /// </summary>
-        public IEnumerable<IRecipeProvider> RecipeProviders => SetupProvider == null
-            ? new IRecipeProvider[] { ProductManagement, CleanupProvider } : [ProductManagement, CleanupProvider, SetupProvider];
+        public IEnumerable<IRecipeProvider> RecipeProviders => [ProductManagement, CleanupProvider, SetupManager];
 
         /// <summary>
         /// Unit of work factory to open a database context

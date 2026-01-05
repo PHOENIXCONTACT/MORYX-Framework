@@ -2,16 +2,16 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
+using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Capabilities;
+using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.AbstractionLayer.Workplans;
 using Moryx.ControlSystem.Activities;
 using Moryx.ControlSystem.Setups;
 using Moryx.Workplans;
-using Moryx.AbstractionLayer.Activities;
-using Moryx.AbstractionLayer.Processes;
-using Moryx.AbstractionLayer.Workplans;
 
-namespace Moryx.ControlSystem.SetupProvider.Tests
+namespace Moryx.ControlSystem.ProcessEngine.Tests.Setups
 {
     internal abstract class TestTriggerBase : SetupTriggerBase<SetupTriggerConfig>
     {
@@ -36,8 +36,9 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
         }
     }
 
-    internal class TestSetupTask : TaskStep<TestSetupActivity, TestSetupParameters>
+    internal class TestSetupTask : TaskStep<TestSetupActivity, TestSetupParameters>, ISetupStep
     {
+        public SetupClassification Classification => SetupClassification.Unspecified;
     }
 
     [ActivityResults(typeof(DefaultActivityResult))]

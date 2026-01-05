@@ -8,6 +8,7 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Jobs;
+using Moryx.ControlSystem.ProcessEngine.Setups;
 using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Setups;
 using Moryx.Logging;
@@ -30,10 +31,9 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
         public IJobDataList JobList { get; set; }
 
         /// <summary>
-        /// Castle factory to create <see cref="ISetupTrigger"/> instances from
-        /// their <see cref="SetupTriggerConfig"/>
+        /// Component that can determine setup requirement and create setup recipes
         /// </summary>
-        public ISetupProvider SetupProvider { get; set; }
+        public ISetupManager SetupManager { get; set; }
 
         /// <summary>
         /// Temporary recipe provider
@@ -92,7 +92,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
                 SetupRecipe prepareRecipe;
                 try
                 {
-                    prepareRecipe = SetupProvider?.RequiredSetup(SetupExecution.BeforeProduction, productionJob.Recipe, new CurrentResourceTarget(ResourceManagement));
+                    prepareRecipe = SetupManager.RequiredSetup(SetupExecution.BeforeProduction, productionJob.Recipe, new CurrentResourceTarget(ResourceManagement));
                 }
                 catch (Exception setupProviderException)
                 {
@@ -112,7 +112,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
                 try
                 {
                     // Clean-up is evaluated just in time, so we only create a temporary recipe
-                    cleanupRecipe = SetupProvider?.RequiredSetup(SetupExecution.AfterProduction, productionJob.Recipe, new TemporaryCleanupTarget()) ??
+                    cleanupRecipe = SetupManager.RequiredSetup(SetupExecution.AfterProduction, productionJob.Recipe, new TemporaryCleanupTarget()) ??
                                     RecipeProvider.CreateTemporary(productionJob.Recipe);
                 }
                 catch (Exception e)
@@ -204,7 +204,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
         private void LogAbortedJobs(Exception e, List<long> abortedJobIds, SetupExecution executionType)
         {
             Logger.LogError(e, "{provider} threw an exception when creating required setup {classification} for " +
-                "job(s) {jobs}. Interrupting job(s)...", SetupProvider.GetType().Name, executionType, string.Join(", ", abortedJobIds));
+                "job(s) {jobs}. Interrupting job(s)...", SetupManager.GetType().Name, executionType, string.Join(", ", abortedJobIds));
         }
 
         /// <summary>
@@ -282,7 +282,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
 
             // Fetch current recipe and check if setup is complete
             var currentRecipe = setupJob.Recipe;
-            var retryRecipe = SetupProvider?.RequiredSetup(currentRecipe.Execution, (ProductionRecipe)currentRecipe.TargetRecipe, new CurrentResourceTarget(ResourceManagement));
+            var retryRecipe = SetupManager.RequiredSetup(currentRecipe.Execution, (ProductionRecipe)currentRecipe.TargetRecipe, new CurrentResourceTarget(ResourceManagement));
             setupJob.UpdateSetup(retryRecipe);
         }
 

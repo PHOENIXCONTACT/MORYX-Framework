@@ -6,9 +6,12 @@ using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Setups;
 using Moryx.Modules;
 
-namespace Moryx.ControlSystem.SetupProvider
+namespace Moryx.ControlSystem.ProcessEngine.Setups
 {
-    internal interface ISetupManager : IPlugin
+    /// <summary>
+    /// Component that can determine setup requirement and create setup recipes
+    /// </summary>
+    internal interface ISetupManager : IPlugin, IRecipeProvider
     {
         SetupRecipe RequiredSetup(SetupExecution execution, ProductionRecipe recipe, ISetupTarget targetSystem);
     }

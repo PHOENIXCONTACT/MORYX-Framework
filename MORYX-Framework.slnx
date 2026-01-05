@@ -13,7 +13,6 @@
     <Project Path="src/Moryx.ControlSystem.ProcessEngine.Web/Moryx.ControlSystem.ProcessEngine.Web.csproj" />
     <Project Path="src/Moryx.ControlSystem.ProcessEngine/Moryx.ControlSystem.ProcessEngine.csproj" />
     <Project Path="src/Moryx.ControlSystem.Processes.Endpoints/Moryx.ControlSystem.Processes.Endpoints.csproj" />
-    <Project Path="src/Moryx.ControlSystem.SetupProvider/Moryx.ControlSystem.SetupProvider.csproj" />
     <Project Path="src/Moryx.ControlSystem.Simulator/Moryx.ControlSystem.Simulator.csproj" />
   </Folder>
   <Folder Name="/Drivers/">
@@ -121,7 +120,6 @@
     <Project Path="src/Tests/Moryx.AbstractionLayer.Tests/Moryx.AbstractionLayer.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Container.Tests/Moryx.Container.Tests.csproj" />
     <Project Path="src/Tests/Moryx.ControlSystem.ProcessEngine.Tests/Moryx.ControlSystem.ProcessEngine.Tests.csproj" />
-    <Project Path="src/Tests/Moryx.ControlSystem.SetupProvider.Tests/Moryx.ControlSystem.SetupProvider.Tests.csproj" />
     <Project Path="src/Tests/Moryx.ControlSystem.Tests/Moryx.ControlSystem.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Drivers.Mqtt.Tests/Moryx.Drivers.Mqtt.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Drivers.OpcUa.Tests/Moryx.Drivers.OpcUa.Tests.csproj" />
@@ -181,8 +179,4 @@
   <Project Path="src/Moryx.Notifications/Moryx.Notifications.csproj" />
   <Project Path="src/Moryx/Moryx.csproj" />
   <Project Path="src/StartProject.Asp/StartProject.Asp.csproj" />
-  <Properties Name="ExtensibilityGlobals" Scope="PostLoad">
-    <Property Name="RESX_ShowErrorsInErrorList" Value="True" />
-    <Property Name="RESX_TaskErrorCategory" Value="Message" />
-  </Properties>
 </Solution>
