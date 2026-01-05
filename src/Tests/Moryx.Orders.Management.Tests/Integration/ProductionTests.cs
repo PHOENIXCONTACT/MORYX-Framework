@@ -47,7 +47,7 @@ namespace Moryx.Orders.Management.Tests
             _orderModel = new UnitOfWorkFactory<OrdersContext>(new InMemoryDbContextManager(Guid.NewGuid().ToString()));
 
             var logger = new ModuleLogger("Dummy", new NullLoggerFactory());
-            var parallelOperations = new ParallelOperations(new ModuleLogger("Dummy", new NullLoggerFactory()));
+            var parallelOperations = new ParallelOperations(logger);
 
             var userMock = new Mock<User>();
             userMock.SetupGet(u => u.Identifier).Returns("1234");
@@ -79,6 +79,7 @@ namespace Moryx.Orders.Management.Tests
                 JobManagement = jobManagement,
                 OperationDataPool = _operationDataPool,
                 ParallelOperations = parallelOperations,
+                Logger = logger,
                 Dispatcher = dispatcher
             };
 
