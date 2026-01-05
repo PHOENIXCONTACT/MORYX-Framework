@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 using Moryx.Orders.Advice;
@@ -131,6 +132,11 @@ namespace Moryx.Orders.Management
         /// </summary>
         [DataMember, Description("Limits the maximum number of running operations."), DefaultValue(1)]
         public int MaxRunningOperations { get; set; }
+
+        /// <summary>
+        /// Configuration of notifications
+        /// </summary>
+        [DataMember, Description("Configuration of notifications")]
+        public OperationNotificationConfig Notifications { get; set; }
     }
 }
-

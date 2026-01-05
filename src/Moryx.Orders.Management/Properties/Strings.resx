@@ -216,10 +216,10 @@
   <data name="DocumentAssignStep_Restore_Documents_Failed" xml:space="preserve">
     <value>Unable to restore documents from FileSystem!</value>
   </data>
-  <data name="OperationData_AmountReachedNotificationTitle" xml:space="preserve">
+  <data name="OperationNotifications_AmountReachedNotificationTitle" xml:space="preserve">
 	  <value>Operation is ready to report</value>
   </data>
-  <data name="OperationData_AmountReachedNotificationMessage" xml:space="preserve">
+  <data name="OperationNotifications_AmountReachedNotificationMessage" xml:space="preserve">
 	  <value>Operation {0} has finished the last parts and is ready to report. Please report the produced parts.</value>
   </data>
   <data name="OperationAssignment_Successful" xml:space="preserve">

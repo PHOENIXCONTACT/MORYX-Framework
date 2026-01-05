@@ -12,10 +12,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="OperationData_AmountReachedNotificationMessage" xml:space="preserve">
+  <data name="OperationNotifications_AmountReachedNotificationMessage" xml:space="preserve">
 		<value>L'operazione {0} ha completato le ultime parti ed è ora pronta per la disconnessione. Riportare le parti prodotte.</value>
 	</data>
-  <data name="OperationData_AmountReachedNotificationTitle" xml:space="preserve">
+  <data name="OperationNotifications_AmountReachedNotificationTitle" xml:space="preserve">
 		<value>L'ordine è pronto per la segnalazione</value>
 	</data>
   <data name="RegexOperationValidation_Wrong_Amount" xml:space="preserve">

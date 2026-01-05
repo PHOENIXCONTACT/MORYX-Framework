@@ -8,7 +8,6 @@ namespace Moryx.Notifications
     /// </summary>
     public interface INotificationPublisher
     {
-
         /// <summary>
         /// Returns all active notifications
         /// </summary>

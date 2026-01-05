@@ -67,6 +67,10 @@ namespace Moryx.Orders.Management
         /// Flag if the operation is currently creating
         /// </summary>
         bool IsAssigning { get; }
+
+        /// <summary>
+        /// Flag if the operation has reached the target amount
+        /// </summary>
+        bool IsAmountReached { get; }
     }
 }
-
