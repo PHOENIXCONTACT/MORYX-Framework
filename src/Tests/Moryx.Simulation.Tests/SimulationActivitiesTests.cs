@@ -186,7 +186,7 @@ namespace Moryx.Simulation.Tests
         public void CompleteMovement_ActivityAlreadyStarted_ShouldNotCallReady()
         {
             // Arrange
-            _moduleConfig.MovingDuration = 1;
+            _moduleConfig.MovingDuration = 5;
             var processId = 42;
             var completedActivity = new AssemblyActivity();
             completedActivity.Result = new ActivityResult();
@@ -198,14 +198,13 @@ namespace Moryx.Simulation.Tests
                 .Returns([completedActivity, readyActivity]);
             _processMock.SetupGet(x => x.Id).Returns(processId);
             _processMock.Setup(x => x.GetActivity(ActivitySelectionType.LastOrDefault, It.IsAny<Func<Activity, bool>>()));
-
             _processControlMock.Setup(pc => pc.GetRunningProcesses()).Returns([_processMock.Object]);
             CreateActivity(readyActivity, _processMock.Object, [_anotherAssemblyCell]);
 
             // Act
-            _processSimulator.Start();
-            readyActivity.Tracing.Started = DateTime.Now;
-            Thread.Sleep(10);
+            _processSimulator.Start(); // Start movement for readyActivity
+            readyActivity.Tracing.Started = DateTime.Now; // Simulate that activity has started during movement
+            Thread.Sleep(10); // Wait for movement to complete
 
             // Assert
             _anotherAssemblyDriverMock.Verify(d => d.Ready(It.IsAny<Activity>()), Times.Never);

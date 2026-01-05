@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.TestTools;
-using Moq;
-using NUnit.Framework;
+using Moryx.Logging;
 using Moryx.TestTools.UnitTest;
+using NUnit.Framework;
 
 namespace Moryx.Orders.Management.Tests
 {
@@ -56,6 +58,7 @@ namespace Moryx.Orders.Management.Tests
                 JobManagement = _jobManagementMock.Object,
                 OperationDataPool = _operationPoolMock.Object,
                 ParallelOperations = new NotSoParallelOps(),
+                Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
                 Dispatcher = _dispatcher
             };
 

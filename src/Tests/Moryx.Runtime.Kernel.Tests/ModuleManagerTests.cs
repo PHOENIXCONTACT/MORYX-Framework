@@ -5,15 +5,15 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Moryx.Configuration;
 using Moryx.Logging;
+using Moryx.Runtime.Kernel.Tests.Dummies;
 using Moryx.Runtime.Kernel.Tests.ModuleMocks;
 using Moryx.Runtime.Modules;
-using Moq;
 using Moryx.Tools;
 using NUnit.Framework;
-using Microsoft.Extensions.Logging.Abstractions;
-using Moryx.Runtime.Kernel.Tests.Dummies;
 
 namespace Moryx.Runtime.Kernel.Tests
 {
@@ -208,9 +208,9 @@ namespace Moryx.Runtime.Kernel.Tests
             // Act
             await moduleManager.StartModulesAsync();
 
-            // Assert
-            Thread.Sleep(3000); // Give the thread pool some time
+            WaitForTimeboxed(() => mockModule2.Invocations.Any(i => i.Method.Name == nameof(IServerModule.StartAsync)));
 
+            // Assert
             mockModule1.Verify(mock => mock.InitializeAsync(), Times.Exactly(2));
             mockModule1.Verify(mock => mock.StartAsync());
 
@@ -229,7 +229,7 @@ namespace Moryx.Runtime.Kernel.Tests
             // Act
             await moduleManager.StartModuleAsync(mockModule.Object);
 
-            Thread.Sleep(1);
+            WaitForTimeboxed(() => mockModule.Invocations.Any(i => i.Method.Name == nameof(IServerModule.StartAsync)));
 
             // Assert
             mockModule.Verify(mock => mock.InitializeAsync());
@@ -312,7 +312,7 @@ namespace Moryx.Runtime.Kernel.Tests
             var i = 0;
             while (!condition() && (i < maxSeconds))
             {
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
                 i++;
             }
         }
