@@ -63,6 +63,8 @@ namespace Moryx.ControlSystem.Processes.Endpoints
             State = InferActivityState(activity),
             Classification = InferActivityClassification(activity),
             InstanceId = (activity.Process as ProductionProcess)?.ProductInstance?.Id,
+            Instance = (activity.Process as ProductionProcess)?.ProductInstance != null ?
+                        EntryConvert.EncodeObject((activity.Process as ProductionProcess)?.ProductInstance) : null,
             Resource = ConvertResource(activity, resourceManagement),
             PossibleResources = processControl.Targets(activity)?.Select(r => new ActivityResourceModel
             {
