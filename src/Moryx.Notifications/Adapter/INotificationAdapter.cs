@@ -24,6 +24,18 @@ namespace Moryx.Notifications
         void Publish(INotificationSender sender, Notification notification);
 
         /// <summary>
+        /// Publishes the given notification asynchronously. Will return true if the notification was published and processed,
+        /// false if it was not processed before acknowledgement.
+        /// </summary>
+        Task<bool> PublishAsync(INotificationSender sender, Notification notification, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Publishes the given notification asynchronously. Will return true if the notification was published and processed,
+        /// false if it was not processed before acknowledgement.
+        /// </summary>
+        Task<bool> PublishAsync(INotificationSender sender, Notification notification, object tag, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Publishes the given notification
         /// </summary>
         void Publish(INotificationSender sender, Notification notification, object tag);

@@ -15,7 +15,7 @@ namespace Moryx.Notifications
         private readonly List<NotificationMap> _pendingAcks = new(16);
         private readonly List<NotificationMap> _pendingPubs = new(16);
 
-        private readonly object _listLock = new();
+        private readonly Lock _listLock = new();
 
         /// <summary>
         /// Logger used by the <see cref="NotificationAdapter"/>
@@ -50,45 +50,99 @@ namespace Moryx.Notifications
         }
 
         /// <inheritdoc />
-        public void Publish(INotificationSender sender, Notification notification)
-        {
-            Publish(sender, notification, new object());
-        }
+        public void Publish(INotificationSender sender, Notification notification) =>
+            PublishInternal(sender, new NotificationMap(sender, notification, new object()));
+
 
         /// <inheritdoc />
-        public void Publish(INotificationSender sender, Notification notification, object tag)
-        {
-            if (string.IsNullOrEmpty(sender.Identifier))
-                throw new InvalidOperationException("The identifier of the sender must be set");
+        public void Publish(INotificationSender sender, Notification notification, object tag) =>
+            PublishInternal(sender, new NotificationMap(sender, notification, tag));
 
-            if (notification == null)
-                throw new ArgumentNullException(nameof(notification), "Notification must be set");
+        /// <inheritdoc />
+        public Task<bool> PublishAsync(INotificationSender sender, Notification notification, CancellationToken cancellationToken = default) =>
+            PublishAsync(sender, notification, new object(), cancellationToken);
+
+        /// <inheritdoc />
+        public async Task<bool> PublishAsync(INotificationSender sender, Notification notification, object tag, CancellationToken cancellationToken = default)
+        {
+            ArgumentNullException.ThrowIfNull(notification);
+
+            // Define TaskCompletionSource to await publication
+            var tcs = new TaskCompletionSource<bool>();
+            var map = new NotificationMap(sender, notification, tag)
+            {
+                TaskCompletionSource = tcs
+            };
+
+            // React to cancellation
+            CancellationTokenRegistration ctr = default;
+            if (cancellationToken.CanBeCanceled)
+            {
+                ctr = cancellationToken.Register(() => PublishCancelled(map, tcs, cancellationToken));
+            }
+
+            PublishInternal(sender, map);
+
+            var result = await tcs.Task;
+            ctr.Unregister();
+
+            return result;
+        }
+
+        /// <summary>
+        /// Private method to publish a notification
+        /// </summary>
+        private void PublishInternal(INotificationSender sender, NotificationMap map)
+        {
+            ArgumentNullException.ThrowIfNull(sender);
+
+            if (string.IsNullOrEmpty(sender.Identifier))
+                throw new ArgumentException("The identifier of the sender must be set");
 
             lock (_listLock)
             {
                 // Lets check if the notification was already published
                 var isPending = _pendingPubs.Union(_pendingAcks).Union(_published)
-                    .Any(n => n.Notification == notification);
+                    .Any(n => n.Notification == map.Notification);
 
                 if (isPending)
                     throw new InvalidOperationException("Notification cannot be published twice!");
-                notification.Created = DateTime.Now;
-                notification.Sender = sender.Identifier;
+                map.Notification.Created = DateTime.Now;
+                map.Notification.Sender = sender.Identifier;
 
-                _pendingPubs.Add(new NotificationMap(sender, notification, tag));
+                _pendingPubs.Add(map);
             }
 
-            Published?.Invoke(this, notification);
+            Published?.Invoke(this, map.Notification);
+        }
+
+        private void PublishCancelled(NotificationMap map, TaskCompletionSource<bool> tcs, CancellationToken cancellationToken)
+        {
+            NotificationMap pending;
+            lock (_pendingPubs)
+            {
+                pending = _pendingPubs.SingleOrDefault(n => n.Notification == map.Notification);
+                if (pending != null)
+                {
+                    _pendingPubs.Remove(pending);
+                }
+            }
+
+            if (pending != null)
+                Acknowledged?.Invoke(this, pending.Notification);
+
+            tcs.TrySetCanceled(cancellationToken);
         }
 
         /// <inheritdoc />
         public void Acknowledge(INotificationSender sender, Notification notification)
         {
+            ArgumentNullException.ThrowIfNull(sender);
+
             if (string.IsNullOrEmpty(sender.Identifier))
                 throw new InvalidOperationException("The identifier of the sender must be set");
 
-            if (notification == null)
-                throw new ArgumentNullException(nameof(notification), "Notification must be set");
+            ArgumentNullException.ThrowIfNull(notification);
 
             notification.Acknowledged = DateTime.Now;
             notification.Acknowledger = sender.Identifier;
@@ -98,14 +152,19 @@ namespace Moryx.Notifications
             {
                 published = _published.SingleOrDefault(n => n.Notification.Identifier == notification.Identifier);
                 if (published is not null)
+                {
                     _published.Remove(published);
+                }
                 else
                 {
+                    // Not found in published, check pending publications
                     published = _pendingPubs.SingleOrDefault(n => n.Notification.Identifier == notification.Identifier);
 
                     if (published is null)
                         throw new InvalidOperationException("Notification was not managed by the adapter. " +
                                                             "The sender was not registered on the adapter");
+
+                    FinalizePendingNotification(published, false);
 
                     _pendingPubs.Remove(published);
                 }
@@ -113,8 +172,7 @@ namespace Moryx.Notifications
                 _pendingAcks.Add(published);
             }
 
-            if (published is not null)
-                Acknowledged?.Invoke(this, published.Notification);
+            Acknowledged?.Invoke(this, published.Notification);
         }
 
         /// <inheritdoc />
@@ -134,24 +192,37 @@ namespace Moryx.Notifications
         /// </summary>
         private void AcknowledgeByFilter(INotificationSender sender, Predicate<NotificationMap> filter)
         {
-            NotificationMap[] publishes;
+            NotificationMap[] notificationsToAcknowledge;
+            NotificationMap[] notificationsWasPending;
             lock (_listLock)
             {
-                publishes = _published.Union(_pendingPubs).Where(m => filter(m)).ToArray();
+                notificationsWasPending = _pendingPubs.Where(m => filter(m)).ToArray();
+
+                // Acknowledge all matching published and pending notifications
+                notificationsToAcknowledge = _published.Union(_pendingPubs).Where(m => filter(m)).ToArray();
+
                 _published.RemoveAll(filter);
                 _pendingPubs.RemoveAll(filter);
 
-                foreach (var published in publishes)
+                foreach (var notificationToAcknowledge in notificationsToAcknowledge)
                 {
-                    published.Notification.Acknowledged = DateTime.Now;
-                    published.Notification.Acknowledger = sender.Identifier;
+                    notificationToAcknowledge.Notification.Acknowledged = DateTime.Now;
+                    notificationToAcknowledge.Notification.Acknowledger = sender.Identifier;
 
-                    _pendingAcks.Add(published);
+                    _pendingAcks.Add(notificationToAcknowledge);
                 }
             }
 
-            foreach (var published in publishes ?? [])
+            // Finalize pending publications
+            foreach (var wasPendingNotification in notificationsWasPending)
+            {
+                FinalizePendingNotification(wasPendingNotification, false);
+            }
+
+            foreach (var published in notificationsToAcknowledge)
+            {
                 Acknowledged?.Invoke(this, published.Notification);
+            }
         }
 
         #endregion
@@ -207,8 +278,13 @@ namespace Moryx.Notifications
                 {
                     _pendingPubs.Remove(map);
                     _published.Add(map);
-                    return;
                 }
+            }
+
+            // Finalize the pending publication
+            if (map != null)
+            {
+                FinalizePendingNotification(map, true);
             }
 
             // If necessary we can acknowledge it
@@ -229,7 +305,7 @@ namespace Moryx.Notifications
         void INotificationSourceAdapter.Sync()
         {
             // Publish pending notifications
-            NotificationMap[] pendingPublishes = [];
+            NotificationMap[] pendingPublishes;
             lock (_listLock)
             {
                 pendingPublishes = _pendingPubs.ToArray();
@@ -240,7 +316,7 @@ namespace Moryx.Notifications
             }
 
             // Acknowledge pending acknowledges
-            NotificationMap[] pendingAcks = [];
+            NotificationMap[] pendingAcks;
             lock (_listLock)
             {
                 pendingAcks = _pendingAcks.ToArray();
@@ -259,6 +335,17 @@ namespace Moryx.Notifications
 
         #endregion
 
+        private static void FinalizePendingNotification(NotificationMap map, bool result)
+        {
+            if (map.TaskCompletionSource == null)
+            {
+                return;
+            }
+
+            map.TaskCompletionSource.SetResult(result);
+            map.TaskCompletionSource = null;
+        }
+
         private class NotificationMap
         {
             public NotificationMap(INotificationSender sender, Notification notification, object tag)
@@ -273,6 +360,8 @@ namespace Moryx.Notifications
             public INotificationSender Sender { get; }
 
             public object Tag { get; }
+
+            public TaskCompletionSource<bool> TaskCompletionSource { get; set; }
         }
     }
 }

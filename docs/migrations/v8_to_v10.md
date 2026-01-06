@@ -400,7 +400,6 @@ All driver APIs have been reworked to use TPL async/await instead of callbacks f
 - `IRfidDriver`, `IScannerDriver`, `IPickByLightDriver` and `IWeightScaleDriver` were extended with commonly used methods, extendable by options and result objects
 - Added generic `ISingleInput{TOptions, TResult}` and `IContinuousInput{TOptions, TResult}` for general pattern of input devices
 
-
 ## Resource initialization
 
 The API of `IResourceInitializer` was adjusted
@@ -449,6 +448,10 @@ The API of `IResourceInitializer` was adjusted
 **`IProductStorage`**
 
 - API `LoadType` is using `IIdentity` instead of `ProductIdentity` but in MORYX 10.0, only `ProductIdentity` is supported.
+
+## Modules-Notifications
+
+NotificationAdapter supports async publishing now. `PublishAsync` will return `true` if the notification was published and processed, and `false` if it was not processed before acknowledgement.
 
 ## Modules-Orders
 
