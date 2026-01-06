@@ -288,11 +288,16 @@ In *Moryx.Factory* **6.3** and **8.1** we introduced the new result object and o
 The interface was only used in `VisualInstructionParameters` which can and is being used as a base class in most cases anyway.
 Hence, `IVisualInstructions` is removed in favor of a more extendable base class.
 
-## Integration of Moryx.Simulation into Moryx.ControlSystem
+## Module Simulation 
+
+#### Integration of Moryx.Simulation into Moryx.ControlSystem
 
 To reduce the number of API packages and simplify the overall architecture, **Moryx.Simulation** has been integrated into **Moryx.ControlSystem** starting with MORYX 10. All simulation-related APIs and functionality are now part of the Moryx.ControlSystem package. This change streamlines dependency management and makes it easier to maintain and extend simulation features within the control system context.
 
 The simulator module has also been renamed, and its namespace and package id have changed accordingly to reflect its new location within Moryx.ControlSystem.
+- Rename the module configuration file from `Moryx.Simulation.Simulator.ModuleConfig.json` to `Moryx.ControlSystem.Simulator.ModuleConfig.json`.
+- Replace package reference `Moryx.Simulation.Simulator` with `Moryx.ControlSystem.Simulator`
+- Remove package reference `Moryx.Simulation`
 
 ## Renaming and Typo-Fixes
 
@@ -403,11 +408,17 @@ With MORYX 10, several changes have been made to the data model to improve perfo
 
 ## Launcher
 
-- The `SortIndex` configuration was moved to the `Moryx.Launcher.LauncherConfig.json` configuration file. Refer to the [Launcher](/docs/articles/launcher/Launcher.md) documentation for more information.
+- The `SortIndex` configuration was moved from the `appsettings.json` to the `Moryx.Launcher.LauncherConfig.json` configuration file.  
+Refer to the [Launcher](/docs/articles/launcher/Launcher.md) documentation for more information.
 
-## Removal of Modules-Analytics
+## Module Analytics
+
+#### Removal of the module in favor of external web-pages
 
 The analytics module was doing nothing and the web module was replaced by supporting external modules in `Launcher`. Its now supported to embed external web-pages into the shell. Refer to the [Launcher](/docs/articles/launcher/Launcher.md) documentation for more information.
+
+- Remove package references of `Moryx.Analytics.Server` and `Moryx.Analytics.Web`
+- (Optional) Remove module configuration file `Moryx.Analytics.Server.ModuleController.ModuleConfig.json`
 
 ## Rarely used features removed
 
@@ -450,8 +461,9 @@ All driver APIs have been reworked to use TPL async/await instead of callbacks f
 
 ## Modules-Resources
 
-#### Resource initialization
+- Database configuration name changed `Moryx.Resources.Model.ResourcesContext.DbConfig.json` -> `Moryx.Resources.Management.Model.ResourcesContext.DbConfig.json`  
 
+#### Resource initialization
 The API of `IResourceInitializer` was adjusted
 
 - Its now possible to execute initializers from the facade
@@ -508,6 +520,8 @@ The `ProcessEngineContext` was added to the `ProcessEngineAttached` to provide t
 
 ## Modules-Products
 
+- Database configuration name changed `Moryx.Products.Model.ProductsContext.DbConfig.json` -> `Moryx.Products.Management.Model.ProductsContext.DbConfig.json`  
+This is part of the unification of the general [data model changes](#data-model-changes)
 - Removed `productId` from `SaveRecipes` of `IProductStorage` and changed argument to `IReadOnlyList`
 - `ProductState` and `ProductInstanceState` are now Flags-Enum.
 - Introduced `ProductState.Generated` to classify a product as generated for internal use
@@ -601,3 +615,7 @@ Removed `PrimitiveValuesAttribute`, use `AllowedValuesAttribute` of .NET instead
 ## Merged `IProcessControlReporting` into `IProcessControl`
 
 The `IProcessControlReporting` interface has been merged into `IProcessControl`. All reporting-related methods and the `ReportAction` enum are now part of `IProcessControl`. Remove usages of `IProcessControlReporting` and update your code to use the unified `IProcessControl` interface.
+
+## Module Notifications
+- Database configuration name changed `Moryx.Notifications.Model.NotificationsContext.DbConfig.json` -> `Moryx.Notifications.Publisher.Model.NotificationsContext.DbConfig.json`  
+This is part of the unification of the general [data model changes](#data-model-changes)
