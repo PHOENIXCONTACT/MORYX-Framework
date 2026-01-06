@@ -97,7 +97,15 @@ namespace Moryx.Model.Configuration
 
             await using var context = CreateMigrationContext(config);
 
-            return await CreateDatabaseAsync(config, context, cancellationToken);
+            try
+            {
+                return await CreateDatabaseAsync(config, context, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Creating database '{0}' failed!", config.ConnectionSettings.Database);
+                return false;
+            }
         }
 
         /// <summary>
@@ -175,11 +183,11 @@ namespace Moryx.Model.Configuration
             try
             {
                 var pendingMigrations = await context.Database.GetPendingMigrationsAsync(cancellationToken);
-
                 return pendingMigrations.ToArray();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Logger.LogError(e, "Could not retrieve available database migrations for context '{0}'!", context.GetType().Name);
                 return Array.Empty<string>();
             }
         }
@@ -200,11 +208,11 @@ namespace Moryx.Model.Configuration
             try
             {
                 var appliedMigrations = await context.Database.GetAppliedMigrationsAsync(cancellationToken);
-
                 return appliedMigrations.ToArray();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Logger.LogError(e, "Could not retrieve applied database migrations for context '{0}'!", context.GetType().Name);
                 return Array.Empty<string>();
             }
         }
