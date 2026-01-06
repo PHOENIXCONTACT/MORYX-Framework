@@ -323,8 +323,31 @@ Several interfaces have been removed to streamline the codebase and reduce compl
 -
 The following interfaces are still existent for api extensions but the base class is used in whole code base:
 
-- `IActivity`: Replaced with class `Activity`
+- `IActivity` Replaced with class `Activity`
+    <details>
+    <summary> Code Replacement Snippets </summary>
+
+    ``` 
+    // old version:
+    public override IReadOnlyList<ICell> SelectCells(IActivity activity, IReadOnlyList<ICell> availableCells)
+
+    // new version:
+    public IReadOnlyList<ICell> SelectCells(Activity activity, IReadOnlyList<ICell> availableCells)
+    ```
+    </details>
+
+
 - `IProcess`: Replaced with class `Process`
+    <details>
+    <summary> Code Replacement Snippets </summary>
+
+    ``` 
+    // old version:
+    protected override void Populate(IProcess process, Parameters instance)
+    // new version:
+    protected override void Populate(Process process, Parameters instance)
+    ```
+    </details>
 - `IProductType`: Replaced with class `ProductType`
 - `IProductInstance`: Replaced with class `ProductInstance`
 - `IProductPartLink`: Replaced with class `ProductPartLink`
