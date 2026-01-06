@@ -12,8 +12,8 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
 {
     /// <summary>
     /// A graph that represent any Resource that can be displayed on the UI.
-    /// For a Factory this represent the structure of the factory and its visible content.
-    /// For a resource, this represent the resource and its parts/children that should be visible on the UI
+    /// For a Factory this represents the structure of the factory and its visible content.
+    /// For a resource, this represents the resource and its parts/children that should be visible on the UI
     /// </summary>
     internal class SimpleGraph
     {
@@ -33,10 +33,8 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
         public List<SimpleGraph> Children { get; set; } = new List<SimpleGraph>();
 
         /// <summary>
-        /// Creates a full simple Graph from the <paramref name="factory"/>
+        /// Creates a full simple Graph from the <paramref name="resource"/>
         /// </summary>
-        /// <param name="factory"></param>
-        /// <returns></returns>
         public static SimpleGraph Create(Resource resource)
         {
             if (resource is not ManufacturingFactory factory) return null;
@@ -55,11 +53,29 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
             Converter.Converter converter,
             Func<IMachineLocation, bool> filter)
         {
-            VisualizableItemModel result = resourceManager.ReadUnsafe(Id, e =>
+            var result = resourceManager.ReadUnsafe(Id, resource =>
             {
-                if (e.GetDisplayableResourceLocation(logger) is not MachineLocation displayableItemLocation) return null;
+                if (resource is not MachineLocation machineLocation)
+                {
+                    return null;
+                }
 
-                var resourceAtThisLocation = displayableItemLocation.Children.First(x => x is ICell || x is IManufacturingFactory);
+                var resourcesAtThisLocation = machineLocation.Children.Where(x => x is ICell || x is IManufacturingFactory).ToArray();
+                if (resourcesAtThisLocation.Length == 0)
+                {
+                    logger.LogError("There is no resource type Cell or ManufacturingFactory found under Location '{Name}'",
+                        machineLocation.Name);
+                    return null;
+                }
+
+                if (resourcesAtThisLocation.Length > 1)
+                {
+                    logger.Log(LogLevel.Warning, "More than one resource were found under Location '{Name}'. The first child will be used",
+                        machineLocation.Name);
+                }
+
+                var resourceAtThisLocation = resourcesAtThisLocation.First();
+
                 var model = new VisualizableItemModel();
 
                 switch (resourceAtThisLocation)
@@ -71,12 +87,10 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
                         model = cell.GetResourceChangedModel(converter, resourceManager, filter);
                         model.IsACell = true;
                         break;
-                    default:
-                        break;
                 }
-                model.IconName = displayableItemLocation.SpecificIcon;
+                model.IconName = machineLocation.SpecificIcon;
                 model.Id = resourceAtThisLocation?.Id ?? 0;
-                model.Location = Converter.Converter.ToCellLocationModel(displayableItemLocation);
+                model.Location = Converter.Converter.ToCellLocationModel(machineLocation);
                 return model;
             });
 
@@ -100,9 +114,9 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
         {
             switch (addition)
             {
-                case MachineLocation location:
-                case ManufacturingFactory factory:
-                case Cell cell:
+                case MachineLocation:
+                case ManufacturingFactory:
+                case Cell:
                     AddSubGraph(addition);
                     return;
 
@@ -114,11 +128,15 @@ namespace Moryx.FactoryMonitor.Endpoints.Models
 
         private void AddSubGraph(Resource addition)
         {
-            var subGraph = new SimpleGraph();
-            subGraph.Id = addition.Id;
-            subGraph.Type = addition.GetType().Name;
+            var subGraph = new SimpleGraph
+            {
+                Id = addition.Id,
+                Type = addition.GetType().Name
+            };
+
             if (addition is not Cell)
                 addition.Children.ForEach(subGraph.Append);
+
             Children.Add(subGraph);
         }
     }

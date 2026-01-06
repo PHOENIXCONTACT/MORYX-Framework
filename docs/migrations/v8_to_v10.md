@@ -266,6 +266,22 @@ VisualInstructions has an own separate namespace now.
 | Moryx.VisualInstructions.Endpoints  | ASP.NET Controller for hosting API of Visual Instructions | Moryx.ControlSystem.WorkerSupport.Endpoints |
 | Moryx.Resources.VisualInstructions  | Digital Twin of a visual instructions                     | Moryx.Resources.AssemblyInstructions        |
 
+Required SQL Update:
+
+````sql
+// SQLite
+UPDATE Resources
+SET "Type" = 'Moryx.Resources.VisualInstructions.VisualInstructor'
+WHERE "Type" = 'Moryx.Resources.AssemblyInstruction.VisualInstructor';
+
+// PostgreSQL
+UPDATE public."Resources"
+SET "Type" = 'Moryx.Resources.VisualInstructions.VisualInstructor'
+WHERE "Type" = 'Moryx.Resources.AssemblyInstruction.VisualInstructor';
+````
+
+
+
 ### Replaced result of visual instructions with dedicated result object
 
 In *Moryx.Factory* **6.3** and **8.1** we introduced the new result object and optional extended APIs. The result object solved issues caused by localization of the different results. With **Moryx 10** we remove all old APIs based on strings.
