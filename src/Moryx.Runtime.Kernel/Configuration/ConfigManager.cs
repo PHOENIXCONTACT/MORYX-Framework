@@ -84,6 +84,8 @@ namespace Moryx.Runtime.Kernel
         /// <param name="name">Name of the configuration</param>
         public void SaveConfiguration(ConfigBase configuration, string name, bool liveUpdate)
         {
+            ArgumentNullException.ThrowIfNull(configuration);
+
             var configType = configuration.GetType();
 
             lock (ConfigCache)

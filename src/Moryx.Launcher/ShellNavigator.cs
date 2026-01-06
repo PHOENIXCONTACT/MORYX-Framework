@@ -144,7 +144,7 @@ namespace Moryx.Launcher
             if (launcherConfig.ConfigState == ConfigState.Generated)
             {
                 launcherConfig.ConfigState = ConfigState.Valid;
-                configManager.SaveConfiguration(_launcherConfig);
+                configManager.SaveConfiguration(launcherConfig);
             }
 
             return launcherConfig;
