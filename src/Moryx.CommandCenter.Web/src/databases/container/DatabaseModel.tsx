@@ -91,7 +91,9 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         if (prevState.targetModel !== this.props.DataModel.targetModel) {
             this.setState({
                 config: this.props.DataModel.config,
-                targetModel: this.props.DataModel.targetModel
+                targetModel: this.props.DataModel.targetModel,
+                connectionString: this.props.DataModel.config.connectionString,
+                modelConfigurator: this.props.ModelConfigurators.find((c) => c.configuratorType === this.props.DataModel.config.configuratorType)!
             });
             this.onTestConnection();
         }
@@ -106,7 +108,6 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         if (!modelConfigurator) {
             return;
         }
-        console.log ("Selected configurator: ", modelConfigurator);
 
         const config = { ...this.state.config };
         config.configuratorType = modelConfigurator.configuratorType;

@@ -28,9 +28,17 @@ export function getDatabaseReducer(state: DatabaseState = initialDatabaseState, 
     case UPDATE_DATABASE_CONFIG: {
         const database = action.payload as DataModel;
 
+        const databases = state.Databases.map((dbAndConfig) => {
+            if (dbAndConfig.database.targetModel === database.targetModel) {
+                dbAndConfig.database = database;
+            }
+            return dbAndConfig;
+        });
+
+        console.log("UPDATE_DATABASE_CONFIG", database);
         return {
             ...state,
-            Databases: state.Databases,
+            Databases: databases,
          };
     }
   }
