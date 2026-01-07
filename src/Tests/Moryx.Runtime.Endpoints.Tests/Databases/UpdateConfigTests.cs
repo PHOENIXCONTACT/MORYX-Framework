@@ -8,9 +8,8 @@ using Moryx.TestTools.Test.Model;
 using System;
 using Moryx.Configuration;
 using Moryx.Model.Sqlite;
-using Moryx.Runtime.Endpoints.Databases.Exceptions;
-using Moryx.Runtime.Endpoints.Databases.Models;
 using Moryx.Runtime.Endpoints.Databases.Services;
+using Moryx.Tools;
 using NUnit.Framework;
 
 namespace Moryx.Runtime.Endpoints.Tests.Databases
@@ -28,6 +27,9 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
             {
                 ConfigDirectory = ""
             };
+
+            // Ensure that the assembly containing TestModelContext is loaded
+            AppDomainBuilder.LoadAssemblies();
 
             _dbContextManager = new DbContextManager(configManager, new LoggerFactory());
             _databaseConfigUpdateService = new DatabaseConfigUpdateService(_dbContextManager);

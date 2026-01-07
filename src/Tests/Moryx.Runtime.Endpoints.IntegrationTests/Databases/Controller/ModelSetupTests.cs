@@ -54,6 +54,7 @@ namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
                 Config = new()
                 {
                     ConfiguratorType = "1",
+                    ConnectionString = sqliteConfig.ConnectionString,
                     Properties = entries
                 },
                 Setup = new SetupModel { Fullname = typeof(DisposedObjectSetup).FullName }
