@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using Moryx.Model.Attributes;
 
 namespace Moryx.Model.SqlServer;
 
@@ -10,19 +11,19 @@ namespace Moryx.Model.SqlServer;
 [DataContract]
 public class SqlServerDatabaseConfig : DatabaseConfig
 {
-    [DataMember, Required]
+    /// <inheritdoc />
+    public override string ConfiguratorType => typeof(SqlServerModelConfigurator).AssemblyQualifiedName;
+
+    [Required, DefaultValue("<DatabaseName>")]
     [ConnectionStringKey("Initial Catalog")]
     public string InitialCatalog { get; set; }
 
-    [DataMember]
-    [ConnectionStringKey("User Id")]
+    [ConnectionStringKey("User Id") , DefaultValue("sa")]
     public string UserId { get; set; }
 
-    [DataMember]
-    [ConnectionStringKey("Password")]
-    public string CacheMode { get; set; }
-    
-    [DataMember]
-    [ConnectionStringKey("TrustServerCertificate")]
-    public bool TrustServerCertificate { get; set; }
+    [ConnectionStringKey("Password"), DefaultValue("password")]
+    public string Password { get; set; }
+
+    [ConnectionStringKey("TrustServerCertificate"), DefaultValue("True")]
+    public string TrustServerCertificate { get; set; }
 }

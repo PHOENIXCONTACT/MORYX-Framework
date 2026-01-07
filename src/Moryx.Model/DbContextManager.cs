@@ -104,6 +104,14 @@ namespace Moryx.Model
 
                 var typedConfig = (DatabaseConfig)_configManager.GetConfiguration(configType,
                     ConfigFilename(possibleModel.DbContext), true);
+                if (string.IsNullOrEmpty(typedConfig.ConnectionString))
+                {
+                    typedConfig.UpdateConnectionString();
+                }
+                else
+                {
+                    typedConfig.UpdatePropertiesFromConnectionString();
+                }
 
                 configuredModels.Add(new ConfiguredModelWrapper
                 {
@@ -149,6 +157,26 @@ namespace Moryx.Model
         /// <inheritdoc />
         public IModelConfigurator GetConfigurator(Type contextType) =>
             _configuredModels.First(km => km.BaseDbContextType == contextType).Configurator;
+
+        public IModelConfigurator GetConfigurator(Type contextType, Type configuratorType, DatabaseConfig databaseConfig)
+        {
+            var possibleModel = _possibleModels.FirstOrDefault(pm => pm.DbContext == contextType);
+            if (possibleModel == null)
+                return null;
+
+            if (possibleModel.ModelConfiguratorMap.TryGetValue(configuratorType, out var specificDbContextType))
+            {
+                var configuratorInstance = (IModelConfigurator)Activator.CreateInstance(configuratorType)!;
+                var logger = _loggerFactory.CreateLogger(configuratorType);
+                configuratorInstance.Initialize(specificDbContextType, databaseConfig, logger);
+
+                return configuratorInstance;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         /// <inheritdoc />
         public Type[] GetConfigurators(Type contextType)

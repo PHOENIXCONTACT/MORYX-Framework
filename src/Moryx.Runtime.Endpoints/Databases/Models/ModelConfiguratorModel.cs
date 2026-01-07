@@ -20,7 +20,15 @@ namespace Moryx.Runtime.Endpoints.Databases.Models
         /// </summary>
         public string ConfiguratorType { get; set; }
 
+        /// <summary>
+        /// Keys for the connection string to map entries
+        /// </summary>
         public IReadOnlyDictionary<string, string> ConnectionStringKeys { get; set; }
+
+        /// <summary>
+        /// Prototype of the connection string
+        /// </summary>
+        public string ConnectionStringPrototype { get; set; }
 
         /// <summary>
         /// Properties to be configured for the given configurator

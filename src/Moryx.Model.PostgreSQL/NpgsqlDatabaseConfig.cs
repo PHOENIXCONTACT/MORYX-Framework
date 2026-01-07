@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
+using Moryx.Model.Attributes;
 
 namespace Moryx.Model.PostgreSQL
 {
@@ -14,33 +15,30 @@ namespace Moryx.Model.PostgreSQL
     [DataContract]
     public class NpgsqlDatabaseConfig : DatabaseConfig
     {
-        private static readonly Dictionary<string, string> _connectionStringKeys;
+        /// <inheritdoc />
         public override string ConfiguratorType => typeof(NpgsqlModelConfigurator).AssemblyQualifiedName;
 
-        [DataMember, Required, DefaultValue("Database=<DatabaseName>;Username=postgres;Password=postgres;Host=localhost;Port=5432")]
-        public override string ConnectionString { get; set; }
-
-        [DataMember, Required]
+        [Required]
         [DefaultValue("<DatabaseName>")]
         [ConnectionStringKey("Database")]
         public string Database { get; set; }
 
-        [DataMember, Required]
+        [Required]
         [DefaultValue("postgres")]
         [ConnectionStringKey("Username")]
         public string Username { get; set; }
 
-        [DataMember, Required, Password]
+        [Required, Password]
         [DefaultValue("postgres")]
         [ConnectionStringKey("Password")]
         public string Password { get; set; }
 
-        [DataMember, Required]
+        [Required]
         [DefaultValue("localhost")]
         [ConnectionStringKey("Host")]
         public string Host { get; set; }
 
-        [DataMember, Required]
+        [Required]
         [DefaultValue(5432)]
         [ConnectionStringKey("Port")]
         public int Port { get; set; }

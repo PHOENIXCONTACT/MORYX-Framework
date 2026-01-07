@@ -2,7 +2,6 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
-using Moryx.Model.Configuration;
 
 namespace Moryx.Model
 {
@@ -20,6 +19,11 @@ namespace Moryx.Model
         /// Get configurator for the given context type
         /// </summary>
         IModelConfigurator GetConfigurator(Type contextType);
+
+        /// <summary>
+        /// Get configurator instance for the given context type
+        /// </summary>
+        IModelConfigurator GetConfigurator(Type contextType, Type configuratorType, DatabaseConfig databaseConfig);
 
         /// <summary>
         /// Get possible configurators for the given context type

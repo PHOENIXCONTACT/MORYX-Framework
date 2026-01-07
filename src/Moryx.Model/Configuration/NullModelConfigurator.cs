@@ -9,6 +9,7 @@ namespace Moryx.Model.Configuration
 {
     public class NullDatabaseConfig : DatabaseConfig
     {
+        /// <inheritdoc />
         public override string ConfiguratorType => typeof(NullModelConfigurator).AssemblyQualifiedName;
     }
 
