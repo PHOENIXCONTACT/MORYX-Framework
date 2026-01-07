@@ -348,6 +348,15 @@ With MORYX 10, several changes have been made to the data model to improve perfo
 - If you were using `ProductFileEntity`, consider using alternative storage solutions such as file systems or dedicated file storage services to manage product-related files.
 - The `ProductFile` was removed completely.
 
+### Renamed types
+
+- `SqliteContext` -> `SqliteDbContext`
+- `NpgsqlDatabaseContext` -> `NpgsqlDbContext`
+
+### Namespaces
+
+- `Moryx.Model.*.Attributes` have been merged into `Moryx.Model.*` 
+
 ## Other model adjustments
 
 - Removed `TypeName` from ProcessEntity. It was not used.
@@ -441,6 +450,8 @@ The API of `IResourceInitializer` was adjusted
   - `GetInstancesAsync` -> `LoadInstancesAsync`
   - `DeleteProductAsync` -> `DeleteTypeAsync`
   - `RemoveRecipeAsync` -> `DeleteRecipeAsync`
+  - `SaveRecipe` -> `SaveRecipeAsync`
+  - `LoadRecipe` -> `LoadRecipeAsync`
 
 **`IProductManagement`**
 
