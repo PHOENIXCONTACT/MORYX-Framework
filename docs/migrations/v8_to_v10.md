@@ -357,6 +357,32 @@ With MORYX 10, several changes have been made to the data model to improve perfo
 - Naming conventions across the data model have been standardized to ensure consistency and clarity. We use pluralised names for DbSet properties and singular names for entity classes. Sample: `public DbSet<ProductEntity> Products { get; set; }` instead of `public DbSet<ProductEntity> ProductEntities { get; set; }`.
 - Derived data models are now fully supported. This needs some changes how the model is defined in code first scenarios. Please refer to the [Data Model Tutorial](/docs/tutorials/data-model/CodeFirst.md) for more information.
 - Removed support of Dump and Restore operations in the data model. These operations were rarely used and added unnecessary complexity to the data model management. Use your database admin tools to perform backup and restore operations instead.
+- Data model configs are reduced to the targeting model configurator and connection string.
+
+**Changes of DatabaseConfig**
+
+Old version:
+````json
+{
+  "ConnectionSettings": {
+    "$type": "Moryx.Model.Sqlite.SqliteDatabaseConnectionSettings, Moryx.Model.Sqlite",
+    "Database": "ProcessContext",
+    "ConnectionString": "Data Source=./db/ProcessContext.db;Mode=ReadWrite;"
+  },
+  "ConfiguratorTypename": "Moryx.Model.Sqlite.SqliteModelConfigurator, Moryx.Model.Sqlite, Version=10.0.0.0, Culture=neutral, PublicKeyToken=null",
+  "ConfigState": "Valid"
+}
+````
+
+New version:
+
+````json
+{
+  "ConfiguratorType": "Moryx.Model.Sqlite.SqliteModelConfigurator, Moryx.Model.Sqlite, Version=8.0.0.0, Culture=neutral, PublicKeyToken=null",
+  "ConnectionString": "Data Source=./db/ProcessContext.db;Mode=ReadWrite;",
+  "ConfigState": "Valid"
+}
+````
 
 ### Removal of ProductFile
 
