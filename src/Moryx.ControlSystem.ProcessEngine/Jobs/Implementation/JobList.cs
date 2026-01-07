@@ -6,6 +6,7 @@ using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
+using Moryx.ControlSystem.Setups;
 using Moryx.Logging;
 using Moryx.Tools;
 
@@ -70,13 +71,8 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
                 Thread.Sleep(1);
 
             if (_jobs.Any(j => !j.IsStable))
-                Logger.LogWarning("Reached shutdown-timout of the {name} after {seconds}s. Unfinished jobs: {jobs}",
+                Logger.LogWarning("Reached shutdown-timeout of the {name} after {seconds}s. Unfinished jobs: {jobs}",
                     nameof(JobList), Config.JobListStopTimeout, string.Join(", ", _jobs.Select(j => j.Id)));
-        }
-
-        /// <inheritdoc cref="IJobDataList"/>
-        public void Dispose()
-        {
         }
 
         #endregion
@@ -306,13 +302,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
             // TODO: This solution only fixes a special case and needs to be replaced with proper job positioning
             if (referenceNode.Value.Recipe.Id != jobDatas.First().Recipe.Id
                 && referenceNode.Previous?.Value is ISetupJobData setup
-                && setup.Recipe.Execution == Setups.SetupExecution.BeforeProduction
+                && setup.Recipe.Execution == SetupExecution.BeforeProduction
                 && setup.Recipe.TargetRecipe.Id == referenceNode.Value.Recipe.Id)
                 referenceNode = referenceNode.Previous;
 
             if (referenceNode.Value.Recipe.Id != jobDatas.First().Recipe.Id
                 && referenceNode.Previous?.Value is ISetupJobData cleanup
-                && cleanup.Recipe.Execution == Setups.SetupExecution.AfterProduction
+                && cleanup.Recipe.Execution == SetupExecution.AfterProduction
                 && cleanup.Recipe.TargetRecipe.Id == jobDatas.Last().Recipe.Id)
                 referenceNode = referenceNode.Previous;
 

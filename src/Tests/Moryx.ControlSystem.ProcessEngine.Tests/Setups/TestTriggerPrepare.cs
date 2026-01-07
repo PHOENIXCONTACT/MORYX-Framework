@@ -3,12 +3,10 @@
 
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Setups;
-using Moryx.Workplans;
-using System.Collections.Generic;
 
-namespace Moryx.ControlSystem.SetupProvider.Tests
+namespace Moryx.ControlSystem.ProcessEngine.Tests.Setups
 {
-    internal class MultiStepTrigger : TestTriggerBase
+    internal class TestTriggerPrepare : TestTriggerBase
     {
         public override SetupExecution Execution => SetupExecution.BeforeProduction;
 
@@ -20,12 +18,6 @@ namespace Moryx.ControlSystem.SetupProvider.Tests
             {
                 SetupState = ((TestRecipe)recipe).SetupState
             });
-        }
-
-        public override IReadOnlyList<IWorkplanStep> CreateSteps(IProductRecipe recipe)
-        {
-            CreateStepCalled = true;
-            return [new TestSetupTask { Name = "P1" }, new TestSetupTask { Name = "P2" }];
         }
     }
 }

@@ -8,17 +8,18 @@ using Moq;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
+using Moryx.ControlSystem.ProcessEngine.Setups;
 using Moryx.ControlSystem.Setups;
 using Moryx.Logging;
 using NUnit.Framework;
 
-namespace Moryx.ControlSystem.SetupProvider.Tests
+namespace Moryx.ControlSystem.ProcessEngine.Tests.Setups
 {
     /// <summary>
     /// Tests for the setup-management
     /// </summary>
     [TestFixture]
-    public class SetupManagerTests
+    public class SetupManagerComponentTests
     {
         private Mock<ISetupTriggerFactory> _triggerFactoryMock;
         private Mock<IResourceManagement> _resourceManagerMock;

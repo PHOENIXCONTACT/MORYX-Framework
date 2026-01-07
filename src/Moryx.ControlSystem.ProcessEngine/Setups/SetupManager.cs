@@ -10,7 +10,7 @@ using Moryx.Logging;
 using Moryx.Workplans;
 using Moryx.Workplans.WorkplanSteps;
 
-namespace Moryx.ControlSystem.SetupProvider
+namespace Moryx.ControlSystem.ProcessEngine.Setups
 {
     [Component(LifeCycle.Singleton, typeof(ISetupManager))]
     internal class SetupManager : ISetupManager, ILoggingComponent
@@ -222,6 +222,31 @@ namespace Moryx.ControlSystem.SetupProvider
                 input = output;
             }
         }
+
+        #region RecipeProvider
+
+        string IRecipeProvider.Name => "SetupProvider";
+
+        Task<IRecipe> IRecipeProvider.LoadRecipeAsync(long id, CancellationToken cancellationToken)
+        {
+            // TODO: Setup restore --> SetupRecipes are not saved
+            return Task.FromResult<IRecipe>(new SetupRecipe
+            {
+                Id = id,
+                Origin = this
+            });
+        }
+
+        private event EventHandler<IRecipe> RecipeChanged;
+
+        event EventHandler<IRecipe> IRecipeProvider.RecipeChanged
+        {
+            add => this.RecipeChanged += value;
+            remove => this.RecipeChanged -= value;
+        }
+
+        #endregion
+
     }
 }
 

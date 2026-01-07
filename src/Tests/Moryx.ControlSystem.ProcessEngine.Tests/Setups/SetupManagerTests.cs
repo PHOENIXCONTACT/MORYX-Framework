@@ -14,6 +14,7 @@ using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs.Setup;
+using Moryx.ControlSystem.ProcessEngine.Setups;
 using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Setups;
 using Moryx.ControlSystem.TestTools.Tasks;
@@ -22,7 +23,7 @@ using Moryx.Workplans;
 using NUnit.Framework;
 using SetupClassification = Moryx.ControlSystem.Setups.SetupClassification;
 
-namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
+namespace Moryx.ControlSystem.ProcessEngine.Tests.Setups
 {
     /// <summary>
     /// Tests for the setup-management
@@ -33,7 +34,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
         private Mock<IJobDataList> _jobListMock;
         private Mock<IResourceManagement> _resourceManagerMock;
         private Mock<IJobDataFactory> _jobDataFactoryMock;
-        private Mock<ISetupProvider> _providerMock;
+        private Mock<ISetupManager> _providerMock;
         private readonly List<Mock<ISetupJobData>> _setupJobs = new();
 
         private readonly List<IJobData> _jobList = new();
@@ -108,7 +109,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
                         return setupJobDataMock.Object;
                     });
 
-            _providerMock = new Mock<ISetupProvider>();
+            _providerMock = new Mock<ISetupManager>();
             _providerMock.Setup(p => p.RequiredSetup(It.IsAny<SetupExecution>(), It.IsAny<ProductionRecipe>(), It.IsAny<ISetupTarget>()))
                 .Returns<SetupExecution, ProductionRecipe, ISetupTarget>(ProvideSetup);
 
@@ -120,7 +121,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
 
         private SetupRecipe ProvideSetup(SetupExecution execution, ProductionRecipe recipe, ISetupTarget target)
         {
-            var testRecipe = (TestRecipe)recipe;
+            var testRecipe = (Tests.TestRecipe)recipe;
             if (execution == SetupExecution.BeforeProduction && target.Cells(new TestSetupCapabilities { SetupState = testRecipe.SetupState }).Count == 0)
             {
                 var workplan = new Workplan();
@@ -634,7 +635,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
                 JobList = _jobListMock.Object,
                 JobFactory = _jobDataFactoryMock.Object,
                 ResourceManagement = _resourceManagerMock.Object,
-                SetupProvider = _providerMock.Object
+                SetupManager = _providerMock.Object
             };
 
             return setupManager;
@@ -654,11 +655,11 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
         }
 
         /// <summary>
-        /// Creates an <see cref="TestRecipe"/> for special test handling
+        /// Creates an <see cref="Tests.TestRecipe"/> for special test handling
         /// </summary>
-        private static TestRecipe CreateRecipe(long id, int state)
+        private static Tests.TestRecipe CreateRecipe(long id, int state)
         {
-            var recipe = new TestRecipe
+            var recipe = new Tests.TestRecipe
             {
                 Id = id,
                 SetupState = state
@@ -673,7 +674,7 @@ namespace Moryx.ControlSystem.ProcessEngine.Tests.Setup
         /// <param name="name">name of the JobData to identify it.</param>
         /// <param name="recipe">The Recipe which should be assigned.</param>
         /// <returns>A new <see cref="IProductionJobData"/></returns>
-        private static Mock<IProductionJobData> CreateProductionJob(string name, TestRecipe recipe, JobClassification classification = JobClassification.Waiting)
+        private static Mock<IProductionJobData> CreateProductionJob(string name, Tests.TestRecipe recipe, JobClassification classification = JobClassification.Waiting)
         {
             var productionJobData = new Mock<IProductionJobData> { Name = name };
             productionJobData.SetupGet(j => j.Classification).Returns(classification);

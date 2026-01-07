@@ -2,11 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
+using Moryx.ControlSystem.ProcessEngine.Setups;
 using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Setups;
 using Moryx.Runtime.Modules;
 
-namespace Moryx.ControlSystem.SetupProvider
+namespace Moryx.ControlSystem.ProcessEngine
 {
     internal class SetupProviderFacade : ISetupProvider, IFacadeControl
     {
@@ -28,23 +29,16 @@ namespace Moryx.ControlSystem.SetupProvider
         {
         }
 
-        public string Name => "SetupProvider";
+        public string Name => SetupManager.Name;
 
         public Task<IRecipe> LoadRecipeAsync(long id, CancellationToken cancellationToken = default)
         {
             ValidateHealthState();
-
-            // TODO: Setup restore --> SetupRecipes are not saved
-            return Task.FromResult<IRecipe>(new SetupRecipe
-            {
-                Id = id,
-                Origin = this
-            });
+            return SetupManager.LoadRecipeAsync(id, cancellationToken);
         }
 
         public SetupRecipe RequiredSetup(SetupExecution execution, ProductionRecipe recipe, ISetupTarget targetSystem)
         {
-
             ValidateHealthState();
 
             var setup = SetupManager.RequiredSetup(execution, recipe, targetSystem);
