@@ -10,4 +10,3 @@ export default class DatabaseMigrationSummary {
     public executedMigrations: string[];
     public errors: string[];
 }
-

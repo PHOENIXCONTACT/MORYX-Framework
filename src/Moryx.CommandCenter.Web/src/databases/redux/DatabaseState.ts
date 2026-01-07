@@ -6,33 +6,31 @@
 require("../../types/constants");
 import { ActionType } from "../../common/redux/Types";
 import DatabasesRestClient from "../api/DatabasesRestClient";
+import DatabaseAndConfigurators from "../models/DatabaseAndConfigurators";
 import DataModel from "../models/DataModel";
 import { UPDATE_DATABASE_CONFIG, UPDATE_DATABASE_CONFIGS } from "./DatabaseActions";
 
 export interface DatabaseState {
     RestClient: DatabasesRestClient;
-    DatabaseConfigs: DataModel[];
+    Databases: DatabaseAndConfigurators[];
 }
 
 export const initialDatabaseState: DatabaseState = {
-    DatabaseConfigs: [],
+    Databases: [],
     RestClient: new DatabasesRestClient(BASE_URL),
 };
 
 export function getDatabaseReducer(state: DatabaseState = initialDatabaseState, action: ActionType<{}>): DatabaseState {
   switch (action.type) {
     case UPDATE_DATABASE_CONFIGS: {
-        return { ...state, DatabaseConfigs: action.payload as DataModel[] };
+        return { ...state, Databases: action.payload as DatabaseAndConfigurators[] };
     }
     case UPDATE_DATABASE_CONFIG: {
-        const databaseConfig = action.payload as DataModel;
+        const database = action.payload as DataModel;
 
         return {
             ...state,
-            DatabaseConfigs: state.DatabaseConfigs.map(
-                (config, i) => config.targetModel === databaseConfig.targetModel ? {...databaseConfig}
-                                        : config,
-            ),
+            Databases: state.Databases,
          };
     }
   }

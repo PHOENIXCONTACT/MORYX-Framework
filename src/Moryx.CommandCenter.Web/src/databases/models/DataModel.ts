@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Copyright (c) 2026, Phoenix Contact GmbH & Co. KG
  * Licensed under the Apache License, Version 2.0
 */
+
 import DatabaseConfigModel from "./DatabaseConfigModel";
-import DatabaseConfigOptionModel from "./DatabaseConfigOptionModel";
 import DbMigrationsModel from "./DbMigrationsModel";
 import SetupModel from "./SetupModel";
 
@@ -13,5 +13,5 @@ export default class DataModel {
     public setups: SetupModel[];
     public availableMigrations: DbMigrationsModel[];
     public appliedMigrations: DbMigrationsModel[];
-    public possibleConfigurators: DatabaseConfigOptionModel[];
+    public possibleConfigurators: string[];
 }
