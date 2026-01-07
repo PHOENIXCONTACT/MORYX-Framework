@@ -2,6 +2,9 @@
 // Licensed under the Apache License, Version 2.0
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using NUnit.Framework;
 
@@ -26,7 +29,11 @@ namespace Moryx.Notifications.Tests
         [SetUp]
         public void SetUp()
         {
-            _adapter = new NotificationAdapter();
+            _adapter = new NotificationAdapter()
+            {
+                Logger = NullLogger.Instance
+            };
+
             _notificationSenderMock = new Mock<INotificationSender>();
             _notificationSenderMock.Setup(n => n.Acknowledge(It.IsAny<Notification>(), It.IsAny<object>()))
                 .Callback((Notification notification, object tag) => _acknowledgeCallNotification = notification);
@@ -68,6 +75,40 @@ namespace Moryx.Notifications.Tests
             {
                 _adapter.Publish(_sender, notification);
             }, "The same notification was published a second time.");
+        }
+
+        [Test(Description = "Check that publishing a notification asynchronously publishes an event, and marks the notification as published.")]
+        public async Task AdapterPublishAsync()
+        {
+            // Arrange
+            var notification = new Notification();
+
+            // Act
+            var publishTask = _adapter.PublishAsync(_sender, notification);
+            ((INotificationSourceAdapter)_adapter).PublishProcessed(notification);
+
+            await publishTask;
+
+            // Assert
+            Assert.That(_publishedEventNotification, Is.Not.Null, "Published-event was not triggered.");
+            Assert.That(_publishedEventNotification, Is.EqualTo(notification), "Published-event was triggered with wrong notification.");
+            Assert.That(_publishedEventNotification.Identifier, Is.Not.Null, "Identifier should not be null.");
+            Assert.That(_publishedEventNotification.Created, Is.Not.EqualTo(default(DateTime)), "Created date should have been set");
+        }
+
+        [Test(Description = "Check that publishing a notification can be cancelled.")]
+        public async Task AdapterPublishAsyncWithCancellation()
+        {
+            // Arrange
+            var notification = new Notification();
+            var cts = new CancellationTokenSource();
+
+            // Act
+            var publishTask = _adapter.PublishAsync(_sender, notification, cts.Token);
+            await cts.CancelAsync();
+
+            // Assert
+            Assert.That(publishTask.IsCanceled, Is.True, "Publishing was not cancelled.");
         }
 
         [Test(Description = "Publishes a notification with a tag")]
