@@ -63,7 +63,7 @@ namespace Moryx.Model.Configuration
         /// <inheritdoc />
         public virtual async Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(config.ConnectionSettings.Database))
+            if (string.IsNullOrWhiteSpace(config.ConnectionString))
                 return TestConnectionResult.ConfigurationError;
 
             // Simple ef independent database connection
@@ -103,7 +103,7 @@ namespace Moryx.Model.Configuration
             }
             catch (Exception e)
             {
-                Logger.LogError(e, "Creating database '{0}' failed!", config.ConnectionSettings.Database);
+                Logger.LogError(e, "Creating database for context '{0}' failed!", context.GetType().Name);
                 return false;
             }
         }
@@ -143,8 +143,8 @@ namespace Moryx.Model.Configuration
             {
                 result.Result = MigrationResult.NoMigrationsAvailable;
                 result.ExecutedMigrations = [];
-                Logger.Log(LogLevel.Warning, "Database migration for database '{0}' failed. There are no migrations available!",
-                    config.ConnectionSettings.Database);
+                Logger.Log(LogLevel.Warning, "Database migration for context '{contextName}' was failed. There are no migrations available!",
+                    ContextType.Name);
 
                 return result;
             }
@@ -154,14 +154,14 @@ namespace Moryx.Model.Configuration
                 await context.Database.MigrateAsync(cancellationToken: cancellationToken);
                 result.Result = MigrationResult.Migrated;
                 result.ExecutedMigrations = pendingMigrations;
-                Logger.Log(LogLevel.Information, "Database migration for database '{0}' was successful. Executed migrations: {1}",
-                    config.ConnectionSettings.Database, string.Join(", ", pendingMigrations));
+                Logger.Log(LogLevel.Information, "Database migration for context '{contextName}' was successful. Executed migrations: {1}",
+                    ContextType.Name, string.Join(", ", pendingMigrations));
             }
             catch (Exception e)
             {
                 result.Result = MigrationResult.Error;
                 result.Errors = [.. result.Errors, e.Message];
-                Logger.Log(LogLevel.Error, e, "Database migration for database '{0}' failed!", config.ConnectionSettings.Database);
+                Logger.Log(LogLevel.Error, e, "Database migration for database '{contextName}' was failed!", ContextType.Name);
             }
 
             return result;
@@ -265,8 +265,8 @@ namespace Moryx.Model.Configuration
         /// </summary>
         protected static bool CheckDatabaseConfig(DatabaseConfig config)
         {
-            return (!(string.IsNullOrEmpty(config.ConfiguratorTypename) ||
-                      string.IsNullOrEmpty(config.ConnectionSettings.ConnectionString)));
+            return (!(string.IsNullOrEmpty(config.ConfiguratorType) ||
+                      string.IsNullOrEmpty(config.ConnectionString)));
         }
 
         /// <summary>

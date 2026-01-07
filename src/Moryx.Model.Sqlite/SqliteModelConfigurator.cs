@@ -24,7 +24,7 @@ namespace Moryx.Model.Sqlite
         /// <inheritdoc />
         protected override DbConnection CreateConnection(DatabaseConfig config, bool includeModel)
         {
-            return new SqliteConnection(BuildConnectionString(config));
+            return new SqliteConnection(config.ConnectionString);
         }
 
         /// <inheritdoc />
@@ -49,14 +49,9 @@ namespace Moryx.Model.Sqlite
         public override DbContextOptions BuildDbContextOptions(DatabaseConfig config)
         {
             var builder = new DbContextOptionsBuilder();
-            builder.UseSqlite(BuildConnectionString(config));
+            builder.UseSqlite(config.ConnectionString);
 
             return builder.Options;
-        }
-
-        private static string BuildConnectionString(DatabaseConfig config)
-        {
-            return config.ConnectionSettings.ConnectionString;
         }
 
         /// <inheritdoc />
@@ -80,7 +75,7 @@ namespace Moryx.Model.Sqlite
 
         private static string GetFilePath(DatabaseConfig config)
         {
-            var builder = new SqliteConnectionStringBuilder(config.ConnectionSettings.ConnectionString);
+            var builder = new SqliteConnectionStringBuilder(config.ConnectionString);
             return builder.DataSource;
         }
 
@@ -94,11 +89,11 @@ namespace Moryx.Model.Sqlite
 
             // Overwrite the connection mode to ensure that the database
             // file can be created
-            var connectionStringBuilder = new SqliteConnectionStringBuilder(config.ConnectionSettings.ConnectionString)
+            var connectionStringBuilder = new SqliteConnectionStringBuilder(config.ConnectionString)
             {
                 Mode = SqliteOpenMode.ReadWriteCreate
             };
-            config.ConnectionSettings.ConnectionString = connectionStringBuilder.ConnectionString;
+            config.ConnectionString = connectionStringBuilder.ConnectionString;
 
             return base.CreateDatabaseAsync(config, cancellationToken);
         }
@@ -109,9 +104,7 @@ namespace Moryx.Model.Sqlite
             var migrationAssemblyType = FindMigrationAssemblyType(typeof(SqliteDbContextAttribute));
 
             var builder = new DbContextOptionsBuilder();
-            builder.UseSqlite(
-                BuildConnectionString(config),
-                x => x.MigrationsAssembly(migrationAssemblyType.Assembly.FullName));
+            builder.UseSqlite(config.ConnectionString, x => x.MigrationsAssembly(migrationAssemblyType.Assembly.FullName));
 
             return CreateContext(migrationAssemblyType, builder.Options);
         }

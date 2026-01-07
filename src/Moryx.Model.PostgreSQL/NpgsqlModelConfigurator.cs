@@ -36,7 +36,7 @@ namespace Moryx.Model.PostgreSQL
         /// <inheritdoc />
         public override async Task DeleteDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
         {
-            var settings = (NpgsqlDatabaseConnectionSettings)config.ConnectionSettings;
+            var settings = (NpgsqlDatabaseConfig)config;
 
             // Close all connections to the server.
             // Its not possible to delete the database while there are open connections.
@@ -54,11 +54,11 @@ namespace Moryx.Model.PostgreSQL
 
         private static NpgsqlConnectionStringBuilder CreateConnectionStringBuilder(DatabaseConfig config, bool includeModel = true)
         {
-            var builder = new NpgsqlConnectionStringBuilder(config.ConnectionSettings.ConnectionString);
+            var builder = new NpgsqlConnectionStringBuilder(config.ConnectionString);
 
-            if (includeModel)
+            if (!includeModel)
             {
-                builder.Database = config.ConnectionSettings.Database;
+                builder.Database = string.Empty;
             }
 
             return builder;
@@ -73,20 +73,19 @@ namespace Moryx.Model.PostgreSQL
         /// <returns>Modified copy of given config</returns>
         private static DatabaseConfig CreateTestDatabaseConfig(DatabaseConfig config)
         {
-            var testConfig = new DatabaseConfig<DatabaseConnectionSettings>
+            var testConfig = new NpgsqlDatabaseConfig
             {
-                ConfiguratorTypename = config.ConfiguratorTypename,
-                ConnectionSettings = config.ConnectionSettings,
+                ConnectionString = config.ConnectionString,
                 ConfigState = config.ConfigState,
                 LoadError = config.LoadError
             };
 
-            var builder = new NpgsqlConnectionStringBuilder(testConfig.ConnectionSettings.ConnectionString)
+            var builder = new NpgsqlConnectionStringBuilder(testConfig.ConnectionString)
             {
                 Database = "postgres"
             };
 
-            testConfig.ConnectionSettings.ConnectionString = builder.ConnectionString;
+            testConfig.ConnectionString = builder.ConnectionString;
 
             return testConfig;
         }

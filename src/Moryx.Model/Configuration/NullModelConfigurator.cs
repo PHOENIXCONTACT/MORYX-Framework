@@ -6,13 +6,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Moryx.Model.Configuration
 {
+    public class NullDatabaseConfig : DatabaseConfig
+    {
+        public override string ConfiguratorType => typeof(NullModelConfigurator).AssemblyQualifiedName;
+    }
+
     /// <summary>
     /// Null implementation of the <see cref="ModelConfiguratorBase{TConfig}"/>
     /// </summary>
     public sealed class NullModelConfigurator : IModelConfigurator
     {
         /// <inheritdoc />
-        public DatabaseConfig Config => new DatabaseConfig<DatabaseConnectionSettings>();
+        public DatabaseConfig Config => new NullDatabaseConfig();
 
         /// <inheritdoc />
         public void Initialize(Type contextType, DatabaseConfig config, ILogger logger)

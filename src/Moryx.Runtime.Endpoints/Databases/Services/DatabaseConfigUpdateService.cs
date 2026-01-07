@@ -2,13 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Model;
-using Moryx.Model.Configuration;
 using Moryx.Runtime.Endpoints.Databases.Exceptions;
-using Moryx.Runtime.Endpoints.Databases.Models;
 
 namespace Moryx.Runtime.Endpoints.Databases.Services
 {
-    public class DatabaseConfigUpdateService : IDatabaseConfigUpdateService
+    //TODO: Add internals visible to for testing
+    public class DatabaseConfigUpdateService
     {
         private readonly IDbContextManager _dbContextManager;
 
@@ -17,52 +16,23 @@ namespace Moryx.Runtime.Endpoints.Databases.Services
             _dbContextManager = dbContextManager;
         }
 
-        public Type UpdateModel(string targetModel, DatabaseConfigModel config)
+        public Type UpdateModel(string targetModel, DatabaseConfig config)
         {
-            var requestErrors = new List<string>();
-            var dbContextType = FindContext(targetModel);
+            var dbContextType = _dbContextManager.Contexts.First(c => c.FullName == targetModel);
 
             var match = _dbContextManager.GetConfigurator(dbContextType);
             if (match == null)
                 throw new NotFoundException($"Configurator with target model \"{targetModel}\" could not be found");
 
-            var configuratorType = Type.GetType(config.ConfiguratorTypename);
-
-            // Assert config
-            var configType = configuratorType.BaseType.GenericTypeArguments.First();
-            var dbConfig = (DatabaseConfig)Activator.CreateInstance(configType);
-            var updatedConfig = UpdateConfigFromModel(dbConfig, config);
-            if (!updatedConfig.IsValid())
-                requestErrors.Add("Requested config values aren't valid");
-
-            // If database was not set, use context name as database name
-            if (string.IsNullOrEmpty(updatedConfig.ConnectionSettings.Database))
-            {
-                updatedConfig.ConnectionSettings.Database = dbContextType.Name;
-            }
+            var configuratorType = Type.GetType(config.ConfiguratorType);
 
             // Save config and reload all DataModels
             _dbContextManager.UpdateConfig(
                 dbContextType,
                 configuratorType,
-                dbConfig);
+                config);
 
-            if (requestErrors.Any())
-                throw new BadRequestException(requestErrors.ToArray());
-
-            return FindContext(targetModel);
-        }
-
-        private Type FindContext(string targetModel)
-        {
-            return _dbContextManager.Contexts.First(c => c.FullName == targetModel);
-        }
-
-        private static DatabaseConfig UpdateConfigFromModel(DatabaseConfig dbConfig, DatabaseConfigModel configModel)
-        {
-            //dbConfig.ConfiguratorTypename = configModel.ConfiguratorTypename;
-            dbConfig.ConnectionSettings.FromDictionary(configModel.Entries);
-            return dbConfig;
+            return dbContextType;
         }
     }
 }

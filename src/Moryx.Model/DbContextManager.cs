@@ -75,12 +75,12 @@ namespace Moryx.Model
             var configuredModels = new List<ConfiguredModelWrapper>();
             foreach (var possibleModel in _possibleModels)
             {
-                var config = _configManager.GetConfiguration<DatabaseConfig<DatabaseConnectionSettings>>(ConfigFilename(possibleModel.DbContext));
+                var config = _configManager.GetConfiguration<DatabaseConfig>(ConfigFilename(possibleModel.DbContext));
                 Type configuratorType = null;
                 Type specificDbContextType = null;
-                if (!string.IsNullOrEmpty(config.ConfiguratorTypename))
+                if (!string.IsNullOrEmpty(config.ConfiguratorType))
                 {
-                    var configuredConfiguratorType = Type.GetType(config.ConfiguratorTypename);
+                    var configuredConfiguratorType = Type.GetType(config.ConfiguratorType);
                     if (configuredConfiguratorType != null &&
                         possibleModel.ModelConfiguratorMap.TryGetValue(configuredConfiguratorType, out specificDbContextType))
                     {
@@ -104,12 +104,6 @@ namespace Moryx.Model
 
                 var typedConfig = (DatabaseConfig)_configManager.GetConfiguration(configType,
                     ConfigFilename(possibleModel.DbContext), true);
-
-                // If database is empty, fill with TargetModel name
-                if (string.IsNullOrWhiteSpace(typedConfig.ConnectionSettings.Database))
-                {
-                    typedConfig.ConnectionSettings.Database = possibleModel.DbContext.Name;
-                }
 
                 configuredModels.Add(new ConfiguredModelWrapper
                 {

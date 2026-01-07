@@ -12,63 +12,23 @@ namespace Moryx.Model.Sqlite
     /// Database config for the Sqlite databases
     /// </summary>
     [DataContract]
-    public class SqliteDatabaseConfig : DatabaseConfig<SqliteDatabaseConnectionSettings>
+    public class SqliteDatabaseConfig : DatabaseConfig
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="SqliteDatabaseConfig"/>
-        /// </summary>
-        public SqliteDatabaseConfig()
-        {
-            ConnectionSettings = new SqliteDatabaseConnectionSettings();
-            ConfiguratorTypename = typeof(SqliteModelConfigurator).AssemblyQualifiedName;
-        }
-    }
+        public override string ConfiguratorType => typeof(SqliteModelConfigurator).AssemblyQualifiedName;
 
-    internal class DefaultSqliteConnectionStringAttribute : DefaultValueAttribute
-    {
-        public DefaultSqliteConnectionStringAttribute() : base("")
-        {
-            var path = Path.Combine(".", "db", "<DatabaseName>.db");
-            SetValue($"Data Source={path};Mode=ReadWrite;");
-        }
-    }
-
-    /// <summary>
-    /// Database connection settings for the Sqlite databases
-    /// </summary>
-    public class SqliteDatabaseConnectionSettings : DatabaseConnectionSettings
-    {
-        private string _database;
-
-        /// <inheritdoc />
-        [DataMember]
-        public override string Database
-        {
-            get => _database;
-            set
-            {
-                if (string.IsNullOrEmpty(value)) return;
-                _database = value;
-                ConnectionString = ConnectionString?.Replace("<DatabaseName>", value);
-            }
-        }
-
-        /// <inheritdoc />
-        [DataMember, Required, DefaultSqliteConnectionString]
+        [DataMember, Required, DefaultValue("Data Source=<DatabaseName>;Mode=ReadWrite")]
         public override string ConnectionString { get; set; }
 
-        /// <inheritdoc />
-        public override bool IsValid()
-        {
-            try
-            {
-                var builder = new SqliteConnectionStringBuilder(ConnectionString);
-                return !string.IsNullOrEmpty(ConnectionString);
-            }
-            catch (ArgumentException)
-            {
-                return false;
-            }
-        }
+        [DataMember, Required]
+        [ConnectionStringKey("Data Source")]
+        public string DataSource { get; set; }
+
+        [DataMember]
+        [ConnectionStringKey("Mode")]
+        public SqliteOpenMode OpenMode { get; set; }
+
+        [DataMember]
+        [ConnectionStringKey("Cache")]
+        public SqliteCacheMode CacheMode { get; set; }
     }
 }

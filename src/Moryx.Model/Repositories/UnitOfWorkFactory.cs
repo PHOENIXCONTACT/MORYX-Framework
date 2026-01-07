@@ -18,9 +18,10 @@ namespace Moryx.Model.Repositories
         private readonly IDbContextManager _manager;
 
         // ReSharper disable once StaticMemberInGenericType
-        private static readonly RepositoryProxyBuilder ProxyBuilder = new();
+        private static readonly RepositoryProxyBuilder _proxyBuilder = new();
+
         // ReSharper disable once StaticMemberInGenericType
-        private static readonly IDictionary<Type, Func<Repository>> Repositories = new Dictionary<Type, Func<Repository>>();
+        private static readonly IDictionary<Type, Func<Repository>> _repositories = new Dictionary<Type, Func<Repository>>();
 
         /// <summary>
         /// Static constructor to register repositories once a time per typed context
@@ -42,14 +43,14 @@ namespace Moryx.Model.Repositories
         public IUnitOfWork<TContext> Create()
         {
             var context = _manager.Create<TContext>();
-            return new UnitOfWork<TContext>(context, Repositories);
+            return new UnitOfWork<TContext>(context, _repositories);
         }
 
         /// <inheritdoc />
         public IUnitOfWork<TContext> Create(DatabaseConfig config)
         {
             var context = _manager.Create<TContext>(config);
-            return new UnitOfWork<TContext>(context, Repositories);
+            return new UnitOfWork<TContext>(context, _repositories);
         }
 
         private static void RegisterRepositories()
@@ -68,17 +69,17 @@ namespace Moryx.Model.Repositories
                 var implementations = types.Where(t => t.IsClass && apiPair.RepoApi.IsAssignableFrom(t)).ToList();
                 if (implementations.Count == 0)
                 {
-                    repoProxy = ProxyBuilder.Build(apiPair.RepoApi);
+                    repoProxy = _proxyBuilder.Build(apiPair.RepoApi);
                 }
                 else
                 {
                     var selectedImpl = implementations.First();
-                    repoProxy = ProxyBuilder.Build(apiPair.RepoApi, selectedImpl);
+                    repoProxy = _proxyBuilder.Build(apiPair.RepoApi, selectedImpl);
                 }
 
                 var constructorDelegate = ReflectionTool.ConstructorDelegate<Repository>(repoProxy);
                 // Register constructor for both interfaces
-                Repositories[apiPair.RepoApi] = Repositories[apiPair.GenericApi] = constructorDelegate;
+                _repositories[apiPair.RepoApi] = _repositories[apiPair.GenericApi] = constructorDelegate;
             }
         }
     }

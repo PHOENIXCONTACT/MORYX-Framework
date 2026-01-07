@@ -43,7 +43,7 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
             // Assert
             var updatedConfig = GetUpdatedConfig();
             Assert.That(result, Is.EqualTo(typeof(TestModelContext)));
-            Assert.That(updatedConfig.ConfiguratorTypename, Does.Contain(_configuratorType.FullName));
+            Assert.That(updatedConfig.ConfiguratorType, Does.Contain(_configuratorType.FullName));
             Assert.That(updatedConfig.ConnectionSettings.Database, Is.EqualTo(nameof(TestModelContext)));
             Assert.That(updatedConfig.ConnectionSettings.ConnectionString, Is.EqualTo("Data Source=.\\db-filename.db"));
         }
@@ -98,7 +98,7 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
             _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config);
             var updatedConfig = GetUpdatedConfig();
 
-            Assert.That(updatedConfig.ConfiguratorTypename, Does.Contain(_configuratorType.FullName));
+            Assert.That(updatedConfig.ConfiguratorType, Does.Contain(_configuratorType.FullName));
             Assert.That(updatedConfig.ConnectionSettings.Database, Is.EqualTo("MyDatabase"));
             Assert.That(updatedConfig.ConnectionSettings.ConnectionString, Is.EqualTo("Data Source=.\\MyDatabase.db"));
         }
@@ -123,8 +123,8 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
         {
             return new DatabaseConfigModel
             {
-                ConfiguratorTypename = typeof(SqliteModelConfigurator).AssemblyQualifiedName,
-                Entries = new() { }
+                ConfiguratorType = typeof(SqliteModelConfigurator).AssemblyQualifiedName,
+                Properties = new() { }
             };
         }
 
@@ -148,20 +148,20 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
     {
         public static DatabaseConfigModel WithDatabase(this DatabaseConfigModel model, string databaseName)
         {
-            model.Entries["Database"] = databaseName;
+            model.Properties["Database"] = databaseName;
             return model;
         }
 
         public static DatabaseConfigModel WithConnectionString(this DatabaseConfigModel model, string connectionString)
         {
-            model.Entries["ConnectionString"] = connectionString;
+            model.Properties["ConnectionString"] = connectionString;
             return model;
         }
 
         public static DatabaseConfigModel WithDefaults(this DatabaseConfigModel model)
         {
-            model.Entries["ConnectionString"] = "Data Source=.\\db-filename.db";
-            model.Entries["Database"] = "";
+            model.Properties["ConnectionString"] = "Data Source=.\\db-filename.db";
+            model.Properties["Database"] = "";
             return model;
         }
     }
