@@ -96,29 +96,20 @@ Note: For projects using top-level statements you can use the new async methods 
 ### Async Lifecycle Support for ResourceManagement
 
 The ResourceManagement has been updated to support **asynchronous lifecycle methods**, including initialization, startup, and shutdown processes.
+<details>
+  <summary> Code Replacement Snippets </summary>
 
-**Changes in Resource**:
+  ```csharp
+  protected override void OnInitialize() // replace with
+  protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
 
-- `OnInitialize()` -> `OnInitializeAsync(CancellationToken cancellationToken)`
-- `OnStart()` -> `OnStartAsync(CancellationToken cancellationToken)`
-- `OnStop()` -> `OnStopAsync(CancellationToken cancellationToken)`
+  protected override void OnStart() // replace with
+  protected override async Task OnStartAsync(CancellationToken cancellationToken)
 
-````cs
-protected override Task OnInitializeAsync(CancellationToken cancellationToken)
-{
-    return base.OnStartAsync();
-}
-
-protected override Task OnStartAsync(CancellationToken cancellationToken)
-{
-    return base.OnStartAsync();
-}
-
-protected override Task OnStopAsync(CancellationToken cancellationToken)
-{
-    return base.OnStopAsync();
-}
-````
+  protected override void OnStop() // replace with
+  protected override async Task OnStopAsync(CancellationToken cancellationToken)
+  ```
+</details>
 
 Additionally, the APIs of these components have been updated to return `Task` or `Task<T>` to reflect asynchronous behavior.
 
@@ -139,9 +130,31 @@ The following plugins have been migrated to the **async lifecycle**:
 
 - `IAdviceExecutor`
 - `IDocumentLoader`
+  <details>
+    <summary> Code Replacement Snippets </summary>
+
+    ```csharp
+    public void Initialize(DocumentLoaderConfig config) // replace with
+    public async Task InitializeAsync(DocumentLoaderConfig config, CancellationToken cancellationToken = default)
+
+    public async Task<IReadOnlyList<Document>> Load(Operation operation) // replace with
+    public async Task<IReadOnlyList<Document>> LoadAsync(Operation operation, CancellationToken cancellationToken)
+    ```
+  </details>
 - `IPartsAssignment`
 - `IProductAssignment`
-- `IRecipeAssignment`
+- `IRecipeAssignment`  
+  <details>
+    <summary> Code Replacement Snippets </summary>
+
+    ```csharp
+    public override bool ProcessRecipe(IProductRecipe clone, Operation operation, IOperationLogger operationLogger) // replace with
+    public override Task<bool> ProcessRecipeAsync(IProductRecipe clone, Operation operation, IOperationLogger operationLogger, CancellationToken cancellationToken)
+
+    public override IReadOnlyList<IProductRecipe> SelectRecipes(Operation operation, IOperationLogger operationLogger) // replace with
+    public override async Task<IReadOnlyList<IProductRecipe>> SelectRecipesAsync(Operation operation, IOperationLogger operationLogger, CancellationToken cancellationToken)
+    ```
+  </details>
 - `IOperationValidation`
 - `IOperationDispatcher`
 
@@ -281,12 +294,6 @@ To reduce the number of API packages and simplify the overall architecture, **Mo
 
 The simulator module has also been renamed, and its namespace and package id have changed accordingly to reflect its new location within Moryx.ControlSystem.
 
-## ProcessEngineContext and ControlSystemAttached/Detached
-
-The methods `ControlSystemAttached` and `ControlSystemDetached` were renamed to `ProcessEngineAttached` and `ProcessEngineDetached` to match the naming of the framework. ControlSystem is a term for multiple modules and components used within the framework (ProcessEngine, SetupProvider, MaterialManager, ...).
-
-The `ProcessEngineContext` was added to the `ProcessEngineAttached` to provide the `Cell` a possibility to gather information from the process engine. The class is empty in 10.0 because it defines only the API. Features are implemented in the next feature-releases of MORYX 10.x.
-
 ## Renaming and Typo-Fixes
 
 - TcpClientConfig.IpAdress -> TcpClientConfig.IpAddress
@@ -320,19 +327,21 @@ Several interfaces have been removed to streamline the codebase and reduce compl
 - `IProductionRecipe`: Replaced with class `ProductionRecipe`
 - `ISetupRecipe`: Replaced with class `SetupRecipe`
 - `IState`: Replace with base-class `StateBase`
--
+
 The following interfaces are still existent for api extensions but the base class is used in whole code base:
 
 - `IActivity` Replaced with class `Activity`
     <details>
     <summary> Code Replacement Snippets </summary>
 
-    ``` 
-    // old version:
-    public override IReadOnlyList<ICell> SelectCells(IActivity activity, IReadOnlyList<ICell> availableCells)
+    ```csharp
+    // ICellSelector
+    public override IReadOnlyList<ICell> SelectCells(IActivity activity, IReadOnlyList<ICell> availableCells) // replace with
+    public override Task<IReadOnlyList<ICell>> SelectCellsAsync(Activity activity, IReadOnlyList<ICell> availableCells, CancellationToken cancellationToken)
 
-    // new version:
-    public IReadOnlyList<ICell> SelectCells(Activity activity, IReadOnlyList<ICell> availableCells)
+    // ICell
+    public override void ProcessAborting(IActivity affectedActivity) // replace with
+    public override void ProcessAborting(Activity affectedActivity)
     ```
     </details>
 
@@ -341,11 +350,17 @@ The following interfaces are still existent for api extensions but the base clas
     <details>
     <summary> Code Replacement Snippets </summary>
 
-    ``` 
-    // old version:
-    protected override void Populate(IProcess process, Parameters instance)
-    // new version:
+    ```csharp
+    // Parameters
+    protected override void Populate(IProcess process, Parameters instance) // replace with
     protected override void Populate(Process process, Parameters instance)
+
+    // IProcessReporter
+    public event EventHandler<IProcess> ProcessBroken; // replace with
+    public event EventHandler<Process> ProcessBroken;
+    
+    public event EventHandler<IProcess> ProcessRemoved; // replace with
+    public event EventHandler<Process> ProcessRemoved;
     ```
     </details>
 - `IProductType`: Replaced with class `ProductType`
@@ -376,6 +391,15 @@ With MORYX 10, several changes have been made to the data model to improve perfo
 - Removed `TypeName` from ProcessEntity. It was not used.
 - Combined `Classname`, `Namespace` in `TypeName` of `WorkplanStepEntity` and removed `Assembly`
 - Renamed `Type` to `TypeName` in `RecipeEntity
+
+<details>
+  <summary> Code Replacement Snippets </summary>
+
+  ```csharp
+  [SqliteContext] // replace with
+  [SqliteDbContext]
+  ```
+</details>
 
 ## Launcher
 
@@ -424,25 +448,57 @@ All driver APIs have been reworked to use TPL async/await instead of callbacks f
 - Added generic `ISingleInput{TOptions, TResult}` and `IContinuousInput{TOptions, TResult}` for general pattern of input devices
 
 
-## Resource initialization
+## Modules-Resources
+
+#### Resource initialization
 
 The API of `IResourceInitializer` was adjusted
 
-- `Initialize` renamed to `InitializeAsync` and now returns async task
-- Introduced `ResourceInitializerResult` object for extensibility and option to save
 - Its now possible to execute initializers from the facade
 - The initializers are registered transient by default.
+- It is subject to the [#async-life-cycle](#async-life-cycle) changes.
+- Introduced `ResourceInitializerResult` object for extensibility and option to save
+
+<details>
+  <summary> Code Replacement Snippets </summary>
+
+  ```csharp
+  public override IReadOnlyList<Resource> Execute(IResourceGraph graph) // replace with
+  public override Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters, CancellationToken cancellationToken)
+  ```
+</details>
 
 ## Modules-ProcessEngine
 
-- Clean-ups and unifications on `JobCreationContext`
+#### API Changes
+- Removed API from IJobManagement: `JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement)`
+- Added `IAsyncEnumerable<IProcessChunk> LoadArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)` to `IProcessControl`
+
+#### Clean-ups and unifications on `JobCreationContext`
   - Removed unused constructor `public JobCreationContext(IProductRecipe recipe)`
   - Removed unused method `public JobCreationContext Add(ProductionRecipe recipe)`
   - Replaced uses of `IProductRecipe` with `ProductionRecipe`
     _Note: ProcessEngine Module did expect IWorkplanRecipe anyways, so the use of IProductRecipe would have lead to exceptions in the past already._
   - Transformed `public struct JobTemplate` to `public record JobTemplate` to allow extensions in the future.
-- Removed API from IJobManagement: `JobEvaluation Evaluate(IProductRecipe recipe, int amount, IResourceManagement resourceManagement)`
-- Added `IAsyncEnumerable<IProcessChunk> LoadArchivedProcessesAsync(ProcessRequestFilter filterType, DateTime start, DateTime end, long[] jobIds)` to `IProcessControl`
+
+#### ProcessEngineContext and ControlSystemAttached/Detached
+
+The methods `ControlSystemAttached` and `ControlSystemDetached` were renamed to `ProcessEngineAttached` and `ProcessEngineDetached` to match the naming of the framework. ControlSystem is a term for multiple modules and components used within the framework (ProcessEngine, SetupProvider, MaterialManager, ...).
+
+<details>
+  <summary> Code Replacement Snippets </summary>
+
+  ```csharp
+  public override IEnumerable<Session> ControlSystemAttached() // replace with
+  protected override IEnumerable<Session> ProcessEngineAttached()
+
+  public override IEnumerable<Session> ControlSystemDetached() // replace with
+  protected override IEnumerable<Session> ProcessEngineDetached()
+  ```
+</details>
+
+The `ProcessEngineContext` was added to the `ProcessEngineAttached` to provide the `Cell` a possibility to gather information from the process engine. The class is empty in 10.0 because it defines only the API. Features are implemented in the next feature-releases of MORYX 10.x.
+
 
 ## Modules-Media
 
@@ -465,22 +521,33 @@ The API of `IResourceInitializer` was adjusted
   - `DeleteProductAsync` -> `DeleteTypeAsync`
   - `RemoveRecipeAsync` -> `DeleteRecipeAsync`
 
-**`IProductManagement`**
+#### IProductManagement
 
 - APIs (LoadType, Duplicate) are using `IIdentity` instead of `ProductIdentity` but in MORYX 10.0, only `ProductIdentity` is supported.
 
-**`IProductStorage`**
+#### IProductStorage
 
 - API `LoadType` is using `IIdentity` instead of `ProductIdentity` but in MORYX 10.0, only `ProductIdentity` is supported.
+
+#### Product importer
+
+- Introduced `ProductImporterAttribute` for harmonized registration of importers.
+- The importers are registered transient by default.
+- Subject to [#async-life-cycle](#async-life-cycle) changes.
+  <details>
+    <summary> Code Replacement Snippets </summary>
+
+    ```csharp
+    protected Task<ProductImporterResult> Import(ProductImportContext context, DemoImportParameters parameters) // replace with
+    protected override Task<ProductImporterResult> ImportAsync(ProductImportContext context, DemoImportParameters parameters, CancellationToken cancellationToken)
+    ```
+  </details>
+
 
 ## Modules-Orders
 
 - Removed **Amount Reached Notification** from OperationData. **Upgrade hint:** Replace by custom module, to add notifications for certain modules.
 
-### Product importer
-
-- Introduced `ProductImporterAttribute` for harmonized registration of importers.
-- The importers are registered transient by default.
 
 ## ConstraintContext during activity-handling
 
