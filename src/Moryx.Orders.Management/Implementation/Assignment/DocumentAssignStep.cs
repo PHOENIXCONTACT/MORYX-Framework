@@ -105,7 +105,7 @@ namespace Moryx.Orders.Management.Assignment
             fileName += ext;
 
             // use FileMode.Create to not corrupt file caused by remaining bytes of a existing file (that was longer)
-            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
             {
                 await stream.CopyToAsync(fs);
             }
