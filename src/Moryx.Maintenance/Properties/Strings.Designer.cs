@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Moryx.Maintenance.Localizations {
+namespace Moryx.Maintenance.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Moryx.Maintenance.Localizations {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Moryx.Maintenance.Localizations.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Moryx.Maintenance.Properties.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -63,117 +63,117 @@ namespace Moryx.Maintenance.Localizations {
         /// <summary>
         ///   Looks up a localized string similar to Block Machine.
         /// </summary>
-        public static string BLOCK {
+        public static string MaintenanceOrderResponse_Block {
             get {
-                return ResourceManager.GetString("BLOCK", resourceCulture);
+                return ResourceManager.GetString("MaintenanceOrderResponse_Block", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Block/Stop the machine during maintenance. Note: To be used with MachineBreak.
         /// </summary>
-        public static string BLOCK_DESCRIPTION {
+        public static string MaintenanceOrderResponse_Block_Description {
             get {
-                return ResourceManager.GetString("BLOCK_DESCRIPTION", resourceCulture);
+                return ResourceManager.GetString("MaintenanceOrderResponse_Block_Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Description.
         /// </summary>
-        public static string DESCRIPTION {
+        public static string MaintenanceOrderResponse_Description {
             get {
-                return ResourceManager.GetString("DESCRIPTION", resourceCulture);
+                return ResourceManager.GetString("MaintenanceOrderResponse_Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to A maintenance order already exist for the resource id &apos;{0}&apos;.
         /// </summary>
-        public static string DUPLICATED_RESOURCE_EXCEPTION {
+        public static string DuplicatedMaintenanceOrderException_Message {
             get {
-                return ResourceManager.GetString("DUPLICATED_RESOURCE_EXCEPTION", resourceCulture);
+                return ResourceManager.GetString("DuplicatedMaintenanceOrderException_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Maintenance Instructions/manual.
         /// </summary>
-        public static string INSTRUCTIONS {
+        public static string MaintenanceOrderResponse_Instructions {
             get {
-                return ResourceManager.GetString("INSTRUCTIONS", resourceCulture);
+                return ResourceManager.GetString("MaintenanceOrderResponse_Instructions", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Interval.
         /// </summary>
-        public static string INTERVAL {
+        public static string MaintenanceOrderResponse_Interval {
             get {
-                return ResourceManager.GetString("INTERVAL", resourceCulture);
+                return ResourceManager.GetString("MaintenanceOrderResponse_Interval", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Periodic time at which to perform a maintenance.
         /// </summary>
-        public static string INTERVAL_DESCRIPTION {
+        public static string MaintenanceOrderResponse_Interval_Description {
             get {
-                return ResourceManager.GetString("INTERVAL_DESCRIPTION", resourceCulture);
+                return ResourceManager.GetString("MaintenanceOrderResponse_Interval_Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Is Active.
         /// </summary>
-        public static string IS_ACTIVE {
+        public static string MaintenanceOrderResponse_IsActive {
             get {
-                return ResourceManager.GetString("IS_ACTIVE", resourceCulture);
+                return ResourceManager.GetString("MaintenanceOrderResponse_IsActive", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to If false the maintenance for the resource will not be scheduled..
         /// </summary>
-        public static string IS_ACTIVE_DESCRIPTION {
+        public static string MaintenanceOrderResponse_IsActive_Description {
             get {
-                return ResourceManager.GetString("IS_ACTIVE_DESCRIPTION", resourceCulture);
+                return ResourceManager.GetString("MaintenanceOrderResponse_IsActive_Description", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Maintenance Schedule.
         /// </summary>
-        public static string MAINTENANCE_FORM {
+        public static string MaintenanceOrderResponse_MaintenanceForm {
             get {
-                return ResourceManager.GetString("MAINTENANCE_FORM", resourceCulture);
+                return ResourceManager.GetString("MaintenanceOrderResponse_MaintenanceForm", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to No Maintenance Order found for the given id &apos;{0}&apos;.
         /// </summary>
-        public static string MAINTENANCE_NOT_FOUND_EXCEPTION {
+        public static string MaintenanceNotFoundException_Message {
             get {
-                return ResourceManager.GetString("MAINTENANCE_NOT_FOUND_EXCEPTION", resourceCulture);
+                return ResourceManager.GetString("MaintenanceNotFoundException_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Resource.
         /// </summary>
-        public static string RESOURCE {
+        public static string MaintenanceOrderResponse_Resource {
             get {
-                return ResourceManager.GetString("RESOURCE", resourceCulture);
+                return ResourceManager.GetString("MaintenanceOrderResponse_Resource", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Resource that will receive a maintenance.
         /// </summary>
-        public static string RESOURCE_DESCRIPTION {
+        public static string MaintenanceOrderResponse_Resource_Description {
             get {
-                return ResourceManager.GetString("RESOURCE_DESCRIPTION", resourceCulture);
+                return ResourceManager.GetString("MaintenanceOrderResponse_Resource_Description", resourceCulture);
             }
         }
     }

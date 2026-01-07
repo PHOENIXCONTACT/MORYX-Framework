@@ -117,47 +117,47 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BLOCK" xml:space="preserve">
-    <value>砌块机</value>
-    <comment>维护期间阻止/停止机器。注意：需与 MachineBreak 配合使用</comment>
+  <data name="MaintenanceOrderResponse_Block" xml:space="preserve">
+    <value>Blockieren Sie die Maschine</value>
+    <comment>Blockieren/Stoppen Sie die Maschine während der Wartung. Hinweis: Zur Verwendung mit MachineBreak</comment>
   </data>
-  <data name="BLOCK_DESCRIPTION" xml:space="preserve">
-    <value>维护期间阻止/停止机器。注意：需与 MachineBreak 配合使用</value>
+  <data name="MaintenanceOrderResponse_Block_Description" xml:space="preserve">
+    <value>Blockieren/Stoppen Sie die Maschine während der Wartung. Hinweis: Zur Verwendung mit MachineBreak</value>
   </data>
-  <data name="DESCRIPTION" xml:space="preserve">
-    <value>描述</value>
+  <data name="MaintenanceOrderResponse_Description" xml:space="preserve">
+    <value>Beschreibung</value>
   </data>
-  <data name="DUPLICATED_RESOURCE_EXCEPTION" xml:space="preserve">
-    <value>资源 ID 为“{0}”的维护订单已存在</value>
+  <data name="DuplicatedMaintenanceOrderException_Message" xml:space="preserve">
+    <value>Für die Ressourcen-ID '{0}' ist bereits ein Wartungsauftrag vorhanden.</value>
   </data>
-  <data name="INSTRUCTIONS" xml:space="preserve">
-    <value>维护说明/手册</value>
+  <data name="MaintenanceOrderResponse_Instructions" xml:space="preserve">
+    <value>Wartungsanleitung/Handbuch</value>
   </data>
-  <data name="INTERVAL" xml:space="preserve">
-    <value>间隔</value>
-    <comment>定期进行维护的时间</comment>
+  <data name="MaintenanceOrderResponse_Interval" xml:space="preserve">
+    <value>Intervall</value>
+    <comment>Regelmäßiger Zeitpunkt für die Durchführung einer Wartung</comment>
   </data>
-  <data name="INTERVAL_DESCRIPTION" xml:space="preserve">
-    <value>定期进行维护的时间</value>
+  <data name="MaintenanceOrderResponse_Interval_Description" xml:space="preserve">
+    <value>Regelmäßiger Zeitpunkt für die Durchführung einer Wartung</value>
   </data>
-  <data name="IS_ACTIVE" xml:space="preserve">
-    <value>处于活动状态</value>
-    <comment>如果为假，则不会安排资源的维护。</comment>
+  <data name="MaintenanceOrderResponse_IsActive" xml:space="preserve">
+    <value>Ist aktiv</value>
+    <comment>Wenn „false“, wird die Wartung für die Ressource nicht geplant.</comment>
   </data>
-  <data name="IS_ACTIVE_DESCRIPTION" xml:space="preserve">
-    <value>如果为假，则不会安排资源的维护。</value>
+  <data name="MaintenanceOrderResponse_IsActive_Description" xml:space="preserve">
+    <value>Wenn 'false', wird die Wartung für die Ressource nicht geplant.</value>
   </data>
-  <data name="MAINTENANCE_FORM" xml:space="preserve">
-    <value>维护计划</value>
+  <data name="MaintenanceOrderResponse_MaintenanceForm" xml:space="preserve">
+    <value>Wartungsplan</value>
   </data>
-  <data name="MAINTENANCE_NOT_FOUND_EXCEPTION" xml:space="preserve">
-    <value>未找到指定 ID“{0}”的维护订单</value>
+  <data name="MaintenanceNotFoundException_Message" xml:space="preserve">
+    <value>Für die angegebene ID '{0}' wurde kein Wartungsauftrag gefunden.</value>
   </data>
-  <data name="RESOURCE" xml:space="preserve">
-    <value>资源</value>
-    <comment>将接受维护的资源</comment>
+  <data name="MaintenanceOrderResponse_Resource" xml:space="preserve">
+    <value>Ressource</value>
+    <comment>Ressource, die gewartet wird</comment>
   </data>
-  <data name="RESOURCE_DESCRIPTION" xml:space="preserve">
-    <value>将接受维护的资源</value>
+  <data name="MaintenanceOrderResponse_Resource_Description" xml:space="preserve">
+    <value>Ressource, die gewartet wird</value>
   </data>
 </root>

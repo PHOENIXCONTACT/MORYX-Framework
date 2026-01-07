@@ -117,47 +117,47 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BLOCK" xml:space="preserve">
-    <value>Block Machine</value>
-    <comment>Block/Stop the machine during maintenance. Note: To be used with MachineBreak</comment>
+  <data name="MaintenanceOrderResponse_Block" xml:space="preserve">
+    <value>Macchina a blocchi</value>
+    <comment>Blocca/Arresta la macchina durante la manutenzione. Nota: da utilizzare con MachineBreak</comment>
   </data>
-  <data name="BLOCK_DESCRIPTION" xml:space="preserve">
-    <value>Block/Stop the machine during maintenance. Note: To be used with MachineBreak</value>
+  <data name="MaintenanceOrderResponse_Block_Description" xml:space="preserve">
+    <value>Blocca/Arresta la macchina durante la manutenzione. Nota: da utilizzare con MachineBreak</value>
   </data>
-  <data name="DESCRIPTION" xml:space="preserve">
-    <value>Description</value>
+  <data name="MaintenanceOrderResponse_Description" xml:space="preserve">
+    <value>Descrizione</value>
   </data>
-  <data name="DUPLICATED_RESOURCE_EXCEPTION" xml:space="preserve">
-    <value>A maintenance order already exist for the resource id '{0}'</value>
+  <data name="DuplicatedMaintenanceOrderException_Message" xml:space="preserve">
+    <value>Esiste già un ordine di manutenzione per l'ID risorsa '{0}'</value>
   </data>
-  <data name="INSTRUCTIONS" xml:space="preserve">
-    <value>Maintenance Instructions/manual</value>
+  <data name="MaintenanceOrderResponse_Instructions" xml:space="preserve">
+    <value>Istruzioni/manuale di manutenzione</value>
   </data>
-  <data name="INTERVAL" xml:space="preserve">
-    <value>Interval</value>
-    <comment>Periodic time at which to perform a maintenance</comment>
+  <data name="MaintenanceOrderResponse_Interval" xml:space="preserve">
+    <value>Intervallo</value>
+    <comment>Tempo periodico in cui eseguire una manutenzione</comment>
   </data>
-  <data name="INTERVAL_DESCRIPTION" xml:space="preserve">
-    <value>Periodic time at which to perform a maintenance</value>
+  <data name="MaintenanceOrderResponse_Interval_Description" xml:space="preserve">
+    <value>Tempo periodico in cui eseguire una manutenzione</value>
   </data>
-  <data name="IS_ACTIVE" xml:space="preserve">
-    <value>Is Active</value>
-    <comment>If false the maintenance for the resource will not be scheduled.</comment>
+  <data name="MaintenanceOrderResponse_IsActive" xml:space="preserve">
+    <value>È attivo</value>
+    <comment>Se falso, la manutenzione della risorsa non verrà pianificata.</comment>
   </data>
-  <data name="IS_ACTIVE_DESCRIPTION" xml:space="preserve">
-    <value>If false the maintenance for the resource will not be scheduled.</value>
+  <data name="MaintenanceOrderResponse_IsActive_Description" xml:space="preserve">
+    <value>Se falso, la manutenzione della risorsa non verrà pianificata.</value>
   </data>
-  <data name="MAINTENANCE_FORM" xml:space="preserve">
-    <value>Maintenance Schedule</value>
+  <data name="MaintenanceOrderResponse_MaintenanceForm" xml:space="preserve">
+    <value>Programma di manutenzione</value>
   </data>
-  <data name="MAINTENANCE_NOT_FOUND_EXCEPTION" xml:space="preserve">
-    <value>No Maintenance Order found for the given id '{0}'</value>
+  <data name="MaintenanceNotFoundException_Message" xml:space="preserve">
+    <value>Nessun ordine di manutenzione trovato per l'ID specificato '{0}'</value>
   </data>
-  <data name="RESOURCE" xml:space="preserve">
-    <value>Resource</value>
-    <comment>Resource that will receive a maintenance</comment>
+  <data name="MaintenanceOrderResponse_Resource" xml:space="preserve">
+    <value>Risorsa</value>
+    <comment>Risorsa che riceverà una manutenzione</comment>
   </data>
-  <data name="RESOURCE_DESCRIPTION" xml:space="preserve">
-    <value>Resource that will receive a maintenance</value>
+  <data name="MaintenanceOrderResponse_Resource_Description" xml:space="preserve">
+    <value>Risorsa che riceverà una manutenzione</value>
   </data>
 </root>
