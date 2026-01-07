@@ -26,7 +26,12 @@ namespace Moryx.Runtime.Endpoints.Databases.Services
 
             var configuratorType = Type.GetType(config.ConfiguratorType);
 
-            if (config.ConnectionString.Contains("<DatabaseName>"))
+            if (string.IsNullOrEmpty(config.ConnectionString))
+            {
+                config.UpdateConnectionString();
+            }
+
+            if (config.ConnectionString!.Contains("<DatabaseName>"))
             {
                 config.ConnectionString = config.ConnectionString.Replace("<DatabaseName>", dbContextType.Name);
                 config.UpdatePropertiesFromConnectionString();
