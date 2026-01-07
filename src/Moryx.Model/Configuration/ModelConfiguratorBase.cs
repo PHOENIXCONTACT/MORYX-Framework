@@ -248,7 +248,7 @@ namespace Moryx.Model.Configuration
             if (!CheckDatabaseConfig(config))
                 return false;
 
-            using var conn = CreateConnection(config, false);
+            await using var conn = CreateConnection(config, false);
             try
             {
                 await conn.OpenAsync(cancellationToken);

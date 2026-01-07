@@ -7,7 +7,6 @@ using Moryx.Model.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Reflection;
-using Moryx.Runtime.Endpoints.Databases.Endpoint.Models;
 using Moryx.Runtime.Endpoints.Databases.Exceptions;
 using Moryx.Runtime.Endpoints.Databases.Models;
 using Moryx.Runtime.Endpoints.Databases.Request;
@@ -144,17 +143,10 @@ namespace Moryx.Runtime.Endpoints.Databases
 
             var configInstance = DeserializeConfig(targetConfigurator, config);
 
-            try
-            {
-                var creationResult = await targetConfigurator.CreateDatabaseAsync(configInstance);
-                return creationResult
-                    ? new InvocationResponse()
-                    : throw new Exception("Cannot create database. May be the database already exists or was misconfigured.");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            var creationResult = await targetConfigurator.CreateDatabaseAsync(configInstance);
+            return creationResult
+                ? new InvocationResponse()
+                : throw new Exception("Cannot create database. May be the database already exists or was misconfigured.");
         }
 
         [HttpDelete]
@@ -177,15 +169,8 @@ namespace Moryx.Runtime.Endpoints.Databases
 
             var configInstance = DeserializeConfig(targetConfigurator, config);
 
-            try
-            {
-                await targetConfigurator.DeleteDatabaseAsync(configInstance);
-                return new InvocationResponse();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            await targetConfigurator.DeleteDatabaseAsync(configInstance);
+            return new InvocationResponse();
         }
 
         [HttpPost("{targetModel}/migrate")]
@@ -220,16 +205,8 @@ namespace Moryx.Runtime.Endpoints.Databases
                 return NotFound("No matching setup found");
 
             // Provide logger for model
-            // ReSharper disable once SuspiciousTypeConversion.Global
-            try
-            {
-                await setupExecutor.ExecuteAsync(configInstance, targetSetup, request.Setup.SetupData);
-                return new InvocationResponse();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            await setupExecutor.ExecuteAsync(configInstance, targetSetup, request.Setup.SetupData);
+            return new InvocationResponse();
         }
 
         private SetupModel ConvertSetup(IModelSetup setup)
@@ -294,8 +271,6 @@ namespace Moryx.Runtime.Endpoints.Databases
             var config = (DatabaseConfig)EntryConvert.CreateInstance(modelConfigurator.Config.GetType(), databaseConfigModel.Properties, _databaseConfigSerialization);
             return config;
         }
-
-
 
         private static Entry GetConfigPrototype(Type configuratorType)
         {

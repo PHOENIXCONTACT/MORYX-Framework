@@ -8,39 +8,21 @@ namespace Moryx.Model.SqlServer;
 /// Database config for the SqlServer databases
 /// </summary>
 [DataContract]
-public class SqlServerDatabaseConfig : DatabaseConfig<SqlServerDatabaseConnectionSettings>
+public class SqlServerDatabaseConfig : DatabaseConfig
 {
-    /// <summary>
-    /// Creates a new instance of the <see cref="SqlServerDatabaseConfig"/>
-    /// </summary>
-    public SqlServerDatabaseConfig()
-    {
-        ConnectionSettings = new SqlServerDatabaseConnectionSettings();
-        ConfiguratorTypename = typeof(SqlServerModelConfigurator).AssemblyQualifiedName;
-    }
-}
+    [DataMember, Required]
+    [ConnectionStringKey("Initial Catalog")]
+    public string InitialCatalog { get; set; }
 
-/// <summary>
-/// Database connection settings for the SqlServer databases
-/// </summary>
-public class SqlServerDatabaseConnectionSettings : DatabaseConnectionSettings
-{
-    private string _database;
-
-    /// <inheritdoc />
     [DataMember]
-    public override string Database
-    {
-        get => _database;
-        set
-        {
-            if (string.IsNullOrEmpty(value)) return;
-            _database = value;
-            ConnectionString = ConnectionString?.Replace("<DatabaseName>", value);
-        }
-    }
+    [ConnectionStringKey("User Id")]
+    public string UserId { get; set; }
 
-    /// <inheritdoc/>
-    [DataMember, Required, DefaultValue("Server=localhost;Initial Catalog=<DatabaseName>;User Id=sa;Password=password;TrustServerCertificate=True;")]
-    public override string ConnectionString { get; set; }
+    [DataMember]
+    [ConnectionStringKey("Password")]
+    public string CacheMode { get; set; }
+    
+    [DataMember]
+    [ConnectionStringKey("TrustServerCertificate")]
+    public bool TrustServerCertificate { get; set; }
 }

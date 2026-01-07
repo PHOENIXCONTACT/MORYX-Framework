@@ -3,7 +3,7 @@
 
 using Moryx.Serialization;
 
-namespace Moryx.Runtime.Endpoints.Databases.Endpoint.Models
+namespace Moryx.Runtime.Endpoints.Databases.Models
 {
     /// <summary>
     /// Database configurator options model
