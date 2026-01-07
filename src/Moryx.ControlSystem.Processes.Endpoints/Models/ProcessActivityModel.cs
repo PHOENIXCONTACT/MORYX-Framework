@@ -38,6 +38,9 @@ namespace Moryx.ControlSystem.Processes.Endpoints
 
         [DataMember]
         public long? InstanceId { get; set; }
+        
+        [DataMember]
+        public Entry Instance { get; set; }
 
         [DataMember]
         public TracingModel Tracing { get; set; }

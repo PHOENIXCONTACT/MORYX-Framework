@@ -15,6 +15,7 @@ import {
   MatSlideToggleModule,
 } from "@angular/material/slide-toggle";
 import {
+  Entry,
   MoryxSnackbarService,
   NavigableEntryEditorComponent,
 } from "@moryx/ngx-web-framework";
@@ -50,6 +51,10 @@ export class ProcessesComponent implements OnInit, OnDestroy {
   processesAvailable = computed(() => this.processes().length > 0);
   selectedProcess = signal<JobProcessModel | undefined>(undefined);
   selectedActivity = signal<ProcessActivityModel | undefined>(undefined);
+  currentProductInstance = computed(() => {
+    const activity = this.selectedActivity();
+    return Object.assign({}, activity?.instance ?? {}) as Entry;
+  });
   possibleResources = computed(() => {
     const activity = this.selectedActivity();
     return activity?.possibleResources?.map((r) => r.name)?.join(", ");
@@ -68,7 +73,6 @@ export class ProcessesComponent implements OnInit, OnDestroy {
     public translate: TranslateService,
     private moryxSnackbar: MoryxSnackbarService
   ) {
-    console.log('loadede')
   }
 
   ngOnInit(): void {
@@ -118,7 +122,7 @@ export class ProcessesComponent implements OnInit, OnDestroy {
         // Replace with new object from stream
         const index = this.processes().indexOf(oldProcess!);
         updatedProcess.activities = oldProcess.activities;
-        this.processes.update(items => {
+        this.processes.update((items) => {
           items[index!] = updatedProcess;
           return items;
         });

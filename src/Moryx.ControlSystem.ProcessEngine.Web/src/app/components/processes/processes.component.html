@@ -101,6 +101,22 @@
         ></navigable-entry-editor>
       </div>
     </div>
+     <h2>Product Instance details</h2>
+    <div class="processes-activity-details-container">
+      <div
+        *ngIf="
+          currentProductInstance()
+        "
+        class="processes-activity-tracing-details"
+      >
+        <navigable-entry-editor
+          [entry]="currentProductInstance()!"
+          [disabled]="true"
+          queryParam="productInstance"
+        ></navigable-entry-editor>
+      </div>
+    </div>
+  </div>
   </div>
 </div>
 <mat-slide-toggle
