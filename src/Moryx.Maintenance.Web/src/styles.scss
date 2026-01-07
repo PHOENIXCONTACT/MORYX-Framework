@@ -1,0 +1,34 @@
+@use '@angular/material' as mat;
+@use '@moryx/ngx-web-framework/styles/variables' as *;
+@use "@moryx/ngx-web-framework/styles/theme.scss" as *;
+
+
+html, body { height: 100%; }
+body { 
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background-color: $mat-background;
+    display: block;
+    @include mat.theme((
+    color: (
+      primary: $primary-palette,
+      tertiary: $tertiary-palette,
+      theme-type: light,
+    ),
+    typography: Roboto,
+    density: -4
+  ));
+}
+
+.maintenance-nav-bar {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    height: 3rem;
+    border-bottom: 1px solid rgba(167, 167, 167, 0.25);
+    background-color: $mat-background-light;
+}
+
+.maintenance-title{
+  font-weight: bold;
+}

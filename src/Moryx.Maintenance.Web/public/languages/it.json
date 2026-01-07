@@ -1,0 +1,48 @@
+{
+  "APP": {
+    "MAINTENANCE_SCHEDULES": "Programmi di manutenzione",
+    "FAILED_LOADING": "Impossibile stabilire la connessione al server. Controlla la connessione di rete o riprova più tardi.",
+    "SNACK_BAR": {
+      "ADDED": "Programma di manutenzione salvato!",
+      "REMOVED": "Programma di manutenzione rimosso!",
+      "START_SENT": "Comando 'Avvia manutenzione' inviato"
+    }
+  },
+  "INTERVALS": {
+    "CYCLES": "Cicli",
+    "DAYS": "Giorni",
+    "HOURS": "Ore"
+  },
+  "MAINTENANCES": {
+    "ACTIVE_FILTER": "Attivo",
+    "INACTIVE_FILTER": "Inattivo",
+    "ALL_FILTER": "Tutto",
+    "MAINTENANCE_INTERVAL": "Wartungsintervall",
+    "EMPTY_STATE_HEADER": "Nessun programma di manutenzione",
+    "EMPTY_STATE_TEXT": "Aggiungine uno nuovo cliccando sul segno più.",
+    "EMPTY_STATE_ACKNOLEDGEMENT_HEADER": "Riconoscimenti di manutenzione",
+    "EMPTY_STATE_ACKNOLEDGEMENT_TEXT": "Al momento non ci sono conferme per l'attuale programma di manutenzione.",
+    "NEXT_MAINTENANCE": "Prossima manutenzione",
+    "LAST_MAINTENANCE": "Ultima manutenzione",
+    "IN": "Nel"
+  },
+    "MAINTENANCE": {
+    "HEADER": "Dettagli del programma di manutenzione"
+  },
+  "ACTIONS": {
+    "ACKNOWLEDGEMENTS": "Ringraziamenti",
+    "DELETE": "Eliminare",
+    "SAVE": "Salva",
+    "START_MAINTENANCE": "Avvia la manutenzione",
+    "EDIT": "Modificare"
+  },
+  "CONFIRMATION_DIALOG": {
+    "MESSAGE": "Sei sicuro di voler eliminare questa pianificazione di manutenzione?",
+    "HEADER": "Eliminazione del programma di manutenzione",
+    "YES": "SÌ",
+    "NO": "No"
+  },
+  "DISMISS": "CONGEDARE",
+  "DEFAULT_MESSAGE": "Qualcosa è andato storto sul server.",
+  "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controlla la tua connessione Internet o le impostazioni del proxy."
+}

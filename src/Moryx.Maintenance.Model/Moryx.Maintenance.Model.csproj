@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.Maintenance\Moryx.Maintenance.csproj" />
+    <ProjectReference Include="..\Moryx.ControlSystem\Moryx.ControlSystem.csproj" />
+    <ProjectReference Include="..\Moryx.Resources.Management\Moryx.Resources.Management.csproj" />
+    <ProjectReference Include="..\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj" />
+  </ItemGroup>
+</Project>

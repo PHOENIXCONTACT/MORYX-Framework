@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net10.0</TargetFrameworks>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<IsPackable>true</IsPackable>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\icon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Moryx.Maintenance.Model\Moryx.Maintenance.Model.csproj" />
+		<ProjectReference Include="..\Moryx\Moryx.csproj" />
+		<ProjectReference Include="..\Moryx.Notifications.Publisher\Moryx.Notifications.Publisher.csproj" />
+		<ProjectReference Include="..\Moryx.Resources.Management\Moryx.Resources.Management.csproj" />
+		<ProjectReference Include="..\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj" />
+		<ProjectReference Include="..\Moryx.ControlSystem\Moryx.ControlSystem.csproj" />
+	</ItemGroup>
+</Project>
