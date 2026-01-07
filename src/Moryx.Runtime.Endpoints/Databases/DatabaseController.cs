@@ -1,20 +1,19 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
-using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Moryx.Model;
 using Moryx.Model.Configuration;
-using Moryx.Runtime.Endpoints.Databases.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Reflection;
+using Moryx.Configuration;
+using Moryx.Model.Attributes;
 using Moryx.Runtime.Endpoints.Databases.Models;
 using Moryx.Runtime.Endpoints.Databases.Request;
 using Moryx.Runtime.Endpoints.Databases.Response;
 using Moryx.Runtime.Endpoints.Databases.Services;
+using Moryx.Serialization;
 using Moryx.Tools;
 
 namespace Moryx.Runtime.Endpoints.Databases
@@ -24,8 +23,9 @@ namespace Moryx.Runtime.Endpoints.Databases
     public class DatabaseController : ControllerBase
     {
         private readonly IDbContextManager _dbContextManager;
-        private readonly IDatabaseConfigUpdateService _databaseUpdateService;
+        private readonly DatabaseConfigUpdateService _databaseUpdateService;
         private static readonly string _dataDirectory;
+        private static readonly ICustomSerialization _databaseConfigSerialization = new DatabaseConfigSerialization();
 
         static DatabaseController()
         {
@@ -43,8 +43,25 @@ namespace Moryx.Runtime.Endpoints.Databases
         [Authorize(Policy = RuntimePermissions.DatabaseCanView)]
         public async Task<ActionResult<DatabasesResponse>> GetAll()
         {
-            var allModels = await Task.WhenAll(_dbContextManager.Contexts.Select(ConvertAsync));
-            return Ok(new DatabasesResponse { Databases = allModels });
+            var contexts = _dbContextManager.Contexts;
+
+            var dataModels = await Task.WhenAll(contexts.Select(ConvertAsync));
+
+            var configurators = contexts.SelectMany(c => _dbContextManager.GetConfigurators(c)).Distinct().ToArray();
+            var configuratorModels = configurators.Select(configurator => new ModelConfiguratorModel
+            {
+                Name = configurator.GetDisplayName(),
+                ConfiguratorType = configurator.AssemblyQualifiedName,
+                ConfigPrototype = GetConfigPrototype(configurator),
+                ConnectionStringPrototype = GetConnectionStringPrototype(configurator),
+                ConnectionStringKeys = GetConnectionStringKeys(configurator)
+            }).ToArray();
+
+            return Ok(new DatabasesResponse
+            {
+                Databases = dataModels,
+                Configurators = configuratorModels
+            });
         }
 
         [HttpGet("{targetModel}")]
@@ -53,7 +70,7 @@ namespace Moryx.Runtime.Endpoints.Databases
         {
             var model = _dbContextManager.Contexts.FirstOrDefault(context => TargetModelName(context) == targetModel);
             if (model == null)
-                return NotFound($"Module with name \"{targetModel}\" could not be found");
+                return NotFound($"Model \"{targetModel}\" could not be found");
 
             return await ConvertAsync(model);
         }
@@ -62,42 +79,39 @@ namespace Moryx.Runtime.Endpoints.Databases
         [Authorize(Policy = RuntimePermissions.DatabaseCanSetAndTestConfig)]
         public async Task<ActionResult<DataModel>> SetDatabaseConfig([FromRoute] string targetModel, [FromBody] DatabaseConfigModel config)
         {
-            try
-            {
-                var result = _databaseUpdateService.UpdateModel(targetModel, config);
-                return Ok(await ConvertAsync(_dbContextManager.Contexts.First(c => TargetModelName(c) == targetModel)));
-            }
-            catch (NotFoundException exception)
-            {
-                return NotFound(exception.Message);
-            }
-            catch (BadRequestException)
-            {
-                return BadConfigValues();
-            }
-        }
+            var targetConfigurator = GetTargetConfigurator(targetModel, config);
+            if (targetConfigurator == null)
+                return NotFound($"Configurator for target model \"{targetModel}\" could not be found");
 
-        private ActionResult BadConfigValues()
-         => BadRequest($"Config values are not valid");
+            var configInstance = DeserializeConfig(targetConfigurator, config);
+
+            var dbContextType = _dbContextManager.Contexts.FirstOrDefault(c => c.FullName == targetModel);
+            if (dbContextType == null)
+                return NotFound($"Model \"{targetModel}\" could not be found");
+
+            var result = _databaseUpdateService.UpdateModel(dbContextType, configInstance);
+            var dbContext = _dbContextManager.Contexts.First(c => TargetModelName(c) == targetModel);
+            var dataModel = await ConvertAsync(dbContext);
+            return Ok(dataModel);
+
+        }
 
         [HttpPost("{targetModel}/config/test")]
         [Authorize(Policy = RuntimePermissions.DatabaseCanSetAndTestConfig)]
         public async Task<ActionResult<TestConnectionResponse>> TestDatabaseConfig(string targetModel, DatabaseConfigModel config)
         {
-            var targetConfigurator = GetTargetConfigurator(targetModel);
+            var targetConfigurator = GetTargetConfigurator(targetModel, config);
             if (targetConfigurator == null)
-                return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
+                return NotFound($"Configurator for target model \"{targetModel}\" could not be found");
 
             if (targetConfigurator is NullModelConfigurator)
             {
                 return new TestConnectionResponse { Result = TestConnectionResult.ConfigurationError };
             }
 
-            var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
-            if (!IsConfigValid(updatedConfig))
-                return BadConfigValues();
+            var configInstance = DeserializeConfig(targetConfigurator, config);
 
-            var result = await targetConfigurator.TestConnectionAsync(updatedConfig);
+            var result = await targetConfigurator.TestConnectionAsync(configInstance);
 
             return new TestConnectionResponse { Result = result };
         }
@@ -114,32 +128,16 @@ namespace Moryx.Runtime.Endpoints.Databases
         [Authorize(Policy = RuntimePermissions.DatabaseCanCreate)]
         public async Task<ActionResult<InvocationResponse>> CreateDatabase(string targetModel, DatabaseConfigModel config)
         {
-            var targetConfigurator = GetTargetConfigurator(targetModel);
+            var targetConfigurator = GetTargetConfigurator(targetModel, config);
             if (targetConfigurator == null)
-                return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
+                return NotFound($"Configurator for target model \"{targetModel}\" could not be found");
 
-            var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
-            if (!IsConfigValid(updatedConfig))
-                return BadConfigValues();
+            var configInstance = DeserializeConfig(targetConfigurator, config);
 
-            try
-            {
-                var creationResult = await targetConfigurator.CreateDatabaseAsync(updatedConfig);
-                return creationResult
-                    ? new InvocationResponse()
-                    : throw new Exception("Cannot create database. May be the database already exists or was misconfigured.");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        private static DatabaseConfig UpdateConfigFromModel(DatabaseConfig dbConfig, DatabaseConfigModel configModel)
-        {
-            dbConfig.ConfiguratorTypename = configModel.ConfiguratorTypename;
-            dbConfig.ConnectionSettings.FromDictionary(configModel.Entries);
-            return dbConfig;
+            var creationResult = await targetConfigurator.CreateDatabaseAsync(configInstance);
+            return creationResult
+                ? new InvocationResponse()
+                : new InvocationResponse(new Exception("Cannot create database. May be the database already exists or was misconfigured."));
         }
 
         [HttpDelete]
@@ -152,44 +150,31 @@ namespace Moryx.Runtime.Endpoints.Databases
 
         [HttpDelete("{targetModel}")]
         [Authorize(Policy = RuntimePermissions.DatabaseCanErase)]
-        public async Task<ActionResult<InvocationResponse>> EraseDatabase(string targetModel, DatabaseConfigModel config)
+        public async Task<ActionResult<InvocationResponse>> EraseDatabase(string targetModel, DatabaseConfigModel configModel)
         {
-            var targetConfigurator = GetTargetConfigurator(targetModel);
+            var targetConfigurator = GetTargetConfigurator(targetModel, configModel);
             if (targetConfigurator == null)
             {
-                return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
+                return NotFound($"Configurator for target model \"{targetModel}\" could not be found");
             }
 
-            var updatedConfig = UpdateConfigFromModel(targetConfigurator.Config, config);
-            if (!IsConfigValid(updatedConfig))
-            {
-                return BadConfigValues();
-            }
+            var configInstance = DeserializeConfig(targetConfigurator, configModel);
 
-            try
-            {
-                await targetConfigurator.DeleteDatabaseAsync(updatedConfig);
-                return new InvocationResponse();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            await targetConfigurator.DeleteDatabaseAsync(configInstance);
+            return new InvocationResponse();
         }
 
         [HttpPost("{targetModel}/migrate")]
         [Authorize(Policy = RuntimePermissions.DatabaseCanMigrateModel)]
         public async Task<ActionResult<DatabaseMigrationSummary>> MigrateDatabaseModel(string targetModel, DatabaseConfigModel configModel)
         {
-            var targetConfigurator = GetTargetConfigurator(targetModel);
+            var targetConfigurator = GetTargetConfigurator(targetModel, configModel);
             if (targetConfigurator == null)
-                return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
+                return NotFound($"Configurator for target model \"{targetModel}\" could not be found");
 
-            var config = UpdateConfigFromModel(targetConfigurator.Config, configModel);
-            if (!IsConfigValid(config))
-                return BadConfigValues();
+            var configInstance = DeserializeConfig(targetConfigurator, configModel);
 
-            return await targetConfigurator.MigrateDatabaseAsync(config);
+            return await targetConfigurator.MigrateDatabaseAsync(configInstance);
         }
 
         [HttpPost("{targetModel}/setup")]
@@ -199,38 +184,23 @@ namespace Moryx.Runtime.Endpoints.Databases
             var contextType = _dbContextManager.Contexts.First(c => TargetModelName(c) == targetModel);
             var targetConfigurator = _dbContextManager.GetConfigurator(contextType);
             if (targetConfigurator == null)
-                return NotFound($"Configurator with target model \"{targetModel}\" could not be found");
+                return NotFound($"Configurator for target model \"{targetModel}\" could not be found");
 
             // Update config copy from model
-            var config = UpdateConfigFromModel(targetConfigurator.Config, request.Config);
-            if (!IsConfigValid(config))
-                return BadConfigValues();
+            var configInstance = DeserializeConfig(targetConfigurator, request.Config);
 
+            // Fetch setup
             var setupExecutor = _dbContextManager.GetSetupExecutor(contextType);
-
             var targetSetup = setupExecutor.GetAllSetups().FirstOrDefault(s => s.GetType().FullName == request.Setup.Fullname);
             if (targetSetup == null)
                 return NotFound("No matching setup found");
 
             // Provide logger for model
-            // ReSharper disable once SuspiciousTypeConversion.Global
-            try
-            {
-                await setupExecutor.ExecuteAsync(config, targetSetup, request.Setup.SetupData);
-                return new InvocationResponse();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            await setupExecutor.ExecuteAsync(configInstance, targetSetup, request.Setup.SetupData);
+            return new InvocationResponse();
         }
 
-        private static bool IsConfigValid(DatabaseConfig config)
-        {
-            return config.IsValid();
-        }
-
-        private SetupModel ConvertSetup(IModelSetup setup)
+        private static SetupModel ConvertSetup(IModelSetup setup)
         {
             var model = new SetupModel
             {
@@ -243,10 +213,39 @@ namespace Moryx.Runtime.Endpoints.Databases
             return model;
         }
 
-        private IModelConfigurator GetTargetConfigurator(string model)
+        private IModelConfigurator GetTargetConfigurator(string targetModel, DatabaseConfigModel config)
         {
-            var context = _dbContextManager.Contexts.First(c => TargetModelName(c) == model);
-            return _dbContextManager.GetConfigurator(context);
+            Type configuratorType;
+            try
+            {
+                configuratorType = Type.GetType(config.ConfiguratorType);
+                if (configuratorType == null)
+                {
+                    return null;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+
+            var context = _dbContextManager.Contexts.First(c => TargetModelName(c) == targetModel);
+            var currentConfigurator = _dbContextManager.GetConfigurator(context);
+
+            // Still the same configurator
+            if (currentConfigurator != null && currentConfigurator.GetType() == configuratorType)
+            {
+                return currentConfigurator;
+            }
+
+            // Its another one, create new instance
+            var configType = configuratorType.BaseType!.GenericTypeArguments.First();
+            var configInstance = (DatabaseConfig)EntryConvert.CreateInstance(configType, config.Properties, _databaseConfigSerialization);
+            configInstance.ConnectionString = config.ConnectionString;
+            configInstance.UpdatePropertiesFromConnectionString();
+
+            var modelConfigurator = _dbContextManager.GetConfigurator(context, configuratorType, configInstance);
+            return modelConfigurator;
         }
 
         private async Task<DataModel> ConvertAsync(Type contextType)
@@ -262,7 +261,7 @@ namespace Moryx.Runtime.Endpoints.Databases
             {
                 TargetModel = TargetModelName(contextType),
                 Config = SerializeConfig(dbConfig),
-                PossibleConfigurators = GetConfigurators(contextType),
+                PossibleConfigurators = GetPossibleConfiguratorsForContext(contextType),
                 Setups = GetAllSetups(contextType).ToArray(),
                 AvailableMigrations = await GetAvailableUpdates(dbConfig, configurator),
                 AppliedMigrations = await GetInstalledUpdates(dbConfig, configurator)
@@ -270,43 +269,71 @@ namespace Moryx.Runtime.Endpoints.Databases
             return model;
         }
 
+        private string[] GetPossibleConfiguratorsForContext(Type contextType)
+        {
+            var possibleConfigurators = _dbContextManager.GetConfigurators(contextType);
+            return possibleConfigurators.Select(c => c.AssemblyQualifiedName).ToArray();
+        }
+
         private static DatabaseConfigModel SerializeConfig(DatabaseConfig dbConfig)
         {
-            return new()
+            var configProperties = EntryConvert.EncodeObject(dbConfig, _databaseConfigSerialization);
+            return new DatabaseConfigModel
             {
-                ConfiguratorTypename = dbConfig.ConfiguratorTypename,
-                Entries = dbConfig.ConnectionSettings?.ToDictionary(),
+                ConfiguratorType = dbConfig.ConfiguratorType,
+                ConnectionString = dbConfig.ConnectionString,
+                Properties = configProperties
             };
         }
 
-        private DatabaseConfigOptionModel[] GetConfigurators(Type contextType)
+        private static DatabaseConfig DeserializeConfig(IModelConfigurator modelConfigurator, DatabaseConfigModel databaseConfigModel)
         {
-            var configuratorTypes = _dbContextManager.GetConfigurators(contextType);
-
-            var result = configuratorTypes
-                .Select(type => new DatabaseConfigOptionModel
-                {
-                    Name = type.GetDisplayName() ?? type.Name,
-                    ConfiguratorTypename = type.AssemblyQualifiedName,
-                    Properties = GetConfiguratorProperties(type),
-                }).ToArray();
-            return result;
+            var config = (DatabaseConfig)EntryConvert.CreateInstance(modelConfigurator.Config.GetType(), databaseConfigModel.Properties, _databaseConfigSerialization);
+            config.ConnectionString = databaseConfigModel.ConnectionString;
+            if (string.IsNullOrEmpty(config.ConnectionString))
+            {
+                config.UpdateConnectionString();
+            }
+            else
+            {
+                config.UpdatePropertiesFromConnectionString();
+            }
+            return config;
         }
 
-        private static DatabaseConfigOptionPropertyModel[] GetConfiguratorProperties(Type type)
+        private static Entry GetConfigPrototype(Type configuratorType)
         {
-            var configType = type.BaseType.GenericTypeArguments.First()
-                .BaseType.GenericTypeArguments.First();
+            var configType = configuratorType.BaseType!.GenericTypeArguments.First();
+            return EntryConvert.EncodeClass(configType, _databaseConfigSerialization);
+        }
 
-            var properties = configType.GetProperties();
-            return properties
-                .Where(p => p.GetCustomAttribute<DataMemberAttribute>() != null)
-                .Select(p => new DatabaseConfigOptionPropertyModel
+        private static string GetConnectionStringPrototype(Type configuratorType)
+        {
+            var configType = configuratorType.BaseType!.GenericTypeArguments.First();
+
+            var tempConfig = (DatabaseConfig)Activator.CreateInstance(configType)!;
+            ValueProviderExecutor.Execute(tempConfig, new ValueProviderExecutorSettings().AddProviders([new DefaultValueAttributeProvider()]));
+
+            tempConfig.UpdateConnectionString();
+
+            return tempConfig.ConnectionString;
+        }
+
+        private static Dictionary<string, string> GetConnectionStringKeys(Type configuratorType)
+        {
+            var configType = configuratorType.BaseType!.GenericTypeArguments.First();
+            var properties = configType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var connectionStringKeys = new Dictionary<string, string>();
+            foreach (var property in properties)
+            {
+                var attribute = property.GetCustomAttribute<ConnectionStringKeyAttribute>();
+                if (attribute != null)
                 {
-                    Name = p.Name,
-                    Default = p.GetCustomAttribute<DefaultValueAttribute>()?.Value.ToString(),
-                    Required = p.GetCustomAttribute<RequiredAttribute>() != null,
-                }).ToArray();
+                    connectionStringKeys.Add(property.Name, attribute.Key);
+                }
+            }
+
+            return connectionStringKeys;
         }
 
         private IEnumerable<SetupModel> GetAllSetups(Type contextType)
@@ -376,10 +403,26 @@ namespace Moryx.Runtime.Endpoints.Databases
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"{operationName} of {TargetModelName(contextType)} failed!\n", ex);
+                    result += $"{TargetModelName(contextType)}: {operationName} failed with error: {ex.Message}{Environment.NewLine}";
                 }
             }
             return result;
+        }
+    }
+
+    internal class DatabaseConfigSerialization : DefaultSerialization
+    {
+        public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
+        {
+            var properties = base.GetProperties(sourceType)
+                .Where(prop =>
+                    prop.Name != nameof(DatabaseConfig.ConfiguratorType) &&
+                    prop.Name != nameof(DatabaseConfig.ConnectionString) &&
+                    prop.Name != nameof(DatabaseConfig.ConfigState) &&
+                    prop.Name != nameof(DatabaseConfig.LoadError))
+                .ToArray();
+
+            return properties;
         }
     }
 }

@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
 using System.ComponentModel;
 using System.Data.Common;
-using System.Text.RegularExpressions;
 
 namespace Moryx.Model.SqlServer;
 
@@ -37,13 +36,13 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
     /// <inheritdoc />
     public override async Task DeleteDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
     {
-        var settings = (SqlServerDatabaseConnectionSettings)config.ConnectionSettings;
+        var settings = (SqlServerDatabaseConfig)config;
 
         // Create connection and prepare command
         await using var connection = new SqlConnection(BuildConnectionString(config, false));
 
-        var sqlCommandText = $"ALTER DATABASE {settings.Database} SET SINGLE_USER WITH ROLLBACK IMMEDIATE;" +
-                             $"DROP DATABASE [{settings.Database}]";
+        var sqlCommandText = $"ALTER DATABASE {settings.InitialCatalog} SET SINGLE_USER WITH ROLLBACK IMMEDIATE;" +
+                             $"DROP DATABASE [{settings.InitialCatalog}]";
 
         await using var command = CreateCommand(sqlCommandText, connection);
 
@@ -54,10 +53,12 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
 
     private static SqlConnectionStringBuilder CreateConnectionStringBuilder(DatabaseConfig config, bool includeModel = true)
     {
-        var builder = new SqlConnectionStringBuilder(config.ConnectionSettings.ConnectionString)
+        var builder = new SqlConnectionStringBuilder(config.ConnectionString);
+
+        if (!includeModel)
         {
-            InitialCatalog = includeModel ? config.ConnectionSettings.Database : string.Empty
-        };
+            builder.InitialCatalog = string.Empty;
+        }
 
         return builder;
     }
@@ -73,9 +74,6 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
 
     private static string BuildConnectionString(DatabaseConfig config, bool includeModel)
     {
-        if (!IsValidDatabaseName(config.ConnectionSettings.Database))
-            throw new ArgumentException("Invalid database name.");
-
         var builder = CreateConnectionStringBuilder(config, includeModel);
         builder.PersistSecurityInfo = true;
 
@@ -93,15 +91,5 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
             x => x.MigrationsAssembly(migrationAssemblyType.Assembly.FullName));
 
         return CreateContext(migrationAssemblyType, builder.Options);
-    }
-
-    private static bool IsValidDatabaseName(string dbName)
-    {
-        // Avoid sql injection by validating the database name
-        if (string.IsNullOrWhiteSpace(dbName) || dbName.Length > 128)
-            return false;
-
-        // Only allow letters, numbers, and underscores
-        return Regex.IsMatch(dbName, @"^[A-Za-z0-9_]+$");
     }
 }

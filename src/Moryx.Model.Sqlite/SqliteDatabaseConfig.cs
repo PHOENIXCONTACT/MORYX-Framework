@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Microsoft.Data.Sqlite;
+using Moryx.Model.Attributes;
 
 namespace Moryx.Model.Sqlite
 {
@@ -12,63 +13,34 @@ namespace Moryx.Model.Sqlite
     /// Database config for the Sqlite databases
     /// </summary>
     [DataContract]
-    public class SqliteDatabaseConfig : DatabaseConfig<SqliteDatabaseConnectionSettings>
+    public class SqliteDatabaseConfig : DatabaseConfig
     {
+        /// <inheritdoc />
+        public override string ConfiguratorType => typeof(SqliteModelConfigurator).AssemblyQualifiedName;
+
         /// <summary>
-        /// Creates a new instance of the <see cref="SqliteDatabaseConfig"/>
+        /// Path to the database file
         /// </summary>
-        public SqliteDatabaseConfig()
-        {
-            ConnectionSettings = new SqliteDatabaseConnectionSettings();
-            ConfiguratorTypename = typeof(SqliteModelConfigurator).AssemblyQualifiedName;
-        }
-    }
+        [Required]
+        [DefaultValue("./db/<DatabaseName>.db")]
+        [Description("Path to the database file")]
+        [ConnectionStringKey("Data Source")]
+        public string DataSource { get; set; }
 
-    internal class DefaultSqliteConnectionStringAttribute : DefaultValueAttribute
-    {
-        public DefaultSqliteConnectionStringAttribute() : base("")
-        {
-            var path = Path.Combine(".", "db", "<DatabaseName>.db");
-            SetValue($"Data Source={path};Mode=ReadWrite;");
-        }
-    }
+        /// <summary>
+        /// Connection mode that will be used when opening a connection
+        /// </summary>
+        [DefaultValue(SqliteOpenMode.ReadWrite)]
+        [Description("Connection mode that will be used when opening a connection")]
+        [ConnectionStringKey("Mode")]
+        public SqliteOpenMode OpenMode { get; set; }
 
-    /// <summary>
-    /// Database connection settings for the Sqlite databases
-    /// </summary>
-    public class SqliteDatabaseConnectionSettings : DatabaseConnectionSettings
-    {
-        private string _database;
-
-        /// <inheritdoc />
-        [DataMember]
-        public override string Database
-        {
-            get => _database;
-            set
-            {
-                if (string.IsNullOrEmpty(value)) return;
-                _database = value;
-                ConnectionString = ConnectionString?.Replace("<DatabaseName>", value);
-            }
-        }
-
-        /// <inheritdoc />
-        [DataMember, Required, DefaultSqliteConnectionString]
-        public override string ConnectionString { get; set; }
-
-        /// <inheritdoc />
-        public override bool IsValid()
-        {
-            try
-            {
-                var builder = new SqliteConnectionStringBuilder(ConnectionString);
-                return !string.IsNullOrEmpty(ConnectionString);
-            }
-            catch (ArgumentException)
-            {
-                return false;
-            }
-        }
+        /// <summary>
+        /// Caching mode that will be used when opening a connection
+        /// </summary>
+        [DefaultValue(SqliteCacheMode.Default)]
+        [Description("Caching mode that will be used when opening a connection")]
+        [ConnectionStringKey("Cache")]
+        public SqliteCacheMode CacheMode { get; set; }
     }
 }

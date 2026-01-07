@@ -6,10 +6,10 @@ using Moryx.Model;
 using Moryx.Runtime.Kernel;
 using Moryx.TestTools.Test.Model;
 using System;
+using Moryx.Configuration;
 using Moryx.Model.Sqlite;
-using Moryx.Runtime.Endpoints.Databases.Exceptions;
-using Moryx.Runtime.Endpoints.Databases.Models;
 using Moryx.Runtime.Endpoints.Databases.Services;
+using Moryx.Tools;
 using NUnit.Framework;
 
 namespace Moryx.Runtime.Endpoints.Tests.Databases
@@ -18,15 +18,21 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
     {
         private DbContextManager _dbContextManager;
         private DatabaseConfigUpdateService _databaseConfigUpdateService;
-        private string _targetModelTypename;
         private Type _configuratorType;
 
         [SetUp]
         public void Setup()
         {
-            _dbContextManager = new DbContextManager(CreateConfigManager(), new LoggerFactory());
+            var configManager = new ConfigManager
+            {
+                ConfigDirectory = ""
+            };
+
+            // Ensure that the assembly containing TestModelContext is loaded
+            AppDomainBuilder.LoadAssemblies();
+
+            _dbContextManager = new DbContextManager(configManager, new LoggerFactory());
             _databaseConfigUpdateService = new DatabaseConfigUpdateService(_dbContextManager);
-            _targetModelTypename = typeof(TestModelContext).FullName;
             _configuratorType = typeof(SqliteModelConfigurator);
         }
 
@@ -34,135 +40,36 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
         public void LeavingDatabaseEmptyDefaultsToDbContextName()
         {
             // Arrange
-            var config = SqliteConfigModel()
-                .WithDefaults();
+            var config = new SqliteDatabaseConfig();
+            ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddProviders([new DefaultValueAttributeProvider()]));
+            config.UpdateConnectionString();
 
             // Act
-            var result = _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config);
+            var result = _databaseConfigUpdateService.UpdateModel(typeof(TestModelContext), config);
 
             // Assert
             var updatedConfig = GetUpdatedConfig();
             Assert.That(result, Is.EqualTo(typeof(TestModelContext)));
-            Assert.That(updatedConfig.ConfiguratorTypename, Does.Contain(_configuratorType.FullName));
-            Assert.That(updatedConfig.ConnectionSettings.Database, Is.EqualTo(nameof(TestModelContext)));
-            Assert.That(updatedConfig.ConnectionSettings.ConnectionString, Is.EqualTo("Data Source=.\\db-filename.db"));
+            Assert.That(updatedConfig.ConfiguratorType, Does.Contain(_configuratorType.FullName));
+            Assert.That(updatedConfig.DataSource, Is.EqualTo($"./db/{nameof(TestModelContext)}.db"));
+            Assert.That(updatedConfig.ConnectionString, Is.EqualTo("Data Source=./db/TestModelContext.db;Mode=ReadWrite;Cache=Default;"));
         }
 
         [Test]
-        public void LeavingConnectionStringEmptyFails()
-        {
-            var config = SqliteConfigModel()
-                .WithDefaults()
-                .WithConnectionString("");
-
-            BadRequestException exception = Assert.Throws<BadRequestException>(
-                () => _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config));
-
-            Assert.That(exception.Message, Is.EqualTo("Requested config values aren't valid"));
-        }
-
-        [Test]
-        public void InvalidConnectionStringFails()
-        {
-            var config = SqliteConfigModel()
-                .WithDefaults()
-                .WithConnectionString("rubbish");
-
-            BadRequestException exception = Assert.Throws<BadRequestException>(
-                () => _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config));
-
-            Assert.That(exception.Message, Is.EqualTo("Requested config values aren't valid"));
-        }
-
-        [Test]
-        public void ValidConnectionStringWithInvalidDataFails()
-        {
-            var config = SqliteConfigModel()
-                .WithDefaults()
-                // * | ? are invalid characters for a filename
-                .WithConnectionString("Data Source=.\\*|?.db\"");
-
-            BadRequestException exception = Assert.Throws<BadRequestException>(
-                () => _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config));
-
-            Assert.That(exception.Message, Is.EqualTo("Requested config values aren't valid"));
-        }
-
-        [Test]
-        public void DatabasePlaceholderGetsReplaced()
-        {
-            var config = SqliteConfigModel()
-                .WithDatabase("MyDatabase")
-                .WithConnectionString("Data Source=.\\<DatabaseName>.db");
-
-            _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config);
-            var updatedConfig = GetUpdatedConfig();
-
-            Assert.That(updatedConfig.ConfiguratorTypename, Does.Contain(_configuratorType.FullName));
-            Assert.That(updatedConfig.ConnectionSettings.Database, Is.EqualTo("MyDatabase"));
-            Assert.That(updatedConfig.ConnectionSettings.ConnectionString, Is.EqualTo("Data Source=.\\MyDatabase.db"));
-        }
-
-        [Test(Description = "Using <DatabaseName> placeholder in ConnectionString without setting Database property, leads to filling with DbContext type name.")]
-        public void UsingDatabasePlaceholderWithoutDatabaseNameDefaultsToDbContextName()
+        public void LeavingConnectionStringEmptyDoesNotFail()
         {
             // Arrange
-            var config = SqliteConfigModel()
-                .WithDatabase("")
-                .WithConnectionString("Data Source=.\\<DatabaseName>.db");
+            var config = new SqliteDatabaseConfig();
+            ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddProviders([new DefaultValueAttributeProvider()]));
 
-            // Act
-            _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config);
-
-            // Assert
-            var updatedConfig = GetUpdatedConfig();
-            Assert.That(updatedConfig.ConnectionSettings.ConnectionString, Is.EqualTo($"Data Source=.\\{nameof(TestModelContext)}.db"));
-        }
-
-        private static DatabaseConfigModel SqliteConfigModel()
-        {
-            return new DatabaseConfigModel
-            {
-                ConfiguratorTypename = typeof(SqliteModelConfigurator).AssemblyQualifiedName,
-                Entries = new() { }
-            };
-        }
-
-        private static ConfigManager CreateConfigManager()
-        {
-            var configManager = new ConfigManager
-            {
-                ConfigDirectory = ""
-            };
-            return configManager;
+            // Act & Assert
+            Assert.DoesNotThrow(() => _databaseConfigUpdateService.UpdateModel(typeof(TestModelContext), config));
         }
 
         private SqliteDatabaseConfig GetUpdatedConfig()
         {
             var configurator = _dbContextManager.GetConfigurator(typeof(TestModelContext));
             return (SqliteDatabaseConfig)configurator.Config;
-        }
-    }
-
-    public static class DatabaseConfigModelBuilderExtension
-    {
-        public static DatabaseConfigModel WithDatabase(this DatabaseConfigModel model, string databaseName)
-        {
-            model.Entries["Database"] = databaseName;
-            return model;
-        }
-
-        public static DatabaseConfigModel WithConnectionString(this DatabaseConfigModel model, string connectionString)
-        {
-            model.Entries["ConnectionString"] = connectionString;
-            return model;
-        }
-
-        public static DatabaseConfigModel WithDefaults(this DatabaseConfigModel model)
-        {
-            model.Entries["ConnectionString"] = "Data Source=.\\db-filename.db";
-            model.Entries["Database"] = "";
-            return model;
         }
     }
 }

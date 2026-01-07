@@ -24,29 +24,33 @@ import { toast } from "react-toastify";
 import { updateShowWaitDialog } from "../../common/redux/CommonActions";
 import { ActionType } from "../../common/redux/Types";
 import { getEnumTypeValue } from "../../modules/converter/EnumTypeHelper";
+import Entry from "../../modules/models/Entry";
 import DatabasesRestClient from "../api/DatabasesRestClient";
+import { MigrationResult } from "../api/responses/MigrationResult";
 import DatabaseConfigModel from "../models/DatabaseConfigModel";
-import DatabaseConfigOptionModel from "../models/DatabaseConfigOptionModel";
 import DataModel from "../models/DataModel";
 import DbMigrationsModel from "../models/DbMigrationsModel";
+import {ModelConfiguratorModel} from "../models/ModelConfiguratorModel";
 import SetupModel from "../models/SetupModel";
 import { TestConnectionResult } from "../models/TestConnectionResult";
 import { updateDatabaseConfig } from "../redux/DatabaseActions";
 import { DatabaseSection } from "./DatabaseSection";
 import { ExecuterList } from "./ExecuterList";
-import { MigrationResult } from "../api/responses/MigrationResult";
 
 interface DatabaseModelPropsModel {
     RestClient: DatabasesRestClient;
     DataModel: DataModel;
+    ModelConfigurators: ModelConfiguratorModel[];
 }
 
 interface DatabaseModelStateModel {
     activeTab: number;
     config: DatabaseConfigModel;
     targetModel: string;
+    modelConfigurator: ModelConfiguratorModel;
     testConnectionPending: boolean;
     testConnectionResult: TestConnectionResult;
+    connectionString: string;
 }
 
 interface DatabaseModelDispatchPropsModel {
@@ -68,10 +72,12 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
 
         this.state = {
             activeTab: 1,
-            config: this.getConfigValue(),
+            config: props.DataModel.config,
             targetModel: props.DataModel.targetModel,
+            modelConfigurator: props.ModelConfigurators.find((c) => c.configuratorType === props.DataModel.config.configuratorType)!,
             testConnectionPending : false,
             testConnectionResult : TestConnectionResult.ConfigurationError,
+            connectionString: this.props.DataModel.config.connectionString
         };
 
         this.activeTab = this.activeTab.bind(this);
@@ -85,55 +91,105 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         if (prevState.targetModel !== this.props.DataModel.targetModel) {
             this.setState({
                 config: this.props.DataModel.config,
-                targetModel: this.props.DataModel.targetModel
+                targetModel: this.props.DataModel.targetModel,
+                connectionString: this.props.DataModel.config.connectionString,
+                modelConfigurator: this.props.ModelConfigurators.find((c) => c.configuratorType === this.props.DataModel.config.configuratorType)!
             });
             this.onTestConnection();
         }
-    }
-
-    public createConfigModel(): DatabaseConfigModel {
-        return this.state.config;
     }
 
     public activeTab(event: React.SyntheticEvent, tabId: number): void {
         this.setState({ activeTab: tabId });
     }
 
-    private getValidationState(entryName: string): React.JSX.ElementAttributesProperty {
-        const result = this.props.DataModel.possibleConfigurators.find((x) => x.configuratorTypename === this.state.config.configuratorTypename)
-            ?.properties.find((x) => x.name === entryName).required
-                ? (this.state.config.entries[entryName]
-                    ? { error: false }
-                    : { error: true })
-                : { error: false };
-
-        return { props: result };
-    }
-
     public onConfiguratorTypeChanged(e: React.ChangeEvent<HTMLInputElement>): void {
+        const modelConfigurator = this.props.ModelConfigurators.find((c) => c.configuratorType === e.target.value);
+        if (!modelConfigurator) {
+            return;
+        }
+
         const config = { ...this.state.config };
-        config.configuratorTypename = e.target.value;
-        config.entries = this.getConfigWithDefaultValue(e.target.value);
-        this.setState({ config });
+        config.configuratorType = modelConfigurator.configuratorType;
+        config.connectionString = modelConfigurator.connectionStringPrototype;
+        config.properties = { ...modelConfigurator.configPrototype};
+
+        this.setState({
+            modelConfigurator,
+            connectionString: modelConfigurator.connectionStringPrototype,
+            config
+        });
     }
 
-    public onInputChanged(e: string, entryName: string): void {
-        const config = {...this.state.config };
-        config.entries[entryName] = e;
-        this.setState({ config });
+    public onConnectionStringChanged(e: React.ChangeEvent<HTMLInputElement>): void {
+        const config = { ...this.state.config };
+        const newConnectionString = e.target.value;
+        config.connectionString = newConnectionString;
+
+        const parts = newConnectionString.split(";").filter((p) => p.trim() !== "");
+
+        parts.map((part) => {
+            const [k, v] = part.split("=");
+
+            // Find corresponding entry
+            const entry = Object.values(config.properties.subEntries).find((e) => {
+                const key = this.state.modelConfigurator.connectionStringKeys[e.identifier];
+                return key && key.trim().toLowerCase() === k.trim().toLowerCase();
+            });
+
+            // Update if found
+            if (entry) {
+                entry.value.current = v;
+            }
+        });
+
+        this.setState({ config, connectionString: newConnectionString });
+    }
+
+    public onInputChanged(e: string, entry: Entry): void {
+        entry.value.current = e;
+
+        const currentConnectionString = this.state.connectionString;
+        const key = this.state.modelConfigurator.connectionStringKeys[entry.identifier];
+        const newValue = entry.value.current;
+
+        if (!key) // Safety check
+        {
+            return;
+        }
+
+        // Split connection string into key-value pairs
+        const parts = currentConnectionString.split(";").filter((p) => p.trim() !== "");
+
+        // Map and replace the target key
+        const updatedParts = parts.map((part) => {
+            const [k, v] = part.split("=");
+            if (k.trim().toLowerCase() === key.toLowerCase()) {
+                return `${k}=${newValue}`; // Update value
+            }
+            return part; // Keep unchanged
+        });
+
+        // Join back into a single string
+        const updatedConnectionString = updatedParts.join(";");
+
+        const config = { ...this.state.config };
+        config.connectionString = updatedConnectionString;
+
+        // Update state
+        this.setState({connectionString: updatedConnectionString, config});
     }
 
     private createEntriesInput(): React.JSX.Element[] {
-        return Object.keys(this.state.config.entries)?.map((element) => {
+        return this.state.config.properties.subEntries.map((entry) => {
             return (
                 <TextField
-                    key={element + "-input"}
-                    label={element}
-                    placeholder={element}
-                    {...this.getValidationState(element)}
-                    value={this.state.config.entries[element] ?? ""}
+                    key={entry.identifier + "-input"}
+                    label={entry.displayName}
+                    placeholder={entry.value.default}
+                    value={entry.value.current}
                     onBlur={() => this.onTestConnection()}
-                    onChange={(e) => this.onInputChanged(e.target.value, element)}
+                    onChange={(e) => this.onInputChanged(e.target.value, entry)}
                     variant="outlined"
                     size="small"
                     margin="dense"
@@ -142,44 +198,14 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
         });
     }
 
-    private getConfigEntries(): any {
-        const newEntries: any = {};
-        this.props.DataModel.possibleConfigurators[0].properties.forEach((property) => {
-            newEntries[property.name] = "";
-        });
-        return newEntries;
-    }
-
-    private getConfigWithDefaultValue(configuratorName: string): any {
-        const newEntries: any = {};
-        this.props.DataModel.possibleConfigurators
-            .find((x) => x.configuratorTypename === configuratorName)
-            .properties.forEach((property) => {
-                const alternativeDefault = property.name.toLowerCase() === "database"
-                    ? contextNameWithoutNamespace(this.state.targetModel)
-                    : "";
-                newEntries[property.name] = property.default ?? alternativeDefault;
-
-            });
-        return newEntries;
-    }
-
-    public getConfigValue(): DatabaseConfigModel {
-        return {
-            ...this.props.DataModel.config,
-            entries: this.props.DataModel.config.entries ?
-                this.props.DataModel.config.entries : this.getConfigEntries()
-        };
-    }
-
     public onSave(): void {
         this.props.onShowWaitDialog(true);
 
         this.onTestConnection();
-        this.props.RestClient.saveDatabaseConfig(this.createConfigModel(), this.state.targetModel).then((response) => {
+        this.props.RestClient.saveDatabaseConfig(this.state.config, this.state.targetModel).then((response) => {
             this.props.onShowWaitDialog(false);
 
-            this.setState({ config: response.config });
+            this.setState({ config: response.config, connectionString: response.config.connectionString });
             this.props.onUpdateDatabaseConfig(response);
             toast.success("Configuration saved", { autoClose: 5000 });
             this.onTestConnection();
@@ -188,7 +214,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
 
     public onTestConnection(): void {
         this.setState({ testConnectionPending: true });
-        this.props.RestClient.testDatabaseConfig(this.createConfigModel(), this.props.DataModel.targetModel)
+        this.props.RestClient.testDatabaseConfig(this.state.config, this.props.DataModel.targetModel)
             .then((response) => {
                 this.setState({
                     testConnectionPending: false,
@@ -200,7 +226,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     public onCreateDatabase(): void {
         this.props.onShowWaitDialog(true);
 
-        this.props.RestClient.createDatabase(this.createConfigModel(), this.props.DataModel.targetModel).then((data) => {
+        this.props.RestClient.createDatabase(this.state.config, this.props.DataModel.targetModel).then((data) => {
             this.props.onShowWaitDialog(false);
 
             if (data.success) {
@@ -220,7 +246,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
 
         this.props.onShowWaitDialog(true);
 
-        this.props.RestClient.eraseDatabase(this.createConfigModel(), this.props.DataModel.targetModel).then((data) => {
+        this.props.RestClient.eraseDatabase(this.state.config, this.props.DataModel.targetModel).then((data) => {
             this.props.onShowWaitDialog(false);
 
             if (data.success) {
@@ -236,14 +262,14 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     public onApplyMigration(migration: string): void {
         this.props.onShowWaitDialog(true);
 
-        this.props.RestClient.applyMigration(this.props.DataModel.targetModel, migration, this.createConfigModel()).then((data) => {
+        this.props.RestClient.applyMigration(this.props.DataModel.targetModel, migration, this.state.config).then((data) => {
             this.props.onShowWaitDialog(false);
 
             if (data.result === MigrationResult.Migrated) {
                 this.props.RestClient.databaseModel(this.props.DataModel.targetModel).then((databaseConfig) => this.props.onUpdateDatabaseConfig(databaseConfig));
                 toast.success("Migration applied", { autoClose: 5000 });
             } else {
-                let errors = data.errors.join("; "); 
+                const errors = data.errors.join("; ");
                 toast.error("Migration not applied: " + errors, { autoClose: 5000 });
             }
         }).catch((d) => this.props.onShowWaitDialog(false));
@@ -252,7 +278,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     public onRollbackDatabase(): void {
         this.props.onShowWaitDialog(true);
 
-        this.props.RestClient.rollbackDatabase(this.props.DataModel.targetModel, this.createConfigModel()).then((data) => {
+        this.props.RestClient.rollbackDatabase(this.props.DataModel.targetModel, this.state.config).then((data) => {
             this.props.onShowWaitDialog(false);
 
             if (data.success) {
@@ -267,7 +293,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     public onExecuteSetup(setup: SetupModel): void {
         this.props.onShowWaitDialog(true);
 
-        this.props.RestClient.executeSetup(this.props.DataModel.targetModel, { Config: this.createConfigModel(), Setup: setup }).then((data) => {
+        this.props.RestClient.executeSetup(this.props.DataModel.targetModel, { Config: this.state.config, Setup: setup }).then((data) => {
             this.props.onShowWaitDialog(false);
 
             if (data.success) {
@@ -317,10 +343,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                 <CardContent>
                     <GridLegacy container={true} direction="column" spacing={1}>
                         <DatabaseSection title={(
-                            <Typography
-                                variant="h5"
-                                gutterBottom={true}
-                            >
+                            <Typography variant="h5" gutterBottom={true}>
                                 {contextNameWithoutNamespace(this.state.targetModel)} {this.state.testConnectionPending
                                     ? (<CircularProgress size="small"/>)
                                     : this.preRenderConnectionCheckIcon()}
@@ -332,16 +355,27 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                                     <TextField
                                         label="Configurator"
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.onConfiguratorTypeChanged(e)}
-                                        value={reviseConfiguratorName(this.state.config.configuratorTypename, this.props.DataModel.possibleConfigurators)}
+                                        value={this.state.modelConfigurator.configuratorType}
                                         onBlur={() => this.onTestConnection()}
                                         variant="outlined"
                                         select={true}
                                         size="small">
-                                            {this.props.DataModel.possibleConfigurators.map((config, idx) => (
-                                                <MenuItem key={idx} value={config.configuratorTypename}>{config.name}</MenuItem>))
+                                            {this.props.ModelConfigurators.map((configurator, idx) => (
+                                                <MenuItem key={idx} value={configurator.configuratorType}>{configurator.name}</MenuItem>))
                                             }
                                     </TextField>
-                                    {this.state.config.configuratorTypename && this.createEntriesInput()}
+                                    <TextField
+                                        key="connectionstr-input"
+                                        label="Connection String"
+                                        placeholder=""
+                                        value={this.state.connectionString}
+                                        onBlur={() => this.onTestConnection()}
+                                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.onConnectionStringChanged(e)}
+                                        variant="outlined"
+                                        size="small"
+                                        margin="dense"
+                                    />
+                                    {this.createEntriesInput()}
                                 </Stack>
                             </GridLegacy>
                             <GridLegacy item={true} md={12}>
@@ -433,22 +467,6 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
 
 function contextNameWithoutNamespace(databaseModel: string): string {
     return databaseModel.replace(/^.+\./, "");
-}
-
-function reviseConfiguratorName(name: string, possibleConfigurators: DatabaseConfigOptionModel[]): string {
-    const result = name;
-
-    let configurator = possibleConfigurators.find((pc) => pc.configuratorTypename === result);
-
-    if (configurator != null) {
-        return result;
-    }
-
-    configurator = possibleConfigurators.find((pc) => pc.configuratorTypename.startsWith(result.replace(/,.+/, "")));
-
-    return configurator != null
-        ? configurator.configuratorTypename
-        : "";
 }
 
 export default connect<{}, DatabaseModelDispatchPropsModel>(null, mapDispatchToProps)(DatabaseModel);

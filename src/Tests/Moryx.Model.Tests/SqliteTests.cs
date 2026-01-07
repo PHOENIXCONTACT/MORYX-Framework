@@ -24,11 +24,7 @@ namespace Moryx.Model.Tests
             var connectionString = $@"Data Source={_dataSource};";
             _dbConfig = new SqliteDatabaseConfig
             {
-                ConnectionSettings = new DatabaseConnectionSettings
-                {
-                    ConnectionString = connectionString,
-                    Database = databaseName
-                }
+                ConnectionString = connectionString
             };
             _configurator = new SqliteModelConfigurator();
             _configurator.Initialize(typeof(SqliteTestModelContext), _dbConfig, null);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Copyright (c) 2026, Phoenix Contact GmbH & Co. KG
  * Licensed under the Apache License, Version 2.0
 */
 
@@ -23,29 +23,32 @@ import MenuModel from "../../common/models/MenuModel";
 import { AppState } from "../../common/redux/AppState";
 import { ActionType } from "../../common/redux/Types";
 import DatabasesRestClient from "../api/DatabasesRestClient";
+import DatabaseAndConfigurators from "../models/DatabaseAndConfigurators";
+import DatabasesResponse from "../models/DatabasesResponse";
 import DataModel from "../models/DataModel";
-import { updateDatabaseConfigs } from "../redux/DatabaseActions";
+import {ModelConfiguratorModel} from "../models/ModelConfiguratorModel";
+import { updateDatabases } from "../redux/DatabaseActions";
 import DatabaseModel from "./DatabaseModel";
 
 interface DatabasesPropsModel {
     RestClient?: DatabasesRestClient;
-    DatabaseConfigs?: DataModel[];
+    Databases?: DatabaseAndConfigurators[];
 }
 
 interface DatabasesDispatchPropModel {
-    onUpdateDatabaseConfigs?(databaseConfigs: DataModel[]): void;
+    onUpdateDatabases?(databasesAndConfigurators: DatabaseAndConfigurators[]): void;
 }
 
 const mapStateToProps = (state: AppState): DatabasesPropsModel => {
     return {
         RestClient: state.Databases.RestClient,
-        DatabaseConfigs: state.Databases.DatabaseConfigs
+        Databases: state.Databases.Databases
     };
 };
 
 const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): DatabasesDispatchPropModel => {
     return {
-        onUpdateDatabaseConfigs: (databaseConfigs: DataModel[]) => dispatch(updateDatabaseConfigs(databaseConfigs)),
+        onUpdateDatabases: (databasesAndConfigurators: DatabaseAndConfigurators[]) => dispatch(updateDatabases(databasesAndConfigurators)),
     };
 };
 
@@ -68,10 +71,27 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
         this.setState({ IsLoading: true });
 
         this.props.RestClient.databaseModels().then((data) => {
+            console.log(data);
             const validModels = data.databases.filter((model) => model);
-            this.props.onUpdateDatabaseConfigs(validModels);
+            this.props.onUpdateDatabases(this.mapDatabasesWithConfigurators(data));
             this.setState({ MenuModel: { MenuItems: validModels.map((dataModel, idx) => Database.createMenuItem(dataModel)) }, IsLoading: false });
         });
+    }
+
+    private mapDatabasesWithConfigurators(response: DatabasesResponse): DatabaseAndConfigurators[] {
+        const configuratorByType = new Map<string, ModelConfiguratorModel[]>();
+
+        for (const configurator of response.configurators) {
+            const list = configuratorByType.get(configurator.configuratorType) ?? [];
+            list.push(configurator);
+            configuratorByType.set(configurator.configuratorType, list);
+        }
+
+        return response.databases.map((database) => ({
+            database,
+            configurators: database.possibleConfigurators
+                .flatMap((type) => configuratorByType.get(type) ?? [])
+        }));
     }
 
     private static createMenuItem(dataModel: DataModel): MenuItemModel {
@@ -90,10 +110,10 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
         const routes: any[] = [];
         let idx = 0;
 
-        this.props.DatabaseConfigs.forEach((model) => {
+        this.props.Databases.forEach((databaseAndConfigurator) => {
             routes.push(
-                <Route key={idx} path={`${model.targetModel}`} element={
-                    <DatabaseModel DataModel={model} RestClient={this.props.RestClient} />} />);
+                <Route key={idx} path={`${databaseAndConfigurator.database.targetModel}`} element={
+                    <DatabaseModel DataModel={databaseAndConfigurator.database} RestClient={this.props.RestClient} ModelConfigurators={databaseAndConfigurator.configurators} />} />);
             ++idx;
         });
 

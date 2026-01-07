@@ -8,6 +8,8 @@ namespace Moryx.Runtime.Endpoints.Databases.Response
     public class DatabasesResponse
     {
         public DataModel[] Databases { get; set; }
+
+        public ModelConfiguratorModel[] Configurators { get; set; }
     }
 }
 

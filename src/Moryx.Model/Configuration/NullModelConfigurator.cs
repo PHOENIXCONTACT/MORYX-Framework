@@ -3,16 +3,18 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Moryx.Modules;
 
 namespace Moryx.Model.Configuration
 {
     /// <summary>
     /// Null implementation of the <see cref="ModelConfiguratorBase{TConfig}"/>
     /// </summary>
+    [ExpectedConfig(typeof(NullDatabaseConfig))]
     public sealed class NullModelConfigurator : IModelConfigurator
     {
         /// <inheritdoc />
-        public DatabaseConfig Config => new DatabaseConfig<DatabaseConnectionSettings>();
+        public DatabaseConfig Config => new NullDatabaseConfig();
 
         /// <inheritdoc />
         public void Initialize(Type contextType, DatabaseConfig config, ILogger logger)

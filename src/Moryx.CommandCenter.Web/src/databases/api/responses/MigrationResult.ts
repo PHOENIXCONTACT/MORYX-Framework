@@ -4,7 +4,7 @@
 */
 
 export enum MigrationResult {
-  Migrated = 'Migrated',
-  NoMigrationsAvailable = 'NoMigrationsAvailable',
-  Error = 'Error'
+  Migrated = "Migrated",
+  NoMigrationsAvailable = "NoMigrationsAvailable",
+  Error = "Error"
 }

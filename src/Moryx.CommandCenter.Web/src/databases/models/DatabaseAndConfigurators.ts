@@ -4,9 +4,9 @@
 */
 
 import DataModel from "./DataModel";
-import {ModelConfiguratorModel} from "./ModelConfiguratorModel";
+import { ModelConfiguratorModel } from "./ModelConfiguratorModel";
 
-export default class DatabasesResponse {
+export default class DatabaseAndConfigurators {
+    public database: DataModel;
     public configurators: ModelConfiguratorModel[];
-    public databases: DataModel[];
 }

@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 using Moryx.AbstractionLayer.TestTools;
 using System;
 using System.Collections.Generic;
+using Moryx.Model.Sqlite;
 using Moryx.Runtime.Endpoints.Databases;
 using Moryx.Runtime.Endpoints.Databases.Models;
+using Moryx.Serialization;
 
 namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
 {
@@ -43,12 +45,17 @@ namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
                 _exceptions.Add(e.Exception);
             };
 
+            var sqliteConfig = new SqliteDatabaseConfig { DataSource = ":memory:" };
+            sqliteConfig.UpdateConnectionString();
+            var entries = EntryConvert.EncodeObject(sqliteConfig);
+
             var result = await _databaseController!.ExecuteSetup(typeof(TestModelContext).FullName, new()
             {
                 Config = new()
                 {
-                    ConfiguratorTypename = "1",
-                    Entries = new() { { "ConnectionString", "DataSource=:memory:" } }
+                    ConfiguratorType = "1",
+                    ConnectionString = sqliteConfig.ConnectionString,
+                    Properties = entries
                 },
                 Setup = new SetupModel { Fullname = typeof(DisposedObjectSetup).FullName }
             });

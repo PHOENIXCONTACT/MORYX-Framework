@@ -21,7 +21,7 @@ namespace Moryx.Runtime.Endpoints.Databases.Models
         /// <summary>
         /// Configurators that could be set up
         /// </summary>
-        public DatabaseConfigOptionModel[] PossibleConfigurators { get; set; }
+        public string[] PossibleConfigurators { get; set; }
 
         /// <summary>
         /// An amount of setups for this model.

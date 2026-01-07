@@ -46,6 +46,12 @@ namespace Moryx.Model.Sqlite
         }
 
         /// <inheritdoc />
+        public IModelConfigurator GetConfigurator(Type contextType, Type configuratorType, DatabaseConfig databaseConfig)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
         public Type[] GetConfigurators(Type contextType)
         {
             throw new NotImplementedException();

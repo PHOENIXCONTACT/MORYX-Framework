@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
+<Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
 
   <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\bundle.js')) And ('$(NoBuild)' != 'true') ">
    <Exec WorkingDirectory="./" Command="npm config set strict-ssl false" />

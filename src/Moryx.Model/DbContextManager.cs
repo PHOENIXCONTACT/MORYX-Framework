@@ -75,12 +75,12 @@ namespace Moryx.Model
             var configuredModels = new List<ConfiguredModelWrapper>();
             foreach (var possibleModel in _possibleModels)
             {
-                var config = _configManager.GetConfiguration<DatabaseConfig<DatabaseConnectionSettings>>(ConfigFilename(possibleModel.DbContext));
+                var config = _configManager.GetConfiguration<DatabaseConfig>(ConfigFilename(possibleModel.DbContext));
                 Type configuratorType = null;
                 Type specificDbContextType = null;
-                if (!string.IsNullOrEmpty(config.ConfiguratorTypename))
+                if (!string.IsNullOrEmpty(config.ConfiguratorType))
                 {
-                    var configuredConfiguratorType = Type.GetType(config.ConfiguratorTypename);
+                    var configuredConfiguratorType = Type.GetType(config.ConfiguratorType);
                     if (configuredConfiguratorType != null &&
                         possibleModel.ModelConfiguratorMap.TryGetValue(configuredConfiguratorType, out specificDbContextType))
                     {
@@ -104,11 +104,13 @@ namespace Moryx.Model
 
                 var typedConfig = (DatabaseConfig)_configManager.GetConfiguration(configType,
                     ConfigFilename(possibleModel.DbContext), true);
-
-                // If database is empty, fill with TargetModel name
-                if (string.IsNullOrWhiteSpace(typedConfig.ConnectionSettings.Database))
+                if (string.IsNullOrEmpty(typedConfig.ConnectionString))
                 {
-                    typedConfig.ConnectionSettings.Database = possibleModel.DbContext.Name;
+                    typedConfig.UpdateConnectionString();
+                }
+                else
+                {
+                    typedConfig.UpdatePropertiesFromConnectionString();
                 }
 
                 configuredModels.Add(new ConfiguredModelWrapper
@@ -155,6 +157,26 @@ namespace Moryx.Model
         /// <inheritdoc />
         public IModelConfigurator GetConfigurator(Type contextType) =>
             _configuredModels.First(km => km.BaseDbContextType == contextType).Configurator;
+
+        public IModelConfigurator GetConfigurator(Type contextType, Type configuratorType, DatabaseConfig databaseConfig)
+        {
+            var possibleModel = _possibleModels.FirstOrDefault(pm => pm.DbContext == contextType);
+            if (possibleModel == null)
+                return null;
+
+            if (possibleModel.ModelConfiguratorMap.TryGetValue(configuratorType, out var specificDbContextType))
+            {
+                var configuratorInstance = (IModelConfigurator)Activator.CreateInstance(configuratorType)!;
+                var logger = _loggerFactory.CreateLogger(configuratorType);
+                configuratorInstance.Initialize(specificDbContextType, databaseConfig, logger);
+
+                return configuratorInstance;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         /// <inheritdoc />
         public Type[] GetConfigurators(Type contextType)
