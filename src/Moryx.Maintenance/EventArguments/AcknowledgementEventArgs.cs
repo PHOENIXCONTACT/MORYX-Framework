@@ -1,12 +1,12 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Maintenance.EventArguments;
+namespace Moryx.Maintenance;
 
 /// <summary>
 /// Arguments of a maintenance that was acknowledge/done on a resource
 /// </summary>
-public class AcknowledgementEventArg
+public class AcknowledgementEventArgs
 {
     /// <summary>
     /// Operator that performed the maintenance

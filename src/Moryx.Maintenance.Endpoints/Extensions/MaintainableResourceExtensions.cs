@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 using Moryx.Maintenance.Management.Models;
 
-namespace Moryx.Maintenance.Management.Extensions;
+namespace Moryx.Maintenance.Endpoints.Extensions;
 
 internal static class MaintainableResourceExtensions
 {

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.Text.Json;
-using Moryx.Maintenance.IntervalTypes;
+using Moryx.Maintenance;
 using Moryx.Maintenance.Model.Entities;
 
 namespace Moryx.Maintenance.Model.Mappers;

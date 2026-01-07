@@ -2,13 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Moryx.Model.Sqlite.Attributes;
+using Moryx.Model.Sqlite;
 
 namespace Moryx.Maintenance.Model;
 
 /// <inheritdoc />
-[SqliteContext]
+[SqliteDbContext(typeof(MaintenanceContext))]
 public class SqliteMaintenanceContext : MaintenanceContext
 {
     /// <inheritdoc />
@@ -24,21 +23,4 @@ public class SqliteMaintenanceContext : MaintenanceContext
     public SqliteMaintenanceContext(DbContextOptions<SqliteMaintenanceContext> options) : base(options)
     {
     }
-
-    /// <inheritdoc />
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
-
-        if (!optionsBuilder.IsConfigured)
-        {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-            var connectionString = configuration.GetConnectionString("Moryx.Maintenance.Management.Model.Sqlite");
-            optionsBuilder.UseSqlite(connectionString);
-        }
-    }
-
 }

@@ -3,8 +3,12 @@
 using Moryx.Maintenance.Model.Entities;
 using Moryx.Model.Repositories;
 
-namespace Moryx.Maintenance.Model.API;
+namespace Moryx.Maintenance.Model;
 
+/// <summary>
+/// Repository for <see cref="MaintenanceOrderEntity"/>
+/// </summary>
 public interface IMaintenanceOrderRepository : IRepository<MaintenanceOrderEntity>
 {
+    
 }

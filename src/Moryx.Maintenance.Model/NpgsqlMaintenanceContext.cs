@@ -2,13 +2,12 @@
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Moryx.Model.PostgreSQL.Attributes;
+using Moryx.Model.PostgreSQL;
 
 namespace Moryx.Maintenance.Model;
 
 /// <inheritdoc />
-[NpgsqlDatabaseContext]
+[NpgsqlDbContext(typeof(MaintenanceContext))]
 public class NpgsqlMaintenanceContext : MaintenanceContext
 {
     /// <inheritdoc />
@@ -24,22 +23,6 @@ public class NpgsqlMaintenanceContext : MaintenanceContext
     /// <inheritdoc />
     public NpgsqlMaintenanceContext(DbContextOptions<NpgsqlMaintenanceContext> options) : base(options)
     {
-    }
-
-    /// <inheritdoc />
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
-
-        if (!optionsBuilder.IsConfigured)
-        {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-            var connectionString = configuration.GetConnectionString("Moryx.Maintenance.Management.Model.Npgsql");
-            optionsBuilder.UseNpgsql(connectionString);
-        }
     }
 
 }

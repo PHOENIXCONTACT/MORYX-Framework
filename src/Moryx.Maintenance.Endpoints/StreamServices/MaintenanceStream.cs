@@ -8,7 +8,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace Moryx.Maintenance.Endpoints.StreamServices;
 
-internal class MaintenanceStream(IMaintenanceManagement maintenanceManagement)
+internal sealed class MaintenanceStream(IMaintenanceManagement maintenanceManagement)
 {
     private static JsonSerializerSettings CreateSerializerSettings()
     {
@@ -28,7 +28,7 @@ internal class MaintenanceStream(IMaintenanceManagement maintenanceManagement)
         var serializationSettings = CreateSerializerSettings();
 
         // Define event handling
-        var channel = Channel.CreateUnbounded<MaintenanceEventArg>();
+        var channel = Channel.CreateUnbounded<MaintenanceEventArgs>();
         var maintenanceEvent = MaintenanceEvent(channel);
 
         maintenanceManagement.MaintenanceStarted += maintenanceEvent;
@@ -59,10 +59,10 @@ internal class MaintenanceStream(IMaintenanceManagement maintenanceManagement)
     }
 
     private static EventHandler<MaintenanceOrder> MaintenanceEvent(
-        Channel<MaintenanceEventArg> groupChannel)
+        Channel<MaintenanceEventArgs> groupChannel)
       => new((obj, e) =>
       {
-          groupChannel.Writer.TryWrite(new MaintenanceEventArg(e.ToDto()));
+          groupChannel.Writer.TryWrite(new MaintenanceEventArgs(e.ToDto()));
       });
 
 }

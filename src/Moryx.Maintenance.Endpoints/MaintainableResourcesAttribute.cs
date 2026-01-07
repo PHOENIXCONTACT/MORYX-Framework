@@ -9,7 +9,10 @@ using Moryx.Maintenance.Management.Models;
 
 namespace Moryx.Maintenance.Endpoints;
 
-internal class MaintainableResourcesAttribute : PossibleValuesAttribute
+/// <summary>
+/// Attribute to select maintainable resources  
+/// </summary>
+internal sealed class MaintainableResourcesAttribute : PossibleValuesAttribute
 {
     public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)
     {

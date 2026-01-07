@@ -1,40 +1,32 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 using Microsoft.Extensions.Logging;
-using Moryx.ControlSystem.Supervision.MachineBreak;
 using Moryx.Logging;
 using Moryx.Maintenance.Management.Components;
 using Moryx.Runtime.Modules;
 
 namespace Moryx.Maintenance.Management.Facade;
 
-internal sealed class  MaintenanceManagementFacade : FacadeBase, IMaintenanceManagement, IMachineBreakSource
+internal sealed class  MaintenanceManagementFacade : FacadeBase, IMaintenanceManagement
 {
     #region Dependencies
-    public IMaintenanceManager? MaintenanceManager { get; set; }
+    public required IMaintenanceManager MaintenanceManager { get; set; }
     #endregion
 
-    public IEnumerable<MaintenanceOrder> Orders
-        => MaintenanceManager?.Orders ?? [];
-    public IEnumerable<Acknowledgement> Acknowledgements
-        => MaintenanceManager?.Acknowledgements ?? [];
-    public IModuleLogger? Logger { get; set; }
-
-    public MachineBreakSourceStatus Status
-        => new()
-        {
-            ShouldBreak = HasOverdueMaintenance
-        };
+    public IReadOnlyList<MaintenanceOrder> Orders
+        => MaintenanceManager.Orders;
+    public IReadOnlyList<Acknowledgement> Acknowledgements
+        => MaintenanceManager.Acknowledgements;
+    public required IModuleLogger Logger { get; set; }
 
     public bool HasOverdueMaintenance =>
-        MaintenanceManager?.HasOverdueMaintenance ?? false;
-
+        MaintenanceManager.HasOverdueMaintenance;
     public event EventHandler<MaintenanceOrder>? MaintenanceOverdue;
-    public event EventHandler? MachineBreak;
-    public event EventHandler? MaintenanceOrderAdded;
-    public event EventHandler? MaintenanceOrderUpdated;
+    public event EventHandler<MaintenanceOrder>? MachineBreak;
+    public event EventHandler<MaintenanceOrder>? MaintenanceOrderAdded;
+    public event EventHandler<MaintenanceOrder>? MaintenanceOrderUpdated;
     public event EventHandler<MaintenanceOrder>? MaintenanceOrderAcknowledged;
-    public event EventHandler? MaintenanceOrderSent;
+    public event EventHandler<MaintenanceOrder>? MaintenanceOrderSent;
     public event EventHandler<MaintenanceOrder>? MaintenanceStarted;
 
     #region FacadeBase
@@ -69,53 +61,53 @@ internal sealed class  MaintenanceManagementFacade : FacadeBase, IMaintenanceMan
     private void MaintenanceManager_MaintenanceOverdue(object? sender, MaintenanceOrder e)
         => MaintenanceOverdue?.Invoke(sender, e);
 
-    private void MaintenanceManager_OrdersSent(object? sender, EventArgs e)
+    private void MaintenanceManager_OrdersSent(object? sender, MaintenanceOrder e)
         => MaintenanceOrderSent?.Invoke(sender, e);
 
-    private void MaintenanceManager_OrderUpdated(object? sender, EventArgs e)
+    private void MaintenanceManager_OrderUpdated(object? sender, MaintenanceOrder e)
         => MaintenanceOrderUpdated?.Invoke(sender, e);
 
-    private void MaintenanceManager_OrderAdded(object? sender, EventArgs e)
+    private void MaintenanceManager_OrderAdded(object? sender, MaintenanceOrder e)
         => MaintenanceOrderAdded?.Invoke(sender, e);
 
     private void MaintenanceManager_OrderAcknowledged(object? sender, MaintenanceOrder e)
         => MaintenanceOrderAcknowledged?.Invoke(sender, e);
 
-    public void AddMaintenanceOrder(MaintenanceOrder order)
+    public Task AddMaintenanceOrderAsync(MaintenanceOrder order, CancellationToken cancellationToken)
     {
         ValidateHealthState();
         ArgumentNullException.ThrowIfNull(order);
-        MaintenanceManager?.Add(order);
+        return MaintenanceManager.AddAsync(order, cancellationToken);
     }
 
-    public void AcknowledgeMaintenanceOrder(long maintenanceOrderId, Acknowledgement data)
+    public Task AcknowledgeMaintenanceOrderAsync(long maintenanceOrderId, Acknowledgement data, CancellationToken cancellationToken)
     {
         ValidateHealthState();
         ArgumentNullException.ThrowIfNull(data);
         Logger?.Log(LogLevel.Information, "Maintenance {id} will be acknowledged/rescheduled caused by facade a call.", maintenanceOrderId);
-        MaintenanceManager?.Acknowledge(maintenanceOrderId, data);
+        return MaintenanceManager.AcknowledgeAsync(maintenanceOrderId, data, cancellationToken);
     }
 
-    public void UpdateMaintenanceOrder(MaintenanceOrder order)
+    public Task UpdateMaintenanceOrderAsync(MaintenanceOrder order, CancellationToken cancellationToken)
     {
         ValidateHealthState();
         ArgumentNullException.ThrowIfNull(order);
-        MaintenanceManager?.Update(order);
+        return MaintenanceManager.UpdateAsync(order, cancellationToken);
     }
 
-    public void DeleteMaintenanceOrder(MaintenanceOrder order)
+    public Task DeleteMaintenanceOrderAsync(MaintenanceOrder order, CancellationToken cancellationToken)
     {
         ValidateHealthState();
         ArgumentNullException.ThrowIfNull(order);
-        MaintenanceManager?.Delete(order);
+        return MaintenanceManager.DeleteAsync(order, cancellationToken);
     }
 
-    public void StartMaintenance(MaintenanceOrder order)
+    public async Task StartMaintenanceAsync(MaintenanceOrder order, CancellationToken cancellationToken)
     {
         ValidateHealthState();
         ArgumentNullException.ThrowIfNull(order);
-        MaintenanceManager?.Start(order.Id);
-        MachineBreak?.Invoke(this, EventArgs.Empty);
+        await MaintenanceManager?.StartAsync(order.Id, cancellationToken);
+        MachineBreak?.Invoke(this, order);
     }
     #endregion
 }

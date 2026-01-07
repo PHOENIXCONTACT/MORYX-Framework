@@ -1,6 +1,6 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-using Moryx.Maintenance.Endpoints.Dtos;
+using Moryx.Maintenance.Endpoints.Models;
 using Moryx.Maintenance.Management.Models;
 using Moryx.Serialization;
 

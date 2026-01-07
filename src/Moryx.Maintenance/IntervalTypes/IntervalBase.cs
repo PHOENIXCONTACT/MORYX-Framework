@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Moryx.Serialization;
 
-namespace Moryx.Maintenance.IntervalTypes;
+namespace Moryx.Maintenance;
 
 /// <summary>
 /// Type of the maintenance interval

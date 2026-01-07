@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0
 using Microsoft.AspNetCore.Http;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Maintenance.Endpoints.Dtos;
+using Moryx.Maintenance.Endpoints.Models;
 using Moryx.Maintenance.Endpoints.Extensions;
 using Moryx.Maintenance.Endpoints.StreamServices;
 using Moryx.Maintenance.Exceptions;
@@ -16,10 +16,10 @@ namespace Moryx.Maintenance.Endpoints.Services;
 /// <summary>
 /// Handles Maintenance client and backend interactions
 /// </summary>
-internal class MaintenanceService
+internal sealed class MaintenanceService
 {
     private readonly IMaintenanceManagement _maintenanceManagement;
-    private readonly ICustomSerialization _serialization;
+    private readonly ICustomSerialization? _serialization;
     private readonly IResourceManagement _resourceManagement;
     public MaintenanceService(
        IMaintenanceManagement maintenanceManagement,
@@ -63,7 +63,7 @@ internal class MaintenanceService
         var form = dto?.ToOrderEntry();
         var entry = form == null
         ? throw new MaintenanceNotFoundException(id)
-        : form.ToEntry(_serialization);
+        : form.ToEntry(_serialization ?? throw new InvalidOperationException("Serialization service not available"));
         return entry;
     }
 
@@ -80,10 +80,11 @@ internal class MaintenanceService
     /// Adds a new maintenance order from the given <paramref name="entry"/>
     /// </summary>
     /// <param name="entry"></param>
+    /// <param name="cancellationToken">Cancellation token</param>
     /// <exception cref="ArgumentNullException"></exception>
-    public void Add(Entry entry)
+    public Task AddAsync(Entry entry, CancellationToken cancellationToken = default)
     {
-        var form = EntryConvert.CreateInstance<MaintenanceOrderResponse>(entry, _serialization) ?? throw new ArgumentNullException();
+        var form = EntryConvert.CreateInstance<MaintenanceOrderResponse>(entry, _serialization) ?? throw new ArgumentNullException(nameof(entry));
         var resource = _resourceManagement.GetResource<IMaintainableResource>(form.Resource);
         var model = new MaintenanceOrder
         {
@@ -94,7 +95,7 @@ internal class MaintenanceService
             Interval = form.Interval,
             IsActive = form.IsActive,
         };
-        _maintenanceManagement.AddMaintenanceOrder(model);
+        return _maintenanceManagement.AddMaintenanceOrderAsync(model, cancellationToken);
     }
 
     /// <summary>
@@ -102,8 +103,9 @@ internal class MaintenanceService
     /// </summary>
     /// <param name="id">OrderId of the maintenance order</param>
     /// <param name="entry">Entry that contains the data of the updated maintenance order</param>
+    /// <param name="cancellationToken">Cancellation token</param>
     /// <exception cref="MaintenanceNotFoundException"></exception>
-    public void Update(long id, Entry entry)
+    public Task UpdateAsync(long id, Entry entry, CancellationToken cancellationToken = default)
     {
         var order = _maintenanceManagement.Orders.FirstOrDefault(x => x.Id == id) ?? throw new MaintenanceNotFoundException(id);
         var oldForm = order.ToDto().ToOrderEntry();
@@ -119,7 +121,7 @@ internal class MaintenanceService
         {
             order.Resource = _resourceManagement.GetResource<IMaintainableResource>(oldForm.Resource);
         }
-        _maintenanceManagement.UpdateMaintenanceOrder(order);
+        return _maintenanceManagement.UpdateMaintenanceOrderAsync(order, cancellationToken);
     }
 
     /// <summary>
@@ -127,37 +129,40 @@ internal class MaintenanceService
     /// </summary>
     /// <param name="id"></param>
     /// <param name="data"></param>
+    /// <param name="cancellationToken">Cancellation token</param>
     /// <exception cref="MaintenanceNotFoundException"></exception>
-    public void Acknowledge(long id, Acknowledgement data)
+    public Task AcknowledgeAsync(long id, Acknowledgement data, CancellationToken cancellationToken = default)
     {
         var order = _maintenanceManagement
         .Orders
         .First(x => x.Id == id) ?? throw new MaintenanceNotFoundException(id);
-        _maintenanceManagement.AcknowledgeMaintenanceOrder(id, data);
+        return _maintenanceManagement.AcknowledgeMaintenanceOrderAsync(id, data, cancellationToken);
     }
 
     /// <summary>
     /// Given a maintenance order <paramref name="id"/>, start/sends the order to the corresponding cell/resource
     /// </summary>
     /// <param name="id">OrderId of the maintenance order</param>
+    /// <param name="cancellationToken">Cancellation token</param>
     /// <exception cref="MaintenanceNotFoundException"></exception>
-    public void Start(long id)
+    public Task StartAsync(long id, CancellationToken cancellationToken = default)
     {
         var order = _maintenanceManagement
         .Orders
         .First(x => x.Id == id) ?? throw new MaintenanceNotFoundException(id);
-        _maintenanceManagement.StartMaintenance(order);
+        return _maintenanceManagement.StartMaintenanceAsync(order, cancellationToken);
     }
 
     /// <summary>
     /// Given a maintenance order <paramref name="id"/>, marks the corresponding entity as 'DELETED'
     /// </summary>
     /// <param name="id">OrderId of the maintenance order</param>
+    /// <param name="cancellationToken">Cancellation token</param>
     /// <exception cref="MaintenanceNotFoundException"></exception>
-    public void Delete(long id)
+    public Task DeleteAsync(long id, CancellationToken cancellationToken = default)
     {
         var order = _maintenanceManagement.Orders.FirstOrDefault(x => x.Id == id) ?? throw new MaintenanceNotFoundException(id);
-        _maintenanceManagement.DeleteMaintenanceOrder(order);
+        return _maintenanceManagement.DeleteMaintenanceOrderAsync(order, cancellationToken);
     }
 
     /// <summary>

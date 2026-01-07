@@ -42,31 +42,42 @@ public class ModuleController(
     public IDbContextManager DbContextManager { get; } = dbContextManager;
 
     [RequiredModuleApi(IsOptional = false, IsStartDependency = true)]
-    public IResourceManagement? ResourceManager { get; set; }
+    public IResourceManagement ResourceManager { get; set; }
 
     #endregion
-
-    protected override void OnInitialize()
+    /// <summary>
+    /// Code executed on start up and after service was stopped and should be started again
+    /// </summary>
+    protected override Task OnInitializeAsync(CancellationToken cancellationToken)
     {
         Container
             .ActivateDbContexts(DbContextManager)
             .SetInstance(ResourceManager);
+        return Task.CompletedTask;
     }
 
-    protected override void OnStart()
+    /// <summary>
+    /// Code executed after OnInitialize
+    /// </summary>
+    protected override Task OnStartAsync(CancellationToken cancellationToken)
     {
         Container.Resolve<IMaintenanceManager>().Start();
 
         ActivateFacade(_facade);
+        return Task.CompletedTask;
     }
 
-    protected override void OnStop()
+    /// <summary>
+    /// Code executed when service is stopped
+    /// </summary>
+    protected override Task OnStopAsync(CancellationToken cancellationToken)
     {
         DeactivateFacade(_facade);
 
         Container.Resolve<IMaintenanceManager>().Stop();
+        return Task.CompletedTask;
     }
 
-    private readonly MaintenanceManagementFacade _facade = new();
+    private readonly MaintenanceManagementFacade _facade = default!;
     public IMaintenanceManagement Facade => _facade;
 }

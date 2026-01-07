@@ -7,7 +7,5 @@ namespace Moryx.Maintenance.Management.ModuleController;
 [ServerModuleConsole]
 internal sealed class ModuleConsole : IServerModuleConsole
 {
-    public void ExecuteCommand(string[] args, Action<string> outputStream)
-    {
-    }
+    
 }

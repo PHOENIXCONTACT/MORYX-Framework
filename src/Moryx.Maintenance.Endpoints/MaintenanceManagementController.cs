@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Resources;
-using Moryx.Maintenance.Endpoints.Dtos;
+using Moryx.Maintenance.Endpoints.Models;
 using Moryx.Maintenance.Endpoints.Services;
 using Moryx.Maintenance.Exceptions;
 using Moryx.Maintenance.Management.Models;
@@ -27,96 +27,146 @@ public class MaintenanceManagementController(
 {
     private readonly MaintenanceService _maintenanceService = new(maintenanceManagement, serviceProvider, moduleManager, resourceManagement);
 
+
+    /// <summary>
+    ///  Returns the list of maintenance orders
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<GetAllMaintenanceOrderResponse> GetAll()
+    public Task<ActionResult<GetAllMaintenanceOrderResponse>> GetAll()
     {
-        return Response(() => new GetAllMaintenanceOrderResponse([.._maintenanceService.GetAll()]));
+        return Response(() => Task.FromResult(new GetAllMaintenanceOrderResponse([.. _maintenanceService.GetAll()])));
     }
 
+    /// <summary>
+    /// Given an <paramref name="id"/> returns the corresponding <see cref="Entry"/>
+    /// </summary>
+    /// <param name="id">Id of the maintenance order</param>
+    /// <returns></returns>
     [HttpGet("{id:long}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<Entry> Get(long id)
+    public Task<ActionResult<Entry>> Get(long id)
     {
         return Response(() =>
         {
-            return _maintenanceService.Get(id);
+            return Task.FromResult(_maintenanceService.Get(id));
         });
     }
 
+    /// <summary>
+    /// Returns a prototype of a maintenance order entry
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("prototype")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<Entry> Prototype()
+    public Task<ActionResult<Entry>> Prototype()
     {
-        return Response(_maintenanceService.Prototype);
+        return Response(() => Task.FromResult(_maintenanceService.Prototype()));
     }
 
+    /// <summary>
+    /// Adds a new maintenance order from the given <paramref name="entry"/>
+    /// </summary>
+    /// <param name="entry">The maintenance order entry to add</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns></returns>
     [HttpPost("new")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult Add(Entry entry)
+    public Task<ActionResult> Add(Entry entry, CancellationToken cancellationToken)
     {
         return Response(() =>
         {
-            _maintenanceService.Add(entry);
+            return _maintenanceService.AddAsync(entry, cancellationToken);
         });
     }
 
+    /// <summary>
+    /// Updates an existing maintenance order from the given <paramref name="entry"/>
+    /// </summary>
+    /// <param name="id">Id of the maintenance order to update</param>
+    /// <param name="entry">The maintenance order entry to update</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns></returns>
     [HttpPut("{id:long}")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult Update(long id, Entry entry)
+    public Task<ActionResult> Update(long id, Entry entry, CancellationToken cancellationToken)
     {
         return Response(() =>
         {
-            _maintenanceService.Update(id, entry);
+            return _maintenanceService.UpdateAsync(id, entry, cancellationToken);
         });
     }
 
+    /// <summary>
+    /// Acknowledges the maintenance order with the given <paramref name="id"/>
+    /// </summary>
+    /// <param name="id">Id of the maintenance order to acknowledge</param>
+    /// <param name="data">Acknowledgement data</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns></returns>
     [HttpPut("{id:long}/acknowledge")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult Acknowledge(long id, Acknowledgement data)
+    public Task<ActionResult> Acknowledge(long id, Acknowledgement data, CancellationToken cancellationToken)
     {
         return Response(() =>
         {
-            _maintenanceService.Acknowledge(id, data);
+            return _maintenanceService.AcknowledgeAsync(id, data, cancellationToken);
         });
     }
 
+    /// <summary>
+    /// Starts the maintenance for the given <paramref name="id"/>
+    /// </summary>
+    /// <param name="id">Id of the maintenance order to start</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns></returns>
     [HttpPut("{id:long}/start")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult Start(long id)
+    public Task<ActionResult> Start(long id, CancellationToken cancellationToken)
     {
         return Response(() =>
         {
-            _maintenanceService.Start(id);
+            return _maintenanceService.StartAsync(id, cancellationToken);
         });
     }
 
+    /// <summary>
+    /// Deletes the maintenance order with the given <paramref name="id"/>
+    /// </summary>
+    /// <param name="id">Id of the maintenance order to delete</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns></returns>
     [HttpDelete("{id:long}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult Delete(long id)
+    public Task<ActionResult> Delete(long id, CancellationToken cancellationToken)
     {
-        return Response(() =>
+        return Response(async () =>
         {
-            _maintenanceService.Delete(id);
+            await _maintenanceService.DeleteAsync(id, cancellationToken);
         });
     }
 
+    /// <summary>
+    /// Streams the updates and changes of all maintenance orders
+    /// </summary>
+    /// <param name="cancelToken">Cancellation token</param>
     [HttpGet("stream")]
     [ProducesResponseType(typeof(MaintenanceOrderModel), StatusCodes.Status200OK)]
     public async Task Stream(CancellationToken cancelToken)
@@ -124,11 +174,11 @@ public class MaintenanceManagementController(
         await _maintenanceService.Stream(cancelToken, HttpContext);
     }
 
-    private new ActionResult<TResult> Response<TResult>(Func<TResult> func, Func<TResult, ActionResult<TResult>>? onSuccess = null)
+    private new async Task<ActionResult<TResult>> Response<TResult>(Func<Task<TResult>> func, Func<TResult, ActionResult<TResult>>? onSuccess = null)
     {
         try
         {
-            var result = func();
+            var result = await func();
             return onSuccess != null
                 ? onSuccess(result)
                 : (ActionResult<TResult>)Ok(result);
@@ -139,11 +189,11 @@ public class MaintenanceManagementController(
         }
     }
 
-    private new ActionResult Response(Action action)
+    private new async Task<ActionResult> Response(Func<Task> action)
     {
         try
         {
-            action();
+            await action();
             return Ok();
         }
         catch (Exception ex)

@@ -1,15 +1,24 @@
 // Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.Maintenance.Model.API;
 using Moryx.Maintenance.Model.Entities;
 using Moryx.Model.Repositories;
 using Moryx.Maintenance.Model.Mappers;
 namespace Moryx.Maintenance.Model.Storage;
 
+/// <summary>
+/// Storage operations for maintenance orders
+/// </summary>
 public class MaintenanceStorage
 {
-    public static async Task<MaintenanceOrderEntity> Save(IUnitOfWork uow, MaintenanceOrder dto)
+    /// <summary>
+    /// Saves the given maintenance order
+    /// </summary>
+    /// <param name="uow">Unit of work for database operations</param>
+    /// <param name="dto">Maintenance order data transfer object</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Saved maintenance order entity</returns>
+    public static async Task<MaintenanceOrderEntity> SaveAsync(IUnitOfWork uow, MaintenanceOrder dto, CancellationToken cancellationToken)
     {
         var repos = uow.GetRepository<IMaintenanceOrderRepository>();
         var entity = repos.GetByKey(dto.Id);
@@ -39,18 +48,29 @@ public class MaintenanceStorage
         return entity;
     }
 
+    /// <summary>
+    /// Loads the maintenance order model from the given entity
+    /// </summary>
+    /// <returns></returns> /// <returns>Saved maintenance order model</returns>
     public static MaintenanceOrder Load(MaintenanceOrderEntity entity, IEnumerable<IMaintainableResource> resources)
     {
         var model = entity.ToModel(resources);
         return model;
     }
 
-    public static async Task Delete(IUnitOfWork uow, long id)
+    /// <summary>
+    /// Deletes the maintenance order with the given id
+    /// </summary>
+    /// <param name="uow">Unit of work for database operations</param>
+    /// <param name="id">Id of the maintenance order to delete</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns></returns>
+    public static async Task DeleteAsync(IUnitOfWork uow, long id, CancellationToken cancellationToken)
     {
         var repos = uow.GetRepository<IMaintenanceOrderRepository>();
         var entity = repos.GetByKey(id);
         repos.Remove(entity);
-        await uow.SaveChangesAsync();
+        await uow.SaveChangesAsync(cancellationToken);
     }
 
 }

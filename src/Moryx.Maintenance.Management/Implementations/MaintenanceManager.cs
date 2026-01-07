@@ -4,13 +4,10 @@ using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.Logging;
-using Moryx.Maintenance.EventArguments;
 using Moryx.Maintenance.Exceptions;
-using Moryx.Maintenance.IntervalTypes;
 using Moryx.Maintenance.Management.Components;
 using Moryx.Maintenance.Management.ModuleController;
 using Moryx.Maintenance.Model;
-using Moryx.Maintenance.Model.API;
 using Moryx.Maintenance.Model.Mappers;
 using Moryx.Maintenance.Model.Storage;
 using Moryx.Model.Repositories;
@@ -29,17 +26,17 @@ internal sealed class MaintenanceManager : IMaintenanceManager
     private List<IMaintainableResource> _maintainableResources = [];
 
     #region Dependencies
-    public IUnitOfWorkFactory<MaintenanceContext>? UnitOfWorkFactory { get; set; }
-    public ModuleConfig? ModuleConfig { get; set; }
-    public IResourceManagement? ResourceManagement { get; set; }
-    public IEnumerable<MaintenanceOrder> Orders
-        => _maintenanceOrders.AsEnumerable();
-    public IEnumerable<Acknowledgement> Acknowledgements
-        => _acknowledgements.AsEnumerable();
+    public required IUnitOfWorkFactory<MaintenanceContext> UnitOfWorkFactory { get; set; }
+    public required ModuleConfig ModuleConfig { get; set; }
+    public required IResourceManagement ResourceManagement { get; set; }
+    public IReadOnlyList<MaintenanceOrder> Orders
+        => _maintenanceOrders.AsReadOnly();
+    public IReadOnlyList<Acknowledgement> Acknowledgements
+        => _acknowledgements.AsReadOnly();
 
-    public IParallelOperations? ParallelOperations { get; set; }
+    public required IParallelOperations ParallelOperations { get; set; }
 
-    public IModuleLogger? Logger { get; set; }
+    public required IModuleLogger Logger { get; set; }
     #endregion
 
     #region Facade
@@ -71,14 +68,14 @@ internal sealed class MaintenanceManager : IMaintenanceManager
     public bool HasOverdueMaintenance
         => _maintenanceOrders.Any(x => x.Interval?.Overdue > 0);
 
-    public event EventHandler? OrderAdded;
-    public event EventHandler? OrderUpdated;
+    public event EventHandler<MaintenanceOrder>? OrderAdded;
+    public event EventHandler<MaintenanceOrder>? OrderUpdated;
     public event EventHandler<MaintenanceOrder>? OrderAcknowledged;
-    public event EventHandler? OrdersSent;
+    public event EventHandler<MaintenanceOrder>? OrdersSent;
     public event EventHandler<MaintenanceOrder>? MaintenanceOverdue;
     public event EventHandler<MaintenanceOrder>? MaintenanceStarted;
 
-    public async Task Acknowledge(long orderId, Acknowledgement data)
+    public async Task AcknowledgeAsync(long orderId, Acknowledgement data, CancellationToken cancellationToken)
     {
         var maintenance = _maintenanceOrders.FirstOrDefault(x => x.Id == orderId)
             ?? throw new MaintenanceNotFoundException(orderId);
@@ -86,7 +83,7 @@ internal sealed class MaintenanceManager : IMaintenanceManager
 
         maintenance.Acknowledgements = [.. maintenance.Acknowledgements, data];
         using var uow = UnitOfWorkFactory?.Create();
-        var acknowledgement = (await MaintenanceStorage.Save(uow!, maintenance)).Acknowledgements.LastOrDefault();
+        var acknowledgement = (await MaintenanceStorage.SaveAsync(uow!, maintenance, cancellationToken)).Acknowledgements.LastOrDefault();
         Logger?.LogInformation("MaintenanceOrder '{orderId}' acknowledged!", orderId);
         if (acknowledgement is not null)
         {
@@ -165,7 +162,7 @@ internal sealed class MaintenanceManager : IMaintenanceManager
         }
     }
 
-    private async void Resource_MaintenanceStarted(object? sender, MaintenanceEventArg e)
+    private async void Resource_MaintenanceStarted(object? sender, MaintenanceEventArgs e)
     {
         var found = _maintenanceOrders.FirstOrDefault(x => x.Id == e.MaintenanceOrderId);
         if (found != null)
@@ -173,7 +170,7 @@ internal sealed class MaintenanceManager : IMaintenanceManager
             found.MaintenanceStarted = true;
 
             using var uow = UnitOfWorkFactory?.Create()!;
-            await MaintenanceStorage.Save(uow, found);
+            await MaintenanceStorage.SaveAsync(uow, found, CancellationToken.None);
             MaintenanceStarted?.Invoke(sender, found);
         }
     }
@@ -188,7 +185,7 @@ internal sealed class MaintenanceManager : IMaintenanceManager
         }
     }
 
-    private async void Resource_MaintenanceCompleted(object? sender, AcknowledgementEventArg e)
+    private async void Resource_MaintenanceCompleted(object? sender, AcknowledgementEventArgs e)
     {
         var acknowledgement = new Acknowledgement
         {
@@ -197,7 +194,7 @@ internal sealed class MaintenanceManager : IMaintenanceManager
             Created = DateTime.UtcNow
         };
 
-        await Acknowledge(e.MaintenanceOrderId, acknowledgement);
+        await AcknowledgeAsync(e.MaintenanceOrderId, acknowledgement, CancellationToken.None);
     }
 
     private async void Resource_CycleChanged(object? sender, int count)
@@ -242,7 +239,7 @@ internal sealed class MaintenanceManager : IMaintenanceManager
         {
             maintenance.Interval.Update(elapsed);
             using var uow = UnitOfWorkFactory.Create();
-            await MaintenanceStorage.Save(uow!, maintenance);
+            await MaintenanceStorage.SaveAsync(uow!, maintenance, CancellationToken.None);
 
             if (maintenance.Interval.IsOverdue())
             {
@@ -263,7 +260,7 @@ internal sealed class MaintenanceManager : IMaintenanceManager
             OrderId = maintenance.Id,
             Instructions = maintenance.Instructions
         });
-        OrdersSent?.Invoke(this, EventArgs.Empty);
+        OrdersSent?.Invoke(this, maintenance);
     }
 
     private void TriggerOverdue(MaintenanceOrder maintenance)
@@ -274,19 +271,19 @@ internal sealed class MaintenanceManager : IMaintenanceManager
             OrderId = maintenance.Id,
             Instructions = maintenance.Instructions
         });
-        OrdersSent?.Invoke(this, EventArgs.Empty);
+        OrdersSent?.Invoke(this, maintenance);
         MaintenanceOverdue?.Invoke(this, maintenance);
     }
 
-    public async Task Update(MaintenanceOrder model)
+    public async Task UpdateAsync(MaintenanceOrder model, CancellationToken cancellationToken)
     {
         using var uow = UnitOfWorkFactory?.Create();
-        await MaintenanceStorage.Save(uow!, model);
-        OrderUpdated?.Invoke(this, EventArgs.Empty);
+        await MaintenanceStorage.SaveAsync(uow!, model, cancellationToken);
+        OrderUpdated?.Invoke(this, model);
         Logger?.LogInformation("MaintenanceOrder '{id}' updated", model.Id);
     }
 
-    public async Task Add(MaintenanceOrder model)
+    public async Task AddAsync(MaintenanceOrder model, CancellationToken cancellationToken)
     {
         var match = _maintenanceOrders.FirstOrDefault(x => x.Resource?.Id == model.Resource!.Id);
 
@@ -296,24 +293,24 @@ internal sealed class MaintenanceManager : IMaintenanceManager
         }
 
         using var uow = UnitOfWorkFactory?.Create();
-        var result = await MaintenanceStorage.Save(uow!, model);
+        var result = await MaintenanceStorage.SaveAsync(uow!, model, cancellationToken);
         Logger?.LogInformation("MaintenanceOrder '{id}' created!", result.Id);
         lock (_locker)
         {
             var order = MaintenanceStorage.Load(result, _maintainableResources);
             _maintenanceOrders.Add(order);
         }
-        OrderAdded?.Invoke(this, EventArgs.Empty);
+        OrderAdded?.Invoke(this, model);
     }
 
-    public async Task Delete(MaintenanceOrder model)
+    public async Task DeleteAsync(MaintenanceOrder model, CancellationToken cancellationToken)
     {
         using var uow = UnitOfWorkFactory?.Create();
-        await MaintenanceStorage.Delete(uow!, model.Id);
+        await MaintenanceStorage.DeleteAsync(uow!, model.Id, cancellationToken);
         Logger?.LogInformation("MaintenanceOrder '{id}' deleted!", model.Id);
     }
 
-    public void Start(long maintenanceOrderId)
+    public Task StartAsync(long maintenanceOrderId, CancellationToken cancellationToken)
     {
         var match = _maintenanceOrders.FirstOrDefault(x => x.Id == maintenanceOrderId);
         match?.Resource?.StartMaintenance(new MaintenanceOrderStart
@@ -321,5 +318,6 @@ internal sealed class MaintenanceManager : IMaintenanceManager
             OrderId = match.Id,
             Instructions = match.Instructions
         });
+        return Task.CompletedTask;
     }
 }
