@@ -18,28 +18,48 @@ namespace Moryx.Model.PostgreSQL
         /// <inheritdoc />
         public override string ConfiguratorType => typeof(NpgsqlModelConfigurator).AssemblyQualifiedName;
 
+        /// <summary>
+        /// Name of the database to connect to
+        /// </summary>
         [Required]
         [DefaultValue("<DatabaseName>")]
+        [Description("Name of the database to connect to")]
         [ConnectionStringKey("Database")]
         public string Database { get; set; }
 
+        /// <summary>
+        /// Username used to connect to the database
+        /// </summary>
         [Required]
         [DefaultValue("postgres")]
+        [Description("Username used to connect to the database")]
         [ConnectionStringKey("Username")]
         public string Username { get; set; }
 
+        /// <summary>
+        /// Password used to connect to the database
+        /// </summary>
         [Required, Password]
         [DefaultValue("postgres")]
+        [Description("Password used to connect to the database")]
         [ConnectionStringKey("Password")]
         public string Password { get; set; }
 
+        /// <summary>
+        /// Hostname of the database server
+        /// </summary>
         [Required]
         [DefaultValue("localhost")]
+        [Description("Hostname of the database server")]
         [ConnectionStringKey("Host")]
         public string Host { get; set; }
 
+        /// <summary>
+        /// Port of the database server
+        /// </summary>
         [Required]
         [DefaultValue(5432)]
+        [Description("Port of the database server")]
         [ConnectionStringKey("Port")]
         public int Port { get; set; }
     }

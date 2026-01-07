@@ -18,13 +18,28 @@ namespace Moryx.Model.Sqlite
         /// <inheritdoc />
         public override string ConfiguratorType => typeof(SqliteModelConfigurator).AssemblyQualifiedName;
 
-        [Required, DefaultValue("./db/<DatabaseName>.db")]
+        /// <summary>
+        /// Path to the database file
+        /// </summary>
+        [Required]
+        [DefaultValue("./db/<DatabaseName>.db")]
+        [Description("Path to the database file")]
         [ConnectionStringKey("Data Source")]
         public string DataSource { get; set; }
 
-        [ConnectionStringKey("Mode"), DefaultValue(SqliteOpenMode.ReadWrite)]
+        /// <summary>
+        /// Connection mode that will be used when opening a connection
+        /// </summary>
+        [DefaultValue(SqliteOpenMode.ReadWrite)]
+        [Description("Connection mode that will be used when opening a connection")]
+        [ConnectionStringKey("Mode")]
         public SqliteOpenMode OpenMode { get; set; }
 
+        /// <summary>
+        /// Caching mode that will be used when opening a connection
+        /// </summary>
+        [DefaultValue(SqliteCacheMode.Default)]
+        [Description("Caching mode that will be used when opening a connection")]
         [ConnectionStringKey("Cache")]
         public SqliteCacheMode CacheMode { get; set; }
     }
