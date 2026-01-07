@@ -6,7 +6,6 @@ using System.Data.Common;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
-using Moryx.Modules;
 
 namespace Moryx.Model.Sqlite
 {
@@ -14,7 +13,6 @@ namespace Moryx.Model.Sqlite
     /// Used to configure, create and update data models
     /// </summary>
     [DisplayName("SQLite Connector")]
-    [ExpectedConfig(typeof(SqliteDatabaseConfig))]
     public sealed class SqliteModelConfigurator : ModelConfiguratorBase<SqliteDatabaseConfig>
     {
         /// <inheritdoc />

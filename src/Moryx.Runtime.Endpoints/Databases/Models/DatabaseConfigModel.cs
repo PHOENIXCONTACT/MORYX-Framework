@@ -16,10 +16,13 @@ namespace Moryx.Runtime.Endpoints.Databases.Models
         public string ConfiguratorType { get; set; }
 
         /// <summary>
+        /// Connection string of the database.
+        /// </summary>
+        public string ConnectionString { get; set; }
+
+        /// <summary>
         /// Configuration of the database model.
         /// </summary>
         public Entry Properties { get; set; }
-
-        public string ConnectionString { get; set; }
     }
 }

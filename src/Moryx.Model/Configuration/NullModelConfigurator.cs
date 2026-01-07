@@ -7,12 +7,6 @@ using Moryx.Modules;
 
 namespace Moryx.Model.Configuration
 {
-    public class NullDatabaseConfig : DatabaseConfig
-    {
-        /// <inheritdoc />
-        public override string ConfiguratorType => typeof(NullModelConfigurator).AssemblyQualifiedName;
-    }
-
     /// <summary>
     /// Null implementation of the <see cref="ModelConfiguratorBase{TConfig}"/>
     /// </summary>

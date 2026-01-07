@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
-using Moryx.Modules;
 using Npgsql;
 
 namespace Moryx.Model.PostgreSQL
@@ -14,7 +13,6 @@ namespace Moryx.Model.PostgreSQL
     /// Used to configure, create and update data models
     /// </summary>
     [DisplayName("PostgreSQL Connector")]
-    [ExpectedConfig(typeof(NpgsqlDatabaseConfig))]
     public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase<NpgsqlDatabaseConfig>
     {
         /// <inheritdoc />

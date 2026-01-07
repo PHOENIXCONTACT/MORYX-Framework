@@ -369,7 +369,7 @@ Old version:
     "Database": "ProcessContext",
     "ConnectionString": "Data Source=./db/ProcessContext.db;Mode=ReadWrite;"
   },
-  "ConfiguratorTypename": "Moryx.Model.Sqlite.SqliteModelConfigurator, Moryx.Model.Sqlite, Version=10.0.0.0, Culture=neutral, PublicKeyToken=null",
+  "ConfiguratorTypename": "Moryx.Model.Sqlite.SqliteModelConfigurator, Moryx.Model.Sqlite, Version=8.0.0.0, Culture=neutral, PublicKeyToken=null",
   "ConfigState": "Valid"
 }
 ````
@@ -378,7 +378,7 @@ New version:
 
 ````json
 {
-  "ConfiguratorType": "Moryx.Model.Sqlite.SqliteModelConfigurator, Moryx.Model.Sqlite, Version=8.0.0.0, Culture=neutral, PublicKeyToken=null",
+  "ConfiguratorType": "Moryx.Model.Sqlite.SqliteModelConfigurator, Moryx.Model.Sqlite, Version=10.0.0.0, Culture=neutral, PublicKeyToken=null",
   "ConnectionString": "Data Source=./db/ProcessContext.db;Mode=ReadWrite;",
   "ConfigState": "Valid"
 }

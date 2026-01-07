@@ -19,7 +19,6 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
     {
         private DbContextManager _dbContextManager;
         private DatabaseConfigUpdateService _databaseConfigUpdateService;
-        private string _targetModelTypename;
         private Type _configuratorType;
 
         [SetUp]
@@ -32,7 +31,6 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
 
             _dbContextManager = new DbContextManager(configManager, new LoggerFactory());
             _databaseConfigUpdateService = new DatabaseConfigUpdateService(_dbContextManager);
-            _targetModelTypename = typeof(TestModelContext).FullName;
             _configuratorType = typeof(SqliteModelConfigurator);
         }
 
@@ -45,7 +43,7 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
             config.UpdateConnectionString();
 
             // Act
-            var result = _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config);
+            var result = _databaseConfigUpdateService.UpdateModel(typeof(TestModelContext), config);
 
             // Assert
             var updatedConfig = GetUpdatedConfig();
@@ -63,7 +61,7 @@ namespace Moryx.Runtime.Endpoints.Tests.Databases
             ValueProviderExecutor.Execute(config, new ValueProviderExecutorSettings().AddProviders([new DefaultValueAttributeProvider()]));
 
             // Act & Assert
-            Assert.DoesNotThrow(() => _databaseConfigUpdateService.UpdateModel(_targetModelTypename, config));
+            Assert.DoesNotThrow(() => _databaseConfigUpdateService.UpdateModel(typeof(TestModelContext), config));
         }
 
         private SqliteDatabaseConfig GetUpdatedConfig()

@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
 using System.ComponentModel;
 using System.Data.Common;
-using Moryx.Modules;
 
 namespace Moryx.Model.SqlServer;
 
@@ -14,7 +13,6 @@ namespace Moryx.Model.SqlServer;
 /// Used to configure, create and update data models
 /// </summary>
 [DisplayName("SqlServer Connector")]
-[ExpectedConfig(typeof(SqlServerDatabaseConfig))]
 public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServerDatabaseConfig>
 {
     /// <inheritdoc />

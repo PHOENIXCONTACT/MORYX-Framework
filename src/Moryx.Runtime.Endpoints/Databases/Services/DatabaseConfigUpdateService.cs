@@ -16,14 +16,8 @@ namespace Moryx.Runtime.Endpoints.Databases.Services
             _dbContextManager = dbContextManager;
         }
 
-        public Type UpdateModel(string targetModel, DatabaseConfig config)
+        public Type UpdateModel(Type dbContextType, DatabaseConfig config)
         {
-            var dbContextType = _dbContextManager.Contexts.First(c => c.FullName == targetModel);
-
-            var match = _dbContextManager.GetConfigurator(dbContextType);
-            if (match == null)
-                throw new NotFoundException($"Configurator with target model \"{targetModel}\" could not be found");
-
             var configuratorType = Type.GetType(config.ConfiguratorType);
 
             if (string.IsNullOrEmpty(config.ConnectionString))
