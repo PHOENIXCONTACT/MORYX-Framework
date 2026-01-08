@@ -20,7 +20,7 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
     IFacadeContainer<IResourceTypeTree>,
     IFacadeContainer<INotificationSource>
 {
-    internal const string ModuleName = "ResourceManager";
+    private const string ModuleName = "ResourceManager";
 
     /// <summary>
     /// Name of this module
@@ -30,13 +30,13 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
     /// <summary>
     /// Generic component to access every data model
     /// </summary>
-    public IDbContextManager DbContextManager { get; }
+    private readonly IDbContextManager _dbContextManager;
 
     /// <inheritdoc />
-    public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
+    public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager dbContextManager)
         : base(containerFactory, configManager, loggerFactory)
     {
-        DbContextManager = contextManager;
+        _dbContextManager = dbContextManager;
     }
 
     /// <summary>
@@ -46,7 +46,7 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
     {
         // Extend container
         Container.RegisterNotifications();
-        Container.ActivateDbContexts(DbContextManager);
+        Container.ActivateDbContexts(_dbContextManager);
 
         // Register imports
         Container

@@ -29,25 +29,25 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
     /// <summary>
     /// The module's name.
     /// </summary>
-    public const string ModuleName = "ProcessEngine";
+    private const string ModuleName = "ProcessEngine";
 
     /// <inheritdoc />
     public override string Name => ModuleName;
+
+    /// <summary>
+    /// Provides access to the ControlSystem model that stores jobs, processes and activities
+    /// </summary>
+    private readonly IDbContextManager _dbContextManager;
 
     /// <summary>
     /// Create a new instance of the module
     /// </summary>
     public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager dbContextManager) : base(containerFactory, configManager, loggerFactory)
     {
-        DbContextManager = dbContextManager;
+        _dbContextManager = dbContextManager;
     }
 
     #region Generated imports
-
-    /// <summary>
-    /// Provides access to the ControlSystem model that stores jobs, processes and activities
-    /// </summary>
-    public IDbContextManager DbContextManager { get; }
 
     /// <summary>
     /// Resource management facade that allows communication with different hardware within
@@ -80,7 +80,7 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
         Container.RegisterNotifications();
 
         // Load database model into local container
-        Container.ActivateDbContexts(DbContextManager);
+        Container.ActivateDbContexts(_dbContextManager);
 
         // Register all imported components
         Container.SetInstance(ResourceManagement)

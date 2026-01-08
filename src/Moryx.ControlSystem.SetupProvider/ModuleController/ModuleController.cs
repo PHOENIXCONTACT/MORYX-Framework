@@ -16,13 +16,8 @@ namespace Moryx.ControlSystem.SetupProvider;
 [Description("SetupProvider to determine setup requirement and generate reconfiguration workplans")]
 public class ModuleController : ServerModuleBase<ModuleConfig>, IFacadeContainer<ISetupProvider>
 {
-    /// <summary>
-    /// The module's name.
-    /// </summary>
-    public const string ModuleName = "SetupProvider";
-
     /// <inheritdoc />
-    public override string Name => ModuleName;
+    public override string Name => "SetupProvider";
 
     /// <summary>
     /// Create new module instance

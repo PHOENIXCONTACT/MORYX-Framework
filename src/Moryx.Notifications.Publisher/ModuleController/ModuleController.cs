@@ -17,15 +17,13 @@ namespace Moryx.Notifications.Publisher;
 public class ModuleController : ServerModuleBase<ModuleConfig>,
     IFacadeContainer<INotificationPublisher>
 {
-    private const string ModuleName = "NotificationPublisher";
-
     /// <inheritdoc />
-    public override string Name => ModuleName;
+    public override string Name => "NotificationPublisher";
 
     /// <summary>
     /// Manager for creating configured DbContext instances
     /// </summary>
-    public IDbContextManager DbContextManager { get; }
+    private readonly IDbContextManager _dbContextManager;
 
     /// <summary>
     /// Notification facades from other modules
@@ -36,17 +34,17 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
     /// <summary>
     /// Creates a new instance of the module
     /// </summary>
-    public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
+    public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager dbContextManager)
         : base(containerFactory, configManager, loggerFactory)
     {
-        DbContextManager = contextManager;
+        _dbContextManager = dbContextManager;
     }
 
     /// <inheritdoc />
     protected override Task OnInitializeAsync(CancellationToken cancellationToken)
     {
         // Register global components
-        Container.ActivateDbContexts(DbContextManager);
+        Container.ActivateDbContexts(_dbContextManager);
 
         // Load additional processors
         Container.LoadComponents<INotificationProcessor>();

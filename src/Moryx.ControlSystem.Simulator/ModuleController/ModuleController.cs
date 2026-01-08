@@ -17,11 +17,10 @@ namespace Moryx.ControlSystem.Simulator;
 [Description("Module to handle orders provided by several plugins e.g. Hydra or Web.")]
 public class ModuleController : ServerModuleBase<ModuleConfig>
 {
-    internal const string ModuleName = "MachineSimulator";
     /// <summary>
     /// Name of this module
     /// </summary>
-    public override string Name => ModuleName;
+    public override string Name => "MachineSimulator";
 
     /// <summary>
     /// Resource management to access machines

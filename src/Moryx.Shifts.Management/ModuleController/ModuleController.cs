@@ -10,6 +10,8 @@ using Moryx.Model;
 using Moryx.Operators;
 using Moryx.Runtime.Modules;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
 namespace Moryx.Shifts.Management;
 
 /// <summary>
@@ -18,19 +20,18 @@ namespace Moryx.Shifts.Management;
 [Description("Manages shifts")]
 public class ModuleController : ServerModuleBase<ModuleConfig>, IFacadeContainer<IShiftManagement>
 {
-    /// <summary>
-    /// The module's name.
-    /// </summary>
-    public const string ModuleName = "Shift Management";
-
     /// <inheritdoc />
-    public override string Name => ModuleName;
+    public override string Name => "Shift Management";
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    /// <summary>
+    /// Generic component to manage database contexts
+    /// </summary>
+    private readonly IDbContextManager _dbContextManager;
+
     public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager dbContextManager)
         : base(containerFactory, configManager, loggerFactory)
     {
-        DbContextManager = dbContextManager;
+        _dbContextManager = dbContextManager;
     }
 
     [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
@@ -38,18 +39,12 @@ public class ModuleController : ServerModuleBase<ModuleConfig>, IFacadeContainer
 
     [RequiredModuleApi(IsStartDependency = true, IsOptional = false)]
     public IOperatorManagement OperatorManagement { get; set; }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
-    /// <summary>
-    /// Generic component to manage database contexts
-    /// </summary>
-    public IDbContextManager DbContextManager { get; }
 
     /// <inheritdoc />
     protected override Task OnInitializeAsync(CancellationToken cancellationToken)
     {
         Container
-            .ActivateDbContexts(DbContextManager)
+            .ActivateDbContexts(_dbContextManager)
             .SetInstance(ResourceManagement)
             .SetInstance(OperatorManagement);
         return Task.CompletedTask;

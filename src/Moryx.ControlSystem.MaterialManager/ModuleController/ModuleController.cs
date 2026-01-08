@@ -18,11 +18,6 @@ namespace Moryx.ControlSystem.MaterialManager;
 public class ModuleController : ServerModuleBase<ModuleConfig>
 {
     /// <summary>
-    /// The module's name.
-    /// </summary>
-    public const string ModuleName = "MaterialManager";
-
-    /// <summary>
     /// Create new module instance
     /// </summary>
     public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) : base(containerFactory, configManager, loggerFactory)
@@ -30,7 +25,7 @@ public class ModuleController : ServerModuleBase<ModuleConfig>
     }
 
     /// <inheritdoc />
-    public override string Name => ModuleName;
+    public override string Name => "MaterialManager";
 
     #region Generated imports
 

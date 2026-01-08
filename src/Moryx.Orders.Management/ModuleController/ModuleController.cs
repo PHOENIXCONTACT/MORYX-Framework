@@ -28,16 +28,16 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
     internal const string ModuleName = "OrderManagement";
 
     /// <summary>
+    /// Generic component to manage database contexts
+    /// </summary>
+    private readonly IDbContextManager _dbContextManager;
+
+    /// <summary>
     /// Name of this module
     /// </summary>
     public override string Name => ModuleName;
 
     #region Imports
-
-    /// <summary>
-    /// Generic component to manage database contexts
-    /// </summary>
-    public IDbContextManager DbContextManager { get; }
 
     /// <summary>
     /// Product management to handle products for the orders
@@ -65,10 +65,10 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
 
     #endregion
 
-    public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
+    public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager dbContextManager)
         : base(containerFactory, configManager, loggerFactory)
     {
-        DbContextManager = contextManager;
+        _dbContextManager = dbContextManager;
     }
 
     #region State transition
@@ -79,7 +79,7 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
     protected override Task OnInitializeAsync(CancellationToken cancellationToken)
     {
         Container.RegisterNotifications();
-        Container.ActivateDbContexts(DbContextManager);
+        Container.ActivateDbContexts(_dbContextManager);
 
         Container.SetInstance(ProductManagement)
             .SetInstance(JobManagement)

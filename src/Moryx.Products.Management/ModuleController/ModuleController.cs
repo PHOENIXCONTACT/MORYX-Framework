@@ -19,6 +19,7 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
     IFacadeContainer<IWorkplans>
 {
     internal const string ModuleName = "ProductManager";
+
     /// <summary>
     /// Name of this module
     /// </summary>
@@ -27,7 +28,7 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
     /// <summary>
     /// Generic component to access every data model
     /// </summary>
-    public IDbContextManager DbContextManager { get; }
+    private readonly IDbContextManager _dbContextManager;
 
     /// <summary>
     /// Create new module instance
@@ -35,7 +36,7 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
     public ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager contextManager)
         : base(containerFactory, configManager, loggerFactory)
     {
-        DbContextManager = contextManager;
+        _dbContextManager = contextManager;
     }
 
     /// <summary>
@@ -45,7 +46,7 @@ public class ModuleController : ServerModuleBase<ModuleConfig>,
     {
         // Extend container
         Container
-            .ActivateDbContexts(DbContextManager);
+            .ActivateDbContexts(_dbContextManager);
 
         // Register imports
         Container.SetInstance(ConfigManager);
