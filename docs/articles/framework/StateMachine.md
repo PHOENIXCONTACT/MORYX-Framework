@@ -67,7 +67,7 @@ public class MyContext : IStateContext
 
     public void Initial()
     {
-        StateMachine.Initialize(this).With<MyStateBase>();
+        StateMachine.ForContext(this).With<MyStateBase>();
         //State is not Initial = A
         _currentValue = 0;
     }
@@ -219,12 +219,12 @@ The state machine will be initialized with the static helper class [StateMachine
 ````cs
 private void InitializeMachine()
 {
-    StateMachine.Initialize(this).With<MyStateBase>();
+    StateMachine.ForContext(this).With<MyStateBase>();
 }
 
 private async Task InitializeMachineAsync()
 {
-    await StateMachine.Initialize(this).WithAsync<MyAsyncStateBase>();
+    await StateMachine.ForAsyncContext(this).WithAsync<MyAsyncStateBase>();
 }
 ````
 
@@ -237,12 +237,27 @@ Additionally a `stateKey` can be given to the method.
 private void ReloadMachine()
 {
     // Get the key of current state
-    var key = _state.Key;
+    var currentStateKey = _state.Key;
 
     // ... save key to db or somewhere else
 
     // Reload the state with the saved key
-    StateMachine.Reload(this, key).With<MyStateBase>();
+    StateMachine.ForContext(this).With<MyStateBase>(currentStateKey);
+}
+````
+
+For async state machines:
+
+````cs
+private async Task ReloadMachineAsync()
+{
+    // Get the key of current state
+    var currentStateKey = _state.Key;
+
+    // ... save key to db or somewhere else
+
+    // Reload the state with the saved key
+    StateMachine.ForAsyncContext(this, key).WithAsync<MyAsyncStateBase>(currentStateKey);
 }
 ````
 

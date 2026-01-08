@@ -98,7 +98,7 @@ public class TcpListenerConnection : IBinaryConnection, IStateContext
         else
             throw new FormatException($"Failed to parse IPAddress: {_config.IpAddress}");
 
-        StateMachine.Initialize(this).With<ServerStateBase>();
+        StateMachine.ForContext(this).With<ServerStateBase>();
     }
 
     /// <summary>

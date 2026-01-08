@@ -32,6 +32,12 @@ Due to the reduction of unnecessary interfaces, `IState` was removed and `StateB
 The `StateMachine` class was extended by `WithAsync()` and `ForceAsync()`. The `AsyncStateBase` provides async all the way: `NextStateAsync()`, `OnEnterAsync()`, `OnExitAsync`.\
 **Upgrade hint:** Replace `StateBase<TContext>` by `SyncStateBase<TContext>`.
 
+The `StateMachine.Initialize` method was renamed to `StateMachine.ForContext` to better reflect its purpose. Additionally, a new method `ForAsyncContext` was introduced to create an asynchronous state machines.
+
+The `StateMachine.Reload` methods were merged into `StateMachine.With` which makes it possible to provide the initial state during initialization. Additionally, a new method `WithAsync` was introduced to create an asynchronous state machines including overload for providing an initial state.
+
+````cs
+
 The same convention was applied to `DriverState`. It was renamed to `SyncDriverState` and a new implementation `AsyncDriverState` was added with full async support.\
 **Upgrade hint:** Replace `DriverState<TContext>` by `SyncDriverState<TContext>`.
 
@@ -280,8 +286,6 @@ SET "Type" = 'Moryx.Resources.VisualInstructions.VisualInstructor'
 WHERE "Type" = 'Moryx.Resources.AssemblyInstruction.VisualInstructor';
 ````
 
-
-
 ### Replaced result of visual instructions with dedicated result object
 
 In *Moryx.Factory* **6.3** and **8.1** we introduced the new result object and optional extended APIs. The result object solved issues caused by localization of the different results. With **Moryx 10** we remove all old APIs based on strings.
@@ -397,7 +401,7 @@ New version:
 
 ### Namespaces
 
-- `Moryx.Model.*.Attributes` have been merged into `Moryx.Model.*` 
+- `Moryx.Model.*.Attributes` have been merged into `Moryx.Model.*`
 
 ## Other model adjustments
 

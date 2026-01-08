@@ -56,7 +56,7 @@ public abstract class ServerModuleBase<TConf> : IServerModule, IServerModuleStat
         LoggerFactory = loggerFactory;
         Logger = LoggerFactory.CreateLogger(GetType().Namespace);
 
-        StateMachine.InitializeAsync((IServerModuleStateContext)this).WithAsync<ServerModuleStateBase>().Wait();
+        StateMachine.ForAsyncContext((IServerModuleStateContext)this).WithAsync<ServerModuleStateBase>().Wait();
     }
 
     #region ValidateHealthState

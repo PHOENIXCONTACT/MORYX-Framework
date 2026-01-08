@@ -71,12 +71,12 @@ internal sealed class SetupJobData : JobDataBase, ISetupJobData, INotificationSe
 
     public SetupJobData(IWorkplanRecipe recipe) : base(recipe, recipe.Workplan.Steps.Count())
     {
-        StateMachine.Initialize(this).With<SetupJobStateBase>();
+        StateMachine.ForContext(this).With<SetupJobStateBase>();
     }
 
     public SetupJobData(IWorkplanRecipe recipe, JobEntity entity) : base(recipe, entity)
     {
-        StateMachine.Reload(this, entity.State).With<SetupJobStateBase>();
+        StateMachine.ForContext(this).With<SetupJobStateBase>(entity.State);
     }
 
     public void UpdateSetup(SetupRecipe updatedRecipe)
@@ -94,7 +94,7 @@ internal sealed class SetupJobData : JobDataBase, ISetupJobData, INotificationSe
             // resolve type of current disabled step
             foreach (var oldDisabledStepId in base.Recipe.DisabledSteps)
             {
-                // find task in current recipe 
+                // find task in current recipe
                 var disabledStep = base.Recipe.Workplan.Steps.First(step => step.Id == oldDisabledStepId);
                 // find same task in new recipe
                 var step = recipe.Workplan.Steps.FirstOrDefault(step => step.GetType() == disabledStep.GetType());

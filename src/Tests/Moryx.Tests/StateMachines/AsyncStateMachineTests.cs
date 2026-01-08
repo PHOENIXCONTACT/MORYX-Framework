@@ -75,18 +75,18 @@ public class AsyncStateMachineTests
     }
 
 
-    [Test]
-    public async Task Reload()
+    [Test(Description = "Create a StateMachine with a specific initial state key.")]
+    public async Task CreateWithSpecificInitialState()
     {
         // Assert
         var context = new MyAsyncContext();
-        await StateMachine.InitializeAsync(context).WithAsync<MyAsyncStateBase>();
+        await StateMachine.ForAsyncContext(context).WithAsync<MyAsyncStateBase>();
         await context.State.AtoBAsync();
 
         // Act
         var reloadedContext = new MyAsyncContext();
         var bkey = context.State.Key;
-        await StateMachine.ReloadAsync(reloadedContext, bkey).WithAsync<MyAsyncStateBase>();
+        await StateMachine.ForAsyncContext(reloadedContext).WithAsync<MyAsyncStateBase>(bkey);
 
         // Assert
         Assert.ThrowsAsync<InvalidOperationException>(() => reloadedContext.State.InitialAsync());
@@ -146,7 +146,7 @@ public class AsyncStateMachineTests
     private static async Task<MyAsyncContext> CreateContext()
     {
         var context = new MyAsyncContext();
-        await StateMachine.InitializeAsync(context).WithAsync<MyAsyncStateBase>();
+        await StateMachine.ForAsyncContext(context).WithAsync<MyAsyncStateBase>();
 
         return context;
     }
