@@ -4,9 +4,6 @@
     <Project Path="src/Moryx.Resources.Benchmarking/Moryx.Resources.Benchmarking.csproj" />
     <Project Path="src/Moryx.Resources.BenchmarkSetup/Moryx.Benchmarking.Setups.csproj" />
   </Folder>
-  <Folder Name="/CommandCenter/">
-    <Project Path="src/Moryx.CommandCenter.Web/Moryx.CommandCenter.Web.csproj" />
-  </Folder>
   <Folder Name="/ControlSystem/">
     <Project Path="src/Moryx.ControlSystem.Jobs.Endpoints/Moryx.ControlSystem.Jobs.Endpoints.csproj" />
     <Project Path="src/Moryx.ControlSystem.MaterialManager/Moryx.ControlSystem.MaterialManager.csproj" />
@@ -15,20 +12,15 @@
     <Project Path="src/Moryx.ControlSystem.Processes.Endpoints/Moryx.ControlSystem.Processes.Endpoints.csproj" />
     <Project Path="src/Moryx.ControlSystem.SetupProvider/Moryx.ControlSystem.SetupProvider.csproj" />
     <Project Path="src/Moryx.ControlSystem.Simulator/Moryx.ControlSystem.Simulator.csproj" />
+    <Project Path="src/Moryx.ControlSystem/Moryx.ControlSystem.csproj" />
   </Folder>
   <Folder Name="/Drivers/">
     <Project Path="src/Moryx.Drivers.Mqtt/Moryx.Drivers.Mqtt.csproj" />
     <Project Path="src/Moryx.Drivers.OpcUa/Moryx.Drivers.OpcUa.csproj" />
     <Project Path="src/Moryx.Drivers.Simulation/Moryx.Drivers.Simulation.csproj" />
   </Folder>
-  <Folder Name="/Factory/">
-    <Project Path="src/Moryx.ControlSystem/Moryx.ControlSystem.csproj" />
-    <Project Path="src/Moryx.Factory/Moryx.Factory.csproj" />
-    <Project Path="src/Moryx.Orders/Moryx.Orders.csproj" />
-    <Project Path="src/Moryx.ProcessData/Moryx.ProcessData.csproj" />
-    <Project Path="src/Moryx.Users/Moryx.Users.csproj" />
-  </Folder>
   <Folder Name="/FactoryMonitor/">
+    <Project Path="src/Moryx.Factory/Moryx.Factory.csproj" />
     <Project Path="src/Moryx.FactoryMonitor.Endpoints/Moryx.FactoryMonitor.Endpoints.csproj" />
     <Project Path="src/Moryx.FactoryMonitor.Web/Moryx.FactoryMonitor.Web.csproj" />
   </Folder>
@@ -53,6 +45,7 @@
     <Project Path="src/Moryx.Notifications.Endpoints/Moryx.Notifications.Endpoints.csproj" />
     <Project Path="src/Moryx.Notifications.Publisher/Moryx.Notifications.Publisher.csproj" />
     <Project Path="src/Moryx.Notifications.Web/Moryx.Notifications.Web.csproj" />
+    <Project Path="src/Moryx.Notifications/Moryx.Notifications.csproj" />
   </Folder>
   <Folder Name="/Operators/">
     <Project Path="src/Moryx.Operators.Endpoints/Moryx.Operators.Endpoints.csproj" />
@@ -63,11 +56,13 @@
     <Project Path="src/Moryx.Shifts.Management/Moryx.Shifts.Management.csproj" />
     <Project Path="src/Moryx.Shifts.Web/Moryx.Shifts.Web.csproj" />
     <Project Path="src/Moryx.Shifts/Moryx.Shifts.csproj" />
+    <Project Path="src/Moryx.Users/Moryx.Users.csproj" />
   </Folder>
   <Folder Name="/Orders/">
     <Project Path="src/Moryx.Orders.Endpoints/Moryx.Orders.Endpoints.csproj" />
     <Project Path="src/Moryx.Orders.Management/Moryx.Orders.Management.csproj" />
     <Project Path="src/Moryx.Orders.Web/Moryx.Orders.Web.csproj" />
+    <Project Path="src/Moryx.Orders/Moryx.Orders.csproj" />
   </Folder>
   <Folder Name="/ProcessData/">
     <Project Path="src/Moryx.ProcessData.Adapter.NotificationPublisher/Moryx.ProcessData.Adapter.NotificationPublisher.csproj" />
@@ -78,6 +73,7 @@
     <Project Path="src/Moryx.ProcessData.InfluxDbListener/Moryx.ProcessData.InfluxDbListener.csproj" />
     <Project Path="src/Moryx.ProcessData.Monitor/Moryx.ProcessData.Monitor.csproj" />
     <Project Path="src/Moryx.ProcessData.SpreadsheetsListener/Moryx.ProcessData.SpreadsheetsListener.csproj" />
+    <Project Path="src/Moryx.ProcessData/Moryx.ProcessData.csproj" />
   </Folder>
   <Folder Name="/Products/">
     <Project Path="src/Moryx.AbstractionLayer.Products.Endpoints/Moryx.AbstractionLayer.Products.Endpoints.csproj" />
@@ -93,6 +89,7 @@
   </Folder>
   <Folder Name="/Runtime/">
     <Project Path="src/Moryx.AspNetCore/Moryx.AspNetCore.csproj" />
+    <Project Path="src/Moryx.CommandCenter.Web/Moryx.CommandCenter.Web.csproj" />
     <Project Path="src/Moryx.Runtime.Endpoints/Moryx.Runtime.Endpoints.csproj" />
     <Project Path="src/Moryx.Runtime.Kernel/Moryx.Runtime.Kernel.csproj" />
     <Project Path="src/Moryx.Runtime/Moryx.Runtime.csproj" />
@@ -179,7 +176,6 @@
   <Project Path="src/Moryx.Communication.Serial/Moryx.Communication.Serial.csproj" />
   <Project Path="src/Moryx.Container/Moryx.Container.csproj" />
   <Project Path="src/Moryx.Launcher/Moryx.Launcher.csproj" />
-  <Project Path="src/Moryx.Notifications/Moryx.Notifications.csproj" />
   <Project Path="src/Moryx/Moryx.csproj" />
   <Project Path="src/StartProject.Asp/StartProject.Asp.csproj" />
   <Properties Name="ExtensibilityGlobals" Scope="PostLoad">
