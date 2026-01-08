@@ -64,7 +64,7 @@ public class WorkplanEditingController : ControllerBase
         return ModelConverter.ConvertSession(session);
     }
 
-    private Workplan CreateNew()
+    private static Workplan CreateNew()
     {
         var workplan = new Workplan { Name = "New workplan", State = WorkplanState.New };
         workplan.Add(new Connector { Name = "Start", Classification = NodeClassification.Start, Position = new Point(200, 100) });
@@ -131,13 +131,13 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpPost("sessions/{sessionId}/save")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
-    public ActionResult<WorkplanSessionModel> SaveSession(
+    public async Task<ActionResult<WorkplanSessionModel>> SaveSession(
         [FromRoute] string sessionId,
         [FromBody] WorkplanSessionModel sessionModel)
     {
         var session = _workplanEditing.OpenSession(sessionId);
         UpdateSession(sessionModel, session);
-        _workplans.SaveWorkplanAsync(session.Workplan);
+        await _workplans.SaveWorkplanAsync(session.Workplan);
         return ModelConverter.ConvertSession(session);
     }
 
@@ -151,7 +151,7 @@ public class WorkplanEditingController : ControllerBase
 
     [HttpPost("sessions/{sessionId}/nodes")]
     [Authorize(Policy = WorkplanPermissions.CanEdit)]
-    public ActionResult<WorkplanNodeModel> AddStep(
+    public async Task<ActionResult<WorkplanNodeModel>> AddStep(
         [FromRoute] string sessionId,
         [FromBody] WorkplanStepRecipe recipe
     )
@@ -161,7 +161,7 @@ public class WorkplanEditingController : ControllerBase
 
         if (recipe.Classification == WorkplanNodeClassification.Subworkplan)
         {
-            var workplan = _workplans.LoadWorkplanAsync(recipe.SubworkplanId);
+            var workplan = await _workplans.LoadWorkplanAsync(recipe.SubworkplanId);
             step = (IWorkplanStep)Activator.CreateInstance(stepType, workplan);
         }
         else if (recipe.Constructor == null)
