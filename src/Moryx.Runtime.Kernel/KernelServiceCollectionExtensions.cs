@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.DependencyInjection;
@@ -8,17 +8,19 @@ using Moryx.Runtime.Modules;
 using Moryx.Threading;
 using Moryx.Tools;
 
-namespace Moryx.Runtime.Kernel
+namespace Moryx.Runtime.Kernel;
+
+/// <summary>
+/// Contains <seealso cref="IServiceCollection"/> extensions to easily add MORYX to an Asp.Net Core application
+/// </summary>
+public static class KernelServiceCollectionExtensions
 {
-    /// <summary>
-    /// Contains <seealso cref="IServiceCollection"/> extensions to easily add MORYX to an Asp.Net Core application
-    /// </summary>
-    public static class KernelServiceCollectionExtensions
+    extension(IServiceCollection serviceCollection)
     {
         /// <summary>
         /// Link MORYX kernel to the service collection
         /// </summary>
-        public static void AddMoryxKernel(this IServiceCollection serviceCollection)
+        public void AddMoryxKernel()
         {
             // Register config manager
             serviceCollection.AddSingleton<ConfigManager>();
@@ -41,7 +43,7 @@ namespace Moryx.Runtime.Kernel
         /// <summary>
         /// Add MORYX modules to the service collection
         /// </summary>
-        public static void AddMoryxModules(this IServiceCollection serviceCollection)
+        public void AddMoryxModules()
         {
             // Find all module types in the app domain
             var modules = ReflectionTool.GetPublicClasses<IServerModule>();
@@ -73,22 +75,22 @@ namespace Moryx.Runtime.Kernel
         /// The MORYX Service can hook into the command line and gracefuly stop the modules when the user tries to close the window.
         /// <see cref="Moryx.Runtime.Kernel.MoryxHost"/>
         /// </summary>
-        public static void AddMoryxService(this IServiceCollection serviceCollection)
+        public void AddMoryxService()
         {
             serviceCollection.AddHostedService<MoryxHost>();
         }
+    }
 
-        /// <summary>
-        /// Use the moryx config manager
-        /// </summary>
-        public static IConfigManager UseMoryxConfigurations(this IServiceProvider serviceProvider, string configDirectory)
-        {
-            // Load config manager
-            var configManager = serviceProvider.GetRequiredService<ConfigManager>();
-            if (!Directory.Exists(configDirectory))
-                Directory.CreateDirectory(configDirectory);
-            configManager.ConfigDirectory = configDirectory;
-            return configManager;
-        }
+    /// <summary>
+    /// Use the moryx config manager
+    /// </summary>
+    public static IConfigManager UseMoryxConfigurations(this IServiceProvider serviceProvider, string configDirectory)
+    {
+        // Load config manager
+        var configManager = serviceProvider.GetRequiredService<ConfigManager>();
+        if (!Directory.Exists(configDirectory))
+            Directory.CreateDirectory(configDirectory);
+        configManager.ConfigDirectory = configDirectory;
+        return configManager;
     }
 }

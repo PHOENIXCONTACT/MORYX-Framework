@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
@@ -7,55 +7,54 @@ using Moryx.Container;
 using Moryx.Orders.Assignment;
 using Moryx.Orders.Management.Properties;
 
-namespace Moryx.Orders.Management.Assignment
+namespace Moryx.Orders.Management.Assignment;
+
+[Component(LifeCycle.Singleton, typeof(IOperationAssignStep), Name = nameof(ProductAssignStep))]
+internal class ProductAssignStep : IOperationAssignStep
 {
-    [Component(LifeCycle.Singleton, typeof(IOperationAssignStep), Name = nameof(ProductAssignStep))]
-    internal class ProductAssignStep : IOperationAssignStep
+    public IProductManagement ProductManagement { get; set; }
+
+    public IProductAssignment ProductAssignment { get; set; }
+
+    public void Start()
     {
-        public IProductManagement ProductManagement { get; set; }
+    }
 
-        public IProductAssignment ProductAssignment { get; set; }
+    public void Stop()
+    {
+    }
 
-        public void Start()
+    public async Task<bool> AssignStep(IOperationData operationData, IOperationLogger operationLogger)
+    {
+        var product = await ProductAssignment.SelectProductAsync(operationData.Operation, operationLogger, CancellationToken.None);
+        if (product == null)
         {
+            operationLogger.Log(LogLevel.Error, Strings.ProductAssignStep_Selection_Failed);
+            return false;
         }
 
-        public void Stop()
+        operationData.AssignProduct(product);
+        return true;
+    }
+
+    public async Task<bool> RestoreStep(IOperationData operationData, IOperationLogger operationLogger)
+    {
+        if (operationData.Product == null)
+            return false;
+
+        var productId = operationData.Product.Id;
+
+        ProductType product = null;
+        if (productId != 0)
+            product = await ProductManagement.LoadTypeAsync(operationData.Product.Id);
+
+        if (product == null)
         {
+            operationLogger.Log(LogLevel.Warning, Strings.ProductAssignStep_Selection_Failed);
+            return false;
         }
 
-        public async Task<bool> AssignStep(IOperationData operationData, IOperationLogger operationLogger)
-        {
-            var product = await ProductAssignment.SelectProductAsync(operationData.Operation, operationLogger, CancellationToken.None);
-            if (product == null)
-            {
-                operationLogger.Log(LogLevel.Error, Strings.ProductAssignStep_Selection_Failed);
-                return false;
-            }
-
-            operationData.AssignProduct(product);
-            return true;
-        }
-
-        public async Task<bool> RestoreStep(IOperationData operationData, IOperationLogger operationLogger)
-        {
-            if (operationData.Product == null)
-                return false;
-
-            var productId = operationData.Product.Id;
-
-            ProductType product = null;
-            if (productId != 0)
-                product = await ProductManagement.LoadTypeAsync(operationData.Product.Id);
-
-            if (product == null)
-            {
-                operationLogger.Log(LogLevel.Warning, Strings.ProductAssignStep_Selection_Failed);
-                return false;
-            }
-
-            operationData.AssignProduct(product);
-            return true;
-        }
+        operationData.AssignProduct(product);
+        return true;
     }
 }

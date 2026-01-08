@@ -1,20 +1,19 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Reflection;
 
-namespace Moryx.Model.Repositories.Proxy
+namespace Moryx.Model.Repositories.Proxy;
+
+internal class ParameterPropertyMap
 {
-    internal class ParameterPropertyMap
+    public ParameterPropertyMap(ParameterInfo parameter, PropertyInfo property)
     {
-        public ParameterPropertyMap(ParameterInfo parameter, PropertyInfo property)
-        {
-            Parameter = parameter;
-            Property = property;
-        }
-
-        public ParameterInfo Parameter { get; }
-
-        public PropertyInfo Property { get; }
+        Parameter = parameter;
+        Property = property;
     }
+
+    public ParameterInfo Parameter { get; }
+
+    public PropertyInfo Property { get; }
 }

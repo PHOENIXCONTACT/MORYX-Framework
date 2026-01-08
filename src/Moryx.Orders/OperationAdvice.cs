@@ -1,64 +1,63 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Orders
+namespace Moryx.Orders;
+
+/// <summary>
+/// Representation of an advice in a defined tote box
+/// </summary>
+public abstract class OperationAdvice : IPersistentObject
 {
     /// <summary>
-    /// Representation of an advice in a defined tote box
+    /// Creates a new instance of <see cref="OperationAdvice"/>
     /// </summary>
-    public abstract class OperationAdvice : IPersistentObject
+    protected OperationAdvice(string toteBoxNumber)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="OperationAdvice"/>
-        /// </summary>
-        protected OperationAdvice(string toteBoxNumber)
-        {
-            ToteBoxNumber = toteBoxNumber;
-        }
-
-        /// <summary>
-        /// Id of the current advice
-        /// </summary>
-        long IPersistentObject.Id { get; set; }
-
-        /// <summary>
-        /// The number of the tote box which was used to advice
-        /// </summary>
-        public string ToteBoxNumber { get; set; }
+        ToteBoxNumber = toteBoxNumber;
     }
 
     /// <summary>
-    /// Advice for pick parts in a defined tote box
+    /// Id of the current advice
     /// </summary>
-    public class PickPartAdvice : OperationAdvice
-    {
-        /// <summary>
-        /// Typed part for the pick part advice
-        /// </summary>
-        public ProductPart Part { get; set; }
-
-        /// <inheritdoc />
-        // ReSharper disable once SuggestBaseTypeForParameter
-        public PickPartAdvice(ProductPart part, string toteBoxNumber) : base(toteBoxNumber)
-        {
-            Part = part;
-        }
-    }
+    long IPersistentObject.Id { get; set; }
 
     /// <summary>
-    /// Advice for an order with an amount of parts within a defined tote box
+    /// The number of the tote box which was used to advice
     /// </summary>
-    public class OrderAdvice : OperationAdvice
-    {
-        /// <summary>
-        /// Amount of parts which are adviced in the given tote box
-        /// </summary>
-        public int Amount { get; set; }
+    public string ToteBoxNumber { get; set; }
+}
 
-        /// <inheritdoc />
-        public OrderAdvice(string toteBoxNumber, int amount) : base(toteBoxNumber)
-        {
-            Amount = amount;
-        }
+/// <summary>
+/// Advice for pick parts in a defined tote box
+/// </summary>
+public class PickPartAdvice : OperationAdvice
+{
+    /// <summary>
+    /// Typed part for the pick part advice
+    /// </summary>
+    public ProductPart Part { get; set; }
+
+    /// <inheritdoc />
+    // ReSharper disable once SuggestBaseTypeForParameter
+    public PickPartAdvice(ProductPart part, string toteBoxNumber) : base(toteBoxNumber)
+    {
+        Part = part;
+    }
+}
+
+/// <summary>
+/// Advice for an order with an amount of parts within a defined tote box
+/// </summary>
+public class OrderAdvice : OperationAdvice
+{
+    /// <summary>
+    /// Amount of parts which are adviced in the given tote box
+    /// </summary>
+    public int Amount { get; set; }
+
+    /// <inheritdoc />
+    public OrderAdvice(string toteBoxNumber, int amount) : base(toteBoxNumber)
+    {
+        Amount = amount;
     }
 }

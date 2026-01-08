@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations;
@@ -7,45 +7,44 @@ using Moryx.AbstractionLayer.Capabilities;
 using Moryx.ControlSystem.Capabilities;
 using Moryx.VisualInstructions;
 
-namespace Moryx.ControlSystem.Activities
+namespace Moryx.ControlSystem.Activities;
+
+/// <summary>
+/// Result enum representing the results of process removal activities
+/// </summary>
+public enum ProcessFixupResult
 {
     /// <summary>
-    /// Result enum representing the results of process removal activities
+    /// Process was removed
     /// </summary>
-    public enum ProcessFixupResult
+    [Display(Name = "Ok")]
+    Fixed = 0
+}
+
+/// <summary>
+/// Activity dispatched for broken processes
+/// </summary>
+[ActivityResults(typeof(ProcessFixupResult))]
+public class ProcessFixupActivity : Activity<VisualInstructionParameters>, IMountingActivity
+{
+    /// <inheritdoc />
+    public MountOperation Operation => MountOperation.Unmount;
+
+    /// <inheritdoc />
+    public override ProcessRequirement ProcessRequirement => ProcessRequirement.Required;
+
+    /// <inheritdoc />
+    public override ICapabilities RequiredCapabilities => new ProcessFixupCapabilities();
+
+    /// <inheritdoc />
+    protected override ActivityResult CreateResult(long resultNumber)
     {
-        /// <summary>
-        /// Process was removed
-        /// </summary>
-        [Display(Name = "Ok")]
-        Fixed = 0
+        return ActivityResult.Create((ProcessFixupResult)resultNumber);
     }
 
-    /// <summary>
-    /// Activity dispatched for broken processes
-    /// </summary>
-    [ActivityResults(typeof(ProcessFixupResult))]
-    public class ProcessFixupActivity : Activity<VisualInstructionParameters>, IMountingActivity
+    /// <inheritdoc />
+    protected override ActivityResult CreateFailureResult()
     {
-        /// <inheritdoc />
-        public MountOperation Operation => MountOperation.Unmount;
-
-        /// <inheritdoc />
-        public override ProcessRequirement ProcessRequirement => ProcessRequirement.Required;
-
-        /// <inheritdoc />
-        public override ICapabilities RequiredCapabilities => new ProcessFixupCapabilities();
-
-        /// <inheritdoc />
-        protected override ActivityResult CreateResult(long resultNumber)
-        {
-            return ActivityResult.Create((ProcessFixupResult)resultNumber);
-        }
-
-        /// <inheritdoc />
-        protected override ActivityResult CreateFailureResult()
-        {
-            return ActivityResult.Create(ProcessFixupResult.Fixed);
-        }
+        return ActivityResult.Create(ProcessFixupResult.Fixed);
     }
 }

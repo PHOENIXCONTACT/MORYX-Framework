@@ -1,24 +1,23 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Generic;
 
-namespace Moryx.Communication.Sockets.IntegrationTests
+namespace Moryx.Communication.Sockets.IntegrationTests;
+
+public class ConnectionBuffer<TMessage> where TMessage : BinaryMessage
 {
-    public class ConnectionBuffer<TMessage> where TMessage : BinaryMessage
+    public ConnectionBuffer()
     {
-        public ConnectionBuffer()
-        {
-            Received = [];
-            LastStateChangeEvents = [];
-        }
-
-        public IBinaryConnection Connection { get; set; }
-
-        public List<TMessage> Received { get; }
-
-        public int Id { get; set; }
-
-        public List<BinaryConnectionState> LastStateChangeEvents { get; }
+        Received = [];
+        LastStateChangeEvents = [];
     }
+
+    public IBinaryConnection Connection { get; set; }
+
+    public List<TMessage> Received { get; }
+
+    public int Id { get; set; }
+
+    public List<BinaryConnectionState> LastStateChangeEvents { get; }
 }

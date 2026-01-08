@@ -1,20 +1,18 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.ControlSystem.Jobs;
 
-namespace Moryx.ControlSystem.ProcessEngine.Jobs
+namespace Moryx.ControlSystem.ProcessEngine.Jobs;
+
+/// <summary>
+/// Get jobs from the history like completed jobs
+/// </summary>
+internal interface IJobHistory
 {
     /// <summary>
-    /// Get jobs from the history like completed jobs
+    /// Returns a requested job from the history
     /// </summary>
-    internal interface IJobHistory
-    {
-        /// <summary>
-        /// Returns a requested job from the history
-        /// </summary>
-        /// <returns>The requested job or <c>null</c> if there is no job with the given ID.</returns>
-        Job Get(long jobId);
-    }
+    /// <returns>The requested job or <c>null</c> if there is no job with the given ID.</returns>
+    Job Get(long jobId);
 }
-

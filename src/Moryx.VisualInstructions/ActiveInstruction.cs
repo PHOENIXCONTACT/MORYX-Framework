@@ -1,38 +1,37 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.VisualInstructions;
 
-namespace Moryx.VisualInstructions
+namespace Moryx.VisualInstructions;
+
+/// <summary>
+/// Active instruction for a task
+/// </summary>
+public class ActiveInstruction
 {
     /// <summary>
-    /// Active instruction for a task
+    /// Runtime unique identifier of this instruction
     /// </summary>
-    public class ActiveInstruction
-    {
-        /// <summary>
-        /// Runtime unique identifier of this instruction
-        /// </summary>
-        public long Id { get; set; }
+    public long Id { get; set; }
 
-        /// <summary>
-        /// Title of the instruction
-        /// </summary>
-        public string Title { get; set; }
+    /// <summary>
+    /// Title of the instruction
+    /// </summary>
+    public string Title { get; set; }
 
-        /// <summary>
-        /// Items of the instruction
-        /// </summary>
-        public VisualInstruction[] Instructions { get; set; }
+    /// <summary>
+    /// Items of the instruction
+    /// </summary>
+    public VisualInstruction[] Instructions { get; set; }
 
-        /// <summary>
-        /// Optional input object
-        /// </summary>
-        public object Inputs { get; set; }
+    /// <summary>
+    /// Optional input object
+    /// </summary>
+    public object Inputs { get; set; }
 
-        /// <summary>
-        /// Possible results of the instruction
-        /// </summary>
-        public IReadOnlyList<InstructionResult> Results { get; set; } = Array.Empty<InstructionResult>();
-    }
+    /// <summary>
+    /// Possible results of the instruction
+    /// </summary>
+    public IReadOnlyList<InstructionResult> Results { get; set; } = Array.Empty<InstructionResult>();
 }

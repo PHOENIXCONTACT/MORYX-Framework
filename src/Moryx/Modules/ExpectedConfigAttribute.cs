@@ -1,25 +1,24 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Modules
+namespace Moryx.Modules;
+
+/// <summary>
+/// Attribute to decorate a <see cref="IPlugin"/> to receive a certain config type
+/// </summary>
+[AttributeUsage(AttributeTargets.Class)]
+public class ExpectedConfigAttribute : Attribute
 {
     /// <summary>
-    /// Attribute to decorate a <see cref="IPlugin"/> to receive a certain config type
+    /// Config type expected by this <see cref="IPlugin"/>
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
-    public class ExpectedConfigAttribute : Attribute
-    {
-        /// <summary>
-        /// Config type expected by this <see cref="IPlugin"/>
-        /// </summary>
-        public Type ExpectedConfigType { get; }
+    public Type ExpectedConfigType { get; }
 
-        /// <summary>
-        /// State that this <see cref="IPlugin"/> requires config instances of the given type
-        /// </summary>
-        public ExpectedConfigAttribute(Type configType)
-        {
-            ExpectedConfigType = configType;
-        }
+    /// <summary>
+    /// State that this <see cref="IPlugin"/> requires config instances of the given type
+    /// </summary>
+    public ExpectedConfigAttribute(Type configType)
+    {
+        ExpectedConfigType = configType;
     }
 }

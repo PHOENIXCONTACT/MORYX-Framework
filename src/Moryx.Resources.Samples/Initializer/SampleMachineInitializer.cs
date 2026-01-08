@@ -1,64 +1,63 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Modules;
 
-namespace Moryx.Resources.Samples.Initializer
+namespace Moryx.Resources.Samples.Initializer;
+
+[ResourceInitializer(nameof(SampleMachineInitializer))]
+[ExpectedConfig(typeof(SampleMachineInitializerConfig))]
+public class SampleMachineInitializer : ResourceInitializerBase<SampleMachineInitializerConfig>
 {
-    [ResourceInitializer(nameof(SampleMachineInitializer))]
-    [ExpectedConfig(typeof(SampleMachineInitializerConfig))]
-    public class SampleMachineInitializer : ResourceInitializerBase<SampleMachineInitializerConfig>
+    /// <inheritdoc />
+    public override string Name => "Sample Machine";
+
+    /// <inheritdoc />
+    public override string Description => "Creates a sample machine and two cells";
+
+    /// <inheritdoc />
+    public override Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters, CancellationToken cancellationToken)
     {
-        /// <inheritdoc />
-        public override string Name => "Sample Machine";
-
-        /// <inheritdoc />
-        public override string Description => "Creates a sample machine and two cells";
-
-        /// <inheritdoc />
-        public override Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters, CancellationToken cancellationToken)
+        var machine = graph.Instantiate<Machine>();
+        machine.Name = Config.MachineName;
+        machine.AdditionalInformation = new MachineInfos
         {
-            var machine = graph.Instantiate<Machine>();
-            machine.Name = Config.MachineName;
-            machine.AdditionalInformation = new MachineInfos
-            {
-                MaximumNumberOperator = 4,
-                TechnicalStaff = "Max Mustermann",
-            };
-            machine.ProductionHours = 50000;
-            machine.Description = "This is a description";
-            machine.Values = new List<int> { 1, 2, 3, 4 };
-            machine.PossibleTechnicalStaffs = new List<TechnicalStaff>()
-            {
-                new() {
-                    FirstName = "Max",
-                    LastName = "Mustermann",
-                    StaffNumber = 0815
-                },
-                new() {
-                    FirstName = "Flynn",
-                    LastName = "Rider",
-                    StaffNumber = 4711
-                }
-            };
+            MaximumNumberOperator = 4,
+            TechnicalStaff = "Max Mustermann",
+        };
+        machine.ProductionHours = 50000;
+        machine.Description = "This is a description";
+        machine.Values = new List<int> { 1, 2, 3, 4 };
+        machine.PossibleTechnicalStaffs = new List<TechnicalStaff>()
+        {
+            new() {
+                FirstName = "Max",
+                LastName = "Mustermann",
+                StaffNumber = 0815
+            },
+            new() {
+                FirstName = "Flynn",
+                LastName = "Rider",
+                StaffNumber = 4711
+            }
+        };
 
-            machine.MachineType = MachineType.halfAutomatic;
-            machine.Power = 234.1;
+        machine.MachineType = MachineType.halfAutomatic;
+        machine.Power = 234.1;
 
-            var someGate = graph.Instantiate<GateResource>();
-            someGate.Name = "Some Gate";
+        var someGate = graph.Instantiate<GateResource>();
+        someGate.Name = "Some Gate";
 
-            someGate.Parent = machine;
-            machine.Children.Add(someGate);
+        someGate.Parent = machine;
+        machine.Children.Add(someGate);
 
-            var anotherGate = graph.Instantiate<GateResource>();
-            anotherGate.Name = "Another Gate";
+        var anotherGate = graph.Instantiate<GateResource>();
+        anotherGate.Name = "Another Gate";
 
-            anotherGate.Parent = machine;
-            machine.Children.Add(anotherGate);
+        anotherGate.Parent = machine;
+        machine.Children.Add(anotherGate);
 
-            return InitializedAsync([machine]);
-        }
+        return InitializedAsync([machine]);
     }
 }

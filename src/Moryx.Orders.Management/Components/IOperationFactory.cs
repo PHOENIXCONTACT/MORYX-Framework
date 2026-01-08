@@ -1,15 +1,14 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
 
-namespace Moryx.Orders.Management
-{
-    [PluginFactory]
-    internal interface IOperationFactory
-    {
-        IOperationData Create(IOperationSavingContext savingContext);
+namespace Moryx.Orders.Management;
 
-        void Destroy(IOperationData operationData);
-    }
+[PluginFactory]
+internal interface IOperationFactory
+{
+    IOperationData Create(IOperationSavingContext savingContext);
+
+    void Destroy(IOperationData operationData);
 }

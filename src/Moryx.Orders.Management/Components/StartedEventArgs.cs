@@ -1,26 +1,25 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Users;
 
-namespace Moryx.Orders.Management
+namespace Moryx.Orders.Management;
+
+/// <summary>
+/// Event args for started events
+/// </summary>
+internal class StartedEventArgs : OperationEventArgs
 {
     /// <summary>
-    /// Event args for started events
+    /// The user which started the operation
     /// </summary>
-    internal class StartedEventArgs : OperationEventArgs
-    {
-        /// <summary>
-        /// The user which started the operation
-        /// </summary>
-        public User User { get; }
+    public User User { get; }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="StartedEventArgs"/>
-        /// </summary>
-        public StartedEventArgs(IOperationData operationData, User user) : base(operationData)
-        {
-            User = user;
-        }
+    /// <summary>
+    /// Creates a new instance of <see cref="StartedEventArgs"/>
+    /// </summary>
+    public StartedEventArgs(IOperationData operationData, User user) : base(operationData)
+    {
+        User = user;
     }
 }

@@ -1,30 +1,28 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Moryx.ControlSystem.Assemble
+namespace Moryx.ControlSystem.Assemble;
+
+/// <summary>
+/// Default results for all "Assemble Activities"
+/// </summary>
+public enum AssembleActivityResult
 {
     /// <summary>
-    /// Default results for all "Assemble Activities"
+    /// OK
     /// </summary>
-    public enum AssembleActivityResult
-    {
-        /// <summary>
-        /// OK
-        /// </summary>
-        Success = 0,
+    Success = 0,
 
-        /// <summary>
-        /// The part is defect and has been removed
-        /// </summary>
-        [Display(Name = "Ausschuss")]
-        Failed = 1,
+    /// <summary>
+    /// The part is defect and has been removed
+    /// </summary>
+    [Display(Name = "Ausschuss")]
+    Failed = 1,
 
-        /// <summary>
-        /// A technical failure occured
-        /// </summary>
-        TechnicalError = 2,
-    }
+    /// <summary>
+    /// A technical failure occured
+    /// </summary>
+    TechnicalError = 2,
 }
-

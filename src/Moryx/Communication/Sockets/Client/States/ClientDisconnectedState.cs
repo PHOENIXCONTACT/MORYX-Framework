@@ -1,34 +1,33 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Communication.Sockets
+namespace Moryx.Communication.Sockets;
+
+internal class ClientDisconnectedState : ClientStateBase
 {
-    internal class ClientDisconnectedState : ClientStateBase
+    public ClientDisconnectedState(TcpClientConnection context, StateMap stateMap) : base(context, stateMap, BinaryConnectionState.Disconnected)
     {
-        public ClientDisconnectedState(TcpClientConnection context, StateMap stateMap) : base(context, stateMap, BinaryConnectionState.Disconnected)
-        {
-        }
+    }
 
-        public override void Reconnect(int delayMs)
+    public override void Reconnect(int delayMs)
+    {
+        if (delayMs > 0)
         {
-            if (delayMs > 0)
-            {
-                NextState(StateRetryConnect);
-                Context.ScheduleConnectTimer(delayMs);
-            }
-            else
-            {
-                NextState(StateConnecting);
-            }
+            NextState(StateRetryConnect);
+            Context.ScheduleConnectTimer(delayMs);
         }
-
-        public override void Connect()
+        else
         {
             NextState(StateConnecting);
         }
+    }
 
-        public override void Disconnect()
-        {
-        }
+    public override void Connect()
+    {
+        NextState(StateConnecting);
+    }
+
+    public override void Disconnect()
+    {
     }
 }

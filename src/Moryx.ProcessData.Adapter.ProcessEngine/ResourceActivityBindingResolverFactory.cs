@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Reflection;
@@ -6,53 +6,52 @@ using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Bindings;
 
-namespace Moryx.ProcessData.Adapter.ProcessEngine
+namespace Moryx.ProcessData.Adapter.ProcessEngine;
+
+internal class ResourceActivityBindingResolverFactory : ActivityBindingResolverFactory
 {
-    internal class ResourceActivityBindingResolverFactory : ActivityBindingResolverFactory
+    private readonly IResourceManagement _resourceManagement;
+
+    public ResourceActivityBindingResolverFactory(IResourceManagement resourceManagement)
     {
-        private readonly IResourceManagement _resourceManagement;
-
-        public ResourceActivityBindingResolverFactory(IResourceManagement resourceManagement)
-        {
-            _resourceManagement = resourceManagement;
-        }
-
-        protected override IBindingResolverChain CreateBaseResolver(string baseKey)
-        {
-            return baseKey switch
-            {
-                "Resource" => new TracingResourceResolver(_resourceManagement),
-                _ => base.CreateBaseResolver(baseKey)
-            };
-        }
+        _resourceManagement = resourceManagement;
     }
 
-    internal class TracingResourceResolver : BindingResolverBase
+    protected override IBindingResolverChain CreateBaseResolver(string baseKey)
     {
-        private readonly IResourceManagement _resourceManagement;
-
-        public TracingResourceResolver(IResourceManagement resourceManagement)
+        return baseKey switch
         {
-            _resourceManagement = resourceManagement;
-        }
+            "Resource" => new TracingResourceResolver(_resourceManagement),
+            _ => base.CreateBaseResolver(baseKey)
+        };
+    }
+}
 
-        protected override object Resolve(object source)
-        {
-            var tracing = ((Activity)source).Tracing.Transform<Tracing>();
-            if (tracing == null)
-                return null;
+internal class TracingResourceResolver : BindingResolverBase
+{
+    private readonly IResourceManagement _resourceManagement;
 
-            var proxy = _resourceManagement.GetResource<IResource>(tracing.ResourceId);
-            // Dirty hack to extract target
-            var property = proxy.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
-                .FirstOrDefault(p => p.Name == "Target");
-            var resource = (IResource)property.GetValue(proxy);
-            return resource;
-        }
+    public TracingResourceResolver(IResourceManagement resourceManagement)
+    {
+        _resourceManagement = resourceManagement;
+    }
 
-        protected override bool Update(object source, object value)
-        {
-            throw new System.NotImplementedException();
-        }
+    protected override object Resolve(object source)
+    {
+        var tracing = ((Activity)source).Tracing.Transform<Tracing>();
+        if (tracing == null)
+            return null;
+
+        var proxy = _resourceManagement.GetResource<IResource>(tracing.ResourceId);
+        // Dirty hack to extract target
+        var property = proxy.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+            .FirstOrDefault(p => p.Name == "Target");
+        var resource = (IResource)property.GetValue(proxy);
+        return resource;
+    }
+
+    protected override bool Update(object source, object value)
+    {
+        throw new System.NotImplementedException();
     }
 }

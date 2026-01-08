@@ -1,21 +1,20 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Notifications
+namespace Moryx.Notifications;
+
+/// <summary>
+/// Interface for components which are sending notifications
+/// </summary>
+public interface INotificationSender
 {
     /// <summary>
-    /// Interface for components which are sending notifications
+    /// Name of the notification sender
     /// </summary>
-    public interface INotificationSender
-    {
-        /// <summary>
-        /// Name of the notification sender
-        /// </summary>
-        string Identifier { get; }
+    string Identifier { get; }
 
-        /// <summary>
-        /// Inform the sender about the acknowledged notification
-        /// </summary>
-        void Acknowledge(Notification notification, object tag);
-    }
+    /// <summary>
+    /// Inform the sender about the acknowledged notification
+    /// </summary>
+    void Acknowledge(Notification notification, object tag);
 }

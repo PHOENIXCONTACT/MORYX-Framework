@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Products;
@@ -7,41 +7,40 @@ using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Products.Management.Model;
 
-namespace Moryx.Products.Management
+namespace Moryx.Products.Management;
+
+/// <summary>
+/// Generic strategy for product instances
+/// </summary>
+[ExpectedConfig(typeof(GenericRecipeConfiguration))]
+[StrategyConfiguration(typeof(IProductRecipe), DerivedTypes = true)]
+[Plugin(LifeCycle.Transient, typeof(IProductRecipeStrategy), Name = nameof(GenericRecipeStrategy))]
+internal class GenericRecipeStrategy : RecipeStrategyBase<GenericRecipeConfiguration>
 {
     /// <summary>
-    /// Generic strategy for product instances
+    /// Injected entity mapper
     /// </summary>
-    [ExpectedConfig(typeof(GenericRecipeConfiguration))]
-    [StrategyConfiguration(typeof(IProductRecipe), DerivedTypes = true)]
-    [Plugin(LifeCycle.Transient, typeof(IProductRecipeStrategy), Name = nameof(GenericRecipeStrategy))]
-    internal class GenericRecipeStrategy : RecipeStrategyBase<GenericRecipeConfiguration>
+    public GenericEntityMapper<ProductionRecipe, ProductType> EntityMapper { get; set; }
+
+    /// <summary>
+    /// Initialize the type strategy
+    /// </summary>
+    public override async Task InitializeAsync(ProductRecipeConfiguration config, CancellationToken cancellationToken = default)
     {
-        /// <summary>
-        /// Injected entity mapper
-        /// </summary>
-        public GenericEntityMapper<ProductionRecipe, ProductType> EntityMapper { get; set; }
+        await base.InitializeAsync(config, cancellationToken);
 
-        /// <summary>
-        /// Initialize the type strategy
-        /// </summary>
-        public override async Task InitializeAsync(ProductRecipeConfiguration config, CancellationToken cancellationToken = default)
-        {
-            await base.InitializeAsync(config, cancellationToken);
+        EntityMapper.Initialize(TargetType, Config);
+    }
 
-            EntityMapper.Initialize(TargetType, Config);
-        }
+    public override Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target, CancellationToken cancellationToken)
+    {
+        EntityMapper.WriteValue(source, target);
+        return Task.CompletedTask;
+    }
 
-        public override Task SaveRecipeAsync(IProductRecipe source, IGenericColumns target, CancellationToken cancellationToken)
-        {
-            EntityMapper.WriteValue(source, target);
-            return Task.CompletedTask;
-        }
-
-        public override Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target, CancellationToken cancellationToken)
-        {
-            EntityMapper.ReadValue(source, target);
-            return Task.CompletedTask;
-        }
+    public override Task LoadRecipeAsync(IGenericColumns source, IProductRecipe target, CancellationToken cancellationToken)
+    {
+        EntityMapper.ReadValue(source, target);
+        return Task.CompletedTask;
     }
 }

@@ -1,28 +1,27 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Serialization;
 
-namespace Moryx.Runtime.Endpoints.Databases.Models
+namespace Moryx.Runtime.Endpoints.Databases.Models;
+
+/// <summary>
+/// Configuration of the database.
+/// </summary>
+public record DatabaseConfigModel
 {
     /// <summary>
-    /// Configuration of the database.
+    /// Name of the database configurator type
     /// </summary>
-    public record DatabaseConfigModel
-    {
-        /// <summary>
-        /// Name of the database configurator type
-        /// </summary>
-        public string ConfiguratorType { get; set; }
+    public string ConfiguratorType { get; set; }
 
-        /// <summary>
-        /// Connection string of the database.
-        /// </summary>
-        public string ConnectionString { get; set; }
+    /// <summary>
+    /// Connection string of the database.
+    /// </summary>
+    public string ConnectionString { get; set; }
 
-        /// <summary>
-        /// Configuration of the database model.
-        /// </summary>
-        public Entry Properties { get; set; }
-    }
+    /// <summary>
+    /// Configuration of the database model.
+    /// </summary>
+    public Entry Properties { get; set; }
 }

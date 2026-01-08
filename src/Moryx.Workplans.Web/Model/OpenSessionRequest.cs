@@ -1,12 +1,11 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Workplans.Endpoint
-{
-    public class OpenSessionRequest
-    {
-        public long WorkplanId { get; set; }
+namespace Moryx.Workplans.Endpoint;
 
-        public bool Duplicate { get; set; }
-    }
+public class OpenSessionRequest
+{
+    public long WorkplanId { get; set; }
+
+    public bool Duplicate { get; set; }
 }

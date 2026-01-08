@@ -1,15 +1,17 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.AspNetCore.Http;
 using Moryx.Identity.AccessManagement.Data;
 using Moryx.Identity.Models;
 
-namespace Moryx.Identity.AccessManagement
+namespace Moryx.Identity.AccessManagement;
+
+internal static class CookiesExtensions
 {
-    internal static class CookiesExtensions
+    extension(IResponseCookies cookies)
     {
-        internal static void SetJwtCookie(this IResponseCookies cookies, AuthResult authResult, MoryxUser user = null)
+        internal void SetJwtCookie(AuthResult authResult, MoryxUser user = null)
         {
             cookies.Append(MoryxIdentityDefaults.JWT_COOKIE_NAME, authResult.Token, new CookieOptions
             {
@@ -36,7 +38,7 @@ namespace Moryx.Identity.AccessManagement
                 });
         }
 
-        internal static void RemoveJwtCookie(this IResponseCookies responseCookies, string domain)
+        internal void RemoveJwtCookie(string domain)
         {
             var cookieOption = new CookieOptions
             {
@@ -45,10 +47,9 @@ namespace Moryx.Identity.AccessManagement
                 Domain = domain,
             };
 
-            responseCookies.Delete(MoryxIdentityDefaults.REFRESH_TOKEN_COOKIE_NAME, cookieOption);
-            responseCookies.Delete(MoryxIdentityDefaults.JWT_COOKIE_NAME, cookieOption);
-            responseCookies.Delete(MoryxIdentityDefaults.USER_COOKIE_NAME, cookieOption);
+            cookies.Delete(MoryxIdentityDefaults.REFRESH_TOKEN_COOKIE_NAME, cookieOption);
+            cookies.Delete(MoryxIdentityDefaults.JWT_COOKIE_NAME, cookieOption);
+            cookies.Delete(MoryxIdentityDefaults.USER_COOKIE_NAME, cookieOption);
         }
     }
 }
-

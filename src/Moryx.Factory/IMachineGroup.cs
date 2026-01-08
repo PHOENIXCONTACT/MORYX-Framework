@@ -1,18 +1,17 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Factory
+namespace Moryx.Factory;
+
+/// <summary>
+/// Group of resources inside the factory
+/// </summary>
+public interface IMachineGroup : IResource
 {
     /// <summary>
-    /// Group of resources inside the factory
+    /// Default icon for this resource group
     /// </summary>
-    public interface IMachineGroup : IResource
-    {
-        /// <summary>
-        /// Default icon for this resource group
-        /// </summary>
-        string DefaultIcon { get; set; }
-    }
+    string DefaultIcon { get; set; }
 }

@@ -1,46 +1,45 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Bindings;
 using NUnit.Framework;
 
-namespace Moryx.Tests.Bindings
+namespace Moryx.Tests.Bindings;
+
+[TestFixture]
+public class DelegateResolverTest
 {
-    [TestFixture]
-    public class DelegateResolverTest
+    [Test(Description = "Resolve value using delegate resolver")]
+    public void ResolveValue()
     {
-        [Test(Description = "Resolve value using delegate resolver")]
-        public void ResolveValue()
+        // Arrange
+        var foo = new Foo
         {
-            // Arrange
-            var foo = new Foo
-            {
-                Branch = new Branch { Name = "Howard" }
-            };
-            IBindingResolver resolver = new DelegateResolver(src => ((Foo)src).Branch.Name);
+            Branch = new Branch { Name = "Howard" }
+        };
+        IBindingResolver resolver = new DelegateResolver(src => ((Foo)src).Branch.Name);
 
-            // Act
-            var result = resolver.Resolve(foo);
+        // Act
+        var result = resolver.Resolve(foo);
 
-            // Assert
-            Assert.That(result, Is.EqualTo("Howard"));
-        }
+        // Assert
+        Assert.That(result, Is.EqualTo("Howard"));
+    }
 
-        [Test(Description = "Update the propert value using a delegate resolver")]
-        public void Updatevalue()
+    [Test(Description = "Update the propert value using a delegate resolver")]
+    public void Updatevalue()
+    {
+        // Arrange
+        var foo = new Foo
         {
-            // Arrange
-            var foo = new Foo
-            {
-                Branch = new Branch()
-            };
-            IBindingResolver resolver = new DelegateResolver(src => ((Foo)src).Branch.Name, (src, value) => ((Foo)src).Branch.Name = (string)value);
+            Branch = new Branch()
+        };
+        IBindingResolver resolver = new DelegateResolver(src => ((Foo)src).Branch.Name, (src, value) => ((Foo)src).Branch.Name = (string)value);
 
-            // Act
-            resolver.Update(foo, "Howard");
+        // Act
+        resolver.Update(foo, "Howard");
 
-            // Assert
-            Assert.That(foo.Branch.Name, Is.EqualTo("Howard"));
-        }
+        // Assert
+        Assert.That(foo.Branch.Name, Is.EqualTo("Howard"));
     }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Products;
@@ -6,51 +6,50 @@ using Moryx.Container;
 using Moryx.Modules;
 using Moryx.Products.Management.Model;
 
-namespace Moryx.Products.Management
+namespace Moryx.Products.Management;
+
+/// <summary>
+///
+/// </summary>
+[ExpectedConfig(typeof(GenericLinkConfiguration))]
+[StrategyConfiguration(typeof(ProductPartLink), DerivedTypes = true)]
+[Plugin(LifeCycle.Transient, typeof(IProductLinkStrategy), Name = nameof(GenericLinkStrategy))]
+internal class GenericLinkStrategy : LinkStrategyBase<GenericLinkConfiguration>
 {
     /// <summary>
-    ///
+    /// Injected entity mapper
     /// </summary>
-    [ExpectedConfig(typeof(GenericLinkConfiguration))]
-    [StrategyConfiguration(typeof(ProductPartLink), DerivedTypes = true)]
-    [Plugin(LifeCycle.Transient, typeof(IProductLinkStrategy), Name = nameof(GenericLinkStrategy))]
-    internal class GenericLinkStrategy : LinkStrategyBase<GenericLinkConfiguration>
+    public GenericEntityMapper<ProductPartLink, ProductType> EntityMapper { get; set; }
+
+    /// <summary>
+    /// Initialize the type strategy
+    /// </summary>
+    public override async Task InitializeAsync(ProductLinkConfiguration config, CancellationToken cancellationToken = default)
     {
-        /// <summary>
-        /// Injected entity mapper
-        /// </summary>
-        public GenericEntityMapper<ProductPartLink, ProductType> EntityMapper { get; set; }
+        await base.InitializeAsync(config, cancellationToken);
 
-        /// <summary>
-        /// Initialize the type strategy
-        /// </summary>
-        public override async Task InitializeAsync(ProductLinkConfiguration config, CancellationToken cancellationToken = default)
+        var property = TargetType.GetProperty(PropertyName);
+        var linkType = property.PropertyType;
+        // Extract element type from collections
+        if (typeof(IEnumerable<ProductPartLink>).IsAssignableFrom(linkType))
         {
-            await base.InitializeAsync(config, cancellationToken);
-
-            var property = TargetType.GetProperty(PropertyName);
-            var linkType = property.PropertyType;
-            // Extract element type from collections
-            if (typeof(IEnumerable<ProductPartLink>).IsAssignableFrom(linkType))
-            {
-                linkType = linkType.GetGenericArguments()[0];
-            }
-
-            EntityMapper.Initialize(linkType, Config);
+            linkType = linkType.GetGenericArguments()[0];
         }
 
-        public override Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target, CancellationToken cancellationToken)
-        {
-            EntityMapper.ReadValue(linkEntity, target);
+        EntityMapper.Initialize(linkType, Config);
+    }
 
-            return Task.CompletedTask;
-        }
+    public override Task LoadPartLinkAsync(IGenericColumns linkEntity, ProductPartLink target, CancellationToken cancellationToken)
+    {
+        EntityMapper.ReadValue(linkEntity, target);
 
-        public override Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target, CancellationToken cancellationToken)
-        {
-            EntityMapper.WriteValue(source, target);
+        return Task.CompletedTask;
+    }
 
-            return Task.CompletedTask;
-        }
+    public override Task SavePartLinkAsync(ProductPartLink source, IGenericColumns target, CancellationToken cancellationToken)
+    {
+        EntityMapper.WriteValue(source, target);
+
+        return Task.CompletedTask;
     }
 }

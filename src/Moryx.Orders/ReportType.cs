@@ -1,11 +1,10 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Orders
+namespace Moryx.Orders;
+
+public enum ReportType
 {
-    public enum ReportType
-    {
-        Interrupt,
-        Report
-    }
+    Interrupt,
+    Report
 }

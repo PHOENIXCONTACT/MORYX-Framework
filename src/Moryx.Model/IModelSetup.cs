@@ -1,41 +1,40 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Model.Repositories;
 
-namespace Moryx.Model
+namespace Moryx.Model;
+
+/// <summary>
+/// Setup to initialize a database
+/// </summary>
+public interface IModelSetup
 {
     /// <summary>
-    /// Setup to initialize a database
+    /// For this data model unique setup id
     /// </summary>
-    public interface IModelSetup
-    {
-        /// <summary>
-        /// For this data model unique setup id
-        /// </summary>
-        int SortOrder { get; }
+    int SortOrder { get; }
 
-        /// <summary>
-        /// Display name of this setup
-        /// </summary>
-        string Name { get; }
+    /// <summary>
+    /// Display name of this setup
+    /// </summary>
+    string Name { get; }
 
-        /// <summary>
-        /// Short description what data this setup contains
-        /// </summary>
-        string Description { get; }
+    /// <summary>
+    /// Short description what data this setup contains
+    /// </summary>
+    string Description { get; }
 
-        /// <summary>
-        /// FileType supported by this setup
-        /// </summary>
-        string SupportedFileRegex { get; }
+    /// <summary>
+    /// FileType supported by this setup
+    /// </summary>
+    string SupportedFileRegex { get; }
 
-        /// <summary>
-        /// Execute setup in this context
-        /// </summary>
-        /// <param name="openContext">Context for db access</param>
-        /// <param name="setupData">Any data for the setup, excel or sql etc</param>
-        /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
-        Task ExecuteAsync(IUnitOfWork openContext, string setupData, CancellationToken cancellationToken);
-    }
+    /// <summary>
+    /// Execute setup in this context
+    /// </summary>
+    /// <param name="openContext">Context for db access</param>
+    /// <param name="setupData">Any data for the setup, excel or sql etc</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    Task ExecuteAsync(IUnitOfWork openContext, string setupData, CancellationToken cancellationToken);
 }

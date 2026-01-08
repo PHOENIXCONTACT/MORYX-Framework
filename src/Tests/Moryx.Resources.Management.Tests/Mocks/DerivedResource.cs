@@ -1,13 +1,12 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Resources.Management.Tests
+namespace Moryx.Resources.Management.Tests;
+
+public class DerivedResource : SimpleResource
 {
-    public class DerivedResource : SimpleResource
+    public override int MultiplyFoo(int factor)
     {
-        public override int MultiplyFoo(int factor)
-        {
-            return Foo *= factor + 1;
-        }
+        return Foo *= factor + 1;
     }
 }

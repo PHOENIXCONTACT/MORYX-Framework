@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Immutable;
@@ -36,7 +36,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         get
         {
             ValidateHealthState();
-            return OperatorManager.Operators.Select(o => o.Operator).ToImmutableArray();
+            return [..OperatorManager.Operators.Select(o => o.Operator)];
         }
     }
 
@@ -210,7 +210,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         get
         {
             ValidateHealthState();
-            return OperatorManager.Operators.Select(o => o.User).ToImmutableArray();
+            return [..OperatorManager.Operators.Select(o => o.User)];
         }
     }
 

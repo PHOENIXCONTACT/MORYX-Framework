@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
@@ -20,8 +20,10 @@ namespace Moryx.Operators.Skills;
 [Display(Name = nameof(Strings.AttendableResource_DisplayName), Description = nameof(Strings.AttendableResource_Description), ResourceType = typeof(Strings))]
 public class AttendableResource : Resource, IOperatorAssignable
 {
-    private static readonly IReadOnlyCollection<Type> _capabilityTypes = ReflectionTool.GetPublicClasses<ICapabilities>()
-            .Where(t => !t.IsAbstract && !t.IsGenericType).ToImmutableArray();
+    private static readonly IReadOnlyCollection<Type> _capabilityTypes = [
+        ..ReflectionTool.GetPublicClasses<ICapabilities>()
+            .Where(t => !t.IsAbstract && !t.IsGenericType)
+    ];
 
     private string configuredRequiredSkill;
 

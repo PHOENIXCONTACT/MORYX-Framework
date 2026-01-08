@@ -1,22 +1,21 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Tools
+namespace Moryx.Tools;
+
+/// <summary>
+/// Extension methods for dictionaries
+/// </summary>
+public static class DictionaryExtensions
 {
     /// <summary>
-    /// Extension methods for dictionaries
+    /// Determines whether the specified dictionary contains the given keys.
     /// </summary>
-    public static class DictionaryExtensions
+    /// <returns>
+    ///   <c>true</c> if the dictionary contains the given keys; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool ContainsKeys(this IDictionary<string, string> dictionary, params string[] keys)
     {
-        /// <summary>
-        /// Determines whether the specified dictionary contains the given keys.
-        /// </summary>
-        /// <returns>
-        ///   <c>true</c> if the dictionary contains the given keys; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool ContainsKeys(this IDictionary<string, string> dictionary, params string[] keys)
-        {
-            return dictionary.Any(entry => keys.Contains(entry.Key));
-        }
+        return dictionary.Any(entry => keys.Contains(entry.Key));
     }
 }

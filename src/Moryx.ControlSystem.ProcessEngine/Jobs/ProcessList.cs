@@ -1,30 +1,28 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
 
-namespace Moryx.ControlSystem.ProcessEngine.Jobs
-{
-    internal class ProcessList<T> : List<T>, IReadOnlyList<T>
+namespace Moryx.ControlSystem.ProcessEngine.Jobs;
+
+internal class ProcessList<T> : List<T>, IReadOnlyList<T>
     where T : class
+{
+    public ProcessList() : base()
     {
-        public ProcessList() : base()
-        {
-        }
+    }
 
-        public ProcessList(int capacity) : base(capacity)
-        {
-        }
+    public ProcessList(int capacity) : base(capacity)
+    {
+    }
 
-        public new IEnumerator<T> GetEnumerator()
-        {
-            return new ProcessDataIterator<T>(this);
-        }
+    public new IEnumerator<T> GetEnumerator()
+    {
+        return new ProcessDataIterator<T>(this);
+    }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }
-

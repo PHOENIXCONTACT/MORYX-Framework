@@ -1,28 +1,18 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Moryx.Model
-{
-    /// <summary>
-    /// Base class for <see cref="IEntity"/>
-    /// </summary>
-    public abstract class EntityBase : IEntity
-    {
-        private long _id;
+namespace Moryx.Model;
 
-        /// <inheritdoc />
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public virtual long Id
-        {
-            get => _id;
-            set
-            {
-                _id = value;
-            }
-        }
-    }
+/// <summary>
+/// Base class for <see cref="IEntity"/>
+/// </summary>
+public abstract class EntityBase : IEntity
+{
+    /// <inheritdoc />
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public virtual long Id { get; set; }
 }

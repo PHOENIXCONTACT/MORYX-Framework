@@ -1,34 +1,33 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Workplans
+namespace Moryx.Workplans;
+
+internal class RestoredState : EngineState
 {
-    internal class RestoredState : EngineState
+    public RestoredState(WorkplanEngine context, StateMap stateMap) : base(context, stateMap)
     {
-        public RestoredState(WorkplanEngine context, StateMap stateMap) : base(context, stateMap)
-        {
-        }
+    }
 
-        /// <summary>
-        /// Start the engine
-        /// </summary>
-        internal override void Start()
-        {
-            NextState(StateRunning);
-            Context.ExecuteResume();
-        }
+    /// <summary>
+    /// Start the engine
+    /// </summary>
+    internal override void Start()
+    {
+        NextState(StateRunning);
+        Context.ExecuteResume();
+    }
 
-        /// <summary>
-        /// Return the snapshot that was used to restore the engine
-        /// </summary>
-        internal override WorkplanSnapshot Pause()
-        {
-            return Context.CurrentSnapshot;
-        }
+    /// <summary>
+    /// Return the snapshot that was used to restore the engine
+    /// </summary>
+    internal override WorkplanSnapshot Pause()
+    {
+        return Context.CurrentSnapshot;
+    }
 
-        internal override void Destroy()
-        {
-            ExecuteDestroy();
-        }
+    internal override void Destroy()
+    {
+        ExecuteDestroy();
     }
 }

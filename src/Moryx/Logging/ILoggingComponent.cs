@@ -1,16 +1,15 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Logging
+namespace Moryx.Logging;
+
+/// <summary>
+/// This interface allows framework components to access a module logger and log entries in their name
+/// </summary>
+public interface ILoggingComponent
 {
     /// <summary>
-    /// This interface allows framework components to access a module logger and log entries in their name
+    /// Logger of this component
     /// </summary>
-    public interface ILoggingComponent
-    {
-        /// <summary>
-        /// Logger of this component
-        /// </summary>
-        IModuleLogger Logger { get; set; }
-    }
+    IModuleLogger Logger { get; set; }
 }

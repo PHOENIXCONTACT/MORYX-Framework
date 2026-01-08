@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -6,19 +6,18 @@ using System.Runtime.Serialization;
 using Moryx.Modules;
 using Moryx.Serialization;
 
-namespace Moryx.AbstractionLayer.Products
+namespace Moryx.AbstractionLayer.Products;
+
+/// <summary>
+/// Config for product importers
+/// </summary>
+[DataContract]
+public class ProductImporterConfig : IPluginConfig
 {
     /// <summary>
-    /// Config for product importers
+    /// Name of the component represented by this entry
     /// </summary>
-    [DataContract]
-    public class ProductImporterConfig : IPluginConfig
-    {
-        /// <summary>
-        /// Name of the component represented by this entry
-        /// </summary>
-        [DataMember, Description("PluginName of the importer")]
-        [PluginNameSelector(typeof(IProductImporter))]
-        public virtual string PluginName { get; set; }
-    }
+    [DataMember, Description("PluginName of the importer")]
+    [PluginNameSelector(typeof(IProductImporter))]
+    public virtual string PluginName { get; set; }
 }

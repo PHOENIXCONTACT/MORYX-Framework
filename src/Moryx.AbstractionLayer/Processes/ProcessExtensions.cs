@@ -1,14 +1,17 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Activities;
 
-namespace Moryx.AbstractionLayer.Processes
+namespace Moryx.AbstractionLayer.Processes;
+
+/// <summary>
+/// Extensions for <see cref="IProcess"/>
+/// </summary>
+public static class ProcessExtensions
 {
-    /// <summary>
-    /// Extensions for <see cref="IProcess"/>
-    /// </summary>
-    public static class ProcessExtensions
+    /// <param name="process">Extended instance of <see cref="IProcess"/></param>
+    extension(IProcess process)
     {
         /// <summary>
         /// Get one prepared activity that will be dispatched as soon as a ready to work was send.
@@ -16,7 +19,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// See also: <seealso cref="NextActivities"/>
         /// </summary>
         /// <returns>Last activity of the process that is prepared</returns>
-        public static Activity NextActivity(this IProcess process)
+        public Activity NextActivity()
         {
             return process.GetActivity(ActivitySelectionType.LastOrDefault, activity => activity.Tracing?.Started == null);
         }
@@ -24,7 +27,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// <summary>
         /// Get all prepared activities that will be dispatched as soon as a ready to work was send.
         /// </summary>
-        public static IEnumerable<Activity> NextActivities(this IProcess process)
+        public IEnumerable<Activity> NextActivities()
         {
             return process.GetActivities(activity => activity.Tracing?.Started == null);
         }
@@ -35,7 +38,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// See also: <seealso cref="CurrentActivities"/>
         /// </summary>
         /// <returns>Last activity of the process that is running</returns>
-        public static Activity CurrentActivity(this IProcess process)
+        public Activity CurrentActivity()
         {
             return process.GetActivity(ActivitySelectionType.LastOrDefault, activity => activity.Tracing?.Started != null && activity.Result == null);
         }
@@ -43,7 +46,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// <summary>
         /// Get all current running activities of the process.
         /// </summary>
-        public static IEnumerable<Activity> CurrentActivities(this IProcess process)
+        public IEnumerable<Activity> CurrentActivities()
         {
             return process.GetActivities(activity => activity.Tracing?.Started != null && activity.Result == null);
         }
@@ -51,7 +54,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// <summary>
         /// Get last completed activity
         /// </summary>
-        public static Activity LastActivity(this IProcess process)
+        public Activity LastActivity()
         {
             return process.GetActivity(ActivitySelectionType.LastOrDefault, a => a.Result != null);
         }
@@ -59,7 +62,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// <summary>
         /// Get last activity of a certain type
         /// </summary>
-        public static Activity LastActivity(this IProcess process, string typeName)
+        public Activity LastActivity(string typeName)
         {
             return process.GetActivity(ActivitySelectionType.LastOrDefault, a => a.GetType().Name == typeName);
         }
@@ -69,8 +72,7 @@ namespace Moryx.AbstractionLayer.Processes
         /// Use <see cref="LastActivity{TActivity}(IProcess, bool)" /> if the exact type is needed.
         /// </summary>
         /// <typeparam name="TActivity">Type of the activity</typeparam>
-        /// <param name="process">Extended instance of <see cref="IProcess"/></param>
-        public static Activity LastActivity<TActivity>(this IProcess process) where TActivity : IActivity
+        public Activity LastActivity<TActivity>() where TActivity : IActivity
         {
             return process.LastActivity<TActivity>(false);
         }
@@ -80,9 +82,8 @@ namespace Moryx.AbstractionLayer.Processes
         /// If exact parameter is set to <c>true</c> only the exact type will be considered.
         /// </summary>
         /// <typeparam name="TActivity">Type of the activity</typeparam>
-        /// <param name="process">Extended instance of <see cref="IProcess"/></param>
         /// <param name="exact">If <c>true</c> only the exact type will be considered.</param>
-        public static Activity LastActivity<TActivity>(this IProcess process, bool exact) where TActivity : IActivity
+        public Activity LastActivity<TActivity>(bool exact) where TActivity : IActivity
         {
             return process.GetActivity(ActivitySelectionType.LastOrDefault, a => !exact && a is TActivity || exact && a.GetType() == typeof(TActivity));
         }

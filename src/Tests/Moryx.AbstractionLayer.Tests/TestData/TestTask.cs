@@ -1,13 +1,11 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Workplans;
 
-namespace Moryx.AbstractionLayer.Tests.TestData
-{
-    public class TestTask : TaskStep<TestActivity, NullActivityParameters>
-    {
-    }
-}
+namespace Moryx.AbstractionLayer.Tests.TestData;
 
+public class TestTask : TaskStep<TestActivity, NullActivityParameters>
+{
+}

@@ -1,23 +1,21 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
 using System.Collections.Generic;
 
-namespace Moryx.FactoryMonitor.Endpoints.Tests
+namespace Moryx.FactoryMonitor.Endpoints.Tests;
+
+public class DummyCapabilities2 : ICapabilities
 {
-    public class DummyCapabilities2 : ICapabilities
+    public bool IsCombined => false;
+
+    public IEnumerable<ICapabilities> GetAll()
     {
-        public bool IsCombined => false;
-
-        public IEnumerable<ICapabilities> GetAll()
-        {
-            yield return this;
-        }
-
-        public bool ProvidedBy(ICapabilities provided) => provided is DummyCapabilities2;
-
-        public bool Provides(ICapabilities required) => required is DummyCapabilities2;
+        yield return this;
     }
-}
 
+    public bool ProvidedBy(ICapabilities provided) => provided is DummyCapabilities2;
+
+    public bool Provides(ICapabilities required) => required is DummyCapabilities2;
+}

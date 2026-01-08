@@ -1,15 +1,13 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Workplans.Endpoint
+namespace Moryx.Workplans.Endpoint;
+
+public class NodeConnectionPoint
 {
-    public class NodeConnectionPoint
-    {
-        public int Index { get; set; }
+    public int Index { get; set; }
 
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public List<NodeConnector> Connections { get; set; } = new List<NodeConnector>();
-    }
+    public List<NodeConnector> Connections { get; set; } = new List<NodeConnector>();
 }
-

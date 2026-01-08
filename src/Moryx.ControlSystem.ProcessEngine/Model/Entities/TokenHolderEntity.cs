@@ -1,27 +1,25 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 using Moryx.Model;
 
-namespace Moryx.ControlSystem.ProcessEngine.Model
+namespace Moryx.ControlSystem.ProcessEngine.Model;
+
+public class TokenHolderEntity : EntityBase
 {
-    public class TokenHolderEntity : EntityBase
-    {
-        public virtual long HolderId { get; set; }
+    public virtual long HolderId { get; set; }
 
-        /// <summary>
-        /// Json array of all tokens
-        /// </summary>
-        public virtual string Tokens { get; set; }
+    /// <summary>
+    /// Json array of all tokens
+    /// </summary>
+    public virtual string Tokens { get; set; }
 
-        #region Navigation properties
+    #region Navigation properties
 
-        public virtual long ProcessId { get; set; }
+    public virtual long ProcessId { get; set; }
 
-        public virtual ProcessEntity Process { get; set; }
+    public virtual ProcessEntity Process { get; set; }
 
-        #endregion
-    }
+    #endregion
 }
-

@@ -1,31 +1,30 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Products.Samples
+namespace Moryx.Products.Samples;
+
+/// <summary>
+/// Role of the referenced <see cref="NeedleType"/> in the <see cref="WatchType"/>
+/// </summary>
+public enum NeedleRole
 {
     /// <summary>
-    /// Role of the referenced <see cref="NeedleType"/> in the <see cref="WatchType"/>
+    /// Needle shows the hours
     /// </summary>
-    public enum NeedleRole
-    {
-        /// <summary>
-        /// Needle shows the hours
-        /// </summary>
-        Hours,
+    Hours,
 
-        /// <summary>
-        /// Needle shows the minutes
-        /// </summary>
-        Minutes,
+    /// <summary>
+    /// Needle shows the minutes
+    /// </summary>
+    Minutes,
 
-        /// <summary>
-        /// Needle shows the seconds
-        /// </summary>
-        Seconds,
+    /// <summary>
+    /// Needle shows the seconds
+    /// </summary>
+    Seconds,
 
-        /// <summary>
-        /// Needle is used for a dedicated stopwatch
-        /// </summary>
-        Stopwatch
-    }
+    /// <summary>
+    /// Needle is used for a dedicated stopwatch
+    /// </summary>
+    Stopwatch
 }

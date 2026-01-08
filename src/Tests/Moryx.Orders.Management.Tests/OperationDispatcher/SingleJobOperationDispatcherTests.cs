@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -14,181 +14,180 @@ using Moryx.Logging;
 using Moryx.TestTools.UnitTest;
 using NUnit.Framework;
 
-namespace Moryx.Orders.Management.Tests
+namespace Moryx.Orders.Management.Tests;
+
+[TestFixture]
+public class SingleJobOperationDispatcherTests
 {
-    [TestFixture]
-    public class SingleJobOperationDispatcherTests
+    private Mock<IJobManagement> _jobManagementMock;
+    private Mock<IOperationDataPool> _operationPoolMock;
+    private Mock<IOperationData> _operationDataMock;
+    private JobHandler _jobHandler;
+    private SingleJobOperationDispatcher _dispatcher;
+    private IJobManagement _jobManagement;
+    private IOperationData _operationData;
+    private InternalOperation _operation;
+
+    [SetUp]
+    public void SetUp()
     {
-        private Mock<IJobManagement> _jobManagementMock;
-        private Mock<IOperationDataPool> _operationPoolMock;
-        private Mock<IOperationData> _operationDataMock;
-        private JobHandler _jobHandler;
-        private SingleJobOperationDispatcher _dispatcher;
-        private IJobManagement _jobManagement;
-        private IOperationData _operationData;
-        private InternalOperation _operation;
+        _jobManagementMock = new Mock<IJobManagement>();
+        _jobManagement = _jobManagementMock.Object;
 
-        [SetUp]
-        public void SetUp()
+        _operation = new InternalOperation
         {
-            _jobManagementMock = new Mock<IJobManagement>();
-            _jobManagement = _jobManagementMock.Object;
+            Recipes = new List<IProductRecipe>(1) { new DummyRecipe() }
+        };
 
-            _operation = new InternalOperation
-            {
-                Recipes = new List<IProductRecipe>(1) { new DummyRecipe() }
-            };
+        _operationDataMock = new Mock<IOperationData>();
+        _operationDataMock.SetupGet(o => o.Operation).Returns(_operation);
+        _operationData = _operationDataMock.Object;
 
-            _operationDataMock = new Mock<IOperationData>();
-            _operationDataMock.SetupGet(o => o.Operation).Returns(_operation);
-            _operationData = _operationDataMock.Object;
+        _operationPoolMock = new Mock<IOperationDataPool>();
+        _operationPoolMock.Setup(p => p.Get(_operation)).Returns(_operationData);
+        _operationPoolMock.Setup(p => p.GetAll(It.IsAny<Func<IOperationData, bool>>())).Returns([_operationData]);
 
-            _operationPoolMock = new Mock<IOperationDataPool>();
-            _operationPoolMock.Setup(p => p.Get(_operation)).Returns(_operationData);
-            _operationPoolMock.Setup(p => p.GetAll(It.IsAny<Func<IOperationData, bool>>())).Returns([_operationData]);
-
-            _dispatcher = new SingleJobOperationDispatcher
-            {
-                JobManagement = _jobManagementMock.Object,
-                ParallelOperations = new NotSoParallelOps()
-            };
-
-            _jobHandler = new JobHandler
-            {
-                JobManagement = _jobManagementMock.Object,
-                OperationDataPool = _operationPoolMock.Object,
-                ParallelOperations = new NotSoParallelOps(),
-                Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
-                Dispatcher = _dispatcher
-            };
-
-            _jobHandler.Start();
-        }
-
-        [TearDown]
-        public void TearDown()
+        _dispatcher = new SingleJobOperationDispatcher
         {
-            _jobHandler.Stop();
-        }
+            JobManagement = _jobManagementMock.Object,
+            ParallelOperations = new NotSoParallelOps()
+        };
 
-        [Test(Description = "Job updates of job management should update job on operation.")]
-        public void JobUpdateUpdatesJobOnOperation()
+        _jobHandler = new JobHandler
         {
-            // Arrange
-            var someJob = new Job(new ProductRecipe(), 1) { Id = 1 };
-            _operation.Jobs = [someJob];
+            JobManagement = _jobManagementMock.Object,
+            OperationDataPool = _operationPoolMock.Object,
+            ParallelOperations = new NotSoParallelOps(),
+            Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
+            Dispatcher = _dispatcher
+        };
 
-            // Act
-            var args = new JobStateChangedEventArgs(someJob, JobClassification.Idle, JobClassification.Running);
-            _jobManagementMock.Raise(j => j.StateChanged += null, _jobManagement, args);
+        _jobHandler.Start();
+    }
 
-            // Assert
-            Assert.DoesNotThrow(delegate
-            {
-                _operationDataMock.Verify(o => o.JobStateChanged(args), Times.Once);
-            }, "There should be an occurred JobStateChanged event");
-        }
+    [TearDown]
+    public void TearDown()
+    {
+        _jobHandler.Stop();
+    }
 
-        [Test]
-        public void DispatchAddsNewJob()
+    [Test(Description = "Job updates of job management should update job on operation.")]
+    public void JobUpdateUpdatesJobOnOperation()
+    {
+        // Arrange
+        var someJob = new Job(new ProductRecipe(), 1) { Id = 1 };
+        _operation.Jobs = [someJob];
+
+        // Act
+        var args = new JobStateChangedEventArgs(someJob, JobClassification.Idle, JobClassification.Running);
+        _jobManagementMock.Raise(j => j.StateChanged += null, _jobManagement, args);
+
+        // Assert
+        Assert.DoesNotThrow(delegate
         {
-            // Arrange
-            const int amount = 10;
-            var newJob = new Job(new ProductRecipe(), amount)
-            {
-                Id = 2
-            };
+            _operationDataMock.Verify(o => o.JobStateChanged(args), Times.Once);
+        }, "There should be an occurred JobStateChanged event");
+    }
 
-            _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>()))
-                .ReturnsAsync([newJob]);
-
-            // Act
-            _jobHandler.Dispatch(_operationData, [new DispatchContext(new DummyRecipe(), amount)]);
-
-            // Assert
-            Assert.DoesNotThrow(delegate
-            {
-                _operationDataMock.Verify(o => o.AddJob(newJob), Times.Once);
-            }, "There should be an added OperationData");
-        }
-
-        [Test(Description = "If the operation have multiple jobs, the new dispatched job should be moved after the last job of the operation")]
-        public void DispatchMovesJobAfterLastOfOperation()
+    [Test]
+    public void DispatchAddsNewJob()
+    {
+        // Arrange
+        const int amount = 10;
+        var newJob = new Job(new ProductRecipe(), amount)
         {
-            var lastJob = new Job(new ProductRecipe(), 1) { Id = 3, Classification = JobClassification.Completing };
-            var jobs = new[]
-            {
-                new Job(new ProductRecipe(), 1) {Id = 1, Classification = JobClassification.Completing},
-                new Job(new ProductRecipe(), 1) {Id = 2, Classification = JobClassification.Completing},
-                lastJob
-            };
-            _operation.Jobs = jobs;
+            Id = 2
+        };
 
-            const int amount = 10;
-            var newJob = new Job(new ProductRecipe(), amount)
-            {
-                Id = 4
-            };
+        _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>()))
+            .ReturnsAsync([newJob]);
 
-            JobCreationContext createdContext = null;
-            _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(delegate (JobCreationContext context, CancellationToken _)
+        // Act
+        _jobHandler.Dispatch(_operationData, [new DispatchContext(new DummyRecipe(), amount)]);
+
+        // Assert
+        Assert.DoesNotThrow(delegate
+        {
+            _operationDataMock.Verify(o => o.AddJob(newJob), Times.Once);
+        }, "There should be an added OperationData");
+    }
+
+    [Test(Description = "If the operation have multiple jobs, the new dispatched job should be moved after the last job of the operation")]
+    public void DispatchMovesJobAfterLastOfOperation()
+    {
+        var lastJob = new Job(new ProductRecipe(), 1) { Id = 3, Classification = JobClassification.Completing };
+        var jobs = new[]
+        {
+            new Job(new ProductRecipe(), 1) {Id = 1, Classification = JobClassification.Completing},
+            new Job(new ProductRecipe(), 1) {Id = 2, Classification = JobClassification.Completing},
+            lastJob
+        };
+        _operation.Jobs = jobs;
+
+        const int amount = 10;
+        var newJob = new Job(new ProductRecipe(), amount)
+        {
+            Id = 4
+        };
+
+        JobCreationContext createdContext = null;
+        _jobManagementMock.Setup(j => j.AddAsync(It.IsAny<JobCreationContext>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(delegate (JobCreationContext context, CancellationToken _)
             {
                 createdContext = context;
                 return [newJob];
             });
 
-            // Act
-            _jobHandler.Dispatch(_operationData, [new DispatchContext(new DummyRecipe(), amount)]);
+        // Act
+        _jobHandler.Dispatch(_operationData, [new DispatchContext(new DummyRecipe(), amount)]);
 
-            // Assert
-            Assert.That(createdContext.Position.PositionType, Is.EqualTo(JobPositionType.AfterOther));
-            Assert.That(createdContext.Position.ReferenceId, Is.EqualTo(lastJob.Id));
-            Assert.DoesNotThrow(delegate
-            {
-                _operationDataMock.Verify(o => o.AddJob(newJob), Times.Once);
-            }, "There should be a MoveAfterRequest after adding the new Job");
-        }
-
-        [Test(Description = "Complete should complete all jobs of the operation")]
-        public void CompleteCompletesAllJobs()
+        // Assert
+        Assert.That(createdContext.Position.PositionType, Is.EqualTo(JobPositionType.AfterOther));
+        Assert.That(createdContext.Position.ReferenceId, Is.EqualTo(lastJob.Id));
+        Assert.DoesNotThrow(delegate
         {
-            // Arrange
-            var firstJob = new Job(new ProductRecipe(), 1) { Id = 1 };
-            var secondJob = new Job(new ProductRecipe(), 1) { Id = 2 };
-            var jobs = new[] { firstJob, secondJob };
-            _operation.Jobs = jobs;
+            _operationDataMock.Verify(o => o.AddJob(newJob), Times.Once);
+        }, "There should be a MoveAfterRequest after adding the new Job");
+    }
 
-            // Act
-            _jobHandler.Complete(_operationData);
+    [Test(Description = "Complete should complete all jobs of the operation")]
+    public void CompleteCompletesAllJobs()
+    {
+        // Arrange
+        var firstJob = new Job(new ProductRecipe(), 1) { Id = 1 };
+        var secondJob = new Job(new ProductRecipe(), 1) { Id = 2 };
+        var jobs = new[] { firstJob, secondJob };
+        _operation.Jobs = jobs;
 
-            // Assert
-            Assert.DoesNotThrow(delegate
-            {
-                foreach (var job in jobs)
-                {
-                    _jobManagementMock.Verify(j => j.Complete(job), Times.Once);
-                }
-            }, "There should be a call of the Complete method at the JobManagement for every job");
-        }
+        // Act
+        _jobHandler.Complete(_operationData);
 
-        [Test(Description = "Restore adds the jobs by their given id back to the operation.")]
-        public void RestoreAddsJobsToOperation()
+        // Assert
+        Assert.DoesNotThrow(delegate
         {
-            // Arrange
-            var firstJob = new Job(new ProductRecipe(), 1) { Id = 1 };
-            var secondJob = new Job(new ProductRecipe(), 1) { Id = 2 };
-            var jobs = new[] { firstJob, secondJob };
+            foreach (var job in jobs)
+            {
+                _jobManagementMock.Verify(j => j.Complete(job), Times.Once);
+            }
+        }, "There should be a call of the Complete method at the JobManagement for every job");
+    }
 
-            _jobManagementMock.Setup(j => j.Get(1)).Returns(firstJob);
-            _jobManagementMock.Setup(j => j.Get(2)).Returns(secondJob);
+    [Test(Description = "Restore adds the jobs by their given id back to the operation.")]
+    public void RestoreAddsJobsToOperation()
+    {
+        // Arrange
+        var firstJob = new Job(new ProductRecipe(), 1) { Id = 1 };
+        var secondJob = new Job(new ProductRecipe(), 1) { Id = 2 };
+        var jobs = new[] { firstJob, secondJob };
 
-            // Act
-            var restored = _jobHandler.Restore(jobs.Select(j => j.Id));
+        _jobManagementMock.Setup(j => j.Get(1)).Returns(firstJob);
+        _jobManagementMock.Setup(j => j.Get(2)).Returns(secondJob);
 
-            // Assert
-            Assert.That(restored.SequenceEqual(jobs), "The job handler should restore the jobs for all given ids");
-            _jobManagementMock.Verify(j => j.Get(It.IsAny<long>()), Times.Exactly(2), "The job management facade should be called once for each job");
-        }
+        // Act
+        var restored = _jobHandler.Restore(jobs.Select(j => j.Id));
+
+        // Assert
+        Assert.That(restored.SequenceEqual(jobs), "The job handler should restore the jobs for all given ids");
+        _jobManagementMock.Verify(j => j.Get(It.IsAny<long>()), Times.Exactly(2), "The job management facade should be called once for each job");
     }
 }

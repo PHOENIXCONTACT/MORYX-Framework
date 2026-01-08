@@ -1,51 +1,50 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Workplans
+namespace Moryx.Workplans;
+
+internal static class WorkplanInstanceFactory
 {
-    internal static class WorkplanInstanceFactory
+    public static IWorkplanInstance Instantiate(IWorkplan workplan, IWorkplanContext context)
     {
-        public static IWorkplanInstance Instantiate(IWorkplan workplan, IWorkplanContext context)
+        // Prepare variables
+        var places = new Dictionary<long, IPlace>();
+        var transitions = new List<ITransition>();
+
+        // Iterate over each step and find its connectors
+        foreach (var step in workplan.Steps)
         {
-            // Prepare variables
-            var places = new Dictionary<long, IPlace>();
-            var transitions = new List<ITransition>();
+            // Create transition
+            var transition = step.CreateInstance(context);
 
-            // Iterate over each step and find its connectors
-            foreach (var step in workplan.Steps)
+            // Set inputs
+            for (var i = 0; i < step.Inputs.Length; i++)
             {
-                // Create transition
-                var transition = step.CreateInstance(context);
-
-                // Set inputs
-                for (var i = 0; i < step.Inputs.Length; i++)
-                {
-                    transition.Inputs[i] = GetPlace(step.Inputs[i], places);
-                }
-
-                // Set outputs
-                for (int i = 0; i < step.Outputs.Length; i++)
-                {
-                    transition.Outputs[i] = GetPlace(step.Outputs[i], places);
-                }
-
-                transitions.Add(transition);
+                transition.Inputs[i] = GetPlace(step.Inputs[i], places);
             }
 
-            return new SimpleWorkplanInstance(workplan, places.Values.ToList(), transitions);
+            // Set outputs
+            for (int i = 0; i < step.Outputs.Length; i++)
+            {
+                transition.Outputs[i] = GetPlace(step.Outputs[i], places);
+            }
+
+            transitions.Add(transition);
         }
 
-        private static IPlace GetPlace(IConnector connector, IDictionary<long, IPlace> cache)
+        return new SimpleWorkplanInstance(workplan, places.Values.ToList(), transitions);
+    }
+
+    private static IPlace GetPlace(IConnector connector, IDictionary<long, IPlace> cache)
+    {
+        IPlace instance;
+        if (cache.ContainsKey(connector.Id))
+            instance = cache[connector.Id];
+        else
         {
-            IPlace instance;
-            if (cache.ContainsKey(connector.Id))
-                instance = cache[connector.Id];
-            else
-            {
-                instance = connector.CreateInstance();
-                cache[connector.Id] = instance;
-            }
-            return instance;
+            instance = connector.CreateInstance();
+            cache[connector.Id] = instance;
         }
+        return instance;
     }
 }

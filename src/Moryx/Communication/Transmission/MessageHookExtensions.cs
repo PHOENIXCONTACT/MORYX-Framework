@@ -1,17 +1,19 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Communication
+namespace Moryx.Communication;
+
+/// <summary>
+/// Extensions to improve use of message hooks in your application
+/// </summary>
+public static class MessageHookExtensions
 {
-    /// <summary>
-    /// Extensions to improve use of message hooks in your application
-    /// </summary>
-    public static class MessageHookExtensions
+    extension(IEnumerable<IBinaryMessageHook> hooks)
     {
         /// <summary>
         /// Iterate over all hooks and call <see cref="IBinaryMessageHook.SendingMessage"/>
         /// </summary>
-        public static bool SendingMessage<T>(this IEnumerable<IBinaryMessageHook> hooks, ref T payload)
+        public bool SendingMessage<T>(ref T payload)
             where T : class
         {
             object message = payload;
@@ -23,7 +25,7 @@ namespace Moryx.Communication
         /// <summary>
         /// Iterate over all hooks and call <see cref="IBinaryMessageHook.MessageSent"/>
         /// </summary>
-        public static void MessageSent(this IEnumerable<IBinaryMessageHook> hooks, BinaryMessage message)
+        public void MessageSent(BinaryMessage message)
         {
             foreach (var hook in hooks)
             {
@@ -34,7 +36,7 @@ namespace Moryx.Communication
         /// <summary>
         /// Iterate over all hooks and call <see cref="IBinaryMessageHook.MessageReceived"/>
         /// </summary>
-        public static void MessageReceived(this IEnumerable<IBinaryMessageHook> hooks, BinaryMessage message)
+        public void MessageReceived(BinaryMessage message)
         {
             foreach (var hook in hooks)
             {
@@ -45,7 +47,7 @@ namespace Moryx.Communication
         /// <summary>
         /// Iterate over all hooks and call <see cref="IBinaryMessageHook.PublishingMessage"/>
         /// </summary>
-        public static bool PublishingMessage<T>(this IEnumerable<IBinaryMessageHook> hooks, ref T payload)
+        public bool PublishingMessage<T>(ref T payload)
             where T : class
         {
             object message = payload;

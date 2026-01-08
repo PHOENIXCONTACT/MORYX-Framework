@@ -1,21 +1,20 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Properties;
 
-namespace Moryx.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources;
+
+/// <summary>
+/// Exception thrown by the resource proxy fetched from the facade if it was detached and can no longer
+/// interact with the target instance.
+/// </summary>
+public class ProxyDetachedException : Exception
 {
     /// <summary>
-    /// Exception thrown by the resource proxy fetched from the facade if it was detached and can no longer
-    /// interact with the target instance.
+    /// Create new instance of the detached exception
     /// </summary>
-    public class ProxyDetachedException : Exception
+    public ProxyDetachedException() : base(Strings.ProxyDetachedException_Message)
     {
-        /// <summary>
-        /// Create new instance of the detached exception
-        /// </summary>
-        public ProxyDetachedException() : base(Strings.ProxyDetachedException_Message)
-        {
-        }
     }
 }

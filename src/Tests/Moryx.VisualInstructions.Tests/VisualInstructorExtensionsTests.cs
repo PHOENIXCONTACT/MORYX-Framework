@@ -1,23 +1,22 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using NUnit.Framework;
 
-namespace Moryx.VisualInstructions.Tests
+namespace Moryx.VisualInstructions.Tests;
+
+[TestFixture]
+
+public class VisualInstructorExtensionsTests
 {
-    [TestFixture]
-
-    public class VisualInstructorExtensionsTests
+    [Test]
+    public void ExtensionCreatesStringAsInstruction()
     {
-        [Test]
-        public void ExtensionCreatesStringAsInstruction()
-        {
-            const string str = "text instruction";
+        const string str = "text instruction";
 
-            var instruction = str.AsInstruction();
+        var instruction = str.AsInstruction();
 
-            Assert.That(instruction.Type, Is.EqualTo(InstructionContentType.Text));
-            Assert.That(instruction.Content, Is.EqualTo(str));
-        }
+        Assert.That(instruction.Type, Is.EqualTo(InstructionContentType.Text));
+        Assert.That(instruction.Content, Is.EqualTo(str));
     }
 }

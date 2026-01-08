@@ -1,40 +1,39 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
 
-namespace Moryx.Media
+namespace Moryx.Media;
+
+/// <summary>
+/// Descriptor for an variant
+/// </summary>
+[DataContract]
+public sealed class VariantDescriptor : FileDescriptor
 {
     /// <summary>
-    /// Descriptor for an variant
+    /// Creates a new instance of <see cref="VariantDescriptor"/>
     /// </summary>
-    [DataContract]
-    public sealed class VariantDescriptor : FileDescriptor
+    public VariantDescriptor()
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="VariantDescriptor"/>
-        /// </summary>
-        public VariantDescriptor()
-        {
-            Preview = new PreviewDescriptor();
-        }
-
-        /// <summary>
-        /// Name of the variant
-        /// </summary>
-        [DataMember]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Date of the creation
-        /// </summary>
-        [DataMember]
-        public DateTime CreationDate { get; set; }
-
-        /// <summary>
-        /// Preview information for this variant
-        /// </summary>
-        [DataMember]
-        public PreviewDescriptor Preview { get; set; }
+        Preview = new PreviewDescriptor();
     }
+
+    /// <summary>
+    /// Name of the variant
+    /// </summary>
+    [DataMember]
+    public string Name { get; set; }
+
+    /// <summary>
+    /// Date of the creation
+    /// </summary>
+    [DataMember]
+    public DateTime CreationDate { get; set; }
+
+    /// <summary>
+    /// Preview information for this variant
+    /// </summary>
+    [DataMember]
+    public PreviewDescriptor Preview { get; set; }
 }

@@ -1,19 +1,18 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Modules;
 
-namespace Moryx.Runtime.Tests
-{
-    public interface IStrategy
-    {
-    }
+namespace Moryx.Runtime.Tests;
 
-    public class StrategyConfig : IPluginConfig
-    {
-        /// <summary>
-        /// Name of the component represented by this entry
-        /// </summary>
-        public string PluginName { get; set; }
-    }
+public interface IStrategy
+{
+}
+
+public class StrategyConfig : IPluginConfig
+{
+    /// <summary>
+    /// Name of the component represented by this entry
+    /// </summary>
+    public string PluginName { get; set; }
 }

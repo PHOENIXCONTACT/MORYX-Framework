@@ -1,28 +1,27 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Model.Attributes
+namespace Moryx.Model.Attributes;
+
+/// <summary>
+/// Defines the default schema for this database context
+/// </summary>
+[AttributeUsage(AttributeTargets.Class)]
+public class DefaultSchemaAttribute : Attribute
 {
     /// <summary>
-    /// Defines the default schema for this database context
+    /// Default schema name
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
-    public class DefaultSchemaAttribute : Attribute
+    public const string DefaultName = "public";
+
+    /// <summary>
+    /// Name of the default schema
+    /// </summary>
+    public string Schema { get; }
+
+    /// <inheritdoc />
+    public DefaultSchemaAttribute(string schema)
     {
-        /// <summary>
-        /// Default schema name
-        /// </summary>
-        public const string DefaultName = "public";
-
-        /// <summary>
-        /// Name of the default schema
-        /// </summary>
-        public string Schema { get; }
-
-        /// <inheritdoc />
-        public DefaultSchemaAttribute(string schema)
-        {
-            Schema = schema;
-        }
+        Schema = schema;
     }
 }

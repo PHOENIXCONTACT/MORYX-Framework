@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
@@ -6,45 +6,44 @@ using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.Serialization;
 
-namespace Moryx.VisualInstructions
+namespace Moryx.VisualInstructions;
+
+/// <summary>
+/// Provides parameters with visual instructions
+/// </summary>
+[DataContract]
+public class VisualInstructionParameters : Parameters
 {
     /// <summary>
-    /// Provides parameters with visual instructions
+    /// All instructions for this activity, if it used as a visual activity
     /// </summary>
-    [DataContract]
-    public class VisualInstructionParameters : Parameters
+    [EntrySerialize, DataMember]
+    public VisualInstruction[] Instructions { get; set; }
+
+    /// <summary>
+    /// Inputs for this activity.
+    /// </summary>
+    public object Inputs { get; set; }
+
+    /// <summary>
+    /// Binder to resolve visual instruction bindings
+    /// </summary>
+    protected VisualInstructionBinder InstructionBinder { get; private set; }
+
+    /// <inheritdoc />
+    protected override void Populate(Process process, Parameters instance)
     {
-        /// <summary>
-        /// All instructions for this activity, if it used as a visual activity
-        /// </summary>
-        [EntrySerialize, DataMember]
-        public VisualInstruction[] Instructions { get; set; }
+        var parameters = (VisualInstructionParameters)instance;
 
-        /// <summary>
-        /// Inputs for this activity.
-        /// </summary>
-        public object Inputs { get; set; }
+        // No instructions, no binding!
+        if (Instructions == null || Instructions.Length == 0)
+            return;
 
-        /// <summary>
-        /// Binder to resolve visual instruction bindings
-        /// </summary>
-        protected VisualInstructionBinder InstructionBinder { get; private set; }
+        // Create binder for our instructions
+        if (InstructionBinder == null)
+            InstructionBinder = new VisualInstructionBinder(Instructions, ResolverFactory);
 
-        /// <inheritdoc />
-        protected override void Populate(Process process, Parameters instance)
-        {
-            var parameters = (VisualInstructionParameters)instance;
-
-            // No instructions, no binding!
-            if (Instructions == null || Instructions.Length == 0)
-                return;
-
-            // Create binder for our instructions
-            if (InstructionBinder == null)
-                InstructionBinder = new VisualInstructionBinder(Instructions, ResolverFactory);
-
-            // Resolve instructions
-            parameters.Instructions = InstructionBinder.ResolveInstructions(process) ?? Instructions;
-        }
+        // Resolve instructions
+        parameters.Instructions = InstructionBinder.ResolveInstructions(process) ?? Instructions;
     }
 }

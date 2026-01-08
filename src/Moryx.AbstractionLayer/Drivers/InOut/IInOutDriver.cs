@@ -1,35 +1,34 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Drivers.InOut
+namespace Moryx.AbstractionLayer.Drivers.InOut;
+
+/// <summary>
+/// Interface for drivers that offer data input
+/// </summary>
+public interface IInputDriver : IDriver
 {
     /// <summary>
-    /// Interface for drivers that offer data input
+    /// Access to input values and events
     /// </summary>
-    public interface IInputDriver : IDriver
-    {
-        /// <summary>
-        /// Access to input values and events
-        /// </summary>
-        IInput Input { get; }
-    }
+    IInput Input { get; }
+}
 
+/// <summary>
+/// Interface for drivers that offer data output
+/// </summary>
+public interface IOutputDriver : IDriver
+{
     /// <summary>
-    /// Interface for drivers that offer data output
+    /// Access to data output
     /// </summary>
-    public interface IOutputDriver : IDriver
-    {
-        /// <summary>
-        /// Access to data output
-        /// </summary>
-        IOutput Output { get; }
-    }
+    IOutput Output { get; }
+}
 
-    /// <summary>
-    /// Most basic driver interface for input and output of data
-    /// This can be used to create less specific dependencies or simply as an additional interface
-    /// </summary>
-    public interface IInOutDriver : IInputDriver, IOutputDriver
-    {
-    }
+/// <summary>
+/// Most basic driver interface for input and output of data
+/// This can be used to create less specific dependencies or simply as an additional interface
+/// </summary>
+public interface IInOutDriver : IInputDriver, IOutputDriver
+{
 }

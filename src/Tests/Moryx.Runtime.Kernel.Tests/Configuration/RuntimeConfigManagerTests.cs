@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -8,190 +8,189 @@ using Moryx.Configuration;
 using Moryx.Runtime.Kernel.Tests.Dummies;
 using NUnit.Framework;
 
-namespace Moryx.Runtime.Kernel.Tests.Configuration
+namespace Moryx.Runtime.Kernel.Tests.Configuration;
+
+/// <summary>
+/// Tests for the runtime config manager
+/// </summary>
+[TestFixture]
+public class RuntimeConfigManagerTests
 {
+    private readonly string _tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+    private ConfigManager _manager;
+
     /// <summary>
-    /// Tests for the runtime config manager
+    /// Initializes this test.
     /// </summary>
-    [TestFixture]
-    public class RuntimeConfigManagerTests
+    [OneTimeSetUp]
+    public void Init()
     {
-        private string _tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-        private ConfigManager _manager;
+        _manager = new ConfigManager();
+        _manager.ConfigDirectory = _tempDirectory;
 
-        /// <summary>
-        /// Initializes this test.
-        /// </summary>
-        [OneTimeSetUp]
-        public void Init()
+        DeleteTempFolder();
+        CreateTempFolder();
+    }
+
+    /// <summary>
+    /// Testing the save configuration functionality with liveupdate.
+    /// </summary>
+    /// <param name="liveUpdate">if set to <c>true</c> [live update].</param>
+    [TestCase(true, Description = "Save with live update")]
+    [TestCase(false, Description = "Save without live update")]
+    public void SaveTest(bool liveUpdate)
+    {
+        DeleteTempFolder();
+        CreateTempFolder();
+
+        ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+        var configChangedEvent = false;
+
+        // create a config by saving it.
+        _manager.SaveConfiguration(new RuntimeConfigManagerTestConfig1(), liveUpdate);
+
+        // try to read the config
+        var config = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>(false);
+        Assert.That(config, Is.Not.Null, "Config not saved!");
+        // get a copy of the config
+        var copyOfConfig = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>(true);
+
+        // add the config changed event
+        config.ConfigChanged += delegate (object sender, ConfigChangedEventArgs args)
         {
-            _manager = new ConfigManager();
-            _manager.ConfigDirectory = _tempDirectory;
+            configChangedEvent = true;
+            Assert.That(args.Contains(() => copyOfConfig.BooleanField), Is.True, "the changed event do not acknowlege the correct property.");
+            manualResetEvent.Set();
+        };
 
-            DeleteTempFolder();
-            CreateTempFolder();
-        }
+        // change a property of the copied config (the original will not cause any event on save)
+        copyOfConfig.BooleanField = true;
+        _manager.SaveConfiguration(copyOfConfig, liveUpdate);
 
-        /// <summary>
-        /// Testing the save configuration functionality with liveupdate.
-        /// </summary>
-        /// <param name="liveUpdate">if set to <c>true</c> [live update].</param>
-        [TestCase(true, Description = "Save with live update")]
-        [TestCase(false, Description = "Save without live update")]
-        public void SaveTest(bool liveUpdate)
-        {
-            DeleteTempFolder();
-            CreateTempFolder();
+        // wait for the event
+        manualResetEvent.WaitOne(1000);
 
-            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-            var configChangedEvent = false;
+        // check if the event has been rised or not.
+        Assert.That(liveUpdate == configChangedEvent, Is.True);
+    }
 
-            // create a config by saving it.
-            _manager.SaveConfiguration(new RuntimeConfigManagerTestConfig1(), liveUpdate);
+    /// <summary>
+    /// Testing the save configuration functionality
+    /// </summary>
+    [Test(Description = "Testing the save configuration functionality")]
+    public void SaveTest()
+    {
+        DeleteTempFolder();
+        CreateTempFolder();
 
-            // try to read the config
-            var config = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>(false);
-            Assert.That(config, Is.Not.Null, "Config not saved!");
-            // get a copy of the config
-            var copyOfConfig = _manager.GetConfiguration<RuntimeConfigManagerTestConfig1>(true);
+        _manager.SaveConfiguration(new RuntimeConfigManagerTestConfig1());
 
-            // add the config changed event
-            config.ConfigChanged += delegate (object sender, ConfigChangedEventArgs args)
-            {
-                configChangedEvent = true;
-                Assert.That(args.Contains(() => copyOfConfig.BooleanField), Is.True, "the changed event do not acknowlege the correct property.");
-                manualResetEvent.Set();
-            };
+        var config = _manager.GetConfiguration(typeof(RuntimeConfigManagerTestConfig1), false);
 
-            // change a property of the copied config (the original will not cause any event on save)
-            copyOfConfig.BooleanField = true;
-            _manager.SaveConfiguration(copyOfConfig, liveUpdate);
+        Assert.That(config, Is.Not.Null, "Config not saved!");
+    }
 
-            // wait for the event
-            manualResetEvent.WaitOne(1000);
+    /// <summary>
+    /// Check if fill empty properties function loads the default values.
+    /// </summary>
+    [Test(Description = "Check if fill empty properties function loads the default values.")]
+    public void FillEmptyTest()
+    {
+        // create a config item
+        var emptyConfig = new RuntimeConfigManagerTestConfig1();
 
-            // check if the event has been rised or not.
-            Assert.That(liveUpdate == configChangedEvent, Is.True);
-        }
+        // check if all system default values are not the same like the configured default values.
+        Assert.That(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Nullable Boolean: The system default value equals the test setup default value.");
+        Assert.That(emptyConfig.BooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Boolean: The system default value equals the test setup default value.");
+        Assert.That(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, Is.False, "Byte: The system default value equals the test setup default value.");
+        Assert.That(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, Is.False, "Double: The system default value equals the test setup default value.");
+        Assert.That(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, Is.False, "Enum: The system default value equals the test setup default value.");
+        Assert.That(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, Is.False, "Integer: The system default value equals the test setup default value.");
+        Assert.That(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, Is.False, "Long: The system default value equals the test setup default value.");
+        Assert.That(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, Is.False, "String: The system default value equals the test setup default value.");
 
-        /// <summary>
-        /// Testing the save configuration functionality
-        /// </summary>
-        [Test(Description = "Testing the save configuration functionality")]
-        public void SaveTest()
-        {
-            DeleteTempFolder();
-            CreateTempFolder();
+        // load the default values for unset properties
+        _manager.FillEmpty(emptyConfig);
 
-            _manager.SaveConfiguration(new RuntimeConfigManagerTestConfig1());
+        // check if all properties got their default values.
+        Assert.That(emptyConfig.BooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.True, "Boolean field has been initialized!");
+        Assert.That(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, Is.True, "Enum field has not been initialized!");
+        Assert.That(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.True, "Nullable boolean field has not been initialized!");
+        Assert.That(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, Is.True, "Double field has not been initialized!");
+        Assert.That(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, Is.True, "Integer field has not been initialized!");
+        Assert.That(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, Is.True, "String field has not been initialized!");
+        Assert.That(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, Is.True, "Byte field has not been initialized!");
+        Assert.That(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, Is.True, "Long field has not been initialized!");
+    }
 
-            var config = _manager.GetConfiguration(typeof(RuntimeConfigManagerTestConfig1), false);
+    /// <summary>
+    /// Check if fill empty properties function fills only 'empty' properties.
+    /// </summary>
+    [Test(Description = "Check if fill empty properties function fills only 'empty' properties.")]
+    public void DoNotOverrideSetFieldsTest()
+    {
+        // create a new config
+        var emptyConfig = new RuntimeConfigManagerTestConfig1();
 
-            Assert.That(config, Is.Not.Null, "Config not saved!");
-        }
+        // set the value of the properties to non-system-default
+        emptyConfig.ByteField = 129;
+        emptyConfig.DoubleField = 0.1;
+        emptyConfig.EnumField = TestConfig1Enum.EnumValue2;
+        emptyConfig.IntField = 130;
+        emptyConfig.LongField = 140;
+        emptyConfig.NullableBooleanField = false;
+        emptyConfig.StringField = "";
+        // it makes no sense to test boolean here!
 
-        /// <summary>
-        /// Check if fill empty properties function loads the default values.
-        /// </summary>
-        [Test(Description = "Check if fill empty properties function loads the default values.")]
-        public void FillEmptyTest()
-        {
-            // create a config item
-            var emptyConfig = new RuntimeConfigManagerTestConfig1();
+        // check if all properties are now not the same like the configured default values.
+        Assert.That(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Nullable Boolean: The system default value equals the test setup default value.");
+        Assert.That(emptyConfig.BooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Boolean: The system default value equals the test setup default value.");
+        Assert.That(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, Is.False, "Byte: The system default value equals the test setup default value.");
+        Assert.That(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, Is.False, "Double: The system default value equals the test setup default value.");
+        Assert.That(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, Is.False, "Enum: The system default value equals the test setup default value.");
+        Assert.That(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, Is.False, "Integer: The system default value equals the test setup default value.");
+        Assert.That(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, Is.False, "Long: The system default value equals the test setup default value.");
+        Assert.That(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, Is.False, "String: The system default value equals the test setup default value.");
 
-            // check if all system default values are not the same like the configured default values.
-            Assert.That(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Nullable Boolean: The system default value equals the test setup default value.");
-            Assert.That(emptyConfig.BooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Boolean: The system default value equals the test setup default value.");
-            Assert.That(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, Is.False, "Byte: The system default value equals the test setup default value.");
-            Assert.That(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, Is.False, "Double: The system default value equals the test setup default value.");
-            Assert.That(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, Is.False, "Enum: The system default value equals the test setup default value.");
-            Assert.That(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, Is.False, "Integer: The system default value equals the test setup default value.");
-            Assert.That(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, Is.False, "Long: The system default value equals the test setup default value.");
-            Assert.That(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, Is.False, "String: The system default value equals the test setup default value.");
+        // fillup empty properties
+        _manager.FillEmpty(emptyConfig);
 
-            // load the default values for unset properties
-            _manager.FillEmpty(emptyConfig);
+        // check that no property value has been overwritten.
+        Assert.That(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, Is.False, "Enum field has been overwritten!");
+        Assert.That(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Nullable boolean field has not been overwritten!");
+        Assert.That(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, Is.False, "Double field has not been overwritten!");
+        Assert.That(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, Is.False, "Integer field has not been overwritten!");
+        Assert.That(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, Is.False, "String field has not been overwritten!");
+        Assert.That(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, Is.False, "Byte field has not been overwritten!");
+        Assert.That(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, Is.False, "Long field has not been overwritten!");
+    }
 
-            // check if all properties got their default values.
-            Assert.That(emptyConfig.BooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.True, "Boolean field has been initialized!");
-            Assert.That(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, Is.True, "Enum field has not been initialized!");
-            Assert.That(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.True, "Nullable boolean field has not been initialized!");
-            Assert.That(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, Is.True, "Double field has not been initialized!");
-            Assert.That(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, Is.True, "Integer field has not been initialized!");
-            Assert.That(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, Is.True, "String field has not been initialized!");
-            Assert.That(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, Is.True, "Byte field has not been initialized!");
-            Assert.That(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, Is.True, "Long field has not been initialized!");
-        }
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources.
+    /// </summary>
+    [TearDown]
+    public void Dispose()
+    {
+        DeleteTempFolder();
+    }
 
-        /// <summary>
-        /// Check if fill empty properties function fills only 'empty' properties.
-        /// </summary>
-        [Test(Description = "Check if fill empty properties function fills only 'empty' properties.")]
-        public void DoNotOverrideSetFieldsTest()
-        {
-            // create a new config
-            var emptyConfig = new RuntimeConfigManagerTestConfig1();
+    /// <summary>
+    /// Creates the temporary folder.
+    /// </summary>
+    private void CreateTempFolder()
+    {
+        Assert.That(Directory.Exists(_tempDirectory), Is.False);
+        Directory.CreateDirectory(_tempDirectory);
+    }
 
-            // set the value of the properties to non-system-default
-            emptyConfig.ByteField = 129;
-            emptyConfig.DoubleField = 0.1;
-            emptyConfig.EnumField = TestConfig1Enum.EnumValue2;
-            emptyConfig.IntField = 130;
-            emptyConfig.LongField = 140;
-            emptyConfig.NullableBooleanField = false;
-            emptyConfig.StringField = "";
-            // it makes no sense to test boolean here!
+    /// <summary>
+    /// Deletes the temporary folder.
+    /// </summary>
+    private void DeleteTempFolder()
+    {
+        if (Directory.Exists(_tempDirectory))
+            Directory.Delete(_tempDirectory, true);
 
-            // check if all properties are now not the same like the configured default values.
-            Assert.That(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Nullable Boolean: The system default value equals the test setup default value.");
-            Assert.That(emptyConfig.BooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Boolean: The system default value equals the test setup default value.");
-            Assert.That(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, Is.False, "Byte: The system default value equals the test setup default value.");
-            Assert.That(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, Is.False, "Double: The system default value equals the test setup default value.");
-            Assert.That(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, Is.False, "Enum: The system default value equals the test setup default value.");
-            Assert.That(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, Is.False, "Integer: The system default value equals the test setup default value.");
-            Assert.That(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, Is.False, "Long: The system default value equals the test setup default value.");
-            Assert.That(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, Is.False, "String: The system default value equals the test setup default value.");
-
-            // fillup empty properties
-            _manager.FillEmpty(emptyConfig);
-
-            // check that no property value has been overwritten.
-            Assert.That(emptyConfig.EnumField == RuntimeConfigManagerTestConfig1.EnumFieldDefault, Is.False, "Enum field has been overwritten!");
-            Assert.That(emptyConfig.NullableBooleanField == RuntimeConfigManagerTestConfig1.BooleanFieldDefault, Is.False, "Nullable boolean field has not been overwritten!");
-            Assert.That(emptyConfig.DoubleField.CompareTo(RuntimeConfigManagerTestConfig1.DoubleFieldDefault) == 0, Is.False, "Double field has not been overwritten!");
-            Assert.That(emptyConfig.IntField == RuntimeConfigManagerTestConfig1.IntFieldDefault, Is.False, "Integer field has not been overwritten!");
-            Assert.That(emptyConfig.StringField == RuntimeConfigManagerTestConfig1.StringFieldDefault, Is.False, "String field has not been overwritten!");
-            Assert.That(emptyConfig.ByteField == RuntimeConfigManagerTestConfig1.ByteFieldDefault, Is.False, "Byte field has not been overwritten!");
-            Assert.That(emptyConfig.LongField == RuntimeConfigManagerTestConfig1.LongFieldDefault, Is.False, "Long field has not been overwritten!");
-        }
-
-        /// <summary>
-        /// Releases unmanaged and - optionally - managed resources.
-        /// </summary>
-        [TearDown]
-        public void Dispose()
-        {
-            DeleteTempFolder();
-        }
-
-        /// <summary>
-        /// Creates the temporary folder.
-        /// </summary>
-        private void CreateTempFolder()
-        {
-            Assert.That(Directory.Exists(_tempDirectory), Is.False);
-            Directory.CreateDirectory(_tempDirectory);
-        }
-
-        /// <summary>
-        /// Deletes the temporary folder.
-        /// </summary>
-        private void DeleteTempFolder()
-        {
-            if (Directory.Exists(_tempDirectory))
-                Directory.Delete(_tempDirectory, true);
-
-            Assert.That(Directory.Exists(_tempDirectory), Is.False);
-        }
+        Assert.That(Directory.Exists(_tempDirectory), Is.False);
     }
 }

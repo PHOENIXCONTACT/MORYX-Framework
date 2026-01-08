@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -7,66 +7,65 @@ using Microsoft.Extensions.Logging;
 using Moryx.Configuration;
 using Moryx.Serialization;
 
-namespace Moryx.TestModule
+namespace Moryx.TestModule;
+
+public enum ConfigEnumeration
 {
-    public enum ConfigEnumeration
-    {
-        Value0,
-        Value1,
-        Value2,
-        Value3,
-        Value4,
-        Value5,
-        Value6,
-        Value7,
-        Value8,
-        Value9
-    }
+    Value0,
+    Value1,
+    Value2,
+    Value3,
+    Value4,
+    Value5,
+    Value6,
+    Value7,
+    Value8,
+    Value9
+}
 
-    [DataContract]
-    public class ModuleConfig : ConfigBase
-    {
-        [DataMember]
-        [DefaultValue(0x2)]
-        public byte ByteValue { get; set; }
+[DataContract]
+public class ModuleConfig : ConfigBase
+{
+    [DataMember]
+    [DefaultValue(0x2)]
+    public byte ByteValue { get; set; }
 
-        [DataMember]
-        [DefaultValue(5)]
-        public int IntegerValue { get; set; }
+    [DataMember]
+    [DefaultValue(5)]
+    public int IntegerValue { get; set; }
 
-        [DataMember]
-        public bool BoolValue { get; set; }
+    [DataMember]
+    public bool BoolValue { get; set; }
 
-        [DataMember]
-        [DefaultValue(4200000000000)]
-        public long LongValue { get; set; }
+    [DataMember]
+    [DefaultValue(4200000000000)]
+    public long LongValue { get; set; }
 
-        [DataMember]
-        [DefaultValue("Hello")]
-        public string StringValue { get; set; }
+    [DataMember]
+    [DefaultValue("Hello")]
+    public string StringValue { get; set; }
 
-        [DataMember]
-        [DefaultValue(3.14)]
-        public double DoubleValue { get; set; }
+    [DataMember]
+    [DefaultValue(3.14)]
+    public double DoubleValue { get; set; }
 
-        [DataMember]
-        [DefaultValue(ConfigEnumeration.Value0)]
-        public ConfigEnumeration EnumValue { get; set; }
+    [DataMember]
+    [DefaultValue(ConfigEnumeration.Value0)]
+    public ConfigEnumeration EnumValue { get; set; }
 
-        [DataMember]
-        [PluginConfigs(typeof(ITestPlugin))]
-        public TestPluginConfig TestPlugin { get; set; }
+    [DataMember]
+    [PluginConfigs(typeof(ITestPlugin))]
+    public TestPluginConfig TestPlugin { get; set; }
 
-        [DataMember]
-        [PluginConfigs(typeof(ITestPlugin), false)]
-        public List<TestPluginConfig> Plugins { get; set; }
+    [DataMember]
+    [PluginConfigs(typeof(ITestPlugin), false)]
+    public List<TestPluginConfig> Plugins { get; set; }
 
-        [DataMember]
-        [DefaultValue(LogLevel.Trace)]
-        public LogLevel LogLevel { get; set; }
+    [DataMember]
+    [DefaultValue(LogLevel.Trace)]
+    public LogLevel LogLevel { get; set; }
 
-        [DataMember]
-        [DefaultValue(2000)]
-        public int SleepTime { get; set; }
-    }
+    [DataMember]
+    [DefaultValue(2000)]
+    public int SleepTime { get; set; }
 }

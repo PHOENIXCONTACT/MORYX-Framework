@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Threading;
@@ -10,50 +10,49 @@ using Moryx.Runtime.Kernel.Tests.Dummies;
 using Moryx.Runtime.Kernel.Tests.ModuleMocks.Facade;
 using Moryx.Runtime.Modules;
 
-namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
+namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
+
+public class LifeCycleBoundFacadeTestModule : ServerModuleBase<RuntimeConfigManagerTestConfig2>
 {
-    public class LifeCycleBoundFacadeTestModule : ServerModuleBase<RuntimeConfigManagerTestConfig2>
+    public override string Name => "LifeCycleBoundTestModule";
+
+    private TestFacade _facade;
+
+    public LifeCycleBoundFacadeTestModule(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory)
+        : base(containerFactory, configManager, loggerFactory)
     {
-        public override string Name => "LifeCycleBoundTestModule";
+    }
 
-        private TestFacade _facade;
+    public int ActivatedCount { get; private set; }
+    public int DeactivatedCount { get; private set; }
 
-        public LifeCycleBoundFacadeTestModule(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory)
-            : base(containerFactory, configManager, loggerFactory)
-        {
-        }
+    public FacadeBase Facade => _facade;
 
-        public int ActivatedCount { get; private set; }
-        public int DeactivatedCount { get; private set; }
+    protected override Task OnInitializeAsync(CancellationToken cancellationToken)
+    {
+        _facade = new TestFacade();
+        _facade.StateChanged += OnFacadeActivated;
 
-        public FacadeBase Facade => _facade;
+        return Task.CompletedTask;
+    }
 
-        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
-        {
-            _facade = new TestFacade();
-            _facade.StateChanged += OnFacadeActivated;
+    protected override Task OnStartAsync(CancellationToken cancellationToken)
+    {
+        ActivateFacade(_facade);
+        return Task.CompletedTask;
+    }
 
-            return Task.CompletedTask;
-        }
+    protected override Task OnStopAsync(CancellationToken cancellationToken)
+    {
+        DeactivateFacade(_facade);
+        return Task.CompletedTask;
+    }
 
-        protected override Task OnStartAsync(CancellationToken cancellationToken)
-        {
-            ActivateFacade(_facade);
-            return Task.CompletedTask;
-        }
-
-        protected override Task OnStopAsync(CancellationToken cancellationToken)
-        {
-            DeactivateFacade(_facade);
-            return Task.CompletedTask;
-        }
-
-        private void OnFacadeActivated(object sender, bool activated)
-        {
-            if (activated)
-                ++ActivatedCount;
-            else
-                ++DeactivatedCount;
-        }
+    private void OnFacadeActivated(object sender, bool activated)
+    {
+        if (activated)
+            ++ActivatedCount;
+        else
+            ++DeactivatedCount;
     }
 }

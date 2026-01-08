@@ -1,23 +1,25 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Recipes;
 
-namespace Moryx.ControlSystem.Processes
+namespace Moryx.ControlSystem.Processes;
+
+/// <summary>
+/// Extensions on an <see cref="IProcess"/>
+/// </summary>
+public static class IProcessExtensions
 {
-    /// <summary>
-    /// Extensions on an <see cref="IProcess"/>
-    /// </summary>
-    public static class IProcessExtensions
+    /// <param name="process">The process holding the product instance</param>
+    extension(IProcess process)
     {
         /// <summary>
         /// Modifies the <see cref="ProductInstance"/> of type <typeparamref name="TInstance"/>
         /// on the <see cref="IProcess"/> using the given <paramref name="setter"/>.
         /// </summary>
         /// <typeparam name="TInstance">The expected type of the product instance</typeparam>
-        /// <param name="process">The process holding the product instance</param>
         /// <param name="setter">The action to be executed on the product instance</param>
         /// <example>
         /// <code>
@@ -30,14 +32,14 @@ namespace Moryx.ControlSystem.Processes
         /// not hold a product instance of type <typeparamref name="TInstance"/></exception>
         /// <exception cref="InvalidOperationException">Thrown if the given <paramref name="process"/>
         /// is no <see cref="ProductionProcess"/></exception>
-        public static TInstance ModifyProductInstance<TInstance>(this IProcess process, Action<TInstance> setter)
+        public TInstance ModifyProductInstance<TInstance>(Action<TInstance> setter)
             where TInstance : ProductInstance
         {
             if (process is not ProductionProcess productionProcess)
                 throw new InvalidOperationException($"Cannot modify an {nameof(ProductInstance)} on a process of type {process.GetType()}");
             if (productionProcess.ProductInstance is not TInstance instance)
                 throw new InvalidCastException($"Cannot cast {nameof(ProductionProcess.ProductInstance)} of type " +
-                    $"{productionProcess?.ProductInstance?.GetType()} to {typeof(TInstance)}");
+                                               $"{productionProcess?.ProductInstance?.GetType()} to {typeof(TInstance)}");
             setter.Invoke(instance);
             return instance;
         }
@@ -48,7 +50,6 @@ namespace Moryx.ControlSystem.Processes
         /// operation could not be executed.
         /// </summary>
         /// <typeparam name="TInstance">The expected type of the product instance</typeparam>
-        /// <param name="process">The process holding the product instance</param>
         /// <param name="setter">The action to be executed on the product instance</param>
         /// <example>
         /// <code>
@@ -57,7 +58,7 @@ namespace Moryx.ControlSystem.Processes
         /// ]]>
         /// </code>
         /// </example>
-        public static bool TryModifyProductInstance<TInstance>(this IProcess process, Action<TInstance> setter)
+        public bool TryModifyProductInstance<TInstance>(Action<TInstance> setter)
             where TInstance : ProductInstance
         {
             if (process is not ProductionProcess productionProcess)
@@ -71,7 +72,6 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Returns <see cref="IOrderBasedRecipe.OrderNumber"/> on the <see cref="IProcess"/> using the given <paramref name="process"/>.
         /// </summary>
-        /// <param name="process">The process holding the order number</param>
         /// <example>
         /// <code>
         /// <![CDATA[
@@ -79,7 +79,7 @@ namespace Moryx.ControlSystem.Processes
         /// ]]>
         /// </code>
         /// </example>
-        public static string GetOrderNumber(this IProcess process)
+        public string GetOrderNumber()
         {
             return (process.Recipe as IOrderBasedRecipe)?.OrderNumber;
         }
@@ -87,7 +87,6 @@ namespace Moryx.ControlSystem.Processes
         /// <summary>
         /// Returns <see cref="IOrderBasedRecipe.OperationNumber"/> on the <see cref="IProcess"/> using the given <paramref name="process"/>.
         /// </summary>
-        /// <param name="process">The process holding the operation number</param>
         /// <example>
         /// <code>
         /// <![CDATA[
@@ -95,10 +94,9 @@ namespace Moryx.ControlSystem.Processes
         /// ]]>
         /// </code>
         /// </example>
-        public static string GetOperationNumber(this IProcess process)
+        public string GetOperationNumber()
         {
             return (process.Recipe as IOrderBasedRecipe)?.OperationNumber;
         }
     }
 }
-

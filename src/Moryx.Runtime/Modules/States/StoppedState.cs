@@ -1,26 +1,25 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Runtime.Modules
+namespace Moryx.Runtime.Modules;
+
+internal class StoppedState : ServerModuleStateBase
 {
-    internal class StoppedState : ServerModuleStateBase
+    public override ServerModuleState Classification => ServerModuleState.Stopped;
+
+    public StoppedState(IServerModuleStateContext context, StateMap stateMap)
+        : base(context, stateMap)
     {
-        public override ServerModuleState Classification => ServerModuleState.Stopped;
+    }
 
-        public StoppedState(IServerModuleStateContext context, StateMap stateMap)
-            : base(context, stateMap)
-        {
-        }
+    public override Task Initialize(CancellationToken cancellationToken)
+    {
+        return NextStateAsync(StateInitializing, cancellationToken);
+    }
 
-        public override Task Initialize(CancellationToken cancellationToken)
-        {
-            return NextStateAsync(StateInitializing, cancellationToken);
-        }
-
-        public override Task Stop(CancellationToken cancellationToken)
-        {
-            // Stop again does not matter
-            return Task.CompletedTask;
-        }
+    public override Task Stop(CancellationToken cancellationToken)
+    {
+        // Stop again does not matter
+        return Task.CompletedTask;
     }
 }

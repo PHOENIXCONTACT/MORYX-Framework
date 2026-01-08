@@ -1,13 +1,15 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Security.Claims;
 
-namespace Moryx.Identity.AccessManagement
+namespace Moryx.Identity.AccessManagement;
+
+internal static class ClaimsPrincipalExtension
 {
-    internal static class ClaimsPrincipalExtension
+    extension(ClaimsPrincipal principal)
     {
-        public static string GeUserId(this ClaimsPrincipal principal)
+        public string GeUserId()
         {
             if (principal == null)
                 return string.Empty;
@@ -16,7 +18,7 @@ namespace Moryx.Identity.AccessManagement
             return userId != null ? userId.Value : string.Empty;
         }
 
-        public static string GetFullName(this ClaimsPrincipal principal)
+        public string GetFullName()
         {
             if (principal == null)
                 return string.Empty;

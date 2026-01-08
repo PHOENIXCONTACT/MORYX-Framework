@@ -1,20 +1,19 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.Tests
-{
-    public interface ISecondNonResourceInterface
-    {
-    }
+namespace Moryx.Resources.Management.Tests;
 
-    [ResourceAvailableAs(typeof(ISecondNonResourceInterface))]
-    public class DerivedResourceWithNewProxy : SimpleResource, ISecondNonResourceInterface
+public interface ISecondNonResourceInterface
+{
+}
+
+[ResourceAvailableAs(typeof(ISecondNonResourceInterface))]
+public class DerivedResourceWithNewProxy : SimpleResource, ISecondNonResourceInterface
+{
+    public override int MultiplyFoo(int factor)
     {
-        public override int MultiplyFoo(int factor)
-        {
-            return Foo *= factor + 2;
-        }
+        return Foo *= factor + 2;
     }
 }

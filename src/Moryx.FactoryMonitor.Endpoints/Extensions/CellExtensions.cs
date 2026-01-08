@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Activities;
@@ -12,15 +12,15 @@ using Moryx.ControlSystem.Recipes;
 using Moryx.Factory;
 using Moryx.FactoryMonitor.Endpoints.Models;
 
-namespace Moryx.FactoryMonitor.Endpoints.Extensions
+namespace Moryx.FactoryMonitor.Endpoints.Extensions;
+
+internal static class CellExtensions
 {
-    internal static class CellExtensions
+    extension(ICell cell)
     {
-        public static ResourceChangedModel GetResourceChangedModel(
-           this ICell cell,
-           Converter.Converter converter,
-           IResourceManagement resourceManager,
-           Func<IMachineLocation, bool> cellFilter)
+        public ResourceChangedModel GetResourceChangedModel(Converter.Converter converter,
+            IResourceManagement resourceManager,
+            Func<IMachineLocation, bool> cellFilter)
         {
 
             var resourceChangedCellModel = resourceManager.ReadUnsafe(cell.Id, converter.ToResourceChangedModel);
@@ -36,20 +36,20 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             return resourceChangedCellModel;
         }
 
-        public static long GetFactoryId(this ICell cell, IResourceManagement resourceManagement)
+        public long GetFactoryId(IResourceManagement resourceManagement)
         {
             var resource = resourceManagement.ReadUnsafe(cell, x => x.GetFactory());
             return resource?.Id ?? -1;
         }
 
-        public static CellStateChangedModel GetCellStateChangedModel(this ICell cell, Resource resource)
+        public CellStateChangedModel GetCellStateChangedModel(Resource resource)
         {
             var cellStateChangedModel = Converter.Converter.ToCellStateChangedModel(resource);
             cellStateChangedModel.State = GetCellState(cell);
             return cellStateChangedModel;
         }
 
-        public static CellStateChangedModel GetCellStateChangedModel(this ICell cell, ActivityProgress activityProgress, Resource resource)
+        public CellStateChangedModel GetCellStateChangedModel(ActivityProgress activityProgress, Resource resource)
         {
             var model = GetCellStateChangedModel(cell, resource);
             model.State = GetCellState(cell, activityProgress);
@@ -57,9 +57,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             return model;
         }
 
-        public static ActivityChangedModel GetActivityChangedModel(
-            this ICell cell,
-            Activity activity,
+        public ActivityChangedModel GetActivityChangedModel(Activity activity,
             List<OrderModel> orderModels)
         {
             var activityChangedModel = Converter.Converter.ToActivityChangedModel(cell);
@@ -79,7 +77,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             return activityChangedModel;
         }
 
-        public static CellState GetCellState(this ICell cell, ActivityProgress activityProgress)
+        public CellState GetCellState(ActivityProgress activityProgress)
         {
             var state = GetCellState(cell);
             if (state is CellState.NotReadyToWork)
@@ -93,7 +91,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
             return CellState.Idle;
         }
 
-        public static CellState GetCellState(this ICell cell)
+        public CellState GetCellState()
         {
             var currentCapabilities = cell.Capabilities.GetAll();
             if ((currentCapabilities.Count() == 1 && currentCapabilities.Single() is NullCapabilities) || !currentCapabilities.Any())
@@ -101,7 +99,5 @@ namespace Moryx.FactoryMonitor.Endpoints.Extensions
 
             return CellState.Idle;
         }
-
     }
 }
-

@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
@@ -6,57 +6,56 @@ using Moryx.Modules;
 using Moryx.Notifications;
 using Moryx.ProcessData.Bindings;
 
-namespace Moryx.ProcessData.Adapter.NotificationPublisher
+namespace Moryx.ProcessData.Adapter.NotificationPublisher;
+
+[Plugin(LifeCycle.Singleton)]
+internal class NotificationPublisherAdapter : IPlugin
 {
-    [Plugin(LifeCycle.Singleton)]
-    internal class NotificationPublisherAdapter : IPlugin
+    private const string MeasurementPrefix = "notifications_";
+    private MeasurementBindingProcessor _notificationBindingProcessor;
+
+    #region Dependencies
+
+    public INotificationPublisher NotificationPublisher { get; set; }
+
+    public IProcessDataMonitor ProcessDataMonitor { get; set; }
+
+    public ModuleConfig ModuleConfig { get; set; }
+
+    #endregion
+
+    /// <inheritdoc />
+    public void Start()
     {
-        private const string MeasurementPrefix = "notifications_";
-        private MeasurementBindingProcessor _notificationBindingProcessor;
+        var notificationBindingResolverFactory = new NotificationBindingResolverFactory();
+        _notificationBindingProcessor = new MeasurementBindingProcessor(notificationBindingResolverFactory, ModuleConfig.NotificationBindings);
 
-        #region Dependencies
+        NotificationPublisher.Acknowledged += OnNotificationAcknowledged;
+    }
 
-        public INotificationPublisher NotificationPublisher { get; set; }
+    /// <summary>
+    /// Stops the adapter component
+    /// </summary>
+    public void Stop()
+    {
+        NotificationPublisher.Acknowledged -= OnNotificationAcknowledged;
+    }
 
-        public IProcessDataMonitor ProcessDataMonitor { get; set; }
+    private void OnNotificationAcknowledged(object sender, Notification notification)
+    {
+        var measurement = new Measurement(MeasurementPrefix + "acknowledged");
 
-        public ModuleConfig ModuleConfig { get; set; }
+        measurement.Add(new DataField("id", notification.Identifier));
 
-        #endregion
+        var duration = notification.Acknowledged - notification.Created;
+        if (duration.HasValue)
+            measurement.Add(new DataField("duration", duration.Value));
 
-        /// <inheritdoc />
-        public void Start()
-        {
-            var notificationBindingResolverFactory = new NotificationBindingResolverFactory();
-            _notificationBindingProcessor = new MeasurementBindingProcessor(notificationBindingResolverFactory, ModuleConfig.NotificationBindings);
+        measurement.Add(new DataTag("severity", notification.Severity.ToString()));
+        measurement.Add(new DataTag("type", notification.GetType().Name));
 
-            NotificationPublisher.Acknowledged += OnNotificationAcknowledged;
-        }
+        _notificationBindingProcessor.Apply(measurement, notification);
 
-        /// <summary>
-        /// Stops the adapter component
-        /// </summary>
-        public void Stop()
-        {
-            NotificationPublisher.Acknowledged -= OnNotificationAcknowledged;
-        }
-
-        private void OnNotificationAcknowledged(object sender, Notification notification)
-        {
-            var measurement = new Measurement(MeasurementPrefix + "acknowledged");
-
-            measurement.Add(new DataField("id", notification.Identifier));
-
-            var duration = notification.Acknowledged - notification.Created;
-            if (duration.HasValue)
-                measurement.Add(new DataField("duration", duration.Value));
-
-            measurement.Add(new DataTag("severity", notification.Severity.ToString()));
-            measurement.Add(new DataTag("type", notification.GetType().Name));
-
-            _notificationBindingProcessor.Apply(measurement, notification);
-
-            ProcessDataMonitor.Add(measurement);
-        }
+        ProcessDataMonitor.Add(measurement);
     }
 }

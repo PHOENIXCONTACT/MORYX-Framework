@@ -1,26 +1,25 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Workplans
+namespace Moryx.Workplans;
+
+/// <summary>
+/// Interface of instances of an <see cref="IWorkplan"/>, executable by an implementation of <see cref="IWorkplanEngine"/>.
+/// </summary>
+public interface IWorkplanInstance
 {
     /// <summary>
-    /// Interface of instances of an <see cref="IWorkplan"/>, executable by an implementation of <see cref="IWorkplanEngine"/>.
+    /// Instantiated workplan type
     /// </summary>
-    public interface IWorkplanInstance
-    {
-        /// <summary>
-        /// Instantiated workplan type
-        /// </summary>
-        IWorkplan Workplan { get; }
+    IWorkplan Workplan { get; }
 
-        /// <summary>
-        /// All places of the <see cref="IWorkplanInstance"/>. See also <seealso href="https://en.wikipedia.org/wiki/Petri_net"/>.
-        /// </summary>
-        IReadOnlyList<IPlace> Places { get; }
+    /// <summary>
+    /// All places of the <see cref="IWorkplanInstance"/>. See also <seealso href="https://en.wikipedia.org/wiki/Petri_net"/>.
+    /// </summary>
+    IReadOnlyList<IPlace> Places { get; }
 
-        /// <summary>
-        /// All transitions of the <see cref="IWorkplanInstance"/>. See also <seealso href="https://en.wikipedia.org/wiki/Petri_net"/>.
-        /// </summary>
-        IReadOnlyList<ITransition> Transitions { get; }
-    }
+    /// <summary>
+    /// All transitions of the <see cref="IWorkplanInstance"/>. See also <seealso href="https://en.wikipedia.org/wiki/Petri_net"/>.
+    /// </summary>
+    IReadOnlyList<ITransition> Transitions { get; }
 }

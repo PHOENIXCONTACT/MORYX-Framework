@@ -1,49 +1,47 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections.Concurrent;
 using Moryx.Container;
 using Moryx.Logging;
 
-namespace Moryx.Orders.Management
+namespace Moryx.Orders.Management;
+
+[Component(LifeCycle.Singleton, typeof(IOperationLoggerProvider))]
+internal class OperationLoggerProvider : IOperationLoggerProvider
 {
-    [Component(LifeCycle.Singleton, typeof(IOperationLoggerProvider))]
-    internal class OperationLoggerProvider : IOperationLoggerProvider
+    #region Dependencies
+
+    [UseChild("Operations")]
+    public IModuleLogger Logger { get; set; }
+
+    #endregion
+
+    #region Fields and Properties
+
+    private readonly IDictionary<IOperationData, IOperationLogger> _logger = new ConcurrentDictionary<IOperationData, IOperationLogger>();
+
+    #endregion
+
+    public IOperationLogger GetLogger(IOperationData operationData)
     {
-        #region Dependencies
-
-        [UseChild("Operations")]
-        public IModuleLogger Logger { get; set; }
-
-        #endregion
-
-        #region Fields and Properties
-
-        private readonly IDictionary<IOperationData, IOperationLogger> _logger = new ConcurrentDictionary<IOperationData, IOperationLogger>();
-
-        #endregion
-
-        public IOperationLogger GetLogger(IOperationData operationData)
+        IOperationLogger operationLogger;
+        if (_logger.ContainsKey(operationData))
+            operationLogger = _logger[operationData];
+        else
         {
-            IOperationLogger operationLogger;
-            if (_logger.ContainsKey(operationData))
-                operationLogger = _logger[operationData];
-            else
-            {
-                operationLogger = new OperationLogger(Logger, operationData);
-                _logger[operationData] = operationLogger;
-            }
-
-            return operationLogger;
+            operationLogger = new OperationLogger(Logger, operationData);
+            _logger[operationData] = operationLogger;
         }
 
-        public void RemoveLogger(IOperationData operationData)
-        {
-            if (!_logger.ContainsKey(operationData))
-                return;
+        return operationLogger;
+    }
 
-            _logger.Remove(operationData);
-        }
+    public void RemoveLogger(IOperationData operationData)
+    {
+        if (!_logger.ContainsKey(operationData))
+            return;
+
+        _logger.Remove(operationData);
     }
 }
-

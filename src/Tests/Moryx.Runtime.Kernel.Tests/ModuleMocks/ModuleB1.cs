@@ -1,28 +1,27 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Runtime.Modules;
 
-namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
+namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
+
+internal class ModuleB1 : ModuleBase, IFacadeContainer<IFacadeB>
 {
-    internal class ModuleB1 : ModuleBase, IFacadeContainer<IFacadeB>
+    public ModuleB1()
     {
-        public ModuleB1()
-        {
-            Facade = new FacadeB1();
-        }
-
-        /// <summary>
-        /// Facade controlled by this module
-        /// </summary>
-        /// <remarks>
-        /// The hard-coded name of this property is also used in Moryx.Runtime.Kernel\ModuleManagement\Components\ModuleDependencyManager.cs
-        /// </remarks>
-        public IFacadeB Facade { get; private set; }
+        Facade = new FacadeB1();
     }
 
-    internal class FacadeB1 : IFacadeB
-    {
+    /// <summary>
+    /// Facade controlled by this module
+    /// </summary>
+    /// <remarks>
+    /// The hard-coded name of this property is also used in Moryx.Runtime.Kernel\ModuleManagement\Components\ModuleDependencyManager.cs
+    /// </remarks>
+    public IFacadeB Facade { get; private set; }
+}
 
-    }
+internal class FacadeB1 : IFacadeB
+{
+
 }

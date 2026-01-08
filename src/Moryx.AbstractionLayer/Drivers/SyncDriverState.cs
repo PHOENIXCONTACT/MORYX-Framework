@@ -1,45 +1,44 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.StateMachines;
 
-namespace Moryx.AbstractionLayer.Drivers
+namespace Moryx.AbstractionLayer.Drivers;
+
+/// <summary>
+/// Base class for synchronous driver states with typed context object
+/// </summary>
+/// <typeparam name="TContext">Type of the driver context</typeparam>
+public abstract class SyncDriverState<TContext> : SyncStateBase<TContext>, IDriverState
+    where TContext : Driver
 {
+    /// <inheritdoc />
+    public StateClassification Classification { get; protected set; }
+
     /// <summary>
-    /// Base class for synchronous driver states with typed context object
+    /// Initializes a new instance of the <see cref="SyncDriverState{TContext}"/> class.
     /// </summary>
-    /// <typeparam name="TContext">Type of the driver context</typeparam>
-    public abstract class SyncDriverState<TContext> : SyncStateBase<TContext>, IDriverState
-        where TContext : Driver
+    /// <param name="classification">The classification of the state.</param>
+    /// <param name="stateMap">Map of states to objects</param>
+    /// <param name="context">Context of the state machine</param>
+    protected SyncDriverState(TContext context, StateMap stateMap, StateClassification classification) : base(context, stateMap)
     {
-        /// <inheritdoc />
-        public StateClassification Classification { get; protected set; }
+        Classification = classification;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SyncDriverState{TContext}"/> class.
-        /// </summary>
-        /// <param name="classification">The classification of the state.</param>
-        /// <param name="stateMap">Map of states to objects</param>
-        /// <param name="context">Context of the state machine</param>
-        protected SyncDriverState(TContext context, StateMap stateMap, StateClassification classification) : base(context, stateMap)
-        {
-            Classification = classification;
-        }
+    /// <summary>
+    /// State transition to connect
+    /// </summary>
+    public virtual void Connect()
+    {
+        InvalidState();
+    }
 
-        /// <summary>
-        /// State transition to connect
-        /// </summary>
-        public virtual void Connect()
-        {
-            InvalidState();
-        }
-
-        /// <summary>
-        /// State transition to disconnect
-        /// </summary>
-        public virtual void Disconnect()
-        {
-            InvalidState();
-        }
+    /// <summary>
+    /// State transition to disconnect
+    /// </summary>
+    public virtual void Disconnect()
+    {
+        InvalidState();
     }
 }

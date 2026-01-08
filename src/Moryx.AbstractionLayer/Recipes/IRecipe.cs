@@ -1,53 +1,52 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Processes;
 
-namespace Moryx.AbstractionLayer.Recipes
+namespace Moryx.AbstractionLayer.Recipes;
+
+/// <summary>
+/// A recipe is used to provide data for a process and to provide additional parameters.
+/// </summary>
+public interface IRecipe : IPersistentObject
 {
     /// <summary>
-    /// A recipe is used to provide data for a process and to provide additional parameters.
+    /// Recipe reference that served as a template for this recipe
     /// </summary>
-    public interface IRecipe : IPersistentObject
-    {
-        /// <summary>
-        /// Recipe reference that served as a template for this recipe
-        /// </summary>
-        long TemplateId { get; set; }
+    long TemplateId { get; set; }
 
-        /// <summary>
-        /// Name of the recipe
-        /// </summary>
-        string Name { get; set; }
+    /// <summary>
+    /// Name of the recipe
+    /// </summary>
+    string Name { get; set; }
 
-        /// <summary>
-        /// Revision of this recipe
-        /// </summary>
-        int Revision { get; set; }
+    /// <summary>
+    /// Revision of this recipe
+    /// </summary>
+    int Revision { get; set; }
 
-        /// <summary>
-        /// This recipe's state
-        /// </summary>
-        RecipeState State { get; set; }
+    /// <summary>
+    /// This recipe's state
+    /// </summary>
+    RecipeState State { get; set; }
 
-        /// <summary>
-        /// Classification of the recipe
-        /// </summary>
-        RecipeClassification Classification { get; set; }
+    /// <summary>
+    /// Classification of the recipe
+    /// </summary>
+    RecipeClassification Classification { get; set; }
 
-        /// <summary>
-        /// Provider that created this recipe
-        /// </summary>
-        IRecipeProvider Origin { get; set; }
+    /// <summary>
+    /// Provider that created this recipe
+    /// </summary>
+    IRecipeProvider Origin { get; set; }
 
-        /// <summary>
-        /// Create process that can execute this recipe
-        /// </summary>
-        Process CreateProcess();
+    /// <summary>
+    /// Create process that can execute this recipe
+    /// </summary>
+    Process CreateProcess();
 
-        /// <summary>
-        /// Creates a clone of the current recipe
-        /// </summary>
-        IRecipe Clone();
-    }
+    /// <summary>
+    /// Creates a clone of the current recipe
+    /// </summary>
+    IRecipe Clone();
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
@@ -7,42 +7,41 @@ using Moryx.Model.Configuration;
 using Moryx.Model.Repositories;
 using Moryx.Tools;
 
-namespace Moryx.Model
+namespace Moryx.Model;
+
+/// <inheritdoc />
+public class ModelSetupExecutor<TContext> : IModelSetupExecutor
+    where TContext : DbContext
 {
-    /// <inheritdoc />
-    public class ModelSetupExecutor<TContext> : IModelSetupExecutor
-        where TContext : DbContext
+    private readonly IDbContextManager _dbContextManager;
+    private readonly IModelSetup[] _setups;
+
+    /// <summary>
+    /// Creates a new instance of <see cref="ModelSetupExecutor{TContext}"/>
+    /// </summary>
+    /// <param name="dbContextManager"></param>
+    public ModelSetupExecutor(IDbContextManager dbContextManager)
     {
-        private readonly IDbContextManager _dbContextManager;
-        private readonly IModelSetup[] _setups;
+        _dbContextManager = dbContextManager;
 
-        /// <summary>
-        /// Creates a new instance of <see cref="ModelSetupExecutor{TContext}"/>
-        /// </summary>
-        /// <param name="dbContextManager"></param>
-        public ModelSetupExecutor(IDbContextManager dbContextManager)
+        // Load ModelSetups TODO: Load internals
+        _setups = ReflectionTool.GetPublicClasses<IModelSetup>(delegate (Type type)
         {
-            _dbContextManager = dbContextManager;
+            // Try to read context from attribute
+            var setupAttr = type.GetCustomAttribute<ModelSetupAttribute>();
+            return setupAttr != null && setupAttr.TargetContext == typeof(TContext);
+        }).Select(s => (IModelSetup)Activator.CreateInstance((Type)s)).ToArray();
+    }
 
-            // Load ModelSetups TODO: Load internals
-            _setups = ReflectionTool.GetPublicClasses<IModelSetup>(delegate (Type type)
-            {
-                // Try to read context from attribute
-                var setupAttr = type.GetCustomAttribute<ModelSetupAttribute>();
-                return setupAttr != null && setupAttr.TargetContext == typeof(TContext);
-            }).Select(s => (IModelSetup)Activator.CreateInstance((Type)s)).ToArray();
-        }
+    /// <inheritdoc />
+    public IReadOnlyList<IModelSetup> GetAllSetups() => _setups;
 
-        /// <inheritdoc />
-        public IReadOnlyList<IModelSetup> GetAllSetups() => _setups;
+    /// <inheritdoc />
+    public async Task ExecuteAsync(DatabaseConfig config, IModelSetup setup, string setupData, CancellationToken cancellationToken = default)
+    {
+        var unitOfWorkFactory = new UnitOfWorkFactory<TContext>(_dbContextManager);
+        using var uow = unitOfWorkFactory.Create(config);
 
-        /// <inheritdoc />
-        public async Task ExecuteAsync(DatabaseConfig config, IModelSetup setup, string setupData, CancellationToken cancellationToken = default)
-        {
-            var unitOfWorkFactory = new UnitOfWorkFactory<TContext>(_dbContextManager);
-            using var uow = unitOfWorkFactory.Create(config);
-
-            await setup.ExecuteAsync(uow, setupData, cancellationToken);
-        }
+        await setup.ExecuteAsync(uow, setupData, cancellationToken);
     }
 }

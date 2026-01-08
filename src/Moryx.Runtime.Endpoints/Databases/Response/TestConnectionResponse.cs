@@ -1,18 +1,17 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Model;
 
-namespace Moryx.Runtime.Endpoints.Databases.Response
+namespace Moryx.Runtime.Endpoints.Databases.Response;
+
+/// <summary>
+/// Response object for testing database connections
+/// </summary>
+public class TestConnectionResponse
 {
     /// <summary>
-    /// Response object for testing database connections
+    /// Result of the connection test
     /// </summary>
-    public class TestConnectionResponse
-    {
-        /// <summary>
-        /// Result of the connection test
-        /// </summary>
-        public TestConnectionResult Result { get; set; }
-    }
+    public TestConnectionResult Result { get; set; }
 }

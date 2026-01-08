@@ -1,25 +1,24 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Activities
+namespace Moryx.AbstractionLayer.Activities;
+
+/// <summary>
+/// Class to decorate activities to declare the results enum
+/// </summary>
+[AttributeUsage(AttributeTargets.Class)]
+public class ActivityResultsAttribute : Attribute
 {
     /// <summary>
-    /// Class to decorate activities to declare the results enum
+    /// Declare all possible results for this activity
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
-    public class ActivityResultsAttribute : Attribute
+    public ActivityResultsAttribute(Type resultEnum)
     {
-        /// <summary>
-        /// Declare all possible results for this activity
-        /// </summary>
-        public ActivityResultsAttribute(Type resultEnum)
-        {
-            ResultEnum = resultEnum;
-        }
-
-        /// <summary>
-        /// Type of the enum containing the results
-        /// </summary>
-        public Type ResultEnum { get; private set; }
+        ResultEnum = resultEnum;
     }
+
+    /// <summary>
+    /// Type of the enum containing the results
+    /// </summary>
+    public Type ResultEnum { get; private set; }
 }

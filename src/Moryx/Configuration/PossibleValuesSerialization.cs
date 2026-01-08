@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Reflection;
@@ -6,129 +6,128 @@ using Moryx.Container;
 using Moryx.Serialization;
 using Moryx.Tools;
 
-namespace Moryx.Configuration
+namespace Moryx.Configuration;
+
+/// <summary>
+/// Base class for config to model transformer
+/// </summary>
+public class PossibleValuesSerialization : DefaultSerialization
 {
     /// <summary>
-    /// Base class for config to model transformer
+    /// Container used to include current information from current composition into the configuration
     /// </summary>
-    public class PossibleValuesSerialization : DefaultSerialization
+    protected IContainer Container { get; }
+
+    /// <summary>
+    /// Access to level 1 service registration
+    /// </summary>
+    public IServiceProvider ServiceProvider { get; }
+
+    /// <summary>
+    /// Empty property provider to pre-fill newley created objects
+    /// </summary>
+    protected IEmptyPropertyProvider EmptyPropertyProvider { get; }
+
+    /// <summary>
+    /// Initialize base class
+    /// </summary>
+    public PossibleValuesSerialization(IContainer container, IServiceProvider serviceProvider, IEmptyPropertyProvider emptyPropertyProvider)
     {
-        /// <summary>
-        /// Container used to include current information from current composition into the configuration
-        /// </summary>
-        protected IContainer Container { get; }
+        Container = container;
+        ServiceProvider = serviceProvider;
+        EmptyPropertyProvider = emptyPropertyProvider;
+    }
 
-        /// <summary>
-        /// Access to level 1 service registration
-        /// </summary>
-        public IServiceProvider ServiceProvider { get; }
+    /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
+    public override EntryPrototype[] Prototypes(Type memberType, ICustomAttributeProvider attributeProvider)
+    {
+        var possibleValuesAtt = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
+        // We can not create prototypes for possible primitives
+        if (possibleValuesAtt == null || IsPrimitiveCollection(memberType))
+            return base.Prototypes(memberType, attributeProvider);
 
-        /// <summary>
-        /// Empty property provider to pre-fill newley created objects
-        /// </summary>
-        protected IEmptyPropertyProvider EmptyPropertyProvider { get; }
-
-        /// <summary>
-        /// Initialize base class
-        /// </summary>
-        public PossibleValuesSerialization(IContainer container, IServiceProvider serviceProvider, IEmptyPropertyProvider emptyPropertyProvider)
+        // Create prototypes from possible values
+        var list = new List<EntryPrototype>();
+        foreach (var value in possibleValuesAtt.GetValues(Container, ServiceProvider))
         {
-            Container = container;
-            ServiceProvider = serviceProvider;
-            EmptyPropertyProvider = emptyPropertyProvider;
+            var prototype = possibleValuesAtt.Parse(Container, ServiceProvider, value);
+            EmptyPropertyProvider.FillEmpty(prototype);
+            list.Add(new EntryPrototype(value, prototype));
+        }
+        return list.ToArray();
+    }
+
+    /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
+    public override EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
+    {
+        var possibleValuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
+        // Possible values for primitive collections only apply to members
+        if (possibleValuesAttribute == null || IsPrimitiveCollection(memberType))
+            return base.PossibleValues(memberType, attributeProvider);
+
+        // Use attribute
+        var values = possibleValuesAttribute.GetValues(Container, ServiceProvider);
+        return EntryPossible.FromStrings(values?.Distinct());
+    }
+
+    /// <summary>
+    /// Check if a property is a collection of primitives
+    /// </summary>
+    private static bool IsPrimitiveCollection(Type memberType)
+    {
+        if (!EntryConvert.IsCollection(memberType))
+            return false;
+
+        var elementType = EntryConvert.ElementType(memberType);
+        return EntryConvert.ValueOrStringType(elementType);
+    }
+
+    /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
+    public override EntryPossible[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
+    {
+        var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
+        if (valuesAttribute == null)
+        {
+            return base.PossibleElementValues(memberType, attributeProvider);
         }
 
-        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
-        public override EntryPrototype[] Prototypes(Type memberType, ICustomAttributeProvider attributeProvider)
+        // Use attribute
+        var values = valuesAttribute.GetValues(Container, ServiceProvider);
+        return EntryPossible.FromStrings(values?.Distinct());
+    }
+
+    /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
+    public override object CreateInstance(Type memberType, ICustomAttributeProvider attributeProvider, Entry encoded)
+    {
+        var possibleValuesAtt = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
+        var instance = possibleValuesAtt != null
+            ? possibleValuesAtt.Parse(Container, ServiceProvider, encoded.Value.Current)
+            : base.CreateInstance(memberType, attributeProvider, encoded);
+
+        EmptyPropertyProvider.FillEmpty(instance);
+
+        return instance;
+    }
+
+    /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
+    public override object ConvertValue(Type memberType, ICustomAttributeProvider attributeProvider, Entry mappedEntry, object currentValue)
+    {
+        var value = mappedEntry.Value;
+
+        var att = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
+        if (att == null || !att.OverridesConversion || value.Type == EntryValueType.Collection)
+            return base.ConvertValue(memberType, attributeProvider, mappedEntry, currentValue);
+
+        // If old and current type are identical, keep the object
+        if (value.Type == EntryValueType.Class && currentValue != null && currentValue.GetType().Name == value.Current)
+            return currentValue;
+
+        var instance = att.Parse(Container, ServiceProvider, mappedEntry.Value.Current);
+        if (mappedEntry.Value.Type == EntryValueType.Class)
         {
-            var possibleValuesAtt = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
-            // We can not create prototypes for possible primitives
-            if (possibleValuesAtt == null || IsPrimitiveCollection(memberType))
-                return base.Prototypes(memberType, attributeProvider);
-
-            // Create prototypes from possible values
-            var list = new List<EntryPrototype>();
-            foreach (var value in possibleValuesAtt.GetValues(Container, ServiceProvider))
-            {
-                var prototype = possibleValuesAtt.Parse(Container, ServiceProvider, value);
-                EmptyPropertyProvider.FillEmpty(prototype);
-                list.Add(new EntryPrototype(value, prototype));
-            }
-            return list.ToArray();
-        }
-
-        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
-        public override EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
-        {
-            var possibleValuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
-            // Possible values for primitive collections only apply to members
-            if (possibleValuesAttribute == null || IsPrimitiveCollection(memberType))
-                return base.PossibleValues(memberType, attributeProvider);
-
-            // Use attribute
-            var values = possibleValuesAttribute.GetValues(Container, ServiceProvider);
-            return EntryPossible.FromStrings(values?.Distinct());
-        }
-
-        /// <summary>
-        /// Check if a property is a collection of primitives
-        /// </summary>
-        private static bool IsPrimitiveCollection(Type memberType)
-        {
-            if (!EntryConvert.IsCollection(memberType))
-                return false;
-
-            var elementType = EntryConvert.ElementType(memberType);
-            return EntryConvert.ValueOrStringType(elementType);
-        }
-
-        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
-        public override EntryPossible[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
-        {
-            var valuesAttribute = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
-            if (valuesAttribute == null)
-            {
-                return base.PossibleElementValues(memberType, attributeProvider);
-            }
-
-            // Use attribute
-            var values = valuesAttribute.GetValues(Container, ServiceProvider);
-            return EntryPossible.FromStrings(values?.Distinct());
-        }
-
-        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
-        public override object CreateInstance(Type memberType, ICustomAttributeProvider attributeProvider, Entry encoded)
-        {
-            var possibleValuesAtt = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
-            var instance = possibleValuesAtt != null
-                ? possibleValuesAtt.Parse(Container, ServiceProvider, encoded.Value.Current)
-                : base.CreateInstance(memberType, attributeProvider, encoded);
-
             EmptyPropertyProvider.FillEmpty(instance);
-
-            return instance;
         }
 
-        /// <see cref="T:Moryx.Serialization.ICustomSerialization"/>
-        public override object ConvertValue(Type memberType, ICustomAttributeProvider attributeProvider, Entry mappedEntry, object currentValue)
-        {
-            var value = mappedEntry.Value;
-
-            var att = attributeProvider.GetCustomAttribute<PossibleValuesAttribute>();
-            if (att == null || !att.OverridesConversion || value.Type == EntryValueType.Collection)
-                return base.ConvertValue(memberType, attributeProvider, mappedEntry, currentValue);
-
-            // If old and current type are identical, keep the object
-            if (value.Type == EntryValueType.Class && currentValue != null && currentValue.GetType().Name == value.Current)
-                return currentValue;
-
-            var instance = att.Parse(Container, ServiceProvider, mappedEntry.Value.Current);
-            if (mappedEntry.Value.Type == EntryValueType.Class)
-            {
-                EmptyPropertyProvider.FillEmpty(instance);
-            }
-
-            return instance;
-        }
+        return instance;
     }
 }

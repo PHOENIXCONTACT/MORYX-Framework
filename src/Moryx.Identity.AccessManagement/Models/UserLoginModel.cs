@@ -1,25 +1,24 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Moryx.Identity.AccessManagement.Models
+namespace Moryx.Identity.AccessManagement.Models;
+
+/// <summary>
+/// View model to login
+/// </summary>
+public class UserLoginModel
 {
     /// <summary>
-    /// View model to login
+    /// User name of the user to be logged in.
     /// </summary>
-    public class UserLoginModel
-    {
-        /// <summary>
-        /// User name of the user to be logged in.
-        /// </summary>
-        [Required]
-        public string UserName { get; set; }
+    [Required]
+    public string UserName { get; set; }
 
-        /// <summary>
-        /// Password of the user to be logged in.
-        /// </summary>
-        [Required]
-        public string Password { get; set; }
-    }
+    /// <summary>
+    /// Password of the user to be logged in.
+    /// </summary>
+    [Required]
+    public string Password { get; set; }
 }

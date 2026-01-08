@@ -1,41 +1,40 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 
 using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Processes;
 using Moryx.ControlSystem.Tests.Mocks;
 using NUnit.Framework;
 
-namespace Moryx.ControlSystem.Tests
+namespace Moryx.ControlSystem.Tests;
+
+[TestFixture]
+internal class ProcessExtensionsTest
 {
-    [TestFixture]
-    internal class ProcessExtensionsTest
+    [Test]
+    public void ShouldReturnOrderNumber()
     {
-        [Test]
-        public void ShouldReturnOrderNumber()
-        {
-            // Arrange
-            var recipe = new DummyRecipe { OrderNumber = "O10", OperationNumber = "Op082" };
-            var process = new Process { Recipe = recipe };
+        // Arrange
+        var recipe = new DummyRecipe { OrderNumber = "O10", OperationNumber = "Op082" };
+        var process = new Process { Recipe = recipe };
 
-            // Act
-            var orderNumber = process?.GetOrderNumber();
+        // Act
+        var orderNumber = process?.GetOrderNumber();
 
-            // Assert
-            Assert.That(orderNumber, Is.EqualTo(recipe.OrderNumber));
-        }
+        // Assert
+        Assert.That(orderNumber, Is.EqualTo(recipe.OrderNumber));
+    }
         
-        [Test]
-        public void ShouldReturnOperationNumber()
-        {
-            // Arrange
-            var recipe = new DummyRecipe { OrderNumber = "O10", OperationNumber = "Op082" };
-            var process = new Process { Recipe = recipe };
+    [Test]
+    public void ShouldReturnOperationNumber()
+    {
+        // Arrange
+        var recipe = new DummyRecipe { OrderNumber = "O10", OperationNumber = "Op082" };
+        var process = new Process { Recipe = recipe };
 
-            // Act
-            var operationNumber = process?.GetOperationNumber();
+        // Act
+        var operationNumber = process?.GetOperationNumber();
 
-            // Assert
-            Assert.That(operationNumber, Is.EqualTo(recipe.OperationNumber));
-        }
+        // Assert
+        Assert.That(operationNumber, Is.EqualTo(recipe.OperationNumber));
     }
 }

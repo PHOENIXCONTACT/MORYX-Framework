@@ -1,16 +1,15 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.ProcessData
+namespace Moryx.ProcessData;
+
+/// <summary>
+/// Generic interface for components publishing process data
+/// </summary>
+public interface IProcessDataPublisher
 {
     /// <summary>
-    /// Generic interface for components publishing process data
+    /// Will be raised if process data is occurred
     /// </summary>
-    public interface IProcessDataPublisher
-    {
-        /// <summary>
-        /// Will be raised if process data is occurred
-        /// </summary>
-        event EventHandler<Measurement> ProcessDataOccurred;
-    }
+    event EventHandler<Measurement> ProcessDataOccurred;
 }

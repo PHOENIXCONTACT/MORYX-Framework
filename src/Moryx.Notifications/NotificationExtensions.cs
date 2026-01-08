@@ -1,29 +1,28 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
 using Moryx.Logging;
 
-namespace Moryx.Notifications
+namespace Moryx.Notifications;
+
+/// <summary>
+/// <see cref="IContainer"/> extensions to register and handle notifications
+/// </summary>
+public static class NotificationExtensions
 {
     /// <summary>
-    /// <see cref="IContainer"/> extensions to register and handle notifications
+    /// Registers all components to handling notifications in the current container
     /// </summary>
-    public static class NotificationExtensions
+    public static IContainer RegisterNotifications(this IContainer container)
     {
-        /// <summary>
-        /// Registers all components to handling notifications in the current container
-        /// </summary>
-        public static IContainer RegisterNotifications(this IContainer container)
-        {
-            var logger = container.Resolve<IModuleLogger>();
+        var logger = container.Resolve<IModuleLogger>();
 
-            var adapter = new NotificationAdapter() { Logger = logger };
+        var adapter = new NotificationAdapter() { Logger = logger };
 
-            container.SetInstance((INotificationAdapter)adapter, "NotificationAdapter");
-            container.SetInstance((INotificationSourceAdapter)adapter, "NotificationSenderAdapter");
+        container.SetInstance((INotificationAdapter)adapter, "NotificationAdapter");
+        container.SetInstance((INotificationSourceAdapter)adapter, "NotificationSenderAdapter");
 
-            return container;
-        }
+        return container;
     }
 }

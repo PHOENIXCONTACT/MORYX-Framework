@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
@@ -8,37 +8,36 @@ using Moryx.AbstractionLayer.Drivers.Axis;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 
-namespace Moryx.Resources.Samples
+namespace Moryx.Resources.Samples;
+
+public abstract class Cell : Resource
 {
-    public abstract class Cell : Resource
+    #region Config
+
+    [DataMember]
+    public int LastCall { get; set; }
+
+    #endregion
+
+    [EntrySerialize, DisplayName("Editor Value")]
+    public int EditorValue { get; set; }
+
+    [EntrySerialize, DisplayName("Do Foo")]
+    public int Foo([Description("Very important parameter")] string bla = "Hallo")
     {
-        #region Config
+        LastCall = bla.Length;
+        RaiseResourceChanged();
 
-        [DataMember]
-        public int LastCall { get; set; }
+        return LastCall;
+    }
 
-        #endregion
+    [EntrySerialize, Description("Perform a self test of the resource")]
+    public void PerformSelfTest()
+    {
+    }
 
-        [EntrySerialize, DisplayName("Editor Value")]
-        public int EditorValue { get; set; }
-
-        [EntrySerialize, DisplayName("Do Foo")]
-        public int Foo([Description("Very important parameter")] string bla = "Hallo")
-        {
-            LastCall = bla.Length;
-            RaiseResourceChanged();
-
-            return LastCall;
-        }
-
-        [EntrySerialize, Description("Perform a self test of the resource")]
-        public void PerformSelfTest()
-        {
-        }
-
-        [EntrySerialize, Description("Move an axis of the resource")]
-        public void Move(Axes axis, AxisPosition position)
-        {
-        }
+    [EntrySerialize, Description("Move an axis of the resource")]
+    public void Move(Axes axis, AxisPosition position)
+    {
     }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations;
@@ -6,36 +6,34 @@ using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.ControlSystem.ProcessEngine.Properties;
 
-namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup
+namespace Moryx.ControlSystem.ProcessEngine.Jobs.Setup;
+
+[Display(Name = nameof(Strings.JobStates_Interrupting), ResourceType = typeof(Strings))]
+internal class InterruptingState : SetupJobStateBase
 {
-
-    [Display(Name = nameof(Strings.JobStates_Interrupting), ResourceType = typeof(Strings))]
-    internal class InterruptingState : SetupJobStateBase
+    public InterruptingState(JobDataBase context, StateMap stateMap)
+        : base(context, stateMap, JobClassification.Completing)
     {
-        public InterruptingState(JobDataBase context, StateMap stateMap)
-            : base(context, stateMap, JobClassification.Completing)
-        {
-        }
+    }
 
-        public override void Load()
-        {
+    public override void Load()
+    {
+        NextState(StateCompleted);
+    }
+
+    public override void Start()
+    {
+
+    }
+
+    public override void Stop()
+    {
+
+    }
+
+    public override void ProcessChanged(ProcessData processData, ProcessState trigger)
+    {
+        if (trigger >= ProcessState.Interrupted)
             NextState(StateCompleted);
-        }
-
-        public override void Start()
-        {
-
-        }
-
-        public override void Stop()
-        {
-
-        }
-
-        public override void ProcessChanged(ProcessData processData, ProcessState trigger)
-        {
-            if (trigger >= ProcessState.Interrupted)
-                NextState(StateCompleted);
-        }
     }
 }

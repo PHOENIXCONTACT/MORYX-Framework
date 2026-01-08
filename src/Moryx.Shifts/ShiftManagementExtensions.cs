@@ -1,17 +1,19 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Moryx.Shifts
-{
-    public static class ShiftManagementExtensions
-    {
-        public static Shift? GetShift(this IShiftManagement source, long id) => source.Shifts.SingleOrDefault(s => s.Id == id);
+namespace Moryx.Shifts;
 
-        public static IEnumerable<Shift> GetShifts(this IShiftManagement source, DateOnly? earliestDate, DateOnly? latestDate)
+public static class ShiftManagementExtensions
+{
+    extension(IShiftManagement source)
+    {
+        public Shift? GetShift(long id) => source.Shifts.SingleOrDefault(s => s.Id == id);
+
+        public IEnumerable<Shift> GetShifts(DateOnly? earliestDate, DateOnly? latestDate)
         {
             IEnumerable<Shift> shifts = source.Shifts;
             if (!earliestDate.HasValue && !latestDate.HasValue) return shifts;
@@ -27,9 +29,9 @@ namespace Moryx.Shifts
             return shifts;
         }
 
-        public static ShiftType? GetShiftType(this IShiftManagement source, long id) => source.ShiftTypes.SingleOrDefault(t => t.Id == id);
+        public ShiftType? GetShiftType(long id) => source.ShiftTypes.SingleOrDefault(t => t.Id == id);
 
-        public static IEnumerable<ShiftAssignement> GetShiftAssignements(this IShiftManagement source, DateOnly? earliestDate, DateOnly? latestDate)
+        public IEnumerable<ShiftAssignement> GetShiftAssignements(DateOnly? earliestDate, DateOnly? latestDate)
         {
             if (!earliestDate.HasValue && !latestDate.HasValue) return source.ShiftAssignements;
 
@@ -38,4 +40,3 @@ namespace Moryx.Shifts
         }
     }
 }
-

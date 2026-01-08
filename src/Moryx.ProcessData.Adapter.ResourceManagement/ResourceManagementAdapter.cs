@@ -1,79 +1,78 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 using Moryx.Modules;
 
-namespace Moryx.ProcessData.Adapter.ResourceManagement
+namespace Moryx.ProcessData.Adapter.ResourceManagement;
+
+[Plugin(LifeCycle.Singleton)]
+internal class ResourceManagementAdapter : IPlugin
 {
-    [Plugin(LifeCycle.Singleton)]
-    internal class ResourceManagementAdapter : IPlugin
+    private const string MeasurementPrefix = "resources_";
+
+    private readonly ICollection<IProcessDataPublisher> _resources = new List<IProcessDataPublisher>();
+
+    #region Dependencies
+
+    public IResourceManagement ResourceManagement { get; set; }
+
+    public IProcessDataMonitor ProcessDataMonitor { get; set; }
+
+    #endregion
+
+    /// <inheritdoc />
+    public void Start()
     {
-        private const string MeasurementPrefix = "resources_";
+        ResourceManagement.ResourceAdded += OnResourceAdded;
+        ResourceManagement.ResourceRemoved += OnResourceRemoved;
 
-        private readonly ICollection<IProcessDataPublisher> _resources = new List<IProcessDataPublisher>();
+        var processDataPublishers = ResourceManagement.GetResources<IResource>().OfType<IProcessDataPublisher>();
+        foreach (var publisher in processDataPublishers)
+            RegisterToResource(publisher);
+    }
 
-        #region Dependencies
+    /// <summary>
+    /// Stops the adapter component
+    /// </summary>
+    public void Stop()
+    {
+        ResourceManagement.ResourceAdded -= OnResourceAdded;
+        ResourceManagement.ResourceRemoved -= OnResourceRemoved;
 
-        public IResourceManagement ResourceManagement { get; set; }
+        foreach (var resource in _resources)
+            resource.ProcessDataOccurred -= OnProcessDataOccurred;
 
-        public IProcessDataMonitor ProcessDataMonitor { get; set; }
+        _resources.Clear();
+    }
 
-        #endregion
+    private void OnResourceAdded(object sender, IResource addedResource)
+    {
+        if (addedResource is IProcessDataPublisher publisher)
+            RegisterToResource(publisher);
+    }
 
-        /// <inheritdoc />
-        public void Start()
-        {
-            ResourceManagement.ResourceAdded += OnResourceAdded;
-            ResourceManagement.ResourceRemoved += OnResourceRemoved;
+    private void OnResourceRemoved(object sender, IResource addedResource)
+    {
+        if (addedResource is IProcessDataPublisher publisher)
+            UnregisterFromResource(publisher);
+    }
 
-            var processDataPublishers = ResourceManagement.GetResources<IResource>().OfType<IProcessDataPublisher>();
-            foreach (var publisher in processDataPublishers)
-                RegisterToResource(publisher);
-        }
+    private void RegisterToResource(IProcessDataPublisher publisher)
+    {
+        _resources.Add(publisher);
+        publisher.ProcessDataOccurred += OnProcessDataOccurred;
+    }
 
-        /// <summary>
-        /// Stops the adapter component
-        /// </summary>
-        public void Stop()
-        {
-            ResourceManagement.ResourceAdded -= OnResourceAdded;
-            ResourceManagement.ResourceRemoved -= OnResourceRemoved;
+    private void UnregisterFromResource(IProcessDataPublisher publisher)
+    {
+        _resources.Remove(publisher);
+        publisher.ProcessDataOccurred -= OnProcessDataOccurred;
+    }
 
-            foreach (var resource in _resources)
-                resource.ProcessDataOccurred -= OnProcessDataOccurred;
-
-            _resources.Clear();
-        }
-
-        private void OnResourceAdded(object sender, IResource addedResource)
-        {
-            if (addedResource is IProcessDataPublisher publisher)
-                RegisterToResource(publisher);
-        }
-
-        private void OnResourceRemoved(object sender, IResource addedResource)
-        {
-            if (addedResource is IProcessDataPublisher publisher)
-                UnregisterFromResource(publisher);
-        }
-
-        private void RegisterToResource(IProcessDataPublisher publisher)
-        {
-            _resources.Add(publisher);
-            publisher.ProcessDataOccurred += OnProcessDataOccurred;
-        }
-
-        private void UnregisterFromResource(IProcessDataPublisher publisher)
-        {
-            _resources.Remove(publisher);
-            publisher.ProcessDataOccurred -= OnProcessDataOccurred;
-        }
-
-        private void OnProcessDataOccurred(object sender, Measurement measurement)
-        {
-            ProcessDataMonitor.Add(measurement);
-        }
+    private void OnProcessDataOccurred(object sender, Measurement measurement)
+    {
+        ProcessDataMonitor.Add(measurement);
     }
 }

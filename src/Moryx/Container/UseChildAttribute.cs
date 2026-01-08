@@ -1,49 +1,48 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Container
+namespace Moryx.Container;
+
+/// <summary>
+/// Attribute used to decorate dependencies which are part of larger container and shall be resolved by name
+/// from this container.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
+public class UseChildAttribute : Attribute
 {
     /// <summary>
-    /// Attribute used to decorate dependencies which are part of larger container and shall be resolved by name
-    /// from this container.
+    /// Name of the child to resolve
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
-    public class UseChildAttribute : Attribute
+    public string ChildName { get; }
+
+    /// <summary>
+    /// Optional name of the model, if more than one is available
+    /// </summary>
+    public string ParentName { get; }
+
+    /// <summary>
+    /// Request a child instance with the same name custom tailored for this component
+    /// </summary>
+    public UseChildAttribute() : this(string.Empty)
     {
-        /// <summary>
-        /// Name of the child to resolve
-        /// </summary>
-        public string ChildName { get; }
+    }
 
-        /// <summary>
-        /// Optional name of the model, if more than one is available
-        /// </summary>
-        public string ParentName { get; }
+    /// <summary>
+    /// Request a named child of the parent component
+    /// </summary>
+    /// <param name="childName">Name of the child to resolve</param>
+    public UseChildAttribute(string childName)
+    {
+        ChildName = childName;
+    }
 
-        /// <summary>
-        /// Request a child instance with the same name custom tailored for this component
-        /// </summary>
-        public UseChildAttribute() : this(string.Empty)
-        {
-        }
-
-        /// <summary>
-        /// Request a named child of the parent component
-        /// </summary>
-        /// <param name="childName">Name of the child to resolve</param>
-        public UseChildAttribute(string childName)
-        {
-            ChildName = childName;
-        }
-
-        /// <summary>
-        /// Fetch child of a named parent, of there might be more than one
-        /// </summary>
-        /// <param name="childName">Name of the child to resolve</param>
-        /// <param name="parentName">Name of the parent, to look for the child</param>
-        public UseChildAttribute(string childName, string parentName) : this(childName)
-        {
-            ParentName = parentName;
-        }
+    /// <summary>
+    /// Fetch child of a named parent, of there might be more than one
+    /// </summary>
+    /// <param name="childName">Name of the child to resolve</param>
+    /// <param name="parentName">Name of the parent, to look for the child</param>
+    public UseChildAttribute(string childName, string parentName) : this(childName)
+    {
+        ParentName = parentName;
     }
 }

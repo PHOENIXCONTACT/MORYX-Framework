@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
@@ -8,24 +8,26 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Processes;
 
-namespace Moryx.ControlSystem.Cells
+namespace Moryx.ControlSystem.Cells;
+
+/// <summary>
+/// Extension methods on the <see cref="Session"/> to get product related information, activity details or just provide shortcuts based on the actual session type
+/// </summary>
+public static class SessionExtensions
 {
-    /// <summary>
-    /// Extension methods on the <see cref="Session"/> to get product related information, activity details or just provide shortcuts based on the actual session type
-    /// </summary>
-    public static class SessionExtensions
+    /// <param name="session">The sesion to get the <see cref="ProductInstance"/> from</param>
+    extension(Session session)
     {
         /// <summary>
         /// Extension method to get the <see cref="ProductInstance"/> from the <see cref="Process"/> of the <paramref name="session"/>
         /// </summary>
         /// <typeparam name="TProductInstance">Type of the <see cref="ProductInstance"/> that is expected.</typeparam>
-        /// <param name="session">The sesion to get the <see cref="ProductInstance"/> from</param>
         /// <returns>
         /// The <see cref="ProductInstance"/> in the session, if the <paramref name="session"/> belongs to a
         /// <see cref="ProductionProcess"/> and the <see cref="ProductionProcess"/> holds a <typeparamref name="TProductInstance"/>;
         /// Otherwise returns null
         /// </returns>
-        public static TProductInstance GetProductInstance<TProductInstance>(this Session session) where TProductInstance : ProductInstance
+        public TProductInstance GetProductInstance<TProductInstance>() where TProductInstance : ProductInstance
         {
             if (session.Process is not ProductionProcess process) return null;
 
@@ -38,7 +40,6 @@ namespace Moryx.ControlSystem.Cells
         /// <paramref name="setter"/>.
         /// </summary>
         /// <typeparam name="TInstance">The expected type of the product instance</typeparam>
-        /// <param name="session">The sessopm holding the product instance</param>
         /// <param name="setter">The action to be executed on the product instance</param>
         /// <example>
         /// <code>
@@ -52,7 +53,7 @@ namespace Moryx.ControlSystem.Cells
         /// </exception>
         /// <exception cref="InvalidOperationException">Thrown if the <see cref="Process"/> of the
         /// <paramref name="session"/> is no <see cref="ProductionProcess"/></exception>
-        public static TInstance ModifyProductInstance<TInstance>(this Session session, Action<TInstance> setter)
+        public TInstance ModifyProductInstance<TInstance>(Action<TInstance> setter)
             where TInstance : ProductInstance => session.Process.ModifyProductInstance(setter);
 
         /// <summary>
@@ -62,7 +63,6 @@ namespace Moryx.ControlSystem.Cells
         /// operation could not be executed.
         /// </summary>
         /// <typeparam name="TInstance">The expected type of the product instance</typeparam>
-        /// <param name="session">The sessopm holding the product instance</param>
         /// <param name="setter">The action to be executed on the product instance</param>
         /// <example>
         /// <code>
@@ -71,19 +71,18 @@ namespace Moryx.ControlSystem.Cells
         /// ]]>
         /// </code>
         /// </example>
-        public static bool TryModifyProductInstance<TInstance>(this Session session, Action<TInstance> setter)
+        public bool TryModifyProductInstance<TInstance>(Action<TInstance> setter)
             where TInstance : ProductInstance => session.Process.TryModifyProductInstance(setter);
 
         /// <summary>
         /// Extension method to get the <see cref="Activity"/> from the <paramref name="session"/>
         /// </summary>
         /// <typeparam name="TActivityType">Type of the <see cref="Activity"/> that is expected.</typeparam>
-        /// <param name="session">The sesion to get the <see cref="Activity"/> from</param>
         /// <returns>
         /// The <see cref="Activity"/> in the session, if the <paramref name="session"/> currently handles an
         /// Activity of type <typeparamref name="TActivityType"/>; Otherwise returns null
         /// </returns>
-        public static TActivityType GetActivity<TActivityType>(this Session session) where TActivityType : Activity
+        public TActivityType GetActivity<TActivityType>() where TActivityType : Activity
         {
             if (session is ActivityCompleted completed)
                 return completed.CompletedActivity as TActivityType;
@@ -97,24 +96,22 @@ namespace Moryx.ControlSystem.Cells
         /// Extension method to get the last <see cref="Activity"/> from the <paramref name="session"/>
         /// </summary>
         /// <typeparam name="TActivityType">Type of the <see cref="Activity"/> that is expected.</typeparam>
-        /// <param name="session">The sesion to get the <see cref="Activity"/> from</param>
         /// <returns>
         /// The last <see cref="Activity"/> in the session, if the <paramref name="session"/> currently handles an
         /// Activity of type <typeparamref name="TActivityType"/>; Otherwise returns null
         /// </returns>
-        public static TActivityType GetLastActivity<TActivityType>(this Session session) where TActivityType : Activity
+        public TActivityType GetLastActivity<TActivityType>() where TActivityType : Activity
             => session.Process.LastActivity<TActivityType>() as TActivityType;
 
         /// <summary>
         /// Extension method to get the <see cref="ProductType"/> from the <paramref name="session"/>
         /// </summary>
         /// <typeparam name="TProductType">Type of the <see cref="ProductType"/> that is expected.</typeparam>
-        /// <param name="session">The session to get the <see cref="ProductType"/> from</param>
         /// <returns>
         /// The target <see cref="ProductType"/> in the session, if it belongs to a <see cref="ProductionProcess"/>
         /// or holds an <see cref="SetupRecipe"/> with a <typeparamref name="TProductType"/>; Otherwise returns null.
         /// </returns>
-        public static TProductType GetProductType<TProductType>(this Session session) where TProductType : ProductType
+        public TProductType GetProductType<TProductType>() where TProductType : ProductType
         {
             if (session.Process.Recipe is SetupRecipe setupRecipe)
                 return setupRecipe.TargetRecipe.Target as TProductType;

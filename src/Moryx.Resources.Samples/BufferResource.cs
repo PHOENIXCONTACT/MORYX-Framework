@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
@@ -7,52 +7,42 @@ using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 
-namespace Moryx.Resources.Samples
+namespace Moryx.Resources.Samples;
+
+[ResourceRegistration]
+public class BufferResource : Resource
 {
-    [ResourceRegistration]
-    public class BufferResource : Resource
+    [ReferenceOverride(nameof(Children), AutoSave = true)]
+    public IReferences<BufferValue> Values { get; set; }
+
+    [EntrySerialize, DisplayName("Add Value")]
+    [Description("Add typed value to the buffer")]
+    public int AddValue([ResourceTypes(typeof(BufferValue))] string type, string name, string value)
     {
-        [ReferenceOverride(nameof(Children), AutoSave = true)]
-        public IReferences<BufferValue> Values { get; set; }
+        var bufferValue = Graph.Instantiate<BufferValue>(type);
+        bufferValue.Name = name;
+        bufferValue.Value = value;
+        Values.Add(bufferValue);
 
-        [EntrySerialize, DisplayName("Add Value")]
-        [Description("Add typed value to the buffer")]
-        public int AddValue([ResourceTypes(typeof(BufferValue))] string type, string name, string value)
-        {
-            var bufferValue = Graph.Instantiate<BufferValue>(type);
-            bufferValue.Name = name;
-            bufferValue.Value = value;
-            Values.Add(bufferValue);
-
-            return Values.Count;
-        }
-
-        [EntrySerialize, DisplayName("Remove Value")]
-        public async Task<int> RemoveValueAsync(string name)
-        {
-            var value = Values.FirstOrDefault(v => v.Name == name);
-            if (value != null)
-                await Graph.DestroyAsync(value, true);
-            return Values.Count;
-        }
+        return Values.Count;
     }
 
-    public class BufferValue : Resource
+    [EntrySerialize, DisplayName("Remove Value")]
+    public async Task<int> RemoveValueAsync(string name)
     {
-        private string _value;
-
-        [DataMember, EntrySerialize]
-        public string Value
-        {
-            get { return _value; }
-            set
-            {
-                _value = value;
-            }
-        }
+        var value = Values.FirstOrDefault(v => v.Name == name);
+        if (value != null)
+            await Graph.DestroyAsync(value, true);
+        return Values.Count;
     }
+}
 
-    public class ExtendedBufferValue : BufferValue
-    {
-    }
+public class BufferValue : Resource
+{
+    [DataMember, EntrySerialize]
+    public string Value { get; set; }
+}
+
+public class ExtendedBufferValue : BufferValue
+{
 }

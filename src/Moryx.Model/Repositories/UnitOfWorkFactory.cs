@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
@@ -6,81 +6,80 @@ using Moryx.Model.Configuration;
 using Moryx.Model.Repositories.Proxy;
 using Moryx.Tools;
 
-namespace Moryx.Model.Repositories
+namespace Moryx.Model.Repositories;
+
+/// <inheritdoc />
+public sealed class UnitOfWorkFactory<TContext> : IUnitOfWorkFactory<TContext>
+    where TContext : DbContext
 {
-    /// <inheritdoc />
-    public sealed class UnitOfWorkFactory<TContext> : IUnitOfWorkFactory<TContext>
-        where TContext : DbContext
+    /// <summary>
+    /// Manager that does the real work
+    /// </summary>
+    private readonly IDbContextManager _manager;
+
+    // ReSharper disable once StaticMemberInGenericType
+    private static readonly RepositoryProxyBuilder _proxyBuilder = new();
+
+    // ReSharper disable once StaticMemberInGenericType
+    private static readonly IDictionary<Type, Func<Repository>> _repositories = new Dictionary<Type, Func<Repository>>();
+
+    /// <summary>
+    /// Static constructor to register repositories once a time per typed context
+    /// </summary>
+    static UnitOfWorkFactory()
     {
-        /// <summary>
-        /// Manager that does the real work
-        /// </summary>
-        private readonly IDbContextManager _manager;
+        RegisterRepositories();
+    }
 
-        // ReSharper disable once StaticMemberInGenericType
-        private static readonly RepositoryProxyBuilder _proxyBuilder = new();
+    /// <summary>
+    /// Creates a new instance of <see cref="UnitOfWorkFactory{TContext}"/>
+    /// </summary>
+    public UnitOfWorkFactory(IDbContextManager dbContextManager)
+    {
+        _manager = dbContextManager;
+    }
 
-        // ReSharper disable once StaticMemberInGenericType
-        private static readonly IDictionary<Type, Func<Repository>> _repositories = new Dictionary<Type, Func<Repository>>();
+    /// <inheritdoc />
+    public IUnitOfWork<TContext> Create()
+    {
+        var context = _manager.Create<TContext>();
+        return new UnitOfWork<TContext>(context, _repositories);
+    }
 
-        /// <summary>
-        /// Static constructor to register repositories once a time per typed context
-        /// </summary>
-        static UnitOfWorkFactory()
+    /// <inheritdoc />
+    public IUnitOfWork<TContext> Create(DatabaseConfig config)
+    {
+        var context = _manager.Create<TContext>(config);
+        return new UnitOfWork<TContext>(context, _repositories);
+    }
+
+    private static void RegisterRepositories()
+    {
+        var types = typeof(TContext).Assembly.GetTypes();
+
+        var repoApis = from type in types
+            let genericApi = type.GetInterfaces().FirstOrDefault(i => i.GetGenericArguments().Length == 1 && typeof(IRepository<>) == i.GetGenericTypeDefinition())
+            where type.IsInterface && genericApi != null
+            select new { RepoApi = type, GenericApi = genericApi };
+
+        foreach (var apiPair in repoApis)
         {
-            RegisterRepositories();
-        }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="UnitOfWorkFactory{TContext}"/>
-        /// </summary>
-        public UnitOfWorkFactory(IDbContextManager dbContextManager)
-        {
-            _manager = dbContextManager;
-        }
-
-        /// <inheritdoc />
-        public IUnitOfWork<TContext> Create()
-        {
-            var context = _manager.Create<TContext>();
-            return new UnitOfWork<TContext>(context, _repositories);
-        }
-
-        /// <inheritdoc />
-        public IUnitOfWork<TContext> Create(DatabaseConfig config)
-        {
-            var context = _manager.Create<TContext>(config);
-            return new UnitOfWork<TContext>(context, _repositories);
-        }
-
-        private static void RegisterRepositories()
-        {
-            var types = typeof(TContext).Assembly.GetTypes();
-
-            var repoApis = from type in types
-                           let genericApi = type.GetInterfaces().FirstOrDefault(i => i.GetGenericArguments().Length == 1 && typeof(IRepository<>) == i.GetGenericTypeDefinition())
-                           where type.IsInterface && genericApi != null
-                           select new { RepoApi = type, GenericApi = genericApi };
-
-            foreach (var apiPair in repoApis)
+            Type repoProxy;
+            // Find implementations for the RepoAPI, which will also fit the generic API because of the inheritance
+            var implementations = types.Where(t => t.IsClass && apiPair.RepoApi.IsAssignableFrom(t)).ToList();
+            if (implementations.Count == 0)
             {
-                Type repoProxy;
-                // Find implementations for the RepoAPI, which will also fit the generic API because of the inheritance
-                var implementations = types.Where(t => t.IsClass && apiPair.RepoApi.IsAssignableFrom(t)).ToList();
-                if (implementations.Count == 0)
-                {
-                    repoProxy = _proxyBuilder.Build(apiPair.RepoApi);
-                }
-                else
-                {
-                    var selectedImpl = implementations.First();
-                    repoProxy = _proxyBuilder.Build(apiPair.RepoApi, selectedImpl);
-                }
-
-                var constructorDelegate = ReflectionTool.ConstructorDelegate<Repository>(repoProxy);
-                // Register constructor for both interfaces
-                _repositories[apiPair.RepoApi] = _repositories[apiPair.GenericApi] = constructorDelegate;
+                repoProxy = _proxyBuilder.Build(apiPair.RepoApi);
             }
+            else
+            {
+                var selectedImpl = implementations.First();
+                repoProxy = _proxyBuilder.Build(apiPair.RepoApi, selectedImpl);
+            }
+
+            var constructorDelegate = ReflectionTool.ConstructorDelegate<Repository>(repoProxy);
+            // Register constructor for both interfaces
+            _repositories[apiPair.RepoApi] = _repositories[apiPair.GenericApi] = constructorDelegate;
         }
     }
 }

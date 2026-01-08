@@ -1,25 +1,24 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Moryx.Model
+namespace Moryx.Model;
+
+/// <summary>
+/// Extensions to the EF DbContext
+/// </summary>
+public static class DbContextExtensions
 {
     /// <summary>
-    /// Extensions to the EF DbContext
+    /// Get or create an entity for a business object
     /// </summary>
-    public static class DbContextExtensions
+    /// <param name="dbContext">An open database context</param>
+    /// <param name="obj">The business object</param>
+    /// <typeparam name="TEntity">The entity type to use</typeparam>
+    public static TEntity GetEntity<TEntity>(this DbContext dbContext, IPersistentObject obj)
+        where TEntity : class, IEntity, new()
     {
-        /// <summary>
-        /// Get or create an entity for a business object
-        /// </summary>
-        /// <param name="dbContext">An open database context</param>
-        /// <param name="obj">The business object</param>
-        /// <typeparam name="TEntity">The entity type to use</typeparam>
-        public static TEntity GetEntity<TEntity>(this DbContext dbContext, IPersistentObject obj)
-            where TEntity : class, IEntity, new()
-        {
-            return dbContext.Set<TEntity>().GetEntity(obj);
-        }
+        return dbContext.Set<TEntity>().GetEntity(obj);
     }
 }

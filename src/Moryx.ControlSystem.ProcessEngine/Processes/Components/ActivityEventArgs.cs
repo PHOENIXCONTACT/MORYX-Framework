@@ -1,30 +1,29 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.ControlSystem.ProcessEngine.Processes
+namespace Moryx.ControlSystem.ProcessEngine.Processes;
+
+/// <summary>
+/// <see cref="EventArgs"/> for activity changes
+/// </summary>
+internal class ActivityEventArgs : EventArgs
 {
     /// <summary>
-    /// <see cref="EventArgs"/> for activity changes
+    /// Initializes a new instance of the <see cref="ActivityEventArgs"/> class.
     /// </summary>
-    internal class ActivityEventArgs : EventArgs
+    public ActivityEventArgs(ActivityData activityData, ActivityState trigger)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ActivityEventArgs"/> class.
-        /// </summary>
-        public ActivityEventArgs(ActivityData activityData, ActivityState trigger)
-        {
-            ActivityData = activityData;
-            Trigger = trigger;
-        }
-
-        /// <summary>
-        /// The changed or added activity data
-        /// </summary>
-        public ActivityData ActivityData { get; }
-
-        /// <summary>
-        /// Trigger state of the activity for executing the event chain
-        /// </summary>
-        public ActivityState Trigger { get; }
+        ActivityData = activityData;
+        Trigger = trigger;
     }
+
+    /// <summary>
+    /// The changed or added activity data
+    /// </summary>
+    public ActivityData ActivityData { get; }
+
+    /// <summary>
+    /// Trigger state of the activity for executing the event chain
+    /// </summary>
+    public ActivityState Trigger { get; }
 }

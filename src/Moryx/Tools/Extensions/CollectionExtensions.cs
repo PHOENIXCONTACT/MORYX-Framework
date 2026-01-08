@@ -1,40 +1,42 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Tools
+namespace Moryx.Tools;
+
+/// <summary>
+/// ICollection Extensions
+/// </summary>
+public static class CollectionExtensions
 {
     /// <summary>
-    /// ICollection Extensions
+    /// Adds a range of items to the collection
     /// </summary>
-    public static class CollectionExtensions
+    public static void AddRange<TSource>(this ICollection<TSource> source, IEnumerable<TSource> items) where TSource : class
     {
-        /// <summary>
-        /// Adds a range of items to the collection
-        /// </summary>
-        public static void AddRange<TSource>(this ICollection<TSource> source, IEnumerable<TSource> items) where TSource : class
-        {
-            foreach (var item in items)
-                source.Add(item);
-        }
+        foreach (var item in items)
+            source.Add(item);
+    }
 
-        /// <summary>
-        /// Replaces the first item which mets the given condition
-        /// </summary>
-        public static void ReplaceItem<TSource>(this IList<TSource> list, Func<TSource, bool> match, TSource newItem)
-        {
-            var oldItem = list.FirstOrDefault(match);
-            if (oldItem == null)
-                return;
+    /// <summary>
+    /// Replaces the first item which mets the given condition
+    /// </summary>
+    public static void ReplaceItem<TSource>(this IList<TSource> list, Func<TSource, bool> match, TSource newItem)
+    {
+        var oldItem = list.FirstOrDefault(match);
+        if (oldItem == null)
+            return;
 
-            var oldIndex = list.IndexOf(oldItem);
-            if (oldIndex != -1)
-                list[oldIndex] = newItem;
-        }
+        var oldIndex = list.IndexOf(oldItem);
+        if (oldIndex != -1)
+            list[oldIndex] = newItem;
+    }
 
+    extension<TSource>(ICollection<TSource> collection) where TSource : class
+    {
         /// <summary>
         /// Removes a range of items from the collection
         /// </summary>
-        public static void RemoveRange<TSource>(this ICollection<TSource> collection, IEnumerable<TSource> items) where TSource : class
+        public void RemoveRange(IEnumerable<TSource> items)
         {
             var itemsArray = new List<TSource>(items).ToArray();
             for (var i = itemsArray.Length - 1; i >= 0; i--)
@@ -44,16 +46,19 @@ namespace Moryx.Tools
         /// <summary>
         /// Add an entry only if it does not exist already
         /// </summary>
-        public static void AddIfNotExists<TSource>(this ICollection<TSource> coll, TSource item) where TSource : class
+        public void AddIfNotExists(TSource item)
         {
-            if (!coll.Contains(item))
-                coll.Add(item);
+            if (!collection.Contains(item))
+                collection.Add(item);
         }
+    }
 
+    extension<TSource>(IList<TSource> collection)
+    {
         /// <summary>
         /// Removes a range of items by the given condition
         /// </summary>
-        public static void RemoveBy<TSource>(this IList<TSource> collection, Func<TSource, bool> condition)
+        public void RemoveBy(Func<TSource, bool> condition)
         {
             for (var i = collection.Count - 1; i >= 0; i--)
             {
@@ -65,20 +70,19 @@ namespace Moryx.Tools
         /// <summary>
         /// Shuffles the list
         /// </summary>
-        public static void Shuffle<T>(this IList<T> list)
+        public void Shuffle()
         {
             var rng = new Random();
 
-            var n = list.Count;
+            var n = collection.Count;
             while (n > 1)
             {
                 n--;
                 var k = rng.Next(n + 1);
-                var value = list[k];
-                list[k] = list[n];
-                list[n] = value;
+                var value = collection[k];
+                collection[k] = collection[n];
+                collection[n] = value;
             }
         }
     }
 }
-

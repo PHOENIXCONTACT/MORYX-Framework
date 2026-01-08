@@ -1,14 +1,13 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 
-namespace Moryx.DependentTestModule
+namespace Moryx.DependentTestModule;
+
+[DataContract]
+public class ModuleConfig : ConfigBase
 {
-    [DataContract]
-    public class ModuleConfig : ConfigBase
-    {
-        public int Foo { get; set; }
-    }
+    public int Foo { get; set; }
 }

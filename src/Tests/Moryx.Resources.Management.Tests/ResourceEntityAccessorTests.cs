@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
@@ -12,148 +12,147 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Moryx.Resources.Management.Model;
 
-namespace Moryx.Resources.Management.Tests
+namespace Moryx.Resources.Management.Tests;
+
+[TestFixture]
+public class ResourceEntityAccessorTests
 {
-    [TestFixture]
-    public class ResourceEntityAccessorTests
+    private IResourceTypeController _typeControllerMock;
+    private IResourceGraph _resourceGraph;
+
+    [SetUp]
+    public void Setup()
     {
-        private IResourceTypeController _typeControllerMock;
-        private IResourceGraph _resourceGraph;
+        var typeControllerMock = new Mock<IResourceTypeController>();
+        typeControllerMock.Setup(tc => tc.Create(It.Is<string>(type => type == typeof(TestResource).ResourceType()))).Returns(new TestResource());
+        typeControllerMock.Setup(tc => tc.Create(It.Is<string>(type => type == typeof(DefaultTestResource).ResourceType()))).Returns(new DefaultTestResource());
 
-        [SetUp]
-        public void Setup()
+        _typeControllerMock = typeControllerMock.Object;
+
+        var resourceCreator = new Mock<IResourceGraph>();
+        _resourceGraph = resourceCreator.Object;
+    }
+
+    [Test(Description = "Calling Instantiate without an entity sets default value")]
+    public void InstantiateWithoutEntitySetsDefaults()
+    {
+        // Arrange
+        var accessor = new ResourceEntityAccessor
         {
-            var typeControllerMock = new Mock<IResourceTypeController>();
-            typeControllerMock.Setup(tc => tc.Create(It.Is<string>(type => type == typeof(TestResource).ResourceType()))).Returns(new TestResource());
-            typeControllerMock.Setup(tc => tc.Create(It.Is<string>(type => type == typeof(DefaultTestResource).ResourceType()))).Returns(new DefaultTestResource());
+            Type = typeof(DefaultTestResource).ResourceType()
+        };
 
-            _typeControllerMock = typeControllerMock.Object;
+        // Act
+        var resource = accessor.Instantiate(_typeControllerMock, _resourceGraph) as DefaultTestResource;
 
-            var resourceCreator = new Mock<IResourceGraph>();
-            _resourceGraph = resourceCreator.Object;
-        }
+        // Assert
+        Assert.That(resource, Is.Not.Null);
+        Assert.That(resource.GetType().ResourceType(), Is.EqualTo(accessor.Type));
 
-        [Test(Description = "Calling Instantiate without an entity sets default value")]
-        public void InstantiateWithoutEntitySetsDefaults()
+        Assert.That(resource.Enabled);
+        Assert.That(resource.Number, Is.EqualTo(42));
+    }
+
+    [Test(Description = "Instantiates a resource")]
+    public void InstantiateCreatesAValidResourceObject()
+    {
+        // Arrange
+        var accessor = new ResourceEntityAccessor
         {
-            // Arrange
-            var accessor = new ResourceEntityAccessor
-            {
-                Type = typeof(DefaultTestResource).ResourceType()
-            };
+            Id = 10,
+            Type = typeof(TestResource).ResourceType(),
+            Name = nameof(ResourceEntityAccessor.Name),
+            Description = nameof(ResourceEntityAccessor.Description),
+            ExtensionData = JsonConvert.SerializeObject(new TestResource { Data = new ExtensionDataInherited() }, JsonSettings.Minimal)
+        };
 
-            // Act
-            var resource = accessor.Instantiate(_typeControllerMock, _resourceGraph) as DefaultTestResource;
+        // Act
+        var resource = accessor.Instantiate(_typeControllerMock, _resourceGraph) as TestResource;
 
-            // Assert
-            Assert.That(resource, Is.Not.Null);
-            Assert.That(resource.GetType().ResourceType(), Is.EqualTo(accessor.Type));
+        // Assert
+        Assert.That(resource, Is.Not.Null);
+        Assert.That(resource.Id, Is.EqualTo(10));
+        Assert.That(resource.GetType().ResourceType(), Is.EqualTo(accessor.Type));
+        Assert.That(resource.Name, Is.EqualTo(accessor.Name));
+        Assert.That(resource.Description, Is.EqualTo(accessor.Description));
 
-            Assert.That(resource.Enabled);
-            Assert.That(resource.Number, Is.EqualTo(42));
-        }
+        Assert.That(resource.Data, Is.Not.Null);
+        Assert.That(resource.Data.GetType(), Is.EqualTo(typeof(ExtensionDataInherited)));
+        Assert.That(resource.Data.Value1, Is.EqualTo(1));
+        Assert.That(resource.Data.Value2, Is.EqualTo("MyVal"));
+        Assert.That(((ExtensionDataInherited)resource.Data).Value3, Is.EqualTo(42));
+    }
 
-        [Test(Description = "Instantiates a resource")]
-        public void InstantiateCreatesAValidResourceObject()
+    [TestCase(false, Description = "Updates an existing ResourceEntity")]
+    [TestCase(true, Description = "Creates a new ResourceEntity")]
+    public async Task SaveEntityReturnsAValidResource(bool createNew)
+    {
+        // Arrange
+        var id = createNew ? 0 : 10;
+        var type = createNew ? typeof(TestResource).ResourceType() : "";
+        const string name = nameof(ResourceEntityAccessor.Name);
+        const string description = nameof(ResourceEntityAccessor.Description);
+
+        var entity = new ResourceEntity
         {
-            // Arrange
-            var accessor = new ResourceEntityAccessor
-            {
-                Id = 10,
-                Type = typeof(TestResource).ResourceType(),
-                Name = nameof(ResourceEntityAccessor.Name),
-                Description = nameof(ResourceEntityAccessor.Description),
-                ExtensionData = JsonConvert.SerializeObject(new TestResource { Data = new ExtensionDataInherited() }, JsonSettings.Minimal)
-            };
+            Id = id,
+            Type = type,
+            Name = "",
+            Description = ""
+        };
 
-            // Act
-            var resource = accessor.Instantiate(_typeControllerMock, _resourceGraph) as TestResource;
+        var repoMock = new Mock<IRepository<ResourceEntity>>();
+        repoMock.Setup(r => r.CreateAsync()).ReturnsAsync(entity);
+        repoMock.Setup(r => r.GetByKeyAsync(It.IsAny<long>())).ReturnsAsync(entity);
 
-            // Assert
-            Assert.That(resource, Is.Not.Null);
-            Assert.That(resource.Id, Is.EqualTo(10));
-            Assert.That(resource.GetType().ResourceType(), Is.EqualTo(accessor.Type));
-            Assert.That(resource.Name, Is.EqualTo(accessor.Name));
-            Assert.That(resource.Description, Is.EqualTo(accessor.Description));
+        var unitOfWorkMock = new Mock<IUnitOfWork>();
+        unitOfWorkMock.Setup(uow => uow.GetRepository<IRepository<ResourceEntity>>()).Returns(repoMock.Object);
 
-            Assert.That(resource.Data, Is.Not.Null);
-            Assert.That(resource.Data.GetType(), Is.EqualTo(typeof(ExtensionDataInherited)));
-            Assert.That(resource.Data.Value1, Is.EqualTo(1));
-            Assert.That(resource.Data.Value2, Is.EqualTo("MyVal"));
-            Assert.That(((ExtensionDataInherited)resource.Data).Value3, Is.EqualTo(42));
-        }
-
-        [TestCase(false, Description = "Updates an existing ResourceEntity")]
-        [TestCase(true, Description = "Creates a new ResourceEntity")]
-        public async Task SaveEntityReturnsAValidResource(bool createNew)
+        var resource = new TestResource
         {
-            // Arrange
-            var id = createNew ? 0 : 10;
-            var type = createNew ? typeof(TestResource).ResourceType() : "";
-            const string name = nameof(ResourceEntityAccessor.Name);
-            const string description = nameof(ResourceEntityAccessor.Description);
+            Name = name,
+            Data = new ExtensionDataInherited(),
+            Description = description
+        };
 
-            var entity = new ResourceEntity
-            {
-                Id = id,
-                Type = type,
-                Name = "",
-                Description = ""
-            };
+        var extensionDataJson = JsonConvert.SerializeObject(resource, JsonSettings.Minimal);
 
-            var repoMock = new Mock<IRepository<ResourceEntity>>();
-            repoMock.Setup(r => r.CreateAsync()).ReturnsAsync(entity);
-            repoMock.Setup(r => r.GetByKeyAsync(It.IsAny<long>())).ReturnsAsync(entity);
+        // Act
+        var resourceEntity = await ResourceEntityAccessor.SaveToEntity(unitOfWorkMock.Object, resource);
 
-            var unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock.Setup(uow => uow.GetRepository<IRepository<ResourceEntity>>()).Returns(repoMock.Object);
+        // Assert
+        Assert.That(resourceEntity, Is.Not.Null);
+        Assert.That(resourceEntity.Id, Is.EqualTo(id));
+        Assert.That(resourceEntity.Type, Is.EqualTo(type));
+        Assert.That(resourceEntity.Name, Is.EqualTo(name));
+        Assert.That(resourceEntity.Description, Is.EqualTo(description));
+        Assert.That(resourceEntity.ExtensionData, Is.EqualTo(extensionDataJson));
+    }
 
-            var resource = new TestResource
-            {
-                Name = name,
-                Data = new ExtensionDataInherited(),
-                Description = description
-            };
+    private class ExtensionDataTestBase
+    {
+        public int Value1 => 1;
 
-            var extensionDataJson = JsonConvert.SerializeObject(resource, JsonSettings.Minimal);
+        public string Value2 => "MyVal";
+    }
 
-            // Act
-            var resourceEntity = await ResourceEntityAccessor.SaveToEntity(unitOfWorkMock.Object, resource);
+    private class ExtensionDataInherited : ExtensionDataTestBase
+    {
+        public long Value3 => 42;
+    }
 
-            // Assert
-            Assert.That(resourceEntity, Is.Not.Null);
-            Assert.That(resourceEntity.Id, Is.EqualTo(id));
-            Assert.That(resourceEntity.Type, Is.EqualTo(type));
-            Assert.That(resourceEntity.Name, Is.EqualTo(name));
-            Assert.That(resourceEntity.Description, Is.EqualTo(description));
-            Assert.That(resourceEntity.ExtensionData, Is.EqualTo(extensionDataJson));
-        }
+    private class DefaultTestResource : Resource
+    {
+        [DataMember, DefaultValue(42)]
+        public int Number { get; set; }
 
-        private class ExtensionDataTestBase
-        {
-            public int Value1 => 1;
+        [DataMember, DefaultValue(true)]
+        public bool Enabled { get; set; }
+    }
 
-            public string Value2 => "MyVal";
-        }
-
-        private class ExtensionDataInherited : ExtensionDataTestBase
-        {
-            public long Value3 => 42;
-        }
-
-        private class DefaultTestResource : Resource
-        {
-            [DataMember, DefaultValue(42)]
-            public int Number { get; set; }
-
-            [DataMember, DefaultValue(true)]
-            public bool Enabled { get; set; }
-        }
-
-        private class TestResource : Resource
-        {
-            [DataMember]
-            public ExtensionDataTestBase Data { get; set; }
-        }
+    private class TestResource : Resource
+    {
+        [DataMember]
+        public ExtensionDataTestBase Data { get; set; }
     }
 }

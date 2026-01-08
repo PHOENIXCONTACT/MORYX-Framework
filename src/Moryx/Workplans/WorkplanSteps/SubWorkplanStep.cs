@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Runtime.Serialization;
@@ -6,37 +6,36 @@ using Moryx.Workplans.Transitions;
 using System.ComponentModel.DataAnnotations;
 using Moryx.Properties;
 
-namespace Moryx.Workplans.WorkplanSteps
+namespace Moryx.Workplans.WorkplanSteps;
+
+/// <summary>
+/// Step that creates a <see cref="SubworkplanTransition"/> with the given workplan
+/// </summary>
+[DataContract]
+[Display(ResourceType = typeof(Strings), Name = nameof(Strings.SubworkplanStep_DisplayName), Description = nameof(Strings.SubworkplanStep_Description))]
+public class SubworkplanStep : SubWorkplanStepBase
 {
-    /// <summary>
-    /// Step that creates a <see cref="SubworkplanTransition"/> with the given workplan
-    /// </summary>
-    [DataContract]
-    [Display(ResourceType = typeof(Strings), Name = nameof(Strings.SubworkplanStep_DisplayName), Description = nameof(Strings.SubworkplanStep_Description))]
-    public class SubworkplanStep : SubWorkplanStepBase
+    private SubworkplanStep()
     {
-        private SubworkplanStep()
-        {
-            // Empty constructor for JSON
-        }
+        // Empty constructor for JSON
+    }
 
-        /// <summary>
-        /// Create step from workplan
-        /// </summary>
-        public SubworkplanStep(IWorkplan workplan) : base(workplan)
-        {
-        }
+    /// <summary>
+    /// Create step from workplan
+    /// </summary>
+    public SubworkplanStep(IWorkplan workplan) : base(workplan)
+    {
+    }
 
-        private IIndexResolver _indexResolver;
-        /// <summary>
-        /// Instantiate transition from this step
-        /// </summary>
-        protected override TransitionBase Instantiate(IWorkplanContext context)
-        {
-            var engine = WorkplanInstance.CreateEngine(Workplan, context);
-            var indexResolver = _indexResolver ??= TransitionBase.CreateIndexResolver(OutputDescriptions);
-            var transition = new SubworkplanTransition(engine, indexResolver);
-            return transition;
-        }
+    private IIndexResolver _indexResolver;
+    /// <summary>
+    /// Instantiate transition from this step
+    /// </summary>
+    protected override TransitionBase Instantiate(IWorkplanContext context)
+    {
+        var engine = WorkplanInstance.CreateEngine(Workplan, context);
+        var indexResolver = _indexResolver ??= TransitionBase.CreateIndexResolver(OutputDescriptions);
+        var transition = new SubworkplanTransition(engine, indexResolver);
+        return transition;
     }
 }

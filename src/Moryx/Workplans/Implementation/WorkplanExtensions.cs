@@ -1,19 +1,21 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Workplans
+namespace Moryx.Workplans;
+
+/// <summary>
+/// Extension methods for the <see cref="IWorkplan"/>
+/// </summary>
+public static class WorkplanExtensions
 {
-    /// <summary>
-    /// Extension methods for the <see cref="IWorkplan"/>
-    /// </summary>
-    public static class WorkplanExtensions
+    /// <param name="workplan">The workplan</param>
+    extension(IWorkplan workplan)
     {
         /// <summary>
         /// Extracts the steps of the workplan by using the first output of any step (normally the success path)
         /// </summary>
-        /// <param name="workplan">The workplan</param>
         /// <returns>A sorted list of steps for the path</returns>
-        public static IReadOnlyList<IWorkplanStep> ExtractPath(this IWorkplan workplan)
+        public IReadOnlyList<IWorkplanStep> ExtractPath()
         {
             var startConnector = workplan.Connectors.FirstOrDefault(c => c.Classification == NodeClassification.Start);
             if (startConnector == null)
@@ -25,10 +27,9 @@ namespace Moryx.Workplans
         /// <summary>
         /// Extracts the steps of the workplan by using the first output of any step (normally the success path)
         /// </summary>
-        /// <param name="workplan">The workplan</param>
         /// <param name="startConnector">Connector for starting the extraction</param>
         /// <returns>A sorted list of steps for the path</returns>
-        public static IReadOnlyList<IWorkplanStep> ExtractPath(this IWorkplan workplan, IConnector startConnector)
+        public IReadOnlyList<IWorkplanStep> ExtractPath(IConnector startConnector)
         {
             var endConnector = workplan.Connectors.FirstOrDefault(c => c.Classification == NodeClassification.End);
             if (endConnector == null)
@@ -40,11 +41,10 @@ namespace Moryx.Workplans
         /// <summary>
         /// Extracts the steps of the workplan by using the first output of any step (normally the success path)
         /// </summary>
-        /// <param name="workplan">The workplan</param>
         /// <param name="startConnector">Connector for starting the extraction</param>
         /// <param name="endConnector">Connector for ending the extraction</param>
         /// <returns>A sorted list of steps for the path</returns>
-        public static IReadOnlyList<IWorkplanStep> ExtractPath(this IWorkplan workplan, IConnector startConnector, IConnector endConnector)
+        public IReadOnlyList<IWorkplanStep> ExtractPath(IConnector startConnector, IConnector endConnector)
         {
             if (!workplan.Connectors.Contains(startConnector))
                 throw new ArgumentException("The start connector is not part of the workplan");
@@ -71,4 +71,3 @@ namespace Moryx.Workplans
         }
     }
 }
-

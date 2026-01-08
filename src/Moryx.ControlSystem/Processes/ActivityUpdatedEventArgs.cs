@@ -1,51 +1,50 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Activities;
 
-namespace Moryx.ControlSystem.Processes
+namespace Moryx.ControlSystem.Processes;
+
+/// <summary>
+/// Three stages of an activity within the kernel
+/// </summary>
+public enum ActivityProgress
 {
     /// <summary>
-    /// Three stages of an activity within the kernel
+    /// Activity was prepared and is awaiting execution
     /// </summary>
-    public enum ActivityProgress
-    {
-        /// <summary>
-        /// Activity was prepared and is awaiting execution
-        /// </summary>
-        Ready,
-        /// <summary>
-        /// Activity was started in a cell
-        /// </summary>
-        Running,
-        /// <summary>
-        /// Activity was completed
-        /// </summary>
-        Completed
-    }
+    Ready,
+    /// <summary>
+    /// Activity was started in a cell
+    /// </summary>
+    Running,
+    /// <summary>
+    /// Activity was completed
+    /// </summary>
+    Completed
+}
+
+/// <summary>
+/// Event args for activity changes
+/// </summary>
+public class ActivityUpdatedEventArgs : EventArgs
+{
+    /// <summary>
+    /// Activity references
+    /// </summary>
+    public Activity Activity { get; }
 
     /// <summary>
-    /// Event args for activity changes
+    /// Current progress
     /// </summary>
-    public class ActivityUpdatedEventArgs : EventArgs
+    public ActivityProgress Progress { get; }
+
+    /// <summary>
+    /// Initialize the activity event args
+    /// </summary>
+    public ActivityUpdatedEventArgs(Activity activity, ActivityProgress progress)
     {
-        /// <summary>
-        /// Activity references
-        /// </summary>
-        public Activity Activity { get; }
-
-        /// <summary>
-        /// Current progress
-        /// </summary>
-        public ActivityProgress Progress { get; }
-
-        /// <summary>
-        /// Initialize the activity event args
-        /// </summary>
-        public ActivityUpdatedEventArgs(Activity activity, ActivityProgress progress)
-        {
-            Activity = activity;
-            Progress = progress;
-        }
+        Activity = activity;
+        Progress = progress;
     }
 }

@@ -1,14 +1,13 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.ProcessData.Endpoints.Models;
 
-namespace Moryx.ProcessData.Endpoints.Services
+namespace Moryx.ProcessData.Endpoints.Services;
+
+public interface IListenerService
 {
-    public interface IListenerService
-    {
-        Models.Listener GetListener(string name);
-        ListenersResponse GetListeners();
-        Models.Listener UpdateListener(string name, Models.Listener listenerDto);
-    }
+    Models.Listener GetListener(string name);
+    ListenersResponse GetListeners();
+    Models.Listener UpdateListener(string name, Models.Listener listenerDto);
 }

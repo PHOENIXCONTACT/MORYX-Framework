@@ -1,70 +1,69 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.IO;
 using Moryx.Configuration;
 using NUnit.Framework;
 
-namespace Moryx.Runtime.Kernel.Tests.Configuration
+namespace Moryx.Runtime.Kernel.Tests.Configuration;
+
+[TestFixture]
+public class CachedConfigManagerTests
 {
-    [TestFixture]
-    public class CachedConfigManagerTests
+    private const string ConfigDir = "Configs";
+
+    private string _fullConfigDir;
+    private ConfigManager _configManager;
+
+    [SetUp]
+    public void Setup()
     {
-        private const string ConfigDir = "Configs";
+        // Clear configs dir
+        _fullConfigDir = Path.Combine(Directory.GetCurrentDirectory(), ConfigDir);
+        Directory.CreateDirectory(_fullConfigDir);
 
-        private string _fullConfigDir;
-        private ConfigManager _configManager;
+        // Init config manager
+        _configManager = new ConfigManager { ConfigDirectory = ConfigDir };
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            // Clear configs dir
-            _fullConfigDir = Path.Combine(Directory.GetCurrentDirectory(), ConfigDir);
-            Directory.CreateDirectory(_fullConfigDir);
+    [TearDown]
+    public void Cleanup()
+    {
+        Directory.Delete(_fullConfigDir, true);
+    }
 
-            // Init config manager
-            _configManager = new ConfigManager { ConfigDirectory = ConfigDir };
-        }
+    [Test]
+    public void TestGetCopy()
+    {
+        var config1 = _configManager.GetConfiguration<TestConfig>();
+        var config2 = _configManager.GetConfiguration<TestConfig>(true);
 
-        [TearDown]
-        public void Cleanup()
-        {
-            Directory.Delete(_fullConfigDir, true);
-        }
+        config1.DummyNumber++;
 
-        [Test]
-        public void TestGetCopy()
-        {
-            var config1 = _configManager.GetConfiguration<TestConfig>();
-            var config2 = _configManager.GetConfiguration<TestConfig>(true);
+        Assert.That(config1.DummyNumber, Is.Not.EqualTo(config2.DummyNumber));
+    }
 
-            config1.DummyNumber++;
+    [Test]
+    public void TestGetCached()
+    {
+        var config1 = _configManager.GetConfiguration<TestConfig>();
+        var config2 = _configManager.GetConfiguration<TestConfig>(false);
 
-            Assert.That(config1.DummyNumber, Is.Not.EqualTo(config2.DummyNumber));
-        }
+        config1.DummyNumber++;
 
-        [Test]
-        public void TestGetCached()
-        {
-            var config1 = _configManager.GetConfiguration<TestConfig>();
-            var config2 = _configManager.GetConfiguration<TestConfig>(false);
+        Assert.That(config2.DummyNumber, Is.EqualTo(config1.DummyNumber));
+    }
 
-            config1.DummyNumber++;
+    [Test]
+    public void TestSave()
+    {
+        var config1 = _configManager.GetConfiguration<TestConfig>();
 
-            Assert.That(config2.DummyNumber, Is.EqualTo(config1.DummyNumber));
-        }
+        config1.DummyNumber++;
+        _configManager.SaveConfiguration(config1);
 
-        [Test]
-        public void TestSave()
-        {
-            var config1 = _configManager.GetConfiguration<TestConfig>();
+        var config2 = _configManager.GetConfiguration<TestConfig>(true);
 
-            config1.DummyNumber++;
-            _configManager.SaveConfiguration(config1);
-
-            var config2 = _configManager.GetConfiguration<TestConfig>(true);
-
-            Assert.That(config2.DummyNumber, Is.EqualTo(config1.DummyNumber));
-        }
+        Assert.That(config2.DummyNumber, Is.EqualTo(config1.DummyNumber));
     }
 }

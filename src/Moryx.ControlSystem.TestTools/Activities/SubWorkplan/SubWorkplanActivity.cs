@@ -1,39 +1,37 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Capabilities;
 
-namespace Moryx.ControlSystem.TestTools.Activities
+namespace Moryx.ControlSystem.TestTools.Activities;
+
+/// <summary>
+/// Activity for a subworkplan.
+/// </summary>
+public class SubWorkplanActivity : Activity<SubWorkplanParameters>
 {
+    ///
+    public override ICapabilities RequiredCapabilities => Parameters.Capabilities;
+
     /// <summary>
-    /// Activity for a subworkplan.
+    /// Specifies the special process requirements of this type
     /// </summary>
-    public class SubWorkplanActivity : Activity<SubWorkplanParameters>
+    public override ProcessRequirement ProcessRequirement => Parameters.ProcessRequirements;
+
+    /// <summary>
+    /// Create a typed result object for this activity based on the result number
+    /// </summary>
+    protected override ActivityResult CreateResult(long resultNumber)
     {
-        ///
-        public override ICapabilities RequiredCapabilities => Parameters.Capabilities;
+        return ActivityResult.Create(resultNumber == Parameters.SuccessResult, resultNumber);
+    }
 
-        /// <summary>
-        /// Specifies the special process requirements of this type
-        /// </summary>
-        public override ProcessRequirement ProcessRequirement => Parameters.ProcessRequirements;
-
-        /// <summary>
-        /// Create a typed result object for this activity based on the result number
-        /// </summary>
-        protected override ActivityResult CreateResult(long resultNumber)
-        {
-            return ActivityResult.Create(resultNumber == Parameters.SuccessResult, resultNumber);
-        }
-
-        /// <summary>
-        /// Create a typed result object for a technical failure.
-        /// </summary>
-        protected override ActivityResult CreateFailureResult()
-        {
-            return ActivityResult.Create(false, Parameters.FailureResult);
-        }
+    /// <summary>
+    /// Create a typed result object for a technical failure.
+    /// </summary>
+    protected override ActivityResult CreateFailureResult()
+    {
+        return ActivityResult.Create(false, Parameters.FailureResult);
     }
 }
-

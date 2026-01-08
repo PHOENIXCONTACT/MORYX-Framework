@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.DependencyInjection;
@@ -6,19 +6,17 @@ using Moryx.Container;
 using Moryx.Serialization;
 using Moryx.TestModule;
 
-namespace Moryx.Products.Samples.Recipe
+namespace Moryx.Products.Samples.Recipe;
+
+public class FacacadeRecipeValueAttribute : PossibleValuesAttribute
 {
-    public class FacacadeRecipeValueAttribute : PossibleValuesAttribute
+    public override bool OverridesConversion => false;
+
+    public override bool UpdateFromPredecessor => false;
+
+    public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)
     {
-        public override bool OverridesConversion => false;
-
-        public override bool UpdateFromPredecessor => false;
-
-        public override IEnumerable<string> GetValues(IContainer localContainer, IServiceProvider serviceProvider)
-        {
-            var module = serviceProvider.GetRequiredService<ITestModule>();
-            return [module.Bla.ToString("D")];
-        }
+        var module = serviceProvider.GetRequiredService<ITestModule>();
+        return [module.Bla.ToString("D")];
     }
 }
-

@@ -1,19 +1,18 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Constraints
+namespace Moryx.AbstractionLayer.Constraints;
+
+/// <summary>
+/// Implementation of a null constraint which will be the default implementation which is always ok.
+/// </summary>
+public class NullConstraint : IConstraint
 {
     /// <summary>
-    /// Implementation of a null constraint which will be the default implementation which is always ok.
+    /// Implementation of a null constraint. Will always be true and will check nothing.
     /// </summary>
-    public class NullConstraint : IConstraint
+    public bool Check(IConstraintContext context)
     {
-        /// <summary>
-        /// Implementation of a null constraint. Will always be true and will check nothing.
-        /// </summary>
-        public bool Check(IConstraintContext context)
-        {
-            return true;
-        }
+        return true;
     }
 }

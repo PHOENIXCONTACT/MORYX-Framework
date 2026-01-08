@@ -1,54 +1,53 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Processes;
 
-namespace Moryx.AbstractionLayer.Recipes
+namespace Moryx.AbstractionLayer.Recipes;
+
+/// <summary>
+/// Temporary recipe which should be replaced by the product management
+/// </summary>
+public class RecipeReference : IRecipe
 {
+    /// <inheritdoc />
+    public long Id { get; set; }
+
+    /// <inheritdoc />
+    public long TemplateId { get; set; }
+
+    /// <inheritdoc />
+    public string Name { get; set; }
+
+    /// <inheritdoc />
+    public int Revision { get; set; }
+
+    /// <inheritdoc />
+    public RecipeState State { get; set; }
+
+    /// <inheritdoc />
+    public RecipeClassification Classification { get; set; }
+
+    /// <inheritdoc />
+    public IRecipeProvider Origin { get; set; }
+
     /// <summary>
-    /// Temporary recipe which should be replaced by the product management
+    /// Creates a new instance of the <see cref="RecipeReference"/>
     /// </summary>
-    public class RecipeReference : IRecipe
+    public RecipeReference(long recipeId)
     {
-        /// <inheritdoc />
-        public long Id { get; set; }
+        Id = recipeId;
+    }
 
-        /// <inheritdoc />
-        public long TemplateId { get; set; }
+    /// <inheritdoc />
+    public Process CreateProcess()
+    {
+        throw new InvalidOperationException($"{nameof(RecipeReference)} cannot create processes.");
+    }
 
-        /// <inheritdoc />
-        public string Name { get; set; }
-
-        /// <inheritdoc />
-        public int Revision { get; set; }
-
-        /// <inheritdoc />
-        public RecipeState State { get; set; }
-
-        /// <inheritdoc />
-        public RecipeClassification Classification { get; set; }
-
-        /// <inheritdoc />
-        public IRecipeProvider Origin { get; set; }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="RecipeReference"/>
-        /// </summary>
-        public RecipeReference(long recipeId)
-        {
-            Id = recipeId;
-        }
-
-        /// <inheritdoc />
-        public Process CreateProcess()
-        {
-            throw new InvalidOperationException($"{nameof(RecipeReference)} cannot create processes.");
-        }
-
-        /// <inheritdoc />
-        public IRecipe Clone()
-        {
-            throw new InvalidOperationException($"{nameof(RecipeReference)} cannot be cloned!");
-        }
+    /// <inheritdoc />
+    public IRecipe Clone()
+    {
+        throw new InvalidOperationException($"{nameof(RecipeReference)} cannot be cloned!");
     }
 }

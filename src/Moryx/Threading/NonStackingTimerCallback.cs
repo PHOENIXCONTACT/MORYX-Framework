@@ -1,99 +1,98 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Threading
+namespace Moryx.Threading;
+
+/// <summary>
+/// This class can wrap a timer callback in a way to make sure that if the execution
+/// exceeds the call duration the timer threads do not accumulate.
+/// </summary>
+public class NonStackingTimerCallback
 {
     /// <summary>
-    /// This class can wrap a timer callback in a way to make sure that if the execution
-    /// exceeds the call duration the timer threads do not accumulate.
+    /// Flag if callback is currently executed in other thread
     /// </summary>
-    public class NonStackingTimerCallback
+    private bool _callbackExecuting;
+
+    /// <summary>
+    /// Lock used to sync multiple timer threads
+    /// </summary>
+    private readonly object _syncLock = new();
+
+    /// <summary>
+    /// Callback for timer
+    /// </summary>
+    private readonly TimerCallback _callback;
+
+    /// <summary>
+    /// Constructor to create a new instance of <see cref="NonStackingTimerCallback"/>
+    /// </summary>
+    public NonStackingTimerCallback(Action timerCallback)
     {
-        /// <summary>
-        /// Flag if callback is currently executed in other thread
-        /// </summary>
-        private bool _callbackExecuting;
+        _callback = state => timerCallback();
+    }
 
-        /// <summary>
-        /// Lock used to sync multiple timer threads
-        /// </summary>
-        private readonly object _syncLock = new();
+    /// <summary>
+    /// Constructor to create a new instance of <see cref="NonStackingTimerCallback"/>
+    /// </summary>
+    public NonStackingTimerCallback(TimerCallback timerCallback)
+    {
+        _callback = timerCallback;
+    }
 
-        /// <summary>
-        /// Callback for timer
-        /// </summary>
-        private readonly TimerCallback _callback;
+    /// <summary>
+    /// Callback for the threading timer that doesn't accumulate threads if execution time is greater than call period
+    /// </summary>
+    public TimerCallback Callback => NonStackingCall;
 
-        /// <summary>
-        /// Constructor to create a new instance of <see cref="NonStackingTimerCallback"/>
-        /// </summary>
-        public NonStackingTimerCallback(Action timerCallback)
+    /// <summary>
+    /// Non stacking call to the timer callback
+    /// </summary>
+    /// <param name="state">State object</param>
+    private void NonStackingCall(object state)
+    {
+        // Retrieve lock only to ready execution flag
+        lock (_syncLock)
         {
-            _callback = state => timerCallback();
+            if (_callbackExecuting)
+                return;
+            _callbackExecuting = true;
         }
 
-        /// <summary>
-        /// Constructor to create a new instance of <see cref="NonStackingTimerCallback"/>
-        /// </summary>
-        public NonStackingTimerCallback(TimerCallback timerCallback)
+        // Execute callback only once at a time non stacking
+        _callback(state);
+
+        // Get lock again to reset execution flag
+        lock (_syncLock)
         {
-            _callback = timerCallback;
-        }
-
-        /// <summary>
-        /// Callback for the threading timer that doesn't accumulate threads if execution time is greater than call period
-        /// </summary>
-        public TimerCallback Callback => NonStackingCall;
-
-        /// <summary>
-        /// Non stacking call to the timer callback
-        /// </summary>
-        /// <param name="state">State object</param>
-        private void NonStackingCall(object state)
-        {
-            // Retrieve lock only to ready execution flag
-            lock (_syncLock)
-            {
-                if (_callbackExecuting)
-                    return;
-                _callbackExecuting = true;
-            }
-
-            // Execute callback only once at a time non stacking
-            _callback(state);
-
-            // Get lock again to reset execution flag
-            lock (_syncLock)
-            {
-                _callbackExecuting = false;
-            }
-        }
-
-        /// <summary>
-        /// Implicit cast point to callback property
-        /// </summary>
-        /// <param name="item">Wrapped callback</param>
-        /// <returns>Non stacking timer callback</returns>
-        public static implicit operator TimerCallback(NonStackingTimerCallback item)
-        {
-            return item.Callback;
+            _callbackExecuting = false;
         }
     }
 
     /// <summary>
-    /// replaces the TimerCallback with a non stacking version of it.
+    /// Implicit cast point to callback property
     /// </summary>
-    public static class TimerCallbackExtension
+    /// <param name="item">Wrapped callback</param>
+    /// <returns>Non stacking timer callback</returns>
+    public static implicit operator TimerCallback(NonStackingTimerCallback item)
     {
-        /// <summary>
-        /// Creates a new stack proved NonStackingTimerCallback and ensure that it is not stacking.
-        /// </summary>
-        /// <param name="callback">Callback which is called when the timer elapsed.</param>
-        /// <returns>A non stacking callback.</returns>
-        public static TimerCallback StackProve(this TimerCallback callback)
-        {
-            var callbackWrapper = new NonStackingTimerCallback(callback);
-            return callbackWrapper.Callback;
-        }
+        return item.Callback;
+    }
+}
+
+/// <summary>
+/// replaces the TimerCallback with a non stacking version of it.
+/// </summary>
+public static class TimerCallbackExtension
+{
+    /// <summary>
+    /// Creates a new stack proved NonStackingTimerCallback and ensure that it is not stacking.
+    /// </summary>
+    /// <param name="callback">Callback which is called when the timer elapsed.</param>
+    /// <returns>A non stacking callback.</returns>
+    public static TimerCallback StackProve(this TimerCallback callback)
+    {
+        var callbackWrapper = new NonStackingTimerCallback(callback);
+        return callbackWrapper.Callback;
     }
 }

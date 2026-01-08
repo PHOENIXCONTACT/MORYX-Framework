@@ -1,21 +1,23 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Setups;
 
-namespace Moryx.ControlSystem.ProcessEngine.Jobs
+namespace Moryx.ControlSystem.ProcessEngine.Jobs;
+
+internal static class SchedulerExtensions
 {
-    internal static class SchedulerExtensions
+    /// <param name="one"></param>
+    extension(Job one)
     {
         /// <summary>
         /// Check if two jobs have the same recipe
         /// </summary>
-        /// <param name="one"></param>
         /// <param name="other"></param>
         /// <returns></returns>
-        public static bool SameRecipeAs(this Job one, Job other)
+        public bool SameRecipeAs(Job other)
         {
             if (one == null || other == null)
                 return false;
@@ -29,37 +31,37 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs
         /// <summary>
         /// Check if the job is a preparation job
         /// </summary>
-        public static bool IsPrepare(this Job candidate)
+        public bool IsPrepare()
         {
-            return candidate != null
-                 && candidate.Recipe is SetupRecipe prepare
-                 && prepare.Execution == SetupExecution.BeforeProduction;
+            return one != null
+                   && one.Recipe is SetupRecipe prepare
+                   && prepare.Execution == SetupExecution.BeforeProduction;
         }
 
         /// <summary>
         /// Check if the job is a preparation job for a specific job
         /// </summary>
-        public static bool IsPrepareOf(this Job candidate, Job target)
+        public bool IsPrepareOf(Job target)
         {
-            return IsPrepare(candidate) && ((SetupRecipe)candidate.Recipe).TargetRecipe == target?.Recipe;
+            return IsPrepare(one) && ((SetupRecipe)one.Recipe).TargetRecipe == target?.Recipe;
         }
 
         /// <summary>
         /// Check if the job is a clean-up job
         /// </summary>
-        public static bool IsCleanup(this Job candidate)
+        public bool IsCleanup()
         {
-            return candidate != null
-                && candidate.Recipe is SetupRecipe cleanup
-                && cleanup.Execution == SetupExecution.AfterProduction;
+            return one != null
+                   && one.Recipe is SetupRecipe cleanup
+                   && cleanup.Execution == SetupExecution.AfterProduction;
         }
 
         /// <summary>
         /// Check if the job is a clean-up job for a specific job
         /// </summary>
-        public static bool IsCleanupOf(this Job candidate, Job target)
+        public bool IsCleanupOf(Job target)
         {
-            return IsCleanup(candidate) && ((SetupRecipe)candidate.Recipe).TargetRecipe == target?.Recipe;
+            return IsCleanup(one) && ((SetupRecipe)one.Recipe).TargetRecipe == target?.Recipe;
         }
     }
 }

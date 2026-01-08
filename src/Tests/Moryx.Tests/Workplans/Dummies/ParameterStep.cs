@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Serialization;
@@ -6,63 +6,62 @@ using Moryx.Workplans;
 using Moryx.Workplans.Transitions;
 using Moryx.Workplans.WorkplanSteps;
 
-namespace Moryx.Tests.Workplans
+namespace Moryx.Tests.Workplans;
+
+internal class ParameterStep : WorkplanStepBase, IParameterHolder
 {
-    internal class ParameterStep : WorkplanStepBase, IParameterHolder
+    public ParameterStep()
     {
-        public ParameterStep()
-        {
-            Name = "ParameterStep";
-        }
-
-        [EntrySerialize]
-        public DummyParameters Parameters { get; set; }
-
-        ///
-        protected override TransitionBase Instantiate(IWorkplanContext context)
-        {
-            return new DummyTransition();
-        }
-
-        public DummyParameters Export()
-        {
-            return Parameters;
-        }
+        Name = "ParameterStep";
     }
 
-    internal class ParameterConstructorStep : WorkplanStepBase, IParameterHolder
+    [EntrySerialize]
+    public DummyParameters Parameters { get; set; }
+
+    ///
+    protected override TransitionBase Instantiate(IWorkplanContext context)
     {
-        private readonly DummyParameters _parameters;
-
-        public ParameterConstructorStep(DummyParameters parameters)
-        {
-            _parameters = parameters;
-            Name = "ParameterConstructorStep";
-        }
-
-        ///
-        protected override TransitionBase Instantiate(IWorkplanContext context)
-        {
-            return new DummyTransition();
-        }
-
-        public DummyParameters Export()
-        {
-            return _parameters;
-        }
+        return new DummyTransition();
     }
 
-    internal interface IParameterHolder
+    public DummyParameters Export()
     {
-        DummyParameters Export();
+        return Parameters;
+    }
+}
+
+internal class ParameterConstructorStep : WorkplanStepBase, IParameterHolder
+{
+    private readonly DummyParameters _parameters;
+
+    public ParameterConstructorStep(DummyParameters parameters)
+    {
+        _parameters = parameters;
+        Name = "ParameterConstructorStep";
     }
 
-    internal class DummyParameters
+    ///
+    protected override TransitionBase Instantiate(IWorkplanContext context)
     {
-        [EntrySerialize]
-        public int Number { get; set; }
-
-        [EntrySerialize]
-        public string Name { get; set; }
+        return new DummyTransition();
     }
+
+    public DummyParameters Export()
+    {
+        return _parameters;
+    }
+}
+
+internal interface IParameterHolder
+{
+    DummyParameters Export();
+}
+
+internal class DummyParameters
+{
+    [EntrySerialize]
+    public int Number { get; set; }
+
+    [EntrySerialize]
+    public string Name { get; set; }
 }

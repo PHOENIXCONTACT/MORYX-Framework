@@ -1,37 +1,36 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Workplans
+namespace Moryx.Workplans;
+
+/// <summary>
+/// Base interface for places and transitions. It declares properties and fields
+/// to to persist and restore the position of tokens.
+/// </summary>
+public interface ITokenHolder
 {
     /// <summary>
-    /// Base interface for places and transitions. It declares properties and fields
-    /// to to persist and restore the position of tokens.
+    /// Workplan-unique id of this holder. Same id can be present in another workplan
     /// </summary>
-    public interface ITokenHolder
-    {
-        /// <summary>
-        /// Workplan-unique id of this holder. Same id can be present in another workplan
-        /// </summary>
-        long Id { get; }
+    long Id { get; }
 
-        /// <summary>
-        /// All tokens on this holder
-        /// </summary>
-        IEnumerable<IToken> Tokens { get; set; }
+    /// <summary>
+    /// All tokens on this holder
+    /// </summary>
+    IEnumerable<IToken> Tokens { get; set; }
 
-        /// <summary>
-        /// Internal state of the holder. This object should be used to store custom data.
-        /// </summary>
-        object InternalState { get; set; }
+    /// <summary>
+    /// Internal state of the holder. This object should be used to store custom data.
+    /// </summary>
+    object InternalState { get; set; }
 
-        /// <summary>
-        /// Pause execution on this holder and stop passing of tokens
-        /// </summary>
-        void Pause();
+    /// <summary>
+    /// Pause execution on this holder and stop passing of tokens
+    /// </summary>
+    void Pause();
 
-        /// <summary>
-        /// Resume execution on this holder and process placed tokens
-        /// </summary>
-        void Resume();
-    }
+    /// <summary>
+    /// Resume execution on this holder and process placed tokens
+    /// </summary>
+    void Resume();
 }

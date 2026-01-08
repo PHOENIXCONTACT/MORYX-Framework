@@ -1,24 +1,22 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Setups;
 
-namespace Moryx.ControlSystem.SetupProvider.Tests
+namespace Moryx.ControlSystem.SetupProvider.Tests;
+
+internal class TestTriggerCleanup : TestTriggerBase
 {
-    internal class TestTriggerCleanup : TestTriggerBase
+    public override SetupExecution Execution => SetupExecution.AfterProduction;
+
+    public override SetupEvaluation Evaluate(IProductRecipe recipe)
     {
-        public override SetupExecution Execution => SetupExecution.AfterProduction;
+        RequiredWasCalled = true;
 
-        public override SetupEvaluation Evaluate(IProductRecipe recipe)
+        return SetupEvaluation.Remove(new TestSetupCapabilities
         {
-            RequiredWasCalled = true;
-
-            return SetupEvaluation.Remove(new TestSetupCapabilities
-            {
-                SetupState = ((TestRecipe)recipe).SetupState
-            });
-        }
+            SetupState = ((TestRecipe)recipe).SetupState
+        });
     }
 }
-

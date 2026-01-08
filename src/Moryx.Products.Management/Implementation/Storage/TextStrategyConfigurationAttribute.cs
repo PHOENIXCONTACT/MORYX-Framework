@@ -1,25 +1,24 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Products.Management
+namespace Moryx.Products.Management;
+
+public class TextStrategyConfigurationAttribute : PropertyStrategyConfigurationAttribute
 {
-    public class TextStrategyConfigurationAttribute : PropertyStrategyConfigurationAttribute
+    public TextStrategyConfigurationAttribute()
     {
-        public TextStrategyConfigurationAttribute()
-        {
-            ColumnType = typeof(string);
-            DerivedTypes = true;
-            SupportedTypes = [typeof(string), typeof(object), typeof(Guid)];
-        }
+        ColumnType = typeof(string);
+        DerivedTypes = true;
+        SupportedTypes = [typeof(string), typeof(object), typeof(Guid)];
+    }
 
-        /// <inheritdoc />
-        public override int TypeCompliance(Type targetType)
-        {
-            // Fallback for interfaces
-            if (targetType.IsInterface)
-                return BadCompliance - 1;
+    /// <inheritdoc />
+    public override int TypeCompliance(Type targetType)
+    {
+        // Fallback for interfaces
+        if (targetType.IsInterface)
+            return BadCompliance - 1;
 
-            return base.TypeCompliance(targetType);
-        }
+        return base.TypeCompliance(targetType);
     }
 }

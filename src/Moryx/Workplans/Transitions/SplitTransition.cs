@@ -1,24 +1,23 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Workplans.Transitions
+namespace Moryx.Workplans.Transitions;
+
+/// <summary>
+/// Transition to split execution flow
+/// </summary>
+internal sealed class SplitTransition : TransitionBase
 {
-    /// <summary>
-    /// Transition to split execution flow
-    /// </summary>
-    internal sealed class SplitTransition : TransitionBase
+    protected override void InputTokenAdded(object sender, IToken token)
     {
-        protected override void InputTokenAdded(object sender, IToken token)
+        Executing(delegate
         {
-            Executing(delegate
+            ((IPlace)sender).Remove(token);
+            // Split input into output
+            foreach (var output in Outputs)
             {
-                ((IPlace)sender).Remove(token);
-                // Split input into output
-                foreach (var output in Outputs)
-                {
-                    output.Add(new SplitToken(token));
-                }
-            });
-        }
+                output.Add(new SplitToken(token));
+            }
+        });
     }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -14,464 +14,463 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
 using Moryx.Resources.Management.Model;
 
-namespace Moryx.Resources.Management.Tests
+namespace Moryx.Resources.Management.Tests;
+
+[TestFixture]
+public class ResourceLinkerTests
 {
-    [TestFixture]
-    public class ResourceLinkerTests
+    private ResourceLinker _linker;
+
+    private readonly Dictionary<long, Resource> _graph = new();
+
+    [OneTimeSetUp]
+    public void PrepareLinker()
     {
-        private ResourceLinker _linker;
+        var mock = new Mock<IResourceGraph>();
+        mock.Setup(g => g.Get(It.IsAny<long>())).Returns<long>(id => _graph.ContainsKey(id) ? _graph[id] : null);
 
-        private readonly Dictionary<long, Resource> _graph = new();
-
-        [OneTimeSetUp]
-        public void PrepareLinker()
+        _linker = new ResourceLinker
         {
-            var mock = new Mock<IResourceGraph>();
-            mock.Setup(g => g.Get(It.IsAny<long>())).Returns<long>(id => _graph.ContainsKey(id) ? _graph[id] : null);
+            Graph = mock.Object,
+            Logger = new ModuleLogger("Dummy", new NullLoggerFactory())
+        };
+    }
 
-            _linker = new ResourceLinker
-            {
-                Graph = mock.Object,
-                Logger = new ModuleLogger("Dummy", new NullLoggerFactory())
-            };
-        }
+    [TearDown]
+    public void ClearGraph()
+    {
+        _graph.Clear();
+    }
 
-        [TearDown]
-        public void ClearGraph()
+    [Test(Description = "Set all reference collections on the test resource including overrides")]
+    public void SetReferenceCollection()
+    {
+        // Arrange 
+        var resource = new ReferenceResource();
+
+        // Act
+        ResourceReferenceTools.InitializeCollections(resource);
+
+        // Assert
+        Assert.That(resource.References, Is.Not.Null);
+        Assert.That(resource.ChildReferences, Is.Not.Null);
+    }
+
+    [Test(Description = "Detect all collections flagged with 'AutoSave' on the test resource")]
+    public void DetectAutoSaveCollections()
+    {
+        // Arrange
+        var resource = new ReferenceResource();
+
+        // Act
+        ResourceReferenceTools.InitializeCollections(resource);
+        var autosave = ResourceReferenceTools.GetAutoSaveCollections(resource);
+        Assert.That(autosave.Count, Is.EqualTo(1));
+
+        // Validate event raised on modification
+        var overrideAutosave = autosave.First();
+        ReferenceCollectionChangedEventArgs eventArgs = null;
+        overrideAutosave.CollectionChanged += (sender, args) => eventArgs = args;
+        resource.ChildReferences.Add(new DerivedResource { Id = 42 });
+
+        // Assert
+        Assert.That(eventArgs, Is.Not.Null);
+        Assert.That(eventArgs.Parent, Is.EqualTo(resource));
+        Assert.That(eventArgs.CollectionProperty.Name, Is.EqualTo(nameof(Resource.Children)));
+    }
+
+    [Test(Description = "Fill all references of the test resource")]
+    public void LinkResource()
+    {
+        // Arrange
+        var instance = new ReferenceResource { Id = 1 };
+        _graph[1] = instance;
+        _graph[2] = new SimpleResource { Id = 2, Name = "Ref1" };
+        _graph[3] = new SimpleResource { Id = 3, Name = "Pos1" };
+        _graph[4] = new DerivedResource { Id = 4, Name = "Ref2" };
+        _graph[5] = new DerivedResource { Id = 5, Name = "ChildOnly" };
+        _graph[6] = new DerivedResource { Id = 6, Name = "BackRef" };
+        var relations = new List<ResourceRelationAccessor>
         {
-            _graph.Clear();
-        }
+            // All Parent-Child relations
+            RelationAccessor(2), RelationAccessor(3), RelationAccessor(4), RelationAccessor(5),
+            RelationAccessor(6, ResourceRelationType.ParentChild, ResourceReferenceRole.Source),
+            // All PossibleExchangeablePart relations
+            RelationAccessor(2, ResourceRelationType.PossibleExchangeablePart), RelationAccessor(3, ResourceRelationType.PossibleExchangeablePart),
+            RelationAccessor(4, ResourceRelationType.PossibleExchangeablePart),
+            // The 2 CurrentExchangeablePart
+            RelationAccessor(2, ResourceRelationType.CurrentExchangeablePart, ResourceReferenceRole.Target, nameof(ReferenceResource.Reference)),
+            RelationAccessor(4, ResourceRelationType.CurrentExchangeablePart),
+        };
 
-        [Test(Description = "Set all reference collections on the test resource including overrides")]
-        public void SetReferenceCollection()
+        // Act
+        ResourceReferenceTools.InitializeCollections(instance);
+        _linker.LinkReferences(instance, relations);
+
+        // Assert
+        Assert.That(instance.Parent, Is.Not.Null, "Parent reference not set");
+        Assert.That(instance.Reference, Is.Not.Null, "Named reference not set");
+        Assert.That(instance.Reference2, Is.Not.Null, "Type inferred reference not set");
+        Assert.That(instance.Children.Count, Is.EqualTo(4), "Children not set");
+        Assert.That(instance.ChildReferences.Count, Is.EqualTo(4), "Children override not set");
+        Assert.That(instance.References.Count, Is.EqualTo(3), "Possible parts not set");
+    }
+
+    private static ResourceRelationAccessor RelationAccessor(long id,
+        ResourceRelationType relationType = ResourceRelationType.ParentChild,
+        ResourceReferenceRole role = ResourceReferenceRole.Target,
+        string relationName = null)
+    {
+        return new ResourceRelationAccessor
         {
-            // Arrange 
-            var resource = new ReferenceResource();
+            Role = role,
+            Entity = Relation(id, 1, relationType, role, relationName)
+        };
+    }
 
-            // Act
-            ResourceReferenceTools.InitializeCollections(resource);
+    [Test(Description = "Save modified bidirectional references")]
+    public async Task SaveBidirectionalReferences()
+    {
+        // Arrange
+        var instance = new ReferenceResource { Id = 1 };
+        ResourceReferenceTools.InitializeCollections(instance);
+        // Prepare reference objects
+        var resource = new BidirectionalReferenceResource { Id = 2, Name = "resource" };
+        var collectionResource = new SimpleResource { Id = 3, Name = "collectionResource" };
+        var newResource = new BidirectionalReferenceResource() { Name = "newResource" };
+        ResourceReferenceTools.InitializeCollections(newResource);
+        var newCollectionResource = new SimpleResource() { Name = "newCollectionResource" };
+        ResourceReferenceTools.InitializeCollections(newCollectionResource);
+        // Fill graph
+        _graph[1] = instance;
+        _graph[2] = resource;
+        _graph[3] = collectionResource;
+        // Set single references
+        instance.TargetReference = resource; // The bidirectional reference is created with an existing resource
+        instance.NewTargetReference = newResource; // The bidirectional reference is created with a new resource
+        // Fill collections
+        instance.ChildReferences.Add(collectionResource); // An existing resource is added to the reference collection
+        instance.ChildReferences.Add(newCollectionResource); // A new resource is added to the reference collection
+        // Setup uow and repo to simulate the current database
+        var relations = new List<ResourceRelationEntity>();
+        var mocks = SetupDbMocks(relations);
 
-            // Assert
-            Assert.That(resource.References, Is.Not.Null);
-            Assert.That(resource.ChildReferences, Is.Not.Null);
-        }
+        // Act
+        var newResources = await _linker.SaveReferencesAsync(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
 
-        [Test(Description = "Detect all collections flagged with 'AutoSave' on the test resource")]
-        public void DetectAutoSaveCollections()
+        // Assert
+        Assert.Multiple(() =>
         {
-            // Arrange
-            var resource = new ReferenceResource();
+            // Resources were created
+            Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.CreateAsync(), Times.Exactly(2)), "Linker did not detect the new resources");
+            Assert.That(newResources, Has.Count.EqualTo(2));
+            Assert.That(newResources[0], Is.EqualTo(newResource));
+            Assert.That(newResources[1], Is.EqualTo(newCollectionResource));
+            // Resources properties were set
+            Assert.That(instance, Is.EqualTo(resource.SourceReference), "Backlink sync failed for a reference to an existing resource");
+            Assert.That(instance, Is.EqualTo(newResource.SourceReference), "Backlink sync failed for a reference to a new resource");
+            Assert.That(instance, Is.EqualTo(collectionResource.Parent), "Backlink sync failed for collection reference to a new resource");
+            Assert.That(instance, Is.EqualTo(newCollectionResource.Parent), "Backlink sync failed for a collection reference to a new resource");
+            // Relations were created
+            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.Extension), Times.Exactly(2)), "Linker did not create relations for references");
+            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.ParentChild), Times.Exactly(2)), "Linker did not create relations for collection references");
+            Assert.That(2, Is.EqualTo(relations.Count(r => r.RelationType == (int)ResourceRelationType.ParentChild)));
+            Assert.That(2, Is.EqualTo(relations.Count(r => r.RelationType == (int)ResourceRelationType.Extension)));
+            // Relation sources and targets were set
+            Assert.That(4, Is.EqualTo(relations.Count(r => r.Source.Id == instance.Id)));
+            Assert.DoesNotThrow(() => relations.Single(r => r.Target.Id == resource.Id));
+            Assert.DoesNotThrow(() => relations.Single(r => r.Target.Id == collectionResource.Id));
+            Assert.DoesNotThrow(() => relations.Single(r => r.Target.Name == newResource.Name));
+            Assert.DoesNotThrow(() => relations.Single(r => r.Target.Name == newCollectionResource.Name));
+        });
+    }
 
-            // Act
-            ResourceReferenceTools.InitializeCollections(resource);
-            var autosave = ResourceReferenceTools.GetAutoSaveCollections(resource);
-            Assert.That(autosave.Count, Is.EqualTo(1));
+    [Test(Description = "Save modified references of a resource")]
+    public async Task SaveReferences()
+    {
+        // Arrange
+        var instance = new ReferenceResource { Id = 1 };
+        ResourceReferenceTools.InitializeCollections(instance);
+        // Prepare reference objects
+        var ref1 = new SimpleResource { Id = 2, Name = "Ref1" };
+        var ref2 = new SimpleResource { Id = 3, Name = "Pos1" };
+        var ref3 = new DerivedResource { Name = "Ref2" };
+        ResourceReferenceTools.InitializeCollections(ref3);
+        var ref4 = new DerivedResource { Id = 5, Name = "ChildOnly" };
+        var ref5 = new DerivedResource { Id = 6, Name = "BackRef" };
+        ResourceReferenceTools.InitializeCollections(ref5);
+        // Fill graph
+        _graph[1] = instance;
+        _graph[2] = ref1;
+        _graph[3] = ref2;
+        _graph[5] = ref4;
+        _graph[6] = ref5;
+        // Set single references
+        instance.Parent = ref5; // Parent is set and
+        // ref5.Children.Add(instance); Bidirectional reference synced --> no longer necessary
+        instance.Reference = ref2; // Reference is changed from ref1 to ref2 
+        instance.Reference2 = ref3; // Reference2 is assigned with a new object
+        // Fill collections
+        instance.References.Add(ref1); // This element remains
+        //instance.References.Add(ref2); // This element was removed
+        instance.References.Add(ref3); // The new element is also added to the list, but is not a child
+        // Fill children with all except the unsaved one to simulate an unchanged collection
+        instance.Children.Add(ref1);
+        instance.Children.Add(ref2);
+        instance.Children.Add(ref4);
 
-            // Validate event raised on modification
-            var overrideAutosave = autosave.First();
-            ReferenceCollectionChangedEventArgs eventArgs = null;
-            overrideAutosave.CollectionChanged += (sender, args) => eventArgs = args;
-            resource.ChildReferences.Add(new DerivedResource { Id = 42 });
-
-            // Assert
-            Assert.That(eventArgs, Is.Not.Null);
-            Assert.That(eventArgs.Parent, Is.EqualTo(resource));
-            Assert.That(eventArgs.CollectionProperty.Name, Is.EqualTo(nameof(Resource.Children)));
-        }
-
-        [Test(Description = "Fill all references of the test resource")]
-        public void LinkResource()
+        // Setup uow and repo to simulate the current database
+        var relations = new List<ResourceRelationEntity>
         {
-            // Arrange
-            var instance = new ReferenceResource { Id = 1 };
-            _graph[1] = instance;
-            _graph[2] = new SimpleResource { Id = 2, Name = "Ref1" };
-            _graph[3] = new SimpleResource { Id = 3, Name = "Pos1" };
-            _graph[4] = new DerivedResource { Id = 4, Name = "Ref2" };
-            _graph[5] = new DerivedResource { Id = 5, Name = "ChildOnly" };
-            _graph[6] = new DerivedResource { Id = 6, Name = "BackRef" };
-            var relations = new List<ResourceRelationAccessor>
-            {
-                // All Parent-Child relations
-                RelationAccessor(2), RelationAccessor(3), RelationAccessor(4), RelationAccessor(5),
-                RelationAccessor(6, ResourceRelationType.ParentChild, ResourceReferenceRole.Source),
-                // All PossibleExchangeablePart relations
-                RelationAccessor(2, ResourceRelationType.PossibleExchangeablePart), RelationAccessor(3, ResourceRelationType.PossibleExchangeablePart),
-                RelationAccessor(4, ResourceRelationType.PossibleExchangeablePart),
-                // The 2 CurrentExchangeablePart
-                RelationAccessor(2, ResourceRelationType.CurrentExchangeablePart, ResourceReferenceRole.Target, nameof(ReferenceResource.Reference)),
-                RelationAccessor(4, ResourceRelationType.CurrentExchangeablePart),
-            };
+            // Parent child relations
+            //Relation(6, ResourceRelationType.ParentChild, ResourceReferenceRole.Source), <-- Represents the missing bidirectional parent relationship created during this test
+            Relation(2, 1), Relation(3, 1), Relation(5, 1),
+            // Current exchangable part
+            Relation(2, 1, ResourceRelationType.CurrentExchangeablePart, ResourceReferenceRole.Target, nameof(ReferenceResource.Reference)), // This is changed to ref2
+            // Possible exchangable part
+            Relation(2, 1, ResourceRelationType.PossibleExchangeablePart), // This remains untouched
+            Relation(3, 1, ResourceRelationType.PossibleExchangeablePart) // This is removed
+        };
+        var mocks = SetupDbMocks(relations);
 
-            // Act
-            ResourceReferenceTools.InitializeCollections(instance);
-            _linker.LinkReferences(instance, relations);
+        // Act
+        var newResources = await _linker.SaveReferencesAsync(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
 
-            // Assert
-            Assert.That(instance.Parent, Is.Not.Null, "Parent reference not set");
-            Assert.That(instance.Reference, Is.Not.Null, "Named reference not set");
-            Assert.That(instance.Reference2, Is.Not.Null, "Type inferred reference not set");
-            Assert.That(instance.Children.Count, Is.EqualTo(4), "Children not set");
-            Assert.That(instance.ChildReferences.Count, Is.EqualTo(4), "Children override not set");
-            Assert.That(instance.References.Count, Is.EqualTo(3), "Possible parts not set");
-        }
+        // Assert
+        Assert.That(newResources.Count, Is.EqualTo(1));
+        Assert.That(newResources[0], Is.EqualTo(ref3));
+        Assert.That(ref5.Children.Contains(instance), "Backlink sync failed for parent ref5");
 
-        private static ResourceRelationAccessor RelationAccessor(long id,
-            ResourceRelationType relationType = ResourceRelationType.ParentChild,
-            ResourceReferenceRole role = ResourceReferenceRole.Target,
-            string relationName = null)
+        Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.CreateAsync(), Times.Once), "Linker did not detect the new resource");
+        Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.PossibleExchangeablePart), Times.Once), "Linker did not create relation for ref3 in References");
+        Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.ParentChild), Times.Once), "Linker did not create relation for parent ref5");
+        Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Once), "Linker did not remove relation 1-3");
+
+        var parentChild = relations.Where(r => r.RelationType == (int)ResourceRelationType.ParentChild).ToArray();
+        Assert.That(parentChild.Length, Is.EqualTo(4));
+        var currentPart = relations.Where(r => r.RelationType == (int)ResourceRelationType.CurrentExchangeablePart).ToArray();
+        Assert.That(currentPart.Length, Is.EqualTo(2));
+        Assert.That(currentPart.Count(r => r.Target.Id == 3), Is.EqualTo(1));
+        Assert.That(currentPart.Count(r => r.Target.Id == 0), Is.EqualTo(1));
+        var possiblePart = relations.Where(r => r.RelationType == (int)ResourceRelationType.PossibleExchangeablePart).ToArray();
+        Assert.That(possiblePart.Length, Is.EqualTo(2));
+        Assert.That(possiblePart.Count(r => r.Target.Id == 2), Is.EqualTo(1));
+        Assert.That(possiblePart.Count(r => r.Target.Id == 0), Is.EqualTo(1));
+    }
+
+    [Test(Description = "Multiple references of the same relation type should not interfere with each other")]
+    public async Task ReferenceInterferenceOnSave()
+    {
+        // Arrange
+        var instance = new InterferenceResource() { Id = 1 };
+        ResourceReferenceTools.InitializeCollections(instance);
+        // Prepare reference objects
+        var derived = new DerivedResource { Id = 2, Name = "Ref1" };
+        var other = new OtherResource { Id = 3, Name = "Ref2" };
+        var different = new DifferentResource { Id = 4, Name = "Different" };
+        // Fill graph
+        _graph[1] = instance;
+        _graph[2] = derived;
+        _graph[3] = other;
+        _graph[4] = different;
+        // Set references
+        instance.Derived = derived;
+        instance.Others.Add(other);
+        instance.Different = different;
+
+        // Setup uow and repo to simulate the current database
+        var relations = new List<ResourceRelationEntity>
         {
-            return new ResourceRelationAccessor
-            {
-                Role = role,
-                Entity = Relation(id, 1, relationType, role, relationName)
-            };
-        }
+            // Current exchangable parts
+            Relation(2, 1, ResourceRelationType.CurrentExchangeablePart),
+            Relation(3, 1, ResourceRelationType.CurrentExchangeablePart),
+            Relation(4, 1, ResourceRelationType.CurrentExchangeablePart),
+        };
+        var mocks = SetupDbMocks(relations);
 
-        [Test(Description = "Save modified bidirectional references")]
-        public async Task SaveBidirectionalReferences()
+        // Act
+        await _linker.SaveReferencesAsync(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
+
+        // Assert
+        Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 2)), Times.Never), "Linker did remove relation 1-2");
+        Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Never), "Linker did remove relation 1-3");
+        Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Never), "Linker did remove relation 1-4");
+    }
+
+    private static ResourceRelationEntity Relation(long id, long otherId,
+        ResourceRelationType relationType = ResourceRelationType.ParentChild,
+        ResourceReferenceRole role = ResourceReferenceRole.Target,
+        string relationName = null)
+    {
+        var relation = new ResourceRelationEntity
         {
-            // Arrange
-            var instance = new ReferenceResource { Id = 1 };
-            ResourceReferenceTools.InitializeCollections(instance);
-            // Prepare reference objects
-            var resource = new BidirectionalReferenceResource { Id = 2, Name = "resource" };
-            var collectionResource = new SimpleResource { Id = 3, Name = "collectionResource" };
-            var newResource = new BidirectionalReferenceResource() { Name = "newResource" };
-            ResourceReferenceTools.InitializeCollections(newResource);
-            var newCollectionResource = new SimpleResource() { Name = "newCollectionResource" };
-            ResourceReferenceTools.InitializeCollections(newCollectionResource);
-            // Fill graph
-            _graph[1] = instance;
-            _graph[2] = resource;
-            _graph[3] = collectionResource;
-            // Set single references
-            instance.TargetReference = resource; // The bidirectional reference is created with an existing resource
-            instance.NewTargetReference = newResource; // The bidirectional reference is created with a new resource
-            // Fill collections
-            instance.ChildReferences.Add(collectionResource); // An existing resource is added to the reference collection
-            instance.ChildReferences.Add(newCollectionResource); // A new resource is added to the reference collection
-            // Setup uow and repo to simulate the current database
-            var relations = new List<ResourceRelationEntity>();
-            var mocks = SetupDbMocks(relations);
+            RelationType = (int)relationType,
+            TargetName = relationName,
+            TargetId = role == ResourceReferenceRole.Target ? id : otherId,
+            SourceId = role == ResourceReferenceRole.Source ? id : otherId
+        };
+        relation.Target = new ResourceEntity { Id = relation.TargetId };
+        relation.Source = new ResourceEntity { Id = relation.SourceId };
+        return relation;
+    }
 
-            // Act
-            var newResources = await _linker.SaveReferencesAsync(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
+    [Test(Description = "Extend children and make sure the parent is set")]
+    public async Task SetParentWhenAddingChild()
+    {
+        // Arrange
+        // Create resources
+        var parent = new SimpleResource { Id = 1 };
+        ResourceReferenceTools.InitializeCollections(parent);
+        var child = new SimpleResource { Id = 2 };
+        ResourceReferenceTools.InitializeCollections(child);
+        var mocks = SetupDbMocks([]);
+        // Setup graph mock
+        _graph[1] = parent;
+        _graph[2] = child;
 
-            // Assert
-            Assert.Multiple(() =>
-            {
-                // Resources were created
-                Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.CreateAsync(), Times.Exactly(2)), "Linker did not detect the new resources");
-                Assert.That(newResources, Has.Count.EqualTo(2));
-                Assert.That(newResources[0], Is.EqualTo(newResource));
-                Assert.That(newResources[1], Is.EqualTo(newCollectionResource));
-                // Resources properties were set
-                Assert.That(instance, Is.EqualTo(resource.SourceReference), "Backlink sync failed for a reference to an existing resource");
-                Assert.That(instance, Is.EqualTo(newResource.SourceReference), "Backlink sync failed for a reference to a new resource");
-                Assert.That(instance, Is.EqualTo(collectionResource.Parent), "Backlink sync failed for collection reference to a new resource");
-                Assert.That(instance, Is.EqualTo(newCollectionResource.Parent), "Backlink sync failed for a collection reference to a new resource");
-                // Relations were created
-                Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.Extension), Times.Exactly(2)), "Linker did not create relations for references");
-                Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.ParentChild), Times.Exactly(2)), "Linker did not create relations for collection references");
-                Assert.That(2, Is.EqualTo(relations.Count(r => r.RelationType == (int)ResourceRelationType.ParentChild)));
-                Assert.That(2, Is.EqualTo(relations.Count(r => r.RelationType == (int)ResourceRelationType.Extension)));
-                // Relation sources and targets were set
-                Assert.That(4, Is.EqualTo(relations.Count(r => r.Source.Id == instance.Id)));
-                Assert.DoesNotThrow(() => relations.Single(r => r.Target.Id == resource.Id));
-                Assert.DoesNotThrow(() => relations.Single(r => r.Target.Id == collectionResource.Id));
-                Assert.DoesNotThrow(() => relations.Single(r => r.Target.Name == newResource.Name));
-                Assert.DoesNotThrow(() => relations.Single(r => r.Target.Name == newCollectionResource.Name));
-            });
-        }
+        // Act
+        parent.Children.Add(child);
+        await _linker.SaveReferencesAsync(mocks.Item1.Object, parent, new ResourceEntity { Id = 1 });
 
-        [Test(Description = "Save modified references of a resource")]
-        public async Task SaveReferences()
+        // Assert
+        Assert.That(parent.Children.Contains(child), "Child was not set");
+        Assert.That(child.Parent, Is.EqualTo(parent), "Parent was not set");
+    }
+
+    [Test(Description = "Extend children and make sure the parent is set")]
+    public async Task ClearParentWhenRemovingChild()
+    {
+        // Arrange
+        // Create resources
+        var parent = new SimpleResource { Id = 1 };
+        ResourceReferenceTools.InitializeCollections(parent);
+        var child = new SimpleResource { Id = 2 };
+        ResourceReferenceTools.InitializeCollections(child);
+        // Create initial relationship
+        child.Parent = parent;
+        parent.Children.Add(child);
+        var relations = new List<ResourceRelationEntity>
         {
-            // Arrange
-            var instance = new ReferenceResource { Id = 1 };
-            ResourceReferenceTools.InitializeCollections(instance);
-            // Prepare reference objects
-            var ref1 = new SimpleResource { Id = 2, Name = "Ref1" };
-            var ref2 = new SimpleResource { Id = 3, Name = "Pos1" };
-            var ref3 = new DerivedResource { Name = "Ref2" };
-            ResourceReferenceTools.InitializeCollections(ref3);
-            var ref4 = new DerivedResource { Id = 5, Name = "ChildOnly" };
-            var ref5 = new DerivedResource { Id = 6, Name = "BackRef" };
-            ResourceReferenceTools.InitializeCollections(ref5);
-            // Fill graph
-            _graph[1] = instance;
-            _graph[2] = ref1;
-            _graph[3] = ref2;
-            _graph[5] = ref4;
-            _graph[6] = ref5;
-            // Set single references
-            instance.Parent = ref5; // Parent is set and
-            // ref5.Children.Add(instance); Bidirectional reference synced --> no longer necessary
-            instance.Reference = ref2; // Reference is changed from ref1 to ref2 
-            instance.Reference2 = ref3; // Reference2 is assigned with a new object
-            // Fill collections
-            instance.References.Add(ref1); // This element remains
-            //instance.References.Add(ref2); // This element was removed
-            instance.References.Add(ref3); // The new element is also added to the list, but is not a child
-            // Fill children with all except the unsaved one to simulate an unchanged collection
-            instance.Children.Add(ref1);
-            instance.Children.Add(ref2);
-            instance.Children.Add(ref4);
+            Relation(2, 1) // Initial relationship
+        };
+        var mocks = SetupDbMocks(relations);
+        // Setup graph mock
+        _graph[1] = parent;
+        _graph[2] = child;
 
-            // Setup uow and repo to simulate the current database
-            var relations = new List<ResourceRelationEntity>
-            {
-                // Parent child relations
-                //Relation(6, ResourceRelationType.ParentChild, ResourceReferenceRole.Source), <-- Represents the missing bidirectional parent relationship created during this test
-                Relation(2, 1), Relation(3, 1), Relation(5, 1),
-                // Current exchangable part
-                Relation(2, 1, ResourceRelationType.CurrentExchangeablePart, ResourceReferenceRole.Target, nameof(ReferenceResource.Reference)), // This is changed to ref2
-                // Possible exchangable part
-                Relation(2, 1, ResourceRelationType.PossibleExchangeablePart), // This remains untouched
-                Relation(3, 1, ResourceRelationType.PossibleExchangeablePart) // This is removed
-            };
-            var mocks = SetupDbMocks(relations);
+        // Act
+        parent.Children.Remove(child);
+        await _linker.SaveReferencesAsync(mocks.Item1.Object, parent, new ResourceEntity { Id = 1 });
 
-            // Act
-            var newResources = await _linker.SaveReferencesAsync(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
+        // Assert
+        Assert.That(parent.Children.Contains(child), Is.False, "Child was not removed");
+        Assert.That(child.Parent, Is.Null, "Parent was not cleared");
+    }
 
-            // Assert
-            Assert.That(newResources.Count, Is.EqualTo(1));
-            Assert.That(newResources[0], Is.EqualTo(ref3));
-            Assert.That(ref5.Children.Contains(instance), "Backlink sync failed for parent ref5");
-
-            Assert.DoesNotThrow(() => mocks.Item3.Verify(repo => repo.CreateAsync(), Times.Once), "Linker did not detect the new resource");
-            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.PossibleExchangeablePart), Times.Once), "Linker did not create relation for ref3 in References");
-            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Create((int)ResourceRelationType.ParentChild), Times.Once), "Linker did not create relation for parent ref5");
-            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Once), "Linker did not remove relation 1-3");
-
-            var parentChild = relations.Where(r => r.RelationType == (int)ResourceRelationType.ParentChild).ToArray();
-            Assert.That(parentChild.Length, Is.EqualTo(4));
-            var currentPart = relations.Where(r => r.RelationType == (int)ResourceRelationType.CurrentExchangeablePart).ToArray();
-            Assert.That(currentPart.Length, Is.EqualTo(2));
-            Assert.That(currentPart.Count(r => r.Target.Id == 3), Is.EqualTo(1));
-            Assert.That(currentPart.Count(r => r.Target.Id == 0), Is.EqualTo(1));
-            var possiblePart = relations.Where(r => r.RelationType == (int)ResourceRelationType.PossibleExchangeablePart).ToArray();
-            Assert.That(possiblePart.Length, Is.EqualTo(2));
-            Assert.That(possiblePart.Count(r => r.Target.Id == 2), Is.EqualTo(1));
-            Assert.That(possiblePart.Count(r => r.Target.Id == 0), Is.EqualTo(1));
-        }
-
-        [Test(Description = "Multiple references of the same relation type should not interfere with each other")]
-        public async Task ReferenceInterferenceOnSave()
+    [Test(Description = "Change parent and make sure children are updated")]
+    public async Task SyncChildrenOnParentModification()
+    {
+        // Arrange
+        // Create resources
+        var parent1 = new SimpleResource { Id = 1 };
+        ResourceReferenceTools.InitializeCollections(parent1);
+        var parent2 = new SimpleResource { Id = 2 };
+        ResourceReferenceTools.InitializeCollections(parent2);
+        var child = new SimpleResource { Id = 3 };
+        ResourceReferenceTools.InitializeCollections(child);
+        // Create initial relationship
+        child.Parent = parent1;
+        parent1.Children.Add(child);
+        var relations = new List<ResourceRelationEntity>
         {
-            // Arrange
-            var instance = new InterferenceResource() { Id = 1 };
-            ResourceReferenceTools.InitializeCollections(instance);
-            // Prepare reference objects
-            var derived = new DerivedResource { Id = 2, Name = "Ref1" };
-            var other = new OtherResource { Id = 3, Name = "Ref2" };
-            var different = new DifferentResource { Id = 4, Name = "Different" };
-            // Fill graph
-            _graph[1] = instance;
-            _graph[2] = derived;
-            _graph[3] = other;
-            _graph[4] = different;
-            // Set references
-            instance.Derived = derived;
-            instance.Others.Add(other);
-            instance.Different = different;
+            Relation(3, 1) // Initial relationship
+        };
+        var mocks = SetupDbMocks(relations);
+        // Setup graph mock
+        _graph[1] = parent1;
+        _graph[2] = parent2;
+        _graph[3] = child;
 
-            // Setup uow and repo to simulate the current database
-            var relations = new List<ResourceRelationEntity>
-            {
-                // Current exchangable parts
-                Relation(2, 1, ResourceRelationType.CurrentExchangeablePart),
-                Relation(3, 1, ResourceRelationType.CurrentExchangeablePart),
-                Relation(4, 1, ResourceRelationType.CurrentExchangeablePart),
-            };
-            var mocks = SetupDbMocks(relations);
+        // Act
+        child.Parent = parent2;
+        await _linker.SaveReferencesAsync(mocks.Item1.Object, child, new ResourceEntity { Id = 3 });
 
-            // Act
-            await _linker.SaveReferencesAsync(mocks.Item1.Object, instance, new ResourceEntity { Id = 1 });
+        // Assert
+        Assert.That(parent1.Children, Does.Not.Contain(child), "Child was not removed");
+        Assert.That(parent2.Children.Contains(child), "Child was not set");
+    }
 
-            // Assert
-            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 2)), Times.Never), "Linker did remove relation 1-2");
-            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Never), "Linker did remove relation 1-3");
-            Assert.DoesNotThrow(() => mocks.Item2.Verify(repo => repo.Remove(It.Is<ResourceRelationEntity>(removed => removed.SourceId == 1 && removed.TargetId == 3)), Times.Never), "Linker did remove relation 1-4");
-        }
+    [Test(Description = "A resource was deleted and should be removed from all resources referencing it")]
+    public void RemoveLinking()
+    {
+        // Arrange
+        var instance = new ReferenceResource();
+        ResourceReferenceTools.InitializeCollections(instance);
+        var deletedRef = new DerivedResource();
+        instance.Reference2 = deletedRef;
+        instance.References.Add(deletedRef);
+        instance.References.Add(new SimpleResource());
 
-        private static ResourceRelationEntity Relation(long id, long otherId,
-            ResourceRelationType relationType = ResourceRelationType.ParentChild,
-            ResourceReferenceRole role = ResourceReferenceRole.Target,
-            string relationName = null)
+        // Act
+        // Call once for each relation
+        _linker.RemoveLinking(deletedRef, instance);
+        _linker.RemoveLinking(deletedRef, instance);
+
+        // Assert
+        Assert.That(instance.Reference2, Is.Null);
+        Assert.That(instance.References.Count, Is.EqualTo(1));
+    }
+
+    [TestCase(false, false, Description = "Validation should go through if both required properties are set")]
+    [TestCase(true, false, Description = "Validation should fail if the reference is null")]
+    [TestCase(false, true, Description = "Validation should fail if the references are empty")]
+    [TestCase(true, true, Description = "Validation should fail if both required are empty")]
+    public void CheckRequiredReference(bool isNull, bool isEmpty)
+    {
+        // Arrange
+        var instance = new RequiredReferenceResource();
+        var reference = new SimpleResource();
+        ResourceReferenceTools.InitializeCollections(instance);
+        ResourceReferenceTools.InitializeCollections(reference);
+        var dbMocks = SetupDbMocks([]);
+
+        // Act
+        if (!isNull)
+            instance.Reference = reference;
+        if (!isEmpty)
+            instance.References.Add(reference);
+
+        // Assert
+        if (isNull || isEmpty)
+            Assert.ThrowsAsync<ValidationException>(() => _linker.SaveReferencesAsync(dbMocks.Item1.Object, instance, new ResourceEntity()));
+        else
+            Assert.DoesNotThrowAsync(() => _linker.SaveReferencesAsync(dbMocks.Item1.Object, instance, new ResourceEntity()));
+    }
+
+    private static Tuple<Mock<IUnitOfWork>, Mock<IResourceRelationRepository>, Mock<IResourceRepository>> SetupDbMocks(List<ResourceRelationEntity> relations)
+    {
+        // Setup uow and repo to simulate the current database
+        var relRepo = new Mock<IResourceRelationRepository>();
+        relRepo.Setup(r => r.Linq).Returns(relations.AsQueryable());
+        relRepo.Setup(r => r.Create(It.IsAny<int>())).Returns<int>(type =>
         {
-            var relation = new ResourceRelationEntity
-            {
-                RelationType = (int)relationType,
-                TargetName = relationName,
-                TargetId = role == ResourceReferenceRole.Target ? id : otherId,
-                SourceId = role == ResourceReferenceRole.Source ? id : otherId
-            };
-            relation.Target = new ResourceEntity { Id = relation.TargetId };
-            relation.Source = new ResourceEntity { Id = relation.SourceId };
+            var relation = new ResourceRelationEntity { RelationType = type };
+            relations.Add(relation);
             return relation;
-        }
+        });
+        relRepo.Setup(r => r.Remove(It.IsAny<ResourceRelationEntity>()))
+            .Callback<ResourceRelationEntity>(removedRelation => relations.Remove(removedRelation));
+        relRepo.Setup(r => r.RemoveRange(It.IsAny<IEnumerable<ResourceRelationEntity>>()))
+            .Callback<IEnumerable<ResourceRelationEntity>>(removedRelations => relations.RemoveAll(removedRelations.Contains));
+        var resRepo = new Mock<IResourceRepository>();
+        resRepo.Setup(r => r.GetByKey(It.Is<long>(id => id > 0))).Returns<long>(id => new ResourceEntity { Id = id });
+        resRepo.Setup(r => r.GetByKey(It.Is<long>(id => id == 0))).Returns((ResourceEntity)null);
+        resRepo.Setup(r => r.CreateAsync()).ReturnsAsync(() => new ResourceEntity());
 
-        [Test(Description = "Extend children and make sure the parent is set")]
-        public async Task SetParentWhenAddingChild()
-        {
-            // Arrange
-            // Create resources
-            var parent = new SimpleResource { Id = 1 };
-            ResourceReferenceTools.InitializeCollections(parent);
-            var child = new SimpleResource { Id = 2 };
-            ResourceReferenceTools.InitializeCollections(child);
-            var mocks = SetupDbMocks([]);
-            // Setup graph mock
-            _graph[1] = parent;
-            _graph[2] = child;
+        var uowMock = new Mock<IUnitOfWork>();
+        uowMock.Setup(u => u.GetRepository<IResourceRelationRepository>()).Returns(relRepo.Object);
+        uowMock.Setup(u => u.GetRepository<IRepository<ResourceEntity>>()).Returns(resRepo.Object);
 
-            // Act
-            parent.Children.Add(child);
-            await _linker.SaveReferencesAsync(mocks.Item1.Object, parent, new ResourceEntity { Id = 1 });
-
-            // Assert
-            Assert.That(parent.Children.Contains(child), "Child was not set");
-            Assert.That(child.Parent, Is.EqualTo(parent), "Parent was not set");
-        }
-
-        [Test(Description = "Extend children and make sure the parent is set")]
-        public async Task ClearParentWhenRemovingChild()
-        {
-            // Arrange
-            // Create resources
-            var parent = new SimpleResource { Id = 1 };
-            ResourceReferenceTools.InitializeCollections(parent);
-            var child = new SimpleResource { Id = 2 };
-            ResourceReferenceTools.InitializeCollections(child);
-            // Create initial relationship
-            child.Parent = parent;
-            parent.Children.Add(child);
-            var relations = new List<ResourceRelationEntity>
-            {
-                Relation(2, 1) // Initial relationship
-            };
-            var mocks = SetupDbMocks(relations);
-            // Setup graph mock
-            _graph[1] = parent;
-            _graph[2] = child;
-
-            // Act
-            parent.Children.Remove(child);
-            await _linker.SaveReferencesAsync(mocks.Item1.Object, parent, new ResourceEntity { Id = 1 });
-
-            // Assert
-            Assert.That(parent.Children.Contains(child), Is.False, "Child was not removed");
-            Assert.That(child.Parent, Is.Null, "Parent was not cleared");
-        }
-
-        [Test(Description = "Change parent and make sure children are updated")]
-        public async Task SyncChildrenOnParentModification()
-        {
-            // Arrange
-            // Create resources
-            var parent1 = new SimpleResource { Id = 1 };
-            ResourceReferenceTools.InitializeCollections(parent1);
-            var parent2 = new SimpleResource { Id = 2 };
-            ResourceReferenceTools.InitializeCollections(parent2);
-            var child = new SimpleResource { Id = 3 };
-            ResourceReferenceTools.InitializeCollections(child);
-            // Create initial relationship
-            child.Parent = parent1;
-            parent1.Children.Add(child);
-            var relations = new List<ResourceRelationEntity>
-            {
-                Relation(3, 1) // Initial relationship
-            };
-            var mocks = SetupDbMocks(relations);
-            // Setup graph mock
-            _graph[1] = parent1;
-            _graph[2] = parent2;
-            _graph[3] = child;
-
-            // Act
-            child.Parent = parent2;
-            await _linker.SaveReferencesAsync(mocks.Item1.Object, child, new ResourceEntity { Id = 3 });
-
-            // Assert
-            Assert.That(parent1.Children, Does.Not.Contain(child), "Child was not removed");
-            Assert.That(parent2.Children.Contains(child), "Child was not set");
-        }
-
-        [Test(Description = "A resource was deleted and should be removed from all resources referencing it")]
-        public void RemoveLinking()
-        {
-            // Arrange
-            var instance = new ReferenceResource();
-            ResourceReferenceTools.InitializeCollections(instance);
-            var deletedRef = new DerivedResource();
-            instance.Reference2 = deletedRef;
-            instance.References.Add(deletedRef);
-            instance.References.Add(new SimpleResource());
-
-            // Act
-            // Call once for each relation
-            _linker.RemoveLinking(deletedRef, instance);
-            _linker.RemoveLinking(deletedRef, instance);
-
-            // Assert
-            Assert.That(instance.Reference2, Is.Null);
-            Assert.That(instance.References.Count, Is.EqualTo(1));
-        }
-
-        [TestCase(false, false, Description = "Validation should go through if both required properties are set")]
-        [TestCase(true, false, Description = "Validation should fail if the reference is null")]
-        [TestCase(false, true, Description = "Validation should fail if the references are empty")]
-        [TestCase(true, true, Description = "Validation should fail if both required are empty")]
-        public void CheckRequiredReference(bool isNull, bool isEmpty)
-        {
-            // Arrange
-            var instance = new RequiredReferenceResource();
-            var reference = new SimpleResource();
-            ResourceReferenceTools.InitializeCollections(instance);
-            ResourceReferenceTools.InitializeCollections(reference);
-            var dbMocks = SetupDbMocks([]);
-
-            // Act
-            if (!isNull)
-                instance.Reference = reference;
-            if (!isEmpty)
-                instance.References.Add(reference);
-
-            // Assert
-            if (isNull || isEmpty)
-                Assert.ThrowsAsync<ValidationException>(() => _linker.SaveReferencesAsync(dbMocks.Item1.Object, instance, new ResourceEntity()));
-            else
-                Assert.DoesNotThrowAsync(() => _linker.SaveReferencesAsync(dbMocks.Item1.Object, instance, new ResourceEntity()));
-        }
-
-        private static Tuple<Mock<IUnitOfWork>, Mock<IResourceRelationRepository>, Mock<IResourceRepository>> SetupDbMocks(List<ResourceRelationEntity> relations)
-        {
-            // Setup uow and repo to simulate the current database
-            var relRepo = new Mock<IResourceRelationRepository>();
-            relRepo.Setup(r => r.Linq).Returns(relations.AsQueryable());
-            relRepo.Setup(r => r.Create(It.IsAny<int>())).Returns<int>(type =>
-            {
-                var relation = new ResourceRelationEntity { RelationType = type };
-                relations.Add(relation);
-                return relation;
-            });
-            relRepo.Setup(r => r.Remove(It.IsAny<ResourceRelationEntity>()))
-                .Callback<ResourceRelationEntity>(removedRelation => relations.Remove(removedRelation));
-            relRepo.Setup(r => r.RemoveRange(It.IsAny<IEnumerable<ResourceRelationEntity>>()))
-                .Callback<IEnumerable<ResourceRelationEntity>>(removedRelations => relations.RemoveAll(removedRelations.Contains));
-            var resRepo = new Mock<IResourceRepository>();
-            resRepo.Setup(r => r.GetByKey(It.Is<long>(id => id > 0))).Returns<long>(id => new ResourceEntity { Id = id });
-            resRepo.Setup(r => r.GetByKey(It.Is<long>(id => id == 0))).Returns((ResourceEntity)null);
-            resRepo.Setup(r => r.CreateAsync()).ReturnsAsync(() => new ResourceEntity());
-
-            var uowMock = new Mock<IUnitOfWork>();
-            uowMock.Setup(u => u.GetRepository<IResourceRelationRepository>()).Returns(relRepo.Object);
-            uowMock.Setup(u => u.GetRepository<IRepository<ResourceEntity>>()).Returns(resRepo.Object);
-
-            return Tuple.Create(uowMock, relRepo, resRepo);
-        }
+        return Tuple.Create(uowMock, relRepo, resRepo);
     }
 }

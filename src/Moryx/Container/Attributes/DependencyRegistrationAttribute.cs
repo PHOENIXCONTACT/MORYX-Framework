@@ -1,75 +1,74 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Container
+namespace Moryx.Container;
+
+/// <summary>
+/// Enum defining the installer mode for dependency registration
+/// </summary>
+public enum InstallerMode
 {
     /// <summary>
-    /// Enum defining the installer mode for dependency registration
+    /// Register all components from this assembly
     /// </summary>
-    public enum InstallerMode
+    All,
+    /// <summary>
+    /// Register components for specified services only
+    /// </summary>
+    Specified
+}
+
+/// <summary>
+/// Use this attribute to enable auto installer for the subcomponent assembly
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+public class DependencyRegistrationAttribute : Attribute
+{
+    /// <summary>
+    /// Executes DependencyAutoInstaller in this assembly
+    /// </summary>
+    public DependencyRegistrationAttribute(InstallerMode mode)
     {
-        /// <summary>
-        /// Register all components from this assembly
-        /// </summary>
-        All,
-        /// <summary>
-        /// Register components for specified services only
-        /// </summary>
-        Specified
+        InstallerMode = mode;
+        RequiredTypes = [];
     }
 
     /// <summary>
-    /// Use this attribute to enable auto installer for the subcomponent assembly
+    /// Executes selective DependencyAutioInstaller in this assembly
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class DependencyRegistrationAttribute : Attribute
+    /// <param name="minimalService">Minimum of one service to avoid empty constructor</param>
+    /// <param name="services">Services to install</param>
+    public DependencyRegistrationAttribute(Type minimalService, params Type[] services)
     {
-        /// <summary>
-        /// Executes DependencyAutoInstaller in this assembly
-        /// </summary>
-        public DependencyRegistrationAttribute(InstallerMode mode)
-        {
-            InstallerMode = mode;
-            RequiredTypes = [];
-        }
-
-        /// <summary>
-        /// Executes selective DependencyAutioInstaller in this assembly
-        /// </summary>
-        /// <param name="minimalService">Minimum of one service to avoid empty constructor</param>
-        /// <param name="services">Services to install</param>
-        public DependencyRegistrationAttribute(Type minimalService, params Type[] services)
-        {
-            InstallerMode = InstallerMode.Specified;
-            RequiredTypes = new Type[services.Length + 1];
-            RequiredTypes[0] = minimalService;
-            services.CopyTo(RequiredTypes, 1);
-        }
-
-        /// <summary>
-        /// Mode used by the installer for dependency registration
-        /// </summary>
-        public InstallerMode InstallerMode { get; private set; }
-
-        /// <summary>
-        /// Types that need to be registered from this assembly
-        /// </summary>
-        public Type[] RequiredTypes { get; private set; }
-
-        /// <summary>
-        /// Optional initializer to be executed
-        /// </summary>
-        public Type Initializer { get; set; }
+        InstallerMode = InstallerMode.Specified;
+        RequiredTypes = new Type[services.Length + 1];
+        RequiredTypes[0] = minimalService;
+        services.CopyTo(RequiredTypes, 1);
     }
 
     /// <summary>
-    /// Interface for components that execute further initialization
+    /// Mode used by the installer for dependency registration
     /// </summary>
-    public interface ISubInitializer
-    {
-        /// <summary>
-        /// Execute further initialization
-        /// </summary>
-        void Initialize(IContainer services);
-    }
+    public InstallerMode InstallerMode { get; private set; }
+
+    /// <summary>
+    /// Types that need to be registered from this assembly
+    /// </summary>
+    public Type[] RequiredTypes { get; private set; }
+
+    /// <summary>
+    /// Optional initializer to be executed
+    /// </summary>
+    public Type Initializer { get; set; }
+}
+
+/// <summary>
+/// Interface for components that execute further initialization
+/// </summary>
+public interface ISubInitializer
+{
+    /// <summary>
+    /// Execute further initialization
+    /// </summary>
+    void Initialize(IContainer services);
 }

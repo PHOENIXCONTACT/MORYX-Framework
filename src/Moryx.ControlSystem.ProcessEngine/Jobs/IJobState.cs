@@ -1,23 +1,22 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.ControlSystem.Jobs;
 
-namespace Moryx.ControlSystem.ProcessEngine.Jobs
+namespace Moryx.ControlSystem.ProcessEngine.Jobs;
+
+/// <summary>
+/// Public representation of the job state
+/// </summary>
+internal interface IJobState
 {
     /// <summary>
-    /// Public representation of the job state
+    /// Key of the job state
     /// </summary>
-    internal interface IJobState
-    {
-        /// <summary>
-        /// Key of the job state
-        /// </summary>
-        int Key { get; }
+    int Key { get; }
 
-        /// <summary>
-        /// Classification of the job
-        /// </summary>
-        JobClassification Classification { get; }
-    }
+    /// <summary>
+    /// Classification of the job
+    /// </summary>
+    JobClassification Classification { get; }
 }

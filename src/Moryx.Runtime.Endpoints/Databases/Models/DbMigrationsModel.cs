@@ -1,16 +1,15 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Runtime.Endpoints.Databases.Models
+namespace Moryx.Runtime.Endpoints.Databases.Models;
+
+/// <summary>
+/// Model for database scripts.
+/// </summary>
+public class DbMigrationsModel
 {
     /// <summary>
-    /// Model for database scripts.
+    /// Name of the script.
     /// </summary>
-    public class DbMigrationsModel
-    {
-        /// <summary>
-        /// Name of the script.
-        /// </summary>
-        public string Name { get; set; }
-    }
+    public string Name { get; set; }
 }

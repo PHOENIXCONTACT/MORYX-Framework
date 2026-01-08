@@ -1,27 +1,25 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Capabilities;
 
-namespace Moryx.FactoryMonitor.Endpoints.Tests
+namespace Moryx.FactoryMonitor.Endpoints.Tests;
+
+[ActivityResults(typeof(DefaultActivityResult))]
+public class AssemblyActivity : Activity<ActivityParameters>
 {
-    [ActivityResults(typeof(DefaultActivityResult))]
-    public class AssemblyActivity : Activity<ActivityParameters>
+    public override ProcessRequirement ProcessRequirement => ProcessRequirement.Required;
+
+    public override ICapabilities RequiredCapabilities => new DummyCapabilities1();
+
+    protected override ActivityResult CreateFailureResult()
     {
-        public override ProcessRequirement ProcessRequirement => ProcessRequirement.Required;
+        return Fail();
+    }
 
-        public override ICapabilities RequiredCapabilities => new DummyCapabilities1();
-
-        protected override ActivityResult CreateFailureResult()
-        {
-            return Fail();
-        }
-
-        protected override ActivityResult CreateResult(long resultNumber)
-        {
-            return Complete(resultNumber);
-        }
+    protected override ActivityResult CreateResult(long resultNumber)
+    {
+        return Complete(resultNumber);
     }
 }
-

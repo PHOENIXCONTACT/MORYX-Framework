@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Text;
@@ -14,17 +14,19 @@ using Microsoft.IdentityModel.Tokens;
 using Moryx.Identity.AccessManagement.Data;
 using Moryx.Identity.AccessManagement.Settings;
 
-namespace Moryx.Identity.AccessManagement
+namespace Moryx.Identity.AccessManagement;
+
+/// <summary>
+/// Provid extension method for an easy configuration of the MORYX Access Management in the <see cref="IServiceCollection"/>.
+/// </summary>
+public static class ServiceCollectionExtensions
 {
-    /// <summary>
-    /// Provid extension method for an easy configuration of the MORYX Access Management in the <see cref="IServiceCollection"/>.
-    /// </summary>
-    public static class ServiceCollectionExtensions
+    /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
+    extension(IServiceCollection services)
     {
         /// <summary>
         /// Adds and configures services for the MORYX AccessManagement to the specified <see cref="IServiceCollection"/>.
         /// </summary>
-        /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
         /// <param name="jwtConfigurationSection">The section of the configuration containing the <see cref="JwtSettings"/>.</param>
         /// <param name="connectionString">The connection string for the PostgreSql database used by the MORYX AccessManagement.</param>
         /// <param name="corsOptionsAction">Action providing CORS options used for a call to
@@ -45,8 +47,7 @@ namespace Moryx.Identity.AccessManagement
         /// <see cref="MvcServiceCollectionExtensions.AddControllersWithViews(IServiceCollection)"/>.
         /// </remarks>
         /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
-        public static IServiceCollection AddMoryxAccessManagement(this IServiceCollection services,
-            IConfiguration jwtConfigurationSection,
+        public IServiceCollection AddMoryxAccessManagement(IConfiguration jwtConfigurationSection,
             string connectionString,
             Action<CorsOptions> corsOptionsAction = null)
         {
@@ -57,7 +58,6 @@ namespace Moryx.Identity.AccessManagement
         /// <summary>
         /// Adds and configures services for the MORYX AccessManagement to the specified <see cref="IServiceCollection"/>.
         /// </summary>
-        /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
         /// <param name="jwtConfigurationSection">The section of the configuration containing the <see cref="JwtSettings"/>.</param>
         /// <param name="dbOptionsAction">A <see cref="Action{DbOptionsContextBuilder}"/> tp use a custom database provider.</param>
         /// <param name="corsOptionsAction">Action providing CORS options used for a call to
@@ -78,8 +78,7 @@ namespace Moryx.Identity.AccessManagement
         /// <see cref="MvcServiceCollectionExtensions.AddControllersWithViews(IServiceCollection)"/>.
         /// </remarks>
         /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
-        public static IServiceCollection AddMoryxAccessManagement(this IServiceCollection services,
-            IConfiguration jwtConfigurationSection,
+        public IServiceCollection AddMoryxAccessManagement(IConfiguration jwtConfigurationSection,
             Action<DbContextOptionsBuilder> dbOptionsAction,
             Action<CorsOptions> corsOptionsAction = null)
         {
@@ -93,10 +92,10 @@ namespace Moryx.Identity.AccessManagement
             services.AddDbContext<MoryxIdentitiesDbContext>(dbOptionsAction);
 
             services.AddIdentity<MoryxUser, MoryxRole>(options =>
-            {
-                options.Stores.MaxLengthForKeys = 128;
-                options.SignIn.RequireConfirmedAccount = false;
-            })
+                {
+                    options.Stores.MaxLengthForKeys = 128;
+                    options.SignIn.RequireConfirmedAccount = false;
+                })
                 .AddUserManager<MoryxUserManager>()
                 .AddRoleManager<MoryxRoleManager>()
                 .AddEntityFrameworkStores<MoryxIdentitiesDbContext>()
@@ -156,4 +155,3 @@ namespace Moryx.Identity.AccessManagement
         }
     }
 }
-

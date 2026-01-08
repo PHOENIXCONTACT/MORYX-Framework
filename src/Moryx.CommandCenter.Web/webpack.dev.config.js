@@ -10,7 +10,7 @@ module.exports = (env, options) => merge(baseConfig(env, options), {
     },
     plugins: [
         new webpack.DefinePlugin({
-            "BASE_URL": JSON.stringify('https://localhost:5000'),
+            "BASE_URL": JSON.stringify('https://localhost:5002'),
         }),
         new HtmlWebpackPlugin({
             template: __dirname + '/src/index.html',

@@ -1,19 +1,18 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
 
-namespace Moryx.ControlSystem.ProcessEngine.Processes
+namespace Moryx.ControlSystem.ProcessEngine.Processes;
+
+/// <summary>
+/// Pool listener that assigns the target resource to an activity and updates the
+/// state to <see cref="ActivityState.Configured"/>
+/// </summary>
+internal interface IResourceAssignment
 {
     /// <summary>
-    /// Pool listener that assigns the target resource to an activity and updates the
-    /// state to <see cref="ActivityState.Configured"/>
+    /// Capabilities of a managed cell has changed
     /// </summary>
-    internal interface IResourceAssignment
-    {
-        /// <summary>
-        /// Capabilities of a managed cell has changed
-        /// </summary>
-        event EventHandler<ICapabilities> CapabilitiesChanged;
-    }
+    event EventHandler<ICapabilities> CapabilitiesChanged;
 }

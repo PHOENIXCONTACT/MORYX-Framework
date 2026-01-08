@@ -1,16 +1,15 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.StateMachines
+namespace Moryx.StateMachines;
+
+/// <summary>
+/// Represents the context of a state machine including a typed state property
+/// </summary>
+public interface IStateContext
 {
     /// <summary>
-    /// Represents the context of a state machine including a typed state property
+    /// Update state on context
     /// </summary>
-    public interface IStateContext
-    {
-        /// <summary>
-        /// Update state on context
-        /// </summary>
-        void SetState(StateBase state);
-    }
+    void SetState(StateBase state);
 }
