@@ -10,6 +10,7 @@ using Moryx.Runtime.Modules;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators.Attendances;
 using Moryx.Operators.Skills;
+using Moryx.Users;
 
 namespace Moryx.Operators.Management;
 
@@ -23,6 +24,7 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     ServerModuleBase<ModuleConfig>(containerFactory, configManager, loggerFactory),
     IFacadeContainer<IOperatorManagement>, IFacadeContainer<IAttendanceManagement>,
+    IFacadeContainer<IUserManagement>,
     IFacadeContainer<ISkillManagement>
 {
     /// <summary>
@@ -82,4 +84,5 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
     IOperatorManagement IFacadeContainer<IOperatorManagement>.Facade => _facade;
     IAttendanceManagement IFacadeContainer<IAttendanceManagement>.Facade => _facade;
     ISkillManagement IFacadeContainer<ISkillManagement>.Facade => _facade;
+    IUserManagement IFacadeContainer<IUserManagement>.Facade => _facade;
 }
