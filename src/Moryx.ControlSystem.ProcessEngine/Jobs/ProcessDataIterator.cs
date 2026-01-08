@@ -13,8 +13,6 @@ internal class ProcessDataIterator<T> : IEnumerator<T>
 {
     private int _currentIndex = -1;
 
-    private T _currentProcess;
-
     private readonly IReadOnlyList<T> _processes;
 
     public ProcessDataIterator(IReadOnlyList<T> processes)
@@ -26,12 +24,12 @@ internal class ProcessDataIterator<T> : IEnumerator<T>
     {
         if (++_currentIndex < _processes.Count)
         {
-            _currentProcess = _processes[_currentIndex];
+            Current = _processes[_currentIndex];
             return true;
         }
         else
         {
-            _currentProcess = null;
+            Current = null;
             return false;
         }
     }
@@ -42,7 +40,7 @@ internal class ProcessDataIterator<T> : IEnumerator<T>
     {
     }
 
-    public T Current => _currentProcess;
+    public T Current { get; private set; }
 
-    object IEnumerator.Current => _currentProcess;
+    object IEnumerator.Current => Current;
 }

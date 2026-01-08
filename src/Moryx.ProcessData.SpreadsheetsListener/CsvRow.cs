@@ -5,21 +5,20 @@ namespace Moryx.ProcessData.SpreadsheetsListener;
 
 internal class CsvRow
 {
-    private readonly IList<object> _row;
-    public IList<object> Fields { get => _row; }
+    public IList<object> Fields { get; }
 
     public CsvRow(IList<object> row)
     {
-        _row = row;
+        Fields = row;
     }
 
     public void Add(object item)
     {
-        _row.Add(item);
+        Fields.Add(item);
     }
 
     public object ElementAt(int index)
     {
-        return _row.ElementAt(index);
+        return Fields.ElementAt(index);
     }
 }

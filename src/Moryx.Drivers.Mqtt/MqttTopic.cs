@@ -60,7 +60,7 @@ public abstract class MqttTopic : Resource, IMessageChannel
                     RegexTopic = new Regex(pattern);
 
                     var regex = new Regex(@"({\w*})");
-                    _subscribedTopic = regex.Replace(value.Replace(".", "__"), "+");
+                    SubscribedTopic = regex.Replace(value.Replace(".", "__"), "+");
 
                     var oldTopic = _topicName;
                     _topicName = value;
@@ -176,9 +176,7 @@ public abstract class MqttTopic : Resource, IMessageChannel
     /// placeholders are replaced with +
     /// </summary>
     [EntrySerialize]
-    public string SubscribedTopic => _subscribedTopic;
-
-    private string _subscribedTopic;
+    public string SubscribedTopic { get; private set; }
 
     /// <summary>
     /// Name of the type sent through this topic

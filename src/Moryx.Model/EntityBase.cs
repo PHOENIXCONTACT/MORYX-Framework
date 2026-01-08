@@ -11,17 +11,8 @@ namespace Moryx.Model;
 /// </summary>
 public abstract class EntityBase : IEntity
 {
-    private long _id;
-
     /// <inheritdoc />
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public virtual long Id
-    {
-        get => _id;
-        set
-        {
-            _id = value;
-        }
-    }
+    public virtual long Id { get; set; }
 }

@@ -39,17 +39,8 @@ public class BufferResource : Resource
 
 public class BufferValue : Resource
 {
-    private string _value;
-
     [DataMember, EntrySerialize]
-    public string Value
-    {
-        get { return _value; }
-        set
-        {
-            _value = value;
-        }
-    }
+    public string Value { get; set; }
 }
 
 public class ExtendedBufferValue : BufferValue

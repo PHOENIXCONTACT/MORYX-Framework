@@ -13,25 +13,23 @@ namespace Moryx.Communication.Sockets.IntegrationTests;
 
 public abstract class CommunicationSocketsTestsBase<TMessage> where TMessage : BinaryMessage
 {
-    private List<ConnectionBuffer<TMessage>> _serverConnections;
-    private List<ConnectionBuffer<TMessage>> _clients;
     private BinaryConnectionFactoryMock _binaryConnectionFactory;
 
     private List<ConnectionBuffer<TMessage>> _overallClients;
 
-    private int _testPort;
     protected const string TestIpAddress = "127.0.0.1";
 
-    protected List<ConnectionBuffer<TMessage>> ServerConnections => _serverConnections;
-    protected List<ConnectionBuffer<TMessage>> Clients => _clients;
+    protected List<ConnectionBuffer<TMessage>> ServerConnections { get; private set; }
 
-    protected int TestPort => _testPort;
+    protected List<ConnectionBuffer<TMessage>> Clients { get; private set; }
+
+    protected int TestPort { get; private set; }
 
     [OneTimeSetUp]
     public void SetUpTestCase()
     {
         var rnd = new Random();
-        _testPort = rnd.Next(2000, 2101);
+        TestPort = rnd.Next(2000, 2101);
 
         _overallClients = [];
     }
@@ -43,8 +41,8 @@ public abstract class CommunicationSocketsTestsBase<TMessage> where TMessage : B
     public void SetupTestCase()
     {
         _binaryConnectionFactory = new BinaryConnectionFactoryMock();
-        _clients = [];
-        _serverConnections = [];
+        Clients = [];
+        ServerConnections = [];
     }
 
     [TearDown]
@@ -59,14 +57,14 @@ public abstract class CommunicationSocketsTestsBase<TMessage> where TMessage : B
     /// <summary>
     /// Get client by index
     /// </summary>
-    protected ConnectionBuffer<TMessage> GetClient(int index) => _clients[index];
+    protected ConnectionBuffer<TMessage> GetClient(int index) => Clients[index];
 
     /// <summary>
     /// Closes all server listeners
     /// </summary>
     protected void CloseServer()
     {
-        foreach (var s in _serverConnections)
+        foreach (var s in ServerConnections)
         {
             if (s.Connection == null)
                 return;
@@ -84,14 +82,14 @@ public abstract class CommunicationSocketsTestsBase<TMessage> where TMessage : B
     protected void CloseClients()
     {
         //Clean up
-        foreach (var c in _clients)
+        foreach (var c in Clients)
         {
             if (c.Connection == null)
                 return;
 
             c.Connection.Dispose();
             // Client should be disconnected
-            WaitForConnectionState(_clients.IndexOf(c), new TimeSpan(0, 0, 0, 10), BinaryConnectionState.Disconnected);
+            WaitForConnectionState(Clients.IndexOf(c), new TimeSpan(0, 0, 0, 10), BinaryConnectionState.Disconnected);
             c.Connection = null;
         }
     }
@@ -108,15 +106,15 @@ public abstract class CommunicationSocketsTestsBase<TMessage> where TMessage : B
         var stopWatch = new Stopwatch();
         stopWatch.Start();
 
-        while (!_clients[clientIdx].Connection.CurrentState.Equals(wantedState) && stopWatch.ElapsedMilliseconds < timeToWait.TotalMilliseconds)
+        while (!Clients[clientIdx].Connection.CurrentState.Equals(wantedState) && stopWatch.ElapsedMilliseconds < timeToWait.TotalMilliseconds)
             Thread.Sleep(new TimeSpan(0, 0, 0, 0, 100));
 
         stopWatch.Stop();
 
         // Client should be connected
-        Assert.That(_clients[clientIdx].Connection.CurrentState, Is.EqualTo(wantedState),
+        Assert.That(Clients[clientIdx].Connection.CurrentState, Is.EqualTo(wantedState),
             $"Client ({clientIdx}) is not in the state '{wantedState:G}'. " +
-            $"CurrentState: {_clients[clientIdx].Connection.CurrentState:G}. Waited for {stopWatch.ElapsedMilliseconds / 1000}s");
+            $"CurrentState: {Clients[clientIdx].Connection.CurrentState:G}. Waited for {stopWatch.ElapsedMilliseconds / 1000}s");
     }
 
     /// <summary>
@@ -146,7 +144,7 @@ public abstract class CommunicationSocketsTestsBase<TMessage> where TMessage : B
         Assert.That(server.Connection.CurrentState, Is.EqualTo(BinaryConnectionState.AttemptingConnection),
             $"server is not in the state '{BinaryConnectionState.AttemptingConnection:G}'. CurrentState: {server.Connection.CurrentState:G}");
 
-        _serverConnections.Add(server);
+        ServerConnections.Add(server);
 
         return server;
     }
@@ -170,17 +168,17 @@ public abstract class CommunicationSocketsTestsBase<TMessage> where TMessage : B
             (sender, message) => client.Received.Add((TMessage)message);
         client.Connection.NotifyConnectionState += (sender, message) => client.LastStateChangeEvents.Add(message);
 
-        var clientIdx = _clients.Count;
-        _clients.Add(client);
+        var clientIdx = Clients.Count;
+        Clients.Add(client);
         _overallClients.Add(client);
 
         Console.WriteLine("CreateAndStartClient Added Client idx: {0}.", clientIdx);
 
         // Client should be disconnected
-        Assert.That(BinaryConnectionState.Disconnected, Is.EqualTo(_clients[clientIdx].Connection.CurrentState),
-            $"Client is not in the state '{BinaryConnectionState.Disconnected:G}'. CurrentState: {_clients[clientIdx].Connection.CurrentState:G}");
+        Assert.That(BinaryConnectionState.Disconnected, Is.EqualTo(Clients[clientIdx].Connection.CurrentState),
+            $"Client is not in the state '{BinaryConnectionState.Disconnected:G}'. CurrentState: {Clients[clientIdx].Connection.CurrentState:G}");
 
-        _clients[clientIdx].Connection.Start();
+        Clients[clientIdx].Connection.Start();
 
         // In some tests the client shall be connected at this point and in some tests it shall not be connected,
         // so check the connection-state somewhere else...
