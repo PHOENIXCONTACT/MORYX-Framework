@@ -243,7 +243,7 @@ public class MqttDriver : Driver, IMessageDriver
 
         _mqttClient.DisconnectedAsync += OnDisconnected;
 
-        StateMachine.Initialize(this).With<DriverMqttState>();
+        StateMachine.ForContext(this).With<DriverMqttState>();
     }
 
     internal void InitializeForTest(IMqttClient client) //TODO: no explicit method for tests
@@ -252,7 +252,7 @@ public class MqttDriver : Driver, IMessageDriver
         _mqttClient.ApplicationMessageReceivedAsync += OnReceived;
         _mqttClient.ConnectedAsync += OnConnected;
         _mqttClient.DisconnectedAsync += OnDisconnected;
-        StateMachine.Initialize(this).With<DriverMqttState>();
+        StateMachine.ForContext(this).With<DriverMqttState>();
     }
 
     /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>

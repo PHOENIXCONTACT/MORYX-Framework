@@ -242,7 +242,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         Output = new OpcUaOutput(this);
         _nodeIdAliasDictionary ??= [];
 
-        StateMachine.Initialize(this).With<DriverOpcUaState>();
+        StateMachine.ForContext(this).With<DriverOpcUaState>();
 
         ServerStatus = ServerState.Unknown;
     }

@@ -57,7 +57,7 @@ internal sealed class ProductionJobData : JobDataBase, IProductionJobData
     /// <inheritdoc />
     public ProductionJobData(ProductionRecipe recipe, int amount) : base(recipe, amount)
     {
-        StateMachine.Initialize(this).With<ProductionJobStateBase>();
+        StateMachine.ForContext(this).With<ProductionJobStateBase>();
     }
 
     /// <inheritdoc />
@@ -65,7 +65,7 @@ internal sealed class ProductionJobData : JobDataBase, IProductionJobData
     {
         Started = entity.Created;
 
-        StateMachine.Reload(this, entity.State).With<ProductionJobStateBase>();
+        StateMachine.ForContext(this).With<ProductionJobStateBase>(entity.State);
     }
 
     /// <inheritdoc />

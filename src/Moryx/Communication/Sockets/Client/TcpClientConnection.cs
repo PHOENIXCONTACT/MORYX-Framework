@@ -80,7 +80,7 @@ public class TcpClientConnection : IBinaryConnection, IStateContext
     {
         Config = (TcpClientConfig)config;
 
-        StateMachine.Initialize(this).With<ClientStateBase>();
+        StateMachine.ForContext(this).With<ClientStateBase>();
 
         _endpoint = GetIpEndpointFromHost(Config.IpAddress, Config.Port);
     }

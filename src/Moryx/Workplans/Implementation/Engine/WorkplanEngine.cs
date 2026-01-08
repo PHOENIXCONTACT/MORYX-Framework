@@ -9,7 +9,7 @@ internal class WorkplanEngine : IMonitoredEngine, IStateContext
 {
     public WorkplanEngine()
     {
-        StateMachine.Initialize(this).With<EngineState>();
+        StateMachine.ForContext(this).With<EngineState>();
     }
 
     internal EngineState State { get; private set; }

@@ -121,7 +121,7 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
     /// <inheritdoc />
     public async Task<IOperationData> Initialize(OperationCreationContext context, IOrderData orderData, IOperationSource source)
     {
-        await StateMachine.InitializeAsync(this).WithAsync<OperationDataStateBase>();
+        await StateMachine.ForAsyncContext(this).WithAsync<OperationDataStateBase>();
         _dispatchHandler = new DispatchHandler(this);
 
         AssignState = OperationAssignState.Initial;
@@ -179,7 +179,7 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
 
         OperationStorage.RestoreOperationData(this, entity);
 
-        await StateMachine.ReloadAsync(this, entity.State).WithAsync<OperationDataStateBase>();
+        await StateMachine.ForAsyncContext(this).WithAsync<OperationDataStateBase>(entity.State);
 
         return this;
     }

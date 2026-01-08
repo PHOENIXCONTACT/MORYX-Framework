@@ -62,7 +62,7 @@ public class DelayQueue<T> : IDelayQueue<T>, IDelayQueueContext
         _parallelOperations = parallelOperations;
         _stopwatch = new Stopwatch();
 
-        StateMachine.Initialize<IDelayQueueContext>(this).With<QueueStateBase>();
+        StateMachine.ForContext<IDelayQueueContext>(this).With<QueueStateBase>();
     }
 
     void IStateContext.SetState(StateBase state)

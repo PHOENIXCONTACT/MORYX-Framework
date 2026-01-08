@@ -86,18 +86,18 @@ public class StateMachineTests
         Assert.That(text, Is.EqualTo(resultText));
     }
 
-    [Test]
-    public void Reload()
+    [Test(Description = "Create a StateMachine with a specific initial state key.")]
+    public void CreateWithSpecificInitialState()
     {
         // Assert
         var context = new MyContext();
-        StateMachine.Initialize(context).With<MyStateBase>();
+        StateMachine.ForContext(context).With<MyStateBase>();
         context.State.AtoB();
 
         // Act
         var reloadedContext = new MyContext();
         var bkey = context.State.Key;
-        StateMachine.Reload(reloadedContext, bkey).With<MyStateBase>();
+        StateMachine.ForContext(reloadedContext).With<MyStateBase>(bkey);
 
         // Assert
         Assert.Throws<InvalidOperationException>(() => reloadedContext.State.Initial());
@@ -110,8 +110,8 @@ public class StateMachineTests
         Assert.That(context.CtoATriggered, Is.False);
     }
 
-    [Test]
-    public void ReloadUnknown()
+    [Test(Description = "Create a StateMachine with an unknown initial state key.")]
+    public void CreateWithUnknownInitialState()
     {
         // Arrange
         var context = new MyContext();
@@ -120,7 +120,7 @@ public class StateMachineTests
         Assert.Throws<InvalidOperationException>(delegate
         {
             // Act
-            StateMachine.Reload(context, int.MaxValue).With<MyStateBase>();
+            StateMachine.ForContext(context).With<MyStateBase>(int.MaxValue);
         });
     }
 
@@ -171,7 +171,7 @@ public class StateMachineTests
     private static MyContext CreateContext()
     {
         var context = new MyContext();
-        StateMachine.Initialize(context).With<MyStateBase>();
+        StateMachine.ForContext(context).With<MyStateBase>();
 
         return context;
     }
