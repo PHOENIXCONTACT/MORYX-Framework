@@ -4,11 +4,12 @@
 using Moryx.Serialization;
 using Moryx.Workplans.WorkplanSteps;
 
-namespace Moryx.Workplans.Endpoint;
+namespace Moryx.Workplans.Web.Models;
 
 internal static class ModelConverter
 {
-    private static readonly ICustomSerialization WorkplanStepSerialization = new WorkplanStepSerialization();
+    private static readonly ICustomSerialization _workplanStepSerialization = new WorkplanStepSerialization();
+
     public static WorkplanNodeClassification ToClassification(Type type)
     {
         // Everything not explicitly set is an execution step
@@ -111,11 +112,11 @@ internal static class ModelConverter
             PositionLeft = step.Position.X,
             PositionTop = step.Position.Y,
             SubworkplanId = step is ISubworkplanStep subworkplan ? subworkplan.WorkplanId : 0,
-            Properties = EntryConvert.EncodeObject(step, WorkplanStepSerialization)
+            Properties = EntryConvert.EncodeObject(step, _workplanStepSerialization)
         };
 
         var connections = new NodeConnectionPoint[step.Inputs.Length];
-        for (int i = 0; i < step.Inputs.Length; i++)
+        for (var i = 0; i < step.Inputs.Length; i++)
         {
             connections[i] = new NodeConnectionPoint { Name = "Input_" + i, Index = i };
             var connector = step.Inputs[i];
@@ -131,7 +132,7 @@ internal static class ModelConverter
         nodeModel.Inputs = connections;
 
         connections = new NodeConnectionPoint[step.Outputs.Length];
-        for (int i = 0; i < step.Outputs.Length; i++)
+        for (var i = 0; i < step.Outputs.Length; i++)
         {
             connections[i] = new NodeConnectionPoint { Name = step.OutputDescriptions[i].Name, Index = i };
             var connector = step.Outputs[i];

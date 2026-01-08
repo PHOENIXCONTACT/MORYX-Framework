@@ -3,7 +3,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.Workplans.Endpoint;
+namespace Moryx.Workplans.Web.Models;
 
 [DataContract]
 public class WorkplanModel

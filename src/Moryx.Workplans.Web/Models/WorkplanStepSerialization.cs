@@ -1,12 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Reflection;
 using Moryx.Configuration;
 using Moryx.Serialization;
 using Moryx.Workplans.WorkplanSteps;
-using System.Reflection;
 
-namespace Moryx.Workplans.Endpoint;
+namespace Moryx.Workplans.Web.Models;
 
 /// <summary>
 /// Implementation of <see cref="ICustomSerialization"/> for types derived from <see cref="WorkplanStepBase"/>
@@ -23,7 +23,7 @@ internal class WorkplanStepSerialization : PossibleValuesSerialization
     public override IEnumerable<PropertyInfo> GetProperties(Type sourceType)
     {
         return typeof(WorkplanStepBase).IsAssignableFrom(sourceType)
-            ? base.GetProperties(sourceType).Where(p => CustomAttributeExtensions.GetCustomAttribute<EntrySerializeAttribute>((MemberInfo)p)?.Mode == EntrySerializeMode.Always)
+            ? base.GetProperties(sourceType).Where(p => p.GetCustomAttribute<EntrySerializeAttribute>()?.Mode == EntrySerializeMode.Always)
             : new EntrySerializeSerialization().GetProperties(sourceType);
     }
 
