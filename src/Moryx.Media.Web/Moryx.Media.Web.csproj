@@ -6,12 +6,17 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="ng-openapi-gen.json" />
+    <Content Remove="service-config.json" />
     <Content Remove="tsconfig*.json" />
     <Content Remove="package.json" />
     <Content Remove="package-lock.json" />
     <Content Remove="angular.json" />
-    <Content Remove=".prettierrc.json; prettierrc.json;" />
-    <Content Remove="service-config.json" />
+    <Content Remove=".prettierrc.json; prettierrc.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="@(Content)" Pack="false" />
+    <Content Update="wwwroot\**" Pack="true" PackagePath="staticwebassets" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
