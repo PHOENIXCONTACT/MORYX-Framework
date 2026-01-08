@@ -53,7 +53,7 @@ To _participate in the development_ of the MORYX Framework,
 - build the solution
 
 To use MORYX to _build your own application_, we recommend to 
-- start with the [MORYX Application Developer Training](https://github.com/PHOENIXCONTACT/MORYX-Application-Developer-Training) 
+- start with the [MORYX Application Developer Training](https://github.com/PHOENIXCONTACT/Application-Developer-Training) 
 - and to use the [MORYX CLI Tool](https://github.com/PHOENIXCONTACT/MORYX-CLI) to develop it.
 - Additional tutorials for specific topics can be found in the [Tutorials](./docs/articles/tutorials/index.md) section of the documentation.
 
