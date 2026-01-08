@@ -9,17 +9,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Asp.Net Core dependencies -->
-    <FrameworkReference Include="Microsoft.AspNetCore.App"/>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"/>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt"/>
-    <PackageReference Include="Microsoft.Identity.Web"/>
-    <PackageReference Include="Microsoft.Identity.Web.DownstreamApi"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Moryx.Identity\Moryx.Identity.csproj"/>
+    <!-- Asp.Net Core dependencies -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    <PackageReference Include="Microsoft.Identity.Web" />
+    <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.Identity\Moryx.Identity.csproj" />
+    <ProjectReference Include="..\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj" />
   </ItemGroup>
 </Project>
