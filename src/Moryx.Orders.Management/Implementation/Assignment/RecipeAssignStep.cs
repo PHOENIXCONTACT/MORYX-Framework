@@ -6,6 +6,7 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
+using Moryx.Logging;
 using Moryx.Orders.Assignment;
 using Moryx.Orders.Management.Properties;
 using Moryx.Tools;
@@ -13,7 +14,7 @@ using Moryx.Tools;
 namespace Moryx.Orders.Management.Assignment
 {
     [Component(LifeCycle.Singleton, typeof(IOperationAssignStep), Name = nameof(RecipeAssignStep))]
-    internal class RecipeAssignStep : IOperationAssignStep
+    internal class RecipeAssignStep : IOperationAssignStep, ILoggingComponent
     {
         public IRecipeAssignment RecipeAssignment { get; set; }
 
@@ -23,16 +24,18 @@ namespace Moryx.Orders.Management.Assignment
 
         public IJobManagement JobManagement { get; set; }
 
+        public IModuleLogger Logger { get; set; }
+
         public void Start()
         {
-            ProductManagement.TypeChanged += OnTypeChanged;
-            ProductManagement.RecipeChanged += OnRecipeChanged;
+            ProductManagement.TypeChanged += OnTypeChangedAsync;
+            ProductManagement.RecipeChanged += OnRecipeChangedAsync;
         }
 
         public void Stop()
         {
-            ProductManagement.TypeChanged += OnTypeChanged;
-            ProductManagement.RecipeChanged += OnRecipeChanged;
+            ProductManagement.TypeChanged -= OnTypeChangedAsync;
+            ProductManagement.RecipeChanged -= OnRecipeChangedAsync;
         }
 
         public async Task<bool> AssignStep(IOperationData operationData, IOperationLogger operationLogger)
@@ -115,56 +118,97 @@ namespace Moryx.Orders.Management.Assignment
         /// <summary>
         /// Event handler for recipe changes of the product management
         /// </summary>
-        private void OnRecipeChanged(object sender, IRecipe recipe)
+        private async void OnRecipeChangedAsync(object sender, IRecipe recipe)
         {
-            if (recipe is not IProductRecipe productRecipe)
-                return;
-
-            IList<IOperationData> operations;
-
-            // If the recipe is a template itself
-            if (productRecipe.TemplateId == 0)
+            try
             {
-                operations = OperationDataPool.GetAll(o =>
-                    o.State.Classification < OperationStateClassification.Completed &&
-                    o.Operation.Recipes.Any(r => r.TemplateId == productRecipe.Id)).ToList();
-            }
-            // Else the recipe is a clone
-            else
-            {
-                operations = OperationDataPool.GetAll(o =>
-                    o.State.Classification < OperationStateClassification.Completed &&
-                    o.Operation.Recipes.Any(r => r.Id == productRecipe.Id)).ToList();
-            }
+                if (recipe is not IProductRecipe productRecipe)
+                {
+                    return;
+                }
 
-            // Raise recipe changed for all operations where the recipe was changed
-            foreach (var operationData in operations)
-                operationData.RecipeChanged(productRecipe);
+                IList<IOperationData> operations;
+
+                // If the recipe is a template itself
+                if (productRecipe.TemplateId == 0)
+                {
+                    operations = [.. OperationDataPool.GetAll(o =>
+                        o.State.Classification < OperationStateClassification.Completed &&
+                        o.Operation.Recipes.Any(r => r.TemplateId == productRecipe.Id))];
+                }
+                // Else the recipe is a clone
+                else
+                {
+                    operations = [.. OperationDataPool.GetAll(o =>
+                        o.State.Classification < OperationStateClassification.Completed &&
+                        o.Operation.Recipes.Any(r => r.Id == productRecipe.Id))];
+                }
+
+                // Raise recipe changed for all operations where the recipe was changed
+                foreach (var operationData in operations)
+                {
+                    await operationData.RecipeChanged(productRecipe);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Error during recipe change handling in {step}", nameof(RecipeAssignStep));
+            }
         }
 
-        private void OnTypeChanged(object sender, ProductType productType)
+        private async void OnTypeChangedAsync(object sender, ProductType productType)
         {
-            // Update not initial operations
-            var operations = OperationDataPool.GetAll(o =>
-                o.State.Classification < OperationStateClassification.Completed).ToArray();
+            try
+            {
+                // Update not initial operations
+                var operations = OperationDataPool.GetAll(o =>
+                    o.State.Classification < OperationStateClassification.Completed).ToArray();
 
-            // Try to find affected operations
+                // Try to find affected operations
+                await ScanOperationsForChangedType(productType, operations);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "Error during product type change handling in {step}", nameof(RecipeAssignStep));
+            }
+        }
+
+        private async Task ScanOperationsForChangedType(ProductType productType, IOperationData[] operations)
+        {
             foreach (var operationData in operations)
             {
                 var recipes = operationData.Operation.Recipes.ToArray();
+                await ScanRecipesForChangedType(productType, operationData, recipes);
+            }
+        }
 
-                foreach (var recipe in recipes)
+        private async Task ScanRecipesForChangedType(ProductType productType, IOperationData operationData, IProductRecipe[] recipes)
+        {
+            foreach (var recipe in recipes)
+            {
+                // Operation is affected if a recipe referenced the updated product type directly of is a part of a referenced product type
+                if (recipe.Product.Id == productType.Id
+                    || recipe.Target.Id == productType.Id
+                    || CheckProductPartLinksRecursive(recipe.Product, productType.Id))
                 {
-                    var references = ReflectionTool.GetReferences<ProductPartLink>(recipe.Product)
-                        .SelectMany(g => g).ToList();
-
-                    // Operation is affected if a recipe referenced the updated product type directly of is a part of a referenced product type
-                    if (recipe.Product.Id == productType.Id || references.Any(r => r.Product.Id == productType.Id))
-                    {
-                        operationData.RecipeChanged(recipe);
-                    }
+                    // load a fresh recipe directly from product!
+                    var templateRecipe = (IProductRecipe)await ProductManagement.LoadRecipeAsync(recipe.TemplateId);
+                    await operationData.RecipeChanged(templateRecipe);
                 }
             }
+        }
+
+        private static bool CheckProductPartLinksRecursive(ProductType type, long productId)
+        {
+            var references = ReflectionTool.GetReferences<ProductPartLink>(type)
+                .SelectMany(g => g).ToArray();
+
+            if (references.Any(link => link.Product?.Id == productId))
+            {
+                return true;
+            }
+
+            return references.Any(link => CheckProductPartLinksRecursive(link.Product, productId));
         }
     }
 }
