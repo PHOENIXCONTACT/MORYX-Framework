@@ -45,7 +45,7 @@ internal class NotificationPublisherAdapter : IPlugin
     {
         var measurement = new Measurement(MeasurementPrefix + "acknowledged");
 
-        measurement.Add(new DataField("id", notification.Identifier));
+        measurement.Add(new DataTag("id", notification.Identifier.ToString()));
 
         var duration = notification.Acknowledged - notification.Created;
         if (duration.HasValue)

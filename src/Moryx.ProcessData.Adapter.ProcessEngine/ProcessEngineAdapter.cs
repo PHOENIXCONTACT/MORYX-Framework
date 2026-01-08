@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Resources;
@@ -15,7 +16,7 @@ namespace Moryx.ProcessData.Adapter.ProcessEngine;
 [Plugin(LifeCycle.Singleton)]
 internal class ProcessEngineAdapter : IPlugin
 {
-    private const string MeasurementPrefix = "controlSystem_";
+    private const string MeasurementPrefix = "processEngine_";
 
     #region Fields and Properties
 
@@ -67,7 +68,9 @@ internal class ProcessEngineAdapter : IPlugin
         {
             var process = e.Process;
             var measurement = new Measurement(MeasurementPrefix + "processes");
-            measurement.Add(new DataField("id", process.Id));
+
+            measurement.Add(new DataTag("id", process.Id.ToString(CultureInfo.InvariantCulture)));
+
             var success = process is ProductionProcess prodProcess && prodProcess.ProductInstance.State == ProductInstanceState.Success;
             measurement.Add(new DataField("success", success));
 
@@ -111,7 +114,7 @@ internal class ProcessEngineAdapter : IPlugin
                 activity.Tracing.Started.HasValue)
             {
                 var waitTime = activity.Tracing.Started - lastActivity.Tracing.Completed;
-                measurement.Add(new DataField("waittimeMS", waitTime.Value));
+                measurement.Add(new DataField("waitTimeMs", waitTime.Value));
             }
 
             measurement.Add(new DataTag("type", activity.GetType().Name));

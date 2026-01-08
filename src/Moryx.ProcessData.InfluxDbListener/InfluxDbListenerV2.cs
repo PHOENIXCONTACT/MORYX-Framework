@@ -27,8 +27,8 @@ public class InfluxDbListenerV2 : ProcessDataListenerBase<InfluxDbListenerConfig
     /// </summary>
     public IParallelOperations ParallelOperations { get; set; }
 
-    private readonly object _timerLock = new();
-    private readonly object _pendingPointsLock = new();
+    private readonly Lock _timerLock = new();
+    private readonly Lock _pendingPointsLock = new();
     private readonly ICollection<PointData> _pendingPoints = [];
     private int _timerId;
     private InfluxDBClient _client;
@@ -118,11 +118,14 @@ public class InfluxDbListenerV2 : ProcessDataListenerBase<InfluxDbListenerConfig
 
     private void StartTimerIfStopped()
     {
-
         lock (_timerLock)
+        {
             if (_timerId == 0)
+            {
                 // Using .Wait() is ugly and I hate it, but as of now ParallelOperations cannot handle async actions. Change as soon as possible
                 _timerId = ParallelOperations.ScheduleExecution(() => ReportAsync(_cancellationTokenSource.Token).Wait(), Config.ReportIntervalMs, Config.ReportIntervalMs);
+            }
+        }
     }
 
     private async Task ReportAsync(CancellationToken cancellationToken)
@@ -251,7 +254,7 @@ public class InfluxDbListenerV2 : ProcessDataListenerBase<InfluxDbListenerConfig
                 break;
             case IEnumerable enumerable:
             {
-                int i = 0;
+                var i = 0;
                 foreach (var elem in enumerable)
                 {
                     AddDataToPoint(point, $"{prefix}_{i}", elem);
@@ -272,7 +275,7 @@ public class InfluxDbListenerV2 : ProcessDataListenerBase<InfluxDbListenerConfig
                 }
                 else
                 {
-                    Logger?.LogWarning("No case matched {typeName}", type.Name);
+                    Logger.LogWarning("No case matched {typeName}", type.Name);
                     point.Field(prefix, value);
                 }
                 break;

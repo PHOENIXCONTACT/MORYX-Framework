@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
 using Moryx.Modules;
@@ -96,7 +97,7 @@ internal class OrderManagementAdapter : IPlugin
 
             var productIdentity = (ProductIdentity)operation.Product.Identity;
             measurement.Add(new DataTag("productIdent", productIdentity.Identifier));
-            measurement.Add(new DataTag("productRev", productIdentity.Revision.ToString("D2")));
+            measurement.Add(new DataTag("productRev", productIdentity.Revision.ToString("D2", CultureInfo.InvariantCulture)));
 
             ProcessDataMonitor.Add(measurement);
         }
