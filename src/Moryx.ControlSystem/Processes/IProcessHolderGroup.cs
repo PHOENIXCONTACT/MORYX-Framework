@@ -3,34 +3,33 @@
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.ControlSystem.Processes
+namespace Moryx.ControlSystem.Processes;
+
+/// <summary>
+/// Standard interface for groups of types derived from <see cref="IProcessHolderPosition"/>
+/// </summary>
+public interface IProcessHolderGroup : IResource
 {
     /// <summary>
-    /// Standard interface for groups of types derived from <see cref="IProcessHolderPosition"/>
+    /// All positions of the group
     /// </summary>
-    public interface IProcessHolderGroup : IResource
-    {
-        /// <summary>
-        /// All positions of the group
-        /// </summary>
-        IEnumerable<IProcessHolderPosition> Positions { get; }
-
-        /// <summary>
-        /// The entire group is reset
-        /// </summary>
-        void Reset();
-    }
+    IEnumerable<IProcessHolderPosition> Positions { get; }
 
     /// <summary>
-    /// Generic interface for groups of types derived from <see cref="IProcessHolderPosition"/>
+    /// The entire group is reset
     /// </summary>
-    /// <typeparam name="TPosition"></typeparam>
-    public interface IProcessHolderGroup<out TPosition> : IProcessHolderGroup
-        where TPosition : IProcessHolderPosition
-    {
-        /// <summary>
-        /// All positions of the group
-        /// </summary>
-        new IEnumerable<TPosition> Positions { get; }
-    }
+    void Reset();
+}
+
+/// <summary>
+/// Generic interface for groups of types derived from <see cref="IProcessHolderPosition"/>
+/// </summary>
+/// <typeparam name="TPosition"></typeparam>
+public interface IProcessHolderGroup<out TPosition> : IProcessHolderGroup
+    where TPosition : IProcessHolderPosition
+{
+    /// <summary>
+    /// All positions of the group
+    /// </summary>
+    new IEnumerable<TPosition> Positions { get; }
 }

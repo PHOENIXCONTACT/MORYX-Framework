@@ -3,32 +3,31 @@
 
 using Moryx.Runtime.Modules;
 
-namespace Moryx.ProcessData.Monitor
+namespace Moryx.ProcessData.Monitor;
+
+internal class ProcessDataMonitorFacade : IProcessDataMonitor, IFacadeControl
 {
-    internal class ProcessDataMonitorFacade : IProcessDataMonitor, IFacadeControl
+    public Action ValidateHealthState { get; set; }
+
+    public IProcessDataCollector ProcessDataCollector { get; set; }
+
+    public void Activate()
     {
-        public Action ValidateHealthState { get; set; }
+    }
 
-        public IProcessDataCollector ProcessDataCollector { get; set; }
+    public void Deactivate()
+    {
+    }
 
-        public void Activate()
-        {
-        }
+    public void Add(Measurement measurement)
+    {
+        ValidateHealthState();
+        ProcessDataCollector.AddMeasurement(measurement);
+    }
 
-        public void Deactivate()
-        {
-        }
-
-        public void Add(Measurement measurement)
-        {
-            ValidateHealthState();
-            ProcessDataCollector.AddMeasurement(measurement);
-        }
-
-        public void Add(Measurand measurand)
-        {
-            ValidateHealthState();
-            ProcessDataCollector.AddMeasurand(measurand);
-        }
+    public void Add(Measurand measurand)
+    {
+        ValidateHealthState();
+        ProcessDataCollector.AddMeasurand(measurand);
     }
 }

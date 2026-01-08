@@ -3,13 +3,12 @@
 
 using Moryx.ProcessData.Configuration;
 
-namespace Moryx.ProcessData.Endpoints.Models
+namespace Moryx.ProcessData.Endpoints.Models;
+
+public class ConfiguredBindings
 {
-    public class ConfiguredBindings
-    {
-        /// <summary>
-        /// List of all configured bindings for this measurand
-        /// </summary>
-        public List<MeasurementBinding> Bindings { get; set; }
-    }
+    /// <summary>
+    /// List of all configured bindings for this measurand
+    /// </summary>
+    public List<MeasurementBinding> Bindings { get; set; }
 }

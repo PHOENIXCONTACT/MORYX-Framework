@@ -9,96 +9,94 @@ using Moryx.Orders.Management.Advice;
 using Moryx.Orders.Management.Assignment;
 using Moryx.Orders.Management.Notifications;
 
-namespace Moryx.Orders.Management
+namespace Moryx.Orders.Management;
+
+[Component(LifeCycle.Singleton)]
+internal class ComponentOrchestration : IAsyncPlugin
 {
-    [Component(LifeCycle.Singleton)]
-    internal class ComponentOrchestration : IAsyncPlugin
+    #region Dependencies
+
+    public IProductAssignment ProductAssignment { get; set; }
+
+    public IPartsAssignment PartsAssignment { get; set; }
+
+    public IRecipeAssignment RecipeAssignment { get; set; }
+
+    public IOperationDispatcher OperationDispatcher { get; set; }
+
+    public IJobHandler JobHandler { get; set; }
+
+    public IOperationValidation OperationValidation { get; set; }
+
+    public IOperationAssignment OperationAssignment { get; set; }
+
+    public IOperationDataPool OperationDataPool { get; set; }
+
+    public IDocumentLoader DocumentLoader { get; set; }
+
+    public IAdviceManager AdviceManager { get; set; }
+
+    public IOperationNotifications OperationNotifications { get; set; }
+
+    public ModuleConfig Config { get; set; }
+
+    #endregion
+
+    public async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        #region Dependencies
+        // --Initialize Assignment
+        await ProductAssignment.InitializeAsync(Config.ProductAssignment, cancellationToken);
+        await PartsAssignment.InitializeAsync(Config.PartsAssignment, cancellationToken);
+        await RecipeAssignment.InitializeAsync(Config.RecipeAssignment, cancellationToken);
+        await OperationValidation.InitializeAsync(Config.OperationValidation, cancellationToken);
+        await DocumentLoader.InitializeAsync(Config.Documents.DocumentLoader, cancellationToken);
 
-        public IProductAssignment ProductAssignment { get; set; }
+        // --Initialize dispatcher
+        await OperationDispatcher.InitializeAsync(Config.OperationDispatcher, cancellationToken);
 
-        public IPartsAssignment PartsAssignment { get; set; }
+        // --Start Advice
+        await AdviceManager.StartAsync(cancellationToken);
 
-        public IRecipeAssignment RecipeAssignment { get; set; }
+        // --Start Assignment
+        await ProductAssignment.StartAsync(cancellationToken);
+        await PartsAssignment.StartAsync(cancellationToken);
+        await RecipeAssignment.StartAsync(cancellationToken);
+        await OperationValidation.StartAsync(cancellationToken);
+        await DocumentLoader.StartAsync(cancellationToken);
+        OperationAssignment.Start();
 
-        public IOperationDispatcher OperationDispatcher { get; set; }
+        // --Start Job handler and dispatcher
+        await OperationDispatcher.StartAsync(cancellationToken);
+        JobHandler.Start();
 
-        public IJobHandler JobHandler { get; set; }
+        // --Start pool
+        await OperationDataPool.StartAsync(cancellationToken);
 
-        public IOperationValidation OperationValidation { get; set; }
+        // --Start Notifications
+        OperationNotifications.Start();
+    }
 
-        public IOperationAssignment OperationAssignment { get; set; }
+    public async Task StopAsync(CancellationToken cancellationToken = default)
+    {
+        // --Stop Notifications
+        OperationNotifications.Stop();
 
-        public IOperationDataPool OperationDataPool { get; set; }
+        // --Stop Job handler and dispatcher
+        JobHandler.Stop();
+        await OperationDispatcher.StopAsync(cancellationToken);
 
-        public IDocumentLoader DocumentLoader { get; set; }
+        // --Stop Assignment
+        OperationAssignment.Stop();
+        await DocumentLoader.StopAsync(cancellationToken);
+        await OperationValidation.StopAsync(cancellationToken);
+        await RecipeAssignment.StopAsync(cancellationToken);
+        await PartsAssignment.StopAsync(cancellationToken);
+        await ProductAssignment.StopAsync(cancellationToken);
 
-        public IAdviceManager AdviceManager { get; set; }
+        // --Stop Advice
+        await AdviceManager.StopAsync(cancellationToken);
 
-        public IOperationNotifications OperationNotifications { get; set; }
-
-        public ModuleConfig Config { get; set; }
-
-        #endregion
-
-        public async Task StartAsync(CancellationToken cancellationToken = default)
-        {
-            // --Initialize Assignment
-            await ProductAssignment.InitializeAsync(Config.ProductAssignment, cancellationToken);
-            await PartsAssignment.InitializeAsync(Config.PartsAssignment, cancellationToken);
-            await RecipeAssignment.InitializeAsync(Config.RecipeAssignment, cancellationToken);
-            await OperationValidation.InitializeAsync(Config.OperationValidation, cancellationToken);
-            await DocumentLoader.InitializeAsync(Config.Documents.DocumentLoader, cancellationToken);
-
-            // --Initialize dispatcher
-            await OperationDispatcher.InitializeAsync(Config.OperationDispatcher, cancellationToken);
-
-            // --Start Advice
-            await AdviceManager.StartAsync(cancellationToken);
-
-            // --Start Assignment
-            await ProductAssignment.StartAsync(cancellationToken);
-            await PartsAssignment.StartAsync(cancellationToken);
-            await RecipeAssignment.StartAsync(cancellationToken);
-            await OperationValidation.StartAsync(cancellationToken);
-            await DocumentLoader.StartAsync(cancellationToken);
-            OperationAssignment.Start();
-
-            // --Start Job handler and dispatcher
-            await OperationDispatcher.StartAsync(cancellationToken);
-            JobHandler.Start();
-
-            // --Start pool
-            await OperationDataPool.StartAsync(cancellationToken);
-
-            // --Start Notifications
-            OperationNotifications.Start();
-        }
-
-        public async Task StopAsync(CancellationToken cancellationToken = default)
-        {
-            // --Stop Notifications
-            OperationNotifications.Stop();
-
-            // --Stop Job handler and dispatcher
-            JobHandler.Stop();
-            await OperationDispatcher.StopAsync(cancellationToken);
-
-            // --Stop Assignment
-            OperationAssignment.Stop();
-            await DocumentLoader.StopAsync(cancellationToken);
-            await OperationValidation.StopAsync(cancellationToken);
-            await RecipeAssignment.StopAsync(cancellationToken);
-            await PartsAssignment.StopAsync(cancellationToken);
-            await ProductAssignment.StopAsync(cancellationToken);
-
-            // --Stop Advice
-            await AdviceManager.StopAsync(cancellationToken);
-
-            // --Stop pool
-            await OperationDataPool.StopAsync(cancellationToken);
-        }
+        // --Stop pool
+        await OperationDataPool.StopAsync(cancellationToken);
     }
 }
-

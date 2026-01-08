@@ -3,18 +3,17 @@
 
 using System.Reflection;
 
-namespace Moryx.Model.Repositories.Proxy
+namespace Moryx.Model.Repositories.Proxy;
+
+internal class ParameterPropertyMap
 {
-    internal class ParameterPropertyMap
+    public ParameterPropertyMap(ParameterInfo parameter, PropertyInfo property)
     {
-        public ParameterPropertyMap(ParameterInfo parameter, PropertyInfo property)
-        {
-            Parameter = parameter;
-            Property = property;
-        }
-
-        public ParameterInfo Parameter { get; }
-
-        public PropertyInfo Property { get; }
+        Parameter = parameter;
+        Property = property;
     }
+
+    public ParameterInfo Parameter { get; }
+
+    public PropertyInfo Property { get; }
 }

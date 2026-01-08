@@ -6,47 +6,46 @@ using Moryx.Workplans;
 using Moryx.Workplans.Transitions;
 using Moryx.Workplans.WorkplanSteps;
 
-namespace Moryx.Tests.Workplans
-{
-    internal class PausableStep : WorkplanStepBase
-    {
-        public PausableStep()
-        {
-            Name = "Pausable";
-        }
+namespace Moryx.Tests.Workplans;
 
-        ///
-        protected override TransitionBase Instantiate(IWorkplanContext context)
-        {
-            return new PausableTransition();
-        }
+internal class PausableStep : WorkplanStepBase
+{
+    public PausableStep()
+    {
+        Name = "Pausable";
     }
 
-    internal class PausableTransition : TransitionBase<MainToken>
+    ///
+    protected override TransitionBase Instantiate(IWorkplanContext context)
     {
-        ///
-        protected override void InputTokenAdded(object sender, IToken token)
-        {
-            ((IPlace)sender).Remove(token);
-            StoredTokens.Add(token);
-        }
+        return new PausableTransition();
+    }
+}
 
-        /// <summary>
-        /// Pause this transitions or finish up quickly
-        /// </summary>
-        public override void Pause()
-        {
-            State = (MainToken)StoredTokens.First();
-            base.Pause();
-        }
+internal class PausableTransition : TransitionBase<MainToken>
+{
+    ///
+    protected override void InputTokenAdded(object sender, IToken token)
+    {
+        ((IPlace)sender).Remove(token);
+        StoredTokens.Add(token);
+    }
 
-        /// <summary>
-        /// Resume execution of this transition, if we hold any tokens
-        /// </summary>
-        public override void Resume()
-        {
-            PlaceToken(Outputs[0], StoredTokens.First());
-            base.Resume();
-        }
+    /// <summary>
+    /// Pause this transitions or finish up quickly
+    /// </summary>
+    public override void Pause()
+    {
+        State = (MainToken)StoredTokens.First();
+        base.Pause();
+    }
+
+    /// <summary>
+    /// Resume execution of this transition, if we hold any tokens
+    /// </summary>
+    public override void Resume()
+    {
+        PlaceToken(Outputs[0], StoredTokens.First());
+        base.Resume();
     }
 }

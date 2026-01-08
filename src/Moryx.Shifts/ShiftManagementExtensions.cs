@@ -5,37 +5,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Moryx.Shifts
+namespace Moryx.Shifts;
+
+public static class ShiftManagementExtensions
 {
-    public static class ShiftManagementExtensions
+    public static Shift? GetShift(this IShiftManagement source, long id) => source.Shifts.SingleOrDefault(s => s.Id == id);
+
+    public static IEnumerable<Shift> GetShifts(this IShiftManagement source, DateOnly? earliestDate, DateOnly? latestDate)
     {
-        public static Shift? GetShift(this IShiftManagement source, long id) => source.Shifts.SingleOrDefault(s => s.Id == id);
+        IEnumerable<Shift> shifts = source.Shifts;
+        if (!earliestDate.HasValue && !latestDate.HasValue) return shifts;
 
-        public static IEnumerable<Shift> GetShifts(this IShiftManagement source, DateOnly? earliestDate, DateOnly? latestDate)
+        if (earliestDate.HasValue)
         {
-            IEnumerable<Shift> shifts = source.Shifts;
-            if (!earliestDate.HasValue && !latestDate.HasValue) return shifts;
-
-            if (earliestDate.HasValue)
-            {
-                shifts = shifts.Where(s => s.Date.AddDays(s.Type.Periode) >= earliestDate);
-            }
-            if (latestDate.HasValue)
-            {
-                shifts = shifts.Where(s => s.Date <= latestDate);
-            }
-            return shifts;
+            shifts = shifts.Where(s => s.Date.AddDays(s.Type.Periode) >= earliestDate);
         }
-
-        public static ShiftType? GetShiftType(this IShiftManagement source, long id) => source.ShiftTypes.SingleOrDefault(t => t.Id == id);
-
-        public static IEnumerable<ShiftAssignement> GetShiftAssignements(this IShiftManagement source, DateOnly? earliestDate, DateOnly? latestDate)
+        if (latestDate.HasValue)
         {
-            if (!earliestDate.HasValue && !latestDate.HasValue) return source.ShiftAssignements;
-
-            IEnumerable<Shift> shifts = source.GetShifts(earliestDate, latestDate);
-            return source.ShiftAssignements.Where(a => shifts.Contains(a.Shift));
+            shifts = shifts.Where(s => s.Date <= latestDate);
         }
+        return shifts;
+    }
+
+    public static ShiftType? GetShiftType(this IShiftManagement source, long id) => source.ShiftTypes.SingleOrDefault(t => t.Id == id);
+
+    public static IEnumerable<ShiftAssignement> GetShiftAssignements(this IShiftManagement source, DateOnly? earliestDate, DateOnly? latestDate)
+    {
+        if (!earliestDate.HasValue && !latestDate.HasValue) return source.ShiftAssignements;
+
+        IEnumerable<Shift> shifts = source.GetShifts(earliestDate, latestDate);
+        return source.ShiftAssignements.Where(a => shifts.Contains(a.Shift));
     }
 }
-

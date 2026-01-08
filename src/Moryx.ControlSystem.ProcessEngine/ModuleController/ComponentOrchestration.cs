@@ -9,97 +9,96 @@ using Moryx.ControlSystem.ProcessEngine.Jobs.Setup;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.Logging;
 
-namespace Moryx.ControlSystem.ProcessEngine
+namespace Moryx.ControlSystem.ProcessEngine;
+
+/// <summary>
+/// Central component to orchestrate the boot and shutdown of the ProcessEngine
+/// </summary>
+[Component(LifeCycle.Singleton)]
+internal class ComponentOrchestration
 {
-    /// <summary>
-    /// Central component to orchestrate the boot and shutdown of the ProcessEngine
-    /// </summary>
-    [Component(LifeCycle.Singleton)]
-    internal class ComponentOrchestration
+    #region Dependencies
+
+    public ModuleConfig Config { get; set; }
+
+    public IJobDataList JobList { get; set; }
+
+    public IJobManager JobManager { get; set; }
+
+    public IJobDispatcher JobDispatcher { get; set; }
+
+    public IJobScheduler JobScheduler { get; set; }
+
+    public IJobStorage JobStorage { get; set; }
+
+    public IProcessController ProcessController { get; set; }
+
+    public IProcessStorage ProcessStorage { get; set; }
+
+    public IActivityPoolListener[] PoolListeners { get; set; }
+
+    public ISetupJobHandler SetupManager { get; set; }
+
+    public IModuleLogger Logger { get; set; }
+
+    #endregion
+
+    public void Start()
     {
-        #region Dependencies
+        JobStorage.Start();
 
-        public ModuleConfig Config { get; set; }
+        JobScheduler.Initialize(Config.JobSchedulerConfig);
 
-        public IJobDataList JobList { get; set; }
+        SetupManager.Start();
 
-        public IJobManager JobManager { get; set; }
+        ProcessStorage.Start();
 
-        public IJobDispatcher JobDispatcher { get; set; }
+        // Boot all listeners
+        foreach (var listener in PoolListeners.OrderBy(l => l.StartOrder))
+            listener.Initialize();
 
-        public IJobScheduler JobScheduler { get; set; }
+        JobList.Start();
 
-        public IJobStorage JobStorage { get; set; }
+        JobDispatcher.Start();
 
-        public IProcessController ProcessController { get; set; }
+        JobScheduler.Start();
 
-        public IProcessStorage ProcessStorage { get; set; }
+        JobManager.Configure(JobScheduler);
+        JobManager.Start();
 
-        public IActivityPoolListener[] PoolListeners { get; set; }
+        // Start execution
+        foreach (var listener in PoolListeners.OrderBy(l => l.StartOrder))
+            listener.Start();
 
-        public ISetupJobHandler SetupManager { get; set; }
+        if (JobManager.AwaitBoot(Config.BootSyncTimeoutSec))
+            Logger.Log(LogLevel.Warning, new TimeoutException("Job manager ran into a timeout trying to restore the previous job list state!"), "Timeout");
+    }
 
-        public IModuleLogger Logger { get; set; }
-
-        #endregion
-
-        public void Start()
+    public void Stop()
+    {
+        try
         {
-            JobStorage.Start();
-
-            JobScheduler.Initialize(Config.JobSchedulerConfig);
-
-            SetupManager.Start();
-
-            ProcessStorage.Start();
-
-            // Boot all listeners
-            foreach (var listener in PoolListeners.OrderBy(l => l.StartOrder))
-                listener.Initialize();
-
-            JobList.Start();
-
-            JobDispatcher.Start();
-
-            JobScheduler.Start();
-
-            JobManager.Configure(JobScheduler);
-            JobManager.Start();
-
-            // Start execution
-            foreach (var listener in PoolListeners.OrderBy(l => l.StartOrder))
-                listener.Start();
-
-            if (JobManager.AwaitBoot(Config.BootSyncTimeoutSec))
-                Logger.Log(LogLevel.Warning, new TimeoutException("Job manager ran into a timeout trying to restore the previous job list state!"), "Timeout");
+            JobScheduler.Stop();
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Shutting down process engine caused an exception in {name}", JobScheduler.GetType().Name);
         }
 
-        public void Stop()
+        SetupManager.Stop();
+        JobDispatcher.Stop();
+
+        JobManager.Stop();
+
+        // Stop all pool listeners
+        var ordered = PoolListeners.OrderByDescending(l => l.StartOrder).ToArray();
+        foreach (var listener in ordered)
         {
-            try
-            {
-                JobScheduler.Stop();
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e, "Shutting down process engine caused an exception in {name}", JobScheduler.GetType().Name);
-            }
-
-            SetupManager.Stop();
-            JobDispatcher.Stop();
-
-            JobManager.Stop();
-
-            // Stop all pool listeners
-            var ordered = PoolListeners.OrderByDescending(l => l.StartOrder).ToArray();
-            foreach (var listener in ordered)
-            {
-                listener.Stop();
-            }
-
-            JobList.Stop();
-
-            JobStorage.Stop();
+            listener.Stop();
         }
+
+        JobList.Stop();
+
+        JobStorage.Stop();
     }
 }

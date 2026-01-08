@@ -3,9 +3,8 @@
 
 using Moryx.Modules;
 
-namespace Moryx.ControlSystem.Simulator
+namespace Moryx.ControlSystem.Simulator;
+
+internal interface IProcessSimulator : IPlugin
 {
-    internal interface IProcessSimulator : IPlugin
-    {
-    }
 }

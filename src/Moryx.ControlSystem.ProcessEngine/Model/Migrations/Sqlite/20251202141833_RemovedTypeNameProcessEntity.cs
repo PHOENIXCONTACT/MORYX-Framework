@@ -5,29 +5,28 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Moryx.ControlSystem.ProcessEngine.Model.Migrations.Sqlite
+namespace Moryx.ControlSystem.ProcessEngine.Model.Migrations.Sqlite;
+
+/// <inheritdoc />
+public partial class RemovedTypeNameProcessEntity : Migration
 {
     /// <inheritdoc />
-    public partial class RemovedTypeNameProcessEntity : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "TypeName",
-                schema: "public",
-                table: "Processes");
-        }
+        migrationBuilder.DropColumn(
+            name: "TypeName",
+            schema: "public",
+            table: "Processes");
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<string>(
-                name: "TypeName",
-                schema: "public",
-                table: "Processes",
-                type: "TEXT",
-                nullable: true);
-        }
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.AddColumn<string>(
+            name: "TypeName",
+            schema: "public",
+            table: "Processes",
+            type: "TEXT",
+            nullable: true);
     }
 }

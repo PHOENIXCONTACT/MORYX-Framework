@@ -4,10 +4,8 @@
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Workplans;
 
-namespace Moryx.AbstractionLayer.Tests.TestData
-{
-    public class TestTask : TaskStep<TestActivity, NullActivityParameters>
-    {
-    }
-}
+namespace Moryx.AbstractionLayer.Tests.TestData;
 
+public class TestTask : TaskStep<TestActivity, NullActivityParameters>
+{
+}

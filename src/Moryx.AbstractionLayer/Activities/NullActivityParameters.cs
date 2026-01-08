@@ -4,18 +4,17 @@
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Processes;
 
-namespace Moryx.AbstractionLayer.Activities
+namespace Moryx.AbstractionLayer.Activities;
+
+/// <summary>
+/// Class to enforce the null object pattern
+/// </summary>
+[DataContract]
+public sealed class NullActivityParameters : IParameters
 {
-    /// <summary>
-    /// Class to enforce the null object pattern
-    /// </summary>
-    [DataContract]
-    public sealed class NullActivityParameters : IParameters
+    /// <see cref="IParameters"/>
+    public IParameters Bind(Process process)
     {
-        /// <see cref="IParameters"/>
-        public IParameters Bind(Process process)
-        {
-            return this;
-        }
+        return this;
     }
 }

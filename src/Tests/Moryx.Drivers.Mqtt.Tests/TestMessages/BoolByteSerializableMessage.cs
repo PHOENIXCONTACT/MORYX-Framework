@@ -4,21 +4,18 @@
 using System;
 using Moryx.Communication;
 
-namespace Moryx.Drivers.Mqtt.Tests.TestMessages
-{
-    public class BoolByteSerializableMessage : IByteSerializable
-    {
-        public bool Message;
-        public byte[] ToBytes()
-        {
-            return [Convert.ToByte(Message)];
-        }
+namespace Moryx.Drivers.Mqtt.Tests.TestMessages;
 
-        public void FromBytes(byte[] bytes)
-        {
-            Message = BitConverter.ToBoolean(bytes, 0);
-        }
+public class BoolByteSerializableMessage : IByteSerializable
+{
+    public bool Message;
+    public byte[] ToBytes()
+    {
+        return [Convert.ToByte(Message)];
     }
 
+    public void FromBytes(byte[] bytes)
+    {
+        Message = BitConverter.ToBoolean(bytes, 0);
+    }
 }
-

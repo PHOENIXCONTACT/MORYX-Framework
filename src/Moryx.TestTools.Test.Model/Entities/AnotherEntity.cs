@@ -3,10 +3,9 @@
 
 using Moryx.Model;
 
-namespace Moryx.TestTools.Test.Model
-{
-    public class AnotherEntity : ModificationTrackedEntityBase
-    {
+namespace Moryx.TestTools.Test.Model;
 
-    }
+public class AnotherEntity : ModificationTrackedEntityBase
+{
+
 }

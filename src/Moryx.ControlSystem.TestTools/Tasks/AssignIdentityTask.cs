@@ -4,13 +4,11 @@
 using Moryx.AbstractionLayer.Workplans;
 using Moryx.ControlSystem.TestTools.Activities;
 
-namespace Moryx.ControlSystem.TestTools.Tasks
-{
-    /// <summary>
-    /// The description of <see cref="AssignIdentityActivity"/>
-    /// </summary>
-    public class AssignIdentityTask : TaskStep<AssignIdentityActivity, IAssignIdentityParameters, AssignIdentityParameters>
-    {
-    }
-}
+namespace Moryx.ControlSystem.TestTools.Tasks;
 
+/// <summary>
+/// The description of <see cref="AssignIdentityActivity"/>
+/// </summary>
+public class AssignIdentityTask : TaskStep<AssignIdentityActivity, IAssignIdentityParameters, AssignIdentityParameters>
+{
+}

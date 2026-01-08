@@ -13,62 +13,61 @@ using Moryx.Runtime.Endpoints.Databases;
 using Moryx.Runtime.Endpoints.Databases.Models;
 using Moryx.Serialization;
 
-namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
+namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller;
+
+internal class ModelSetupTests
 {
-    internal class ModelSetupTests
+    private IDbContextManager? _dbContextManager;
+    private DatabaseController? _databaseController;
+    private readonly List<Exception> _exceptions = [];
+
+    [SetUp]
+    public void Setup()
     {
-        private IDbContextManager? _dbContextManager;
-        private DatabaseController? _databaseController;
-        private readonly List<Exception> _exceptions = [];
+        _dbContextManager = InMemoryUnitOfWorkFactoryBuilder
+            .SqliteDbContextManager();
 
-        [SetUp]
-        public void Setup()
+        _dbContextManager
+            .Factory<TestModelContext>()
+            .EnsureDbIsCreated();
+
+        _databaseController = new DatabaseController(_dbContextManager);
+
+        _exceptions.Clear();
+    }
+
+    [Test]
+    public async Task ExecuteSetupDoesNotThrowDisposedObjectException()
+    {
+        // Add unobserved task exceptions to a list, to be checked later.
+        TaskScheduler.UnobservedTaskException += (sender, e) =>
         {
-            _dbContextManager = InMemoryUnitOfWorkFactoryBuilder
-                .SqliteDbContextManager();
+            _exceptions.Add(e.Exception);
+        };
 
-            _dbContextManager
-                .Factory<TestModelContext>()
-                .EnsureDbIsCreated();
+        var sqliteConfig = new SqliteDatabaseConfig { DataSource = ":memory:" };
+        sqliteConfig.UpdateConnectionString();
+        var entries = EntryConvert.EncodeObject(sqliteConfig);
 
-            _databaseController = new DatabaseController(_dbContextManager);
-
-            _exceptions.Clear();
-        }
-
-        [Test]
-        public async Task ExecuteSetupDoesNotThrowDisposedObjectException()
+        var result = await _databaseController!.ExecuteSetup(typeof(TestModelContext).FullName, new()
         {
-            // Add unobserved task exceptions to a list, to be checked later.
-            TaskScheduler.UnobservedTaskException += (sender, e) =>
+            Config = new()
             {
-                _exceptions.Add(e.Exception);
-            };
+                ConfiguratorType = "1",
+                ConnectionString = sqliteConfig.ConnectionString,
+                Properties = entries
+            },
+            Setup = new SetupModel { Fullname = typeof(DisposedObjectSetup).FullName }
+        });
 
-            var sqliteConfig = new SqliteDatabaseConfig { DataSource = ":memory:" };
-            sqliteConfig.UpdateConnectionString();
-            var entries = EntryConvert.EncodeObject(sqliteConfig);
+        // ExecuteSetup lead to unobserved task exceptions. We give them
+        // some time to be thrown.
+        Task.Delay(100).Wait();
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
 
-            var result = await _databaseController!.ExecuteSetup(typeof(TestModelContext).FullName, new()
-            {
-                Config = new()
-                {
-                    ConfiguratorType = "1",
-                    ConnectionString = sqliteConfig.ConnectionString,
-                    Properties = entries
-                },
-                Setup = new SetupModel { Fullname = typeof(DisposedObjectSetup).FullName }
-            });
-
-            // ExecuteSetup lead to unobserved task exceptions. We give them
-            // some time to be thrown.
-            Task.Delay(100).Wait();
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-
-            Assert.That(result?.Value?.Success, Is.True);
-            Assert.That(0, Is.EqualTo(_exceptions.Count));
-        }
+        Assert.That(result?.Value?.Success, Is.True);
+        Assert.That(0, Is.EqualTo(_exceptions.Count));
     }
 }

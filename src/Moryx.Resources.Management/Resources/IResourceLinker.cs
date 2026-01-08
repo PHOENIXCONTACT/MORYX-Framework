@@ -6,44 +6,43 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Model.Repositories;
 using Moryx.Resources.Management.Model;
 
-namespace Moryx.Resources.Management
+namespace Moryx.Resources.Management;
+
+/// <summary>
+/// Helper class responsible for linking the flat list of resources
+/// into a directed graph
+/// </summary>
+internal interface IResourceLinker
 {
     /// <summary>
-    /// Helper class responsible for linking the flat list of resources
-    /// into a directed graph
+    /// Saves all roots to the database
     /// </summary>
-    internal interface IResourceLinker
-    {
-        /// <summary>
-        /// Saves all roots to the database
-        /// </summary>
-        Task<IReadOnlyList<Resource>> SaveRootsAsync(IUnitOfWork uow, IReadOnlyList<Resource> instances);
+    Task<IReadOnlyList<Resource>> SaveRootsAsync(IUnitOfWork uow, IReadOnlyList<Resource> instances);
 
-        /// <summary>
-        /// Link all reference properties of an instance using the relation information
-        /// and complete resource collection
-        /// </summary>
-        /// <returns>List of reference collections configured for autosave</returns>
-        void LinkReferences(Resource resource, ICollection<ResourceRelationAccessor> relations);
+    /// <summary>
+    /// Link all reference properties of an instance using the relation information
+    /// and complete resource collection
+    /// </summary>
+    /// <returns>List of reference collections configured for autosave</returns>
+    void LinkReferences(Resource resource, ICollection<ResourceRelationAccessor> relations);
 
-        /// <summary>
-        /// Save all references of a resource to the database. Use the creator callback to save new instances discovered
-        /// in relations on the fly.
-        /// </summary>
-        /// <returns>Found new instances</returns>
-        Task<IReadOnlyList<Resource>> SaveReferencesAsync(IUnitOfWork uow, Resource instance, ResourceEntity entity, Dictionary<Resource, ResourceEntity> partsDict = null);
+    /// <summary>
+    /// Save all references of a resource to the database. Use the creator callback to save new instances discovered
+    /// in relations on the fly.
+    /// </summary>
+    /// <returns>Found new instances</returns>
+    Task<IReadOnlyList<Resource>> SaveReferencesAsync(IUnitOfWork uow, Resource instance, ResourceEntity entity, Dictionary<Resource, ResourceEntity> partsDict = null);
 
-        /// <summary>
-        /// Save changes to a single collection
-        /// </summary>
-        /// <returns>Found new instances</returns>
-        Task<IReadOnlyList<Resource>> SaveSingleCollectionAsync(IUnitOfWork uow, Resource instance, PropertyInfo property);
+    /// <summary>
+    /// Save changes to a single collection
+    /// </summary>
+    /// <returns>Found new instances</returns>
+    Task<IReadOnlyList<Resource>> SaveSingleCollectionAsync(IUnitOfWork uow, Resource instance, PropertyInfo property);
 
-        /// <summary>
-        /// Remove all links to the deleted instance on the reference
-        /// </summary>
-        /// <param name="deletedInstance">Resource that is being deleted</param>
-        /// <param name="reference">Resource referencing the deleted instance</param>
-        void RemoveLinking(IResource deletedInstance, IResource reference);
-    }
+    /// <summary>
+    /// Remove all links to the deleted instance on the reference
+    /// </summary>
+    /// <param name="deletedInstance">Resource that is being deleted</param>
+    /// <param name="reference">Resource referencing the deleted instance</param>
+    void RemoveLinking(IResource deletedInstance, IResource reference);
 }

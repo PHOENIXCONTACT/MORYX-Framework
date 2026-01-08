@@ -4,17 +4,16 @@
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Recipes;
 
-namespace Moryx.ControlSystem.Setups
+namespace Moryx.ControlSystem.Setups;
+
+/// <summary>
+/// Facade for modules that can determine setup requirement and and create setup recipes
+/// </summary>
+public interface ISetupProvider : IRecipeProvider
 {
     /// <summary>
-    /// Facade for modules that can determine setup requirement and and create setup recipes
+    /// Determine the necessary changes to produce a given recipe 
     /// </summary>
-    public interface ISetupProvider : IRecipeProvider
-    {
-        /// <summary>
-        /// Determine the necessary changes to produce a given recipe 
-        /// </summary>
-        /// <returns><value>null</value> if no setup is required, otherwise a setup recipe with a reconfiguration workplan</returns>
-        SetupRecipe RequiredSetup(SetupExecution execution, ProductionRecipe recipe, ISetupTarget targetSystem);
-    }
+    /// <returns><value>null</value> if no setup is required, otherwise a setup recipe with a reconfiguration workplan</returns>
+    SetupRecipe RequiredSetup(SetupExecution execution, ProductionRecipe recipe, ISetupTarget targetSystem);
 }

@@ -3,9 +3,8 @@
 
 using Moryx.Model.Repositories;
 
-namespace Moryx.TestTools.Test.Model
+namespace Moryx.TestTools.Test.Model;
+
+public interface IAnotherEntityRepository : IRepository<AnotherEntity>
 {
-    public interface IAnotherEntityRepository : IRepository<AnotherEntity>
-    {
-    }
 }

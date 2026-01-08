@@ -6,134 +6,133 @@ using Moryx.Model.Repositories;
 using Moryx.Model.Repositories.Proxy;
 using NUnit.Framework;
 
-namespace Moryx.Model.Tests
+namespace Moryx.Model.Tests;
+
+[TestFixture]
+public class InterfaceProxyTests
 {
-    [TestFixture]
-    public class InterfaceProxyTests
+    private RepositoryProxyBuilder _proxyBuilder;
+
+    [SetUp]
+    public void SetUp()
     {
-        private RepositoryProxyBuilder _proxyBuilder;
+        _proxyBuilder = new RepositoryProxyBuilder();
+    }
 
-        [SetUp]
-        public void SetUp()
+    [Test]
+    public void EmptyRepositoryInterface()
+    {
+        // Act
+        Type proxyType = null;
+        Assert.DoesNotThrow(delegate
         {
-            _proxyBuilder = new RepositoryProxyBuilder();
-        }
+            proxyType = _proxyBuilder.Build(typeof(IEmptyRepository));
+        });
 
-        [Test]
-        public void EmptyRepositoryInterface()
+        // Assert
+        var baseType = proxyType.BaseType;
+        Assert.That(baseType, Is.Not.Null);
+
+        var genericBaseType = baseType.GetGenericTypeDefinition();
+        Assert.That(genericBaseType, Is.EqualTo(typeof(Repository<>)));
+    }
+
+    [Test]
+    public void InterfaceWithoutRepositoryThrows()
+    {
+        //Act - Assert
+        Assert.Throws<InvalidOperationException>(delegate
         {
-            // Act
-            Type proxyType = null;
-            Assert.DoesNotThrow(delegate
-            {
-                proxyType = _proxyBuilder.Build(typeof(IEmptyRepository));
-            });
+            _proxyBuilder.Build(typeof(IWithoutIRepositoryRepository));
+        });
+    }
 
-            // Assert
-            var baseType = proxyType.BaseType;
-            Assert.That(baseType, Is.Not.Null);
-
-            var genericBaseType = baseType.GetGenericTypeDefinition();
-            Assert.That(genericBaseType, Is.EqualTo(typeof(Repository<>)));
-        }
-
-        [Test]
-        public void InterfaceWithoutRepositoryThrows()
+    [Test]
+    public void NonRepositoryInterfaceThrows()
+    {
+        //Act - Assert
+        Assert.Throws<InvalidOperationException>(delegate
         {
-            //Act - Assert
-            Assert.Throws<InvalidOperationException>(delegate
-            {
-                _proxyBuilder.Build(typeof(IWithoutIRepositoryRepository));
-            });
-        }
+            _proxyBuilder.Build(typeof(Type));
+        });
+    }
 
-        [Test]
-        public void NonRepositoryInterfaceThrows()
+    [Test]
+    public void CreateWithStringParameter()
+    {
+        //Act - Assert
+        Assert.DoesNotThrow(delegate
         {
-            //Act - Assert
-            Assert.Throws<InvalidOperationException>(delegate
-            {
-                _proxyBuilder.Build(typeof(Type));
-            });
-        }
+            _proxyBuilder.Build(typeof(ICreateStringParamRepository));
+        });
+    }
 
-        [Test]
-        public void CreateWithStringParameter()
+    [Test]
+    public void CreateWithValueParameter()
+    {
+        //Act - Assert
+        Assert.DoesNotThrow(delegate
         {
-            //Act - Assert
-            Assert.DoesNotThrow(delegate
-            {
-                _proxyBuilder.Build(typeof(ICreateStringParamRepository));
-            });
-        }
+            _proxyBuilder.Build(typeof(ICreateValueParamRepository));
+        });
+    }
 
-        [Test]
-        public void CreateWithValueParameter()
+    [Test]
+    public void CreateWithUnknownPropertyThrows()
+    {
+        //Act - Assert
+        Assert.Throws<InvalidOperationException>(delegate
         {
-            //Act - Assert
-            Assert.DoesNotThrow(delegate
-            {
-                _proxyBuilder.Build(typeof(ICreateValueParamRepository));
-            });
-        }
+            _proxyBuilder.Build(typeof(ICreateUnknownPropertyRepository));
+        });
+    }
 
-        [Test]
-        public void CreateWithUnknownPropertyThrows()
+    [Test]
+    public void CreateWithWrongReturnTypeThrows()
+    {
+        //Act - Assert
+        Assert.Throws<InvalidOperationException>(delegate
         {
-            //Act - Assert
-            Assert.Throws<InvalidOperationException>(delegate
-            {
-                _proxyBuilder.Build(typeof(ICreateUnknownPropertyRepository));
-            });
-        }
+            _proxyBuilder.Build(typeof(ICreateWrongReturnTypeRepository));
+        });
+    }
 
-        [Test]
-        public void CreateWithWrongReturnTypeThrows()
+    [Test]
+    public void CreateWithAllParameters()
+    {
+        //Act
+        var proxyType = _proxyBuilder.Build(typeof(ICreateAllParamsRepository));
+
+        // Assert
+        var baseType = proxyType.BaseType;
+        Assert.That(baseType, Is.Not.Null);
+
+        var genericBaseType = baseType.GetGenericTypeDefinition();
+        Assert.That(genericBaseType, Is.EqualTo(typeof(Repository<>)));
+    }
+
+    [Test]
+    public void CreateModificationTracked()
+    {
+        // Act
+        var proxyType = _proxyBuilder.Build(typeof(IModificationTrackedRepository));
+
+        // Assert
+        var baseType = proxyType.BaseType;
+        Assert.That(baseType, Is.Not.Null);
+
+        var genericBaseType = baseType.GetGenericTypeDefinition();
+        Assert.That(genericBaseType, Is.EqualTo(typeof(ModificationTrackedRepository<>)));
+    }
+
+    [Test]
+    public void CreateWithWrongParameterExcepionIsThrown()
+    {
+        //Act - Assert
+        Assert.Throws<InvalidOperationException>(delegate
         {
-            //Act - Assert
-            Assert.Throws<InvalidOperationException>(delegate
-            {
-                _proxyBuilder.Build(typeof(ICreateWrongReturnTypeRepository));
-            });
-        }
+            _proxyBuilder.Build(typeof(IWrongParamTypeRepository));
+        });
 
-        [Test]
-        public void CreateWithAllParameters()
-        {
-            //Act
-            var proxyType = _proxyBuilder.Build(typeof(ICreateAllParamsRepository));
-
-            // Assert
-            var baseType = proxyType.BaseType;
-            Assert.That(baseType, Is.Not.Null);
-
-            var genericBaseType = baseType.GetGenericTypeDefinition();
-            Assert.That(genericBaseType, Is.EqualTo(typeof(Repository<>)));
-        }
-
-        [Test]
-        public void CreateModificationTracked()
-        {
-            // Act
-            var proxyType = _proxyBuilder.Build(typeof(IModificationTrackedRepository));
-
-            // Assert
-            var baseType = proxyType.BaseType;
-            Assert.That(baseType, Is.Not.Null);
-
-            var genericBaseType = baseType.GetGenericTypeDefinition();
-            Assert.That(genericBaseType, Is.EqualTo(typeof(ModificationTrackedRepository<>)));
-        }
-
-        [Test]
-        public void CreateWithWrongParameterExcepionIsThrown()
-        {
-            //Act - Assert
-            Assert.Throws<InvalidOperationException>(delegate
-            {
-                _proxyBuilder.Build(typeof(IWrongParamTypeRepository));
-            });
-
-        }
     }
 }

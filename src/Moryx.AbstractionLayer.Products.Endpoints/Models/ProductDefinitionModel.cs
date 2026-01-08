@@ -4,21 +4,20 @@
 using System.Runtime.Serialization;
 using Moryx.Serialization;
 
-namespace Moryx.AbstractionLayer.Products.Endpoints.Models
+namespace Moryx.AbstractionLayer.Products.Endpoints.Models;
+
+[DataContract]
+public class ProductDefinitionModel
 {
-    [DataContract]
-    public class ProductDefinitionModel
-    {
-        [DataMember]
-        public string Name { get; set; }
+    [DataMember]
+    public string Name { get; set; }
 
-        [DataMember]
-        public string DisplayName { get; set; }
+    [DataMember]
+    public string DisplayName { get; set; }
 
-        [DataMember]
-        public string BaseDefinition { get; set; }
+    [DataMember]
+    public string BaseDefinition { get; set; }
 
-        [DataMember]
-        public Entry Properties { get; set; }
-    }
+    [DataMember]
+    public Entry Properties { get; set; }
 }

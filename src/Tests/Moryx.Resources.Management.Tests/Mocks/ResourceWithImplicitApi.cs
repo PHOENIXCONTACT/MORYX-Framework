@@ -3,23 +3,22 @@
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.Tests
+namespace Moryx.Resources.Management.Tests;
+
+public interface IExtension
 {
-    public interface IExtension
-    {
-        int Add(int value);
-    }
+    int Add(int value);
+}
 
-    public interface IResourceWithImplicitApi : IResource, IExtension
-    {
+public interface IResourceWithImplicitApi : IResource, IExtension
+{
 
-    }
+}
 
-    public class ResourceWithImplicitApi : Resource, IResourceWithImplicitApi
+public class ResourceWithImplicitApi : Resource, IResourceWithImplicitApi
+{
+    public int Add(int value)
     {
-        public int Add(int value)
-        {
-            return value + 10;
-        }
+        return value + 10;
     }
 }

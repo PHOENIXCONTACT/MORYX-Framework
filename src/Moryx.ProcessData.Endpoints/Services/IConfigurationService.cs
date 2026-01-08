@@ -5,16 +5,15 @@ using Moryx.Modules;
 using Moryx.ProcessData.Endpoints.Models;
 using Moryx.Runtime.Modules;
 
-namespace Moryx.ProcessData.Endpoints.Services
+namespace Moryx.ProcessData.Endpoints.Services;
+
+public interface IConfigurationService
 {
-    public interface IConfigurationService
-    {
-        MeasurandBindings GetAvailableBindings(string adapterName);
-        Dictionary<string, List<string>> GetBindings(IModule module);
-        MeasurandResponse GetMeasuarand(string name);
-        ConfiguredBindings GetMeasuarandBindings(string name);
-        List<MeasurandResponse> GetMeasuarands();
-        IServerModule GetModule(string moduleName);
-        ConfiguredBindings UpdateMeasuarandBindings(string name, ConfiguredBindings measurandBindings);
-    }
+    MeasurandBindings GetAvailableBindings(string adapterName);
+    Dictionary<string, List<string>> GetBindings(IModule module);
+    MeasurandResponse GetMeasuarand(string name);
+    ConfiguredBindings GetMeasuarandBindings(string name);
+    List<MeasurandResponse> GetMeasuarands();
+    IServerModule GetModule(string moduleName);
+    ConfiguredBindings UpdateMeasuarandBindings(string name, ConfiguredBindings measurandBindings);
 }

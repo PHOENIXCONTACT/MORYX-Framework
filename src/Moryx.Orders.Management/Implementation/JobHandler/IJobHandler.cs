@@ -4,28 +4,27 @@
 using Moryx.ControlSystem.Jobs;
 using Moryx.Modules;
 
-namespace Moryx.Orders.Management
+namespace Moryx.Orders.Management;
+
+/// <summary>
+/// Interface used by the <see cref="OperationData"/>
+/// to handle jobs. Will be used to dispatch new jobs, complete and restore them
+/// </summary>
+internal interface IJobHandler : IPlugin
 {
     /// <summary>
-    /// Interface used by the <see cref="OperationData"/>
-    /// to handle jobs. Will be used to dispatch new jobs, complete and restore them
+    /// A new job will be added to the <see cref="IJobManagement"/> and to the given operation.
+    /// The new job will be moved to the bottom of all jobs of the given operation
     /// </summary>
-    internal interface IJobHandler : IPlugin
-    {
-        /// <summary>
-        /// A new job will be added to the <see cref="IJobManagement"/> and to the given operation.
-        /// The new job will be moved to the bottom of all jobs of the given operation
-        /// </summary>
-        Task Dispatch(IOperationData operationData, IReadOnlyList<DispatchContext> dispatchContexts);
+    Task Dispatch(IOperationData operationData, IReadOnlyList<DispatchContext> dispatchContexts);
 
-        /// <summary>
-        /// Will complete all jobs of the given operation
-        /// </summary>
-        Task Complete(IOperationData operationData);
+    /// <summary>
+    /// Will complete all jobs of the given operation
+    /// </summary>
+    Task Complete(IOperationData operationData);
 
-        /// <summary>
-        /// Will load all given jobs by their id from the <see cref="IJobManagement"/>
-        /// </summary>
-        IEnumerable<Job> Restore(IEnumerable<long> jobIds);
-    }
+    /// <summary>
+    /// Will load all given jobs by their id from the <see cref="IJobManagement"/>
+    /// </summary>
+    IEnumerable<Job> Restore(IEnumerable<long> jobIds);
 }

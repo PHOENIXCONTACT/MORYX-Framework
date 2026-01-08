@@ -3,9 +3,8 @@
 
 using Moryx.Runtime.Modules;
 
-namespace Moryx.Runtime.Kernel.Tests.ModuleMocks.Facade
+namespace Moryx.Runtime.Kernel.Tests.ModuleMocks.Facade;
+
+public class TestFacade : FacadeBase
 {
-    public class TestFacade : FacadeBase
-    {
-    }
 }

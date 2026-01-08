@@ -3,16 +3,15 @@
 
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Products.Samples
+namespace Moryx.Products.Samples;
+
+/// <summary>
+/// Instance of a single cardboard package
+/// </summary>
+public class WatchPackageInstance : ProductInstance<WatchPackageType>
 {
     /// <summary>
-    /// Instance of a single cardboard package
+    /// Reference to the watch packed in this box
     /// </summary>
-    public class WatchPackageInstance : ProductInstance<WatchPackageType>
-    {
-        /// <summary>
-        /// Reference to the watch packed in this box
-        /// </summary>
-        public WatchInstance PackedWatch { get; set; }
-    }
+    public WatchInstance PackedWatch { get; set; }
 }

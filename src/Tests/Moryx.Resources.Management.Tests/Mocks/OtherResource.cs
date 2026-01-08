@@ -3,13 +3,12 @@
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.Tests
-{
-    public class OtherResource : Resource
-    {
-    }
+namespace Moryx.Resources.Management.Tests;
 
-    public class DifferentResource : Resource
-    {
-    }
+public class OtherResource : Resource
+{
+}
+
+public class DifferentResource : Resource
+{
 }

@@ -6,111 +6,110 @@ using Moryx.AbstractionLayer.Processes;
 using Moryx.Workplans;
 using Moryx.Workplans.Transitions;
 
-namespace Moryx.AbstractionLayer.Workplans
+namespace Moryx.AbstractionLayer.Workplans;
+
+/// <summary>
+/// Transition representing a certain task
+/// </summary>
+public class TaskTransition<TActivity> : TransitionBase, IObservableTransition, ITaskTransition
+    where TActivity : IActivity, new()
 {
     /// <summary>
-    /// Transition representing a certain task
+    /// Flag if engine of this transition is still running
     /// </summary>
-    public class TaskTransition<TActivity> : TransitionBase, IObservableTransition, ITaskTransition
-        where TActivity : IActivity, new()
+    private bool _paused;
+
+    /// <summary>
+    /// Parameters for the target activity
+    /// </summary>
+    private readonly IParameters _parameters;
+    /// <summary>
+    /// Map of output names to index of the Outputs array
+    /// </summary>
+    private readonly IIndexResolver _indexResolver;
+
+    /// <summary>
+    /// Name of the task
+    /// </summary>
+    public string Name { get; internal set; }
+
+    /// <summary>
+    /// Create a new instance of the <see cref="TaskTransition{T}"/>
+    /// </summary>
+    public TaskTransition(IParameters parameters, IIndexResolver resolver)
     {
-        /// <summary>
-        /// Flag if engine of this transition is still running
-        /// </summary>
-        private bool _paused;
+        _parameters = parameters;
+        _indexResolver = resolver;
+    }
 
-        /// <summary>
-        /// Parameters for the target activity
-        /// </summary>
-        private readonly IParameters _parameters;
-        /// <summary>
-        /// Map of output names to index of the Outputs array
-        /// </summary>
-        private readonly IIndexResolver _indexResolver;
+    ///
+    protected override void InputTokenAdded(object sender, IToken token)
+    {
+        Executing(() => TakeToken((IPlace)sender, token));
 
-        /// <summary>
-        /// Name of the task
-        /// </summary>
-        public string Name { get; internal set; }
+        // Raise the triggered event if engine is still running
+        if (!_paused)
+            Triggered(this, new EventArgs());
+    }
 
-        /// <summary>
-        /// Create a new instance of the <see cref="TaskTransition{T}"/>
-        /// </summary>
-        public TaskTransition(IParameters parameters, IIndexResolver resolver)
+    /// <see cref="IObservableTransition"/>
+    public event EventHandler Triggered;
+
+    /// <see cref="ITokenHolder.Pause"/>
+    public override void Pause()
+    {
+        _paused = true;
+    }
+
+    /// <see cref="ITokenHolder.Resume"/>
+    public override void Resume()
+    {
+        // Only trigger if we did not return from a pause
+        if (!_paused)
+            Triggered(this, new EventArgs());
+        _paused = false;
+    }
+
+    /// <summary>
+    /// Method called when the activity was completed
+    /// </summary>
+    /// <param name="result">Result of the execution</param>
+    public void Completed(ActivityResult result)
+    {
+        Executing(delegate
         {
-            _parameters = parameters;
-            _indexResolver = resolver;
+            var outputIndex = _indexResolver.Resolve(result.Numeric);
+            PlaceToken(Outputs[outputIndex], StoredTokens.First());
+        });
+    }
+
+    /// <summary>
+    /// Activity created by this task
+    /// </summary>
+    public Type ActivityType => typeof(TActivity);
+
+    /// <summary>
+    /// Create activity instance from transition
+    /// </summary>
+    /// <returns>the new IActivity object</returns>
+    public Activity CreateActivity(Process process)
+    {
+        // Create activity
+        var activity = new TActivity
+        {
+            Name = Name,
+            Parameters = _parameters.Bind(process),
+            Process = process
+        };
+
+        if (activity is not Activity castedActivity)
+        {
+            throw new InvalidCastException($"Activity type must inherit from Activity");
         }
 
-        ///
-        protected override void InputTokenAdded(object sender, IToken token)
-        {
-            Executing(() => TakeToken((IPlace)sender, token));
+        // Link objects
+        process.AddActivity(castedActivity);
 
-            // Raise the triggered event if engine is still running
-            if (!_paused)
-                Triggered(this, new EventArgs());
-        }
-
-        /// <see cref="IObservableTransition"/>
-        public event EventHandler Triggered;
-
-        /// <see cref="ITokenHolder.Pause"/>
-        public override void Pause()
-        {
-            _paused = true;
-        }
-
-        /// <see cref="ITokenHolder.Resume"/>
-        public override void Resume()
-        {
-            // Only trigger if we did not return from a pause
-            if (!_paused)
-                Triggered(this, new EventArgs());
-            _paused = false;
-        }
-
-        /// <summary>
-        /// Method called when the activity was completed
-        /// </summary>
-        /// <param name="result">Result of the execution</param>
-        public void Completed(ActivityResult result)
-        {
-            Executing(delegate
-            {
-                var outputIndex = _indexResolver.Resolve(result.Numeric);
-                PlaceToken(Outputs[outputIndex], StoredTokens.First());
-            });
-        }
-
-        /// <summary>
-        /// Activity created by this task
-        /// </summary>
-        public Type ActivityType => typeof(TActivity);
-
-        /// <summary>
-        /// Create activity instance from transition
-        /// </summary>
-        /// <returns>the new IActivity object</returns>
-        public Activity CreateActivity(Process process)
-        {
-            // Create activity
-            var activity = new TActivity
-            {
-                Name = Name,
-                Parameters = _parameters.Bind(process),
-                Process = process
-            };
-
-            if (activity is not Activity castedActivity)
-            {
-                throw new InvalidCastException($"Activity type must inherit from Activity");
-            }
-
-            // Link objects
-            process.AddActivity(castedActivity);
-
-            return castedActivity;
-        }
+        return castedActivity;
     }
 }

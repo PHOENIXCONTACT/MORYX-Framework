@@ -4,22 +4,21 @@
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Sqlite;
 
-namespace Moryx.Resources.Management.Model
-{
-    /// <summary>
-    /// Sqlite specific implementation of <see cref="ResourcesContext"/>
-    /// </summary>
-    [SqliteDbContext(typeof(ResourcesContext))]
-    public class SqliteResourcesContext : ResourcesContext
-    {
-        /// <inheritdoc />
-        public SqliteResourcesContext()
-        {
-        }
+namespace Moryx.Resources.Management.Model;
 
-        /// <inheritdoc />
-        public SqliteResourcesContext(DbContextOptions options) : base(options)
-        {
-        }
+/// <summary>
+/// Sqlite specific implementation of <see cref="ResourcesContext"/>
+/// </summary>
+[SqliteDbContext(typeof(ResourcesContext))]
+public class SqliteResourcesContext : ResourcesContext
+{
+    /// <inheritdoc />
+    public SqliteResourcesContext()
+    {
+    }
+
+    /// <inheritdoc />
+    public SqliteResourcesContext(DbContextOptions options) : base(options)
+    {
     }
 }

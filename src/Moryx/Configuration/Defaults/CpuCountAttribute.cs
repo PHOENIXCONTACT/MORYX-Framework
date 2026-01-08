@@ -3,28 +3,27 @@
 
 using System.ComponentModel;
 
-namespace Moryx.Configuration
+namespace Moryx.Configuration;
+
+/// <summary>
+/// Default value attribute which provides the current count of CPU cores
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class CpuCountAttribute : DefaultValueAttribute
 {
     /// <summary>
-    /// Default value attribute which provides the current count of CPU cores
+    /// Creates a new instance of <see cref="CpuCountAttribute"/>
+    /// All cores will be used
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public class CpuCountAttribute : DefaultValueAttribute
+    public CpuCountAttribute() : this(0)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="CpuCountAttribute"/>
-        /// All cores will be used
-        /// </summary>
-        public CpuCountAttribute() : this(0)
-        {
-        }
+    }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="CpuCountAttribute"/>
-        /// Number of cores which will be reserved
-        /// </summary>
-        public CpuCountAttribute(int reserve) : base(Environment.ProcessorCount > reserve ? Environment.ProcessorCount - reserve : 1)
-        {
-        }
+    /// <summary>
+    /// Creates a new instance of <see cref="CpuCountAttribute"/>
+    /// Number of cores which will be reserved
+    /// </summary>
+    public CpuCountAttribute(int reserve) : base(Environment.ProcessorCount > reserve ? Environment.ProcessorCount - reserve : 1)
+    {
     }
 }

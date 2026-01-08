@@ -3,10 +3,9 @@
 
 using Moryx.Modules;
 
-namespace Moryx.Container.TestTools
+namespace Moryx.Container.TestTools;
+
+public interface IConfiguredComponent : IConfiguredPlugin<ComponentConfig>
 {
-    public interface IConfiguredComponent : IConfiguredPlugin<ComponentConfig>
-    {
-        string GetName();
-    }
+    string GetName();
 }

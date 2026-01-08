@@ -4,16 +4,15 @@
 using Moryx.Modules;
 using Moryx.Orders.Documents;
 
-namespace Moryx.Orders.Assignment
+namespace Moryx.Orders.Assignment;
+
+/// <summary>
+/// Plugin to load the needed documents
+/// </summary>
+public interface IDocumentLoader : IAsyncConfiguredPlugin<DocumentLoaderConfig>
 {
     /// <summary>
-    /// Plugin to load the needed documents
+    /// Load document information for the given operation
     /// </summary>
-    public interface IDocumentLoader : IAsyncConfiguredPlugin<DocumentLoaderConfig>
-    {
-        /// <summary>
-        /// Load document information for the given operation
-        /// </summary>
-        Task<IReadOnlyList<Document>> LoadAsync(Operation operation, CancellationToken cancellationToken);
-    }
+    Task<IReadOnlyList<Document>> LoadAsync(Operation operation, CancellationToken cancellationToken);
 }

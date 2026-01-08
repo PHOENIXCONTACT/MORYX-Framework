@@ -4,18 +4,17 @@
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Capabilities;
 
-namespace Moryx.ControlSystem.Capabilities
+namespace Moryx.ControlSystem.Capabilities;
+
+/// <summary>
+/// Capabilities to fixup broken processes
+/// </summary>
+[DataContract]
+public class ProcessFixupCapabilities : CapabilitiesBase
 {
-    /// <summary>
-    /// Capabilities to fixup broken processes
-    /// </summary>
-    [DataContract]
-    public class ProcessFixupCapabilities : CapabilitiesBase
+    /// <inheritdoc />
+    protected override bool ProvidedBy(ICapabilities provided)
     {
-        /// <inheritdoc />
-        protected override bool ProvidedBy(ICapabilities provided)
-        {
-            return provided is ProcessFixupCapabilities;
-        }
+        return provided is ProcessFixupCapabilities;
     }
 }

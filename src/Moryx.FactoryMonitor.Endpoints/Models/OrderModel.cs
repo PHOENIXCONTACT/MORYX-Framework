@@ -3,16 +3,14 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.FactoryMonitor.Endpoints.Models
-{
-    /// <summary>
-    /// Initial order model to display in the UI
-    /// </summary>
-    [DataContract]
-    public class OrderModel : OrderChangedModel
-    {
-        [DataMember]
-        public string Color { get; set; }
-    }
-}
+namespace Moryx.FactoryMonitor.Endpoints.Models;
 
+/// <summary>
+/// Initial order model to display in the UI
+/// </summary>
+[DataContract]
+public class OrderModel : OrderChangedModel
+{
+    [DataMember]
+    public string Color { get; set; }
+}

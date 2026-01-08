@@ -5,19 +5,18 @@ using Moryx.Workplans;
 using Moryx.Workplans.Transitions;
 using Moryx.Workplans.WorkplanSteps;
 
-namespace Moryx.Tests.Workplans
-{
-    public class InvalidStep : WorkplanStepBase
-    {
-        private InvalidStep()
-        {
-            Name = "Invalid";
-        }
+namespace Moryx.Tests.Workplans;
 
-        ///
-        protected override TransitionBase Instantiate(IWorkplanContext context)
-        {
-            return new DummyTransition();
-        }
+public class InvalidStep : WorkplanStepBase
+{
+    private InvalidStep()
+    {
+        Name = "Invalid";
+    }
+
+    ///
+    protected override TransitionBase Instantiate(IWorkplanContext context)
+    {
+        return new DummyTransition();
     }
 }

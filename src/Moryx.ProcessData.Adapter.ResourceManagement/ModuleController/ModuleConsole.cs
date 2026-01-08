@@ -3,13 +3,12 @@
 
 using Moryx.Runtime.Modules;
 
-namespace Moryx.ProcessData.Adapter.ResourceManagement
+namespace Moryx.ProcessData.Adapter.ResourceManagement;
+
+[ServerModuleConsole]
+internal class ModuleConsole : IServerModuleConsole
 {
-    [ServerModuleConsole]
-    internal class ModuleConsole : IServerModuleConsole
+    public void ExecuteCommand(string[] args, Action<string> outputStream)
     {
-        public void ExecuteCommand(string[] args, Action<string> outputStream)
-        {
-        }
     }
 }

@@ -4,22 +4,20 @@
 using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
 
-namespace Moryx.Orders.Endpoints.Models
+namespace Moryx.Orders.Endpoints.Models;
+
+[DataContract]
+public class OperationLogMessageModel
 {
-    [DataContract]
-    public class OperationLogMessageModel
-    {
-        [DataMember]
-        public LogLevel LogLevel { get; set; }
+    [DataMember]
+    public LogLevel LogLevel { get; set; }
 
-        [DataMember]
-        public string Message { get; set; }
+    [DataMember]
+    public string Message { get; set; }
 
-        [DataMember]
-        public string Exception { get; set; }
+    [DataMember]
+    public string Exception { get; set; }
 
-        [DataMember]
-        public DateTime TimeStamp { get; set; }
-    }
+    [DataMember]
+    public DateTime TimeStamp { get; set; }
 }
-

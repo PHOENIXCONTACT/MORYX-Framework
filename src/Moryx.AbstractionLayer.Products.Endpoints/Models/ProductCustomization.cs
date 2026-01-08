@@ -3,18 +3,17 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.AbstractionLayer.Products.Endpoints.Models
+namespace Moryx.AbstractionLayer.Products.Endpoints.Models;
+
+[DataContract]
+public class ProductCustomization
 {
-    [DataContract]
-    public class ProductCustomization
-    {
-        [DataMember]
-        public ProductDefinitionModel[] ProductTypes { get; set; }
+    [DataMember]
+    public ProductDefinitionModel[] ProductTypes { get; set; }
 
-        [DataMember]
-        public RecipeDefinitionModel[] RecipeTypes { get; set; }
+    [DataMember]
+    public RecipeDefinitionModel[] RecipeTypes { get; set; }
 
-        [DataMember]
-        public ProductImporter[] Importers { get; set; }
-    }
+    [DataMember]
+    public ProductImporter[] Importers { get; set; }
 }

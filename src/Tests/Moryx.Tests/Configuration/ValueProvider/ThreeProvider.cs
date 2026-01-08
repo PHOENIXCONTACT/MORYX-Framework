@@ -4,14 +4,13 @@
 using System.Reflection;
 using Moryx.Configuration;
 
-namespace Moryx.Tests.Configuration.ValueProvider
+namespace Moryx.Tests.Configuration.ValueProvider;
+
+internal class ThreeProvider : IValueProvider
 {
-    internal class ThreeProvider : IValueProvider
+    public ValueProviderResult Handle(object parent, PropertyInfo property)
     {
-        public ValueProviderResult Handle(object parent, PropertyInfo property)
-        {
-            property.SetValue(parent, 3);
-            return ValueProviderResult.Handled;
-        }
+        property.SetValue(parent, 3);
+        return ValueProviderResult.Handled;
     }
 }

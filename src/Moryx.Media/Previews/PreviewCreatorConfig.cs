@@ -4,16 +4,14 @@
 using System.Runtime.Serialization;
 using Moryx.Modules;
 
-namespace Moryx.Media.Previews
-{
-    /// <summary>
-    /// Base class for <see cref="IPreviewCreator"/> plugins
-    /// </summary>
-    [DataContract]
-    public abstract class PreviewCreatorConfig : IPluginConfig
-    {
-        /// <inheritdoc />
-        public abstract string PluginName { get; }
-    }
-}
+namespace Moryx.Media.Previews;
 
+/// <summary>
+/// Base class for <see cref="IPreviewCreator"/> plugins
+/// </summary>
+[DataContract]
+public abstract class PreviewCreatorConfig : IPluginConfig
+{
+    /// <inheritdoc />
+    public abstract string PluginName { get; }
+}

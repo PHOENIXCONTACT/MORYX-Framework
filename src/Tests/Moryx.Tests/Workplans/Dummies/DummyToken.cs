@@ -3,13 +3,12 @@
 
 using Moryx.Workplans;
 
-namespace Moryx.Tests.Workplans
+namespace Moryx.Tests.Workplans;
+
+public class DummyToken : IToken
 {
-    public class DummyToken : IToken
-    {
-        /// <summary>
-        /// Token name
-        /// </summary>
-        public string Name { get { return "DummyToken"; } }
-    }
+    /// <summary>
+    /// Token name
+    /// </summary>
+    public string Name { get { return "DummyToken"; } }
 }

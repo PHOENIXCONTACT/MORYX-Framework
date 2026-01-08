@@ -4,13 +4,12 @@
 using System.Reflection;
 using Moryx.Configuration;
 
-namespace Moryx.Tests.Configuration.ValueProvider
+namespace Moryx.Tests.Configuration.ValueProvider;
+
+public class NoStringValueProviderFilter : IValueProviderFilter
 {
-    public class NoStringValueProviderFilter : IValueProviderFilter
+    public bool CheckProperty(PropertyInfo propertyInfo)
     {
-        public bool CheckProperty(PropertyInfo propertyInfo)
-        {
-            return propertyInfo.PropertyType != typeof(string);
-        }
+        return propertyInfo.PropertyType != typeof(string);
     }
 }

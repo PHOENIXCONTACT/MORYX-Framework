@@ -3,11 +3,10 @@
 
 using Moryx.Container;
 
-namespace Moryx.Orders.Management.Assignment
+namespace Moryx.Orders.Management.Assignment;
+
+[PluginFactory(typeof(INameBasedComponentSelector))]
+internal interface IAssignStepFactory
 {
-    [PluginFactory(typeof(INameBasedComponentSelector))]
-    internal interface IAssignStepFactory
-    {
-        IOperationAssignStep Create(string name);
-    }
+    IOperationAssignStep Create(string name);
 }

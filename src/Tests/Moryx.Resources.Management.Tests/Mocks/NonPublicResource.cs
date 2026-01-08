@@ -3,13 +3,12 @@
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.Tests
-{
-    public interface INonPublicResource : IResource
-    {
-    }
+namespace Moryx.Resources.Management.Tests;
 
-    public class NonPublicResource : Resource, INonPublicResource
-    {
-    }
+public interface INonPublicResource : IResource
+{
+}
+
+public class NonPublicResource : Resource, INonPublicResource
+{
 }

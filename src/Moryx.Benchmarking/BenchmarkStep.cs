@@ -3,10 +3,8 @@
 
 using Moryx.AbstractionLayer.Workplans;
 
-namespace Moryx.Benchmarking
-{
-    public class BenchmarkStep : TaskStep<BenchmarkActivity, BenchmarkParameters>
-    {
-    }
-}
+namespace Moryx.Benchmarking;
 
+public class BenchmarkStep : TaskStep<BenchmarkActivity, BenchmarkParameters>
+{
+}

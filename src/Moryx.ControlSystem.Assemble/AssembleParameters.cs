@@ -7,42 +7,41 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.VisualInstructions;
 
-namespace Moryx.ControlSystem.Assemble
+namespace Moryx.ControlSystem.Assemble;
+
+/// <summary>
+/// Parameters for the <see cref="AssembleActivity"/>
+/// </summary>
+public class AssembleParameters : VisualInstructionParameters
 {
     /// <summary>
-    /// Parameters for the <see cref="AssembleActivity"/>
+    /// Product that may provide additional Parameters
     /// </summary>
-    public class AssembleParameters : VisualInstructionParameters
+    public ProductType Product { get; set; }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="AssembleParameters"/>
+    /// </summary>
+    public AssembleParameters() : this([])
     {
-        /// <summary>
-        /// Product that may provide additional Parameters
-        /// </summary>
-        public ProductType Product { get; set; }
+    }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="AssembleParameters"/>
-        /// </summary>
-        public AssembleParameters() : this([])
-        {
-        }
+    /// <summary>
+    /// Create parameters with visual instructions
+    /// </summary>
+    public AssembleParameters(VisualInstruction[] instructions)
+    {
+        Instructions = instructions;
+    }
 
-        /// <summary>
-        /// Create parameters with visual instructions
-        /// </summary>
-        public AssembleParameters(VisualInstruction[] instructions)
-        {
-            Instructions = instructions;
-        }
+    /// <inheritdoc />
+    protected override void Populate(Process process, Parameters instance)
+    {
+        base.Populate(process, instance);
+        var parameters = (AssembleParameters)instance;
 
-        /// <inheritdoc />
-        protected override void Populate(Process process, Parameters instance)
-        {
-            base.Populate(process, instance);
-            var parameters = (AssembleParameters)instance;
-
-            // Assign product
-            var recipe = (IProductRecipe)process.Recipe;
-            parameters.Product = recipe.Target;
-        }
+        // Assign product
+        var recipe = (IProductRecipe)process.Recipe;
+        parameters.Product = recipe.Target;
     }
 }

@@ -7,40 +7,39 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.Modules;
 using Moryx.Serialization;
 
-namespace Moryx.Products.Management.Importers
+namespace Moryx.Products.Management.Importers;
+
+/// <summary>
+/// Product importer which can create all types of products
+/// </summary>
+[ExpectedConfig(typeof(ProductImporterConfig))]
+[ProductImporter(nameof(DefaultImporter))]
+public class DefaultImporter : ProductImporterBase<ProductImporterConfig, DefaultImporterParameters>
+{
+    /// <inheritdoc />
+    protected override Task<ProductImporterResult> ImportAsync(ProductImportContext context, DefaultImporterParameters parameters,
+        CancellationToken cancellationToken)
+    {
+        var productType = (ProductType)TypeTool.CreateInstance<ProductType>(parameters.ProductType);
+        productType.Identity = new ProductIdentity(parameters.Identifier, parameters.Revision);
+        productType.Name = parameters.Name;
+
+        return Task.FromResult(new ProductImporterResult
+        {
+            ImportedTypes = [productType]
+        });
+    }
+}
+
+/// <summary>
+/// Parameters for the default importer
+/// </summary>
+public class DefaultImporterParameters : PrototypeParameters
 {
     /// <summary>
-    /// Product importer which can create all types of products
+    /// Product type to import
     /// </summary>
-    [ExpectedConfig(typeof(ProductImporterConfig))]
-    [ProductImporter(nameof(DefaultImporter))]
-    public class DefaultImporter : ProductImporterBase<ProductImporterConfig, DefaultImporterParameters>
-    {
-        /// <inheritdoc />
-        protected override Task<ProductImporterResult> ImportAsync(ProductImportContext context, DefaultImporterParameters parameters,
-            CancellationToken cancellationToken)
-        {
-            var productType = (ProductType)TypeTool.CreateInstance<ProductType>(parameters.ProductType);
-            productType.Identity = new ProductIdentity(parameters.Identifier, parameters.Revision);
-            productType.Name = parameters.Name;
-
-            return Task.FromResult(new ProductImporterResult
-            {
-                ImportedTypes = [productType]
-            });
-        }
-    }
-
-    /// <summary>
-    /// Parameters for the default importer
-    /// </summary>
-    public class DefaultImporterParameters : PrototypeParameters
-    {
-        /// <summary>
-        /// Product type to import
-        /// </summary>
-        [DisplayName("Product type"), Description("Type of product to import")]
-        [Required, PossibleTypes(typeof(ProductType))]
-        public string ProductType { get; set; }
-    }
+    [DisplayName("Product type"), Description("Type of product to import")]
+    [Required, PossibleTypes(typeof(ProductType))]
+    public string ProductType { get; set; }
 }

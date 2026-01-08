@@ -3,16 +3,14 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.ControlSystem.Processes.Endpoints
+namespace Moryx.ControlSystem.Processes.Endpoints;
+
+[DataContract]
+public class ActivityResourceModel
 {
-    [DataContract]
-    public class ActivityResourceModel
-    {
-        [DataMember]
-        public long Id { get; set; }
+    [DataMember]
+    public long Id { get; set; }
 
-        [DataMember]
-        public string Name { get; set; }
-    }
+    [DataMember]
+    public string Name { get; set; }
 }
-

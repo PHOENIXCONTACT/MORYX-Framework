@@ -3,21 +3,20 @@
 
 using Moryx.AbstractionLayer.Recipes;
 
-namespace Moryx.ControlSystem.Recipes
+namespace Moryx.ControlSystem.Recipes;
+
+/// <summary>
+/// Interface for recipes which based on an order/operation
+/// </summary>
+public interface IOrderBasedRecipe : IRecipe
 {
     /// <summary>
-    /// Interface for recipes which based on an order/operation
+    /// Order number
     /// </summary>
-    public interface IOrderBasedRecipe : IRecipe
-    {
-        /// <summary>
-        /// Order number
-        /// </summary>
-        string OrderNumber { get; set; }
+    string OrderNumber { get; set; }
 
-        /// <summary>
-        /// Operation number
-        /// </summary>
-        string OperationNumber { get; set; }
-    }
+    /// <summary>
+    /// Operation number
+    /// </summary>
+    string OperationNumber { get; set; }
 }

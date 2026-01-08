@@ -7,36 +7,35 @@ using Moryx.ControlSystem.Setups;
 using Moryx.Modules;
 using Moryx.Workplans;
 
-namespace Moryx.Benchmarking
+namespace Moryx.Benchmarking;
+
+public class BenchmarkTriggerConfig : SetupTriggerConfig
 {
-    public class BenchmarkTriggerConfig : SetupTriggerConfig
+    public override string PluginName => nameof(BenchmarkTrigger);
+}
+
+[ExpectedConfig(typeof(BenchmarkTriggerConfig))]
+[Plugin(LifeCycle.Transient, typeof(ISetupTrigger), Name = nameof(BenchmarkTrigger))]
+public class BenchmarkTrigger : SetupTriggerBase<SetupTriggerConfig>
+{
+    public override SetupExecution Execution => SetupExecution.BeforeProduction;
+
+    public override SetupEvaluation Evaluate(IProductRecipe recipe)
     {
-        public override string PluginName => nameof(BenchmarkTrigger);
+        return SetupClassification.Manual;
     }
 
-    [ExpectedConfig(typeof(BenchmarkTriggerConfig))]
-    [Plugin(LifeCycle.Transient, typeof(ISetupTrigger), Name = nameof(BenchmarkTrigger))]
-    public class BenchmarkTrigger : SetupTriggerBase<SetupTriggerConfig>
+    public override IReadOnlyList<IWorkplanStep> CreateSteps(IProductRecipe recipe)
     {
-        public override SetupExecution Execution => SetupExecution.BeforeProduction;
-
-        public override SetupEvaluation Evaluate(IProductRecipe recipe)
-        {
-            return SetupClassification.Manual;
-        }
-
-        public override IReadOnlyList<IWorkplanStep> CreateSteps(IProductRecipe recipe)
-        {
-            return
-            [
-                new BenchmarkStep
+        return
+        [
+            new BenchmarkStep
+            {
+                Parameters = new BenchmarkParameters
                 {
-                    Parameters = new BenchmarkParameters
-                    {
-                        Step = 42
-                    }
+                    Step = 42
                 }
-            ];
-        }
+            }
+        ];
     }
 }

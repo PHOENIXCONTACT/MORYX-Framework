@@ -3,14 +3,12 @@
 
 using Moryx.Resources.Benchmarking;
 
-namespace Moryx.Simulation.Tests
+namespace Moryx.Simulation.Tests;
+
+public class AssemblyTestCell : AssemblyCell
 {
-    public class AssemblyTestCell : AssemblyCell
+    public void TestInit()
     {
-        public void TestInit()
-        {
-            OnInitializeAsync(CancellationToken.None).GetAwaiter().GetResult();
-        }
+        OnInitializeAsync(CancellationToken.None).GetAwaiter().GetResult();
     }
 }
-

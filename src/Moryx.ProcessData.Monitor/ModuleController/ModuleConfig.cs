@@ -7,19 +7,18 @@ using Moryx.Configuration;
 using Moryx.ProcessData.Listener;
 using Moryx.Serialization;
 
-namespace Moryx.ProcessData.Monitor
+namespace Moryx.ProcessData.Monitor;
+
+/// <summary>
+/// Module configuration of the process data monitor <see cref="ModuleController"/>
+/// </summary>
+[DataContract]
+public class ModuleConfig : ConfigBase
 {
     /// <summary>
-    /// Module configuration of the process data monitor <see cref="ModuleController"/>
+    /// List of listeners for process data events
     /// </summary>
-    [DataContract]
-    public class ModuleConfig : ConfigBase
-    {
-        /// <summary>
-        /// List of listeners for process data events
-        /// </summary>
-        [DataMember, PluginConfigs(typeof(IProcessDataListener), true)]
-        [Description("List of listeners for process data events")]
-        public List<ProcessDataListenerConfig> Listeners { get; set; }
-    }
+    [DataMember, PluginConfigs(typeof(IProcessDataListener), true)]
+    [Description("List of listeners for process data events")]
+    public List<ProcessDataListenerConfig> Listeners { get; set; }
 }

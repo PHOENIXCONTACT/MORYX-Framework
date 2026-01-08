@@ -3,16 +3,15 @@
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Factory
+namespace Moryx.Factory;
+
+/// <summary>
+/// A manufacturing factory interface
+/// </summary>
+public interface IManufacturingFactory : IResource
 {
     /// <summary>
-    /// A manufacturing factory interface
+    /// Background URL of the factory monitor
     /// </summary>
-    public interface IManufacturingFactory : IResource
-    {
-        /// <summary>
-        /// Background URL of the factory monitor
-        /// </summary>
-        string BackgroundUrl { get; set; }
-    }
+    string BackgroundUrl { get; set; }
 }

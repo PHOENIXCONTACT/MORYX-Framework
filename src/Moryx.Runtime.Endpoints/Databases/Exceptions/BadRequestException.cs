@@ -1,16 +1,14 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Runtime.Endpoints.Databases.Exceptions
-{
-    public class BadRequestException : Exception
-    {
-        public string[] Errors { get; }
+namespace Moryx.Runtime.Endpoints.Databases.Exceptions;
 
-        public BadRequestException(string[] errors) : base(string.Join("\n", errors))
-        {
-            Errors = errors;
-        }
+public class BadRequestException : Exception
+{
+    public string[] Errors { get; }
+
+    public BadRequestException(string[] errors) : base(string.Join("\n", errors))
+    {
+        Errors = errors;
     }
 }
-

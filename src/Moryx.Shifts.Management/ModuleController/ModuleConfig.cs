@@ -4,13 +4,12 @@
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 
-namespace Moryx.Shifts.Management
+namespace Moryx.Shifts.Management;
+
+/// <summary>
+/// Module configuration of the <see cref="ModuleController"/>
+/// </summary>
+[DataContract]
+public class ModuleConfig : ConfigBase
 {
-    /// <summary>
-    /// Module configuration of the <see cref="ModuleController"/>
-    /// </summary>
-    [DataContract]
-    public class ModuleConfig : ConfigBase
-    {
-    }
 }

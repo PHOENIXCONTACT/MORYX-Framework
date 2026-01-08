@@ -3,10 +3,9 @@
 
 using Moryx.Model.Repositories;
 
-namespace Moryx.Model.Tests
-{
-    public interface IEmptyRepository : IRepository<SomeEntity>
-    {
+namespace Moryx.Model.Tests;
 
-    }
+public interface IEmptyRepository : IRepository<SomeEntity>
+{
+
 }

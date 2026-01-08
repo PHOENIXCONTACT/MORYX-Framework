@@ -9,380 +9,379 @@ using System.Reflection;
 using Moryx.Configuration;
 using Moryx.Tools;
 
-namespace Moryx.Serialization
+namespace Moryx.Serialization;
+
+/// <summary>
+/// Default implementation of serialization
+/// </summary>
+public class DefaultSerialization : ICustomSerialization
 {
     /// <summary>
-    /// Default implementation of serialization
+    /// Constructor to construct a <see cref="DefaultSerialization"/> instance
     /// </summary>
-    public class DefaultSerialization : ICustomSerialization
+    public DefaultSerialization()
     {
-        /// <summary>
-        /// Constructor to construct a <see cref="DefaultSerialization"/> instance
-        /// </summary>
-        public DefaultSerialization()
+        FormatProvider = Thread.CurrentThread.CurrentCulture;
+    }
+
+    /// <inheritdoc />
+    public IFormatProvider FormatProvider { get; set; }
+
+    /// <see cref="ICustomSerialization"/>
+    public virtual IEnumerable<PropertyInfo> GetProperties(Type sourceType)
+    {
+        return sourceType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+    }
+
+    /// <see cref="ICustomSerialization"/>
+    public virtual EntryPrototype[] Prototypes(Type memberType, ICustomAttributeProvider attributeProvider)
+    {
+        // Check if it is a list, array or dictionary
+        if (EntryConvert.IsCollection(memberType))
         {
-            FormatProvider = Thread.CurrentThread.CurrentCulture;
+            memberType = EntryConvert.ElementType(memberType);
         }
 
-        /// <inheritdoc />
-        public IFormatProvider FormatProvider { get; set; }
-
-        /// <see cref="ICustomSerialization"/>
-        public virtual IEnumerable<PropertyInfo> GetProperties(Type sourceType)
+        List<EntryPrototype> prototypes = [];
+        if (memberType == typeof(string))
         {
-            return sourceType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            prototypes.Add(new EntryPrototype(nameof(String), string.Empty));
+        }
+        else if (memberType.IsEnum)
+        {
+            foreach (Enum enumValue in Enum.GetValues(memberType))
+                prototypes.Add(new EntryPrototype(enumValue.ToString("G"), enumValue));
+        }
+        else
+        {
+            // check if this member is abstract
+            if (memberType.IsAbstract) return prototypes.ToArray();
+
+            var prototype = Activator.CreateInstance(memberType);
+            if (memberType.IsClass)
+                ValueProviderExecutor.Execute(prototype, new ValueProviderExecutorSettings().AddDefaultValueProvider());
+            prototypes.Add(new EntryPrototype(memberType.Name, prototype));
         }
 
-        /// <see cref="ICustomSerialization"/>
-        public virtual EntryPrototype[] Prototypes(Type memberType, ICustomAttributeProvider attributeProvider)
+        return prototypes.ToArray();
+    }
+
+    /// <see cref="ICustomSerialization"/>
+    public virtual EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
+    {
+        // Element type for collections
+        var isCollection = EntryConvert.IsCollection(memberType);
+        if (isCollection)
+            memberType = EntryConvert.ElementType(memberType);
+
+        // Enum names, member name for collections, allowed values or null
+        if (memberType.IsEnum)
         {
-            // Check if it is a list, array or dictionary
-            if (EntryConvert.IsCollection(memberType))
-            {
-                memberType = EntryConvert.ElementType(memberType);
-            }
-
-            List<EntryPrototype> prototypes = [];
-            if (memberType == typeof(string))
-            {
-                prototypes.Add(new EntryPrototype(nameof(String), string.Empty));
-            }
-            else if (memberType.IsEnum)
-            {
-                foreach (Enum enumValue in Enum.GetValues(memberType))
-                    prototypes.Add(new EntryPrototype(enumValue.ToString("G"), enumValue));
-            }
-            else
-            {
-                // check if this member is abstract
-                if (memberType.IsAbstract) return prototypes.ToArray();
-
-                var prototype = Activator.CreateInstance(memberType);
-                if (memberType.IsClass)
-                    ValueProviderExecutor.Execute(prototype, new ValueProviderExecutorSettings().AddDefaultValueProvider());
-                prototypes.Add(new EntryPrototype(memberType.Name, prototype));
-            }
-
-            return prototypes.ToArray();
+            return EntryPossible.FromStrings(GetPossibleEnumNames(memberType, attributeProvider));
         }
 
-        /// <see cref="ICustomSerialization"/>
-        public virtual EntryPossible[] PossibleValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        if (isCollection)
         {
-            // Element type for collections
-            var isCollection = EntryConvert.IsCollection(memberType);
-            if (isCollection)
-                memberType = EntryConvert.ElementType(memberType);
-
-            // Enum names, member name for collections, allowed values or null
-            if (memberType.IsEnum)
-            {
-                return EntryPossible.FromStrings(GetPossibleEnumNames(memberType, attributeProvider));
-            }
-
-            if (isCollection)
-            {
-                return EntryPossible.FromStrings([memberType.Name]);
-            }
-
-            var allowedValuesAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
-            if (allowedValuesAttribute != null)
-            {
-                var allowedValues = allowedValuesAttribute.Values.Where(v => v != null && v.GetType() == memberType)
-                    .Select(v => v.ToString());
-                return EntryPossible.FromStrings(allowedValues.ToArray());
-            }
-
-            return null;
+            return EntryPossible.FromStrings([memberType.Name]);
         }
 
-        /// <see cref="ICustomSerialization"/>
-        public virtual EntryPossible[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
+        var allowedValuesAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
+        if (allowedValuesAttribute != null)
         {
-            var elementType = EntryConvert.ElementType(memberType);
-            return PossibleValues(elementType, attributeProvider);
+            var allowedValues = allowedValuesAttribute.Values.Where(v => v != null && v.GetType() == memberType)
+                .Select(v => v.ToString());
+            return EntryPossible.FromStrings(allowedValues.ToArray());
         }
 
-        /// <see cref="ICustomSerialization"/>
-        public virtual EntryValidation CreateValidation(Type memberType, ICustomAttributeProvider attributeProvider)
-        {
-            var validation = new EntryValidation();
+        return null;
+    }
 
-            var validationAttributes = attributeProvider.GetCustomAttributes<ValidationAttribute>();
-            if (validationAttributes.Length == 0)
-                return validation;
+    /// <see cref="ICustomSerialization"/>
+    public virtual EntryPossible[] PossibleElementValues(Type memberType, ICustomAttributeProvider attributeProvider)
+    {
+        var elementType = EntryConvert.ElementType(memberType);
+        return PossibleValues(elementType, attributeProvider);
+    }
 
-            // Iterate over attributes reading all validation rules
-            foreach (var attribute in validationAttributes)
-            {
-                switch (attribute)
-                {
-                    case MinLengthAttribute minAttribute:
-                        validation.Minimum = minAttribute.Length;
-                        break;
-                    case MaxLengthAttribute maxAttribute:
-                        validation.Maximum = maxAttribute.Length;
-                        break;
-                    case RangeAttribute rangeAttribute:
-                        validation.Minimum = Convert.ToDouble(rangeAttribute.Minimum, CultureInfo.CurrentCulture);
-                        validation.Maximum = Convert.ToDouble(rangeAttribute.Maximum, CultureInfo.CurrentCulture);
-                        break;
-                    case RegularExpressionAttribute regexAttribute:
-                        validation.Regex = regexAttribute.Pattern;
-                        break;
-                    case StringLengthAttribute strLength:
-                        validation.Minimum = strLength.MinimumLength;
-                        validation.Maximum = strLength.MaximumLength;
-                        break;
-                    case RequiredAttribute:
-                        validation.IsRequired = true;
-                        break;
-                    case LengthAttribute lengthAttribute:
-                        validation.Minimum = lengthAttribute.MinimumLength;
-                        validation.Maximum = lengthAttribute.MaximumLength;
-                        break;
-                    case DataTypeAttribute dataTypeAttribute:
-                        validation.DataType = dataTypeAttribute.DataType;
-                        break;
-                }
-            }
+    /// <see cref="ICustomSerialization"/>
+    public virtual EntryValidation CreateValidation(Type memberType, ICustomAttributeProvider attributeProvider)
+    {
+        var validation = new EntryValidation();
 
+        var validationAttributes = attributeProvider.GetCustomAttributes<ValidationAttribute>();
+        if (validationAttributes.Length == 0)
             return validation;
-        }
 
-        /// <see cref="ICustomSerialization"/>
-        public virtual IEnumerable<MethodInfo> GetMethods(Type sourceType)
+        // Iterate over attributes reading all validation rules
+        foreach (var attribute in validationAttributes)
         {
-            return sourceType.GetMethods().Where(m => !m.IsSpecialName);
-        }
-
-        /// <see cref="ICustomSerialization"/>
-        public virtual IEnumerable<ConstructorInfo> GetConstructors(Type sourceType)
-        {
-            return sourceType.GetConstructors();
-        }
-
-        /// <see cref="ICustomSerialization"/>
-        public virtual IEnumerable<MappedProperty> WriteFilter(Type sourceType, IEnumerable<Entry> encoded)
-        {
-            // Return pairs where available
-            return from entry in encoded
-                   let property = sourceType.GetProperty(entry.Identifier)
-                   select new MappedProperty
-                   {
-                       Entry = entry,
-                       Property = property
-                   };
-        }
-
-        /// <see cref="ICustomSerialization"/>
-        public virtual object DefaultValue(PropertyInfo property, object currentValue)
-        {
-            // No default is better than the current value
-            if (currentValue != null)
-                return currentValue;
-
-            // Try to read default from attribute
-            var defaultAtt = property.GetCustomAttribute<DefaultValueAttribute>();
-            if (defaultAtt != null)
-                return defaultAtt.Value;
-
-            // For arrays create empty element array
-            if (property.PropertyType.IsArray)
-                return Array.CreateInstance(property.PropertyType.GetElementType(), 0);
-
-            // In all other cases use the activator
-            return Activator.CreateInstance(property.PropertyType);
-        }
-
-        /// <see cref="ICustomSerialization"/>
-        public virtual object ConvertValue(Type memberType, ICustomAttributeProvider attributeProvider, Entry mappedEntry, object currentValue)
-        {
-            // Other operations depend on the element type
-            switch (mappedEntry.Value.Type)
+            switch (attribute)
             {
-                case EntryValueType.Stream:
-                    Stream targetStream;
-
-                    var safeContent = mappedEntry.Value.Current ?? "";
-                    var contentBytes = Convert.FromBase64String(safeContent);
-                    var currentStream = currentValue as Stream;
-
-                    var createNewMemoryStream = currentStream == null || !currentStream.CanWrite;
-                    if (!createNewMemoryStream &&
-                        currentStream.GetType() == typeof(MemoryStream) &&
-                        currentStream.Length < contentBytes.Length)
-                    {
-                        // MemoryStream is not expandable
-                        createNewMemoryStream = true;
-                    }
-
-                    if (currentStream != null && !createNewMemoryStream)
-                    {
-                        if (currentStream.CanSeek)
-                            currentStream.Seek(0, SeekOrigin.Begin);
-
-                        targetStream = currentStream;
-                        targetStream.Write(contentBytes, 0, contentBytes.Length);
-                        targetStream.SetLength(contentBytes.Length);
-                    }
-                    else
-                    {
-                        currentStream?.Dispose();
-
-                        targetStream = new MemoryStream(contentBytes);
-                    }
-
-                    return targetStream;
-
-                case EntryValueType.Class:
-                    return currentValue ?? Activator.CreateInstance(memberType);
-                case EntryValueType.Collection:
-                    return CollectionBuilder(memberType, currentValue, mappedEntry);
-                default:
-                    var value = mappedEntry.Value.Current;
-                    if (value is null)
-                        return null;
-
-                    try
-                    {
-                        return EntryConvert.ToObject(memberType, value, FormatProvider);
-                    }
-                    catch (Exception e)
-                    {
-                        if (e is FormatException or OverflowException)
-                            throw new ArgumentException($"Invalid value {mappedEntry.Value.Current} for entry {mappedEntry.DisplayName ?? mappedEntry.Identifier}", e);
-                        throw;
-                    }
+                case MinLengthAttribute minAttribute:
+                    validation.Minimum = minAttribute.Length;
+                    break;
+                case MaxLengthAttribute maxAttribute:
+                    validation.Maximum = maxAttribute.Length;
+                    break;
+                case RangeAttribute rangeAttribute:
+                    validation.Minimum = Convert.ToDouble(rangeAttribute.Minimum, CultureInfo.CurrentCulture);
+                    validation.Maximum = Convert.ToDouble(rangeAttribute.Maximum, CultureInfo.CurrentCulture);
+                    break;
+                case RegularExpressionAttribute regexAttribute:
+                    validation.Regex = regexAttribute.Pattern;
+                    break;
+                case StringLengthAttribute strLength:
+                    validation.Minimum = strLength.MinimumLength;
+                    validation.Maximum = strLength.MaximumLength;
+                    break;
+                case RequiredAttribute:
+                    validation.IsRequired = true;
+                    break;
+                case LengthAttribute lengthAttribute:
+                    validation.Minimum = lengthAttribute.MinimumLength;
+                    validation.Maximum = lengthAttribute.MaximumLength;
+                    break;
+                case DataTypeAttribute dataTypeAttribute:
+                    validation.DataType = dataTypeAttribute.DataType;
+                    break;
             }
         }
-        /// <see cref="ICustomSerialization"/>
-        public virtual object CreateInstance(Type memberType, ICustomAttributeProvider attributeProvider, Entry encoded)
-        {
-            if (EntryConvert.IsCollection(memberType))
+
+        return validation;
+    }
+
+    /// <see cref="ICustomSerialization"/>
+    public virtual IEnumerable<MethodInfo> GetMethods(Type sourceType)
+    {
+        return sourceType.GetMethods().Where(m => !m.IsSpecialName);
+    }
+
+    /// <see cref="ICustomSerialization"/>
+    public virtual IEnumerable<ConstructorInfo> GetConstructors(Type sourceType)
+    {
+        return sourceType.GetConstructors();
+    }
+
+    /// <see cref="ICustomSerialization"/>
+    public virtual IEnumerable<MappedProperty> WriteFilter(Type sourceType, IEnumerable<Entry> encoded)
+    {
+        // Return pairs where available
+        return from entry in encoded
+            let property = sourceType.GetProperty(entry.Identifier)
+            select new MappedProperty
             {
-                memberType = EntryConvert.ElementType(memberType);
-            }
-            return CreateInstance(memberType, encoded);
-        }
+                Entry = entry,
+                Property = property
+            };
+    }
 
-        /// <inheritdoc />
-        public EntryUnitType GetUnitTypeByAttributes(ICustomAttributeProvider property)
+    /// <see cref="ICustomSerialization"/>
+    public virtual object DefaultValue(PropertyInfo property, object currentValue)
+    {
+        // No default is better than the current value
+        if (currentValue != null)
+            return currentValue;
+
+        // Try to read default from attribute
+        var defaultAtt = property.GetCustomAttribute<DefaultValueAttribute>();
+        if (defaultAtt != null)
+            return defaultAtt.Value;
+
+        // For arrays create empty element array
+        if (property.PropertyType.IsArray)
+            return Array.CreateInstance(property.PropertyType.GetElementType(), 0);
+
+        // In all other cases use the activator
+        return Activator.CreateInstance(property.PropertyType);
+    }
+
+    /// <see cref="ICustomSerialization"/>
+    public virtual object ConvertValue(Type memberType, ICustomAttributeProvider attributeProvider, Entry mappedEntry, object currentValue)
+    {
+        // Other operations depend on the element type
+        switch (mappedEntry.Value.Type)
         {
-            var unitType = EntryUnitType.None;
+            case EntryValueType.Stream:
+                Stream targetStream;
 
-            if (HasFlagsAttribute(property))
-                unitType = EntryUnitType.Flags;
+                var safeContent = mappedEntry.Value.Current ?? "";
+                var contentBytes = Convert.FromBase64String(safeContent);
+                var currentStream = currentValue as Stream;
 
-            var passwordAttr = property.GetCustomAttribute<PasswordAttribute>();
-            if (passwordAttr != null)
-                unitType = EntryUnitType.Password;
-
-            var fileAttr = property.GetCustomAttribute<FileSystemPathAttribute>();
-            if (fileAttr != null)
-            {
-                switch (fileAttr.Type)
+                var createNewMemoryStream = currentStream == null || !currentStream.CanWrite;
+                if (!createNewMemoryStream &&
+                    currentStream.GetType() == typeof(MemoryStream) &&
+                    currentStream.Length < contentBytes.Length)
                 {
-                    case FileSystemPathType.File:
-                        unitType = EntryUnitType.FilePath;
-                        break;
-                    case FileSystemPathType.Directory:
-                        unitType = EntryUnitType.DirectoryPath;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    // MemoryStream is not expandable
+                    createNewMemoryStream = true;
                 }
-            }
 
-            var base64Attr = property.GetCustomAttribute<Base64StringAttribute>();
-            if (base64Attr != null)
-            {
-                unitType = EntryUnitType.Base64;
-            }
+                if (currentStream != null && !createNewMemoryStream)
+                {
+                    if (currentStream.CanSeek)
+                        currentStream.Seek(0, SeekOrigin.Begin);
 
-            return unitType;
+                    targetStream = currentStream;
+                    targetStream.Write(contentBytes, 0, contentBytes.Length);
+                    targetStream.SetLength(contentBytes.Length);
+                }
+                else
+                {
+                    currentStream?.Dispose();
+
+                    targetStream = new MemoryStream(contentBytes);
+                }
+
+                return targetStream;
+
+            case EntryValueType.Class:
+                return currentValue ?? Activator.CreateInstance(memberType);
+            case EntryValueType.Collection:
+                return CollectionBuilder(memberType, currentValue, mappedEntry);
+            default:
+                var value = mappedEntry.Value.Current;
+                if (value is null)
+                    return null;
+
+                try
+                {
+                    return EntryConvert.ToObject(memberType, value, FormatProvider);
+                }
+                catch (Exception e)
+                {
+                    if (e is FormatException or OverflowException)
+                        throw new ArgumentException($"Invalid value {mappedEntry.Value.Current} for entry {mappedEntry.DisplayName ?? mappedEntry.Identifier}", e);
+                    throw;
+                }
         }
-
-        /// <see cref="ICustomSerialization"/>
-        public virtual object CreateInstance(Type elementType, Entry entry)
+    }
+    /// <see cref="ICustomSerialization"/>
+    public virtual object CreateInstance(Type memberType, ICustomAttributeProvider attributeProvider, Entry encoded)
+    {
+        if (EntryConvert.IsCollection(memberType))
         {
-            return Activator.CreateInstance(elementType);
+            memberType = EntryConvert.ElementType(memberType);
         }
+        return CreateInstance(memberType, encoded);
+    }
 
-        /// <summary>
-        /// Build collection object from entry
-        /// </summary>
-        protected static object CollectionBuilder(Type collectionType, object currentValue, Entry collectionEntry)
+    /// <inheritdoc />
+    public EntryUnitType GetUnitTypeByAttributes(ICustomAttributeProvider property)
+    {
+        var unitType = EntryUnitType.None;
+
+        if (HasFlagsAttribute(property))
+            unitType = EntryUnitType.Flags;
+
+        var passwordAttr = property.GetCustomAttribute<PasswordAttribute>();
+        if (passwordAttr != null)
+            unitType = EntryUnitType.Password;
+
+        var fileAttr = property.GetCustomAttribute<FileSystemPathAttribute>();
+        if (fileAttr != null)
         {
-            // Arrays must be recreated whenever their size changes
-            if (collectionType.IsArray)
+            switch (fileAttr.Type)
             {
-                var currentArray = (Array)currentValue;
-                var size = collectionEntry.SubEntries.Count;
-                return currentArray != null && currentArray.Length == size
-                    ? currentArray : Array.CreateInstance(collectionType.GetElementType(), size);
+                case FileSystemPathType.File:
+                    unitType = EntryUnitType.FilePath;
+                    break;
+                case FileSystemPathType.Directory:
+                    unitType = EntryUnitType.DirectoryPath;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-
-            // Create instance for collections of type Dictionary
-            if (EntryConvert.IsDictionary(collectionType))
-            {
-                // Use dictionary when interface where used
-                if (collectionType.IsInterface)
-                    collectionType = typeof(Dictionary<,>).MakeGenericType(collectionType.GenericTypeArguments);
-                // Reuse current object if available
-                return currentValue ?? Activator.CreateInstance(collectionType);
-            }
-
-            // Create instance for collections of type list
-            if (typeof(IEnumerable).IsAssignableFrom(collectionType))
-            {
-                // Use lists when interfaces where used
-                if (collectionType.IsInterface)
-                    collectionType = typeof(List<>).MakeGenericType(collectionType.GenericTypeArguments);
-                // Reuse current object if available
-                return currentValue ?? Activator.CreateInstance(collectionType);
-            }
-
-            // Other collections are not supported
-            return null;
         }
 
-        /// <summary>
-        /// Checks if the given property is an enum and has the <see cref="System.FlagsAttribute"/>.
-        /// </summary>
-        /// <param name="property">The property to inspect for attributes.</param>
-        /// <returns>True if the property has the Flags attribute; otherwise, false.</returns>
-        private static bool HasFlagsAttribute(ICustomAttributeProvider property)
+        var base64Attr = property.GetCustomAttribute<Base64StringAttribute>();
+        if (base64Attr != null)
         {
-            return property is PropertyInfo propertyInfo &&
-                   propertyInfo.PropertyType.IsEnum &&
-                   propertyInfo.PropertyType.GetCustomAttributes(typeof(System.FlagsAttribute), false).Any();
+            unitType = EntryUnitType.Base64;
         }
 
-        /// <summary>
-        /// Returns the possible enum names.
-        /// Depending on the <see cref="AllowedValuesAttribute"/> and <see cref="DeniedValuesAttribute"/>
-        /// </summary>
-        private static string[] GetPossibleEnumNames(Type memberType, ICustomAttributeProvider attributeProvider)
+        return unitType;
+    }
+
+    /// <see cref="ICustomSerialization"/>
+    public virtual object CreateInstance(Type elementType, Entry entry)
+    {
+        return Activator.CreateInstance(elementType);
+    }
+
+    /// <summary>
+    /// Build collection object from entry
+    /// </summary>
+    protected static object CollectionBuilder(Type collectionType, object currentValue, Entry collectionEntry)
+    {
+        // Arrays must be recreated whenever their size changes
+        if (collectionType.IsArray)
         {
-            var enumNames = Enum.GetNames(memberType);
-            var allowedValuesAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
-            if (allowedValuesAttribute != null)
-            {
-                var allowedEnumNames = allowedValuesAttribute.Values.Where(v => v != null && enumNames.Contains(v.ToString()))
-                    .Select(v => v.ToString());
-                return allowedEnumNames.Distinct().ToArray();
-            }
-
-            var deniedValuesAttribute = attributeProvider.GetCustomAttribute<DeniedValuesAttribute>();
-            if (deniedValuesAttribute != null)
-            {
-                var deniedEnumNames = deniedValuesAttribute.Values.Where(v => v != null)
-                    .Select(v => v.ToString());
-                return enumNames.Except(deniedEnumNames).ToArray();
-            }
-
-            return enumNames;
+            var currentArray = (Array)currentValue;
+            var size = collectionEntry.SubEntries.Count;
+            return currentArray != null && currentArray.Length == size
+                ? currentArray : Array.CreateInstance(collectionType.GetElementType(), size);
         }
+
+        // Create instance for collections of type Dictionary
+        if (EntryConvert.IsDictionary(collectionType))
+        {
+            // Use dictionary when interface where used
+            if (collectionType.IsInterface)
+                collectionType = typeof(Dictionary<,>).MakeGenericType(collectionType.GenericTypeArguments);
+            // Reuse current object if available
+            return currentValue ?? Activator.CreateInstance(collectionType);
+        }
+
+        // Create instance for collections of type list
+        if (typeof(IEnumerable).IsAssignableFrom(collectionType))
+        {
+            // Use lists when interfaces where used
+            if (collectionType.IsInterface)
+                collectionType = typeof(List<>).MakeGenericType(collectionType.GenericTypeArguments);
+            // Reuse current object if available
+            return currentValue ?? Activator.CreateInstance(collectionType);
+        }
+
+        // Other collections are not supported
+        return null;
+    }
+
+    /// <summary>
+    /// Checks if the given property is an enum and has the <see cref="System.FlagsAttribute"/>.
+    /// </summary>
+    /// <param name="property">The property to inspect for attributes.</param>
+    /// <returns>True if the property has the Flags attribute; otherwise, false.</returns>
+    private static bool HasFlagsAttribute(ICustomAttributeProvider property)
+    {
+        return property is PropertyInfo propertyInfo &&
+               propertyInfo.PropertyType.IsEnum &&
+               propertyInfo.PropertyType.GetCustomAttributes(typeof(System.FlagsAttribute), false).Any();
+    }
+
+    /// <summary>
+    /// Returns the possible enum names.
+    /// Depending on the <see cref="AllowedValuesAttribute"/> and <see cref="DeniedValuesAttribute"/>
+    /// </summary>
+    private static string[] GetPossibleEnumNames(Type memberType, ICustomAttributeProvider attributeProvider)
+    {
+        var enumNames = Enum.GetNames(memberType);
+        var allowedValuesAttribute = attributeProvider.GetCustomAttribute<AllowedValuesAttribute>();
+        if (allowedValuesAttribute != null)
+        {
+            var allowedEnumNames = allowedValuesAttribute.Values.Where(v => v != null && enumNames.Contains(v.ToString()))
+                .Select(v => v.ToString());
+            return allowedEnumNames.Distinct().ToArray();
+        }
+
+        var deniedValuesAttribute = attributeProvider.GetCustomAttribute<DeniedValuesAttribute>();
+        if (deniedValuesAttribute != null)
+        {
+            var deniedEnumNames = deniedValuesAttribute.Values.Where(v => v != null)
+                .Select(v => v.ToString());
+            return enumNames.Except(deniedEnumNames).ToArray();
+        }
+
+        return enumNames;
     }
 }

@@ -8,62 +8,61 @@ using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Activities;
 
-namespace Moryx.ControlSystem.TestTools
+namespace Moryx.ControlSystem.TestTools;
+
+public class DummyActivityParameters : Parameters, IActivityTimeoutParameters
 {
-    public class DummyActivityParameters : Parameters, IActivityTimeoutParameters
-    {
-        public int Timeout { get; set; }
+    public int Timeout { get; set; }
 
-        protected override void Populate(Process process, Parameters instance)
-        {
-        }
+    protected override void Populate(Process process, Parameters instance)
+    {
+    }
+}
+
+public class DummyCapabilities : CapabilitiesBase
+{
+    protected override bool ProvidedBy(ICapabilities provided)
+    {
+        return provided is DummyCapabilities;
+    }
+}
+
+[ActivityResults(typeof(DummyResult))]
+public class DummyActivity : Activity<DummyActivityParameters>, IInstanceModificationActivity
+{
+    public IIdentity InstanceIdentity { get; set; }
+
+    public InstanceModificationType ModificationType { get; set; }
+
+    protected override ActivityResult CreateResult(long resultNumber)
+    {
+        return ActivityResult.Create((DummyResult)resultNumber);
     }
 
-    public class DummyCapabilities : CapabilitiesBase
+    protected override ActivityResult CreateFailureResult()
     {
-        protected override bool ProvidedBy(ICapabilities provided)
-        {
-            return provided is DummyCapabilities;
-        }
+        return ActivityResult.Create(DummyResult.TechnicalFailure);
     }
 
-    [ActivityResults(typeof(DummyResult))]
-    public class DummyActivity : Activity<DummyActivityParameters>, IInstanceModificationActivity
-    {
-        public IIdentity InstanceIdentity { get; set; }
+    public override ICapabilities RequiredCapabilities => new DummyCapabilities();
 
-        public InstanceModificationType ModificationType { get; set; }
+    public override ProcessRequirement ProcessRequirement => ProcessRequirement.Required;
+}
 
-        protected override ActivityResult CreateResult(long resultNumber)
-        {
-            return ActivityResult.Create((DummyResult)resultNumber);
-        }
+public enum DummyResult
+{
+    /// <summary>
+    /// Production step was successful
+    /// </summary>
+    Done,
 
-        protected override ActivityResult CreateFailureResult()
-        {
-            return ActivityResult.Create(DummyResult.TechnicalFailure);
-        }
+    /// <summary>
+    /// Production step was not successful
+    /// </summary>
+    Failed,
 
-        public override ICapabilities RequiredCapabilities => new DummyCapabilities();
-
-        public override ProcessRequirement ProcessRequirement => ProcessRequirement.Required;
-    }
-
-    public enum DummyResult
-    {
-        /// <summary>
-        /// Production step was successful
-        /// </summary>
-        Done,
-
-        /// <summary>
-        /// Production step was not successful
-        /// </summary>
-        Failed,
-
-        /// <summary>
-        /// The activity could not be started at all.
-        /// </summary>
-        TechnicalFailure
-    }
+    /// <summary>
+    /// The activity could not be started at all.
+    /// </summary>
+    TechnicalFailure
 }

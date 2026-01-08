@@ -3,12 +3,11 @@
 
 using Moryx.AbstractionLayer.Activities;
 
-namespace Moryx.ControlSystem.Assemble
+namespace Moryx.ControlSystem.Assemble;
+
+/// <summary>
+/// Common interface for <see cref="AssembleActivity"/> and <see cref="AssembleActivity{TParam}"/>
+/// </summary>
+public interface IAssembleActivity : IActivity<AssembleParameters>
 {
-    /// <summary>
-    /// Common interface for <see cref="AssembleActivity"/> and <see cref="AssembleActivity{TParam}"/>
-    /// </summary>
-    public interface IAssembleActivity : IActivity<AssembleParameters>
-    {
-    }
 }

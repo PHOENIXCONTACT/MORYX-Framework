@@ -3,12 +3,10 @@
 
 using Moryx.Runtime.Modules;
 
-namespace Moryx.ControlSystem.Simulator
-{
-    [ServerModuleConsole]
-    public class ModuleConsole : IServerModuleConsole
-    {
-        
-    }
-}
+namespace Moryx.ControlSystem.Simulator;
 
+[ServerModuleConsole]
+public class ModuleConsole : IServerModuleConsole
+{
+        
+}

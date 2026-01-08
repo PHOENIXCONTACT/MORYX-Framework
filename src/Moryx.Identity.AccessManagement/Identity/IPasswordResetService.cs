@@ -3,15 +3,13 @@
 
 using Moryx.Identity.AccessManagement.Data;
 
-namespace Moryx.Identity.AccessManagement
+namespace Moryx.Identity.AccessManagement;
+
+public interface IPasswordResetService
 {
-    public interface IPasswordResetService
-    {
-        Task<PasswordReset> GetPasswordResetAsync(string userId);
+    Task<PasswordReset> GetPasswordResetAsync(string userId);
 
-        Task<PasswordReset> GeneratePasswordResetAsync(string userId);
+    Task<PasswordReset> GeneratePasswordResetAsync(string userId);
 
-        Task RemovePasswordResetAsync(PasswordReset passwordReset);
-    }
+    Task RemovePasswordResetAsync(PasswordReset passwordReset);
 }
-

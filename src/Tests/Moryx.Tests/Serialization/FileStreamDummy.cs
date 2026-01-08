@@ -3,15 +3,14 @@
 
 using System.IO;
 
-namespace Moryx.Tests.Serialization
-{
-    public class FileStreamDummy
-    {
-        public FileStreamDummy(string filePath, FileMode mode)
-        {
-            FileStream = new FileStream(filePath, mode);
-        }
+namespace Moryx.Tests.Serialization;
 
-        public FileStream FileStream { get; set; }
+public class FileStreamDummy
+{
+    public FileStreamDummy(string filePath, FileMode mode)
+    {
+        FileStream = new FileStream(filePath, mode);
     }
+
+    public FileStream FileStream { get; set; }
 }

@@ -3,21 +3,20 @@
 
 using Moryx.ControlSystem.Jobs;
 
-namespace Moryx.ControlSystem.ProcessEngine.Jobs
+namespace Moryx.ControlSystem.ProcessEngine.Jobs;
+
+/// <summary>
+/// Public representation of the job state
+/// </summary>
+internal interface IJobState
 {
     /// <summary>
-    /// Public representation of the job state
+    /// Key of the job state
     /// </summary>
-    internal interface IJobState
-    {
-        /// <summary>
-        /// Key of the job state
-        /// </summary>
-        int Key { get; }
+    int Key { get; }
 
-        /// <summary>
-        /// Classification of the job
-        /// </summary>
-        JobClassification Classification { get; }
-    }
+    /// <summary>
+    /// Classification of the job
+    /// </summary>
+    JobClassification Classification { get; }
 }

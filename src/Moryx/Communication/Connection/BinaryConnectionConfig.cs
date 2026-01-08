@@ -3,14 +3,13 @@
 
 using Moryx.Modules;
 
-namespace Moryx.Communication
+namespace Moryx.Communication;
+
+/// <summary>
+/// Base config for client and server config modes
+/// </summary>
+public class BinaryConnectionConfig : IPluginConfig
 {
-    /// <summary>
-    /// Base config for client and server config modes
-    /// </summary>
-    public class BinaryConnectionConfig : IPluginConfig
-    {
-        ///
-        public virtual string PluginName => "CommunicatorConfig";
-    }
+    ///
+    public virtual string PluginName => "CommunicatorConfig";
 }

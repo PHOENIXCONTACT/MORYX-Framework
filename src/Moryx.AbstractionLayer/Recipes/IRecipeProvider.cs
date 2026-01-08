@@ -1,26 +1,25 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Recipes
+namespace Moryx.AbstractionLayer.Recipes;
+
+/// <summary>
+/// Provides recipes for production
+/// </summary>
+public interface IRecipeProvider
 {
     /// <summary>
-    /// Provides recipes for production
+    /// Identity of this provider
     /// </summary>
-    public interface IRecipeProvider
-    {
-        /// <summary>
-        /// Identity of this provider
-        /// </summary>
-        string Name { get; }
+    string Name { get; }
 
-        /// <summary>
-        /// Load recipe by its database id
-        /// </summary>
-        Task<IRecipe> LoadRecipeAsync(long id, CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Load recipe by its database id
+    /// </summary>
+    Task<IRecipe> LoadRecipeAsync(long id, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// A recipe was changed, give users the chance to update their reference
-        /// </summary>
-        event EventHandler<IRecipe> RecipeChanged;
-    }
+    /// <summary>
+    /// A recipe was changed, give users the chance to update their reference
+    /// </summary>
+    event EventHandler<IRecipe> RecipeChanged;
 }

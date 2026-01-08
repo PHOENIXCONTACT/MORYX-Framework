@@ -3,13 +3,11 @@
 
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Moryx.FactoryMonitor.Web.Pages
+namespace Moryx.FactoryMonitor.Web.Pages;
+
+public class FactoryMonitorModel : PageModel
 {
-  public class FactoryMonitorModel : PageModel
+  public void OnGet()
   {
-    public void OnGet()
-    {
-    }
   }
 }
-

@@ -9,98 +9,97 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Moryx.Notifications.Publisher.Model.Migrations.Sqlite
+namespace Moryx.Notifications.Publisher.Model.Migrations.Sqlite;
+
+[DbContext(typeof(SqliteNotificationsContext))]
+partial class SqliteNotificationsContextModelSnapshot : ModelSnapshot
 {
-    [DbContext(typeof(SqliteNotificationsContext))]
-    partial class SqliteNotificationsContextModelSnapshot : ModelSnapshot
+    protected override void BuildModel(ModelBuilder modelBuilder)
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "8.0.21")
-                .HasAnnotation("Proxies:ChangeTracking", false)
-                .HasAnnotation("Proxies:CheckEquality", false)
-                .HasAnnotation("Proxies:LazyLoading", true);
+        modelBuilder
+            .HasDefaultSchema("public")
+            .HasAnnotation("ProductVersion", "8.0.21")
+            .HasAnnotation("Proxies:ChangeTracking", false)
+            .HasAnnotation("Proxies:CheckEquality", false)
+            .HasAnnotation("Proxies:LazyLoading", true);
 
-            modelBuilder.Entity("Moryx.Notifications.Model.NotificationEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+        modelBuilder.Entity("Moryx.Notifications.Model.NotificationEntity", b =>
+        {
+            b.Property<long>("Id")
+                .ValueGeneratedOnAdd()
+                .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("Acknowledged")
-                        .HasColumnType("TEXT");
+            b.Property<DateTime?>("Acknowledged")
+                .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+            b.Property<DateTime>("Created")
+                .HasColumnType("TEXT");
 
-                    b.Property<string>("ExtensionData")
-                        .HasColumnType("TEXT");
+            b.Property<string>("ExtensionData")
+                .HasColumnType("TEXT");
 
-                    b.Property<Guid>("Identifier")
-                        .HasColumnType("TEXT");
+            b.Property<Guid>("Identifier")
+                .HasColumnType("TEXT");
 
-                    b.Property<string>("Message")
-                        .HasColumnType("TEXT");
+            b.Property<string>("Message")
+                .HasColumnType("TEXT");
 
-                    b.Property<string>("Sender")
-                        .HasColumnType("TEXT");
+            b.Property<string>("Sender")
+                .HasColumnType("TEXT");
 
-                    b.Property<string>("Source")
-                        .HasColumnType("TEXT");
+            b.Property<string>("Source")
+                .HasColumnType("TEXT");
 
-                    b.Property<string>("Title")
-                        .HasColumnType("TEXT");
+            b.Property<string>("Title")
+                .HasColumnType("TEXT");
 
-                    b.Property<long>("TypeId")
-                        .HasColumnType("INTEGER");
+            b.Property<long>("TypeId")
+                .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
+            b.HasKey("Id");
 
-                    b.HasIndex("TypeId");
+            b.HasIndex("TypeId");
 
-                    b.ToTable("Notifications", "public");
-                });
+            b.ToTable("Notifications", "public");
+        });
 
-            modelBuilder.Entity("Moryx.Notifications.Model.NotificationTypeEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+        modelBuilder.Entity("Moryx.Notifications.Model.NotificationTypeEntity", b =>
+        {
+            b.Property<long>("Id")
+                .ValueGeneratedOnAdd()
+                .HasColumnType("INTEGER");
 
-                    b.Property<string>("ExtensionData")
-                        .HasColumnType("TEXT");
+            b.Property<string>("ExtensionData")
+                .HasColumnType("TEXT");
 
-                    b.Property<string>("Identifier")
-                        .HasColumnType("TEXT");
+            b.Property<string>("Identifier")
+                .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsDisabled")
-                        .HasColumnType("INTEGER");
+            b.Property<bool>("IsDisabled")
+                .HasColumnType("INTEGER");
 
-                    b.Property<int>("Severity")
-                        .HasColumnType("INTEGER");
+            b.Property<int>("Severity")
+                .HasColumnType("INTEGER");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("TEXT");
+            b.Property<string>("Type")
+                .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+            b.HasKey("Id");
 
-                    b.ToTable("NotificationTypes", "public");
-                });
+            b.ToTable("NotificationTypes", "public");
+        });
 
-            modelBuilder.Entity("Moryx.Notifications.Model.NotificationEntity", b =>
-                {
-                    b.HasOne("Moryx.Notifications.Model.NotificationTypeEntity", "Type")
-                        .WithMany()
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+        modelBuilder.Entity("Moryx.Notifications.Model.NotificationEntity", b =>
+        {
+            b.HasOne("Moryx.Notifications.Model.NotificationTypeEntity", "Type")
+                .WithMany()
+                .HasForeignKey("TypeId")
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
 
-                    b.Navigation("Type");
-                });
+            b.Navigation("Type");
+        });
 #pragma warning restore 612, 618
-        }
     }
 }

@@ -6,29 +6,27 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Moryx.Model;
 
-namespace Moryx.Shifts.Management.Model
+namespace Moryx.Shifts.Management.Model;
+
+public class ShiftTypeEntity : ModificationTrackedEntityBase
 {
-    public class ShiftTypeEntity : ModificationTrackedEntityBase
+    [Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public override long Id
     {
-        [Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public override long Id
-        {
-            get => base.Id;
-            set => base.Id = value;
-        }
-
-        [Required]
-        [MaxLength(200)]
-        public string Name { get; set; }
-
-        [Required]
-        public TimeOnly StartTime { get; set; }
-
-        [Required]
-        public TimeOnly Endtime { get; set; }
-
-        [Required]
-        public byte Periode { get; set; }
+        get => base.Id;
+        set => base.Id = value;
     }
-}
 
+    [Required]
+    [MaxLength(200)]
+    public string Name { get; set; }
+
+    [Required]
+    public TimeOnly StartTime { get; set; }
+
+    [Required]
+    public TimeOnly Endtime { get; set; }
+
+    [Required]
+    public byte Periode { get; set; }
+}

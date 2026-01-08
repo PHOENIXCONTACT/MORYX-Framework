@@ -23,934 +23,933 @@ using Moryx.Products.Management.Model;
 using Moryx.Serialization;
 using NUnit.Framework;
 
-namespace Moryx.Products.IntegrationTests
+namespace Moryx.Products.IntegrationTests;
+
+[TestFixture]
+public class ProductStorageTests
 {
-    [TestFixture]
-    public class ProductStorageTests
+    private long _workplanId;
+
+    private IUnitOfWorkFactory<ProductsContext> _factory;
+
+    private const string WatchMaterial = "87654";
+
+    private ProductStorage _storage;
+
+    [OneTimeSetUp]
+    public void TestFixtureSetUp()
     {
-        private long _workplanId;
+        // Enable test mode
+        ReflectionTool.TestMode = true;
+        // This call is necessary for NUnit to load the type
+        var someType = new WatchType();
+    }
 
-        private IUnitOfWorkFactory<ProductsContext> _factory;
+    [SetUp]
+    public async Task PrepareStorage()
+    {
+        // prepare in memory products db
+        _factory = BuildUnitOfWorkFactory();
 
-        private const string WatchMaterial = "87654";
+        // prepare empty workplan
+        var workplan = new Workplan { Name = "TestWorkplan" };
+        workplan.AddConnector("Start", NodeClassification.Start);
+        workplan.AddConnector("End", NodeClassification.End);
 
-        private ProductStorage _storage;
+        using var uow = _factory.Create();
+        var entity = RecipeStorage.ToWorkplanEntity(uow, workplan);
+        await uow.SaveChangesAsync();
+        _workplanId = entity.Id;
 
-        [OneTimeSetUp]
-        public void TestFixtureSetUp()
+        var strategyFactory = CreateStrategyFactory();
+
+        _storage = new ProductStorage
         {
-            // Enable test mode
-            ReflectionTool.TestMode = true;
-            // This call is necessary for NUnit to load the type
-            var someType = new WatchType();
-        }
-
-        [SetUp]
-        public async Task PrepareStorage()
+            Factory = _factory,
+            StrategyFactory = strategyFactory.Object
+        };
+        _storage.Config = new ModuleConfig
         {
-            // prepare in memory products db
-            _factory = BuildUnitOfWorkFactory();
-
-            // prepare empty workplan
-            var workplan = new Workplan { Name = "TestWorkplan" };
-            workplan.AddConnector("Start", NodeClassification.Start);
-            workplan.AddConnector("End", NodeClassification.End);
-
-            using var uow = _factory.Create();
-            var entity = RecipeStorage.ToWorkplanEntity(uow, workplan);
-            await uow.SaveChangesAsync();
-            _workplanId = entity.Id;
-
-            var strategyFactory = CreateStrategyFactory();
-
-            _storage = new ProductStorage
-            {
-                Factory = _factory,
-                StrategyFactory = strategyFactory.Object
-            };
-            _storage.Config = new ModuleConfig
-            {
-                TypeStrategies =
-                [
-                    new ProductTypeConfiguration
-                    {
-                        TargetType = typeof(WatchType).FullName,
-                        PluginName = nameof(WatchStrategy)
-                    },
-
-                    new GenericTypeConfiguration
-                    {
-                        TargetType = typeof(WatchFaceType).FullName,
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceType.Brand),
-                                Column = nameof(IGenericColumns.Text1),
-                                PluginName = nameof(TextColumnMapper)
-                            },
-
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceType.IsDigital),
-                                Column = nameof(IGenericColumns.Integer1),
-                                PluginName = nameof(IntegerColumnMapper)
-                            },
-
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceType.Color),
-                                Column = string.Empty,
-                                PluginName = nameof(NullPropertyMapper)
-                            }
-                        ],
-                        JsonColumn = nameof(IGenericColumns.Text8)
-                    },
-
-                    new GenericTypeConfiguration
-                    {
-                        TargetType = typeof(DisplayWatchFaceType).FullName,
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(DisplayWatchFaceType.Resolution),
-                                Column = nameof(IGenericColumns.Integer1),
-                                PluginName = nameof(IntegerColumnMapper)
-                            }
-                        ],
-                        JsonColumn = nameof(IGenericColumns.Text8)
-                    },
-
-                    new GenericTypeConfiguration
-                    {
-                        TargetType = typeof(NeedleType).FullName,
-                        PropertyConfigs = [],
-                        JsonColumn = nameof(IGenericColumns.Text8)
-                    },
-
-                    new GenericTypeConfiguration
-                    {
-                        TargetType = typeof(WatchPackageType).FullName,
-                        JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs = []
-                    }
-                ],
-                InstanceStrategies =
-                [
-                    new GenericInstanceConfiguration
-                    {
-                        TargetType = typeof(WatchInstance).FullName,
-                        JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchInstance.DeliveryDate),
-                                Column = nameof(IGenericColumns.Integer1),
-                                PluginName = nameof(IntegerColumnMapper)
-                            },
-
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchInstance.TimeSet),
-                                Column = nameof(IGenericColumns.Integer2),
-                                PluginName = nameof(IntegerColumnMapper)
-                            },
-
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchInstance.Identity),
-                                Column = nameof(IGenericColumns.Text1),
-                                PluginName = nameof(TextColumnMapper)
-                            }
-                        ]
-                    },
-
-                    new GenericInstanceConfiguration
-                    {
-                        TargetType = typeof(WatchFaceInstance).FullName,
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceInstance.Identifier),
-                                Column = nameof(IGenericColumns.Text1),
-                                PluginName = nameof(TextColumnMapper)
-                            },
-
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(WatchFaceInstance.Identity),
-                                Column = nameof(IGenericColumns.Text2),
-                                PluginName = nameof(TextColumnMapper)
-                            }
-                        ],
-                        JsonColumn = nameof(IGenericColumns.Text8)
-                    },
-
-                    new ProductInstanceConfiguration()
-                    {
-                        TargetType = typeof(NeedleInstance).FullName,
-                        PluginName = nameof(SkipInstancesStrategy)
-                    }
-
-                ],
-                LinkStrategies =
-                [
-                    new ProductLinkConfiguration()
-                    {
-                        TargetType = typeof(WatchType).FullName,
-                        PartName = nameof(WatchType.WatchFace),
-                        PluginName = nameof(SimpleLinkStrategy)
-                    },
-
-                    new GenericLinkConfiguration
-                    {
-                        TargetType = typeof(WatchType).FullName,
-                        PartName = nameof(WatchType.Needles),
-                        JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs =
-                        [
-                            new PropertyMapperConfig
-                            {
-                                PropertyName = nameof(NeedlePartLink.Role),
-                                PluginName = nameof(IntegerColumnMapper),
-                                Column = nameof(IGenericColumns.Integer1)
-                            }
-                        ]
-                    },
-
-                    new ProductLinkConfiguration()
-                    {
-                        TargetType = typeof(WatchPackageType).FullName,
-                        PartName = nameof(WatchPackageType.PossibleWatches),
-                        PluginName = nameof(SimpleLinkStrategy)
-                    }
-
-                ],
-                RecipeStrategies =
-                [
-                    new GenericRecipeConfiguration
-                    {
-                        TargetType = typeof(WatchProductRecipe).FullName,
-                        JsonColumn = nameof(IGenericColumns.Text8),
-                        PropertyConfigs = []
-                    }
-                ]
-            };
-
-            await _storage.StartAsync();
-        }
-
-        protected virtual UnitOfWorkFactory<SqliteProductsContext> BuildUnitOfWorkFactory()
-        {
-            var uowFactory = InMemoryUnitOfWorkFactoryBuilder
-                .Sqlite<SqliteProductsContext>();
-            uowFactory.EnsureDbIsCreated();
-
-            return uowFactory;
-        }
-
-        private Mock<IStorageStrategyFactory> CreateStrategyFactory()
-        {
-            var mapperFactory = new Mock<IPropertyMapperFactory>();
-            mapperFactory.Setup(mf => mf.Create(It.IsAny<PropertyMapperConfig>(), It.IsAny<Type>()))
-                .Returns<PropertyMapperConfig, Type>((config, type) =>
+            TypeStrategies =
+            [
+                new ProductTypeConfiguration
                 {
-                    IPropertyMapper mapper = null;
-                    switch (config.PluginName)
-                    {
-                        case nameof(IntegerColumnMapper):
-                            mapper = new IntegerColumnMapper(type);
-                            break;
-                        case nameof(TextColumnMapper):
-                            mapper = new TextColumnMapper(type);
-                            break;
-                        case nameof(NullPropertyMapper):
-                            mapper = new NullPropertyMapper(type);
-                            break;
-                    }
+                    TargetType = typeof(WatchType).FullName,
+                    PluginName = nameof(WatchStrategy)
+                },
 
-                    mapper.Initialize(config);
-
-                    return mapper;
-                });
-
-            var strategyFactory = new Mock<IStorageStrategyFactory>();
-            strategyFactory.Setup(f => f.CreateTypeStrategy(It.IsAny<ProductTypeConfiguration>(), It.IsAny<CancellationToken>()))
-                .Returns(async (ProductTypeConfiguration config, CancellationToken cancellationToken) =>
+                new GenericTypeConfiguration
                 {
-                    IProductTypeStrategy strategy = null;
-                    switch (config.PluginName)
-                    {
-                        case nameof(WatchStrategy):
-                            strategy = new WatchStrategy();
-                            break;
-                        case nameof(GenericTypeStrategy):
-                            strategy = new GenericTypeStrategy
-                            {
-                                EntityMapper = new GenericEntityMapper<ProductType, ProductPartLink>
-                                {
-                                    MapperFactory = mapperFactory.Object
-                                }
-                            };
-                            break;
-                    }
-
-                    await strategy.InitializeAsync(config, cancellationToken);
-
-                    return strategy;
-                });
-
-            strategyFactory.Setup(f => f.CreateInstanceStrategy(It.IsAny<ProductInstanceConfiguration>(), It.IsAny<CancellationToken>()))
-                .Returns(async (ProductInstanceConfiguration config, CancellationToken cancellationToken) =>
-                {
-                    IProductInstanceStrategy strategy = null;
-                    switch (config.PluginName)
-                    {
-                        case nameof(GenericInstanceStrategy):
-                            strategy = new GenericInstanceStrategy()
-                            {
-                                EntityMapper = new GenericEntityMapper<ProductInstance, ProductInstance>
-                                {
-                                    MapperFactory = mapperFactory.Object
-                                }
-                            };
-                            break;
-                        case nameof(SkipInstancesStrategy):
-                            strategy = new SkipInstancesStrategy();
-                            break;
-                    }
-
-                    await strategy.InitializeAsync(config, cancellationToken);
-
-                    return strategy;
-                });
-
-            strategyFactory.Setup(f => f.CreateLinkStrategy(It.IsAny<ProductLinkConfiguration>(), It.IsAny<CancellationToken>()))
-                .Returns(async (ProductLinkConfiguration config, CancellationToken cancellationToken) =>
-                {
-                    IProductLinkStrategy strategy = null;
-                    switch (config.PluginName)
-                    {
-                        case nameof(GenericLinkStrategy):
-                            strategy = new GenericLinkStrategy()
-                            {
-                                EntityMapper = new GenericEntityMapper<ProductPartLink, ProductType>
-                                {
-                                    MapperFactory = mapperFactory.Object
-                                }
-                            };
-                            break;
-                        case nameof(SimpleLinkStrategy):
-                            strategy = new SimpleLinkStrategy();
-                            break;
-                    }
-
-                    await strategy.InitializeAsync(config, cancellationToken);
-
-                    return strategy;
-                });
-
-            strategyFactory.Setup(f => f.CreateRecipeStrategy(It.IsAny<ProductRecipeConfiguration>(), It.IsAny<CancellationToken>()))
-                .Returns(async (ProductRecipeConfiguration config, CancellationToken cancellationToken) =>
-                {
-                    IProductRecipeStrategy strategy = new GenericRecipeStrategy
-                    {
-                        EntityMapper = new GenericEntityMapper<ProductionRecipe, ProductType>
+                    TargetType = typeof(WatchFaceType).FullName,
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
                         {
-                            MapperFactory = mapperFactory.Object
+                            PropertyName = nameof(WatchFaceType.Brand),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        },
+
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchFaceType.IsDigital),
+                            Column = nameof(IGenericColumns.Integer1),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
+
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchFaceType.Color),
+                            Column = string.Empty,
+                            PluginName = nameof(NullPropertyMapper)
                         }
-                    };
-
-                    await strategy.InitializeAsync(config, cancellationToken);
-
-                    return strategy;
-                });
-
-            return strategyFactory;
-        }
-
-        private static WatchType SetupProduct(string watchName, string identifierPrefix, short revision = 5, ProductState state = ProductState.Created)
-        {
-            var watchface = new WatchFaceType
-            {
-                Name = "Black water resistant for " + watchName,
-                Identity = new ProductIdentity(identifierPrefix + "4711", revision),
-                Numbers = [3, 6, 9, 12]
-            };
-
-            var needles = new List<NeedlePartLink>
-            {
-                new() {
-                    Product = new NeedleType { Name = "Hours needle", Identity = new ProductIdentity(identifierPrefix + "24", 1) }
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
                 },
-                new() {
-                    Product = new NeedleType { Name = "Minutes needle", Identity = new ProductIdentity(identifierPrefix + "1440", 2) }
+
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(DisplayWatchFaceType).FullName,
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(DisplayWatchFaceType.Resolution),
+                            Column = nameof(IGenericColumns.Integer1),
+                            PluginName = nameof(IntegerColumnMapper)
+                        }
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
                 },
-                new() {
-                    Product = new NeedleType { Name = "Seconds needle", Identity = new ProductIdentity(identifierPrefix + "B86400", 3) }
+
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(NeedleType).FullName,
+                    PropertyConfigs = [],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                },
+
+                new GenericTypeConfiguration
+                {
+                    TargetType = typeof(WatchPackageType).FullName,
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs = []
                 }
-            };
-
-            var watch = new WatchType
-            {
-                Name = watchName,
-                Identity = new ProductIdentity(identifierPrefix + WatchMaterial, revision),
-                WatchFace = new ProductPartLink<WatchFaceTypeBase> { Product = watchface },
-                Needles = needles,
-                Weight = 123.45,
-                State = state
-            };
-
-            return watch;
-        }
-
-        [Test]
-        public async Task PartLinksWithTheSameIdentifierAreOnlySavedOnce()
-        {
-            //Arrange
-            var watch = new WatchType
-            {
-                Name = "watch",
-                Identity = new ProductIdentity("223", 1),
-                Needles =
-                [
-                    new NeedlePartLink
-                    {
-                        Role = NeedleRole.Minutes,
-                        Product = new NeedleType
-                        {
-                            Identity = new ProductIdentity("222", 0),
-                            Name = "name"
-                        }
-                    },
-
-                    new NeedlePartLink
-                    {
-                        Role = NeedleRole.Seconds,
-                        Product = new NeedleType
-                        {
-                            Identity = new ProductIdentity("222", 0),
-                            Name = "name"
-                        }
-                    }
-                ]
-            };
-
-            //Act
-            await _storage.SaveTypeAsync(watch);
-            var minuteNeedle = watch.Needles.Find(t => t.Role == NeedleRole.Minutes);
-            var secondsNeedle = watch.Needles.Find(t => t.Role == NeedleRole.Seconds);
-
-            //Assert
-            Assert.That(minuteNeedle.Product.Id, Is.Not.EqualTo(0), "Id of Needle for minutes was 0");
-            Assert.That(secondsNeedle.Product.Id, Is.Not.EqualTo(0), "Id of Needle for seconds was 0");
-            Assert.That(minuteNeedle.Product.Id, Is.EqualTo(secondsNeedle.Product.Id), "Both needles must have the same Id since they are the same product");
-        }
-
-        [Test]
-        public async Task SaveWatchProduct()
-        {
-            // Arrange
-            var watch = SetupProduct("Jaques Lemans", string.Empty);
-
-            // Act
-            var savedWatchId = await _storage.SaveTypeAsync(watch);
-
-            // Assert
-            using (var uow = _factory.Create())
-            {
-                var productEntityRepo = uow.GetRepository<IProductTypeRepository>();
-
-                var watchEntity = productEntityRepo.GetByKey(savedWatchId);
-                Assert.That(watchEntity, Is.Not.Null, "Failed to save or id not written");
-
-                CheckProduct(watch, watchEntity, productEntityRepo, savedWatchId);
-            }
-        }
-
-        [Test]
-        public async Task SaveNewWatchProductVersion()
-        {
-            // Arrange
-            var watch = SetupProduct("Jaques Lemans", string.Empty);
-
-            // Act
-            // TODO: Looks like this act section didn't match the assertions
-            await _storage.SaveTypeAsync(watch);
-            watch.Weight = 234.56;
-            var savedWatchId = await _storage.SaveTypeAsync(watch);
-
-            // Assert
-            using (var uow = _factory.Create())
-            {
-                var productEntityRepo = uow.GetRepository<IProductTypeRepository>();
-
-                var watchEntity = productEntityRepo.GetByKey(savedWatchId);
-                Assert.That(watchEntity, Is.Not.Null, "Failed to save or id not written");
-                Assert.That(watchEntity.OldVersions.First().Float1, Is.EqualTo(123.45), "Old data are not equal to the previous version");
-                Assert.That(watchEntity.CurrentVersion.Float1, Is.EqualTo(234.56), "Latest changes are not in the new version");
-
-                CheckProduct(watch, watchEntity, productEntityRepo, savedWatchId);
-            }
-        }
-
-        private static void CheckProduct(WatchType watch, ProductTypeEntity watchProductTypeEntity, IProductTypeRepository productTypeRepo, long savedWatchId)
-        {
-            var watchNeedlesCount = watch.Needles.Count;
-            var watchEntityNeedlesCount = watchProductTypeEntity.Parts.Count(p => p.Child.TypeName.Equals(typeof(NeedleType).FullName));
-            Assert.That(watchEntityNeedlesCount, Is.EqualTo(watchNeedlesCount), "Different number of needles");
-
-            var watchfaceEntity = watchProductTypeEntity.Parts.First(p => p.Child.TypeName.Equals(typeof(WatchFaceType).FullName)).Child;
-            Assert.That(watchfaceEntity, Is.Not.Null, "There is no watchface");
-
-            var identity = (ProductIdentity)watch.Identity;
-            var byIdentifier = productTypeRepo.GetByIdentity(identity.Identifier, identity.Revision);
-            Assert.That(byIdentifier, Is.Not.Null, "New version of watch not found by identifier ");
-            Assert.That(byIdentifier.Id, Is.EqualTo(savedWatchId), "Different id´s");
-        }
-
-        [Test]
-        public async Task GetWatchProduct()
-        {
-            // Arrange
-            var watch = SetupProduct("Jaques Lemans", string.Empty);
-            var watchface = (WatchFaceType)watch.WatchFace.Product;
-
-            // Act
-            var savedWatchId = await _storage.SaveTypeAsync(watch);
-            var loadedWatch = (WatchType)await _storage.LoadTypeAsync(savedWatchId);
-
-            // Assert
-            Assert.That(loadedWatch, Is.Not.Null, "Failed to load from database");
-            Assert.That(loadedWatch.Identity.Identifier, Is.EqualTo(watch.Identity.Identifier), "Different identifier of the saved an loaded watch");
-            Assert.That(loadedWatch.WatchFace.Product.Identity.Identifier, Is.EqualTo(watch.WatchFace.Product.Identity.Identifier), "Different watchface identifier of the saved and loaded watch");
-            Assert.That(loadedWatch.Needles.Count, Is.EqualTo(watch.Needles.Count), "Different number of needles");
-            var loadedWatchface = (WatchFaceType)loadedWatch.WatchFace.Product;
-            Assert.That(loadedWatchface.Numbers.Length, Is.EqualTo(watchface.Numbers.Length), "Different number of watch numbers");
-        }
-
-        [Test(Description = "This test saves a product with a null string property and saves it again. " +
-                            "The bug was, that the HasChanged of the ColumnMapper throws an NullReferenceException")]
-        public async Task LoadAndSaveTypeWithNullString()
-        {
-            // Arrange
-            var watchfaceWithString = new WatchFaceType
-            {
-                Name = "Blubber",
-                Identity = new ProductIdentity("8899665", 1),
-                Numbers = [3, 6, 9, 12],
-                Brand = null //That's important for this test
-            };
-
-            var savedId = await _storage.SaveTypeAsync(watchfaceWithString);
-            var loaded = (WatchFaceType)await _storage.LoadTypeAsync(savedId);
-
-            // Act & Assert
-            Assert.DoesNotThrowAsync(() => _storage.SaveTypeAsync(loaded), "Save should not fail with null string property");
-        }
-
-        [Test(Description = "Loads recipes by the classification flags enum")]
-        public async Task LoadRecipesByClassification()
-        {
-            // Arrange
-            var watch = new WatchType
-            {
-                Name = "Test",
-                Identity = new ProductIdentity("8899665", 1),
-            };
-
-            await _storage.SaveTypeAsync(watch);
-
-            await CreateRecipe(RecipeClassification.Default);
-            await CreateRecipe(RecipeClassification.Alternative);
-            await CreateRecipe(RecipeClassification.Alternative);
-            await CreateRecipe(RecipeClassification.Part);
-
-            // Act
-            var defaults = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.Default);
-            var alternatives = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.Alternative);
-            var defaultsAndAlternatives = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.Default | RecipeClassification.Alternative);
-            var parts = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.Part);
-            var all = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.CloneFilter);
-
-            // Assert
-            Assert.That(defaults.Count, Is.EqualTo(1));
-            Assert.That(alternatives.Count, Is.EqualTo(2));
-            Assert.That(defaultsAndAlternatives.Count, Is.EqualTo(3));
-            Assert.That(parts.Count, Is.EqualTo(1));
-            Assert.That(all.Count, Is.EqualTo(4));
-            return;
-
-            Task CreateRecipe(RecipeClassification classification)
-            {
-                var recipe = new WatchProductRecipe
+            ],
+            InstanceStrategies =
+            [
+                new GenericInstanceConfiguration
                 {
-                    Product = watch,
-                    Classification = classification,
-                    Name = classification + ": TestRecipe",
-                    Workplan = new Workplan { Id = _workplanId }
-                };
-                return _storage.SaveRecipeAsync(recipe);
-            }
-        }
-
-        [Test(Description = "This test saves a product with a property which should not be saved. " +
-                            "The NullPropertyMapper ignores this property at load and save.")]
-        public async Task LoadAndSaveTypeWithNullPropertyMapper()
-        {
-            // Arrange
-            var watchfaceWithString = new WatchFaceType
-            {
-                Name = "Fasel",
-                Identity = new ProductIdentity("55889966", 1),
-                Numbers = [3, 6, 9, 12],
-                Brand = "Unknown",
-                Color = 42  //That's important for this test
-            };
-
-            // Act
-            var savedId = await _storage.SaveTypeAsync(watchfaceWithString);
-            var loaded = (WatchFaceType)await _storage.LoadTypeAsync(savedId);
-
-            // Assert
-            Assert.That(loaded.Color, Is.EqualTo(0));
-        }
-
-        [TestCase(true, Description = "Get the latest revision of an existing product")]
-        [TestCase(false, Description = "Try to get the latest revision of a not-existing product")]
-        public async Task LoadLatestRevision(bool exists)
-        {
-            const string newName = "Jaques Lemans XS";
-
-            // Arrange
-            var watch = SetupProduct("Jaques Lemans", string.Empty);
-            await _storage.SaveTypeAsync(watch);
-            watch = SetupProduct(newName, string.Empty, 42);
-            await _storage.SaveTypeAsync(watch);
-
-            // Act
-            var loadedWatch = (WatchType)await _storage.LoadTypeAsync(ProductIdentity.AsLatestRevision(exists ? WatchMaterial : "1234"));
-
-            // Assert
-            if (exists)
-            {
-                Assert.That(loadedWatch, Is.Not.Null);
-                Assert.That(((ProductIdentity)loadedWatch.Identity).Revision, Is.EqualTo(42));
-                Assert.That(loadedWatch.Name, Is.EqualTo(newName));
-            }
-            else
-            {
-                Assert.That(loadedWatch, Is.Null);
-            }
-        }
-
-        [Test(Description = "Request products by query - multiple tests")]
-        public async Task GetProductByQuery()
-        {
-            // Arrange
-            var watch = SetupProduct("Jaques Lemans", string.Empty);
-            await _storage.SaveTypeAsync(watch);
-            watch = SetupProduct("Jaques Lemans", string.Empty, 17);
-            await _storage.SaveTypeAsync(watch);
-
-            // Act
-            var all = await _storage.LoadTypesAsync(new ProductQuery());
-            var latestRevision = await _storage.LoadTypesAsync(new ProductQuery { RevisionFilter = RevisionFilter.Latest });
-            var byType = await _storage.LoadTypesAsync(new ProductQuery { TypeName = typeof(NeedleType).FullName });
-            var allRevision = await _storage.LoadTypesAsync(new ProductQuery { Identifier = WatchMaterial });
-            var latestByType = await _storage.LoadTypesAsync(new ProductQuery
-            {
-                TypeName = typeof(WatchType).FullName,
-                RevisionFilter = RevisionFilter.Latest
-            });
-            var usages = await _storage.LoadTypesAsync(new ProductQuery
-            {
-                Identifier = "24",
-                Selector = Selector.Parent
-            });
-            var needles = await _storage.LoadTypesAsync(new ProductQuery
-            {
-                Name = "needle",
-                RevisionFilter = RevisionFilter.Latest
-            });
-
-            // Assert
-            Assert.That(all.Count, Is.GreaterThan(latestRevision.Count));
-            Assert.That(byType.All(p => p is NeedleType));
-            Assert.That(allRevision.All(p => p.Identity.Identifier == WatchMaterial));
-            Assert.That(latestByType.Count, Is.GreaterThanOrEqualTo(1));
-            Assert.That(usages.All(u => u is WatchType));
-            Assert.That(needles.Count, Is.GreaterThanOrEqualTo(3));
-        }
-
-        [Test(Description = "Request products by query with a required state")]
-        public async Task GetProductsByQueryRequiredState()
-        {
-            // Arrange
-            const string identifierPrefix = "123";
-            var watch = SetupProduct("Rolex GMT-Master II", identifierPrefix, 1, ProductState.Released | ProductState.Generated);
-            await _storage.SaveTypeAsync(watch);
-
-            var anotherWatch = SetupProduct("G-SHOCK GM-5600BWD-1", "5600", 1, ProductState.Released);
-            await _storage.SaveTypeAsync(anotherWatch);
-
-            // Act
-            var generated = await _storage.LoadTypesAsync(new ProductQuery
-            {
-                TypeName = typeof(WatchType).FullName,
-                RequiredState = ProductState.Generated
-            });
-
-            // Assert
-            Assert.That(generated, Is.Not.Null);
-            Assert.That(generated.Count, Is.EqualTo(1));
-            Assert.That(generated[0].Identity.Identifier, Is.EqualTo(identifierPrefix + WatchMaterial));
-        }
-
-        [Test]
-        public async Task GetProductByExpression()
-        {
-            // Arrange
-            var watchface = new DisplayWatchFaceType
-            {
-                Name = "ExpressionWatchface",
-                Identity = new ProductIdentity("4742", 0),
-                Resolution = 180
-            };
-            await _storage.SaveTypeAsync(watchface);
-
-            // Act
-            var loaded = await _storage.LoadTypesAsync<DisplayWatchFaceType>(wf => wf.Resolution == 180);
-            var loaded2 = await _storage.LoadTypesAsync<DisplayWatchFaceType>(wf => wf.Resolution > 150);
-            var loaded3 = await _storage.LoadTypesAsync(new ProductQuery
-            {
-                TypeName = typeof(DisplayWatchFaceType).FullName,
-                PropertyFilters =
-                [
-                    new()
-                    {
-                        Operator = PropertyFilterOperator.Equals,
-                        Entry = new Entry
+                    TargetType = typeof(WatchInstance).FullName,
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
                         {
-                            Identifier = nameof(DisplayWatchFaceType.Resolution),
-                            Value = new EntryValue { Current = "180" }
+                            PropertyName = nameof(WatchInstance.DeliveryDate),
+                            Column = nameof(IGenericColumns.Integer1),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
+
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchInstance.TimeSet),
+                            Column = nameof(IGenericColumns.Integer2),
+                            PluginName = nameof(IntegerColumnMapper)
+                        },
+
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchInstance.Identity),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
                         }
+                    ]
+                },
+
+                new GenericInstanceConfiguration
+                {
+                    TargetType = typeof(WatchFaceInstance).FullName,
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchFaceInstance.Identifier),
+                            Column = nameof(IGenericColumns.Text1),
+                            PluginName = nameof(TextColumnMapper)
+                        },
+
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(WatchFaceInstance.Identity),
+                            Column = nameof(IGenericColumns.Text2),
+                            PluginName = nameof(TextColumnMapper)
+                        }
+                    ],
+                    JsonColumn = nameof(IGenericColumns.Text8)
+                },
+
+                new ProductInstanceConfiguration()
+                {
+                    TargetType = typeof(NeedleInstance).FullName,
+                    PluginName = nameof(SkipInstancesStrategy)
+                }
+
+            ],
+            LinkStrategies =
+            [
+                new ProductLinkConfiguration()
+                {
+                    TargetType = typeof(WatchType).FullName,
+                    PartName = nameof(WatchType.WatchFace),
+                    PluginName = nameof(SimpleLinkStrategy)
+                },
+
+                new GenericLinkConfiguration
+                {
+                    TargetType = typeof(WatchType).FullName,
+                    PartName = nameof(WatchType.Needles),
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs =
+                    [
+                        new PropertyMapperConfig
+                        {
+                            PropertyName = nameof(NeedlePartLink.Role),
+                            PluginName = nameof(IntegerColumnMapper),
+                            Column = nameof(IGenericColumns.Integer1)
+                        }
+                    ]
+                },
+
+                new ProductLinkConfiguration()
+                {
+                    TargetType = typeof(WatchPackageType).FullName,
+                    PartName = nameof(WatchPackageType.PossibleWatches),
+                    PluginName = nameof(SimpleLinkStrategy)
+                }
+
+            ],
+            RecipeStrategies =
+            [
+                new GenericRecipeConfiguration
+                {
+                    TargetType = typeof(WatchProductRecipe).FullName,
+                    JsonColumn = nameof(IGenericColumns.Text8),
+                    PropertyConfigs = []
+                }
+            ]
+        };
+
+        await _storage.StartAsync();
+    }
+
+    protected virtual UnitOfWorkFactory<SqliteProductsContext> BuildUnitOfWorkFactory()
+    {
+        var uowFactory = InMemoryUnitOfWorkFactoryBuilder
+            .Sqlite<SqliteProductsContext>();
+        uowFactory.EnsureDbIsCreated();
+
+        return uowFactory;
+    }
+
+    private Mock<IStorageStrategyFactory> CreateStrategyFactory()
+    {
+        var mapperFactory = new Mock<IPropertyMapperFactory>();
+        mapperFactory.Setup(mf => mf.Create(It.IsAny<PropertyMapperConfig>(), It.IsAny<Type>()))
+            .Returns<PropertyMapperConfig, Type>((config, type) =>
+            {
+                IPropertyMapper mapper = null;
+                switch (config.PluginName)
+                {
+                    case nameof(IntegerColumnMapper):
+                        mapper = new IntegerColumnMapper(type);
+                        break;
+                    case nameof(TextColumnMapper):
+                        mapper = new TextColumnMapper(type);
+                        break;
+                    case nameof(NullPropertyMapper):
+                        mapper = new NullPropertyMapper(type);
+                        break;
+                }
+
+                mapper.Initialize(config);
+
+                return mapper;
+            });
+
+        var strategyFactory = new Mock<IStorageStrategyFactory>();
+        strategyFactory.Setup(f => f.CreateTypeStrategy(It.IsAny<ProductTypeConfiguration>(), It.IsAny<CancellationToken>()))
+            .Returns(async (ProductTypeConfiguration config, CancellationToken cancellationToken) =>
+            {
+                IProductTypeStrategy strategy = null;
+                switch (config.PluginName)
+                {
+                    case nameof(WatchStrategy):
+                        strategy = new WatchStrategy();
+                        break;
+                    case nameof(GenericTypeStrategy):
+                        strategy = new GenericTypeStrategy
+                        {
+                            EntityMapper = new GenericEntityMapper<ProductType, ProductPartLink>
+                            {
+                                MapperFactory = mapperFactory.Object
+                            }
+                        };
+                        break;
+                }
+
+                await strategy.InitializeAsync(config, cancellationToken);
+
+                return strategy;
+            });
+
+        strategyFactory.Setup(f => f.CreateInstanceStrategy(It.IsAny<ProductInstanceConfiguration>(), It.IsAny<CancellationToken>()))
+            .Returns(async (ProductInstanceConfiguration config, CancellationToken cancellationToken) =>
+            {
+                IProductInstanceStrategy strategy = null;
+                switch (config.PluginName)
+                {
+                    case nameof(GenericInstanceStrategy):
+                        strategy = new GenericInstanceStrategy()
+                        {
+                            EntityMapper = new GenericEntityMapper<ProductInstance, ProductInstance>
+                            {
+                                MapperFactory = mapperFactory.Object
+                            }
+                        };
+                        break;
+                    case nameof(SkipInstancesStrategy):
+                        strategy = new SkipInstancesStrategy();
+                        break;
+                }
+
+                await strategy.InitializeAsync(config, cancellationToken);
+
+                return strategy;
+            });
+
+        strategyFactory.Setup(f => f.CreateLinkStrategy(It.IsAny<ProductLinkConfiguration>(), It.IsAny<CancellationToken>()))
+            .Returns(async (ProductLinkConfiguration config, CancellationToken cancellationToken) =>
+            {
+                IProductLinkStrategy strategy = null;
+                switch (config.PluginName)
+                {
+                    case nameof(GenericLinkStrategy):
+                        strategy = new GenericLinkStrategy()
+                        {
+                            EntityMapper = new GenericEntityMapper<ProductPartLink, ProductType>
+                            {
+                                MapperFactory = mapperFactory.Object
+                            }
+                        };
+                        break;
+                    case nameof(SimpleLinkStrategy):
+                        strategy = new SimpleLinkStrategy();
+                        break;
+                }
+
+                await strategy.InitializeAsync(config, cancellationToken);
+
+                return strategy;
+            });
+
+        strategyFactory.Setup(f => f.CreateRecipeStrategy(It.IsAny<ProductRecipeConfiguration>(), It.IsAny<CancellationToken>()))
+            .Returns(async (ProductRecipeConfiguration config, CancellationToken cancellationToken) =>
+            {
+                IProductRecipeStrategy strategy = new GenericRecipeStrategy
+                {
+                    EntityMapper = new GenericEntityMapper<ProductionRecipe, ProductType>
+                    {
+                        MapperFactory = mapperFactory.Object
                     }
-                ]
+                };
+
+                await strategy.InitializeAsync(config, cancellationToken);
+
+                return strategy;
             });
 
-            // Assert
-            Assert.That(1, Is.EqualTo(loaded.Count));
-            Assert.That(loaded[0].Id, Is.EqualTo(watchface.Id));
-            Assert.That(1, Is.EqualTo(loaded2.Count));
-            Assert.That(loaded2[0].Id, Is.EqualTo(watchface.Id));
-            Assert.That(1, Is.EqualTo(loaded3.Count));
-            Assert.That(loaded3[0].Id, Is.EqualTo(watchface.Id));
-        }
+        return strategyFactory;
+    }
 
-        [Test]
-        public async Task ShouldReturnNoProductsForWildcardInName()
+    private static WatchType SetupProduct(string watchName, string identifierPrefix, short revision = 5, ProductState state = ProductState.Created)
+    {
+        var watchface = new WatchFaceType
         {
-            // Arrange
-            var productMgr = new ProductManager
-            {
-                Factory = _factory,
-                Storage = _storage
-            };
-            var watch = SetupProduct("Jaques Lemans", string.Empty);
-            await _storage.SaveTypeAsync(watch);
+            Name = "Black water resistant for " + watchName,
+            Identity = new ProductIdentity(identifierPrefix + "4711", revision),
+            Numbers = [3, 6, 9, 12]
+        };
 
-            // Act
-            var needles = await productMgr.LoadTypes(new ProductQuery
-            {
-                Name = "*needle",
-                RevisionFilter = RevisionFilter.Latest
-            });
-
-            // Assert
-            Assert.That(needles.Count, Is.GreaterThanOrEqualTo(0), "There should be no products if a wildcard was used for the name");
-        }
-
-        [Test]
-        public async Task IdentifierQueryShouldNotBeCaseSensitive()
+        var needles = new List<NeedlePartLink>
         {
-            // Arrange
-            var productMgr = new ProductManager
-            {
-                Factory = _factory,
-                Storage = _storage
-            };
-            var watch = SetupProduct("Jaques Lemans", string.Empty);
-            await _storage.SaveTypeAsync(watch);
+            new() {
+                Product = new NeedleType { Name = "Hours needle", Identity = new ProductIdentity(identifierPrefix + "24", 1) }
+            },
+            new() {
+                Product = new NeedleType { Name = "Minutes needle", Identity = new ProductIdentity(identifierPrefix + "1440", 2) }
+            },
+            new() {
+                Product = new NeedleType { Name = "Seconds needle", Identity = new ProductIdentity(identifierPrefix + "B86400", 3) }
+            }
+        };
 
-            // Act
-            var products = await productMgr.LoadTypes(new ProductQuery
-            {
-                Identifier = "b*",
-                RevisionFilter = RevisionFilter.Latest
-            });
-
-            // Assert
-            Assert.That(products.Count, Is.EqualTo(1), "There should be a product for the given query");
-        }
-
-        [TestCase(false, false, Description = "Duplicate product with valid id")]
-        //[TestCase(false, true, Description = "Duplicate product, but identity already taken")]
-        //[TestCase(true, false, Description = "Duplicate product but with template missmatch")]
-        public async Task DuplicateProduct(bool crossTypeIdentifier, bool revisionTaken)
+        var watch = new WatchType
         {
-            // Arrange
-            var productMgr = new ProductManager
-            {
-                Factory = _factory,
-                Storage = _storage
-            };
-            productMgr.TypeChanged += (sender, product) => { };
-            var watch = SetupProduct("Jaques Lemans", "321");
-            await _storage.SaveTypeAsync(watch);
+            Name = watchName,
+            Identity = new ProductIdentity(identifierPrefix + WatchMaterial, revision),
+            WatchFace = new ProductPartLink<WatchFaceTypeBase> { Product = watchface },
+            Needles = needles,
+            Weight = 123.45,
+            State = state
+        };
+
+        return watch;
+    }
+
+    [Test]
+    public async Task PartLinksWithTheSameIdentifierAreOnlySavedOnce()
+    {
+        //Arrange
+        var watch = new WatchType
+        {
+            Name = "watch",
+            Identity = new ProductIdentity("223", 1),
+            Needles =
+            [
+                new NeedlePartLink
+                {
+                    Role = NeedleRole.Minutes,
+                    Product = new NeedleType
+                    {
+                        Identity = new ProductIdentity("222", 0),
+                        Name = "name"
+                    }
+                },
+
+                new NeedlePartLink
+                {
+                    Role = NeedleRole.Seconds,
+                    Product = new NeedleType
+                    {
+                        Identity = new ProductIdentity("222", 0),
+                        Name = "name"
+                    }
+                }
+            ]
+        };
+
+        //Act
+        await _storage.SaveTypeAsync(watch);
+        var minuteNeedle = watch.Needles.Find(t => t.Role == NeedleRole.Minutes);
+        var secondsNeedle = watch.Needles.Find(t => t.Role == NeedleRole.Seconds);
+
+        //Assert
+        Assert.That(minuteNeedle.Product.Id, Is.Not.EqualTo(0), "Id of Needle for minutes was 0");
+        Assert.That(secondsNeedle.Product.Id, Is.Not.EqualTo(0), "Id of Needle for seconds was 0");
+        Assert.That(minuteNeedle.Product.Id, Is.EqualTo(secondsNeedle.Product.Id), "Both needles must have the same Id since they are the same product");
+    }
+
+    [Test]
+    public async Task SaveWatchProduct()
+    {
+        // Arrange
+        var watch = SetupProduct("Jaques Lemans", string.Empty);
+
+        // Act
+        var savedWatchId = await _storage.SaveTypeAsync(watch);
+
+        // Assert
+        using (var uow = _factory.Create())
+        {
+            var productEntityRepo = uow.GetRepository<IProductTypeRepository>();
+
+            var watchEntity = productEntityRepo.GetByKey(savedWatchId);
+            Assert.That(watchEntity, Is.Not.Null, "Failed to save or id not written");
+
+            CheckProduct(watch, watchEntity, productEntityRepo, savedWatchId);
+        }
+    }
+
+    [Test]
+    public async Task SaveNewWatchProductVersion()
+    {
+        // Arrange
+        var watch = SetupProduct("Jaques Lemans", string.Empty);
+
+        // Act
+        // TODO: Looks like this act section didn't match the assertions
+        await _storage.SaveTypeAsync(watch);
+        watch.Weight = 234.56;
+        var savedWatchId = await _storage.SaveTypeAsync(watch);
+
+        // Assert
+        using (var uow = _factory.Create())
+        {
+            var productEntityRepo = uow.GetRepository<IProductTypeRepository>();
+
+            var watchEntity = productEntityRepo.GetByKey(savedWatchId);
+            Assert.That(watchEntity, Is.Not.Null, "Failed to save or id not written");
+            Assert.That(watchEntity.OldVersions.First().Float1, Is.EqualTo(123.45), "Old data are not equal to the previous version");
+            Assert.That(watchEntity.CurrentVersion.Float1, Is.EqualTo(234.56), "Latest changes are not in the new version");
+
+            CheckProduct(watch, watchEntity, productEntityRepo, savedWatchId);
+        }
+    }
+
+    private static void CheckProduct(WatchType watch, ProductTypeEntity watchProductTypeEntity, IProductTypeRepository productTypeRepo, long savedWatchId)
+    {
+        var watchNeedlesCount = watch.Needles.Count;
+        var watchEntityNeedlesCount = watchProductTypeEntity.Parts.Count(p => p.Child.TypeName.Equals(typeof(NeedleType).FullName));
+        Assert.That(watchEntityNeedlesCount, Is.EqualTo(watchNeedlesCount), "Different number of needles");
+
+        var watchfaceEntity = watchProductTypeEntity.Parts.First(p => p.Child.TypeName.Equals(typeof(WatchFaceType).FullName)).Child;
+        Assert.That(watchfaceEntity, Is.Not.Null, "There is no watchface");
+
+        var identity = (ProductIdentity)watch.Identity;
+        var byIdentifier = productTypeRepo.GetByIdentity(identity.Identifier, identity.Revision);
+        Assert.That(byIdentifier, Is.Not.Null, "New version of watch not found by identifier ");
+        Assert.That(byIdentifier.Id, Is.EqualTo(savedWatchId), "Different id´s");
+    }
+
+    [Test]
+    public async Task GetWatchProduct()
+    {
+        // Arrange
+        var watch = SetupProduct("Jaques Lemans", string.Empty);
+        var watchface = (WatchFaceType)watch.WatchFace.Product;
+
+        // Act
+        var savedWatchId = await _storage.SaveTypeAsync(watch);
+        var loadedWatch = (WatchType)await _storage.LoadTypeAsync(savedWatchId);
+
+        // Assert
+        Assert.That(loadedWatch, Is.Not.Null, "Failed to load from database");
+        Assert.That(loadedWatch.Identity.Identifier, Is.EqualTo(watch.Identity.Identifier), "Different identifier of the saved an loaded watch");
+        Assert.That(loadedWatch.WatchFace.Product.Identity.Identifier, Is.EqualTo(watch.WatchFace.Product.Identity.Identifier), "Different watchface identifier of the saved and loaded watch");
+        Assert.That(loadedWatch.Needles.Count, Is.EqualTo(watch.Needles.Count), "Different number of needles");
+        var loadedWatchface = (WatchFaceType)loadedWatch.WatchFace.Product;
+        Assert.That(loadedWatchface.Numbers.Length, Is.EqualTo(watchface.Numbers.Length), "Different number of watch numbers");
+    }
+
+    [Test(Description = "This test saves a product with a null string property and saves it again. " +
+                        "The bug was, that the HasChanged of the ColumnMapper throws an NullReferenceException")]
+    public async Task LoadAndSaveTypeWithNullString()
+    {
+        // Arrange
+        var watchfaceWithString = new WatchFaceType
+        {
+            Name = "Blubber",
+            Identity = new ProductIdentity("8899665", 1),
+            Numbers = [3, 6, 9, 12],
+            Brand = null //That's important for this test
+        };
+
+        var savedId = await _storage.SaveTypeAsync(watchfaceWithString);
+        var loaded = (WatchFaceType)await _storage.LoadTypeAsync(savedId);
+
+        // Act & Assert
+        Assert.DoesNotThrowAsync(() => _storage.SaveTypeAsync(loaded), "Save should not fail with null string property");
+    }
+
+    [Test(Description = "Loads recipes by the classification flags enum")]
+    public async Task LoadRecipesByClassification()
+    {
+        // Arrange
+        var watch = new WatchType
+        {
+            Name = "Test",
+            Identity = new ProductIdentity("8899665", 1),
+        };
+
+        await _storage.SaveTypeAsync(watch);
+
+        await CreateRecipe(RecipeClassification.Default);
+        await CreateRecipe(RecipeClassification.Alternative);
+        await CreateRecipe(RecipeClassification.Alternative);
+        await CreateRecipe(RecipeClassification.Part);
+
+        // Act
+        var defaults = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.Default);
+        var alternatives = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.Alternative);
+        var defaultsAndAlternatives = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.Default | RecipeClassification.Alternative);
+        var parts = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.Part);
+        var all = await _storage.LoadRecipesAsync(watch.Id, RecipeClassification.CloneFilter);
+
+        // Assert
+        Assert.That(defaults.Count, Is.EqualTo(1));
+        Assert.That(alternatives.Count, Is.EqualTo(2));
+        Assert.That(defaultsAndAlternatives.Count, Is.EqualTo(3));
+        Assert.That(parts.Count, Is.EqualTo(1));
+        Assert.That(all.Count, Is.EqualTo(4));
+        return;
+
+        Task CreateRecipe(RecipeClassification classification)
+        {
             var recipe = new WatchProductRecipe
             {
                 Product = watch,
-                Classification = RecipeClassification.Default,
-                Name = "TestRecipe",
+                Classification = classification,
+                Name = classification + ": TestRecipe",
                 Workplan = new Workplan { Id = _workplanId }
             };
-            await _storage.SaveRecipeAsync(recipe);
+            return _storage.SaveRecipeAsync(recipe);
+        }
+    }
 
-            // Act (& Assert)
-            WatchType duplicate = null;
-            if (crossTypeIdentifier | revisionTaken)
-            {
-                var newIdentity = crossTypeIdentifier
-                    ? new ProductIdentity("3214711", 7)
-                    : new ProductIdentity("321" + WatchMaterial, 5);
-                var ex = Assert.ThrowsAsync<IdentityConflictException>(async () =>
+    [Test(Description = "This test saves a product with a property which should not be saved. " +
+                        "The NullPropertyMapper ignores this property at load and save.")]
+    public async Task LoadAndSaveTypeWithNullPropertyMapper()
+    {
+        // Arrange
+        var watchfaceWithString = new WatchFaceType
+        {
+            Name = "Fasel",
+            Identity = new ProductIdentity("55889966", 1),
+            Numbers = [3, 6, 9, 12],
+            Brand = "Unknown",
+            Color = 42  //That's important for this test
+        };
+
+        // Act
+        var savedId = await _storage.SaveTypeAsync(watchfaceWithString);
+        var loaded = (WatchFaceType)await _storage.LoadTypeAsync(savedId);
+
+        // Assert
+        Assert.That(loaded.Color, Is.EqualTo(0));
+    }
+
+    [TestCase(true, Description = "Get the latest revision of an existing product")]
+    [TestCase(false, Description = "Try to get the latest revision of a not-existing product")]
+    public async Task LoadLatestRevision(bool exists)
+    {
+        const string newName = "Jaques Lemans XS";
+
+        // Arrange
+        var watch = SetupProduct("Jaques Lemans", string.Empty);
+        await _storage.SaveTypeAsync(watch);
+        watch = SetupProduct(newName, string.Empty, 42);
+        await _storage.SaveTypeAsync(watch);
+
+        // Act
+        var loadedWatch = (WatchType)await _storage.LoadTypeAsync(ProductIdentity.AsLatestRevision(exists ? WatchMaterial : "1234"));
+
+        // Assert
+        if (exists)
+        {
+            Assert.That(loadedWatch, Is.Not.Null);
+            Assert.That(((ProductIdentity)loadedWatch.Identity).Revision, Is.EqualTo(42));
+            Assert.That(loadedWatch.Name, Is.EqualTo(newName));
+        }
+        else
+        {
+            Assert.That(loadedWatch, Is.Null);
+        }
+    }
+
+    [Test(Description = "Request products by query - multiple tests")]
+    public async Task GetProductByQuery()
+    {
+        // Arrange
+        var watch = SetupProduct("Jaques Lemans", string.Empty);
+        await _storage.SaveTypeAsync(watch);
+        watch = SetupProduct("Jaques Lemans", string.Empty, 17);
+        await _storage.SaveTypeAsync(watch);
+
+        // Act
+        var all = await _storage.LoadTypesAsync(new ProductQuery());
+        var latestRevision = await _storage.LoadTypesAsync(new ProductQuery { RevisionFilter = RevisionFilter.Latest });
+        var byType = await _storage.LoadTypesAsync(new ProductQuery { TypeName = typeof(NeedleType).FullName });
+        var allRevision = await _storage.LoadTypesAsync(new ProductQuery { Identifier = WatchMaterial });
+        var latestByType = await _storage.LoadTypesAsync(new ProductQuery
+        {
+            TypeName = typeof(WatchType).FullName,
+            RevisionFilter = RevisionFilter.Latest
+        });
+        var usages = await _storage.LoadTypesAsync(new ProductQuery
+        {
+            Identifier = "24",
+            Selector = Selector.Parent
+        });
+        var needles = await _storage.LoadTypesAsync(new ProductQuery
+        {
+            Name = "needle",
+            RevisionFilter = RevisionFilter.Latest
+        });
+
+        // Assert
+        Assert.That(all.Count, Is.GreaterThan(latestRevision.Count));
+        Assert.That(byType.All(p => p is NeedleType));
+        Assert.That(allRevision.All(p => p.Identity.Identifier == WatchMaterial));
+        Assert.That(latestByType.Count, Is.GreaterThanOrEqualTo(1));
+        Assert.That(usages.All(u => u is WatchType));
+        Assert.That(needles.Count, Is.GreaterThanOrEqualTo(3));
+    }
+
+    [Test(Description = "Request products by query with a required state")]
+    public async Task GetProductsByQueryRequiredState()
+    {
+        // Arrange
+        const string identifierPrefix = "123";
+        var watch = SetupProduct("Rolex GMT-Master II", identifierPrefix, 1, ProductState.Released | ProductState.Generated);
+        await _storage.SaveTypeAsync(watch);
+
+        var anotherWatch = SetupProduct("G-SHOCK GM-5600BWD-1", "5600", 1, ProductState.Released);
+        await _storage.SaveTypeAsync(anotherWatch);
+
+        // Act
+        var generated = await _storage.LoadTypesAsync(new ProductQuery
+        {
+            TypeName = typeof(WatchType).FullName,
+            RequiredState = ProductState.Generated
+        });
+
+        // Assert
+        Assert.That(generated, Is.Not.Null);
+        Assert.That(generated.Count, Is.EqualTo(1));
+        Assert.That(generated[0].Identity.Identifier, Is.EqualTo(identifierPrefix + WatchMaterial));
+    }
+
+    [Test]
+    public async Task GetProductByExpression()
+    {
+        // Arrange
+        var watchface = new DisplayWatchFaceType
+        {
+            Name = "ExpressionWatchface",
+            Identity = new ProductIdentity("4742", 0),
+            Resolution = 180
+        };
+        await _storage.SaveTypeAsync(watchface);
+
+        // Act
+        var loaded = await _storage.LoadTypesAsync<DisplayWatchFaceType>(wf => wf.Resolution == 180);
+        var loaded2 = await _storage.LoadTypesAsync<DisplayWatchFaceType>(wf => wf.Resolution > 150);
+        var loaded3 = await _storage.LoadTypesAsync(new ProductQuery
+        {
+            TypeName = typeof(DisplayWatchFaceType).FullName,
+            PropertyFilters =
+            [
+                new()
                 {
-                    duplicate = (WatchType)await productMgr.DuplicateType(watch, newIdentity);
-                });
-                Assert.That(ex.InvalidTemplate, Is.EqualTo(crossTypeIdentifier));
-                return;
-            }
+                    Operator = PropertyFilterOperator.Equals,
+                    Entry = new Entry
+                    {
+                        Identifier = nameof(DisplayWatchFaceType.Resolution),
+                        Value = new EntryValue { Current = "180" }
+                    }
+                }
+            ]
+        });
 
-            Assert.DoesNotThrowAsync(async () =>
-            {
-                duplicate = (WatchType)await productMgr.DuplicateType(watch,
-                    new ProductIdentity("654" + WatchMaterial, 1));
-            });
+        // Assert
+        Assert.That(1, Is.EqualTo(loaded.Count));
+        Assert.That(loaded[0].Id, Is.EqualTo(watchface.Id));
+        Assert.That(1, Is.EqualTo(loaded2.Count));
+        Assert.That(loaded2[0].Id, Is.EqualTo(watchface.Id));
+        Assert.That(1, Is.EqualTo(loaded3.Count));
+        Assert.That(loaded3[0].Id, Is.EqualTo(watchface.Id));
+    }
 
-            var recipeDuplicates = await _storage.LoadRecipesAsync(duplicate.Id, RecipeClassification.CloneFilter);
-
-            // Assert
-            Assert.That(duplicate.WatchFace.Product.Id, Is.EqualTo(watch.WatchFace.Product.Id));
-            Assert.That(duplicate.Needles.Sum(n => n.Product.Id), Is.EqualTo(watch.Needles.Sum(n => n.Product.Id)));
-            Assert.That(recipeDuplicates.Count, Is.GreaterThan(0));
-            Assert.That(recipe.Id, Is.Not.EqualTo(recipeDuplicates[0].Id));
-            Assert.That(recipeDuplicates[0].Name, Is.EqualTo(recipe.Name));
-            Assert.That(recipeDuplicates[0].Classification, Is.EqualTo(recipe.Classification));
-        }
-
-        [TestCase(true, Description = "Remove a product that is still used")]
-        [TestCase(false, Description = "Remove a product that is not used")]
-        public async Task RemoveProduct(bool stillUsed)
+    [Test]
+    public async Task ShouldReturnNoProductsForWildcardInName()
+    {
+        // Arrange
+        var productMgr = new ProductManager
         {
-            // Arrange
-            var productMgr = new ProductManager
-            {
-                Factory = _factory,
-                Storage = _storage
-            };
-            var watch = SetupProduct("Jaques Lemans", "567");
-            await _storage.SaveTypeAsync(watch);
+            Factory = _factory,
+            Storage = _storage
+        };
+        var watch = SetupProduct("Jaques Lemans", string.Empty);
+        await _storage.SaveTypeAsync(watch);
 
-            // Act
-            bool result;
-            if (stillUsed)
-                result = await productMgr.DeleteType(watch.WatchFace.Product.Id);
-            else
-                result = await productMgr.DeleteType(watch.Id);
-
-            // Assert
-            Assert.That(!result, Is.EqualTo(stillUsed));
-            if (stillUsed)
-                return;
-
-            var matches = await productMgr.LoadTypes(new ProductQuery
-            {
-                RevisionFilter = RevisionFilter.Specific,
-                Revision = 5,
-                Identifier = watch.Identity.Identifier
-            });
-            Assert.That(matches.Count, Is.EqualTo(0));
-        }
-
-        [Test]
-        public async Task SaveAndLoadInstance()
+        // Act
+        var needles = await productMgr.LoadTypes(new ProductQuery
         {
-            // Arrange
-            var watch = SetupProduct("TestWatch", string.Empty);
-            await _storage.SaveTypeAsync(watch);
-            // Reload from storage for partlink ids if the object exists
-            watch = (WatchType)await _storage.LoadTypeAsync(watch.Id);
+            Name = "*needle",
+            RevisionFilter = RevisionFilter.Latest
+        });
 
-            // Act
-            var instance = (WatchInstance)watch.CreateInstance();
-            instance.TimeSet = true;
-            instance.DeliveryDate = DateTime.Now;
-            instance.Identity = new BatchIdentity("12345");
-            await _storage.SaveInstancesAsync([instance]);
+        // Assert
+        Assert.That(needles.Count, Is.GreaterThanOrEqualTo(0), "There should be no products if a wildcard was used for the name");
+    }
 
-            // Assert
-            using (var uow = _factory.Create())
+    [Test]
+    public async Task IdentifierQueryShouldNotBeCaseSensitive()
+    {
+        // Arrange
+        var productMgr = new ProductManager
+        {
+            Factory = _factory,
+            Storage = _storage
+        };
+        var watch = SetupProduct("Jaques Lemans", string.Empty);
+        await _storage.SaveTypeAsync(watch);
+
+        // Act
+        var products = await productMgr.LoadTypes(new ProductQuery
+        {
+            Identifier = "b*",
+            RevisionFilter = RevisionFilter.Latest
+        });
+
+        // Assert
+        Assert.That(products.Count, Is.EqualTo(1), "There should be a product for the given query");
+    }
+
+    [TestCase(false, false, Description = "Duplicate product with valid id")]
+    //[TestCase(false, true, Description = "Duplicate product, but identity already taken")]
+    //[TestCase(true, false, Description = "Duplicate product but with template missmatch")]
+    public async Task DuplicateProduct(bool crossTypeIdentifier, bool revisionTaken)
+    {
+        // Arrange
+        var productMgr = new ProductManager
+        {
+            Factory = _factory,
+            Storage = _storage
+        };
+        productMgr.TypeChanged += (sender, product) => { };
+        var watch = SetupProduct("Jaques Lemans", "321");
+        await _storage.SaveTypeAsync(watch);
+        var recipe = new WatchProductRecipe
+        {
+            Product = watch,
+            Classification = RecipeClassification.Default,
+            Name = "TestRecipe",
+            Workplan = new Workplan { Id = _workplanId }
+        };
+        await _storage.SaveRecipeAsync(recipe);
+
+        // Act (& Assert)
+        WatchType duplicate = null;
+        if (crossTypeIdentifier | revisionTaken)
+        {
+            var newIdentity = crossTypeIdentifier
+                ? new ProductIdentity("3214711", 7)
+                : new ProductIdentity("321" + WatchMaterial, 5);
+            var ex = Assert.ThrowsAsync<IdentityConflictException>(async () =>
             {
-                var root = uow.GetRepository<IProductInstanceRepository>().GetByKey(instance.Id);
-                Assert.That(root, Is.Not.Null, "Failed to save or id not written");
-                Assert.That(root.Integer1, Is.EqualTo(instance.DeliveryDate.Ticks), "DateTime not saved");
-                Assert.That(root.Integer2, Is.EqualTo(1), "Bool not saved");
-
-                var parts = root.Parts;
-                Assert.That(parts.Count, Is.EqualTo(1), "Invalid number of parts!"); // needles will be skipped for saving
-
-                var single = parts.FirstOrDefault(p => p.PartLinkEntityId == watch.WatchFace.Id);
-                Assert.That(single, Is.Not.Null, "Single part not saved!");
-            }
-
-            // Act
-            var watchCopy = (WatchInstance)(await _storage.LoadInstancesAsync([instance.Id]))[0];
-            var identity = instance.Identity;
-            var byIdentity = await _storage.LoadInstancesAsync<IIdentifiableObject>(w => identity.Equals(w.Identity));
-            var byDateTime = await _storage.LoadInstancesAsync<WatchInstance>(i => i.DeliveryDate < DateTime.Now);
-            var byBool = await _storage.LoadInstancesAsync<WatchInstance>(i => i.TimeSet);
-            var byType = await _storage.LoadInstancesAsync(watch);
-            var byType1 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type == watch);
-            var byType2 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type.Equals(watch));
-            var byType3 = await _storage.LoadInstancesAsync<WatchInstance>(i => watch.Equals(i.Type));
-            var byType4 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type.Name == "TestWatch");
-            var byType5 = await _storage.LoadInstancesAsync<WatchInstance>(i => watch == i.Type);
-            identity = watch.Identity;
-            var byType6 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type.Identity == identity);
-
-            // Assert
-            Assert.That(watchCopy, Is.Not.Null);
-            Assert.That(watchCopy.DeliveryDate, Is.EqualTo(instance.DeliveryDate));
-            Assert.That(watchCopy.TimeSet, Is.EqualTo(instance.TimeSet));
-            Assert.That(instance.WatchFace, Is.Not.Null);
-            Assert.That(watchCopy.WatchFace.Identifier, Is.EqualTo(instance.WatchFace.Identifier), "Guid does not match");
-            Assert.That(instance.Needles, Is.Not.Null);
-            Assert.That(instance.Needles.Count, Is.EqualTo(3));
-
-            Assert.That(byIdentity.Count, Is.GreaterThanOrEqualTo(1));
-            Assert.That(byDateTime.Count, Is.GreaterThanOrEqualTo(1));
-            Assert.That(byBool.Count, Is.GreaterThanOrEqualTo(1));
-            Assert.That(byType.Count, Is.GreaterThanOrEqualTo(1));
-            Assert.That(byType1.Count, Is.GreaterThanOrEqualTo(1));
-            Assert.That(byType2.Count, Is.GreaterThanOrEqualTo(1));
-            Assert.That(byType3.Count, Is.GreaterThanOrEqualTo(1));
-            Assert.That(byType4.Count, Is.GreaterThanOrEqualTo(1));
-            Assert.That(byType5.Count, Is.GreaterThanOrEqualTo(1));
-            Assert.That(byType6.Count, Is.GreaterThanOrEqualTo(1));
+                duplicate = (WatchType)await productMgr.DuplicateType(watch, newIdentity);
+            });
+            Assert.That(ex.InvalidTemplate, Is.EqualTo(crossTypeIdentifier));
+            return;
         }
+
+        Assert.DoesNotThrowAsync(async () =>
+        {
+            duplicate = (WatchType)await productMgr.DuplicateType(watch,
+                new ProductIdentity("654" + WatchMaterial, 1));
+        });
+
+        var recipeDuplicates = await _storage.LoadRecipesAsync(duplicate.Id, RecipeClassification.CloneFilter);
+
+        // Assert
+        Assert.That(duplicate.WatchFace.Product.Id, Is.EqualTo(watch.WatchFace.Product.Id));
+        Assert.That(duplicate.Needles.Sum(n => n.Product.Id), Is.EqualTo(watch.Needles.Sum(n => n.Product.Id)));
+        Assert.That(recipeDuplicates.Count, Is.GreaterThan(0));
+        Assert.That(recipe.Id, Is.Not.EqualTo(recipeDuplicates[0].Id));
+        Assert.That(recipeDuplicates[0].Name, Is.EqualTo(recipe.Name));
+        Assert.That(recipeDuplicates[0].Classification, Is.EqualTo(recipe.Classification));
+    }
+
+    [TestCase(true, Description = "Remove a product that is still used")]
+    [TestCase(false, Description = "Remove a product that is not used")]
+    public async Task RemoveProduct(bool stillUsed)
+    {
+        // Arrange
+        var productMgr = new ProductManager
+        {
+            Factory = _factory,
+            Storage = _storage
+        };
+        var watch = SetupProduct("Jaques Lemans", "567");
+        await _storage.SaveTypeAsync(watch);
+
+        // Act
+        bool result;
+        if (stillUsed)
+            result = await productMgr.DeleteType(watch.WatchFace.Product.Id);
+        else
+            result = await productMgr.DeleteType(watch.Id);
+
+        // Assert
+        Assert.That(!result, Is.EqualTo(stillUsed));
+        if (stillUsed)
+            return;
+
+        var matches = await productMgr.LoadTypes(new ProductQuery
+        {
+            RevisionFilter = RevisionFilter.Specific,
+            Revision = 5,
+            Identifier = watch.Identity.Identifier
+        });
+        Assert.That(matches.Count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public async Task SaveAndLoadInstance()
+    {
+        // Arrange
+        var watch = SetupProduct("TestWatch", string.Empty);
+        await _storage.SaveTypeAsync(watch);
+        // Reload from storage for partlink ids if the object exists
+        watch = (WatchType)await _storage.LoadTypeAsync(watch.Id);
+
+        // Act
+        var instance = (WatchInstance)watch.CreateInstance();
+        instance.TimeSet = true;
+        instance.DeliveryDate = DateTime.Now;
+        instance.Identity = new BatchIdentity("12345");
+        await _storage.SaveInstancesAsync([instance]);
+
+        // Assert
+        using (var uow = _factory.Create())
+        {
+            var root = uow.GetRepository<IProductInstanceRepository>().GetByKey(instance.Id);
+            Assert.That(root, Is.Not.Null, "Failed to save or id not written");
+            Assert.That(root.Integer1, Is.EqualTo(instance.DeliveryDate.Ticks), "DateTime not saved");
+            Assert.That(root.Integer2, Is.EqualTo(1), "Bool not saved");
+
+            var parts = root.Parts;
+            Assert.That(parts.Count, Is.EqualTo(1), "Invalid number of parts!"); // needles will be skipped for saving
+
+            var single = parts.FirstOrDefault(p => p.PartLinkEntityId == watch.WatchFace.Id);
+            Assert.That(single, Is.Not.Null, "Single part not saved!");
+        }
+
+        // Act
+        var watchCopy = (WatchInstance)(await _storage.LoadInstancesAsync([instance.Id]))[0];
+        var identity = instance.Identity;
+        var byIdentity = await _storage.LoadInstancesAsync<IIdentifiableObject>(w => identity.Equals(w.Identity));
+        var byDateTime = await _storage.LoadInstancesAsync<WatchInstance>(i => i.DeliveryDate < DateTime.Now);
+        var byBool = await _storage.LoadInstancesAsync<WatchInstance>(i => i.TimeSet);
+        var byType = await _storage.LoadInstancesAsync(watch);
+        var byType1 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type == watch);
+        var byType2 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type.Equals(watch));
+        var byType3 = await _storage.LoadInstancesAsync<WatchInstance>(i => watch.Equals(i.Type));
+        var byType4 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type.Name == "TestWatch");
+        var byType5 = await _storage.LoadInstancesAsync<WatchInstance>(i => watch == i.Type);
+        identity = watch.Identity;
+        var byType6 = await _storage.LoadInstancesAsync<WatchInstance>(i => i.Type.Identity == identity);
+
+        // Assert
+        Assert.That(watchCopy, Is.Not.Null);
+        Assert.That(watchCopy.DeliveryDate, Is.EqualTo(instance.DeliveryDate));
+        Assert.That(watchCopy.TimeSet, Is.EqualTo(instance.TimeSet));
+        Assert.That(instance.WatchFace, Is.Not.Null);
+        Assert.That(watchCopy.WatchFace.Identifier, Is.EqualTo(instance.WatchFace.Identifier), "Guid does not match");
+        Assert.That(instance.Needles, Is.Not.Null);
+        Assert.That(instance.Needles.Count, Is.EqualTo(3));
+
+        Assert.That(byIdentity.Count, Is.GreaterThanOrEqualTo(1));
+        Assert.That(byDateTime.Count, Is.GreaterThanOrEqualTo(1));
+        Assert.That(byBool.Count, Is.GreaterThanOrEqualTo(1));
+        Assert.That(byType.Count, Is.GreaterThanOrEqualTo(1));
+        Assert.That(byType1.Count, Is.GreaterThanOrEqualTo(1));
+        Assert.That(byType2.Count, Is.GreaterThanOrEqualTo(1));
+        Assert.That(byType3.Count, Is.GreaterThanOrEqualTo(1));
+        Assert.That(byType4.Count, Is.GreaterThanOrEqualTo(1));
+        Assert.That(byType5.Count, Is.GreaterThanOrEqualTo(1));
+        Assert.That(byType6.Count, Is.GreaterThanOrEqualTo(1));
     }
 }

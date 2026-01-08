@@ -3,13 +3,12 @@
 
 using Moryx.Configuration;
 
-namespace Moryx.Runtime.Kernel.Tests.Dummies
-{
-    /// <summary>
-    /// Test subconfig
-    /// </summary>
-    public class RuntimeConfigManagerTestConfig2 : ConfigBase
-    {
+namespace Moryx.Runtime.Kernel.Tests.Dummies;
 
-    }
+/// <summary>
+/// Test subconfig
+/// </summary>
+public class RuntimeConfigManagerTestConfig2 : ConfigBase
+{
+
 }

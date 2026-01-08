@@ -3,28 +3,26 @@
 
 using Moryx.Modules;
 
-namespace Moryx.Shifts.Management
+namespace Moryx.Shifts.Management;
+
+internal interface IShiftManager : IPlugin
 {
-    internal interface IShiftManager : IPlugin
-    {
-        IReadOnlyList<Shift> Shifts { get; }
-        Shift CreateShift(ShiftCreationContext context);
-        void UpdateShift(Shift shift);
-        void DeleteShift(Shift shift);
+    IReadOnlyList<Shift> Shifts { get; }
+    Shift CreateShift(ShiftCreationContext context);
+    void UpdateShift(Shift shift);
+    void DeleteShift(Shift shift);
 
-        IReadOnlyList<ShiftType> ShiftTypes { get; }
-        ShiftType CreateShiftType(ShiftTypeCreationContext context);
-        void UpdateShiftType(ShiftType type);
-        void DeleteShiftType(ShiftType type);
+    IReadOnlyList<ShiftType> ShiftTypes { get; }
+    ShiftType CreateShiftType(ShiftTypeCreationContext context);
+    void UpdateShiftType(ShiftType type);
+    void DeleteShiftType(ShiftType type);
 
-        IReadOnlyList<ShiftAssignement> ShiftAssignements { get; }
-        ShiftAssignement CreateShiftAssignement(ShiftAssignementCreationContext context);
-        void UpdateShiftAssignement(ShiftAssignement assignement);
-        void DeleteShiftAssignement(ShiftAssignement assignement);
+    IReadOnlyList<ShiftAssignement> ShiftAssignements { get; }
+    ShiftAssignement CreateShiftAssignement(ShiftAssignementCreationContext context);
+    void UpdateShiftAssignement(ShiftAssignement assignement);
+    void DeleteShiftAssignement(ShiftAssignement assignement);
 
-        event EventHandler<ShiftsChangedEventArgs> ShiftsChanged;
-        event EventHandler<ShiftTypesChangedEventArgs> ShiftTypesChanged;
-        event EventHandler<ShiftAssignementsChangedEventArgs> ShiftAssignementsChanged;
-    }
+    event EventHandler<ShiftsChangedEventArgs> ShiftsChanged;
+    event EventHandler<ShiftTypesChangedEventArgs> ShiftTypesChanged;
+    event EventHandler<ShiftAssignementsChangedEventArgs> ShiftAssignementsChanged;
 }
-

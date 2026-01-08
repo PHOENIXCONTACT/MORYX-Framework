@@ -4,62 +4,60 @@
 using Moryx.Container;
 using Moryx.Tools;
 
-namespace Moryx.Communication
+namespace Moryx.Communication;
+
+/// <summary>
+/// Specialized interface of <see cref="IDeviceCommunication"/>
+/// </summary>
+public interface IStatusCheck : IDeviceCommunication;
+
+/// <summary>
+/// Implements a common process of executing status checks.
+/// </summary>
+[Plugin(LifeCycle.Transient, [typeof(IStatusCheck)])]
+public class StatusCheck : DeviceCommunicationBase, IStatusCheck
 {
     /// <summary>
-    /// Specialized interface of <see cref="IDeviceCommunication"/>
+    /// Interval in which the status check is executed
     /// </summary>
-    public interface IStatusCheck : IDeviceCommunication;
+    public int IntervalInMs { get; set; } = 5000;
 
     /// <summary>
-    /// Implements a common process of executing status checks.
+    /// Starts intervally checking the status
     /// </summary>
-    [Plugin(LifeCycle.Transient, [typeof(IStatusCheck)])]
-    public class StatusCheck : DeviceCommunicationBase, IStatusCheck
+    public override void Start(Func<FunctionResult> execute)
     {
-        /// <summary>
-        /// Interval in which the status check is executed
-        /// </summary>
-        public int IntervalInMs { get; set; } = 5000;
+        if (_started)
+            return;
 
-        /// <summary>
-        /// Starts intervally checking the status
-        /// </summary>
-        public override void Start(Func<FunctionResult> execute)
+        _execute = execute;
+        _started = true;
+
+        StartStatusCheck();
+    }
+
+    private void StartStatusCheck()
+    {
+        _timerId = ParallelOperations.ScheduleExecution(
+            CheckStatus,
+            IntervalInMs,
+            0);
+    }
+
+    private void CheckStatus()
+    {
+        if (_execute != null)
         {
-            if (_started)
-                return;
-
-            _execute = execute;
-            _started = true;
-
-            StartStatusCheck();
-        }
-
-        private void StartStatusCheck()
-        {
-            _timerId = ParallelOperations.ScheduleExecution(
-                CheckStatus,
-                IntervalInMs,
-                0);
-        }
-
-        private void CheckStatus()
-        {
-            if (_execute != null)
+            var result = _execute.Invoke();
+            if (result.Success)
             {
-                var result = _execute.Invoke();
-                if (result.Success)
-                {
-                    RaiseExecutedEvent();
-                    StartStatusCheck();
-                }
-                else
-                {
-                    RaiseFailureEvent(result);
-                }
+                RaiseExecutedEvent();
+                StartStatusCheck();
+            }
+            else
+            {
+                RaiseFailureEvent(result);
             }
         }
     }
 }
-

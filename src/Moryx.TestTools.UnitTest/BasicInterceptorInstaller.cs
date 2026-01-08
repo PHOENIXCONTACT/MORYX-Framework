@@ -5,18 +5,17 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Container;
 
-namespace Moryx.TestTools.UnitTest
+namespace Moryx.TestTools.UnitTest;
+
+/// <summary>
+/// Installer registering the interceptor
+/// </summary>
+public static class BasicInterceptorInstaller
 {
-    /// <summary>
-    /// Installer registering the interceptor
-    /// </summary>
-    public static class BasicInterceptorInstaller
+    /// <inheritdoc />
+    public static void Install(this IContainer container)
     {
-        /// <inheritdoc />
-        public static void Install(this IContainer container)
-        {
-            container.Register(typeof(EmptyInterceptor));
-            container.Register(typeof(NullLoggerFactory), [typeof(ILoggerFactory)]);
-        }
+        container.Register(typeof(EmptyInterceptor));
+        container.Register(typeof(NullLoggerFactory), [typeof(ILoggerFactory)]);
     }
 }

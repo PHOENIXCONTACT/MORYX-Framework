@@ -3,31 +3,30 @@
 
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Products.Management
+namespace Moryx.Products.Management;
+
+internal class ImportState
 {
-    internal class ImportState
+    private readonly ProductManager _manager;
+
+    public ImportState(ProductManager manager)
     {
-        private readonly ProductManager _manager;
+        _manager = manager;
+    }
 
-        public ImportState(ProductManager manager)
-        {
-            _manager = manager;
-        }
+    public Guid Session { get; set; }
 
-        public Guid Session { get; set; }
+    public bool Completed { get; set; }
 
-        public bool Completed { get; set; }
+    public string ErrorMsg { get; set; }
 
-        public string ErrorMsg { get; set; }
+    public void TaskCompleted(Task<ProductImporterResult> task)
+    {
+        if (task.IsCompleted)
+            _manager.HandleResult(task.Result);
 
-        public void TaskCompleted(Task<ProductImporterResult> task)
-        {
-            if (task.IsCompleted)
-                _manager.HandleResult(task.Result);
-
-            Completed = task.IsCompleted | task.IsFaulted;
-            if (task.IsFaulted)
-                ErrorMsg = task.Exception.Message;
-        }
+        Completed = task.IsCompleted | task.IsFaulted;
+        if (task.IsFaulted)
+            ErrorMsg = task.Exception.Message;
     }
 }

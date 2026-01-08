@@ -3,11 +3,9 @@
 
 using Moryx.AbstractionLayer.Recipes;
 
-namespace Moryx.ControlSystem.ProcessEngine.Tests
-{
-    internal class TestRecipe : ProductionRecipe
-    {
-        public int SetupState { get; set; }
-    }
-}
+namespace Moryx.ControlSystem.ProcessEngine.Tests;
 
+internal class TestRecipe : ProductionRecipe
+{
+    public int SetupState { get; set; }
+}

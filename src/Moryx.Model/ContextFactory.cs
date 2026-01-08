@@ -4,32 +4,31 @@
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Configuration;
 
-namespace Moryx.Model
+namespace Moryx.Model;
+
+/// <inheritdoc />
+public class ContextFactory<TContext> : IContextFactory<TContext>
+    where TContext : DbContext
 {
-    /// <inheritdoc />
-    public class ContextFactory<TContext> : IContextFactory<TContext>
-        where TContext : DbContext
+    private readonly IDbContextManager _manager;
+
+    /// <summary>
+    /// Creates a new instance of <see cref="ContextFactory{TContext}"/>
+    /// </summary>
+    public ContextFactory(IDbContextManager dbContextManager)
     {
-        private readonly IDbContextManager _manager;
+        _manager = dbContextManager;
+    }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="ContextFactory{TContext}"/>
-        /// </summary>
-        public ContextFactory(IDbContextManager dbContextManager)
-        {
-            _manager = dbContextManager;
-        }
+    /// <inheritdoc />
+    public TContext Create()
+    {
+        return _manager.Create<TContext>();
+    }
 
-        /// <inheritdoc />
-        public TContext Create()
-        {
-            return _manager.Create<TContext>();
-        }
-
-        /// <inheritdoc />
-        public TContext Create(DatabaseConfig config)
-        {
-            return _manager.Create<TContext>(config);
-        }
+    /// <inheritdoc />
+    public TContext Create(DatabaseConfig config)
+    {
+        return _manager.Create<TContext>(config);
     }
 }

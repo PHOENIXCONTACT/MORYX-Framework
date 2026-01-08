@@ -4,16 +4,14 @@
 using System.IO;
 using System.Linq;
 
-namespace Moryx.ProcessData.SpreadsheetsListener.Tests
+namespace Moryx.ProcessData.SpreadsheetsListener.Tests;
+
+internal static class TestDirectory
 {
-    internal static class TestDirectory
+    internal static string[] GetOrderedFiles(string path, string searchPattern)
     {
-        internal static string[] GetOrderedFiles(string path, string searchPattern)
-        {
-            return Directory.GetFiles(path, searchPattern)
-                .OrderBy(s => s)
-                .ToArray();
-        }
+        return Directory.GetFiles(path, searchPattern)
+            .OrderBy(s => s)
+            .ToArray();
     }
 }
-

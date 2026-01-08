@@ -1,26 +1,25 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Workplans
+namespace Moryx.Workplans;
+
+internal class IdleState : EngineState
 {
-    internal class IdleState : EngineState
+    public IdleState(WorkplanEngine context, StateMap stateMap) : base(context, stateMap)
     {
-        public IdleState(WorkplanEngine context, StateMap stateMap) : base(context, stateMap)
-        {
-        }
+    }
 
-        /// <summary>
-        /// Initialize the engine
-        /// </summary>
-        internal override void Initialize(IWorkplanInstance workplanInstance)
-        {
-            NextState(StateReady);
-            Context.ExecuteInitialize(workplanInstance);
-        }
+    /// <summary>
+    /// Initialize the engine
+    /// </summary>
+    internal override void Initialize(IWorkplanInstance workplanInstance)
+    {
+        NextState(StateReady);
+        Context.ExecuteInitialize(workplanInstance);
+    }
 
-        internal override void Destroy()
-        {
-            Context.ExecuteDispose();
-        }
+    internal override void Destroy()
+    {
+        Context.ExecuteDispose();
     }
 }

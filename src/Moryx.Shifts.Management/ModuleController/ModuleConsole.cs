@@ -3,10 +3,9 @@
 
 using Moryx.Runtime.Modules;
 
-namespace Moryx.Shifts.Management
+namespace Moryx.Shifts.Management;
+
+[ServerModuleConsole]
+internal class ModuleConsole : IServerModuleConsole
 {
-    [ServerModuleConsole]
-    internal class ModuleConsole : IServerModuleConsole
-    {
-    }
 }

@@ -3,10 +3,9 @@
 
 using Moryx.Modules;
 
-namespace Moryx.TestModule
-{
-    public interface ITestSubPlugin : IConfiguredPlugin<TestSubPluginConfig>
-    {
+namespace Moryx.TestModule;
 
-    }
+public interface ITestSubPlugin : IConfiguredPlugin<TestSubPluginConfig>
+{
+
 }

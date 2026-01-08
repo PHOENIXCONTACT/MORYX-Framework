@@ -3,20 +3,19 @@
 
 using Moryx.AbstractionLayer.Properties;
 
-namespace Moryx.AbstractionLayer.Products
+namespace Moryx.AbstractionLayer.Products;
+
+/// <summary>
+/// Exception thrown when a product for a certain id was not found
+/// </summary>
+public class ProductNotFoundException : Exception
 {
     /// <summary>
-    /// Exception thrown when a product for a certain id was not found
+    /// Initialize exception with database id
     /// </summary>
-    public class ProductNotFoundException : Exception
+    /// <param name="id">Id that was not found</param>
+    public ProductNotFoundException(long id)
+        : base(string.Format(Strings.ProductNotFoundException_Message, id))
     {
-        /// <summary>
-        /// Initialize exception with database id
-        /// </summary>
-        /// <param name="id">Id that was not found</param>
-        public ProductNotFoundException(long id)
-            : base(string.Format(Strings.ProductNotFoundException_Message, id))
-        {
-        }
     }
 }

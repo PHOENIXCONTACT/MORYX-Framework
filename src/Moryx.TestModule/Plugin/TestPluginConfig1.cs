@@ -5,30 +5,29 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Serialization;
 
-namespace Moryx.TestModule
+namespace Moryx.TestModule;
+
+public class TestPluginConfig1 : TestPluginConfig
 {
-    public class TestPluginConfig1 : TestPluginConfig
+    public TestPluginConfig1()
     {
-        public TestPluginConfig1()
-        {
-            OrderSources = [];
-        }
-
-        /// <summary>
-        /// The name of the component.
-        /// </summary>
-        [DataMember]
-        [PluginNameSelector(typeof(ITestPlugin))]
-        [DefaultValue(TestPlugin1.ComponentName)]
-        public override string PluginName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the order source.
-        /// </summary>
-        /// <value>
-        /// The order source.
-        /// </value>
-        [DataMember]
-        public List<SourceConfig> OrderSources { get; set; }
+        OrderSources = [];
     }
+
+    /// <summary>
+    /// The name of the component.
+    /// </summary>
+    [DataMember]
+    [PluginNameSelector(typeof(ITestPlugin))]
+    [DefaultValue(TestPlugin1.ComponentName)]
+    public override string PluginName { get; set; }
+
+    /// <summary>
+    /// Gets or sets the order source.
+    /// </summary>
+    /// <value>
+    /// The order source.
+    /// </value>
+    [DataMember]
+    public List<SourceConfig> OrderSources { get; set; }
 }

@@ -3,14 +3,12 @@
 
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Moryx.Resources.Web.MyFeature.Pages
-{
-    public class Page1Model : PageModel
-    {
-        public void OnGet()
-        {
+namespace Moryx.Resources.Web.MyFeature.Pages;
 
-        }
+public class Page1Model : PageModel
+{
+    public void OnGet()
+    {
+
     }
 }
-

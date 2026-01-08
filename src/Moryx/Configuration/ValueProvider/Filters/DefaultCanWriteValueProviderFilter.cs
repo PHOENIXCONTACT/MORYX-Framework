@@ -3,17 +3,16 @@
 
 using System.Reflection;
 
-namespace Moryx.Configuration
+namespace Moryx.Configuration;
+
+/// <summary>
+/// ValueProviderFilter that skips read only properties
+/// </summary>
+public sealed class DefaultCanWriteValueProviderFilter : IValueProviderFilter
 {
-    /// <summary>
-    /// ValueProviderFilter that skips read only properties
-    /// </summary>
-    public sealed class DefaultCanWriteValueProviderFilter : IValueProviderFilter
+    /// <inheritdoc />
+    public bool CheckProperty(PropertyInfo propertyInfo)
     {
-        /// <inheritdoc />
-        public bool CheckProperty(PropertyInfo propertyInfo)
-        {
-            return propertyInfo.GetSetMethod() != null;
-        }
+        return propertyInfo.GetSetMethod() != null;
     }
 }

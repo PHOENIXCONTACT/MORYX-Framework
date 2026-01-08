@@ -3,18 +3,17 @@
 
 using Moryx.Runtime.Modules;
 
-namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
-{
-    internal class ModuleB3 : ModuleBase, IFacadeContainer<IFacadeB>
-    {
-        public ModuleB3()
-        {
-            Facade = new FacadeB();
-        }
+namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
 
-        /// <summary>
-        /// Facade controlled by this module
-        /// </summary>
-        public IFacadeB Facade { get; }
+internal class ModuleB3 : ModuleBase, IFacadeContainer<IFacadeB>
+{
+    public ModuleB3()
+    {
+        Facade = new FacadeB();
     }
+
+    /// <summary>
+    /// Facade controlled by this module
+    /// </summary>
+    public IFacadeB Facade { get; }
 }

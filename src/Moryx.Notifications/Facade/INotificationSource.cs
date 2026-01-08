@@ -3,16 +3,15 @@
 
 using Moryx.Runtime.Modules;
 
-namespace Moryx.Notifications
+namespace Moryx.Notifications;
+
+/// <summary>
+/// Facade interface for providing notifications
+/// </summary>
+public interface INotificationSource : INotificationSourceAdapter, ILifeCycleBoundFacade
 {
     /// <summary>
-    /// Facade interface for providing notifications
+    /// Name of the Source which will publish notifications
     /// </summary>
-    public interface INotificationSource : INotificationSourceAdapter, ILifeCycleBoundFacade
-    {
-        /// <summary>
-        /// Name of the Source which will publish notifications
-        /// </summary>
-        string Name { get; }
-    }
+    string Name { get; }
 }

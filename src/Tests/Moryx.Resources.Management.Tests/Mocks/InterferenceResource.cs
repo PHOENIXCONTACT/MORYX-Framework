@@ -3,17 +3,16 @@
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.Tests
+namespace Moryx.Resources.Management.Tests;
+
+public class InterferenceResource : Resource
 {
-    public class InterferenceResource : Resource
-    {
-        [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
-        public DerivedResource Derived { get; set; }
+    [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
+    public DerivedResource Derived { get; set; }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
-        public IReferences<OtherResource> Others { get; set; }
+    [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
+    public IReferences<OtherResource> Others { get; set; }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
-        public DifferentResource Different { get; set; }
-    }
+    [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
+    public DifferentResource Different { get; set; }
 }

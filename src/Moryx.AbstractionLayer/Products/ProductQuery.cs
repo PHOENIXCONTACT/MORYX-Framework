@@ -4,182 +4,181 @@
 using System.Runtime.Serialization;
 using Moryx.Serialization;
 
-namespace Moryx.AbstractionLayer.Products
+namespace Moryx.AbstractionLayer.Products;
+
+/// <summary>
+/// Filter to fetch products from the product management
+/// </summary>
+[DataContract]
+public class ProductQuery
 {
     /// <summary>
-    /// Filter to fetch products from the product management
+    /// Flag if deleted products should be included in the query
     /// </summary>
-    [DataContract]
-    public class ProductQuery
-    {
-        /// <summary>
-        /// Flag if deleted products should be included in the query
-        /// </summary>
-        [DataMember]
-        public bool IncludeDeleted { get; set; }
-
-        /// <summary>
-        /// Product types to filter by
-        /// </summary>
-        [DataMember]
-        public string TypeName { get; set; }
-
-        /// <summary>
-        /// When filtering by type exclude derived types and only return specific matches
-        /// </summary>
-        [DataMember]
-        public bool ExcludeDerivedTypes { get; set; }
-
-        /// <summary>
-        /// Material identifiers
-        /// </summary>
-        [DataMember]
-        public string Identifier { get; set; }
-
-        /// <summary>
-        /// State of the product
-        /// </summary>
-        public ProductState? RequiredState { get; set; }
-
-        /// <summary>
-        /// Revisions to filter
-        /// </summary>
-        [DataMember]
-        public RevisionFilter RevisionFilter { get; set; }
-
-        /// <summary>
-        /// Material identifiers
-        /// </summary>
-        [DataMember]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Optional specific revision if <see cref="RevisionFilter"/> is set to
-        /// <see cref="RevisionFilter.Specific"/>
-        /// </summary>
-        [DataMember]
-        public short Revision { get; set; }
-
-        /// <summary>
-        /// Optional recipe filter
-        /// </summary>
-        [DataMember]
-        public RecipeFilter RecipeFilter { get; set; }
-
-        /// <summary>
-        /// Selector
-        /// </summary>
-        [DataMember]
-        public Selector Selector { get; set; }
-
-        /// <summary>
-        /// List of property filters
-        /// </summary>
-        [DataMember]
-        public List<PropertyFilter> PropertyFilters { get; set; }
-    }
+    [DataMember]
+    public bool IncludeDeleted { get; set; }
 
     /// <summary>
-    /// Property filter wrapper for the filtered entry
+    /// Product types to filter by
     /// </summary>
-    [DataContract]
-    public class PropertyFilter
-    {
-        /// <summary>
-        /// Entry to filter
-        /// </summary>
-        [DataMember]
-        public Entry Entry { get; set; }
-
-        /// <summary>
-        /// Operator for the filter expression
-        /// </summary>
-        [DataMember]
-        public PropertyFilterOperator Operator { get; set; }
-    }
+    [DataMember]
+    public string TypeName { get; set; }
 
     /// <summary>
-    /// Property filter operator expression
+    /// When filtering by type exclude derived types and only return specific matches
     /// </summary>
-    public enum PropertyFilterOperator
-    {
-        /// <summary>
-        /// Value equals
-        /// </summary>
-        Equals,
-
-        /// <summary>
-        /// Value is greater then
-        /// </summary>
-        GreaterThen,
-
-        /// <summary>
-        /// Value is less then
-        /// </summary>
-        LessThen
-    }
+    [DataMember]
+    public bool ExcludeDerivedTypes { get; set; }
 
     /// <summary>
-    /// Filter for revisions
+    /// Material identifiers
     /// </summary>
-    public enum RevisionFilter
-    {
-        /// <summary>
-        /// Fetch all revisions, this is the default
-        /// </summary>
-        All = 0,
-
-        /// <summary>
-        /// Fetch only the latest revision
-        /// </summary>
-        Latest = 1,
-
-        /// <summary>
-        /// Fetch only specific revisions
-        /// </summary>
-        Specific = 2
-    }
+    [DataMember]
+    public string Identifier { get; set; }
 
     /// <summary>
-    /// Different options regarding the recipes of the product
+    /// State of the product
     /// </summary>
-    public enum RecipeFilter
-    {
-        /// <summary>
-        /// Recipe information is not relevant
-        /// </summary>
-        Unset = 0,
-
-        /// <summary>
-        /// Product has recipes
-        /// </summary>
-        WithRecipe = 1,
-
-        /// <summary>
-        /// Product does not have recipes
-        /// </summary>
-        WithoutRecipes = 2
-    }
+    public ProductState? RequiredState { get; set; }
 
     /// <summary>
-    /// Determine which objects to select for the query
+    /// Revisions to filter
     /// </summary>
-    public enum Selector
-    {
-        /// <summary>
-        /// Fetch the instances that match the query
-        /// </summary>
-        Direct,
+    [DataMember]
+    public RevisionFilter RevisionFilter { get; set; }
 
-        /// <summary>
-        /// Fetch parents of instances that match the query
-        /// </summary>
-        Parent,
+    /// <summary>
+    /// Material identifiers
+    /// </summary>
+    [DataMember]
+    public string Name { get; set; }
 
-        /// <summary>
-        /// Fetch parts of instances that match the query
-        /// </summary>
-        Parts,
+    /// <summary>
+    /// Optional specific revision if <see cref="RevisionFilter"/> is set to
+    /// <see cref="RevisionFilter.Specific"/>
+    /// </summary>
+    [DataMember]
+    public short Revision { get; set; }
 
-    }
+    /// <summary>
+    /// Optional recipe filter
+    /// </summary>
+    [DataMember]
+    public RecipeFilter RecipeFilter { get; set; }
+
+    /// <summary>
+    /// Selector
+    /// </summary>
+    [DataMember]
+    public Selector Selector { get; set; }
+
+    /// <summary>
+    /// List of property filters
+    /// </summary>
+    [DataMember]
+    public List<PropertyFilter> PropertyFilters { get; set; }
+}
+
+/// <summary>
+/// Property filter wrapper for the filtered entry
+/// </summary>
+[DataContract]
+public class PropertyFilter
+{
+    /// <summary>
+    /// Entry to filter
+    /// </summary>
+    [DataMember]
+    public Entry Entry { get; set; }
+
+    /// <summary>
+    /// Operator for the filter expression
+    /// </summary>
+    [DataMember]
+    public PropertyFilterOperator Operator { get; set; }
+}
+
+/// <summary>
+/// Property filter operator expression
+/// </summary>
+public enum PropertyFilterOperator
+{
+    /// <summary>
+    /// Value equals
+    /// </summary>
+    Equals,
+
+    /// <summary>
+    /// Value is greater then
+    /// </summary>
+    GreaterThen,
+
+    /// <summary>
+    /// Value is less then
+    /// </summary>
+    LessThen
+}
+
+/// <summary>
+/// Filter for revisions
+/// </summary>
+public enum RevisionFilter
+{
+    /// <summary>
+    /// Fetch all revisions, this is the default
+    /// </summary>
+    All = 0,
+
+    /// <summary>
+    /// Fetch only the latest revision
+    /// </summary>
+    Latest = 1,
+
+    /// <summary>
+    /// Fetch only specific revisions
+    /// </summary>
+    Specific = 2
+}
+
+/// <summary>
+/// Different options regarding the recipes of the product
+/// </summary>
+public enum RecipeFilter
+{
+    /// <summary>
+    /// Recipe information is not relevant
+    /// </summary>
+    Unset = 0,
+
+    /// <summary>
+    /// Product has recipes
+    /// </summary>
+    WithRecipe = 1,
+
+    /// <summary>
+    /// Product does not have recipes
+    /// </summary>
+    WithoutRecipes = 2
+}
+
+/// <summary>
+/// Determine which objects to select for the query
+/// </summary>
+public enum Selector
+{
+    /// <summary>
+    /// Fetch the instances that match the query
+    /// </summary>
+    Direct,
+
+    /// <summary>
+    /// Fetch parents of instances that match the query
+    /// </summary>
+    Parent,
+
+    /// <summary>
+    /// Fetch parts of instances that match the query
+    /// </summary>
+    Parts,
+
 }

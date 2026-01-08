@@ -3,18 +3,17 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.Factory
-{
-    /// <summary>
-    /// Position of a resource/machine
-    /// </summary>
-    [DataContract]
-    public class Position
-    {
-        [DataMember]
-        public double PositionX { get; set; }
+namespace Moryx.Factory;
 
-        [DataMember]
-        public double PositionY { get; set; }
-    }
+/// <summary>
+/// Position of a resource/machine
+/// </summary>
+[DataContract]
+public class Position
+{
+    [DataMember]
+    public double PositionX { get; set; }
+
+    [DataMember]
+    public double PositionY { get; set; }
 }

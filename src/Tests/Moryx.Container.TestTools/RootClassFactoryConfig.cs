@@ -3,10 +3,9 @@
 
 using Moryx.Modules;
 
-namespace Moryx.Container.TestTools
+namespace Moryx.Container.TestTools;
+
+public class RootClassFactoryConfig : IPluginConfig
 {
-    public class RootClassFactoryConfig : IPluginConfig
-    {
-        public string PluginName { get; set; }
-    }
+    public string PluginName { get; set; }
 }

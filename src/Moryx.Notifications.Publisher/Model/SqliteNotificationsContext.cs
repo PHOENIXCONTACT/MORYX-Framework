@@ -4,23 +4,21 @@
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.Sqlite;
 
-namespace Moryx.Notifications.Publisher.Model
-{
-    /// <summary>
-    /// Sqlite specific implementation of <see cref="NotificationsContext"/>
-    /// </summary>
-    [SqliteDbContext(typeof(NotificationsContext))]
-    public class SqliteNotificationsContext : NotificationsContext
-    {
-        /// <inheritdoc />
-        public SqliteNotificationsContext()
-        {
-        }
+namespace Moryx.Notifications.Publisher.Model;
 
-        /// <inheritdoc />
-        public SqliteNotificationsContext(DbContextOptions options) : base(options)
-        {
-        }
+/// <summary>
+/// Sqlite specific implementation of <see cref="NotificationsContext"/>
+/// </summary>
+[SqliteDbContext(typeof(NotificationsContext))]
+public class SqliteNotificationsContext : NotificationsContext
+{
+    /// <inheritdoc />
+    public SqliteNotificationsContext()
+    {
+    }
+
+    /// <inheritdoc />
+    public SqliteNotificationsContext(DbContextOptions options) : base(options)
+    {
     }
 }
-

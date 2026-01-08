@@ -6,152 +6,151 @@ using System.Reflection;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 
-namespace Moryx.Resources.Management
+namespace Moryx.Resources.Management;
+
+/// <summary>
+/// Resource grap implementation
+/// In AL 3 this remains internal to avoid conflicts with other APIs
+/// </summary>
+[Component(LifeCycle.Singleton, typeof(IResourceGraph), typeof(IManagedResourceGraph))]
+internal class ResourceGraph : IManagedResourceGraph
 {
     /// <summary>
-    /// Resource grap implementation
-    /// In AL 3 this remains internal to avoid conflicts with other APIs
+    /// Type controller to create new resource objects
     /// </summary>
-    [Component(LifeCycle.Singleton, typeof(IResourceGraph), typeof(IManagedResourceGraph))]
-    internal class ResourceGraph : IManagedResourceGraph
+    public IResourceTypeController TypeController { get; set; }
+
+    private readonly ReaderWriterLockSlim _graphLock = new();
+
+    /// <summary>
+    /// All resources of the graph
+    /// </summary>
+    private readonly IDictionary<long, Resource> _graph = new Dictionary<long, Resource>();
+
+    public Func<Resource, Task> SaveDelegate { get; set; }
+
+    public Func<Resource, bool, Task<bool>> DestroyDelegate { get; set; }
+
+    public Resource Add(Resource instance)
     {
-        /// <summary>
-        /// Type controller to create new resource objects
-        /// </summary>
-        public IResourceTypeController TypeController { get; set; }
+        _graphLock.EnterWriteLock();
+        var wrapper = _graph[instance.Id] = instance;
+        _graphLock.ExitWriteLock();
 
-        private readonly ReaderWriterLockSlim _graphLock = new();
+        return wrapper;
+    }
 
-        /// <summary>
-        /// All resources of the graph
-        /// </summary>
-        private readonly IDictionary<long, Resource> _graph = new Dictionary<long, Resource>();
+    public bool Remove(Resource instance)
+    {
+        _graphLock.EnterWriteLock();
+        var found = _graph.Remove(instance.Id);
+        _graphLock.ExitWriteLock();
 
-        public Func<Resource, Task> SaveDelegate { get; set; }
+        return found;
+    }
 
-        public Func<Resource, bool, Task<bool>> DestroyDelegate { get; set; }
+    public Resource Get(long id)
+    {
+        return GetResource(id);
+    }
 
-        public Resource Add(Resource instance)
-        {
-            _graphLock.EnterWriteLock();
-            var wrapper = _graph[instance.Id] = instance;
-            _graphLock.ExitWriteLock();
+    public Resource GetResource(long id)
+    {
+        _graphLock.EnterReadLock();
+        var match = _graph.ContainsKey(id) ? _graph[id] : null;
+        _graphLock.ExitReadLock();
 
-            return wrapper;
-        }
+        return match;
+    }
 
-        public bool Remove(Resource instance)
-        {
-            _graphLock.EnterWriteLock();
-            var found = _graph.Remove(instance.Id);
-            _graphLock.ExitWriteLock();
+    public ICollection<Resource> GetAll()
+    {
+        _graphLock.EnterReadLock();
+        var values = _graph.Values;
+        _graphLock.ExitReadLock();
+        return values;
+    }
 
-            return found;
-        }
+    public TResource GetResource<TResource>() where TResource : class, IResource
+    {
+        return GetResource<TResource>(r => true);
+    }
 
-        public Resource Get(long id)
-        {
-            return GetResource(id);
-        }
+    public TResource GetResource<TResource>(long id) where TResource : class, IResource
+    {
+        return Get(id) as TResource;
+    }
 
-        public Resource GetResource(long id)
-        {
-            _graphLock.EnterReadLock();
-            var match = _graph.ContainsKey(id) ? _graph[id] : null;
-            _graphLock.ExitReadLock();
+    public TResource GetResource<TResource>(string name) where TResource : class, IResource
+    {
+        return GetResource<TResource>(r => r.Name == name);
+    }
 
-            return match;
-        }
+    public TResource GetResource<TResource>(Func<TResource, bool> predicate)
+        where TResource : class, IResource
+    {
+        // Return a single resource
+        var match = GetResources(predicate).SingleOrDefault();
+        if (match == null)
+            throw new ResourceNotFoundException();
 
-        public ICollection<Resource> GetAll()
-        {
-            _graphLock.EnterReadLock();
-            var values = _graph.Values;
-            _graphLock.ExitReadLock();
-            return values;
-        }
+        return match;
+    }
 
-        public TResource GetResource<TResource>() where TResource : class, IResource
-        {
-            return GetResource<TResource>(r => true);
-        }
+    public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IResource
+    {
+        return GetResources<TResource>(r => true);
+    }
 
-        public TResource GetResource<TResource>(long id) where TResource : class, IResource
-        {
-            return Get(id) as TResource;
-        }
+    public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate) where TResource : class, IResource
+    {
+        IEnumerable<TResource> matches;
+        _graphLock.EnterReadLock();
+        matches = from resource in _graph.Values
+            let target = resource as TResource
+            where target != null && predicate(target)
+            select target;
+        _graphLock.ExitReadLock();
 
-        public TResource GetResource<TResource>(string name) where TResource : class, IResource
-        {
-            return GetResource<TResource>(r => r.Name == name);
-        }
+        return matches;
+    }
 
-        public TResource GetResource<TResource>(Func<TResource, bool> predicate)
-            where TResource : class, IResource
-        {
-            // Return a single resource
-            var match = GetResources(predicate).SingleOrDefault();
-            if (match == null)
-                throw new ResourceNotFoundException();
+    public Resource Instantiate(string type)
+    {
+        // Create simplified template and instantiate
+        var template = new ResourceEntityAccessor { Type = type };
+        var instance = template.Instantiate(TypeController, this);
 
-            return match;
-        }
+        // Initially set name to value of DisplayNameAttribute if available
+        var typeObj = instance.GetType();
+        var displayNameAttr = typeObj.GetCustomAttribute<DisplayNameAttribute>();
+        instance.Name = displayNameAttr?.DisplayName ?? typeObj.Name;
 
-        public IEnumerable<TResource> GetResources<TResource>() where TResource : class, IResource
-        {
-            return GetResources<TResource>(r => true);
-        }
+        return instance;
+    }
 
-        public IEnumerable<TResource> GetResources<TResource>(Func<TResource, bool> predicate) where TResource : class, IResource
-        {
-            IEnumerable<TResource> matches;
-            _graphLock.EnterReadLock();
-            matches = from resource in _graph.Values
-                      let target = resource as TResource
-                      where target != null && predicate(target)
-                      select target;
-            _graphLock.ExitReadLock();
+    public TResource Instantiate<TResource>() where TResource : class, IResource
+    {
+        return Instantiate(typeof(TResource).ResourceType()) as TResource;
+    }
 
-            return matches;
-        }
+    public TResource Instantiate<TResource>(string type) where TResource : class, IResource
+    {
+        return Instantiate(type) as TResource;
+    }
 
-        public Resource Instantiate(string type)
-        {
-            // Create simplified template and instantiate
-            var template = new ResourceEntityAccessor { Type = type };
-            var instance = template.Instantiate(TypeController, this);
+    public Task SaveAsync(IResource resource, CancellationToken cancellationToken = default)
+    {
+        return SaveDelegate((Resource)resource);
+    }
 
-            // Initially set name to value of DisplayNameAttribute if available
-            var typeObj = instance.GetType();
-            var displayNameAttr = typeObj.GetCustomAttribute<DisplayNameAttribute>();
-            instance.Name = displayNameAttr?.DisplayName ?? typeObj.Name;
+    public Task<bool> DestroyAsync(IResource resource, CancellationToken cancellationToken = default)
+    {
+        return DestroyAsync(resource, false, cancellationToken);
+    }
 
-            return instance;
-        }
-
-        public TResource Instantiate<TResource>() where TResource : class, IResource
-        {
-            return Instantiate(typeof(TResource).ResourceType()) as TResource;
-        }
-
-        public TResource Instantiate<TResource>(string type) where TResource : class, IResource
-        {
-            return Instantiate(type) as TResource;
-        }
-
-        public Task SaveAsync(IResource resource, CancellationToken cancellationToken = default)
-        {
-            return SaveDelegate((Resource)resource);
-        }
-
-        public Task<bool> DestroyAsync(IResource resource, CancellationToken cancellationToken = default)
-        {
-            return DestroyAsync(resource, false, cancellationToken);
-        }
-
-        public Task<bool> DestroyAsync(IResource resource, bool permanent, CancellationToken cancellationToken = default)
-        {
-            return DestroyDelegate((Resource)resource, permanent);
-        }
+    public Task<bool> DestroyAsync(IResource resource, bool permanent, CancellationToken cancellationToken = default)
+    {
+        return DestroyDelegate((Resource)resource, permanent);
     }
 }

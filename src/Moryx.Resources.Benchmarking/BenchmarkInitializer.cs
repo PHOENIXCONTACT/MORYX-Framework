@@ -4,52 +4,50 @@
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Resources.VisualInstructions;
 
-namespace Moryx.Resources.Benchmarking
+namespace Moryx.Resources.Benchmarking;
+
+[ResourceInitializer(nameof(BenchmarkInitializer))]
+public class BenchmarkInitializer : ResourceInitializerBase
 {
-    [ResourceInitializer(nameof(BenchmarkInitializer))]
-    public class BenchmarkInitializer : ResourceInitializerBase
+    private const int CellCount = 30;
+
+    public override string Name => nameof(BenchmarkInitializer);
+
+    public override string Description => $"Creates a ring of {CellCount} Benchmark resources";
+
+    public override Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters, CancellationToken cancellationToken)
     {
-        private const int CellCount = 30;
+        // Create Reporter
+        var reporter = graph.Instantiate<BenchmarkReporter>();
+        reporter.Name = "Benchmark Reporter";
+        reporter.StepId = 42;
 
-        public override string Name => nameof(BenchmarkInitializer);
+        // Create VisualInstructor
+        var instructor = graph.Instantiate<VisualInstructor>();
+        instructor.Name = "moryx-client";
 
-        public override string Description => $"Creates a ring of {CellCount} Benchmark resources";
+        // Reference to reporter
+        reporter.VisualInstructor = instructor;
 
-        public override Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters, CancellationToken cancellationToken)
+        // Create cells
+        var instances = new BenchmarkResource[CellCount];
+        for (var i = 0; i < CellCount; i++)
         {
-            // Create Reporter
-            var reporter = graph.Instantiate<BenchmarkReporter>();
-            reporter.Name = "Benchmark Reporter";
-            reporter.StepId = 42;
+            var instance = graph.Instantiate<BenchmarkResource>();
+            instances[i] = instance;
 
-            // Create VisualInstructor
-            var instructor = graph.Instantiate<VisualInstructor>();
-            instructor.Name = "moryx-client";
+            // Properties
+            instance.Name = $"Cell {i + 1:D2}";
+            instance.StepId = i + 1;
 
-            // Reference to reporter
-            reporter.VisualInstructor = instructor;
+            // References
+            instance.Parent = reporter;
 
-            // Create cells
-            var instances = new BenchmarkResource[CellCount];
-            for (var i = 0; i < CellCount; i++)
-            {
-                var instance = graph.Instantiate<BenchmarkResource>();
-                instances[i] = instance;
+            instance.VisualInstructor = instructor;
 
-                // Properties
-                instance.Name = $"Cell {i + 1:D2}";
-                instance.StepId = i + 1;
-
-                // References
-                instance.Parent = reporter;
-
-                instance.VisualInstructor = instructor;
-
-                reporter.Children.Add(instance);
-            }
-
-            return InitializedAsync([reporter]);
+            reporter.Children.Add(instance);
         }
+
+        return InitializedAsync([reporter]);
     }
 }
-

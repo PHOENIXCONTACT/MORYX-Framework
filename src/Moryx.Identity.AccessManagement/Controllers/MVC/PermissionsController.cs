@@ -7,58 +7,55 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Identity.AccessManagement.Models;
 
-namespace Moryx.Identity.AccessManagement.Controllers
+namespace Moryx.Identity.AccessManagement.Controllers;
+
+[Authorize(Roles = Roles.SuperAdmin)]
+public class PermissionsController : Controller
 {
+    private readonly MoryxRoleManager _roleManager;
+    private readonly IPermissionManager _permissionManager;
 
-    [Authorize(Roles = Roles.SuperAdmin)]
-    public class PermissionsController : Controller
+    public PermissionsController(MoryxRoleManager roleManager, IPermissionManager permissionManager)
     {
-        private readonly MoryxRoleManager _roleManager;
-        private readonly IPermissionManager _permissionManager;
+        _roleManager = roleManager;
+        _permissionManager = permissionManager;
+    }
 
-        public PermissionsController(MoryxRoleManager roleManager, IPermissionManager permissionManager)
+    public async Task<ActionResult> Index()
+    {
+        if (Request.QueryString.HasValue)
         {
-            _roleManager = roleManager;
-            _permissionManager = permissionManager;
+            ViewBag.ErrorMessage = Request.Query["viewBagError"].FirstOrDefault();
         }
 
-        public async Task<ActionResult> Index()
+        var permissions = await _permissionManager.Permissions.Include(p => p.Roles).ToListAsync();
+        var model = permissions.Select(p => new PermissionsViewModel
         {
-            if (Request.QueryString.HasValue)
-            {
-                ViewBag.ErrorMessage = Request.Query["viewBagError"].FirstOrDefault();
-            }
+            Id = p.Id,
+            Name = p.Name,
+            Roles = p.Roles.Select(r => r.Name).ToArray()
+        });
 
-            var permissions = await _permissionManager.Permissions.Include(p => p.Roles).ToListAsync();
-            var model = permissions.Select(p => new PermissionsViewModel
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Roles = p.Roles.Select(r => r.Name).ToArray()
-            });
+        return View(model);
+    }
 
-            return View(model);
-        }
+    public async Task<IActionResult> AddPermission(string permission)
+    {
+        var creationResult = await _permissionManager.CreateAsync(permission);
 
-        public async Task<IActionResult> AddPermission(string permission)
-        {
-            var creationResult = await _permissionManager.CreateAsync(permission);
+        if (!creationResult.Succeeded)
+            ViewBag.ErrorMessage = creationResult.Errors.First().Description;
 
-            if (!creationResult.Succeeded)
-                ViewBag.ErrorMessage = creationResult.Errors.First().Description;
+        return RedirectToAction("Index", routeValues: new { viewBagError = ViewBag.ErrorMessage });
+    }
 
-            return RedirectToAction("Index", routeValues: new { viewBagError = ViewBag.ErrorMessage });
-        }
+    public async Task<IActionResult> Delete(string permissionId)
+    {
+        var deletionResult = await _permissionManager.DeleteAsync(permissionId);
 
-        public async Task<IActionResult> Delete(string permissionId)
-        {
-            var deletionResult = await _permissionManager.DeleteAsync(permissionId);
+        if (!deletionResult.Succeeded)
+            return BadRequest(deletionResult);
 
-            if (!deletionResult.Succeeded)
-                return BadRequest(deletionResult);
-
-            return RedirectToAction("Index");
-        }
+        return RedirectToAction("Index");
     }
 }
-

@@ -1,24 +1,23 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Modules
+namespace Moryx.Modules;
+
+/// <summary>
+/// Attribute to declare a web modules event stream
+/// </summary>
+public class ModuleEventStreamAttribute : Attribute
 {
     /// <summary>
-    /// Attribute to declare a web modules event stream
+    /// Export event stream with given URL
     /// </summary>
-    public class ModuleEventStreamAttribute : Attribute
+    public ModuleEventStreamAttribute(string eventStreamUrl)
     {
-        /// <summary>
-        /// Export event stream with given URL
-        /// </summary>
-        public ModuleEventStreamAttribute(string eventStreamUrl)
-        {
-            EventStreamUrl = eventStreamUrl;
-        }
-
-        /// <summary>
-        /// URL of the event stream
-        /// </summary>
-        public string EventStreamUrl { get; }
+        EventStreamUrl = eventStreamUrl;
     }
+
+    /// <summary>
+    /// URL of the event stream
+    /// </summary>
+    public string EventStreamUrl { get; }
 }

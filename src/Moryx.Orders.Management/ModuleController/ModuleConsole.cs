@@ -5,46 +5,45 @@ using Moryx.Runtime.Modules;
 using Moryx.Serialization;
 using Moryx.Tools;
 
-namespace Moryx.Orders.Management
+namespace Moryx.Orders.Management;
+
+[ServerModuleConsole]
+internal class ModuleConsole : IServerModuleConsole
 {
-    [ServerModuleConsole]
-    internal class ModuleConsole : IServerModuleConsole
+    public IOperationDataPool OperationDataPool { get; set; }
+
+    public IOperationManager OperationManager { get; set; }
+
+    [EntrySerialize]
+    public string ImportTryAgain()
     {
-        public IOperationDataPool OperationDataPool { get; set; }
+        var operations = OperationDataPool.GetAll(o => o.State.Classification == OperationStateClassification.Initial)
+            .ToArray();
 
-        public IOperationManager OperationManager { get; set; }
-
-        [EntrySerialize]
-        public string ImportTryAgain()
+        if (!operations.Any())
         {
-            var operations = OperationDataPool.GetAll(o => o.State.Classification == OperationStateClassification.Initial)
-                .ToArray();
-
-            if (!operations.Any())
-            {
-                return "Noting to try again!";
-            }
-
-            operations.ForEach(delegate (IOperationData data)
-            {
-                data.Assign();
-            });
-
-            return "ok";
+            return "Noting to try again!";
         }
 
-        [EntrySerialize]
-        public string AbortOperation(string orderNumber, string operationNumber)
+        operations.ForEach(delegate (IOperationData data)
         {
-            var operation = OperationDataPool.Get(orderNumber, operationNumber).Result;
-            if (operation == null)
-            {
-                return $"Operation {orderNumber}-{operationNumber} was not found!";
-            }
+            data.Assign();
+        });
 
-            OperationManager.Abort(operation);
+        return "ok";
+    }
 
-            return "ok";
+    [EntrySerialize]
+    public string AbortOperation(string orderNumber, string operationNumber)
+    {
+        var operation = OperationDataPool.Get(orderNumber, operationNumber).Result;
+        if (operation == null)
+        {
+            return $"Operation {orderNumber}-{operationNumber} was not found!";
         }
+
+        OperationManager.Abort(operation);
+
+        return "ok";
     }
 }

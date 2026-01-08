@@ -3,21 +3,20 @@
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Factory
+namespace Moryx.Factory;
+
+/// <summary>
+/// A resource/machine location inside the factory
+/// </summary>
+public interface IMachineLocation : ILocation, IResource
 {
     /// <summary>
-    /// A resource/machine location inside the factory
+    /// Resource/Machine at this location
     /// </summary>
-    public interface IMachineLocation : ILocation, IResource
-    {
-        /// <summary>
-        /// Resource/Machine at this location
-        /// </summary>
-        IResource Machine { get; }
+    IResource Machine { get; }
 
-        /// <summary>
-        /// Icon for the machine at this location
-        /// </summary>
-        string SpecificIcon { get; set; }
-    }
+    /// <summary>
+    /// Icon for the machine at this location
+    /// </summary>
+    string SpecificIcon { get; set; }
 }

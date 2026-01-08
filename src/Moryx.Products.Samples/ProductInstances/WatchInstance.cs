@@ -4,18 +4,17 @@
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Products.Samples
+namespace Moryx.Products.Samples;
+
+public class WatchInstance : ProductInstance<WatchType>, IIdentifiableObject
 {
-    public class WatchInstance : ProductInstance<WatchType>, IIdentifiableObject
-    {
-        public IIdentity Identity { get; set; }
+    public IIdentity Identity { get; set; }
 
-        public bool TimeSet { get; set; }
+    public bool TimeSet { get; set; }
 
-        public DateTime DeliveryDate { get; set; }
+    public DateTime DeliveryDate { get; set; }
 
-        public WatchFaceInstance WatchFace { get; set; }
+    public WatchFaceInstance WatchFace { get; set; }
 
-        public ICollection<NeedleInstance> Needles { get; set; }
-    }
+    public ICollection<NeedleInstance> Needles { get; set; }
 }

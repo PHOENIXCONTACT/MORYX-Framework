@@ -3,10 +3,9 @@
 
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Products.Samples
+namespace Moryx.Products.Samples;
+
+public class NeedleInstance : ProductInstance<NeedleType>
 {
-    public class NeedleInstance : ProductInstance<NeedleType>
-    {
-        public NeedleRole Role { get; set; }
-    }
+    public NeedleRole Role { get; set; }
 }

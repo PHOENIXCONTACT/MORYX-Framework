@@ -3,17 +3,16 @@
 
 using Moryx.Modules;
 
-namespace Moryx.Runtime.Tests
-{
-    public interface IStrategy
-    {
-    }
+namespace Moryx.Runtime.Tests;
 
-    public class StrategyConfig : IPluginConfig
-    {
-        /// <summary>
-        /// Name of the component represented by this entry
-        /// </summary>
-        public string PluginName { get; set; }
-    }
+public interface IStrategy
+{
+}
+
+public class StrategyConfig : IPluginConfig
+{
+    /// <summary>
+    /// Name of the component represented by this entry
+    /// </summary>
+    public string PluginName { get; set; }
 }

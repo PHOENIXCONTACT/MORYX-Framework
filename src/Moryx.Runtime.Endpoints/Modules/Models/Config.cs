@@ -3,16 +3,15 @@
 
 using Moryx.Serialization;
 
-namespace Moryx.Runtime.Endpoints.Modules.Models
+namespace Moryx.Runtime.Endpoints.Modules.Models;
+
+/// <summary>
+/// Contract for a config response
+/// </summary>
+public class Config
 {
     /// <summary>
-    /// Contract for a config response
+    /// Entry converted configuration
     /// </summary>
-    public class Config
-    {
-        /// <summary>
-        /// Entry converted configuration
-        /// </summary>
-        public Entry Root { get; set; }
-    }
+    public Entry Root { get; set; }
 }

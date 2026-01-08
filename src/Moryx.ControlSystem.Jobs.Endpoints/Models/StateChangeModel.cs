@@ -3,20 +3,18 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.ControlSystem.Jobs.Endpoints
+namespace Moryx.ControlSystem.Jobs.Endpoints;
+
+[DataContract]
+public class StateChangeModel
 {
-    [DataContract]
-    public class StateChangeModel
-    {
-        [DataMember]
-        public JobModel JobModel { get; set; }
+    [DataMember]
+    public JobModel JobModel { get; set; }
 
-        [DataMember]
-        public JobClassification PreviousState { get; set; }
+    [DataMember]
+    public JobClassification PreviousState { get; set; }
 
-        [DataMember]
-        public JobClassification CurrentState { get; set; }
+    [DataMember]
+    public JobClassification CurrentState { get; set; }
 
-    }
 }
-

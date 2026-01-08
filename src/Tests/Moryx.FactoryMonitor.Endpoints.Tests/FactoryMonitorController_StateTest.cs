@@ -19,232 +19,230 @@ using System.Threading.Tasks;
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 
-namespace Moryx.FactoryMonitor.Endpoints.Tests
+namespace Moryx.FactoryMonitor.Endpoints.Tests;
+
+[TestFixture]
+
+public class FactoryMonitorController_StateStreamTest : BaseTest
 {
-    [TestFixture]
 
-    public class FactoryMonitorController_StateStreamTest : BaseTest
+    [SetUp]
+    public override void Setup()
     {
+        base.Setup();
 
-        [SetUp]
-        public override void Setup()
+        _assemblyCell.ChangeCapabilities(new DummyCapabilities1());
+        _assemblyCell.Temperature = 125.2;
+        _assemblyCell.Name = "Assembly 1.0";
+        _assemblyCell.Parent = _manufactoringFactory;
+
+        _solderingCell.ChangeCapabilities(new DummyCapabilities2());
+        _solderingCell.Temperature = 130;
+        _solderingCell.Name = "Soldering 1.0";
+        _solderingCell.Parent = _manufactoringFactory;
+    }
+
+    [Test]
+    public void GetInitialFactoryState()
+    {
+        // Arrange
+        _manufactoringFactory.BackgroundUrl = backgroundUrl;
+
+        //Act
+        var endpointResult = _factoryMonitor.InitialFactoryState();
+
+        //Assert
+        Assert.That(endpointResult, Is.Not.Null);
+        //number of cells in the factory
+        Assert.That(GetLocations().Length, Is.EqualTo(endpointResult.Value.ResourceChangedModels.Count));
+
+        foreach (var endpointCell in endpointResult.Value.ResourceChangedModels)
+            //machine location matches
+            Assert.That(GetLocations().Any(l => l.Id == endpointCell.Location.Id));
+    }
+
+    [Test]
+    public void ShouldInferCorrectCellStatus()
+    {
+        // Arrange
+        _solderingCell.ChangeCapabilities(NullCapabilities.Instance);
+
+        //Act
+        var endpointResult = _factoryMonitor.InitialFactoryState();
+
+        //Assert
+        var cells = endpointResult.Value.CellStateChangedModels;
+        var assemblyCellModel = cells.Single(c => c.Id == _assemblyCell.Id);
+        Assert.That(assemblyCellModel.State, Is.EqualTo(CellState.Idle));
+
+        var solderingCellModel = cells.Single(c => c.Id == _solderingCell.Id);
+        Assert.That(solderingCellModel.State, Is.EqualTo(CellState.NotReadyToWork));
+    }
+
+    [Test]
+    public void FactoryStatesStream()
+    {
+        //Arrange
+        var source = new CancellationTokenSource();
+        var cancellationToken = source.Token;
+        var process = new Process
         {
-            base.Setup();
-
-            _assemblyCell.ChangeCapabilities(new DummyCapabilities1());
-            _assemblyCell.Temperature = 125.2;
-            _assemblyCell.Name = "Assembly 1.0";
-            _assemblyCell.Parent = _manufactoringFactory;
-
-            _solderingCell.ChangeCapabilities(new DummyCapabilities2());
-            _solderingCell.Temperature = 130;
-            _solderingCell.Name = "Soldering 1.0";
-            _solderingCell.Parent = _manufactoringFactory;
-        }
-
-        [Test]
-        public void GetInitialFactoryState()
-        {
-            // Arrange
-            _manufactoringFactory.BackgroundUrl = backgroundUrl;
-
-            //Act
-            var endpointResult = _factoryMonitor.InitialFactoryState();
-
-            //Assert
-            Assert.That(endpointResult, Is.Not.Null);
-            //number of cells in the factory
-            Assert.That(GetLocations().Length, Is.EqualTo(endpointResult.Value.ResourceChangedModels.Count));
-
-            foreach (var endpointCell in endpointResult.Value.ResourceChangedModels)
-                //machine location matches
-                Assert.That(GetLocations().Any(l => l.Id == endpointCell.Location.Id));
-        }
-
-        [Test]
-        public void ShouldInferCorrectCellStatus()
-        {
-            // Arrange
-            _solderingCell.ChangeCapabilities(NullCapabilities.Instance);
-
-            //Act
-            var endpointResult = _factoryMonitor.InitialFactoryState();
-
-            //Assert
-            var cells = endpointResult.Value.CellStateChangedModels;
-            var assemblyCellModel = cells.Single(c => c.Id == _assemblyCell.Id);
-            Assert.That(assemblyCellModel.State, Is.EqualTo(CellState.Idle));
-
-            var solderingCellModel = cells.Single(c => c.Id == _solderingCell.Id);
-            Assert.That(solderingCellModel.State, Is.EqualTo(CellState.NotReadyToWork));
-        }
-
-        [Test]
-        public void FactoryStatesStream()
-        {
-            //Arrange
-            var source = new CancellationTokenSource();
-            var cancellationToken = source.Token;
-            var process = new Process
+            Id = 1,
+            Recipe = new MyRecipe
             {
-                Id = 1,
-                Recipe = new MyRecipe
-                {
-                    OrderNumber = "100000",
-                    OperationNumber = "0001",
-                    Classification = AbstractionLayer.Recipes.RecipeClassification.Default,
-                },
-            };
-            var assemblyActivity = new AssemblyActivity();
-            var solderingActivity = new SolderingActivity();
-            var memoryStream = new MemoryStream();
-            var streamResponseCells = new List<CellStateChangedModel>();
-            var streamResponseOrders = new List<OrderModel>();
-            var streamResponseActivities = new List<ActivityChangedModel>();
+                OrderNumber = "100000",
+                OperationNumber = "0001",
+                Classification = AbstractionLayer.Recipes.RecipeClassification.Default,
+            },
+        };
+        var assemblyActivity = new AssemblyActivity();
+        var solderingActivity = new SolderingActivity();
+        var memoryStream = new MemoryStream();
+        var streamResponseCells = new List<CellStateChangedModel>();
+        var streamResponseOrders = new List<OrderModel>();
+        var streamResponseActivities = new List<ActivityChangedModel>();
 
-            _factoryMonitor.ControllerContext = new ControllerContext();
-            _factoryMonitor.ControllerContext.HttpContext = new DefaultHttpContext();
-            _factoryMonitor.ControllerContext.HttpContext.Response.Body = memoryStream;
+        _factoryMonitor.ControllerContext = new ControllerContext();
+        _factoryMonitor.ControllerContext.HttpContext = new DefaultHttpContext();
+        _factoryMonitor.ControllerContext.HttpContext.Response.Body = memoryStream;
 
-            _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<Process>()))
-                .Returns<Process>(p => _activityTargets.Where(pair => pair.Key.Process == p).SelectMany(pair => pair.Value).ToList());
-            _processFacadeMock.Setup(pm => pm.GetRunningProcesses()).Returns([process]);
-            //Act
+        _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<Process>()))
+            .Returns<Process>(p => _activityTargets.Where(pair => pair.Key.Process == p).SelectMany(pair => pair.Value).ToList());
+        _processFacadeMock.Setup(pm => pm.GetRunningProcesses()).Returns([process]);
+        //Act
 
-            Task.Run(async () =>
-            {
-                await _factoryMonitor.FactoryStatesStream(cancellationToken);
-            });
-
-            //assembly activity
-            StartFirstActivity(process, assemblyActivity);
-            Thread.Sleep(500);
-            ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
-
-            // Assert
-            Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _assemblyCellId)?.State,
-                Is.EqualTo(CellState.Running));
-
-            //Assert part 1
-            RaiseActivityUpdated(assemblyActivity, ActivityProgress.Completed);
-            Thread.Sleep(500);
-            ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
-
-            //verify that the assembly cell is idle
-            Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _assemblyCellId)?.State,
-                Is.EqualTo(CellState.Idle));
-
-            StartSecondActivity(process, solderingActivity);
-            Thread.Sleep(500);
-            ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
-
-            //Assert part 2
-            //verify that the soldering cell is running
-            Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _solderingCellId)?.State
-                , Is.EqualTo(CellState.Running));
-
-            RaiseActivityUpdated(solderingActivity, ActivityProgress.Completed);
-            Thread.Sleep(500);
-            ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
-
-            //verify that the soldering cell is not running
-            Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _solderingCellId)?.State,
-                Is.EqualTo(CellState.Idle));
-
-            // end of the process
-            RaiseProcessUpdated(process, ProcessProgress.Completed);
-            Thread.Sleep(500);
-            ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
-
-            //Assert part 3
-            _solderingCell.ChangeCapabilities(NullCapabilities.Instance);
-            Thread.Sleep(500);
-            ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
-
-            Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _solderingCellId)?.State, Is.EqualTo(CellState.NotReadyToWork));
-
-            //cancel/stop the request task
-            memoryStream.Close();
-            source.Cancel();
-        }
-
-        private void ReadJsonData(MemoryStream memoryStream, List<CellStateChangedModel> cells, List<OrderModel> orders, List<ActivityChangedModel> activities)
+        Task.Run(async () =>
         {
-            var jsonData = Encoding.UTF8.GetString(memoryStream.ToArray());
-            if (string.IsNullOrEmpty(jsonData)) return;
+            await _factoryMonitor.FactoryStatesStream(cancellationToken);
+        });
 
-            var array = jsonData.Split("type: ").ToList();
-            foreach (var item in array)
+        //assembly activity
+        StartFirstActivity(process, assemblyActivity);
+        Thread.Sleep(500);
+        ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
+
+        // Assert
+        Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _assemblyCellId)?.State,
+            Is.EqualTo(CellState.Running));
+
+        //Assert part 1
+        RaiseActivityUpdated(assemblyActivity, ActivityProgress.Completed);
+        Thread.Sleep(500);
+        ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
+
+        //verify that the assembly cell is idle
+        Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _assemblyCellId)?.State,
+            Is.EqualTo(CellState.Idle));
+
+        StartSecondActivity(process, solderingActivity);
+        Thread.Sleep(500);
+        ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
+
+        //Assert part 2
+        //verify that the soldering cell is running
+        Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _solderingCellId)?.State
+            , Is.EqualTo(CellState.Running));
+
+        RaiseActivityUpdated(solderingActivity, ActivityProgress.Completed);
+        Thread.Sleep(500);
+        ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
+
+        //verify that the soldering cell is not running
+        Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _solderingCellId)?.State,
+            Is.EqualTo(CellState.Idle));
+
+        // end of the process
+        RaiseProcessUpdated(process, ProcessProgress.Completed);
+        Thread.Sleep(500);
+        ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
+
+        //Assert part 3
+        _solderingCell.ChangeCapabilities(NullCapabilities.Instance);
+        Thread.Sleep(500);
+        ReadJsonData(memoryStream, streamResponseCells, streamResponseOrders, streamResponseActivities);
+
+        Assert.That(streamResponseCells.LastOrDefault(x => x.Id == _solderingCellId)?.State, Is.EqualTo(CellState.NotReadyToWork));
+
+        //cancel/stop the request task
+        memoryStream.Close();
+        source.Cancel();
+    }
+
+    private void ReadJsonData(MemoryStream memoryStream, List<CellStateChangedModel> cells, List<OrderModel> orders, List<ActivityChangedModel> activities)
+    {
+        var jsonData = Encoding.UTF8.GetString(memoryStream.ToArray());
+        if (string.IsNullOrEmpty(jsonData)) return;
+
+        var array = jsonData.Split("type: ").ToList();
+        foreach (var item in array)
+        {
+            if (item.Contains("cellStateChangedModel"))
             {
-                if (item.Contains("cellStateChangedModel"))
-                {
-                    //clean up remove "cells" and "data:" text
-                    var content = item.Replace("cellStateChangedModel", "").Replace("data: ", "");
-                    if (!string.IsNullOrEmpty(content))
-                        cells.Add(JsonConvert.DeserializeObject<CellStateChangedModel>(content));
-                }
-                else if (item.Contains("activityChangedModel"))
-                {
-                    //clean up, remove "processes" and "data:" text
-                    var content = item.Replace("activityChangedModel", "").Replace("data: ", "");
-                    if (!string.IsNullOrEmpty(content))
-                        activities.Add(JsonConvert.DeserializeObject<ActivityChangedModel>(content));
-                }
-                else if (item.Contains("process"))
-                {
-                    //clean up, remove "processes" and "data:" text
-                    var content = item.Replace("process", "").Replace("data: ", "");
-                    if (!string.IsNullOrEmpty(content))
-                        orders.AddRange(JsonConvert.DeserializeObject<List<OrderModel>>(content));
-                }
+                //clean up remove "cells" and "data:" text
+                var content = item.Replace("cellStateChangedModel", "").Replace("data: ", "");
+                if (!string.IsNullOrEmpty(content))
+                    cells.Add(JsonConvert.DeserializeObject<CellStateChangedModel>(content));
+            }
+            else if (item.Contains("activityChangedModel"))
+            {
+                //clean up, remove "processes" and "data:" text
+                var content = item.Replace("activityChangedModel", "").Replace("data: ", "");
+                if (!string.IsNullOrEmpty(content))
+                    activities.Add(JsonConvert.DeserializeObject<ActivityChangedModel>(content));
+            }
+            else if (item.Contains("process"))
+            {
+                //clean up, remove "processes" and "data:" text
+                var content = item.Replace("process", "").Replace("data: ", "");
+                if (!string.IsNullOrEmpty(content))
+                    orders.AddRange(JsonConvert.DeserializeObject<List<OrderModel>>(content));
             }
         }
+    }
 
-        private void StartSecondActivity(Process process, SolderingActivity mySecondActivity)
-        {
+    private void StartSecondActivity(Process process, SolderingActivity mySecondActivity)
+    {
 
-            // ---------------------second activity
-            AssignActivity(process, mySecondActivity, _solderingCell);
-            RaiseActivityUpdated(mySecondActivity, ActivityProgress.Ready);
+        // ---------------------second activity
+        AssignActivity(process, mySecondActivity, _solderingCell);
+        RaiseActivityUpdated(mySecondActivity, ActivityProgress.Ready);
 
-            Thread.Sleep(200);
-            //activity updated
-            RaiseActivityUpdated(mySecondActivity, ActivityProgress.Running);
-            RaiseProcessUpdated(process, ProcessProgress.Running);
-        }
+        Thread.Sleep(200);
+        //activity updated
+        RaiseActivityUpdated(mySecondActivity, ActivityProgress.Running);
+        RaiseProcessUpdated(process, ProcessProgress.Running);
+    }
 
-        private void StartFirstActivity(Process process, AssemblyActivity myFirstActivity)
-        {
-            // ----------- First activity
-            AssignActivity(process, myFirstActivity, _assemblyCell);
-            RaiseProcessUpdated(process, ProcessProgress.Ready);
-            RaiseActivityUpdated(myFirstActivity, ActivityProgress.Ready);
+    private void StartFirstActivity(Process process, AssemblyActivity myFirstActivity)
+    {
+        // ----------- First activity
+        AssignActivity(process, myFirstActivity, _assemblyCell);
+        RaiseProcessUpdated(process, ProcessProgress.Ready);
+        RaiseActivityUpdated(myFirstActivity, ActivityProgress.Ready);
 
-            Thread.Sleep(200);
+        Thread.Sleep(200);
 
-            RaiseActivityUpdated(myFirstActivity, ActivityProgress.Running);
-            RaiseProcessUpdated(process, ProcessProgress.Running);
-        }
+        RaiseActivityUpdated(myFirstActivity, ActivityProgress.Running);
+        RaiseProcessUpdated(process, ProcessProgress.Running);
+    }
 
-        private void RaiseActivityUpdated(Activity activity, ActivityProgress progress)
-        {
-            _processFacadeMock.Raise(pm => pm.ActivityUpdated += null, new ActivityUpdatedEventArgs(activity, progress));
-        }
+    private void RaiseActivityUpdated(Activity activity, ActivityProgress progress)
+    {
+        _processFacadeMock.Raise(pm => pm.ActivityUpdated += null, new ActivityUpdatedEventArgs(activity, progress));
+    }
 
-        private void RaiseProcessUpdated(Process process, ProcessProgress progress)
-        {
-            _processFacadeMock.Raise(pm => pm.ProcessUpdated += null, new ProcessUpdatedEventArgs(process, progress));
-        }
+    private void RaiseProcessUpdated(Process process, ProcessProgress progress)
+    {
+        _processFacadeMock.Raise(pm => pm.ProcessUpdated += null, new ProcessUpdatedEventArgs(process, progress));
+    }
 
-        private Activity AssignActivity(Process process, Activity activity, ICell cell)
-        {
-            activity.Process = process;
-            activity.Tracing.ResourceId = cell.Id;
-            process.AddActivity(activity);
-            // Assign resources AFTER creation
-            _activityTargets[activity] = [cell];
-            return activity;
-        }
+    private Activity AssignActivity(Process process, Activity activity, ICell cell)
+    {
+        activity.Process = process;
+        activity.Tracing.ResourceId = cell.Id;
+        process.AddActivity(activity);
+        // Assign resources AFTER creation
+        _activityTargets[activity] = [cell];
+        return activity;
     }
 }
-

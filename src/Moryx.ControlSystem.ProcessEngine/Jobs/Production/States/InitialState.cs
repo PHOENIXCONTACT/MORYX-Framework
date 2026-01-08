@@ -6,61 +6,60 @@ using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Processes;
 using Moryx.ControlSystem.ProcessEngine.Properties;
 
-namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production
+namespace Moryx.ControlSystem.ProcessEngine.Jobs.Production;
+
+[Display(Name = nameof(Strings.JobStates_Initial), ResourceType = typeof(Strings))]
+internal sealed class InitialState : ProductionJobStateBase
 {
-    [Display(Name = nameof(Strings.JobStates_Initial), ResourceType = typeof(Strings))]
-    internal sealed class InitialState : ProductionJobStateBase
+    public override bool CanComplete => true;
+
+    public override bool CanAbort => true;
+
+    public override bool IsStable => true;
+
+    public InitialState(JobDataBase context, StateMap stateMap)
+        : base(context, stateMap, JobClassification.Idle)
     {
-        public override bool CanComplete => true;
+    }
 
-        public override bool CanAbort => true;
+    public override void Load()
+    {
+        // Nothing to load
+    }
 
-        public override bool IsStable => true;
+    public override void Ready()
+    {
+        NextState(StateWaiting);
+    }
 
-        public InitialState(JobDataBase context, StateMap stateMap)
-            : base(context, stateMap, JobClassification.Idle)
-        {
-        }
+    public override void Complete()
+    {
+        NextState(StateCompleted);
+    }
 
-        public override void Load()
-        {
-            // Nothing to load
-        }
+    public override void Abort()
+    {
+        NextState(StateCompleted);
+    }
 
-        public override void Ready()
-        {
-            NextState(StateWaiting);
-        }
-
-        public override void Complete()
-        {
+    public override void Interrupt()
+    {
+        // Nothing to interrupt
+        if (Context.Dispatcher.RebootCompleteInitial)
             NextState(StateCompleted);
-        }
+    }
 
-        public override void Abort()
+    public override void ProcessChanged(ProcessData processData, ProcessState trigger)
+    {
+        if (trigger == ProcessState.Discarded)
         {
-            NextState(StateCompleted);
+            // Discarded processes can occur when a Dispatched job was interrupted again
+            Context.ProcessCompleted(processData);
         }
-
-        public override void Interrupt()
+        else
         {
-            // Nothing to interrupt
-            if (Context.Dispatcher.RebootCompleteInitial)
-                NextState(StateCompleted);
-        }
-
-        public override void ProcessChanged(ProcessData processData, ProcessState trigger)
-        {
-            if (trigger == ProcessState.Discarded)
-            {
-                // Discarded processes can occur when a Dispatched job was interrupted again
-                Context.ProcessCompleted(processData);
-            }
-            else
-            {
-                // No other state changes may occur
-                base.ProcessChanged(processData, trigger);
-            }
+            // No other state changes may occur
+            base.ProcessChanged(processData, trigger);
         }
     }
 }

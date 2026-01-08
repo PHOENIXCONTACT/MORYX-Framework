@@ -3,35 +3,34 @@
 
 using System.Globalization;
 
-namespace Moryx.Bindings
+namespace Moryx.Bindings;
+
+/// <summary>
+/// Binding resolver that converts objects to formatted strings
+/// </summary>
+public class FormatBindingResolver : BindingResolverBase
 {
+    private readonly string _format;
+
     /// <summary>
-    /// Binding resolver that converts objects to formatted strings
+    /// Create new instance of the format resolver with a given format
     /// </summary>
-    public class FormatBindingResolver : BindingResolverBase
+    /// <param name="format">Desired format of the string</param>
+    public FormatBindingResolver(string format)
     {
-        private readonly string _format;
+        _format = format;
+    }
 
-        /// <summary>
-        /// Create new instance of the format resolver with a given format
-        /// </summary>
-        /// <param name="format">Desired format of the string</param>
-        public FormatBindingResolver(string format)
-        {
-            _format = format;
-        }
+    /// <inheritdoc />
+    protected override object Resolve(object source)
+    {
+        var formattable = source as IFormattable;
+        return formattable?.ToString(_format, CultureInfo.CurrentCulture) ?? source.ToString();
+    }
 
-        /// <inheritdoc />
-        protected override object Resolve(object source)
-        {
-            var formattable = source as IFormattable;
-            return formattable?.ToString(_format, CultureInfo.CurrentCulture) ?? source.ToString();
-        }
-
-        /// <inheritdoc />
-        protected sealed override bool Update(object source, object value)
-        {
-            throw new NotImplementedException();
-        }
+    /// <inheritdoc />
+    protected sealed override bool Update(object source, object value)
+    {
+        throw new NotImplementedException();
     }
 }

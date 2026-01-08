@@ -10,35 +10,34 @@ using System.Threading;
 using System.Threading.Tasks;
 using Moryx.Runtime.Kernel.Tests.Dummies;
 
-namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
+namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
+
+public class ServerModuleA : ServerModuleBase<RuntimeConfigManagerTestConfig2>, IFacadeContainer<IFacadeA>
+
 {
-    public class ServerModuleA : ServerModuleBase<RuntimeConfigManagerTestConfig2>, IFacadeContainer<IFacadeA>
-
+    public ServerModuleA(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) : base(containerFactory, configManager, loggerFactory)
     {
-        public ServerModuleA(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory) : base(containerFactory, configManager, loggerFactory)
-        {
-            Facade = new FacadaA();
-        }
+        Facade = new FacadaA();
+    }
 
-        public override string Name => "ServerModuleA";
+    public override string Name => "ServerModuleA";
 
-        private readonly FacadaA _aFacade = new();
-        IFacadeA IFacadeContainer<IFacadeA>.Facade => _aFacade;
-        public IFacadeA Facade { get; private set; }
+    private readonly FacadaA _aFacade = new();
+    IFacadeA IFacadeContainer<IFacadeA>.Facade => _aFacade;
+    public IFacadeA Facade { get; private set; }
 
-        protected override Task OnInitializeAsync(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+    protected override Task OnInitializeAsync(CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 
-        protected override Task OnStartAsync(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+    protected override Task OnStartAsync(CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 
-        protected override Task OnStopAsync(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+    protected override Task OnStopAsync(CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }

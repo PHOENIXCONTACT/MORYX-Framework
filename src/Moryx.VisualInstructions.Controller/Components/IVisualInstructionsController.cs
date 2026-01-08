@@ -3,9 +3,8 @@
 
 using Moryx.Modules;
 
-namespace Moryx.VisualInstructions.Controller
+namespace Moryx.VisualInstructions.Controller;
+
+internal interface IVisualInstructionsController : IVisualInstructions, IPlugin
 {
-    internal interface IVisualInstructionsController : IVisualInstructions, IPlugin
-    {
-    }
 }

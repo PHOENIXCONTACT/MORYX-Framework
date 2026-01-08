@@ -3,28 +3,27 @@
 
 using Moryx.Modules;
 
-namespace Moryx.Workplans.Editing
+namespace Moryx.Workplans.Editing;
+
+internal interface IWorkplanEditor : IPlugin
 {
-    internal interface IWorkplanEditor : IPlugin
-    {
-        /// <summary>
-        /// Available steps
-        /// </summary>
-        IReadOnlyList<Type> AvailableSteps { get; }
+    /// <summary>
+    /// Available steps
+    /// </summary>
+    IReadOnlyList<Type> AvailableSteps { get; }
 
-        /// <summary>
-        /// Open session to edit a workplan
-        /// </summary>
-        IWorkplanEditingSession EditWorkplan(Workplan workplan, bool duplicate);
+    /// <summary>
+    /// Open session to edit a workplan
+    /// </summary>
+    IWorkplanEditingSession EditWorkplan(Workplan workplan, bool duplicate);
 
-        /// <summary>
-        /// Access session
-        /// </summary>
-        IWorkplanEditingSession this[string token] { get; }
+    /// <summary>
+    /// Access session
+    /// </summary>
+    IWorkplanEditingSession this[string token] { get; }
 
-        /// <summary>
-        /// Close the session
-        /// </summary>
-        void CloseSession(string token);
-    }
+    /// <summary>
+    /// Close the session
+    /// </summary>
+    void CloseSession(string token);
 }

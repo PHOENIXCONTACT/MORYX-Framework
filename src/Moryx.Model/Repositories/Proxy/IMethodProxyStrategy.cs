@@ -4,12 +4,11 @@
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Moryx.Model.Repositories.Proxy
-{
-    internal interface IMethodProxyStrategy
-    {
-        bool CanImplement(MethodInfo methodInfo);
+namespace Moryx.Model.Repositories.Proxy;
 
-        void Implement(TypeBuilder typeBuilder, MethodInfo methodInfo, Type baseType, Type targetType);
-    }
+internal interface IMethodProxyStrategy
+{
+    bool CanImplement(MethodInfo methodInfo);
+
+    void Implement(TypeBuilder typeBuilder, MethodInfo methodInfo, Type baseType, Type targetType);
 }

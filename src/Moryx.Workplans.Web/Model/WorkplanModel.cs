@@ -3,22 +3,20 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.Workplans.Endpoint
+namespace Moryx.Workplans.Endpoint;
+
+[DataContract]
+public class WorkplanModel
 {
-    [DataContract]
-    public class WorkplanModel
-    {
-        [DataMember]
-        public long Id { get; set; }
+    [DataMember]
+    public long Id { get; set; }
 
-        [DataMember]
-        public string Name { get; set; }
+    [DataMember]
+    public string Name { get; set; }
 
-        [DataMember]
-        public int Version { get; set; }
+    [DataMember]
+    public int Version { get; set; }
 
-        [DataMember]
-        public WorkplanState State { get; set; }
-    }
+    [DataMember]
+    public WorkplanState State { get; set; }
 }
-

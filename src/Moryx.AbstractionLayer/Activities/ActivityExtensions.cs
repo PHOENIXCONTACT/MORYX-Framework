@@ -4,26 +4,25 @@
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Workplans;
 
-namespace Moryx.AbstractionLayer.Activities
+namespace Moryx.AbstractionLayer.Activities;
+
+/// <summary>
+/// Extensions for <see cref="Activity"/>
+/// </summary>
+public static class ActivityExtensions
 {
     /// <summary>
-    /// Extensions for <see cref="Activity"/>
+    /// Get the task of an <see cref="Activity"/>.
+    /// Interface extension for more accessibility and less casting.
     /// </summary>
-    public static class ActivityExtensions
+    /// <param name="activity">Must derive from <seealso cref="Activity"/>!</param>
+    public static IWorkplanStep GetTask(this Activity activity)
     {
-        /// <summary>
-        /// Get the task of an <see cref="Activity"/>.
-        /// Interface extension for more accessibility and less casting.
-        /// </summary>
-        /// <param name="activity">Must derive from <seealso cref="Activity"/>!</param>
-        public static IWorkplanStep GetTask(this Activity activity)
+        if (activity.Process.Recipe is WorkplanRecipe workplanRecipe)
         {
-            if (activity.Process.Recipe is WorkplanRecipe workplanRecipe)
-            {
-                var step = workplanRecipe.Workplan.Steps.FirstOrDefault(s => s.Id == activity.StepId);
-                return step;
-            }
-            return null;
+            var step = workplanRecipe.Workplan.Steps.FirstOrDefault(s => s.Id == activity.StepId);
+            return step;
         }
+        return null;
     }
 }

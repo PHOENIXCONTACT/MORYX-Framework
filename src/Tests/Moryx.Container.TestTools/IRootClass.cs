@@ -3,12 +3,11 @@
 
 using Moryx.Modules;
 
-namespace Moryx.Container.TestTools
-{
-    public interface IRootClass : IConfiguredPlugin<RootClassFactoryConfig>
-    {
-        IConfiguredComponent ConfiguredComponent { get; set; }
+namespace Moryx.Container.TestTools;
 
-        string GetName();
-    }
+public interface IRootClass : IConfiguredPlugin<RootClassFactoryConfig>
+{
+    IConfiguredComponent ConfiguredComponent { get; set; }
+
+    string GetName();
 }

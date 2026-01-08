@@ -3,17 +3,15 @@
 
 using Moryx.AbstractionLayer.Capabilities;
 
-namespace Moryx.Operators.Skills
-{
-    public static class SkillExtensions
-    {
-        /// <summary>
-        /// Returns the acquired capabilities of the skill
-        /// </summary>
-        /// <param name="skill">skill of the operator</param>
-        /// <returns></returns>
-        public static ICapabilities AcquiredCapabilities(this Skill skill) =>
-            skill.Type.AcquiredCapabilities;
-    }
-}
+namespace Moryx.Operators.Skills;
 
+public static class SkillExtensions
+{
+    /// <summary>
+    /// Returns the acquired capabilities of the skill
+    /// </summary>
+    /// <param name="skill">skill of the operator</param>
+    /// <returns></returns>
+    public static ICapabilities AcquiredCapabilities(this Skill skill) =>
+        skill.Type.AcquiredCapabilities;
+}

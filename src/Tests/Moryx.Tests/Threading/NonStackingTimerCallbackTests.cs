@@ -4,57 +4,56 @@
 using Moryx.Threading;
 using NUnit.Framework;
 
-namespace Moryx.Tests.Threading
+namespace Moryx.Tests.Threading;
+
+[TestFixture]
+public class NonStackingTimerCallbackTests
 {
-    [TestFixture]
-    public class NonStackingTimerCallbackTests
+    private int _counter;
+
+    private NonStackingTimerCallback _nonStackingTimerCallback;
+
+    [SetUp]
+    public void Setup()
     {
-        private int _counter;
+        _counter = 0;
+    }
 
-        private NonStackingTimerCallback _nonStackingTimerCallback;
+    [Test]
+    public void Recursion()
+    {
+        _nonStackingTimerCallback = new NonStackingTimerCallback(RecursiveCallback);
 
-        [SetUp]
-        public void Setup()
+        _nonStackingTimerCallback.Callback(null);
+
+        Assert.That(_counter, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void CallByCall()
+    {
+        _nonStackingTimerCallback = new NonStackingTimerCallback(SimpleCallback);
+
+        _nonStackingTimerCallback.Callback(null);
+        _nonStackingTimerCallback.Callback(null);
+
+        Assert.That(_counter, Is.EqualTo(2));
+    }
+
+    private void RecursiveCallback()
+    {
+        _counter++;
+
+        if (_counter > 1)
         {
-            _counter = 0;
+            return;
         }
 
-        [Test]
-        public void Recursion()
-        {
-            _nonStackingTimerCallback = new NonStackingTimerCallback(RecursiveCallback);
+        _nonStackingTimerCallback.Callback(null);
+    }
 
-            _nonStackingTimerCallback.Callback(null);
-
-            Assert.That(_counter, Is.EqualTo(1));
-        }
-
-        [Test]
-        public void CallByCall()
-        {
-            _nonStackingTimerCallback = new NonStackingTimerCallback(SimpleCallback);
-
-            _nonStackingTimerCallback.Callback(null);
-            _nonStackingTimerCallback.Callback(null);
-
-            Assert.That(_counter, Is.EqualTo(2));
-        }
-
-        private void RecursiveCallback()
-        {
-            _counter++;
-
-            if (_counter > 1)
-            {
-                return;
-            }
-
-            _nonStackingTimerCallback.Callback(null);
-        }
-
-        private void SimpleCallback()
-        {
-            _counter++;
-        }
+    private void SimpleCallback()
+    {
+        _counter++;
     }
 }

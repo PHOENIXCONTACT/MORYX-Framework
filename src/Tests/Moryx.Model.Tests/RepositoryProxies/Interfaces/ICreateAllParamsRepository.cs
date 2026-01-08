@@ -3,10 +3,9 @@
 
 using Moryx.Model.Repositories;
 
-namespace Moryx.Model.Tests
+namespace Moryx.Model.Tests;
+
+public interface ICreateAllParamsRepository : IRepository<SomeEntity>
 {
-    public interface ICreateAllParamsRepository : IRepository<SomeEntity>
-    {
-        SomeEntity Create(int value, string name, int value2, int value3, int value4);
-    }
+    SomeEntity Create(int value, string name, int value2, int value3, int value4);
 }

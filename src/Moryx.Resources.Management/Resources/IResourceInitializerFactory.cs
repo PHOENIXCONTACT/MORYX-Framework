@@ -4,22 +4,21 @@
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Container;
 
-namespace Moryx.Resources.Management
+namespace Moryx.Resources.Management;
+
+/// <summary>
+/// Factory to create <see cref="IResourceInitializer"/>
+/// </summary>
+[PluginFactory(typeof(IConfigBasedComponentSelector))]
+internal interface IResourceInitializerFactory
 {
     /// <summary>
-    /// Factory to create <see cref="IResourceInitializer"/>
+    /// Creates an <see cref="IResourceInitializer"/> with the given config
     /// </summary>
-    [PluginFactory(typeof(IConfigBasedComponentSelector))]
-    internal interface IResourceInitializerFactory
-    {
-        /// <summary>
-        /// Creates an <see cref="IResourceInitializer"/> with the given config
-        /// </summary>
-        Task<IResourceInitializer> Create(ResourceInitializerConfig config, CancellationToken cancellationToken);
+    Task<IResourceInitializer> Create(ResourceInitializerConfig config, CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Destroys an <see cref="IResourceInitializer"/>
-        /// </summary>
-        void Destroy(IResourceInitializer resourceInitializer);
-    }
+    /// <summary>
+    /// Destroys an <see cref="IResourceInitializer"/>
+    /// </summary>
+    void Destroy(IResourceInitializer resourceInitializer);
 }

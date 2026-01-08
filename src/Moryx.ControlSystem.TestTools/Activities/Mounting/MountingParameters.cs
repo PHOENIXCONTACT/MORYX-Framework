@@ -4,13 +4,12 @@
 using System.Runtime.Serialization;
 using Moryx.VisualInstructions;
 
-namespace Moryx.ControlSystem.TestTools.Activities
+namespace Moryx.ControlSystem.TestTools.Activities;
+
+/// <summary>
+/// Parameter base class to derive visual type
+/// </summary>
+[DataContract]
+public class MountingParameters : VisualInstructionParameters
 {
-    /// <summary>
-    /// Parameter base class to derive visual type
-    /// </summary>
-    [DataContract]
-    public class MountingParameters : VisualInstructionParameters
-    {
-    }
 }

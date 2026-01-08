@@ -5,13 +5,12 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Activities;
 
-namespace Moryx.Benchmarking
+namespace Moryx.Benchmarking;
+
+[DataContract]
+public class BenchmarkTracing : Tracing
 {
-    [DataContract]
-    public class BenchmarkTracing : Tracing
-    {
-        [DataMember]
-        [DisplayName("Runtime"), Description("Processing time of the activity")]
-        public long RuntimeMs { get; set; }
-    }
+    [DataMember]
+    [DisplayName("Runtime"), Description("Processing time of the activity")]
+    public long RuntimeMs { get; set; }
 }

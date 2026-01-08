@@ -1,21 +1,20 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Notifications.Publisher
+namespace Moryx.Notifications.Publisher;
+
+/// <summary>
+/// Result of the processing and acknowledge of the notification processor
+/// </summary>
+public enum NotificationProcessorResult
 {
     /// <summary>
-    /// Result of the processing and acknowledge of the notification processor
+    /// Notification was processed successfully
     /// </summary>
-    public enum NotificationProcessorResult
-    {
-        /// <summary>
-        /// Notification was processed successfully
-        /// </summary>
-        Processed,
+    Processed,
 
-        /// <summary>
-        /// Notification was ignored by the processor
-        /// </summary>
-        Ignored
-    }
+    /// <summary>
+    /// Notification was ignored by the processor
+    /// </summary>
+    Ignored
 }

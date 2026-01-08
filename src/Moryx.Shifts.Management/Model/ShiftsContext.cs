@@ -8,46 +8,44 @@ using Moryx.Model;
 // ReSharper disable VirtualMemberNeverOverridden.Global
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-namespace Moryx.Shifts.Management.Model
+namespace Moryx.Shifts.Management.Model;
+
+/// <summary>
+/// The DBContext of this database model.
+/// </summary>
+public class ShiftsContext : MoryxDbContext
 {
-    /// <summary>
-    /// The DBContext of this database model.
-    /// </summary>
-    public class ShiftsContext : MoryxDbContext
+    /// <inheritdoc />
+    public ShiftsContext()
     {
-        /// <inheritdoc />
-        public ShiftsContext()
-        {
-        }
-
-        /// <inheritdoc />
-        public ShiftsContext(DbContextOptions options) : base(options)
-        {
-        }
-
-        /// <inheritdoc />
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-
-            optionsBuilder.UseLazyLoadingProxies();
-        }
-
-        /// <inheritdoc />
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<ShiftEntity>().HasOne(s => s.ShiftType);
-
-            modelBuilder.Entity<ShiftAssignementEntity>().HasOne(s => s.Shift);
-        }
-
-        public virtual DbSet<ShiftEntity> Shifts { get; set; }
-
-        public virtual DbSet<ShiftTypeEntity> ShiftTypes { get; set; }
-
-        public virtual DbSet<ShiftAssignementEntity> ShiftAssignements { get; set; }
     }
-}
 
+    /// <inheritdoc />
+    public ShiftsContext(DbContextOptions options) : base(options)
+    {
+    }
+
+    /// <inheritdoc />
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+
+        optionsBuilder.UseLazyLoadingProxies();
+    }
+
+    /// <inheritdoc />
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<ShiftEntity>().HasOne(s => s.ShiftType);
+
+        modelBuilder.Entity<ShiftAssignementEntity>().HasOne(s => s.Shift);
+    }
+
+    public virtual DbSet<ShiftEntity> Shifts { get; set; }
+
+    public virtual DbSet<ShiftTypeEntity> ShiftTypes { get; set; }
+
+    public virtual DbSet<ShiftAssignementEntity> ShiftAssignements { get; set; }
+}

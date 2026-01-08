@@ -3,16 +3,15 @@
 
 using Moryx.AbstractionLayer.Identity;
 
-namespace Moryx.ControlSystem.TestTools.Identity
-{
-    public class TestNumberIdentity : NumberIdentity
-    {
-        public TestNumberIdentity(int numberType) : base(numberType)
-        {
-        }
+namespace Moryx.ControlSystem.TestTools.Identity;
 
-        public TestNumberIdentity(int numberType, string identifier) : base(numberType, identifier)
-        {
-        }
+public class TestNumberIdentity : NumberIdentity
+{
+    public TestNumberIdentity(int numberType) : base(numberType)
+    {
+    }
+
+    public TestNumberIdentity(int numberType, string identifier) : base(numberType, identifier)
+    {
     }
 }

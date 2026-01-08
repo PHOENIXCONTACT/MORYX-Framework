@@ -5,50 +5,49 @@ using System.ComponentModel;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 
-namespace Moryx.Resources.Samples
+namespace Moryx.Resources.Samples;
+
+public class RoutingResource : Resource
 {
-    public class RoutingResource : Resource
+    [EntrySerialize, ResourceTypes(typeof(IWpc))]
+    [Description("Type of wpc for Autocreate")]
+    public string WpcType { get; set; }
+
+    [EntrySerialize]
+    public void AutoCreateWpc()
     {
-        [EntrySerialize, ResourceTypes(typeof(IWpc))]
-        [Description("Type of wpc for Autocreate")]
-        public string WpcType { get; set; }
+        var wpc = (Resource)Graph.Instantiate<IWpc>(WpcType);
+        wpc.Parent = this;
 
-        [EntrySerialize]
-        public void AutoCreateWpc()
+        var pos = Graph.Instantiate<WpcPosition>();
+        pos.Parent = wpc;
+        wpc.Children.Add(pos);
+
+        Children.Add(wpc);
+
+        RaiseResourceChanged();
+    }
+}
+
+public interface IWpc : IResource
+{
+}
+
+public class Wpc : Resource, IWpc
+{
+    [ResourceConstructor]
+    public void CreatePositions(int count)
+    {
+        for (int i = 0; i < count; i++)
         {
-            var wpc = (Resource)Graph.Instantiate<IWpc>(WpcType);
-            wpc.Parent = this;
-
             var pos = Graph.Instantiate<WpcPosition>();
-            pos.Parent = wpc;
-            wpc.Children.Add(pos);
-
-            Children.Add(wpc);
-
-            RaiseResourceChanged();
+            pos.Parent = this;
+            Children.Add(pos);
         }
     }
+}
 
-    public interface IWpc : IResource
-    {
-    }
+public class WpcPosition : Resource
+{
 
-    public class Wpc : Resource, IWpc
-    {
-        [ResourceConstructor]
-        public void CreatePositions(int count)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                var pos = Graph.Instantiate<WpcPosition>();
-                pos.Parent = this;
-                Children.Add(pos);
-            }
-        }
-    }
-
-    public class WpcPosition : Resource
-    {
-
-    }
 }

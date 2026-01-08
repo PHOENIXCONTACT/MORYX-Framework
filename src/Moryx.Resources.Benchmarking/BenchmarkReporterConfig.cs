@@ -3,10 +3,9 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.Resources.Benchmarking
+namespace Moryx.Resources.Benchmarking;
+
+[DataContract]
+public class BenchmarkReporterConfig
 {
-    [DataContract]
-    public class BenchmarkReporterConfig
-    {
-    }
 }

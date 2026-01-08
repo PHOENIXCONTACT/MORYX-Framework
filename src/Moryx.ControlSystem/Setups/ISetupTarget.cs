@@ -5,16 +5,15 @@ using Moryx.AbstractionLayer.Capabilities;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
 
-namespace Moryx.ControlSystem.Setups
+namespace Moryx.ControlSystem.Setups;
+
+/// <summary>
+/// Interface to decouple setup evaluation from the current state of the <see cref="IResourceManagement"/>
+/// </summary>
+public interface ISetupTarget
 {
     /// <summary>
-    /// Interface to decouple setup evaluation from the current state of the <see cref="IResourceManagement"/>
+    /// Return all cells that provide given, required capabilities
     /// </summary>
-    public interface ISetupTarget
-    {
-        /// <summary>
-        /// Return all cells that provide given, required capabilities
-        /// </summary>
-        IReadOnlyList<ICell> Cells(ICapabilities capabilities);
-    }
+    IReadOnlyList<ICell> Cells(ICapabilities capabilities);
 }

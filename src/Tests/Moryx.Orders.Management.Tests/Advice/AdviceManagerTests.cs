@@ -8,95 +8,93 @@ using Moryx.Orders.Advice;
 using Moryx.Orders.Management.Advice;
 using NUnit.Framework;
 
-namespace Moryx.Orders.Management.Tests
+namespace Moryx.Orders.Management.Tests;
+
+[TestFixture]
+public class AdviceManagerTests
 {
-    [TestFixture]
-    public class AdviceManagerTests
+    private AdviceManager _adviceManager;
+    private Mock<IAdviceExecutor> _adviceExecutorMock;
+    private ModuleConfig _config;
+    private Mock<IOperationData> _operationDataMock;
+    private InternalOperation _operation;
+
+    [SetUp]
+    public Task SetUp()
     {
-        private AdviceManager _adviceManager;
-        private Mock<IAdviceExecutor> _adviceExecutorMock;
-        private ModuleConfig _config;
-        private Mock<IOperationData> _operationDataMock;
-        private InternalOperation _operation;
+        _adviceExecutorMock = new Mock<IAdviceExecutor>();
+        _config = new ModuleConfig();
 
-        [SetUp]
-        public Task SetUp()
+        _operation = new InternalOperation();
+
+        _operationDataMock = new Mock<IOperationData>();
+        _operationDataMock.SetupGet(o => o.Operation).Returns(_operation);
+
+        _adviceManager = new AdviceManager
         {
-            _adviceExecutorMock = new Mock<IAdviceExecutor>();
-            _config = new ModuleConfig();
+            AdviceExecutor = _adviceExecutorMock.Object,
+            ModuleConfig = _config
+        };
 
-            _operation = new InternalOperation();
+        _adviceExecutorMock.Setup(e => e.AdviceAsync(_operation, It.IsAny<OrderAdvice>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Operation _, OrderAdvice advice, CancellationToken _) => new AdviceResult(advice));
 
-            _operationDataMock = new Mock<IOperationData>();
-            _operationDataMock.SetupGet(o => o.Operation).Returns(_operation);
+        _adviceExecutorMock.Setup(e => e.AdviceAsync(_operation, It.IsAny<PickPartAdvice>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Operation _, PickPartAdvice advice, CancellationToken _) => new AdviceResult(advice));
 
-            _adviceManager = new AdviceManager
-            {
-                AdviceExecutor = _adviceExecutorMock.Object,
-                ModuleConfig = _config
-            };
+        return _adviceManager.StartAsync();
+    }
 
-            _adviceExecutorMock.Setup(e => e.AdviceAsync(_operation, It.IsAny<OrderAdvice>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Operation _, OrderAdvice advice, CancellationToken _) => new AdviceResult(advice));
+    [Test(Description = "Executor should handle order advices")]
+    public async Task OrderAdviceShouldBeHandledByTheExecutor()
+    {
+        // Arrange
+        _config.Advice.UseAdviceExecutorForOrderAdvice = true;
 
-            _adviceExecutorMock.Setup(e => e.AdviceAsync(_operation, It.IsAny<PickPartAdvice>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Operation _, PickPartAdvice advice, CancellationToken _) => new AdviceResult(advice));
+        // Act
+        await _adviceManager.OrderAdvice(_operationDataMock.Object, "123456789", 10);
 
-            return _adviceManager.StartAsync();
-        }
+        // Assert
+        _adviceExecutorMock.Verify(e => e.AdviceAsync(_operation, It.IsAny<OrderAdvice>(), It.IsAny<CancellationToken>()),
+            Times.Once, "There should be an OrderAdvice handled by the Executor");
+        _operationDataMock.Verify(o => o.Advice(It.IsAny<OrderAdvice>()), Times.Once,
+            "There should be an order advice at the OperationData");
+    }
 
-        [Test(Description = "Executor should handle order advices")]
-        public async Task OrderAdviceShouldBeHandledByTheExecutor()
+    [TestCase(true, Description = "The pick part advice should be handled by the executor")]
+    [TestCase(false, Description = "The pick part advice should be handled by the executor")]
+    public void PickPartAdvicesShouldBeHandledTheExecutor(bool executorConfig)
+    {
+        // Arrange
+        _config.Advice.UseAdviceExecutorForOrderAdvice = executorConfig;
+        var part = new ProductPart
         {
-            // Arrange
-            _config.Advice.UseAdviceExecutorForOrderAdvice = true;
+            StagingIndicator = StagingIndicator.PickPart
+        };
 
-            // Act
-            await _adviceManager.OrderAdvice(_operationDataMock.Object, "123456789", 10);
+        // Act
+        _adviceManager.PickPartAdvice(_operationDataMock.Object, "123456789", part);
 
-            // Assert
-            _adviceExecutorMock.Verify(e => e.AdviceAsync(_operation, It.IsAny<OrderAdvice>(), It.IsAny<CancellationToken>()),
-                Times.Once, "There should be an OrderAdvice handled by the Executor");
-            _operationDataMock.Verify(o => o.Advice(It.IsAny<OrderAdvice>()), Times.Once,
-                "There should be an order advice at the OperationData");
-        }
+        // Assert
+        _adviceExecutorMock.Verify(e => e.AdviceAsync(_operation, It.IsAny<PickPartAdvice>(), It.IsAny<CancellationToken>()),
+            Times.Once, "There should be a PickPartAdvice handled by the Executor");
+        _operationDataMock.Verify(o => o.Advice(It.IsAny<PickPartAdvice>()), Times.Once,
+            "There should be a pick part advice at the OperationData");
+    }
 
-        [TestCase(true, Description = "The pick part advice should be handled by the executor")]
-        [TestCase(false, Description = "The pick part advice should be handled by the executor")]
-        public void PickPartAdvicesShouldBeHandledTheExecutor(bool executorConfig)
-        {
-            // Arrange
-            _config.Advice.UseAdviceExecutorForOrderAdvice = executorConfig;
-            var part = new ProductPart
-            {
-                StagingIndicator = StagingIndicator.PickPart
-            };
+    [Test(Description = "The executor should not be used for order advices if it disabled for order advices")]
+    public void ExecutorShouldNotHandleOrderAdvice()
+    {
+        // Arrange
+        _config.Advice.UseAdviceExecutorForOrderAdvice = false;
 
-            // Act
-            _adviceManager.PickPartAdvice(_operationDataMock.Object, "123456789", part);
+        // Act
+        _adviceManager.OrderAdvice(_operationDataMock.Object, "123456789", 10);
 
-            // Assert
-            _adviceExecutorMock.Verify(e => e.AdviceAsync(_operation, It.IsAny<PickPartAdvice>(), It.IsAny<CancellationToken>()),
-                Times.Once, "There should be a PickPartAdvice handled by the Executor");
-            _operationDataMock.Verify(o => o.Advice(It.IsAny<PickPartAdvice>()), Times.Once,
-                "There should be a pick part advice at the OperationData");
-        }
-
-        [Test(Description = "The executor should not be used for order advices if it disabled for order advices")]
-        public void ExecutorShouldNotHandleOrderAdvice()
-        {
-            // Arrange
-            _config.Advice.UseAdviceExecutorForOrderAdvice = false;
-
-            // Act
-            _adviceManager.OrderAdvice(_operationDataMock.Object, "123456789", 10);
-
-            // Assert
-            _adviceExecutorMock.Verify(e => e.AdviceAsync(_operation, It.IsAny<OrderAdvice>(), It.IsAny<CancellationToken>()),
-                Times.Never, "There should be no OrderAdvice handled by the Executor");
-            _operationDataMock.Verify(o => o.Advice(It.IsAny<OrderAdvice>()), Times.Once,
-                "There should be an order advice at the OperationData");
-        }
+        // Assert
+        _adviceExecutorMock.Verify(e => e.AdviceAsync(_operation, It.IsAny<OrderAdvice>(), It.IsAny<CancellationToken>()),
+            Times.Never, "There should be no OrderAdvice handled by the Executor");
+        _operationDataMock.Verify(o => o.Advice(It.IsAny<OrderAdvice>()), Times.Once,
+            "There should be an order advice at the OperationData");
     }
 }
-

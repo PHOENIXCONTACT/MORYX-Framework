@@ -4,13 +4,12 @@
 using System.Runtime.Serialization;
 using Moryx.Configuration;
 
-namespace Moryx.ProcessData.Adapter.ResourceManagement
+namespace Moryx.ProcessData.Adapter.ResourceManagement;
+
+/// <summary>
+/// Module configuration of the adapter <see cref="ModuleController"/>
+/// </summary>
+[DataContract]
+public class ModuleConfig : ConfigBase
 {
-    /// <summary>
-    /// Module configuration of the adapter <see cref="ModuleController"/>
-    /// </summary>
-    [DataContract]
-    public class ModuleConfig : ConfigBase
-    {
-    }
 }

@@ -4,25 +4,24 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Moryx.Model
-{
-    /// <summary>
-    /// Base class for <see cref="IEntity"/>
-    /// </summary>
-    public abstract class EntityBase : IEntity
-    {
-        private long _id;
+namespace Moryx.Model;
 
-        /// <inheritdoc />
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public virtual long Id
+/// <summary>
+/// Base class for <see cref="IEntity"/>
+/// </summary>
+public abstract class EntityBase : IEntity
+{
+    private long _id;
+
+    /// <inheritdoc />
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public virtual long Id
+    {
+        get => _id;
+        set
         {
-            get => _id;
-            set
-            {
-                _id = value;
-            }
+            _id = value;
         }
     }
 }

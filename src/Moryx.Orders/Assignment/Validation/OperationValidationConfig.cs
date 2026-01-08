@@ -5,17 +5,16 @@ using System.Runtime.Serialization;
 using Moryx.Modules;
 using Moryx.Serialization;
 
-namespace Moryx.Orders.Assignment
+namespace Moryx.Orders.Assignment;
+
+/// <summary>
+/// Base config for operation validators <see cref="IOperationValidation"/>
+/// </summary>
+[DataContract]
+public class OperationValidationConfig : IPluginConfig
 {
-    /// <summary>
-    /// Base config for operation validators <see cref="IOperationValidation"/>
-    /// </summary>
-    [DataContract]
-    public class OperationValidationConfig : IPluginConfig
-    {
-        /// <inheritdoc cref="IOperationValidation"/>
-        [DataMember]
-        [PluginNameSelector(typeof(IOperationValidation))]
-        public virtual string PluginName { get; set; }
-    }
+    /// <inheritdoc cref="IOperationValidation"/>
+    [DataMember]
+    [PluginNameSelector(typeof(IOperationValidation))]
+    public virtual string PluginName { get; set; }
 }

@@ -3,10 +3,9 @@
 
 using Moryx.Model.Repositories;
 
-namespace Moryx.Model.Tests
-{
-    public interface IModificationTrackedRepository : IRepository<SomeModificationTrackedEntity>
-    {
+namespace Moryx.Model.Tests;
 
-    }
+public interface IModificationTrackedRepository : IRepository<SomeModificationTrackedEntity>
+{
+
 }

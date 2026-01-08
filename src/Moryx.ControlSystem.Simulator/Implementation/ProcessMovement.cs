@@ -5,20 +5,19 @@ using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Simulation;
 
-namespace Moryx.ControlSystem.Simulator
+namespace Moryx.ControlSystem.Simulator;
+
+internal class ProcessMovement
 {
-    internal class ProcessMovement
-    {
-        public Process Process { get; set; }
+    public Process Process { get; set; }
 
-        public Activity NextActivity { get; set; }
+    public Activity NextActivity { get; set; }
 
-        public ISimulationDriver Source { get; set; }
+    public ISimulationDriver Source { get; set; }
 
-        public ISimulationDriver Target { get; set; }
+    public ISimulationDriver Target { get; set; }
 
-        public DateTime Started { get; set; }
+    public DateTime Started { get; set; }
 
-        public TimeSpan Duration { get; set; }
-    }
+    public TimeSpan Duration { get; set; }
 }

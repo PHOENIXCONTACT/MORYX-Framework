@@ -3,21 +3,20 @@
 
 using Moryx.Runtime.Endpoints.Databases.Models;
 
-namespace Moryx.Runtime.Endpoints.Databases.Request
+namespace Moryx.Runtime.Endpoints.Databases.Request;
+
+/// <summary>
+/// Request to execute a database setup
+/// </summary>
+public class ExecuteSetupRequest
 {
     /// <summary>
-    /// Request to execute a database setup
+    /// Configuration of the database
     /// </summary>
-    public class ExecuteSetupRequest
-    {
-        /// <summary>
-        /// Configuration of the database
-        /// </summary>
-        public DatabaseConfigModel Config { get; set; }
+    public DatabaseConfigModel Config { get; set; }
 
-        /// <summary>
-        /// Setup to be executed
-        /// </summary>
-        public SetupModel Setup { get; set; }
-    }
+    /// <summary>
+    /// Setup to be executed
+    /// </summary>
+    public SetupModel Setup { get; set; }
 }

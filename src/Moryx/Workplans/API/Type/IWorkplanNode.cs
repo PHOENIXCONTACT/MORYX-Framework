@@ -3,26 +3,25 @@
 
 using System.Drawing;
 
-namespace Moryx.Workplans
+namespace Moryx.Workplans;
+
+/// <summary>
+/// Common interface for <see cref="IWorkplanStep"/> and <see cref="IConnector"/>
+/// </summary>
+public interface IWorkplanNode
 {
     /// <summary>
-    /// Common interface for <see cref="IWorkplanStep"/> and <see cref="IConnector"/>
+    /// Workplan unique element id of this node
     /// </summary>
-    public interface IWorkplanNode
-    {
-        /// <summary>
-        /// Workplan unique element id of this node
-        /// </summary>
-        long Id { get; set; }
+    long Id { get; set; }
 
-        /// <summary>
-        /// Node name
-        /// </summary>
-        string Name { get; set; }
+    /// <summary>
+    /// Node name
+    /// </summary>
+    string Name { get; set; }
 
-        /// <summary>
-        /// Position of this <see cref="IWorkplanNode"/> in any visualization of the <see cref="IWorkplan"/>
-        /// </summary>
-        Point Position { get; set; }
-    }
+    /// <summary>
+    /// Position of this <see cref="IWorkplanNode"/> in any visualization of the <see cref="IWorkplan"/>
+    /// </summary>
+    Point Position { get; set; }
 }

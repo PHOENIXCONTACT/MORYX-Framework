@@ -5,17 +5,16 @@ using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
 using Moryx.Orders.Assignment;
 
-namespace Moryx.Orders.Management.Assignment
+namespace Moryx.Orders.Management.Assignment;
+
+[Component(LifeCycle.Singleton, typeof(IProductAssignment), Name = nameof(DefaultProductAssignment))]
+internal class DefaultProductAssignment : ProductAssignmentBase<ProductAssignmentConfig>
 {
-    [Component(LifeCycle.Singleton, typeof(IProductAssignment), Name = nameof(DefaultProductAssignment))]
-    internal class DefaultProductAssignment : ProductAssignmentBase<ProductAssignmentConfig>
+    /// <inheritdoc />
+    public override Task<ProductType> SelectProductAsync(Operation operation, IOperationLogger operationLogger,
+        CancellationToken cancellationToken)
     {
-        /// <inheritdoc />
-        public override Task<ProductType> SelectProductAsync(Operation operation, IOperationLogger operationLogger,
-            CancellationToken cancellationToken)
-        {
-            var productIdentity = (ProductIdentity)operation.Product.Identity;
-            return ProductManagement.LoadTypeAsync(productIdentity, cancellationToken);
-        }
+        var productIdentity = (ProductIdentity)operation.Product.Identity;
+        return ProductManagement.LoadTypeAsync(productIdentity, cancellationToken);
     }
 }

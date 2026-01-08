@@ -3,18 +3,17 @@
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.Tests
-{
-    public interface ISecondNonResourceInterface
-    {
-    }
+namespace Moryx.Resources.Management.Tests;
 
-    [ResourceAvailableAs(typeof(ISecondNonResourceInterface))]
-    public class DerivedResourceWithNewProxy : SimpleResource, ISecondNonResourceInterface
+public interface ISecondNonResourceInterface
+{
+}
+
+[ResourceAvailableAs(typeof(ISecondNonResourceInterface))]
+public class DerivedResourceWithNewProxy : SimpleResource, ISecondNonResourceInterface
+{
+    public override int MultiplyFoo(int factor)
     {
-        public override int MultiplyFoo(int factor)
-        {
-            return Foo *= factor + 2;
-        }
+        return Foo *= factor + 2;
     }
 }

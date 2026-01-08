@@ -3,16 +3,14 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.Orders.Endpoints.Models
+namespace Moryx.Orders.Endpoints.Models;
+
+[DataContract]
+public class OperationRecipeModel
 {
-    [DataContract]
-    public class OperationRecipeModel
-    {
-        [DataMember]
-        public long Id { get; set; }
+    [DataMember]
+    public long Id { get; set; }
 
-        [DataMember]
-        public string Name { get; set; }
-    }
+    [DataMember]
+    public string Name { get; set; }
 }
-

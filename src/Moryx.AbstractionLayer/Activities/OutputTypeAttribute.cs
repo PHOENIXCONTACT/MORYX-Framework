@@ -3,26 +3,25 @@
 
 using Moryx.Workplans;
 
-namespace Moryx.AbstractionLayer.Activities
+namespace Moryx.AbstractionLayer.Activities;
+
+/// <summary>
+/// Indicates that an result is a failure
+/// </summary>
+[AttributeUsage(AttributeTargets.Field)]
+public class OutputTypeAttribute : Attribute
 {
     /// <summary>
-    /// Indicates that an result is a failure
+    /// Constructor
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class OutputTypeAttribute : Attribute
+    /// <param name="outputType"></param>
+    public OutputTypeAttribute(OutputType outputType)
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="outputType"></param>
-        public OutputTypeAttribute(OutputType outputType)
-        {
-            OutputType = outputType;
-        }
-
-        /// <summary>
-        /// Set output type
-        /// </summary>
-        public OutputType OutputType { get; }
+        OutputType = outputType;
     }
+
+    /// <summary>
+    /// Set output type
+    /// </summary>
+    public OutputType OutputType { get; }
 }

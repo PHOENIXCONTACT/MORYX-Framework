@@ -5,27 +5,26 @@ using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 
-namespace Moryx.Configuration
+namespace Moryx.Configuration;
+
+/// <summary>
+/// Default value attribute which provides the current HostName of this computer
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class CurrentHostNameAttribute : DefaultValueAttribute
 {
     /// <summary>
-    /// Default value attribute which provides the current HostName of this computer
+    /// Creates a new instance of <see cref="CurrentHostNameAttribute"/>
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public class CurrentHostNameAttribute : DefaultValueAttribute
+    public CurrentHostNameAttribute() : base("localhost")
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="CurrentHostNameAttribute"/>
-        /// </summary>
-        public CurrentHostNameAttribute() : base("localhost")
+        try
         {
-            try
-            {
-                SetValue(Dns.GetHostName());
-            }
-            catch (SocketException)
-            {
-                // ignored -> default is "localhost"
-            }
+            SetValue(Dns.GetHostName());
+        }
+        catch (SocketException)
+        {
+            // ignored -> default is "localhost"
         }
     }
 }

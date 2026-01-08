@@ -4,27 +4,25 @@
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Factory;
 
-namespace Moryx.FactoryMonitor.Endpoints.Extensions
-{
-    internal static class ResourceExtensions
-    {
-        public static Resource GetFactory(this Resource resource)
-        {
-            var parent = resource.Parent;
-            if (parent is null)
-            {
-                return null;
-            }
+namespace Moryx.FactoryMonitor.Endpoints.Extensions;
 
-            if (parent is IManufacturingFactory)
-            {
-                return parent;
-            }
-            else
-            {
-                return GetFactory(parent);
-            }
+internal static class ResourceExtensions
+{
+    public static Resource GetFactory(this Resource resource)
+    {
+        var parent = resource.Parent;
+        if (parent is null)
+        {
+            return null;
+        }
+
+        if (parent is IManufacturingFactory)
+        {
+            return parent;
+        }
+        else
+        {
+            return GetFactory(parent);
         }
     }
 }
-

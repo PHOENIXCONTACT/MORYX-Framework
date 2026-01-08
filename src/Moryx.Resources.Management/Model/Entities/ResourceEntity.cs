@@ -4,20 +4,19 @@
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 using Moryx.Model;
 
-namespace Moryx.Resources.Management.Model
+namespace Moryx.Resources.Management.Model;
+
+public class ResourceEntity : ModificationTrackedEntityBase
 {
-    public class ResourceEntity : ModificationTrackedEntityBase
-    {
-        public virtual string Name { get; set; }
+    public virtual string Name { get; set; }
 
-        public virtual string Description { get; set; }
+    public virtual string Description { get; set; }
 
-        public virtual string ExtensionData { get; set; }
+    public virtual string ExtensionData { get; set; }
 
-        public virtual string Type { get; set; }
+    public virtual string Type { get; set; }
 
-        public virtual ICollection<ResourceRelationEntity> Targets { get; set; }
+    public virtual ICollection<ResourceRelationEntity> Targets { get; set; }
 
-        public virtual ICollection<ResourceRelationEntity> Sources { get; set; }
-    }
+    public virtual ICollection<ResourceRelationEntity> Sources { get; set; }
 }

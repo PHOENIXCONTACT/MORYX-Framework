@@ -4,18 +4,17 @@
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace Moryx.Model.Repositories.Proxy
-{
-    internal class RemoveMethodStrategy : MethodProxyStrategyBase
-    {
-        public override bool CanImplement(MethodInfo methodInfo)
-        {
-            return false;
-        }
+namespace Moryx.Model.Repositories.Proxy;
 
-        public override void Implement(TypeBuilder typeBuilder, MethodInfo methodInfo, Type baseType, Type targetType)
-        {
-            throw new NotImplementedException();
-        }
+internal class RemoveMethodStrategy : MethodProxyStrategyBase
+{
+    public override bool CanImplement(MethodInfo methodInfo)
+    {
+        return false;
+    }
+
+    public override void Implement(TypeBuilder typeBuilder, MethodInfo methodInfo, Type baseType, Type targetType)
+    {
+        throw new NotImplementedException();
     }
 }

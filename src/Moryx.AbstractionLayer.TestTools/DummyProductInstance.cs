@@ -3,12 +3,11 @@
 
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.AbstractionLayer.TestTools
+namespace Moryx.AbstractionLayer.TestTools;
+
+/// <summary>
+/// Dummy implementation of an product instance. Created by the <see cref="DummyProductType"/>
+/// </summary>
+public class DummyProductInstance : ProductInstance
 {
-    /// <summary>
-    /// Dummy implementation of an product instance. Created by the <see cref="DummyProductType"/>
-    /// </summary>
-    public class DummyProductInstance : ProductInstance
-    {
-    }
 }

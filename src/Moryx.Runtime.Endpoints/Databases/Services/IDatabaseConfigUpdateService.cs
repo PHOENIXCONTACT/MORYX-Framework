@@ -3,10 +3,9 @@
 
 using Moryx.Runtime.Endpoints.Databases.Models;
 
-namespace Moryx.Runtime.Endpoints.Databases.Services
+namespace Moryx.Runtime.Endpoints.Databases.Services;
+
+public interface IDatabaseConfigUpdateService
 {
-    public interface IDatabaseConfigUpdateService
-    {
-        Type UpdateModel(string targetModel, DatabaseConfigModel config);
-    }
+    Type UpdateModel(string targetModel, DatabaseConfigModel config);
 }

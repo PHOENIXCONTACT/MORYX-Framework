@@ -3,24 +3,22 @@
 
 using Moryx.Media.Endpoints.Models;
 
-namespace Moryx.Media.Endpoints
-{
-    internal static class MediaModelConverter
-    {
-        public static ContentDescriptorModel ConvertContent(ContentDescriptor contentDescriptor)
-        {
-            if (contentDescriptor == null)
-                return null;
+namespace Moryx.Media.Endpoints;
 
-            var variants = contentDescriptor.Variants.ToList();
-            return new ContentDescriptorModel
-            {
-                Id = contentDescriptor.Id,
-                Name = contentDescriptor.Name,
-                Variants = variants.ToArray(),
-                Master = contentDescriptor.GetMaster()
-            };
-        }
+internal static class MediaModelConverter
+{
+    public static ContentDescriptorModel ConvertContent(ContentDescriptor contentDescriptor)
+    {
+        if (contentDescriptor == null)
+            return null;
+
+        var variants = contentDescriptor.Variants.ToList();
+        return new ContentDescriptorModel
+        {
+            Id = contentDescriptor.Id,
+            Name = contentDescriptor.Name,
+            Variants = variants.ToArray(),
+            Master = contentDescriptor.GetMaster()
+        };
     }
 }
-

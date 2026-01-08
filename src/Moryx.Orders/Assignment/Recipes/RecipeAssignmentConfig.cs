@@ -5,16 +5,15 @@ using System.Runtime.Serialization;
 using Moryx.Modules;
 using Moryx.Serialization;
 
-namespace Moryx.Orders.Assignment
+namespace Moryx.Orders.Assignment;
+
+/// <summary>
+/// Base config for <see cref="IRecipeAssignment"/> implementations
+/// </summary>
+public class RecipeAssignmentConfig : IPluginConfig
 {
-    /// <summary>
-    /// Base config for <see cref="IRecipeAssignment"/> implementations
-    /// </summary>
-    public class RecipeAssignmentConfig : IPluginConfig
-    {
-        /// <inheritdoc cref="IPluginConfig"/>
-        [DataMember]
-        [PluginNameSelector(typeof(IRecipeAssignment))]
-        public virtual string PluginName { get; set; }
-    }
+    /// <inheritdoc cref="IPluginConfig"/>
+    [DataMember]
+    [PluginNameSelector(typeof(IRecipeAssignment))]
+    public virtual string PluginName { get; set; }
 }

@@ -6,90 +6,88 @@ using Moryx.AbstractionLayer.Resources;
 using Moryx.Logging;
 using NUnit.Framework;
 
-namespace Moryx.VisualInstructions.Controller.Tests
+namespace Moryx.VisualInstructions.Controller.Tests;
+
+[TestFixture]
+public class VisualInstructionsControllerTests
 {
-    [TestFixture]
-    public class VisualInstructionsControllerTests
+    private Mock<IVisualInstructionSource> _instructor;
+
+    private VisualInstructionsController _controller;
+
+    [SetUp]
+    public void PrepareSystem()
     {
-        private Mock<IVisualInstructionSource> _instructor;
+        var resourceManagement = new Mock<IResourceManagement>();
 
-        private VisualInstructionsController _controller;
+        _instructor = new Mock<IVisualInstructionSource>();
+        _instructor.SetupGet(i => i.Identifier).Returns("Foo");
 
-        [SetUp]
-        public void PrepareSystem()
+        resourceManagement.Setup(rm => rm.GetResources<IVisualInstructionSource>())
+            .Returns([_instructor.Object]);
+
+        _controller = new VisualInstructionsController
         {
-            var resourceManagement = new Mock<IResourceManagement>();
-
-            _instructor = new Mock<IVisualInstructionSource>();
-            _instructor.SetupGet(i => i.Identifier).Returns("Foo");
-
-            resourceManagement.Setup(rm => rm.GetResources<IVisualInstructionSource>())
-                .Returns([_instructor.Object]);
-
-            _controller = new VisualInstructionsController
+            Logger = new Mock<IModuleLogger>().Object,
+            ResourceManagement = resourceManagement.Object,
+            Config = new ModuleConfig
             {
-                Logger = new Mock<IModuleLogger>().Object,
-                ResourceManagement = resourceManagement.Object,
-                Config = new ModuleConfig
-                {
-                    ProcessorConfigs = []
-                }
-            };
-            _controller.InstructionAdded += EmptyListener;
-            _controller.InstructionCleared += EmptyListener;
-            _controller.Start();
-        }
+                ProcessorConfigs = []
+            }
+        };
+        _controller.InstructionAdded += EmptyListener;
+        _controller.InstructionCleared += EmptyListener;
+        _controller.Start();
+    }
 
-        private void EmptyListener(object sender, InstructionEventArgs args) { }
+    private void EmptyListener(object sender, InstructionEventArgs args) { }
 
-        [Test]
-        public void ReturnAllInstructors()
-        {
-            // Arrange
-            _controller.AddInstruction("Bla", new ActiveInstruction { Id = 42 });
-            _controller.AddInstruction("Foo", new ActiveInstruction { Id = 43 }); // Same identifier as the resource
+    [Test]
+    public void ReturnAllInstructors()
+    {
+        // Arrange
+        _controller.AddInstruction("Bla", new ActiveInstruction { Id = 42 });
+        _controller.AddInstruction("Foo", new ActiveInstruction { Id = 43 }); // Same identifier as the resource
 
-            // Act
-            var instructors = _controller.GetInstructors();
+        // Act
+        var instructors = _controller.GetInstructors();
 
-            // Assert
-            Assert.That(instructors, Is.Not.Null);
-            Assert.That(instructors.Count, Is.EqualTo(2));
-        }
+        // Assert
+        Assert.That(instructors, Is.Not.Null);
+        Assert.That(instructors.Count, Is.EqualTo(2));
+    }
 
-        [Test]
-        public void ForwardInstructionsToFacade()
-        {
-            // Arrange
-            InstructionEventArgs added = null, cleared = null;
-            _controller.InstructionAdded += (sender, args) => added = args;
-            _controller.InstructionCleared += (sender, args) => cleared = args;
+    [Test]
+    public void ForwardInstructionsToFacade()
+    {
+        // Arrange
+        InstructionEventArgs added = null, cleared = null;
+        _controller.InstructionAdded += (sender, args) => added = args;
+        _controller.InstructionCleared += (sender, args) => cleared = args;
 
-            // Act
-            _instructor.Raise(i => i.Added += null, _instructor.Object, new ActiveInstruction { Id = 42 });
-            _instructor.Raise(i => i.Cleared += null, _instructor.Object, new ActiveInstruction { Id = 42 });
+        // Act
+        _instructor.Raise(i => i.Added += null, _instructor.Object, new ActiveInstruction { Id = 42 });
+        _instructor.Raise(i => i.Cleared += null, _instructor.Object, new ActiveInstruction { Id = 42 });
 
-            // Assert
-            Assert.That(added, Is.Not.Null);
-            Assert.That(cleared, Is.Not.Null);
-            Assert.That(added.Instruction.Id, Is.EqualTo(42));
-            Assert.That(cleared.Instruction.Id, Is.EqualTo(42));
-        }
+        // Assert
+        Assert.That(added, Is.Not.Null);
+        Assert.That(cleared, Is.Not.Null);
+        Assert.That(added.Instruction.Id, Is.EqualTo(42));
+        Assert.That(cleared.Instruction.Id, Is.EqualTo(42));
+    }
 
-        [Test]
-        public void ForwardMethodsToResource()
-        {
-            // Arrange
-            var instruction = new ActiveInstruction { Id = 42 };
-            _instructor.SetupGet(i => i.Instructions).Returns([instruction]);
+    [Test]
+    public void ForwardMethodsToResource()
+    {
+        // Arrange
+        var instruction = new ActiveInstruction { Id = 42 };
+        _instructor.SetupGet(i => i.Instructions).Returns([instruction]);
 
-            // Act
-            var response = new ActiveInstructionResponse { Id = 42, SelectedResult = new InstructionResult { Key = "Ok" } };
-            _controller.CompleteInstruction("Foo", response);
+        // Act
+        var response = new ActiveInstructionResponse { Id = 42, SelectedResult = new InstructionResult { Key = "Ok" } };
+        _controller.CompleteInstruction("Foo", response);
 
-            // Assert
-            _instructor.Verify(rm => rm.Completed(response), Times.Once);
-        }
+        // Assert
+        _instructor.Verify(rm => rm.Completed(response), Times.Once);
     }
 }
-

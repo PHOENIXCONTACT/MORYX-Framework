@@ -4,52 +4,51 @@
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators;
 
-namespace Moryx.Shifts
+namespace Moryx.Shifts;
+
+/// <summary>
+/// Class representing the context for creating a shift assignment.
+/// </summary>
+public class ShiftAssignementCreationContext
 {
     /// <summary>
-    /// Class representing the context for creating a shift assignment.
+    /// The resource of the shift assignment.
     /// </summary>
-    public class ShiftAssignementCreationContext
+    public IResource Resource { get; set; }
+
+    /// <summary>
+    /// The shift of the shift assignment.
+    /// </summary>
+    public Shift Shift { get; set; }
+
+    /// <summary>
+    /// The operator of the shift assignment.
+    /// </summary>
+    public Operator Operator { get; set; }
+
+    /// <summary>
+    /// The note of the shift assignment.
+    /// </summary>
+    public string? Note { get; set; }
+
+    /// <summary>
+    /// The priority of the shift assignment.
+    /// </summary>
+    public int Priority { get; set; }
+
+    /// <summary>
+    /// The assigned days of the shift assignment.
+    /// </summary>
+    public AssignedDays AssignedDays { get; set; }
+
+    /// <summary>
+    /// Creates a new instance with the given parameters
+    /// </summary>
+    /// <param name="operator"></param>
+    public ShiftAssignementCreationContext(Shift shift, IResource resource, Operator @operator)
     {
-        /// <summary>
-        /// The resource of the shift assignment.
-        /// </summary>
-        public IResource Resource { get; set; }
-
-        /// <summary>
-        /// The shift of the shift assignment.
-        /// </summary>
-        public Shift Shift { get; set; }
-
-        /// <summary>
-        /// The operator of the shift assignment.
-        /// </summary>
-        public Operator Operator { get; set; }
-
-        /// <summary>
-        /// The note of the shift assignment.
-        /// </summary>
-        public string? Note { get; set; }
-
-        /// <summary>
-        /// The priority of the shift assignment.
-        /// </summary>
-        public int Priority { get; set; }
-
-        /// <summary>
-        /// The assigned days of the shift assignment.
-        /// </summary>
-        public AssignedDays AssignedDays { get; set; }
-
-        /// <summary>
-        /// Creates a new instance with the given parameters
-        /// </summary>
-        /// <param name="operator"></param>
-        public ShiftAssignementCreationContext(Shift shift, IResource resource, Operator @operator)
-        {
-            Shift = shift;
-            Resource = resource;
-            Operator = @operator;
-        }
+        Shift = shift;
+        Resource = resource;
+        Operator = @operator;
     }
 }

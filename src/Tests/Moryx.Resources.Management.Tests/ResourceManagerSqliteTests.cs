@@ -6,18 +6,17 @@ using NUnit.Framework;
 using Moryx.AbstractionLayer.TestTools;
 using Moryx.Resources.Management.Model;
 
-namespace Moryx.Resources.Management.Tests
-{
-    [TestFixture]
-    public class ResourceManagerSqliteTests : ResourceManagerTests
-    {
-        protected override UnitOfWorkFactory<ResourcesContext> BuildUnitOfWorkFactory()
-        {
-            var uowFactory = InMemoryUnitOfWorkFactoryBuilder
-                .Sqlite<ResourcesContext>();
-            uowFactory.EnsureDbIsCreated();
+namespace Moryx.Resources.Management.Tests;
 
-            return uowFactory;
-        }
+[TestFixture]
+public class ResourceManagerSqliteTests : ResourceManagerTests
+{
+    protected override UnitOfWorkFactory<ResourcesContext> BuildUnitOfWorkFactory()
+    {
+        var uowFactory = InMemoryUnitOfWorkFactoryBuilder
+            .Sqlite<ResourcesContext>();
+        uowFactory.EnsureDbIsCreated();
+
+        return uowFactory;
     }
 }

@@ -3,12 +3,11 @@
 
 using NUnit.Framework;
 
-namespace Moryx.Tests.Tools
+namespace Moryx.Tests.Tools;
+
+[TestFixture]
+public class FunctionResultTestsBase
 {
-    [TestFixture]
-    public class FunctionResultTestsBase
-    {
-        protected const string Message = "Error occured!";
-        protected const string ExceptionMessage = "Exception Message";
-    }
+    protected const string Message = "Error occured!";
+    protected const string ExceptionMessage = "Exception Message";
 }

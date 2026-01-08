@@ -3,23 +3,22 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Moryx.Identity.AccessManagement.Models
+namespace Moryx.Identity.AccessManagement.Models;
+
+/// <summary>
+/// Transfer object to exchange tokens with corresponding refresh tokens
+/// </summary>
+public class TokenRequest
 {
     /// <summary>
-    /// Transfer object to exchange tokens with corresponding refresh tokens
+    /// The token to be transfered
     /// </summary>
-    public class TokenRequest
-    {
-        /// <summary>
-        /// The token to be transfered
-        /// </summary>
-        [Required]
-        public string Token { get; set; }
+    [Required]
+    public string Token { get; set; }
 
-        /// <summary>
-        /// The corresponding refresh token
-        /// </summary>
-        [Required]
-        public string RefreshToken { get; set; }
-    }
+    /// <summary>
+    /// The corresponding refresh token
+    /// </summary>
+    [Required]
+    public string RefreshToken { get; set; }
 }

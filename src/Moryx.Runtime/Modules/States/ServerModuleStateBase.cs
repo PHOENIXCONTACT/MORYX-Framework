@@ -3,61 +3,60 @@
 
 using Moryx.StateMachines;
 
-namespace Moryx.Runtime.Modules
+namespace Moryx.Runtime.Modules;
+
+internal abstract class ServerModuleStateBase : AsyncStateBase<IServerModuleStateContext>
 {
-    internal abstract class ServerModuleStateBase : AsyncStateBase<IServerModuleStateContext>
+    public abstract ServerModuleState Classification { get; }
+
+    protected ServerModuleStateBase(IServerModuleStateContext context, StateMap stateMap) : base(context, stateMap)
     {
-        public abstract ServerModuleState Classification { get; }
-
-        protected ServerModuleStateBase(IServerModuleStateContext context, StateMap stateMap) : base(context, stateMap)
-        {
-        }
-
-        public virtual Task Initialize(CancellationToken cancellationToken)
-        {
-            return InvalidStateAsync();
-        }
-
-        public virtual Task Start(CancellationToken cancellationToken)
-        {
-            return InvalidStateAsync();
-        }
-
-        public virtual Task Stop(CancellationToken cancellationToken)
-        {
-            return InvalidStateAsync();
-        }
-
-        public virtual void ValidateHealthState()
-        {
-            throw new HealthStateException(Classification);
-        }
-
-        [StateDefinition(typeof(StoppedState), IsInitial = true)]
-        protected const int StateStopped = 0;
-
-        [StateDefinition(typeof(InitializingState))]
-        protected const int StateInitializing = 10;
-
-        [StateDefinition(typeof(ReadyState))]
-        protected const int StateReady = 20;
-
-        [StateDefinition(typeof(StartingState))]
-        protected const int StateStarting = 30;
-
-        [StateDefinition(typeof(RunningState))]
-        protected const int StateRunning = 40;
-
-        [StateDefinition(typeof(ReadyStoppingState))]
-        protected const int StateReadyStopping = 50;
-
-        [StateDefinition(typeof(RunningStoppingState))]
-        protected const int StateRunningStopping = 55;
-
-        [StateDefinition(typeof(RunningFailureState))]
-        protected const int StateRunningFailure = 60;
-
-        [StateDefinition(typeof(InitializedFailureState))]
-        protected const int StateInitializedFailure = 65;
     }
+
+    public virtual Task Initialize(CancellationToken cancellationToken)
+    {
+        return InvalidStateAsync();
+    }
+
+    public virtual Task Start(CancellationToken cancellationToken)
+    {
+        return InvalidStateAsync();
+    }
+
+    public virtual Task Stop(CancellationToken cancellationToken)
+    {
+        return InvalidStateAsync();
+    }
+
+    public virtual void ValidateHealthState()
+    {
+        throw new HealthStateException(Classification);
+    }
+
+    [StateDefinition(typeof(StoppedState), IsInitial = true)]
+    protected const int StateStopped = 0;
+
+    [StateDefinition(typeof(InitializingState))]
+    protected const int StateInitializing = 10;
+
+    [StateDefinition(typeof(ReadyState))]
+    protected const int StateReady = 20;
+
+    [StateDefinition(typeof(StartingState))]
+    protected const int StateStarting = 30;
+
+    [StateDefinition(typeof(RunningState))]
+    protected const int StateRunning = 40;
+
+    [StateDefinition(typeof(ReadyStoppingState))]
+    protected const int StateReadyStopping = 50;
+
+    [StateDefinition(typeof(RunningStoppingState))]
+    protected const int StateRunningStopping = 55;
+
+    [StateDefinition(typeof(RunningFailureState))]
+    protected const int StateRunningFailure = 60;
+
+    [StateDefinition(typeof(InitializedFailureState))]
+    protected const int StateInitializedFailure = 65;
 }

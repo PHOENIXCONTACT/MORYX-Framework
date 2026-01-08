@@ -4,13 +4,11 @@
 using Moryx.AbstractionLayer.Workplans;
 using Moryx.ControlSystem.TestTools.Activities;
 
-namespace Moryx.ControlSystem.TestTools.Tasks
-{
-    /// <summary>
-    /// The description of <see cref="UnmountActivity"/>
-    /// </summary>
-    public class UnmountTask : TaskStep<UnmountActivity, MountingParameters>
-    {
-    }
-}
+namespace Moryx.ControlSystem.TestTools.Tasks;
 
+/// <summary>
+/// The description of <see cref="UnmountActivity"/>
+/// </summary>
+public class UnmountTask : TaskStep<UnmountActivity, MountingParameters>
+{
+}

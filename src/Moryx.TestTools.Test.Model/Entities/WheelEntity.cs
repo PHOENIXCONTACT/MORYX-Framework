@@ -3,20 +3,19 @@
 
 using Moryx.Model;
 
-namespace Moryx.TestTools.Test.Model
+namespace Moryx.TestTools.Test.Model;
+
+public enum WheelType
 {
-    public enum WheelType
-    {
-        FrontLeft,
-        FrontRight,
-        RearLeft,
-        RearRight
-    }
+    FrontLeft,
+    FrontRight,
+    RearLeft,
+    RearRight
+}
 
-    public class WheelEntity : EntityBase
-    {
-        public virtual CarEntity Car { get; set; }
+public class WheelEntity : EntityBase
+{
+    public virtual CarEntity Car { get; set; }
 
-        public virtual WheelType WheelType { get; set; }
-    }
+    public virtual WheelType WheelType { get; set; }
 }

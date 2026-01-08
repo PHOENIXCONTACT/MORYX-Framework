@@ -4,24 +4,22 @@
 using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Capabilities;
 
-namespace Moryx.Workplans.Samples.Activities
+namespace Moryx.Workplans.Samples.Activities;
+
+[ActivityResults(typeof(DefaultActivityResult))]
+public class TestActivity : Activity<TestParameters, Tracing>
 {
-    [ActivityResults(typeof(DefaultActivityResult))]
-    public class TestActivity : Activity<TestParameters, Tracing>
+    public override ProcessRequirement ProcessRequirement => ProcessRequirement.Required;
+
+    public override ICapabilities RequiredCapabilities => throw new NotImplementedException();
+
+    protected override ActivityResult CreateFailureResult()
     {
-        public override ProcessRequirement ProcessRequirement => ProcessRequirement.Required;
+        throw new NotImplementedException();
+    }
 
-        public override ICapabilities RequiredCapabilities => throw new NotImplementedException();
-
-        protected override ActivityResult CreateFailureResult()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override ActivityResult CreateResult(long resultNumber)
-        {
-            throw new NotImplementedException();
-        }
+    protected override ActivityResult CreateResult(long resultNumber)
+    {
+        throw new NotImplementedException();
     }
 }
-

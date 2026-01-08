@@ -4,14 +4,13 @@
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Products.Samples
+namespace Moryx.Products.Samples;
+
+[DataContract]
+public class FileImporterConfig : ProductImporterConfig
 {
-    [DataContract]
-    public class FileImporterConfig : ProductImporterConfig
-    {
-        /// <summary>
-        /// Name of the component represented by this entry
-        /// </summary>
-        public override string PluginName => nameof(FileImporter);
-    }
+    /// <summary>
+    /// Name of the component represented by this entry
+    /// </summary>
+    public override string PluginName => nameof(FileImporter);
 }

@@ -3,13 +3,12 @@
 
 using Moryx.AbstractionLayer.Capabilities;
 
-namespace Moryx.ControlSystem.Tests
+namespace Moryx.ControlSystem.Tests;
+
+public class DummyCapabilities : CapabilitiesBase
 {
-    public class DummyCapabilities : CapabilitiesBase
+    protected override bool ProvidedBy(ICapabilities provided)
     {
-        protected override bool ProvidedBy(ICapabilities provided)
-        {
-            return provided is DummyCapabilities;
-        }
+        return provided is DummyCapabilities;
     }
 }

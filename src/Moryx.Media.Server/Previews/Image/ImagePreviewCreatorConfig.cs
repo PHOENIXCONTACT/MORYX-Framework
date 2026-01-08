@@ -5,20 +5,18 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Moryx.Media.Previews;
 
-namespace Moryx.Media.Server.Previews
+namespace Moryx.Media.Server.Previews;
+
+[DataContract]
+internal class ImagePreviewCreatorConfig : PreviewCreatorConfig
 {
-    [DataContract]
-    internal class ImagePreviewCreatorConfig : PreviewCreatorConfig
-    {
-        public override string PluginName => nameof(ImagePreviewCreator);
+    public override string PluginName => nameof(ImagePreviewCreator);
 
-        [DataMember, DefaultValue(250)]
-        [Description("Defines how long the longest edge of the resulting preview should be")]
-        public int LongestEdge { get; set; }
+    [DataMember, DefaultValue(250)]
+    [Description("Defines how long the longest edge of the resulting preview should be")]
+    public int LongestEdge { get; set; }
 
-        [DataMember, DefaultValue(80)]
-        [Description("Image quality between 0 - 100")]
-        public int Quality { get; set; }
-    }
+    [DataMember, DefaultValue(80)]
+    [Description("Image quality between 0 - 100")]
+    public int Quality { get; set; }
 }
-

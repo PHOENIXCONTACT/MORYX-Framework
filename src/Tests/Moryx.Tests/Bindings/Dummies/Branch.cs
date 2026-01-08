@@ -3,12 +3,11 @@
 
 using System.Collections.Generic;
 
-namespace Moryx.Tests.Bindings
-{
-    public class Branch
-    {
-        public string Name { get; set; }
+namespace Moryx.Tests.Bindings;
 
-        public Dictionary<string, string> Dictionary { get; set; }
-    }
+public class Branch
+{
+    public string Name { get; set; }
+
+    public Dictionary<string, string> Dictionary { get; set; }
 }

@@ -3,13 +3,12 @@
 
 using System;
 
-namespace Moryx.Tests.Serialization
+namespace Moryx.Tests.Serialization;
+
+public class ExceptionDummy
 {
-    public class ExceptionDummy
+    public int ThrowsException
     {
-        public int ThrowsException
-        {
-            get { throw new Exception("BAM!"); }
-        }
+        get { throw new Exception("BAM!"); }
     }
 }

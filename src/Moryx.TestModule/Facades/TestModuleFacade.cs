@@ -3,14 +3,13 @@
 
 using Moryx.Runtime.Modules;
 
-namespace Moryx.TestModule
+namespace Moryx.TestModule;
+
+public class TestModuleFacade : FacadeBase, ITestModule
 {
-    public class TestModuleFacade : FacadeBase, ITestModule
-    {
-        private int _bla;
+    private int _bla;
 
-        public int Bla => ++_bla;
+    public int Bla => ++_bla;
 
-        public int Foo(int a, int b) => a + b;
-    }
+    public int Foo(int a, int b) => a + b;
 }

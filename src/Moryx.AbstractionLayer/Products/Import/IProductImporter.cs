@@ -3,36 +3,35 @@
 
 using Moryx.Modules;
 
-namespace Moryx.AbstractionLayer.Products
+namespace Moryx.AbstractionLayer.Products;
+
+/// <summary>
+/// Interface for plugins that can import products from file
+/// </summary>
+public interface IProductImporter : IAsyncConfiguredPlugin<ProductImporterConfig>
 {
     /// <summary>
-    /// Interface for plugins that can import products from file
+    /// Name of the importer
     /// </summary>
-    public interface IProductImporter : IAsyncConfiguredPlugin<ProductImporterConfig>
-    {
-        /// <summary>
-        /// Name of the importer
-        /// </summary>
-        string Name { get; }
+    string Name { get; }
 
-        /// <summary>
-        /// Importer is long-running and synchronous execution useless
-        /// </summary>
-        bool LongRunning { get; }
+    /// <summary>
+    /// Importer is long-running and synchronous execution useless
+    /// </summary>
+    bool LongRunning { get; }
 
-        /// <summary>
-        /// Get the parameters of this importer
-        /// </summary>
-        object Parameters { get; }
+    /// <summary>
+    /// Get the parameters of this importer
+    /// </summary>
+    object Parameters { get; }
 
-        /// <summary>
-        /// Update parameters based on partial input
-        /// </summary>
-        object Update(object currentParameters);
+    /// <summary>
+    /// Update parameters based on partial input
+    /// </summary>
+    object Update(object currentParameters);
 
-        /// <summary>
-        /// Import products using given parameters
-        /// </summary>
-        Task<ProductImporterResult> ImportAsync(ProductImportContext context, object parameters, CancellationToken cancellationToken);
-    }
+    /// <summary>
+    /// Import products using given parameters
+    /// </summary>
+    Task<ProductImporterResult> ImportAsync(ProductImportContext context, object parameters, CancellationToken cancellationToken);
 }

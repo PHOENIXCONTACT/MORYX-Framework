@@ -8,53 +8,52 @@ using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 
-namespace Moryx.Resources.Samples
+namespace Moryx.Resources.Samples;
+
+[Description("Cell to mount product instances on carriers!")]
+[ResourceRegistration]
+public class MountingCell : Cell
 {
-    [Description("Cell to mount product instances on carriers!")]
-    [ResourceRegistration]
-    public class MountingCell : Cell
+    [DataMember, EntrySerialize, DefaultValue("Bye bye, WPC!")]
+    public string OutfeedMessage { get; set; }
+
+    [ResourceReference(ResourceRelationType.Driver)]
+    public IMessageDriver Driver { get; set; }
+
+    /// <inheritdoc />
+    protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
     {
-        [DataMember, EntrySerialize, DefaultValue("Bye bye, WPC!")]
-        public string OutfeedMessage { get; set; }
+        await base.OnInitializeAsync(cancellationToken);
 
-        [ResourceReference(ResourceRelationType.Driver)]
-        public IMessageDriver Driver { get; set; }
-
-        /// <inheritdoc />
-        protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
-        {
-            await base.OnInitializeAsync(cancellationToken);
-
-            Driver.Received += OnDriverMessageReceived;
-        }
-
-        private void OnDriverMessageReceived(object sender, object e)
-        {
-        }
-
-        [EntrySerialize]
-        public Dummy CreateDummy(int number, string name)
-        {
-            return new Dummy
-            {
-                Number = number * 2,
-                Name = name + number
-            };
-        }
-        public class Dummy
-        {
-            public int Number { get; set; }
-
-            public string Name { get; set; }
-        }
+        Driver.Received += OnDriverMessageReceived;
     }
 
-    public class ManualMountingCell : MountingCell
+    private void OnDriverMessageReceived(object sender, object e)
     {
-        // Automatically detect relation name based
-        public IVisualInstructor Instructor { get; set; }
-
-        [ResourceReference(ResourceRelationType.CurrentExchangeablePart, AutoSave = true)]
-        public IReferences<IWpc> CurentWpcs { get; set; }
     }
+
+    [EntrySerialize]
+    public Dummy CreateDummy(int number, string name)
+    {
+        return new Dummy
+        {
+            Number = number * 2,
+            Name = name + number
+        };
+    }
+    public class Dummy
+    {
+        public int Number { get; set; }
+
+        public string Name { get; set; }
+    }
+}
+
+public class ManualMountingCell : MountingCell
+{
+    // Automatically detect relation name based
+    public IVisualInstructor Instructor { get; set; }
+
+    [ResourceReference(ResourceRelationType.CurrentExchangeablePart, AutoSave = true)]
+    public IReferences<IWpc> CurentWpcs { get; set; }
 }

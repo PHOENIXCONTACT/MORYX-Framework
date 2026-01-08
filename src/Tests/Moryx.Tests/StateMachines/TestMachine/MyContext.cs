@@ -3,40 +3,39 @@
 
 using Moryx.StateMachines;
 
-namespace Moryx.Tests
+namespace Moryx.Tests;
+
+public class MyContext : IStateContext
 {
-    public class MyContext : IStateContext
+    public MyStateBase State { get; private set; }
+
+    public bool AEntered { get; set; }
+
+    public bool BExited { get; set; }
+
+    public bool AtoBTriggered { get; set; }
+
+    public bool BtoCTriggered { get; set; }
+
+    public bool CtoATriggered { get; set; }
+
+    internal void HandleAtoB()
     {
-        public MyStateBase State { get; private set; }
+        AtoBTriggered = true;
+    }
 
-        public bool AEntered { get; set; }
+    internal void HandleBtoC()
+    {
+        BtoCTriggered = true;
+    }
 
-        public bool BExited { get; set; }
+    internal void HandleCtoA()
+    {
+        CtoATriggered = true;
+    }
 
-        public bool AtoBTriggered { get; set; }
-
-        public bool BtoCTriggered { get; set; }
-
-        public bool CtoATriggered { get; set; }
-
-        internal void HandleAtoB()
-        {
-            AtoBTriggered = true;
-        }
-
-        internal void HandleBtoC()
-        {
-            BtoCTriggered = true;
-        }
-
-        internal void HandleCtoA()
-        {
-            CtoATriggered = true;
-        }
-
-        void IStateContext.SetState(StateBase state)
-        {
-            State = (MyStateBase)state;
-        }
+    void IStateContext.SetState(StateBase state)
+    {
+        State = (MyStateBase)state;
     }
 }

@@ -3,18 +3,17 @@
 
 using System.Threading.Tasks;
 
-namespace Moryx.Tests.AsyncTestMachine
-{
-    internal sealed class CAsyncState : MyAsyncStateBase
-    {
-        public CAsyncState(MyAsyncContext context, StateMap stateMap) : base(context, stateMap)
-        {
-        }
+namespace Moryx.Tests.AsyncTestMachine;
 
-        public override async Task CtoAAsync()
-        {
-            await NextStateAsync(StateA);
-            await Context.HandleCtoA();
-        }
+internal sealed class CAsyncState : MyAsyncStateBase
+{
+    public CAsyncState(MyAsyncContext context, StateMap stateMap) : base(context, stateMap)
+    {
+    }
+
+    public override async Task CtoAAsync()
+    {
+        await NextStateAsync(StateA);
+        await Context.HandleCtoA();
     }
 }

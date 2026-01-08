@@ -3,19 +3,18 @@
 
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Benchmarking
+namespace Moryx.Benchmarking;
+
+public class BenchmarkProduct : ProductType
 {
-    public class BenchmarkProduct : ProductType
+    /// <summary>
+    /// Instantiate this product
+    /// </summary>
+    /// <returns>
+    /// New instance
+    /// </returns>
+    protected override ProductInstance Instantiate()
     {
-        /// <summary>
-        /// Instantiate this product
-        /// </summary>
-        /// <returns>
-        /// New instance
-        /// </returns>
-        protected override ProductInstance Instantiate()
-        {
-            return new BenchmarkInstance();
-        }
+        return new BenchmarkInstance();
     }
 }

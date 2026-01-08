@@ -3,18 +3,17 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.AbstractionLayer.Products.Endpoints.Models
+namespace Moryx.AbstractionLayer.Products.Endpoints.Models;
+
+[DataContract]
+public class RecipeDefinitionModel
 {
-    [DataContract]
-    public class RecipeDefinitionModel
-    {
-        [DataMember]
-        public string Name { get; set; }
+    [DataMember]
+    public string Name { get; set; }
 
-        [DataMember]
-        public string DisplayName { get; set; }
+    [DataMember]
+    public string DisplayName { get; set; }
 
-        [DataMember]
-        public bool HasWorkplans { get; set; }
-    }
+    [DataMember]
+    public bool HasWorkplans { get; set; }
 }

@@ -4,23 +4,21 @@
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model.PostgreSQL;
 
-namespace Moryx.Notifications.Publisher.Model
-{
-    /// <summary>
-    /// Npgsql specific implementation of <see cref="NotificationsContext"/>
-    /// </summary>
-    [NpgsqlDbContext(typeof(NotificationsContext))]
-    public class NpgsqlNotificationsContext : NotificationsContext
-    {
-        /// <inheritdoc />
-        public NpgsqlNotificationsContext()
-        {
-        }
+namespace Moryx.Notifications.Publisher.Model;
 
-        /// <inheritdoc />
-        public NpgsqlNotificationsContext(DbContextOptions options) : base(options)
-        {
-        }
+/// <summary>
+/// Npgsql specific implementation of <see cref="NotificationsContext"/>
+/// </summary>
+[NpgsqlDbContext(typeof(NotificationsContext))]
+public class NpgsqlNotificationsContext : NotificationsContext
+{
+    /// <inheritdoc />
+    public NpgsqlNotificationsContext()
+    {
+    }
+
+    /// <inheritdoc />
+    public NpgsqlNotificationsContext(DbContextOptions options) : base(options)
+    {
     }
 }
-

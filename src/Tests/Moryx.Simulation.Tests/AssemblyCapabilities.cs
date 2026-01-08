@@ -3,26 +3,24 @@
 
 using Moryx.AbstractionLayer.Capabilities;
 
-namespace Moryx.Simulation.Tests
+namespace Moryx.Simulation.Tests;
+
+public class AssemblyCapabilities : ICapabilities
 {
-    public class AssemblyCapabilities : ICapabilities
+    public bool IsCombined => false;
+
+    public IEnumerable<ICapabilities> GetAll()
     {
-        public bool IsCombined => false;
+        yield return this;
+    }
 
-        public IEnumerable<ICapabilities> GetAll()
-        {
-            yield return this;
-        }
+    public bool ProvidedBy(ICapabilities provided)
+    {
+        return provided is AssemblyCapabilities;
+    }
 
-        public bool ProvidedBy(ICapabilities provided)
-        {
-            return provided is AssemblyCapabilities;
-        }
-
-        public bool Provides(ICapabilities required)
-        {
-            return required is AssemblyCapabilities;
-        }
+    public bool Provides(ICapabilities required)
+    {
+        return required is AssemblyCapabilities;
     }
 }
-

@@ -3,12 +3,11 @@
 
 using Moryx.Model.Repositories;
 
-namespace Moryx.TestTools.Test.Model
-{
-    public interface IWheelEntityRepository : IRepository<WheelEntity>
-    {
-        WheelEntity Create(WheelType wheelType);
+namespace Moryx.TestTools.Test.Model;
 
-        WheelEntity Create(WheelType wheelType, CarEntity car);
-    }
+public interface IWheelEntityRepository : IRepository<WheelEntity>
+{
+    WheelEntity Create(WheelType wheelType);
+
+    WheelEntity Create(WheelType wheelType, CarEntity car);
 }

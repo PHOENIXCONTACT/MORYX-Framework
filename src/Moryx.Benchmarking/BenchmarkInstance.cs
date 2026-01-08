@@ -3,9 +3,8 @@
 
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Benchmarking
+namespace Moryx.Benchmarking;
+
+public class BenchmarkInstance : ProductInstance
 {
-    public class BenchmarkInstance : ProductInstance
-    {
-    }
 }

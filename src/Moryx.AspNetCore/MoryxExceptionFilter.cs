@@ -5,20 +5,18 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Moryx.AspNetCore
+namespace Moryx.AspNetCore;
+
+public class MoryxExceptionFilter : IExceptionFilter
 {
-    public class MoryxExceptionFilter : IExceptionFilter
+    public void OnException(ExceptionContext context)
     {
-        public void OnException(ExceptionContext context)
+        context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        var headers = string.Join(" \r\n ", context.HttpContext.Request.Headers.Select(h => $"{h.Key}: {h.Value}"));
+        context.Result = new ObjectResult(new MoryxExceptionResponse
         {
-            context.HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            var headers = string.Join(" \r\n ", context.HttpContext.Request.Headers.Select(h => $"{h.Key}: {h.Value}"));
-            context.Result = new ObjectResult(new MoryxExceptionResponse
-            {
-                Title = "500 - Internal Server Error",
-                Exception = context.Exception.ToString() + headers
-            });
-        }
+            Title = "500 - Internal Server Error",
+            Exception = context.Exception.ToString() + headers
+        });
     }
 }
-

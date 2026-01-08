@@ -3,21 +3,20 @@
 
 using Moryx.Modules;
 
-namespace Moryx.Orders.Assignment
+namespace Moryx.Orders.Assignment;
+
+/// <summary>
+/// Will be used to validate the complete operation after finishing the creation
+/// </summary>
+public interface IOperationValidation : IAsyncConfiguredPlugin<OperationValidationConfig>
 {
     /// <summary>
-    /// Will be used to validate the complete operation after finishing the creation
+    /// Validates the given operation
     /// </summary>
-    public interface IOperationValidation : IAsyncConfiguredPlugin<OperationValidationConfig>
-    {
-        /// <summary>
-        /// Validates the given operation
-        /// </summary>
-        Task<bool> ValidateAsync(Operation operation, IOperationLogger operationLogger, CancellationToken cancellationToken);
+    Task<bool> ValidateAsync(Operation operation, IOperationLogger operationLogger, CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Validates the given creation context
-        /// </summary>
-        Task<bool> ValidateCreationContextAsync(OrderCreationContext orderContext, CancellationToken cancellationToken);
-    }
+    /// <summary>
+    /// Validates the given creation context
+    /// </summary>
+    Task<bool> ValidateCreationContextAsync(OrderCreationContext orderContext, CancellationToken cancellationToken);
 }

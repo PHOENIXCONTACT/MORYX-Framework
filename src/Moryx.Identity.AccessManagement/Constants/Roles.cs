@@ -1,16 +1,15 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Identity.AccessManagement
+namespace Moryx.Identity.AccessManagement;
+
+/// <summary>
+/// Provides constants for roles handled in the AccessManagement
+/// </summary>
+public static class Roles
 {
     /// <summary>
-    /// Provides constants for roles handled in the AccessManagement
+    /// Defines the SuperAdmin role
     /// </summary>
-    public static class Roles
-    {
-        /// <summary>
-        /// Defines the SuperAdmin role
-        /// </summary>
-        public const string SuperAdmin = "SuperAdmin";
-    }
+    public const string SuperAdmin = "SuperAdmin";
 }

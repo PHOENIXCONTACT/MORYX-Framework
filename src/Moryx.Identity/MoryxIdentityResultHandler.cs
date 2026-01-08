@@ -6,45 +6,44 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
 
-namespace Moryx.Identity
+namespace Moryx.Identity;
+
+/// <summary>
+/// An <see cref="IAuthorizationMiddlewareResultHandler"/> that can perform MORYX Identity based handling of authorization responses.
+/// </summary>
+public class MoryxIdentityResultHandler : IAuthorizationMiddlewareResultHandler
 {
+    private readonly IAuthorizationMiddlewareResultHandler _handler;
+
     /// <summary>
-    /// An <see cref="IAuthorizationMiddlewareResultHandler"/> that can perform MORYX Identity based handling of authorization responses.
+    /// Initializes a new instance of <see cref="MoryxIdentityResultHandler"/>.
     /// </summary>
-    public class MoryxIdentityResultHandler : IAuthorizationMiddlewareResultHandler
+    /// <inheritdoc />
+    public MoryxIdentityResultHandler()
     {
-        private readonly IAuthorizationMiddlewareResultHandler _handler;
+        _handler = new AuthorizationMiddlewareResultHandler();
+    }
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="MoryxIdentityResultHandler"/>.
-        /// </summary>
-        /// <inheritdoc />
-        public MoryxIdentityResultHandler()
+    /// <summary>
+    /// Writes the collection of missing permissions in the HTTP respone in case of a 403 error.
+    /// In all other cases the authorization result is processed by the <see cref="AuthorizationMiddlewareResultHandler"/>.
+    /// </summary>
+    /// <returns></returns>
+    public async Task HandleAsync(
+        RequestDelegate requestDelegate,
+        HttpContext httpContext,
+        AuthorizationPolicy authorizationPolicy,
+        PolicyAuthorizationResult policyAuthorizationResult)
+    {
+        if (policyAuthorizationResult.Forbidden && policyAuthorizationResult.AuthorizationFailure != null)
         {
-            _handler = new AuthorizationMiddlewareResultHandler();
+            httpContext.Response.StatusCode = 403;
+            var response = policyAuthorizationResult.AuthorizationFailure.FailedRequirements
+                .Select(req => ((ClaimsAuthorizationRequirement)req).AllowedValues)
+                .SelectMany(x => x);
+            await httpContext.Response.WriteAsJsonAsync(response);
+            return;
         }
-
-        /// <summary>
-        /// Writes the collection of missing permissions in the HTTP respone in case of a 403 error.
-        /// In all other cases the authorization result is processed by the <see cref="AuthorizationMiddlewareResultHandler"/>.
-        /// </summary>
-        /// <returns></returns>
-        public async Task HandleAsync(
-            RequestDelegate requestDelegate,
-            HttpContext httpContext,
-            AuthorizationPolicy authorizationPolicy,
-            PolicyAuthorizationResult policyAuthorizationResult)
-        {
-            if (policyAuthorizationResult.Forbidden && policyAuthorizationResult.AuthorizationFailure != null)
-            {
-                httpContext.Response.StatusCode = 403;
-                var response = policyAuthorizationResult.AuthorizationFailure.FailedRequirements
-                    .Select(req => ((ClaimsAuthorizationRequirement)req).AllowedValues)
-                    .SelectMany(x => x);
-                await httpContext.Response.WriteAsJsonAsync(response);
-                return;
-            }
-            await _handler.HandleAsync(requestDelegate, httpContext, authorizationPolicy, policyAuthorizationResult);
-        }
+        await _handler.HandleAsync(requestDelegate, httpContext, authorizationPolicy, policyAuthorizationResult);
     }
 }

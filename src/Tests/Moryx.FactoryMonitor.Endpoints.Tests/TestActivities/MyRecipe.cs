@@ -3,10 +3,8 @@
 
 using Moryx.ControlSystem.Recipes;
 
-namespace Moryx.FactoryMonitor.Endpoints.Tests
-{
-    public class MyRecipe : OrderBasedRecipe
-    {
-    }
-}
+namespace Moryx.FactoryMonitor.Endpoints.Tests;
 
+public class MyRecipe : OrderBasedRecipe
+{
+}

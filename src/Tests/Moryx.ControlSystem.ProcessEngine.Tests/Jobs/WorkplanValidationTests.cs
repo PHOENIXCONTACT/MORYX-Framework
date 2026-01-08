@@ -10,49 +10,48 @@ using Moryx.ControlSystem.TestTools.Activities;
 using Moryx.ControlSystem.TestTools.Tasks;
 using NUnit.Framework;
 
-namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
+namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs;
+
+[TestFixture]
+public class WorkplanValidationTests
 {
-    [TestFixture]
-    public class WorkplanValidationTests
+    [Test]
+    public void DetectOpenOutput()
     {
-        [Test]
-        public void DetectOpenOutput()
+        // Arrange
+        var dummy = DummyRecipe.BuildRecipe(1);
+        // Break workplan
+        dummy.Workplan.Steps.ElementAt(1).Outputs[1] = null;
+
+        // Act
+        var evaluation = WorkplanValidation.Validate(dummy.Workplan);
+
+        // Assert
+        Assert.That(evaluation.Count, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void DetectInvalidParameter()
+    {
+        // Arrange
+        var dummy = DummyRecipe.BuildRecipe(1);
+        var step = (AssignIdentityTask)dummy.Workplan.Steps.ElementAt(1);
+        step.Parameters = new ValidationParameters();
+
+        // Act
+        var evaluation = WorkplanValidation.Validate(dummy.Workplan);
+
+        // Assert
+        Assert.That(evaluation.Count, Is.EqualTo(1));
+    }
+
+    private class ValidationParameters : AssignIdentityParameters
+    {
+        [System.ComponentModel.DataAnnotations.Range(0, 7)]
+        public int Invalid { get; set; } = 42;
+
+        protected override void Populate(Process process, Parameters instance)
         {
-            // Arrange
-            var dummy = DummyRecipe.BuildRecipe(1);
-            // Break workplan
-            dummy.Workplan.Steps.ElementAt(1).Outputs[1] = null;
-
-            // Act
-            var evaluation = WorkplanValidation.Validate(dummy.Workplan);
-
-            // Assert
-            Assert.That(evaluation.Count, Is.EqualTo(1));
-        }
-
-        [Test]
-        public void DetectInvalidParameter()
-        {
-            // Arrange
-            var dummy = DummyRecipe.BuildRecipe(1);
-            var step = (AssignIdentityTask)dummy.Workplan.Steps.ElementAt(1);
-            step.Parameters = new ValidationParameters();
-
-            // Act
-            var evaluation = WorkplanValidation.Validate(dummy.Workplan);
-
-            // Assert
-            Assert.That(evaluation.Count, Is.EqualTo(1));
-        }
-
-        private class ValidationParameters : AssignIdentityParameters
-        {
-            [System.ComponentModel.DataAnnotations.Range(0, 7)]
-            public int Invalid { get; set; } = 42;
-
-            protected override void Populate(Process process, Parameters instance)
-            {
-            }
         }
     }
 }

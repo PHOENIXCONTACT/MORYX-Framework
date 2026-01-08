@@ -3,13 +3,12 @@
 
 using Moryx.Runtime.Modules;
 
-namespace Moryx.ProcessData.Adapter.OrderManagement
+namespace Moryx.ProcessData.Adapter.OrderManagement;
+
+[ServerModuleConsole]
+internal class ModuleConsole : IServerModuleConsole
 {
-    [ServerModuleConsole]
-    internal class ModuleConsole : IServerModuleConsole
+    public void ExecuteCommand(string[] args, Action<string> outputStream)
     {
-        public void ExecuteCommand(string[] args, Action<string> outputStream)
-        {
-        }
     }
 }

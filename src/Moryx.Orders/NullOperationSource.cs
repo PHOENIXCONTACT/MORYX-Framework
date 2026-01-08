@@ -4,16 +4,15 @@
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-namespace Moryx.Orders
+namespace Moryx.Orders;
+
+/// <summary>
+/// Empty implementation of a operation source
+/// </summary>
+[DataContract, DisplayName("Unknown")]
+public class NullOperationSource : IOperationSource
 {
-    /// <summary>
-    /// Empty implementation of a operation source
-    /// </summary>
-    [DataContract, DisplayName("Unknown")]
-    public class NullOperationSource : IOperationSource
-    {
-        /// <inheritdoc />
-        [DataMember]
-        public string Type => nameof(NullOperationSource);
-    }
+    /// <inheritdoc />
+    [DataMember]
+    public string Type => nameof(NullOperationSource);
 }

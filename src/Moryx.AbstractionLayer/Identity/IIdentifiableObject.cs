@@ -1,16 +1,15 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Identity
+namespace Moryx.AbstractionLayer.Identity;
+
+/// <summary>
+/// Base interface for objects with an <see cref="IIdentity"/>
+/// </summary>
+public interface IIdentifiableObject
 {
     /// <summary>
-    /// Base interface for objects with an <see cref="IIdentity"/>
+    /// Identity of this product
     /// </summary>
-    public interface IIdentifiableObject
-    {
-        /// <summary>
-        /// Identity of this product
-        /// </summary>
-        IIdentity Identity { get; set; }
-    }
+    IIdentity Identity { get; set; }
 }

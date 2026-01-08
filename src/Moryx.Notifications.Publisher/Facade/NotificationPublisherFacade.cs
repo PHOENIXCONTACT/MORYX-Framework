@@ -3,64 +3,63 @@
 
 using Moryx.Runtime.Modules;
 
-namespace Moryx.Notifications.Publisher
+namespace Moryx.Notifications.Publisher;
+
+internal class NotificationPublisherFacade : IFacadeControl, INotificationPublisher
 {
-    internal class NotificationPublisherFacade : IFacadeControl, INotificationPublisher
+    public Action ValidateHealthState { get; set; }
+
+    public INotificationManager NotificationManager { get; set; }
+
+    public NotificationPublisherFacade()
     {
-        public Action ValidateHealthState { get; set; }
+        ValidateHealthState = InitialValidateHealthState;
+    }
 
-        public INotificationManager NotificationManager { get; set; }
+    public void Activate()
+    {
+        NotificationManager.Published += OnPublished;
+        NotificationManager.Acknowledged += OnAcknowledged;
+    }
 
-        public NotificationPublisherFacade()
-        {
-            ValidateHealthState = InitialValidateHealthState;
-        }
+    public void Deactivate()
+    {
+        NotificationManager.Published -= OnPublished;
+        NotificationManager.Acknowledged -= OnAcknowledged;
+    }
 
-        public void Activate()
-        {
-            NotificationManager.Published += OnPublished;
-            NotificationManager.Acknowledged += OnAcknowledged;
-        }
+    public Notification[] GetAll()
+    {
+        ValidateHealthState();
+        return NotificationManager.GetAll();
+    }
 
-        public void Deactivate()
-        {
-            NotificationManager.Published -= OnPublished;
-            NotificationManager.Acknowledged -= OnAcknowledged;
-        }
+    private void OnPublished(object sender, Notification e)
+    {
+        Published?.Invoke(this, e);
+    }
 
-        public Notification[] GetAll()
-        {
-            ValidateHealthState();
-            return NotificationManager.GetAll();
-        }
+    private void OnAcknowledged(object sender, Notification e)
+    {
+        Acknowledged?.Invoke(this, e);
+    }
 
-        private void OnPublished(object sender, Notification e)
-        {
-            Published?.Invoke(this, e);
-        }
+    public event EventHandler<Notification> Published;
 
-        private void OnAcknowledged(object sender, Notification e)
-        {
-            Acknowledged?.Invoke(this, e);
-        }
+    public event EventHandler<Notification> Acknowledged;
 
-        public event EventHandler<Notification> Published;
+    public Notification Get(Guid id)
+    {
+        return GetAll().Single(n => n.Identifier == id) as Notification;
+    }
 
-        public event EventHandler<Notification> Acknowledged;
+    public void Acknowledge(Notification notification)
+    {
+        NotificationManager.Acknowledge(notification.Identifier);
+    }
 
-        public Notification Get(Guid id)
-        {
-            return GetAll().Single(n => n.Identifier == id) as Notification;
-        }
-
-        public void Acknowledge(Notification notification)
-        {
-            NotificationManager.Acknowledge(notification.Identifier);
-        }
-
-        private void InitialValidateHealthState()
-        {
-            throw new HealthStateException(ServerModuleState.Stopped);
-        }
+    private void InitialValidateHealthState()
+    {
+        throw new HealthStateException(ServerModuleState.Stopped);
     }
 }

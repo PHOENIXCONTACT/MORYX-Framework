@@ -4,32 +4,31 @@
 using Moryx.Orders.Management.Properties;
 using System.ComponentModel.DataAnnotations;
 
-namespace Moryx.Orders.Management
+namespace Moryx.Orders.Management;
+
+[Display(Name = nameof(Strings.OperationState_InitialAssignFailedState), ResourceType = typeof(Strings))]
+internal sealed class InitialAssignFailedState : OperationDataStateBase
 {
-    [Display(Name = nameof(Strings.OperationState_InitialAssignFailedState), ResourceType = typeof(Strings))]
-    internal sealed class InitialAssignFailedState : OperationDataStateBase
+    public override bool IsFailed => true;
+
+    public override bool CanAssign => true;
+
+    public override bool IsCreated => false;
+
+    public InitialAssignFailedState(OperationData context, StateMap stateMap)
+        : base(context, stateMap, OperationStateClassification.Initial)
     {
-        public override bool IsFailed => true;
+    }
 
-        public override bool CanAssign => true;
+    public override async Task Assign()
+    {
+        await NextStateAsync(StateInitialAssign);
+        Context.HandleAssign();
+    }
 
-        public override bool IsCreated => false;
-
-        public InitialAssignFailedState(OperationData context, StateMap stateMap)
-            : base(context, stateMap, OperationStateClassification.Initial)
-        {
-        }
-
-        public override async Task Assign()
-        {
-            await NextStateAsync(StateInitialAssign);
-            Context.HandleAssign();
-        }
-
-        public override async Task Abort()
-        {
-            await NextStateAsync(StateAborted);
-            await Context.HandleAbort();
-        }
+    public override async Task Abort()
+    {
+        await NextStateAsync(StateAborted);
+        await Context.HandleAbort();
     }
 }

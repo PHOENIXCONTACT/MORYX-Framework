@@ -3,20 +3,18 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.FactoryMonitor.Endpoints.Models
+namespace Moryx.FactoryMonitor.Endpoints.Models;
+
+/// <summary>
+/// Model for the cell information for every ActivityUpdated event.
+/// </summary>
+[DataContract]
+public class CellStateChangedModel
 {
-    /// <summary>
-    /// Model for the cell information for every ActivityUpdated event.
-    /// </summary>
-    [DataContract]
-    public class CellStateChangedModel
-    {
-        [DataMember]
-        public long Id { get; set; }
+    [DataMember]
+    public long Id { get; set; }
 
-        [DataMember]
-        public CellState State { get; set; }
+    [DataMember]
+    public CellState State { get; set; }
 
-    }
 }
-

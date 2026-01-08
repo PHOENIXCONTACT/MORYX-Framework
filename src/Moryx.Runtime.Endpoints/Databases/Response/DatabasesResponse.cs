@@ -3,13 +3,11 @@
 
 using Moryx.Runtime.Endpoints.Databases.Models;
 
-namespace Moryx.Runtime.Endpoints.Databases.Response
+namespace Moryx.Runtime.Endpoints.Databases.Response;
+
+public class DatabasesResponse
 {
-    public class DatabasesResponse
-    {
-        public DataModel[] Databases { get; set; }
+    public DataModel[] Databases { get; set; }
 
-        public ModelConfiguratorModel[] Configurators { get; set; }
-    }
+    public ModelConfiguratorModel[] Configurators { get; set; }
 }
-

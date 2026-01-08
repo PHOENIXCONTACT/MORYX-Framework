@@ -8,73 +8,72 @@ using Moryx.Container;
 using Moryx.ControlSystem.Materials;
 using Moryx.Logging;
 
-namespace Moryx.ControlSystem.MaterialManager
+namespace Moryx.ControlSystem.MaterialManager;
+
+[Component(LifeCycle.Singleton, typeof(IMaterialManager))]
+internal class MaterialManager : IMaterialManager
 {
-    [Component(LifeCycle.Singleton, typeof(IMaterialManager))]
-    internal class MaterialManager : IMaterialManager
+    /// <summary>
+    /// Access material containers
+    /// </summary>
+    public IResourceManagement ResourceManagement { get; set; }
+
+    /// <summary>
+    /// Load the products of each container
+    /// </summary>
+    public IProductManagement ProductManagement { get; set; }
+
+    /// <summary>
+    /// Logger for this component
+    /// </summary>
+    public IModuleLogger Logger { get; set; }
+
+    /// <inheritdoc />
+    public async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        /// <summary>
-        /// Access material containers
-        /// </summary>
-        public IResourceManagement ResourceManagement { get; set; }
-
-        /// <summary>
-        /// Load the products of each container
-        /// </summary>
-        public IProductManagement ProductManagement { get; set; }
-
-        /// <summary>
-        /// Logger for this component
-        /// </summary>
-        public IModuleLogger Logger { get; set; }
-
-        /// <inheritdoc />
-        public async Task StartAsync(CancellationToken cancellationToken = default)
+        var containers = ResourceManagement.GetResources<IMaterialContainer>().ToList();
+        foreach (var container in containers)
         {
-            var containers = ResourceManagement.GetResources<IMaterialContainer>().ToList();
-            foreach (var container in containers)
-            {
-                container.MaterialChanged += OnMaterialChanged;
-                await SetProduct(container);
-            }
+            container.MaterialChanged += OnMaterialChanged;
+            await SetProduct(container);
+        }
+    }
+
+    /// <inheritdoc />
+    public Task StopAsync(CancellationToken cancellationToken = default)
+    {
+        var containers = ResourceManagement.GetResources<IMaterialContainer>().ToList();
+        foreach (var container in containers)
+        {
+            container.MaterialChanged -= OnMaterialChanged;
         }
 
-        /// <inheritdoc />
-        public Task StopAsync(CancellationToken cancellationToken = default)
-        {
-            var containers = ResourceManagement.GetResources<IMaterialContainer>().ToList();
-            foreach (var container in containers)
-            {
-                container.MaterialChanged -= OnMaterialChanged;
-            }
+        return Task.CompletedTask;
+    }
 
-            return Task.CompletedTask;
+    private async void OnMaterialChanged(object sender, EventArgs empty)
+    {
+        try
+        {
+            var container = (IMaterialContainer)sender;
+            await SetProduct(container);
         }
-
-        private async void OnMaterialChanged(object sender, EventArgs empty)
+        catch (Exception e)
         {
-            try
-            {
-                var container = (IMaterialContainer)sender;
-                await SetProduct(container);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e, "Error during setting product");
-            }
+            Logger.LogError(e, "Error during setting product");
         }
+    }
 
-        private async Task SetProduct(IMaterialContainer container)
+    private async Task SetProduct(IMaterialContainer container)
+    {
+        if (container.ProvidedMaterial == null)
+            return;
+
+        // Update reference with values from product management
+        if (container.ProvidedMaterial is ProductReference && container.ProvidedMaterial.Identity is ProductIdentity prodIdent)
         {
-            if (container.ProvidedMaterial == null)
-                return;
-
-            // Update reference with values from product management
-            if (container.ProvidedMaterial is ProductReference && container.ProvidedMaterial.Identity is ProductIdentity prodIdent)
-            {
-                var material = await ProductManagement.LoadTypeAsync(prodIdent);
-                container.SetMaterial(material);
-            }
+            var material = await ProductManagement.LoadTypeAsync(prodIdent);
+            container.SetMaterial(material);
         }
     }
 }

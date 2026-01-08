@@ -6,43 +6,42 @@ using System.Runtime.Serialization;
 using Moryx.Properties;
 using Moryx.Workplans.Transitions;
 
-namespace Moryx.Workplans.WorkplanSteps
+namespace Moryx.Workplans.WorkplanSteps;
+
+/// <summary>
+/// Workplanstep to split execution
+/// </summary>
+[DataContract]
+[Display(ResourceType = typeof(Strings), Name = "SplitWorkplanStep_Name", Description = "SplitWorkplanStep_Description")]
+public class SplitWorkplanStep : WorkplanStepBase
 {
-    /// <summary>
-    /// Workplanstep to split execution
-    /// </summary>
-    [DataContract]
-    [Display(ResourceType = typeof(Strings), Name = "SplitWorkplanStep_Name", Description = "SplitWorkplanStep_Description")]
-    public class SplitWorkplanStep : WorkplanStepBase
+    private SplitWorkplanStep()
     {
-        private SplitWorkplanStep()
-        {
-            Name = "Split";
-        }
+        Name = "Split";
+    }
 
-        /// <summary>
-        /// Create new split instance
-        /// </summary>
-        /// <param name="outputs"></param>
-        public SplitWorkplanStep([Display(Name = "Outputs", Description = "Number of parallel paths")] int outputs = 2)
-        {
-            if (outputs <= 1)
-                throw new ArgumentException("Split must have at least two outputs!");
+    /// <summary>
+    /// Create new split instance
+    /// </summary>
+    /// <param name="outputs"></param>
+    public SplitWorkplanStep([Display(Name = "Outputs", Description = "Number of parallel paths")] int outputs = 2)
+    {
+        if (outputs <= 1)
+            throw new ArgumentException("Split must have at least two outputs!");
 
-            Outputs = new IConnector[outputs];
-            OutputDescriptions = new OutputDescription[outputs];
-            for (var i = 0; i < outputs; i++)
-            {
-                OutputDescriptions[i] = new OutputDescription { OutputType = OutputType.Success };
-            }
-        }
-
-        /// <summary>
-        /// Create transistion instance
-        /// </summary>
-        protected override TransitionBase Instantiate(IWorkplanContext context)
+        Outputs = new IConnector[outputs];
+        OutputDescriptions = new OutputDescription[outputs];
+        for (var i = 0; i < outputs; i++)
         {
-            return new SplitTransition();
+            OutputDescriptions[i] = new OutputDescription { OutputType = OutputType.Success };
         }
+    }
+
+    /// <summary>
+    /// Create transistion instance
+    /// </summary>
+    protected override TransitionBase Instantiate(IWorkplanContext context)
+    {
+        return new SplitTransition();
     }
 }

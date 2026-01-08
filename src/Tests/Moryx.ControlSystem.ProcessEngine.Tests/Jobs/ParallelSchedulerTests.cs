@@ -6,60 +6,59 @@ using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using NUnit.Framework;
 
-namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs
+namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs;
+
+[TestFixture]
+public class ParallelSchedulerTests : SchedulerTestBase
 {
-    [TestFixture]
-    public class ParallelSchedulerTests : SchedulerTestBase
+    private const int MaxActive = 3;
+
+    protected override IJobScheduler CreateScheduler()
     {
-        private const int MaxActive = 3;
-
-        protected override IJobScheduler CreateScheduler()
+        var scheduler = new ParallelScheduler
         {
-            var scheduler = new ParallelScheduler
-            {
-                JobList = JobListMock.Object
-            };
-            scheduler.Initialize(new ParallelSchedulerConfig { MaxActiveJobs = MaxActive });
+            JobList = JobListMock.Object
+        };
+        scheduler.Initialize(new ParallelSchedulerConfig { MaxActiveJobs = MaxActive });
 
-            return scheduler;
-        }
+        return scheduler;
+    }
 
-        [Test(Description = "Should return the configured value for active jobs initially")]
-        public void ReturnsTheParallelSlots()
+    [Test(Description = "Should return the configured value for active jobs initially")]
+    public void ReturnsTheParallelSlots()
+    {
+        // Arrange
+        var jobs = CreateProductionJobs(5);
+
+        // Act
+        var slots = JobScheduler.SchedulableJobs(jobs).ToArray();
+
+        // Assert
+        Assert.That(slots.Length, Is.EqualTo(MaxActive), "There should be three slots");
+    }
+
+    [Test()]
+    public void ShouldAssignAndStartWaitingJob()
+    {
+        // Arrange
+        var job = new Job(Recipe, 1)
         {
-            // Arrange
-            var jobs = CreateProductionJobs(5);
+            Classification = JobClassification.Waiting
+        };
+        var otherJobs = CreateProductionJobs(4);
 
-            // Act
-            var slots = JobScheduler.SchedulableJobs(jobs).ToArray();
+        // Act
+        JobScheduler.JobsReady([job]);
+        var slots = JobScheduler.SchedulableJobs(otherJobs).ToArray();
 
-            // Assert
-            Assert.That(slots.Length, Is.EqualTo(MaxActive), "There should be three slots");
-        }
+        // Assert
+        Assert.That(slots.Length, Is.EqualTo(2));
+        Assert.That(ScheduledJob, Is.Not.Null);
+    }
 
-        [Test()]
-        public void ShouldAssignAndStartWaitingJob()
-        {
-            // Arrange
-            var job = new Job(Recipe, 1)
-            {
-                Classification = JobClassification.Waiting
-            };
-            var otherJobs = CreateProductionJobs(4);
-
-            // Act
-            JobScheduler.JobsReady([job]);
-            var slots = JobScheduler.SchedulableJobs(otherJobs).ToArray();
-
-            // Assert
-            Assert.That(slots.Length, Is.EqualTo(2));
-            Assert.That(ScheduledJob, Is.Not.Null);
-        }
-
-        [Test]
-        public void ResumeJobsAfterRestart()
-        {
-            ResumeJobsAfterRestart(3);
-        }
+    [Test]
+    public void ResumeJobsAfterRestart()
+    {
+        ResumeJobsAfterRestart(3);
     }
 }

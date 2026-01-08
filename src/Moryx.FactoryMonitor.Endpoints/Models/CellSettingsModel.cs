@@ -3,15 +3,13 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.FactoryMonitor.Endpoints.Models
-{
-    [DataContract]
-    public class CellSettingsModel
-    {
-        [DataMember]
-        public virtual string Image { get; set; }
-        [DataMember]
-        public virtual string Icon { get; set; }
-    }
-}
+namespace Moryx.FactoryMonitor.Endpoints.Models;
 
+[DataContract]
+public class CellSettingsModel
+{
+    [DataMember]
+    public virtual string Image { get; set; }
+    [DataMember]
+    public virtual string Icon { get; set; }
+}

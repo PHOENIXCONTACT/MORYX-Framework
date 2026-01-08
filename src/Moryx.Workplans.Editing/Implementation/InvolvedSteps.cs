@@ -1,35 +1,33 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Workplans.Editing
+namespace Moryx.Workplans.Editing;
+
+internal struct InvolvedSteps
 {
-    internal struct InvolvedSteps
+    /// <summary>
+    /// Create instance with all involved entities
+    /// </summary>
+    public InvolvedSteps(IWorkplanStep source, IWorkplanStep target, IConnector connector)
+        : this()
     {
-        /// <summary>
-        /// Create instance with all involved entities
-        /// </summary>
-        public InvolvedSteps(IWorkplanStep source, IWorkplanStep target, IConnector connector)
-            : this()
-        {
-            Source = source;
-            Target = target;
-            Connector = connector;
-        }
-
-        /// <summary>
-        /// Source of the connection, e.g. the step that references the connector as output
-        /// </summary>
-        public IWorkplanStep Source { get; private set; }
-
-        /// <summary>
-        /// Target of the connection, e.g the step that references the connector as input
-        /// </summary>
-        public IWorkplanStep Target { get; private set; }
-
-        /// <summary>
-        /// Connector of the connection
-        /// </summary>
-        public IConnector Connector { get; private set; }
+        Source = source;
+        Target = target;
+        Connector = connector;
     }
-}
 
+    /// <summary>
+    /// Source of the connection, e.g. the step that references the connector as output
+    /// </summary>
+    public IWorkplanStep Source { get; private set; }
+
+    /// <summary>
+    /// Target of the connection, e.g the step that references the connector as input
+    /// </summary>
+    public IWorkplanStep Target { get; private set; }
+
+    /// <summary>
+    /// Connector of the connection
+    /// </summary>
+    public IConnector Connector { get; private set; }
+}

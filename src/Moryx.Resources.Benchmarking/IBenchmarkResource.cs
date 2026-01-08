@@ -3,37 +3,36 @@
 
 using Moryx.ControlSystem.Cells;
 
-namespace Moryx.Resources.Benchmarking
+namespace Moryx.Resources.Benchmarking;
+
+/// <summary>
+/// Interface for all benchmark resources
+/// </summary>
+public interface IBenchmarkResource : ICell
 {
     /// <summary>
-    /// Interface for all benchmark resources
+    /// Get activity count since last call
     /// </summary>
-    public interface IBenchmarkResource : ICell
-    {
-        /// <summary>
-        /// Get activity count since last call
-        /// </summary>
-        BenchmarkReport GetReport();
-    }
+    BenchmarkReport GetReport();
+}
+
+/// <summary>
+/// Report of current performance in the resource
+/// </summary>
+public struct BenchmarkReport
+{
+    /// <summary>
+    /// Total number of activities
+    /// </summary>
+    public int ActivityCount;
 
     /// <summary>
-    /// Report of current performance in the resource
+    /// Time spent waiting for a ReadyToWork response
     /// </summary>
-    public struct BenchmarkReport
-    {
-        /// <summary>
-        /// Total number of activities
-        /// </summary>
-        public int ActivityCount;
+    public long ReadyToWorkWait;
 
-        /// <summary>
-        /// Time spent waiting for a ReadyToWork response
-        /// </summary>
-        public long ReadyToWorkWait;
-
-        /// <summary>
-        /// Time spent waiting for an ActivityCompleted response
-        /// </summary>
-        public long ActivityCompletionWait;
-    }
+    /// <summary>
+    /// Time spent waiting for an ActivityCompleted response
+    /// </summary>
+    public long ActivityCompletionWait;
 }

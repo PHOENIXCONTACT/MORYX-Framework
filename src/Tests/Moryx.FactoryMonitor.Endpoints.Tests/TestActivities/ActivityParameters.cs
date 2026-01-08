@@ -5,16 +5,14 @@ using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Processes;
 using Moryx.VisualInstructions;
 
-namespace Moryx.FactoryMonitor.Endpoints.Tests
+namespace Moryx.FactoryMonitor.Endpoints.Tests;
+
+public class ActivityParameters : VisualInstructionParameters
 {
-    public class ActivityParameters : VisualInstructionParameters
+
+    protected override void Populate(Process process, Parameters instance)
     {
-
-        protected override void Populate(Process process, Parameters instance)
-        {
-            var parameters = (ActivityParameters)instance;
-        }
-
+        var parameters = (ActivityParameters)instance;
     }
-}
 
+}

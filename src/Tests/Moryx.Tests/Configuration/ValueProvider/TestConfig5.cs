@@ -4,22 +4,21 @@
 using System;
 using System.ComponentModel;
 
-namespace Moryx.Tests.Configuration.ValueProvider
+namespace Moryx.Tests.Configuration.ValueProvider;
+
+internal class ClassWithoutParamLessCtor
 {
-    internal class ClassWithoutParamLessCtor
+    public ClassWithoutParamLessCtor(string a)
     {
-        public ClassWithoutParamLessCtor(string a)
-        {
 
-        }
     }
+}
 
-    internal class TestConfig5
-    {
-        [DefaultValue(null)]
-        public ClassWithoutParamLessCtor Field1 { get; set; }
+internal class TestConfig5
+{
+    [DefaultValue(null)]
+    public ClassWithoutParamLessCtor Field1 { get; set; }
 
-        [DefaultValue(null)]
-        public Func<string, bool> Field2 { get; set; }
-    }
+    [DefaultValue(null)]
+    public Func<string, bool> Field2 { get; set; }
 }

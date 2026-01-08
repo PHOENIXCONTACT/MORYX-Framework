@@ -5,16 +5,15 @@ using System.Runtime.Serialization;
 using Moryx.Modules;
 using Moryx.Serialization;
 
-namespace Moryx.Orders.Assignment
+namespace Moryx.Orders.Assignment;
+
+/// <summary>
+/// Config of the document loader to get the needed document information
+/// </summary>
+public class DocumentLoaderConfig : IPluginConfig
 {
-    /// <summary>
-    /// Config of the document loader to get the needed document information
-    /// </summary>
-    public class DocumentLoaderConfig : IPluginConfig
-    {
-        /// <inheritdoc />
-        [DataMember]
-        [PluginNameSelector(typeof(IDocumentLoader))]
-        public virtual string PluginName { get; set; }
-    }
+    /// <inheritdoc />
+    [DataMember]
+    [PluginNameSelector(typeof(IDocumentLoader))]
+    public virtual string PluginName { get; set; }
 }

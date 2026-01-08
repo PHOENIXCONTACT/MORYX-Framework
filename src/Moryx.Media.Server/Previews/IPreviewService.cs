@@ -4,15 +4,13 @@
 using Moryx.Media.Previews;
 using Moryx.Modules;
 
-namespace Moryx.Media.Server.Previews
+namespace Moryx.Media.Server.Previews;
+
+internal delegate void PreviewCreationResultHandler(PreviewJob job, PreviewJobResult result);
+
+internal interface IPreviewService : IPlugin
 {
-    internal delegate void PreviewCreationResultHandler(PreviewJob job, PreviewJobResult result);
+    void QueuePreviewJob(PreviewJob job);
 
-    internal interface IPreviewService : IPlugin
-    {
-        void QueuePreviewJob(PreviewJob job);
-
-        event PreviewCreationResultHandler PreviewJobCompleted;
-    }
+    event PreviewCreationResultHandler PreviewJobCompleted;
 }
-

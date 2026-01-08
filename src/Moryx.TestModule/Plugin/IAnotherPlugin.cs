@@ -3,15 +3,14 @@
 
 using Moryx.Modules;
 
-namespace Moryx.TestModule
+namespace Moryx.TestModule;
+
+public interface IAnotherPlugin : IConfiguredPlugin<AnotherPluginConfig>
 {
-    public interface IAnotherPlugin : IConfiguredPlugin<AnotherPluginConfig>
-    {
 
-    }
+}
 
-    public interface IAnotherSubPlugin : IConfiguredPlugin<AnotherSubConfig>
-    {
+public interface IAnotherSubPlugin : IConfiguredPlugin<AnotherSubConfig>
+{
 
-    }
 }

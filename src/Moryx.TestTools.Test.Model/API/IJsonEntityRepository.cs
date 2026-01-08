@@ -3,10 +3,9 @@
 
 using Moryx.Model.Repositories;
 
-namespace Moryx.TestTools.Test.Model
+namespace Moryx.TestTools.Test.Model;
+
+public interface IJsonEntityRepository : IRepository<JsonEntity>
 {
-    public interface IJsonEntityRepository : IRepository<JsonEntity>
-    {
-        JsonEntity Create(string jsonData);
-    }
+    JsonEntity Create(string jsonData);
 }

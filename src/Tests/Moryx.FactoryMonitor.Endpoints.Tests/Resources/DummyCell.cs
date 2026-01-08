@@ -9,37 +9,35 @@ using System;
 using System.Collections.Generic;
 using Moryx.AbstractionLayer.Activities;
 
-namespace Moryx.FactoryMonitor.Endpoints.Tests.Resources
+namespace Moryx.FactoryMonitor.Endpoints.Tests.Resources;
+
+public class DummyCell : Cell
 {
-    public class DummyCell : Cell
+    [EntryVisualization("celcius", "thermometer")]
+    public double Temperature { get; set; }
+
+    public void ChangeCapabilities(ICapabilities capabilities)
     {
-        [EntryVisualization("celcius", "thermometer")]
-        public double Temperature { get; set; }
+        Capabilities = capabilities;
+    }
 
-        public void ChangeCapabilities(ICapabilities capabilities)
-        {
-            Capabilities = capabilities;
-        }
+    protected override IEnumerable<Session> ProcessEngineAttached()
+    {
+        yield break;
+    }
 
-        protected override IEnumerable<Session> ProcessEngineAttached()
-        {
-            yield break;
-        }
+    protected override IEnumerable<Session> ProcessEngineDetached()
+    {
+        yield break;
+    }
 
-        protected override IEnumerable<Session> ProcessEngineDetached()
-        {
-            yield break;
-        }
+    public override void StartActivity(ActivityStart activityStart)
+    {
+        throw new NotImplementedException();
+    }
 
-        public override void StartActivity(ActivityStart activityStart)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void SequenceCompleted(SequenceCompleted completed)
-        {
-            throw new NotImplementedException();
-        }
+    public override void SequenceCompleted(SequenceCompleted completed)
+    {
+        throw new NotImplementedException();
     }
 }
-

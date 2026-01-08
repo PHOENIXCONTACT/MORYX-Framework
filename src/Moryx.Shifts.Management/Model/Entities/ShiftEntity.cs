@@ -6,37 +6,35 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Moryx.Model;
 
-namespace Moryx.Shifts.Management.Model
+namespace Moryx.Shifts.Management.Model;
+
+public class ShiftEntity : ModificationTrackedEntityBase
 {
-    public class ShiftEntity : ModificationTrackedEntityBase
+    [Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public override long Id
     {
-        [Key, Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public override long Id
-        {
-            get => base.Id;
-            set => base.Id = value;
-        }
-
-        [Required]
-        public DateOnly Date { get; set; }
-
-        [Required]
-        public ShiftState State { get; set; }
-
-        #region Navigation properties
-
-        public virtual long ShiftTypeId { get; set; }
-
-        public virtual ShiftTypeEntity ShiftType { get; set; }
-
-        #endregion
+        get => base.Id;
+        set => base.Id = value;
     }
 
-    public enum ShiftState
-    {
-        New,
-        Released,
-        Obsolete
-    }
+    [Required]
+    public DateOnly Date { get; set; }
+
+    [Required]
+    public ShiftState State { get; set; }
+
+    #region Navigation properties
+
+    public virtual long ShiftTypeId { get; set; }
+
+    public virtual ShiftTypeEntity ShiftType { get; set; }
+
+    #endregion
 }
 
+public enum ShiftState
+{
+    New,
+    Released,
+    Obsolete
+}

@@ -3,36 +3,35 @@
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.VisualInstructions
+namespace Moryx.VisualInstructions;
+
+/// <summary>
+/// Source of visual instructions within the resource graph
+/// </summary>
+public interface IVisualInstructionSource : IResource
 {
     /// <summary>
-    /// Source of visual instructions within the resource graph
+    /// Identifier of this instruction source
     /// </summary>
-    public interface IVisualInstructionSource : IResource
-    {
-        /// <summary>
-        /// Identifier of this instruction source
-        /// </summary>
-        string Identifier { get; }
+    string Identifier { get; }
 
-        /// <summary>
-        /// Instructions on this source
-        /// </summary>
-        IReadOnlyList<ActiveInstruction> Instructions { get; }
+    /// <summary>
+    /// Instructions on this source
+    /// </summary>
+    IReadOnlyList<ActiveInstruction> Instructions { get; }
 
-        /// <summary>
-        /// An instruction was completed
-        /// </summary>
-        void Completed(ActiveInstructionResponse response);
+    /// <summary>
+    /// An instruction was completed
+    /// </summary>
+    void Completed(ActiveInstructionResponse response);
 
-        /// <summary>
-        /// Instruction was added
-        /// </summary>
-        event EventHandler<ActiveInstruction> Added;
+    /// <summary>
+    /// Instruction was added
+    /// </summary>
+    event EventHandler<ActiveInstruction> Added;
 
-        /// <summary>
-        /// Instruction was cleared
-        /// </summary>
-        event EventHandler<ActiveInstruction> Cleared;
-    }
+    /// <summary>
+    /// Instruction was cleared
+    /// </summary>
+    event EventHandler<ActiveInstruction> Cleared;
 }

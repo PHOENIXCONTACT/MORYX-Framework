@@ -1,49 +1,48 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Container
+namespace Moryx.Container;
+
+/// <summary>
+/// Extensions to replace the overloads of <see cref="IContainer.Resolve(Type, string)"/>
+/// </summary>
+public static class ContainerResolveExtensions
 {
     /// <summary>
-    /// Extensions to replace the overloads of <see cref="IContainer.Resolve(Type, string)"/>
+    /// Resolve an instance of the given service
     /// </summary>
-    public static class ContainerResolveExtensions
+    /// <typeparam name="T">Type to resolve</typeparam>
+    /// <returns>Instance of type</returns>
+    public static T Resolve<T>(this IContainer container)
     {
-        /// <summary>
-        /// Resolve an instance of the given service
-        /// </summary>
-        /// <typeparam name="T">Type to resolve</typeparam>
-        /// <returns>Instance of type</returns>
-        public static T Resolve<T>(this IContainer container)
-        {
-            return (T)container.Resolve(typeof(T), null);
-        }
+        return (T)container.Resolve(typeof(T), null);
+    }
 
-        /// <summary>
-        /// Resolve this dependency
-        /// </summary>
-        public static object Resolve(this IContainer container, Type service)
-        {
-            return container.Resolve(service, null);
-        }
+    /// <summary>
+    /// Resolve this dependency
+    /// </summary>
+    public static object Resolve(this IContainer container, Type service)
+    {
+        return container.Resolve(service, null);
+    }
 
-        /// <summary>
-        /// Resolve a named instance of the given service
-        /// </summary>
-        /// <typeparam name="T">Type to resolve</typeparam>
-        /// <returns>Instance of type</returns>
-        public static T Resolve<T>(this IContainer container, string name)
-        {
-            return (T)container.Resolve(typeof(T), name);
-        }
+    /// <summary>
+    /// Resolve a named instance of the given service
+    /// </summary>
+    /// <typeparam name="T">Type to resolve</typeparam>
+    /// <returns>Instance of type</returns>
+    public static T Resolve<T>(this IContainer container, string name)
+    {
+        return (T)container.Resolve(typeof(T), name);
+    }
 
-        /// <summary>
-        /// Resolve all implementations of this contract
-        /// </summary>
-        /// <typeparam name="T">Type to resolve</typeparam>
-        /// <returns></returns>
-        public static T[] ResolveAll<T>(this IContainer container)
-        {
-            return (T[])container.ResolveAll(typeof(T));
-        }
+    /// <summary>
+    /// Resolve all implementations of this contract
+    /// </summary>
+    /// <typeparam name="T">Type to resolve</typeparam>
+    /// <returns></returns>
+    public static T[] ResolveAll<T>(this IContainer container)
+    {
+        return (T[])container.ResolveAll(typeof(T));
     }
 }

@@ -3,26 +3,25 @@
 
 using Moryx.AbstractionLayer.Identity;
 
-namespace Moryx.AbstractionLayer.Products
+namespace Moryx.AbstractionLayer.Products;
+
+/// <summary>
+/// Interface for all typed products
+/// </summary>
+public interface IProductType : IPersistentObject, IIdentifiableObject
 {
     /// <summary>
-    /// Interface for all typed products
+    /// Display name of this product
     /// </summary>
-    public interface IProductType : IPersistentObject, IIdentifiableObject
-    {
-        /// <summary>
-        /// Display name of this product
-        /// </summary>
-        string Name { get; }
+    string Name { get; }
 
-        /// <summary>
-        /// State of the product
-        /// </summary>
-        ProductState State { get; }
+    /// <summary>
+    /// State of the product
+    /// </summary>
+    ProductState State { get; }
 
-        /// <summary>
-        /// Create instance of this type
-        /// </summary>
-        ProductInstance CreateInstance();
-    }
+    /// <summary>
+    /// Create instance of this type
+    /// </summary>
+    ProductInstance CreateInstance();
 }

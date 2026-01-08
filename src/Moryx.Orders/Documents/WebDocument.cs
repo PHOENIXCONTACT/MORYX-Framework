@@ -3,44 +3,43 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.Orders.Documents
+namespace Moryx.Orders.Documents;
+
+/// <summary>
+/// Document which the file source is the web
+/// </summary>
+[DataContract]
+public class WebDocument : Document
 {
     /// <summary>
-    /// Document which the file source is the web
+    /// Url to download the file
     /// </summary>
-    [DataContract]
-    public class WebDocument : Document
+    [DataMember]
+    public string Url { get; set; }
+
+    private static readonly HttpClient _client = new();
+
+    /// <summary>
+    /// Default constructor
+    /// </summary>
+    public WebDocument()
     {
-        /// <summary>
-        /// Url to download the file
-        /// </summary>
-        [DataMember]
-        public string Url { get; set; }
+    }
 
-        private static readonly HttpClient _client = new();
+    /// <summary>
+    /// Constructor to create a web document
+    /// </summary>
+    public WebDocument(string number, short revision, string url) : base(number, revision)
+    {
+        Url = url;
+    }
 
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public WebDocument()
-        {
-        }
+    /// <inheritdoc />
+    public override Stream GetStream()
+    {
+        var response = _client.GetAsync(Url).Result;
+        ContentType = response.Content.Headers.ContentType.MediaType;
 
-        /// <summary>
-        /// Constructor to create a web document
-        /// </summary>
-        public WebDocument(string number, short revision, string url) : base(number, revision)
-        {
-            Url = url;
-        }
-
-        /// <inheritdoc />
-        public override Stream GetStream()
-        {
-            var response = _client.GetAsync(Url).Result;
-            ContentType = response.Content.Headers.ContentType.MediaType;
-
-            return response.Content.ReadAsStreamAsync().Result;
-        }
+        return response.Content.ReadAsStreamAsync().Result;
     }
 }

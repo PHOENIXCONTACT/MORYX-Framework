@@ -5,17 +5,16 @@ using System.Runtime.Serialization;
 using Moryx.Modules;
 using Moryx.Serialization;
 
-namespace Moryx.Orders.Dispatcher
+namespace Moryx.Orders.Dispatcher;
+
+/// <summary>
+/// The operation dispatcher config
+/// </summary>
+[DataContract]
+public class OperationDispatcherConfig : IPluginConfig
 {
-    /// <summary>
-    /// The operation dispatcher config
-    /// </summary>
-    [DataContract]
-    public class OperationDispatcherConfig : IPluginConfig
-    {
-        /// <inheritdoc />
-        [DataMember]
-        [PluginNameSelector(typeof(IOperationDispatcher))]
-        public virtual string PluginName { get; set; }
-    }
+    /// <inheritdoc />
+    [DataMember]
+    [PluginNameSelector(typeof(IOperationDispatcher))]
+    public virtual string PluginName { get; set; }
 }

@@ -1,16 +1,15 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Products
+namespace Moryx.AbstractionLayer.Products;
+
+/// <summary>
+/// Context of a product import session
+/// </summary>
+public class ProductImportContext
 {
     /// <summary>
-    /// Context of a product import session
+    /// Session guid of the import
     /// </summary>
-    public class ProductImportContext
-    {
-        /// <summary>
-        /// Session guid of the import
-        /// </summary>
-        public Guid Session { get; } = Guid.NewGuid();
-    }
+    public Guid Session { get; } = Guid.NewGuid();
 }

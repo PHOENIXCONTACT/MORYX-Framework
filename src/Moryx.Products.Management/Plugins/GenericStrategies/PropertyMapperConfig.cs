@@ -5,35 +5,34 @@ using System.Runtime.Serialization;
 using Moryx.Modules;
 using Moryx.Serialization;
 
-namespace Moryx.Products.Management
+namespace Moryx.Products.Management;
+
+/// <summary>
+/// Configuration how a single property should be stored
+/// </summary>
+[DataContract]
+public class PropertyMapperConfig : IPluginConfig
 {
     /// <summary>
-    /// Configuration how a single property should be stored
+    /// Name of the property on the product
     /// </summary>
-    [DataContract]
-    public class PropertyMapperConfig : IPluginConfig
+    [DataMember]
+    public string PropertyName { get; set; }
+
+    /// <summary>
+    /// Name of plugin responsible for the property
+    /// </summary>
+    [DataMember, PluginNameSelector(typeof(IPropertyMapper))]
+    public virtual string PluginName { get; set; }
+
+    /// <summary>
+    /// Column where the value shall be stored
+    /// </summary>
+    [DataMember, AvailableColumns]
+    public string Column { get; set; }
+
+    public override string ToString()
     {
-        /// <summary>
-        /// Name of the property on the product
-        /// </summary>
-        [DataMember]
-        public string PropertyName { get; set; }
-
-        /// <summary>
-        /// Name of plugin responsible for the property
-        /// </summary>
-        [DataMember, PluginNameSelector(typeof(IPropertyMapper))]
-        public virtual string PluginName { get; set; }
-
-        /// <summary>
-        /// Column where the value shall be stored
-        /// </summary>
-        [DataMember, AvailableColumns]
-        public string Column { get; set; }
-
-        public override string ToString()
-        {
-            return $"{PropertyName}=>{Column}({PluginName})";
-        }
+        return $"{PropertyName}=>{Column}({PluginName})";
     }
 }

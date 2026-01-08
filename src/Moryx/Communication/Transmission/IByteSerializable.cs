@@ -1,21 +1,20 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Communication
+namespace Moryx.Communication;
+
+/// <summary>
+/// Interface for all objects that can be directly serialized
+/// </summary>
+public interface IByteSerializable
 {
     /// <summary>
-    /// Interface for all objects that can be directly serialized
+    /// Convert object into byte array
     /// </summary>
-    public interface IByteSerializable
-    {
-        /// <summary>
-        /// Convert object into byte array
-        /// </summary>
-        byte[] ToBytes();
+    byte[] ToBytes();
 
-        /// <summary>
-        /// Read object from bytes
-        /// </summary>
-        void FromBytes(byte[] bytes);
-    }
+    /// <summary>
+    /// Read object from bytes
+    /// </summary>
+    void FromBytes(byte[] bytes);
 }

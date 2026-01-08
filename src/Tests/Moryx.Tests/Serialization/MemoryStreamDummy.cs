@@ -4,15 +4,14 @@
 using System.IO;
 using System.Text;
 
-namespace Moryx.Tests.Serialization
-{
-    public class MemoryStreamDummy
-    {
-        public MemoryStreamDummy(string testString)
-        {
-            MemoryStream = new MemoryStream(Encoding.UTF8.GetBytes(testString));
-        }
+namespace Moryx.Tests.Serialization;
 
-        public MemoryStream MemoryStream { get; set; }
+public class MemoryStreamDummy
+{
+    public MemoryStreamDummy(string testString)
+    {
+        MemoryStream = new MemoryStream(Encoding.UTF8.GetBytes(testString));
     }
+
+    public MemoryStream MemoryStream { get; set; }
 }

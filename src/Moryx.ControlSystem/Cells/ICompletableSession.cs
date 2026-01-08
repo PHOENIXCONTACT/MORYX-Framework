@@ -3,16 +3,15 @@
 
 using Moryx.AbstractionLayer.Processes;
 
-namespace Moryx.ControlSystem.Cells
+namespace Moryx.ControlSystem.Cells;
+
+/// <summary>
+/// Indicator if a session can complete the current sequence
+/// </summary>
+public interface ICompletableSession
 {
     /// <summary>
-    /// Indicator if a session can complete the current sequence
+    /// Complete the current sequence
     /// </summary>
-    public interface ICompletableSession
-    {
-        /// <summary>
-        /// Complete the current sequence
-        /// </summary>
-        SequenceCompleted CompleteSequence(Process process, bool processActive, params long[] nextCells);
-    }
+    SequenceCompleted CompleteSequence(Process process, bool processActive, params long[] nextCells);
 }

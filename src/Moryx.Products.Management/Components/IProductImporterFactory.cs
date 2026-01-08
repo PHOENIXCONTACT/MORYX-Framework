@@ -4,22 +4,21 @@
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
 
-namespace Moryx.Products.Management
+namespace Moryx.Products.Management;
+
+/// <summary>
+/// Factory to create configured importers
+/// </summary>
+[PluginFactory(typeof(IConfigBasedComponentSelector))]
+internal interface IProductImporterFactory
 {
     /// <summary>
-    /// Factory to create configured importers
+    /// Create new importer
     /// </summary>
-    [PluginFactory(typeof(IConfigBasedComponentSelector))]
-    internal interface IProductImporterFactory
-    {
-        /// <summary>
-        /// Create new importer
-        /// </summary>
-        Task<IProductImporter> Create(ProductImporterConfig config, CancellationToken cancellationToken);
+    Task<IProductImporter> Create(ProductImporterConfig config, CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Destroy an importer
-        /// </summary>
-        void Destroy(IProductImporter instance);
-    }
+    /// <summary>
+    /// Destroy an importer
+    /// </summary>
+    void Destroy(IProductImporter instance);
 }

@@ -4,11 +4,10 @@
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
 
-namespace Moryx.Resources.Samples
+namespace Moryx.Resources.Samples;
+
+public class RefreshResource : Resource
 {
-    public class RefreshResource : Resource
-    {
-        [EntrySerialize]
-        public string CurrentTime => DateTime.Now.ToLongTimeString();
-    }
+    [EntrySerialize]
+    public string CurrentTime => DateTime.Now.ToLongTimeString();
 }

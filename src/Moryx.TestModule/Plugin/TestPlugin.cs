@@ -5,27 +5,26 @@ using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.Modules;
 
-namespace Moryx.TestModule
+namespace Moryx.TestModule;
+
+[ExpectedConfig(typeof(TestPluginConfig))]
+[Plugin(LifeCycle.Singleton, typeof(ITestPlugin), Name = ComponentName)]
+public class TestPlugin : ITestPlugin
 {
-    [ExpectedConfig(typeof(TestPluginConfig))]
-    [Plugin(LifeCycle.Singleton, typeof(ITestPlugin), Name = ComponentName)]
-    public class TestPlugin : ITestPlugin
+    public const string ComponentName = "TestPlugin";
+
+    [UseChild("Plugin")]
+    public ILogger Logger { get; set; }
+
+    public void Initialize(TestPluginConfig config)
     {
-        public const string ComponentName = "TestPlugin";
+    }
 
-        [UseChild("Plugin")]
-        public ILogger Logger { get; set; }
+    public void Start()
+    {
+    }
 
-        public void Initialize(TestPluginConfig config)
-        {
-        }
-
-        public void Start()
-        {
-        }
-
-        public void Stop()
-        {
-        }
+    public void Stop()
+    {
     }
 }

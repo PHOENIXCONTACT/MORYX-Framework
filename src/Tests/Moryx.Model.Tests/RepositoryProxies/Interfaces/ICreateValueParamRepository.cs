@@ -4,10 +4,9 @@
 using System;
 using Moryx.Model.Repositories;
 
-namespace Moryx.Model.Tests
+namespace Moryx.Model.Tests;
+
+public interface ICreateValueParamRepository : IRepository<SomeEntity>
 {
-    public interface ICreateValueParamRepository : IRepository<SomeEntity>
-    {
-        SomeEntity Create(Int32 value);
-    }
+    SomeEntity Create(Int32 value);
 }

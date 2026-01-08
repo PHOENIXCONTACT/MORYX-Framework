@@ -3,26 +3,25 @@
 
 using Moryx.Runtime.Modules;
 
-namespace Moryx.Runtime.Kernel
+namespace Moryx.Runtime.Kernel;
+
+/// <summary>
+/// Component handling the start of modules
+/// </summary>
+internal interface IModuleStarter
 {
     /// <summary>
-    /// Component handling the start of modules
+    /// Call initialize on the module
     /// </summary>
-    internal interface IModuleStarter
-    {
-        /// <summary>
-        /// Call initialize on the module
-        /// </summary>
-        Task InitializeAsync(IServerModule module, CancellationToken cancellationToken);
+    Task InitializeAsync(IServerModule module, CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Starts a module and all dependencies if necessary
-        /// </summary>
-        Task StartAsync(IServerModule module, CancellationToken cancellationToken);
+    /// <summary>
+    /// Starts a module and all dependencies if necessary
+    /// </summary>
+    Task StartAsync(IServerModule module, CancellationToken cancellationToken);
 
-        /// <summary>
-        /// Starts all modules
-        /// </summary>
-        Task StartAllAsync(CancellationToken cancellationToken);
-    }
+    /// <summary>
+    /// Starts all modules
+    /// </summary>
+    Task StartAllAsync(CancellationToken cancellationToken);
 }

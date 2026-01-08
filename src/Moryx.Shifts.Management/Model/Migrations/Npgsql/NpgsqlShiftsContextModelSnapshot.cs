@@ -11,159 +11,158 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Moryx.Shifts.Management.Model.Migrations.Npgsql
+namespace Moryx.Shifts.Management.Model.Migrations.Npgsql;
+
+[DbContext(typeof(NpgsqlShiftsContext))]
+partial class NpgsqlShiftsContextModelSnapshot : ModelSnapshot
 {
-    [DbContext(typeof(NpgsqlShiftsContext))]
-    partial class NpgsqlShiftsContextModelSnapshot : ModelSnapshot
+    protected override void BuildModel(ModelBuilder modelBuilder)
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "8.0.21")
-                .HasAnnotation("Proxies:ChangeTracking", false)
-                .HasAnnotation("Proxies:CheckEquality", false)
-                .HasAnnotation("Proxies:LazyLoading", true)
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+        modelBuilder
+            .HasDefaultSchema("public")
+            .HasAnnotation("ProductVersion", "8.0.21")
+            .HasAnnotation("Proxies:ChangeTracking", false)
+            .HasAnnotation("Proxies:CheckEquality", false)
+            .HasAnnotation("Proxies:LazyLoading", true)
+            .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+        NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Moryx.Shifts.Management.ShiftAssignementEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Moryx.Shifts.Management.ShiftAssignementEntity", b =>
+        {
+            b.Property<long>("Id")
+                .ValueGeneratedOnAdd()
+                .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("AssignedDays")
-                        .HasColumnType("integer");
+            b.Property<int>("AssignedDays")
+                .HasColumnType("integer");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+            b.Property<DateTime>("Created")
+                .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("Deleted")
-                        .HasColumnType("timestamp with time zone");
+            b.Property<DateTime?>("Deleted")
+                .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Note")
-                        .HasMaxLength(2048)
-                        .HasColumnType("character varying(2048)");
+            b.Property<string>("Note")
+                .HasMaxLength(2048)
+                .HasColumnType("character varying(2048)");
 
-                    b.Property<string>("OperatorIdentifier")
-                        .IsRequired()
-                        .HasColumnType("text");
+            b.Property<string>("OperatorIdentifier")
+                .IsRequired()
+                .HasColumnType("text");
 
-                    b.Property<int>("Priority")
-                        .HasColumnType("integer");
+            b.Property<int>("Priority")
+                .HasColumnType("integer");
 
-                    b.Property<long>("ResourceId")
-                        .HasColumnType("bigint");
+            b.Property<long>("ResourceId")
+                .HasColumnType("bigint");
 
-                    b.Property<long>("ShiftId")
-                        .HasColumnType("bigint");
+            b.Property<long>("ShiftId")
+                .HasColumnType("bigint");
 
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("timestamp with time zone");
+            b.Property<DateTime>("Updated")
+                .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("Id");
+            b.HasKey("Id");
 
-                    b.HasIndex("ShiftId");
+            b.HasIndex("ShiftId");
 
-                    b.ToTable("ShiftAssignements", "public");
-                });
+            b.ToTable("ShiftAssignements", "public");
+        });
 
-            modelBuilder.Entity("Moryx.Shifts.Management.ShiftEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Moryx.Shifts.Management.ShiftEntity", b =>
+        {
+            b.Property<long>("Id")
+                .ValueGeneratedOnAdd()
+                .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+            b.Property<DateTime>("Created")
+                .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
+            b.Property<DateOnly>("Date")
+                .HasColumnType("date");
 
-                    b.Property<DateTime?>("Deleted")
-                        .HasColumnType("timestamp with time zone");
+            b.Property<DateTime?>("Deleted")
+                .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("ShiftTypeId")
-                        .HasColumnType("bigint");
+            b.Property<long>("ShiftTypeId")
+                .HasColumnType("bigint");
 
-                    b.Property<int>("State")
-                        .HasColumnType("integer");
+            b.Property<int>("State")
+                .HasColumnType("integer");
 
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("timestamp with time zone");
+            b.Property<DateTime>("Updated")
+                .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("Id");
+            b.HasKey("Id");
 
-                    b.HasIndex("ShiftTypeId");
+            b.HasIndex("ShiftTypeId");
 
-                    b.ToTable("Shifts", "public");
-                });
+            b.ToTable("Shifts", "public");
+        });
 
-            modelBuilder.Entity("Moryx.Shifts.Management.ShiftTypeEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Moryx.Shifts.Management.ShiftTypeEntity", b =>
+        {
+            b.Property<long>("Id")
+                .ValueGeneratedOnAdd()
+                .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+            b.Property<DateTime>("Created")
+                .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime?>("Deleted")
-                        .HasColumnType("timestamp with time zone");
+            b.Property<DateTime?>("Deleted")
+                .HasColumnType("timestamp with time zone");
 
-                    b.Property<TimeOnly>("Endtime")
-                        .HasColumnType("time without time zone");
+            b.Property<TimeOnly>("Endtime")
+                .HasColumnType("time without time zone");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+            b.Property<string>("Name")
+                .IsRequired()
+                .HasMaxLength(200)
+                .HasColumnType("character varying(200)");
 
-                    b.Property<byte>("Periode")
-                        .HasColumnType("smallint");
+            b.Property<byte>("Periode")
+                .HasColumnType("smallint");
 
-                    b.Property<TimeOnly>("StartTime")
-                        .HasColumnType("time without time zone");
+            b.Property<TimeOnly>("StartTime")
+                .HasColumnType("time without time zone");
 
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("timestamp with time zone");
+            b.Property<DateTime>("Updated")
+                .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("Id");
+            b.HasKey("Id");
 
-                    b.ToTable("ShiftTypes", "public");
-                });
+            b.ToTable("ShiftTypes", "public");
+        });
 
-            modelBuilder.Entity("Moryx.Shifts.Management.ShiftAssignementEntity", b =>
-                {
-                    b.HasOne("Moryx.Shifts.Management.ShiftEntity", "Shift")
-                        .WithMany()
-                        .HasForeignKey("ShiftId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+        modelBuilder.Entity("Moryx.Shifts.Management.ShiftAssignementEntity", b =>
+        {
+            b.HasOne("Moryx.Shifts.Management.ShiftEntity", "Shift")
+                .WithMany()
+                .HasForeignKey("ShiftId")
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
 
-                    b.Navigation("Shift");
-                });
+            b.Navigation("Shift");
+        });
 
-            modelBuilder.Entity("Moryx.Shifts.Management.ShiftEntity", b =>
-                {
-                    b.HasOne("Moryx.Shifts.Management.ShiftTypeEntity", "ShiftType")
-                        .WithMany()
-                        .HasForeignKey("ShiftTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+        modelBuilder.Entity("Moryx.Shifts.Management.ShiftEntity", b =>
+        {
+            b.HasOne("Moryx.Shifts.Management.ShiftTypeEntity", "ShiftType")
+                .WithMany()
+                .HasForeignKey("ShiftTypeId")
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
 
-                    b.Navigation("ShiftType");
-                });
+            b.Navigation("ShiftType");
+        });
 #pragma warning restore 612, 618
-        }
     }
 }

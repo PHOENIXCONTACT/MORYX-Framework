@@ -4,38 +4,36 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Moryx.Identity.AccessManagement.Data
+namespace Moryx.Identity.AccessManagement.Data;
+
+public class PasswordReset
 {
-    public class PasswordReset
-    {
-        /// <summary>
-        /// The ID of this token
-        /// </summary>
-        public int Id { get; set; }
+    /// <summary>
+    /// The ID of this token
+    /// </summary>
+    public int Id { get; set; }
 
-        /// <summary>
-        /// The token value
-        /// </summary>
-        [Required]
-        public string ResetToken { get; set; }
+    /// <summary>
+    /// The token value
+    /// </summary>
+    [Required]
+    public string ResetToken { get; set; }
 
-        /// <summary>
-        /// The time the token expires
-        /// </summary>
-        [Required]
-        public DateTime ExpiryTime { get; set; }
+    /// <summary>
+    /// The time the token expires
+    /// </summary>
+    [Required]
+    public DateTime ExpiryTime { get; set; }
 
-        /// <summary>
-        /// Id of the <see cref="MoryxUser"/> this refresh token is linked to.
-        /// </summary>
-        [Required]
-        public string UserId { get; set; }
+    /// <summary>
+    /// Id of the <see cref="MoryxUser"/> this refresh token is linked to.
+    /// </summary>
+    [Required]
+    public string UserId { get; set; }
 
-        /// <summary>
-        /// The <see cref="MoryxUser"/> this refresh token is linked to.
-        /// </summary>
-        [ForeignKey(nameof(UserId))]
-        public MoryxUser User { get; set; }
-    }
+    /// <summary>
+    /// The <see cref="MoryxUser"/> this refresh token is linked to.
+    /// </summary>
+    [ForeignKey(nameof(UserId))]
+    public MoryxUser User { get; set; }
 }
-

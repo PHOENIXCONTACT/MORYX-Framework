@@ -5,60 +5,59 @@ using Moryx.AbstractionLayer.Activities;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.ControlSystem.Cells;
 
-namespace Moryx.ControlSystem.ProcessEngine.Processes
+namespace Moryx.ControlSystem.ProcessEngine.Processes;
+
+internal class CellReference : ICell
 {
-    internal class CellReference : ICell
+    public long Id { get; }
+
+    // ReSharper disable UnassignedGetOnlyAutoProperty
+
+    public string Name { get; }
+
+    public string LocalIdentifier { get; }
+
+    public string GlobalIdentifier { get; }
+
+    public ICapabilities Capabilities { get; }
+
+    public CellReference(long id)
     {
-        public long Id { get; }
+        Id = id;
+    }
 
-        // ReSharper disable UnassignedGetOnlyAutoProperty
+    public IEnumerable<Session> ProcessEngineAttached(ProcessEngineContext context)
+    {
+        throw new NotImplementedException();
+    }
 
-        public string Name { get; }
+    public IEnumerable<Session> ProcessEngineDetached()
+    {
+        throw new NotImplementedException();
+    }
 
-        public string LocalIdentifier { get; }
+    public void StartActivity(ActivityStart activityStart)
+    {
+        throw new NotImplementedException();
+    }
 
-        public string GlobalIdentifier { get; }
+    public void ProcessAborting(Activity affectedActivity)
+    {
+        throw new NotImplementedException();
+    }
 
-        public ICapabilities Capabilities { get; }
-
-        public CellReference(long id)
-        {
-            Id = id;
-        }
-
-        public IEnumerable<Session> ProcessEngineAttached(ProcessEngineContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Session> ProcessEngineDetached()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void StartActivity(ActivityStart activityStart)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ProcessAborting(Activity affectedActivity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SequenceCompleted(SequenceCompleted completed)
-        {
-            throw new NotImplementedException();
-        }
+    public void SequenceCompleted(SequenceCompleted completed)
+    {
+        throw new NotImplementedException();
+    }
 
 #pragma warning disable 67
-        public event EventHandler<ReadyToWork> ReadyToWork;
+    public event EventHandler<ReadyToWork> ReadyToWork;
 
-        public event EventHandler<NotReadyToWork> NotReadyToWork;
+    public event EventHandler<NotReadyToWork> NotReadyToWork;
 
-        public event EventHandler<ActivityCompleted> ActivityCompleted;
+    public event EventHandler<ActivityCompleted> ActivityCompleted;
 
-        public event EventHandler<ICapabilities> CapabilitiesChanged;
+    public event EventHandler<ICapabilities> CapabilitiesChanged;
 #pragma warning restore 67
-    }
 }

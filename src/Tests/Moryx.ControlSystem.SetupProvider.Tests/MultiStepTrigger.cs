@@ -6,27 +6,25 @@ using Moryx.ControlSystem.Setups;
 using Moryx.Workplans;
 using System.Collections.Generic;
 
-namespace Moryx.ControlSystem.SetupProvider.Tests
+namespace Moryx.ControlSystem.SetupProvider.Tests;
+
+internal class MultiStepTrigger : TestTriggerBase
 {
-    internal class MultiStepTrigger : TestTriggerBase
+    public override SetupExecution Execution => SetupExecution.BeforeProduction;
+
+    public override SetupEvaluation Evaluate(IProductRecipe recipe)
     {
-        public override SetupExecution Execution => SetupExecution.BeforeProduction;
+        RequiredWasCalled = true;
 
-        public override SetupEvaluation Evaluate(IProductRecipe recipe)
+        return SetupEvaluation.Provide(new TestSetupCapabilities
         {
-            RequiredWasCalled = true;
+            SetupState = ((TestRecipe)recipe).SetupState
+        });
+    }
 
-            return SetupEvaluation.Provide(new TestSetupCapabilities
-            {
-                SetupState = ((TestRecipe)recipe).SetupState
-            });
-        }
-
-        public override IReadOnlyList<IWorkplanStep> CreateSteps(IProductRecipe recipe)
-        {
-            CreateStepCalled = true;
-            return [new TestSetupTask { Name = "P1" }, new TestSetupTask { Name = "P2" }];
-        }
+    public override IReadOnlyList<IWorkplanStep> CreateSteps(IProductRecipe recipe)
+    {
+        CreateStepCalled = true;
+        return [new TestSetupTask { Name = "P1" }, new TestSetupTask { Name = "P2" }];
     }
 }
-

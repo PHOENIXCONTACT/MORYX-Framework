@@ -8,105 +8,104 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace Moryx.Notifications.Publisher.Model.Migrations.Npgsql
+namespace Moryx.Notifications.Publisher.Model.Migrations.Npgsql;
+
+[DbContext(typeof(NpgsqlNotificationsContext))]
+partial class NotificationsContextModelSnapshot : ModelSnapshot
 {
-    [DbContext(typeof(NpgsqlNotificationsContext))]
-    partial class NotificationsContextModelSnapshot : ModelSnapshot
+    protected override void BuildModel(ModelBuilder modelBuilder)
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "8.0.21")
-                .HasAnnotation("Proxies:ChangeTracking", false)
-                .HasAnnotation("Proxies:CheckEquality", false)
-                .HasAnnotation("Proxies:LazyLoading", true)
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+        modelBuilder
+            .HasDefaultSchema("public")
+            .HasAnnotation("ProductVersion", "8.0.21")
+            .HasAnnotation("Proxies:ChangeTracking", false)
+            .HasAnnotation("Proxies:CheckEquality", false)
+            .HasAnnotation("Proxies:LazyLoading", true)
+            .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+        NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Moryx.Notifications.Model.NotificationEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Moryx.Notifications.Model.NotificationEntity", b =>
+        {
+            b.Property<long>("Id")
+                .ValueGeneratedOnAdd()
+                .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime?>("Acknowledged")
-                        .HasColumnType("timestamp with time zone");
+            b.Property<DateTime?>("Acknowledged")
+                .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+            b.Property<DateTime>("Created")
+                .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("ExtensionData")
-                        .HasColumnType("text");
+            b.Property<string>("ExtensionData")
+                .HasColumnType("text");
 
-                    b.Property<Guid>("Identifier")
-                        .HasColumnType("uuid");
+            b.Property<Guid>("Identifier")
+                .HasColumnType("uuid");
 
-                    b.Property<string>("Message")
-                        .HasColumnType("text");
+            b.Property<string>("Message")
+                .HasColumnType("text");
 
-                    b.Property<string>("Sender")
-                        .HasColumnType("text");
+            b.Property<string>("Sender")
+                .HasColumnType("text");
 
-                    b.Property<string>("Source")
-                        .HasColumnType("text");
+            b.Property<string>("Source")
+                .HasColumnType("text");
 
-                    b.Property<string>("Title")
-                        .HasColumnType("text");
+            b.Property<string>("Title")
+                .HasColumnType("text");
 
-                    b.Property<long>("TypeId")
-                        .HasColumnType("bigint");
+            b.Property<long>("TypeId")
+                .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+            b.HasKey("Id");
 
-                    b.HasIndex("TypeId");
+            b.HasIndex("TypeId");
 
-                    b.ToTable("Notifications", "public");
-                });
+            b.ToTable("Notifications", "public");
+        });
 
-            modelBuilder.Entity("Moryx.Notifications.Model.NotificationTypeEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+        modelBuilder.Entity("Moryx.Notifications.Model.NotificationTypeEntity", b =>
+        {
+            b.Property<long>("Id")
+                .ValueGeneratedOnAdd()
+                .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("ExtensionData")
-                        .HasColumnType("text");
+            b.Property<string>("ExtensionData")
+                .HasColumnType("text");
 
-                    b.Property<string>("Identifier")
-                        .HasColumnType("text");
+            b.Property<string>("Identifier")
+                .HasColumnType("text");
 
-                    b.Property<bool>("IsDisabled")
-                        .HasColumnType("boolean");
+            b.Property<bool>("IsDisabled")
+                .HasColumnType("boolean");
 
-                    b.Property<int>("Severity")
-                        .HasColumnType("integer");
+            b.Property<int>("Severity")
+                .HasColumnType("integer");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
+            b.Property<string>("Type")
+                .HasColumnType("text");
 
-                    b.HasKey("Id");
+            b.HasKey("Id");
 
-                    b.ToTable("NotificationTypes", "public");
-                });
+            b.ToTable("NotificationTypes", "public");
+        });
 
-            modelBuilder.Entity("Moryx.Notifications.Model.NotificationEntity", b =>
-                {
-                    b.HasOne("Moryx.Notifications.Model.NotificationTypeEntity", "Type")
-                        .WithMany()
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+        modelBuilder.Entity("Moryx.Notifications.Model.NotificationEntity", b =>
+        {
+            b.HasOne("Moryx.Notifications.Model.NotificationTypeEntity", "Type")
+                .WithMany()
+                .HasForeignKey("TypeId")
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
 
-                    b.Navigation("Type");
-                });
+            b.Navigation("Type");
+        });
 #pragma warning restore 612, 618
-        }
     }
 }

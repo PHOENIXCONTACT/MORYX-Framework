@@ -3,30 +3,29 @@
 
 using Moryx.AbstractionLayer.Recipes;
 
-namespace Moryx.Orders
+namespace Moryx.Orders;
+
+/// <summary>
+/// Context to encapsulate what should be dispatched
+/// </summary>
+public class DispatchContext
 {
     /// <summary>
-    /// Context to encapsulate what should be dispatched
+    /// Default constructor with the needed information for the dispatching
     /// </summary>
-    public class DispatchContext
+    public DispatchContext(ProductionRecipe recipe, uint amount)
     {
-        /// <summary>
-        /// Default constructor with the needed information for the dispatching
-        /// </summary>
-        public DispatchContext(ProductionRecipe recipe, uint amount)
-        {
-            Recipe = recipe;
-            Amount = amount;
-        }
-
-        /// <summary>
-        /// Recipe which should be used for the dispatching
-        /// </summary>
-        public ProductionRecipe Recipe { get; }
-
-        /// <summary>
-        /// The amount which should be dispatched
-        /// </summary>
-        public uint Amount { get; }
+        Recipe = recipe;
+        Amount = amount;
     }
+
+    /// <summary>
+    /// Recipe which should be used for the dispatching
+    /// </summary>
+    public ProductionRecipe Recipe { get; }
+
+    /// <summary>
+    /// The amount which should be dispatched
+    /// </summary>
+    public uint Amount { get; }
 }

@@ -3,18 +3,16 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.FactoryMonitor.Endpoints.Models
+namespace Moryx.FactoryMonitor.Endpoints.Models;
+
+/// <summary>
+/// Reference model used in the ActivityChangedModel
+/// </summary>
+public class OrderReferenceModel
 {
-    /// <summary>
-    /// Reference model used in the ActivityChangedModel
-    /// </summary>
-    public class OrderReferenceModel
-    {
-        [DataMember]
-        public string Order { get; set; }
+    [DataMember]
+    public string Order { get; set; }
 
-        [DataMember]
-        public string Operation { get; set; }
-    }
+    [DataMember]
+    public string Operation { get; set; }
 }
-

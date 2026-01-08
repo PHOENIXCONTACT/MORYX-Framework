@@ -3,18 +3,17 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace Moryx.TestModule.Kestrel
-{
-    [ApiController]
-    public class TestController : ControllerBase
-    {
-        [HttpGet("foo/{value}")]
-        [Produces("application/json")]
-        public Foo GetFoo(int value) => new() { Value = value };
-    }
+namespace Moryx.TestModule.Kestrel;
 
-    public class Foo
-    {
-        public int Value { get; set; }
-    }
+[ApiController]
+public class TestController : ControllerBase
+{
+    [HttpGet("foo/{value}")]
+    [Produces("application/json")]
+    public Foo GetFoo(int value) => new() { Value = value };
+}
+
+public class Foo
+{
+    public int Value { get; set; }
 }

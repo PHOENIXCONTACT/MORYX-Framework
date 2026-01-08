@@ -3,17 +3,16 @@
 
 using Moryx.Container;
 
-namespace Moryx.Products.Management
+namespace Moryx.Products.Management;
+
+/// <summary>
+/// Mapper for columns of type <see cref="double"/>
+/// </summary>
+[FloatStrategyConfiguration]
+[Component(LifeCycle.Transient, typeof(IPropertyMapper), Name = nameof(FloatColumnMapper))]
+internal class FloatColumnMapper : ColumnMapper<double>
 {
-    /// <summary>
-    /// Mapper for columns of type <see cref="double"/>
-    /// </summary>
-    [FloatStrategyConfiguration]
-    [Component(LifeCycle.Transient, typeof(IPropertyMapper), Name = nameof(FloatColumnMapper))]
-    internal class FloatColumnMapper : ColumnMapper<double>
+    public FloatColumnMapper(Type targetType) : base(targetType)
     {
-        public FloatColumnMapper(Type targetType) : base(targetType)
-        {
-        }
     }
 }

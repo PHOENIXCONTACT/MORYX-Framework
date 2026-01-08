@@ -4,33 +4,32 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Moryx.Logging;
 
-namespace Moryx.Communication.Sockets.IntegrationTests
+namespace Moryx.Communication.Sockets.IntegrationTests;
+
+public class BinaryConnectionFactoryMock : IBinaryConnectionFactory
 {
-    public class BinaryConnectionFactoryMock : IBinaryConnectionFactory
+    private readonly IModuleLogger _logger;
+
+    public BinaryConnectionFactoryMock()
     {
-        private readonly IModuleLogger _logger;
+        _logger = new ModuleLogger("Dummy", new NullLoggerFactory());
+    }
 
-        public BinaryConnectionFactoryMock()
-        {
-            _logger = new ModuleLogger("Dummy", new NullLoggerFactory());
-        }
+    public IBinaryConnection Create(BinaryConnectionConfig config, IMessageValidator validator)
+    {
+        IBinaryConnection connection = null;
+        if (config is TcpClientConfig)
+            connection = new TcpClientConnection(validator) { Logger = _logger };
 
-        public IBinaryConnection Create(BinaryConnectionConfig config, IMessageValidator validator)
-        {
-            IBinaryConnection connection = null;
-            if (config is TcpClientConfig)
-                connection = new TcpClientConnection(validator) { Logger = _logger };
+        if (config is TcpListenerConfig)
+            connection = new TcpListenerConnection(validator) { Logger = _logger };
 
-            if (config is TcpListenerConfig)
-                connection = new TcpListenerConnection(validator) { Logger = _logger };
+        connection?.Initialize(config);
 
-            connection?.Initialize(config);
+        return connection;
+    }
 
-            return connection;
-        }
-
-        public void Destroy(IBinaryConnection instance)
-        {
-        }
+    public void Destroy(IBinaryConnection instance)
+    {
     }
 }

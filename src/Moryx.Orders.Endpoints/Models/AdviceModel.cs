@@ -3,19 +3,17 @@
 
 using System.Runtime.Serialization;
 
-namespace Moryx.Orders.Endpoints.Models
+namespace Moryx.Orders.Endpoints.Models;
+
+[DataContract]
+public class AdviceModel
 {
-    [DataContract]
-    public class AdviceModel
-    {
-        [DataMember]
-        public string ToteBoxNumber { get; set; }
+    [DataMember]
+    public string ToteBoxNumber { get; set; }
 
-        [DataMember]
-        public int Amount { get; set; }
+    [DataMember]
+    public int Amount { get; set; }
 
-        [DataMember]
-        public long? PartId { get; set; }
-    }
+    [DataMember]
+    public long? PartId { get; set; }
 }
-

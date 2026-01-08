@@ -6,27 +6,26 @@ using Moryx.Workplans;
 using Moryx.Workplans.Transitions;
 using Moryx.Workplans.WorkplanSteps;
 
-namespace Moryx.Tests.Workplans
+namespace Moryx.Tests.Workplans;
+
+public class EmptyParameters
 {
-    public class EmptyParameters
+    public int Hidden { get; set; }
+}
+
+public class EmptyParametersStep : WorkplanStepBase
+{
+    public EmptyParametersStep()
     {
-        public int Hidden { get; set; }
+        Name = "EmptyParameters";
     }
 
-    public class EmptyParametersStep : WorkplanStepBase
+    [EntrySerialize]
+    public EmptyParameters Parameters { get; set; }
+
+    ///
+    protected override TransitionBase Instantiate(IWorkplanContext context)
     {
-        public EmptyParametersStep()
-        {
-            Name = "EmptyParameters";
-        }
-
-        [EntrySerialize]
-        public EmptyParameters Parameters { get; set; }
-
-        ///
-        protected override TransitionBase Instantiate(IWorkplanContext context)
-        {
-            return null;
-        }
+        return null;
     }
 }

@@ -5,34 +5,33 @@ using Moryx.Logging;
 using Moryx.Notifications;
 using Moryx.Orders.Management.Assignment;
 
-namespace Moryx.Orders.Management.Tests
+namespace Moryx.Orders.Management.Tests;
+
+internal class OperationFactoryMock : IOperationFactory
 {
-    internal class OperationFactoryMock : IOperationFactory
+    private readonly IModuleLogger _logger;
+    private readonly IJobHandler _jobHandler;
+    private readonly IOperationAssignment _operationAssignment;
+
+    public OperationFactoryMock(IModuleLogger logger, IJobHandler jobHandler, IOperationAssignment operationAssignment)
     {
-        private readonly IModuleLogger _logger;
-        private readonly IJobHandler _jobHandler;
-        private readonly IOperationAssignment _operationAssignment;
+        _logger = logger;
+        _jobHandler = jobHandler;
+        _operationAssignment = operationAssignment;
+    }
 
-        public OperationFactoryMock(IModuleLogger logger, IJobHandler jobHandler, IOperationAssignment operationAssignment)
+    public IOperationData Create(IOperationSavingContext savingContext)
+    {
+        return new OperationData(savingContext)
         {
-            _logger = logger;
-            _jobHandler = jobHandler;
-            _operationAssignment = operationAssignment;
-        }
+            Logger = _logger,
+            JobHandler = _jobHandler,
+            OperationAssignment = _operationAssignment,
+            CountStrategy = new DoNotReplaceScrapStrategy()
+        };
+    }
 
-        public IOperationData Create(IOperationSavingContext savingContext)
-        {
-            return new OperationData(savingContext)
-            {
-                Logger = _logger,
-                JobHandler = _jobHandler,
-                OperationAssignment = _operationAssignment,
-                CountStrategy = new DoNotReplaceScrapStrategy()
-            };
-        }
-
-        public void Destroy(IOperationData operationData)
-        {
-        }
+    public void Destroy(IOperationData operationData)
+    {
     }
 }

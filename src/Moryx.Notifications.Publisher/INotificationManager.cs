@@ -3,31 +3,30 @@
 
 using Moryx.Modules;
 
-namespace Moryx.Notifications.Publisher
+namespace Moryx.Notifications.Publisher;
+
+/// <summary>
+/// Interface for the notification publisher base component
+/// </summary>
+internal interface INotificationManager : IInitializablePlugin
 {
     /// <summary>
-    /// Interface for the notification publisher base component
+    /// Returns all current notifications
     /// </summary>
-    internal interface INotificationManager : IInitializablePlugin
-    {
-        /// <summary>
-        /// Returns all current notifications
-        /// </summary>
-        Notification[] GetAll();
+    Notification[] GetAll();
 
-        /// <summary>
-        /// Acknowledges an notification with the given identifier
-        /// </summary>
-        void Acknowledge(Guid identifier);
+    /// <summary>
+    /// Acknowledges an notification with the given identifier
+    /// </summary>
+    void Acknowledge(Guid identifier);
 
-        /// <summary>
-        /// Raised if notification was published
-        /// </summary>
-        event EventHandler<Notification> Published;
+    /// <summary>
+    /// Raised if notification was published
+    /// </summary>
+    event EventHandler<Notification> Published;
 
-        /// <summary>
-        /// Raised if notification was acknowledged
-        /// </summary>
-        event EventHandler<Notification> Acknowledged;
-    }
+    /// <summary>
+    /// Raised if notification was acknowledged
+    /// </summary>
+    event EventHandler<Notification> Acknowledged;
 }

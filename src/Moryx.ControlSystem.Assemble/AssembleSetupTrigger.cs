@@ -13,105 +13,103 @@ using Moryx.Modules;
 using Moryx.Tools;
 using Moryx.Workplans;
 
-namespace Moryx.ControlSystem.Assemble
+namespace Moryx.ControlSystem.Assemble;
+
+/// <summary>
+/// Generic setup trigger for <see cref="T:Moryx.Resources.Assemble.AssembleCell" />
+/// </summary>
+[ExpectedConfig(typeof(AssembleSetupTriggerConfig))]
+[Plugin(LifeCycle.Transient, typeof(ISetupTrigger), Name = nameof(AssembleSetupTrigger))]
+public class AssembleSetupTrigger : SetupTriggerBase<AssembleSetupTriggerConfig>
 {
-    /// <summary>
-    /// Generic setup trigger for <see cref="T:Moryx.Resources.Assemble.AssembleCell" />
-    /// </summary>
-    [ExpectedConfig(typeof(AssembleSetupTriggerConfig))]
-    [Plugin(LifeCycle.Transient, typeof(ISetupTrigger), Name = nameof(AssembleSetupTrigger))]
-    public class AssembleSetupTrigger : SetupTriggerBase<AssembleSetupTriggerConfig>
+    private VisualInstructionBinder _instructionBinder;
+
+    private Func<ICapabilities> _capabilitiesConstructor;
+
+    private IBindingResolver _sourceResolver;
+    private IPropertyAccessor<ICapabilities, object> _descriptorAccessor;
+
+    /// <inheritdoc />
+    public override SetupExecution Execution => Config.Execution;
+
+    /// <inheritdoc />
+    public override void Initialize(SetupTriggerConfig config)
     {
-        private VisualInstructionBinder _instructionBinder;
+        base.Initialize(config);
 
-        private Func<ICapabilities> _capabilitiesConstructor;
+        // Validate type and create constructor delegate
+        if (string.IsNullOrWhiteSpace(Config.RequiredCapabilityType))
+            throw new NullReferenceException($"{nameof(AssembleSetupTriggerConfig.RequiredCapabilityType)} is null.");
 
-        private IBindingResolver _sourceResolver;
-        private IPropertyAccessor<ICapabilities, object> _descriptorAccessor;
+        var requiredAssembleCapabilitiesType = ReflectionTool
+            .GetPublicClasses<AssembleCapabilities>(type => type.Name == Config.RequiredCapabilityType)
+            .FirstOrDefault();
 
-        /// <inheritdoc />
-        public override SetupExecution Execution => Config.Execution;
+        if (requiredAssembleCapabilitiesType == null)
+            throw new InvalidConfigException(Config.RequiredCapabilityType, $"{nameof(AssembleSetupTriggerConfig.RequiredCapabilityType)} was not found!");
 
-        /// <inheritdoc />
-        public override void Initialize(SetupTriggerConfig config)
-        {
-            base.Initialize(config);
+        _capabilitiesConstructor = ReflectionTool.ConstructorDelegate<ICapabilities>(requiredAssembleCapabilitiesType); ;
 
-            // Validate type and create constructor delegate
-            if (string.IsNullOrWhiteSpace(Config.RequiredCapabilityType))
-                throw new NullReferenceException($"{nameof(AssembleSetupTriggerConfig.RequiredCapabilityType)} is null.");
+        // Validate property and create accessor
+        if (string.IsNullOrWhiteSpace(Config.ValueSource))
+            throw new NullReferenceException($"{nameof(AssembleSetupTriggerConfig.ValueSource)} is null.");
 
-            var requiredAssembleCapabilitiesType = ReflectionTool
-                .GetPublicClasses<AssembleCapabilities>(type => type.Name == Config.RequiredCapabilityType)
-                .FirstOrDefault();
+        _sourceResolver = RecipeResolverFactory.Create(Config.ValueSource);
 
-            if (requiredAssembleCapabilitiesType == null)
-                throw new InvalidConfigException(Config.RequiredCapabilityType, $"{nameof(AssembleSetupTriggerConfig.RequiredCapabilityType)} was not found!");
+        if (string.IsNullOrWhiteSpace(Config.TargetPropertyName))
+            throw new NullReferenceException($"{nameof(AssembleSetupTriggerConfig.TargetPropertyName)} is null.");
 
-            _capabilitiesConstructor = ReflectionTool.ConstructorDelegate<ICapabilities>(requiredAssembleCapabilitiesType); ;
+        var targetProperty = requiredAssembleCapabilitiesType.GetProperty(Config.TargetPropertyName);
+        if (targetProperty == null)
+            throw new ArgumentException($"{nameof(AssembleSetupTriggerConfig.TargetPropertyName)} is not available in {Config.RequiredCapabilityType}");
 
-            // Validate property and create accessor
-            if (string.IsNullOrWhiteSpace(Config.ValueSource))
-                throw new NullReferenceException($"{nameof(AssembleSetupTriggerConfig.ValueSource)} is null.");
+        // Make custom descriptor instance
+        _descriptorAccessor = ReflectionTool.PropertyAccessor<ICapabilities>(targetProperty);
 
-            _sourceResolver = RecipeResolverFactory.Create(Config.ValueSource);
-
-            if (string.IsNullOrWhiteSpace(Config.TargetPropertyName))
-                throw new NullReferenceException($"{nameof(AssembleSetupTriggerConfig.TargetPropertyName)} is null.");
-
-            var targetProperty = requiredAssembleCapabilitiesType.GetProperty(Config.TargetPropertyName);
-            if (targetProperty == null)
-                throw new ArgumentException($"{nameof(AssembleSetupTriggerConfig.TargetPropertyName)} is not available in {Config.RequiredCapabilityType}");
-
-            // Make custom descriptor instance
-            _descriptorAccessor = ReflectionTool.PropertyAccessor<ICapabilities>(targetProperty);
-
-            // Only create resolve if config was valid
-            if (!string.IsNullOrEmpty(Config.Instruction))
-                _instructionBinder = new VisualInstructionBinder([new VisualInstruction
-                {
-                    Type = InstructionContentType.Text,
-                    Content = Config.Instruction
-                }], RecipeResolverFactory);
-        }
-
-        /// <inheritdoc />
-        public override SetupEvaluation Evaluate(IProductRecipe recipe)
-        {
-            var currentCapabilities = _capabilitiesConstructor();
-            var targetCapabilities = _capabilitiesConstructor();
-
-            var value = _sourceResolver.Resolve(recipe);
-            _descriptorAccessor.WriteProperty(targetCapabilities, value);
-
-            return new SetupEvaluation.Change(Config.SetupClassification, currentCapabilities, targetCapabilities);
-        }
-
-        /// <inheritdoc />
-        public override IReadOnlyList<IWorkplanStep> CreateSteps(IProductRecipe recipe)
-        {
-            var requiredCapabilities = _capabilitiesConstructor();
-            var targetCapabilities = _capabilitiesConstructor();
-
-            var value = _sourceResolver.Resolve(recipe);
-            _descriptorAccessor.WriteProperty(targetCapabilities, value);
-
-            var setupTask = new AssembleSetupTask
+        // Only create resolve if config was valid
+        if (!string.IsNullOrEmpty(Config.Instruction))
+            _instructionBinder = new VisualInstructionBinder([new VisualInstruction
             {
-                Parameters = new AssembleDescriptorSetupParameters
-                {
-                    RequiredCapabilities = requiredCapabilities,
-                    TargetCapabilities = targetCapabilities,
+                Type = InstructionContentType.Text,
+                Content = Config.Instruction
+            }], RecipeResolverFactory);
+    }
 
-                    PropertyName = Config.TargetPropertyName,
-                    Value = value,
+    /// <inheritdoc />
+    public override SetupEvaluation Evaluate(IProductRecipe recipe)
+    {
+        var currentCapabilities = _capabilitiesConstructor();
+        var targetCapabilities = _capabilitiesConstructor();
 
-                    Instructions = _instructionBinder.ResolveInstructions(recipe)
-                }
-            };
+        var value = _sourceResolver.Resolve(recipe);
+        _descriptorAccessor.WriteProperty(targetCapabilities, value);
 
-            return [setupTask];
-        }
+        return new SetupEvaluation.Change(Config.SetupClassification, currentCapabilities, targetCapabilities);
+    }
+
+    /// <inheritdoc />
+    public override IReadOnlyList<IWorkplanStep> CreateSteps(IProductRecipe recipe)
+    {
+        var requiredCapabilities = _capabilitiesConstructor();
+        var targetCapabilities = _capabilitiesConstructor();
+
+        var value = _sourceResolver.Resolve(recipe);
+        _descriptorAccessor.WriteProperty(targetCapabilities, value);
+
+        var setupTask = new AssembleSetupTask
+        {
+            Parameters = new AssembleDescriptorSetupParameters
+            {
+                RequiredCapabilities = requiredCapabilities,
+                TargetCapabilities = targetCapabilities,
+
+                PropertyName = Config.TargetPropertyName,
+                Value = value,
+
+                Instructions = _instructionBinder.ResolveInstructions(recipe)
+            }
+        };
+
+        return [setupTask];
     }
 }
-

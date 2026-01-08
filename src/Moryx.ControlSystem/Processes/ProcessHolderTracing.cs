@@ -4,20 +4,19 @@
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Activities;
 
-namespace Moryx.ControlSystem.Processes
+namespace Moryx.ControlSystem.Processes;
+
+/// <summary>
+/// Tracing for wpc based activities
+/// </summary>
+[DataContract]
+public class ProcessHolderTracing : Tracing
 {
     /// <summary>
-    /// Tracing for wpc based activities
+    /// Id of the process holder where the activity was executed
     /// </summary>
-    [DataContract]
-    public class ProcessHolderTracing : Tracing
-    {
-        /// <summary>
-        /// Id of the process holder where the activity was executed
-        /// </summary>
-        public long HolderId { get; set; }
+    public long HolderId { get; set; }
 
-        ///
-        public virtual double Relative => Progress;
-    }
+    ///
+    public virtual double Relative => Progress;
 }

@@ -4,21 +4,19 @@
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Setups;
 
-namespace Moryx.ControlSystem.SetupProvider.Tests
+namespace Moryx.ControlSystem.SetupProvider.Tests;
+
+internal class TestTriggerPrepare : TestTriggerBase
 {
-    internal class TestTriggerPrepare : TestTriggerBase
+    public override SetupExecution Execution => SetupExecution.BeforeProduction;
+
+    public override SetupEvaluation Evaluate(IProductRecipe recipe)
     {
-        public override SetupExecution Execution => SetupExecution.BeforeProduction;
+        RequiredWasCalled = true;
 
-        public override SetupEvaluation Evaluate(IProductRecipe recipe)
+        return SetupEvaluation.Provide(new TestSetupCapabilities
         {
-            RequiredWasCalled = true;
-
-            return SetupEvaluation.Provide(new TestSetupCapabilities
-            {
-                SetupState = ((TestRecipe)recipe).SetupState
-            });
-        }
+            SetupState = ((TestRecipe)recipe).SetupState
+        });
     }
 }
-

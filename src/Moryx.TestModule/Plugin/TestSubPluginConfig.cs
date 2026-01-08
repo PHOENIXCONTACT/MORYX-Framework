@@ -4,11 +4,10 @@
 using System.Runtime.Serialization;
 using Moryx.Modules;
 
-namespace Moryx.TestModule
+namespace Moryx.TestModule;
+
+[DataContract]
+public class TestSubPluginConfig : IPluginConfig
 {
-    [DataContract]
-    public class TestSubPluginConfig : IPluginConfig
-    {
-        public virtual string PluginName { get { return TestSubPlugin.ComponentName; } }
-    }
+    public virtual string PluginName { get { return TestSubPlugin.ComponentName; } }
 }

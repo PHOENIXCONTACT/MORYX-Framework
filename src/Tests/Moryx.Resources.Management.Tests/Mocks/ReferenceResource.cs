@@ -6,114 +6,113 @@ using System.Collections.Generic;
 using System.Linq;
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.Tests
+namespace Moryx.Resources.Management.Tests;
+
+public interface IReferenceResource : IResource
 {
-    public interface IReferenceResource : IResource
+    ISimpleResource Reference { get; set; }
+
+    DerivedResource Reference2 { get; set; }
+
+    IEnumerable<ISimpleResource> MoreReferences { get; }
+
+    IEnumerable<ISimpleResource> EvenMoreReferences { get; set; }
+
+    INonPublicResource NonPublic { get; }
+
+    ISimpleResource GetReference();
+
+    IReadOnlyList<ISimpleResource> GetReferences();
+
+    void SetReference(ISimpleResource reference);
+
+    void SetMany(IReadOnlyList<ISimpleResource> references);
+
+    event EventHandler<ISimpleResource> ReferenceChanged;
+
+    event EventHandler<ISimpleResource[]> SomeChanged;
+}
+
+public class RequiredReferenceResource : Resource
+{
+    [ResourceReference(ResourceRelationType.Extension)]
+    public SimpleResource NotRequired { get; set; }
+
+    [ResourceReference(ResourceRelationType.CurrentExchangeablePart, IsRequired = true)]
+    public SimpleResource Reference { get; set; }
+
+    [ResourceReference(ResourceRelationType.TransportSystem)]
+    public IReferences<SimpleResource> NotRequiredReferences { get; set; }
+
+    [ResourceReference(ResourceRelationType.PossibleExchangeablePart, IsRequired = true)]
+    public IReferences<SimpleResource> References { get; set; }
+}
+
+public class ReferenceResource : Resource, IReferenceResource
+{
+    private ISimpleResource _reference;
+
+    [ResourceReference(ResourceRelationType.CurrentExchangeablePart, nameof(Reference))]
+    public ISimpleResource Reference
     {
-        ISimpleResource Reference { get; set; }
-
-        DerivedResource Reference2 { get; set; }
-
-        IEnumerable<ISimpleResource> MoreReferences { get; }
-
-        IEnumerable<ISimpleResource> EvenMoreReferences { get; set; }
-
-        INonPublicResource NonPublic { get; }
-
-        ISimpleResource GetReference();
-
-        IReadOnlyList<ISimpleResource> GetReferences();
-
-        void SetReference(ISimpleResource reference);
-
-        void SetMany(IReadOnlyList<ISimpleResource> references);
-
-        event EventHandler<ISimpleResource> ReferenceChanged;
-
-        event EventHandler<ISimpleResource[]> SomeChanged;
+        get { return _reference; }
+        set
+        {
+            _reference = value;
+            ReferenceChanged?.Invoke(this, value);
+            SomeChanged?.Invoke(this, [value]);
+        }
     }
 
-    public class RequiredReferenceResource : Resource
+    [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
+    public DerivedResource Reference2 { get; set; }
+
+    [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Target, nameof(TargetReference))]
+    public BidirectionalReferenceResource TargetReference { get; set; }
+
+    [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Target, nameof(NewTargetReference))]
+    public BidirectionalReferenceResource NewTargetReference { get; set; }
+
+    [ResourceReference(ResourceRelationType.PossibleExchangeablePart)]
+    public IReferences<ISimpleResource> References { get; set; }
+
+    [ReferenceOverride(nameof(Children), AutoSave = true)]
+    internal IReferences<ISimpleResource> ChildReferences { get; set; }
+
+    IEnumerable<ISimpleResource> IReferenceResource.MoreReferences => References;
+
+    public IEnumerable<ISimpleResource> EvenMoreReferences { get; set; }
+
+    public ISimpleResource GetReference()
     {
-        [ResourceReference(ResourceRelationType.Extension)]
-        public SimpleResource NotRequired { get; set; }
-
-        [ResourceReference(ResourceRelationType.CurrentExchangeablePart, IsRequired = true)]
-        public SimpleResource Reference { get; set; }
-
-        [ResourceReference(ResourceRelationType.TransportSystem)]
-        public IReferences<SimpleResource> NotRequiredReferences { get; set; }
-
-        [ResourceReference(ResourceRelationType.PossibleExchangeablePart, IsRequired = true)]
-        public IReferences<SimpleResource> References { get; set; }
+        return Reference;
     }
 
-    public class ReferenceResource : Resource, IReferenceResource
+    public IReadOnlyList<ISimpleResource> GetReferences()
     {
-        private ISimpleResource _reference;
+        return References.ToArray();
+    }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangeablePart, nameof(Reference))]
-        public ISimpleResource Reference
-        {
-            get { return _reference; }
-            set
-            {
-                _reference = value;
-                ReferenceChanged?.Invoke(this, value);
-                SomeChanged?.Invoke(this, [value]);
-            }
-        }
+    public void SetReference(ISimpleResource reference)
+    {
+        References.Add(reference);
+    }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
-        public DerivedResource Reference2 { get; set; }
-
-        [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Target, nameof(TargetReference))]
-        public BidirectionalReferenceResource TargetReference { get; set; }
-
-        [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Target, nameof(NewTargetReference))]
-        public BidirectionalReferenceResource NewTargetReference { get; set; }
-
-        [ResourceReference(ResourceRelationType.PossibleExchangeablePart)]
-        public IReferences<ISimpleResource> References { get; set; }
-
-        [ReferenceOverride(nameof(Children), AutoSave = true)]
-        internal IReferences<ISimpleResource> ChildReferences { get; set; }
-
-        IEnumerable<ISimpleResource> IReferenceResource.MoreReferences => References;
-
-        public IEnumerable<ISimpleResource> EvenMoreReferences { get; set; }
-
-        public ISimpleResource GetReference()
-        {
-            return Reference;
-        }
-
-        public IReadOnlyList<ISimpleResource> GetReferences()
-        {
-            return References.ToArray();
-        }
-
-        public void SetReference(ISimpleResource reference)
-        {
+    public void SetMany(IReadOnlyList<ISimpleResource> references)
+    {
+        foreach (var reference in references)
             References.Add(reference);
-        }
-
-        public void SetMany(IReadOnlyList<ISimpleResource> references)
-        {
-            foreach (var reference in references)
-                References.Add(reference);
-        }
-
-        public INonPublicResource NonPublic { get; set; }
-
-        public event EventHandler<ISimpleResource> ReferenceChanged;
-
-        public event EventHandler<ISimpleResource[]> SomeChanged;
     }
 
-    public class BidirectionalReferenceResource : Resource
-    {
-        [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Source, nameof(SourceReference))]
-        public ReferenceResource SourceReference { get; set; }
-    }
+    public INonPublicResource NonPublic { get; set; }
+
+    public event EventHandler<ISimpleResource> ReferenceChanged;
+
+    public event EventHandler<ISimpleResource[]> SomeChanged;
+}
+
+public class BidirectionalReferenceResource : Resource
+{
+    [ResourceReference(ResourceRelationType.Extension, ResourceReferenceRole.Source, nameof(SourceReference))]
+    public ReferenceResource SourceReference { get; set; }
 }

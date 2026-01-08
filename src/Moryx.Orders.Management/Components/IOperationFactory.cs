@@ -3,13 +3,12 @@
 
 using Moryx.Container;
 
-namespace Moryx.Orders.Management
-{
-    [PluginFactory]
-    internal interface IOperationFactory
-    {
-        IOperationData Create(IOperationSavingContext savingContext);
+namespace Moryx.Orders.Management;
 
-        void Destroy(IOperationData operationData);
-    }
+[PluginFactory]
+internal interface IOperationFactory
+{
+    IOperationData Create(IOperationSavingContext savingContext);
+
+    void Destroy(IOperationData operationData);
 }

@@ -6,34 +6,33 @@ using Moryx.Tools;
 using Moryx.Model;
 using Moryx.Runtime.Modules;
 
-namespace StartProject.Asp
+namespace StartProject.Asp;
+
+public class Program
 {
-    public class Program
+    public static async Task Main(string[] args)
     {
-        public static async Task Main(string[] args)
-        {
-            AppDomainBuilder.LoadAssemblies();
+        AppDomainBuilder.LoadAssemblies();
 
-            var host = Host.CreateDefaultBuilder(args)
-                .ConfigureServices(serviceCollection =>
-                {
-                    serviceCollection.AddMoryxKernel();
-                    serviceCollection.AddMoryxModels();
-                    serviceCollection.AddMoryxModules();
-                })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                }).Build();
+        var host = Host.CreateDefaultBuilder(args)
+            .ConfigureServices(serviceCollection =>
+            {
+                serviceCollection.AddMoryxKernel();
+                serviceCollection.AddMoryxModels();
+                serviceCollection.AddMoryxModules();
+            })
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            }).Build();
 
-            host.Services.UseMoryxConfigurations("Config");
+        host.Services.UseMoryxConfigurations("Config");
 
-            var moduleManager = host.Services.GetRequiredService<IModuleManager>();
-            await moduleManager.StartModulesAsync();
+        var moduleManager = host.Services.GetRequiredService<IModuleManager>();
+        await moduleManager.StartModulesAsync();
 
-            await host.RunAsync();
+        await host.RunAsync();
 
-            await moduleManager.StopModulesAsync();
-        }
+        await moduleManager.StopModulesAsync();
     }
 }

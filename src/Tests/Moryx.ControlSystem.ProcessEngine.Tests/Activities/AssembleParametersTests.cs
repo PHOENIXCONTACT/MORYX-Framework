@@ -12,63 +12,62 @@ using NUnit.Framework;
 using Moryx.ControlSystem.Assemble;
 using Moryx.ControlSystem.TestTools.Identity;
 
-namespace Moryx.ControlSystem.ProcessEngine.Tests.Activities
+namespace Moryx.ControlSystem.ProcessEngine.Tests.Activities;
+
+[TestFixture]
+public class AssembleParametersTests
 {
-    [TestFixture]
-    public class AssembleParametersTests
+    [Test]
+    public void ResolveParameterBinding()
     {
-        [Test]
-        public void ResolveParameterBinding()
+        // Arrange
+        var parameters = new AssembleParameters
         {
-            // Arrange
-            var parameters = new AssembleParameters
-            {
-                Instructions =
-                [
-                    new VisualInstruction
-                    {
-                        Content = "The name of this Product was {Product.Name}",
-                        Type = InstructionContentType.Text
-                    }
-                ]
-            };
-
-            // Act
-            IParameters resolved = parameters.Bind(DummyProcess());
-
-            // Assert
-            Assert.That(resolved, Is.Not.Null);
-            Assert.That(resolved, Is.InstanceOf<AssembleParameters>());
-            AssembleParameters resolveAssemble = (AssembleParameters)resolved;
-            Assert.That(resolveAssemble.Instructions.Length, Is.EqualTo(1));
-            Assert.That(resolveAssemble.Instructions[0].Content, Is.EqualTo("The name of this Product was Hugonotte"));
-        }
-
-        private static ProductionProcess DummyProcess()
-        {
-            var product = new DummyProductType
-            {
-                Id = 42,
-                Name = "Hugonotte",
-                Identity = new ProductIdentity("4712", 01),
-            };
-            var process = new ProductionProcess
-            {
-                Id = 42,
-                Recipe = new DummyRecipe
+            Instructions =
+            [
+                new VisualInstruction
                 {
-                    Id = 42,
-                    Name = "TheOneAndOnlyRecipe",
-                    Product = product,
+                    Content = "The name of this Product was {Product.Name}",
+                    Type = InstructionContentType.Text
+                }
+            ]
+        };
 
-                },
-                ProductInstance = product.CreateInstance()
-            };
-            process.ProductInstance.Id = 42;
-            if (process.ProductInstance is IIdentifiableObject identifiableObject)
-                identifiableObject.Identity = new TestNumberIdentity(0, "0816");
+        // Act
+        IParameters resolved = parameters.Bind(DummyProcess());
 
-            return process;
-        }
+        // Assert
+        Assert.That(resolved, Is.Not.Null);
+        Assert.That(resolved, Is.InstanceOf<AssembleParameters>());
+        AssembleParameters resolveAssemble = (AssembleParameters)resolved;
+        Assert.That(resolveAssemble.Instructions.Length, Is.EqualTo(1));
+        Assert.That(resolveAssemble.Instructions[0].Content, Is.EqualTo("The name of this Product was Hugonotte"));
+    }
+
+    private static ProductionProcess DummyProcess()
+    {
+        var product = new DummyProductType
+        {
+            Id = 42,
+            Name = "Hugonotte",
+            Identity = new ProductIdentity("4712", 01),
+        };
+        var process = new ProductionProcess
+        {
+            Id = 42,
+            Recipe = new DummyRecipe
+            {
+                Id = 42,
+                Name = "TheOneAndOnlyRecipe",
+                Product = product,
+
+            },
+            ProductInstance = product.CreateInstance()
+        };
+        process.ProductInstance.Id = 42;
+        if (process.ProductInstance is IIdentifiableObject identifiableObject)
+            identifiableObject.Identity = new TestNumberIdentity(0, "0816");
+
+        return process;
     }
 }

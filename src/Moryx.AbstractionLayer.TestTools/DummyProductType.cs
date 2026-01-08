@@ -3,64 +3,63 @@
 
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.AbstractionLayer.TestTools
+namespace Moryx.AbstractionLayer.TestTools;
+
+/// <summary>
+/// Dummy implementation of a <see cref="ProductType"/>
+/// </summary>
+public class DummyProductType : ProductType
 {
-    /// <summary>
-    /// Dummy implementation of a <see cref="ProductType"/>
-    /// </summary>
-    public class DummyProductType : ProductType
+    /// <inheritdoc />
+    protected override ProductInstance Instantiate()
     {
-        /// <inheritdoc />
-        protected override ProductInstance Instantiate()
-        {
-            return new DummyProductInstance();
-        }
-        /// <inheritdoc/>
+        return new DummyProductInstance();
+    }
+    /// <inheritdoc/>
 
-        public override bool Equals(object obj)
-        {
-            var toCompareWith = obj as DummyProductType;
-            if (toCompareWith == null)
-                return false;
+    public override bool Equals(object obj)
+    {
+        var toCompareWith = obj as DummyProductType;
+        if (toCompareWith == null)
+            return false;
 
-            return toCompareWith.Id == Id && toCompareWith.Name == Name && toCompareWith.State == State
-                && ((toCompareWith.Identity is null && Identity is null) || toCompareWith.Identity.Equals(Identity));
-        }
+        return toCompareWith.Id == Id && toCompareWith.Name == Name && toCompareWith.State == State
+               && ((toCompareWith.Identity is null && Identity is null) || toCompareWith.Identity.Equals(Identity));
+    }
+}
+
+/// <summary>
+/// Dummy implementation of a <see cref="ProductType"/> with Product Parts
+/// </summary>
+public class DummyProductTypeWithParts : DummyProductType
+{
+    /// <inheritdoc />
+    protected override ProductInstance Instantiate()
+    {
+        return new DummyProductInstance();
     }
 
     /// <summary>
-    /// Dummy implementation of a <see cref="ProductType"/> with Product Parts
+    /// Dummy ProductPartLink
     /// </summary>
-    public class DummyProductTypeWithParts : DummyProductType
+    public DummyProductPartLink ProductPartLink { get; set; }
+
+    /// <summary>
+    /// Dummy ProductPartLink enumerable
+    /// </summary>
+    public IEnumerable<DummyProductPartLink> ProductPartLinkEnumerable { get; set; }
+
+    /// <inheritdoc/>
+    public override bool Equals(object obj)
     {
-        /// <inheritdoc />
-        protected override ProductInstance Instantiate()
-        {
-            return new DummyProductInstance();
-        }
+        var toCompareWith = obj as DummyProductTypeWithParts;
+        if (toCompareWith == null)
+            return false;
 
-        /// <summary>
-        /// Dummy ProductPartLink
-        /// </summary>
-        public DummyProductPartLink ProductPartLink { get; set; }
-
-        /// <summary>
-        /// Dummy ProductPartLink enumerable
-        /// </summary>
-        public IEnumerable<DummyProductPartLink> ProductPartLinkEnumerable { get; set; }
-
-        /// <inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            var toCompareWith = obj as DummyProductTypeWithParts;
-            if (toCompareWith == null)
-                return false;
-
-            return base.Equals(toCompareWith) &&
-                ((toCompareWith.ProductPartLink is null && ProductPartLink is null) ||
+        return base.Equals(toCompareWith) &&
+               ((toCompareWith.ProductPartLink is null && ProductPartLink is null) ||
                 toCompareWith.ProductPartLink.Equals(ProductPartLink))
-                && ((toCompareWith.ProductPartLinkEnumerable is null && ProductPartLinkEnumerable is null) ||
-                Enumerable.SequenceEqual<DummyProductPartLink>(toCompareWith.ProductPartLinkEnumerable, ProductPartLinkEnumerable));
-        }
+               && ((toCompareWith.ProductPartLinkEnumerable is null && ProductPartLinkEnumerable is null) ||
+                   Enumerable.SequenceEqual<DummyProductPartLink>(toCompareWith.ProductPartLinkEnumerable, ProductPartLinkEnumerable));
     }
 }

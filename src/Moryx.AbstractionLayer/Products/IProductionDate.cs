@@ -1,16 +1,15 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Products
+namespace Moryx.AbstractionLayer.Products;
+
+/// <summary>
+/// Interface for product instances with production date
+/// </summary>
+public interface IProductionDate
 {
     /// <summary>
-    /// Interface for product instances with production date
+    /// Date of production
     /// </summary>
-    public interface IProductionDate
-    {
-        /// <summary>
-        /// Date of production
-        /// </summary>
-        DateTime ProductionDate { get; set; }
-    }
+    DateTime ProductionDate { get; set; }
 }

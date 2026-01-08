@@ -18,430 +18,429 @@ using Moryx.Tools;
 using Newtonsoft.Json;
 using ProcessContext = Moryx.ControlSystem.ProcessEngine.Model.ProcessContext;
 
-namespace Moryx.ControlSystem.ProcessEngine.Processes
+namespace Moryx.ControlSystem.ProcessEngine.Processes;
+
+/// <summary>
+/// Storage to save activities and processes to the database
+/// </summary>
+[Component(LifeCycle.Singleton, typeof(IProcessStorage))]
+internal class ProcessStorage : IProcessStorage, ILoggingComponent
 {
+    private TracingWrapper[] _tracingWrappers;
+
     /// <summary>
-    /// Storage to save activities and processes to the database
+    /// Product management to restore product instance
     /// </summary>
-    [Component(LifeCycle.Singleton, typeof(IProcessStorage))]
-    internal class ProcessStorage : IProcessStorage, ILoggingComponent
+    public IProductManagement ProductManagement { get; set; }
+
+    /// <summary>
+    /// Injected logger
+    /// </summary>
+    public IModuleLogger Logger { get; set; }
+
+    /// <summary>
+    /// Injected factory MUST only be used for the tracing type cache
+    /// </summary>
+    public IUnitOfWorkFactory<ProcessContext> UnitOfWorkFactory { get; set; }
+
+    /// <inheritdoc />
+    public void Start()
     {
-        private TracingWrapper[] _tracingWrappers;
+        _tracingWrappers = ReflectionTool.GetPublicClasses<Tracing>().Select(t => new TracingWrapper(t)).ToArray();
 
-        /// <summary>
-        /// Product management to restore product instance
-        /// </summary>
-        public IProductManagement ProductManagement { get; set; }
+        // Try to map each of the types to a database entity
+        using var uow = UnitOfWorkFactory.Create();
+        var typeRepo = uow.GetRepository<ITracingTypeRepository>();
 
-        /// <summary>
-        /// Injected logger
-        /// </summary>
-        public IModuleLogger Logger { get; set; }
-
-        /// <summary>
-        /// Injected factory MUST only be used for the tracing type cache
-        /// </summary>
-        public IUnitOfWorkFactory<ProcessContext> UnitOfWorkFactory { get; set; }
-
-        /// <inheritdoc />
-        public void Start()
+        // Try to map each type constructor to an entity
+        var typeEntities = typeRepo.GetAll();
+        foreach (var tracingWrapper in _tracingWrappers)
         {
-            _tracingWrappers = ReflectionTool.GetPublicClasses<Tracing>().Select(t => new TracingWrapper(t)).ToArray();
-
-            // Try to map each of the types to a database entity
-            using var uow = UnitOfWorkFactory.Create();
-            var typeRepo = uow.GetRepository<ITracingTypeRepository>();
-
-            // Try to map each type constructor to an entity
-            var typeEntities = typeRepo.GetAll();
-            foreach (var tracingWrapper in _tracingWrappers)
+            var tracingType = tracingWrapper.Type;
+            var isEntityExisting = typeEntities.Any(entity =>
             {
-                var tracingType = tracingWrapper.Type;
-                var isEntityExisting = typeEntities.Any(entity =>
-                {
-                    // Check if entity and type represent the same tracing
-                    if (entity.NameSpace != tracingType.Namespace || entity.Classname != tracingType.Name)
-                        return false;
+                // Check if entity and type represent the same tracing
+                if (entity.NameSpace != tracingType.Namespace || entity.Classname != tracingType.Name)
+                    return false;
 
-                    tracingWrapper.Id = entity.Id;
-                    return true;
-                });
+                tracingWrapper.Id = entity.Id;
+                return true;
+            });
 
-                if (isEntityExisting)
-                    continue;
+            if (isEntityExisting)
+                continue;
 
-                var typeEntity = typeRepo.Create(tracingType.Assembly.GetName().Name, tracingType.Namespace, tracingType.Name);
-                uow.LinkEntityToBusinessObject(tracingWrapper, typeEntity);
-            }
-
-            // Save newly created tracing types
-            uow.SaveChanges();
+            var typeEntity = typeRepo.Create(tracingType.Assembly.GetName().Name, tracingType.Namespace, tracingType.Name);
+            uow.LinkEntityToBusinessObject(tracingWrapper, typeEntity);
         }
 
-        /// <inheritdoc />
-        public void Stop()
-        {
-            // Method is not called
-        }
+        // Save newly created tracing types
+        uow.SaveChanges();
+    }
 
-        /// <inheritdoc />
-        public IReadOnlyList<ProcessData> GetRunningProcesses(IUnitOfWork uow, IJobData job)
-        {
-            var procRepo = uow.GetRepository<IProcessEntityRepository>();
+    /// <inheritdoc />
+    public void Stop()
+    {
+        // Method is not called
+    }
 
-            var dbProcesses = procRepo.Linq.Where(p => p.State <= (int)ProcessState.Interrupted && p.JobId == job.Id)
-                .Select(process => new
-                {
-                    process.Id,
-                    process.Rework,
-                    process.ReferenceId,
-                    MaxIndex = process.Activities.Select(a => a.Id).DefaultIfEmpty().Max()
-                }).ToList();
+    /// <inheritdoc />
+    public IReadOnlyList<ProcessData> GetRunningProcesses(IUnitOfWork uow, IJobData job)
+    {
+        var procRepo = uow.GetRepository<IProcessEntityRepository>();
 
-            return (from dbProcess in dbProcesses
-                    let process = job.Recipe.CreateProcess()
-                    select new ProcessData(process)
-                    {
-                        Id = dbProcess.Id,
-                        Recipe = job.Recipe,
-                        EntityCreated = true,
-                        Rework = dbProcess.Rework,
-                        ReferenceId = dbProcess.ReferenceId,
-                        ActivityIndex = (int)IdShiftGenerator.ExtractChild(dbProcess.MaxIndex) + 1,
-                    }).ToList();
-        }
-
-        /// <inheritdoc />
-        public void LoadCompletedProcesses(IUnitOfWork uow, IJobData jobData, ICollection<ProcessData> allProcesses)
-        {
-            var recipe = jobData.Recipe;
-
-            var processRepo = uow.GetRepository<IProcessEntityRepository>();
-            var query = processRepo.Linq.Where(p => p.State >= (int)ProcessState.Success && p.JobId == jobData.Id).ToList();
-
-            // Prepare collection that can hold all processes
-            foreach (var processEntity in query)
+        var dbProcesses = procRepo.Linq.Where(p => p.State <= (int)ProcessState.Interrupted && p.JobId == job.Id)
+            .Select(process => new
             {
-                // Create process
-                var process = recipe.CreateProcess();
-                process.Id = processEntity.Id;
-                // Create process data
-                var processData = new ProcessData(process)
-                {
-                    Id = processEntity.Id,
-                    Rework = processEntity.Rework,
-                    State = (ProcessState)processEntity.State,
+                process.Id,
+                process.Rework,
+                process.ReferenceId,
+                MaxIndex = process.Activities.Select(a => a.Id).DefaultIfEmpty().Max()
+            }).ToList();
 
-                    Job = jobData,
-                    Recipe = recipe,
-
-                    ReferenceId = processEntity.ReferenceId
-                };
-
-                // Restore product in production processes
-                if (process is ProductionProcess prodProcess)
-                {
-                    if (processData.ReferenceId > 0) // Only load article if the process already has one!
-                        prodProcess.ProductInstance = ProductManagement.LoadInstanceAsync(processData.ReferenceId).GetAwaiter().GetResult();
-                    else // Otherwise provide a prepared, unsaved instance
-                        prodProcess.ProductInstance = ((IProductRecipe)prodProcess.Recipe).Target.CreateInstance();
-                }
-
-                // Restore activities from workflow
-                var context = new ProcessWorkplanContext(process);
-                var taskMap = recipe.Workplan.Steps
-                    .Select(step => step.CreateInstance(context))
-                    .OfType<ITask>().ToDictionary(task => task.Id, task => task);
-                foreach (var activityData in LoadCompletedActivities(uow, processData, taskMap))
-                    processData.AddActivity(activityData);
-
-                allProcesses.Add(processData);
-            }
-        }
-
-        /// <inheritdoc />
-        public IReadOnlyList<ActivityData> LoadCompletedActivities(IUnitOfWork uow, ProcessData processData, IDictionary<long, ITask> taskMap)
-        {
-            var repo = uow.GetRepository<IActivityEntityRepository>();
-            var dbActivities = repo.GetCompleted(processData.Id).ToList();
-
-            var completedActivities = new List<ActivityData>(dbActivities.Count);
-            foreach (var dbActivity in dbActivities.OrderBy(dbActivity => dbActivity.Started))
+        return (from dbProcess in dbProcesses
+            let process = job.Recipe.CreateProcess()
+            select new ProcessData(process)
             {
-                if (!taskMap.ContainsKey(dbActivity.TaskId))
-                {
-                    Logger.Log(LogLevel.Error, "Failed to restore activity {0} with task id {1}", dbActivity.Id, dbActivity.TaskId);
-                    continue;
-                }
+                Id = dbProcess.Id,
+                Recipe = job.Recipe,
+                EntityCreated = true,
+                Rework = dbProcess.Rework,
+                ReferenceId = dbProcess.ReferenceId,
+                ActivityIndex = (int)IdShiftGenerator.ExtractChild(dbProcess.MaxIndex) + 1,
+            }).ToList();
+    }
 
-                var task = taskMap[dbActivity.TaskId];
+    /// <inheritdoc />
+    public void LoadCompletedProcesses(IUnitOfWork uow, IJobData jobData, ICollection<ProcessData> allProcesses)
+    {
+        var recipe = jobData.Recipe;
 
-                var activity = (Activity)task.CreateActivity(processData.Process);
-                FillActivity(dbActivity, activity);
+        var processRepo = uow.GetRepository<IProcessEntityRepository>();
+        var query = processRepo.Linq.Where(p => p.State >= (int)ProcessState.Success && p.JobId == jobData.Id).ToList();
 
-                // Restore all properties
-                var activityData = new ActivityData(activity)
-                {
-                    Task = task,
-                    EntityCreated = true,
-                    Resource = new CellReference(dbActivity.ResourceId),
-                    State = ActivityState.Completed
-                };
-
-                completedActivities.Add(activityData);
-            }
-
-            return completedActivities;
-        }
-
-        /// <inheritdoc />
-        public void TryReloadRunningActivity(long processId, ActivityData activityData)
+        // Prepare collection that can hold all processes
+        foreach (var processEntity in query)
         {
-            using var uow = UnitOfWorkFactory.Create();
-            var activityRepo = uow.GetRepository<IActivityEntityRepository>();
-            var configured = activityRepo.GetRunning(processId);
-            var match = configured.FirstOrDefault(ae => ae.TaskId == activityData.Task.Id);
-            if (match == null)
-                return;
-
-            activityData.Id = match.Id;
-            activityData.EntityCreated = true;
-            // Reload tracing if it was previously saved
-            if (match.TracingTypeId != null)
+            // Create process
+            var process = recipe.CreateProcess();
+            process.Id = processEntity.Id;
+            // Create process data
+            var processData = new ProcessData(process)
             {
-                // Restore tracing from reloaded activity
-                activityData.Activity.Tracing = LoadTracing(match);
-            }
-        }
+                Id = processEntity.Id,
+                Rework = processEntity.Rework,
+                State = (ProcessState)processEntity.State,
 
-        /// <inheritdoc />
-        public void FillActivities(IUnitOfWork uow, Process process, IDictionary<long, ITask> taskMap)
-        {
-            var repo = uow.GetRepository<IActivityEntityRepository>();
-            var dbActivities = repo.GetCompleted(process.Id).ToList();
+                Job = jobData,
+                Recipe = recipe,
 
-            foreach (var dbActivity in dbActivities.OrderBy(dbActivity => dbActivity.Started))
-            {
-                if (!taskMap.ContainsKey(dbActivity.TaskId))
-                {
-                    Logger.Log(LogLevel.Error, "Failed to restore activity {0} with task id {1}", dbActivity.Id, dbActivity.TaskId);
-                    continue;
-                }
-
-                var task = taskMap[dbActivity.TaskId];
-
-                var activity = (Activity)task.CreateActivity(process);
-                FillActivity(dbActivity, activity);
-            }
-        }
-
-        /// <summary>
-        /// Copy all information from the entity to the activity object
-        /// </summary>
-        private void FillActivity(ActivityEntity source, Activity target)
-        {
-            target.Id = source.Id;
-            target.Tracing = LoadTracing(source);
-            target.Result = new ActivityResult
-            {
-                Numeric = source.Result.Value,
-                Success = source.Success
+                ReferenceId = processEntity.ReferenceId
             };
-        }
 
-        /// <inheritdoc />
-        public Tracing LoadTracing(ActivityEntity activityEntity)
-        {
-            // Fetch type from cache and create instance
-            var tracingType = _tracingWrappers.First(tt => tt.Id == activityEntity.TracingTypeId);
-            var tracing = tracingType.Constructor();
-
-            // Base properties
-            tracing.Started = activityEntity.Started;
-            tracing.Completed = activityEntity.Completed;
-            tracing.Text = activityEntity.TracingText;
-            tracing.Progress = activityEntity.Progress;
-            tracing.ResourceId = activityEntity.ResourceId;
-
-            // Process holder tracing
-            if (tracing is ProcessHolderTracing processHolderTracing)
-                processHolderTracing.HolderId = activityEntity.ProcessHolderId ?? -1;
-
-            // Load extended properties from JSON if there is any
-            if (activityEntity.TracingData?.Length > 2)
-                JsonConvert.PopulateObject(activityEntity.TracingData, tracing);
-
-            return tracing;
-        }
-
-        /// <inheritdoc />
-        public void SaveProcess(ProcessData processData)
-        {
-            using var uow = UnitOfWorkFactory.Create();
-            var processRepository = uow.GetRepository<IProcessEntityRepository>();
-
-            // Get or create process
-            ProcessEntity entity;
-            if (processData.EntityCreated)
+            // Restore product in production processes
+            if (process is ProductionProcess prodProcess)
             {
-                entity = processRepository.GetByKey(processData.Id);
+                if (processData.ReferenceId > 0) // Only load article if the process already has one!
+                    prodProcess.ProductInstance = ProductManagement.LoadInstanceAsync(processData.ReferenceId).GetAwaiter().GetResult();
+                else // Otherwise provide a prepared, unsaved instance
+                    prodProcess.ProductInstance = ((IProductRecipe)prodProcess.Recipe).Target.CreateInstance();
             }
-            else
+
+            // Restore activities from workflow
+            var context = new ProcessWorkplanContext(process);
+            var taskMap = recipe.Workplan.Steps
+                .Select(step => step.CreateInstance(context))
+                .OfType<ITask>().ToDictionary(task => task.Id, task => task);
+            foreach (var activityData in LoadCompletedActivities(uow, processData, taskMap))
+                processData.AddActivity(activityData);
+
+            allProcesses.Add(processData);
+        }
+    }
+
+    /// <inheritdoc />
+    public IReadOnlyList<ActivityData> LoadCompletedActivities(IUnitOfWork uow, ProcessData processData, IDictionary<long, ITask> taskMap)
+    {
+        var repo = uow.GetRepository<IActivityEntityRepository>();
+        var dbActivities = repo.GetCompleted(processData.Id).ToList();
+
+        var completedActivities = new List<ActivityData>(dbActivities.Count);
+        foreach (var dbActivity in dbActivities.OrderBy(dbActivity => dbActivity.Started))
+        {
+            if (!taskMap.ContainsKey(dbActivity.TaskId))
             {
-                // Do not use Repository.Create here because id is self-generated.
-                entity = uow.DbContext.Processes.Add(new ProcessEntity
+                Logger.Log(LogLevel.Error, "Failed to restore activity {0} with task id {1}", dbActivity.Id, dbActivity.TaskId);
+                continue;
+            }
+
+            var task = taskMap[dbActivity.TaskId];
+
+            var activity = (Activity)task.CreateActivity(processData.Process);
+            FillActivity(dbActivity, activity);
+
+            // Restore all properties
+            var activityData = new ActivityData(activity)
+            {
+                Task = task,
+                EntityCreated = true,
+                Resource = new CellReference(dbActivity.ResourceId),
+                State = ActivityState.Completed
+            };
+
+            completedActivities.Add(activityData);
+        }
+
+        return completedActivities;
+    }
+
+    /// <inheritdoc />
+    public void TryReloadRunningActivity(long processId, ActivityData activityData)
+    {
+        using var uow = UnitOfWorkFactory.Create();
+        var activityRepo = uow.GetRepository<IActivityEntityRepository>();
+        var configured = activityRepo.GetRunning(processId);
+        var match = configured.FirstOrDefault(ae => ae.TaskId == activityData.Task.Id);
+        if (match == null)
+            return;
+
+        activityData.Id = match.Id;
+        activityData.EntityCreated = true;
+        // Reload tracing if it was previously saved
+        if (match.TracingTypeId != null)
+        {
+            // Restore tracing from reloaded activity
+            activityData.Activity.Tracing = LoadTracing(match);
+        }
+    }
+
+    /// <inheritdoc />
+    public void FillActivities(IUnitOfWork uow, Process process, IDictionary<long, ITask> taskMap)
+    {
+        var repo = uow.GetRepository<IActivityEntityRepository>();
+        var dbActivities = repo.GetCompleted(process.Id).ToList();
+
+        foreach (var dbActivity in dbActivities.OrderBy(dbActivity => dbActivity.Started))
+        {
+            if (!taskMap.ContainsKey(dbActivity.TaskId))
+            {
+                Logger.Log(LogLevel.Error, "Failed to restore activity {0} with task id {1}", dbActivity.Id, dbActivity.TaskId);
+                continue;
+            }
+
+            var task = taskMap[dbActivity.TaskId];
+
+            var activity = (Activity)task.CreateActivity(process);
+            FillActivity(dbActivity, activity);
+        }
+    }
+
+    /// <summary>
+    /// Copy all information from the entity to the activity object
+    /// </summary>
+    private void FillActivity(ActivityEntity source, Activity target)
+    {
+        target.Id = source.Id;
+        target.Tracing = LoadTracing(source);
+        target.Result = new ActivityResult
+        {
+            Numeric = source.Result.Value,
+            Success = source.Success
+        };
+    }
+
+    /// <inheritdoc />
+    public Tracing LoadTracing(ActivityEntity activityEntity)
+    {
+        // Fetch type from cache and create instance
+        var tracingType = _tracingWrappers.First(tt => tt.Id == activityEntity.TracingTypeId);
+        var tracing = tracingType.Constructor();
+
+        // Base properties
+        tracing.Started = activityEntity.Started;
+        tracing.Completed = activityEntity.Completed;
+        tracing.Text = activityEntity.TracingText;
+        tracing.Progress = activityEntity.Progress;
+        tracing.ResourceId = activityEntity.ResourceId;
+
+        // Process holder tracing
+        if (tracing is ProcessHolderTracing processHolderTracing)
+            processHolderTracing.HolderId = activityEntity.ProcessHolderId ?? -1;
+
+        // Load extended properties from JSON if there is any
+        if (activityEntity.TracingData?.Length > 2)
+            JsonConvert.PopulateObject(activityEntity.TracingData, tracing);
+
+        return tracing;
+    }
+
+    /// <inheritdoc />
+    public void SaveProcess(ProcessData processData)
+    {
+        using var uow = UnitOfWorkFactory.Create();
+        var processRepository = uow.GetRepository<IProcessEntityRepository>();
+
+        // Get or create process
+        ProcessEntity entity;
+        if (processData.EntityCreated)
+        {
+            entity = processRepository.GetByKey(processData.Id);
+        }
+        else
+        {
+            // Do not use Repository.Create here because id is self-generated.
+            entity = uow.DbContext.Processes.Add(new ProcessEntity
+            {
+                Id = processData.Id,
+                State = (int)processData.State,
+                JobId = processData.Job.Id,
+            }).Entity;
+        }
+        entity.State = (int)processData.State;
+        entity.Rework = processData.Rework;
+        entity.ReferenceId = processData.ReferenceId;
+
+        // Save unsaved activities
+        // Only save activities that were delivered to a cell AND not saved yet
+        var unsavedActivities = processData.Activities
+            .Where(a => a.State >= ActivityState.Running).ToList();
+        foreach (var activity in unsavedActivities)
+        {
+            SaveActivity(uow, activity);
+        }
+
+        uow.SaveChanges();
+
+        foreach (var activityData in unsavedActivities)
+        {
+            activityData.EntityCreated = true;
+        }
+        processData.EntityCreated = true;
+    }
+
+    /// <inheritdoc />
+    public void AddCompletedActivity(ProcessData processData, ActivityData activityData)
+    {
+        using (var uow = UnitOfWorkFactory.Create())
+        {
+            // If the process does not exist yet, create it
+            if (!processData.EntityCreated)
+            {
+                uow.DbContext.Processes.Add(new ProcessEntity
                 {
                     Id = processData.Id,
-                    State = (int)processData.State,
                     JobId = processData.Job.Id,
-                }).Entity;
-            }
-            entity.State = (int)processData.State;
-            entity.Rework = processData.Rework;
-            entity.ReferenceId = processData.ReferenceId;
-
-            // Save unsaved activities
-            // Only save activities that were delivered to a cell AND not saved yet
-            var unsavedActivities = processData.Activities
-                .Where(a => a.State >= ActivityState.Running).ToList();
-            foreach (var activity in unsavedActivities)
-            {
-                SaveActivity(uow, activity);
+                    State = (int)processData.State,
+                    Rework = processData.Rework,
+                    ReferenceId = processData.ReferenceId,
+                });
             }
 
+            // Save completed activity
+            SaveActivity(uow, activityData);
+
+            // Save
             uow.SaveChanges();
 
-            foreach (var activityData in unsavedActivities)
-            {
-                activityData.EntityCreated = true;
-            }
             processData.EntityCreated = true;
+            activityData.EntityCreated = true;
         }
+    }
 
-        /// <inheritdoc />
-        public void AddCompletedActivity(ProcessData processData, ActivityData activityData)
+    /// <summary>
+    /// Save an activity in the database
+    /// </summary>
+    private void SaveActivity(IUnitOfWork<ProcessContext> uow, ActivityData activityData)
+    {
+        var activity = activityData.Activity;
+        var activityRepo = uow.GetRepository<IActivityEntityRepository>();
+
+        ActivityEntity dbActivity;
+        if (activityData.EntityCreated)
         {
-            using (var uow = UnitOfWorkFactory.Create())
+            dbActivity = activityRepo.GetByKey(activity.Id);
+        }
+        else
+        {
+            // Do not use Repository.Create here because id is self-generated.
+            dbActivity = new()
             {
-                // If the process does not exist yet, create it
-                if (!processData.EntityCreated)
-                {
-                    uow.DbContext.Processes.Add(new ProcessEntity
-                    {
-                        Id = processData.Id,
-                        JobId = processData.Job.Id,
-                        State = (int)processData.State,
-                        Rework = processData.Rework,
-                        ReferenceId = processData.ReferenceId,
-                    });
-                }
-
-                // Save completed activity
-                SaveActivity(uow, activityData);
-
-                // Save
-                uow.SaveChanges();
-
-                processData.EntityCreated = true;
-                activityData.EntityCreated = true;
-            }
+                Id = activity.Id,
+                TaskId = activityData.Task.Id,
+                ResourceId = activityData.Resource.Id,
+                ProcessId = activityData.ProcessData.Id,
+            };
+            uow.DbContext.Activities.Add(dbActivity);
         }
 
-        /// <summary>
-        /// Save an activity in the database
-        /// </summary>
-        private void SaveActivity(IUnitOfWork<ProcessContext> uow, ActivityData activityData)
+        // UpdateList tracing info
+        SaveTracing(activity, dbActivity);
+
+        // Only set the other values for completed activities
+        if (activityData.Result == null)
+            return;
+
+        // Save result
+        var activityResult = activity.Result;
+        dbActivity.Result = activityResult.Numeric;
+        dbActivity.Success = activityResult.Success;
+    }
+
+    /// <summary>
+    /// Save tracing information to activity
+    /// </summary>
+    /// <param name="source">Data source</param>
+    /// <param name="target">Entity target</param>
+    private void SaveTracing(Activity source, ActivityEntity target)
+    {
+        // Fetch tracing type cache and save reference on target
+        var tracingType = _tracingWrappers.First(tt => tt.TypeCheck(source.Tracing));
+        target.TracingTypeId = tracingType.Id;
+
+        // General tracing data
+        target.Started = ConvertToUtc(source.Tracing.Started);
+        target.Completed = ConvertToUtc(source.Tracing.Completed);
+        target.TracingText = source.Tracing.Text;
+        target.Progress = source.Tracing.Progress;
+        target.ResourceId = source.Tracing.ResourceId;
+
+        // Process holder tracing data
+        if (source.Tracing is ProcessHolderTracing processHolderTracing)
+            target.ProcessHolderId = processHolderTracing.HolderId;
+
+        // Extended tracing data
+        var json = JsonConvert.SerializeObject(source.Tracing, JsonSettings.Minimal);
+        if (json.Length > 2)
+            target.TracingData = json;
+    }
+
+    private static DateTime? ConvertToUtc(DateTime? dateTime)
+    {
+        if (dateTime == null) return null;
+
+        var nonNullDateTime = (DateTime)dateTime;
+        if (nonNullDateTime.Kind == DateTimeKind.Utc)
+            return nonNullDateTime;
+        if (nonNullDateTime.Kind == DateTimeKind.Local)
+            return TimeZoneInfo.ConvertTimeToUtc(nonNullDateTime, TimeZoneInfo.Local);
+        throw new ArgumentException($"Provided {nameof(DateTime)} is neither UTC nor Local Time");
+    }
+
+    private class TracingWrapper : IPersistentObject
+    {
+        public long Id { get; set; }
+
+        public Type Type { get; }
+
+        public Func<Tracing> Constructor { get; }
+
+        public Func<object, bool> TypeCheck { get; }
+
+        public TracingWrapper(Type type)
         {
-            var activity = activityData.Activity;
-            var activityRepo = uow.GetRepository<IActivityEntityRepository>();
-
-            ActivityEntity dbActivity;
-            if (activityData.EntityCreated)
-            {
-                dbActivity = activityRepo.GetByKey(activity.Id);
-            }
-            else
-            {
-                // Do not use Repository.Create here because id is self-generated.
-                dbActivity = new()
-                {
-                    Id = activity.Id,
-                    TaskId = activityData.Task.Id,
-                    ResourceId = activityData.Resource.Id,
-                    ProcessId = activityData.ProcessData.Id,
-                };
-                uow.DbContext.Activities.Add(dbActivity);
-            }
-
-            // UpdateList tracing info
-            SaveTracing(activity, dbActivity);
-
-            // Only set the other values for completed activities
-            if (activityData.Result == null)
-                return;
-
-            // Save result
-            var activityResult = activity.Result;
-            dbActivity.Result = activityResult.Numeric;
-            dbActivity.Success = activityResult.Success;
-        }
-
-        /// <summary>
-        /// Save tracing information to activity
-        /// </summary>
-        /// <param name="source">Data source</param>
-        /// <param name="target">Entity target</param>
-        private void SaveTracing(Activity source, ActivityEntity target)
-        {
-            // Fetch tracing type cache and save reference on target
-            var tracingType = _tracingWrappers.First(tt => tt.TypeCheck(source.Tracing));
-            target.TracingTypeId = tracingType.Id;
-
-            // General tracing data
-            target.Started = ConvertToUtc(source.Tracing.Started);
-            target.Completed = ConvertToUtc(source.Tracing.Completed);
-            target.TracingText = source.Tracing.Text;
-            target.Progress = source.Tracing.Progress;
-            target.ResourceId = source.Tracing.ResourceId;
-
-            // Process holder tracing data
-            if (source.Tracing is ProcessHolderTracing processHolderTracing)
-                target.ProcessHolderId = processHolderTracing.HolderId;
-
-            // Extended tracing data
-            var json = JsonConvert.SerializeObject(source.Tracing, JsonSettings.Minimal);
-            if (json.Length > 2)
-                target.TracingData = json;
-        }
-
-        private static DateTime? ConvertToUtc(DateTime? dateTime)
-        {
-            if (dateTime == null) return null;
-
-            var nonNullDateTime = (DateTime)dateTime;
-            if (nonNullDateTime.Kind == DateTimeKind.Utc)
-                return nonNullDateTime;
-            if (nonNullDateTime.Kind == DateTimeKind.Local)
-                return TimeZoneInfo.ConvertTimeToUtc(nonNullDateTime, TimeZoneInfo.Local);
-            throw new ArgumentException($"Provided {nameof(DateTime)} is neither UTC nor Local Time");
-        }
-
-        private class TracingWrapper : IPersistentObject
-        {
-            public long Id { get; set; }
-
-            public Type Type { get; }
-
-            public Func<Tracing> Constructor { get; }
-
-            public Func<object, bool> TypeCheck { get; }
-
-            public TracingWrapper(Type type)
-            {
-                Type = type;
-                Constructor = ReflectionTool.ConstructorDelegate<Tracing>(type);
-                TypeCheck = ReflectionTool.TypePredicate(type, false);
-            }
+            Type = type;
+            Constructor = ReflectionTool.ConstructorDelegate<Tracing>(type);
+            TypeCheck = ReflectionTool.TypePredicate(type, false);
         }
     }
 }

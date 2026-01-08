@@ -3,24 +3,23 @@
 
 using Moryx.Orders.Restrictions;
 
-namespace Moryx.Orders
+namespace Moryx.Orders;
+
+/// <summary>
+/// Event args for a report request of an operation
+/// </summary>
+public class OperationReportRequestEventArgs : OperationActionRequestEventArgs<ReportRestriction>
 {
     /// <summary>
-    /// Event args for a report request of an operation
+    /// Specification of the report
     /// </summary>
-    public class OperationReportRequestEventArgs : OperationActionRequestEventArgs<ReportRestriction>
-    {
-        /// <summary>
-        /// Specification of the report
-        /// </summary>
-        public ReportType ReportType { get; }
+    public ReportType ReportType { get; }
 
-        /// <summary>
-        /// Creates a new instance of <see cref="OperationReportRequestEventArgs"/>
-        /// </summary>
-        public OperationReportRequestEventArgs(Operation operation, ReportType reportType) : base(operation)
-        {
-            ReportType = reportType;
-        }
+    /// <summary>
+    /// Creates a new instance of <see cref="OperationReportRequestEventArgs"/>
+    /// </summary>
+    public OperationReportRequestEventArgs(Operation operation, ReportType reportType) : base(operation)
+    {
+        ReportType = reportType;
     }
 }

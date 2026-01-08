@@ -3,24 +3,23 @@
 
 using Moryx.Container;
 
-namespace Moryx.Communication
+namespace Moryx.Communication;
+
+/// <summary>
+/// Factory to create connections based on config and header interpreter
+/// </summary>
+[PluginFactory(typeof(IConfigBasedComponentSelector))]
+public interface IBinaryConnectionFactory
 {
     /// <summary>
-    /// Factory to create connections based on config and header interpreter
+    /// Create a connection instance
     /// </summary>
-    [PluginFactory(typeof(IConfigBasedComponentSelector))]
-    public interface IBinaryConnectionFactory
-    {
-        /// <summary>
-        /// Create a connection instance
-        /// </summary>
-        /// <param name="config">Config of the <see cref="IBinaryConnection"/> implementation</param>
-        /// <param name="validator">Interpreter for validation of incoming header bytes</param>
-        IBinaryConnection Create(BinaryConnectionConfig config, IMessageValidator validator);
+    /// <param name="config">Config of the <see cref="IBinaryConnection"/> implementation</param>
+    /// <param name="validator">Interpreter for validation of incoming header bytes</param>
+    IBinaryConnection Create(BinaryConnectionConfig config, IMessageValidator validator);
 
-        /// <summary>
-        /// Destroy the no longer required instance
-        /// </summary>
-        void Destroy(IBinaryConnection instance);
-    }
+    /// <summary>
+    /// Destroy the no longer required instance
+    /// </summary>
+    void Destroy(IBinaryConnection instance);
 }

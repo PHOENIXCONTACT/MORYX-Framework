@@ -3,21 +3,20 @@
 
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Drivers.Mqtt.Tests.TestMessages
+namespace Moryx.Drivers.Mqtt.Tests.TestMessages;
+
+public class MessageForPlaceholderMessages
 {
-    public class MessageForPlaceholderMessages
-    {
-        public string PcName { get; set; }
-        public int AdapterNumber { get; set; }
+    public string PcName { get; set; }
+    public int AdapterNumber { get; set; }
 
-        public ProductIdentity Identity { get; set; }
-        public int Value { get; set; }
+    public ProductIdentity Identity { get; set; }
+    public int Value { get; set; }
 
-        public TestClass ClassProperty { get; set; }
-    }
+    public TestClass ClassProperty { get; set; }
+}
 
-    public class TestClass
-    {
-        public string Test { get; set; }
-    }
+public class TestClass
+{
+    public string Test { get; set; }
 }

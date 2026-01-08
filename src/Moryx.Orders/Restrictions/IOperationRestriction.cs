@@ -1,10 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Orders.Restrictions
+namespace Moryx.Orders.Restrictions;
+
+public interface IOperationRestriction
 {
-    public interface IOperationRestriction
-    {
-        RestrictionDescription Description { get; }
-    }
+    RestrictionDescription Description { get; }
 }

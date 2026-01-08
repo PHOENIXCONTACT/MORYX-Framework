@@ -4,14 +4,13 @@
 using System.Runtime.Serialization;
 using Moryx.AbstractionLayer.Products;
 
-namespace Moryx.Products.Samples
+namespace Moryx.Products.Samples;
+
+[DataContract]
+public class WatchImporterConfig : ProductImporterConfig
 {
-    [DataContract]
-    public class WatchImporterConfig : ProductImporterConfig
-    {
-        /// <summary>
-        /// Name of the component represented by this entry
-        /// </summary>
-        public override string PluginName => nameof(WatchImporter);
-    }
+    /// <summary>
+    /// Name of the component represented by this entry
+    /// </summary>
+    public override string PluginName => nameof(WatchImporter);
 }

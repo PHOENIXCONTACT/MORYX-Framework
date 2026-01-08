@@ -3,13 +3,12 @@
 
 using Moryx.Runtime.Modules;
 
-namespace Moryx.VisualInstructions.Controller
+namespace Moryx.VisualInstructions.Controller;
+
+[ServerModuleConsole]
+internal class ModuleConsole : IServerModuleConsole
 {
-    [ServerModuleConsole]
-    internal class ModuleConsole : IServerModuleConsole
+    public void ExecuteCommand(string[] args, Action<string> outputStream)
     {
-        public void ExecuteCommand(string[] args, Action<string> outputStream)
-        {
-        }
     }
 }

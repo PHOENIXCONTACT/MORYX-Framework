@@ -3,21 +3,19 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Moryx.Model
+namespace Moryx.Model;
+
+/// <summary>
+/// Register components necessary for 
+/// </summary>
+public static class ModelServiceCollectionExtension
 {
     /// <summary>
-    /// Register components necessary for 
+    /// Link MORYX kernel to the service collection
     /// </summary>
-    public static class ModelServiceCollectionExtension
+    public static void AddMoryxModels(this IServiceCollection serviceCollection)
     {
-        /// <summary>
-        /// Link MORYX kernel to the service collection
-        /// </summary>
-        public static void AddMoryxModels(this IServiceCollection serviceCollection)
-        {
-            // Register config manager
-            serviceCollection.AddSingleton<IDbContextManager, DbContextManager>();
-        }
+        // Register config manager
+        serviceCollection.AddSingleton<IDbContextManager, DbContextManager>();
     }
 }
-

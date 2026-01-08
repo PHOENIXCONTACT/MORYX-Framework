@@ -3,9 +3,8 @@
 
 using Moryx.Modules;
 
-namespace Moryx.ControlSystem.MaterialManager
+namespace Moryx.ControlSystem.MaterialManager;
+
+internal interface IMaterialManager : IAsyncPlugin
 {
-    internal interface IMaterialManager : IAsyncPlugin
-    {
-    }
 }
