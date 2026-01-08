@@ -33,7 +33,7 @@ public class TestDriverMqttIByteSerializable
     private MqttDriver _driver;
     private MqttTopic _topicBoolMqtt;
     private MqttTopic _topicBoolIByteSerializable;
-    private MqttProtocolVersion _version;
+    private readonly MqttProtocolVersion _version;
 
     public TestDriverMqttIByteSerializable(MqttProtocolVersion version) => _version = version;
 

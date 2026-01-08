@@ -25,7 +25,7 @@ public class CsvStructureTest
     private CsvConfiguration _csvConfig = new(CultureInfo.InvariantCulture);
     private SpreadsheetsListenerConfig _slConfig;
     private IModuleLogger _logger;
-    private Random _random = new();
+    private readonly Random _random = new();
 
     private readonly string _path = Path.Combine(Path.GetTempPath(), nameof(CsvStructure));
     private string _randomFileName;

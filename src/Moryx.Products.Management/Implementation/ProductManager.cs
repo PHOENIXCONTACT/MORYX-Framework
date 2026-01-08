@@ -33,7 +33,7 @@ internal class ProductManager : IProductManager
 
     public IProductImporter[] Importers => _importers.ToArray();
 
-    private IDictionary<Guid, ImportState> _runningImports = new ConcurrentDictionary<Guid, ImportState>();
+    private readonly IDictionary<Guid, ImportState> _runningImports = new ConcurrentDictionary<Guid, ImportState>();
 
     #endregion
 

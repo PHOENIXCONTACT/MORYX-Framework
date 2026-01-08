@@ -35,7 +35,7 @@ public class TestDriverMqttJsonTopic
     private MqttDriver _driver;
     private MqttTopic _mqttTopicCamel;
     private MqttTopic _mqttTopicPascal;
-    private MqttProtocolVersion _version;
+    private readonly MqttProtocolVersion _version;
 
     public TestDriverMqttJsonTopic(MqttProtocolVersion version) => _version = version;
 

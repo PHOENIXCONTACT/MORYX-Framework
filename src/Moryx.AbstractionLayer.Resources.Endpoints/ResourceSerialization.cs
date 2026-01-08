@@ -13,7 +13,7 @@ internal class ResourceSerialization : PossibleValuesSerialization
     /// <summary>
     /// Instance for <see cref="EntrySerializeSerialization"/> we use to filter properties and methods
     /// </summary>
-    private EntrySerializeSerialization _memberFilter = new();
+    private readonly EntrySerializeSerialization _memberFilter = new();
 
     public ResourceSerialization(IContainer container, IServiceProvider serviceProvider) : base(container, serviceProvider, new ValueProviderExecutor(new ValueProviderExecutorSettings()))
     {

@@ -27,7 +27,7 @@ internal class ProductTypeInformation
     public IDictionary<string, ConstructorStrategyInformation<ProductPartLink, ProductLinkConfiguration, IProductLinkStrategy>> PartLinksInformation =
         new Dictionary<string, ConstructorStrategyInformation<ProductPartLink, ProductLinkConfiguration, IProductLinkStrategy>>();
 
-    private IDictionary<string, PropertyInfo> _properties = new Dictionary<string, PropertyInfo>();
+    private readonly IDictionary<string, PropertyInfo> _properties = new Dictionary<string, PropertyInfo>();
 
     public ProductTypeInformation(Type type)
     {

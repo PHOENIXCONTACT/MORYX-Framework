@@ -12,7 +12,7 @@ namespace Moryx.Workplans.Editing;
 internal class WorkplanEditor : IWorkplanEditor, IPlugin
 {
     private Type[] _availableTasks;
-    private List<IWorkplanEditingSession> _sessions = new();
+    private readonly List<IWorkplanEditingSession> _sessions = new();
 
     #region Dependencies
     public ModuleConfig Config { get; set; }

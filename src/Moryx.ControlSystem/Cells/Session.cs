@@ -158,13 +158,13 @@ public abstract class Session
             Process = null;
         }
 
-        public Guid SessionId;
+        public readonly Guid SessionId;
 
         public Process Process;
 
         public ProcessReference Reference;
 
-        public ActivityClassification Classification;
+        public readonly ActivityClassification Classification;
 
         public object Tag;
     }

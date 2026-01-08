@@ -14,7 +14,7 @@ internal class VisualInstructionsController : IVisualInstructionsController
 {
     private Dictionary<string, IVisualInstructionSource> _instructionSources;
 
-    private Dictionary<string, List<ActiveInstruction>> _facadeInstructions = new();
+    private readonly Dictionary<string, List<ActiveInstruction>> _facadeInstructions = new();
 
     public ModuleConfig Config { get; set; }
 

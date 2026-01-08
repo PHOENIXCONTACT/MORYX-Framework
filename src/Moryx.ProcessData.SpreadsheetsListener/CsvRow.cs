@@ -5,7 +5,7 @@ namespace Moryx.ProcessData.SpreadsheetsListener;
 
 internal class CsvRow
 {
-    private IList<object> _row;
+    private readonly IList<object> _row;
     public IList<object> Fields { get => _row; }
 
     public CsvRow(IList<object> row)

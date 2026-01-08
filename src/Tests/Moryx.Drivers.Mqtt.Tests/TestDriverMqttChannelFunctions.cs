@@ -39,7 +39,7 @@ public class TestDriverMqttChannelFunctions
     private MqttTopic _topicBoolMqtt;
     private MqttTopic _topicPlaceholder;
     private MessageForPlaceholderMessages _placeholderMessages;
-    private MqttProtocolVersion _version;
+    private readonly MqttProtocolVersion _version;
 
     public TestDriverMqttChannelFunctions(MqttProtocolVersion version) => _version = version;
 

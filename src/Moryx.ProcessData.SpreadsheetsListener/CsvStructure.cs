@@ -16,18 +16,18 @@ internal class CsvStructure
 {
     private readonly IList<string> _header = new List<string>();
     private readonly ICollection<CsvRow> _rows = new List<CsvRow>();
-    private object _headerLock = new();
-    private object _rowsLock = new();
+    private readonly object _headerLock = new();
+    private readonly object _rowsLock = new();
 
-    private string _path;
-    private string _measurand;
+    private readonly string _path;
+    private readonly string _measurand;
     private string _completeFilePath;
 
-    private CsvConfiguration _csvConfig = new(CultureInfo.InvariantCulture);
-    private IModuleLogger _logger;
+    private readonly CsvConfiguration _csvConfig = new(CultureInfo.InvariantCulture);
+    private readonly IModuleLogger _logger;
 
     private int _writtenRows = 0;
-    private int _maxNumOfRows;
+    private readonly int _maxNumOfRows;
 
     private FileStream _fileStream;
     private StreamWriter _streamWriter;

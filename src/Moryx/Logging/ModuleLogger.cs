@@ -10,7 +10,7 @@ namespace Moryx.Logging;
 /// </summary>
 public class ModuleLogger : IModuleLogger
 {
-    private ILogger _logger;
+    private readonly ILogger _logger;
     private readonly ILoggerFactory _loggerFactory;
 
     public string Name { get; }

@@ -22,9 +22,8 @@ public class JobManagerTests
     private JobManager _jobManager;
     private Mock<IJobDataList> _jobListMock;
     private Mock<IJobStorage> _jobStorageMock;
-    private List<IProductionJobData> _jobList = new();
+    private readonly List<IProductionJobData> _jobList = new();
     private Mock<IJobScheduler> _jobSchedulerMock;
-    private List<IJobData> _jobs = new();
     private Mock<IJobHandler> _handlerMock;
 
     [SetUp]

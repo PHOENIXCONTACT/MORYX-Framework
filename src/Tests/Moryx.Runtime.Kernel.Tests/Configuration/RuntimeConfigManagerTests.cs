@@ -16,7 +16,7 @@ namespace Moryx.Runtime.Kernel.Tests.Configuration;
 [TestFixture]
 public class RuntimeConfigManagerTests
 {
-    private string _tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+    private readonly string _tempDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
     private ConfigManager _manager;
 
     /// <summary>

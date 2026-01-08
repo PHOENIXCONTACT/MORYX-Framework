@@ -34,7 +34,7 @@ public class TestDriverMqttPrimitiveDatatypeTopic
     private MqttDriver _driver;
     private MqttTopic _mqttTopicInt;
     private MqttTopic _mqttTopicString;
-    private MqttProtocolVersion _version;
+    private readonly MqttProtocolVersion _version;
 
     public TestDriverMqttPrimitiveDatatypeTopic(MqttProtocolVersion version) => _version = version;
 

@@ -47,7 +47,7 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
     /// <summary>
     /// Proxies of all cells the Activity Dispatcher works on
     /// </summary>
-    private List<ICell> _cells = new();
+    private readonly List<ICell> _cells = new();
 
     /// <summary>
     /// Sessions that were reported during ControlSystemSync or as RTW.Push but could not yet be processed

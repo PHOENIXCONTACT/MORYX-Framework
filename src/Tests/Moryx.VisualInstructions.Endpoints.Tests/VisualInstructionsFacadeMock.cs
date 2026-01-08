@@ -9,7 +9,7 @@ namespace Moryx.VisualInstructions.Endpoints.Tests;
 
 internal class VisualInstructionsFacadeMock : IVisualInstructions
 {
-    private Dictionary<string, List<ActiveInstruction>> _instructions;
+    private readonly Dictionary<string, List<ActiveInstruction>> _instructions;
 
     public string CompleteResult { get; private set; }
 
