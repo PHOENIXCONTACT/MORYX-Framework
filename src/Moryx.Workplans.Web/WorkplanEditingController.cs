@@ -7,9 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Products.Endpoints;
 using Moryx.AspNetCore;
 using Moryx.Serialization;
+using Moryx.Workplans.Web.Models;
 using Moryx.Workplans.Web.Properties;
 
-namespace Moryx.Workplans.Endpoint;
+namespace Moryx.Workplans.Web;
 
 [Route("api/moryx/workplans/")]
 [ApiController, Produces("application/json")]

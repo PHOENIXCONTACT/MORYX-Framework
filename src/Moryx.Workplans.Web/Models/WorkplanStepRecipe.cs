@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using Moryx.Serialization;
 using Moryx.Tools;
 
-namespace Moryx.Workplans.Endpoint;
+namespace Moryx.Workplans.Web.Models;
 
 /// <summary>
 /// Exchange type for workplan step creation 

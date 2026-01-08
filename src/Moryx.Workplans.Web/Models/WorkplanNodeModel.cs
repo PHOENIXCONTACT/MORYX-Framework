@@ -4,7 +4,7 @@
 using System.Runtime.Serialization;
 using Moryx.Serialization;
 
-namespace Moryx.Workplans.Endpoint;
+namespace Moryx.Workplans.Web.Models;
 
 /// <summary>
 /// DTO representation of a <see cref="IWorkplanStep"/>
