@@ -23,7 +23,7 @@ namespace Moryx.Model
         /// Fully qualified name of the configurator type
         /// </summary>
         [DataMember]
-        public virtual string ConfiguratorType { get; }
+        public virtual string ConfiguratorType { get; set; } = string.Empty;
 
         /// <summary>
         /// Updates the properties decorated with <see cref="ConnectionStringKeyAttribute"/> from the current <see cref="ConnectionString"/>.
