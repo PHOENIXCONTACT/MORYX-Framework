@@ -22,14 +22,13 @@ public abstract class SimulatedInOutDriver : Driver, IInOutDriver, ISimulationDr
 
     public IEnumerable<ICell> Usages => [Cell];
 
-    private SimulationState _simulatedState;
     [EntrySerialize]
     public SimulationState SimulatedState
     {
-        get => _simulatedState;
+        get;
         set
         {
-            _simulatedState = value;
+            field = value;
             SimulatedStateChanged?.Invoke(this, value);
         }
     }

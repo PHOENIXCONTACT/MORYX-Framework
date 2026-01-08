@@ -21,13 +21,12 @@ public class SimulatedDummyTestDriver : Driver, IMessageDriver, ISimulationDrive
 
     public string Identifier => Name;
 
-    private SimulationState _simulatedState;
     public virtual SimulationState SimulatedState
     {
-        get => _simulatedState;
+        get;
         private set
         {
-            _simulatedState = value;
+            field = value;
             SimulatedStateChanged?.Invoke(this, value);
         }
     }

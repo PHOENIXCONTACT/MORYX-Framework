@@ -50,15 +50,13 @@ public class RequiredReferenceResource : Resource
 
 public class ReferenceResource : Resource, IReferenceResource
 {
-    private ISimpleResource _reference;
-
     [ResourceReference(ResourceRelationType.CurrentExchangeablePart, nameof(Reference))]
     public ISimpleResource Reference
     {
-        get { return _reference; }
+        get { return field; }
         set
         {
-            _reference = value;
+            field = value;
             ReferenceChanged?.Invoke(this, value);
             SomeChanged?.Invoke(this, [value]);
         }

@@ -11,7 +11,6 @@ namespace Moryx.Orders.Management;
 
 internal class InternalOperation : Operation
 {
-    private InternalOrder _order;
     private readonly List<Document> _documents;
     private readonly List<ProductPart> _parts;
     private readonly List<IProductRecipe> _recipes;
@@ -38,8 +37,8 @@ internal class InternalOperation : Operation
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     public new InternalOrder Order
     {
-        get => _order;
-        set => base.Order = _order = value;
+        get;
+        set => base.Order = field = value;
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

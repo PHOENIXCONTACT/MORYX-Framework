@@ -89,21 +89,20 @@ internal class ProcessData : IEquatable<ProcessData>
     /// </summary>
     public IJobData Job { get; set; }
 
-    private ProcessState _state;
     /// <summary>
     /// The state of this process.
     /// </summary>
     public ProcessState State
     {
-        get { return _state; }
+        get { return field; }
         set
         {
-            _state = value;
+            field = value;
 
             // Update Start and End when altering the process state
-            if (_state == ProcessState.Running)
+            if (field == ProcessState.Running)
                 Started = Activities.FirstOrDefault()?.Tracing.Started ?? DateTime.Now;
-            else if (_state >= ProcessState.Success)
+            else if (field >= ProcessState.Success)
                 Completed = Activities.LastOrDefault()?.Tracing.Completed ?? DateTime.Now;
         }
     }

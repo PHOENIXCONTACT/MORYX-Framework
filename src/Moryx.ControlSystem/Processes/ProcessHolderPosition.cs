@@ -23,8 +23,6 @@ public class ProcessHolderPosition : Resource, IProcessHolderPosition
     [DataMember]
     private long _processId;
 
-    private Session _session;
-
     #region EntrySerialize
 
     /// <summary>
@@ -59,13 +57,13 @@ public class ProcessHolderPosition : Resource, IProcessHolderPosition
     /// <inheritdoc />
     public Session Session
     {
-        get => _session;
+        get;
         set
         {
-            _session = value;
+            field = value;
             // Sync process reference with control system kernel
-            if (_session?.Process?.Id == _processId)
-                Process = _session.Process;
+            if (field?.Process?.Id == _processId)
+                Process = field.Process;
         }
     }
 

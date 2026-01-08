@@ -61,23 +61,21 @@ public class Job
     /// </summary>
     public virtual string StateDisplayName { get; protected set; }
 
-    private IReadOnlyList<Process> _runningProcesses;
     /// <summary>
     /// Currently running processes of the job
     /// </summary>
     public IReadOnlyList<Process> RunningProcesses
     {
-        get => _runningProcesses ?? Array.Empty<Process>();
-        protected set => _runningProcesses = value;
+        get => field ?? Array.Empty<Process>();
+        protected set;
     }
 
-    private IReadOnlyList<Process> _allProcesses;
     /// <summary>
     /// All processes of the job including running and completed processes
     /// </summary>
     public IReadOnlyList<Process> AllProcesses
     {
-        get => _allProcesses ?? Array.Empty<Process>();
-        protected set => _allProcesses = value;
+        get => field ?? Array.Empty<Process>();
+        protected set;
     }
 }

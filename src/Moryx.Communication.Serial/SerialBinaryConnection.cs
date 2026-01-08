@@ -42,16 +42,14 @@ public class SerialBinaryConnection : IBinaryConnection, ILoggingComponent
     /// </summary>
     private IReadContext _readContext;
 
-    private BinaryConnectionState _currentState;
-
     /// <inheritdoc />
     public BinaryConnectionState CurrentState
     {
-        get => _currentState;
+        get;
         private set
         {
-            _currentState = value;
-            NotifyConnectionState?.Invoke(this, _currentState);
+            field = value;
+            NotifyConnectionState?.Invoke(this, field);
         }
     }
 

@@ -37,15 +37,13 @@ public interface INonResourceInterface
 [ResourceAvailableAs(typeof(INonResourceInterface))]
 public class SimpleResource : Resource, ISimpleResource, IDuplicateFoo, INonResourceInterface
 {
-    private int _foo;
-
     public int Foo
     {
-        get { return _foo; }
+        get { return field; }
         set
         {
-            _foo = value;
-            FooChanged?.Invoke(this, _foo);
+            field = value;
+            FooChanged?.Invoke(this, field);
             FooEven?.Invoke(this, value % 2 == 0);
         }
     }

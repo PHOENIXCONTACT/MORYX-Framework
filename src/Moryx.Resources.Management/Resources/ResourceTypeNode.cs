@@ -16,15 +16,14 @@ internal class ResourceTypeNode : IResourceTypeNode
     /// <inheritdoc />
     public string Name => ResourceType.ResourceType();
 
-    private Type _resourceType;
     /// <inheritdoc />
     public Type ResourceType
     {
-        get { return _resourceType; }
+        get { return field; }
         set
         {
-            _resourceType = value;
-            PropertiesOfResourceType = _resourceType.GetProperties();
+            field = value;
+            PropertiesOfResourceType = field.GetProperties();
             ReferenceOverrides = (from prop in PropertiesOfResourceType
                 let overrideAtt = prop.GetCustomAttribute<ReferenceOverrideAttribute>()
                 where overrideAtt != null

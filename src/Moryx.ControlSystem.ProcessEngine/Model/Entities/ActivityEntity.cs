@@ -10,18 +10,17 @@ namespace Moryx.ControlSystem.ProcessEngine.Model;
 
 public class ActivityEntity : IEntity
 {
-    private long _id;
     // Not derived from EntityBase, because the Id is code generated, not database generated
     [Key, Required, DatabaseGenerated(DatabaseGeneratedOption.None)]
     public virtual long Id
     {
-        get { return _id; }
+        get { return field; }
         set
         {
-            if (_id == value)
+            if (field == value)
                 return;
 
-            _id = value;
+            field = value;
             IdChanged?.Invoke(this, EventArgs.Empty);
         }
     }

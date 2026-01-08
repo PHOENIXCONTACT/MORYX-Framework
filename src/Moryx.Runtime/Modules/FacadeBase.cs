@@ -8,8 +8,6 @@ namespace Moryx.Runtime.Modules;
 /// </summary>
 public class FacadeBase : IFacadeControl, ILifeCycleBoundFacade
 {
-    private bool _activated;
-
     /// <inheritdoc />
     public Action ValidateHealthState { get; set; }
 
@@ -42,13 +40,13 @@ public class FacadeBase : IFacadeControl, ILifeCycleBoundFacade
     /// <inheritdoc />
     public bool IsActivated
     {
-        get { return _activated; }
+        get { return field; }
         set
         {
-            if (_activated == value)
+            if (field == value)
                 return;
-            _activated = value;
-            RaiseActivatedStateChanged(_activated);
+            field = value;
+            RaiseActivatedStateChanged(field);
         }
     }
 

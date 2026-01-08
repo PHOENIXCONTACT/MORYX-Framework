@@ -14,9 +14,6 @@ namespace Moryx.ControlSystem.ProcessEngine.Processes;
 /// </summary>
 internal class ActivityData
 {
-    private ICell _resource;
-    private ITask _task;
-
     public static readonly ICell[] EmptyTargets = [];
 
     /// <summary>
@@ -70,12 +67,12 @@ internal class ActivityData
     /// </summary>
     public ICell Resource
     {
-        get => _resource;
+        get;
         set
         {
-            _resource = value;
+            field = value;
 
-            Tracing.Trace(t => t.ResourceId = _resource.Id);
+            Tracing.Trace(t => t.ResourceId = field.Id);
         }
     }
 
@@ -110,11 +107,11 @@ internal class ActivityData
     /// </summary>
     public ITask Task
     {
-        get => _task;
+        get;
         set
         {
-            _task = value;
-            Activity.StepId = _task.Id;
+            field = value;
+            Activity.StepId = field.Id;
         }
     }
 

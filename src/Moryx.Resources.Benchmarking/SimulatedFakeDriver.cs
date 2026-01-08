@@ -21,13 +21,12 @@ public class SimulatedFakeDriver : Driver, IMessageDriver, ISimulationDriver
 
     public string Identifier => Name;
 
-    private SimulationState _simulatedState;
     public SimulationState SimulatedState
     {
-        get => _simulatedState;
+        get;
         private set
         {
-            _simulatedState = value;
+            field = value;
             SimulatedStateChanged?.Invoke(this, value);
         }
     }
