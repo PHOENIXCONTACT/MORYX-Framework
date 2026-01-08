@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+﻿// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 
 using Moryx.AbstractionLayer.Processes;
 using Moryx.ControlSystem.Processes;
