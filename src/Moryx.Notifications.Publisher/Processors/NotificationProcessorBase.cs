@@ -388,7 +388,7 @@ public abstract class NotificationProcessorBase<TNotification, TNotificationType
 
         var results = filter.ToArray();
 
-        return results.Select(n => (Notification)CopyFromEntityToNotification(n)).ToArray();
+        return results.Select(Notification (n) => CopyFromEntityToNotification(n)).ToArray();
     }
 
     internal List<TNotificationType> GetTypes()

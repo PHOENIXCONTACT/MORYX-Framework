@@ -99,8 +99,7 @@ public static class RecipeStorage
     private static Dictionary<long, IConnector> LoadConnectors(WorkplanEntity workplan)
     {
         return workplan.Connectors.ToDictionary(
-            connector => connector.Id,
-            connector => (IConnector)new Connector
+            connector => connector.Id, IConnector (connector) => new Connector
             {
                 Id = connector.ConnectorId,
                 Name = connector.Name,
