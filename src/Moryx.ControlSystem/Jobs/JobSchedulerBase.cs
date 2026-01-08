@@ -72,7 +72,7 @@ public abstract class JobSchedulerBase<T> : IJobScheduler
         }
         else
         {
-            _dependencies[target] = new List<Job> { dependency };
+            _dependencies[target] = [dependency];
         }
     }
 

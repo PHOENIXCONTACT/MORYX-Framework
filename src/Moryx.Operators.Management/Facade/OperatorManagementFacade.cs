@@ -36,7 +36,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         get
         {
             ValidateHealthState();
-            return OperatorManager.Operators.Select(o => o.Operator).ToImmutableArray();
+            return [..OperatorManager.Operators.Select(o => o.Operator)];
         }
     }
 
@@ -210,7 +210,7 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         get
         {
             ValidateHealthState();
-            return OperatorManager.Operators.Select(o => o.User).ToImmutableArray();
+            return [..OperatorManager.Operators.Select(o => o.User)];
         }
     }
 

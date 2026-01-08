@@ -66,7 +66,7 @@ internal class ConfigurationService : IConfigurationService
             .FirstOrDefault(p => p.PropertyType == typeof(List<MeasurementBinding>) && p.Name == measurandName);
 
         if (bindings == null)
-            return new();
+            return [];
 
         return bindings.GetMeasurementBindings(config);
     }
@@ -84,7 +84,7 @@ internal class ConfigurationService : IConfigurationService
         var properties = root.GetRuntimeProperties().ToArray();
         if (properties.Length == 0 || root.IsValueType || root == typeof(string))
         {
-            return new List<string>() { name };
+            return [name];
         }
 
         var filteredProperties = properties

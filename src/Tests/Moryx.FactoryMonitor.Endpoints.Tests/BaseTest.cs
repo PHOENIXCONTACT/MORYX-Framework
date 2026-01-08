@@ -115,13 +115,13 @@ public abstract class BaseTest
             .Returns(converter.ToResourceChangedModel(_manufactoringFactory));
         //process
         _processFacadeMock.Setup(pm => pm.GetRunningProcesses())
-            .Returns(Array.Empty<Process>());
+            .Returns([]);
         _processFacadeMock.Setup(pm => pm.Targets(It.IsAny<Activity>()))
-            .Returns<Activity>(a => _activityTargets.ContainsKey(a) ? _activityTargets[a] : Array.Empty<ICell>());
+            .Returns<Activity>(a => _activityTargets.ContainsKey(a) ? _activityTargets[a] : []);
 
         //orders
         _orderFacadeMock.Setup(o => o.GetOperations(It.IsAny<Func<Operation, bool>>()))
-            .Returns(Array.Empty<Operation>());
+            .Returns([]);
 
         //factory controller
         _factoryMonitor = new FactoryMonitorController(_resourceManagementMock.Object, _processFacadeMock.Object, _orderFacadeMock.Object);
@@ -131,12 +131,12 @@ public abstract class BaseTest
         {
             IdCellOfOrigin = _solderingCellId,
             IdCellOfDestination = _assemblyCellId,
-            Paths = new List<Position>
-            {
+            Paths =
+            [
                 _solderingCellLocation.Position,
-                new() { PositionX = 0.1, PositionY = 0.2},
+                new() { PositionX = 0.1, PositionY = 0.2 },
                 _assemblyCellLocation.Position
-            }
+            ]
         };
     }
 

@@ -53,16 +53,15 @@ public class SetupManagerTests
 
         _setupManagerConfig = new ModuleConfig
         {
-            SetupTriggers = new List<SetupTriggerConfig>
-            {
-                // Single prepare
+            SetupTriggers =
+            [
                 CreateTriggerConfig(nameof(TestTriggerPrepare), 1),
                 // Multi prepare
                 CreateTriggerConfig(nameof(MultiStepTrigger), 2),
                 // Parallel clean-up
                 CreateTriggerConfig(nameof(TestTriggerCleanup), 1),
                 CreateTriggerConfig(nameof(TestTriggerCleanup), 1)
-            }
+            ]
         };
 
         _resourceManagerMock = new Mock<IResourceManagement>();

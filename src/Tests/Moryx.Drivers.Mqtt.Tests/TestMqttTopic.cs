@@ -17,7 +17,7 @@ public class TestMqttTopic
     [SetUp]
     public void Setup()
     {
-        _placeHolderNames = new List<string> { "{MachineNR}", "{PC_Name}" };
+        _placeHolderNames = ["{MachineNR}", "{PC_Name}"];
         const string topicBeginning = "abc";
         _topicWithPlaceholders = topicBeginning;
         foreach (var n in _placeHolderNames)

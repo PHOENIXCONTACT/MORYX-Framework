@@ -198,7 +198,7 @@ internal class TokenService : ITokenService
         return new AuthResult()
         {
             Success = false,
-            Errors = new List<string>() { errorMessage },
+            Errors = [errorMessage],
             Token = tokenRequest.Token,
             RefreshToken = tokenRequest.RefreshToken
         };

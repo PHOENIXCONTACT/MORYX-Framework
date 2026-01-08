@@ -56,7 +56,7 @@ public class EntraIdAuthController : ControllerBase
         {
             return BadRequest(new AuthResult
             {
-                Errors = new List<string> { "Failed to identify the user." },
+                Errors = ["Failed to identify the user."],
                 Success = false
             });
         }
@@ -76,7 +76,7 @@ public class EntraIdAuthController : ControllerBase
             {
                 return StatusCode(500, new AuthResult
                 {
-                    Errors = new List<string> { "Failed to create the user." },
+                    Errors = ["Failed to create the user."],
                     Success = false
                 });
             }
@@ -90,7 +90,7 @@ public class EntraIdAuthController : ControllerBase
         {
             return StatusCode(500, new AuthResult
             {
-                Errors = new List<string> { "Failed to access the remote user data." },
+                Errors = ["Failed to access the remote user data."],
                 Success = false
             });
         }

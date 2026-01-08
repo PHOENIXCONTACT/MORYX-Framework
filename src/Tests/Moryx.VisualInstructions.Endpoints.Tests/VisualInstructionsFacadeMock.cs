@@ -20,9 +20,9 @@ internal class VisualInstructionsFacadeMock : IVisualInstructions
     {
         _instructions = new Dictionary<string, List<ActiveInstruction>>()
         {
-            ["Instructor"] = new List<ActiveInstruction> { new() },
-            ["Instructor with spaces"] = new List<ActiveInstruction> { new() },
-            ["Ümlaut"] = new List<ActiveInstruction> { new() },
+            ["Instructor"] = [new()],
+            ["Instructor with spaces"] = [new()],
+            ["Ümlaut"] = [new()],
         };
     }
 

@@ -66,7 +66,7 @@ public class Job
     /// </summary>
     public IReadOnlyList<Process> RunningProcesses
     {
-        get => field ?? Array.Empty<Process>();
+        get => field ?? [];
         protected set;
     }
 
@@ -75,7 +75,7 @@ public class Job
     /// </summary>
     public IReadOnlyList<Process> AllProcesses
     {
-        get => field ?? Array.Empty<Process>();
+        get => field ?? [];
         protected set;
     }
 }

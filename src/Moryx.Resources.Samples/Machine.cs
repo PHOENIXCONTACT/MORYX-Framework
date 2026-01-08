@@ -92,7 +92,7 @@ public class Machine : Resource
     public List<int> IncreaseByAmountTestParameters(int amount, bool whyNot, string alsoAString, MachineType whyNotAnEnum, List<int> andAList)
     {
         Count += amount;
-        return new List<int> { Count, 2, 3, 4, 1, 2, 5, 2 };
+        return [Count, 2, 3, 4, 1, 2, 5, 2];
     }
 }
 

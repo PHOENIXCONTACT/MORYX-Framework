@@ -66,7 +66,7 @@ public class AuthController : ControllerBase
             {
                 return BadRequest(new AuthResult
                 {
-                    Errors = new List<string> { "Username already in use" },
+                    Errors = ["Username already in use"],
                     Success = false
                 });
             }
@@ -89,7 +89,7 @@ public class AuthController : ControllerBase
 
         return BadRequest(new AuthResult
         {
-            Errors = new List<string> { "Invalid payload" },
+            Errors = ["Invalid payload"],
             Success = false
         });
     }
@@ -110,7 +110,7 @@ public class AuthController : ControllerBase
             {
                 return BadRequest(new AuthResult
                 {
-                    Errors = new List<string> { "Email or password incorrect." },
+                    Errors = ["Email or password incorrect."],
                     Success = false
                 });
             }
@@ -121,7 +121,7 @@ public class AuthController : ControllerBase
             {
                 return BadRequest(new AuthResult
                 {
-                    Errors = new List<string> { "Email or password incorrect." },
+                    Errors = ["Email or password incorrect."],
                     Success = false
                 });
             }
@@ -135,7 +135,7 @@ public class AuthController : ControllerBase
 
         return BadRequest(new AuthResult
         {
-            Errors = new List<string> { "Invalid payload" },
+            Errors = ["Invalid payload"],
             Success = false
         });
     }
@@ -164,7 +164,7 @@ public class AuthController : ControllerBase
 
         return BadRequest(new AuthResult
         {
-            Errors = new List<string> { "Invalid payload" },
+            Errors = ["Invalid payload"],
             Success = false
         });
     }

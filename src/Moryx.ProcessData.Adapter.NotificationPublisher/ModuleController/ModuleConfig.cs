@@ -19,13 +19,12 @@ public class ModuleConfig : ConfigBase
     /// </summary>
     public ModuleConfig()
     {
-        NotificationBindings = new List<MeasurementBinding>
-        {
-            new() {Name = "source", Binding = "Notification.Source", ValueTarget = ValueTarget.Tag},
-            new() {Name = "sender", Binding = "Notification.Sender", ValueTarget = ValueTarget.Tag},
-            new() {Name = "acknowledger", Binding = "Notification.Acknowledger", ValueTarget = ValueTarget.Tag}
-
-        };
+        NotificationBindings =
+        [
+            new() { Name = "source", Binding = "Notification.Source", ValueTarget = ValueTarget.Tag },
+            new() { Name = "sender", Binding = "Notification.Sender", ValueTarget = ValueTarget.Tag },
+            new() { Name = "acknowledger", Binding = "Notification.Acknowledger", ValueTarget = ValueTarget.Tag }
+        ];
     }
 
     /// <summary>

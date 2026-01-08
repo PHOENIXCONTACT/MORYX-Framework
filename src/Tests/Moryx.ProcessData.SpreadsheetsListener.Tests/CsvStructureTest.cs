@@ -131,7 +131,7 @@ public class CsvStructureTest
     {
         // Arrange
         Measurement firstMeasurement = RandomMeasurement(_random.Next(0, 8), _random.Next(0, 8));
-        List<Measurement> randomMeasurements = new List<Measurement>() { firstMeasurement };
+        List<Measurement> randomMeasurements = [firstMeasurement];
         if (maxNumOfRowsPerFile < 0) // unless maxNumOfRowsPerFile was specified, every file (except possibly the last one) has the same number of rows
             maxNumOfRowsPerFile = (int)Math.Ceiling(1 + (double)numOfMeasurements / numOfFiles);
         _slConfig.MaxNumOfRows = maxNumOfRowsPerFile;
@@ -186,7 +186,7 @@ public class CsvStructureTest
     {
         // Arrange
         Measurement firstMeasurement = RandomMeasurement(_random.Next(0, 8), _random.Next(0, 8));
-        List<Measurement> randomMeasurements = new List<Measurement>() { firstMeasurement };
+        List<Measurement> randomMeasurements = [firstMeasurement];
         var headingsOfFirstMeasurement = GetNames(firstMeasurement);
 
         if (maxNumOfRowsPerFile < 0) // unless maxNumOfRowsPerFile was specified, every file (except possibly the last one) has the same number of rows
@@ -194,7 +194,7 @@ public class CsvStructureTest
         _slConfig.MaxNumOfRows = maxNumOfRowsPerFile;
         var expectedNumOfRows = maxNumOfRowsPerFile;
 
-        List<Tuple<int, string>> newHeadings = new List<Tuple<int, string>>();
+        List<Tuple<int, string>> newHeadings = [];
         var numOfValidatedMeasurements = 0;
 
         // Act
@@ -439,14 +439,14 @@ public class CsvStructureTest
 
     private List<List<string>> ReadInCsv(string absolutePath)
     {
-        List<List<string>> result = new List<List<string>>();
+        List<List<string>> result = [];
         string value;
         using (TextReader fileReader = File.OpenText(absolutePath))
         {
             var csv = new CsvReader(fileReader, _csvConfig);
             while (csv.Read())
             {
-                List<string> line = new List<string>();
+                List<string> line = [];
                 for (int i = 0; csv.TryGetField<string>(i, out value); i++)
                 {
                     line.Add(value);

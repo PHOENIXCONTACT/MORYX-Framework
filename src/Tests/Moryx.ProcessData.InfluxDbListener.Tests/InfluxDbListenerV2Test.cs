@@ -183,7 +183,7 @@ public class InfluxDbListenerV2Test
         DatabaseName = "database",
         Organisation = "organization",
         ReportIntervalMs = ReportInterval,
-        MeasurandConfigs = new List<MeasurandConfig> { new() { IsEnabled = true, Name = MeasurandName } }
+        MeasurandConfigs = [new() { IsEnabled = true, Name = MeasurandName }]
     };
 
     private static Measurand CreateMeasurand()
