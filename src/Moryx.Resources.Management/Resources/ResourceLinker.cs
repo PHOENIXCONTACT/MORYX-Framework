@@ -467,7 +467,7 @@ internal class ResourceLinker : IResourceLinker
     /// <summary>
     /// Resolve instance matches for relations
     /// </summary>
-    public static IEnumerable<Resource> InstanceProjection(IEnumerable<ResourceRelationAccessor> relations, PropertyInfo property,
+    private static IEnumerable<Resource> InstanceProjection(IEnumerable<ResourceRelationAccessor> relations, PropertyInfo property,
         Func<ResourceRelationAccessor, Resource> instanceResolver)
     {
         return relations.Select(instanceResolver).Where(instance => IsInstanceOfReference(property, instance));
@@ -480,7 +480,7 @@ internal class ResourceLinker : IResourceLinker
     /// <param name="property"></param>
     /// <param name="instanceResolver"></param>
     /// <returns></returns>
-    public static IEnumerable<ResourceRelationAccessor> TypeFilter(IEnumerable<ResourceRelationAccessor> relations, PropertyInfo property,
+    private static IEnumerable<ResourceRelationAccessor> TypeFilter(IEnumerable<ResourceRelationAccessor> relations, PropertyInfo property,
         Func<ResourceRelationAccessor, Resource> instanceResolver)
     {
         return from relation in relations
