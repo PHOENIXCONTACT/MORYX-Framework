@@ -45,7 +45,7 @@ public class SubworkplanTransition : TransitionBase<WorkplanSnapshot>, IObservab
     /// </summary>
     private void TransitionTriggered(object sender, ITransition e)
     {
-        Triggered(e, new EventArgs());
+        Triggered(e, EventArgs.Empty);
     }
 
     private void SubworkplanCompleted(object sender, IPlace place)

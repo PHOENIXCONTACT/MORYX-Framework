@@ -26,7 +26,7 @@ public class DummyTransition : TransitionBase, IObservableTransition
     {
         ((IPlace)sender).Remove(token);
         StoredTokens.Add(token);
-        Triggered?.Invoke(this, new EventArgs());
+        Triggered?.Invoke(this, EventArgs.Empty);
         if (ResultOutput >= 0) // Resume directly
             PlaceToken(Outputs[ResultOutput], StoredTokens.First());
     }
@@ -34,7 +34,7 @@ public class DummyTransition : TransitionBase, IObservableTransition
     public override void Resume()
     {
         if (StoredTokens.Any())
-            Triggered?.Invoke(this, new EventArgs());
+            Triggered?.Invoke(this, EventArgs.Empty);
     }
 
     public void ResumeAsync(int result)
