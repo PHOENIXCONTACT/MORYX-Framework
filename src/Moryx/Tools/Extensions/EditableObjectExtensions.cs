@@ -10,39 +10,35 @@ namespace Moryx.Tools;
 /// </summary>
 public static class EditableObjectExtensions
 {
-    /// <summary>
-    /// Begins an edit on an enumerable of objects
-    /// </summary>
-    /// <typeparam name="T">Generic type of the object</typeparam>
     /// <param name="editableObjects">Enumerable of editable objects</param>
-    public static void BeginEdit<T>(this IEnumerable<T> editableObjects)
-        where T : IEditableObject
+    /// <typeparam name="T">Generic type of the object</typeparam>
+    extension<T>(IEnumerable<T> editableObjects) where T : IEditableObject
     {
-        foreach (var editableObject in editableObjects)
-            editableObject.BeginEdit();
-    }
+        /// <summary>
+        /// Begins an edit on an enumerable of objects
+        /// </summary>
+        public void BeginEdit()
+        {
+            foreach (var editableObject in editableObjects)
+                editableObject.BeginEdit();
+        }
 
-    /// <summary>
-    /// Discards changes since the last <see cref="M:System.ComponentModel.IEditableObject.BeginEdit" /> call.
-    /// </summary>
-    /// <typeparam name="T">Generic type of the object</typeparam>
-    /// <param name="editableObjects">Enumerable of editable objects</param>
-    public static void CancelEdit<T>(this IEnumerable<T> editableObjects)
-        where T : IEditableObject
-    {
-        foreach (var editableObject in editableObjects)
-            editableObject.CancelEdit();
-    }
+        /// <summary>
+        /// Discards changes since the last <see cref="M:System.ComponentModel.IEditableObject.BeginEdit" /> call.
+        /// </summary>
+        public void CancelEdit()
+        {
+            foreach (var editableObject in editableObjects)
+                editableObject.CancelEdit();
+        }
 
-    /// <summary>
-    /// Pushes changes since the last <see cref="M:System.ComponentModel.IEditableObject.BeginEdit" />
-    /// </summary>
-    /// <typeparam name="T">Generic type of the object</typeparam>
-    /// <param name="editableObjects">Enumerable of editable objects</param>
-    public static void EndEdit<T>(this IEnumerable<T> editableObjects)
-        where T : IEditableObject
-    {
-        foreach (var editableObject in editableObjects)
-            editableObject.EndEdit();
+        /// <summary>
+        /// Pushes changes since the last <see cref="M:System.ComponentModel.IEditableObject.BeginEdit" />
+        /// </summary>
+        public void EndEdit()
+        {
+            foreach (var editableObject in editableObjects)
+                editableObject.EndEdit();
+        }
     }
 }

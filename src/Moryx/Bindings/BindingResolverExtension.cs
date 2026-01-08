@@ -4,64 +4,67 @@
 namespace Moryx.Bindings;
 
 /// <summary>
-/// Extension to double link resolver objects
+/// Extensions to double link resolver objects
 /// </summary>
 public static class BindingResolverExtension
 {
-    /// <summary>
-    /// Extend current resolver with next resolver
-    /// </summary>
-    /// <returns>The next resolver for fluent API</returns>
-    public static IBindingResolverChain Extend(this IBindingResolverChain resolver, IBindingResolverChain nextResolver)
+    extension(IBindingResolverChain resolver)
     {
-        resolver.NextResolver = nextResolver;
-        nextResolver.PreviousResolver = resolver;
-        return nextResolver;
-    }
-
-    /// <summary>
-    /// Append resolver to a fully constructed chain
-    /// </summary>
-    /// <returns>The new end of the chain</returns>
-    public static IBindingResolverChain Append(this IBindingResolverChain resolver, IBindingResolverChain nextResolver)
-    {
-        var last = resolver;
-        while (last.NextResolver != null)
+        /// <summary>
+        /// Extend current resolver with next resolver
+        /// </summary>
+        /// <returns>The next resolver for fluent API</returns>
+        public IBindingResolverChain Extend(IBindingResolverChain nextResolver)
         {
-            last = last.NextResolver;
+            resolver.NextResolver = nextResolver;
+            nextResolver.PreviousResolver = resolver;
+            return nextResolver;
         }
-        last.Extend(nextResolver);
-        return nextResolver;
-    }
 
-    /// <summary>
-    /// Insert resolve into the chain
-    /// </summary>
-    public static IBindingResolverChain Insert(this IBindingResolverChain resolver, IBindingResolverChain insertedResolver)
-    {
-        var next = resolver.NextResolver;
-        resolver.Extend(insertedResolver);
-        if (next != null)
-            insertedResolver.Extend(next);
+        /// <summary>
+        /// Append resolver to a fully constructed chain
+        /// </summary>
+        /// <returns>The new end of the chain</returns>
+        public IBindingResolverChain Append(IBindingResolverChain nextResolver)
+        {
+            var last = resolver;
+            while (last.NextResolver != null)
+            {
+                last = last.NextResolver;
+            }
+            last.Extend(nextResolver);
+            return nextResolver;
+        }
 
-        return insertedResolver;
-    }
+        /// <summary>
+        /// Insert resolve into the chain
+        /// </summary>
+        public IBindingResolverChain Insert(IBindingResolverChain insertedResolver)
+        {
+            var next = resolver.NextResolver;
+            resolver.Extend(insertedResolver);
+            if (next != null)
+                insertedResolver.Extend(next);
 
-    /// <summary>
-    /// Replace resolver with a different instance
-    /// </summary>
-    public static IBindingResolverChain Replace(this IBindingResolverChain toReplace, IBindingResolverChain replaceWith)
-    {
-        toReplace.PreviousResolver.Extend(replaceWith);
-        return replaceWith.Extend(toReplace.NextResolver);
-    }
+            return insertedResolver;
+        }
 
-    /// <summary>
-    /// Remove a binding resolver and link its previous and next resolver directly
-    /// </summary>
-    /// <returns>The next resolver</returns>
-    public static IBindingResolverChain Remove(this IBindingResolverChain resolver)
-    {
-        return resolver.PreviousResolver.Extend(resolver.NextResolver);
+        /// <summary>
+        /// Replace resolver with a different instance
+        /// </summary>
+        public IBindingResolverChain Replace(IBindingResolverChain replaceWith)
+        {
+            resolver.PreviousResolver.Extend(replaceWith);
+            return replaceWith.Extend(resolver.NextResolver);
+        }
+
+        /// <summary>
+        /// Remove a binding resolver and link its previous and next resolver directly
+        /// </summary>
+        /// <returns>The next resolver</returns>
+        public IBindingResolverChain Remove()
+        {
+            return resolver.PreviousResolver.Extend(resolver.NextResolver);
+        }
     }
 }

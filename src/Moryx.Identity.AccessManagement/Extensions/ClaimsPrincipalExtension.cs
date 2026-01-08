@@ -7,38 +7,41 @@ namespace Moryx.Identity.AccessManagement;
 
 internal static class ClaimsPrincipalExtension
 {
-    public static string GeUserId(this ClaimsPrincipal principal)
+    extension(ClaimsPrincipal principal)
     {
-        if (principal == null)
-            return string.Empty;
-
-        var userId = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-        return userId != null ? userId.Value : string.Empty;
-    }
-
-    public static string GetFullName(this ClaimsPrincipal principal)
-    {
-        if (principal == null)
-            return string.Empty;
-
-        var firstName = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName);
-        var lastName = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Surname);
-
-        if (firstName == null && lastName != null)
+        public string GeUserId()
         {
-            return lastName.Value;
+            if (principal == null)
+                return string.Empty;
+
+            var userId = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            return userId != null ? userId.Value : string.Empty;
         }
 
-        if (firstName != null && lastName == null)
+        public string GetFullName()
         {
-            return firstName.Value;
-        }
+            if (principal == null)
+                return string.Empty;
 
-        if (firstName == null && lastName == null)
-        {
-            return "Unknown";
-        }
+            var firstName = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName);
+            var lastName = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Surname);
 
-        return $"{firstName?.Value} {lastName?.Value}";
+            if (firstName == null && lastName != null)
+            {
+                return lastName.Value;
+            }
+
+            if (firstName != null && lastName == null)
+            {
+                return firstName.Value;
+            }
+
+            if (firstName == null && lastName == null)
+            {
+                return "Unknown";
+            }
+
+            return $"{firstName?.Value} {lastName?.Value}";
+        }
     }
 }

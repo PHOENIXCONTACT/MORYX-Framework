@@ -11,33 +11,36 @@ namespace Moryx.Container;
 /// </summary>
 public static class ContainerLoadComponentsExtension
 {
-    /// <summary>
-    /// Load all types from an assembly
-    /// </summary>
-    public static void LoadFromAssembly(this IContainer container, Assembly assembly)
+    extension(IContainer container)
     {
-        container.LoadFromAssembly(assembly, t => true);
-    }
-
-    /// <summary>
-    /// Load types from assembly filtered by dependency attribute
-    /// </summary>
-    public static void LoadFromAssembly(this IContainer container, Assembly assembly, DependencyRegistrationAttribute att)
-    {
-        container.LoadFromAssembly(assembly, type => TypeRequired(att, type));
-    }
-
-    /// <summary>
-    /// Load filtered types from assembly
-    /// </summary>
-    public static void LoadFromAssembly(this IContainer container, Assembly assembly, Predicate<Type> predicate)
-    {
-        // Install all components
-        foreach (var type in assembly.GetTypes())
+        /// <summary>
+        /// Load all types from an assembly
+        /// </summary>
+        public void LoadFromAssembly(Assembly assembly)
         {
-            // Register all we want
-            if (ShallInstall(type) && predicate(type))
-                container.Register(type);
+            container.LoadFromAssembly(assembly, t => true);
+        }
+
+        /// <summary>
+        /// Load types from assembly filtered by dependency attribute
+        /// </summary>
+        public void LoadFromAssembly(Assembly assembly, DependencyRegistrationAttribute att)
+        {
+            container.LoadFromAssembly(assembly, type => TypeRequired(att, type));
+        }
+
+        /// <summary>
+        /// Load filtered types from assembly
+        /// </summary>
+        public void LoadFromAssembly(Assembly assembly, Predicate<Type> predicate)
+        {
+            // Install all components
+            foreach (var type in assembly.GetTypes())
+            {
+                // Register all we want
+                if (ShallInstall(type) && predicate(type))
+                    container.Register(type);
+            }
         }
     }
 
@@ -69,32 +72,35 @@ public static class ContainerLoadComponentsExtension
         return false;
     }
 
-    /// <summary>
-    /// Load all implementations of type from currently known types
-    /// KnownTypes: Types in default framework folders and deeper.
-    /// </summary>
-    public static void LoadComponents<T>(this IContainer container) where T : class
+    extension(IContainer container)
     {
-        LoadComponents<T>(container, null);
-    }
-
-    /// <summary>
-    /// Loads all implementations of type from the currently known types
-    /// KnownTypes: Types in default framework folders and deeper.
-    /// </summary>
-    public static IContainer LoadComponents<T>(this IContainer container, Predicate<Type> condition) where T : class
-    {
-        foreach (var type in ReflectionTool.GetPublicClasses<T>(LoadComponentCandidate))
+        /// <summary>
+        /// Load all implementations of type from currently known types
+        /// KnownTypes: Types in default framework folders and deeper.
+        /// </summary>
+        public void LoadComponents<T>() where T : class
         {
-            if (condition?.Invoke(type) ?? true)
-            {
-                container.Register(type);
-
-                RegisterAdditionalDependencies(container, type);
-            }
+            LoadComponents<T>(container, null);
         }
 
-        return container;
+        /// <summary>
+        /// Loads all implementations of type from the currently known types
+        /// KnownTypes: Types in default framework folders and deeper.
+        /// </summary>
+        public IContainer LoadComponents<T>(Predicate<Type> condition) where T : class
+        {
+            foreach (var type in ReflectionTool.GetPublicClasses<T>(LoadComponentCandidate))
+            {
+                if (condition?.Invoke(type) ?? true)
+                {
+                    container.Register(type);
+
+                    RegisterAdditionalDependencies(container, type);
+                }
+            }
+
+            return container;
+        }
     }
 
     private static bool LoadComponentCandidate(Type type)

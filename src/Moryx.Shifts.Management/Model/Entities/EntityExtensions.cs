@@ -8,97 +8,106 @@ namespace Moryx.Shifts.Management.Model;
 
 internal static class EntityExtensions
 {
-    public static ShiftType ToType(this ShiftTypeEntity entity)
+    extension(ShiftTypeEntity entity)
     {
-        return new ShiftType(entity.Name)
+        public ShiftType ToType()
         {
-            Id = entity.Id,
-            StartTime = entity.StartTime,
-            Endtime = entity.Endtime,
-            Periode = entity.Periode
-        };
-    }
+            return new ShiftType(entity.Name)
+            {
+                Id = entity.Id,
+                StartTime = entity.StartTime,
+                Endtime = entity.Endtime,
+                Periode = entity.Periode
+            };
+        }
 
-    public static void Update(this ShiftTypeEntity entity, ShiftType type)
-    {
-        entity.Name = type.Name;
-        entity.StartTime = type.StartTime;
-        entity.Endtime = type.Endtime;
-        entity.Periode = type.Periode;
-    }
-
-    public static Shift ToShift(this ShiftEntity entity, ShiftType type)
-    {
-        return new Shift(type)
+        public void Update(ShiftType type)
         {
-            Id = entity.Id,
-            Date = entity.Date
-        };
+            entity.Name = type.Name;
+            entity.StartTime = type.StartTime;
+            entity.Endtime = type.Endtime;
+            entity.Periode = type.Periode;
+        }
     }
 
-    public static Shift ToShift(this ShiftEntity entity, IEnumerable<ShiftType> types)
+    extension(ShiftEntity entity)
     {
-        var type = types.SingleOrDefault(t => t.Id == entity.ShiftTypeId) ??
-                   throw new KeyNotFoundException($"{nameof(ShiftEntity)} -Id: {entity.Id}- is referencing a {nameof(ShiftType)} " +
-                                                  $"-Id: {entity.ShiftTypeId}- that was not loaded into memory.");
-
-        return new Shift(type)
+        public Shift ToShift(ShiftType type)
         {
-            Id = entity.Id,
-            Date = entity.Date
-        };
-    }
+            return new Shift(type)
+            {
+                Id = entity.Id,
+                Date = entity.Date
+            };
+        }
 
-    public static void Update(this ShiftEntity entity, Shift shift)
-    {
-        entity.Date = shift.Date;
-        entity.ShiftTypeId = shift.Type.Id;
-    }
-
-    public static ShiftAssignement ToAssignement(this ShiftAssignementEntity entity, Shift shift, IResource resource, Operator @operator)
-    {
-        return new ShiftAssignement(resource, @operator, shift)
+        public Shift ToShift(IEnumerable<ShiftType> types)
         {
-            Id = entity.Id,
-            Note = entity.Note,
-            AssignedDays = entity.AssignedDays,
-            Priority = entity.Priority
-        };
+            var type = types.SingleOrDefault(t => t.Id == entity.ShiftTypeId) ??
+                       throw new KeyNotFoundException($"{nameof(ShiftEntity)} -Id: {entity.Id}- is referencing a {nameof(ShiftType)} " +
+                                                      $"-Id: {entity.ShiftTypeId}- that was not loaded into memory.");
+
+            return new Shift(type)
+            {
+                Id = entity.Id,
+                Date = entity.Date
+            };
+        }
+
+        public void Update(Shift shift)
+        {
+            entity.Date = shift.Date;
+            entity.ShiftTypeId = shift.Type.Id;
+        }
     }
 
-    public static void Update(this ShiftAssignementEntity entity, ShiftAssignement assignement)
+    extension(ShiftAssignementEntity entity)
     {
-        entity.ShiftId = assignement.Shift.Id;
-        entity.ResourceId = assignement.Resource.Id;
-        entity.OperatorIdentifier = assignement.Operator.Identifier;
-        entity.Note = assignement.Note;
-        entity.Priority = assignement.Priority;
-        entity.AssignedDays = assignement.AssignedDays;
-    }
+        public ShiftAssignement ToAssignement(Shift shift, IResource resource, Operator @operator)
+        {
+            return new ShiftAssignement(resource, @operator, shift)
+            {
+                Id = entity.Id,
+                Note = entity.Note,
+                AssignedDays = entity.AssignedDays,
+                Priority = entity.Priority
+            };
+        }
 
-    public static ShiftAssignement ToAssignement(this ShiftAssignementEntity entity, IEnumerable<Shift> shifts,
-        IResourceManagement resources, IOperatorManagement operators)
-    {
-        var shift = shifts.SingleOrDefault(s => s.Id == entity.ShiftId) ??
-                    throw new KeyNotFoundException($"{nameof(ShiftAssignementEntity)} -Id: {entity.Id}- is referencing " +
-                                                   $"a {nameof(Shift)} -Id: {entity.ShiftId}- that was not loaded into memory.");
+        public void Update(ShiftAssignement assignement)
+        {
+            entity.ShiftId = assignement.Shift.Id;
+            entity.ResourceId = assignement.Resource.Id;
+            entity.OperatorIdentifier = assignement.Operator.Identifier;
+            entity.Note = assignement.Note;
+            entity.Priority = assignement.Priority;
+            entity.AssignedDays = assignement.AssignedDays;
+        }
 
-        var resource = resources.GetResource<IResource>(entity.ResourceId) ??
-                       throw new KeyNotFoundException($"{nameof(ShiftAssignementEntity)} -Id: {entity.Id}- is referencing " +
-                                                      $"a {nameof(Resource)} -Id: {entity.ResourceId}- that was not available in the {nameof(IResourceManagement)}. " +
-                                                      $"This might happen when the resource database was reset while the shifts database was not.");
-
-        var @operator = operators.Operators.FirstOrDefault(x => x.Identifier == entity.OperatorIdentifier) ??
+        public ShiftAssignement ToAssignement(IEnumerable<Shift> shifts,
+            IResourceManagement resources, IOperatorManagement operators)
+        {
+            var shift = shifts.SingleOrDefault(s => s.Id == entity.ShiftId) ??
                         throw new KeyNotFoundException($"{nameof(ShiftAssignementEntity)} -Id: {entity.Id}- is referencing " +
-                                                       $"an {nameof(Operator)} -Identifier: {entity.OperatorIdentifier}- that was not available in the {nameof(IOperatorManagement)}. " +
-                                                       $"This might happen when the operators database was reset while the shifts database was not.");
+                                                       $"a {nameof(Shift)} -Id: {entity.ShiftId}- that was not loaded into memory.");
 
-        return new ShiftAssignement(resource, @operator, shift)
-        {
-            Id = entity.Id,
-            Note = entity.Note,
-            AssignedDays = entity.AssignedDays,
-            Priority = entity.Priority
-        };
+            var resource = resources.GetResource<IResource>(entity.ResourceId) ??
+                           throw new KeyNotFoundException($"{nameof(ShiftAssignementEntity)} -Id: {entity.Id}- is referencing " +
+                                                          $"a {nameof(Resource)} -Id: {entity.ResourceId}- that was not available in the {nameof(IResourceManagement)}. " +
+                                                          $"This might happen when the resource database was reset while the shifts database was not.");
+
+            var @operator = operators.Operators.FirstOrDefault(x => x.Identifier == entity.OperatorIdentifier) ??
+                            throw new KeyNotFoundException($"{nameof(ShiftAssignementEntity)} -Id: {entity.Id}- is referencing " +
+                                                           $"an {nameof(Operator)} -Identifier: {entity.OperatorIdentifier}- that was not available in the {nameof(IOperatorManagement)}. " +
+                                                           $"This might happen when the operators database was reset while the shifts database was not.");
+
+            return new ShiftAssignement(resource, @operator, shift)
+            {
+                Id = entity.Id,
+                Note = entity.Note,
+                AssignedDays = entity.AssignedDays,
+                Priority = entity.Priority
+            };
+        }
     }
 }

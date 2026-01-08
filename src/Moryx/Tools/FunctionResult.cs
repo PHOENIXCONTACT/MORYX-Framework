@@ -208,31 +208,34 @@ public class Nothing
 /// </summary>
 public static class FunctionResultExtensions
 {
-    /// <summary>
-    /// Executes the provided function in case of a successful result
-    /// </summary>
-    /// <returns><see cref=" FunctionResult{TResult}"/> returned by <paramref name="func"/></returns>
-    public static FunctionResult<TResult> Then<TResult>(this FunctionResult<TResult> result, Func<TResult, FunctionResult<TResult>> func)
-        => result.Match(func, _ => result);
+    extension<TResult>(FunctionResult<TResult> result)
+    {
+        /// <summary>
+        /// Executes the provided function in case of a successful result
+        /// </summary>
+        /// <returns><see cref=" FunctionResult{TResult}"/> returned by <paramref name="func"/></returns>
+        public FunctionResult<TResult> Then(Func<TResult, FunctionResult<TResult>> func)
+            => result.Match(func, _ => result);
 
-    /// <summary>
-    /// Executes the provided function in case of an error result
-    /// </summary>
-    /// <returns><see cref=" FunctionResult{TResult}"/> returned by <paramref name="func"/></returns>
-    public static FunctionResult<TResult> Catch<TResult>(this FunctionResult<TResult> result, Func<FunctionResultError, FunctionResult<TResult>> func)
-        => result.Match(_ => result, func);
+        /// <summary>
+        /// Executes the provided function in case of an error result
+        /// </summary>
+        /// <returns><see cref=" FunctionResult{TResult}"/> returned by <paramref name="func"/></returns>
+        public FunctionResult<TResult> Catch(Func<FunctionResultError, FunctionResult<TResult>> func)
+            => result.Match(_ => result, func);
 
-    /// <summary>
-    /// Executes the provided action in case of a successful result
-    /// </summary>
-    /// <returns>The underlying <see cref="FunctionResult{TResult}"/></returns>
-    public static FunctionResult<TResult> Then<TResult>(this FunctionResult<TResult> result, Action<TResult> action)
-        => result.Match(action, _ => { });
+        /// <summary>
+        /// Executes the provided action in case of a successful result
+        /// </summary>
+        /// <returns>The underlying <see cref="FunctionResult{TResult}"/></returns>
+        public FunctionResult<TResult> Then(Action<TResult> action)
+            => result.Match(action, _ => { });
 
-    /// <summary>
-    /// Executes the provided action in case of a error result
-    /// </summary>
-    /// <returns>The underlying <see cref="FunctionResult{TResult}"/></returns>
-    public static FunctionResult<TResult> Catch<TResult>(this FunctionResult<TResult> result, Action<FunctionResultError> action)
-        => result.Match(_ => { }, action);
+        /// <summary>
+        /// Executes the provided action in case of a error result
+        /// </summary>
+        /// <returns>The underlying <see cref="FunctionResult{TResult}"/></returns>
+        public FunctionResult<TResult> Catch(Action<FunctionResultError> action)
+            => result.Match(_ => { }, action);
+    }
 }

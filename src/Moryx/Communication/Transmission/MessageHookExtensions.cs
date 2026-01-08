@@ -8,49 +8,52 @@ namespace Moryx.Communication;
 /// </summary>
 public static class MessageHookExtensions
 {
-    /// <summary>
-    /// Iterate over all hooks and call <see cref="IBinaryMessageHook.SendingMessage"/>
-    /// </summary>
-    public static bool SendingMessage<T>(this IEnumerable<IBinaryMessageHook> hooks, ref T payload)
-        where T : class
+    extension(IEnumerable<IBinaryMessageHook> hooks)
     {
-        object message = payload;
-        var result = hooks.Aggregate(true, (current, hook) => current & hook.SendingMessage(ref message));
-        payload = (T)message;
-        return result;
-    }
-
-    /// <summary>
-    /// Iterate over all hooks and call <see cref="IBinaryMessageHook.MessageSent"/>
-    /// </summary>
-    public static void MessageSent(this IEnumerable<IBinaryMessageHook> hooks, BinaryMessage message)
-    {
-        foreach (var hook in hooks)
+        /// <summary>
+        /// Iterate over all hooks and call <see cref="IBinaryMessageHook.SendingMessage"/>
+        /// </summary>
+        public bool SendingMessage<T>(ref T payload)
+            where T : class
         {
-            hook.MessageSent(message);
+            object message = payload;
+            var result = hooks.Aggregate(true, (current, hook) => current & hook.SendingMessage(ref message));
+            payload = (T)message;
+            return result;
         }
-    }
 
-    /// <summary>
-    /// Iterate over all hooks and call <see cref="IBinaryMessageHook.MessageReceived"/>
-    /// </summary>
-    public static void MessageReceived(this IEnumerable<IBinaryMessageHook> hooks, BinaryMessage message)
-    {
-        foreach (var hook in hooks)
+        /// <summary>
+        /// Iterate over all hooks and call <see cref="IBinaryMessageHook.MessageSent"/>
+        /// </summary>
+        public void MessageSent(BinaryMessage message)
         {
-            hook.MessageReceived(message);
+            foreach (var hook in hooks)
+            {
+                hook.MessageSent(message);
+            }
         }
-    }
 
-    /// <summary>
-    /// Iterate over all hooks and call <see cref="IBinaryMessageHook.PublishingMessage"/>
-    /// </summary>
-    public static bool PublishingMessage<T>(this IEnumerable<IBinaryMessageHook> hooks, ref T payload)
-        where T : class
-    {
-        object message = payload;
-        var result = hooks.Aggregate(true, (current, hook) => current & hook.PublishingMessage(ref message));
-        payload = (T)message;
-        return result;
+        /// <summary>
+        /// Iterate over all hooks and call <see cref="IBinaryMessageHook.MessageReceived"/>
+        /// </summary>
+        public void MessageReceived(BinaryMessage message)
+        {
+            foreach (var hook in hooks)
+            {
+                hook.MessageReceived(message);
+            }
+        }
+
+        /// <summary>
+        /// Iterate over all hooks and call <see cref="IBinaryMessageHook.PublishingMessage"/>
+        /// </summary>
+        public bool PublishingMessage<T>(ref T payload)
+            where T : class
+        {
+            object message = payload;
+            var result = hooks.Aggregate(true, (current, hook) => current & hook.PublishingMessage(ref message));
+            payload = (T)message;
+            return result;
+        }
     }
 }

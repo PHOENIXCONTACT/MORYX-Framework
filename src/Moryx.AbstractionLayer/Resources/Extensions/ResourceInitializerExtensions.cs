@@ -20,38 +20,37 @@ public static class ResourceInitializerExtensions
         return configurable;
     }
 
-    /// <summary>
-    /// Adds a <paramref name="child"/> resource to the <paramref name="parent"/> and returns the
-    /// <paramref name="parent"/> to allow further operations on it.
-    /// </summary>
-    /// <typeparam name="TResource">Type of the parent <see cref="Resource"/></typeparam>
     /// <param name="parent">Parent resource</param>
-    /// <param name="child">Child resource, that gets added to <paramref name="parent"/></param>
-    /// <returns>The provided <paramref name="parent"/></returns>
-    public static TResource AddChild<TResource>(this TResource parent, Resource child) where TResource : Resource
+    /// <typeparam name="TResource">Type of the parent <see cref="Resource"/></typeparam>
+    extension<TResource>(TResource parent) where TResource : Resource
     {
-        parent.Children.Add(child);
-        return parent;
-    }
+        /// <summary>
+        /// Adds a <paramref name="child"/> resource to the <paramref name="parent"/> and returns the
+        /// <paramref name="parent"/> to allow further operations on it.
+        /// </summary>
+        /// <param name="child">Child resource, that gets added to <paramref name="parent"/></param>
+        /// <returns>The provided <paramref name="parent"/></returns>
+        public TResource AddChild(Resource child)
+        {
+            parent.Children.Add(child);
+            return parent;
+        }
 
-    /// <summary>
-    /// Adds a <paramref name="child"/> resource to the <paramref name="parent"/> and returns the
-    /// <paramref name="parent"/> to allow further operations on it.
-    /// Can be used to perform a custom <paramref name="action"/> within the method chain.
-    /// </summary>
-    /// <typeparam name="TResource">Type of the parent <see cref="Resource"/></typeparam>
-    /// <typeparam name="TChildResource">Type of the child resource</typeparam>
-    /// <param name="parent">Parent resource</param>
-    /// <param name="child">Child resource, that gets added to <paramref name="parent"/></param>
-    /// <param name="action">Custom action which provides <paramref name="parent"/> and <paramref name="child"/> as parameters</param>
-    /// <returns>The provided <paramref name="parent"/></returns>
-    public static TResource AddChild<TResource, TChildResource>(this TResource parent, TChildResource child, Action<TResource, TChildResource> action)
-        where TResource : Resource
-        where TChildResource : Resource
-    {
-        parent.Children.Add(child);
-        action(parent, child);
-        return parent;
+        /// <summary>
+        /// Adds a <paramref name="child"/> resource to the <paramref name="parent"/> and returns the
+        /// <paramref name="parent"/> to allow further operations on it.
+        /// Can be used to perform a custom <paramref name="action"/> within the method chain.
+        /// </summary>
+        /// <typeparam name="TChildResource">Type of the child resource</typeparam>
+        /// <param name="child">Child resource, that gets added to <paramref name="parent"/></param>
+        /// <param name="action">Custom action which provides <paramref name="parent"/> and <paramref name="child"/> as parameters</param>
+        /// <returns>The provided <paramref name="parent"/></returns>
+        public TResource AddChild<TChildResource>(TChildResource child, Action<TResource, TChildResource> action) where TChildResource : Resource
+        {
+            parent.Children.Add(child);
+            action(parent, child);
+            return parent;
+        }
     }
 
     /// <summary>

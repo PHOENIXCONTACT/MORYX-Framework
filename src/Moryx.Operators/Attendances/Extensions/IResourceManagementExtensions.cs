@@ -7,10 +7,13 @@ namespace Moryx.Operators.Attendances;
 
 public static class IResourceManagementExtensions
 {
-    public static IEnumerable<IOperatorAssignable> GetAssignableResources(this IResourceManagement source) =>
-        source.GetResources<IOperatorAssignable>();
+    extension(IResourceManagement source)
+    {
+        public IEnumerable<IOperatorAssignable> GetAssignableResources() =>
+            source.GetResources<IOperatorAssignable>();
 
-    public static IOperatorAssignable GetAssignableResource(this IResourceManagement source, long resourceId) =>
-        source.GetResource<IOperatorAssignable>(resourceId);
+        public IOperatorAssignable GetAssignableResource(long resourceId) =>
+            source.GetResource<IOperatorAssignable>(resourceId);
+    }
 }
 

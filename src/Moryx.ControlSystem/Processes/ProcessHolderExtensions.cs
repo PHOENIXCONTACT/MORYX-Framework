@@ -188,39 +188,45 @@ public static class ProcessHolderExtensions
 
     #region Mounting
 
-    /// <summary>
-    /// Assign a <paramref name="process"/> to this position
-    /// </summary>
-    public static void Mount(this IProcessHolderPosition position, Process process)
-        => position.Mount(new MountInformation(process, null));
+    extension(IProcessHolderPosition position)
+    {
+        /// <summary>
+        /// Assign a <paramref name="process"/> to this position
+        /// </summary>
+        public void Mount(Process process)
+            => position.Mount(new MountInformation(process, null));
 
-    /// <summary>
-    /// Assign a <paramref name="session"/> to this position
-    /// </summary>
-    public static void Mount(this IProcessHolderPosition position, Session session)
-        => position.Mount(new MountInformation(null, session));
+        /// <summary>
+        /// Assign a <paramref name="session"/> to this position
+        /// </summary>
+        public void Mount(Session session)
+            => position.Mount(new MountInformation(null, session));
 
-    /// <summary>
-    /// Assign <paramref name="process"/> and <paramref name="session"/> to this position
-    /// </summary>
-    public static void Mount(this IProcessHolderPosition position, Process process, Session session)
-        => position.Mount(new MountInformation(process, session));
+        /// <summary>
+        /// Assign <paramref name="process"/> and <paramref name="session"/> to this position
+        /// </summary>
+        public void Mount(Process process, Session session)
+            => position.Mount(new MountInformation(process, session));
+    }
 
     #endregion
 
     #region Status Checks
 
-    /// <summary>
-    /// Checks if the <paramref name="group"/> has no empty <see cref="IProcessHolderPosition"/>
-    /// </summary>
-    public static bool IsFull(this IProcessHolderGroup group)
-        => group.Positions.All(position => !position.IsEmpty());
+    extension(IProcessHolderGroup group)
+    {
+        /// <summary>
+        /// Checks if the <paramref name="group"/> has no empty <see cref="IProcessHolderPosition"/>
+        /// </summary>
+        public bool IsFull()
+            => group.Positions.All(position => !position.IsEmpty());
 
-    /// <summary>
-    /// Checks if the <paramref name="group"/> has no filled <see cref="IProcessHolderPosition"/>
-    /// </summary>
-    public static bool IsEmpty(this IProcessHolderGroup group)
-        => group.Positions.All(position => position.IsEmpty());
+        /// <summary>
+        /// Checks if the <paramref name="group"/> has no filled <see cref="IProcessHolderPosition"/>
+        /// </summary>
+        public bool IsEmpty()
+            => group.Positions.All(position => position.IsEmpty());
+    }
 
     /// <summary>
     /// True if the <paramref name="position"/> has neither a <see cref="IProcessHolderPosition.Process"/> nor a
@@ -243,37 +249,40 @@ public static class ProcessHolderExtensions
 
     #endregion
 
-    /// <summary>
-    /// Access tracing of the current activity
-    /// </summary>
-    public static TTracing Tracing<TTracing>(this IProcessHolderPosition position)
-        where TTracing : Tracing, new() => (position.Session as ActivityStart)?.Activity?.TransformTracing<TTracing>();
-
-    /// <summary>
-    /// Updates <see cref="IProcessHolderPosition.Session"/> and <see cref="IProcessHolderPosition.Process"/> by resetting the
-    /// <paramref name="position"/> and remounting the <paramref name="session"/>. For <see cref="ProcessHolderPosition"/>s
-    /// a direct update of the session and process is done on the object.
-    /// </summary>
     /// <param name="position">The position to update</param>
-    /// <param name="session">The updated session on the position</param>
-    /// <exception cref="InvalidOperationException">Thrown if the given <paramref name="session"/> does not match
-    /// the session on the <paramref name="position"/></exception>
-    public static void Update(this IProcessHolderPosition position, Session session)
+    extension(IProcessHolderPosition position)
     {
-        if (position.Session.Id != session.Id)
-            throw new InvalidOperationException($"Tried to update the {nameof(Session)} on an " +
-                                                $"{nameof(IProcessHolderPosition)} with a different session. Make sure to " +
-                                                $"{nameof(IProcessHolderPosition.Reset)} the {nameof(IProcessHolderPosition)} before " +
-                                                $"assigning a new {nameof(Session)}");
+        /// <summary>
+        /// Access tracing of the current activity
+        /// </summary>
+        public TTracing Tracing<TTracing>()
+            where TTracing : Tracing, new() => (position.Session as ActivityStart)?.Activity?.TransformTracing<TTracing>();
 
-        if (position is ProcessHolderPosition explicitPosition)
+        /// <summary>
+        /// Updates <see cref="IProcessHolderPosition.Session"/> and <see cref="IProcessHolderPosition.Process"/> by resetting the
+        /// <paramref name="position"/> and remounting the <paramref name="session"/>. For <see cref="ProcessHolderPosition"/>s
+        /// a direct update of the session and process is done on the object.
+        /// </summary>
+        /// <param name="session">The updated session on the position</param>
+        /// <exception cref="InvalidOperationException">Thrown if the given <paramref name="session"/> does not match
+        /// the session on the <paramref name="position"/></exception>
+        public void Update(Session session)
         {
-            explicitPosition.Session = session;
-            explicitPosition.AssignProcess(session.Process);
-            return;
-        }
+            if (position.Session.Id != session.Id)
+                throw new InvalidOperationException($"Tried to update the {nameof(Session)} on an " +
+                                                    $"{nameof(IProcessHolderPosition)} with a different session. Make sure to " +
+                                                    $"{nameof(IProcessHolderPosition.Reset)} the {nameof(IProcessHolderPosition)} before " +
+                                                    $"assigning a new {nameof(Session)}");
 
-        position.Reset();
-        position.Mount(session.Process, session);
+            if (position is ProcessHolderPosition explicitPosition)
+            {
+                explicitPosition.Session = session;
+                explicitPosition.AssignProcess(session.Process);
+                return;
+            }
+
+            position.Reset();
+            position.Mount(session.Process, session);
+        }
     }
 }

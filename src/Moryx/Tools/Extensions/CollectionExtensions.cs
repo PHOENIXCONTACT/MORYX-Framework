@@ -31,52 +31,58 @@ public static class CollectionExtensions
             list[oldIndex] = newItem;
     }
 
-    /// <summary>
-    /// Removes a range of items from the collection
-    /// </summary>
-    public static void RemoveRange<TSource>(this ICollection<TSource> collection, IEnumerable<TSource> items) where TSource : class
+    extension<TSource>(ICollection<TSource> collection) where TSource : class
     {
-        var itemsArray = new List<TSource>(items).ToArray();
-        for (var i = itemsArray.Length - 1; i >= 0; i--)
-            collection.Remove(itemsArray[i]);
-    }
-
-    /// <summary>
-    /// Add an entry only if it does not exist already
-    /// </summary>
-    public static void AddIfNotExists<TSource>(this ICollection<TSource> coll, TSource item) where TSource : class
-    {
-        if (!coll.Contains(item))
-            coll.Add(item);
-    }
-
-    /// <summary>
-    /// Removes a range of items by the given condition
-    /// </summary>
-    public static void RemoveBy<TSource>(this IList<TSource> collection, Func<TSource, bool> condition)
-    {
-        for (var i = collection.Count - 1; i >= 0; i--)
+        /// <summary>
+        /// Removes a range of items from the collection
+        /// </summary>
+        public void RemoveRange(IEnumerable<TSource> items)
         {
-            if (condition(collection[i]))
-                collection.RemoveAt(i);
+            var itemsArray = new List<TSource>(items).ToArray();
+            for (var i = itemsArray.Length - 1; i >= 0; i--)
+                collection.Remove(itemsArray[i]);
+        }
+
+        /// <summary>
+        /// Add an entry only if it does not exist already
+        /// </summary>
+        public void AddIfNotExists(TSource item)
+        {
+            if (!collection.Contains(item))
+                collection.Add(item);
         }
     }
 
-    /// <summary>
-    /// Shuffles the list
-    /// </summary>
-    public static void Shuffle<T>(this IList<T> list)
+    extension<TSource>(IList<TSource> collection)
     {
-        var rng = new Random();
-
-        var n = list.Count;
-        while (n > 1)
+        /// <summary>
+        /// Removes a range of items by the given condition
+        /// </summary>
+        public void RemoveBy(Func<TSource, bool> condition)
         {
-            n--;
-            var k = rng.Next(n + 1);
-            var value = list[k];
-            list[k] = list[n];
-            list[n] = value;
+            for (var i = collection.Count - 1; i >= 0; i--)
+            {
+                if (condition(collection[i]))
+                    collection.RemoveAt(i);
+            }
+        }
+
+        /// <summary>
+        /// Shuffles the list
+        /// </summary>
+        public void Shuffle()
+        {
+            var rng = new Random();
+
+            var n = collection.Count;
+            while (n > 1)
+            {
+                n--;
+                var k = rng.Next(n + 1);
+                var value = collection[k];
+                collection[k] = collection[n];
+                collection[n] = value;
+            }
         }
     }
 }

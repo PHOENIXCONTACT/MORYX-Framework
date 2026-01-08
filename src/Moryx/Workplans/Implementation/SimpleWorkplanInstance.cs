@@ -31,18 +31,21 @@ internal class SimpleWorkplanInstance : IWorkplanInstance
 
 internal static class WorkplanInstanceExtensions
 {
-    public static IEnumerable<IPlace> StartPlaces(this IWorkplanInstance workplanInstance)
+    extension(IWorkplanInstance workplanInstance)
     {
-        return workplanInstance.Places.Where(p => p.Classification == NodeClassification.Start);
-    }
+        public IEnumerable<IPlace> StartPlaces()
+        {
+            return workplanInstance.Places.Where(p => p.Classification == NodeClassification.Start);
+        }
 
-    public static IEnumerable<IPlace> EndPlaces(this IWorkplanInstance workplanInstance)
-    {
-        return workplanInstance.Places.Where(p => p.Classification.HasFlag(NodeClassification.Exit));
-    }
+        public IEnumerable<IPlace> EndPlaces()
+        {
+            return workplanInstance.Places.Where(p => p.Classification.HasFlag(NodeClassification.Exit));
+        }
 
-    public static ITransition GetTransition(this IWorkplanInstance workplanInstance, long id)
-    {
-        return workplanInstance.Transitions.First(t => t.Id == id);
+        public ITransition GetTransition(long id)
+        {
+            return workplanInstance.Transitions.First(t => t.Id == id);
+        }
     }
 }

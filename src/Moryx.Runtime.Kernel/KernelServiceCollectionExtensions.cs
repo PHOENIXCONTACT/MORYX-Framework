@@ -15,67 +15,70 @@ namespace Moryx.Runtime.Kernel;
 /// </summary>
 public static class KernelServiceCollectionExtensions
 {
-    /// <summary>
-    /// Link MORYX kernel to the service collection
-    /// </summary>
-    public static void AddMoryxKernel(this IServiceCollection serviceCollection)
+    extension(IServiceCollection serviceCollection)
     {
-        // Register config manager
-        serviceCollection.AddSingleton<ConfigManager>();
-        serviceCollection.AddSingleton<IConfigManager>(x => x.GetRequiredService<ConfigManager>());
-
-        // Register module manager
-        serviceCollection.AddSingleton<ModuleManager>();
-        serviceCollection.AddSingleton<IModuleManager>(x => x.GetRequiredService<ModuleManager>());
-
-        // Register parallel operations
-        serviceCollection.AddTransient<IParallelOperations, ParallelOperations>();
-
-        // Register container factory for module container
-        serviceCollection.AddSingleton<IModuleContainerFactory, ModuleContainerFactory>();
-
-        // Initialize Platform class
-        Platform.SetPlatform();
-    }
-
-    /// <summary>
-    /// Add MORYX modules to the service collection
-    /// </summary>
-    public static void AddMoryxModules(this IServiceCollection serviceCollection)
-    {
-        // Find all module types in the app domain
-        var modules = ReflectionTool.GetPublicClasses<IServerModule>();
-        foreach (var module in modules)
+        /// <summary>
+        /// Link MORYX kernel to the service collection
+        /// </summary>
+        public void AddMoryxKernel()
         {
-            // Register module as server module
-            serviceCollection.AddSingleton(module);
-            serviceCollection.AddSingleton(x => (IServerModule)x.GetRequiredService(module));
+            // Register config manager
+            serviceCollection.AddSingleton<ConfigManager>();
+            serviceCollection.AddSingleton<IConfigManager>(x => x.GetRequiredService<ConfigManager>());
 
-            // Determine the exported facades
-            var facadeContainers = module.GetInterfaces().Where(api => api.IsGenericType && api.GetGenericTypeDefinition() == typeof(IFacadeContainer<>));
-            foreach (var facadeContainer in facadeContainers)
+            // Register module manager
+            serviceCollection.AddSingleton<ModuleManager>();
+            serviceCollection.AddSingleton<IModuleManager>(x => x.GetRequiredService<ModuleManager>());
+
+            // Register parallel operations
+            serviceCollection.AddTransient<IParallelOperations, ParallelOperations>();
+
+            // Register container factory for module container
+            serviceCollection.AddSingleton<IModuleContainerFactory, ModuleContainerFactory>();
+
+            // Initialize Platform class
+            Platform.SetPlatform();
+        }
+
+        /// <summary>
+        /// Add MORYX modules to the service collection
+        /// </summary>
+        public void AddMoryxModules()
+        {
+            // Find all module types in the app domain
+            var modules = ReflectionTool.GetPublicClasses<IServerModule>();
+            foreach (var module in modules)
             {
-                // Register module as facade container
-                serviceCollection.AddSingleton(facadeContainer, x => x.GetRequiredService(module));
-                // Forward facade registration to facade container
-                var facade = facadeContainer.GetGenericArguments()[0];
-                serviceCollection.AddSingleton(facade, x =>
+                // Register module as server module
+                serviceCollection.AddSingleton(module);
+                serviceCollection.AddSingleton(x => (IServerModule)x.GetRequiredService(module));
+
+                // Determine the exported facades
+                var facadeContainers = module.GetInterfaces().Where(api => api.IsGenericType && api.GetGenericTypeDefinition() == typeof(IFacadeContainer<>));
+                foreach (var facadeContainer in facadeContainers)
                 {
-                    var instance = x.GetRequiredService(module);
-                    return facadeContainer.GetProperty(nameof(IFacadeContainer<object>.Facade)).GetValue(instance);
-                });
+                    // Register module as facade container
+                    serviceCollection.AddSingleton(facadeContainer, x => x.GetRequiredService(module));
+                    // Forward facade registration to facade container
+                    var facade = facadeContainer.GetGenericArguments()[0];
+                    serviceCollection.AddSingleton(facade, x =>
+                    {
+                        var instance = x.GetRequiredService(module);
+                        return facadeContainer.GetProperty(nameof(IFacadeContainer<object>.Facade)).GetValue(instance);
+                    });
+                }
             }
         }
-    }
 
-    /// <summary>
-    /// Register BackgroundService that controls that starts and stops the MORYX modules inside the lifetime of the host.
-    /// The MORYX Service can hook into the command line and gracefuly stop the modules when the user tries to close the window.
-    /// <see cref="Moryx.Runtime.Kernel.MoryxHost"/>
-    /// </summary>
-    public static void AddMoryxService(this IServiceCollection serviceCollection)
-    {
-        serviceCollection.AddHostedService<MoryxHost>();
+        /// <summary>
+        /// Register BackgroundService that controls that starts and stops the MORYX modules inside the lifetime of the host.
+        /// The MORYX Service can hook into the command line and gracefuly stop the modules when the user tries to close the window.
+        /// <see cref="Moryx.Runtime.Kernel.MoryxHost"/>
+        /// </summary>
+        public void AddMoryxService()
+        {
+            serviceCollection.AddHostedService<MoryxHost>();
+        }
     }
 
     /// <summary>

@@ -13,147 +13,145 @@ namespace Moryx.AbstractionLayer.Workplans;
 /// </summary>
 public static class WorkplanExtensions
 {
-    /// <summary>
-    /// Adds a step to the workplan
-    /// </summary>
     /// <param name="workplan">The workplan.</param>
-    /// <param name="task">The task to add.</param>
-    /// <param name="parameter">The parameter for the task.</param>
-    /// <param name="input">The input for the step</param>
-    /// <param name="outputs">The outputs of the steps.</param>
-    /// <returns></returns>
-    public static TaskStep<TActivity, TParam> AddStep<TActivity, TParam>(this Workplan workplan, TaskStep<TActivity, TParam> task, TParam parameter, IConnector input, params IConnector[] outputs)
-        where TActivity : IActivity<TParam>, new()
-        where TParam : IParameters, new()
+    extension(Workplan workplan)
     {
-        task.Parameters = parameter;
-        task.Inputs[0] = input;
-
-        for (var i = 0; i < outputs.Length; i++)
+        /// <summary>
+        /// Adds a step to the workplan
+        /// </summary>
+        /// <param name="task">The task to add.</param>
+        /// <param name="parameter">The parameter for the task.</param>
+        /// <param name="input">The input for the step</param>
+        /// <param name="outputs">The outputs of the steps.</param>
+        /// <returns></returns>
+        public TaskStep<TActivity, TParam> AddStep<TActivity, TParam>(TaskStep<TActivity, TParam> task, TParam parameter, IConnector input, params IConnector[] outputs)
+            where TActivity : IActivity<TParam>, new()
+            where TParam : IParameters, new()
         {
-            task.Outputs[i] = outputs[i];
+            task.Parameters = parameter;
+            task.Inputs[0] = input;
+
+            for (var i = 0; i < outputs.Length; i++)
+            {
+                task.Outputs[i] = outputs[i];
+            }
+
+            if (task.Outputs.Length != outputs.Length)
+                throw new ArgumentException($"Wrong number of outputs for the task {task.Name}");
+
+            workplan.Add(task);
+
+            return task;
         }
 
-        if (task.Outputs.Length != outputs.Length)
-            throw new ArgumentException($"Wrong number of outputs for the task {task.Name}");
-
-        workplan.Add(task);
-
-        return task;
-    }
-
-    /// <summary>
-    /// Adds a step to the workplan
-    /// </summary>
-    /// <param name="workplan">The workplan.</param>
-    /// <param name="task">The task to add.</param>
-    /// <param name="parameter">The parameter for the task.</param>
-    /// <param name="input">The input for the step</param>
-    /// <param name="outputs">The outputs of the steps.</param>
-    /// <returns></returns>
-    public static TaskStep<TActivity, TProcParam, TParam> AddStep<TActivity, TProcParam, TParam>(this Workplan workplan, TaskStep<TActivity, TProcParam, TParam> task, TParam parameter, IConnector input, params IConnector[] outputs)
-        where TActivity : IActivity<TProcParam>, new()
-        where TProcParam : IParameters
-        where TParam : TProcParam, new()
-    {
-        task.Parameters = parameter;
-        task.Inputs[0] = input;
-
-        for (var i = 0; i < outputs.Length; i++)
+        /// <summary>
+        /// Adds a step to the workplan
+        /// </summary>
+        /// <param name="task">The task to add.</param>
+        /// <param name="parameter">The parameter for the task.</param>
+        /// <param name="input">The input for the step</param>
+        /// <param name="outputs">The outputs of the steps.</param>
+        /// <returns></returns>
+        public TaskStep<TActivity, TProcParam, TParam> AddStep<TActivity, TProcParam, TParam>(TaskStep<TActivity, TProcParam, TParam> task, TParam parameter, IConnector input, params IConnector[] outputs)
+            where TActivity : IActivity<TProcParam>, new()
+            where TProcParam : IParameters
+            where TParam : TProcParam, new()
         {
-            task.Outputs[i] = outputs[i];
+            task.Parameters = parameter;
+            task.Inputs[0] = input;
+
+            for (var i = 0; i < outputs.Length; i++)
+            {
+                task.Outputs[i] = outputs[i];
+            }
+
+            if (task.Outputs.Length != outputs.Length)
+                throw new ArgumentException($"Wrong number of outputs for the task {task.Name}");
+
+            workplan.Add(task);
+
+            return task;
         }
 
-        if (task.Outputs.Length != outputs.Length)
-            throw new ArgumentException($"Wrong number of outputs for the task {task.Name}");
-
-        workplan.Add(task);
-
-        return task;
-    }
-
-    /// <summary>
-    /// Adds a step to the workplan
-    /// </summary>
-    /// <param name="workplan">The workplan.</param>
-    /// <param name="task">The task to add.</param>
-    /// <param name="parameter">The parameter for the task.</param>
-    /// <param name="input">The input for the step</param>
-    /// <param name="outputs">The outputs of the steps.</param>
-    /// <returns></returns>
-    public static TaskStep<TActivity, TParam> AddStep<TActivity, TParam>(this Workplan workplan, TaskStep<TActivity, TParam> task, TParam parameter, IConnector[] input, params IConnector[] outputs)
-        where TActivity : IActivity<TParam>, new()
-        where TParam : IParameters, new()
-    {
-        task.Parameters = parameter;
-        for (var i = 0; i < input.Length; i++)
+        /// <summary>
+        /// Adds a step to the workplan
+        /// </summary>
+        /// <param name="task">The task to add.</param>
+        /// <param name="parameter">The parameter for the task.</param>
+        /// <param name="input">The input for the step</param>
+        /// <param name="outputs">The outputs of the steps.</param>
+        /// <returns></returns>
+        public TaskStep<TActivity, TParam> AddStep<TActivity, TParam>(TaskStep<TActivity, TParam> task, TParam parameter, IConnector[] input, params IConnector[] outputs)
+            where TActivity : IActivity<TParam>, new()
+            where TParam : IParameters, new()
         {
-            task.Inputs[i] = input[i];
+            task.Parameters = parameter;
+            for (var i = 0; i < input.Length; i++)
+            {
+                task.Inputs[i] = input[i];
+            }
+
+            for (var i = 0; i < outputs.Length; i++)
+            {
+                task.Outputs[i] = outputs[i];
+            }
+
+            workplan.Add(task);
+
+            return task;
         }
 
-        for (var i = 0; i < outputs.Length; i++)
+        /// <summary>
+        /// Adds a step to the workplan
+        /// </summary>
+        /// <param name="task">The task to add.</param>
+        /// <param name="parameter">The parameter for the task.</param>
+        /// <param name="input">The input for the step</param>
+        /// <param name="outputs">The outputs of the steps.</param>
+        /// <returns></returns>
+        public TaskStep<TActivity, TProcParam, TParam> AddStep<TActivity, TProcParam, TParam>(TaskStep<TActivity, TProcParam, TParam> task, TParam parameter, IConnector[] input, params IConnector[] outputs)
+            where TActivity : IActivity<TProcParam>, new()
+            where TProcParam : IParameters
+            where TParam : TProcParam, new()
         {
-            task.Outputs[i] = outputs[i];
+            task.Parameters = parameter;
+            for (var i = 0; i < input.Length; i++)
+            {
+                task.Inputs[i] = input[i];
+            }
+
+            for (var i = 0; i < outputs.Length; i++)
+            {
+                task.Outputs[i] = outputs[i];
+            }
+
+            workplan.Add(task);
+
+            return task;
         }
 
-        workplan.Add(task);
-
-        return task;
-    }
-
-    /// <summary>
-    /// Adds a step to the workplan
-    /// </summary>
-    /// <param name="workplan">The workplan.</param>
-    /// <param name="task">The task to add.</param>
-    /// <param name="parameter">The parameter for the task.</param>
-    /// <param name="input">The input for the step</param>
-    /// <param name="outputs">The outputs of the steps.</param>
-    /// <returns></returns>
-    public static TaskStep<TActivity, TProcParam, TParam> AddStep<TActivity, TProcParam, TParam>(this Workplan workplan, TaskStep<TActivity, TProcParam, TParam> task, TParam parameter, IConnector[] input, params IConnector[] outputs)
-        where TActivity : IActivity<TProcParam>, new()
-        where TProcParam : IParameters
-        where TParam : TProcParam, new()
-    {
-        task.Parameters = parameter;
-        for (var i = 0; i < input.Length; i++)
+        /// <summary>
+        /// Adds a connector to the workplan.
+        /// </summary>
+        /// <param name="name">The name of the connector.</param>
+        /// <param name="classification">The classification of the connector.</param>
+        /// <returns></returns>
+        public IConnector AddConnector(string name, NodeClassification classification)
         {
-            task.Inputs[i] = input[i];
+            var connector = WorkplanInstance.CreateConnector(name, classification);
+            workplan.Add(connector);
+            return connector;
         }
 
-        for (var i = 0; i < outputs.Length; i++)
+        /// <summary>
+        /// Adds a intermediate connector to the workplan.
+        /// </summary>
+        /// <param name="name">The name of the connector.</param>
+        /// <returns></returns>
+        public IConnector AddConnector(string name)
         {
-            task.Outputs[i] = outputs[i];
+            return workplan.AddConnector(name, NodeClassification.Intermediate);
         }
-
-        workplan.Add(task);
-
-        return task;
-    }
-
-    /// <summary>
-    /// Adds a connector to the workplan.
-    /// </summary>
-    /// <param name="workplan">The workplan.</param>
-    /// <param name="name">The name of the connector.</param>
-    /// <param name="classification">The classification of the connector.</param>
-    /// <returns></returns>
-    public static IConnector AddConnector(this Workplan workplan, string name, NodeClassification classification)
-    {
-        var connector = WorkplanInstance.CreateConnector(name, classification);
-        workplan.Add(connector);
-        return connector;
-    }
-
-    /// <summary>
-    /// Adds a intermediate connector to the workplan.
-    /// </summary>
-    /// <param name="workplan">The workplan.</param>
-    /// <param name="name">The name of the connector.</param>
-    /// <returns></returns>
-    public static IConnector AddConnector(this Workplan workplan, string name)
-    {
-        return workplan.AddConnector(name, NodeClassification.Intermediate);
     }
 
     /// <summary>

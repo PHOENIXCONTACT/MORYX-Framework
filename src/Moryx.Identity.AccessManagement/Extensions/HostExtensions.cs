@@ -78,50 +78,51 @@ public static class HostExtensions
         "Moryx.Launcher.CanViewExternalModules"
     ];
 
-    /// <summary>
-    /// Extension method to apply all migrations to the <see cref="MoryxIdentitiesDbContext"/> of the application.
-    /// </summary>
     /// <param name="host">The Microsoft.Extensions.Hosting.IHost holding the <see cref="MoryxIdentitiesDbContext"/>.</param>
-    public static IHost Migrate(this IHost host)
+    extension(IHost host)
     {
-        using var scope = host.Services.CreateScope();
-        var services = scope.ServiceProvider;
-        var context = services.GetRequiredService<MoryxIdentitiesDbContext>();
-        context.Database.Migrate();
+        /// <summary>
+        /// Extension method to apply all migrations to the <see cref="MoryxIdentitiesDbContext"/> of the application.
+        /// </summary>
+        public IHost Migrate()
+        {
+            using var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var context = services.GetRequiredService<MoryxIdentitiesDbContext>();
+            context.Database.Migrate();
 
-        return host;
+            return host;
+        }
+
+        /// <summary>
+        /// Seeds an empty <see cref="MoryxIdentitiesDbContext"/> with a SuperAdmin role, an admin user and all currently known MORYX permissions.
+        /// </summary>
+        /// <param name="additionalPermissions">Additional permissions to add to the database with the initial seeding.</param>
+        /// <remarks>Requires an existing database to be seeded. A call of the <see cref="Migrate(IHost)"/> method is usually
+        /// used to make sure of this.</remarks>
+        public async Task<IHost> Seed(IEnumerable<string> additionalPermissions)
+        {
+            using var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+            var logger = loggerFactory.CreateLogger("app");
+
+            var userManager = services.GetRequiredService<MoryxUserManager>();
+            var roleManager = services.GetRequiredService<MoryxRoleManager>();
+            var permissionManager = services.GetRequiredService<IPermissionManager>();
+
+            var seedResult = await SeedDatabase(userManager, roleManager, permissionManager, logger, additionalPermissions);
+
+            return host;
+        }
+
+        /// <summary>
+        /// Seeds an empty <see cref="MoryxIdentitiesDbContext"/> with a SuperAdmin role, an admin user and all currently known MORYX permissions.
+        /// </summary>
+        /// <remarks>Requires an existing database to be seeded. A call of the <see cref="Migrate(IHost)"/> method is usually
+        /// used to make sure of this.</remarks>
+        public async Task<IHost> Seed() => await host.Seed([]);
     }
-
-    /// <summary>
-    /// Seeds an empty <see cref="MoryxIdentitiesDbContext"/> with a SuperAdmin role, an admin user and all currently known MORYX permissions.
-    /// </summary>
-    /// <param name="host">The Microsoft.Extensions.Hosting.IHost holding the <see cref="MoryxIdentitiesDbContext"/>.</param>
-    /// <param name="additionalPermissions">Additional permissions to add to the database with the initial seeding.</param>
-    /// <remarks>Requires an existing database to be seeded. A call of the <see cref="Migrate(IHost)"/> method is usually
-    /// used to make sure of this.</remarks>
-    public static async Task<IHost> Seed(this IHost host, IEnumerable<string> additionalPermissions)
-    {
-        using var scope = host.Services.CreateScope();
-        var services = scope.ServiceProvider;
-        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
-        var logger = loggerFactory.CreateLogger("app");
-
-        var userManager = services.GetRequiredService<MoryxUserManager>();
-        var roleManager = services.GetRequiredService<MoryxRoleManager>();
-        var permissionManager = services.GetRequiredService<IPermissionManager>();
-
-        var seedResult = await SeedDatabase(userManager, roleManager, permissionManager, logger, additionalPermissions);
-
-        return host;
-    }
-
-    /// <summary>
-    /// Seeds an empty <see cref="MoryxIdentitiesDbContext"/> with a SuperAdmin role, an admin user and all currently known MORYX permissions.
-    /// </summary>
-    /// <param name="host">The Microsoft.Extensions.Hosting.IHost holding the <see cref="MoryxIdentitiesDbContext"/>.</param>
-    /// <remarks>Requires an existing database to be seeded. A call of the <see cref="Migrate(IHost)"/> method is usually
-    /// used to make sure of this.</remarks>
-    public static async Task<IHost> Seed(this IHost host) => await host.Seed([]);
 
     private static async Task<bool> SeedDatabase(MoryxUserManager userManager,
         MoryxRoleManager roleManager,

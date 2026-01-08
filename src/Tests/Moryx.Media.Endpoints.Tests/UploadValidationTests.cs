@@ -172,18 +172,21 @@ public class UploadValidationTests
 
 public static class MediaServerMock
 {
-    public static void SetupFileSize(this Mock<IMediaServer> mediaServer, int sizeInMb)
+    extension(Mock<IMediaServer> mediaServer)
     {
-        mediaServer
-            .Setup(ms => ms.FileSizeLimitInMb())
-            .Returns(sizeInMb);
-    }
+        public void SetupFileSize(int sizeInMb)
+        {
+            mediaServer
+                .Setup(ms => ms.FileSizeLimitInMb())
+                .Returns(sizeInMb);
+        }
 
-    public static void SetupSupportedTypes(this Mock<IMediaServer> mediaServer, params string[] types)
-    {
-        mediaServer
-            .Setup(ms => ms.GetSupportedFileTypes())
-            .Returns(types);
+        public void SetupSupportedTypes(params string[] types)
+        {
+            mediaServer
+                .Setup(ms => ms.GetSupportedFileTypes())
+                .Returns(types);
+        }
     }
 }
 

@@ -8,41 +8,44 @@ namespace Moryx.Container;
 /// </summary>
 public static class ContainerResolveExtensions
 {
-    /// <summary>
-    /// Resolve an instance of the given service
-    /// </summary>
-    /// <typeparam name="T">Type to resolve</typeparam>
-    /// <returns>Instance of type</returns>
-    public static T Resolve<T>(this IContainer container)
+    extension(IContainer container)
     {
-        return (T)container.Resolve(typeof(T), null);
-    }
+        /// <summary>
+        /// Resolve an instance of the given service
+        /// </summary>
+        /// <typeparam name="T">Type to resolve</typeparam>
+        /// <returns>Instance of type</returns>
+        public T Resolve<T>()
+        {
+            return (T)container.Resolve(typeof(T), null);
+        }
 
-    /// <summary>
-    /// Resolve this dependency
-    /// </summary>
-    public static object Resolve(this IContainer container, Type service)
-    {
-        return container.Resolve(service, null);
-    }
+        /// <summary>
+        /// Resolve this dependency
+        /// </summary>
+        public object Resolve(Type service)
+        {
+            return container.Resolve(service, null);
+        }
 
-    /// <summary>
-    /// Resolve a named instance of the given service
-    /// </summary>
-    /// <typeparam name="T">Type to resolve</typeparam>
-    /// <returns>Instance of type</returns>
-    public static T Resolve<T>(this IContainer container, string name)
-    {
-        return (T)container.Resolve(typeof(T), name);
-    }
+        /// <summary>
+        /// Resolve a named instance of the given service
+        /// </summary>
+        /// <typeparam name="T">Type to resolve</typeparam>
+        /// <returns>Instance of type</returns>
+        public T Resolve<T>(string name)
+        {
+            return (T)container.Resolve(typeof(T), name);
+        }
 
-    /// <summary>
-    /// Resolve all implementations of this contract
-    /// </summary>
-    /// <typeparam name="T">Type to resolve</typeparam>
-    /// <returns></returns>
-    public static T[] ResolveAll<T>(this IContainer container)
-    {
-        return (T[])container.ResolveAll(typeof(T));
+        /// <summary>
+        /// Resolve all implementations of this contract
+        /// </summary>
+        /// <typeparam name="T">Type to resolve</typeparam>
+        /// <returns></returns>
+        public T[] ResolveAll<T>()
+        {
+            return (T[])container.ResolveAll(typeof(T));
+        }
     }
 }

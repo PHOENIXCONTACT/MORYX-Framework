@@ -10,37 +10,40 @@ namespace Moryx.Tools;
 /// </summary>
 public static class DateTimeExtensions
 {
-    /// <summary>
-    /// Returns the calendar week regarding to ISO8601
-    /// </summary>
-    public static int WeekNumber(this DateTime date)
+    extension(DateTime date)
     {
-        var calender = Thread.CurrentThread.CurrentCulture.Calendar;
-
-        var day = (int)calender.GetDayOfWeek(date);
-        return calender.GetWeekOfYear(date.AddDays(4 - (day == 0 ? 7 : day)), CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
-    }
-
-    /// <summary>
-    /// Returns a DateTime with the date of the start of the week.
-    /// </summary>
-    public static DateTime StartOfWeek(this DateTime dt, DayOfWeek startOfWeek)
-    {
-        var diff = dt.DayOfWeek - startOfWeek;
-        if (diff < 0)
+        /// <summary>
+        /// Returns the calendar week regarding to ISO8601
+        /// </summary>
+        public int WeekNumber()
         {
-            diff += 7;
+            var calender = Thread.CurrentThread.CurrentCulture.Calendar;
+
+            var day = (int)calender.GetDayOfWeek(date);
+            return calender.GetWeekOfYear(date.AddDays(4 - (day == 0 ? 7 : day)), CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         }
 
-        return dt.AddDays(-1 * diff).Date; // .Date for Time 00:00:00
-    }
+        /// <summary>
+        /// Returns a DateTime with the date of the start of the week.
+        /// </summary>
+        public DateTime StartOfWeek(DayOfWeek startOfWeek)
+        {
+            var diff = date.DayOfWeek - startOfWeek;
+            if (diff < 0)
+            {
+                diff += 7;
+            }
 
-    /// <summary>
-    /// Returns a DateTime with the date of the start of the week.
-    /// </summary>
-    public static DateTime StartOfWeek(this DateTime dt)
-    {
-        return dt.StartOfWeek(DayOfWeek.Monday);
+            return date.AddDays(-1 * diff).Date; // .Date for Time 00:00:00
+        }
+
+        /// <summary>
+        /// Returns a DateTime with the date of the start of the week.
+        /// </summary>
+        public DateTime StartOfWeek()
+        {
+            return date.StartOfWeek(DayOfWeek.Monday);
+        }
     }
 
     /// <summary>
@@ -76,41 +79,42 @@ public static class DateTimeExtensions
         return StartOfWeek(year, calendarweek).EndOfWeek();
     }
 
-    /// <summary>
-    /// Add weeks to datetime (n * 7).
-    /// </summary>
     /// <param name="dateTime">The date time.</param>
-    /// <param name="numberOfWeeks">The number of weeks.</param>
-    /// <returns></returns>
-    public static DateTime AddWeeks(this DateTime dateTime, int numberOfWeeks)
+    extension(DateTime dateTime)
     {
-        return dateTime.AddDays(numberOfWeeks * 7);
-    }
+        /// <summary>
+        /// Add weeks to datetime (n * 7).
+        /// </summary>
+        /// <param name="numberOfWeeks">The number of weeks.</param>
+        /// <returns></returns>
+        public DateTime AddWeeks(int numberOfWeeks)
+        {
+            return dateTime.AddDays(numberOfWeeks * 7);
+        }
 
-    /// <summary>
-    /// Firsts the of month.
-    /// </summary>
-    /// <param name="inst">The cur day.</param>
-    /// <returns></returns>
-    public static DateTime StartOfMonth(this DateTime inst)
-    {
-        return new DateTime(inst.Year, inst.Month, 1);
-    }
+        /// <summary>
+        /// Firsts the of month.
+        /// </summary>
+        /// <returns></returns>
+        public DateTime StartOfMonth()
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, 1);
+        }
 
-    /// <summary>
-    /// Lasts the of month.
-    /// </summary>
-    /// <param name="inst">The cur day.</param>
-    /// <returns></returns>
-    public static DateTime EndOfMonth(this DateTime inst)
-    {
-        // overshoot the date by a month
-        var dtTo = new DateTime(inst.Year, inst.Month, 1).AddMonths(1);
+        /// <summary>
+        /// Lasts the of month.
+        /// </summary>
+        /// <returns></returns>
+        public DateTime EndOfMonth()
+        {
+            // overshoot the date by a month
+            var dtTo = new DateTime(dateTime.Year, dateTime.Month, 1).AddMonths(1);
 
-        dtTo = dtTo.AddTicks(-1);
+            dtTo = dtTo.AddTicks(-1);
 
-        // return the last day of the month
-        return dtTo;
+            // return the last day of the month
+            return dtTo;
+        }
     }
 
     /// <summary>
