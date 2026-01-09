@@ -147,9 +147,6 @@ internal class OperationManager : IOperationManager, ILoggingComponent
     /// <inheritdoc />
     public Task Report(IOperationData operationData, OperationReport report)
     {
-        if (!report.User.SignedIn)
-            throw new InvalidOperationException("User for the report of the operation was not signed in.");
-
         return operationData.Report(report);
     }
 

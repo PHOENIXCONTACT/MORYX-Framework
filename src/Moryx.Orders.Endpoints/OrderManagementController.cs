@@ -420,7 +420,9 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
         await _orderManagement.ReportOperationAsync(operation, Converter.FromModel(report, _userManagement));
         return Ok();
@@ -436,9 +438,11 @@ public class OrderManagementController : ControllerBase
     {
         var operation = await _orderManagement.LoadOperationAsync(guid);
         if (operation == null)
+        {
             return NotFound(new MoryxExceptionResponse { Title = Strings.OrderManagementController_OperationNotFound });
+        }
 
-        var user = _userManagement?.GetUser(userIdentifier);
+        var user = string.IsNullOrEmpty(userIdentifier) ? null : _userManagement?.GetUser(userIdentifier);
 
         await _orderManagement.InterruptOperationAsync(operation, user);
         return Ok();
