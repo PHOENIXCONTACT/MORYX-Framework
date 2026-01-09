@@ -16,6 +16,13 @@ public abstract class DesignTimeDbContextFactory<TContext> : IDesignTimeDbContex
     /// <inheritdoc />
     public virtual TContext CreateDbContext(string[] args)
     {
+        var connectionString = ResolveConnectionString(args);
+
+        return CreateDbContext(connectionString);
+    }
+
+    protected static string ResolveConnectionString(string[] args)
+    {
         var connectionString = string.Empty;
         for (var i = 0; i < args.Length; i++)
         {
@@ -36,7 +43,7 @@ public abstract class DesignTimeDbContextFactory<TContext> : IDesignTimeDbContex
                                                 "in the 'EFCORETOOLSDB' environment variable nor by arguments -- --connection \"connectionString\"");
         }
 
-        return CreateDbContext(connectionString);
+        return connectionString;
     }
 
     /// <summary>
