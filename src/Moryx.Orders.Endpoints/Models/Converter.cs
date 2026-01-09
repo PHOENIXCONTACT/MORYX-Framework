@@ -31,7 +31,7 @@ internal static class Converter
 
     internal static OperationReport FromModel(ReportModel model, IUserManagement userManagement)
     {
-        var user = userManagement?.GetUser(model.UserIdentifier);
+        var user = string.IsNullOrEmpty(model.UserIdentifier) ? null : userManagement?.GetUser(model.UserIdentifier);
         return new OperationReport(model.ConfirmationType, model.SuccessCount, model.FailureCount, user)
         {
             Comment = model.Comment
