@@ -1,0 +1,33 @@
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.AbstractionLayer.Resources;
+
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+
+namespace Moryx.ControlSystem.Processes.Endpoints.Extensions;
+
+internal static class ProcessHolderPositionsExtensions
+{
+
+    public static Dictionary<Resource, IEnumerable<IProcessHolderPosition>> GetUngroupedPostions(
+        this IEnumerable<IProcessHolderPosition> positions)
+    {
+        var result = new Dictionary<Resource, IEnumerable<IProcessHolderPosition>>();
+        foreach (var position in positions)
+        {
+            if (position is Resource resource && !(resource.ParentCategory() == Category.ProcessHolderGroup))
+            {
+                if (result.TryGetValue(resource, out var list))
+                {
+                    list.Append(position);
+                }
+                else
+                {
+                    result.Add(resource, [position]);
+                }
+            }
+        }
+        return result;
+    }
+}

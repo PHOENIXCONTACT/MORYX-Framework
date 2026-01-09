@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
+
+  <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\main.js')) And ('$(NoBuild)' != 'true') ">
+	<Exec WorkingDirectory=".\" Command="npm config set strict-ssl false" />
+	<Exec WorkingDirectory=".\" Command="npm ci" />
+	<Exec WorkingDirectory=".\" Command="npm run build:prod" />
+	<Exec WorkingDirectory=".\" Command="npm config set strict-ssl true" />
+  </Target>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <DefaultItemExcludes>src\**;node_modules\**;package\**</DefaultItemExcludes>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="tsconfig*.json" />
+    <Content Remove="package.json" />
+    <Content Remove="package-lock.json" />
+    <Content Remove="angular.json" />
+    <Content Remove=".prettierrc.json; prettierrc.json;" />
+    <Content Remove="service-config.json" />
+    <Content Update="@(Content)" Pack="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.Orders.Endpoints\Moryx.Orders.Endpoints.csproj" />
+    <ProjectReference Include="..\Moryx\Moryx.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

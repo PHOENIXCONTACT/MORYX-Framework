@@ -1,19 +1,11 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Moryx.Model.Configuration;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Common;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Moryx.Model.SqlServer;
 
@@ -24,13 +16,13 @@ namespace Moryx.Model.SqlServer;
 public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServerDatabaseConfig>
 {
     /// <inheritdoc />
-    protected override DbConnection CreateConnection(IDatabaseConfig config)
+    protected override DbConnection CreateConnection(DatabaseConfig config)
     {
         return CreateConnection(config, true);
     }
 
     /// <inheritdoc />
-    protected override DbConnection CreateConnection(IDatabaseConfig config, bool includeModel)
+    protected override DbConnection CreateConnection(DatabaseConfig config, bool includeModel)
     {
         return new SqlConnection(BuildConnectionString(config, includeModel));
     }
@@ -42,75 +34,37 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
     }
 
     /// <inheritdoc />
-    public override async Task DeleteDatabase(IDatabaseConfig config)
+    public override async Task DeleteDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
     {
-        var settings = (SqlServerDatabaseConnectionSettings)config.ConnectionSettings;
+        var settings = (SqlServerDatabaseConfig)config;
 
         // Create connection and prepare command
         await using var connection = new SqlConnection(BuildConnectionString(config, false));
 
-        var sqlCommandText = $"ALTER DATABASE {settings.Database} SET SINGLE_USER WITH ROLLBACK IMMEDIATE;" +
-                             $"DROP DATABASE [{settings.Database}]";
+        var sqlCommandText = $"ALTER DATABASE {settings.InitialCatalog} SET SINGLE_USER WITH ROLLBACK IMMEDIATE;" +
+                             $"DROP DATABASE [{settings.InitialCatalog}]";
 
         await using var command = CreateCommand(sqlCommandText, connection);
 
         // Open connection
-        await connection.OpenAsync();
-        await command.ExecuteNonQueryAsync();
+        await connection.OpenAsync(cancellationToken);
+        await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    /// <inheritdoc />
-    public override async Task DumpDatabase(IDatabaseConfig config, string targetPath)
+    private static SqlConnectionStringBuilder CreateConnectionStringBuilder(DatabaseConfig config, bool includeModel = true)
     {
-        if (!IsValidBackupFilePath(targetPath))
-            throw new ArgumentException("Invalid backup file path.");
+        var builder = new SqlConnectionStringBuilder(config.ConnectionString);
 
-        var connectionString = CreateConnectionStringBuilder(config);
-
-        var dumpName = $"{DateTime.Now:dd-MM-yyyy-hh-mm-ss}_{connectionString.InitialCatalog}.bak";
-        var fileName = Path.Combine(targetPath, dumpName);
-
-        await using var connection = new SqlConnection(BuildConnectionString(config, false));
-        await using var command =
-            CreateCommand($"BACKUP DATABASE [{connectionString.InitialCatalog}] TO DISK = N'{fileName}' WITH INIT",
-                connection);
-
-        Logger.Log(LogLevel.Debug, "Starting to dump database with 'BACKUP DATABASE' to: {fileName}", fileName);
-
-        await connection.OpenAsync();
-        await command.ExecuteNonQueryAsync();
-    }
-
-    private static SqlConnectionStringBuilder CreateConnectionStringBuilder(IDatabaseConfig config, bool includeModel = true)
-    {
-        var builder = new SqlConnectionStringBuilder(config.ConnectionSettings.ConnectionString)
+        if (!includeModel)
         {
-            InitialCatalog = includeModel ? config.ConnectionSettings.Database : string.Empty
-        };
+            builder.InitialCatalog = string.Empty;
+        }
 
         return builder;
     }
 
     /// <inheritdoc />
-    public override async Task RestoreDatabase(IDatabaseConfig config, string filePath)
-    {
-        if (!IsValidBackupFilePath(filePath))
-            throw new ArgumentException("Invalid backup file path.");
-
-        var connectionString = CreateConnectionStringBuilder(config);
-
-        await using var connection = new SqlConnection(BuildConnectionString(config, false));
-        await using var command = CreateCommand($"RESTORE DATABASE [{connectionString.InitialCatalog}] FROM DISK = N'{filePath}' WITH REPLACE",
-                connection);
-
-        Logger.Log(LogLevel.Debug, "Starting to restore database with 'RESTORE DATABASE' from: {filePath}", filePath);
-
-        await connection.OpenAsync();
-        await command.ExecuteNonQueryAsync();
-    }
-
-    /// <inheritdoc />
-    public override DbContextOptions BuildDbContextOptions(IDatabaseConfig config)
+    public override DbContextOptions BuildDbContextOptions(DatabaseConfig config)
     {
         var builder = new DbContextOptionsBuilder();
         builder.UseSqlServer(BuildConnectionString(config, true));
@@ -118,11 +72,8 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
         return builder.Options;
     }
 
-    private static string BuildConnectionString(IDatabaseConfig config, bool includeModel)
+    private static string BuildConnectionString(DatabaseConfig config, bool includeModel)
     {
-        if (!IsValidDatabaseName(config.ConnectionSettings.Database))
-            throw new ArgumentException("Invalid database name.");
-
         var builder = CreateConnectionStringBuilder(config, includeModel);
         builder.PersistSecurityInfo = true;
 
@@ -130,9 +81,9 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
     }
 
     /// <inheritdoc />
-    protected override DbContext CreateMigrationContext(IDatabaseConfig config)
+    protected override DbContext CreateMigrationContext(DatabaseConfig config)
     {
-        var migrationAssemblyType = FindMigrationAssemblyType(typeof(SqlServerDatabaseContextAttribute));
+        var migrationAssemblyType = FindMigrationAssemblyType(typeof(SqlServerDbContextAttribute));
 
         var builder = new DbContextOptionsBuilder();
         builder.UseSqlServer(
@@ -140,22 +91,5 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
             x => x.MigrationsAssembly(migrationAssemblyType.Assembly.FullName));
 
         return CreateContext(migrationAssemblyType, builder.Options);
-    }
-
-    private static bool IsValidDatabaseName(string dbName)
-    {
-        // Avoid sql injection by validating the database name
-        if (string.IsNullOrWhiteSpace(dbName) || dbName.Length > 128)
-            return false;
-
-        // Only allow letters, numbers, and underscores
-        return Regex.IsMatch(dbName, @"^[A-Za-z0-9_]+$");
-    }
-
-    private static bool IsValidBackupFilePath(string filePath)
-    {
-        // Disallow dangerous characters
-        var invalidStrings = new[] { ";", "'", "\"", "--" };
-        return invalidStrings.All(s => !filePath.Contains(s));
     }
 }

@@ -1,37 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Tools
+using System.Collections.ObjectModel;
+using Moryx.Serialization;
+
+namespace Moryx.Tools;
+
+/// <summary>
+/// Extensions for th <see cref="IEnumerable{T}"/>
+/// </summary>
+public static class EnumerableExtensions
 {
-    /// <summary>
-    /// Extensions for th <see cref="IEnumerable{T}"/>
-    /// </summary>
-    public static class EnumerableExtensions
+    extension<T>(IEnumerable<T> enumerable)
     {
         /// <summary>
         /// Converts an IEnumerable to an observable collection
         /// </summary>
-        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> enumerable)
+        public ObservableCollection<T> ToObservableCollection()
         {
-            return enumerable == null ? new ObservableCollection<T>() : new ObservableCollection<T>(enumerable);
+            return enumerable == null ? [] : new ObservableCollection<T>(enumerable);
         }
 
         /// <summary>
         /// Flats a tree of objects. Sample: root.Flatten(c => c.Children)
         /// </summary>
-        public static IEnumerable<T> Flatten<T>(this IEnumerable<T> e, Func<T, IEnumerable<T>> f)
+        public IEnumerable<T> Flatten(Func<T, IEnumerable<T>> f)
         {
-            return e.SelectMany(c => f(c).Flatten(f)).Concat(e);
+            return enumerable.SelectMany(c => f(c).Flatten(f)).Concat(enumerable);
         }
 
         /// <summary>
         /// Executes an action for each element of an <see cref="IEnumerable{T}"/>
         /// </summary>
-        public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
+        public void ForEach(Action<T> action)
         {
-            foreach (var item in enumeration)
+            foreach (var item in enumerable)
             {
                 action(item);
             }
@@ -40,17 +43,17 @@ namespace Moryx.Tools
         /// <summary>
         /// Return all entries from the source collection that do not match the filter for any entry in the second collection
         /// </summary>
-        public static IEnumerable<TSource> Except<TSource, TCompare>(this IEnumerable<TSource> source, ICollection<TCompare> compare, Func<TSource, TCompare, bool> filter)
+        public IEnumerable<T> Except<TCompare>(ICollection<TCompare> compare, Func<T, TCompare, bool> filter)
         {
-            return source.Where(entry => compare.All(item => !filter(entry, item)));
+            return enumerable.Where(entry => compare.All(item => !filter(entry, item)));
         }
 
         /// <summary>
         /// Return all entries from the source collection that do match the filter for any entry in the second collection
         /// </summary>
-        public static IEnumerable<TSource> Intersect<TSource, TCompare>(this IEnumerable<TSource> source, ICollection<TCompare> compare, Func<TSource, TCompare, bool> filter)
+        public IEnumerable<T> Intersect<TCompare>(ICollection<TCompare> compare, Func<T, TCompare, bool> filter)
         {
-            return source.Where(entry => compare.Any(item => filter(entry, item)));
+            return enumerable.Where(entry => compare.Any(item => filter(entry, item)));
         }
     }
 }

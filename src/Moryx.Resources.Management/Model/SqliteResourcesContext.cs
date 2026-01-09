@@ -1,35 +1,24 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.EntityFrameworkCore;
-using Moryx.Model.Attributes;
 using Moryx.Model.Sqlite;
-using Moryx.Model.Sqlite.Attributes;
 
-// ReSharper disable once CheckNamespace
-namespace Moryx.Resources.Model
+namespace Moryx.Resources.Management.Model;
+
+/// <summary>
+/// Sqlite specific implementation of <see cref="ResourcesContext"/>
+/// </summary>
+[SqliteDbContext(typeof(ResourcesContext))]
+public class SqliteResourcesContext : ResourcesContext
 {
-    /// <summary>
-    /// Sqlite specific implementation of <see cref="ResourcesContext"/>
-    /// </summary>
-    [SqliteContext]
-    [ModelConfigurator(typeof(SqliteModelConfigurator))]
-    public class SqliteResourcesContext : ResourcesContext
+    /// <inheritdoc />
+    public SqliteResourcesContext()
     {
-        /// <inheritdoc />
-        public SqliteResourcesContext()
-        {
-        }
+    }
 
-        /// <inheritdoc />
-        public SqliteResourcesContext(DbContextOptions options) : base(options)
-        {
-        }
-
-        /// <inheritdoc />
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-        }
+    /// <inheritdoc />
+    public SqliteResourcesContext(DbContextOptions options) : base(options)
+    {
     }
 }

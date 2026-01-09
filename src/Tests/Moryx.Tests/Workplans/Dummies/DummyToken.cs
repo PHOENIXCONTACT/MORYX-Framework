@@ -1,15 +1,14 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Workplans;
 
-namespace Moryx.Tests.Workplans
+namespace Moryx.Tests.Workplans;
+
+public class DummyToken : IToken
 {
-    public class DummyToken : IToken
-    {
-        /// <summary>
-        /// Token name
-        /// </summary>
-        public string Name { get { return "DummyToken"; } }
-    }
+    /// <summary>
+    /// Token name
+    /// </summary>
+    public string Name { get { return "DummyToken"; } }
 }

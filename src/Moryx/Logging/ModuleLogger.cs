@@ -1,66 +1,64 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Microsoft.Extensions.Logging;
-using System;
 
-namespace Moryx.Logging
+namespace Moryx.Logging;
+
+/// <summary>
+///Slim wrapper around <see cref="ILogger"/> for module focused logging
+/// </summary>
+public class ModuleLogger : IModuleLogger
 {
-    /// <summary>
-    ///Slim wrapper around <see cref="ILogger"/> for module focused logging
-    /// </summary>
-    public class ModuleLogger : IModuleLogger
+    private readonly ILogger _logger;
+    private readonly ILoggerFactory _loggerFactory;
+
+    public string Name { get; }
+
+    protected Action<LogLevel, string, Exception> NotificationTarget { get; }
+
+    public bool IsEnabled(LogLevel logLevel)
     {
-        private ILogger _logger;
-        private readonly ILoggerFactory _loggerFactory;
+        return _logger.IsEnabled(logLevel);
+    }
 
-        public string Name { get; }
+    IDisposable ILogger.BeginScope<TState>(TState state)
+    {
+        return _logger.BeginScope(state);
+    }
 
-        protected Action<LogLevel, string, Exception> NotificationTarget { get; }
+    public ModuleLogger(string name, ILoggerFactory loggerFactory)
+        : this(name, loggerFactory, loggerFactory.CreateLogger(name), null)
+    {
+    }
 
-        public bool IsEnabled(LogLevel logLevel)
-        {
-            return _logger.IsEnabled(logLevel);
-        }
+    public ModuleLogger(string name, ILoggerFactory loggerFactory, Action<LogLevel, string, Exception> notificationTarget)
+        : this(name, loggerFactory, loggerFactory.CreateLogger(name), notificationTarget)
+    {
+    }
 
-        IDisposable ILogger.BeginScope<TState>(TState state)
-        {
-            return _logger.BeginScope(state);
-        }
+    private ModuleLogger(string name, ILoggerFactory loggerFactory, ILogger logger, Action<LogLevel, string, Exception> notificationTarget)
+    {
+        Name = name;
+        NotificationTarget = notificationTarget;
 
-        public ModuleLogger(string name, ILoggerFactory loggerFactory)
-            : this(name, loggerFactory, loggerFactory.CreateLogger(name), null)
-        {
-        }
+        _logger = logger;
+        _loggerFactory = loggerFactory;
+    }
 
-        public ModuleLogger(string name, ILoggerFactory loggerFactory, Action<LogLevel, string, Exception> notificationTarget)
-            : this(name, loggerFactory, loggerFactory.CreateLogger(name), notificationTarget)
-        {
-        }
+    public IModuleLogger GetChild(string name, Type target)
+    {
+        var logger = string.IsNullOrEmpty(name)
+            ? new ModuleLogger(Name, _loggerFactory, _logger, NotificationTarget)
+            : new ModuleLogger($"{Name}.{name}", _loggerFactory, NotificationTarget);
+        return logger;
+    }
 
-        private ModuleLogger(string name, ILoggerFactory loggerFactory, ILogger logger, Action<LogLevel, string, Exception> notificationTarget)
-        {
-            Name = name;
-            NotificationTarget = notificationTarget;
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+    {
+        _logger.Log(logLevel, eventId, state, exception, formatter);
 
-            _logger = logger;
-            _loggerFactory = loggerFactory;
-        }
-
-        public IModuleLogger GetChild(string name, Type target)
-        {
-            var logger = string.IsNullOrEmpty(name)
-                ? new ModuleLogger(Name, _loggerFactory, _logger, NotificationTarget)
-                : new ModuleLogger($"{Name}.{name}", _loggerFactory, NotificationTarget);
-            return logger;
-        }
-
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-        {
-            _logger.Log(logLevel, eventId, state, exception, formatter);
-
-            if (logLevel >= LogLevel.Warning)
-                NotificationTarget?.Invoke(logLevel, formatter(state, exception), exception);
-        }
+        if (logLevel >= LogLevel.Warning)
+            NotificationTarget?.Invoke(logLevel, formatter(state, exception), exception);
     }
 }

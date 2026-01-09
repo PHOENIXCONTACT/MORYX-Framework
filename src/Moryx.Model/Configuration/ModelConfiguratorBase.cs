@@ -1,313 +1,292 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Moryx.Configuration;
-using Moryx.Model.Attributes;
 using Moryx.Tools;
 
-namespace Moryx.Model.Configuration
+namespace Moryx.Model.Configuration;
+
+/// <summary>
+/// Base class for model configurators
+/// </summary>
+public abstract class ModelConfiguratorBase<TConfig> : IModelConfigurator
+    where TConfig : DatabaseConfig, new()
 {
     /// <summary>
-    /// Base class for model configurators
+    /// The underlying context's type
     /// </summary>
-    public abstract class ModelConfiguratorBase<TConfig> : IModelConfigurator
-        where TConfig : class, IDatabaseConfig, new()
+    protected Type ContextType { get; private set; }
+
+    /// <summary>
+    /// Logger for this model configurator
+    /// </summary>
+    protected ILogger Logger { get; private set; }
+
+    /// <inheritdoc />
+    public DatabaseConfig Config { get; private set; }
+
+    /// <inheritdoc />
+    public void Initialize(Type contextType, DatabaseConfig config, ILogger logger)
     {
-        private IConfigManager _configManager;
-        private string _configName;
+        ContextType = contextType;
 
-        /// <summary>
-        /// The underlying context's type
-        /// </summary>
-        protected Type _contextType;
+        // Add logger
+        Logger = logger;
 
-        /// <summary>
-        /// Logger for this model configurator
-        /// </summary>
-        protected ILogger Logger { get; private set; }
+        Config = config as TConfig;
+        if (Config == null)
+            throw new InvalidOperationException(
+                $"Configuration for model '{contextType.FullName}' is not of expected type '{typeof(TConfig).FullName}'");
+    }
 
-        /// <inheritdoc />
-        public IDatabaseConfig Config { get; private set; }
+    /// <inheritdoc />
+    public DbContext CreateContext()
+    {
+        return CreateContext(Config);
+    }
 
-        /// <inheritdoc />
-        public void Initialize(Type contextType, IConfigManager configManager, ILogger logger)
+    /// <inheritdoc />
+    public DbContext CreateContext(DatabaseConfig config)
+    {
+        return CreateContext(ContextType, BuildDbContextOptions(config));
+    }
+
+    /// <inheritdoc />
+    public DbContext CreateContext(Type contextType, DbContextOptions dbContextOptions)
+    {
+        var context = (DbContext)Activator.CreateInstance(contextType, dbContextOptions);
+        return context;
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(config.ConnectionString))
+            return TestConnectionResult.ConfigurationError;
+
+        // Simple ef independent database connection
+        var connectionResult = await TestDatabaseConnection(config, cancellationToken);
+        if (!connectionResult)
+            return TestConnectionResult.ConnectionError;
+
+        await using var context = CreateContext(config);
+
+        // Ef dependent database connection
+        var canConnect = await context.Database.CanConnectAsync(cancellationToken);
+        if (!canConnect)
+            return TestConnectionResult.ConnectionOkDbDoesNotExist;
+
+        // If connection is ok, test migrations
+        var pendingMigrations = (await context.Database.GetPendingMigrationsAsync(cancellationToken: cancellationToken)).ToArray();
+        if (pendingMigrations.Any())
+            return TestConnectionResult.PendingMigrations;
+
+        return TestConnectionResult.Success;
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<bool> CreateDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
+    {
+        // Check is database is configured
+        if (!CheckDatabaseConfig(config))
         {
-            _contextType = contextType;
-            _configManager = configManager;
-
-            // Add logger
-            Logger = logger;
-
-            // Load Config
-            // TODO: Config name should be the name of the base type of the generic DbContext e.g. FooDbContext instead of SqliteFooDbContext. Rework in future version and use base context-type or config wrapper directly.
-            var modelConfiguratorAttr = contextType.GetCustomAttribute<ModelConfiguratorAttribute>();
-            var contextBaseType = modelConfiguratorAttr != null ? contextType.BaseType : contextType;
-            
-            _configName = contextBaseType!.FullName + ".DbConfig";
-            Config = _configManager.GetConfiguration<TConfig>(_configName);
-
-            // If database is empty, fill with TargetModel name
-            if (string.IsNullOrWhiteSpace(Config.ConnectionSettings.Database))
-                Config.ConnectionSettings.Database = contextBaseType.Name;
+            return false;
         }
 
-        /// <inheritdoc />
-        public DbContext CreateContext()
+        await using var context = CreateMigrationContext(config);
+
+        try
         {
-            return CreateContext(Config);
+            return await CreateDatabaseAsync(config, context, cancellationToken);
         }
-
-        /// <inheritdoc />
-        public DbContext CreateContext(IDatabaseConfig config)
+        catch (Exception e)
         {
-            return CreateContext(_contextType, BuildDbContextOptions(config));
+            Logger.LogError(e, "Creating database for context '{0}' failed!", context.GetType().Name);
+            return false;
         }
+    }
 
-        /// <inheritdoc />
-        public DbContext CreateContext(Type contextType, DbContextOptions dbContextOptions)
+    /// <summary>
+    /// Creates a database for the given context and checks if it's possible
+    /// to connect to it
+    /// </summary>
+    /// <param name="config">Config for testing the connection</param>
+    /// <param name="context">Database context</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    /// <returns></returns>
+    protected async Task<bool> CreateDatabaseAsync(DatabaseConfig config, DbContext context, CancellationToken cancellationToken)
+    {
+        //Will create the database if it does not already exist. Applies any pending migrations for the context to the database.
+        await context.Database.MigrateAsync(cancellationToken: cancellationToken);
+
+        // Create connection to our new database
+        var connection = CreateConnection(config);
+        await connection.OpenAsync(cancellationToken);
+
+        // Creation done -> close connection
+        await connection.CloseAsync();
+
+        return true;
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<DatabaseMigrationSummary> MigrateDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
+    {
+        var result = new DatabaseMigrationSummary();
+
+        await using var context = CreateMigrationContext(config);
+        var pendingMigrations = (await context.Database.GetPendingMigrationsAsync(cancellationToken: cancellationToken)).ToArray();
+
+        if (pendingMigrations.Length == 0)
         {
-            var context = (DbContext)Activator.CreateInstance(contextType, dbContextOptions);
-            return context;
-        }
-
-        /// <inheritdoc />
-        public void UpdateConfig()
-        {
-            _configManager.SaveConfiguration(Config, _configName);
-        }
-
-        /// <inheritdoc />
-        public virtual async Task<TestConnectionResult> TestConnection(IDatabaseConfig config)
-        {
-            if (string.IsNullOrWhiteSpace(config.ConnectionSettings.Database))
-                return TestConnectionResult.ConfigurationError;
-
-            // Simple ef independent database connection
-            var connectionResult = await TestDatabaseConnection(config);
-            if (!connectionResult)
-                return TestConnectionResult.ConnectionError;
-
-            await using var context = CreateContext(config);
-
-            // Ef dependent database connection
-            var canConnect = await context.Database.CanConnectAsync();
-            if (!canConnect)
-                return TestConnectionResult.ConnectionOkDbDoesNotExist;
-
-            // If connection is ok, test migrations
-            var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).ToArray();
-            if (pendingMigrations.Any())
-                return TestConnectionResult.PendingMigrations;
-
-            return TestConnectionResult.Success;
-        }
-
-        /// <inheritdoc />
-        public virtual async Task<bool> CreateDatabase(IDatabaseConfig config)
-        {
-            // Check is database is configured
-            if (!CheckDatabaseConfig(config))
-            {
-                return false;
-            }
-
-            await using var context = CreateMigrationContext(config);
-
-            return await CreateDatabase(config, context);
-        }
-
-        /// <summary>
-        /// Creates a database for the given context and checks if it's possible
-        /// to connect to it
-        /// </summary>
-        /// <param name="config">Config for testing the connection</param>
-        /// <param name="context">Database context</param>
-        /// <returns></returns>
-        protected async Task<bool> CreateDatabase(IDatabaseConfig config, DbContext context)
-        {
-            //Will create the database if it does not already exist. Applies any pending migrations for the context to the database.
-            await context.Database.MigrateAsync();
-
-            // Create connection to our new database
-            var connection = CreateConnection(config);
-            await connection.OpenAsync();
-
-            // Creation done -> close connection
-            connection.Close();
-
-            return true;
-        }
-
-        /// <inheritdoc />
-        public virtual async Task<DatabaseMigrationSummary> MigrateDatabase(IDatabaseConfig config)
-        {
-            var result = new DatabaseMigrationSummary();
-
-            await using var context = CreateMigrationContext(config);
-            var pendingMigrations = (await context.Database.GetPendingMigrationsAsync()).ToArray();
-
-            if (pendingMigrations.Length == 0)
-            {
-                result.Result = MigrationResult.NoMigrationsAvailable;
-                result.ExecutedMigrations = Array.Empty<string>();
-                Logger.Log(LogLevel.Warning, "Database migration for database '{0}' was failed. There are no migrations available!", config.ConnectionSettings.Database);
-
-                return result;
-            }
-
-            try
-            {
-                await context.Database.MigrateAsync();
-                result.Result = MigrationResult.Migrated;
-                result.ExecutedMigrations = pendingMigrations;
-                Logger.Log(LogLevel.Information, "Database migration for database '{0}' was successful. Executed migrations: {1}",
-                    config.ConnectionSettings.Database, string.Join(", ", pendingMigrations));
-
-            }
-            catch (Exception e)
-            {
-                result.Result = MigrationResult.Error;
-                Logger.Log(LogLevel.Error, e, "Database migration for database '{0}' was failed!", config.ConnectionSettings.Database);
-            }
+            result.Result = MigrationResult.NoMigrationsAvailable;
+            result.ExecutedMigrations = [];
+            Logger.Log(LogLevel.Warning, "Database migration for context '{contextName}' was failed. There are no migrations available!",
+                ContextType.Name);
 
             return result;
         }
 
-        /// <inheritdoc />
-        public virtual async Task<IReadOnlyList<string>> AvailableMigrations(IDatabaseConfig config)
+        try
         {
-            await using var context = CreateMigrationContext(config);
-            return await AvailableMigrations(context);
+            await context.Database.MigrateAsync(cancellationToken: cancellationToken);
+            result.Result = MigrationResult.Migrated;
+            result.ExecutedMigrations = pendingMigrations;
+            Logger.Log(LogLevel.Information, "Database migration for context '{contextName}' was successful. Executed migrations: {1}",
+                ContextType.Name, string.Join(", ", pendingMigrations));
+        }
+        catch (Exception e)
+        {
+            result.Result = MigrationResult.Error;
+            result.Errors = [.. result.Errors, e.Message];
+            Logger.Log(LogLevel.Error, e, "Database migration for database '{contextName}' was failed!", ContextType.Name);
         }
 
-        /// <summary>
-        /// Retrieves all names of available updates
-        /// </summary>
-        /// <returns></returns>
-        protected async Task<IReadOnlyList<string>> AvailableMigrations(DbContext context)
+        return result;
+    }
+
+    /// <inheritdoc />
+    public virtual async Task<IReadOnlyList<string>> AvailableMigrationsAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
+    {
+        await using var context = CreateMigrationContext(config);
+        return await AvailableMigrationsAsync(context, cancellationToken);
+    }
+
+    /// <summary>
+    /// Retrieves all names of available updates
+    /// </summary>
+    /// <returns></returns>
+    protected async Task<IReadOnlyList<string>> AvailableMigrationsAsync(DbContext context, CancellationToken cancellationToken)
+    {
+        try
         {
-            try
-            {
-                var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
-
-                return pendingMigrations.ToArray();
-            }
-            catch (Exception)
-            {
-                return Array.Empty<string>();
-            }
+            var pendingMigrations = await context.Database.GetPendingMigrationsAsync(cancellationToken);
+            return pendingMigrations.ToArray();
         }
-
-        /// <inheritdoc />
-        public virtual async Task<IReadOnlyList<string>> AppliedMigrations(IDatabaseConfig config)
+        catch (Exception e)
         {
-            await using var context = CreateMigrationContext(config);
-            return await AppliedMigrations(context);
+            Logger.LogError(e, "Could not retrieve available database migrations for context '{0}'!", context.GetType().Name);
+            return Array.Empty<string>();
         }
+    }
 
-        /// <summary>
-        /// Retrieves all names of installed updates
-        /// </summary>
-        /// <returns></returns>
-        public async Task<IReadOnlyList<string>> AppliedMigrations(DbContext context)
+    /// <inheritdoc />
+    public virtual async Task<IReadOnlyList<string>> AppliedMigrationsAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
+    {
+        await using var context = CreateMigrationContext(config);
+        return await AppliedMigrationsAsync(context, cancellationToken);
+    }
+
+    /// <summary>
+    /// Retrieves all names of installed updates
+    /// </summary>
+    /// <returns></returns>
+    protected async Task<IReadOnlyList<string>> AppliedMigrationsAsync(DbContext context, CancellationToken cancellationToken)
+    {
+        try
         {
-            try
-            {
-                var appliedMigrations = await context.Database.GetAppliedMigrationsAsync();
-
-                return appliedMigrations.ToArray();
-            }
-            catch (Exception)
-            {
-                return Array.Empty<string>();
-            }
+            var appliedMigrations = await context.Database.GetAppliedMigrationsAsync(cancellationToken);
+            return appliedMigrations.ToArray();
         }
-
-        /// <summary>
-        /// Creates a <see cref="DbConnection"/>
-        /// </summary>
-        protected abstract DbConnection CreateConnection(IDatabaseConfig config);
-
-        /// <summary>
-        /// Creates a <see cref="DbConnection"/>
-        /// </summary>
-        protected abstract DbConnection CreateConnection(IDatabaseConfig config, bool includeModel);
-
-        /// <summary>
-        /// Creates a <see cref="DbCommand"/>
-        /// </summary>
-        protected abstract DbCommand CreateCommand(string cmdText, DbConnection connection);
-
-        /// <summary>
-        /// Builds options to access the database
-        /// </summary>
-        public abstract DbContextOptions BuildDbContextOptions(IDatabaseConfig config);
-
-        /// <inheritdoc />
-        public abstract Task DeleteDatabase(IDatabaseConfig config);
-
-        /// <inheritdoc />
-        public abstract Task DumpDatabase(IDatabaseConfig config, string targetPath);
-
-        /// <inheritdoc />
-        public abstract Task RestoreDatabase(IDatabaseConfig config, string filePath);
-
-
-        /// <summary>
-        /// Generally tests the connection to the database
-        /// </summary>
-        private async Task<bool> TestDatabaseConnection(IDatabaseConfig config)
+        catch (Exception e)
         {
-            if (!CheckDatabaseConfig(config))
-                return false;
-
-            using var conn = CreateConnection(config, false);
-            try
-            {
-                await conn.OpenAsync();
-                return true;
-            }
-            catch(Exception e)
-            {
-                return false;
-            }
+            Logger.LogError(e, "Could not retrieve applied database migrations for context '{0}'!", context.GetType().Name);
+            return Array.Empty<string>();
         }
+    }
 
-        /// <summary>
-        /// Validates the config gor Host, Database, Username and Port
-        /// </summary>
-        protected static bool CheckDatabaseConfig(IDatabaseConfig config)
+    /// <summary>
+    /// Creates a <see cref="DbConnection"/>
+    /// </summary>
+    protected abstract DbConnection CreateConnection(DatabaseConfig config);
+
+    /// <summary>
+    /// Creates a <see cref="DbConnection"/>
+    /// </summary>
+    protected abstract DbConnection CreateConnection(DatabaseConfig config, bool includeModel);
+
+    /// <summary>
+    /// Creates a <see cref="DbCommand"/>
+    /// </summary>
+    protected abstract DbCommand CreateCommand(string cmdText, DbConnection connection);
+
+    /// <summary>
+    /// Builds options to access the database
+    /// </summary>
+    public abstract DbContextOptions BuildDbContextOptions(DatabaseConfig config);
+
+    /// <inheritdoc />
+    public abstract Task DeleteDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Generally tests the connection to the database
+    /// </summary>
+    private async Task<bool> TestDatabaseConnection(DatabaseConfig config, CancellationToken cancellationToken)
+    {
+        if (!CheckDatabaseConfig(config))
+            return false;
+
+        await using var conn = CreateConnection(config, false);
+        try
         {
-            return (!(string.IsNullOrEmpty(config.ConfiguratorTypename) ||
-                     string.IsNullOrEmpty(config.ConnectionSettings.ConnectionString)));
+            await conn.OpenAsync(cancellationToken);
+            return true;
         }
-
-        /// <summary>
-        /// Finds the context type marked with the provided attribute type.
-        /// </summary>
-        protected Type FindMigrationAssemblyType(Type attributeType)
+        catch(Exception e)
         {
-            var contextTypes =
-                ReflectionTool.GetPublicClasses(_contextType);
-
-            var fileteredAssembly = contextTypes.FirstOrDefault(t => t.CustomAttributes.Any(a => a.AttributeType == attributeType));
-
-            return fileteredAssembly ?? contextTypes.First();
+            return false;
         }
+    }
 
-        /// <summary>
-        /// Creates a context for migration purposes based on a config 
-        /// </summary>
-        protected virtual DbContext CreateMigrationContext(IDatabaseConfig config)
-        {
-            return CreateContext(config);
-        }
+    /// <summary>
+    /// Validates the config gor Host, Database, Username and Port
+    /// </summary>
+    protected static bool CheckDatabaseConfig(DatabaseConfig config)
+    {
+        return (!(string.IsNullOrEmpty(config.ConfiguratorType) ||
+                  string.IsNullOrEmpty(config.ConnectionString)));
+    }
+
+    /// <summary>
+    /// Finds the context type marked with the provided attribute type.
+    /// </summary>
+    protected Type FindMigrationAssemblyType(Type attributeType)
+    {
+        var contextTypes =
+            ReflectionTool.GetPublicClasses(ContextType);
+
+        var fileteredAssembly = contextTypes.FirstOrDefault(t => t.CustomAttributes.Any(a => a.AttributeType == attributeType));
+
+        return fileteredAssembly ?? contextTypes.First();
+    }
+
+    /// <summary>
+    /// Creates a context for migration purposes based on a config
+    /// </summary>
+    protected virtual DbContext CreateMigrationContext(DatabaseConfig config)
+    {
+        return CreateContext(config);
     }
 }

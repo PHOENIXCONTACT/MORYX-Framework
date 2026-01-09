@@ -1,0 +1,17 @@
+@if(getNotificationToDisplay()){
+<div class="tw-pointer-events-none tw-flex tw-justify-between tw-items-center tw-w-full tw-p-3 tw-relative" 
+[style.background-color]="getSeverityBackgroundColor(getNotificationToDisplay()?.severity)">
+    <span 
+    [style.color]="'#FFFFFF'" 
+    class="tw-font-semibold tw-align-middle">{{ getNotificationToDisplay()?.title }}</span>
+    <a 
+    [href]="url"
+    [ngStyle]="{
+        'color': getSeverityBackgroundColor(getNotificationToDisplay()?.severity),
+        'background-color': '#FFFFFF',
+        }"
+    class="tw-pointer-events-auto tw-px-4 tw-py-1 tw-font-bold tw-rounded tw-uppercase hover:tw-opacity-85">     
+        <ng-content></ng-content>
+    </a>
+</div>
+}

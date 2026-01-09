@@ -1,0 +1,52 @@
+{
+  "MEDIA_OVERVIEW": {
+    "DELETE_MESSAGE": "您确定要删除此媒体项目及其所有变体吗？",
+    "EMPTY_STATE_HEADER": "没有媒体",
+    "EMPTY_STATE_TEXT": "要添加内容，请点击上传符号并选择文件。",
+    "FAILED_LOADING": "无法建立与服务器的连接。请检查您的网络连接或稍后重试。"
+  },
+  "CONTEXT_MENU": {
+    "DELETE": "删除",
+    "INFO": "信息",
+    "DOWNLOAD": "下载"
+  },
+
+  "MEDIA_FILE_VARIANTS": "变体",
+
+  "VARIANT_OVERVIEW": {
+    "ALREADY_EXISTS_MESSAGE": "此名称的变体已存在于此内容中",
+    "DELETE_MESSAGE": "您确定要删除此变体吗？",
+    "CREATION_DATE": "创建日期",
+    "SIZE": "大小"
+  },
+
+  "ADD_VARIANT_DIALOG": {
+    "TITLE": "添加变体",
+    "NAME": "名称",
+    "NAME_PLACEHOLDER": "请提供一个名称",
+    "FILE_PLACEHOLDER": "尚未上传文件...",
+    "CANCEL": "取消",
+    "UPLOAD": "上传"
+  },
+
+  "DELETE_DIALOG": {
+    "TITLE": "删除内容",
+    "CANCEL": "取消",
+    "DELETE": "删除"
+  },
+
+  "VARIANT_INFO_DIALOG": {
+    "TITLE": "变体",
+    "VARIANT_NAME": "变体名称：",
+    "CONTENT_NAME": "内容名称：",
+    "ID": "内容ID：",
+    "SIZE": "变体大小：",
+    "LINK": "链接",
+    "CLOSE": "关闭",
+    "COPY_TO_CLIPBOARD": "复制到剪贴板"
+  },
+
+  "DISMISS": "忽略",
+  "DEFAULT_MESSAGE": "服务器发生了错误。",
+  "SERVER_NOT_REACHABLE": "无法访问服务器，请检查您的网络连接或代理设置。"
+}

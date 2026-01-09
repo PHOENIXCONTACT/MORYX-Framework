@@ -1,109 +1,104 @@
-﻿using System;
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
-namespace Moryx.Configuration
+namespace Moryx.Configuration;
+
+/// <summary>
+/// Applies ValueProvider to a specific instance
+/// </summary>
+public class ValueProviderExecutor : IEmptyPropertyProvider
 {
+    private readonly ValueProviderExecutorSettings _settings;
+
     /// <summary>
-    /// Applies ValueProvider to a specific instance
+    /// Create provider instance with <paramref name="settings"/>
     /// </summary>
-    public class ValueProviderExecutor : IEmptyPropertyProvider
+    /// <param name="settings">Settings for the provider</param>
+    public ValueProviderExecutor(ValueProviderExecutorSettings settings)
     {
-        private readonly ValueProviderExecutorSettings _settings;
+        _settings = settings;
+    }
 
-        /// <summary>
-        /// Create provider instance with <paramref name="settings"/>
-        /// </summary>
-        /// <param name="settings">Settings for the provider</param>
-        public ValueProviderExecutor(ValueProviderExecutorSettings settings)
+    /// <inheritdoc />
+    public void FillEmpty(object obj)
+    {
+        Execute(obj, _settings);
+    }
+
+    /// <summary>
+    /// Executes configured <see cref="IValueProvider"/> and <see cref="IValueProviderFilter"/>
+    /// </summary>
+    /// <param name="targetObject">Instance to use</param>
+    /// <param name="settings">Settings</param>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static void Execute(object targetObject, ValueProviderExecutorSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(targetObject);
+
+        if (settings.Providers == null)
         {
-            _settings = settings;
+            throw new ArgumentNullException(nameof(settings.Providers));
         }
 
-        /// <inheritdoc />
-        public void FillEmpty(object obj)
+        if (settings.Filters == null)
         {
-            Execute(obj, _settings);
+            throw new ArgumentNullException(nameof(settings.Filters));
         }
 
-        /// <summary>
-        /// Executes configured <see cref="IValueProvider"/> and <see cref="IValueProviderFilter"/>
-        /// </summary>
-        /// <param name="targetObject">Instance to use</param>
-        /// <param name="settings">Settings</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public static void Execute(object targetObject, ValueProviderExecutorSettings settings)
+        Iterate(targetObject, settings);
+    }
+
+    private static void Iterate(object target, ValueProviderExecutorSettings settings)
+    {
+        foreach (var property in FilterProperties(target, settings))
         {
-            if (targetObject is null)
+            foreach (var settingsProvider in settings.Providers)
             {
-                throw new ArgumentNullException(nameof(targetObject));
-            }
-
-            if (settings.Providers == null)
-            {
-                throw new ArgumentNullException(nameof(settings.Providers));
-            }
-
-            if (settings.Filters == null)
-            {
-                throw new ArgumentNullException(nameof(settings.Filters));
-            }
-
-
-            Iterate(targetObject, settings);
-        }
-
-        private static void Iterate(object target, ValueProviderExecutorSettings settings)
-        {
-            foreach (var property in FilterProperties(target, settings))
-            {
-                foreach (var settingsProvider in settings.Providers)
+                try
                 {
-                    try
+                    if (settingsProvider.Handle(target, property) == ValueProviderResult.Handled)
                     {
-                        if (settingsProvider.Handle(target, property) == ValueProviderResult.Handled)
-                        {
-                            break;
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        // TODO: Restrict exceception type
-                        // TODO: Consider enabling logging
+                        break;
                     }
                 }
-
-                var value = property.GetValue(target);
-                // Iterate each item of an enumerable
-                if (value is IEnumerable enumerable)
+                catch (Exception)
                 {
-                    foreach (var item in enumerable)
-                    {
-                        if (item != null)
-                            Iterate(item, settings);
-                    }
-                }
-                else if (value != null && property.PropertyType.IsClass && property.PropertyType != typeof(string))
-                {
-                    Iterate(value, settings);
+                    // TODO: Restrict exceception type
+                    // TODO: Consider enabling logging
                 }
             }
-        }
 
-        private static IEnumerable<PropertyInfo> FilterProperties(object target, ValueProviderExecutorSettings settings)
-        {
-            var filteredProperties = new List<PropertyInfo>();
-            foreach (var property in target.GetType().GetProperties(settings.PropertyBindingFlags))
+            var value = property.GetValue(target);
+            // Iterate each item of an enumerable
+            if (value is IEnumerable enumerable)
             {
-                if (settings.Filters.All(f => f.CheckProperty(property)))
+                foreach (var item in enumerable)
                 {
-                    filteredProperties.Add(property);
+                    if (item != null)
+                        Iterate(item, settings);
                 }
             }
-
-            return filteredProperties;
+            else if (value != null && property.PropertyType.IsClass && property.PropertyType != typeof(string))
+            {
+                Iterate(value, settings);
+            }
         }
+    }
+
+    private static IEnumerable<PropertyInfo> FilterProperties(object target, ValueProviderExecutorSettings settings)
+    {
+        var filteredProperties = new List<PropertyInfo>();
+        foreach (var property in target.GetType().GetProperties(settings.PropertyBindingFlags))
+        {
+            if (settings.Filters.All(f => f.CheckProperty(property)))
+            {
+                filteredProperties.Add(property);
+            }
+        }
+
+        return filteredProperties;
     }
 }

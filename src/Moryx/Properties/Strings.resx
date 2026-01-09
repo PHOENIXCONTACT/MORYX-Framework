@@ -129,10 +129,10 @@
   <data name="SplitWorkplanStep_Name" xml:space="preserve">
     <value>Split</value>
   </data>
-  <data name="SubworkflowStep_Description" xml:space="preserve">
+  <data name="SubworkplanStep_Description" xml:space="preserve">
     <value>Nests a sub-workplan in the current workplan</value>
   </data>
-  <data name="SubworkflowStep_Name" xml:space="preserve">
+  <data name="SubworkplanStep_DisplayName" xml:space="preserve">
     <value>Sub-Workplan</value>
   </data>
 </root>

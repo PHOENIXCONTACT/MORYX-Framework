@@ -9,8 +9,7 @@ import DatabaseConfigModel from "../models/DatabaseConfigModel";
 import DatabasesResponse from "../models/DatabasesResponse";
 import DataModel from "../models/DataModel";
 import ExecuteSetupRequest from "./requests/ExecuteSetupRequest";
-import RestoreDatabaseRequest from "./requests/RestoreDatabaseRequest";
-import DatabaseUpdateSummary from "./responses/DatabaseUpdateSummary";
+import DatabaseMigrationSummary from "./responses/DatabaseMigrationSummary";
 import TestConnectionResponse from "./responses/TestConnectionResponse";
 
 const ROOT_PATH = "/databases";
@@ -45,16 +44,8 @@ export default class DatabasesRestClient extends RestClientBase {
         return this.delete<DatabaseConfigModel, InvocationResponse>(DatabasesRestClient.pathTo(targetModel), request, new InvocationResponse());
     }
 
-    public dumpDatabase(request: DatabaseConfigModel, targetModel: string): Promise<InvocationResponse> {
-        return this.post<DatabaseConfigModel, InvocationResponse>(DatabasesRestClient.pathTo(targetModel, "/dump"), request, new InvocationResponse());
-    }
-
-    public restoreDatabase(request: RestoreDatabaseRequest, targetModel: string): Promise<InvocationResponse> {
-        return this.post<RestoreDatabaseRequest, InvocationResponse>(DatabasesRestClient.pathTo(targetModel, "/restore"), request, new InvocationResponse());
-    }
-
-    public applyMigration(targetModel: string, migrationName: string, request: DatabaseConfigModel): Promise<DatabaseUpdateSummary> {
-        return this.post<DatabaseConfigModel, DatabaseUpdateSummary>(DatabasesRestClient.pathTo(targetModel, `/migrate`), request, new DatabaseUpdateSummary());
+    public applyMigration(targetModel: string, migrationName: string, request: DatabaseConfigModel): Promise<DatabaseMigrationSummary> {
+        return this.post<DatabaseConfigModel, DatabaseMigrationSummary>(DatabasesRestClient.pathTo(targetModel, `/migrate`), request, new DatabaseMigrationSummary());
     }
 
     public rollbackDatabase(targetModel: string, request: DatabaseConfigModel): Promise<InvocationResponse> {

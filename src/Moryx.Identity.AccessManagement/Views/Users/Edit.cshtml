@@ -1,0 +1,61 @@
+﻿@model Moryx.Identity.AccessManagement.Models.MoryxUserUpdateModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit @Model.UserName</h2>
+<br />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Update">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="UserName" type="hidden" />
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PasswordResetToken" class="control-label"></label>
+                <div class="input-group">
+                    <input asp-for="PasswordResetToken" class="form-control" readonly />
+                    <i id="togglePassword" class="fa fa-eye reset-password-eye"></i>
+                    <button class="btn btn-success" asp-controller="Users" asp-action="GenerateResetToken">
+                        Generate
+                    </button>
+                </div>
+                <span asp-validation-for="PasswordResetToken" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var togglePassword = document.querySelector('#togglePassword');
+    var password = document.querySelector('#PasswordResetToken');
+    password.setAttribute('type', 'password');
+    togglePassword.addEventListener('click', function (e) {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

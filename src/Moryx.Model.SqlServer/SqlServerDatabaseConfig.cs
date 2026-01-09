@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using Moryx.Configuration;
+using Moryx.Model.Attributes;
 
 namespace Moryx.Model.SqlServer;
 
@@ -8,39 +10,42 @@ namespace Moryx.Model.SqlServer;
 /// Database config for the SqlServer databases
 /// </summary>
 [DataContract]
-public class SqlServerDatabaseConfig : DatabaseConfig<SqlServerDatabaseConnectionSettings>
+public class SqlServerDatabaseConfig : DatabaseConfig
 {
-    /// <summary>
-    /// Creates a new instance of the <see cref="SqlServerDatabaseConfig"/>
-    /// </summary>
-    public SqlServerDatabaseConfig()
-    {
-        ConnectionSettings = new SqlServerDatabaseConnectionSettings();
-        ConfiguratorTypename = typeof(SqlServerModelConfigurator).AssemblyQualifiedName;
-    }
-}
-
-/// <summary>
-/// Database connection settings for the SqlServer databases
-/// </summary>
-public class SqlServerDatabaseConnectionSettings : DatabaseConnectionSettings
-{
-    private string _database;
-
     /// <inheritdoc />
-    [DataMember]
-    public override string Database
-    {
-        get => _database;
-        set
-        {
-            if (string.IsNullOrEmpty(value)) return;
-            _database = value;
-            ConnectionString = ConnectionString?.Replace("<DatabaseName>", value);
-        }
-    }
+    public override string ConfiguratorType => typeof(SqlServerModelConfigurator).AssemblyQualifiedName;
 
-    /// <inheritdoc/>
-    [DataMember, Required, DefaultValue("Server=localhost;Initial Catalog=<DatabaseName>;User Id=sa;Password=password;TrustServerCertificate=True;")]
-    public override string ConnectionString { get; set; }
+    /// <summary>
+    /// Name of the database associated with the connection
+    /// </summary>
+    [Required]
+    [DefaultValue("<DatabaseName>")]
+    [Description("Name of the database associated with the connection")]
+    [ConnectionStringKey("Initial Catalog")]
+    public string InitialCatalog { get; set; }
+
+    /// <summary>
+    /// User ID to be used when connecting to SQL Server
+    /// </summary>
+    [DefaultValue("sa")]
+    [Description("User ID to be used when connecting to SQL Server")]
+    [ConnectionStringKey("User Id") ]
+    public string UserId { get; set; }
+
+    /// <summary>
+    /// Password to be used when connecting to SQL Server
+    /// </summary>
+    [Password]
+    [DefaultValue("password")]
+    [Description("Password to use when connecting to SQL Server")]
+    [ConnectionStringKey("Password")]
+    public string Password { get; set; }
+
+    /// <summary>
+    /// Indicates whether the channel will be encrypted while bypassing walking the certificate chain to validate trust.
+    /// </summary>
+    [DefaultValue("True")]
+    [Description("Indicates whether the channel will be encrypted while bypassing walking the certificate chain to validate trust.")]
+    [ConnectionStringKey("TrustServerCertificate")]
+    public string TrustServerCertificate { get; set; }
 }

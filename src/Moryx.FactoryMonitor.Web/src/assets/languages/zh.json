@@ -1,0 +1,47 @@
+{
+  "SHARED": {
+    "SAVE": "保存",
+    "CANCEL": "取消"
+  },
+  "CELL_DETAILS": {
+    "RUNNING_STATE": "运行中",
+    "IDLE_STATE": "空闲",
+    "NOT_READY_TO_WORK_STATE": "不可用",
+    "NO_PROPERTIES": "未配置属性"
+  },
+  "CELL_ICON_SELECTOR_DIALOG": {
+    "ICON_SELECTOR": "图标选择器",
+    "ICON_NAME": "图标名称",
+    "ICON_NAME_REQUIRED": "图标名称是必填项",
+    "PREVIEW": "预览"
+  },
+  "CELL_IMAGE_DIALOG": {
+    "CELL_IMAGE": "单元图像",
+    "NO_IMAGE": "无图像可显示",
+    "IMAGE_URL": "图像URL",
+    "ENTER_IMAGE_URL": "请输入图像URL"
+  },
+  "CHANGE_BACKGROUND_DIALOG": {
+    "BACKGROUND_IMAGE": "背景图像",
+    "BACKGROUND_URL": "背景URL",
+    "ENTER_URL": "请输入URL",
+    "NO_MANUFACTURING_RESOURCE": "我们找不到ManufacturingFactoryResource来保存您的背景，请与系统管理员联系，如果您想更改背景。"
+  },
+  "DETAILS_CONFIGURATION_DIALOG": {
+    "PROPERTIES_CONFIGURATION": "属性配置",
+    "PROPERTY": "属性",
+    "DISPLAY": "显示"
+  },
+  "APP": {
+    "DEFAULT_BACKGROUND_URL": "我们找不到背景URL。在您提供之前，我们将使用默认图像。"
+  },
+  "DISMISS": "忽略",
+  "DEFAULT_MESSAGE": "服务器发生了错误。",
+  "SERVER_NOT_REACHABLE": "无法访问服务器，请检查您的网络连接或代理设置。",
+  "EDIT_MENU": {
+    "EDIT": "编辑",
+    "CONFIRM": "确认",
+    "MOVE": "移动",
+    "BACKGROUND": "背景"
+  }
+}

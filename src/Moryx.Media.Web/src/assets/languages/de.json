@@ -1,0 +1,52 @@
+{
+  "MEDIA_OVERVIEW": {
+    "DELETE_MESSAGE": "Möchten Sie dieses Medienelement und alle seine Varianten wirklich entfernen?",
+    "EMPTY_STATE_HEADER": "Keine Medieninhalte",
+    "EMPTY_STATE_TEXT": "Um Inhalte hinzuzufügen, klicke auf Hochladen und wähle eine Datei.",
+    "FAILED_LOADING": "Die Verbindung zum Server ist leider fehlgeschlagen. Bitte überprüfe deine Netzwerkverbindung oder versuch es später nochmal."
+  },
+  "CONTEXT_MENU": {
+    "DELETE": "Löschen",
+    "INFO": "Info",
+    "DOWNLOAD": "Herunterladen"
+  },
+
+  "MEDIA_FILE_VARIANTS": "Varianten",
+
+  "VARIANT_OVERVIEW": {
+    "ALREADY_EXISTS_MESSAGE": "Variante mit diesem Namen existiert bereits in diesem Medienelement",
+    "DELETE_MESSAGE": "Möchten Sie diese Variante wirklich entfernen?",
+    "CREATION_DATE": "Erstelldatum",
+    "SIZE": "Größe"
+  },
+
+  "ADD_VARIANT_DIALOG": {
+    "TITLE": "Variante hinzufügen",
+    "NAME": "Name",
+    "NAME_PLACEHOLDER": "Bitte geben Sie einen Namen an",
+    "FILE_PLACEHOLDER": "Noch keine Datei hochgeladen...",
+    "CANCEL": "ABBRECHEN",
+    "UPLOAD": "HOCHLADEN"
+  },
+
+  "DELETE_DIALOG": {
+    "TITLE": "Medienelement löschen",
+    "CANCEL": "ABBRECHEN",
+    "DELETE": "LÖSCHEN"
+  },
+
+  "VARIANT_INFO_DIALOG": {
+    "TITLE": "Variante",
+    "VARIANT_NAME": "Variantenname:",
+    "CONTENT_NAME": "Name des Medienelements:",
+    "ID": "ID des Medienelements:",
+    "SIZE": "Variantengröße:",
+    "LINK": "Link",
+    "CLOSE": "SCHLIESSEN",
+    "COPY_TO_CLIPBOARD": "in die Zwischenablage kopieren"
+  },
+
+  "DISMISS":"OKAY",
+  "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
+  "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfen Sie Ihre Internetverbindung oder Proxy-Einstellungen."
+}

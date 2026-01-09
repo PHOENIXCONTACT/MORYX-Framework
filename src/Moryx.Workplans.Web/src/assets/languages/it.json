@@ -1,0 +1,71 @@
+{
+  "APP": {
+    "TITLE": "Piani di lavoro",
+    "OPEN_WORKPLAN_MANAGEMENT": "Apri gestione piano di lavoro",
+    "OPEN_WORKPLAN_SESSIONS": "Apri sessioni",
+    "NO_SESSION_IS_OPEN": "Nessuna sessione aperta"
+  },
+  "NOT_FOUND": "Impossibile trovare la sessione corrente",
+  "DISMISS": "OK",
+  "DEFAULT_MESSAGE": "Qualcosa è andato storto sul server.",
+  "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controllare la connessione internet o le impostazioni del proxy.",
+  "SESSIONS": {
+    "CONFIRM_DIALOG": {
+      "TITLE": "Vuoi chiudere la sessione corrente?",
+      "MESSAGE": "Se non hai salvato, le tue modifiche andranno perse. Sei sicuro di voler chiudere la sessione?",
+      "CONFIRM": "CONFERMA",
+      "CANCEL": "ANNULLA"
+    },
+    "CLOSE": "Chiudi"
+  },
+  "STEP_CREATOR": {
+    "CREATE": "Crea",
+    "CONFIGURE_UNKNOWN": "Configura step sconosciuto",
+    "COULD_NOT_FIND": "Impossibile trovare i steps del tipo assegnato"
+  },
+  "TOOLBOX": {
+    "HEADER": "Flusso di controllo",
+    "STEPS": "Steps",
+    "SUB_HEADER": "Piani di lavoro secondari"
+  },
+  "PROPERTIES": {
+    "TITLE": "Proprietá",
+    "NAME": "Nome",
+    "STATE": "Stato",
+    "VERSION": "Versione",
+    "DISPLAY_NAME": "Nome visualizzato",
+    "NAVIGATE": "Vai al piano di lavoro"
+  },
+  "EDITOR": {
+    "AUTO_LAYOUT": "Layout automatico",
+    "CREATING": "Creazione...",
+    "DELETE": "Elimina",
+    "SAVE": "salvare il piano di lavoro",
+    "SNACK_BAR": {
+      "SUCCESS": "Piano di lavoro salvato"
+    }
+  },
+  "MANAGEMENT": {
+    "NAME": "Nome",
+    "STATE": "Stato",
+    "VERSION": "Versione",
+    "OPEN_SESSION": "Apri sessione",
+    "DUPLICATE": "Duplica",
+    "DELETE": "Elimina",
+    "ADD": "Aggiungi",
+    "CONFIRM_DIALOG": {
+      "TITLE": "Cancella piano di lavoro",
+      "MESSAGE_FIRST_PART": "La sessione corrente del piano di lavoro",
+      "MESSAGE_SECOND_PART": "anche questo verrá chiuso, sei sicuro?",
+      "MESSAGE": "Sei sicuro di continuare con l'eliminazione?",
+      "CANCEL": "ANNULLA"
+    },
+    "SNACK_BAR": {
+      "SUCCESS_FIRST_PART": "Piano di lavoro",
+      "SUCCESS_SECOND_PART": "eliminato"
+    }
+  },
+  "PLACEHOLDER": {
+    "DISPLAY_NAME": "Nessun nome disponibile"
+  }
+}

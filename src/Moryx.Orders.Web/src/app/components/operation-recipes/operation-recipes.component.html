@@ -1,0 +1,121 @@
+<mat-progress-bar
+  mode="indeterminate"
+  *ngIf="isLoading()"
+  class="operation-recipe-loading"></mat-progress-bar>
+<mat-sidenav-container class="operation-recipe-container">
+  <mat-sidenav opened mode="side" position="start">
+    <div class="">
+      <mat-toolbar
+        [ngStyle]="{
+          'background-image': 'url(' + operationRecipeToolbarImage + ')'
+        }"
+        color="primary"
+        class="operation-recipe-toolbar">
+        <mat-toolbar-row>
+          <a mat-icon-button [routerLink]="['/operations']" mat-icon-button aria-label="Go back to operations">
+            <mat-icon>arrow_back</mat-icon>
+          </a>
+        </mat-toolbar-row>
+        <mat-toolbar-row class="operation-recipe-toolbar-details">
+          <div>
+            {{ TranslationConstants.RECIPES.RECIPES_OF | translate }}
+          </div>
+          <div>{{ operation().order }} - {{ operation().number }}</div>
+        </mat-toolbar-row>
+      </mat-toolbar>
+      <mat-list>
+        <mat-list-item
+          *ngFor="let recipe of recipes()"
+          [ngClass]="{ 'moryx-selected': selectedRecipe()?.id == recipe.id }"
+          class="operation-recipes-list-item"
+          (click)="onSelect(recipe)">
+          <span>{{ recipe.name }}</span>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav [opened]="isEditBarOpened()" mode="side" class="toolbar-nav"  position="end">
+    <div class="operation-recipe-details-container">
+      <button
+        mat-icon-button
+        aria-label="Start editing the selected product type"
+        type="button"
+        *ngIf="!isEditMode()"
+        (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        aria-label="Cancel Editing"
+        type="reset"
+        *ngIf="isEditMode()"
+        (click)="onCancel()">
+        <mat-icon class="material-icons-outlined">cancel</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        aria-label="Save the edited resource"
+        type="submit"
+        *ngIf="isEditMode()"
+        (click)="onSave()">
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="operation-recipe-details" *ngIf="selectedRecipe()">
+      <h2>{{ TranslationConstants.RECIPES.GENERAL | translate }}</h2>
+      <mat-form-field appearance="outline">
+        <mat-label>{{
+          TranslationConstants.RECIPES.IDENTIFIER | translate
+        }}</mat-label>
+        <input
+          matInput
+          aria-label="Recipe Name"
+          [disabled]="isEditMode() === false"
+          [(ngModel)]="selectedRecipe()!.name" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" *ngIf="hasWorkplans()">
+        <mat-label>{{
+          TranslationConstants.RECIPES.WORKPLAN | translate
+        }}</mat-label>
+        <mat-select
+          [(ngModel)]="selectedWorkplan"
+          [disabled]="isEditMode() === false"
+          required>
+          <mat-option
+            *ngFor="let workplan of possibleWorkplans()"
+            [value]="workplan">
+            {{ workplan.name }} -
+            {{ TranslationConstants.RECIPES.VERSION | translate }}: {{
+              workplan.version
+            }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{
+          TranslationConstants.RECIPES.CLASSIFICATION | translate
+        }}</mat-label>
+        <mat-select
+          [(ngModel)]="selectedRecipe()!.classification"
+          [disabled]="isEditMode() === false">
+          <mat-option
+            *ngFor="let classification of recipeClassifications"
+            [value]="classification">
+            {{ classification }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <h2>{{ TranslationConstants.RECIPES.PROPERTIES | translate }}</h2>
+      <navigable-entry-editor
+        class="product-recipes-details-properties"
+        queryParam="recipeParameter"
+        *ngIf="selectedRecipe()!.properties !== undefined"
+        [entry]="selectedRecipe()!.properties!"
+        [disabled]="isEditMode() === false"></navigable-entry-editor>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

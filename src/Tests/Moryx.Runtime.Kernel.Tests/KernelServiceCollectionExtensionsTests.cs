@@ -1,6 +1,9 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Moryx.Container;
@@ -8,102 +11,100 @@ using Moryx.Runtime.Kernel.Tests.ModuleMocks;
 using Moryx.Runtime.Modules;
 using Moryx.Threading;
 using NUnit.Framework;
-using System.IO;
-using System.Linq;
 
-namespace Moryx.Runtime.Kernel.Tests
+namespace Moryx.Runtime.Kernel.Tests;
+
+[TestFixture]
+public class KernelServiceCollectionExtensionsTests
 {
-    [TestFixture]
-    public class KernelServiceCollectionExtensionsTests
+    private IServiceCollection _serviceCollection;
+
+    [SetUp]
+    public void Setup()
     {
-        private IServiceCollection _serviceCollection;
+        _serviceCollection = new ServiceCollection();
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            _serviceCollection = new ServiceCollection();
-        }
+    [Test]
+    public void AddsOrInitializesAllKernelComponents()
+    {
+        // Arrange
+        _serviceCollection.AddLogging();
 
-        [Test]
-        public void AddsOrInitializesAllKernelComponents()
-        {
-            // Arrange
-            _serviceCollection.AddLogging();
+        // Act
+        _serviceCollection.AddMoryxKernel();
 
-            // Act
-            _serviceCollection.AddMoryxKernel();
+        // Assert
+        var provider = _serviceCollection.BuildServiceProvider();
+        var configManager = _serviceCollection.FirstOrDefault(s => s.ServiceType == typeof(ConfigManager));
+        var moduleManager = _serviceCollection.FirstOrDefault(s => s.ServiceType == typeof(ModuleManager));
+        var parallelOperations = provider.GetRequiredService(typeof(IParallelOperations));
+        var moduleContainerFactory = provider.GetRequiredService(typeof(IModuleContainerFactory));
+        var currentPlatform = Platform.Current;
+        Assert.That(configManager, Is.Not.Null, "Config Manager not resolvable");
+        Assert.That(moduleManager, Is.Not.Null, "Module Manager not resolvable");
+        Assert.That(parallelOperations, Is.Not.Null, "Parallel Operations not resolvable");
+        Assert.That(moduleContainerFactory, Is.Not.Null, "Module Container Factory not resolvable");
+        Assert.That(currentPlatform.PlatformName, Is.Not.Null);
+        Assert.That(currentPlatform.PlatformVersion, Is.Not.Null);
+        Assert.That(currentPlatform.ProductName, Is.Not.Null);
+        Assert.That(currentPlatform.ProductVersion, Is.Not.Null);
+        Assert.That(currentPlatform.ProductDescription, Is.Not.Null);
+    }
 
-            // Assert
-            var provider = _serviceCollection.BuildServiceProvider();
-            var configManager = _serviceCollection.FirstOrDefault(s => s.ServiceType == typeof(ConfigManager));
-            var moduleManager = _serviceCollection.FirstOrDefault(s => s.ServiceType == typeof(ModuleManager));
-            var parallelOperations = provider.GetRequiredService(typeof(IParallelOperations));
-            var moduleContainerFactory = provider.GetRequiredService(typeof(IModuleContainerFactory));
-            var currentPlatform = Platform.Current;
-            Assert.NotNull(configManager, "Config Manager not resolvable");
-            Assert.NotNull(moduleManager, "Module Manager not resolvable");
-            Assert.NotNull(parallelOperations, "Parallel Operations not resolvable");
-            Assert.NotNull(moduleContainerFactory, "Module Container Factory not resolvable");
-            Assert.NotNull(currentPlatform.PlatformName);
-            Assert.NotNull(currentPlatform.PlatformVersion);
-            Assert.NotNull(currentPlatform.ProductName);
-            Assert.NotNull(currentPlatform.ProductVersion);
-            Assert.NotNull(currentPlatform.ProductDescription);
-        }
+    [Test]
+    public void AddAllMoryxServerModules()
+    {
+        // Arrange
 
-        [Test]
-        public void AddAllMoryxServerModules()
-        {
-            // Arrange
+        // Act
+        _serviceCollection.AddMoryxModules();
 
-            // Act
-            _serviceCollection.AddMoryxModules();
+        // Assert
+        Assert.DoesNotThrow(() => _serviceCollection.Single(s => s.ServiceType == typeof(LifeCycleBoundFacadeTestModule)));
+        Assert.DoesNotThrow(() => _serviceCollection.Single(s => s.ServiceType == typeof(ServerModuleA)));
+        Assert.DoesNotThrow(() => _serviceCollection.Single(s => s.ServiceType == typeof(IFacadeA)));
+    }
 
-            // Assert
-            Assert.DoesNotThrow(() => _serviceCollection.Single(s => s.ServiceType == typeof(LifeCycleBoundFacadeTestModule)));
-            Assert.DoesNotThrow(() => _serviceCollection.Single(s => s.ServiceType == typeof(ServerModuleA)));
-            Assert.DoesNotThrow(() => _serviceCollection.Single(s => s.ServiceType == typeof(IFacadeA)));
-        }
+    [Test]
+    public void SetupConfigurationToBeUsed()
+    {
+        // Arrange
+        var directoryPath = "TestDirectory";
+        if (Directory.Exists(directoryPath))
+            Directory.Delete(directoryPath);
 
-        [Test]
-        public void SetupConfigurationToBeUsed()
-        {
-            // Arrange
-            var directoryPath = "TestDirectory";
-            if (Directory.Exists(directoryPath))
-                Directory.Delete(directoryPath);
+        _serviceCollection.AddMoryxKernel();
+        var provider = _serviceCollection.BuildServiceProvider();
 
-            _serviceCollection.AddMoryxKernel();
-            var provider = _serviceCollection.BuildServiceProvider();
+        // Act
+        provider.UseMoryxConfigurations(directoryPath);
 
-            // Act
-            provider.UseMoryxConfigurations(directoryPath);
+        // Assert
+        Assert.That(provider.GetRequiredService<ConfigManager>().ConfigDirectory, Is.EqualTo(directoryPath));
+        Assert.That(Directory.Exists(directoryPath));
+    }
 
-            // Assert
-            Assert.AreEqual(directoryPath, provider.GetRequiredService<ConfigManager>().ConfigDirectory);
-            Assert.IsTrue(Directory.Exists(directoryPath));
-        }
+    [Test]
+    public async Task StartAndStopAllModules()
+    {
+        // Arrange
+        var moduleManagerMock = new Mock<IModuleManager>();
+        _serviceCollection.AddSingleton(moduleManagerMock.Object);
+        var provider = _serviceCollection.BuildServiceProvider();
+        var moduleManager = provider.GetRequiredService<IModuleManager>();
 
-        [Test]
-        public void StartAndStopAllModules()
-        {
-            // Arrange
-            var moduleManagerMock = new Mock<IModuleManager>();
-            _serviceCollection.AddSingleton(moduleManagerMock.Object);
-            var provider = _serviceCollection.BuildServiceProvider();
+        // Act
+        await moduleManager.StartModulesAsync();
 
-            // Act
-            provider.StartMoryxModules();
+        // Assert
+        moduleManagerMock.Verify(m => m.StartModulesAsync(), Times.Once);
+        moduleManagerMock.VerifyNoOtherCalls();
 
-            // Assert
-            moduleManagerMock.Verify(m => m.StartModules(), Times.Once);
-            moduleManagerMock.VerifyNoOtherCalls();
+        // Act
+        await moduleManager.StopModulesAsync();
 
-            // Act
-            provider.StopMoryxModules();
-
-            // Assert
-            moduleManagerMock.Verify(m => m.StopModules(), Times.Once);
-        }
+        // Assert
+        moduleManagerMock.Verify(m => m.StopModulesAsync(), Times.Once);
     }
 }

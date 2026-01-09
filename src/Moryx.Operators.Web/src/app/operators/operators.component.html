@@ -1,0 +1,13 @@
+<div class="tw:grid tw:grid-cols-2 tw:auto-rows-auto tw:gap-2">
+  <app-operator-card
+    *ngFor="let operator of operators()"
+    [workstationId]="workstation().data.id ?? 0"
+    [operator]="operator"
+    (toggleAssignment)="handleToggleAssignment($event)"
+  />
+</div>
+<div class="tw:w-full tw:h-full" *ngIf="operators().length === 0">
+  <empty-state
+    [message]="TranslationConstants.OPERATORS.EMPTY_MESSAGE | translate"
+  ></empty-state>
+</div>

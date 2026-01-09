@@ -1,0 +1,46 @@
+<mat-sidenav-container class="workplans">
+  <mat-sidenav disableClose opened role="group" mode="side" class="workplan-steps">
+    <div class="workplans-side-bar">
+      <mat-toolbar
+        [ngStyle]="{ 'background-image': 'url(' + workplansToolbarImage + ')' }"
+        class="workplans-toolbar">
+        <mat-toolbar-row class="button-row">
+          <button
+            type="button"
+            (click)="changeView()"
+            mat-icon-button
+            [class.change-view-button-active]="!changeViewDisabled()"
+            [disabled]="changeViewDisabled()"
+            [matTooltip]="changeViewTooltip()"
+            matTooltipShowDelay="500">
+            <mat-icon>change_circle</mat-icon>
+          </button>
+        </mat-toolbar-row>
+
+        <mat-toolbar-row>
+          <button mat-icon-button aria-label="Spacer" disabled="true">
+            <mat-icon></mat-icon>
+          </button>
+          <span>{{ TranslationConstants.APP.TITLE | translate }}</span>
+        </mat-toolbar-row>
+      </mat-toolbar>
+
+      <button
+        class="add"
+        mat-fab
+        (click)="onAdd()"
+        [matTooltip]="TranslationConstants.MANAGEMENT.ADD | translate"
+        matTooltipShowDelay="500"
+        *ngIf="!router.url.includes('session')">
+        <mat-icon>add</mat-icon>
+      </button>
+
+      <!-- Render the toolbox only when session is open -->
+      <app-toolbox class="workplans-sidebar-contents" *ngIf="router.url.includes('session')"></app-toolbox>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content role="main">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

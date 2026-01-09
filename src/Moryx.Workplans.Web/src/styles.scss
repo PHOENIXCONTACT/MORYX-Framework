@@ -1,0 +1,50 @@
+@use "@moryx/ngx-web-framework/styles/theme"; 
+
+html,
+body {
+  height: 100%;
+  font-family: Roboto;
+}
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+app-root {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+app-canvas-screen-saver {
+  flex: 1 1;
+  height: calc(100% - 49px);
+  overflow: hidden;
+}
+
+.errorSnackBar {
+  margin-top: 93px !important;
+  background-color: darkred !important;
+  color: white !important;
+}
+
+.successSnackBar {
+  margin-top: 93px !important;
+  background-color: forestgreen !important;
+  color: white !important;
+}
+
+.moryx-loading-spinner {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,0 +1,77 @@
+#doc-container {
+    padding: 0;
+    padding-top: 1em;
+    padding-left:12.5%;
+    padding-right:12.5%;
+    width: 100%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: auto;
+    word-wrap: break-word;
+}
+
+#doc-container ul,
+#doc-container ol {
+    margin-bottom: 0.7em;
+    padding: revert;
+}
+
+#doc-container ul {
+    list-style: disc;
+}
+
+/* Reset margin top for elements */
+#doc-container h1, h2, h3, h4, h5, h6,
+p, ol, ul, pre {
+    margin-top: 0;
+    font-size: revert;
+}
+
+#doc-container h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    margin-bottom: 0.2em;
+    margin-top:1.5em;
+}
+
+#doc-container img {
+    max-width: 100%;
+    max-height: 100%;
+    margin-top:1.5em;
+    margin-bottom:1.5em;
+}
+
+#doc-container p {
+    margin-bottom: 0.7em;
+}
+
+#doc-container hr {
+    border: 0;
+    height: 2px;
+    border-bottom: 2px solid;
+}
+
+#doc-container h1 {
+    margin-bottom: 0.7em;
+    line-height: 1.2;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    font-weight: normal;
+}
+
+#doc-container a span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #4A4A4A;
+    float: right;
+    border: solid;
+    border-radius: 50%;
+    border-width: 2px;
+}
+
+#doc-container a span:hover {
+    background-color: rgb(107, 184, 190);
+    border-color: rgb(107, 184, 190);
+    color: white;
+}

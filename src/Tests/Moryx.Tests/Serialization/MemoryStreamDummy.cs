@@ -1,18 +1,17 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.IO;
 using System.Text;
 
-namespace Moryx.Tests
-{
-    public class MemoryStreamDummy
-    {
-        public MemoryStreamDummy(string testString)
-        {
-            MemoryStream = new MemoryStream(Encoding.UTF8.GetBytes(testString));
-        }
+namespace Moryx.Tests.Serialization;
 
-        public MemoryStream MemoryStream { get; set; }
+public class MemoryStreamDummy
+{
+    public MemoryStreamDummy(string testString)
+    {
+        MemoryStream = new MemoryStream(Encoding.UTF8.GetBytes(testString));
     }
+
+    public MemoryStream MemoryStream { get; set; }
 }

@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>{{ TranslationConstants.ADD_OPERATOR_DIALOG.TITLE| translate }}</h2>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="operatorForm" class="operator-form">
+
+    <mat-form-field class="tw:w-full tw:mt-2" appearance="outline">
+      <mat-label>{{TranslationConstants.ADD_OPERATOR_DIALOG.IDENTIFIER| translate}}</mat-label>
+      <input matInput placeholder="1012" formControlName="identifier" />
+      @if (!isValid(operatorForm.controls.identifier)) {
+      <mat-error>{{ getError(operatorForm.controls.identifier) }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field class="tw:w-full tw:mt-2" appearance="outline">
+      <mat-label>{{TranslationConstants.ADD_OPERATOR_DIALOG.FIRSTNAME| translate}}</mat-label>
+      <input matInput placeholder="Elon" formControlName="firstName" />
+      @if (!isValid(operatorForm.controls.firstName)) {
+      <mat-error>{{ getError(operatorForm.controls.firstName) }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field class="tw:w-full tw:mt-2" appearance="outline">
+      <mat-label>{{TranslationConstants.ADD_OPERATOR_DIALOG.LASTNAME| translate}}</mat-label>
+      <input matInput placeholder="Musk" formControlName="lastName" />
+      @if (!isValid(operatorForm.controls.lastName)) {
+      <mat-error>{{ getError(operatorForm.controls.lastName) }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field class="tw:w-full tw:mt-2" appearance="outline">
+      <mat-label>{{TranslationConstants.ADD_OPERATOR_DIALOG.PSEUDONYM| translate }}</mat-label>
+      <input matInput placeholder="Operator X" formControlName="pseudonym" />
+      @if (!isValid(operatorForm.controls.pseudonym)) {
+      <mat-error>{{ getError(operatorForm.controls.pseudonym) }}</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>{{TranslationConstants.ADD_OPERATOR_DIALOG.CANCEL| translate}}</button>
+  <button
+    mat-flat-button
+    (click)="save()"
+    [disabled]="!operatorForm.valid"
+    cdkFocusInitial
+  >
+  {{TranslationConstants.ADD_OPERATOR_DIALOG.SAVE| translate}}
+  </button>
+</mat-dialog-actions>

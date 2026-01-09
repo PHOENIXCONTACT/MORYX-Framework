@@ -1,28 +1,34 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
+namespace Moryx.AbstractionLayer.Drivers.PickByLight;
 
-namespace Moryx.AbstractionLayer.Drivers.PickByLight
+/// <summary>
+/// Interface for the pick-by-light drivers
+/// </summary>
+public interface IPickByLightDriver : IDriver
 {
     /// <summary>
-    /// Interface for the pick by light driver
+    /// Sends instruction to pbl system <see cref="LightInstruction"/> <seealso cref="LightPosition"/>
     /// </summary>
-    public interface IPickByLightDriver : IDriver
-    {
-        /// <summary>
-        /// Activate instruction for this address
-        /// </summary>
-        void ActivateInstruction(string address, LightInstructions instruction);
+    /// <param name="positions"></param>
+    /// <param name="instruction"></param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    /// <exception cref="DriverStateException">Thrown if the driver is in an invalid state for this operation.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
+    Task<InstructionResult> ActivateInstructionAsync(LightInstruction instruction, IReadOnlyCollection<LightPosition> positions, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Deactivate an instruction
-        /// </summary>
-        void DeactivateInstruction(string address);
+    /// <summary>
+    /// Resets the given light positions <see cref="LightPosition"/>
+    /// </summary>
+    /// <param name="positions"></param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    /// <exception cref="DriverStateException">Thrown if the driver is in an invalid state for this operation.</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
+    Task<InstructionResult> DeactivateInstructionAsync(IReadOnlyCollection<LightPosition> positions, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Instruction was confirmed
-        /// </summary>
-        event EventHandler<InstructionConfirmation> InstructionConfirmed;
-    }
+    /// <summary>
+    /// Event for messages received by the pbl system
+    /// </summary>
+    event EventHandler<PickByLightMessageEventArgs> MessageReceived;
 }

@@ -1,38 +1,63 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Collections.Generic;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Modules;
 
-namespace Moryx.Resources.Samples.Initializer
+namespace Moryx.Resources.Samples.Initializer;
+
+[ResourceInitializer(nameof(SampleMachineInitializer))]
+[ExpectedConfig(typeof(SampleMachineInitializerConfig))]
+public class SampleMachineInitializer : ResourceInitializerBase<SampleMachineInitializerConfig>
 {
-    [ResourceInitializer(nameof(SampleMachineInitializer))]
-    [ExpectedConfig(typeof(SampleMachineInitializerConfig))]
-    public class SampleMachineInitializer : ResourceInitializerBase<SampleMachineInitializerConfig>
+    /// <inheritdoc />
+    public override string Name => "Sample Machine";
+
+    /// <inheritdoc />
+    public override string Description => "Creates a sample machine and two cells";
+
+    /// <inheritdoc />
+    public override Task<ResourceInitializerResult> ExecuteAsync(IResourceGraph graph, object parameters, CancellationToken cancellationToken)
     {
-        public override string Name => "Sample Machine";
-
-        public override string Description => "Creates a sample machine and two cells";
-
-        public override IReadOnlyList<Resource> Execute(IResourceGraph graph)
+        var machine = graph.Instantiate<Machine>();
+        machine.Name = Config.MachineName;
+        machine.AdditionalInformation = new MachineInfos
         {
-            var machine = graph.Instantiate<Machine>();
-            machine.Name = Config.MachineName;
+            MaximumNumberOperator = 4,
+            TechnicalStaff = "Max Mustermann",
+        };
+        machine.ProductionHours = 50000;
+        machine.Description = "This is a description";
+        machine.Values = new List<int> { 1, 2, 3, 4 };
+        machine.PossibleTechnicalStaffs = new List<TechnicalStaff>()
+        {
+            new() {
+                FirstName = "Max",
+                LastName = "Mustermann",
+                StaffNumber = 0815
+            },
+            new() {
+                FirstName = "Flynn",
+                LastName = "Rider",
+                StaffNumber = 4711
+            }
+        };
 
-            var someGate = graph.Instantiate<GateResource>();
-            someGate.Name = "Some Gate";
+        machine.MachineType = MachineType.halfAutomatic;
+        machine.Power = 234.1;
 
-            someGate.Parent = machine;
-            machine.Children.Add(someGate);
+        var someGate = graph.Instantiate<GateResource>();
+        someGate.Name = "Some Gate";
 
-            var anotherGate = graph.Instantiate<GateResource>();
-            anotherGate.Name = "Another Gate";
+        someGate.Parent = machine;
+        machine.Children.Add(someGate);
 
-            anotherGate.Parent = machine;
-            machine.Children.Add(anotherGate);
+        var anotherGate = graph.Instantiate<GateResource>();
+        anotherGate.Name = "Another Gate";
 
-            return new Resource[] { machine };
-        }
+        anotherGate.Parent = machine;
+        machine.Children.Add(anotherGate);
+
+        return InitializedAsync([machine]);
     }
 }

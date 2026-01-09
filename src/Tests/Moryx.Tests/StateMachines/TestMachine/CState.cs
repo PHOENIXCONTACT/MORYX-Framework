@@ -1,18 +1,17 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Tests
-{
-    internal sealed class CState : MyStateBase
-    {
-        public CState(MyContext context, StateMap stateMap) : base(context, stateMap)
-        {
-        }
+namespace Moryx.Tests;
 
-        public override void CtoA()
-        {
-            NextState(StateA);
-            Context.HandleCtoA();
-        }
+internal sealed class CState : MyStateBase
+{
+    public CState(MyContext context, StateMap stateMap) : base(context, stateMap)
+    {
+    }
+
+    public override void CtoA()
+    {
+        NextState(StateA);
+        Context.HandleCtoA();
     }
 }

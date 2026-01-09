@@ -1,0 +1,71 @@
+{
+  "APP": {
+    "TITLE": "Workplans",
+    "OPEN_WORKPLAN_MANAGEMENT": "Open workplan management",
+    "OPEN_WORKPLAN_SESSIONS": "Open sessions",
+    "NO_SESSION_IS_OPEN": "No session is open"
+  },
+  "NOT_FOUND": "The session could not be found",
+  "DISMISS": "DISMISS",
+  "DEFAULT_MESSAGE": "Something went wrong on the server.",
+  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings.",
+  "SESSIONS": {
+    "CONFIRM_DIALOG": {
+      "TITLE": "Do you want to close this session?",
+      "MESSAGE": "If you haven't saved, your changes will be lost. Are you sure you want to close the session?",
+      "CONFIRM": "CONFIRM",
+      "CANCEL": "CANCEL"
+    },
+    "CLOSE": "Close"
+  },
+  "STEP_CREATOR": {
+    "CREATE": "Create",
+    "CONFIGURE_UNKNOWN": "Configure unknown step",
+    "COULD_NOT_FIND": "We could not find any steps of the given type"
+  },
+  "TOOLBOX": {
+    "HEADER": "Controlflow",
+    "STEPS": "Steps",
+    "SUB_HEADER": "Sub-Workplans"
+  },
+  "PROPERTIES": {
+    "TITLE": "Properties",
+    "NAME": "Name",
+    "STATE": "State",
+    "VERSION": "Version",
+    "DISPLAY_NAME": "Display Name",
+    "NAVIGATE": "Navigate to workplan"
+  },
+  "EDITOR": {
+    "AUTO_LAYOUT": "Auto layout",
+    "CREATING": "Creating...",
+    "DELETE": "Delete",
+    "SAVE": "Save workplan",
+    "SNACK_BAR": {
+      "SUCCESS": "Workplan saved"
+    }
+  },
+  "MANAGEMENT": {
+    "NAME": "Name",
+    "STATE": "State",
+    "VERSION": "Version",
+    "OPEN_SESSION": "Open session",
+    "DUPLICATE": "Duplicate",
+    "DELETE": "Delete",
+    "ADD": "Add",
+    "CONFIRM_DIALOG": {
+      "TITLE": "Delete Workplan",
+      "MESSAGE_FIRST_PART": "The workplan session",
+      "MESSAGE_SECOND_PART": "will also be closed, are you sure",
+      "MESSAGE": "Are you sure you want to delete?",
+      "CANCEL": "CANCEL"
+    },
+    "SNACK_BAR": {
+      "SUCCESS_FIRST_PART": "Workplan",
+      "SUCCESS_SECOND_PART": "deleted"
+    }
+  },
+  "PLACEHOLDER": {
+    "DISPLAY_NAME": "No name available"
+  }
+}

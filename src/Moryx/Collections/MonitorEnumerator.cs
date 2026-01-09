@@ -1,51 +1,48 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 
-namespace Moryx.Collections
+namespace Moryx.Collections;
+
+/// <summary>
+/// Represents a synced enumerator to iterate over a generic collection
+/// </summary>
+public class MonitorEnumerator<T> : IEnumerator<T>
 {
+    private readonly object _syncRoot;
+    private readonly IEnumerator<T> _innerEnumerator;
+
+    /// <inheritdoc />
+    public T Current => _innerEnumerator.Current;
+
+    object IEnumerator.Current => Current;
+
     /// <summary>
-    /// Represents a synced enumerator to iterate over a generic collection
+    /// Constructor for an monitor based enumerator
     /// </summary>
-    public class MonitorEnumerator<T> : IEnumerator<T>
+    /// <param name="syncRoot">An object that can be used for synchronized access</param>
+    /// <param name="enumerable">Enumerable to enumerate</param>
+    public MonitorEnumerator(object syncRoot, IEnumerable<T> enumerable)
     {
-        private readonly object _syncRoot;
-        private readonly IEnumerator<T> _innerEnumerator;
+        _syncRoot = syncRoot;
+        _innerEnumerator = enumerable.GetEnumerator();
 
-        /// <inheritdoc />
-        public T Current => _innerEnumerator.Current;
+        Monitor.Enter(_syncRoot);
+    }
 
-        object IEnumerator.Current => Current;
+    /// <inheritdoc />
+    public virtual bool MoveNext() =>
+        _innerEnumerator.MoveNext();
 
-        /// <summary>
-        /// Constructor for an monitor based enumerator
-        /// </summary>
-        /// <param name="syncRoot">An object that can be used for synchronized access</param>
-        /// <param name="enumerable">Enumerable to enumerate</param>
-        public MonitorEnumerator(object syncRoot, IEnumerable<T> enumerable)
-        {
-            _syncRoot = syncRoot;
-            _innerEnumerator = enumerable.GetEnumerator();
+    /// <inheritdoc />
+    public virtual void Reset() =>
+        _innerEnumerator.Reset();
 
-            Monitor.Enter(_syncRoot);
-        }
-
-        /// <inheritdoc />
-        public virtual bool MoveNext() =>
-            _innerEnumerator.MoveNext();
-
-        /// <inheritdoc />
-        public virtual void Reset() =>
-            _innerEnumerator.Reset();
-
-        /// <inheritdoc />
-        public virtual void Dispose()
-        {
-            _innerEnumerator.Dispose();
-            Monitor.Exit(_syncRoot);
-        }
+    /// <inheritdoc />
+    public virtual void Dispose()
+    {
+        _innerEnumerator.Dispose();
+        Monitor.Exit(_syncRoot);
     }
 }

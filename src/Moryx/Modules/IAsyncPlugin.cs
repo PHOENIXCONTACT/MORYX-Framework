@@ -1,27 +1,26 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Threading.Tasks;
+namespace Moryx.Modules;
 
-namespace Moryx.Modules
+/// <summary>
+/// Base interface for all components collaborating within an <see cref="IModule"/> composition.
+/// For increased flexibility and extensibility modules should be designed as compositions of exchangeable plugins.
+/// Application specific behaviour and patterns like strategy or CoR pattern should include plugins.
+/// Tailored to the different requirements <see cref="IAsyncPlugin"/> come in different variations.
+/// To provide fully restartable modules each plugin must be fully disposable.
+/// </summary>
+public interface IAsyncPlugin
 {
     /// <summary>
-    /// Base interface for all components collaborating within an <see cref="IModule"/> composition.
-    /// For increased flexibility and extensibility modules should be designed as compositions of exchangeable plugins.
-    /// Application specific behaviour and patterns like strategy or CoR pattern should include plugins.
-    /// Tailored to the different requirements <see cref="IAsyncPlugin"/> come in different variations.
-    /// To provide fully restartable modules each plugin must be fully disposable.
+    /// Start internal execution of active and/or periodic functionality.
     /// </summary>
-    public interface IAsyncPlugin
-    {
-        /// <summary>
-        /// Start internal execution of active and/or periodic functionality.
-        /// </summary>
-        Task Start();
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    Task StartAsync(CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Stops internal execution of active and/or periodic functionality.
-        /// </summary>
-        Task Stop();
-    }
+    /// <summary>
+    /// Stops internal execution of active and/or periodic functionality.
+    /// </summary>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    Task StopAsync(CancellationToken cancellationToken = default);
 }

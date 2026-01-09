@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Tests.TestData
+using Moryx.AbstractionLayer.Activities;
+using Moryx.AbstractionLayer.Workplans;
+
+namespace Moryx.AbstractionLayer.Tests.TestData;
+
+public class TestTask : TaskStep<TestActivity, NullActivityParameters>
 {
-    public class TestTask : TaskStep<TestActivity,NullActivityParameters>
-    {
-    }
 }

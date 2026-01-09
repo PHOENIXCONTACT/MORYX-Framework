@@ -1,0 +1,40 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+:host {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+  height: 100%;
+  overflow-y: hidden;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.product-details-header {
+  height: fit-content;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: $mat-background-light;
+}
+
+.product-details-navigation {
+  display: flex;
+  justify-content: flex-start;
+  height: fit-content;
+  background-color: $mat-background-light;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.product-details-information {
+  display: flex;
+  flex: 1;
+  align-items: stretch;
+  justify-content: center;
+  max-height: 100%;
+  overflow: hidden;
+}

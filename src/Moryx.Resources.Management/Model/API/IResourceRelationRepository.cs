@@ -1,19 +1,17 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Model.Repositories;
 
-// ReSharper disable once CheckNamespace
-namespace Moryx.Resources.Model
+namespace Moryx.Resources.Management.Model;
+
+/// <summary>
+/// The public API of the ResourceRelation repository.
+/// </summary>
+public interface IResourceRelationRepository : IRepository<ResourceRelationEntity>
 {
     /// <summary>
-    /// The public API of the ResourceRelation repository.
+    /// Creates instance with all not nullable properties prefilled
     /// </summary>
-    public interface IResourceRelationRepository : IRepository<ResourceRelationEntity>
-    {
-        /// <summary>
-        /// Creates instance with all not nullable properties prefilled
-        /// </summary>
-        ResourceRelationEntity Create(int relationType);
-    }
+    ResourceRelationEntity Create(int relationType);
 }

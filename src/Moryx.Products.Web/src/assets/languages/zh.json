@@ -1,0 +1,113 @@
+{
+  "APP": {
+    "PRODUCTS": "产品",
+    "SELECTOR": "选择器",
+    "RESET_FILTER": "重置",
+    "APPLY_FILTER": "应用",
+    "EMPTY_STATE_HEADER": "无产品",
+    "EMPTY_STATE_TEXT": "从列表中选择一个产品，或者点击加号图标导入新产品。",
+    "EMPTY_STATE_RECIPES_HEADER": "无配方",
+    "EMPTY_STATE_RECIPES_TEXT": "从列表中选择一个配方，或者进入编辑模式创建新配方。",
+    "EMPTY_STATE_PARTS_HEADER": "无零件",
+    "EMPTY_STATE_PARTS_TEXT": "从列表中选择一个零件，或者进入编辑模式创建新零件。",
+    "FAILED_LOADING": "无法连接到服务器，请检查网络连接或稍后重试。",
+    "SNACK_BAR": {
+      "NO_IMPORTER": "未定义导入器"
+    }
+  },
+  "DISMISS": "忽略",
+  "DEFAULT_MESSAGE": "服务器发生了错误。",
+  "SERVER_NOT_REACHABLE": "无法访问服务器，请检查网络连接或代理设置。",
+  "SHARED": {
+    "DELETE": "删除",
+    "EDIT": "编辑",
+    "SAVE": "保存",
+    "DUPLICATE": "复制",
+    "REVISION": "版本",
+    "NAME": "名称",
+    "CANCEL": "取消",
+    "IDENTIFIER": "标识符",
+    "STATE": "状态",
+    "PROPERTIES": "属性",
+    "WORKPLAN": "工作计划",
+    "CLASSIFICATION": "分类"
+  },
+  "IMPORTER": {
+    "TITLE": "产品导入器",
+    "SUB_TITLE": "使用导入器导入产品",
+    "IMPORT": "导入"
+  },
+  "DETAILS": {
+    "PARTS": "零件",
+    "REFERENCES": "引用",
+    "RECIPES": "配方",
+    "HEADER": {
+      "TITLE": "通用信息"
+    },
+    "REFS": {
+      "TITLE": "此产品用于以下产品",
+      "NO_REF": "此产品未被其他产品使用",
+      "NO_REF_HEADER": "无引用"
+    },
+    "RECIPS": {
+      "ADD_RECIPE": "添加配方",
+      "CHOOSE_OTHER": "请选择其他"
+    }
+  },
+  "PARTS": {
+    "REMOVE": "删除",
+    "ADD": "添加",
+    "REPLACE": "替换",
+    "DETAILS": {
+      "TITLE": "产品与零件之间的连接配置"
+    }
+  },
+  "ADD_DIALOG": {
+    "TITLE": "选择零件",
+    "SUB_TITLE": "请从列表中选择一个产品",
+    "SEARCH": "搜索",
+    "CANCEL": "取消",
+    "SELECT": "选择"
+  },
+  "CREATE_RECIPE_DIALOG": {
+    "TITLE": "添加配方",
+    "RECIPE_TYPE": "配方类型",
+    "RECIPE_NAME": "配方名称",
+    "WORKPLAN": "工作计划",
+    "CANCEL": "取消",
+    "CREATE": "创建"
+  },
+  "CREATE_REVISION_DIALOG": {
+    "TITLE": "新建版本",
+    "SUB_TITLE": "为产品创建版本",
+    "REVISION": "版本",
+    "CANCEL": "取消",
+    "CREATE": "创建"
+  },
+  "DUPLICATE_PRODUCT_DIALOG": {
+    "TITLE": "复制产品",
+    "IDENTIFIER": "标识符",
+    "REVISION": "版本",
+    "CANCEL": "取消",
+    "DUPLICATE": "复制"
+  },
+  "REMOVE_PRODUCT_DIALOG": {
+    "TITLE": "移除产品",
+    "SUB_TITLE": "将永久移除以下产品的版本：",
+    "CANNOT_REMOVE": "无法移除所选产品的版本，因为它仍被以下产品使用",
+    "CANCEL": "取消",
+    "REMOVE": "移除"
+  },
+  "SHOW_REVISION_DIALOG": {
+    "TITLE": "选择一个版本",
+    "CANCEL": "取消",
+    "ADD_REVISION": "新建"
+  },
+  "SIDEBAR_BUTTONS": {
+    "HIERARCHY_VIEW": "层次视图",
+    "LIST_VIEW": "列表视图",
+    "REFRESH": "刷新",
+    "FILTER": "过滤",
+    "ADD": "添加"
+  }
+}

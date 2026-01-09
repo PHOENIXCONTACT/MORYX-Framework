@@ -1,0 +1,28 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+.light-text {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.part-list-status {
+    padding: 16px;
+}
+
+.parts-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+        text-align: left;
+        padding-left: 16px;
+    }
+
+    tr {
+        height: 56px;
+        border-bottom: 0.5pt solid $light-background-hover;
+    }
+
+    td {
+        padding-left: 16px;
+    }
+}

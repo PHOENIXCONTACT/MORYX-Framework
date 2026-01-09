@@ -33,19 +33,6 @@ updates:
       - "nuget"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "src/Moryx.CommandCenter.Web/"
-    open-pull-requests-limit: 10
-    schedule:
-      interval: "weekly"
-      # Check for npm updates on Fridays
-      day: "friday"
-      time: "08:05"
-      timezone: "Europe/Berlin"
-    # Labels on pull requests for security and version updates
-    labels:
-      - "npm"
-      - "dependencies"
-  - package-ecosystem: "npm"
     directory: "/src/Moryx.CommandCenter.Web/"
     target-branch: "future"
     open-pull-requests-limit: 10

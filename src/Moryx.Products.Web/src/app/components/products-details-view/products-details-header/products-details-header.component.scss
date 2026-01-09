@@ -1,0 +1,29 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+
+.header {
+  padding: 16px 26px 4px 26px;
+  background-color: $mat-background-light;
+}
+
+.form-field {
+  width: 100%;
+}
+
+.header-border {
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+}
+
+.header-information-title {
+  margin-bottom: 0px;
+}
+
+.header-subtitle {
+  color: $mat-color-caption-light; 
+}
+
+@media (max-width: 400px) {
+  .form-container {
+    grid-template-columns: 1fr;
+  }
+}

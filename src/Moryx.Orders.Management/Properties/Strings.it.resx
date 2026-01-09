@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="OperationNotifications_AmountReachedNotificationMessage" xml:space="preserve">
+		<value>L'operazione {0} ha completato le ultime parti ed è ora pronta per la disconnessione. Riportare le parti prodotte.</value>
+	</data>
+  <data name="OperationNotifications_AmountReachedNotificationTitle" xml:space="preserve">
+		<value>L'ordine è pronto per la segnalazione</value>
+	</data>
+  <data name="RegexOperationValidation_Wrong_Amount" xml:space="preserve">
+    <value>La quantità dell'operazione deve essere maggiore di zero.</value>
+  </data>
+  <data name="RegexOperationValidation_Regex_Match_Failed" xml:space="preserve">
+    <value>Il numero dell'operazione non corrisponde alla regex: {0}.</value>
+  </data>
+  <data name="RegexOperationValidation_No_Valid_Recipe" xml:space="preserve">
+    <value>L'operazione non ha una ricetta valida.</value>
+  </data>
+  <data name="RecipeAssignStep_WorkplanValidation_Failed" xml:space="preserve">
+    <value>La validazione del piano di lavoro è fallita. Errore: \n{0}</value>
+  </data>
+  <data name="RecipeAssignStep_Selection_Failed" xml:space="preserve">
+    <value>Non è stato possibile selezionare le ricette per l'operazione! C'era un valore nullo o nessuna ricetta selezionata!</value>
+  </data>
+  <data name="RecipeAssignStep_Restore_Failed" xml:space="preserve">
+    <value>Assegnazione delle ricette fallita. Dovrebbero esserci solo riferimenti.</value>
+  </data>
+  <data name="RecipeAssignStep_Processing_Failed" xml:space="preserve">
+    <value>Non è stato possibile elaborare con successo la ricetta '{0}'!</value>
+  </data>
+  <data name="ProductAssignStep_Selection_Failed" xml:space="preserve">
+    <value>Non è stato possibile assegnare il prodotto!</value>
+  </data>
+  <data name="OperationState_RunningState" xml:space="preserve">
+    <value>In esecuzione</value>
+  </data>
+  <data name="OperationState_ReadyState" xml:space="preserve">
+    <value>Pronto</value>
+  </data>
+  <data name="OperationState_ReadyAssignState" xml:space="preserve">
+    <value>Assegnazione in corso</value>
+  </data>
+  <data name="OperationState_ReadyAssignFailedState" xml:space="preserve">
+    <value>Assegnazione fallita</value>
+  </data>
+  <data name="OperationState_InterruptingState" xml:space="preserve">
+    <value>Interruzione in corso</value>
+  </data>
+  <data name="OperationState_InterruptedState" xml:space="preserve">
+    <value>Interrotto</value>
+  </data>
+  <data name="OperationState_InitialState" xml:space="preserve">
+    <value>Iniziale</value>
+  </data>
+  <data name="OperationState_AmountReachedAssignState" xml:space="preserve">
+    <value>Assegnazione in corso</value>
+  </data>
+  <data name="OperationState_AmountReachedAssignFailedState" xml:space="preserve">
+    <value>Assegnazione fallita</value>
+  </data>
+  <data name="OperationState_InterruptedAssignState" xml:space="preserve">
+    <value>Assegnazione in corso</value>
+  </data>
+  <data name="OperationState_InterruptedAssignFailedState" xml:space="preserve">
+    <value>Assegnazione fallita</value>
+  </data>
+  <data name="OperationState_InitialAssignState" xml:space="preserve">
+    <value>Creazione in corso</value>
+  </data>
+  <data name="OperationState_InitialAssignFailedState" xml:space="preserve">
+    <value>Creazione fallita</value>
+  </data>
+  <data name="OperationState_CompletedState" xml:space="preserve">
+    <value>Completato</value>
+  </data>
+  <data name="OperationState_AmountReachedState" xml:space="preserve">
+    <value>Quantità raggiunta</value>
+  </data>
+  <data name="OperationState_AbortedState" xml:space="preserve">
+    <value>Annullato</value>
+  </data>
+  <data name="OperationManager_StateErrorText" xml:space="preserve">
+    <value>L'operazione in questo stato non può essere avviata.</value>
+  </data>
+  <data name="OperationManager_NoReportErrorText" xml:space="preserve">
+    <value>Nessun rapporto possibile nello stato attuale dell'operazione.</value>
+  </data>
+  <data name="OperationManager_NoPartialReportErrorText" xml:space="preserve">
+    <value>Il rapporto parziale non è possibile nello stato attuale dell'operazione.</value>
+  </data>
+  <data name="OperationManager_NoFinalReportErrorText" xml:space="preserve">
+    <value>Il rapporto finale non è possibile nello stato attuale dell'operazione.</value>
+  </data>
+  <data name="OperationManager_MaxRunningErrorText" xml:space="preserve">
+    <value>È stato raggiunto il numero massimo di operazioni in esecuzione.</value>
+  </data>
+  <data name="OperationAssignment_Successful" xml:space="preserve">
+    <value>Esecuzione riuscita del passaggio di assegnazione dell'operazione {0}</value>
+  </data>
+  <data name="OperationAssignment_Started" xml:space="preserve">
+    <value>Avvio dell'assegnazione dell'operazione...</value>
+  </data>
+  <data name="OperationAssignment_RecipeReassigned" xml:space="preserve">
+    <value>Ricetta {0} riassegnata all'operazione</value>
+  </data>
+  <data name="OperationAssignment_Exception_Assign" xml:space="preserve">
+    <value>Assegnazione dell'operazione fallita</value>
+  </data>
+  <data name="DocumentAssignStep_Restore_Documents_Failed" xml:space="preserve">
+    <value>Impossibile ripristinare i documenti dal FileSystem!</value>
+  </data>
+  <data name="DocumentAssignStep_Documents_Loading_Failed" xml:space="preserve">
+    <value>Errore durante il caricamento delle informazioni del documento dal fornitore di documenti!</value>
+  </data>
+  <data name="DocumentAssignStep_Document_Loading_Failed" xml:space="preserve">
+    <value>Errore durante il caricamento del documento '{0}' dal fornitore di documenti!</value>
+  </data>
+  <data name="PartsAssignStep_Threw_Exception" xml:space="preserve">
+    <value>{0} ha lanciato un'eccezione durante il caricamento di parti di prodotto</value>
+  </data>
+  <data name="PartsAssignStep_Failed" xml:space="preserve">
+    <value>Non è stato possibile assegnare le parti del prodotto.</value>
+  </data>
+  <data name="OperationManager_OverDeliveryNotice" xml:space="preserve">
+    <value>Non è possibile ridurre l'obiettivo al di sotto del numero di pezzi prodotti con successo.</value>
+  </data>
+</root>

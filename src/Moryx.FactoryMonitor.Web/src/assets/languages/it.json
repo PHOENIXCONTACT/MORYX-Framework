@@ -1,0 +1,46 @@
+{
+  "SHARED": {
+    "SAVE": "SAVE",
+    "CANCEL": "CANCEL"
+  },
+  "CELL_DETAILS": {
+    "RUNNING_STATE": "RUNNING",
+    "IDLE_STATE": "IDLE",
+    "NOT_READY_TO_WORK_STATE": "NOT READY TO WORK",
+    "NO_PROPERTIES": "No property configured"
+  },
+  "CELL_ICON_SELECTOR_DIALOG": {
+    "ICON_SELECTOR": "Cell Icon",
+    "ICON_NAME": "Icon Name",
+    "ICON_NAME_REQUIRED": "The icon name is required",
+    "PREVIEW": "Preview"
+  },
+  "CELL_IMAGE_DIALOG": {
+    "CELL_IMAGE": "Cell Image",
+    "NO_IMAGE": "No image to display",
+    "IMAGE_URL": "Image URL"
+  },
+  "CHANGE_BACKGROUND_DIALOG": {
+    "BACKGROUND_IMAGE": "Background Image",
+    "BACKGROUND_URL": "Background URL",
+    "ENTER_URL": "Please enter a URL",
+    "NO_MANUFACTURING_RESOURCE": "We could not find a ManufactoringFactoryResource to save your background to, please talk to your system administrator if you would like to change the background."
+  },
+  "DETAILS_CONFIGURATION_DIALOG": {
+    "PROPERTIES_CONFIGURATION": "Property configuration",
+    "PROPERTY": "Property",
+    "DISPLAY": "Display"
+  },
+  "APP": {
+    "DEFAULT_BACKGROUND_URL": "We could not find a background URL. Until you provide it, we will use the default image."
+  },
+  "DISMISS": "DISMISS",
+  "DEFAULT_MESSAGE": "Something went wrong on the server.",
+  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings.",
+  "EDIT_MENU": {
+    "EDIT": "Modifica",
+    "CONFIRM": "Conferma",
+    "MOVE": "Sposta",
+    "BACKGROUND": "Contesto"
+  }
+}

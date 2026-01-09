@@ -1,0 +1,61 @@
+@use "@angular/material" as mat;
+mat-form-field {
+  width: 100%;
+}
+
+.create-dialog-operation-container {
+  place-content: space-between;
+}
+
+.create-dialog-operation-title {
+  display: inline-block;
+}
+
+.create-dialog-operation-list-container {
+  padding: 0px;
+}
+
+.product-without-recipe-hint {
+  font-size: 12px;
+  padding-left: 5px;
+}
+
+.operation-mat-list-item-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center ;
+}
+
+.operation-list-item {
+  padding: 0 !important;
+  @include mat.list-overrides((
+     list-item-two-line-container-height: 60px,
+));
+}
+
+.actions { gap: 8px; }
+
+.split-button{
+  display:inline-flex;
+  gap:3px
+}
+
+.split-button .primary{
+  border-top-right-radius:0!important;
+  border-bottom-right-radius:0!important;
+  margin:0;
+  width: 120px;
+}
+
+.split-button .dropdown-flat{
+  border-top-left-radius:0!important;
+  border-bottom-left-radius:0!important;
+  margin:0;
+  padding: 0;
+  min-width: 40px;
+  width: 40px;
+}
+
+.split-button .dropdown-flat .mat-icon {
+  margin: 0;
+}

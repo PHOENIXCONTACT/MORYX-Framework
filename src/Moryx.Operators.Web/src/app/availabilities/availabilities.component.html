@@ -1,0 +1,110 @@
+<div class="tw:relative tw:w-full tw:h-full tw:bg-gray-50">
+  <!-- Header -->
+  <div
+    class="tw:w-full tw:flex tw:justify-between tw:p-2 tw:items-center tw:bg-white tw:border-b tw:border-b-gray-200"
+  >
+    <div class="tw:flex tw:flex-row tw:items-center tw:gap-2">
+      <a
+        mat-icon-button
+        aria-label="Go back"
+        matTooltip="Go back"
+        class="go-back-button"
+        routerLink="/management"
+      >
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+      <span class="tw:text-lg tw:font-medium"> {{ TranslationConstants.AVAILABILITIES.TITLE | translate }}</span>
+    </div>
+
+    <!-- navigation toolbar -->
+    <div class="tw:flex tw:flex-row tw:items-center tw:gap-x-2">
+      <button mat-stroked-button (click)="navigateToCurrentWeek()">
+        {{ TranslationConstants.AVAILABILITIES.THIS_WEEK| translate }}
+      </button>
+
+      <!-- Day navigators -->
+      <div class="tw:flex tw:flex-row tw:justify-between tw:items-center tw:gap-x-3">
+        <button
+          mat-icon-button
+          aria-label="Previous Week"
+          (click)="navigateToPreviousWeek()"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <!-- Date -->
+        <span class="tw:font-bold">{{calendarState.current.datesDisplayed}}</span>
+        <button
+          mat-icon-button
+          aria-label="Next week"
+          (click)="navigateToNextWeek()"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="tw:flex tw:gap-1 tw:items-center">
+      <span class="tw:text-lg tw:font-medium"> 0 </span>
+      <mat-icon>groups</mat-icon>
+    </div>
+  </div>
+  <div class="tw:w-full tw:overflow-y-auto tw:flex tw:flex-col" role="main">
+    <!-- Main Content -->
+    <!-- headers -->
+    <div class="tw:grid tw:grid-cols-8 tw:grid-rows-1 tw:bg-white">
+      <div class="tw:font-bold tw:border-r tw:border-b tw:border-r-gray-200 tw:py-1 tw:pl-2">
+        {{ TranslationConstants.AVAILABILITIES.OPERATORS| translate }}
+      </div>
+      <div class="tw:py-1  tw:font-bold tw:border-b tw:flex tw:flex-row tw:item tw:justify-center"
+       [ngClass]="{
+        'tw:border-r  tw:border-r-gray-200 ': date.date.getDay() !== 6
+       }" *ngFor="let date of calendarState.currentViewDates()">
+          <span class="tw:rounded-full tw:px-2 tw:py-1" [ngClass]="{
+            'tw:bg-primary-800 tw:text-white': isSameDate(date.date,calendarState.today)
+          }">
+            {{ formatDateDigits(date.date.getDate())}}
+          </span>
+          <span class="tw:px-2 tw:py-1">
+            {{getShortDayName(date.day)}}
+          </span>
+        </div>
+   
+    </div>
+    <!-- body -->
+    <div class="tw:grid tw:auto-rows-auto tw:overflow-y-auto">
+      <!-- rows -->
+      <section class="tw:grid tw:grid-cols-8">
+        <div class="tw:border-b tw:border-r tw:border-gray-200 tw:pl-2 py-2 tw:bg-white">
+          AT20125
+        </div>
+        <div class="tw:border-b tw:pl-2 tw:py-2 tw:bg-warning-800"></div>
+        <div class="tw:border-b tw:pl-2 tw:py-2 tw:bg-warning-800"></div>
+        <div class="tw:border-b tw:pl-2 tw:py-2 tw:bg-warning-800"></div>
+        <div class="tw:border-b tw:pl-2 tw:py-2 tw:bg-warning-800"></div>
+        <div class="tw:border-b tw:pl-2 tw:py-2 tw:bg-warning-800"></div>
+        <div class="tw:border-b tw:border-r tw:border-gray-200 tw:pl-2 tw:py-2"></div>
+        <div class="tw:border-b tw:border-gray-200 tw:pl-2 py-2"></div>
+      </section>
+      <section class="tw:grid tw:grid-cols-8">
+        <div class="tw:border-b tw:border-r tw:border-gray-200 tw:pl-2 tw:py-2 tw:bg-white">
+          MC25002
+        </div>
+        <div class="tw:border-b tw:border-r tw:border-gray-200 tw:pl-2 tw:py-2"></div>
+        <div class="tw:border-b tw:border-r tw:border-gray-200 tw:pl-2 tw:py-2"></div>
+        <div class="tw:border-b tw:border-r tw:border-gray-200 tw:pl-2 tw:py-2"></div>
+        <div class="tw:border-b tw:pl-2 tw:py-2 tw:bg-warning-800"></div>
+        <div class="tw:border-b tw:pl-2 tw:py-2 tw:bg-warning-800"></div>
+        <div class="tw:border-b tw:pl-2 tw:py-2 tw:bg-warning-800"></div>
+        <div class="tw:border-b tw:border-gray-200 tw:pl-2 tw:py-2"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- add button -->
+  <div class="tw:absolute tw:z-100 tw:bottom-2 tw:right-2">
+    <button mat-fab color="primary" (click)="onAddClick()">
+      <mat-icon>
+        <mat-icon>add</mat-icon>
+      </mat-icon>
+    </button>
+  </div>
+</div>

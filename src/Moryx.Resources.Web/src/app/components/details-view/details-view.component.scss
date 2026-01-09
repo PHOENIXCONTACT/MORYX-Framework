@@ -1,0 +1,40 @@
+@use "../../../styles.scss" as *;
+
+
+.resource-details {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+}
+
+.resource-details-header {
+  height: fit-content;
+  margin: 0px -10px;
+}
+
+.resource-details-navigation {
+  display: flex;
+  justify-content: flex-start;
+  height: fit-content;
+  background-color: $mat-background-light;
+  padding-top: 8px;
+  margin: 0px -10px;
+}
+
+.resource-details-information {
+  display: flex;
+  flex: 1;
+  align-items: stretch;
+  justify-content: center;
+  max-height: 100%;
+  overflow: hidden;
+  margin: 0px -10px;
+}
+
+.resource-details-actions {
+  display: flex;
+  justify-content: flex-end;
+  height: fit-content;
+}

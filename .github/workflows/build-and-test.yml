@@ -3,25 +3,25 @@ name: CI
 # Controls when the action will run. Triggers the workflow on push or pull request
 on:
   push:
-    branches: 
+    branches:
       - dev
       - future
     tags:
       - v[0-9]+.[0-9]+.[0-9]+ # Matches all semantic versioning tags with major, minor, patch
   pull_request:
-    branches: 
+    branches:
       - dev
       - future
 
 env:
-  dotnet_sdk_version: '8.0.100'
+  dotnet_sdk_version: "10.0.100"
   REPOSITORY_NAME: ${{ github.event.repository.name }}
-  MORYX_PACKAGE_TARGET_DEV: 'https://www.myget.org/F/moryx-oss-ci/api/v2/package'
-  MORYX_PACKAGE_TARGET_V3_DEV: 'https://www.myget.org/F/moryx-oss-ci/api/v3/index.json'
-  MORYX_PACKAGE_TARGET_FUTURE: 'https://www.myget.org/F/moryx-oss-ci/api/v2/package'
-  MORYX_PACKAGE_TARGET_V3_FUTURE: 'https://www.myget.org/F/moryx-oss-ci/api/v3/index.json'
-  MORYX_PACKAGE_TARGET_RELEASE: 'https://api.nuget.org/v3/index.json'
-  MORYX_PACKAGE_TARGET_V3_RELEASE: 'https://api.nuget.org/v3/index.json'
+  MORYX_PACKAGE_TARGET_DEV: "https://www.myget.org/F/moryx-oss-ci/api/v2/package"
+  MORYX_PACKAGE_TARGET_V3_DEV: "https://www.myget.org/F/moryx-oss-ci/api/v3/index.json"
+  MORYX_PACKAGE_TARGET_FUTURE: "https://www.myget.org/F/moryx-oss-ci/api/v2/package"
+  MORYX_PACKAGE_TARGET_V3_FUTURE: "https://www.myget.org/F/moryx-oss-ci/api/v3/index.json"
+  MORYX_PACKAGE_TARGET_RELEASE: "https://api.nuget.org/v3/index.json"
+  MORYX_PACKAGE_TARGET_V3_RELEASE: "https://api.nuget.org/v3/index.json"
 
 jobs:
   EnvVar:
@@ -64,7 +64,7 @@ jobs:
     uses: phoenixcontact/tools/.github/workflows/reportgenerator-tool.yml@main
     with:
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
-               
+
   Publish-Test-Coverage:
     needs: [EnvVar, ReportGenerator]
     uses: phoenixcontact/tools/.github/workflows/publish-test-coverage-tool.yml@main
@@ -82,7 +82,7 @@ jobs:
   #     REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   Publish:
-    needs: [EnvVar, UnitTests]
+    needs: [EnvVar, Build] #, UnitTests]
     uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@main
     with:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
@@ -93,6 +93,6 @@ jobs:
       MORYX_PACKAGE_TARGET_V3_FUTURE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_FUTURE }}
       MORYX_PACKAGE_TARGET_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_RELEASE }}
       MORYX_PACKAGE_TARGET_V3_RELEASE: ${{ needs.EnvVar.outputs.MORYX_PACKAGE_TARGET_V3_RELEASE }}
-    secrets: 
+    secrets:
       MYGET_TOKEN: ${{secrets.MYGET_TOKEN}}
       NUGET_TOKEN: ${{secrets.NUGET_TOKEN}}

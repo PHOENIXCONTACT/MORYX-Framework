@@ -1,29 +1,20 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using Moryx.AbstractionLayer.Hardware;
+namespace Moryx.AbstractionLayer.Drivers.Axis;
 
-namespace Moryx.AbstractionLayer.Drivers.Axis
+/// <summary>
+/// Driver that can control axes
+/// </summary>
+public interface IAxesController : IDriver
 {
     /// <summary>
-    /// Driver that can control axes
+    /// Will move the axes of the system to the given position
     /// </summary>
-    public interface IAxesController : IDriver
-    {
-        /// <summary>
-        /// Will move the axis of the laser to the given position
-        /// </summary>
-        /// <param name="axis">The axis which should be moved</param>
-        /// <param name="targetPosition">The target position of the axis</param>
-        /// <param name="callback">The callback which will be executed after the axis movement</param>
-        void MoveAxis(Axes axis, double targetPosition, DriverResponse<AxisMovementResponse> callback);
-
-        /// <summary>
-        /// Will move the axis of the laser to the given position
-        /// </summary>
-        /// <param name="axis">The axis which should be moved</param>
-        /// <param name="targetPosition">The target position of the axis</param>
-        /// <param name="callback">The callback which will be executed after the axis movement</param>
-        void MoveAxis(Axes axis, AxisPosition targetPosition, DriverResponse<AxisMovementResponse> callback);
-    }
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    /// <param name="movement">Array of axes which should be moved</param>
+    /// <exception cref="DriverStateException">Thrown if the driver is in an invalid state for this operation.</exception>
+    /// <exception cref="MoveAxesException">Will be thrown for errors during moving axes</exception>
+    /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
+    Task<AxisMovementResponse> MoveAxesAsync(CancellationToken cancellationToken = default, params AxisMovement[] movement);
 }

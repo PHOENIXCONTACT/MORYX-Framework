@@ -1,10 +1,9 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Model.Tests
+namespace Moryx.Model.Tests;
+
+public class SomeModificationTrackedEntity : ModificationTrackedEntityBase
 {
-    public class SomeModificationTrackedEntity : ModificationTrackedEntityBase
-    {
-        public string Name { get; set; }
-    }
+    public string Name { get; set; }
 }

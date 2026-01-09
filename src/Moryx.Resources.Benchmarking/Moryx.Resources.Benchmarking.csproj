@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Moryx.Benchmarking\Moryx.Benchmarking.csproj" />
+		<ProjectReference Include="..\Moryx.Notifications\Moryx.Notifications.csproj" />
+		<ProjectReference Include="..\Moryx.Resources.VisualInstructions\Moryx.Resources.VisualInstructions.csproj" />
+	</ItemGroup>
+
+</Project>

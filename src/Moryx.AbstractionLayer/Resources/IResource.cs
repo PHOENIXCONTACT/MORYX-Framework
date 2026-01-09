@@ -1,34 +1,32 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Capabilities;
-using System;
 
-namespace Moryx.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources;
+
+/// <summary>
+/// Basic interface of a Resource.
+/// </summary>
+public interface IResource
 {
     /// <summary>
-    /// Basic interface of a Resource.
+    /// Id of the resource
     /// </summary>
-    public interface IResource
-    {
-        /// <summary>
-        /// Id of the resource
-        /// </summary>
-        long Id { get; }
+    long Id { get; }
 
-        /// <summary>
-        /// Name of this resource instance
-        /// </summary>
-        string Name { get; }
+    /// <summary>
+    /// Name of this resource instance
+    /// </summary>
+    string Name { get; }
 
-        /// <summary>
-        /// The resource's capabilities 
-        /// </summary>
-        ICapabilities Capabilities { get; }
+    /// <summary>
+    /// The resource's capabilities 
+    /// </summary>
+    ICapabilities Capabilities { get; }
 
-        /// <summary>
-        /// Raised when the capabilities have changed.
-        /// </summary>
-        event EventHandler<ICapabilities> CapabilitiesChanged;
-    }
+    /// <summary>
+    /// Raised when the capabilities have changed.
+    /// </summary>
+    event EventHandler<ICapabilities> CapabilitiesChanged;
 }

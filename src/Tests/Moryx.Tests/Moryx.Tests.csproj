@@ -1,23 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <OutputType>Library</OutputType>
     <DebugType>full</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="coverlet.collector" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="Moq" />
-    <PackageReference Include="NUnit" />
-    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="coverlet.collector"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+    <PackageReference Include="Moq"/>
+    <PackageReference Include="NUnit"/>
+    <PackageReference Include="NUnit3TestAdapter"/>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Moryx.TestTools.NUnit\Moryx.TestTools.NUnit.csproj" />
-    <ProjectReference Include="..\..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj" />
-    <ProjectReference Include="..\..\Moryx\Moryx.csproj" />
+    <ProjectReference Include="..\..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj"/>
+    <ProjectReference Include="..\..\Moryx\Moryx.csproj"/>
   </ItemGroup>
 
 </Project>

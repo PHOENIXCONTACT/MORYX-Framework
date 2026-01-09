@@ -1,0 +1,168 @@
+<h2 mat-dialog-title>
+  {{ TranslationConstants.CREATE_DIALOG.TITLE | translate }}
+</h2>
+<mat-dialog-content>
+  <h3>{{ TranslationConstants.CREATE_DIALOG.ORDER_DETAILS | translate }}</h3>
+  <mat-form-field appearance="outline">
+    <mat-label>{{
+      TranslationConstants.CREATE_DIALOG.ORDER_NUMBER | translate
+    }}</mat-label>
+    <input
+      matInput
+      [(ngModel)]="orderNumber"
+      [disabled]="operations().length > 0 || isLoading()"
+      [tabIndex]="0"
+    />
+  </mat-form-field>
+  <div class="create-dialog-operation-container">
+    <h3 class="create-dialog-operation-title">
+      {{ TranslationConstants.CREATE_DIALOG.OPERATION_DETAILS | translate }}
+    </h3>
+  </div>
+  <mat-form-field appearance="outline">
+    <mat-label>{{
+      TranslationConstants.CREATE_DIALOG.OPERATION_NUMBER | translate
+    }}</mat-label>
+    <input
+      matInput
+      [formControl]="operationNumberFormControl"
+      [(ngModel)]="operationNumber"
+      [disabled]="isLoading()"
+      (keydown)="detailsInputchanged($event)"
+    />
+    <mat-error
+      *ngIf="
+        operationNumberFormControl.hasError('isOperationNumberNotValid') &&
+        operationNumberFormControl.touched &&
+        operationNumberFormControl.value
+      "
+    >
+      {{
+        TranslationConstants.CREATE_DIALOG.OPERATION_NUMBER_INVALID | translate
+      }}
+    </mat-error>
+  </mat-form-field>
+  <div>
+    <mat-form-field appearance="outline">
+      <mat-label>{{
+        TranslationConstants.CREATE_DIALOG.PRODUCT | translate
+      }}</mat-label>
+      <mat-select
+        [(value)]="selectedProduct"
+        [disabled]="isLoading()"
+        (valueChange)="detailsInputchanged($event)"
+      >
+        <mat-option *ngFor="let product of products()" [value]="product"
+          >{{ product.identifier }}-{{ product.revision | number : "2.0" }}
+          {{ product.name }}</mat-option
+        >
+        <mat-hint class="product-without-recipe-hint">{{
+          TranslationConstants.CREATE_DIALOG.HINT | translate
+        }}</mat-hint>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>{{
+        TranslationConstants.CREATE_DIALOG.RECIPE | translate
+      }}</mat-label>
+      <mat-select
+        [(value)]="selectedRecipe"
+        [disabled]="isLoading() || recipes().length === 0"
+        (valueChange)="detailsInputchanged($event)"
+      >
+        <mat-option *ngFor="let recipe of recipes()" [value]="recipe">{{
+          recipe.name
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <mat-form-field appearance="outline">
+    <mat-label>{{
+      TranslationConstants.CREATE_DIALOG.AMOUNT | translate
+    }}</mat-label>
+    <input
+      matInput
+      [(ngModel)]="amount"
+      [disabled]="isLoading()"
+      (keydown)="detailsInputchanged($event)"
+    />
+  </mat-form-field>
+
+  <h3>
+    {{ TranslationConstants.CREATE_DIALOG.ADDED_OPERATIONS | translate }} ({{
+      operations().length
+    }})
+  </h3>
+  <mat-list class="create-dialog-operation-list-container">
+    <div
+      *ngFor="let operation of operations()"
+      class="operation-mat-list-item-container"
+    >
+      <mat-list-item class="operation-list-item">
+        <span matListItemTitle>{{ operation.operationNumber }}</span>
+        <span matListItemLine
+          >{{ TranslationConstants.CREATE_DIALOG.PRODUCT | translate }}:
+          {{ operation.productIdentifier }}-{{
+            operation.productRevision | number : "2.0"
+          }}
+          {{ TranslationConstants.CREATE_DIALOG.AMOUNT | translate }}:
+          {{ operation.totalAmount }}</span
+        >
+      </mat-list-item>
+      <button mat-icon-button (click)="deleteOperation(operation)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </mat-list>
+</mat-dialog-content>
+<div mat-dialog-actions align="end">
+  <button mat-button color="primary" (click)="fullClear()">
+    {{ TranslationConstants.CREATE_DIALOG.CLEAR | translate }}
+  </button>
+  <button mat-button mat-dialog-close color="primary">
+    {{ TranslationConstants.CANCEL | translate }}
+  </button>
+
+  <div class="split-button">
+    <button
+      mat-flat-button
+      color="primary"
+      class="primary"
+      (click)="onPrimaryClick()"
+      [disabled]="!canRun(primaryAction())"
+    >
+      {{ primaryActionLabel() }}
+    </button>
+
+    <button
+      mat-flat-button
+      color="primary"
+      class="dropdown-flat"
+      [matMenuTriggerFor]="actionMenu"
+      [disabled]="dropdownDisabled()"
+    >
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #actionMenu="matMenu">
+      <button
+        mat-menu-item
+        (click)="onSelectAction(Action.AddCreate)"
+        [disabled]="!canRun(Action.AddCreate)"
+      >
+        <mat-icon *ngIf="isSelected(Action.AddCreate)">check</mat-icon>
+        <span>{{ TranslationConstants.CREATE_DIALOG.CREATE | translate }}</span>
+      </button>
+      <button
+        mat-menu-item
+        (click)="onSelectAction(Action.AddOnly)"
+        [disabled]="!canRun(Action.AddOnly)"
+      >
+        <mat-icon *ngIf="isSelected(Action.AddOnly)">check</mat-icon>
+        <span>{{ TranslationConstants.CREATE_DIALOG.ADD | translate }}</span>
+      </button>
+    </mat-menu>
+  </div>
+
+  <mat-progress-bar mode="indeterminate" *ngIf="isLoading()"></mat-progress-bar>
+</div>

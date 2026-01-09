@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <IsTestProject>true</IsTestProject>
+    <IsPublishable>false</IsPublishable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+
+    <PackageReference Include="coverlet.collector" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Moryx.Container\Moryx.Container.csproj" />
+    <ProjectReference Include="..\..\Moryx.ControlSystem.Assemble\Moryx.ControlSystem.TestTools.Assemble.csproj" />
+    <ProjectReference Include="..\..\Moryx.ControlSystem.ProcessEngine\Moryx.ControlSystem.ProcessEngine.csproj" />
+    <ProjectReference Include="..\..\Moryx.ControlSystem.TestTools\Moryx.ControlSystem.TestTools.csproj" />
+    <ProjectReference Include="..\..\Moryx.Model.InMemory\Moryx.Model.InMemory.csproj" />
+    <ProjectReference Include="..\..\Moryx.TestTools.UnitTest\Moryx.TestTools.UnitTest.csproj" />
+  </ItemGroup>
+
+</Project>

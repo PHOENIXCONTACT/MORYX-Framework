@@ -1,59 +1,56 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using Moryx.Configuration;
 using Moryx.Modules;
 using Moryx.Runtime.Configuration;
 
-namespace Moryx.Runtime.Modules
+namespace Moryx.Runtime.Modules;
+
+internal class ConfigParser
 {
-    internal class ConfigParser
+    internal static void ParseStrategies(ConfigBase moduleConfig, IDictionary<Type, string> containerConfig)
     {
-        internal static void ParseStrategies(IConfig moduleConfig, IDictionary<Type, string> containerConfig)
-        {
-            ParseEntry(moduleConfig, containerConfig);
-        }
+        ParseEntry(moduleConfig, containerConfig);
+    }
 
-        private static void ParseEntry(object instance, IDictionary<Type, string> containerConfig)
+    private static void ParseEntry(object instance, IDictionary<Type, string> containerConfig)
+    {
+        foreach (var property in instance.GetType().GetProperties())
         {
-            foreach (var property in instance.GetType().GetProperties())
+            var propType = property.PropertyType;
+
+            // Check for class properties
+            if (!propType.IsClass)
+                continue;
+
+            // Check for plugin config and strategy attribute
+            ModuleStrategyAttribute attribute;
+            if ((attribute = property.GetCustomAttribute<ModuleStrategyAttribute>()) != null)
             {
-                var propType = property.PropertyType;
+                var pluginName = typeof(IPluginConfig).IsAssignableFrom(propType)
+                    ? ((IPluginConfig)property.GetValue(instance)).PluginName
+                    : (string)property.GetValue(instance);
+                containerConfig[attribute.Strategy] = pluginName;
+            }
 
-                // Check for class properties
-                if (!propType.IsClass)
-                    continue;
+            // Now filter strings
+            if (propType == typeof(string))
+                continue;
 
-                // Check for plugin config and strategy attribute
-                ModuleStrategyAttribute attribute;
-                if ((attribute = property.GetCustomAttribute<ModuleStrategyAttribute>()) != null)
+            // Check for collection
+            if (typeof(IEnumerable).IsAssignableFrom(propType))
+            {
+                foreach (var entry in (IEnumerable)property.GetValue(instance))
                 {
-                    var pluginName = typeof(IPluginConfig).IsAssignableFrom(propType)
-                        ? ((IPluginConfig)property.GetValue(instance)).PluginName
-                        : (string)property.GetValue(instance);
-                    containerConfig[attribute.Strategy] = pluginName;
+                    ParseEntry(entry, containerConfig);
                 }
-                
-                // Now filter strings
-                if(propType == typeof(string))
-                    continue;
-
-                // Check for collection
-                if (typeof (IEnumerable).IsAssignableFrom(propType))
-                {
-                    foreach (var entry in (IEnumerable) property.GetValue(instance))
-                    {
-                        ParseEntry(entry, containerConfig);
-                    }
-                }
-                else // Simple property
-                {
-                    ParseEntry(property.GetValue(instance), containerConfig);
-                }
+            }
+            else // Simple property
+            {
+                ParseEntry(property.GetValue(instance), containerConfig);
             }
         }
     }

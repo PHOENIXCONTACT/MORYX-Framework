@@ -1,25 +1,22 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
+namespace Moryx.AbstractionLayer.Identity;
 
-namespace Moryx.AbstractionLayer.Identity
+/// <summary>
+/// Base interface for identities (e.g. SerialNumber)
+/// </summary>
+public interface IIdentity : IEquatable<IIdentity>
 {
     /// <summary>
-    /// Base interface for identities (e.g. SerialNumber)
+    /// Main and unique string identifier
     /// </summary>
-    public interface IIdentity : IEquatable<IIdentity>
-    {
-        /// <summary>
-        /// Main and unique string identifier
-        /// </summary>
-        string Identifier { get; }
+    string Identifier { get; }
 
-        /// <summary>
-        /// Set the identifier for this identity
-        /// </summary>
-        /// <param name="identifier"></param>
-        /// <exception cref="InvalidOperationException">Identifiers of some identities must not be overriden</exception>
-        void SetIdentifier(string identifier);
-    }
+    /// <summary>
+    /// Set the identifier for this identity
+    /// </summary>
+    /// <param name="identifier"></param>
+    /// <exception cref="InvalidOperationException">Identifiers of some identities must not be overriden</exception>
+    void SetIdentifier(string identifier);
 }

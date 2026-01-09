@@ -1,0 +1,121 @@
+@import "tailwindcss" prefix(tw);
+
+@theme {
+  --color-*: initial;
+  --color-primary-50: #e5f2f3;
+  --color-primary-100: #cce5e6;
+  --color-primary-200: #b3d8da;
+  --color-primary-300: #99cbce;
+  --color-primary-400: #80bdc1;
+  --color-primary-500: #66b0b5;
+  --color-primary-600: #4da3a9;
+  --color-primary-700: #33969d;
+  --color-primary-800: #1a8990;
+  --color-primary-900: #007c84;
+  --color-primary: #007c84;
+
+  --color-success-50: #f4f8e7;
+  --color-success-100: #eaf2cf;
+  --color-success-200: #dfebb6;
+  --color-success-300: #d5e59e;
+  --color-success-400: #cbdf86;
+  --color-success-500: #c0d86e;
+  --color-success-600: #b6d156;
+  --color-success-700: #abcb3d;
+  --color-success-800: #a0c425;
+  --color-success-900: #96be0d;
+  --color-success: #96be0d;
+
+  --color-warning-50: #fce7e8;
+  --color-warning-100: #f9ced1;
+  --color-warning-200: #f6b6ba;
+  --color-warning-300: #f39da3;
+  --color-warning-400: #ef848b;
+  --color-warning-500: #ec6c74;
+  --color-warning-600: #e9545d;
+  --color-warning-700: #e63b46;
+  --color-warning-800: #e3232f;
+  --color-warning-900: #e00a18;
+  --color-warning: #e00a18;
+
+  --color-danger: #e9545d;
+  --color-info: #808080;
+  --color-fatal: #800080;
+  --color-accent: #abcb3d;
+  --color-background: #fafafa;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-black: #000;
+  --color-white: #fff;
+
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030712;
+
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-200: #a7f3d0;
+  --color-emerald-300: #6ee7b7;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+  --color-emerald-800: #065f46;
+  --color-emerald-900: #064e3b;
+  --color-emerald-950: #022c22;
+
+  --color-indigo-50: #eef2ff;
+  --color-indigo-100: #e0e7ff;
+  --color-indigo-200: #c7d2fe;
+  --color-indigo-300: #a5b4fc;
+  --color-indigo-400: #818cf8;
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
+  --color-indigo-700: #4338ca;
+  --color-indigo-800: #3730a3;
+  --color-indigo-900: #312e81;
+  --color-indigo-950: #1e1b4b;
+
+  --color-yellow-50: #fefce8;
+  --color-yellow-100: #fef9c3;
+  --color-yellow-200: #fef08a;
+  --color-yellow-300: #fde047;
+  --color-yellow-400: #facc15;
+  --color-yellow-500: #eab308;
+  --color-yellow-600: #ca8a04;
+  --color-yellow-700: #a16207;
+  --color-yellow-800: #854d0e;
+  --color-yellow-900: #713f12;
+  --color-yellow-950: #422006;
+
+  --z-index-*: initial;
+  --z-index-1: 1;
+  --z-index-2: 2;
+  --z-index-100: 100;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}

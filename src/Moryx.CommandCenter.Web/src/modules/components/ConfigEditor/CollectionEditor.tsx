@@ -6,7 +6,6 @@
 import { mdiChevronDown, mdiChevronRight, mdiPlus, mdiTrashCanOutline } from "@mdi/js";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
-import Container from "@mui/material/Container";
 import GridLegacy from "@mui/material/GridLegacy";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
@@ -34,7 +33,7 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
     constructor(props: CollapsibleEntryEditorBasePropModel) {
         super(props);
         this.state = {
-            SelectedEntry: props.Entry.value.possible[0],
+            SelectedEntry: props.Entry.value.possible[0]?.key,
             ExpandedEntryNames: [],
             CreatedPrototypesCount: 0
         };
@@ -86,7 +85,7 @@ export default class CollectionEditor extends CollapsibleEntryEditorBase<Collect
         const options: React.ReactNode[] = [];
         this.props.Entry.value.possible.map((colEntry, idx) =>
         (
-            options.push(<MenuItem   key={idx} value={colEntry}>{colEntry}</MenuItem>)
+            options.push(<MenuItem   key={idx} value={colEntry.key}>{colEntry.displayName}</MenuItem>)
         ));
         return options;
     }

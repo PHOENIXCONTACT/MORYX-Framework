@@ -1,0 +1,114 @@
+{
+  "APP": {
+    "PRODUCTS": "Products",
+    "SELECTOR": "Selector",
+    "RESET_FILTER": "Reset",
+    "APPLY_FILTER": "Apply",
+    "EMPTY_STATE_HEADER": "No Product",
+    "EMPTY_STATE_TEXT": "Select a Product from the list or import a new one by clicking the plus sign.",
+    "EMPTY_STATE_RECIPES_HEADER": "No Recipes",
+    "EMPTY_STATE_RECIPES_TEXT": "Select a recipe from the list or enter the edit mode to create a new one.",
+    "EMPTY_STATE_PARTS_HEADER": "No Parts",
+    "EMPTY_STATE_PARTS_TEXT": "Select a part from the list or enter the edit mode to create a new one.",
+    "FAILED_LOADING": "The connection to the server could not be established. Please check your network connection or try again later.",
+    "SNACK_BAR": {
+      "NO_IMPORTER": "No importer was defined"
+    }
+  },
+  "DISMISS": "DISMISS",
+  "DEFAULT_MESSAGE": "Something went wrong on the server.",
+  "SERVER_NOT_REACHABLE": "The server is unreachable, please check your internet connection or proxy settings.",
+  "PRODUCT_NOT_FOUND": "The requested product was not found",
+  "SHARED": {
+    "DELETE": "Delete",
+    "EDIT": "Edit",
+    "SAVE": "Save",
+    "DUPLICATE": "Duplicate",
+    "REVISION": "Revision",
+    "NAME": "Name",
+    "CANCEL": "Cancel",
+    "IDENTIFIER": "Identifier",
+    "STATE": "State",
+    "PROPERTIES": "Properties",
+    "WORKPLAN": "Workplan",
+    "CLASSIFICATION": "Classification"
+  },
+  "IMPORTER": {
+    "TITLE": "Product Importer",
+    "SUB_TITLE": "Import products using an importer",
+    "IMPORT": "Import"
+  },
+  "DETAILS": {
+    "PARTS": "Parts",
+    "REFERENCES": "References",
+    "RECIPES": "Recipes",
+    "HEADER": {
+      "TITLE": "General"
+    },
+    "REFS": {
+      "TITLE": "This product is used in the following products",
+      "NO_REF": "This product is not used in other products",
+      "NO_REF_HEADER": "No References"
+    },
+    "RECIPS": {
+      "ADD_RECIPE": "Add Recipe",
+      "CHOOSE_OTHER": "Please choose any other"
+    }
+  },
+  "PARTS": {
+    "REMOVE": "REMOVE",
+    "ADD": "ADD",
+    "REPLACE": "REPLACE",
+    "DETAILS": {
+      "TITLE": "Configuration for the connection between the product and its part"
+    }
+  },
+  "ADD_DIALOG": {
+    "TITLE": "Select Part",
+    "SUB_TITLE": "Please select a product from the list",
+    "SEARCH": "Search",
+    "CANCEL": "CANCEL",
+    "SELECT": "SELECT"
+  },
+  "CREATE_RECIPE_DIALOG": {
+    "TITLE": "Add Recipe",
+    "RECIPE_TYPE": "Recipe Type",
+    "RECIPE_NAME": "Recipe Name",
+    "WORKPLAN": "Workplan",
+    "CANCEL": "CANCEL",
+    "CREATE": "CREATE"
+  },
+  "CREATE_REVISION_DIALOG": {
+    "TITLE": "New Revision",
+    "SUB_TITLE": "Create Revision for product",
+    "REVISION": "Revision",
+    "CANCEL": "CANCEL",
+    "CREATE": "CREATE"
+  },
+  "DUPLICATE_PRODUCT_DIALOG": {
+    "TITLE": "Duplicate Product",
+    "IDENTIFIER": "Identifier",
+    "REVISION": "Revision",
+    "CANCEL": "CANCEL",
+    "DUPLICATE": "DUPLICATE"
+  },
+  "REMOVE_PRODUCT_DIALOG": {
+    "TITLE": "Remove Product",
+    "SUB_TITLE": "The following product's revision will be irreversibly removed:",
+    "CANNOT_REMOVE": "The selected product's revision cannot be removed because it is still used by these products",
+    "CANCEL": "CANCEL",
+    "REMOVE": "REMOVE"
+  },
+  "SHOW_REVISION_DIALOG": {
+    "TITLE": "Select a Revision",
+    "CANCEL": "CANCEL",
+    "ADD_REVISION": "NEW"
+  },
+  "SIDEBAR_BUTTONS": {
+    "HIERARCHY_VIEW": "Hierarchy view",
+    "LIST_VIEW": "List view",
+    "REFRESH": "Refresh",
+    "FILTER": "Filter",
+    "ADD": "Add"
+  }
+}

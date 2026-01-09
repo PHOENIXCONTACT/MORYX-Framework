@@ -1,0 +1,55 @@
+﻿@model Moryx.Identity.AccessManagement.Models.UserLoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+    
+<div class="columns is-centered">
+    <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+        <form asp-action="Login" asp-route-returnUrl="@ViewBag.ReturnUrl" class="box">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="field">
+            <label asp-for="UserName" class="label">User</label>
+            <div class="control has-icons-left">
+                <input asp-for="UserName" class="input" required/>
+                <span class="icon is-small is-left">
+                        <span class="material-symbols-outlined">person</span>
+                </span>
+            </div>
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        <div class="field">
+            <label asp-for="Password" class="label"></label>
+            <div class="control has-icons-left">
+                <input asp-for="Password" type="password" class="input" placeholder="**********" required/>
+                <span class="icon is-small is-left">
+                    <span class="material-symbols-outlined">lock</span>
+                </span>
+            </div>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="field">
+            <input type="submit" value="Login" class="button btn-primary" />
+        </div>
+        <div class="form-group">
+            <a asp-controller="Login" asp-action="ResetView" asp-route-returnUrl="@ViewBag.ReturnUrl">Forgot Password?</a>
+        </div>
+        @if (ViewBag.ShowLoginViaMicrosoft)
+        {
+            <div class="form-group">
+                <a class="btn btn-primary"
+                   asp-controller="EntraIdAuth"
+                   asp-action="SignInViaMicrosoft"
+                   asp-all-route-data="@(new Dictionary<string, string> { { "redirectUrl", "/" } })">
+                    Login with Microsoft
+                </a>
+            </div>
+        }
+    </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

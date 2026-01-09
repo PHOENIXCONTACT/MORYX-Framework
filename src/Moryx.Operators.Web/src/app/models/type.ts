@@ -1,0 +1,1 @@
+export type OperatorSkillView = 'Current' | 'All';

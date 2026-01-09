@@ -1,35 +1,35 @@
-﻿using Moryx.AbstractionLayer.Resources;
-using Moryx.Container;
-using System.Linq;
-using Moryx.Serialization;
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using Moryx.AbstractionLayer.Resources;
+using Moryx.Container;
+using Moryx.Serialization;
 
-namespace Moryx.Resources.Demo
+namespace Moryx.Resources.Samples;
+
+[DependencyRegistration(typeof(IWhiteSpaceRemovingStrategy)), ResourceRegistration]
+public class StrategyUsingResource : Resource
 {
+    [PluginNameSelector(typeof(IWhiteSpaceRemovingStrategy))]
+    [DataMember, EntrySerialize]
+    public string Strategy { get; set; }
+}
 
-    [DependencyRegistration(typeof(IWhiteSpaceRemovingStrategy)), ResourceRegistration]
-    public class StrategyUsingResource: Resource
-    {
-        [PluginNameSelector(typeof(IWhiteSpaceRemovingStrategy))]
-        [DataMember, EntrySerialize]
-        public string Strategy { get; set; }
-    }
+public interface IWhiteSpaceRemovingStrategy
+{
+    string DropSpaces(string s);
+}
 
-    public interface IWhiteSpaceRemovingStrategy
-    {
-        string DropSpaces(string s);
-    }
+[Plugin(LifeCycle.Singleton, typeof(IWhiteSpaceRemovingStrategy), Name = "Regex Remover")]
+public class RegexWhiteSpaceRemovingStrategy : IWhiteSpaceRemovingStrategy
+{
+    public string DropSpaces(string s) => Regex.Replace(s, @"\s+", "");
+}
 
-    [Plugin(LifeCycle.Singleton, typeof(IWhiteSpaceRemovingStrategy), Name = "Regex Remover")]
-    public class RegexWhiteSpaceRemovingStrategy : IWhiteSpaceRemovingStrategy
-    {
-        public string DropSpaces(string s) => Regex.Replace(s, @"\s+", "");
-    }
-
-    [Plugin(LifeCycle.Singleton, typeof(IWhiteSpaceRemovingStrategy), Name = "Linq Remover")]
-    public class LinqWhiteSpaceRemovingStrategy : IWhiteSpaceRemovingStrategy
-    {
-        public string DropSpaces(string s) => string.Concat(s.Where(c => !char.IsWhiteSpace(c)));
-    }
+[Plugin(LifeCycle.Singleton, typeof(IWhiteSpaceRemovingStrategy), Name = "Linq Remover")]
+public class LinqWhiteSpaceRemovingStrategy : IWhiteSpaceRemovingStrategy
+{
+    public string DropSpaces(string s) => string.Concat(s.Where(c => !char.IsWhiteSpace(c)));
 }

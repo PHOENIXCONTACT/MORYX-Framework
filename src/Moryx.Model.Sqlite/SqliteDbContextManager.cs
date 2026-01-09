@@ -1,108 +1,107 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Moryx.Model.Configuration;
-using Moryx.Runtime.Kernel;
 
-namespace Moryx.Model.Sqlite
+namespace Moryx.Model.Sqlite;
+
+/// <summary>
+/// SQLite implementation of the <see cref="IDbContextManager"/>
+/// </summary>
+public sealed class SqliteDbContextManager : IDbContextManager
 {
+    private readonly Dictionary<Type, IModelConfigurator> _configurators;
+    private readonly string _connectionString;
+    private readonly SqliteConnection _sqliteConnection;
+
     /// <summary>
-    /// SQLite implementation of the <see cref="IDbContextManager"/>
+    /// Creates a new instance of the <see cref="SqliteDbContextManager "/>.
+    /// An SQLite factory will be created with the given connection string.
     /// </summary>
-    public sealed class SqliteDbContextManager : IDbContextManager
+    public SqliteDbContextManager(string connectionString)
     {
-        private Dictionary<Type, IModelConfigurator> _configurators;
-        private readonly string _connectionString;
-        private readonly SqliteConnection _sqliteConnection;
+        _connectionString = connectionString;
+        _configurators = new Dictionary<Type, IModelConfigurator>();
+    }
 
-        /// <summary>
-        /// Creates a new instance of the <see cref="SqliteDbContextManager "/>.
-        /// An SQLite factory will be created with the given connection string.
-        /// </summary>
-        public SqliteDbContextManager(string connectionString)
+    /// <summary>
+    /// Creates a new instance of the <see cref="SqliteDbContextManager "/>.
+    /// An SQLite factory will be created with the given SQLite connection.
+    /// </summary>
+    public SqliteDbContextManager(SqliteConnection sqliteConnection)
+    {
+        _sqliteConnection = sqliteConnection;
+        _configurators = new Dictionary<Type, IModelConfigurator>();
+    }
+
+    /// <inheritdoc />
+    public IReadOnlyCollection<Type> Contexts => _configurators.Select(c => c.Key).ToArray();
+
+    /// <inheritdoc />
+    public IModelConfigurator GetConfigurator(Type contextType)
+    {
+        return _configurators[contextType];
+    }
+
+    /// <inheritdoc />
+    public IModelConfigurator GetConfigurator(Type contextType, Type configuratorType, DatabaseConfig databaseConfig)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public Type[] GetConfigurators(Type contextType)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public IModelSetupExecutor GetSetupExecutor(Type contextType)
+    {
+        var setupExecutorType = typeof(ModelSetupExecutor<>).MakeGenericType(contextType);
+        return (IModelSetupExecutor)Activator.CreateInstance(setupExecutorType, this);
+    }
+
+    /// <inheritdoc />
+    public TContext Create<TContext>() where TContext : DbContext =>
+        Create<TContext>(null);
+
+    /// <inheritdoc />
+    public TContext Create<TContext>(DatabaseConfig config) where TContext : DbContext
+    {
+        var connectionString = string.IsNullOrEmpty(_connectionString)
+            ? Guid.NewGuid().ToString()
+            : _connectionString;
+
+        DbContextOptions options;
+        if (_sqliteConnection != null)
         {
-            _connectionString = connectionString;
-            _configurators = new Dictionary<Type, IModelConfigurator>();
+            options = new DbContextOptionsBuilder<TContext>()
+                .UseSqlite(_sqliteConnection)
+                .Options;
+        }
+        else
+        {
+            options = new DbContextOptionsBuilder<TContext>()
+                .UseSqlite(connectionString)
+                .Options;
         }
 
-        /// <summary>
-        /// Creates a new instance of the <see cref="SqliteDbContextManager "/>.
-        /// An SQLite factory will be created with the given SQLite connection.
-        /// </summary>
-        public SqliteDbContextManager(SqliteConnection sqliteConnection)
-        {
-            _sqliteConnection = sqliteConnection;
-            _configurators = new Dictionary<Type, IModelConfigurator>();
-        }
+        config ??= new SqliteDatabaseConfig();
 
-        /// <inheritdoc />
-        public IReadOnlyCollection<Type> Contexts => _configurators.Select(c => c.Key).ToArray();
+        // Create instance of context
+        var configurator = new SqliteModelConfigurator();
+        configurator.Initialize(typeof(TContext), config, null);
+        var context = (TContext)configurator.CreateContext(typeof(TContext), options);
+        _configurators.TryAdd(context.GetType(), configurator);
+        return context;
+    }
 
-        /// <inheritdoc />
-        public IModelConfigurator GetConfigurator(Type contextType)
-        {
-            return _configurators[contextType];
-        }
-
-        /// <inheritdoc />
-        public IModelSetupExecutor GetSetupExecutor(Type contextType)
-        {
-            var setupExecutorType = typeof(ModelSetupExecutor<>).MakeGenericType(contextType);
-            return (IModelSetupExecutor)Activator.CreateInstance(setupExecutorType, this);
-        }
-
-        /// <inheritdoc />
-        public TContext Create<TContext>() where TContext : DbContext =>
-            Create<TContext>(null);
-
-        /// <inheritdoc />
-        public TContext Create<TContext>(IDatabaseConfig config) where TContext : DbContext
-        {
-            var connectionString = string.IsNullOrEmpty(_connectionString)
-                ? Guid.NewGuid().ToString()
-                : _connectionString;
-
-            DbContextOptions options;
-            if (_sqliteConnection != null)
-            {
-                options = new DbContextOptionsBuilder<TContext>()
-                    .UseSqlite(_sqliteConnection)
-                    .Options;
-            }
-            else
-            {
-                options = new DbContextOptionsBuilder<TContext>()
-                    .UseSqlite(connectionString)
-                    .Options;
-            }
-
-            // Create instance of context
-            var configurator = new SqliteModelConfigurator();
-            configurator.Initialize(typeof(TContext), CreateConfigManager(), null);
-            var context = (TContext)configurator.CreateContext(typeof(TContext), options);
-            _configurators.TryAdd(context.GetType(), configurator);
-            return context;
-        }
-
-        /// <inheritdoc />
-        public void UpdateConfig(Type dbContextType, Type configuratorType, IDatabaseConfig databaseConfig)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static ConfigManager CreateConfigManager()
-        {
-            var configManager = new ConfigManager
-            {
-                ConfigDirectory = ""
-            };
-            return configManager;
-        }
+    /// <inheritdoc />
+    public void UpdateConfig(Type dbContextType, Type configuratorType, DatabaseConfig databaseConfig)
+    {
+        throw new NotImplementedException();
     }
 }

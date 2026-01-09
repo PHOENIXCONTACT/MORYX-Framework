@@ -1,26 +1,25 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Communication
+namespace Moryx.Communication;
+
+/// <summary>
+/// Possible states of a binary connection  
+/// </summary>
+public enum BinaryConnectionState
 {
     /// <summary>
-    /// Possible states of a binary connection  
+    /// No connection available
     /// </summary>
-    public enum BinaryConnectionState
-    {
-        /// <summary>
-        /// No connection available
-        /// </summary>
-        Disconnected,
+    Disconnected,
 
-        /// <summary>
-        /// Component is trying to establish a connection
-        /// </summary>
-        AttemptingConnection,
+    /// <summary>
+    /// Component is trying to establish a connection
+    /// </summary>
+    AttemptingConnection,
 
-        /// <summary>
-        /// Component is connected. Communication is possible
-        /// </summary>
-        Connected
-    }
+    /// <summary>
+    /// Component is connected. Communication is possible
+    /// </summary>
+    Connected
 }

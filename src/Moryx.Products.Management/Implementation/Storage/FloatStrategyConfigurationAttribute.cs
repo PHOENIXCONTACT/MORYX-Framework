@@ -1,21 +1,20 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Products.Management
+namespace Moryx.Products.Management;
+
+/// <inheritdoc/>
+public class FloatStrategyConfigurationAttribute : PropertyStrategyConfigurationAttribute
 {
     /// <inheritdoc/>
-    public class FloatStrategyConfigurationAttribute : PropertyStrategyConfigurationAttribute
+    public FloatStrategyConfigurationAttribute()
     {
-        /// <inheritdoc/>
-        public FloatStrategyConfigurationAttribute()
-        {
-            ColumnType = typeof(double);
-            SupportedTypes = new[]
-            {
-                typeof(float),
-                typeof(double),
-                typeof(decimal)
-            };
-        }
+        ColumnType = typeof(double);
+        SupportedTypes =
+        [
+            typeof(float),
+            typeof(double),
+            typeof(decimal)
+        ];
     }
 }

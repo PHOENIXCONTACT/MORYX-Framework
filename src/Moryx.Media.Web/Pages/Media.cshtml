@@ -1,0 +1,26 @@
+@page "{*_}"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization;
+@using Moryx.Media.Endpoints;
+@using Moryx.Media.Web.Properties
+@using Moryx.Modules
+@{
+  ViewData["Title"] = "Media";
+  ViewData["BaseRef"] = "Media";
+
+  Layout = "_Layout";
+}
+@attribute [WebModule("Media", "perm_media"),
+  Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description"),
+Authorize(Policy = MediaPermissions.CanView), AllowAnonymous]
+@section Styles {
+  <link rel="stylesheet" href="/_content/Moryx.Media.Web/styles.css">
+}
+@section Scripts
+{
+  <script src="/_content/Moryx.Media.Web/runtime.js" type="module"></script>
+  <script src="/_content/Moryx.Media.Web/polyfills.js" type="module"></script>
+  <script src="/_content/Moryx.Media.Web/main.js" type="module"></script>
+}
+
+<app-root></app-root>

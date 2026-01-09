@@ -1,84 +1,85 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
+namespace Moryx.Runtime.Modules;
 
-namespace Moryx.Runtime.Modules
+internal class RunningStoppingState : StoppingStateBase
 {
-    internal class RunningStoppingState : StoppingStateBase
+    public RunningStoppingState(IServerModuleStateContext context, StateMap stateMap)
+        : base(context, stateMap)
     {
-        public RunningStoppingState(IServerModuleStateContext context, StateMap stateMap)
-            : base(context, stateMap)
-        {
-        }
+    }
 
-        protected override void OnStopping()
+    protected override async Task OnStopping(CancellationToken cancellationToken)
+    {
+        try
         {
-            try
-            {
-                Context.Stop();
-            }
-            catch (Exception ex)
-            {
-                Context.ReportError(ex);
-                NextState(StateRunningFailure);
-            }
+            await Context.StopAsync(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            Context.ReportError(ex);
+            await NextStateAsync(StateRunningFailure, cancellationToken);
+        }
+    }
+}
+
+internal class ReadyStoppingState : StoppingStateBase
+{
+    public ReadyStoppingState(IServerModuleStateContext context, StateMap stateMap)
+        : base(context, stateMap)
+    {
+    }
+
+    protected override Task OnStopping(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
+}
+
+internal abstract class StoppingStateBase : ServerModuleStateBase
+{
+    public override ServerModuleState Classification => ServerModuleState.Stopping;
+
+    protected StoppingStateBase(IServerModuleStateContext context, StateMap stateMap)
+        : base(context, stateMap)
+    {
+    }
+
+    public override async Task OnEnterAsync(CancellationToken cancellationToken)
+    {
+        await OnStopping(cancellationToken);
+
+        try
+        {
+            // Regardless of the previous state we need to destruct the container
+            Context.Destruct();
+            await NextStateAsync(StateStopped, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            Context.ReportError(ex);
+            await NextStateAsync(StateInitializedFailure, cancellationToken);
         }
     }
 
-    internal class ReadyStoppingState : StoppingStateBase
-    {
-        public ReadyStoppingState(IServerModuleStateContext context, StateMap stateMap)
-            : base(context, stateMap)
-        {
-        }
+    protected abstract Task OnStopping(CancellationToken cancellationToken);
 
-        protected override void OnStopping()
-        {
-        }
+    public override Task Initialize(CancellationToken cancellationToken)
+    {
+        // Nothing to do here
+        return Task.CompletedTask;
     }
 
-    internal abstract class StoppingStateBase : ServerModuleStateBase
+    public override Task Start(CancellationToken cancellationToken)
     {
-        public override ServerModuleState Classification => ServerModuleState.Stopping;
+        // Not possible here
+        return Task.CompletedTask;
+    }
 
-        protected StoppingStateBase(IServerModuleStateContext context, StateMap stateMap) 
-            : base(context, stateMap)
-        {
-        }
-
-        public override void OnEnter()
-        {
-            OnStopping();
-
-            try
-            {
-                // Regardless of the previous state we need to destruct the container
-                Context.Destruct();
-                NextState(StateStopped);
-            }
-            catch (Exception ex)
-            {
-                Context.ReportError(ex);
-                NextState(StateInitializedFailure);
-            }
-        }
-
-        protected abstract void OnStopping();
-
-        public override void Initialize()
-        {
-            // Nothing to do here
-        }
-
-        public override void Start()
-        {
-            // Not possible here
-        }
-
-        public override void Stop()
-        {
-            // We are already stopping
-        }
+    public override Task Stop(CancellationToken cancellationToken)
+    {
+        // We are already stopping
+        return Task.CompletedTask;
     }
 }

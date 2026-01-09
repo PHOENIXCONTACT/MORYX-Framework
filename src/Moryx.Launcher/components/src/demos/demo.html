@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="w-full h-full">
+  
+    <moryx-layout button="fullscreen">
+      <div class="flex justify-center gap-2 border-r-yellow-200 w-full" topbar>
+        <span> This is top bar</span>
+        <!-- Search box -->
+        <moryx-searchbox placeholder="Search ...."/>
+
+        <!-- Notification -->
+        <moryx-notifications-bar>
+          This is the title of the notification button
+        </moryx-notifications-bar>
+        <!-- <moryx-notification-badge eventstream="" class=""></moryx-notification-badge> -->
+        <button class="border" id="fullscreen">fullscreen</button>
+        <button class="border" id="operator-mode">operator mode</button>
+      </div>
+      <div class="flex flex-col items-start w-12 bg-red-50" leftbar>
+        This is top bar
+      </div>
+      <div
+        class="flex-1 justify-center items-center overflow-auto h-full w-full box-border bg-black text-white p-2"
+        main
+      >
+        This is the main body
+      </div>
+      <div class="flex h-16 w-full bg-red-50 gap-1" bottombar>
+         <moryx-nav-button position="fixed">Button 1</moryx-nav-button>
+         <moryx-nav-button>Button 2</moryx-nav-button>
+         <moryx-nav-button>Button 3</moryx-nav-button>
+         <moryx-nav-button>Button 4</moryx-nav-button>
+         <moryx-nav-button>Button 5</moryx-nav-button>
+         <moryx-nav-button>Button 6</moryx-nav-button>
+         <moryx-nav-button>Button 7</moryx-nav-button>
+         <moryx-nav-button>Button 8</moryx-nav-button>
+         <moryx-nav-button>Button 9</moryx-nav-button>
+         <moryx-nav-button>Button 10</moryx-nav-button>
+         <moryx-nav-button>Button 11</moryx-nav-button>
+         <moryx-nav-button position="fixed">Button 12</moryx-nav-button>
+      </div>
+    </moryx-layout>
+        <div class="flex w-full h-full justify-end">
+           <!-- Dropdown -->
+           <moryx-dropdown-menu position="top">
+            <button class="p-1 border bg-white rounded" button>Click!</button>
+            <moryx-dropdown-container
+              class="bg-white absolute w-60 shadow-md rounded flex flex-col gap-2"
+            >
+              <moryx-dropdown-item
+                class="px-2 text-nowrap w-full hover:bg-yellow-200 hover:cursor-pointer border-b border-gray-200"
+                >Item 1</moryx-dropdown-item
+              >
+  
+              <moryx-dropdown-subitem
+                class="w-full hover:bg-yellow-200 hover:cursor-pointer border-b border-gray-200"
+              >
+                <span class="px-4 w-full" button>Sub Item</span>
+                <moryx-dropdown-container
+                  class="absolute w-60 shadow-md rounded flex flex-col gap-2 bg-white"
+                >
+                  <moryx-dropdown-item
+                    class="px-2 text-nowrap w-full hover:bg-yellow-200 hover:cursor-pointer border-b border-gray-200"
+                    >Sub Item 1</moryx-dropdown-item
+                  >
+                </moryx-dropdown-container>
+              </moryx-dropdown-subitem>
+  
+              <moryx-dropdown-item
+                class="px-2 text-nowrap w-full hover:bg-yellow-200 hover:cursor-pointer"
+                >Item 3</moryx-dropdown-item
+              >
+            </moryx-dropdown-container>
+          </moryx-dropdown-menu>
+        </div>
+    <!-- Auth elements -->
+    <!-- <moryx-auth-buttons authUrl="test-url">
+      <span sign-in>Sign In</span>
+    </moryx-auth-buttons> -->
+
+    <script type="module" src="../../dist/polyfills.js"></script>
+    <script type="module" src="../../dist/main.js"></script>
+
+    <script>
+      const suggestions = [
+            {
+                url: "www.google.com",
+                text: "This is a google website"
+            },
+            {
+                url: "www.facebook.com",
+                text: "This is a facebook website"
+            },
+            {
+                text: "This is another google website"
+            },
+            {
+                text: "This is another facebook website"
+            }
+        ]
+        
+      if(window.shell){
+        window.shell.initSearchBar((filter,complete) => {
+            window.shell.updateSuggestions(suggestions);
+        },false);
+      }
+    </script>
+  </body>
+</html>
