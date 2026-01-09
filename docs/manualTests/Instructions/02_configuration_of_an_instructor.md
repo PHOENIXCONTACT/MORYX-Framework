@@ -3,6 +3,7 @@
 ## Preconditions
 
 Have a list of multiple instructors and one of them configured (saved within the `moryx-client-identifier` cookie).
+
 - Requires creation of a second instructor in the Demo
 
 ## Steps
