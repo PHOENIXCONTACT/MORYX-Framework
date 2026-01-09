@@ -1,0 +1,6 @@
+# Ensure subdirectories are not ignored so below unignore rules take effect
+!*/
+
+# Do not ignore any .css or .js files in this folder and all subfolders
+!**/*.css
+!**/*.js
