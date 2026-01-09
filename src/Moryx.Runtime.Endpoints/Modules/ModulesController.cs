@@ -250,10 +250,8 @@ public class ModulesController : ControllerBase
             else
             {
                 // ReSharper disable once MethodHasAsyncOverload
-                EntryConvert.InvokeMethod(serverModule.Console, method,
+                return EntryConvert.InvokeMethod(serverModule.Console, method,
                     CreateEditorSerializeSerialization(serverModule));
-
-                return null;
             }
 
         }
