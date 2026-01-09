@@ -13,25 +13,25 @@ public enum ProductInstanceState : int
     /// <summary>
     /// Initial state
     /// </summary>
-    Unset = 1 << 0,
+    Unset = 0,
 
     /// <summary>
     /// The instance is currently in production
     /// </summary>
-    InProduction = 1 << 1,
+    InProduction = 1 << 0,
 
     /// <summary>
     /// The production on this instance was paused
     /// </summary>
-    Paused = 1 << 2,
+    Paused = 1 << 1,
 
     /// <summary>
     /// The production process succeeded.
     /// </summary>
-    Success = 1 << 3,
+    Success = 1 << 2,
 
     /// <summary>
     /// The production process failed.
     /// </summary>
-    Failure = 1 << 4,
+    Failure = 1 << 3,
 }
