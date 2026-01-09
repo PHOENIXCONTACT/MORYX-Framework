@@ -1,35 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Runtime.Modules.States
+namespace Moryx.Runtime.Modules;
+
+/// <summary>
+/// Missing state , indicating that the server is missing.
+/// Useful for modules that are missing.
+/// </summary>
+internal class MissingState : ServerModuleStateBase
 {
-    /// <summary>
-    /// Missing state , indicating that the server is missing.
-    /// Usefull for modules that are missing.
-    /// </summary>
-    internal class MissingState : ServerModuleStateBase
+    public override ServerModuleState Classification => ServerModuleState.Missing;
+
+    public MissingState(IServerModuleStateContext context, StateMap stateMap)
+        : base(context, stateMap)
     {
-        public override ServerModuleState Classification => ServerModuleState.Missing;
+    }
 
-        public MissingState(IServerModuleStateContext context, StateMap stateMap)
-            : base(context, stateMap)
-        {
-        }
+    public override Task Initialize(CancellationToken cancellationToken)
+    {
+        // Nothing to do here
+        return Task.CompletedTask;
+    }
 
-        public override void Initialize()
-        {
-            // Nothing to do here
-        }
+    public override Task Start(CancellationToken cancellationToken)
+    {
+        // Nothing to do here
+        return Task.CompletedTask;
+    }
 
-        public override void Start()
-        {
-            // Nothing to do here
-        }
-
-        public override void Stop()
-        {
-            // Nothing to do here
-        }
+    public override Task Stop(CancellationToken cancellationToken)
+    {
+        // Nothing to do here
+        return Task.CompletedTask;
     }
 }

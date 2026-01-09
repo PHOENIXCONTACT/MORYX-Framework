@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Moryx.Model.Sqlite\Moryx.Model.Sqlite.csproj" />
+    <ProjectReference Include="..\Moryx.Model.SqlServer\Moryx.Model.SqlServer.csproj" />
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
     <ProjectReference Include="..\Moryx.Model\Moryx.Model.csproj" />
     <ProjectReference Include="..\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj" />

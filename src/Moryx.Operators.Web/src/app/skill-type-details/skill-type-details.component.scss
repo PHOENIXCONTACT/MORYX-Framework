@@ -1,0 +1,16 @@
+@use '@angular/material' as mat;
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+.skill-form{
+    height: calc(100vh - 70px);
+}
+
+.details-content{
+    mat-sidenav-container{
+        background-color: $mat-background-light;
+    }
+    @include mat.sidenav-overrides((
+        container-width: 50px,
+        container-shape: 0px
+    ));
+}

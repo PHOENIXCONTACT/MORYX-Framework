@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>Bundle assembly for Orders and extensions</Description>
+    <PackageTags>MORYX;Manufacturing;Industrial</PackageTags>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+    <ProjectReference Include="..\Moryx.ControlSystem\Moryx.ControlSystem.csproj" />
+    <ProjectReference Include="..\Moryx.Users\Moryx.Users.csproj" />
+  </ItemGroup>
+
+</Project>

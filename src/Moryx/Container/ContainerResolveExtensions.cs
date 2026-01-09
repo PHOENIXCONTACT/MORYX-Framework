@@ -1,24 +1,21 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+namespace Moryx.Container;
 
-namespace Moryx.Container
+/// <summary>
+/// Extensions to replace the overloads of <see cref="IContainer.Resolve(Type, string)"/>
+/// </summary>
+public static class ContainerResolveExtensions
 {
-    /// <summary>
-    /// Extensions to replace the overloads of <see cref="IContainer.Resolve(Type, string)"/>
-    /// </summary>
-    public static class ContainerResolveExtensions
+    extension(IContainer container)
     {
         /// <summary>
         /// Resolve an instance of the given service
         /// </summary>
         /// <typeparam name="T">Type to resolve</typeparam>
         /// <returns>Instance of type</returns>
-        public static T Resolve<T>(this IContainer container)
+        public T Resolve<T>()
         {
             return (T)container.Resolve(typeof(T), null);
         }
@@ -26,7 +23,7 @@ namespace Moryx.Container
         /// <summary>
         /// Resolve this dependency
         /// </summary>
-        public static object Resolve(this IContainer container, Type service)
+        public object Resolve(Type service)
         {
             return container.Resolve(service, null);
         }
@@ -36,7 +33,7 @@ namespace Moryx.Container
         /// </summary>
         /// <typeparam name="T">Type to resolve</typeparam>
         /// <returns>Instance of type</returns>
-        public static T Resolve<T>(this IContainer container, string name)
+        public T Resolve<T>(string name)
         {
             return (T)container.Resolve(typeof(T), name);
         }
@@ -46,7 +43,7 @@ namespace Moryx.Container
         /// </summary>
         /// <typeparam name="T">Type to resolve</typeparam>
         /// <returns></returns>
-        public static T[] ResolveAll<T>(this IContainer container)
+        public T[] ResolveAll<T>()
         {
             return (T[])container.ResolveAll(typeof(T));
         }

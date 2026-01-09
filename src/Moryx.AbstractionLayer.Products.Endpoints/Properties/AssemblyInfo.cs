@@ -1,3 +1,7 @@
-﻿using System.Runtime.CompilerServices;
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Moryx.Products.Management.Tests")]
+[assembly: InternalsVisibleTo("Moryx.AbstractionLayer.Products.Endpoints.Tests")]

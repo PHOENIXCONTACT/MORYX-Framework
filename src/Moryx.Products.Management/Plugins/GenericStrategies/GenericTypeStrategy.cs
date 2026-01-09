@@ -1,56 +1,56 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Linq.Expressions;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Container;
 using Moryx.Modules;
-using Moryx.Products.Model;
+using Moryx.Products.Management.Model;
 
-namespace Moryx.Products.Management
+namespace Moryx.Products.Management;
+
+/// <summary>
+/// Strategy for simple products
+/// </summary>
+[ExpectedConfig(typeof(GenericTypeConfiguration))]
+[StrategyConfiguration(typeof(ProductType), DerivedTypes = true)]
+[Plugin(LifeCycle.Transient, typeof(IProductTypeStrategy), Name = nameof(GenericTypeStrategy))]
+internal class GenericTypeStrategy : TypeStrategyBase<GenericTypeConfiguration>, IProductTypeStrategy
 {
     /// <summary>
-    /// Strategy for simple products
+    /// Injected entity mapper
     /// </summary>
-    [ExpectedConfig(typeof(GenericTypeConfiguration))]
-    [StrategyConfiguration(typeof(IProductType), DerivedTypes = true)]
-    [Plugin(LifeCycle.Transient, typeof(IProductTypeStrategy), Name = nameof(GenericTypeStrategy))]
-    internal class GenericTypeStrategy : TypeStrategyBase<GenericTypeConfiguration>, IProductTypeStrategy
+    public GenericEntityMapper<ProductType, ProductPartLink> EntityMapper { get; set; }
+
+    /// <summary>
+    /// Initialize the type strategy
+    /// </summary>
+    public override async Task InitializeAsync(ProductTypeConfiguration config, CancellationToken cancellationToken = default)
     {
-        /// <summary>
-        /// Injected entity mapper
-        /// </summary>
-        public GenericEntityMapper<ProductType, IProductPartLink> EntityMapper { get; set; }
+        await base.InitializeAsync(config, cancellationToken);
 
-        /// <summary>
-        /// Initialize the type strategy
-        /// </summary>
-        public override void Initialize(ProductTypeConfiguration config)
-        {
-            base.Initialize(config);
+        EntityMapper.Initialize(TargetType, Config);
+    }
 
-            EntityMapper.Initialize(TargetType, Config);
-        }
+    public override Expression<Func<IGenericColumns, bool>> TransformSelector<TProduct>(Expression<Func<TProduct, bool>> selector)
+    {
+        return EntityMapper.TransformSelector(selector);
+    }
 
-        public override Expression<Func<IGenericColumns, bool>> TransformSelector<TProduct>(Expression<Func<TProduct, bool>> selector)
-        {
-            return EntityMapper.TransformSelector(selector);
-        }
+    public override bool HasChanged(ProductType current, IGenericColumns dbProperties)
+    {
+        return EntityMapper.HasChanged(dbProperties, current);
+    }
 
-        public override bool HasChanged(IProductType current, IGenericColumns dbProperties)
-        {
-            return EntityMapper.HasChanged(dbProperties, current);
-        }
+    public override Task SaveTypeAsync(ProductType source, IGenericColumns target, CancellationToken cancellationToken)
+    {
+        EntityMapper.WriteValue(source, target);
+        return Task.CompletedTask;
+    }
 
-        public override void SaveType(IProductType source, IGenericColumns target)
-        {
-            EntityMapper.WriteValue(source, target);
-        }
-
-        public override void LoadType(IGenericColumns source, IProductType target)
-        {
-            EntityMapper.ReadValue(source, target);
-        }
+    public override Task LoadTypeAsync(IGenericColumns source, ProductType target, CancellationToken cancellationToken)
+    {
+        EntityMapper.ReadValue(source, target);
+        return Task.CompletedTask;
     }
 }

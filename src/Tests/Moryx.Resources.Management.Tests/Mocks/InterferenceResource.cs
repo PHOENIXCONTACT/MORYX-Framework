@@ -1,19 +1,18 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Resources;
 
-namespace Moryx.Resources.Management.Tests
+namespace Moryx.Resources.Management.Tests;
+
+public class InterferenceResource : Resource
 {
-    public class InterferenceResource : Resource
-    {
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
-        public DerivedResource Derived { get; set; }
+    [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
+    public DerivedResource Derived { get; set; }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
-        public IReferences<OtherResource> Others { get; set; }
+    [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
+    public IReferences<OtherResource> Others { get; set; }
 
-        [ResourceReference(ResourceRelationType.CurrentExchangablePart)]
-        public DifferentResource Different { get; set; }
-    }
+    [ResourceReference(ResourceRelationType.CurrentExchangeablePart)]
+    public DifferentResource Different { get; set; }
 }

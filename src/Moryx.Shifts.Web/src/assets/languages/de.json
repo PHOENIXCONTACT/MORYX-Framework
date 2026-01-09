@@ -1,0 +1,94 @@
+{
+    "DISMISS": "VERWERFEN",
+    "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
+    "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Netzwerkverbindung oder Proxy-Einstellungen.",
+    "ASSIGNMENT": {
+        "DETAILS": "Details",
+        "DELETE": "Löschen",
+        "NOTES": "Hinweise"
+    },
+    "DIALOGS":{
+        "SHIFT_INSTANCE_DIALOG" : {
+            "SHIFT_INSTANCE": "Instanz verschieben",
+            "START_DATE": "Startdatum",
+            "END_DATE": "Enddatum",
+            "CANCEL": "Abbrechen",
+            "SAVE": "Speichern"
+        },
+        "SHIFT_TYPE_DIALOG" : {
+            "SHIFT_TYPE": "Schichttyp",
+            "NAME": "Name",
+            "NAME_ERROR": "Bitte geben Sie einen Namen für die Schicht ein.",
+            "DURATION": "Dauer",
+            "DURATION_ERROR": "Bitte geben Sie einen Wert größer als 0 ein.",
+            "START_TIME": "Startzeit",
+            "START_TIME_ERROR": "Bitte geben Sie eine gültige Uhrzeit ein, i.e: 20:00 Uhr.",
+            "END_TIME": "Endzeit",
+            "END_TIME_ERROR": "Bitte geben Sie eine gültige Uhrzeit ein i.e: 21:00 Uhr.",
+            "CANCEL": "Abbrechen",
+            "SAVE": "Speichern",
+            "DAYS": "Tage"
+        },
+        "WEEK_ASSIGNMENT_DIALOG": {
+            "TITLE": "Details zur Wochenaufgabe",
+            "RESOURCE": "Ressource",
+            "RESOURCE_ERROR": "Bitte wählen Sie eine Ressource/einen Standort",
+            "OPERATOR": "Bediener",
+            "OPERATOR_ERROR": "Bitte wählen Sie einen Bediener aus.",
+            "DAYS_OF_THE_SHIFT": "Tage der Verschiebung",
+            "DAYS_OF_THE_SHIFT_ERROR": "Bitte wählen Sie einen Tag aus ",
+            "PRIORITY": "Priorität",
+            "NOTES": "Hinweise",
+            "CANCEL": "Abbrechen",
+            "ASSIGN": "Zuordnen",
+            "NOT_QUALIFIED": "Nicht qualifiziert",
+            "ON_VACATION": "Im Urlaub",
+            "NOT_ALLOWED": "Nicht erlaubt",
+            "AVAILABLE": "Verfügbar"
+        }
+    },
+    "APP_COMPONENT":{
+        "THIS_WEEK": "Diese Woche",
+        "ALL": "Alle",
+        "OPERATORS": "Bediener",
+        "FILTER_OPERATORS": "Bediener filtern",
+        "CLOSE": "Schließen",
+        "RESOURCES": "Ressourcen",
+        "FILTER_RESOURCES": "Ressourcen filtern",
+        "SEARCH": "Suchen",
+        "WEEK_NUMBER": "KW",
+        "ADD_SHIFT": "Schicht hinzufügen",
+        "NO_ASSIGNMENT": "Für diesen Zeitraum wurde keine Zuweisung gefunden.",
+        "NO_SHIFT": "Keine Schicht gefunden! Klicken Sie auf die Schaltfläche „Schicht hinzufügen“, um eine neue Schicht hinzuzufügen.",
+        "ASSIGN_TO": "Zuweisen an ",
+        "ASSIGN_TO_SHIFT": "Der gesamten Schicht zuweisen",
+        "SHIFT_ELEMENTS": "Schaltelemente",
+        "ASSIGNMENTS_SAVED": "Aufgaben erfolgreich gespeichert!",
+        "SHIFT_CREATED": "Schicht erfolgreich erstellt!",
+        "SHIFT_UPDATED": "Schicht erfolgreich aktualisiert!",
+        "NO_SHIFT_TO_COPY": "Keine Zuweisungen/Schichten zum Kopieren gefunden!",
+        "SHIFT_TO_COPIED": "Die Schichten und deren Zuordnungen wurden erfolgreich in die gewünschte Woche kopiert!"
+    },
+    "DAYS_OF_THE_WEEK":{
+        "Monday": "Montag",
+        "Tuesday": "Dienstag",
+        "Wednesday": "Mittwoch",
+        "Thursday": "Donnerstag",
+        "Friday": "Freitag",
+        "Saturday": "Samstag",
+        "Sunday": "Sonntag"
+    },
+    "DATE_FORMAT": {
+        "SHORT_DATE": "DD.MMMYYYY",
+        "MONTH_AND_DAY": "DD.MM"
+    },
+    "COPY_SHIFT_AND_ASSIGNMENT":{
+        "TITLE": "Verschiebung und Zuweisung kopieren",
+        "LAST_FOR": "Zuletzt für",
+        "DAYS": "Tage",
+        "START_DATE": "Startdatum",
+        "DELETE": "Löschen",
+        "CANCEL": "Abbrechen",
+        "COPY": "Kopie"
+    }
+}

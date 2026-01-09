@@ -1,0 +1,68 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+    <RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">false</RestoreLockedMode>
+    <CentralPackageFloatingVersionsEnabled>false</CentralPackageFloatingVersionsEnabled>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <dotnetVersion>10.0.0</dotnetVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Test libraries -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+    <PackageVersion Include="Moq" Version="4.20.72" />
+    <PackageVersion Include="NUnit" Version="4.4.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="5.2.0" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.11.2" />
+    <PackageVersion Include="WireMock.Net" Version="1.16.0" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+
+	  <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="$(dotnetVersion)" />
+
+    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="$(dotnetVersion)" />
+
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Proxies" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="$(dotnetVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(dotnetVersion)" />
+
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
+    <PackageVersion Include="Microsoft.Identity.Web" Version="4.0.0" />
+    <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="4.0.0" />
+
+	  <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="8.1.4" />
+
+    <PackageVersion Include="Castle.Windsor" Version="6.0.0" />
+
+    <!-- Dependencies for drivers and adapters -->
+    <PackageVersion Include="System.IO.Ports" Version="10.0.0" />
+    <PackageVersion Include="MQTTnet" Version="5.0.1.1416" />
+    <PackageVersion Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.377.22" />
+
+    <PackageVersion Include="InfluxDB.LineProtocol" Version="1.1.0" />
+    <PackageVersion Include="InfluxDB.Client" Version="4.18.0" />
+    <PackageVersion Include="CsvHelper" Version="33.1.0" />
+
+    <PackageVersion Include="MimeTypeMapOfficial" Version="1.0.17" />
+    <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.12" />
+
+  </ItemGroup>
+</Project>

@@ -1,0 +1,16 @@
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+namespace Moryx.ControlSystem.Processes.Endpoints;
+
+public class ProcessHolderGroupModel
+{
+    public long Id { get; set; }
+    public string Name { get; set; }
+
+    public bool IsEmpty => Positions.All(x => x.IsEmpty);
+
+    public List<ProcessHolderPositionModel> Positions { get; set; } = [];
+
+    public VisualizationModel Visualization { get; set; }
+}

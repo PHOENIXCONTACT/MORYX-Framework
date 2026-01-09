@@ -1,40 +1,38 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
 using Moryx.Runtime.Kernel;
 using Moryx.Tools;
 using Moryx.Model;
-using Moryx.Runtime.Endpoints;
-using Microsoft.Extensions.DependencyInjection;
 using Moryx.Runtime.Modules;
 
-namespace StartProject.Asp
+namespace StartProject.Asp;
+
+public class Program
 {
-    public class Program
+    public static async Task Main(string[] args)
     {
-        public static void Main(string[] args)
-        {            
-            AppDomainBuilder.LoadAssemblies();
+        AppDomainBuilder.LoadAssemblies();
 
-            var host = Host.CreateDefaultBuilder(args)
-                .ConfigureServices(serviceCollection =>
-                {
-                    serviceCollection.AddMoryxKernel();
-                    serviceCollection.AddMoryxModels();
-                    serviceCollection.AddMoryxModules();
-                })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                }).Build();
+        var host = Host.CreateDefaultBuilder(args)
+            .ConfigureServices(serviceCollection =>
+            {
+                serviceCollection.AddMoryxKernel();
+                serviceCollection.AddMoryxModels();
+                serviceCollection.AddMoryxModules();
+            })
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            }).Build();
 
-            host.Services.UseMoryxConfigurations("Config");
+        host.Services.UseMoryxConfigurations("Config");
 
-            var moduleManager = host.Services.GetRequiredService<IModuleManager>();
-            moduleManager.StartModules();
+        var moduleManager = host.Services.GetRequiredService<IModuleManager>();
+        await moduleManager.StartModulesAsync();
 
-            host.Run();
+        await host.RunAsync();
 
-            moduleManager.StopModules();
-        }
+        await moduleManager.StopModulesAsync();
     }
 }

@@ -1,0 +1,32 @@
+@page
+@using Microsoft.AspNetCore.Authorization;
+@using System.ComponentModel.DataAnnotations
+@using Moryx.Modules
+@using Moryx.Notifications.Endpoints;
+@using Moryx.Notifications.Web.Properties
+
+@inject IAuthorizationService _authorizationService
+
+@{
+  ViewData["Title"] = "Notifications";
+  ViewData["BaseRef"] = "Notifications";
+
+  Layout = "_Layout";
+}
+@attribute [WebModule("Notifications", "notifications"), 
+    ModuleEventStream("/api/moryx/notifications/stream"),
+    Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description"), 
+    Authorize(Policy = NotificationPermissions.CanView), 
+    AllowAnonymous]
+
+@section Styles {
+    <link rel="stylesheet" href="/_content/Moryx.Notifications.Web/styles.css">
+}
+@section Scripts
+{
+  <script src="/_content/Moryx.Notifications.Web/runtime.js" type="module"></script>
+  <script src="/_content/Moryx.Notifications.Web/polyfills.js" type="module"></script>
+  <script src="/_content/Moryx.Notifications.Web/main.js" type="module"></script>
+}
+
+<app-root></app-root>

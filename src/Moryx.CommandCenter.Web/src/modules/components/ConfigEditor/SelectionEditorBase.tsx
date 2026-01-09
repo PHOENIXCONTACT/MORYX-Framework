@@ -8,19 +8,20 @@ import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import * as React from "react";
 import Entry from "../../models/Entry";
+import EntryPossible from "../../models/EntryPossible";
 import { InputEditorBasePropModel } from "./InputEditorBase";
 
 interface SelectionStateModel {
-    PossibleValues: string[];
+    PossibleValues: EntryPossible[];
 }
 
 export default class SelectionEditorBase extends React.Component<InputEditorBasePropModel, SelectionStateModel> {
     constructor(props: InputEditorBasePropModel) {
         super(props);
         if (this.props.Entry.value.possible != null) {
-            const possibleValues: string[] = [...this.props.Entry.value.possible];
-            if (possibleValues.find((value: string) => value === this.props.Entry.value.current) === undefined) {
-                possibleValues.unshift("");
+            const possibleValues: EntryPossible[] = [...this.props.Entry.value.possible];
+            if (possibleValues.find((value: EntryPossible) => value.key === this.props.Entry.value.current) === undefined) {
+                possibleValues.unshift({ key: "", displayName: "", description: "" });
             }
             this.state = { PossibleValues: possibleValues };
         }
@@ -48,7 +49,7 @@ export default class SelectionEditorBase extends React.Component<InputEditorBase
                     {
                         (this.state != null) ?
                         this.state.PossibleValues.map((possibleValue, idx) => {
-                            return (<MenuItem key={idx} value={possibleValue}>{possibleValue}</MenuItem>);
+                            return (<MenuItem key={idx} value={possibleValue.key}>{possibleValue.displayName}</MenuItem>);
                         })
                         : null
                     }

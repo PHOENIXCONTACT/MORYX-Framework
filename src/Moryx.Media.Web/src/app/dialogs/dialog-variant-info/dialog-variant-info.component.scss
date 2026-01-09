@@ -1,0 +1,22 @@
+.info-content {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.info-content-line {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: baseline;
+}
+
+.info-content-line-label {
+  flex: 1 1 70%;
+  min-width: 100px;
+}
+
+.info-content-line-value {
+  flex: 1 1 30%;
+  min-width: 270px;
+}

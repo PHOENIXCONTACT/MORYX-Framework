@@ -1,0 +1,14 @@
+.default-image {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+}
+
+.default-image-img {
+  flex: 1;
+  height: fit-content;
+  width: 90%;
+  align-self: center;
+}

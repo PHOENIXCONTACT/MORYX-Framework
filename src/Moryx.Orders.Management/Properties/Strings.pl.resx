@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="OperationNotifications_AmountReachedNotificationMessage" xml:space="preserve">
+		<value>Operacja {0} zakończyła ostatnie części i jest gotowa do wylogowania. Prosimy o zgłoszenie wyprodukowanych części.</value>
+	</data>
+  <data name="OperationNotifications_AmountReachedNotificationTitle" xml:space="preserve">
+		<value>Zamówienie jest gotowe do zgłoszenia</value>
+	</data>
+  <data name="RegexOperationValidation_Wrong_Amount" xml:space="preserve">
+    <value>Ilość operacji musi być większa niż zero.</value>
+  </data>
+  <data name="RegexOperationValidation_Regex_Match_Failed" xml:space="preserve">
+    <value>Numer operacji nie pasuje do wyrażenia regularnego: {0}.</value>
+  </data>
+  <data name="RegexOperationValidation_No_Valid_Recipe" xml:space="preserve">
+    <value>Operacja nie ma ważnej receptury.</value>
+  </data>
+  <data name="RecipeAssignStep_WorkplanValidation_Failed" xml:space="preserve">
+    <value>Walidacja planu pracy nie powiodła się. Błąd: \n{0}</value>
+  </data>
+  <data name="RecipeAssignStep_Selection_Failed" xml:space="preserve">
+    <value>Nie można było wybrać receptur dla operacji! Wartość była pusta lub nie wybrano żadnej receptury!</value>
+  </data>
+  <data name="RecipeAssignStep_Restore_Failed" xml:space="preserve">
+    <value>Nie udało się przypisać receptur. Powinny być tylko odniesienia.</value>
+  </data>
+  <data name="RecipeAssignStep_Processing_Failed" xml:space="preserve">
+    <value>Nie udało się pomyślnie przetworzyć receptury '{0}'!</value>
+  </data>
+  <data name="ProductAssignStep_Selection_Failed" xml:space="preserve">
+    <value>Nie udało się przypisać produktu!</value>
+  </data>
+  <data name="OperationState_RunningState" xml:space="preserve">
+    <value>W trakcie</value>
+  </data>
+  <data name="OperationState_ReadyState" xml:space="preserve">
+    <value>Gotowy</value>
+  </data>
+  <data name="OperationState_ReadyAssignState" xml:space="preserve">
+    <value>Przypisywanie</value>
+  </data>
+  <data name="OperationState_InterruptedAssignState" xml:space="preserve">
+    <value>Przypisywanie</value>
+  </data>
+  <data name="OperationState_AmountReachedAssignState" xml:space="preserve">
+    <value>Przypisywanie</value>
+  </data>
+  <data name="OperationState_ReadyAssignFailedState" xml:space="preserve">
+    <value>Przypisywanie nie powiodło się</value>
+  </data>
+  <data name="OperationState_InterruptedAssignFailedState" xml:space="preserve">
+    <value>Przypisywanie nie powiodło się</value>
+  </data>
+  <data name="OperationState_AmountReachedAssignFailedState" xml:space="preserve">
+    <value>Przypisywanie nie powiodło się</value>
+  </data>
+  <data name="OperationState_InterruptingState" xml:space="preserve">
+    <value>Przerywanie</value>
+  </data>
+  <data name="OperationState_InterruptedState" xml:space="preserve">
+    <value>Przerwane</value>
+  </data>
+  <data name="OperationState_InitialState" xml:space="preserve">
+    <value>Początkowy</value>
+  </data>
+  <data name="OperationState_InitialAssignState" xml:space="preserve">
+    <value>Tworzenie</value>
+  </data>
+  <data name="OperationState_InitialAssignFailedState" xml:space="preserve">
+    <value>Tworzenie nie powiodło się</value>
+  </data>
+  <data name="OperationState_CompletedState" xml:space="preserve">
+    <value>Zakończone</value>
+  </data>
+  <data name="OperationState_AmountReachedState" xml:space="preserve">
+    <value>Osiągnięta ilość</value>
+  </data>
+  <data name="OperationState_AbortedState" xml:space="preserve">
+    <value>Przerwane</value>
+  </data>
+  <data name="OperationManager_StateErrorText" xml:space="preserve">
+    <value>Operacji w tym stanie nie można rozpocząć.</value>
+  </data>
+  <data name="OperationManager_NoReportErrorText" xml:space="preserve">
+    <value>Raportowanie nie jest możliwe w obecnym stanie operacji.</value>
+  </data>
+  <data name="OperationManager_NoPartialReportErrorText" xml:space="preserve">
+    <value>Częściowe raportowanie nie jest możliwe w obecnym stanie operacji.</value>
+  </data>
+  <data name="OperationManager_NoFinalReportErrorText" xml:space="preserve">
+    <value>Końcowe raportowanie nie jest możliwe w obecnym stanie operacji.</value>
+  </data>
+  <data name="OperationManager_MaxRunningErrorText" xml:space="preserve">
+    <value>Osiągnięto maksymalną liczbę operacji w trakcie.</value>
+  </data>
+  <data name="OperationAssignment_Successful" xml:space="preserve">
+    <value>Pomyślne wykonanie kroku przypisania operacji {0}</value>
+  </data>
+  <data name="OperationAssignment_Started" xml:space="preserve">
+    <value>Rozpoczynanie przypisania operacji...</value>
+  </data>
+  <data name="OperationAssignment_RecipeReassigned" xml:space="preserve">
+    <value>Receptura {0} ponownie przypisana do operacji</value>
+  </data>
+  <data name="OperationAssignment_Exception_Assign" xml:space="preserve">
+    <value>Nie udało się przypisać operacji</value>
+  </data>
+  <data name="DocumentAssignStep_Restore_Documents_Failed" xml:space="preserve">
+    <value>Nie można przywrócić dokumentów z systemu plików!</value>
+  </data>
+  <data name="DocumentAssignStep_Documents_Loading_Failed" xml:space="preserve">
+    <value>Błąd podczas ładowania informacji o dokumencie od dostawcy dokumentów!</value>
+  </data>
+  <data name="DocumentAssignStep_Document_Loading_Failed" xml:space="preserve">
+    <value>Błąd podczas ładowania dokumentu '{0}' od dostawcy dokumentów!</value>
+  </data>
+  <data name="PartsAssignStep_Threw_Exception" xml:space="preserve">
+    <value>{0} rzucił wyjątek podczas ładowania części produktu</value>
+  </data>
+  <data name="PartsAssignStep_Failed" xml:space="preserve">
+    <value>Nie było możliwe przypisanie części produktu.</value>
+  </data>
+  <data name="OperationManager_OverDeliveryNotice" xml:space="preserve">
+    <value>Nie można zmniejszyć kwoty docelowej poniżej liczby pomyślnie wyprodukowanych sztuk.</value>
+  </data>
+</root>

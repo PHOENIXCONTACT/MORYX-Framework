@@ -1,0 +1,42 @@
+﻿@using Moryx.Identity.AccessManagement.Data
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<MoryxUser> SignInManager
+
+
+
+<div role="tree" class="nav-tree-contents">
+    @if (SignInManager.IsSignedIn(User) && User.IsInRole(Roles.SuperAdmin))
+    {
+        <a class="@Html.IsControllerSelected("Users", "UserRoles") nav-tree-item" role="treeitem" aria-level="1" aria-expanded="false" asp-controller="Users" asp-action="Index">
+            <span class="nav-space"></span>
+            Users
+        </a>
+        <a class="@Html.IsControllerSelected("Roles", "RolePermissions") nav-tree-item" role="treeitem" aria-level="1" aria-expanded="false" asp-controller="Roles" asp-action="Index">
+            <span class="nav-space"></span>
+            Roles
+        </a>
+        <a class="@Html.IsControllerSelected("Permissions") nav-tree-item" role="treeitem" aria-level="1" aria-expanded="false" asp-controller="Permissions" asp-action="Index">
+            <span class="nav-space"></span>
+            Permissions
+        </a>
+    }
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <a class="nav-tree-item" role="treeitem" aria-level="1" aria-expanded="false" asp-area="" asp-controller="Login" asp-action="Logout">
+            <span class="nav-space"></span>
+            Logout
+        </a>
+    }
+    else
+    {
+        <a class="@Html.IsActionSelected("Login", "Register") nav-tree-item" role="treeitem" aria-level="1" aria-expanded="false" asp-area="" asp-controller="Login" asp-action="Register">
+            <span class="nav-space"></span>
+            Register
+        </a>
+        <a class="@Html.IsActionSelected("Login", "Index", "ResetView") nav-tree-item" role="treeitem" aria-level="1" aria-expanded="false" asp-area="" asp-controller="Login" asp-action="Index">
+            <span class="nav-space"></span>
+            Login
+        </a>
+    }
+</div>

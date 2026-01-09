@@ -1,0 +1,34 @@
+@use '@angular/material' as mat;
+@use "../../../../styles.scss" as *;
+:host {
+  display: flex;
+  width: 100%;
+  max-width: 60em;
+  height: 100%;
+  overflow: hidden;
+  justify-content: center;
+}
+
+.methods {
+  flex: 1 1;
+  justify-self: center;
+  padding: 8px;
+  overflow: auto;
+  @include mat.expansion-overrides((
+    container-background-color: $mat-background-light,
+  ));
+}
+
+.method-buttons {
+  padding-left: 8px;
+}
+
+.method-headers-align .mat-expansion-panel-header-title,
+.method-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.method-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}

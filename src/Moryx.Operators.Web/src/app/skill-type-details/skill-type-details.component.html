@@ -1,0 +1,109 @@
+<form [formGroup]="form" class="details-content tw:h-full ">
+  <mat-sidenav-container class="tw:w-full tw:h-full ">
+    <mat-sidenav-content role="main">
+      <div class="tw:w-full tw:flex tw:flex-col tw:relative">
+        <div
+          class="tw:sticky tw:flex tw:gap-2 tw:p-2 tw:items-center tw:w-full tw:bg-white tw:border-b tw:border-b-gray-200"
+        >
+          <a
+            mat-icon-button
+            aria-label="Go back"
+            [matTooltip]="
+              TranslationConstants.WORKSTATION_OPERATORS.GO_BACK | translate
+            "
+            routerLink="/skill-types/"
+          >
+            <mat-icon>arrow_back</mat-icon>
+          </a>
+          <span class="tw:text-lg tw:font-medium">
+            @if(skillType().id > 0){
+            {{
+              TranslationConstants.SKILL_TYPE_DETAILS.SKILL_TYPE_DETAILS
+                | translate
+            }}
+            } @else {
+            {{
+              TranslationConstants.SKILL_TYPE_DETAILS.NEW_SKILL_TYPE | translate
+            }}
+            }
+          </span>
+        </div>
+        <!-- form fields -->
+        <div class="skill-form tw:flex tw:flex-col tw:p-2">
+          <section>
+            <mat-form-field class="tw:w-full tw:py-2" appearance="outline">
+              <mat-label>{{
+                TranslationConstants.SKILL_TYPE_DETAILS.NAME | translate
+              }}</mat-label>
+              <mat-hint>{{
+                TranslationConstants.SKILL_TYPE_DETAILS.NAME_DESCRIPTION
+                  | translate
+              }}</mat-hint>
+              <input
+                matInput
+                aria-label="name"
+                id="name"
+                formControlName="name"
+              />
+            </mat-form-field>
+            <mat-form-field class="tw:w-full" appearance="outline">
+              <mat-label>{{
+                TranslationConstants.SKILL_TYPE_DETAILS.VALIDITY_PERIOD
+                  | translate
+              }}</mat-label>
+              <input
+                type="number"
+                matInput
+                id="duration"
+                formControlName="duration"
+              />
+            </mat-form-field>
+          </section>
+          <span class="tw:font-medium tw:mt-2">{{
+            TranslationConstants.SKILL_TYPE_DETAILS.SKILL_CAPABILITY | translate
+          }}</span>
+          <!-- Capability Entry serializer from moryx-web -->
+          <section>
+            <navigable-entry-editor
+              [entry]="skillType().acquiredCapabilities"
+              queryParam="acquiredCapabilities"
+              [disabled]="false"
+            >
+            </navigable-entry-editor>
+          </section>
+        </div>
+      </div>
+    </mat-sidenav-content>
+    <mat-sidenav opened role="group" mode="side" position="end">
+      <div class="tw:flex tw:flex-col tw:h-full tw:bg-white tw:gap-1 tw:p-2">
+        <button
+          mat-icon-button
+          aria-label="Save"
+          [matTooltip]="
+            TranslationConstants.ADD_OPERATOR_DIALOG.SAVE | translate
+          "
+          matTooltipPosition="left"
+          matTooltipShowDelay="500"
+          type="submit"
+          (click)="onSave()"
+          [disabled]="form.invalid"
+        >
+          <mat-icon>save</mat-icon>
+        </button>
+        <!-- <button
+            mat-icon-button
+            aria-label="Cancel"
+            matTooltip="
+              Cancel
+            "
+            matTooltipPosition="left"
+            matTooltipShowDelay="500"
+            type="button"
+            (click)="onCancel()"
+          >
+            <mat-icon>edit</mat-icon>
+          </button> -->
+      </div>
+    </mat-sidenav>
+  </mat-sidenav-container>
+</form>

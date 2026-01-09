@@ -1,37 +1,36 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Communication
+namespace Moryx.Communication;
+
+/// <summary>
+/// Enum determining the state of parsing the bytes
+/// </summary>
+public enum ParsingState
 {
     /// <summary>
-    /// Enum determining the state of parsing the bytes
+    /// Currently parsing the header
     /// </summary>
-    public enum ParsingState
-    {
-        /// <summary>
-        /// Currently parsing the header
-        /// </summary>
-        ReadingHeader,
-        /// <summary>
-        /// Currently parsing the payload
-        /// </summary>
-        ReadingPayload,
-    }
+    ReadingHeader,
+    /// <summary>
+    /// Currently parsing the payload
+    /// </summary>
+    ReadingPayload,
+}
+
+/// <summary>
+/// Transmission for header based messages
+/// </summary>
+public class HeaderMessageContext<THeader> : ReadContext
+    where THeader : IBinaryHeader, new()
+{
+    /// <summary>
+    /// Header of this message
+    /// </summary>
+    public THeader Header { get; set; }
 
     /// <summary>
-    /// Transmission for header based messages
+    /// Currrent parsing state
     /// </summary>
-    public class HeaderMessageContext<THeader> : ReadContext
-        where THeader : IBinaryHeader, new()
-    {
-        /// <summary>
-        /// Header of this message
-        /// </summary>
-        public THeader Header { get; set; }
-
-        /// <summary>
-        /// Currrent parsing state
-        /// </summary>
-        public ParsingState State { get; set; }
-    }
+    public ParsingState State { get; set; }
 }

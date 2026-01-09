@@ -1,0 +1,13 @@
+<h5 class="truncate">{{ currentStateString() }}</h5>
+
+<div class="traffic-light-container">
+  <div class="traffic-light-row">
+    <div class="traffic-light" [class.red-light]="currentState() === CellState.NotReadyToWork"></div>
+  </div>
+  <div class="traffic-light-row">
+    <div class="traffic-light" [class.orange-light]="currentState() === CellState.Idle || currentState() === CellState.Requested"></div>
+  </div>
+  <div class="traffic-light-row">
+    <div class="traffic-light" [class.green-light]="currentState() === CellState.Running"></div>
+  </div>
+</div>

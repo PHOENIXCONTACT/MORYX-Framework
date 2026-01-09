@@ -1,0 +1,53 @@
+{
+  "MEDIA_OVERVIEW": {
+    "DELETE_MESSAGE": "Vuoi davvero rimuovere questo elemento multimediale e tutte le sue varianti?",
+    "EMPTY_STATE_HEADER": "No Media",
+    "EMPTY_STATE_TEXT": "Um Inhalte hinzuzufügen, klicken Sie auf das Upload-Zeichen und wählen Sie eine Datei aus.",
+    "FAILED_LOADING": "Non è stato possibile stabilire la connessione al server. Controllare la connessione di rete o riprovare più tardi."
+  },
+
+  "CONTEXT_MENU": {
+    "DELETE": "Elimina",
+    "INFO": "Info",
+    "DOWNLOAD": "Scarica"
+  },
+
+  "MEDIA_FILE_VARIANTS": "Varianti",
+
+  "VARIANT_OVERVIEW": {
+    "ALREADY_EXISTS_MESSAGE": "Variante con questo nome esiste già in questo contenuto",
+    "DELETE_MESSAGE": "Vuoi davvero rimuovere questa variante?",
+    "CREATION_DATE": "Data di creazione",
+    "SIZE": "Taglia"
+  },
+
+  "ADD_VARIANT_DIALOG": {
+    "TITLE": "Aggiungi variante",
+    "NAME": "Nome",
+    "NAME_PLACEHOLDER": "Si prega di fornire un nome",
+    "FILE_PLACEHOLDER": "Nessun file ancora caricato...",
+    "CANCEL": "ANNULLA",
+    "UPLOAD": "CARICA"
+  },
+  
+  "DELETE_DIALOG": {
+    "TITLE": "Elimina contenuto",
+    "CANCEL": "ANNULLA",
+    "DELETE": "ELIMINA"
+  },
+
+  "VARIANT_INFO_DIALOG": {
+    "TITLE": "Variante",
+    "VARIANT_NAME": "Nome variante:",
+    "CONTENT_NAME": "Nome contenuto:",
+    "ID": "ID contenuto:",
+    "SIZE": "Dimensione variante:",
+    "LINK": "Link",
+    "CLOSE": "CHIUDI",
+    "COPY_TO_CLIPBOARD": "copia negli appunti"
+  },
+
+  "DISMISS": "RIFIUTARE",
+  "DEFAULT_MESSAGE": "Qualcosa è andato storto sul server.",
+  "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controllare la connessione internet o le impostazioni del proxy."
+}

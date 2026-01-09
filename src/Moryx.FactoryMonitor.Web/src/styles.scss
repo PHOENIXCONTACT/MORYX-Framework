@@ -1,0 +1,49 @@
+@use "@moryx/ngx-web-framework/styles/theme.scss"; 
+/* You can add global styles to this file, and also import other style files */
+html, body { 
+    height: 100%; 
+    overflow: hidden;
+}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mdc-list-item__content {
+    margin-right: 200px;
+}     
+
+h5,h4,h3,h2,h1 {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+
+.subtitle {
+    font-weight: lighter !important;
+    font-size: 14px !important;
+    margin-left: 25px;
+}
+
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cell-container {
+    position: absolute;
+    width: 63px;
+    height: 60px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.5);
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-width: 8px;
+    border-style: solid;
+    cursor: pointer;
+    position: absolute;
+    opacity: 0.8;
+}
+
+mat-icon {
+    font-size: 25px;
+}
+  

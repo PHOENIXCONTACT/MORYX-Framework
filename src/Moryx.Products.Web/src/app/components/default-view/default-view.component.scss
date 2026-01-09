@@ -1,0 +1,7 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+.overall-container {
+  padding: 8px;
+  overflow: auto;
+  height: 100%;
+  box-sizing: border-box;
+}

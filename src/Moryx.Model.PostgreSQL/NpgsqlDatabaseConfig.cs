@@ -1,41 +1,65 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using Moryx.Configuration;
+using Moryx.Model.Attributes;
 
-namespace Moryx.Model.PostgreSQL
+namespace Moryx.Model.PostgreSQL;
+
+/// <summary>
+/// Database config for the Npgsql databases
+/// </summary>
+[DataContract]
+public class NpgsqlDatabaseConfig : DatabaseConfig
 {
-    /// <summary>
-    /// Database config for the Npgsql databases
-    /// </summary>
-    [DataContract]
-    public class NpgsqlDatabaseConfig : DatabaseConfig<NpgsqlDatabaseConnectionSettings>
-    {
-        /// <summary>
-        /// Creates a new instance of the <see cref="NpgsqlDatabaseConfig"/>
-        /// </summary>
-        public NpgsqlDatabaseConfig()
-        {
-            ConnectionSettings = new NpgsqlDatabaseConnectionSettings();
-            ConfiguratorTypename = typeof(NpgsqlModelConfigurator).AssemblyQualifiedName;
-        }
-    }
-
+    /// <inheritdoc />
+    public override string ConfiguratorType => typeof(NpgsqlModelConfigurator).AssemblyQualifiedName;
 
     /// <summary>
-    /// Database connection settings for the Npgsql databases
+    /// Name of the database to connect to
     /// </summary>
-    public class NpgsqlDatabaseConnectionSettings : DatabaseConnectionSettings
-    {
+    [Required]
+    [DefaultValue("<DatabaseName>")]
+    [Description("Name of the database to connect to")]
+    [ConnectionStringKey("Database")]
+    public string Database { get; set; }
 
-        /// <inheritdoc/>
-        [DataMember, Required]
-        public override string Database { get; set; }
+    /// <summary>
+    /// Username used to connect to the database
+    /// </summary>
+    [Required]
+    [DefaultValue("postgres")]
+    [Description("Username used to connect to the database")]
+    [ConnectionStringKey("Username")]
+    public string Username { get; set; }
 
-        /// <inheritdoc/>
-        [DataMember, Required, DefaultValue("Username=postgres;Password=postgres;Host=localhost;Port=5432")]
-        public override string ConnectionString { get; set; }
-    }
+    /// <summary>
+    /// Password used to connect to the database
+    /// </summary>
+    [Required, Password]
+    [DefaultValue("postgres")]
+    [Description("Password used to connect to the database")]
+    [ConnectionStringKey("Password")]
+    public string Password { get; set; }
+
+    /// <summary>
+    /// Hostname of the database server
+    /// </summary>
+    [Required]
+    [DefaultValue("localhost")]
+    [Description("Hostname of the database server")]
+    [ConnectionStringKey("Host")]
+    public string Host { get; set; }
+
+    /// <summary>
+    /// Port of the database server
+    /// </summary>
+    [Required]
+    [DefaultValue(5432)]
+    [Description("Port of the database server")]
+    [ConnectionStringKey("Port")]
+    public int Port { get; set; }
 }

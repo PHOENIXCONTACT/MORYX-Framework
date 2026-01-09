@@ -1,0 +1,14 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+.show-revisions-list {
+  flex: 1 1;
+  overflow: auto;
+}
+
+.show-revisions-list-item {
+  cursor: pointer !important;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+}

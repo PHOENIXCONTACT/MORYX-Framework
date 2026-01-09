@@ -1,46 +1,44 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
+namespace Moryx.Runtime.Modules;
 
-namespace Moryx.Runtime.Modules
+internal class InitializingState : ServerModuleStateBase
 {
-    internal class InitializingState : ServerModuleStateBase
+    public override ServerModuleState Classification => ServerModuleState.Initializing;
+
+    public InitializingState(IServerModuleStateContext context, StateMap stateMap)
+        : base(context, stateMap)
     {
-        public override ServerModuleState Classification => ServerModuleState.Initializing;
-
-        public InitializingState(IServerModuleStateContext context, StateMap stateMap) 
-            : base(context, stateMap)
+    }
+    public override async Task OnEnterAsync(CancellationToken cancellationToken)
+    {
+        try
         {
+            await Context.InitializeAsync(cancellationToken);
+            await NextStateAsync(StateReady, cancellationToken);
         }
-
-        public override void OnEnter()
+        catch (Exception ex)
         {
-            try
-            {
-                Context.Initialize();
-                NextState(StateReady);
-            }
-            catch (Exception ex)
-            {
-                Context.ReportError(ex);
-                NextState(StateInitializedFailure);
-            }
+            Context.ReportError(ex);
+            await NextStateAsync(StateInitializedFailure, cancellationToken);
         }
+    }
+    public override Task Initialize(CancellationToken cancellationToken)
+    {
+        // Nothing to do here
+        return Task.CompletedTask;
+    }
 
-        public override void Initialize()
-        {
-            // Nothing to do here
-        }
+    public override Task Start(CancellationToken cancellationToken)
+    {
+        // Nothing to do here
+        return Task.CompletedTask;
+    }
 
-        public override void Start()
-        {
-            // Nothing to do here
-        }
-
-        public override void Stop()
-        {
-            // Nothing to do here
-        }
+    public override Task Stop(CancellationToken cancellationToken)
+    {
+        // Nothing to do here
+        return Task.CompletedTask;
     }
 }

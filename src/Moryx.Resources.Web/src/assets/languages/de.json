@@ -1,0 +1,57 @@
+{
+  "APP": {
+    "RESOURCES": "Ressourcen",
+    "NO_NAME": "Unbenannte Resource"
+  },
+  "DISMISS": "OKAY",
+  "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
+  "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Internetverbindung oder Proxy-Einstellungen.",
+  "SHARED": {
+    "DELETE": "Löschen",
+    "EDIT": "Bearbeiten",
+    "SAVE": "Speichern",
+    "ID": "Id",
+    "TYPE": "Typ",
+    "NAME": "Name",
+    "DESCRIPTION": "Beschreibung",
+    "INTERNAL": "Intern",
+    "CANCEL": "Abbrechen",
+    "CREATE": "ERSTELLEN",
+    "ADD": "Resource hinzufügen",
+    "ADD_CHILD": "Untergeordnete Resource hinzufügen",
+    "RELOAD": "Neu laden",
+    "NEXT": "Weiter"
+  },
+  "ADD_RESOURCE_DIALOG": {
+    "TITLE": "Welcher Ressourcentyp soll erstellt werden?"
+  },
+  "DEFAULT_VIEW": {
+    "FAILED_LOADING": "Resource konnte nicht geladen werden.",
+    "NOT_FOUND": "Die angeforderte Resource existiert nicht.",
+    "EMPTY_STATE_HEADER": "Keine Resource",
+    "EMPTY_STATE_TEXT": "Wähle eine Resource aus der Liste oder klicke auf das Plus um eine neue Resource hinzuzufügen."
+  },
+  "DETAILS": {
+    "PROPERTIES": "Eigenschaften",
+    "REFERENCES": "Referenzen",
+    "METHODS": "Methoden",
+    "REFS": {
+      "LINK": "Link",
+      "LINKED_RESOURCE": "Referenzierte Ressource",
+      "REFERENCE_PLACEHOLDER": "Wähle eine der verfügbaren Resourcen, um sie als Referenz hinzuzufügen",
+      "NO_TARGET": "Keine Referenz ausgewählt"
+    },
+    "METS": {
+      "WAS_INVOKED": "Die Methode wurde aufgerufen",
+      "INVOKE": "AUFRUFEN",
+      "REPEAT": "WIEDERHOLEN",
+      "CLEAR": "LEEREN"
+    }
+  },
+  "REMOVE_RESOURCE_DIALOG": {
+    "TITLE": "Resource entfernen",
+    "SUB_TITLE": "Die Resource wird unwiderruflich entfernt:",
+    "CANCEL": "ABBRECHEN",
+    "REMOVE": "ENTFERNEN"
+  }
+}

@@ -1,49 +1,48 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
+namespace Moryx.Runtime.Modules;
 
-namespace Moryx.Runtime.Modules
+internal class RunningState : ServerModuleStateBase
 {
-    internal class RunningState : ServerModuleStateBase
+    public override ServerModuleState Classification => ServerModuleState.Running;
+
+    public RunningState(IServerModuleStateContext context, StateMap stateMap) : base(context, stateMap)
     {
-        public override ServerModuleState Classification => ServerModuleState.Running;
+    }
 
-        public RunningState(IServerModuleStateContext context, StateMap stateMap) : base(context, stateMap)
+    public override async Task OnEnterAsync(CancellationToken cancellationToken)
+    {
+        try
         {
+            Context.Started();
         }
+        catch (Exception ex)
+        {
+            Context.ReportError(ex);
+            await NextStateAsync(StateRunningFailure, cancellationToken);
+        }
+    }
 
-        public override void OnEnter()
-        {
-            try
-            {
-                Context.Started();
-            }
-            catch (Exception ex)
-            {
-                Context.ReportError(ex);
-                NextState(StateRunningFailure);
-            }
-        }
+    public override Task Initialize(CancellationToken cancellationToken)
+    {
+        // Nothing to do here
+        return Task.CompletedTask;
+    }
 
-        public override void Initialize()
-        {
-            // Nothing to do here
-        }
+    public override Task Start(CancellationToken cancellationToken)
+    {
+        // Already started
+        return Task.CompletedTask;
+    }
 
-        public override void Start()
-        {
-            // Already started
-        }
+    public override Task Stop(CancellationToken cancellationToken)
+    {
+        return NextStateAsync(StateRunningStopping, cancellationToken);
+    }
 
-        public override void Stop()
-        {
-            NextState(StateRunningStopping);
-        }
-
-        public override void ValidateHealthState()
-        {
-            // Health state should be okay!
-        }
+    public override void ValidateHealthState()
+    {
+        // Health state should be okay!
     }
 }

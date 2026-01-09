@@ -1,105 +1,115 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Modules;
 
-namespace Moryx.Products.Management
+namespace Moryx.Products.Management;
+
+/// <summary>
+/// API for the application specific product storage
+/// </summary>
+public interface IProductStorage : IAsyncPlugin
 {
     /// <summary>
-    /// API for the application specific product storage
+    /// Get products by query
     /// </summary>
-    public interface IProductStorage : IPlugin
-    {
-        /// <summary>
-        /// Get products by query
-        /// </summary>
-        IReadOnlyList<IProductType> LoadTypes(ProductQuery query);
+    Task<IReadOnlyList<ProductType>> LoadTypesAsync(ProductQuery query, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Load product instance by id
-        /// </summary>
-        IProductType LoadType(long id);
+    /// <summary>
+    /// Load product instance by id
+    /// </summary>
+    Task<ProductType> LoadTypeAsync(long id, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Load product by identity. This method supports loading a products latest revision
-        /// </summary>
-        IProductType LoadType(ProductIdentity identity);
+    /// <summary>
+    /// Load product by identity. This method supports loading a products latest revision
+    /// </summary>
+    Task<ProductType> LoadTypeAsync(IIdentity identity, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Save a type to the storage
-        /// </summary>
-        long SaveType(IProductType modifiedInstance);
+    /// <summary>
+    /// Save a type to the storage
+    /// </summary>
+    Task<long> SaveTypeAsync(ProductType modifiedInstance, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Get instances by id
-        /// </summary>
-        /// <returns>The instance with the id when it exists.</returns>
-        IReadOnlyList<ProductInstance> LoadInstances(params long[] id);
+    /// <summary>
+    /// Try to delete a product. If it is still used as a part in other products, it will return <c>false</c>
+    /// </summary>
+    /// <param name="productId">Id of the product that is deprecated and should be deleted.</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    /// <returns><value>True</value> if the product was removed, <value>false</value> otherwise</returns>
+    Task<bool> DeleteTypeAsync(long productId, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Load instances using filter expression
-        /// </summary>
-        IReadOnlyList<TInstance> LoadInstances<TInstance>(Expression<Func<TInstance, bool>> selector);
+    /// <summary>
+    /// Get instances by id
+    /// </summary>
+    /// <returns>The instance with the id when it exists.</returns>
+    Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(long[] ids, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Updates the database from the instance
-        /// </summary>
-        void SaveInstances(ProductInstance[] productInstance);
+    /// <summary>
+    /// Load instances using filter expression
+    /// </summary>
+    Task<IReadOnlyList<TInstance>> LoadInstancesAsync<TInstance>(Expression<Func<TInstance, bool>> selector, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Loads a recipe from the storage
-        /// </summary>
-        IProductRecipe LoadRecipe(long recipeId);
+    /// <summary>
+    /// Load instances using ProductType
+    /// </summary>
+    Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(ProductType productType, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Loads all recipes from the storage.
-        /// </summary>
-        IReadOnlyList<IProductRecipe> LoadRecipes(long productId, RecipeClassification classification);
+    /// <summary>
+    /// Updates the database from the instance
+    /// </summary>
+    Task SaveInstancesAsync(ProductInstance[] productInstance, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Saves the recipe of the product
-        /// </summary>
-        long SaveRecipe(IProductRecipe recipe);
+    /// <summary>
+    /// Loads a recipe from the storage
+    /// </summary>
+    Task<IProductRecipe> LoadRecipeAsync(long recipeId, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Save multiple recipes at once
-        /// </summary>
-        void SaveRecipes(long productId, ICollection<IProductRecipe> recipes);
+    /// <summary>
+    /// Loads all recipes from the storage.
+    /// </summary>
+    Task<IReadOnlyList<IProductRecipe>> LoadRecipesAsync(long productId, RecipeClassification classification, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Load types using filter expression
-        /// </summary>
-        IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
+    /// <summary>
+    /// Saves the recipe of the product
+    /// </summary>
+    Task<long> SaveRecipeAsync(IProductRecipe recipe, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Remove recipe by given recipeId
-        /// </summary>
-        void RemoveRecipe(long recipeId);
+    /// <summary>
+    /// Save multiple recipes at once
+    /// </summary>
+    Task SaveRecipesAsync(IReadOnlyList<IProductRecipe> recipes, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="typeName"></param>
-        /// <returns></returns>
-        ProductTypeWrapper GetTypeWrapper(string typeName);
+    /// <summary>
+    /// Load types using filter expression
+    /// </summary>
+    Task<IReadOnlyList<TType>> LoadTypesAsync<TType>(Expression<Func<TType, bool>> selector, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Create instance of a recipe
-        /// </summary>
-        /// <param name="recipeType">Full name of the recipe type</param>
-        /// <returns></returns>
-        IProductRecipe CreateRecipe(string recipeType);
+    /// <summary>
+    /// Delete recipe by given recipeId
+    /// </summary>
+    Task DeleteRecipeAsync(long recipeId, CancellationToken cancellationToken = default);
 
-        /// <summary>
-        /// Checks database's connection by making an initial attempt
-        /// </summary>
-        /// <returns></returns>
-        void CheckDatabase();
-    }
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="typeName"></param>
+    /// <returns></returns>
+    ProductTypeWrapper GetTypeWrapper(string typeName);
 
+    /// <summary>
+    /// Create instance of a recipe
+    /// </summary>
+    /// <param name="recipeType">Full name of the recipe type</param>
+    /// <returns></returns>
+    IProductRecipe CreateRecipe(string recipeType);
+
+    /// <summary>
+    /// Checks database's connection by making an initial attempt
+    /// </summary>
+    /// <returns></returns>
+    Task CheckDatabase(CancellationToken cancellationToken = default);
 }

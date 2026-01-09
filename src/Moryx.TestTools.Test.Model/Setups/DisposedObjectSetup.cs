@@ -1,35 +1,32 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Moryx.Model;
 using Moryx.Model.Attributes;
 using Moryx.Model.Repositories;
 
-namespace Moryx.TestTools.Test.Model
+namespace Moryx.TestTools.Test.Model;
+
+[ModelSetup(typeof(TestModelContext))]
+public class DisposedObjectSetup : IModelSetup
 {
-    [ModelSetup(typeof(TestModelContext))]
-    public class DisposedObjectSetup : IModelSetup
+    public int SortOrder => 1;
+
+    public string Name => "Raw SQL Setup";
+
+    public string Description => "";
+
+    public string SupportedFileRegex => string.Empty;
+
+    public async Task ExecuteAsync(IUnitOfWork openContext, string setupData, CancellationToken cancellationToken)
     {
-        public int SortOrder => 1;
-
-        public string Name => "Raw SQL Setup";
-
-        public string Description => "";
-
-        public string SupportedFileRegex => string.Empty;
-
-        public async Task Execute(IUnitOfWork openContext, string setupData)
-        {
-            // If the caller wouldn't await this method, 
-            // the DbContext might be disposed before it's
-            // being used in here. 
-            // Adding a delay to ensure that the is actually
-            // gone then.
-            await Task.Delay(50);
-            await openContext.DbContext.Database.ExecuteSqlRawAsync("SELECT * FROM \"Cars\"");
-        }
+        // If the caller wouldn't await this method,
+        // the DbContext might be disposed before it's
+        // being used in here.
+        // Adding a delay to ensure that the is actually
+        // gone then.
+        await Task.Delay(50, cancellationToken);
+        await openContext.DbContext.Database.ExecuteSqlRawAsync("SELECT * FROM \"Cars\"", cancellationToken: cancellationToken);
     }
 }

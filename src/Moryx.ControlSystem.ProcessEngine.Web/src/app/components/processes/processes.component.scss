@@ -1,0 +1,71 @@
+@use "@angular/material" as mat;
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+.processes-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    h2 {
+        margin-left: 16px;
+        margin-bottom: 0px;
+        font-size: 16px;
+    }
+}
+
+.processes-activities {
+    flex: 1 25%;
+    max-width: 25%;
+}
+
+.processes-activity-tracing {
+    flex: 1 50%;
+    max-width: 50%;
+}
+
+.processes-list {
+    flex-grow: 1;
+    overflow: auto;
+    height: 255px;
+}
+
+.processes-list-item {
+    font-size: 14px;
+    @include mat.list-overrides((
+       list-item-two-line-container-height: 60px,
+  ));
+}
+.processes-list-item:hover {
+    background-color: $light-background-hover;
+}
+
+.processes-activity-details-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.processes-activity-details {
+    margin-left: 16px;
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+.processes-activity-tracing-details {
+    margin-left: 16px;
+    margin-top: 6px;
+    overflow: auto;
+    height: 255px;
+    flex: 1 50%;
+}
+
+.process-option {
+    margin-top: 8px;
+}
+
+mat-list-item{
+    cursor: pointer;
+}
+.moryx-selected{
+    background-color: $primary-light !important;
+}

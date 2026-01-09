@@ -1,0 +1,20 @@
+<div
+  class="main"
+  [style]="{
+    'background-image': 'url(' + backgroundImage + ')'
+  }">
+  <div
+    class="draggable-area"
+    [style]="{
+      'background-color': isEditMode ? ' rgb(253, 253, 253,0.4)' : 'transparent'
+    }">
+    <div class="left-items">
+      <app-edit-menu></app-edit-menu>
+      <app-orders-container></app-orders-container>
+    </div>
+    <div class="main-content">
+      <router-outlet></router-outlet>
+      <app-cell-details></app-cell-details>
+    </div>
+  </div>
+</div>

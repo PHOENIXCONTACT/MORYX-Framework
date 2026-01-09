@@ -1,14 +1,13 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using NUnit.Framework;
 
-namespace Moryx.Tests.Tools
+namespace Moryx.Tests.Tools;
+
+[TestFixture]
+public class FunctionResultTestsBase
 {
-    [TestFixture]
-    public class FunctionResultTestsBase
-    {
-        protected const string Message = "Error occured!";
-        protected const string ExceptionMessage = "Exception Message";
-    }
+    protected const string Message = "Error occured!";
+    protected const string ExceptionMessage = "Exception Message";
 }

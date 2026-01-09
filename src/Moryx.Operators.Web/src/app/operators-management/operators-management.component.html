@@ -1,0 +1,111 @@
+<div class="tw:relative w-full tw:h-full tw:bg-gray-50">
+  <div
+    class="tw:w-full tw:flex tw:justify-between tw:p-2 tw:items-center tw:bg-white tw:border-b tw:border-b-gray-200"
+  >
+    <div class="tw:flex tw:flex-row tw:items-center tw:gap-2">
+      <a
+        mat-icon-button
+        aria-label="Go back"
+        [matTooltip]="
+          TranslationConstants.WORKSTATION_OPERATORS.GO_BACK | translate
+        "
+        class="go-back-button"
+        routerLink="/workstations"
+      >
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+      <span class="tw:text-lg tw:font-medium">{{
+        TranslationConstants.OPERATORS_MANAGEMENT.MANAGE_OPERATORS | translate
+      }}</span>
+    </div>
+    <div class="tw:flex tw:gap-1 tw:items-center">
+      <span class="tw:text-lg tw:font-medium">{{ operators().length }}</span>
+      <mat-icon>groups</mat-icon>
+    </div>
+  </div>
+  <div class="tw:w-full tw:overflow-y-auto tw:p-2 tw:gap-y-2 main-content" role="main">
+    <mat-accordion class="" multi>
+      <mat-expansion-panel *ngFor="let operator of operators()" #expansion>
+        <mat-expansion-panel-header>
+          <mat-panel-title> {{ operator.data.pseudonym ?? 'UNKNOWN' }} </mat-panel-title>
+          <mat-panel-description *ngIf="!expansion.expanded" class="flex flex-row-reverse">
+              <app-operator-skill-chips
+              [operatorId]="operator.data.identifier ?? ''"
+              [skills]="skills()"
+              [skillTypes]="skillTypes()"
+              [useTagStyle]="false"
+            />
+
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+    
+        <app-operator-skill-chips
+          [operatorId]="operator.data.identifier ?? ''"
+          [skills]="skills()"
+          [skillTypes]="skillTypes()"
+        />
+
+        <mat-action-row>
+          <button mat-button  (click)="onDeleteClick(operator)">{{ TranslationConstants.OPERATORS_MANAGEMENT.DELETE | translate}}</button>
+          <a mat-flat-button  [routerLink]="['operator/details', operator.data.identifier]" >
+            {{ TranslationConstants.OPERATORS_MANAGEMENT.EDIT| translate}}
+          </a>
+        </mat-action-row>
+      </mat-expansion-panel>
+
+      
+    </mat-accordion>
+    <!-- Operators
+    <a
+      class="flex flex-row items-center h-9 p-2 justify-between hover:cursor-pointer bg-white shadow-md rounded-sm mb-1"
+      [routerLink]="['operator/details', operator.data.identifier]"
+      *ngFor="let operator of operators"
+    >
+      <span class="font-medium">{{ operator.data.pseudonym ?? 'UNKNOWN' }}</span>
+      Skills
+      <div class="">
+        <app-operator-skill-chips
+          [operatorId]="operator.data.identifier ?? ''"
+          [skills]="skills"
+          [skillTypes]="skillTypes"
+        />
+      </div>
+    </a> -->
+  </div>
+  <div class="tw:absolute tw:z-100 tw:bottom-2 tw:right-2">
+    <div
+      class="tw:flex tw:flex-col tw:justify-center tw:items-center tw:gap-1"
+      (mouseenter)="updateMenuMode(true)"
+      (mouseleave)="updateMenuMode(false)"
+    >
+      <div>
+        <a
+          mat-mini-fab
+          [matTooltip]="TranslationConstants.OPERATORS_MANAGEMENT.AVAILABILITIES | translate"
+          matTooltipPosition="left"
+          routerLink="/availabilities"
+          class="secondary-button"
+        >
+          <mat-icon>calendar_month</mat-icon>
+        </a>
+      </div>
+      <div>
+        <a
+          mat-mini-fab
+          [matTooltip]="TranslationConstants.OPERATORS_MANAGEMENT.SKILL_TYPES | translate
+        "
+          matTooltipPosition="left"
+          routerLink="/skill-types"
+          class="secondary-button"
+        >
+          <mat-icon>school</mat-icon>
+        </a>
+      </div>
+      <button mat-fab (click)="onAddClick()">
+        <mat-icon>
+          <mat-icon>add</mat-icon>
+        </mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

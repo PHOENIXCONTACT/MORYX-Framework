@@ -1,0 +1,26 @@
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Microsoft.EntityFrameworkCore;
+using Moryx.Model.Attributes;
+using Moryx.Model.SqlServer;
+
+namespace Moryx.TestTools.Test.Model;
+
+/// <summary>
+/// SqlServer specific implementation of <see cref="TestModelContext"/>
+/// </summary>
+[SqlServerDbContext(typeof(TestModelContext))]
+[DefaultSchema("testmodel")]
+public class SqlServerTestModelContext : TestModelContext
+{
+    /// <inheritdoc />
+    public SqlServerTestModelContext()
+    {
+    }
+
+    /// <inheritdoc />
+    public SqlServerTestModelContext(DbContextOptions options) : base(options)
+    {
+    }
+}

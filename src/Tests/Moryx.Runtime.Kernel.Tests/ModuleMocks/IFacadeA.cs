@@ -1,10 +1,9 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Runtime.Kernel.Tests.ModuleMocks
+namespace Moryx.Runtime.Kernel.Tests.ModuleMocks;
+
+public interface IFacadeA
 {
-    public interface IFacadeA
-    {
-         
-    }
+
 }

@@ -1,0 +1,114 @@
+{
+  "APP": {
+    "PRODUCTS": "Produkte",
+    "SELECTOR": "Selektor",
+    "RESET_FILTER": "Zurücksetzen",
+    "APPLY_FILTER": "Anwenden",
+    "EMPTY_STATE_HEADER": "Kein Produkt",
+    "EMPTY_STATE_TEXT": "Wähle ein Produkt aus der Liste oder klicke auf das Plus um ein neues Produkt zu importieren.",
+    "EMPTY_STATE_RECIPES_HEADER": "Keine Rezepte",
+    "EMPTY_STATE_RECIPES_TEXT": "Wähle ein Rezept aus der Liste aus oder rufe den Bearbeitungsmodus auf, um ein neues Rezept zu erstellen.",
+    "EMPTY_STATE_PARTS_HEADER": "Keine Teile",
+    "EMPTY_STATE_PARTS_TEXT": "Wähle ein Teil aus der Liste aus oder rufe den Bearbeitungsmodus auf, um ein neues Teil zu erstellen.",
+    "FAILED_LOADING": "Die Verbindung zum Server ist leider fehlgeschlagen. Bitte überprüfe deine Netzwerkverbindung oder versuch es später nochmal.",
+    "SNACK_BAR": {
+      "NO_IMPORTER": "Es wurde kein Importer definiert"
+    }
+  },
+  "DISMISS": "OKAY",
+  "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
+  "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Internetverbindung oder Proxy-Einstellungen.",
+  "PRODUCT_NOT_FOUND": "Das angeforderte Produkt wurde nicht gefunden.",
+  "SHARED": {
+    "DELETE": "Löschen",
+    "EDIT": "Editieren",
+    "SAVE": "Speichern",
+    "DUPLICATE": "Duplizieren",
+    "REVISION": "Revision",
+    "NAME": "Name",
+    "CANCEL": "Abbrechen",
+    "IDENTIFIER": "Materialnummer",
+    "STATE": "Zustand",
+    "PROPERTIES": "Eigenschaften",
+    "WORKPLAN": "Arbeitsplan",
+    "CLASSIFICATION": "Klassifikation"
+  },
+  "IMPORTER": {
+    "TITLE": "Produkt Importer",
+    "SUB_TITLE": "Importieren von Produkten mithilfe eines Importers",
+    "IMPORT": "Importieren"
+  },
+  "DETAILS": {
+    "PARTS": "Teile",
+    "REFERENCES": "Referenzen",
+    "RECIPES": "Rezepte",
+    "HEADER": {
+      "TITLE": "Allgemein"
+    },
+    "REFS": {
+      "TITLE": "Dieses Produkt wird in den folgenden Produkten verwendet",
+      "NO_REF": "Dieses Produkt wird nicht in anderen Produkten verwendet",
+      "NO_REF_HEADER": "Keine Referenzen"
+    },
+    "RECIPS": {
+      "ADD_RECIPE": "Rezept hinzufügen",
+      "CHOOSE_OTHER": "Bitte wählst du eine andere aus"
+    }
+  },
+  "PARTS": {
+    "REMOVE": "ENTFERNEN",
+    "ADD": "HINZUFÜGEN",
+    "REPLACE": "ERSETZEN",
+    "DETAILS": {
+      "TITLE": "Konfiguration für die Verbindung zwischen dem Produkt und seinem Teil"
+    }
+  },
+  "ADD_DIALOG": {
+    "TITLE": "Teil auswählen",
+    "SUB_TITLE": "Bitte wählen Sie ein Produkt aus der Liste aus",
+    "SEARCH": "Suchen",
+    "CANCEL": "ABBRECHEN",
+    "SELECT": "AUSWÄHLEN"
+  },
+  "CREATE_RECIPE_DIALOG": {
+    "TITLE": "Rezept hinzufügen",
+    "RECIPE_TYPE": "Rezepttyp",
+    "RECIPE_NAME": "Rezeptname",
+    "WORKPLAN": "Arbeitsplan",
+    "CANCEL": "ABBRECHEN",
+    "CREATE": "ERSTELLEN"
+  },
+  "CREATE_REVISION_DIALOG": {
+    "TITLE": "Neue Revision",
+    "SUB_TITLE": "Revision für das Produkt erstellen",
+    "REVISION": "Revision",
+    "CANCEL": "ABBRECHEN",
+    "CREATE": "ERSTELLEN"
+  },
+  "DUPLICATE_PRODUCT_DIALOG": {
+    "TITLE": "Produkt duplizieren",
+    "IDENTIFIER": "Kennung",
+    "REVISION": "Revision",
+    "CANCEL": "ABBRECHEN",
+    "DUPLICATE": "DUPLIZIEREN"
+  },
+  "REMOVE_PRODUCT_DIALOG": {
+    "TITLE": "Produkt entfernen",
+    "SUB_TITLE": "Die Revision des folgenden Produkts wird unwiderruflich entfernt:",
+    "CANNOT_REMOVE": "Die Revision des ausgewählten Produkts kann nicht entfernt werden, da sie noch von diesen Produkten verwendet wird",
+    "CANCEL": "ABBRECHEN",
+    "REMOVE": "ENTFERNEN"
+  },
+  "SHOW_REVISION_DIALOG": {
+    "TITLE": "Wähle eine Revision",
+    "CANCEL": "ABBRECHEN",
+    "ADD_REVISION": "NEU"
+  },
+  "SIDEBAR_BUTTONS": {
+    "HIERARCHY_VIEW": "Hierarchieansicht",
+    "LIST_VIEW": "Listenansicht",
+    "REFRESH": "Aktualisieren",
+    "FILTER": "Filtern",
+    "ADD": "Hinzufügen"
+  }
+}

@@ -1,31 +1,30 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Container;
 using Moryx.Modules;
 
-namespace Moryx.TestModule
+namespace Moryx.TestModule;
+
+[ExpectedConfig(typeof(TestSubPluginConfig2))]
+[Plugin(LifeCycle.Singleton, typeof(ITestSubPlugin), Name = ComponentName)]
+public class TestSubPlugin2 : ITestSubPlugin
 {
-    [ExpectedConfig(typeof(TestSubPluginConfig2))]
-    [Plugin(LifeCycle.Singleton, typeof(ITestSubPlugin), Name = ComponentName)]
-    public class TestSubPlugin2 : ITestSubPlugin
+    public const string ComponentName = "TestSubPlugin2";
+
+    public void Initialize(TestSubPluginConfig config)
     {
-        public const string ComponentName = "TestSubPlugin2";
+    }
 
-        public void Initialize(TestSubPluginConfig config)
-        {
-        }
+    public void Dispose()
+    {
+    }
 
-        public void Dispose()
-        {
-        }
+    public void Start()
+    {
+    }
 
-        public void Start()
-        {
-        }
-
-        public void Stop()
-        {
-        }
+    public void Stop()
+    {
     }
 }

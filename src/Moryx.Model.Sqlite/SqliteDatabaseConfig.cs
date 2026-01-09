@@ -1,75 +1,45 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Microsoft.Data.Sqlite;
-using System;
-using System.IO;
+using Moryx.Model.Attributes;
 
-namespace Moryx.Model.Sqlite
+namespace Moryx.Model.Sqlite;
+
+/// <summary>
+/// Database config for the Sqlite databases
+/// </summary>
+[DataContract]
+public class SqliteDatabaseConfig : DatabaseConfig
 {
+    /// <inheritdoc />
+    public override string ConfiguratorType => typeof(SqliteModelConfigurator).AssemblyQualifiedName;
+
     /// <summary>
-    /// Database config for the Sqlite databases
+    /// Path to the database file
     /// </summary>
-    [DataContract]
-    public class SqliteDatabaseConfig : DatabaseConfig<SqliteDatabaseConnectionSettings>
-    {
-        /// <summary>
-        /// Creates a new instance of the <see cref="SqliteDatabaseConfig"/>
-        /// </summary>
-        public SqliteDatabaseConfig()
-        {
-            ConnectionSettings = new SqliteDatabaseConnectionSettings();
-            ConfiguratorTypename = typeof(SqliteModelConfigurator).AssemblyQualifiedName;
-        }
-    }
-    
+    [Required]
+    [DefaultValue("./db/<DatabaseName>.db")]
+    [Description("Path to the database file")]
+    [ConnectionStringKey("Data Source")]
+    public string DataSource { get; set; }
+
     /// <summary>
-    /// Database connection settings for the Sqlite databases
+    /// Connection mode that will be used when opening a connection
     /// </summary>
-    public class SqliteDatabaseConnectionSettings : DatabaseConnectionSettings
-    {
-        private string _database;
+    [DefaultValue(SqliteOpenMode.ReadWrite)]
+    [Description("Connection mode that will be used when opening a connection")]
+    [ConnectionStringKey("Mode")]
+    public SqliteOpenMode OpenMode { get; set; }
 
-        /// <summary>
-        /// Default constructor of <see cref="SqliteDatabaseConnectionSettings"/>
-        /// </summary>
-        public SqliteDatabaseConnectionSettings()
-        {
-            var defaultDbPath = Path.Combine(".", "db", "<DatabaseName>.db");
-            ConnectionString = $"Data Source={defaultDbPath};Mode=ReadWrite;";
-        }
-
-        /// <inheritdoc />
-        [DataMember]
-        public override string Database
-        {
-            get => _database;
-            set
-            {
-                if (string.IsNullOrEmpty(value)) return;
-                _database = value;
-                ConnectionString = ConnectionString?.Replace("<DatabaseName>", value);
-            }
-        }
-
-        /// <inheritdoc />
-        [DataMember, Required]
-        public override string ConnectionString { get; set; }
-
-        /// <inheritdoc />
-        public override bool IsValid()
-        {
-            try
-            {
-                var builder = new SqliteConnectionStringBuilder(ConnectionString);
-                return !string.IsNullOrEmpty(ConnectionString);
-            } catch(ArgumentException)
-            {
-                return false;
-            }
-        }
-    }
+    /// <summary>
+    /// Caching mode that will be used when opening a connection
+    /// </summary>
+    [DefaultValue(SqliteCacheMode.Default)]
+    [Description("Caching mode that will be used when opening a connection")]
+    [ConnectionStringKey("Cache")]
+    public SqliteCacheMode CacheMode { get; set; }
 }

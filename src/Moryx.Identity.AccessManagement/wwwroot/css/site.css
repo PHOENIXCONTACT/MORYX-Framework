@@ -1,0 +1,201 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+
+/* Provide sufficient contrast against white background */
+a {
+    color: #0098a0;
+}
+
+.btn-primary {
+    color: #0098a0;
+    background-color: #fff;
+    border-color: #0098a0;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #0098a0;
+    border-color: #0098a0;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
+}
+
+#roleTable {
+    margin-top: 10px;
+}
+
+#permissionTable {
+    margin-top: 10px;
+}
+
+.reset-password-eye:before {
+    z-index: 99;
+    position: absolute;
+    top: 30%;
+    right: 100px;
+}
+
+.body-container {
+    display: flex;
+    height: 100%;
+}
+
+.drawer-container {
+    -webkit-overflow-scrolling: touch;
+    background-color: #fafafa;
+    color: #000000de;
+    box-sizing: border-box;
+    display: block;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    position: relative;
+}
+
+.drawer-content {
+    display: block;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+    padding: 3em;
+}
+
+.moryx-selected {
+    background-color: #99cbce;
+}
+
+/* Start Styles From Angular Material Classes */
+.nav-drawer-inner-container {
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+    overflow: auto;
+    width: 100%;
+}
+
+.nav-side-bar {
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch
+}
+
+.nav-space {
+    width: 48px;
+    height: 48px;
+    padding: 12px
+}
+
+.nav-toolbar {
+    background: #33969d;
+    color: #fff;
+    font: 500 20px/32px Roboto,sans-serif;
+    letter-spacing: .0125em;
+    margin: 0;
+}
+
+.nav-toolbar-row {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    height: 64px;
+    padding: 0 16px;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.nav-tree {
+    background-color: #fff;
+    border-right: solid 1px rgba(0,0,0,.12);
+    bottom: 0;
+    box-shadow: 0 .25rem .75rem #0000000d;
+    box-sizing: border-box;
+    font: 400 14px/20px Roboto,sans-serif;
+    color: #000000de;
+    letter-spacing: .0178571429em;
+    outline: 0;
+    top: 0;
+    transform: none;
+    visibility: visible;
+    width: 300px;
+    z-index: 3;
+}
+
+.nav-tree-item {
+    align-items: center;
+    color: #000000de;
+    display: flex;
+    flex: 1;
+    min-height: 48px;
+    word-wrap: break-word;
+}
+
+    .nav-tree-item:hover {
+        background-color: #dbdbdb;
+        color: #363636;
+        text-decoration: none;
+    }
+
+.nav-tree-contents {
+    flex: 1 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #fff
+}
+
+@media (max-width: 599px) {
+    .nav-toolbar-row {
+        height: 56px
+    }
+}
+/* End Styles From Angular Material Classes */
+
+.px-4 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important
+}

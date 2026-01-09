@@ -1,0 +1,59 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+
+.workplans {
+    flex: 1 1;
+    height: 100%;
+    overflow: hidden;
+}
+
+.workplan-steps {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    width: 300px;
+}
+
+.workplans-side-bar {
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: stretch;
+    mat-toolbar{
+        color: $mat-background-light;
+    }
+}
+
+.workplans-toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+
+.workplans-sidebar-contents {
+    flex: 1 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: $mat-background-light;
+}
+
+.workplans-toolbar > .button-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    button:disabled {
+        color: gray;
+    }
+}
+
+.mat-drawer-content{
+    height: fit-content;
+}
+
+.add {
+  position: absolute;
+  top: 75px;
+  right: 16px;
+  z-index: 10;
+}
+.change-view-button-active{
+    color: $mat-background-light;
+}

@@ -1,37 +1,37 @@
-﻿using System;
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Serialization
+namespace Moryx.Serialization;
+
+[AttributeUsage(AttributeTargets.All)]
+public class EntrySerializeAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.All)]
-    public class EntrySerializeAttribute : Attribute
+    /// <summary>
+    /// Configured mode for the entry to serialize
+    /// </summary>
+    public EntrySerializeMode Mode { get; }
+
+    /// <summary>
+    /// Creates a new instance of the <see cref="EntrySerializeAttribute"/>. The default mode is <see cref="EntrySerializeMode.Always"/>
+    /// </summary>
+    public EntrySerializeAttribute() : this(EntrySerializeMode.Always)
     {
-        /// <summary>
-        /// Configured mode for the entry to serialize
-        /// </summary>
-        public EntrySerializeMode Mode { get; }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="EntrySerializeAttribute"/>. The default mode is <see cref="EntrySerializeMode.Always"/>
-        /// </summary>
-        public EntrySerializeAttribute() : this(EntrySerializeMode.Always)
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="EntrySerializeAttribute"/>.
-        /// </summary>
-        public EntrySerializeAttribute(EntrySerializeMode mode)
-        {
-            Mode = mode;
-        }
     }
 
     /// <summary>
-    /// Mode to for the <see cref="EntrySerializeAttribute"/>
+    /// Creates a new instance of the <see cref="EntrySerializeAttribute"/>.
     /// </summary>
-    public enum EntrySerializeMode
+    public EntrySerializeAttribute(EntrySerializeMode mode)
     {
-        Always,
-        Never
+        Mode = mode;
     }
+}
+
+/// <summary>
+/// Mode to for the <see cref="EntrySerializeAttribute"/>
+/// </summary>
+public enum EntrySerializeMode
+{
+    Always,
+    Never
 }

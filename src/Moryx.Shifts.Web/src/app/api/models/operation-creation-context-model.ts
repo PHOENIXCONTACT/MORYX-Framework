@@ -1,0 +1,23 @@
+/* tslint:disable */
+/* eslint-disable */
+import { Entry } from '@moryx/ngx-web-framework/entry-editor';
+import { PartCreationContext } from '../models/part-creation-context';
+export interface OperationCreationContextModel {
+  materialParameters?: Array<Entry> | null;
+  name?: string | null;
+  operationNumber?: string | null;
+  orderNumber?: string | null;
+  overDeliveryAmount?: number;
+  parts?: Array<PartCreationContext> | null;
+  plannedEnd?: string;
+  plannedStart?: string;
+  productIdentifier?: string | null;
+  productName?: string | null;
+  productRevision?: number;
+  recipePreselection?: number;
+  targetCycleTime?: number;
+  targetStock?: string | null;
+  totalAmount?: number;
+  underDeliveryAmount?: number;
+  unit?: string | null;
+}

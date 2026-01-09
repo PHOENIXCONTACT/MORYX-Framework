@@ -1,0 +1,48 @@
+<div class="remove-product-header">
+  <h2 mat-dialog-title>
+    {{ TranslationConstants.REMOVE_PRODUCT_DIALOG.TITLE | translate }}
+  </h2>
+</div>
+<div mat-dialog-content class="remove-product">
+  <p
+    *ngIf="
+      !productsWhichContainProduct() || productsWhichContainProduct().length == 0
+    "
+  >
+    {{ TranslationConstants.REMOVE_PRODUCT_DIALOG.SUB_TITLE | translate }}
+    {{ productToBeRemoved()?.identifier }}-{{ productToBeRemoved()?.revision }}
+    {{ productToBeRemoved()?.name | slice : 0 : 40 }}
+  </p>
+  <div class="remove-product-not-possible" *ngIf="
+      productsWhichContainProduct() && productsWhichContainProduct().length > 0
+    ">
+    <p>
+      {{ TranslationConstants.REMOVE_PRODUCT_DIALOG.CANNOT_REMOVE | translate }}:
+    </p>
+    <mat-list>
+      <mat-list-item *ngFor="let product of productsWhichContainProduct()">
+        {{ product.identifier }}-{{ product.revision }} {{ product.name }}
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button
+    tabindex="1"
+    mat-button
+    type="submit"
+    (click)="onClose()"
+  >
+    {{ TranslationConstants.REMOVE_PRODUCT_DIALOG.CANCEL | translate }}
+  </button>
+  <button
+    mat-flat-button
+    type="submit"
+    *ngIf="
+      !productsWhichContainProduct() || productsWhichContainProduct().length == 0
+    "
+    [mat-dialog-close]="productToBeRemoved"
+  >
+    {{ TranslationConstants.REMOVE_PRODUCT_DIALOG.REMOVE | translate }}
+  </button>
+</div>

@@ -1,332 +1,319 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Moryx.Configuration;
 using Moryx.Logging;
-using Moryx.Runtime.Kernel.Tests.Dummys;
+using Moryx.Runtime.Kernel.Tests.Dummies;
 using Moryx.Runtime.Kernel.Tests.ModuleMocks;
 using Moryx.Runtime.Modules;
-using Moq;
 using Moryx.Tools;
 using NUnit.Framework;
-using Microsoft.Extensions.Logging.Abstractions;
 
-namespace Moryx.Runtime.Kernel.Tests
+namespace Moryx.Runtime.Kernel.Tests;
+
+[TestFixture]
+public class ModuleManagerTests
 {
-    [TestFixture]
-    public class ModuleManagerTests
+    private Mock<IConfigManager> _mockConfigManager;
+    private Mock<IModuleLogger> _mockLogger;
+
+    [SetUp]
+    public void Setup()
     {
-        private Mock<IConfigManager> _mockConfigManager;
-        private Mock<IModuleLogger> _mockLogger;
+        _mockConfigManager = new Mock<IConfigManager>();
+        var moduleManagerConfig = new ModuleManagerConfig { ManagedModules = [] };
+        _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(ModuleManagerConfig), typeof(ModuleManagerConfig).FullName, false)).Returns(moduleManagerConfig);
+        _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(RuntimeConfigManagerTestConfig2), typeof(RuntimeConfigManagerTestConfig2).FullName, false)).Returns(new RuntimeConfigManagerTestConfig2());
 
-        [SetUp]
-        public void Setup()
+        _mockLogger = new Mock<IModuleLogger>();
+        _mockLogger.Setup(ml => ml.GetChild(It.IsAny<string>(), It.IsAny<Type>())).Returns(_mockLogger.Object);
+    }
+
+    private ModuleManager CreateObjectUnderTest(IServerModule[] modules)
+    {
+        return new ModuleManager(modules, _mockConfigManager.Object, new NullLogger<ModuleManager>());
+    }
+
+    private LifeCycleBoundFacadeTestModule CreateLifeCycleBoundFacadeTestModuleUnderTest()
+    {
+        return new LifeCycleBoundFacadeTestModule(new ModuleContainerFactory(), _mockConfigManager.Object, new NullLoggerFactory());
+    }
+
+    [Test]
+    public async Task FacadeCollectionInjection()
+    {
+        // Arrange
+        var dependent = new ModuleC();
+        var moduleManager = CreateObjectUnderTest([
+            new ModuleB1(),
+            new ModuleB2(),
+            new ModuleB3(),
+            dependent
+        ]);
+
+        // Act
+        await moduleManager.StartModulesAsync();
+
+        // Assert
+        Assert.That(dependent.Facades, Is.Not.Null, "No facade injected");
+        Assert.That(dependent.Facades.Length, Is.EqualTo(3), "Faulty number of facades");
+    }
+
+    [Test]
+    public async Task FacadeCollectionNoEntry()
+    {
+        // Arrange
+        var dependent = new ModuleC();
+        var moduleManager = CreateObjectUnderTest([
+            dependent
+        ]);
+
+        // Act
+        await moduleManager.StartModulesAsync();
+
+        // Assert
+        Assert.That(dependent.Facades, Is.Not.Null, "No facade injected");
+        Assert.That(dependent.Facades.Length, Is.EqualTo(0), "Faulty number of facades");
+    }
+
+    [Test]
+    public async Task FacadeCollectionSingleEntry()
+    {
+        // Arrange
+        var dependent = new ModuleC();
+        var moduleManager = CreateObjectUnderTest([
+            new ModuleB1(),
+            dependent
+        ]);
+
+        // Act
+        await moduleManager.StartModulesAsync();
+
+        // Assert
+        Assert.That(dependent.Facades, Is.Not.Null, "No facade injected");
+        Assert.That(dependent.Facades.Length, Is.EqualTo(1), "Faulty number of facades");
+    }
+
+    [Test]
+    public async Task FacadeInjection()
+    {
+        // Arrange
+        var dependency = new ModuleA();
+        var depend = new ModuleADependent();
+        var moduleManager = CreateObjectUnderTest([
+            dependency,
+            depend
+        ]);
+
+        // Act
+        await moduleManager.StartModulesAsync();
+
+        // Assert
+        Assert.That(depend.Dependency, Is.Not.Null, "Facade not injected correctly");
+    }
+
+    [Test]
+    public async Task ShouldExcludeMissingFacadeAndItsDependents()
+    {
+        // Arrange
+        var moduleManager = CreateObjectUnderTest([
+            new ModuleB1(),
+            new ModuleCSingle(),
+            new ModuleADependent(),
+            new ModuleADependentTransient()
+        ]);
+
+        // Act
+        await moduleManager.StartModulesAsync();
+
+        // Assert
+        Assert.That(moduleManager.AllModules.Count(), Is.EqualTo(4));
+        var available = moduleManager.DependencyTree.RootModules
+            .Flatten(md => md.Dependents).ToList();
+        Assert.That(available.Count, Is.EqualTo(2));
+    }
+
+    [Test]
+    public async Task ShouldExcludeWhenInCollection()
+    {
+        // Arrange
+        var moduleManager = CreateObjectUnderTest([
+            new ModuleB1(),
+            new ModuleBUsingA(),
+            new ModuleC()
+        ]);
+
+        // Act
+        await moduleManager.StartModulesAsync();
+
+        // Assert
+        Assert.That(moduleManager.AllModules.Count(), Is.EqualTo(3));
+        var available = moduleManager.DependencyTree.RootModules
+            .Flatten(md => md.Dependents).ToList();
+        Assert.That(available.Count, Is.EqualTo(2));
+    }
+
+    [Test]
+    public async Task ShouldIncludeMissingFacadeInDependencyList()
+    {
+        // Arrange
+        var moduleBUsingA = new ModuleBUsingA();
+        var moduleManager = CreateObjectUnderTest([
+            new ModuleB1(),
+            moduleBUsingA,
+            new ModuleC()
+        ]);
+
+        // Act
+        await moduleManager.StartModulesAsync();
+
+        // Assert
+        Assert.That(moduleManager.AllModules.Count(), Is.EqualTo(3));
+        var moduleBUsingADependencies = moduleManager.StartDependencies(moduleBUsingA);
+        Assert.That(moduleBUsingADependencies.Count(), Is.EqualTo(1));
+    }
+
+    [Test]
+    public async Task ShouldInitializeTheModule()
+    {
+        // Arrange
+        var mockModule = new Mock<IServerModule>();
+        var moduleManager = CreateObjectUnderTest([mockModule.Object]);
+
+        // Act
+        await moduleManager.InitializeModuleAsync(mockModule.Object);
+
+        // Assert
+        mockModule.Verify(mock => mock.InitializeAsync());
+    }
+
+    [Test]
+    public async Task ShouldStartAllModules()
+    {
+        // Arrange
+        var mockModule1 = new Mock<IServerModule>();
+        var mockModule2 = new Mock<IServerModule>();
+
+        var moduleManager = CreateObjectUnderTest([
+            mockModule1.Object,
+            mockModule2.Object
+        ]);
+
+        // Act
+        await moduleManager.StartModulesAsync();
+
+        WaitForTimeboxed(() => mockModule2.Invocations.Any(i => i.Method.Name == nameof(IServerModule.StartAsync)));
+
+        // Assert
+        mockModule1.Verify(mock => mock.InitializeAsync(), Times.Exactly(2));
+        mockModule1.Verify(mock => mock.StartAsync());
+
+        mockModule2.Verify(mock => mock.InitializeAsync(), Times.Exactly(2));
+        mockModule2.Verify(mock => mock.StartAsync());
+    }
+
+    [Test]
+    public async Task ShouldStartOneModule()
+    {
+        // Arrange
+        var mockModule = new Mock<IServerModule>();
+
+        var moduleManager = CreateObjectUnderTest([mockModule.Object]);
+
+        // Act
+        await moduleManager.StartModuleAsync(mockModule.Object);
+
+        WaitForTimeboxed(() => mockModule.Invocations.Any(i => i.Method.Name == nameof(IServerModule.StartAsync)));
+
+        // Assert
+        mockModule.Verify(mock => mock.InitializeAsync());
+        mockModule.Verify(mock => mock.StartAsync());
+    }
+
+    [Test]
+    public async Task ShouldStopModulesAndDeregisterFromEvents()
+    {
+        // Arrange
+        var mockModule1 = new Mock<IServerModule>();
+        var mockModule2 = new Mock<IServerModule>();
+
+        var moduleManager = CreateObjectUnderTest([mockModule1.Object, mockModule2.Object]);
+        await moduleManager.StartModulesAsync();
+
+        // Act
+        await moduleManager.StopModulesAsync();
+
+        // Assert
+        mockModule1.Verify(mock => mock.StopAsync());
+        mockModule2.Verify(mock => mock.StopAsync());
+    }
+
+    [Test]
+    public void ShouldObserveModuleStatesAfterInitialize()
+    {
+        // Arrange
+        var mockModule = new Mock<IServerModule>();
+        var eventFired = false;
+
+        var moduleManager = CreateObjectUnderTest([mockModule.Object]);
+        moduleManager.ModuleStateChanged += (_, _) => eventFired = true;
+
+        // Act
+        mockModule.Raise(mock => mock.StateChanged += null, mockModule.Object, new ModuleStateChangedEventArgs());
+
+        // Assert
+        Assert.That(eventFired, "ModuleManager doesn't observe state changed events of modules.");
+    }
+
+    [Test]
+    public async Task CheckLifeCycleBoundActivatedCountIs1()
+    {
+        // Arrange
+        var module = CreateLifeCycleBoundFacadeTestModuleUnderTest();
+        var moduleManager = CreateObjectUnderTest([module]);
+
+        // Act
+        await moduleManager.StartModulesAsync();
+
+        WaitForTimeboxed(() => module.State == ServerModuleState.Running);
+
+        // Assert
+        Assert.That(module.ActivatedCount, Is.EqualTo(1));
+    }
+
+    [Test]
+    public async Task CheckLifeCycleBoundDeactivatedCountIs1()
+    {
+        // Arrange
+        var module = CreateLifeCycleBoundFacadeTestModuleUnderTest();
+        var moduleManager = CreateObjectUnderTest([module]);
+
+        // Act
+        await moduleManager.StartModulesAsync();
+
+        WaitForTimeboxed(() => module.State == ServerModuleState.Running);
+
+        await moduleManager.StopModulesAsync();
+
+        WaitForTimeboxed(() => module.State == ServerModuleState.Stopped);
+
+        // Assert
+        Assert.That(module.ActivatedCount, Is.EqualTo(1));
+    }
+
+    private static void WaitForTimeboxed(Func<bool> condition, int maxSeconds = 10)
+    {
+        var i = 0;
+        while (!condition() && (i < maxSeconds))
         {
-            _mockConfigManager = new Mock<IConfigManager>();
-            var moduleManagerConfig = new ModuleManagerConfig {ManagedModules = new List<ManagedModuleConfig>()};
-            _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(ModuleManagerConfig), typeof(ModuleManagerConfig).FullName, false)).Returns(moduleManagerConfig);
-            _mockConfigManager.Setup(mock => mock.GetConfiguration(typeof(RuntimeConfigManagerTestConfig2), typeof(RuntimeConfigManagerTestConfig2).FullName, false)).Returns(new RuntimeConfigManagerTestConfig2());
-
-            _mockLogger = new Mock<IModuleLogger>();
-            _mockLogger.Setup(ml => ml.GetChild(It.IsAny<string>(), It.IsAny<Type>())).Returns(_mockLogger.Object);
-        }
-
-
-        private ModuleManager CreateObjectUnderTest(IServerModule[] modules)
-        {
-            return new ModuleManager(modules, _mockConfigManager.Object, new NullLogger<ModuleManager>());
-        }
-
-        private LifeCycleBoundFacadeTestModule CreateLifeCycleBoundFacadeTestModuleUnderTest()
-        {
-            return new LifeCycleBoundFacadeTestModule(new ModuleContainerFactory(), _mockConfigManager.Object, new NullLoggerFactory());
-        }
-
-        [Test]
-        public void FacadeCollectionInjection()
-        {
-            // Arrange
-            var dependend = new ModuleC();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
-                new ModuleB1(),
-                new ModuleB2(),
-                new ModuleB3(),
-                dependend
-            });
-
-
-            // Act
-            moduleManager.StartModules();
-
-            // Assert
-            Assert.NotNull(dependend.Facades, "No facade injected");
-            Assert.AreEqual(3, dependend.Facades.Length, "Faulty number of facades");
-        }
-
-        [Test]
-        public void FacadeCollectionNoEntry()
-        {
-            // Arrange
-            var dependend = new ModuleC();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
-                dependend
-            });
-
-            // Act
-            moduleManager.StartModules();
-
-            // Assert
-            Assert.NotNull(dependend.Facades, "No facade injected");
-            Assert.AreEqual(0, dependend.Facades.Length, "Faulty number of facades");
-        }
-
-        [Test]
-        public void FacadeCollectionSingleEntry()
-        {
-            // Arrange
-            var dependend = new ModuleC();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
-                new ModuleB1(),
-                dependend
-            });
-
-            // Act
-            moduleManager.StartModules();
-
-            // Assert
-            Assert.NotNull(dependend.Facades, "No facade injected");
-            Assert.AreEqual(1, dependend.Facades.Length, "Faulty number of facades");
-        }
-
-
-        [Test]
-        public void FacadeInjection()
-        {
-            // Arrange
-            var dependency = new ModuleA();
-            var depend = new ModuleADependend();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
-                dependency,
-                depend
-            });
-
-            // Act
-            moduleManager.StartModules();
-
-            // Assert
-            Assert.NotNull(depend.Dependency, "Facade not injected correctly");
-        }
-
-        [Test]
-        public void ShouldExcludeMissingFacadeAndItsDependends()
-        {
-            // Arrange
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
-                new ModuleB1(),
-                new ModuleCSingle(), 
-                new ModuleADependend(),
-                new ModuleADependendTransient()
-            });
-
-            // Act
-            moduleManager.StartModules();
-
-            // Assert
-            Assert.AreEqual(4, moduleManager.AllModules.Count());
-            var available = moduleManager.DependencyTree.RootModules
-                .Flatten(md => md.Dependends).ToList();
-            Assert.AreEqual(2, available.Count);
-        }
-
-        [Test]
-        public void ShouldExcludeWhenInCollection()
-        {
-            // Arrange
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
-                new ModuleB1(),
-                new ModuleBUsingA(),
-                new ModuleC()
-            });
-
-            // Act
-            moduleManager.StartModules();
-
-            // Assert
-            Assert.AreEqual(3, moduleManager.AllModules.Count());
-            var available = moduleManager.DependencyTree.RootModules
-                .Flatten(md => md.Dependends).ToList();
-            Assert.AreEqual(2, available.Count);
-        }
-
-        [Test]
-        public void ShouldIncludeMissingFacadeInDependencyList()
-        {
-            // Arrange
-            var moduleBUsingA = new ModuleBUsingA();
-            var moduleManager = CreateObjectUnderTest(new IServerModule[]
-            {
-                new ModuleB1(),
-                moduleBUsingA,
-                new ModuleC()
-            });
-
-            // Act
-            moduleManager.StartModules();
-
-            // Assert
-            Assert.AreEqual(3, moduleManager.AllModules.Count());
-            var moduleBUsingA_Dependencies = moduleManager.StartDependencies(moduleBUsingA);
-            Assert.AreEqual(1,moduleBUsingA_Dependencies.Count());
-        }
-
-        [Test]
-        public void ShouldInitializeTheModule()
-        {
-            // Arrange
-            var mockModule = new Mock<IServerModule>();
-
-            var moduleManager = CreateObjectUnderTest(new[] {mockModule.Object});
-            //moduleManager.Initialize();
-
-            // Act
-            moduleManager.InitializeModule(mockModule.Object);
-
-            // Assert
-            mockModule.Verify(mock => mock.Initialize());
-        }
-
-        [Test]
-        public void ShouldStartAllModules()
-        {
-            // Argange
-            var mockModule1 = new Mock<IServerModule>();
-            var mockModule2 = new Mock<IServerModule>();
-
-            var moduleManager = CreateObjectUnderTest(new[]
-            {
-                mockModule1.Object,
-                mockModule2.Object
-            });
-
-            // Act
-            moduleManager.StartModules();
-
-            // Assert
-            Thread.Sleep(3000); // Give the thread pool some time
-
-            mockModule1.Verify(mock => mock.Initialize(), Times.Exactly(2));
-            mockModule1.Verify(mock => mock.Start());
-
-            mockModule2.Verify(mock => mock.Initialize(), Times.Exactly(2));
-            mockModule2.Verify(mock => mock.Start());
-        }
-
-        [Test]
-        public void ShouldStartOneModule()
-        {
-            // Argange
-            var mockModule = new Mock<IServerModule>();
-
-            var moduleManager = CreateObjectUnderTest(new[] { mockModule.Object });
-
-            // Act
-            moduleManager.StartModule(mockModule.Object);
-
-            Thread.Sleep(1);
-
-            // Assert
-            mockModule.Verify(mock => mock.Initialize());
-            mockModule.Verify(mock => mock.Start());
-        }
-
-        [Test]
-        public void ShouldStopModulesAndDeregisterFromEvents()
-        {
-            // Argange
-            var mockModule1 = new Mock<IServerModule>();
-            var mockModule2 = new Mock<IServerModule>();
-
-            var moduleManager = CreateObjectUnderTest(new[] {mockModule1.Object, mockModule2.Object});
-            moduleManager.StartModules();
-
-            // Act
-            moduleManager.StopModules();
-
-            // Assert
-            mockModule1.Verify(mock => mock.Stop());
-            mockModule2.Verify(mock => mock.Stop());
-        }
-
-        [Test]
-        public void ShouldObserveModuleStatesAfterInitialize()
-        {
-            // Argange
-            var mockModule = new Mock<IServerModule>();
-            var eventFired = false;
-
-            var moduleManager = CreateObjectUnderTest(new[] { mockModule.Object });
-            moduleManager.ModuleStateChanged += (sender, args) => eventFired = true;
-
-            // Act
-            mockModule.Raise(mock => mock.StateChanged += null, null, new ModuleStateChangedEventArgs());
-
-            // Assert
-            Assert.IsTrue(eventFired, "ModuleManager doesn't observe state changed events of modules.");
-        }
-
-        [Test]
-        public void CheckLifeCycleBoundActivatedCountIs1()
-        {
-            // Argange
-            var module = CreateLifeCycleBoundFacadeTestModuleUnderTest();
-            var moduleManager = CreateObjectUnderTest(new[] { module });
-
-            // Act
-            moduleManager.StartModules();
-
-            WaitForTimeboxed(() => module.State == ServerModuleState.Running);
-
-            // Assert
-            Assert.AreEqual(1, module.ActivatedCount);
-        }
-
-        [Test]
-        public void CheckLifeCycleBoundDeactivatedCountIs1()
-        {
-            // Argange
-            var module = CreateLifeCycleBoundFacadeTestModuleUnderTest();
-            var moduleManager = CreateObjectUnderTest(new[] { module });
-
-            // Act
-            moduleManager.StartModules();
-
-            WaitForTimeboxed(() => module.State == ServerModuleState.Running);
-
-            moduleManager.StopModules();
-
-            WaitForTimeboxed(() => module.State == ServerModuleState.Stopped);
-
-            // Assert
-            Assert.AreEqual(1, module.ActivatedCount);
-        }
-
-        private static void WaitForTimeboxed(Func<bool> condition, int maxSeconds = 10) {
-            var i = 0;
-            while (!condition() && (i < maxSeconds))
-            {
-                Thread.Sleep(100);
-                i++;
-            }
+            Thread.Sleep(1000);
+            i++;
         }
     }
 }

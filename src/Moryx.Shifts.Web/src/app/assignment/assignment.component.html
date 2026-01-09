@@ -1,0 +1,83 @@
+@if(assignment().notes || assignment().priority >= 1 ){
+<div
+  class="px-2 py-1 group"
+  [ngClass]="{
+    'invisible': !assignmentIsForGivenDay(calendarDate())
+  }"
+>
+  <div
+    class="relative flex flex-col w-full p-2 bg-red rounded-sm border border-gray-300 group-hover:border group-hover:border-primary-700"
+  >
+    <!-- card menu -->
+    <button
+      class="hidden group-hover:block group-hover:absolute -right-3 -top-3 bg-primary-800 rounded-full group-hover:w-6 group-hover:h-6 text-white hover:cursor-pointer"
+      [matMenuTriggerFor]="menu"
+    >
+      <mat-icon class="mx-auto my-auto">more_horiz</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="showAssigmentDetails()">{{ TranslationConstants.ASSIGNMENT.DETAILS | translate }}</button>
+      <button mat-menu-item (click)="deleteAssignment()">{{ TranslationConstants.ASSIGNMENT.DELETE| translate }}</button>
+    </mat-menu>
+    <!-- Card menu end -->
+
+    <div class="flex flex-row justify-between items-center">
+      <span>{{ assignment().operator.name }}</span>
+      <!-- Note icon -->
+      <div class="flex flex-row">
+        @if(assignment().priority >= 1){
+          <mat-icon class="text-warning-600">info</mat-icon>
+        }
+        @else{
+          <mat-icon class="text-yellow-600">description</mat-icon>
+        }
+        @if(assignment().status === notQualified){
+          <mat-icon class="text-yellow-600">person_alert</mat-icon>
+        }
+      </div>
+    </div>
+    <span class="font-light mt-3">{{ TranslationConstants.ASSIGNMENT.NOTES| translate }} :</span>
+    <span class="italic text-yellow-600">{{ assignment().notes }}</span>
+    <span class="font-medium mt-2 w-36 truncate">{{ assignment().resource.name }}</span>
+  </div>
+</div>
+}
+
+<!-- Card that doesn't have a note or priority -->
+@if(!assignment().notes && assignment().priority === 0){
+<!-- ROW -->
+<div
+  class="px-2 py-1 group"
+  [ngClass]="{
+    'invisible': !assignmentIsForGivenDay(calendarDate())
+  }"
+  
+>
+  <div
+    class="relative flex flex-col w-full p-2 bg-white rounded-sm border border-gray-300 group-hover:border group-hover:border-primary-700"
+  >
+    <!-- card menu -->
+    <button
+      class="hidden group-hover:block group-hover:absolute -right-3 -top-3 bg-primary-800 rounded-full group-hover:w-6 group-hover:h-6 text-white hover:cursor-pointer"
+      [matMenuTriggerFor]="menu"
+    >
+      <mat-icon class="mx-auto my-auto">more_horiz</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="showAssigmentDetails()">{{ TranslationConstants.ASSIGNMENT.DETAILS | translate }}</button>
+      <button mat-menu-item (click)="deleteAssignment()">{{ TranslationConstants.ASSIGNMENT.DELETE | translate }}</button>
+    </mat-menu>
+    <!-- Card menu end -->
+
+    <div class="flex flex-row justify-between items-center">
+      <span>{{ assignment().operator.name }}</span>
+      @if(assignment().status === notQualified){
+        <mat-icon class="not-qualified-operator">person_alert</mat-icon>
+      }
+    </div>
+    <span class="font-medium mt-2 w-36 truncate">
+      {{ assignment().resource.name }}
+    </span>
+  </div>
+</div>
+}

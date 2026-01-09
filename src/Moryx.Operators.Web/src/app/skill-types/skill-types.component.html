@@ -1,0 +1,82 @@
+<div class="tw:h-full tw:w-full tw:relative tw:bg-background">
+  <div
+    class="tw:w-full tw:flex tw:justify-between tw:p-2 tw:items-center tw:bg-white tw:border-b tw:border-b-gray-200"
+  >
+    <div class="tw:flex tw:flex-row tw:items-center tw:gap-2">
+      <a
+        mat-icon-button
+        aria-label="Go back"
+        [matTooltip]="
+          TranslationConstants.WORKSTATION_OPERATORS.GO_BACK | translate
+        "
+        class="go-back-button"
+        routerLink="/management/"
+      >
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+      <span class="tw:text-lg tw:font-medium"> {{ TranslationConstants.OPERATORS_MANAGEMENT.SKILL_TYPES | translate }} </span>
+    </div>
+    <div class="tw:flex tw:gap-1 tw:items-center">
+      <span class="tw:text-lg tw:font-medium"> {{ skillTypes().length }} </span>
+      <mat-icon>school</mat-icon>
+    </div>
+  </div>
+  <div class="tw:absolute tw:z-100 tw:bottom-5 tw:right-5">
+    <a mat-fab color="primary" [routerLink]="['/skill-types/',0]">
+      <mat-icon>
+        <mat-icon>add</mat-icon>
+      </mat-icon>
+    </a>
+  </div>
+  <div class="tw:w-full tw:p-2 tw:relative" role="main">
+    <!-- skill type list -->
+    <section class="tw:overflow-y-auto skill-types-list">
+      <table mat-table [dataSource]="dataSource" class="tw:z-1">
+        <!-- name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>{{ TranslationConstants.SKILL_TYPES.NAME | translate }}</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <!-- trainedOperators Column -->
+        <ng-container matColumnDef="trainedOperators">
+          <th mat-header-cell *matHeaderCellDef>{{ TranslationConstants.SKILL_TYPES.TRAINED_OPERATORS | translate }}</th>
+          <td mat-cell *matCellDef="let element">
+            {{ operatorWithSkillCount(element.id) }}
+          </td>
+        </ng-container>
+
+        <!-- expiresOn Column -->
+        <ng-container matColumnDef="duration">
+          <th mat-header-cell *matHeaderCellDef>{{ TranslationConstants.SKILL_TYPES.VALIDITY_PERIOD | translate }}</th>
+          <td mat-cell *matCellDef="let element">
+            {{getDurationInDays(element.duration) + " days" }}
+          </td>
+        </ng-container>
+
+        <!-- Actions button -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef aria-label="row actions">
+            &nbsp;
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <div class="tw:flex tw:gap-2">
+              <a mat-icon-button [routerLink]="['/skill-types/',element.id]">
+                <mat-icon>edit</mat-icon>
+              </a>
+              <button mat-icon-button (click)="onDeleteClick(element)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+        ></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </section>   
+  </div>
+</div>

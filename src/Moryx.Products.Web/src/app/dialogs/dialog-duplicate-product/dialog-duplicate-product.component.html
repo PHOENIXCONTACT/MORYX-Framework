@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>
+  {{ TranslationConstants.DUPLICATE_PRODUCT_DIALOG.TITLE | translate }}
+  {{ productToDuplicate()!.name }}
+</h2>
+<div mat-dialog-content class="duplicate-product">
+  <mat-form-field appearance="outline">
+    <mat-label>{{
+      TranslationConstants.DUPLICATE_PRODUCT_DIALOG.IDENTIFIER | translate
+    }}</mat-label>
+    <input matInput [(ngModel)]="duplicateInfos()!.identifier" />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>{{
+      TranslationConstants.DUPLICATE_PRODUCT_DIALOG.REVISION | translate
+    }}</mat-label>
+    <input matInput [(ngModel)]="duplicateInfos()!.revision" />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button type="submit" color="primary" (click)="onClose()">
+    {{ TranslationConstants.DUPLICATE_PRODUCT_DIALOG.CANCEL | translate }}
+  </button>
+  <button
+    mat-flat-button
+    type="submit"
+    [disabled]="
+      !duplicateInfos()!.identifier || duplicateInfos()!.revision === undefined
+    "
+    [mat-dialog-close]="duplicateInfos()"
+  >
+    {{ TranslationConstants.DUPLICATE_PRODUCT_DIALOG.DUPLICATE | translate }}
+  </button>
+</div>

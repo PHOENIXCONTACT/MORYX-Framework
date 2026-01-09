@@ -1,0 +1,95 @@
+{
+    "DISMISS": "CONGEDARE",
+    "DEFAULT_MESSAGE": "Si è verificato un problema sul server.",
+    "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controlla la tua connessione Internet o le impostazioni del proxy." ,
+    "WORKSTATION_OPERATORS":{
+        "EMPTY_TITLE": "Postazioni di lavoro",
+        "EMPTY_MESSAGE" : "Nessuna stazione attualmente disponibile.",
+        "EXPAND" : "Espandere",
+        "GO_BACK" : "Torna indietro"
+    },
+    "AVAILABILITIES" : {
+        "TITLE": "Disponibilità",
+        "THIS_WEEK": "Questa settimana",
+        "OPERATORS": "Operatori"
+    },
+    "AVAILABILITY_DIALOG" : {
+        "TITLE": "Nuova disponibilità",
+        "DESCRIPTION": "Creare un avviso di assenza per un operatore",
+        "FROM": "Da",
+        "TO": "A",
+        "CANCEL" : "Cancellare",
+        "SAVE": "Salva"
+    },
+    "SKILL_TYPES" : {
+        "NAME": "Nome",
+        "TRAINED_OPERATORS": "Operatori qualificati",
+        "VALIDITY_PERIOD": "Periodo di validità"
+    },
+    "OPERATORS_MANAGEMENT" : {
+        "MANAGE_OPERATORS" : "Gestisci gli operatori",
+        "SKILL_TYPES" : "Tipi di abilità",
+        "AVAILABILITIES" : "Disponibilità",
+        "NAME": "Nome",
+        "NUMBER": "Numero",
+        "SKILLSET": "Insieme di abilità",
+        "EDIT" : "Modificare",
+        "DELETE" : "Eliminare",
+        "DELETE_TITLE" : "Elimina operatore",
+        "DELETE_MESSAGE" : "Vuoi eliminare questo operatore?"
+    },
+    "OPERATORS" : {
+        "EMPTY_TITLE" : "Operatori",
+        "EMPTY_MESSAGE": "Nessun operatore con la competenza richiesta esiste nel database. Si prega di aggiungere un operatore con la competenza richiesta."
+    },
+    "ADD_OPERATOR_DIALOG":{
+        "IDENTIFIER" : "Identificatore",
+        "FIRSTNAME": "Nome di battesimo",
+        "LASTNAME" : "Cognome",
+        "PSEUDONYM" : "Pseudonimo",
+        "TITLE" : "Aggiungi abilità",
+        "CANCEL" : "Annulla",
+        "SAVE": "Salva"
+    },
+    "SKILL_EDIT_DIALOG":{
+        "TITLE": "Modifica abilità",
+        "NAME": "Nome",
+        "VALIDITY" : "Validità",
+        "CANCEL" : "Annulla",
+        "SKILL_TYPE" : "Tipo di abilità",
+        "SAVE": "Salva"
+    },
+    "SKILL_TYPE_DETAILS":{
+        "SKILL_TYPE_DETAILS": "Dettagli sul tipo di abilità",
+        "NEW_SKILL_TYPE": "Nuovo tipo di abilità",
+        "NAME": "Nome",
+        "NAME_DESCRIPTION": "Nome dell'abilità",
+        "VALIDITY_PERIOD": "Periodo di validità (giorni)",
+        "SKILL_CAPABILITY": "Capacità di Abilità",
+        "SAVE": "Salva"
+    },
+    "SKILL_NEW_DIALOG":{
+        "TITLE": "Nuova abilità",
+        "NAME": "Nome",
+        "VALIDITY" : "Validità",
+        "CANCEL" : "Annulla",
+        "SKILL_TYPE" : "Tipo di abilità",
+        "SAVE": "Salva"
+    },
+    "CONFIRMATION_DIALOG" : {
+        "DELETE_SKILL_TYPE_TITLE": "Fertigkeitstyp löschen",
+        "DELETE_SKILL_TYPE_MESSAGE": "Möchten Sie diesen Fähigkeitstyp löschen?",
+        "DELETE_SKILL_TITLE": "Fertigkeit löschen",
+        "DELETE_SKILL_MESSAGE": "Möchten Sie diese Fertigkeit für den aktuellen Operator löschen?",
+        "YES": "SÌ",
+        "NO" : "NO"
+    } ,
+    "OPERATOR_DETAILS":{
+        "TITLE":"Dettagli dell'operatore",
+        "OBTAINED_ON": "Ottenuto il",
+        "EXPIRES_ON": "Scade il",
+        "SKILLS": "Competenze",
+        "NAME": "Nome",
+        "SEARCH_SKILL": "Cerca abilità..."
+    }
+}

@@ -1,0 +1,172 @@
+@use "@angular/material" as mat;
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+:host {
+  padding: 5px;
+  width: 100%;
+}
+
+.tree-container {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  margin: 0px 10px;
+  @include mat.tree-overrides(
+    (
+      container-background-color: white,
+      node-text-size : 14px,
+      node-min-height : 35px
+    )
+  );
+}
+
+.node-with-children{
+  position: sticky ;
+  top: 0;
+  background-color:  $mat-background-light;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.042);
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+}
+
+.tree-node {
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.042);
+  border-top: 0.5px solid rgba(0, 0, 0, 0.042);
+}
+
+.expand-button {
+  margin-right: 10px;
+  margin-left: 8px;
+}
+
+.process-holder-tree {
+  overflow-y: auto !important;
+  max-height: calc(100% - 200px);
+  border: 0.5px solid rgba(0, 0, 0, 0.042);
+}
+
+.process-holder-group-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.process-holder-group-title-section {
+  display: flex;
+  width: 50%;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.process-holder-group-title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.process-holder-group-title-text {
+  font-weight: bold !important;
+}
+
+.process-holder-group-name {
+  width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.process-holder-group-actions {
+  margin-right: 10px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.active {
+  color: $accent;
+}
+
+.default {
+  color: $info;
+}
+
+.position-container{
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  padding: 2px 0px;
+}
+
+.position-details {
+    display: flex;
+    flex-direction: column;
+    font-size: small;
+}
+
+.details-actions{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right:  10px;
+  background-color: $mat-background-light;
+}
+
+.position-details-name-section{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.indicator{
+  background: $mat-background-light;
+  padding: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 0, 0, 0.132);
+  border-radius: 5px;
+  color: $accent;
+}
+
+.empty-box{
+  width: 24px;
+  height: 24px;
+}
+
+.top-bar-container {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background: $mat-background-light;
+  border: 1px solid rgba(0, 0, 0, 0.0532);
+  border-bottom: 0px;
+}
+
+.search-input-icon{
+  margin-right: 5px !important;
+}
+
+.process-holder-filter {
+  padding-top: 8px;
+  width: 25%;
+}
+
+.clear-button{
+  margin-right: 15px !important;
+}
+
+.list-actions{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+}
+

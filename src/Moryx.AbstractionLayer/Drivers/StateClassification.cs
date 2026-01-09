@@ -1,41 +1,43 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Drivers
+namespace Moryx.AbstractionLayer.Drivers;
+
+/// <summary>
+/// Classification of states from application point of view
+/// This classification is used to map driver states to general states.  It's a flags enum to allow multiple classifications for one state.
+/// The first 16 bits are reserved for general classification. Can be in specific driver implementations.
+/// </summary>
+[Flags]
+public enum StateClassification : int
 {
     /// <summary>
-    /// Classification of states from application point of view
+    /// Offline means not reachable
     /// </summary>
-    public enum StateClassification
-    {
-        /// <summary>
-        /// Offline means not reacheable
-        /// </summary>
-        Offline,
+    Offline = 0,
 
-        /// <summary>
-        /// Initializing means preparing or starting
-        /// </summary>
-        Initializing,
+    /// <summary>
+    /// Initializing means preparing or starting
+    /// </summary>
+    Initializing = 1 << 0,
 
-        /// <summary>
-        /// Running means ready to work or working
-        /// </summary>
-        Running,
+    /// <summary>
+    /// Running means ready to work or working
+    /// </summary>
+    Running = 1 << 2,
 
-        /// <summary>
-        /// Busy means that the driver is running but is already in work
-        /// </summary>
-        Busy,
+    /// <summary>
+    /// Busy means that the driver is running but is already in work
+    /// </summary>
+    Busy = 1 << 4,
 
-        /// <summary>
-        /// Maintenance means waiting for maintenance or maintenance running
-        /// </summary>
-        Maintenance,
+    /// <summary>
+    /// Maintenance means waiting for maintenance or maintenance running
+    /// </summary>
+    Maintenance = 1 << 6,
 
-        /// <summary>
-        /// Error means that is not running because there is an error
-        /// </summary>
-        Error,
-    }
+    /// <summary>
+    /// Error means that is not running because there is an error
+    /// </summary>
+    Error = 1 << 8,
 }

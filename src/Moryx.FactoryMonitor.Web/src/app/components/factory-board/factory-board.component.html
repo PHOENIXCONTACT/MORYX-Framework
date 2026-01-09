@@ -1,0 +1,4 @@
+<ng-container *ngFor="let item of factorySelectionService.factoryContent$ | async">
+    <app-cell  *ngIf="item.isACell" [container]="elemRef" [parameters]="getCell(item.id ?? 0)"></app-cell>
+    <app-factory *ngIf="!item.isACell" [container]="elemRef" [parameters]="item"></app-factory>
+</ng-container>

@@ -1,66 +1,73 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Model;
 using Moryx.TestTools.Test.Model;
 using NUnit.Framework;
 using System.Threading.Tasks;
-using Moryx.Runtime.Endpoints.Databases.Endpoint;
 using Moryx.AbstractionLayer.TestTools;
 using System;
 using System.Collections.Generic;
+using Moryx.Model.Sqlite;
+using Moryx.Runtime.Endpoints.Databases;
+using Moryx.Runtime.Endpoints.Databases.Models;
+using Moryx.Serialization;
 
-namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller
+namespace Moryx.Runtime.Endpoints.IntegrationTests.Databases.Controller;
+
+internal class ModelSetupTests
 {
-    internal class ModelSetupTests
+    private IDbContextManager? _dbContextManager;
+    private DatabaseController? _databaseController;
+    private readonly List<Exception> _exceptions = [];
+
+    [SetUp]
+    public void Setup()
     {
-        private IDbContextManager? _dbContextManager;
-        private DatabaseController _databaseController;
-        private readonly List<Exception> _exceptions = new List<Exception>();
+        _dbContextManager = InMemoryUnitOfWorkFactoryBuilder
+            .SqliteDbContextManager();
 
-        [SetUp]
-        public void Setup()
+        _dbContextManager
+            .Factory<TestModelContext>()
+            .EnsureDbIsCreated();
+
+        _databaseController = new DatabaseController(_dbContextManager);
+
+        _exceptions.Clear();
+    }
+
+    [Test]
+    public async Task ExecuteSetupDoesNotThrowDisposedObjectException()
+    {
+        // Add unobserved task exceptions to a list, to be checked later.
+        TaskScheduler.UnobservedTaskException += (sender, e) =>
         {
-            _dbContextManager = InMemoryUnitOfWorkFactoryBuilder
-                .SqliteDbContextManager();
+            _exceptions.Add(e.Exception);
+        };
 
-            _dbContextManager
-                .Factory<TestModelContext>()
-                .EnsureDbIsCreated();
+        var sqliteConfig = new SqliteDatabaseConfig { DataSource = ":memory:" };
+        sqliteConfig.UpdateConnectionString();
+        var entries = EntryConvert.EncodeObject(sqliteConfig);
 
-            _databaseController = new DatabaseController(_dbContextManager);
-
-            _exceptions.Clear();
-        }
-
-        [Test] 
-        public async Task ExecuteSetupDoesNotThrowDisposedObjectException()
+        var result = await _databaseController!.ExecuteSetup(typeof(TestModelContext).FullName, new()
         {
-            // Add unobserved task exceptions to a list, to be checked later.
-            TaskScheduler.UnobservedTaskException += (sender, e) =>
+            Config = new()
             {
-                _exceptions.Add(e.Exception);
-            };
+                ConfiguratorType = "1",
+                ConnectionString = sqliteConfig.ConnectionString,
+                Properties = entries
+            },
+            Setup = new SetupModel { Fullname = typeof(DisposedObjectSetup).FullName }
+        });
 
-            var result = await _databaseController!.ExecuteSetup("Moryx.TestTools.Test.Model.TestModelContext", new()
-            {
-                Config = new()
-                {
-                    ConfiguratorTypename = "1",
-                    Entries = new() { { "ConnectionString", "DataSource=:memory:" } }
-                },
-                Setup = new Endpoints.Databases.Endpoint.Models.SetupModel { Fullname = "Moryx.TestTools.Test.Model.DisposedObjectSetup" }
-            });
+        // ExecuteSetup lead to unobserved task exceptions. We give them
+        // some time to be thrown.
+        Task.Delay(100).Wait();
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
 
-            // ExecuteSetup lead to unobserved task exceptions. We give them 
-            // some time to be thrown.
-            Task.Delay(100).Wait();
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-
-            Assert.That(result?.Value?.Success, Is.True);
-            Assert.That(_exceptions.Count, Is.EqualTo(0));
-        }
+        Assert.That(result?.Value?.Success, Is.True);
+        Assert.That(0, Is.EqualTo(_exceptions.Count));
     }
 }

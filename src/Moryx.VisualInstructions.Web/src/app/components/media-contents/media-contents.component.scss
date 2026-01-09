@@ -1,0 +1,59 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+
+.media-instruction {
+  width: 100%;
+  flex: 1 1;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.media-content-detail-image {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+ngx-doc-viewer {
+  height: 100%;
+  width: 100%;
+}
+
+.media-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 16px;
+}
+
+mat-icon {
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.next-image {
+  background-color: $light-background-hover;
+  opacity: 0.5;
+  box-shadow: none;
+  width: 60px;
+  height: 60px;
+
+  &::ng-deep .mat-button-wrapper {
+    vertical-align: middle;
+  }
+}
+
+.media-navigation > .image-quick-link {
+  border: 1px solid $light-background-hover;
+  box-shadow: none;
+  opacity: 0.5;
+  width: 30px;
+  height: 30px;
+  margin: 6px;
+}
+
+.selected {
+  background-color: $light-background-hover;
+}

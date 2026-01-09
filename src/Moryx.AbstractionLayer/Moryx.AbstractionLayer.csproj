@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Domain model types and definitions of Cyber-physical systems in IIoT projects.</Description>
     <PackageTags>MORYX;IIoT;IoT;Hardware;Communication;Manufacturing;Industrial;Abstraction;Realtime</PackageTags>
@@ -13,11 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Localizations\Strings.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Strings.resx</DependentUpon>
-    </Compile>
     <Compile Update="Properties\Strings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -26,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Localizations\Strings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Strings.it.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
@@ -40,5 +31,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Drivers\Axis\Axes.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
   </ItemGroup>
 </Project>

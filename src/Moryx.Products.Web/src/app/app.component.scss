@@ -1,0 +1,135 @@
+@use '@angular/material' as mat;
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+.overview {
+  flex: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+}
+.mat-toolbar-row{
+  color: white;
+  button{
+    color: white;
+    margin: 10px;
+  }
+}
+.overview-tree {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  height: 100%;
+}
+
+.overview-tree-header {
+  width: 100%;
+  height: fit-content;
+}
+
+.products-toolbar {
+  background-color: rgba(0, 0, 0, 0.60);
+  background-blend-mode: darken;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.overview-tree-content {
+  flex: 1 1;
+  overflow: hidden;
+  background-color: $mat-background-light;
+  align-items: stretch;
+}
+
+.overview-tree-content-filter {
+  display: flex;
+  flex: 1 1;
+  justify-content: center;
+  padding: 5px;
+  width: 100%;
+}
+
+.overview-tree-content-filter-form {
+  display: flex;
+  flex-flow: column nowrap;
+  height: fit-content;
+  width: 100%;
+}
+
+.overview-tree-content-filter-actions {
+  display: flex;
+  height: fit-content;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.overview-tree-content-tree {
+  flex: 1 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: $mat-background-light;
+  height: 100%;
+}
+
+.overview-tree-content-tree-items {
+  cursor: pointer !important;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  padding-right: 16px;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  @include mat.tree-overrides((
+    node-min-height: 40px
+  ));
+}
+
+.overview-tree-content-tree-items:hover {
+  background-color: $light-background-hover;
+}
+
+.overview-tree-content-tree-items-text {
+  flex: 1 1;
+}
+
+.delete-resource-button {
+  background-color: $mat-background;
+  color: $mat-color;
+}
+
+.delete-resource-button:hover {
+  background-color: $light-background-hover;
+}
+
+.overview-import-button {
+  position: absolute;
+  top: 75px;
+  right: 16px;
+  z-index: 10;
+}
+
+.overview-side-bar-right {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  width: fit-content;
+}
+.overview-details {
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: auto;
+  overflow: hidden;
+}
+.filter-name{
+  margin-top: 10px;
+}

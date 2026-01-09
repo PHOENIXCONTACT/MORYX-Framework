@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Tests.TestData
+using System.ComponentModel.DataAnnotations;
+
+namespace Moryx.AbstractionLayer.Tests.TestData;
+
+public enum TestResults
 {
-    public enum TestResults
-    {
-        Success = 1,
-        [Display(Name = "This is a failed result")]
-        Failed = 2
-    }
+    Success = 1,
+    [Display(Name = "This is a failed result")]
+    Failed = 2
 }

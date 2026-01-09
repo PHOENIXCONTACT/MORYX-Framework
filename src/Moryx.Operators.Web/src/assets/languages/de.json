@@ -1,0 +1,95 @@
+{
+    "DISMISS": "VERWERFEN",
+    "DEFAULT_MESSAGE": "Auf dem Server ist etwas schief gelaufen.",
+    "SERVER_NOT_REACHABLE": "Der Server ist nicht erreichbar, bitte überprüfe deine Netzwerkverbindung oder Proxy-Einstellungen.",
+    "WORKSTATION_OPERATORS":{
+        "EMPTY_TITLE": "Arbeitsplätze",
+        "EMPTY_MESSAGE" : "Derzeit ist kein Sender verfügbar.",
+        "EXPAND" : "Expandieren",
+        "GO_BACK" : "Geh zurück"
+    },
+    "AVAILABILITIES" : {
+        "TITLE": "Verfügbarkeiten",
+        "THIS_WEEK": "Diese Woche",
+        "OPERATORS": "Bediener"
+    },
+    "AVAILABILITY_DIALOG" : {
+        "TITLE": "Neue Verfügbarkeit",
+        "DESCRIPTION": "Abwesenheitsnotiz für einen Bediener erstellen",
+        "FROM": "Aus",
+        "TO": "Zu",
+        "CANCEL" : "Stornieren",
+        "SAVE": "Speichern"
+    },
+    "SKILL_TYPES" : {
+        "NAME": "Name",
+        "TRAINED_OPERATORS": "Geschulte Bediener",
+        "VALIDITY_PERIOD": "Gültigkeitsdauer"
+    },
+    "OPERATORS_MANAGEMENT" : {
+        "MANAGE_OPERATORS" : "Bediener verwalten",
+        "SKILL_TYPES" : "Fertigkeitstypen",
+        "AVAILABILITIES" : "Verfügbarkeiten",
+        "NAME": "Name",
+        "NUMBER": "Nummer",
+        "SKILLSET": "Fähigkeiten",
+        "EDIT" : "BEARBEITEN",
+        "DELETE" : "LÖSCHEN",
+        "DELETE_TITLE" : "Bediener löschen",
+        "DELETE_MESSAGE" : "Möchten Sie diesen Operator löschen?"
+    },
+    "OPERATORS" : {
+        "EMPTY_TITLE" : "Bediener",
+        "EMPTY_MESSAGE": "In der Datenbank ist kein Bediener mit der erforderlichen Fähigkeit vorhanden. Bitte fügen Sie einen Bediener mit der erforderlichen Fähigkeit hinzu."
+    },
+    "ADD_OPERATOR_DIALOG":{
+        "IDENTIFIER" : "Kennung",
+        "FIRSTNAME": "Vorname",
+        "LASTNAME" : "Nachname",
+        "PSEUDONYM" : "Pseudonym",
+        "TITLE" : "Bediener hinzufügen",
+        "CANCEL" : "Stornieren",
+        "SAVE": "Speichern"
+    },
+    "SKILL_EDIT_DIALOG":{
+        "TITLE": "Fertigkeit bearbeiten",
+        "NAME": "Name",
+        "VALIDITY" : "Gültigkeit",
+        "SKILL_TYPE" : "Fähigkeitstyp",
+        "CANCEL" : "Stornieren",
+        "SAVE": "Speichern"
+    },
+    "SKILL_TYPE_DETAILS":{
+        "SKILL_TYPE_DETAILS": "Details zum Fähigkeitstyp",
+        "NEW_SKILL_TYPE": "Neuer Fertigkeitstyp",
+        "NAME": "Name",
+        "NAME_DESCRIPTION": "Name der Fertigkeit",
+        "VALIDITY_PERIOD": "Gültigkeitsdauer (Tage)",
+        "SKILL_CAPABILITY": "Fähigkeitsfähigkeit",
+        "SAVE": "Speichern"
+    },
+    "SKILL_NEW_DIALOG":{
+        "TITLE": "Neue Fähigkeit",
+        "NAME": "Name",
+        "VALIDITY" : "Gültigkeit",
+        "SKILL_TYPE" : "Fähigkeitstyp",
+        "CANCEL" : "Stornieren",
+        "SAVE": "Speichern"
+    },
+    "CONFIRMATION_DIALOG" : {
+        "DELETE_SKILL_TYPE_TITLE": "Fertigkeitstyp löschen",
+        "DELETE_SKILL_TYPE_MESSAGE": "Möchten Sie diesen Fähigkeitstyp löschen?",
+        "DELETE_SKILL_TITLE": "Fertigkeit löschen",
+        "DELETE_SKILL_MESSAGE": "Möchten Sie diese Fertigkeit für den aktuellen Operator löschen?",
+        "YES": "JA",
+        "NO" : "NEIN"
+    },
+    "OPERATOR_DETAILS":{
+        "TITLE":"Bedienerdetails",
+        "OBTAINED_ON": "Erhalten am",
+        "EXPIRES_ON": "Läuft ab",
+        "SKILLS": "Fähigkeiten",
+        "NAME": "Name",
+        "SEARCH_SKILL": "Suchfähigkeit..."
+    }
+}

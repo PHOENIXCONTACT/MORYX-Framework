@@ -1,0 +1,18 @@
+<div
+  #FactoryElement
+  class="cell-container"
+  [ngStyle]="{
+    'border-color': borderColor,
+    background: backgroundColor,    
+    top: (factory.location?.positionY ?? 0) * 100 + '%',
+    left: (factory.location?.positionX ?? 0) * 100 + '%'
+  }"
+  cdkDrag
+  cdkDragBoundary=".draggable-area"
+  (cdkDragEnded)="onCellMove($event)"
+  [cdkDragDisabled]="!isEditMode"
+  (click)="onCellClicked()">
+  <mat-icon [ngStyle]="{ color: iconColor }">{{
+    factory.iconName
+  }}</mat-icon>
+</div>

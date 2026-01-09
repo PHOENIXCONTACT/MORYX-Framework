@@ -1,65 +1,57 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Moryx.Runtime.Modules;
 
-namespace Moryx.Runtime.Kernel
+namespace Moryx.Runtime.Kernel;
+
+internal class ModuleStopper : ModuleManagerComponent, IModuleStopper
 {
-    internal class ModuleStopper : ModuleManagerComponent, IModuleStopper
+    private readonly IModuleDependencyManager _dependencyManager;
+    private readonly ILogger _logger;
+
+    public ModuleStopper(IModuleDependencyManager dependencyManager, ILogger logger)
     {
-        private readonly IModuleDependencyManager _dependencyManager;
-        private readonly ILogger _logger;
+        _dependencyManager = dependencyManager;
+        _logger = logger;
+    }
 
-        public ModuleStopper(IModuleDependencyManager dependencyManager, ILogger logger)
+    /// <inheritdoc/>
+    public async Task StopAsync(IServerModule module, CancellationToken cancellationToken)
+    {
+        if (!AvailableModules.Contains(module))
+            return;
+
+        // First we have to find all running modules that depend on this service
+        var dependingServices = _dependencyManager.GetDependencyBranch(module).Dependents.Select(item => item.RepresentedModule);
+        // Now we will stop all of them recursively
+        foreach (var dependingService in dependingServices.Where(dependent => dependent.State.HasFlag(ServerModuleState.Running)
+                                                                              || dependent.State == ServerModuleState.Starting))
         {
-            _dependencyManager = dependencyManager;
-            _logger = logger;
+            // We will enqueue the service to make sure it is restarted later on
+            AddWaitingModule(module, dependingService);
+            await StopAsync(dependingService, cancellationToken);
         }
 
-        /// <summary>
-        /// Stop this plugin and all required dependencies
-        /// </summary>
-        /// <param name="module"></param>
-        public void Stop(IServerModule module)
+        // Since stop is synchronous we don't need an event
+        try
         {
-            if(!AvailableModules.Contains(module))
-                return;
-
-            // First we have to find all running modules that depend on this service
-            var dependingServices = _dependencyManager.GetDependencyBranch(module).Dependends.Select(item => item.RepresentedModule);
-            // Now we will stop all of them recursivly
-            foreach (var dependingService in dependingServices.Where(dependend => dependend.State.HasFlag(ServerModuleState.Running)
-                                                                               || dependend.State == ServerModuleState.Starting))
-            {
-                // We will enque the service to make sure it is restarted later on
-                AddWaitingService(module, dependingService);
-                Stop(dependingService);
-            }
-
-            // Since stop is synchron we don't need an event
-            try
-            {
-                module.Stop();
-            }
-            catch
-            {
-                Console.WriteLine("Failed to stop service <{0}>", module.Name);
-            }
+            await module.StopAsync(cancellationToken);
         }
-
-        /// <summary>
-        /// Stop all services
-        /// </summary>
-        public void StopAll()
+        catch
         {
-            // Detemine all leaves of the dependency tree
-            foreach (var plugin in AvailableModules)
-            {
-                Stop(plugin);
-            }
+            _logger.LogError("Failed to stop module <{moduleName}>", module.Name);
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task StopAllAsync(CancellationToken cancellationToken)
+    {
+        // Determine all leaves of the dependency tree
+        foreach (var module in AvailableModules)
+        {
+            await StopAsync(module, cancellationToken);
         }
     }
 }

@@ -1,26 +1,25 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.AbstractionLayer.Drivers.Rfid
+namespace Moryx.AbstractionLayer.Drivers.Rfid;
+
+/// <summary>
+/// Movement direction of an rfid tag
+/// </summary>
+public enum RfidDirection
 {
     /// <summary>
-    /// Movement direction of an rfid tag
+    /// No direction was detected
     /// </summary>
-    public enum RfidDirection
-    {
-        /// <summary>
-        /// No direction was detected
-        /// </summary>
-        Unset = 0,
+    Unset = 0,
 
-        /// <summary>
-        /// Direction detection from left to right
-        /// </summary>
-        FromLeftToRight = 1,
+    /// <summary>
+    /// Direction detection from left to right
+    /// </summary>
+    FromLeftToRight = 1,
 
-        /// <summary>
-        /// Direction detection from right ro left
-        /// </summary>
-        FromRightToLeft = 2
-    }
+    /// <summary>
+    /// Direction detection from right ro left
+    /// </summary>
+    FromRightToLeft = 2
 }

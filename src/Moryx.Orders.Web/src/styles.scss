@@ -1,0 +1,8 @@
+@use "@moryx/ngx-web-framework/styles/theme.scss" as *;
+
+html, body { height: 100%;}
+body { margin: 0; overflow: hidden; }
+
+.toolbar-gradient-background {
+    background: linear-gradient(90deg, rgba(0,0,0,0.8016456582633054) 0%, rgba(9,9,121,0) 50%);
+}

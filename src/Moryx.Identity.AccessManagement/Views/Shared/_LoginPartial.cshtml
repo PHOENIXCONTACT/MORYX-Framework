@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Moryx.Identity.AccessManagement.Data
+@inject SignInManager<MoryxUser> SignInManager
+@inject MoryxUserManager UserManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <form class="form-inline" asp-area="" asp-controller="Login" asp-action="Logout">
+                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Login</a>
+        </li>
+    }
+</ul>

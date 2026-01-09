@@ -1,0 +1,23 @@
+<div class="part-list-status light-text" *ngIf="isLoading()">
+  {{ TranslationConstants.OPERATIONS.P_LIST.LOADING | translate }}
+</div>
+<table class="parts-table">
+  <tr>
+    <th>
+      {{ TranslationConstants.OPERATIONS.P_LIST.DESCRIPTION | translate }}
+    </th>
+    <th>{{ TranslationConstants.OPERATIONS.P_LIST.NUMBER | translate }}</th>
+    <th>{{ TranslationConstants.OPERATIONS.P_LIST.QUANTITY | translate }}</th>
+    <th>{{ TranslationConstants.OPERATIONS.P_LIST.UNIT | translate }}</th>
+    <th>
+      {{ TranslationConstants.OPERATIONS.P_LIST.STAGING_INDICATOR | translate }}
+    </th>
+  </tr>
+  <tr *ngFor="let part of parts()">
+    <td>{{ part.name }}</td>
+    <td>{{ part.identifier }}</td>
+    <td>{{ part.quantity }}</td>
+    <td>{{ part.unit }}</td>
+    <td>{{ part.stagingIndicator }}</td>
+  </tr>
+</table>

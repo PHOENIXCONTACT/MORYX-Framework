@@ -10,4 +10,5 @@ export default class MethodEntry {
     public displayName: string;
     public description: string;
     public parameters: Entry;
+    public isAsync: boolean;
 }

@@ -1,0 +1,17 @@
+<div class="tw:flex tw:flex-row tw:w-full tw:rounded tw:h-14 
+tw:items-center tw:justify-center tw:relative tw:border tw:border-gray-200  
+ tw:cursor-pointer" [ngClass]="{
+  'tw:bg-success tw:text-white' : isAssigned(),
+  'tw:bg-gray-100 tw:text-gray-400' : !isAssigned(),
+}" (click)="toggle()">
+  <span class="tw:text-lg tw:truncate"
+  >{{ operator().data.pseudonym ?? operator().data.identifier }}</span>
+  <mat-icon class="tw:absolute tw:right-2 tw:w-11 tw:h-11"> 
+    @if(isAssigned() ){
+      person
+    }
+    @else {
+      person_off
+    }
+  </mat-icon>
+</div>

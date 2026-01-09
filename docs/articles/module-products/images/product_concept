@@ -1,0 +1,24 @@
+@startuml
+interface IRecipe
+interface IWorkplan
+interface IProcess
+interface ProductType
+
+abstract class Recipe
+class ProductRecipe
+class WorkplanRecipe
+class Process
+class ProductionProcess
+abstract class ProductInstance
+
+IProcess <|-- Process
+Process <|- ProductionProcess
+ProductionProcess o-- ProductInstance
+ProductInstance o-- ProductType
+
+IRecipe <|-- Recipe
+Recipe <|- ProductRecipe
+ProductRecipe o-- ProductType
+Recipe <|- WorkplanRecipe
+WorkplanRecipe o-- IWorkplan
+@enduml

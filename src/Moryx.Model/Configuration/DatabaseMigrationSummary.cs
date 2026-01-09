@@ -1,42 +1,46 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-namespace Moryx.Model.Configuration
+namespace Moryx.Model.Configuration;
+
+/// <summary>
+/// Result object created from running a database update
+/// </summary>
+public class DatabaseMigrationSummary
 {
     /// <summary>
-    /// Result object created from running a database update
+    /// Flag that any updates were performed
     /// </summary>
-    public class DatabaseMigrationSummary
-    {
-        /// <summary>
-        /// Flag that any updates were performed
-        /// </summary>
-        public MigrationResult Result { get; set; }
-
-        /// <summary>
-        /// All updates that were executed
-        /// </summary>
-        public string[] ExecutedMigrations { get; set; }
-    }
+    public MigrationResult Result { get; set; }
 
     /// <summary>
-    /// Result enum for executing database migrations
+    /// Reason, in case an error occured during migration
     /// </summary>
-    public enum MigrationResult
-    {
-        /// <summary>
-        /// Database was migrated to the current version
-        /// </summary>
-        Migrated,
+    public string[] Errors { get; set; } = [];
 
-        /// <summary>
-        /// There are no migrations available
-        /// </summary>
-        NoMigrationsAvailable,
+    /// <summary>
+    /// All updates that were executed
+    /// </summary>
+    public string[] ExecutedMigrations { get; set; }
+}
 
-        /// <summary>
-        /// There was an error while executing the migration
-        /// </summary>
-        Error
-    }
+/// <summary>
+/// Result enum for executing database migrations
+/// </summary>
+public enum MigrationResult
+{
+    /// <summary>
+    /// Database was migrated to the current version
+    /// </summary>
+    Migrated,
+
+    /// <summary>
+    /// There are no migrations available
+    /// </summary>
+    NoMigrationsAvailable,
+
+    /// <summary>
+    /// There was an error while executing the migration
+    /// </summary>
+    Error
 }

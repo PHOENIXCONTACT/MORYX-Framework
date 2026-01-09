@@ -1,0 +1,15 @@
+{
+    "APP": {
+      "NOTIFICATIONS": "Notifiche",
+      "FAILED_LOADING": "Non è stato possibile stabilire la connessione al server. Controllare la connessione di rete o riprovare più tardi.",
+      "EMPTY_STATE_HEADER": "Nessuna notifica",
+      "EMPTY_STATE_TEXT": "Al momento non c'è nulla che richieda la vostra attenzione."
+    },
+    "DETAILS": {
+      "ACKNOWLEDGE": "RICONOSCERE"
+    },
+    "DISMISS": "RIFIUTARE",
+    "DEFAULT_MESSAGE": "Qualcosa è andato storto sul server.",
+    "SERVER_NOT_REACHABLE": "Il server non è raggiungibile, controllare la connessione internet o le impostazioni del proxy."
+  }
+

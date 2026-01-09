@@ -1,318 +1,321 @@
-// Copyright (c) 2024, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Logging;
 using Moryx.Runtime.Modules;
+using Moryx.Tools;
 using Moryx.Workplans;
 
-namespace Moryx.Products.Management
+namespace Moryx.Products.Management;
+
+internal class ProductManagementFacade : FacadeBase, IProductManagement
 {
-    internal class ProductManagementFacade : IFacadeControl, IProductManagement
+    #region Dependencies
+
+    public IProductManager ProductManager { get; set; }
+
+    public IConfiguredTypesProvider TypesProvider { get; set; }
+
+    public IRecipeManagement RecipeManagement { get; set; }
+
+    public IWorkplans Workplans { get; set; }
+
+    public IModuleLogger Logger { get; set; }
+
+    #endregion
+
+    public override void Activate()
     {
-        // Use this delegate in every call for clean health state management
-        public Action ValidateHealthState { get; set; }
+        base.Activate();
 
-        #region Dependencies
+        ProductManager.TypeChanged += OnTypeChanged;
+        RecipeManagement.RecipeChanged += OnRecipeChanged;
+    }
 
-        public IProductManager ProductManager { get; set; }
+    public override void Deactivate()
+    {
+        ProductManager.TypeChanged -= OnTypeChanged;
+        RecipeManagement.RecipeChanged -= OnRecipeChanged;
 
-        public IConfiguredTypesProvider TypesProvider { get; set; }
+        base.Deactivate();
+    }
 
-        public IRecipeManagement RecipeManagement { get; set; }
+    public string Name => ModuleController.ModuleName;
 
-        public IWorkplans Workplans { get; set; }
-
-        public ModuleConfig Config { get; set; }
-
-        public IModuleLogger Logger { get; set; }
-
-        #endregion
-
-        public void Activate()
-        {
-            ProductManager.TypeChanged += OnTypeChanged;
-            RecipeManagement.RecipeChanged += OnRecipeChanged;
-
-        }
-
-        public void Deactivate()
-        {
-            ProductManager.TypeChanged -= OnTypeChanged;
-            RecipeManagement.RecipeChanged -= OnRecipeChanged;
-        }
-
-        public string Name => ModuleController.ModuleName;
-
-        public IDictionary<string, object> Importers
-        {
-            get
-            {
-                ValidateHealthState();
-                return ProductManager.Importers.ToDictionary(i => i.Name, i => i.Parameters);
-            }
-        }
-
-        public IReadOnlyList<Type> ProductTypes
-        {
-            get
-            {
-                ValidateHealthState();
-                return TypesProvider.ProductTypes;
-            }
-        }
-
-        public IReadOnlyList<Type> RecipeTypes
-        {
-            get
-            {
-                ValidateHealthState();
-                return TypesProvider.RecipeTypes;
-            }
-        }
-
-        public IReadOnlyList<IProductType> LoadTypes(ProductQuery query)
+    public IDictionary<string, object> Importers
+    {
+        get
         {
             ValidateHealthState();
-            return ProductManager.LoadTypes(query);
+            return ProductManager.Importers.ToDictionary(i => i.Name, i => i.Parameters);
         }
+    }
 
-        public IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector)
+    public IReadOnlyList<Type> ProductTypes
+    {
+        get
         {
             ValidateHealthState();
-            return ProductManager.LoadTypes(selector);
+            return TypesProvider.ProductTypes;
         }
+    }
 
-        public IProductType LoadType(long id)
+    public IReadOnlyList<Type> RecipeTypes
+    {
+        get
         {
             ValidateHealthState();
-            var type = ProductManager.LoadType(id);
-            if (type == null)
-                throw new ProductNotFoundException(id);
-            return type;
+            return TypesProvider.RecipeTypes;
         }
+    }
 
-        public IProductType LoadType(ProductIdentity identity)
+    public Task<IReadOnlyList<ProductType>> LoadTypesAsync(ProductQuery query, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return ProductManager.LoadTypes(query);
+    }
+
+    public Task<IReadOnlyList<TType>> LoadTypesAsync<TType>(Expression<Func<TType, bool>> selector, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return ProductManager.LoadTypes(selector);
+    }
+
+    public async Task<ProductType> LoadTypeAsync(long id, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        var type = await ProductManager.LoadType(id);
+        if (type == null)
+            throw new ProductNotFoundException(id);
+        return type;
+    }
+
+    public Task<ProductType> LoadTypeAsync(IIdentity identity, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return ProductManager.LoadType(identity);
+    }
+
+    private void OnTypeChanged(object sender, ProductType productType)
+    {
+        TypeChanged?.Invoke(this, productType);
+    }
+    public event EventHandler<ProductType> TypeChanged;
+
+    public Task<ProductType> DuplicateTypeAsync(ProductType template, IIdentity newIdentity, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return ProductManager.DuplicateType(template, newIdentity);
+    }
+
+    public Task<long> SaveTypeAsync(ProductType modifiedInstance, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return ProductManager.SaveType(modifiedInstance);
+    }
+
+    public Task<ProductImportResult> ImportAsync(string importerName, object parameters, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return ProductManager.Import(importerName, parameters);
+    }
+
+    public async Task<IRecipe> LoadRecipeAsync(long id, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        var recipe = await RecipeManagement.Get(id);
+
+        ValidateRecipe(recipe);
+
+        ReplaceOrigin(recipe);
+
+        return recipe;
+    }
+
+    public async Task<IReadOnlyList<IProductRecipe>> LoadRecipesAsync(ProductType productType, RecipeClassification classification,
+        CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        var recipes = await RecipeManagement.LoadRecipes(productType, classification);
+        if (recipes == null)
+            return null;
+
+        recipes.ForEach(ReplaceOrigin);
+
+        return recipes;
+    }
+
+    private void OnRecipeChanged(object sender, IRecipe recipe)
+    {
+        ReplaceOrigin(recipe);
+        RecipeChanged?.Invoke(this, recipe);
+    }
+    public event EventHandler<IRecipe> RecipeChanged;
+
+    public async Task<long> SaveRecipeAsync(IProductRecipe recipe, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        var recipeId = await RecipeManagement.Save(recipe);
+        ReplaceOrigin(recipe);
+
+        return recipeId;
+    }
+
+    public Task SaveRecipesAsync(IReadOnlyList<IProductRecipe> recipes, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return RecipeManagement.Save(recipes);
+    }
+
+    public async Task<Workplan> LoadWorkplanAsync(long workplanId, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        var wp = await Workplans.LoadWorkplanAsync(workplanId, cancellationToken);
+        if (wp == null)
+            throw new KeyNotFoundException($"No workplan with id '{workplanId}' found!");
+        return wp;
+    }
+
+    public Task<IReadOnlyList<Workplan>> LoadAllWorkplansAsync(CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return Workplans.LoadAllWorkplansAsync(cancellationToken);
+    }
+
+    public Task<bool> DeleteWorkplanAsync(long workplanId, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return Workplans.DeleteWorkplanAsync(workplanId, cancellationToken);
+    }
+
+    public Task<IReadOnlyList<Workplan>> LoadVersionsAsync(long workplanId, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return Workplans.LoadVersionsAsync(workplanId, cancellationToken);
+    }
+
+    public Task<long> SaveWorkplanAsync(Workplan workplan, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return Workplans.SaveWorkplanAsync(workplan, cancellationToken);
+    }
+
+    public Task<ProductInstance> CreateInstanceAsync(ProductType productType, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return ProductManager.CreateInstance(productType, false);
+    }
+
+    public Task<ProductInstance> CreateInstanceAsync(ProductType productType, bool save, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return ProductManager.CreateInstance(productType, save);
+    }
+
+    public async Task<ProductInstance> LoadInstanceAsync(long id, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return (await ProductManager.LoadInstances([id])).SingleOrDefault();
+    }
+
+    public async Task<ProductInstance> LoadInstanceAsync(IIdentity identity, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+
+        ArgumentNullException.ThrowIfNull(identity);
+
+        var instances = await ProductManager
+            .LoadInstances<IIdentifiableObject>(i => identity.Equals(i.Identity));
+        if (instances.Count > 1)
         {
-            ValidateHealthState();
-            return ProductManager.LoadType(identity);
+            var ex = new InvalidOperationException($"ProductManagement contains more than one {nameof(ProductInstance)} with the identity {identity}.");
+            Logger.LogError(ex, "Please make sure that an identity is unique.");
+            throw ex;
         }
 
-        private void OnTypeChanged(object sender, IProductType productType)
-        {
-            TypeChanged?.Invoke(this, productType);
-        }
-        public event EventHandler<IProductType> TypeChanged;
+        return (ProductInstance)instances.SingleOrDefault();
+    }
 
-        public IProductType Duplicate(IProductType template, ProductIdentity newIdentity)
-        {
-            ValidateHealthState();
-            return ProductManager.Duplicate((ProductType)template, newIdentity);
-        }
+    public async Task<TInstance> LoadInstanceAsync<TInstance>(Expression<Func<TInstance, bool>> selector, CancellationToken cancellationToken = default)
+        where TInstance : ProductInstance
+    {
+        ValidateHealthState();
 
-        public long SaveType(IProductType modifiedInstance)
-        {
-            ValidateHealthState();
-            return ProductManager.SaveType(modifiedInstance);
-        }
+        ArgumentNullException.ThrowIfNull(selector);
 
-        public Task<ProductImportResult> Import(string importerName, object parameters)
-        {
-            ValidateHealthState();
-            return ProductManager.Import(importerName, parameters);
-        }
+        return (await ProductManager.LoadInstances(selector)).SingleOrDefault();
+    }
 
-        public IRecipe LoadRecipe(long id)
-        {
-            ValidateHealthState();
-            var recipe = RecipeManagement.Get(id);
+    public Task SaveInstanceAsync(ProductInstance productInstance, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return ProductManager.SaveInstances(productInstance);
+    }
 
-            ValidateRecipe(recipe);
+    public Task SaveInstancesAsync(ProductInstance[] productInstance, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return ProductManager.SaveInstances(productInstance);
+    }
 
-            return ReplaceOrigin(recipe);
-        }
+    public Task<IReadOnlyList<ProductInstance>> LoadInstancesAsync(long[] ids, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
 
-        public IReadOnlyList<IProductRecipe> GetRecipes(IProductType productType, RecipeClassification classification)
-        {
-            ValidateHealthState();
-            var recipes = RecipeManagement.GetRecipes(productType, classification);
-            if (recipes == null)
-                return null;
-            return recipes.Select(ReplaceOrigin).ToArray();
-        }
+        ArgumentNullException.ThrowIfNull(ids);
 
-        private void OnRecipeChanged(object sender, IRecipe recipe)
-        {
-            ReplaceOrigin(recipe);
-            RecipeChanged?.Invoke(this, recipe);
-        }
-        public event EventHandler<IRecipe> RecipeChanged;
+        return ProductManager.LoadInstances(ids);
+    }
 
-        public long SaveRecipe(IProductRecipe recipe)
-        {
-            ValidateHealthState();
-            var recipeId = RecipeManagement.Save(recipe);
-            ReplaceOrigin(recipe);
+    public Task<IReadOnlyList<TInstance>> LoadInstancesAsync<TInstance>(Expression<Func<TInstance, bool>> selector,
+        CancellationToken cancellationToken = default)
+        where TInstance : ProductInstance
+    {
+        ValidateHealthState();
 
-            return recipeId;
-        }
+        ArgumentNullException.ThrowIfNull(selector);
 
-        public Workplan LoadWorkplan(long workplanId)
-        {
-            ValidateHealthState();
-            var wp = Workplans.LoadWorkplan(workplanId);
-            if (wp == null)
-                throw new KeyNotFoundException($"No workplan with id '{workplanId}' found!");
-            return wp;
-        }
+        return ProductManager.LoadInstances(selector);
+    }
 
-        public IReadOnlyList<Workplan> LoadAllWorkplans()
-        {
-            ValidateHealthState();
-            return Workplans.LoadAllWorkplans();
-        }
+    private static void ValidateRecipe(IProductRecipe recipe)
+    {
+        if (recipe == null)
+            throw new ArgumentException("Recipe could not be found");
+    }
 
-        public bool DeleteWorkplan(long workplanId)
-        {
-            ValidateHealthState();
-            return Workplans.DeleteWorkplan(workplanId);
-        }
+    private void ReplaceOrigin<TRecipe>(TRecipe recipe)
+        where TRecipe : IRecipe
+    {
+        recipe.Origin = this;
+    }
 
-        public IReadOnlyList<Workplan> LoadVersions(long workplanId)
-        {
-            ValidateHealthState();
-            return Workplans.LoadVersions(workplanId);
-        }
+    public Task<bool> DeleteTypeAsync(long productTypeId, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return ProductManager.DeleteType(productTypeId);
+    }
 
-        public long SaveWorkplan(Workplan workplan)
-        {
-            ValidateHealthState();
-            return Workplans.SaveWorkplan(workplan);
-        }
+    public Task DeleteRecipeAsync(long recipeId, CancellationToken cancellationToken = default)
+    {
+        ValidateHealthState();
+        return RecipeManagement.Delete(recipeId);
+    }
 
-        public ProductInstance CreateInstance(IProductType productType)
-        {
-            ValidateHealthState();
-            return ProductManager.CreateInstance(productType, false);
-        }
+    public IProductRecipe CreateRecipe(string recipeType)
+    {
+        ValidateHealthState();
+        return RecipeManagement.CreateRecipe(recipeType);
+    }
 
-        public ProductInstance CreateInstance(IProductType productType, bool save)
-        {
-            ValidateHealthState();
-            return ProductManager.CreateInstance(productType, save);
-        }
-
-        public ProductInstance GetInstance(long id)
-        {
-            ValidateHealthState();
-            return ProductManager.GetInstances(id).SingleOrDefault();
-        }
-
-        public ProductInstance GetInstance(IIdentity identity)
-        {
-            ValidateHealthState();
-
-            if (identity == null)
-                throw new ArgumentNullException(nameof(identity));
-
-            var instances = ProductManager
-                .GetInstances<IIdentifiableObject>(i => identity.Equals(i.Identity));
-            if (instances.Count > 1)
-            {
-                var ex = new InvalidOperationException($"ProductManagement contains more than one {nameof(ProductInstance)} with the identity {identity}.");
-                Logger.LogError(ex, "Please make sure that an identity is unique.");
-                throw ex;
-            }
-                
-            return (ProductInstance) instances.SingleOrDefault(); ;
-        }
-
-        public TInstance GetInstance<TInstance>(Expression<Func<TInstance, bool>> selector)
-            where TInstance : IProductInstance
-        {
-            ValidateHealthState();
-
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return ProductManager.GetInstances(selector).SingleOrDefault();
-        }
-
-        public void SaveInstance(ProductInstance productInstance)
-        {
-            ValidateHealthState();
-            ProductManager.SaveInstances(productInstance);
-        }
-
-        public void SaveInstances(ProductInstance[] productInstance)
-        {
-            ValidateHealthState();
-            ProductManager.SaveInstances(productInstance);
-        }
-
-        public IReadOnlyList<ProductInstance> GetInstances(long[] ids)
-        {
-            ValidateHealthState();
-
-            if(ids == null)
-                throw new ArgumentNullException(nameof(ids));
-
-            return ProductManager.GetInstances(ids);
-        }
-
-        public IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector)
-            where TInstance : IProductInstance
-        {
-            ValidateHealthState();
-
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return ProductManager.GetInstances(selector);
-        }
-
-        private static void ValidateRecipe(IProductRecipe recipe)
-        {
-            if (recipe == null)
-                throw new ArgumentException("Recipe could not be found");
-        }
-
-        private TRecipe ReplaceOrigin<TRecipe>(TRecipe recipe) where  TRecipe : IRecipe
-        {
-            recipe.Origin = this;
-            return recipe;
-        }
-
-        public bool DeleteProduct(long id)
-        {
-            ValidateHealthState();
-            return ProductManager.DeleteType(id);
-        }
-
-        public void RemoveRecipe(long recipeId)
-        {
-            ValidateHealthState();
-            RecipeManagement.Remove(recipeId);
-        }
-
-        public IProductRecipe CreateRecipe(string recipeType)
-        {
-            ValidateHealthState();
-            return RecipeManagement.CreateRecipe(recipeType);
-        }
-
-        public ProductTypeWrapper GetTypeWrapper(string typeName)
-        {
-            ValidateHealthState();
-            return ProductManager.GetTypeWrapper(typeName);
-        }
+    public ProductTypeWrapper GetTypeWrapper(string typeName)
+    {
+        ValidateHealthState();
+        return ProductManager.GetTypeWrapper(typeName);
     }
 }

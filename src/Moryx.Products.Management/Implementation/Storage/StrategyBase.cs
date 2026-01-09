@@ -1,46 +1,30 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moryx.Modules;
 
-namespace Moryx.Products.Management
+namespace Moryx.Products.Management;
+
+public class StrategyBase<TConfig, TConfigBase> : IAsyncConfiguredInitializable<TConfigBase>
+    where TConfigBase : IProductStrategyConfiguration, IPluginConfig
+    where TConfig : TConfigBase
 {
-    public class StrategyBase<TConfig, TConfigBase> : IConfiguredPlugin<TConfigBase>
-        where TConfigBase : IProductStrategyConfiguration, IPluginConfig
-        where TConfig : TConfigBase
+    /// <summary>
+    /// Target type handled by this strategy
+    /// </summary>
+    public Type TargetType { get; protected set; }
+
+    /// <summary>
+    /// Configuration of this strategy
+    /// </summary>
+    protected TConfig Config { get; private set; }
+
+    /// <summary>
+    /// Initialize the strategy
+    /// </summary>
+    public virtual Task InitializeAsync(TConfigBase config, CancellationToken cancellationToken = default)
     {
-        /// <summary>
-        /// Target type handled by this strategy
-        /// </summary>
-        public Type TargetType { get; protected set; }
-
-        /// <summary>
-        /// Configuration of this strategy
-        /// </summary>
-        protected TConfig Config { get; private set; }
-
-        /// <summary>
-        /// Initialize the strategy
-        /// </summary>
-        /// <param name="config"></param>
-        public virtual void Initialize(TConfigBase config)
-        {
-            Config = (TConfig)config;
-        }
-
-        /// <summary>
-        /// Start the strategy
-        /// </summary>
-        public virtual void Start()
-        {
-        }
-
-        /// <summary>
-        /// Stop the strategy
-        /// </summary>
-        public virtual void Stop()
-        {
-        }
+        Config = (TConfig)config;
+        return Task.CompletedTask;
     }
 }

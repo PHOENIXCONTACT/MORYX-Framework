@@ -1,10 +1,12 @@
 /*
- * Copyright (c) 2020, Phoenix Contact GmbH & Co. KG
+ * Copyright (c) 2026, Phoenix Contact GmbH & Co. KG
  * Licensed under the Apache License, Version 2.0
 */
 
 import DataModel from "./DataModel";
+import {ModelConfiguratorModel} from "./ModelConfiguratorModel";
 
 export default class DatabasesResponse {
+    public configurators: ModelConfiguratorModel[];
     public databases: DataModel[];
 }

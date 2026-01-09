@@ -1,0 +1,32 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+@use "@moryx/ngx-web-framework/styles/colors" as *; 
+
+.add-part {
+  flex: 1 1;
+  display: flex;
+  align-items: stretch;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  overflow-y: hidden;
+}
+
+.add-part-list {
+  overflow-y: auto;
+  flex: 1 1;
+}
+
+.add-part-list-item {
+  cursor: pointer !important;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.add-part-loading {
+  align-self: center;
+  padding-top: 10px;
+}
+
+.moryx-selected {
+  background: $primary-light;
+}

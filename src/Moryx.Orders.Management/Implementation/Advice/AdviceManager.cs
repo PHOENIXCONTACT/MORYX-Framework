@@ -1,0 +1,80 @@
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.Container;
+using Moryx.Orders.Advice;
+
+namespace Moryx.Orders.Management.Advice;
+
+[Plugin(LifeCycle.Singleton, typeof(IAdviceManager))]
+internal class AdviceManager : IAdviceManager
+{
+    #region Dependencies
+
+    /// <summary>
+    /// Executor of advices. Strategy to replace the behavior.
+    /// </summary>
+    public IAdviceExecutor AdviceExecutor { get; set; }
+
+    /// <summary>
+    /// Configuration of the module
+    /// </summary>
+    public ModuleConfig ModuleConfig { get; set; }
+
+    #endregion
+
+    /// <inheritdoc />
+    public async Task StartAsync(CancellationToken cancellationToken = default)
+    {
+        await AdviceExecutor.InitializeAsync(ModuleConfig.Advice.AdviceExecutor);
+        await AdviceExecutor.StartAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task StopAsync(CancellationToken cancellationToken = default)
+    {
+        return AdviceExecutor.StopAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<AdviceResult> OrderAdvice(IOperationData operationData, string toteBoxNumber, int amount)
+    {
+        var advice = new OrderAdvice(toteBoxNumber, amount);
+        return Advice(operationData, advice);
+    }
+
+    /// <inheritdoc />
+    public Task<AdviceResult> PickPartAdvice(IOperationData operationData, string toteBoxNumber, ProductPart part)
+    {
+        var advice = new PickPartAdvice(part, toteBoxNumber);
+        if (part.StagingIndicator != StagingIndicator.PickPart)
+        {
+            return Task.FromResult(new AdviceResult(advice, -1)
+            {
+                Message = "Only pick parts are allowed for advice."
+            });
+        }
+
+        return Advice(operationData, advice);
+    }
+
+    private async Task<AdviceResult> Advice<TAdvice>(IOperationData operationData, TAdvice advice)
+        where TAdvice : OperationAdvice
+    {
+        AdviceResult result;
+
+        if (advice is OrderAdvice && !ModuleConfig.Advice.UseAdviceExecutorForOrderAdvice)
+        {
+            result = new AdviceResult(advice);
+        }
+        else
+        {
+            result = await AdviceExecutor.AdviceAsync((Operation)operationData.Operation, (dynamic)advice, CancellationToken.None);
+        }
+
+        if (result.Success)
+            await operationData.Advice(advice);
+
+        return result;
+    }
+}

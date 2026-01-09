@@ -1,75 +1,67 @@
-﻿﻿using Moryx.Model.Sqlite;
-using Moryx.Products.Model;
-using Moryx.Runtime.Kernel;
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Moryx.Model.Sqlite;
 using NUnit.Framework;
 using System.IO;
 using System.Threading.Tasks;
+using Moryx.TestTools.Test.Model;
 
-namespace Moryx.Model.Tests
+namespace Moryx.Model.Tests;
+
+[TestFixture]
+public class SqliteTests
 {
-    [TestFixture]
-    public class SqliteTests
+    private SqliteDatabaseConfig _dbConfig;
+    private SqliteModelConfigurator _configurator;
+    private string _dataSource;
+
+    [SetUp]
+    public void Setup()
     {
-        private SqliteDatabaseConfig dbConfig;
-        private SqliteModelConfigurator configurator;
-        private string datasource;
-
-        [SetUp]
-        public void Setup()
+        var databaseName = "TestDatabase";
+        _dataSource = Path.Combine(".", "db", databaseName + ".db");
+        var connectionString = $@"Data Source={_dataSource};";
+        _dbConfig = new SqliteDatabaseConfig
         {
-            string databaseName = "TestDatabase";
-            datasource = Path.Combine(".", "db", databaseName+".db");
-            string connectionString = $@"Data Source={datasource};";
-            dbConfig = new SqliteDatabaseConfig();
-            dbConfig.ConnectionSettings = new DatabaseConnectionSettings { ConnectionString = connectionString, Database = databaseName };
-            configurator = new SqliteModelConfigurator();
-            configurator.Initialize(typeof(ProductsContext), CreateConfigManager(), null);
-        }
+            ConnectionString = connectionString
+        };
+        _configurator = new SqliteModelConfigurator();
+        _configurator.Initialize(typeof(SqliteTestModelContext), _dbConfig, null);
+    }
 
-        [Test]
-        public async Task SqliteCreateDatabaseShouldWork()
-        {
-            var result = await configurator.TestConnection(dbConfig);
-            Assert.AreEqual(TestConnectionResult.ConnectionOkDbDoesNotExist, result);
+    [Test]
+    public async Task SqliteCreateDatabaseShouldWork()
+    {
+        var result = await _configurator.TestConnectionAsync(_dbConfig);
+        Assert.That(result, Is.EqualTo(TestConnectionResult.ConnectionOkDbDoesNotExist));
 
-            bool isCreated = await configurator.CreateDatabase(dbConfig);
+        var isCreated = await _configurator.CreateDatabaseAsync(_dbConfig);
 
-            Assert.IsTrue(isCreated);
-            Assert.IsTrue(File.Exists(datasource));
+        Assert.That(isCreated);
+        Assert.That(File.Exists(_dataSource));
 
+        //remove the database
+        await _configurator.DeleteDatabaseAsync(_dbConfig);
+    }
+
+    [Test]
+    public async Task SqliteDeleteDatabaseShouldWork()
+    {
+        var connectionResult = await _configurator.TestConnectionAsync(_dbConfig);
+        Assert.That(connectionResult, Is.EqualTo(TestConnectionResult.ConnectionOkDbDoesNotExist));
+
+        var isCreated = await _configurator.CreateDatabaseAsync(_dbConfig);
+        Assert.That(isCreated);
+
+        await _configurator.DeleteDatabaseAsync(_dbConfig);
+        Assert.That(!File.Exists(_dataSource));
+    }
+    [TearDown]
+    public void Destroy()
+    {
+        if (File.Exists(_dataSource))
             //remove the database
-            await configurator.DeleteDatabase(dbConfig);
-        }
-
-
-        [Test]
-        public async Task SqliteDeleteDatabaseShouldWork()
-        {
-            var connectionResult = await configurator.TestConnection(dbConfig);
-            Assert.AreEqual(TestConnectionResult.ConnectionOkDbDoesNotExist, connectionResult);
-
-            bool isCreated = await configurator.CreateDatabase(dbConfig);
-            Assert.IsTrue(isCreated);
-
-            await configurator.DeleteDatabase(dbConfig);
-            Assert.IsFalse(File.Exists(datasource));
-        }
-
-        private static ConfigManager CreateConfigManager()
-        {
-            var configManager = new ConfigManager
-            {
-                ConfigDirectory = ""
-            };
-            return configManager;
-        }
-
-        [TearDown]
-        public void Destroy()
-        {
-            if (File.Exists(datasource))
-                //remove the database
-                configurator.DeleteDatabase(dbConfig).Wait();
-        }
+            _configurator.DeleteDatabaseAsync(_dbConfig).Wait();
     }
 }

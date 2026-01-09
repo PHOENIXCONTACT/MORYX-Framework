@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="MqttDriver_BrokerUrl" xml:space="preserve">
+    <value>Host address</value>
+  </data>
+  <data name="MqttDriver_MqttVersion" xml:space="preserve">
+    <value>MQTT version</value>
+  </data>
+  <data name="MqttDriver_MqttVersion_Description" xml:space="preserve">
+    <value>Specify the MQTT version number. Default is 3.1.0 if unknown.</value>
+  </data>
+  <data name="MqttDriver_Password" xml:space="preserve">
+    <value>Client password</value>
+  </data>
+  <data name="MqttDriver_Password_Description" xml:space="preserve">
+    <value>Password for authenticating with the MQTT broker</value>
+  </data>
+  <data name="MqttDriver_Port_Description" xml:space="preserve">
+    <value>Default port is 1883 for MQTT unless specified otherwise.</value>
+  </data>
+  <data name="MqttDriver_ReconnectWithoutCleanSession" xml:space="preserve">
+    <value>Reconnect using a clean session</value>
+  </data>
+  <data name="MqttDriver_ReconnectWithoutCleanSession_Description" xml:space="preserve">
+    <value>Configure if the connection should be reestablished with a clean session.</value>
+  </data>
+  <data name="MqttDriver_ReconnectDelayMs_Description" xml:space="preserve">
+    <value>Specify a delay in milliseconds before trying to reconnect after an error.</value>
+  </data>
+  <data name="MqttDriver_ReconnectDelayMs" xml:space="preserve">
+    <value>Delay between reconnection attempts</value>
+  </data>
+  <data name="MqttDriver_Identifier" xml:space="preserve">
+    <value>Root MQTT topic</value>
+  </data>
+  <data name="MqttDriver_Username" xml:space="preserve">
+    <value>Client username</value>
+  </data>
+  <data name="MqttDriver_Username_Description" xml:space="preserve">
+    <value>Username for authenticating with the MQTT broker</value>
+  </data>
+  <data name="MqttDriver_UseTls_Description" xml:space="preserve">
+    <value>Check to enable a TLS secured connection</value>
+  </data>
+  <data name="MqttDriver_UseTls" xml:space="preserve">
+    <value>Use TLS</value>
+  </data>
+  <data name="MqttDriver_QualityOfService_Description" xml:space="preserve">
+    <value>Select the QoS level for message delivery</value>
+  </data>
+  <data name="MqttDriver_QualityOfService" xml:space="preserve">
+    <value>Set MQTT quality of service level</value>
+  </data>
+  <data name="MqttDriver_DriverState" xml:space="preserve">
+    <value>Status of the MQTT driver</value>
+  </data>
+  <data name="MqttDriver_DisplayName" xml:space="preserve">
+    <value>MQTT Broker</value>
+  </data>
+  <data name="MqttDriver_Description" xml:space="preserve">
+    <value>A driver for connecting to MQTT resources</value>
+  </data>
+  <data name="MqttTopicIByteSerializable_Description" xml:space="preserve">
+    <value>MQTT topic for messages implementing IByteSerializable</value>
+  </data>
+  <data name="MqttTopicIByteSerializable_DisplayName" xml:space="preserve">
+    <value>MQTT Broker for IByteSerializable messages</value>
+  </data>
+  <data name="MqttTopicIByteSerializable_MessageName" xml:space="preserve">
+    <value>Name of message to be sent</value>
+  </data>
+  <data name="MqttTopic_Identifier_Description" xml:space="preserve">
+    <value>Identifier for MQTT topic, avoiding spaces and following MQTT best practices</value>
+  </data>
+  <data name="MqttTopic_Identifier" xml:space="preserve">
+    <value>MQTT Topic Identifier</value>
+  </data>
+  <data name="MqttTopic_ResponseTopic" xml:space="preserve">
+    <value>Topic for responses</value>
+  </data>
+  <data name="MqttTopic_ResponseTopic_Description" xml:space="preserve">
+    <value>Topic to which other clients can respond</value>
+  </data>
+  <data name="MqttTopicPrimitive_DisplayName" xml:space="preserve">
+    <value>MQTT Topic for primitive types</value>
+  </data>
+  <data name="MqttTopicPrimitive_Description" xml:space="preserve">
+    <value>MQTT Topic where primitive data types are published</value>
+  </data>
+  <data name="MqttTopicJson_DisplayName" xml:space="preserve">
+    <value>MQTT Topic for JSON messages</value>
+  </data>
+  <data name="MqttTopicJson_Description" xml:space="preserve">
+    <value>MQTT Topic where messages are in JSON format</value>
+  </data>
+  <data name="MqttTopicJson_Format" xml:space="preserve">
+    <value>Message format</value>
+  </data>
+  <data name="MqttTopic_Retain" xml:space="preserve">
+    <value>Retain</value>
+  </data>
+  <data name="MqttTopic_Retain_Description" xml:space="preserve">
+    <value>Send Messages should be marked as retain</value>
+  </data>
+  <data name="MqttDriver_Reconnect_Description" xml:space="preserve">
+    <value>Executes reconnect</value>
+  </data>
+  <data name="MqttDriver_Reconnect_Name" xml:space="preserve">
+    <value>Reconnect</value>
+  </data>
+  <data name="MqttDriver_TraceMessageContent_Name" xml:space="preserve">
+    <value>Trace message content</value>
+  </data>
+  <data name="MqttDriver_TraceMessageContent_Description" xml:space="preserve">
+    <value>Decides if the entire message content should be saved for debugging</value>
+  </data>
+  <data name="MqttDriver_HasLastWill" xml:space="preserve">
+    <value>Has last will</value>
+  </data>
+  <data name="MqttDriver_HasLastWill_Description" xml:space="preserve">
+    <value>Decides if a last will message should be registered on the broker</value>
+  </data>
+  <data name="MqttDriver_LastWillTopic" xml:space="preserve">
+    <value>Last will topic</value>
+  </data>
+  <data name="MqttDriver_LastWillTopic_Description" xml:space="preserve">
+    <value>The topic the last will message should be published to. Has no effect if HasLastWill is not set</value>
+  </data>
+  <data name="MqttTopic_TopicType_Description" xml:space="preserve">
+    <value>Message flow direction</value>
+  </data>
+  <data name="MqttTopic_TopicType" xml:space="preserve">
+    <value>Topic type</value>
+  </data>
+  <data name="MqttTopicJson_Serializer" xml:space="preserve">
+    <value>Serializer</value>
+  </data>
+  <data name="MqttTopicJson_Serializer_Description" xml:space="preserve">
+    <value>Controls which serializer library to use</value>
+  </data>
+  <data name="MqttTopicJson_EnumsAsStrings" xml:space="preserve">
+    <value>Enums as string</value>
+  </data>
+  <data name="MqttTopicJson_EnumsAsStrings_Description" xml:space="preserve">
+    <value>Controls enums are encoded as their string names or as numbers</value>
+  </data>
+  <data name="MqttDriver_BrokerUrl_Description" xml:space="preserve">
+    <value>Host address of the mqtt broker</value>
+  </data>
+  <data name="MqttTopic_TraceDecodedMessage" xml:space="preserve">
+    <value>Trace decoded</value>
+  </data>
+  <data name="MqttTopic_TraceDecodedMessage_Description" xml:space="preserve">
+    <value>Determines if the decoded message is stored as part of the activity span for debugging purposes</value>
+  </data>
+</root>

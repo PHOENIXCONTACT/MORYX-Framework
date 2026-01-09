@@ -1,0 +1,6 @@
+<h2 mat-dialog-title>{{data.dialogTitle}}</h2>
+<mat-dialog-content>{{data.dialogMessage}}</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">{{TranslationConstants.CONFIRMATION_DIALOG.NO| translate}}</button>
+  <button mat-button cdkFocusInitial (click)="onYesclick()">{{TranslationConstants.CONFIRMATION_DIALOG.YES| translate}}</button>
+</mat-dialog-actions>

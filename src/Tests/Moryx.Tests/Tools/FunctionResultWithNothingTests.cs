@@ -1,10 +1,10 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using NUnit.Framework;
-using Moryx.Tools.FunctionResult;
 using System;
 using Moq;
+using Moryx.Tools;
+using NUnit.Framework;
 
 namespace Moryx.Tests.Tools;
 
@@ -33,7 +33,6 @@ public class FunctionResultWithNothingTests : FunctionResultTestsBase
         _actionMockError = new Mock<Action<FunctionResultError>>();
     }
 
-
     [Test]
     public void ResultWithValueGetCreated()
     {
@@ -53,9 +52,9 @@ public class FunctionResultWithNothingTests : FunctionResultTestsBase
         Assert.That(result.Success, Is.False);
         Assert.That(result.Result, Is.Null);
 
-        Assert.That(result.Error.Message, Is.EqualTo(Message));
+        Assert.That(Message, Is.EqualTo(result.Error.Message));
         Assert.That(result.Error.Exception, Is.Null);
-        Assert.That(result.ToString(), Is.EqualTo(Message));
+        Assert.That(Message, Is.EqualTo(result.ToString()));
     }
 
     [Test]
@@ -66,9 +65,9 @@ public class FunctionResultWithNothingTests : FunctionResultTestsBase
         Assert.That(result.Success, Is.False);
         Assert.That(result.Result, Is.Null);
 
-        Assert.That(result.Error.Message, Is.EqualTo(ExceptionMessage));
+        Assert.That(ExceptionMessage, Is.EqualTo(result.Error.Message));
         Assert.That(result.Error.Exception, Is.TypeOf<Exception>());
-        Assert.That(result.ToString(), Is.EqualTo(ExceptionMessage));
+        Assert.That(ExceptionMessage, Is.EqualTo(result.ToString()));
     }
 
     [Test]
@@ -90,10 +89,9 @@ public class FunctionResultWithNothingTests : FunctionResultTestsBase
         Assert.That(result.Success, Is.False);
         Assert.That(result.Result, Is.Null);
 
-
-        Assert.That(result.Error.Message, Is.EqualTo(Message));
+        Assert.That(Message, Is.EqualTo(result.Error.Message));
         Assert.That(result.Error.Exception, Is.Null);
-        Assert.That(result.ToString(), Is.EqualTo(Message));
+        Assert.That(Message, Is.EqualTo(result.ToString()));
     }
 
     [Test]
@@ -104,9 +102,9 @@ public class FunctionResultWithNothingTests : FunctionResultTestsBase
         Assert.That(result.Success, Is.False);
         Assert.That(result.Result, Is.Null);
 
-        Assert.That(result.Error.Message, Is.EqualTo(ExceptionMessage));
+        Assert.That(ExceptionMessage, Is.EqualTo(result.Error.Message));
         Assert.That(result.Error.Exception, Is.TypeOf<Exception>());
-        Assert.That(result.ToString(), Is.EqualTo(ExceptionMessage));
+        Assert.That(ExceptionMessage, Is.EqualTo(result.ToString()));
     }
 
     [Test]

@@ -1,39 +1,37 @@
-﻿// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using System.Reflection;
 
-namespace Moryx.Configuration
+namespace Moryx.Configuration;
+
+/// <summary>
+/// Uses the activator on properties of classes with a default constructor
+/// </summary>
+public sealed class ActivatorValueProvider : IValueProvider
 {
-    /// <summary>
-    /// Uses the activator on properties of classes with a default constructor
-    /// </summary>
-    public sealed class ActivatorValueProvider : IValueProvider
+    /// <inheritdoc/>
+    public ValueProviderResult Handle(object parent, PropertyInfo property)
     {
-        /// <inheritdoc/>
-        public ValueProviderResult Handle(object parent, PropertyInfo property)
+        var propertyType = property.PropertyType;
+        var value = property.GetValue(parent);
+
+        if (propertyType.IsClass && value == null && !propertyType.IsAbstract && propertyType != typeof(string))
         {
-            var propertyType = property.PropertyType;
-            var value = property.GetValue(parent);
-
-            if (propertyType.IsClass && value == null && !propertyType.IsAbstract && propertyType != typeof(string))
+            if (propertyType.IsArray)
             {
-                if (propertyType.IsArray)
-                {
-                    var elementType = propertyType.GetElementType();
-                    property.SetValue(parent, Array.CreateInstance(elementType, 0));
-                    return ValueProviderResult.Handled;
-                }
-
-                var ctor = propertyType.GetConstructor(Type.EmptyTypes);
-                if (ctor != null)
-                {
-                    property.SetValue(parent, Activator.CreateInstance(propertyType));
-                    return ValueProviderResult.Handled;
-                }
+                var elementType = propertyType.GetElementType();
+                property.SetValue(parent, Array.CreateInstance(elementType, 0));
+                return ValueProviderResult.Handled;
             }
-            return ValueProviderResult.Skipped;
+
+            var ctor = propertyType.GetConstructor(Type.EmptyTypes);
+            if (ctor != null)
+            {
+                property.SetValue(parent, Activator.CreateInstance(propertyType));
+                return ValueProviderResult.Handled;
+            }
         }
+        return ValueProviderResult.Skipped;
     }
 }

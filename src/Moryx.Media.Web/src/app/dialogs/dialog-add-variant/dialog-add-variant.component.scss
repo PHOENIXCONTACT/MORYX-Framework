@@ -1,0 +1,18 @@
+.add-variant-form {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  min-width: 350px;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-button {
+  margin: 5px;
+}
+
+.file-name-input {
+  margin-top: 5px;
+}

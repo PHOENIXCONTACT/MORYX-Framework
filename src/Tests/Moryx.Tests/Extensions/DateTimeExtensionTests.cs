@@ -1,155 +1,154 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
 using Moryx.Tools;
 using NUnit.Framework;
 
-namespace Moryx.Tests.Extensions
+namespace Moryx.Tests.Extensions;
+
+[TestFixture]
+public class DateTimeExtensionTests
 {
-    [TestFixture]
-    public class DateTimeExtensionTests
+    #region WeekNumbers
+
+    private static readonly object[] WeekNumberCases =
+    [
+        new object[] {new DateTime(2000, 12, 31), 52},
+        new object[] {new DateTime(2001, 1, 1), 1},
+        new object[] {new DateTime(2005, 1, 1), 53},
+        new object[] {new DateTime(2007, 12, 31), 1},
+        new object[] {new DateTime(2008, 12, 29), 1},
+        new object[] {new DateTime(2010, 1, 3), 53},
+        new object[] {new DateTime(2011, 12, 31), 52},
+        new object[] {new DateTime(2012, 1, 1), 52},
+        new object[] {new DateTime(2013, 1, 2), 1},
+        new object[] {new DateTime(2013, 12, 31), 1}
+    ];
+
+    [Test, TestCaseSource(nameof(WeekNumberCases))]
+    public void WeekNumberTest(DateTime dateTime, int result)
     {
-        #region WeekNumbers
+        var week = dateTime.WeekNumber();
 
-        private static readonly object[] WeekNumberCases =
-        {
-            new object[] {new DateTime(2000, 12, 31), 52},
-            new object[] {new DateTime(2001, 1, 1), 1},
-            new object[] {new DateTime(2005, 1, 1), 53},
-            new object[] {new DateTime(2007, 12, 31), 1},
-            new object[] {new DateTime(2008, 12, 29), 1},
-            new object[] {new DateTime(2010, 1, 3), 53},
-            new object[] {new DateTime(2011, 12, 31), 52},
-            new object[] {new DateTime(2012, 1, 1), 52},
-            new object[] {new DateTime(2013, 1, 2), 1},
-            new object[] {new DateTime(2013, 12, 31), 1},
-        };
+        Assert.That(result, Is.EqualTo(week), "Week is not as expected!");
+    }
 
-        [Test, TestCaseSource(nameof(WeekNumberCases))]
-        public void WeekNumberTest(DateTime dateTime, int result)
-        {
-            var week = dateTime.WeekNumber();
+    #endregion
 
-            Assert.AreEqual(week, result, "Week is not as expected!");
-        }
+    #region AddWeeks
 
-        #endregion
+    private static readonly object[] AddWeekCases =
+    [
+        new object[] {new DateTime(2015, 7, 1), 5, new DateTime(2015, 8, 5)},
+        new object[] {new DateTime(2015, 2, 12), 3, new DateTime(2015, 3, 5)},
+        new object[] {new DateTime(2008, 4, 4), 12, new DateTime(2008, 6, 27)}
+    ];
 
-        #region AddWeeks
+    [Test, TestCaseSource(nameof(AddWeekCases))]
+    public void AddWeekTest(DateTime dateTime, int weeksToAdd, DateTime resultDateTime)
+    {
+        var result = dateTime.AddWeeks(weeksToAdd);
 
-        private static readonly object[] AddWeekCases =
-        {
-            new object[] {new DateTime(2015, 7, 1), 5, new DateTime(2015, 8, 5)},
-            new object[] {new DateTime(2015, 2, 12), 3, new DateTime(2015, 3, 5)},
-            new object[] {new DateTime(2008, 4, 4), 12, new DateTime(2008, 6, 27)},
-        };
+        AssertEqualDateTime(result, resultDateTime);
+    }
 
-        [Test, TestCaseSource(nameof(AddWeekCases))]
-        public void AddWeekTest(DateTime dateTime, int weeksToAdd, DateTime resultDateTime)
-        {
-            var result = dateTime.AddWeeks(weeksToAdd);
+    #endregion
 
-            AssertEqualDateTime(result, resultDateTime);
-        }
+    #region Start and End of Week
 
-        #endregion
+    private static readonly object[] StartEndOfWeekCases =
+    [
+        new object[] {new DateTime(2015, 12, 8), new DateTime(2015, 12, 7), new DateTime(2015, 12, 13, 23, 59, 59, 999)},
+        new object[] {new DateTime(2015, 12, 24), new DateTime(2015, 12, 21), new DateTime(2015, 12, 27, 23, 59, 59, 999)}
+    ];
 
-        #region Start and End of Week
+    [Test, TestCaseSource(nameof(StartEndOfWeekCases))]
+    public void StartOfWeekTest(DateTime dateTime, DateTime resultStart, DateTime resultEnd)
+    {
+        var startOfWeek = dateTime.StartOfWeek();
 
-        private static readonly object[] StartEndOfWeekCases =
-        {
-            new object[] {new DateTime(2015, 12, 8), new DateTime(2015, 12, 7), new DateTime(2015, 12, 13, 23, 59, 59, 999)},
-            new object[] {new DateTime(2015, 12, 24), new DateTime(2015, 12, 21), new DateTime(2015, 12, 27, 23, 59, 59, 999)},
-        };
+        AssertEqualDateTime(startOfWeek, resultStart);
+    }
 
-        [Test, TestCaseSource(nameof(StartEndOfWeekCases))]
-        public void StartOfWeekTest(DateTime dateTime, DateTime resultStart, DateTime resultEnd)
-        {
-            var startOfWeek = dateTime.StartOfWeek();
+    [Test, TestCaseSource(nameof(StartEndOfWeekCases))]
+    public void EndOfWeekTest(DateTime dateTime, DateTime resultStart, DateTime resultEnd)
+    {
+        var endOfWeek = dateTime.EndOfWeek();
 
-            AssertEqualDateTime(startOfWeek, resultStart);
-        }
+        AssertEqualDateTime(endOfWeek, resultEnd);
+    }
 
-        [Test, TestCaseSource(nameof(StartEndOfWeekCases))]
-        public void EndOfWeekTest(DateTime dateTime, DateTime resultStart, DateTime resultEnd)
-        {
-            var endOfWeek = dateTime.EndOfWeek();
+    #endregion
 
-            AssertEqualDateTime(endOfWeek, resultEnd);
-        }
+    #region Start and End of Week but with year and calendar week
 
-        #endregion
+    private static readonly object[] StartEndOfWeekWithCalendarWeekCases =
+    [
+        new object[] {2015, 50, new DateTime(2015, 12, 7), new DateTime(2015, 12, 13, 23, 59, 59, 999)},
+        new object[] {2015, 51, new DateTime(2015, 12, 14), new DateTime(2015, 12, 20, 23, 59, 59, 999)}
+    ];
 
-        #region Start and End of Week but with year and calendar week
+    [Test, TestCaseSource(nameof(StartEndOfWeekWithCalendarWeekCases))]
+    public void StartOfWeekTest(int year, int calendarweek, DateTime startResult, DateTime endResult)
+    {
+        var datetime = DateTimeExtensions.StartOfWeek(year, calendarweek);
+        AssertEqualDateTime(datetime, startResult);
+    }
 
-        private static readonly object[] StartEndOfWeekWithCalendarWeekCases =
-        {
-            new object[] {2015, 50, new DateTime(2015, 12, 7), new DateTime(2015, 12, 13, 23, 59, 59, 999)},
-            new object[] {2015, 51, new DateTime(2015, 12, 14), new DateTime(2015, 12, 20, 23, 59, 59, 999)},
-        };
+    [Test, TestCaseSource(nameof(StartEndOfWeekWithCalendarWeekCases))]
+    public void EndOfWeekTest(int year, int calendarweek, DateTime startResult, DateTime endResult)
+    {
+        var datetime = DateTimeExtensions.EndOfWeek(year, calendarweek);
+        AssertEqualDateTime(datetime, endResult);
+    }
 
-        [Test, TestCaseSource(nameof(StartEndOfWeekWithCalendarWeekCases))]
-        public void StartOfWeekTest(int year, int calendarweek, DateTime startResult, DateTime endResult)
-        {
-            var datetime = DateTimeExtensions.StartOfWeek(year, calendarweek);
-            AssertEqualDateTime(datetime, startResult);
-        }
+    #endregion
 
-        [Test, TestCaseSource(nameof(StartEndOfWeekWithCalendarWeekCases))]
-        public void EndOfWeekTest(int year, int calendarweek, DateTime startResult, DateTime endResult)
-        {
-            var datetime = DateTimeExtensions.EndOfWeek(year, calendarweek);
-            AssertEqualDateTime(datetime, endResult);
-        }
+    #region Start and End of Month
 
-        #endregion
+    private static readonly object[] StartEndOfMonthCases =
+    [
+        new object[] {new DateTime(2015, 12, 15), new DateTime(2015, 12, 1), new DateTime(2015, 12, 31, 23, 59, 59, 999)},
+        new object[] {new DateTime(2015, 6, 12), new DateTime(2015, 6, 1), new DateTime(2015, 6, 30, 23, 59, 59, 999)}
+    ];
 
-        #region Start and End of Month
+    [Test, TestCaseSource(nameof(StartEndOfMonthCases))]
+    public void StartOfMonthTest(DateTime dateTime, DateTime resultStart, DateTime resultEnd)
+    {
+        var startOfMonth = dateTime.StartOfMonth();
+        AssertEqualDateTime(startOfMonth, resultStart);
+    }
 
-        private static readonly object[] StartEndOfMonthCases =
-        {
-            new object[] {new DateTime(2015, 12, 15), new DateTime(2015, 12, 1), new DateTime(2015, 12, 31, 23, 59, 59, 999)},
-            new object[] {new DateTime(2015, 6, 12), new DateTime(2015, 6, 1), new DateTime(2015, 6, 30, 23, 59, 59, 999)},
-        };
+    [Test, TestCaseSource(nameof(StartEndOfMonthCases))]
+    public void EndOfMonthTest(DateTime dateTime, DateTime resultStart, DateTime resultEnd)
+    {
+        var endOfMonth = dateTime.EndOfMonth();
+        AssertEqualDateTime(endOfMonth, resultEnd);
+    }
 
-        [Test, TestCaseSource(nameof(StartEndOfMonthCases))]
-        public void StartOfMonthTest(DateTime dateTime, DateTime resultStart, DateTime resultEnd)
-        {
-            var startOfMonth = dateTime.StartOfMonth();
-            AssertEqualDateTime(startOfMonth, resultStart);
-        }
+    #endregion
 
-        [Test, TestCaseSource(nameof(StartEndOfMonthCases))]
-        public void EndOfMonthTest(DateTime dateTime, DateTime resultStart, DateTime resultEnd)
-        {
-            var endOfMonth = dateTime.EndOfMonth();
-            AssertEqualDateTime(endOfMonth, resultEnd);
-        }
+    #region NumberOfCalendarWeeksForYear
 
-        #endregion
-        
-        #region NumberOfCalendarWeeksForYear
+    [Test]
+    [TestCase(2015, 53)]
+    [TestCase(2016, 52)]
+    [TestCase(2017, 52)]
+    public void GetNumberOfCalendarWeeksForYearTest(int year, int resultWeeks)
+    {
+        var numberOfWeeks = DateTimeExtensions.GetNumberOfCalendarWeeksForYear(year);
 
-        [Test]
-        [TestCase(2015, 53)]
-        [TestCase(2016, 52)]
-        [TestCase(2017, 52)]
-        public void GetNumberOfCalendarWeeksForYearTest(int year, int resultWeeks)
-        {
-            var numberOfWeeks = DateTimeExtensions.GetNumberOfCalendarWeeksForYear(year);
+        Assert.That(resultWeeks, Is.EqualTo(numberOfWeeks));
+    }
 
-            Assert.AreEqual(numberOfWeeks, resultWeeks);
-        }
+    #endregion
 
-        #endregion
-
-        private void AssertEqualDateTime(DateTime a, DateTime b)
-        {
-            Assert.AreEqual(a.Day, b.Day);
-            Assert.AreEqual(a.Hour, b.Hour);
-            Assert.AreEqual(a.Minute, b.Minute);
-            Assert.AreEqual(a.Millisecond, b.Millisecond);
-        }
+    private void AssertEqualDateTime(DateTime a, DateTime b)
+    {
+        Assert.That(b.Day, Is.EqualTo(a.Day));
+        Assert.That(b.Hour, Is.EqualTo(a.Hour));
+        Assert.That(b.Minute, Is.EqualTo(a.Minute));
+        Assert.That(b.Millisecond, Is.EqualTo(a.Millisecond));
     }
 }

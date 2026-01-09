@@ -1,0 +1,74 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+@use "@moryx/ngx-web-framework/styles/colors" as *; 
+
+.recipes-overview {
+  flex: 1 1 20%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+}
+
+::ng-deep .recipes-overview-list-item .mdc-list-item__content  {
+  pointer-events: auto;
+}
+
+.recipes-overview-list {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  flex: 1 1;
+  overflow-y: auto;
+}
+
+.recipes-overview-list-item {
+  cursor: pointer !important;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.recipes-overview-list-item-content {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.recipes-overview-list-item-content-delete {
+  width: fit-content;
+}
+
+.recipes-overview-list-item-content-name {
+  align-self: center;
+}
+.recipes-overview-actions {
+  height: fit-content;
+}
+.add-recipe-button{
+  width: 100%;
+}
+.recipes-details {
+  flex: 1 1 80%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  margin-left: 10px;
+  overflow: hidden;
+}
+
+.truncate-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.moryx-selected {
+  background: $primary-light;
+}
+
+@media screen and (max-width: 768px) {
+  .truncate-name {
+    width: 100px;
+  }
+}

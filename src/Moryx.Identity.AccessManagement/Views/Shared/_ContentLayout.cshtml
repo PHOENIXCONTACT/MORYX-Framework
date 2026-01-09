@@ -1,0 +1,63 @@
+﻿@using Moryx.Identity.AccessManagement.Data
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<MoryxUser> SignInManager
+
+@{
+    Layout = "_Layout";
+}
+ 
+@section Styles {
+    <link rel="stylesheet" href="~/_content/Moryx.Identity.AccessManagement/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/_content/Moryx.Identity.AccessManagement/lib/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/_content/Moryx.Identity.AccessManagement/css/site.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/_content/Moryx.Identity.AccessManagement/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/_content/Moryx.Identity.AccessManagement/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/_content/Moryx.Identity.AccessManagement/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+}
+
+<div class="body-container">
+    <div tabindex="-1" role="navigation" class="nav-tree">
+        <div class="nav-drawer-inner-container ">
+            <div class="nav-side-bar ">
+                <div class="nav-toolbar" style="background-image: url('/_content/Moryx.Identity.AccessManagement/img/access-management-toolbar.webp');">
+                    <div class="nav-toolbar-row">
+                    </div>
+                    <div class="nav-toolbar-row">
+                        <span class="nav-space"></span>
+                        <span>AccessManagement</span>
+                    </div>
+                </div>
+                <partial name="_NavigationSidebar" />
+            </div>
+
+        </div>
+    </div>
+    <div class="drawer-container">
+        <section role="main">
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMessage
+                </div>
+            }
+
+            @if (ViewBag.SuccessMessage != null)
+            {
+                <div class="alert alert-success" role="alert">
+                    @ViewBag.SuccessMessage
+                </div>
+            }
+
+            <div class="drawer-content">
+                <div class="container">
+                    @RenderBody()
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+

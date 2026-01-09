@@ -1,119 +1,116 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Products;
 using Moryx.Modules;
 
-namespace Moryx.Products.Management
+namespace Moryx.Products.Management;
+
+/// <summary>
+/// Management component
+/// </summary>
+internal interface IProductManager : IAsyncPlugin
 {
     /// <summary>
-    /// Management component
+    /// Returns all available product importers
     /// </summary>
-    internal interface IProductManager : IPlugin
-    {
-        /// <summary>
-        /// Returns all available product importers
-        /// </summary>
-        IProductImporter[] Importers { get; }
+    IProductImporter[] Importers { get; }
 
-        /// <summary>
-        /// Returns all products on this machine
-        /// </summary>
-        IReadOnlyList<IProductType> LoadTypes(ProductQuery query);
+    /// <summary>
+    /// Returns all products on this machine
+    /// </summary>
+    Task<IReadOnlyList<ProductType>> LoadTypes(ProductQuery query);
 
-        /// <summary>
-        /// Load types using filter expression
-        /// </summary>
-        IReadOnlyList<TType> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
+    /// <summary>
+    /// Load types using filter expression
+    /// </summary>
+    Task<IReadOnlyList<TType>> LoadTypes<TType>(Expression<Func<TType, bool>> selector);
 
-        /// <summary>
-        /// Load product instance by id
-        /// </summary>
-        IProductType LoadType(long id);
+    /// <summary>
+    /// Load product instance by id
+    /// </summary>
+    Task<ProductType> LoadType(long id);
 
-        /// <summary>
-        /// Load product by identity
-        /// </summary>
-        IProductType LoadType(ProductIdentity identity);
+    /// <summary>
+    /// Load product by identity
+    /// </summary>
+    Task<ProductType> LoadType(IIdentity identity);
 
-        /// <summary>
-        /// Create a new product for the given group type
-        /// </summary>
-        IProductType CreateType(string type);
+    /// <summary>
+    /// Create a new product for the given group type
+    /// </summary>
+    ProductType CreateType(string type);
 
-        /// <summary>
-        /// Event raised when a product changed
-        /// </summary>
-        event EventHandler<IProductType> TypeChanged;
+    /// <summary>
+    /// Event raised when a product changed
+    /// </summary>
+    event EventHandler<ProductType> TypeChanged;
 
-        /// <summary>
-        /// Save a product to the database
-        /// </summary>
-        long SaveType(IProductType modifiedInstance);
+    /// <summary>
+    /// Save a product to the database
+    /// </summary>
+    Task<long> SaveType(ProductType modifiedInstance);
 
-        /// <summary>
-        /// Create revision of this product with provided revision number
-        /// </summary>
-        IProductType Duplicate(ProductType source, ProductIdentity identity);
+    /// <summary>
+    /// Create revision of this product with provided revision number
+    /// </summary>
+    Task<ProductType> DuplicateType(ProductType source, IIdentity identity);
 
-        /// <summary>
-        /// Import the given file as a product to the database
-        /// </summary>
-        Task<ProductImportResult> Import(string importer, object parameters);
+    /// <summary>
+    /// Import the given file as a product to the database
+    /// </summary>
+    Task<ProductImportResult> Import(string importer, object parameters);
 
-        /// <summary>
-        /// Import GUID based
-        /// </summary>
-        ImportState ImportParallel(string importer, object parameters);
+    /// <summary>
+    /// Import GUID based
+    /// </summary>
+    ImportState ImportParallel(string importer, object parameters);
 
-        /// <summary>
-        /// Fetch import progress
-        /// </summary>
-        /// <param name="session"></param>
-        /// <returns></returns>
-        ImportState ImportProgress(Guid session);
+    /// <summary>
+    /// Fetch import progress
+    /// </summary>
+    /// <param name="session"></param>
+    /// <returns></returns>
+    ImportState ImportProgress(Guid session);
 
-        /// <summary>
-        /// Try to delete a product. If it is still used as a part in other products, it will return <c>false</c>
-        /// </summary>
-        /// <param name="productId">Id of the product that is deprecated and should be deleted.</param>
-        /// <returns><value>True</value> if the product was removed, <value>false</value> otherwise</returns>
-        bool DeleteType(long productId);
+    /// <summary>
+    /// Try to delete a product. If it is still used as a part in other products, it will return <c>false</c>
+    /// </summary>
+    /// <param name="productId">Id of the product that is deprecated and should be deleted.</param>
+    /// <returns><value>True</value> if the product was removed, <value>false</value> otherwise</returns>
+    Task<bool> DeleteType(long productId);
 
-        /// <summary>
-        /// Create an instance of given product
-        /// </summary>
-        /// <param name="productType">Product to instantiate</param>
-        /// <param name="save">Flag if new instance should already be saved</param>
-        /// <returns>New instance</returns>
-        ProductInstance CreateInstance(IProductType productType, bool save);
+    /// <summary>
+    /// Create an instance of given product
+    /// </summary>
+    /// <param name="productType">Product to instantiate</param>
+    /// <param name="save">Flag if new instance should already be saved</param>
+    /// <returns>New instance</returns>
+    Task<ProductInstance> CreateInstance(ProductType productType, bool save);
 
-        /// <summary>
-        /// Updates the database from the instance
-        /// </summary>
-        void SaveInstances(params ProductInstance[] productInstances);
+    /// <summary>
+    /// Updates the database from the instance
+    /// </summary>
+    Task SaveInstances(params ProductInstance[] productInstances);
 
-        /// <summary>
-        /// Get instances with the given ids.
-        /// </summary>
-        /// <param name="ids">The IDs of instances that should be loaded</param>
-        /// <returns>The instance with the id when it exists.</returns>
-        IReadOnlyList<ProductInstance> GetInstances(params long[] ids);
+    /// <summary>
+    /// Get instances with the given ids.
+    /// </summary>
+    /// <param name="ids">The IDs of instances that should be loaded</param>
+    /// <returns>The instance with the id when it exists.</returns>
+    Task<IReadOnlyList<ProductInstance>> LoadInstances(long[] ids);
 
-        /// <summary>
-        /// Get all instances that match a certain expression
-        /// </summary>
-        IReadOnlyList<TInstance> GetInstances<TInstance>(Expression<Func<TInstance, bool>> selector);
+    /// <summary>
+    /// Get all instances that match a certain expression
+    /// </summary>
+    Task<IReadOnlyList<TInstance>> LoadInstances<TInstance>(Expression<Func<TInstance, bool>> selector);
 
-        /// <summary>
-        /// Return type wrapper to a type
-        /// </summary>
-        /// <param name="typeName">Full name of the type</param>
-        /// <returns></returns>
-        ProductTypeWrapper GetTypeWrapper(string typeName);
-    }
+    /// <summary>
+    /// Return type wrapper to a type
+    /// </summary>
+    /// <param name="typeName">Full name of the type</param>
+    /// <returns></returns>
+    ProductTypeWrapper GetTypeWrapper(string typeName);
 }

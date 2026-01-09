@@ -1,0 +1,61 @@
+<h2 mat-dialog-title>{{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.SHIFT_TYPE | translate }}</h2>
+<mat-dialog-content class="w-full">
+  <form class="w-full flex flex-col gap-y-2" [formGroup]="form">
+    <mat-form-field class="w-full mt-2" appearance="outline">
+      <mat-label>{{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.NAME | translate }}</mat-label>
+      <input
+        matInput
+        type="text"
+        [formControl]="form.controls.name"
+      />
+      @if (form.controls.name.hasError('required')) {
+        <mat-error> {{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.NAME_ERROR | translate }} </mat-error>
+        }
+    </mat-form-field>
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>{{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.DURATION | translate }}</mat-label>
+      <input
+        matInput
+        placeholder="7"
+        type="number"
+        [formControl]="form.controls.duration"
+      />
+      <span matTextSuffix>{{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.DAYS | translate }}</span>
+      @if (form.controls.duration.invalid) {
+        <mat-error> {{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.DURATION_ERROR | translate }} </mat-error>
+        }
+    </mat-form-field>
+    <div class="flex flex-row items-stretch gap-x-2">
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label>{{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.START_TIME | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="10:00"
+          type="time"
+          [formControl]="form.controls.startTime"
+        />
+        @if (form.controls.startTime.invalid) {
+        <mat-error> {{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.START_TIME_ERROR| translate }} </mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field class="w-full" appearance="outline">
+        <mat-label>{{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.END_TIME | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="16:00"
+          type="time"
+          [formControl]="form.controls.endTime"
+        />
+        @if (form.controls.endTime.invalid) {
+        <mat-error> {{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.END_TIME_ERROR | translate }} </mat-error>
+        }
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>{{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.CANCEL | translate }}</button>
+  <button mat-flat-button color="primary" (click)="submit()" cdkFocusInitial>
+    {{ TranslationConstants.DIALOGS.SHIFT_TYPE_DIALOG.SAVE | translate }}
+  </button>
+</mat-dialog-actions>

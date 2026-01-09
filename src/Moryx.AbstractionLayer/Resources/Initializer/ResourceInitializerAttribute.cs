@@ -1,25 +1,23 @@
-// Copyright (c) 2023, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
 using Moryx.Container;
 
-namespace Moryx.AbstractionLayer.Resources
+namespace Moryx.AbstractionLayer.Resources;
+
+/// <summary>
+/// Attribute to register resource initializers
+/// </summary>
+[AttributeUsage(AttributeTargets.Class)]
+public class ResourceInitializerAttribute : PluginAttribute
 {
     /// <summary>
-    /// Attribute to register resource initializers
+    /// Creates a resource initializer registration
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
-    public class ResourceInitializerAttribute : PluginAttribute
+    /// <param name="name">Name of this registration</param>
+    public ResourceInitializerAttribute(string name)
+        : base(LifeCycle.Transient, typeof(IResourceInitializer))
     {
-        /// <summary>
-        /// Creates a resource initializer registration
-        /// </summary>
-        /// <param name="name">Name of this registration</param>
-        public ResourceInitializerAttribute(string name) 
-            : base(LifeCycle.Singleton, typeof(IResourceInitializer))
-        {
-            Name = name;
-        }
+        Name = name;
     }
 }
