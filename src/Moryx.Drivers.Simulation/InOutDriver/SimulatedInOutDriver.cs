@@ -87,28 +87,28 @@ public abstract class SimulatedInOutDriver : Driver, IInOutDriver, ISimulationDr
     public void SetBool(string key, bool value)
     {
         SimulatedInput.Values[key] = value;
-        SimulatedInput.RaiseInputChanged(key);
+        SimulatedInput.RaiseInputChanged(key, value);
     }
 
     [EntrySerialize]
     public void SetFloat(string key, float value)
     {
         SimulatedInput.Values[key] = value;
-        SimulatedInput.RaiseInputChanged(key);
+        SimulatedInput.RaiseInputChanged(key, value);
     }
 
     [EntrySerialize]
     public void SetInteger(string key, int value)
     {
         SimulatedInput.Values[key] = value;
-        SimulatedInput.RaiseInputChanged(key);
+        SimulatedInput.RaiseInputChanged(key, value);
     }
 
     [EntrySerialize]
     public void SetString(string key, string value)
     {
         SimulatedInput.Values[key] = value;
-        SimulatedInput.RaiseInputChanged(key);
+        SimulatedInput.RaiseInputChanged(key, value);
     }
 
     /// <summary>
