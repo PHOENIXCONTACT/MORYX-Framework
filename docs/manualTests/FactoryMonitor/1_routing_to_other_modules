@@ -1,9 +1,0 @@
-# Test Case 1 - Routing to other modules
-
-## Steps
-
-| Step/Instruction | Expected Result | Comment |
-|------------------|-----------------|---------|
-| Open the tile **Factory Monitor** | The factory monitor opens and you can see all the cells | |
-| Right click (or long click for touch) | A context menu opens and has one entry with the name of the resource | During production there are additional entries for the order and the process |
-| Click on the entry with the resource name | You get routed to the page of the resource in the **Resource Management** | |
