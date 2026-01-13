@@ -96,7 +96,7 @@ public class TestMqttTopic
             Identifier = "topicDriver/",
             Id = 4,
             Logger = new ModuleLogger("Dummy", new NullLoggerFactory()),
-            Channels = new ReferenceCollectionMock<MqttTopic> {  },
+            Channels = new ReferenceCollectionMock<MqttTopic> { },
             BrokerUrl = "mock"
         };
         var topic = new MqttTopicJson()
@@ -114,8 +114,8 @@ public class TestMqttTopic
         Assert.That(topic.SubscribedTopic, Is.EqualTo(expected));
     }
 
-    [TestCase("asdf+/asdf", Description = "+ must be complete topic level")] 
-    [TestCase("asdf#", Description = "# must be a complete topic level")] 
+    [TestCase("asdf+/asdf", Description = "+ must be complete topic level")]
+    [TestCase("asdf#", Description = "# must be a complete topic level")]
     [TestCase("#/asdf", Description = "# is only allowed at the end")]
     [TestCase("{test|#}/a", Description = "{test|#} is equivalent to an # and is only allowed at the end")]
     [TestCase("asdf{test}", Description = "{test} is equivalent to + and must be an entire level on it's own")]

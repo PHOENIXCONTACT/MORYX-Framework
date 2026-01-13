@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026, Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
@@ -96,9 +96,7 @@ public abstract class MqttTopic : Resource, IMessageChannel
     [Display(Name = nameof(Strings.MqttTopic_TraceDecodedMessage), Description = nameof(Strings.MqttTopic_TraceDecodedMessage_Description), ResourceType = typeof(Strings))]
     public bool TraceDecodedMessage { get; set; }
 
-
-    
-    private static readonly Regex TopicValidationRegex = CreateTopicValidationRegex();
+    private static readonly Regex _topicValidationRegex = CreateTopicValidationRegex();
 
     private static Regex CreateTopicValidationRegex()
     {
@@ -126,7 +124,7 @@ public abstract class MqttTopic : Resource, IMessageChannel
             return (TopicValidationResult.Invalid, "topic is null");
         }
 
-        if (!TopicValidationRegex.IsMatch(value))
+        if (!_topicValidationRegex.IsMatch(value))
         {
             var logMessage = $"Topic {value} does not match requirements. We don't allow most special characters. '+' must be a complete hierarchy step. '#' wildcards may only appear at the end";
             return (TopicValidationResult.Invalid, logMessage);
