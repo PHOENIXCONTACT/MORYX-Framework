@@ -68,7 +68,7 @@ In case you used any of these `Create()` functions, please update your code by
 using ef core's `DbContext`. As an example for `IActivitiyEntityRepository` the
 changes could look like this:
 
-```
+```csharp
     // before
     var activityEntity = uow.GetRepository<IActivityEntityRepository>().Create(activityData.Task.Id, activityData.Resource.Id);
     activityEntity.ProcessId = processData.Id;
@@ -82,7 +82,7 @@ changes could look like this:
         ResourceId = activityData.Resource.Id,
         ProcessId = processData.Id,
     }).Entity;
-
+```
 
 ### MORYX Machine Connector
 ```sql
@@ -310,8 +310,8 @@ ALTER INDEX "PartLink_IX_ChildId" RENAME TO "IX_PartLinks_ChildId";
 ALTER INDEX "PartLink_IX_ParentId" RENAME TO "IX_PartLinks_ParentId";
 
 ALTER TABLE public."ProductFileEntity" RENAME TO "ProductFiles";
-ALTER TABLE public."PartLinks" RENAME CONSTRAINT "PK_public.ProductFileEntity" TO "PK_ProductFiles";
-ALTER TABLE public."PartLinks" RENAME CONSTRAINT "FK_public.ProductFileEntity_public.ProductTypeEntity_Product_Id" TO "FK_ProductFiles_ProductTypes_ProductId";
+ALTER TABLE public."ProductFiles" RENAME CONSTRAINT "PK_public.ProductFileEntity" TO "PK_ProductFiles";
+ALTER TABLE public."ProductFiles" RENAME CONSTRAINT "FK_public.ProductFileEntity_public.ProductTypeEntity_Product_Id" TO "FK_ProductFiles_ProductTypes_ProductId";
 ALTER INDEX "ProductFileEntity_IX_Product_Id" RENAME TO "IX_ProductFiles_ProductId";
 
 ALTER TABLE public."ProductInstanceEntity" RENAME TO "ProductInstances";
@@ -346,8 +346,8 @@ ALTER TABLE public."StepEntity" RENAME TO "WorkplanSteps";
 ALTER TABLE public."WorkplanSteps" RENAME CONSTRAINT "PK_public.StepEntity" TO "PK_WorkplanSteps";
 ALTER TABLE public."WorkplanSteps" RENAME CONSTRAINT "FK_public.StepEntity_public.WorkplanEntity_SubWorkplanId" TO "FK_WorkplanSteps_Workplans_SubWorkplanId";
 ALTER TABLE public."WorkplanSteps" RENAME CONSTRAINT "FK_public.StepEntity_public.WorkplanEntity_WorkplanId" TO "FK_WorkplanSteps_Workplans_WorkplanId";
-ALTER INDEX "ProductTypeEntity_IX_CurrentVersionId" RENAME TO "IX_WorkplanSteps_WorkplanId";
-ALTER INDEX "ProductTypeEntity_Identifier_Revision_Index" RENAME TO "IX_WorkplanSteps_SubWorkplanId";
+ALTER INDEX "StepEntity_IX_WorkplanId" RENAME TO "IX_WorkplanSteps_WorkplanId";
+ALTER INDEX "StepEntity_IX_SubWorkplanId" RENAME TO "IX_WorkplanSteps_SubWorkplanId";
 ALTER TABLE public."WorkplanSteps" ADD COLUMN "PositionX" float8 NOT NULL;
 ALTER TABLE public."WorkplanSteps" ADD COLUMN "PositionY" float8 NOT NULL;
 
@@ -369,7 +369,7 @@ CREATE TABLE public."__EFMigrationsHistory" (
 );
 ALTER TABLE public."__EFMigrationsHistory" OWNER TO postgres;
 INSERT INTO public."__EFMigrationsHistory"("MigrationId", "ProductVersion") 
-VALUES ('20211104134724_InitialCreate', '3.1.0');
+VALUES ('20220906133824_InitialCreate', '8.0.12');
 ALTER TABLE ONLY public."__EFMigrationsHistory"
     ADD CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY ("MigrationId");
 	
