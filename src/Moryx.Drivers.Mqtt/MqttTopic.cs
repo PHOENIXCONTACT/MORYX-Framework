@@ -50,17 +50,18 @@ public abstract class MqttTopic : Resource, IMessageChannel
                 case TopicValidationResult.Valid:
                     //replace +
                     var pattern = value.Replace("+", @"\w+");
-                    //replace #
-                    pattern = pattern.Replace("#", @"\w+(?:/\w+)*");
                     //replace placeholder
                     pattern = value.Contains('{') ?
-                        pattern.Replace("{", "(?<").Replace("}", @">(?:\w|\:)+)") : pattern;
+                        pattern.Replace("{", "(?<").Replace("|#}", @">[\w-_]+(?:/[\w-_]+)*)").Replace("}", @">(?:[\w-_\:])+)") : pattern;
+                    //replace #
+                    pattern = pattern.Replace("#", @"[\w-_]+(?:/[\w-_]+)*");
                     pattern = pattern.Replace(".", "__");
                     pattern += "$";
                     RegexTopic = new Regex(pattern);
 
-                    var regex = new Regex(@"({\w*})");
-                    SubscribedTopic = regex.Replace(value.Replace(".", "__"), "+");
+                    var subscribeTopic = value.Replace(".", "__");
+                    subscribeTopic = new Regex(@"\{\w+\|#\}").Replace(subscribeTopic, "#");
+                    SubscribedTopic = new Regex(@"({\w*})").Replace(subscribeTopic, "+");
 
                     var oldTopic = _topicName;
                     _topicName = value;
@@ -95,6 +96,24 @@ public abstract class MqttTopic : Resource, IMessageChannel
     [Display(Name = nameof(Strings.MqttTopic_TraceDecodedMessage), Description = nameof(Strings.MqttTopic_TraceDecodedMessage_Description), ResourceType = typeof(Strings))]
     public bool TraceDecodedMessage { get; set; }
 
+
+    
+    private static readonly Regex TopicValidationRegex = CreateTopicValidationRegex();
+
+    private static Regex CreateTopicValidationRegex()
+    {
+        // create complex validation regex from a sequence of steps to keep it somewhat understandable. 
+        var word = @"(\w+)";
+        var allowedCharactersInLevel = @"[^/\+#\| \{\}]";
+        var bindingContent = $$"""({{word}}\.)*{{word}}""";
+        var simpleBinding = $$"""(\{{{bindingContent}}\})""";
+        var wildCardBinding = $$"""(\{{{bindingContent}}(\|#)\})""";
+        var generalTopic = $$"""(({{allowedCharactersInLevel}}+)|{{simpleBinding}}|\+)""";
+        var lastTopic = $$"""({{generalTopic}}|#|{{wildCardBinding}})""";
+        var pattern = $$"""^({{generalTopic}}/)*{{lastTopic}}$""";
+        return new Regex(pattern);
+    }
+
     private (TopicValidationResult result, string errorMessage) ValidateTopicString(string value)
     {
         if (value is null)
@@ -104,19 +123,12 @@ public abstract class MqttTopic : Resource, IMessageChannel
                 return (TopicValidationResult.Uninitialized, "topic is null");
             }
 
-            return (TopicValidationResult.Invalid, "topic is null"); ;
+            return (TopicValidationResult.Invalid, "topic is null");
         }
 
-        var regexPlaceholders = new Regex(@"(\w|})({\w*})|({\w*})(\w|{)");
-        var regexWildcards = new Regex(@"(([^/](\+|#)|(\+|#)[^/]))");
-        if (regexPlaceholders.IsMatch(value))
+        if (!TopicValidationRegex.IsMatch(value))
         {
-            var logMessage = $"Topic {value} does not match requirements.Things like abv{{foo}} and {{foo}}{{foo2}} are not allowed.";
-            return (TopicValidationResult.Invalid, logMessage);
-        }
-        else if (regexWildcards.IsMatch(value))
-        {
-            var logMessage = $"Topic {value} does not match requirements. Things like abv+, abc#, +as, #sdf and +# are not allowed.";
+            var logMessage = $"Topic {value} does not match requirements. We don't allow most special characters. '+' must be a complete hierarchy step. '#' wildcards may only appear at the end";
             return (TopicValidationResult.Invalid, logMessage);
         }
         else if (value.Contains(' '))
