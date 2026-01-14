@@ -43,31 +43,31 @@ public class TestMqttTopic
     [TestCase("{foo}/{foo1.hjh}/abs/+", "as/ff/abs/34", true)]
     public void MessageBelongsToThisTopic(string topicName, string receivedTopic, bool result)
     {
-        //Arrange
+        // Arrange
         var topicResource = new MqttTopicIByteSerializable { Identifier = topicName };
 
-        //Act
+        // Act
         var messageBelongsToTopic = topicResource.Matches(receivedTopic);
 
-        //Assert
+        // Assert
         Assert.That(result, Is.EqualTo(messageBelongsToTopic), "Matching is wrong");
     }
 
     [Test]
     public void GetPlaceHolderNames()
     {
-        //Arrange
+        // Arrange
         var topicResource = new MqttTopicIByteSerializable
         {
             Identifier = _topicWithPlaceholders
         };
 
-        //Act
+        // Act
         var allNames = topicResource.RegexTopic.GetGroupNames();
         var names = new string[allNames.Length - 1];
         Array.Copy(allNames, 1, names, 0, names.Length);
 
-        //Assert
+        // Assert
         Assert.That(_placeHolderNames.Count, Is.EqualTo(names.Length));
         foreach (var n in names)
         {
@@ -89,8 +89,7 @@ public class TestMqttTopic
     [TestCase("colon:and/dashes-allowed", "colon:and/dashes-allowed")]
     public void SubscribedTopicIsAssignedCorrectlyForValidTopics(string identifier, string expected)
     {
-
-        //Arrange
+        // Arrange
         var driver = new MqttDriver
         {
             Identifier = "topicDriver/",
@@ -106,11 +105,11 @@ public class TestMqttTopic
         };
         driver.Channels.Add(topic);
 
-        //Act
+        // Act
 
         topic.Identifier = identifier;
 
-        //Assert
+        // Assert
         Assert.That(topic.SubscribedTopic, Is.EqualTo(expected));
     }
 
@@ -122,8 +121,7 @@ public class TestMqttTopic
     [TestCase("asdf asdo/sfon", Description = "We don't allow spaces")]
     public void SubscribedTopicIsNotAssignedForInvalidTopics(string example)
     {
-        //Arrange
-
+        // Arrange
         var driver = new MqttDriver
         {
             Identifier = "topicDriver/",
@@ -139,25 +137,25 @@ public class TestMqttTopic
         };
 
         driver.Channels.Add(topic);
-        //Act
+        // Act
         topic.Identifier = example;
-        //Assert
+        // Assert
         Assert.That(topic.SubscribedTopic, Is.Null);
     }
 
     public static (string identifier, string topic, MessageForPlaceholderMessages message)[] ParsingExamples => [
         ("a/{PcName}", "a/hello", new MessageForPlaceholderMessages { PcName = "hello"}),
-        //("{Identity.Identifier}/{Identity.Revision}", "hello/5", new MessageForPlaceholderMessages() {Identity = new AbstractionLayer.Products.ProductIdentity("hello", 5)}), // asigning nested properties doesn't work yet. Problem in the binding part
+        // ("{Identity.Identifier}/{Identity.Revision}", "hello/5", new MessageForPlaceholderMessages() {Identity = new AbstractionLayer.Products.ProductIdentity("hello", 5)}), // asigning nested properties doesn't work yet. Problem in the binding part
         ("34/{PcName|#}", "34/europe/abc-283", new MessageForPlaceholderMessages() {PcName = "europe/abc-283"}),
         ("34/{PcName}", "34/europe", new MessageForPlaceholderMessages() {PcName = "europe"}),
-        //("34/{ClassProperty.Test}", "34/europe", new MessageForPlaceholderMessages() {ClassProperty = new() { Test = "europe"} }) // asigning nested properties doesn't work yet. Problem in the binding part
+        // ("34/{ClassProperty.Test}", "34/europe", new MessageForPlaceholderMessages() {ClassProperty = new() { Test = "europe"} }) // asigning nested properties doesn't work yet. Problem in the binding part
     ];
 
     [CancelAfter(100)]
     [TestCaseSource(nameof(ParsingExamples))]
     public async Task TestParsing((string identifier, string topic, MessageForPlaceholderMessages message) example, CancellationToken token)
     {
-        //Arrange
+        // Arrange
         var driver = new MqttDriver
         {
             Identifier = "topicDriver/",
@@ -184,12 +182,11 @@ public class TestMqttTopic
             {}
             """));
 
-        //Act
+        // Act
         jsonTopic.Identifier = example.identifier;
         jsonTopic.OnReceived(example.topic, payload, null, false);
 
-        //Assert
-
+        // Assert
         Assert.That(jsonTopic.Matches(example.topic));
         var parsed = await tcs.Task;
 
@@ -199,7 +196,6 @@ public class TestMqttTopic
         Assert.That(parsed.Identity, Is.EqualTo(example.message.Identity));
         Assert.That(parsed.AdapterNumber, Is.EqualTo(example.message.AdapterNumber));
         Assert.That(parsed.ClassProperty?.Test, Is.EqualTo(example.message.ClassProperty?.Test));
-
     }
 
 }
