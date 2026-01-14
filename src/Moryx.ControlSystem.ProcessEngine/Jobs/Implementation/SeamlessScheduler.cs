@@ -47,9 +47,9 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
             yield break;
         }
         // Option 2: System restarted and we resume jobs
-        else if (allJobs.Any(j => j.RunningProcesses.Count > 0))
+        else if (allJobs.Any(HadStarted))
         {
-            foreach (var job in allJobs.Where(j => j.RunningProcesses.Count > 0))
+            foreach (var job in allJobs.Where(HadStarted))
             {
                 yield return job;
             }
@@ -85,6 +85,11 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
         }
     }
 
+        /// <summary>
+        /// Jobs are reloaded without completed processes and might have been running without currently running processes at shut down
+        /// </summary>
+        private static bool HadStarted(Job j) => j.RunningProcesses.Count > 0 || j.SuccessCount > 0 || j.FailureCount > 0;
+
     public override void JobsReady(IEnumerable<Job> startableJobs)
     {
         var runningJob = _running.Target;
@@ -113,14 +118,14 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
         }
 
         // Iterate all jobs and assign to running or resume slots
-        var last = first;
+        Job last = null;
         foreach (var job in allJobs)
         {
             if (job == first && job.RunningProcesses.Count == 0)
             {
                 AssignRunning(job);
             }
-            else if (job.RunningProcesses.Count > 0)
+            else if (HadStarted(job))
             {
                 // Previously running jobs are resumed
                 if (job.SameRecipeAs(last))
