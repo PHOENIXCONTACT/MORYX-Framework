@@ -1,8 +1,10 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
 using Moryx.Container;
 using Moryx.ControlSystem.Jobs;
+using Moryx.Logging;
 using Moryx.Modules;
 
 namespace Moryx.ControlSystem.ProcessEngine.Jobs;
@@ -18,12 +20,13 @@ namespace Moryx.ControlSystem.ProcessEngine.Jobs;
 /// </summary>
 [ExpectedConfig(typeof(SeamlessSchedulerConfig))]
 [Plugin(LifeCycle.Singleton, typeof(IJobScheduler), Name = nameof(SeamlessScheduler))]
-internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConfig>
+internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConfig>, ILoggingComponent
 {
     private JobSlotWrapper _running;
-
     private JobSlots _completingSlots;
     private JobSlots _resumeSlots;
+
+    public IModuleLogger Logger { get; set; }
 
     /// <inheritdoc />
     public override void Initialize(JobSchedulerConfig config)
@@ -75,33 +78,38 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
             {
                 var previous = JobList.Previous(job);
                 if (_running.Target.SameRecipeAs(job) && job.SameRecipeAs(previous))
+                {
                     yield return job;
+                }
             }
         }
     }
 
     public override void JobsReady(IEnumerable<Job> startableJobs)
     {
-        // If the running slot is currently assigned to a running job, leave this waiting
-        if (_running.Target?.Classification <= JobClassification.Running)
-            return;
-
-        var allJobs = startableJobs.ToList();
-        // If the RunningSlot is currently assigned, with a completing job, we move it
         var runningJob = _running.Target;
+        // If the running slot is currently assigned to a running job, leave these waiting
+        if (runningJob?.Classification <= JobClassification.Running)
+        {
+            return;
+        }
+
+        // If the RunningSlot is currently assigned, with a completing job, we move it
         if (runningJob is not null &&
             (IsCompletingProductionFollowedByCleanUp(runningJob) || IsCompletingSetupNotFollowedByProduction(runningJob)))
         {
             // Move to completing slots
-            MoveToCompleting();
+            MoveToCompleting(runningJob, JobSource.FromRunning);
         }
 
+        var allJobs = startableJobs.ToList();
         var first = allJobs[0];
-        // If the running slot falls back to a completing group, move it back to running
+
+        // If the running slot falls back to a completing group, remove it from completing
         var previous = JobList.Previous(first);
-        if (first.SameRecipeAs(previous) && previous.Classification == JobClassification.Completing && _completingSlots.TryRelease(previous))
+        if (first.SameRecipeAs(previous) && previous.Classification == JobClassification.Completing)
         {
-            _completingSlots.TryResize(_completingSlots.Size - 1);
+            TryReleaseCompleting(previous);
         }
 
         // Iterate all jobs and assign to running or resume slots
@@ -110,25 +118,23 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
         {
             if (job == first && job.RunningProcesses.Count == 0)
             {
-                // New job takes the running slot
-                _running.Assign(job);
-                RaiseJobScheduled(job);
+                AssignRunning(job);
             }
             else if (job.RunningProcesses.Count > 0)
             {
                 // Previously running jobs are resumed
-                if (job.SameRecipeAs(last) && _resumeSlots.TryReplace(last, job))
+                if (job.SameRecipeAs(last))
                 {
-                    // Follow-up to resumed job with slot
-                    RaiseJobScheduled(job);
+                    // Follow-up to already resumed job with slot
+                    ReplaceResumed(last, job);
                 }
-                else if (_resumeSlots.TryResize(_resumeSlots.Size + 1) && _resumeSlots.TryAssign(job))
+                else
                 {
                     // Provide new resume slot
-                    RaiseJobScheduled(job);
+                    AssignResumed(job);
                 }
             }
-                last = job;
+            last = job;
         }
     }
 
@@ -145,31 +151,32 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
         // After restart we move jobs from resume slots to productive slots
         if (_resumeSlots.HasSlot(job))
         {
-            if (classification == JobClassification.Running && _resumeSlots.TryRelease(job))
+            if (classification == JobClassification.Running)
             {
-                // Resumed job takes the running slot
-                _running.Assign(job);
+                MoveToRunning(job, JobSource.FromResumed);
             }
-            else if (classification == JobClassification.Completing && _resumeSlots.TryRelease(job))
+            else if (classification == JobClassification.Completing)
             {
-                // Resumed job is completing
-                MoveToCompleting(job, false);
+                MoveToCompleting(job, JobSource.FromResumed);
             }
 
-            // Prune resume slots
-            _resumeSlots.TryResize(_resumeSlots.Size - _resumeSlots.AvailableSlots);
+            // If we resumed everything, we can reassign running with new jobs
             if (_resumeSlots.Size == 0 && _running.Target == null)
-                RaiseSlotAvailable(); // If we resumed everything, we can reassign running with new jobs
+            {
+                RaiseSlotAvailable();
+            }
+            return;
         }
 
         // Changes below Completing do not interest us
         if (classification < JobClassification.Completing)
+        {
             return;
+        }
 
         // If the completed job was a cleanup or a setup which was moved to completing, remove the slot
-        if (classification == JobClassification.Completed && (job.IsCleanup() || job.IsSetup()) && _completingSlots.TryRelease(job))
+        if (classification == JobClassification.Completed && (job.IsCleanup() || job.IsPrepare()) && TryReleaseCompleting(job))
         {
-            _completingSlots.TryResize(_completingSlots.Size - 1);
             return;
         }
 
@@ -178,9 +185,9 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
         if (next is null)
         {
             // There is a completing setup, for which the production job is gone, e.g. aborted
-            if(classification == JobClassification.Completing && job.IsSetup())
+            if (classification == JobClassification.Completing && job.IsPrepare())
             {
-                MoveToCompleting(job);
+                MoveToCompleting(job, JobSource.FromRunning);
                 RaiseSlotAvailable();
             }
             return;
@@ -189,8 +196,7 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
         if (_running.Target == job && next.SameRecipeAs(job))
         {
             // Next job is a follow-up for the completing job
-            _running.Assign(next);
-            RaiseJobScheduled(next);
+            AssignRunning(next);
         }
         else if (_running.Target == job && classification == JobClassification.Completing && next.IsCleanupOf(job))
         {
@@ -202,49 +208,165 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
             if (job.IsPrepareOf(next))
             {
                 // If the completed job was a prepare, start its production target
-                _running.Assign(next);
-                RaiseJobScheduled(next);
+                AssignRunning(next);
             }
             else if (next.IsCleanupOf(job) && next.IsCleanupOf(JobList.Previous(job)))
             {
-                // Job has the slot, but previous is still running, return the slot
-                _running.Assign(JobList.Previous(job));
-                // If the slot falls back from running to completing, it becomes available
-                RaiseSlotAvailable();
+                // Completing jobs completed in reverse order
+                var previous = JobList.Previous(job);
+                ReplaceRunning(job, previous);
             }
             else if (job.IsPrepare() && next.IsCleanup() || next.IsCleanupOf(job))
             {
-                // We start the clean-up
-                MoveToCompleting(next);
+                // A completing job on running slot has completed, start the cleanup
+                MoveToCompleting(next, JobSource.FromRunning);
                 RaiseJobScheduled(next);
-                // We have released the running slot
+                // Already raised if job is not a prepare, but doesn't hurt and necessary,
+                // if production job was aborted between setup and clean-up
                 RaiseSlotAvailable();
             }
         }
         else if (classification == JobClassification.Completed && next.IsCleanupOf(job))
         {
-            // Completing jobs completed in reverse order
             var previous = JobList.Previous(job);
-            if (next.IsCleanupOf(previous) && _completingSlots.TryReplace(job, previous))
+            if (next.IsCleanupOf(previous) && TryReplaceCompleting(job, previous))
             {
-                // Assign slot back to previous job
+                // Completing jobs completed in reverse order
             }
-            // A running job from the completing slots has completed, start the cleanup
-            else if (_completingSlots.TryReplace(job, next))
+            else if (TryReplaceCompleting(job, next))
             {
+                // A completing job on completing slot has completed, start the cleanup
                 RaiseJobScheduled(next);
             }
         }
     }
 
     /// <summary>
-    /// Move job on running slot to completing
+    /// Replaces the <paramref name="running"/> job with a <paramref name="previous"/> job
     /// </summary>
-    private void MoveToCompleting(Job job = null, bool clearRunning = true)
+    private void ReplaceRunning(Job running, Job previous)
+    {
+        _running.Assign(previous);
+        Logger.LogTrace("{classification} job {id} replaced {runningClassification} job {runningId} in running slot",
+            previous.Classification, previous.Id, running.Classification, running.Id);
+        // We might have raised the event already, when running switched to completing, but this switch is not guaranteed
+        RaiseSlotAvailable();
+    }
+
+    /// <summary>
+    /// Replaces the <paramref name="completing"/> job with a <paramref name="previous"/> job
+    /// </summary>
+    private bool TryReplaceCompleting(Job completing, Job previous)
+    {
+        if (!_completingSlots.TryReplace(completing, previous))
+        {
+            return false;
+        }
+        Logger.LogTrace("{classification} job {id} replaced {previousClassification} job {previousId} in completing slot",
+            previous.Classification, previous.Id, completing.Classification, completing.Id);
+        return true;
+    }
+
+    /// <summary>
+    /// Assign the running slot to new <paramref name="job"/>
+    /// </summary>
+    private void AssignRunning(Job job)
+    {
+        _running.Assign(job);
+        Logger.LogTrace("{classification} job {id} assigned to running slot", job.Classification, job.Id);
+        RaiseJobScheduled(job);
+    }
+
+    /// <summary>
+    /// Moved the <paramref name="job"/> from the <paramref name="source"/> to the running slot
+    /// </summary>
+    /// <param name="job"></param>
+    /// <param name="source"></param>
+    private void MoveToRunning(Job job, JobSource source)
+    {
+        if (source != JobSource.FromResumed)
+        {
+            return;
+        }
+        _resumeSlots.TryRelease(job);
+        _resumeSlots.TryResize(_resumeSlots.Size - _resumeSlots.AvailableSlots);
+        _running.Assign(job);
+        Logger.LogTrace("{classification} job {id} moved from resume to running slot", job.Classification, job.Id);
+    }
+
+    /// <summary>
+    /// Move <paramref name="job"/> completing slots, optionally clearing the running slot
+    /// </summary>
+    private void MoveToCompleting(Job job, JobSource source)
     {
         _completingSlots.TryResize(_completingSlots.Size + 1);
-        _completingSlots.TryAssign(job ?? _running.Target);
-        if (clearRunning)
+        if (!_completingSlots.TryAssign(job))
+        {
+            return;
+        }
+
+        if (source == JobSource.FromRunning)
+        {
             _running.Assign(null);
+            Logger.LogTrace("{classification} job {id} moved from running to completing slot", job.Classification, job.Id);
+        }
+        else if (source == JobSource.FromResumed && _resumeSlots.TryRelease(job))
+        {
+            _resumeSlots.TryResize(_resumeSlots.Size - _resumeSlots.AvailableSlots);
+            Logger.LogTrace("{classification} job {id} moved from running to completing slot", job.Classification, job.Id);
+        }
     }
+
+    /// <summary>
+    /// Try releasing completing slot occupied by the <paramref name="job"/>
+    /// </summary>
+    private bool TryReleaseCompleting(Job job)
+    {
+        if (!_completingSlots.TryRelease(job))
+        {
+            return false;
+        }
+
+        Logger.LogTrace("{classification} Job {id} released a completing slots", job.Classification, job.Id);
+        _completingSlots.TryResize(_completingSlots.Size - 1);
+        return true;
+    }
+
+    /// <summary>
+    /// Assign a new resume slot to the given <paramref name="job"/>
+    /// </summary>
+    /// <param name="job"></param>
+    private void AssignResumed(Job job)
+    {
+        _resumeSlots.TryResize(_resumeSlots.Size + 1);
+        if (!_resumeSlots.TryAssign(job))
+        {
+            return;
+        }
+
+        Logger.LogTrace("{classification} job {id} assigned to resume slot", job.Classification, job.Id);
+        RaiseJobScheduled(job);
+    }
+
+    /// <summary>
+    /// Try replacing a resumed job in the resume slots with a follow-up <paramref name="job"/>
+    /// </summary>
+    private void ReplaceResumed(Job previous, Job job)
+    {
+        if (!_resumeSlots.TryReplace(previous, job))
+        {
+            return;
+        }
+        Logger.LogTrace("{classification} job {id} replaced {previousClassification} job {previousId} in completing slot",
+            job.Classification, job.Id, previous.Classification, previous.Id);
+        RaiseJobScheduled(job);
+    }
+
+    private enum JobSource
+    {
+        FromRunning,
+        FromResumed,
+        FromCompleting
+    }
+}
 }

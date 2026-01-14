@@ -118,7 +118,7 @@ internal class ProcessRemoval : IActivityPoolListener, IDisposable
         }
         // And for aborting processes we process the completed or aborted activities
         else if (processData.State == ProcessState.Aborting
-                 && (args.Trigger == ActivityState.Completed || args.Trigger == ActivityState.Aborted))
+            && (args.Trigger == ActivityState.Completed || args.Trigger == ActivityState.Aborted))
         {
             CheckProcessAborted(processData);
         }

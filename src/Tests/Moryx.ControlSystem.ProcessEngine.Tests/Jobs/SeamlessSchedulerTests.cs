@@ -9,6 +9,7 @@ using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Setups;
 using Moryx.ControlSystem.TestTools;
+using Moryx.TestTools.UnitTest;
 using NUnit.Framework;
 
 namespace Moryx.ControlSystem.ProcessEngine.Tests.Jobs;
@@ -20,7 +21,8 @@ public class SeamlessSchedulerTests : SchedulerTestBase
     {
         var scheduler = new SeamlessScheduler
         {
-            JobList = JobListMock.Object
+            JobList = JobListMock.Object,
+                Logger = new DummyLogger()
         };
         scheduler.Initialize(new SeamlessSchedulerConfig());
         return scheduler;
