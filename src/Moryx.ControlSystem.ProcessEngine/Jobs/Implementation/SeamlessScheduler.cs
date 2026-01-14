@@ -85,7 +85,7 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
         // If the RunningSlot is currently assigned, with a completing job, we move it
         var runningJob = _running.Target;
         if (runningJob is not null &&
-            (IsCompletingProductionFollowedByCleanUp(_running.Target) || IsCompletingSetupNotFollowedByProduction(_running.Target)))
+            (IsCompletingProductionFollowedByCleanUp(runningJob) || IsCompletingSetupNotFollowedByProduction(runningJob)))
         {
             // Move to completing slots
             MoveToCompleting();
@@ -123,6 +123,7 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
                     RaiseJobScheduled(job);
                 }
             }
+                last = job;
         }
     }
 
