@@ -1,0 +1,16 @@
+{
+    "name": "moryx.identity.accessmanagement",
+    "version": "1.0.0",
+    "description": "MORYX Identity and Access Management UI",
+    "scripts": {
+        "build:css": "npx tailwindcss -i ./wwwroot/css/app.css -o ./wwwroot/css/app.min.css --minify",
+        "watch": "npx tailwindcss -i ./wwwroot/css/app.css -o ./wwwroot/css/app.min.css --watch"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "autoprefixer": "^10.4.20",
+        "postcss": "^8.4.47",
+        "tailwindcss": "^3.4.10"
+    }
+}

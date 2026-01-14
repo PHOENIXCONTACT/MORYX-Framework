@@ -7,22 +7,19 @@
 }
  
 @section Styles {
-    <link rel="stylesheet" href="~/_content/Moryx.Identity.AccessManagement/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/_content/Moryx.Identity.AccessManagement/lib/font-awesome/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="~/_content/Moryx.Identity.AccessManagement/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/_content/Moryx.Identity.AccessManagement/css/app.min.css" asp-append-version="true" />
 }
 
 @section Scripts {
-    <script src="~/_content/Moryx.Identity.AccessManagement/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/_content/Moryx.Identity.AccessManagement/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/_content/Moryx.Identity.AccessManagement/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 }
 
 <div class="body-container">
     <div tabindex="-1" role="navigation" class="nav-tree">
-        <div class="nav-drawer-inner-container ">
-            <div class="nav-side-bar ">
+        <div class="nav-drawer-inner-container">
+            <div class="nav-side-bar">
                 <div class="nav-toolbar" style="background-image: url('/_content/Moryx.Identity.AccessManagement/img/access-management-toolbar.webp');">
                     <div class="nav-toolbar-row">
                     </div>
@@ -53,7 +50,7 @@
             }
 
             <div class="drawer-content">
-                <div class="container">
+                <div class="tw-container tw-mx-auto">
                     @RenderBody()
                 </div>
             </div>
