@@ -114,7 +114,7 @@ internal class ProcessRemoval : IActivityPoolListener, IDisposable
         {
             // Removal was completed. We can put the process to rest
             ActivityPool.UpdateProcess(processData, ProcessState.Failure);
-            ActivityPool.UpdateActivity(activityData, ActivityState.EngineProceeded);
+            ActivityPool.TryUpdateActivity(activityData, ActivityState.EngineProceeded);
         }
         // And for aborting processes we process the completed or aborted activities
         else if (processData.State == ProcessState.Aborting

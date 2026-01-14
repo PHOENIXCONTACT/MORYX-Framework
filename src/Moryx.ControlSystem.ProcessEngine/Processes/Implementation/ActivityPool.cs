@@ -94,13 +94,30 @@ internal sealed class ActivityPool : ILoggingComponent, IActivityDataPool, IActi
         }
     }
 
-    public void UpdateActivity(ActivityData activityData, ActivityState newState)
-    {
-        // Validate the change before performing it
-        if (newState <= activityData.State)
+    public bool TryUpdateActivity(ActivityData activityData, ActivityState newState, Action<ActivityData> updateAction)
         {
-            Logger.Log(LogLevel.Warning, "States can only increase! Current state: {0} - New State: {1}", activityData.State, newState);
-            return;
+            // Update the activity
+            _activitiesLock.EnterUpgradeableReadLock();
+            try
+        {
+            // Validate the change before performing it
+            if (newState <= activityData.State)
+            {
+                Logger.Log(LogLevel.Warning, "States can only increase! Current state: {current} - New State: {new}", activityData.State, newState);
+                return false;
+                }
+
+                _activitiesLock.EnterWriteLock();
+                updateAction?.Invoke(activityData);
+                activityData.State = newState;
+            }
+            finally
+            {
+                if (_activitiesLock.IsWriteLockHeld)
+                {
+                    _activitiesLock.ExitWriteLock();
+                }
+                _activitiesLock.ExitUpgradeableReadLock();
         }
 
         // Update the _openActivities collection
@@ -111,11 +128,8 @@ internal sealed class ActivityPool : ILoggingComponent, IActivityDataPool, IActi
             _activitiesLock.ExitWriteLock();
         }
 
-        // prevent state to be changed during enumeration
-        _activitiesLock.EnterWriteLock();
-        activityData.State = newState;
-        _activitiesLock.ExitWriteLock();
         RaiseActivityChanged(activityData, newState);
+        return true;
     }
 
     private void RaiseProcessChanged(ProcessData processData, ProcessState trigger)
