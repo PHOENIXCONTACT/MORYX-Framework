@@ -37,18 +37,23 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
 
     public override IEnumerable<Job> SchedulableJobs(IEnumerable<Job> jobs)
     {
-        var allJobs = jobs.ToList();
-        // Option 1: System restarted and we resume jobs
-        if (allJobs.Any(j => j.RunningProcesses.Count > 0))
+        var allJobs = jobs.ToArray();
+        // Option 1: No jobs to be scheduled in the first place
+        if (allJobs.Length == 0)
+        {
+            yield break;
+        }
+        // Option 2: System restarted and we resume jobs
+        else if (allJobs.Any(j => j.RunningProcesses.Count > 0))
         {
             foreach (var job in allJobs.Where(j => j.RunningProcesses.Count > 0))
             {
                 yield return job;
             }
         }
-        // Option 2:System idle or only occupied by completing jobs with no follow up
+        // Option 3:System idle or only occupied by completing jobs with no follow up
         else if (_running.Target == null
-                 || _running.Target.Classification == JobClassification.Completing && JobList.Next(_running.Target).IsCleanup())
+            || _running.Target.Classification == JobClassification.Completing && JobList.Next(_running.Target).IsCleanup())
         {
             Job last = null;
             // First job and any follow ups are schedulable and take the slot
@@ -62,7 +67,7 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
                 last = job;
             }
         }
-        // Option 3: Running slot occupied and still required
+        // Option 4: Running slot occupied and still required
         else
         {
             // We only accept follow-ups of the running job or its follow-ups
