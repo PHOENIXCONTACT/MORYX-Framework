@@ -66,7 +66,7 @@
         <input matInput [(ngModel)]="success" [disabled]="isLoading()" />
         <mat-hint align="start"
           >{{ TranslationConstants.REPORT_DIALOG.REPORTED | translate }}:
-          {{ context()?.reportedSuccess }}</mat-hint
+          {{ reportContext()?.reportedSuccess }}</mat-hint
         >
         <mat-hint align="end"
           >{{ TranslationConstants.REPORT_DIALOG.ESTIMATED | translate }}:
@@ -84,7 +84,7 @@
         <input matInput [(ngModel)]="scrap" [disabled]="isLoading()" />
         <mat-hint align="start"
           >{{ TranslationConstants.REPORT_DIALOG.REPORTED | translate }}:
-          {{ context()?.reportedFailure }}</mat-hint
+          {{ reportContext()?.reportedFailure }}</mat-hint
         >
         <mat-hint align="end"
           >{{ TranslationConstants.REPORT_DIALOG.ESTIMATED | translate }}:
@@ -100,23 +100,23 @@
     <textarea matInput [(ngModel)]="comment" [disabled]="isLoading()"></textarea>
   </mat-form-field>
   <h3>{{ TranslationConstants.REPORT_DIALOG.CONFIRMATION | translate }}</h3>
-  <mat-radio-group aria-label="Select an option" [(ngModel)]="confirmationType">
+  <mat-radio-group aria-label="Select an report option" [(ngModel)]="confirmationType">
     <mat-radio-button
-      [disabled]="!context()?.canPartial || isLoading()"
+      [disabled]="!reportContext()?.canPartial || isLoading()"
       value="partial"
       >{{
         TranslationConstants.REPORT_DIALOG.PARTIAL | translate
       }}</mat-radio-button
     >
     <mat-radio-button
-      [disabled]="!context()?.canFinal || isLoading()"
+      [disabled]="!reportContext()?.canFinal || isLoading()"
       value="final"
       >{{
         TranslationConstants.REPORT_DIALOG.FINAL | translate
       }}</mat-radio-button
     >
   </mat-radio-group>
-  <mat-list *ngFor="let restriction of context()?.restrictions">
+  <mat-list *ngFor="let restriction of reportContext()?.restrictions">
     <mat-list-item
       [ngStyle]="{
         color:
