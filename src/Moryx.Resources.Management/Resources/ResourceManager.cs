@@ -434,7 +434,9 @@ internal class ResourceManager : IResourceManager
         var result = await initializer.ExecuteAsync(Graph, parameters, CancellationToken.None);
 
         if (result.InitializedResources.Count == 0)
-            throw new InvalidOperationException("ResourceInitializer must return at least one resource");
+        {
+            return result;
+        }
 
         if (!result.Saved)
         {
