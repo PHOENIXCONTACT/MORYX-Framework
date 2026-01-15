@@ -8,7 +8,7 @@ The different terms for softare constructs you will (probably) come across when 
 
 - [TODO:Modules](https://github.com/PHOENIXCONTACT/MORYX-Home/tree/main/development/architecture/components.md#modulelifecycle-componentwork) (with their [Components](https://github.com/PHOENIXCONTACT/MORYX-Home/tree/main/development/architecture/components.md) and *TODO:Plugins*)
 - *TODO:Adapters*
-- [Endpoints](./architecture/endpoints.md)
+- [Endpoints](https://github.com/PHOENIXCONTACT/MORYX-Home/tree/main/development/architecture/endpoints.md)
 - *TODO:Web-UIs*
 
 - [Resources](https://github.com/PHOENIXCONTACT/MORYX-Framework/blob/dev/docs/articles/Resources/Overview.md) (with their [Drivers](https://github.com/PHOENIXCONTACT/MORYX-Framework/blob/dev/docs/articles/Resources/Types/DriverResource.md))
