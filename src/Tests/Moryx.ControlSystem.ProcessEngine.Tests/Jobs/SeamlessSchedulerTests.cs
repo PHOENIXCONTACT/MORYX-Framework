@@ -3,12 +3,16 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using Moryx.AbstractionLayer.Processes;
+using Moryx.AbstractionLayer.Recipes;
 using Moryx.ControlSystem.Jobs;
 using Moryx.ControlSystem.ProcessEngine.Jobs;
 using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Setups;
 using Moryx.ControlSystem.TestTools;
+using Moryx.Logging;
 using Moryx.TestTools.UnitTest;
 using NUnit.Framework;
 
@@ -22,14 +26,13 @@ public class SeamlessSchedulerTests : SchedulerTestBase
         var scheduler = new SeamlessScheduler
         {
             JobList = JobListMock.Object,
-                Logger = new DummyLogger()
+            Logger = new ModuleLogger("Dummy", new NullLoggerFactory())
         };
         scheduler.Initialize(new SeamlessSchedulerConfig());
         return scheduler;
     }
 
-    [Test(Description = "Should return the configured value for active jobs initially")]
-    public void ProvidesASingleRunningSlot()
+    public void SchedulableJobs_WithMultipleJobs_ReturnsOne()
     {
         // Arrange
         var jobs = CreateProductionJobs(5);
@@ -38,13 +41,32 @@ public class SeamlessSchedulerTests : SchedulerTestBase
         var slots = JobScheduler.SchedulableJobs(jobs).ToArray();
 
         // Assert
-        Assert.That(slots.Length, Is.EqualTo(1), "There should be three slots");
+        Assert.That(slots.Length, Is.EqualTo(1));
     }
 
     [Test]
-    public void StartNextJobOnCompleting()
+    public void JobsReady_WithCompletingJob_SchedulesReadyJob()
     {
         // Arrange
+        var waiting = ArrangeWaitingJobAfterCompletingWithCleanup();
+
+        // Act
+        JobScheduler.JobsReady([waiting]);
+
+        // Assert
+        Assert.That(waiting, Is.EqualTo(ScheduledJob));
+    }
+
+    /// <summary>
+    /// Arranges the scheduler in the following way:
+    /// Jobs: ProductionJob (Completing) -> CleanupJob (Waiting) -> WaitingJob (Waiting)
+    /// 
+    /// ResumeSlots: -empty-
+    /// RunningSlot: ProductionJob (Completing)
+    /// CompletingSlots: -empty-
+    /// </summary>
+    private Job ArrangeWaitingJobAfterCompletingWithCleanup()
+    {
         Recipe.Id = 42;
 
         var job = new Job(Recipe, 1)
@@ -68,16 +90,148 @@ public class SeamlessSchedulerTests : SchedulerTestBase
         JobListMock.Setup(j => j.Next(job)).Returns(cleanup);
         JobScheduler.SlotAvailable += (sender, args) => { };
 
-        // Act
-        // The initial job is started and than completing BEFORE the other one is added
+        // The initial newJob is started and than completing BEFORE the other one is added
         JobScheduler.SchedulableJobs([job, waiting]);
         JobScheduler.JobsReady([job, cleanup]);
         job.Classification = JobClassification.Completing;
         JobScheduler.JobUpdated(job, JobClassification.Completing);
-        JobScheduler.JobsReady([waiting]);
+        return waiting;
+    }
+
+    [Test]
+    public void JobsUpdated_CompletingFollowUpsInReverseOrder_DoesNotScheduleCleanUp()
+    {
+        var jobs = ArrangeCompletingFollowUpsAndCleanUpAndSeperateRunningJob();
+
+        jobs[1].Classification = JobClassification.Completed;
+        JobScheduler.JobUpdated(jobs[1], JobClassification.Completed);
+
+        Assert.That(ScheduledJob, Is.Not.EqualTo(jobs[2]));
+    }
+
+    [Test]
+    public void JobsUpdated_CompletedFollowUpsInReverseOrder_ScheduleCleanUp()
+    {
+        var jobs = ArrangeCompletingFollowUpsAndCleanUpAndSeperateRunningJob();
+        jobs[1].Classification = JobClassification.Completed;
+        JobScheduler.JobUpdated(jobs[1], JobClassification.Completed);
+
+        jobs[0].Classification = JobClassification.Completed;
+        JobScheduler.JobUpdated(jobs[0], JobClassification.Completed);
+
+        Assert.That(ScheduledJob, Is.EqualTo(jobs[2]));
+    }
+
+    /// <summary>
+    /// Arranges the scheduler in the following way:
+    /// Jobs: ProductionJob 1 (Completing) -> ProductionJob 2 (Completing) -> CleanupJob 1 (Waiting) -> ProductionJob 3 (Running) -> CleanupJob 2 (Waiting)
+    /// 
+    /// ResumeSlots: -empty-
+    /// RunningSlot: ProductionJob 3 (Running)
+    /// CompletingSlots: ProductionJob 2 (Completing)
+    /// </summary>
+    private List<Job> ArrangeCompletingFollowUpsAndCleanUpAndSeperateRunningJob()
+    {
+        Recipe.Id = 42;
+        var jobs = new List<Job>
+        {
+            new(Recipe, 1)
+            {
+                Classification = JobClassification.Waiting
+            },
+            // Validate Id instead of reference equality checks
+            new(DummyRecipe.BuildRecipe(Recipe.Id), 1)
+            {
+                Classification = JobClassification.Waiting
+            },
+            new(CleanUpRecipe, 1)
+            {
+                Classification = JobClassification.Waiting
+            },
+            new(AnotherRecipe, 1)
+            {
+                Classification = JobClassification.Waiting
+            },new(CleanUpRecipe, 1)
+            {
+                Classification = JobClassification.Waiting
+            },
+        };
+        SetupJobListFor(jobs);
+
+        JobScheduler.JobsReady(jobs.Take(3));
+        jobs[0].Classification = JobClassification.Completing;
+        JobScheduler.JobUpdated(jobs[0], JobClassification.Completing);
+        jobs[1].Classification = JobClassification.Completing;
+        JobScheduler.JobUpdated(jobs[1], JobClassification.Completing);
+
+        JobScheduler.JobsReady(jobs.Skip(3));
+        jobs[3].Classification = JobClassification.Running;
+        JobScheduler.JobUpdated(jobs[0], JobClassification.Running);
+
+        return jobs;
+    }
+
+    [Test]
+    public void JobUpdated_ToCompletedFromResumedWithRelatedFollowUpJob_DoesNotScheduleCleanUp()
+    {
+        var jobs = ArrangeResumedCompletingWithRunningFollowUpJobAndCleanUp();
+
+        // Act
+        JobScheduler.JobUpdated(jobs[0], JobClassification.Completed);
 
         // Assert
-        Assert.That(waiting, Is.EqualTo(ScheduledJob));
+        Assert.That(ScheduledJob, Is.Not.EqualTo(jobs[2]));
+    }
+
+    /// <summary>
+    /// Arranges the scheduler in the following way:
+    /// Jobs: ProductionJob (Completing) -> ProductionJob (Running) -> CleanupJob (Waiting)
+    /// 
+    /// ResumeSlots: -empty-
+    /// RunningSlot: ProductionJob (Running)
+    /// CompletingSlots: -empty-
+    /// </summary>
+    private List<Job> ArrangeResumedCompletingWithRunningFollowUpJobAndCleanUp()
+    {
+        // Arrange
+        var scheduledJobs = new List<Job>();
+        var jobs = new List<Job>
+        {
+            new EngineJob(Recipe, 20) // interrupted completing job
+            {
+                Classification = JobClassification.Idle,
+                SuccessCount = 10,
+                Running = { new Process { Id = 1 } }
+            },
+            new EngineJob(Recipe, 5) // interrupted running job
+            {
+                Classification = JobClassification.Idle,
+                FailureCount = 2,
+            },
+            new(CleanUpRecipe, 1)
+            {
+                Classification = JobClassification.Waiting
+            },
+        };
+
+        SetupJobListFor(jobs);
+
+        JobScheduler.Scheduled += (sender, job) =>
+        {
+            scheduledJobs.Add(job);
+            if (job == jobs[0])
+            {
+                jobs[0].Classification = JobClassification.Completing;
+            }
+            else if (job == jobs[1])
+            {
+                jobs[1].Classification = JobClassification.Running;
+            }
+        };
+        JobScheduler.JobsReady(jobs);
+        JobScheduler.JobUpdated(jobs[0], jobs[0].Classification);
+        JobScheduler.JobUpdated(jobs[1], jobs[1].Classification);
+        return jobs;
     }
 
     [Test]
@@ -87,68 +241,139 @@ public class SeamlessSchedulerTests : SchedulerTestBase
     }
 
     [Test]
-    public void FollowUpsCancelled()
+    public void JobsReady_WithMultipleJobs_SchedulesFirstJob()
+    {
+        var jobs = ArrangeWaitingJobWithTwoFollowUpsAndCleanUp();
+
+        JobScheduler.JobsReady(jobs);
+
+        Assert.That(jobs[0], Is.EqualTo(ScheduledJob));
+    }
+
+    /// <summary>
+    /// Arranges the scheduler in the following way:
+    /// Jobs: ProductionJob (Waiting) -> ProductionJob (Waiting) -> ProductionJob (Waiting) -> CleanupJob (Waiting)
+    /// 
+    /// ResumeSlots: -empty-
+    /// RunningSlot: -empty-
+    /// CompletingSlots: -empty-
+    /// </summary>
+    private List<Job> ArrangeWaitingJobWithTwoFollowUpsAndCleanUp()
+    {
+        Recipe.Id = 42;
+        var jobs = new List<Job>
+        {
+            new(Recipe, 1)
+            {
+                Classification = JobClassification.Waiting
+            },
+            new(Recipe, 1)
+            {
+                Classification = JobClassification.Waiting
+            },
+            new(Recipe, 1)
+            {
+                Classification = JobClassification.Waiting
+            },
+            new(CleanUpRecipe, 1)
+            {
+                Classification = JobClassification.Waiting
+            }
+        };
+        SetupJobListFor(jobs);
+        return jobs;
+    }
+
+    [Test]
+    public void JobUpdated_ToCompleting_SchedulesFollowUpJob()
+    {
+        var jobs = ArrangeCompletingJobWithTwoFollowUpsAndCleanUp();
+
+        JobScheduler.JobUpdated(jobs[0], JobClassification.Completing);
+
+        Assert.That(jobs[1], Is.EqualTo(ScheduledJob));
+    }
+
+    /// <summary>
+    /// Arranges the scheduler in the following way:
+    /// Jobs: ProductionJob 1 (Completing) -> ProductionJob 2 (Waiting) -> ProductionJob 3 (Waiting) -> CleanupJob (Waiting)
+    /// 
+    /// ResumeSlots: -empty-
+    /// RunningSlot: ProductionJob 1
+    /// CompletingSlots: -empty-
+    /// </summary>
+    private List<Job> ArrangeCompletingJobWithTwoFollowUpsAndCleanUp()
+    {
+        var jobs = ArrangeWaitingJobWithTwoFollowUpsAndCleanUp();
+        // Prepare first newJob as completing
+        JobScheduler.JobsReady(jobs);
+        jobs[0].Classification = JobClassification.Completing;
+        return jobs;
+    }
+
+    [Test]
+    public void JobUpdated_ToCompletedWithCanceledFollowUps_SchedulesCleanUp()
+    {
+        var jobs = ArrangeCompletingJobWithTwoCanceledFollowUpsAndCleanUp();
+
+        JobScheduler.JobUpdated(jobs[0], JobClassification.Completed);
+
+        Assert.That(jobs[3], Is.EqualTo(ScheduledJob));
+    }
+
+    /// <summary>
+    /// Arranges the scheduler in the following way:
+    /// Jobs: ProductionJob 1 (Completing) -> ProductionJob 2 (Completed) -> ProductionJob 3 (Completed) -> CleanupJob (Waiting)
+    /// 
+    /// ResumeSlots: -empty-
+    /// RunningSlot: ProductionJob 1
+    /// CompletingSlots: -empty-
+    /// </summary>
+    private List<Job> ArrangeCompletingJobWithTwoCanceledFollowUpsAndCleanUp()
     {
         //Arrange
-        Recipe.Id = 42;
-        var jobs = new List<Job>();
-        jobs.Add(new Job(Recipe, 1)
-        {
-            Classification = JobClassification.Waiting
-        });
-        jobs.Add(new Job(Recipe, 1)
-        {
-            Classification = JobClassification.Waiting
-        });
-        jobs.Add(new Job(Recipe, 1)
-        {
-            Classification = JobClassification.Waiting
-        });
-        jobs.Add(new Job(new SetupRecipe
-            {
-                Execution = SetupExecution.AfterProduction,
-                TargetRecipe = Recipe
-            }, 1)
-            { Classification = JobClassification.Waiting });
+        var jobs = ArrangeCompletingJobWithTwoFollowUpsAndCleanUp();
 
-        JobListMock.Setup(j => j.Previous(It.IsAny<Job>())).Returns<Job>(j =>
-        {
-            var index = jobs.IndexOf(j) - 1;
-            return index >= 0 ? jobs[index] : null;
-        });
-        JobListMock.Setup(j => j.Forward(It.IsAny<Job>())).Returns<Job>(j =>
-        {
-            var index = jobs.IndexOf(j) + 1;
-            return jobs.Skip(index);
-        });
-
-        Job scheduled = null;
-        JobScheduler.Scheduled += (sender, args) => scheduled = args;
-        var slotAvailable = false;
-        JobScheduler.SlotAvailable += (sender, args) => { slotAvailable = true; };
-
-        // Act
-        JobScheduler.JobsReady(jobs);
-        Assert.That(jobs[0], Is.EqualTo(scheduled));
-        jobs[0].Classification = JobClassification.Completing;
-        JobScheduler.JobUpdated(jobs[0], JobClassification.Completing);
-        Assert.That(jobs[1], Is.EqualTo(scheduled));
-        // Now we abort second and third job while the scheduler still process events
+        // Now we abort second and third newJob while the scheduler still processes events
         jobs[1].Classification = jobs[2].Classification = JobClassification.Completed;
         JobScheduler.JobUpdated(jobs[1], JobClassification.Completing);
         JobScheduler.JobUpdated(jobs[1], JobClassification.Completed);
         JobScheduler.JobUpdated(jobs[2], JobClassification.Completed);
-        // Now the slot should fall back to the completing job and we finish it
+        return jobs;
+    }
+
+    [Test]
+    public void JobUpdated_ToCompletedWithCanceledFollowUps_RaisesClotsAvailable()
+    {
+        var jobs = ArrangeCompletingJobWithTwoCanceledFollowUpsAndCleanUp();
+
         JobScheduler.JobUpdated(jobs[0], JobClassification.Completed);
 
-        // Assert: Now the clean-up should have been started and a slot should be available
-        Assert.That(jobs[3], Is.EqualTo(scheduled));
-        Assert.That(slotAvailable);
-        var job = new Job(DummyRecipe.BuildRecipe(43), 1)
-        {
-            Classification = JobClassification.Idle
-        };
-        var schedulable = JobScheduler.SchedulableJobs([job]);
-        Assert.That(schedulable.Any());
+        Assert.That(SlotsAvailableCalled);
+    }
+
+    [Test]
+    public void SchedulableJobs_ForNewJobWhileCleanUpIsScheduled_ReturnsNewJob()
+    {
+        ArrangeScheduledCleanUpAfterCompletedAndCanceledJobs();
+        var newJob = new Job(DummyRecipe.BuildRecipe(43), 1) { Classification = JobClassification.Idle };
+
+        var schedulable = JobScheduler.SchedulableJobs([newJob]);
+
+        Assert.That(new Job[] { newJob }, Is.EquivalentTo(schedulable));
+    }
+
+    /// <summary>
+    /// Arranges the scheduler in the following way:
+    /// Jobs: ProductionJob 1 (Completed) -> ProductionJob 2 (Completed) -> ProductionJob 3 (Completed) -> CleanupJob (Waiting)
+    /// 
+    /// ResumeSlots: -empty-
+    /// RunningSlot: -empty-
+    /// CompletingSlots: CleanupJob
+    /// </summary>
+    private void ArrangeScheduledCleanUpAfterCompletedAndCanceledJobs()
+    {
+        var jobs = ArrangeCompletingJobWithTwoCanceledFollowUpsAndCleanUp();
+        JobScheduler.JobUpdated(jobs[0], JobClassification.Completed);
     }
 }

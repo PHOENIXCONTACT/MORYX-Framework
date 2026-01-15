@@ -85,10 +85,10 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
         }
     }
 
-        /// <summary>
-        /// Jobs are reloaded without completed processes and might have been running without currently running processes at shut down
-        /// </summary>
-        private static bool HadStarted(Job j) => j.RunningProcesses.Count > 0 || j.SuccessCount > 0 || j.FailureCount > 0;
+    /// <summary>
+    /// Jobs are reloaded without completed processes and might have been running without currently running processes at shut down
+    /// </summary>
+    private static bool HadStarted(Job j) => j.RunningProcesses.Count > 0 || j.SuccessCount > 0 || j.FailureCount > 0;
 
     public override void JobsReady(IEnumerable<Job> startableJobs)
     {
@@ -374,4 +374,4 @@ internal sealed class SeamlessScheduler : JobSchedulerBase<SeamlessSchedulerConf
         FromCompleting
     }
 }
-}
+
