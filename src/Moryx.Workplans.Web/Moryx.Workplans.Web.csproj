@@ -1,26 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <DefaultItemExcludes>src\**;node_modules\**;package\**</DefaultItemExcludes>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
+
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Remove="tsconfig*.json" />
-    <Content Remove="package.json" />
-    <Content Remove="package-lock.json" />
-    <Content Remove="angular.json" />
-    <Content Remove=".prettierrc.json; prettierrc.json" />
-    <Content Remove="service-config.json" />
-  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Moryx.AbstractionLayer.Products.Endpoints\Moryx.AbstractionLayer.Products.Endpoints.csproj" />
     <ProjectReference Include="..\Moryx.AspNetCore\Moryx.AspNetCore.csproj" />
     <ProjectReference Include="..\Moryx.Workplans\Moryx.Workplans.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <Compile Update="Properties\Strings.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -28,16 +23,20 @@
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
   </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Update="Properties\Strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+  <Import Project="..\..\.build\WebProjects.props"/>
   <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\main.js')) And ('$(NoBuild)' != 'true') ">
-    <Exec WorkingDirectory=".\" Command="npm config set strict-ssl false" />
-    <Exec WorkingDirectory=".\" Command="npm ci" />
-    <Exec WorkingDirectory=".\" Command="npm run build:prod" />
-    <Exec WorkingDirectory=".\" Command="npm config set strict-ssl true" />
+    <Exec WorkingDirectory=".\app\" Command="npm config set strict-ssl false" />
+    <Exec WorkingDirectory=".\app\" Command="npm ci" />
+    <Exec WorkingDirectory=".\app\" Command="npm run build:prod" />
+    <Exec WorkingDirectory=".\app\" Command="npm config set strict-ssl true" />
   </Target>
+
 </Project>
