@@ -10,6 +10,5 @@ indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.md]
-insert_final_newline = false
-trim_trailing_whitespace = false
+[*.{ts,tsx,js}]
+file_header = /*\n * Copyright (c) $Year Phoenix Contact GmbH & Co. KG\n * Licensed under the Apache License, Version 2.0\n*/
