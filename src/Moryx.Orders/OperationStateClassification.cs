@@ -5,7 +5,7 @@ namespace Moryx.Orders;
 
 /// <summary>
 /// Enum providing the classification of the internal state machine of the operation for an external representation
-/// The lowest 8 bits define the state of the operation. The following 16 bits contain flags for the executable 
+/// The lowest 8 bits define the state of the operation. The following 16 bits contain flags for the executable
 /// actions on the operation and the trailing 8 bits overall classification information.
 /// Bit:    31 - 24  |  23 - 8  |  7 - 0  |
 /// Flag:   Overall  |   Usage  |  State  |
