@@ -10,7 +10,15 @@
     <ProjectReference Include="..\Moryx.FactoryMonitor.Endpoints\Moryx.FactoryMonitor.Endpoints.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Remove="tsconfig*.json; prettierrc.json; .prettierrc.json; angular.json; package.json; package-lock.json; service-config.json;" />
+    <Content Remove="ng-openapi-gen.json" />
+    <Content Remove="service-config.json" />
+    <Content Remove="tsconfig*.json" />
+    <Content Remove="package.json" />
+    <Content Remove="package-lock.json" />
+    <Content Remove="angular.json" />
+    <Content Remove=".prettierrc.json; prettierrc.json" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Update="@(Content)" Pack="false" />
     <Content Update="wwwroot\**" Pack="true" PackagePath="staticwebassets" />
   </ItemGroup>

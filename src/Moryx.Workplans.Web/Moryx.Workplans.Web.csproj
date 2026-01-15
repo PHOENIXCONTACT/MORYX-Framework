@@ -9,12 +9,17 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
+    <Content Remove="ng-openapi-gen.json" />
+    <Content Remove="service-config.json" />
     <Content Remove="tsconfig*.json" />
     <Content Remove="package.json" />
     <Content Remove="package-lock.json" />
     <Content Remove="angular.json" />
     <Content Remove=".prettierrc.json; prettierrc.json" />
-    <Content Remove="service-config.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="@(Content)" Pack="false" />
+    <Content Update="wwwroot\**" Pack="true" PackagePath="staticwebassets" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Moryx.AbstractionLayer.Products.Endpoints\Moryx.AbstractionLayer.Products.Endpoints.csproj" />
