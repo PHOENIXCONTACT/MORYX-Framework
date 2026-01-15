@@ -6,10 +6,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng version && ng build",
-    "build:css": "npx tailwindcss -i ./wwwroot/css/app.css -o ../wwwroot/css/app.min.css --minify",
+    "build:css": "npx tailwindcss -i ../wwwroot/css/app.css -o ../wwwroot/css/app.min.css --minify",
     "build:prod": "ng build --delete-output-path --configuration production --progress false",
     "copy:componentsfiles": "copyfiles -u 1 components/dist/*.js ../wwwroot/js",
-    "watch": "npx tailwindcss -i ./wwwroot/css/app.css -o ../wwwroot/css/app.min.css --minify --watch"
+    "watch": "npx tailwindcss -i ../wwwroot/css/app.css -o ../wwwroot/css/app.min.css --minify --watch"
   },
   "author": "",
   "license": "ISC",

@@ -11,4 +11,4 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 
 [*.{ts,tsx,js}]
-file_header = /*\n * Copyright (c) $Year Phoenix Contact GmbH & Co. KG\n * Licensed under the Apache License, Version 2.0\n*/
+file_header_template = Copyright (c) 2026 Phoenix Contact GmbH & Co. KG\nLicensed under the Apache License, Version 2.0
