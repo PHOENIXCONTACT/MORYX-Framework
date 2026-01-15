@@ -1,0 +1,58 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
+/* tslint:disable */
+/* eslint-disable */
+import { Entry } from '@moryx/ngx-web-framework/entry-editor';
+import { OperationClassification } from '../models/operation-classification';
+export interface OperationModel {
+  canAdvice?: boolean;
+  canAssign?: boolean;
+  canBegin?: boolean;
+  canInterrupt?: boolean;
+  canReport?: boolean;
+  classification?: OperationClassification;
+  end?: string | null;
+  hasDocuments?: boolean;
+  hasPartList?: boolean;
+  identifier?: string;
+  isAborted?: boolean;
+  isAmountReached?: boolean;
+  isAssigning?: boolean;
+  isCreated?: boolean;
+  isFailed?: boolean;
+  jobIds?: Array<number> | null;
+  name?: string | null;
+  number?: string | null;
+  operationSource?: Entry;
+  order?: string | null;
+  overDeliveryAmount?: number;
+  pendingCount?: number;
+  plannedEnd?: string;
+  plannedStart?: string;
+  productId?: number;
+  productIdentifier?: string | null;
+  productName?: string | null;
+  productRevision?: number;
+  progressPending?: number;
+  progressRunning?: number;
+  progressScrap?: number;
+  progressSuccess?: number;
+  recipeIds?: Array<number> | null;
+  recipeName?: string | null;
+  reportedFailureCount?: number;
+  reportedSuccessCount?: number;
+  runningCount?: number;
+  scrapCount?: number;
+  sortOrder?: number;
+  start?: string | null;
+  stateDisplayName?: string | null;
+  successCount?: number;
+  targetCycleTime?: number;
+  totalAmount?: number;
+  underDeliveryAmount?: number;
+  unit?: string | null;
+}
+
