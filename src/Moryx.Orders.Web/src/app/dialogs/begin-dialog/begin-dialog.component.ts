@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, computed, Inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -189,3 +194,4 @@ export interface BeginDialogData {
   context: BeginContext;
   operation: OperationViewModel;
 }
+

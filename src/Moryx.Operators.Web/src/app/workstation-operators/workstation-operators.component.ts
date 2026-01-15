@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, computed, signal } from '@angular/core';
 import { WorkstationViewModel } from '../models/workstation-view-model';
 import { WorkstationTogglingState } from './WorkstationTogglingState';
@@ -118,3 +123,4 @@ export class WorkstationOperatorsComponent {
 
   }
 }
+

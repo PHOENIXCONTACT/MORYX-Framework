@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { CommonModule } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
 import {
@@ -195,3 +200,4 @@ export class ProcessesComponent implements OnInit, OnDestroy {
     );
   }
 }
+

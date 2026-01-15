@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { enableProdMode } from '@angular/core';
 import { environment } from './environments/environment';
 import 'hammerjs';
@@ -12,3 +17,4 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, appConfig)
   .catch(err => console.error(err));
+

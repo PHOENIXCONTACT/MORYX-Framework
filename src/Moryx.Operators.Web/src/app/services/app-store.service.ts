@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, firstValueFrom, Observable } from "rxjs";
 import { WorkstationViewModel } from "../models/workstation-view-model";
@@ -344,3 +349,4 @@ export class AppStoreService {
 
   //#endregion
 }
+

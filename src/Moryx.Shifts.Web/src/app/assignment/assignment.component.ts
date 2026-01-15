@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, computed, effect, EventEmitter, input, Input, model, Output, signal, untracked } from '@angular/core';
 import {
   AssignmentCardModel,
@@ -129,3 +134,4 @@ export class AssignmentComponent {
   }
 
 }
+

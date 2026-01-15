@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { Event, NavigationCancel, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -88,3 +93,4 @@ export class DetailsViewComponent implements OnInit, OnDestroy {
     }
   }
 }
+

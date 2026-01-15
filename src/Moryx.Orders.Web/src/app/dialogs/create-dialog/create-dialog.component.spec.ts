@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {} from '@angular/common/http';
 import {
@@ -131,3 +136,4 @@ describe('CreateDialogComponent', () => {
     expect(component.componentInstance.selectedRecipe.name).toBe('Recipe 2');
   }));
 });
+

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, effect, input, OnInit, signal, untracked } from "@angular/core";
 import { OperatorModel } from "../api/models/operator-model";
 import { OperatorManagementService } from "../api/services";
@@ -178,3 +183,4 @@ export class OperatorDetailsComponent implements OnInit {
     return this.skillTypes().find(x => x.id === id);
   }
 }
+

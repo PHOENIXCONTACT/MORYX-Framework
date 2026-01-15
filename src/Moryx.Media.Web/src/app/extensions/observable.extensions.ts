@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { lastValueFrom, Observable } from 'rxjs';
 
 declare module 'rxjs' {
@@ -9,3 +14,4 @@ declare module 'rxjs' {
 Observable.prototype.toAsync = function () {
   return lastValueFrom(this);
 };
+

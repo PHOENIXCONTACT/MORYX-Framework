@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Entry, MoryxSnackbarService } from '@moryx/ngx-web-framework';
@@ -251,3 +256,4 @@ export class CacheProductsService {
     return entry;
   }
 }
+

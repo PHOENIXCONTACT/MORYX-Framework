@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, DragDropModule, DragRef } from '@angular/cdk/drag-drop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, signal, viewChild, ViewChild } from '@angular/core';
@@ -507,3 +512,4 @@ export class EditorComponent implements OnInit {
     });
   }
 }
+

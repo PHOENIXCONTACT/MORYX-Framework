@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
@@ -34,3 +39,4 @@ export class CookieService {
       document.cookie = `${name}=${encodeURI(value)}; ${expires}${cpath}; samesite=none; secure`;
   }
 }
+

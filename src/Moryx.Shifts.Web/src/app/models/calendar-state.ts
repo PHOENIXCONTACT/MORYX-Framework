@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import  moment from 'moment';
 import { DayOfTheWeek } from './assignment-card-model';
 import { TranslateService } from '@ngx-translate/core';
@@ -150,3 +155,4 @@ export class CalendarState {
     return this.state?.calendarWeek === Number(now.format('W'));
   }
 }
+

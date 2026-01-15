@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { CommonModule } from '@angular/common';
 import { Component, effect, input, Input, OnInit, signal, untracked } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -85,3 +90,4 @@ export class LogMessageListComponent implements OnInit {
     }
   }
 }
+

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, Inject, signal } from '@angular/core';
 import { ShiftInstanceModel } from 'src/app/models/shift-instance-model';
 import { ShiftInstanceDialogComponent } from '../shift-instance-dialog/shift-instance-dialog.component';
@@ -74,3 +79,4 @@ export interface CopyShiftAndAssignmentData {
   assignments: Array<AssignmentData>,
   shiftInstances: Array<ShiftInstanceModel>
 }
+

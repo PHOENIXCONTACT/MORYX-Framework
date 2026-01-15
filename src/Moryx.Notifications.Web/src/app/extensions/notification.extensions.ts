@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Severity } from '../api/models';
 import { NotificationModel } from '../api/models/notification-model';
 
@@ -14,3 +19,4 @@ Array.prototype.sortBySeverity = function (): NotificationModel[] {
     severityOrder.indexOf(n1.severity ?? Severity.Info)
   );
 };
+

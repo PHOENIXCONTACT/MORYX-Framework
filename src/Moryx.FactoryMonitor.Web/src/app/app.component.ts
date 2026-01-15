@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { EditMenuService } from './services/edit-menu.service';
 import { EditMenuState } from './services/EditMenutState';
@@ -70,3 +75,4 @@ export class AppComponent implements OnInit {
     return this.editMenuState === EditMenuState.EditingCells;
   }
 }
+

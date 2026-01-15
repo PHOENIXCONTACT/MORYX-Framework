@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable } from '@angular/core';
 import { OperatorManagementService } from '../api/services';
 import { AssignableOperator } from '../api/models';
@@ -32,3 +37,4 @@ export class OperatorsService {
     return await this.operators.add({ body: { identifier: identifier } as OperatorModel }).toAsync();
   }
 }
+

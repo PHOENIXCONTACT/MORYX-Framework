@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Observable } from 'rxjs';
 import { Notification } from '../notifications/notifications.component';
 export interface MoryxShell extends Object {
@@ -30,3 +35,4 @@ export interface SearchRequestCallback {
 export interface NotificationStreamCallback {
   (values: Array<Notification>): void;
 }
+

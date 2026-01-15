@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -301,3 +306,4 @@ export class OperationsComponent implements OnInit, OnDestroy {
     this.drawer.close();
   }
 }
+

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, OnInit, Input, ViewChild, ElementRef, viewChild, input, computed, signal, effect, untracked } from '@angular/core';
 import { EditMenuState } from 'src/app/services/EditMenutState';
 import { CellStoreService } from 'src/app/services/cell-store.service';
@@ -144,3 +149,4 @@ export class CellComponent implements OnInit {
     return Math.max(0, Math.min(x, 1));
   }
 }
+

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 /* tslint:disable */
 /* eslint-disable */
 import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
@@ -27,3 +32,4 @@ export function getDefaultOperator(http: HttpClient, rootUrl: string, params?: G
 }
 
 getDefaultOperator.PATH = '/api/moryx/operators/default';
+

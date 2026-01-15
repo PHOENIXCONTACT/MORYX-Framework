@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 export function localLanguage(){
     const cookies = document.cookie.split(';').map(c => c.trim());
 

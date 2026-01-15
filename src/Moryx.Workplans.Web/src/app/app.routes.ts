@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Routes } from '@angular/router';
 import { ManagementComponent } from './components/management/management.component';
 import { EditorComponent } from './components/sessions/editor/editor.component';
@@ -15,3 +20,4 @@ export const routes: Routes = [
   { path: 'management', component: ManagementComponent },
   { path: '', redirectTo: 'management', pathMatch: 'full' },
 ];
+

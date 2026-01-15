@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ApplicationConfig, importProvidersFrom } from "@angular/core";

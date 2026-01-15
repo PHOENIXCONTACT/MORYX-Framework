@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { AssignableOperator } from "../api/models/assignable-operator";
 import { OperatorModel } from "../api/models/operator-model";
 import { IOperatorAssignable } from "../api/models/i-operator-assignable";

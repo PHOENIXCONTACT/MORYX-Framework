@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -186,3 +191,4 @@ export class ResourceReferencesComponent implements OnInit, OnDestroy {
     return supportedSubTypes;
   }
 }
+

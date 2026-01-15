@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, computed, Inject, OnInit, signal } from "@angular/core";
 import {
   MatDialogRef,
@@ -119,3 +124,4 @@ export interface ReportDialogData {
   onSubmit: (guid: string, body: ReportModel) => Observable<void>;
   onGetContext: (guid: string) => Observable<ReportContext>;
 }
+

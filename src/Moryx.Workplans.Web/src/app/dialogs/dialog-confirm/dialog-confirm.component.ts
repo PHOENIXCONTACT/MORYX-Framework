@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, Inject, QueryList, ViewChildren } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
@@ -47,3 +52,4 @@ export interface ConfirmDialogButton {
   action: Function;
   focused?: boolean;
 }
+

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 /* tslint:disable */
 /* eslint-disable */
 import { PartClassification } from '../models/part-classification';
@@ -10,3 +15,4 @@ export interface PartCreationContext {
   stagingIndicator?: StagingIndicator;
   unit?: string | null;
 }
+

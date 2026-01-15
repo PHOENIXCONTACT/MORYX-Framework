@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -61,3 +66,4 @@ export class NotificationDetailsComponent implements OnInit, OnDestroy {
     return array !== undefined && array !== null && array.length > 0;
   }
 }
+

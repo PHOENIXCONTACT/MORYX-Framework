@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, EventEmitter, input, Input, OnDestroy, OnInit, output, Output, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -49,3 +54,4 @@ export class StepCreatorComponent implements OnInit, OnDestroy {
     this.created.emit(this.stepRecipe()!);
   }
 }
+

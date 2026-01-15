@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, Input } from '@angular/core';
 import { OrderModel } from '../models/order-model';
 import prettyMilliseconds from 'pretty-ms';
@@ -19,3 +24,4 @@ export class OrderItemComponent {
   hourToMillisecond = 3600000;
   @Input() order!: OrderModel;
 }
+

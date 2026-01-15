@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { ApplicationRef, Injectable, NgZone, ɵgetUnknownElementStrictMode } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 import { OrderModel } from '../api/models/order-model';
@@ -110,3 +115,4 @@ export class OrderStoreService {
     this._runningOrders.next(orders.filter(o => o.classification == InternalOperationClassification.Running))
   }
 }
+

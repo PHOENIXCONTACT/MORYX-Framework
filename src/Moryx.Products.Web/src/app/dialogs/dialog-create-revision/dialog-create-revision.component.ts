@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Router } from '@angular/router';
 import { PermissionService } from '@moryx/ngx-web-framework';
 import { Component, Inject, OnInit, signal } from '@angular/core';
@@ -59,3 +64,4 @@ export class DialogCreateRevisionComponent implements OnInit {
   ngOnInit(): void {
   }
 }
+

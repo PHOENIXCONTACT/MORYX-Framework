@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 /* tslint:disable */
 /* eslint-disable */
 import { HttpRequest, HttpParameterCodec, HttpParams, HttpHeaders, HttpContext } from '@angular/common/http';
@@ -366,3 +371,4 @@ export class RequestBuilder {
     });
   }
 }
+

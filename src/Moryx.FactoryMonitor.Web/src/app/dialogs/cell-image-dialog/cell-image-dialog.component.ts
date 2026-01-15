@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, Inject, signal } from '@angular/core';
 import {
   MatDialogRef,
@@ -89,3 +94,4 @@ export class CellImageDialogComponent {
     })
   }
 }
+

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable, NgZone } from '@angular/core';
 import { InstructionItemModel, InstructionModel } from '../api/models';
 import { VisualInstructionsService } from '../api/services';

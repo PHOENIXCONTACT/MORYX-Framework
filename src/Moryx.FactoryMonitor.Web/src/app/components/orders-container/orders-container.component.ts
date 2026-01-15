@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
@@ -18,3 +23,4 @@ export class OrdersContainerComponent {
   orderStoreService= inject(OrderStoreService);
   translate = inject(TranslateService);
 }
+

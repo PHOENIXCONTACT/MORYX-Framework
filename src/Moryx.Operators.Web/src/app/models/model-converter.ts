@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Entry } from "@moryx/ngx-web-framework";
 import { SkillModel } from "../api/models/skill-model";
 import { SkillTypeModel } from "../api/models/skill-type-model";

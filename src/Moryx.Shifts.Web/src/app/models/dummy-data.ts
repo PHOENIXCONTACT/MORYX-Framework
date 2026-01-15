@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { AttendableResourceModel } from '../api/models/attendable-resource-model';
 import { AssignmentCardModel, DayOfTheWeek } from './assignment-card-model';
 import { OperatorModel, OperatorStatus } from './operator-model';

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 
@@ -27,3 +32,4 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('.content span')?.textContent).toContain('Moryx.Notifications.Web app is running!');
   });
 });
+

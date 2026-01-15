@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import  moment from 'moment';
 
 export interface OrderModel {
@@ -69,4 +74,5 @@ export function getOrdersBasedOnOperatorHours(startDate: Date | undefined,
 
     return orderList;
 }
+
 

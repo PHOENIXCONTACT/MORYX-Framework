@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { Severity } from '../../api/models';
 import { NotificationModel } from '../../api/models/notification-model';
@@ -53,3 +58,4 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.notificationService.select(notification.identifier);
   }
 }
+

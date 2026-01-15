@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, catchError, from, map, tap, throwError } from 'rxjs';
 import { Observable } from 'rxjs';
@@ -129,3 +134,4 @@ export class SessionsService {
     this.activeSession.next(undefined);
   }
 }
+

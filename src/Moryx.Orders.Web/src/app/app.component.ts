@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { LanguageService } from '@moryx/ngx-web-framework';
@@ -36,3 +41,4 @@ export class AppComponent implements OnInit {
     });
   }
 }
+

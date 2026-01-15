@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, OnInit, signal } from "@angular/core";
 import { OperatorViewModel } from "../models/operator-view-model";
 import { MatDialog } from "@angular/material/dialog";
@@ -114,3 +119,4 @@ export class OperatorsManagementComponent implements OnInit {
     return this.skills().filter(x => x.operatorId === id);
   }
 }
+

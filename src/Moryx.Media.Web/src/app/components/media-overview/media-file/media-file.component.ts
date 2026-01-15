@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, OnInit, Input, model, signal, Output, EventEmitter } from '@angular/core';
 import { ContentDescriptorModel } from '../../../api/models';
 import { MediaService } from '../../../services/media-service/media.service';
@@ -94,3 +99,4 @@ export class MediaFileComponent implements OnInit {
       this.show.emit(this.content());
   }
 }
+

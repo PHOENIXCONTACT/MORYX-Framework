@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable, NgZone } from '@angular/core';
 import { ApiConfiguration } from 'src/app/api/api-configuration';
 import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, OperationType } from 'src/app/models/operation-models';
@@ -96,3 +101,4 @@ export class OrderManagementStreamService {
     });
   }
 }
+

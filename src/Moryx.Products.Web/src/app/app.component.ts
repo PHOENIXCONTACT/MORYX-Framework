@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { FlatTreeControl } from "@angular/cdk/tree";
 import {
   Component,
@@ -602,3 +607,4 @@ interface ProductNode {
   identifier: string;
   revision: number;
 }
+

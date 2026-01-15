@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProductPartsDetailsComponent } from './product-parts-details.component';
 
@@ -21,3 +26,4 @@ describe('ProductPartsDetailsComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { WorkplanSessionModel } from '../api/models/workplan-session-model';
@@ -75,3 +80,4 @@ export class EditorStateService {
     if (this.isCreatingStep.value) this.isCreatingStep.next(undefined);
   }
 }
+

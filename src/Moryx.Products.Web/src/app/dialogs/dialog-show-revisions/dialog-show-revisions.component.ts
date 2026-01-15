@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit, signal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -77,3 +82,4 @@ export class DialogShowRevisionsComponent implements OnInit {
     }
   }
 }
+

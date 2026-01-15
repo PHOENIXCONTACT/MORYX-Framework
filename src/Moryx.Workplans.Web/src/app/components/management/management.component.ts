@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -225,3 +230,4 @@ export class ManagementComponent implements OnInit, OnDestroy {
     this.router.navigate(['session', session.sessionToken]);
   }
 }
+

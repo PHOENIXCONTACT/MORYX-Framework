@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, computed, effect, OnInit, signal, untracked } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
@@ -188,3 +193,4 @@ export class OperationRecipesComponent implements OnInit {
     this.isLoading.update((_) => false);
   }
 }
+

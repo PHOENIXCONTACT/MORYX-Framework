@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
@@ -133,3 +138,4 @@ export class MediaService {
     return new Promise((vars) => setTimeout(vars, milliseconds));
   }
 }
+

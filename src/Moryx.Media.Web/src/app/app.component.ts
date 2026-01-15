@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, OnInit } from '@angular/core';
 import { LanguageService } from '@moryx/ngx-web-framework';
 import { TranslateService } from '@ngx-translate/core';
@@ -34,3 +39,4 @@ export class AppComponent implements OnInit {
     this.mediaservice.loadContents();
   }
 }
+

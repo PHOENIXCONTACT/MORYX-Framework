@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, Input, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CellImageDialogComponent } from 'src/app/dialogs/cell-image-dialog/cell-image-dialog.component';
@@ -59,3 +64,4 @@ export class CellDetailsComponent implements OnInit {
     });
   }
 }
+

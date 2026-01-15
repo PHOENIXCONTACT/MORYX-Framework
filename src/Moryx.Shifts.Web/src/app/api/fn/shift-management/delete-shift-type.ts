@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 /* tslint:disable */
 /* eslint-disable */
 import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
@@ -28,3 +33,4 @@ export function deleteShiftType(http: HttpClient, rootUrl: string, params: Delet
 }
 
 deleteShiftType.PATH = '/api/moryx/shifts/types/{id}';
+

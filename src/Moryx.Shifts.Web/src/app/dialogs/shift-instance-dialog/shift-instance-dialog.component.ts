@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -58,3 +63,4 @@ export class ShiftInstanceDialogComponent {
     this.form.controls.endDate.setValue(endDate);
   }
 }
+

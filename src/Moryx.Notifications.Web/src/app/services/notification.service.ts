@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { NotificationModel } from '../api/models';
 import { NotificationPublisherService } from '../api/services';
@@ -89,3 +94,4 @@ export class NotificationService implements OnDestroy {
     this.select(undefined);
   }
 }
+
