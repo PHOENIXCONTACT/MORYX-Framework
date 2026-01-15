@@ -5,20 +5,20 @@
 }
 
 <form method="post" asp-action="AddRole" asp-controller="Roles">
-    <div class="input-group">
-        <input name="roleName" class="form-control w-25" placeholder="Role name" aria-label="Role name">
+    <div class="input-group tw-max-w-md">
+        <input name="roleName" class="form-control" placeholder="Role name" aria-label="Role name">
         <div class="input-group-append">
-            <button class="btn btn-outline-info"><i class="fa fa-plus"></i> Add New Role</button>
+            <button class="btn-outline-info"><i class="fa fa-plus"></i> Add New Role</button>
         </div>
     </div>
 </form>
 
-<table class="table table-striped table-bordered" id="roleTable">
+<table class="table table-striped table-bordered tw-mt-2" id="roleTable">
     <thead>
         <tr>
             <th>Role</th>
             <th>Id</th>
-            <th style="width:10%">Actions</th>
+            <th class="tw-w-[10%]">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -31,8 +31,8 @@
                 <td class="text-right">
                     @if (role.Name != Roles.SuperAdmin)
                     {
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="dropdown">
+                            <button type="button" class="btn-light dropdown-toggle" data-dropdown-toggle aria-haspopup="true" aria-expanded="false">
                                 Action
                             </button>
 

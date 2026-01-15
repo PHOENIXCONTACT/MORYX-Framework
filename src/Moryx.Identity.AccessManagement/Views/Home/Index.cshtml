@@ -12,15 +12,15 @@
     var username = User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name");
     if (username != null)
     {
-        <h1 class="display-4">Welcome @username.Value</h1>
+        <h1 class="tw-text-4xl tw-font-bold tw-mb-4">Welcome @username.Value</h1>
     }
     else
     {
-        <h1 class="display-4">Welcome User</h1>
+        <h1 class="tw-text-4xl tw-font-bold tw-mb-4">Welcome User</h1>
     }
 
 }
 else
 {
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="tw-text-4xl tw-font-bold tw-mb-4">Welcome</h1>
 }

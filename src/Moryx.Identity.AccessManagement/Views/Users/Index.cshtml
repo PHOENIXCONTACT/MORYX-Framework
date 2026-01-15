@@ -3,12 +3,12 @@
     ViewData["Title"] = "Users";
 }
 
-<table class="table table-striped table-bordered" id="userTable">
+<table class="table table-striped table-bordered tw-mt-2" id="userTable">
     <thead>
         <tr>
             <th>User</th>
             <th>Email</th>
-            <th style="width:10%">
+            <th class="tw-w-[10%]">
                 Actions
             </th>
         </tr>
@@ -18,8 +18,8 @@
         {
             <tr>
                 <td>
-                    <div class="row">
-                        <div class="col-sm">
+                    <div class="tw-grid tw-grid-cols-1">
+                        <div>
                             <a>
                                 @user.UserName
                             </a>
@@ -40,8 +40,8 @@
                     </a>
                 </td>
                 <td>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="dropdown">
+                        <button type="button" class="btn-light dropdown-toggle" data-dropdown-toggle aria-haspopup="true" aria-expanded="false">
                             Action
                         </button>
                         <div class="dropdown-menu shadow">

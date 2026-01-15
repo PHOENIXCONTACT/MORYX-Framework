@@ -2,32 +2,32 @@
 @{
     ViewData["Title"] = "Reset Password";
 }
-<div class="row">
-    <div class="col-md-4">
+<div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-3">
+    <div class="tw-col-span-1">
         <form asp-action="ResetPassword" asp-route-returnUrl="@ViewBag.ReturnUrl">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
+            <div class="tw-mb-4">
+                <label asp-for="UserName" class="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"></label>
                 <input asp-for="UserName" type="text" value="@Model.UserName" class="form-control" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ResetToken" class="control-label"></label>
+            <div class="tw-mb-4">
+                <label asp-for="ResetToken" class="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"></label>
                 <input asp-for="ResetToken" value="@Model.ResetToken" type="text" class="form-control" />
                 <span asp-validation-for="ResetToken" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="NewPassword" class="control-label"></label>
+            <div class="tw-mb-4">
+                <label asp-for="NewPassword" class="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"></label>
                 <input asp-for="NewPassword" type="password" class="form-control" />
                 <span asp-validation-for="NewPassword" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ConfirmNewPassword" class="control-label"></label>
+            <div class="tw-mb-4">
+                <label asp-for="ConfirmNewPassword" class="tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2"></label>
                 <input asp-for="ConfirmNewPassword" type="password" class="form-control" />
                 <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="tw-mb-4">
+                <input type="submit" value="Save" class="btn-primary" />
             </div>
         </form>
     </div>
