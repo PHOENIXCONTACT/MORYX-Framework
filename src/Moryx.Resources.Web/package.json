@@ -26,7 +26,7 @@
     "@ngx-translate/http-loader": "^16.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.6.0",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.16.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.0.0",
@@ -35,11 +35,11 @@
     "@types/jasmine": "~3.10.0",
     "@types/node": "^20.11.0",
     "jasmine-core": "~4.0.0",
-    "karma": "~6.3.0",
-    "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage": "~2.1.0",
+    "karma": "~6.4.4",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.1",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
-    "typescript": "~5.5.4"
+    "typescript": "~5.9.3"
   }
 }
