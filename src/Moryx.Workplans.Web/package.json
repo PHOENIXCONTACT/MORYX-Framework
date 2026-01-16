@@ -27,7 +27,7 @@
     "hammerjs": "^2.0.8",
     "rxjs": "^7.8.2",
     "tslib": "^2.6.0",
-    "zone.js": "^0.15.0"
+    "zone.js": "^0.16.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.0.0",
@@ -41,6 +41,6 @@
     "karma-coverage": "^2.2.1",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
-    "typescript": "~5.5.4"
+    "typescript": "~5.9.3"
   }
 }
