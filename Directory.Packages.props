@@ -8,12 +8,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <dotnetVersion>10.0.0</dotnetVersion>
+    <dotnetVersion>10.0.2</dotnetVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- Test libraries -->
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="NUnit" Version="4.4.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="5.2.0" />
@@ -42,8 +42,8 @@
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
 
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
-    <PackageVersion Include="Microsoft.Identity.Web" Version="4.0.0" />
-    <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="4.0.0" />
+    <PackageVersion Include="Microsoft.Identity.Web" Version="4.0.1" />
+    <PackageVersion Include="Microsoft.Identity.Web.DownstreamApi" Version="4.0.1" />
 
 	  <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
 
@@ -53,11 +53,11 @@
     <PackageVersion Include="Castle.Windsor" Version="6.0.0" />
 
     <!-- Dependencies for drivers and adapters -->
-    <PackageVersion Include="System.IO.Ports" Version="10.0.0" />
+    <PackageVersion Include="System.IO.Ports" Version="10.0.2" />
     <PackageVersion Include="MQTTnet" Version="5.0.1.1416" />
-    <PackageVersion Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.377.22" />
+    <PackageVersion Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.378.65" />
 
-    <PackageVersion Include="InfluxDB.LineProtocol" Version="1.1.0" />
+    <PackageVersion Include="InfluxDB.LineProtocol" Version="1.1.1" />
     <PackageVersion Include="InfluxDB.Client" Version="4.18.0" />
     <PackageVersion Include="CsvHelper" Version="33.1.0" />
 
