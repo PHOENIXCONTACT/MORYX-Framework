@@ -11,18 +11,18 @@
   Layout = "_Layout";
 }
 @attribute [WebModule("VisualInstructions", "assignment"),
-ModuleEventStream("/api/moryx/instructions/stream"),
+ModuleEventStream("~/api/moryx/instructions/stream"),
   Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description"),
     Authorize(Policy = VisualInstructionsPermissions.CanView),
     AllowAnonymous]
 @section Styles {
-  <link rel="stylesheet" href="/_content/Moryx.VisualInstructions.Web/styles.css">
+  <link rel="stylesheet" href="~/_content/Moryx.VisualInstructions.Web/styles.css">
 }
 @section Scripts
 {
-  <script src="/_content/Moryx.VisualInstructions.Web/runtime.js" type="module"></script>
-  <script src="/_content/Moryx.VisualInstructions.Web/polyfills.js" type="module"></script>
-  <script src="/_content/Moryx.VisualInstructions.Web/main.js" type="module"></script>
+  <script src="~/_content/Moryx.VisualInstructions.Web/runtime.js" type="module"></script>
+  <script src="~/_content/Moryx.VisualInstructions.Web/polyfills.js" type="module"></script>
+  <script src="~/_content/Moryx.VisualInstructions.Web/main.js" type="module"></script>
 }
 
 <app-root></app-root>

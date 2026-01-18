@@ -28,13 +28,15 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- could compute from base tag, but I think this is clearer -->
+    <meta name="moryx-pathbase" content="@Context.Request.PathBase" />
     <title>@ViewData["Title"]</title>
-    <base href="/@ViewData["BaseRef"]">
-    <link rel="stylesheet" href="/_content/Moryx.Launcher/css/site.css" />
-    <link rel="icon" type="image/x-icon" href="/_content/Moryx.Launcher/favicon.ico">
-    <link rel="stylesheet" href="/_content/Moryx.Launcher/css/icons.css" />
-    <link rel="stylesheet" href="/_content/Moryx.Launcher/css/fonts.css" />
-    <link rel="stylesheet" href="/_content/Moryx.Launcher/css/app.min.css" />
+    <base href="~/@ViewData["BaseRef"]">
+    <link rel="stylesheet" href="~/_content/Moryx.Launcher/css/site.css" />
+    <link rel="icon" type="image/x-icon" href="~/_content/Moryx.Launcher/favicon.ico">
+    <link rel="stylesheet" href="~/_content/Moryx.Launcher/css/icons.css" />
+    <link rel="stylesheet" href="~/_content/Moryx.Launcher/css/fonts.css" />
+    <link rel="stylesheet" href="~/_content/Moryx.Launcher/css/app.min.css" />
     @RenderSection("Styles", false)
 </head>
 <body class="tw-flex tw-flex-col mat-typography ">
@@ -47,7 +49,7 @@
             <div class="tw-relative tw-flex tw-items-center tw-shadow tw-justify-between tw-gap-2 tw-px-2">
                 <div class="tw-flex tw-items-center">
                     <a class="tw-p-0" asp-area="" asp-page="/Index">
-                        <img class="moryx-logo" src="/_content/Moryx.Launcher/assets/moryx-banner-small.webp" alt="Moryx Home Logo">
+                        <img class="moryx-logo" src="~/_content/Moryx.Launcher/assets/moryx-banner-small.webp" alt="Moryx Home Logo">
                     </a>
                 </div>
                 <moryx-searchbox placeholder="@Strings.Layout_Search ..."></moryx-searchbox>
@@ -106,7 +108,7 @@
                                     @foreach (var module in categoryModules)
                                     {
                                         <moryx-dropdown-item class="tw-p-1 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200">
-                                            <a href="/@module.Route" class="tw-flex tw-items-center tw-w-full tw-h-full">
+                                            <a href="~/@module.Route" class="tw-flex tw-items-center tw-w-full tw-h-full">
                                                 <span class="material-symbols-outlined">@module.Icon</span>
                                                 <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@module.Title</span>
                                             </a>
@@ -152,14 +154,14 @@
                             if (splitRoute.Length <= 1) return;
                             var isActive = splitRoute[1].Equals(item.Route);
                             var activeClass = isActive ? "active tw-border-primary-600" : "tw-border-transparent";
-                            var route = cookie == null || isActive ? $"/{item.Route}" : cookie;
+                            var route = cookie == null || isActive ? item.Route : cookie;
                             <li class="tw-group tw-relative tw-w-full hover:tw-cursor-pointer hover:tw-bg-primary-200
                                                                         hover:tw-text-primary-600
                                                                                     tw-border-l-4 hover:tw-rounded tw-p-1 @(activeClass) ">
                                 <a class="tw-flex tw-flex-row tw-items-center 2xl:tw-justify-start tw-p-1 tw-w-full" href="@(route)">
                                     @if (item is WebModuleItem webModuleItem && !isActive && !string.IsNullOrEmpty(webModuleItem.EventStream))
                                     {
-                                        <moryx-notification-badge eventstream="@webModuleItem.EventStream"></moryx-notification-badge>
+                                        <moryx-notification-badge eventstream="@(Url.Content(webModuleItem.EventStream))"></moryx-notification-badge>
                                     }
                                     <span id="@item.Route" class="@(activeClass)  material-symbols-outlined tw-mr-[3px]">@item.Icon</span>
                                     <span class="tw-font-semibold tw-hidden 2xl:tw-block">@item.Title</span>
@@ -179,7 +181,7 @@
             @if (Url.RouteUrl(ViewContext.RouteData.Values).Split('/').Length > 1 &&
             !Url.RouteUrl(ViewContext.RouteData.Values).Split('/')[1].Contains("Notifications"))
             {
-                <moryx-notifications-bar>@Strings.Layout_Details</moryx-notifications-bar>
+                <moryx-notifications-bar api="@(Url.Content("~/api/moryx/notifications/stream"))">@Strings.Layout_Details</moryx-notifications-bar>
             }
 
             <div class="tw-overflow-hidden tw-h-screen tw-w-full tw-box-border">
@@ -225,12 +227,12 @@
                         if (splitRoute.Length <= 1) return;
                         var isActive = splitRoute[1].Equals(item.Route);
                         var activeClass = isActive ? "tw-text-primary-600" : "";
-                        var route = cookie == null || isActive ? $"/{item.Route}" : cookie;
+                        var route = cookie == null || isActive ? Url.Content(item.Route) : cookie;
                         <moryx-nav-button class="tw-relative tw-w-full tw-h-full tw-flex tw-items-center tw-justify-center tw-group ">
                             <a class="tw-h-full tw-w-full tw-flex tw-flex-col tw-flex tw-items-center tw-justify-center @(activeClass)" href="@(route)">
                                 @if (item is WebModuleItem webModuleItem && !isActive && !string.IsNullOrEmpty(webModuleItem.EventStream))
                                 {
-                                    <moryx-notification-badge eventstream="@webModuleItem.EventStream" class="tw-absolute tw-right-1/2 -tw-top-2"></moryx-notification-badge>
+                                    <moryx-notification-badge eventstream="@(Url.Content(webModuleItem.EventStream))" class="tw-absolute tw-right-1/2 -tw-top-2"></moryx-notification-badge>
                                 }
                                 <span id="@item.Route" class="material-symbols-outlined">@item.Icon</span>
                                 <span class="tw-truncate tw-w-30 tw-font-bold">@item.Title</span>
@@ -294,7 +296,7 @@
                                     @foreach (var module in categoryModules)
                                     {
                                         <moryx-dropdown-item class="tw-p-3 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200">
-                                            <a href="/@module.Route" class="tw-flex tw-items-center tw-w-full tw-h-full">
+                                            <a href="~/@module.Route" class="tw-flex tw-items-center tw-w-full tw-h-full">
                                                 <span class="material-symbols-outlined">@module.Icon</span>
                                                 <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@module.Title</span>
                                             </a>
@@ -316,9 +318,9 @@
         </div>
     </moryx-layout>
 
-    <script src="/_content/Moryx.Launcher/js/shell.js"></script>
-    <script src="/_content/Moryx.Launcher/js/dist/polyfills.js" type="module"></script>
-    <script src="/_content/Moryx.Launcher/js/dist/main.js" type="module"></script>
+    <script src="~/_content/Moryx.Launcher/js/shell.js"></script>
+    <script src="~/_content/Moryx.Launcher/js/dist/polyfills.js" type="module"></script>
+    <script src="~/_content/Moryx.Launcher/js/dist/main.js" type="module"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

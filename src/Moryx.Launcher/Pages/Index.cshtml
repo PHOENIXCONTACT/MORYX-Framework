@@ -1,4 +1,5 @@
 ﻿@page
+@using Microsoft.AspNetCore.Components
 @using Moryx.Launcher
 @using Moryx.Modules
 @inject IShellNavigator _navigator
@@ -22,7 +23,7 @@
                     </div>
                     <div class="tw-flex tw-flex-col">
                         <p class="tw-font-bold tw-text-xl">@item.Title</p>
-                        <p class="">/@item.Route</p>
+                        <p class="">@Url.Content(item.Route)</p>
                     </div>
                 </div>
 
