@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
+using Polly;
+using System.Buffers;
+using System.Text;
 
 namespace StartProject.Asp;
 
@@ -76,6 +79,36 @@ public class Startup
     // and passes it directly to Configure().
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+
+        app.UseForwardedHeaders(new ForwardedHeadersOptions()
+        {
+            ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.All
+        });
+        
+        var config = app.ApplicationServices.GetRequiredService<IConfiguration>();
+        var requiredPathBase = config.GetValue<string>("PathBase");
+        
+        if(!string.IsNullOrEmpty(requiredPathBase))
+        {
+            // enable prefix striping. The path base is removed from the path and witten to 
+            // Context.Request.PathBase for later usage
+            app.UsePathBase(requiredPathBase);
+            // middleware to specifially block all traffic that was does not have the path base set for testing
+            app.Use(async (context, next) =>
+            {
+                var pathBase = context.Request.PathBase;
+                if (pathBase == requiredPathBase)
+                {
+                    await next(context);
+                }
+                else
+                {
+                    context.Response.StatusCode = 404;
+                    context.Response.BodyWriter.Write(Encoding.UTF8.GetBytes("Blocked of for test"));
+                }
+            });
+        }
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();

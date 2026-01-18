@@ -1,0 +1,11 @@
+services:
+  nginx-proxy:
+    image: nginx:latest
+    container_name: nginx-reverse-proxy
+    ports:
+      - "8080:8080"
+    volumes:
+      # you can mount ./nginx-stripping.conf instead. To test the case where nginx strips the 
+      # prefix instead of removing it in asp.net
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    network_mode: host
