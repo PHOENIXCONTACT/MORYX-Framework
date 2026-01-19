@@ -9,9 +9,12 @@ export default class RestClientBase {
     private url: string;
 
     constructor(baseUrl: string = "") {
-        this.url = baseUrl
+        const node = document.head.getElementsByTagName("meta")?.namedItem("moryx-pathbase");
+        const path_base = node?.content ?? "";
+
+        this.url = (baseUrl
             ? baseUrl
-            : RestClientBase.baseUrl();
+            : RestClientBase.baseUrl()) + path_base;
     }
 
     public static baseUrl(): string {
