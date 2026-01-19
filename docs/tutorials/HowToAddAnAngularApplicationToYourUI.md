@@ -2,7 +2,7 @@
 
 ## Create an Angular app
 
-Create a new Angular app in the same directory as your `.csproj` file.
+Create a new Angular app in the `./app` directory.
 If you don't have the the Angular CLI installed yet, follow [these instructions](https://v17.angular.io/cli).
 
 ```bash
@@ -24,7 +24,7 @@ Replace the `{"projects":"my-module":"architect":"build":{...}}` element with th
 "build": {
   "builder": "@angular-devkit/build-angular:browser",
   "options": {
-    "outputPath": "wwwroot",
+    "outputPath": "./wwwroot",
     "index": "src/index.html",
     "main": "src/main.ts",
     "polyfills": [
@@ -85,7 +85,7 @@ With the snippet you
 
 1. Replaced the `@angular-devkit/build-angular:application` builder with the `@angular-devkit/build-angular:browser` builder  
 (The application builder is the new way angular builds the app, unfortunately this breaks the deployment in razor inevitably.)
-2. Changed the output path from `dist/` to `wwwroot/`  
+2. Changed the output path from `dist/` to `./wwwroot/`  
 (That's the directory that is packed into nuget packages as static files by default)
 3. Turned off the output hashing (by setting it to `none`)  
 (Otherwise your will have to change the references in the razor page after every build)
@@ -136,8 +136,8 @@ To build the angular app automatically when you build your C# project, you need 
 
   <!-- Automatically build the angular app, if it wasn't build before or you are running a release build -->
   <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\main.js')) And ('$(NoBuild)' != 'true') ">
-    <Exec WorkingDirectory="./" Command="npm ci" />
-    <Exec WorkingDirectory="./" Command="npm run build:prod" />
+    <Exec WorkingDirectory="./app/" Command="npm ci" />
+    <Exec WorkingDirectory="./app/" Command="npm run build:prod" />
   </Target>
 </Project>
 ```
