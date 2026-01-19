@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { NotificationModel, Severity } from "./api/models";
 
   export function getIcon(notification: NotificationModel): string {

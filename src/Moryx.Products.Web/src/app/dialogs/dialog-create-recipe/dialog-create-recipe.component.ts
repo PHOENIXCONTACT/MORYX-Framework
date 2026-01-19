@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, signal } from '@angular/core';
 import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -76,3 +81,4 @@ export interface CreateRecipeDialogResult {
   selectedRecipe: RecipeDefinitionModel | undefined;
   workplanModel: WorkplanModel | undefined;
 }
+

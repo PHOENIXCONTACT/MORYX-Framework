@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, OnDestroy, OnInit, signal, viewChild, ViewChild } from '@angular/core';
 import { VariantDescriptor } from '../../api/models';
 import { ContentDescriptorModel } from '../../api/models/content-descriptor-model';
@@ -407,3 +412,4 @@ export class VariantOverviewComponent implements OnInit, OnDestroy {
     }
   }
 }
+

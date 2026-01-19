@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
@@ -12,3 +17,4 @@ import { MatIcon, MatIconModule } from '@angular/material/icon';
 export class ForkliftComponent {
 
 }
+

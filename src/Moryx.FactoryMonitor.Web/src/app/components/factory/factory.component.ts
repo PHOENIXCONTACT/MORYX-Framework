@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { CellStoreService } from 'src/app/services/cell-store.service';
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
@@ -132,3 +137,4 @@ export class FactoryComponent {
     return Math.max(0, Math.min(x, 1));
   }
 }
+

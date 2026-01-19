@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Routes } from "@angular/router";
 import { AvailabilitiesComponent } from "./availabilities/availabilities.component";
 import { OperatorDetailsComponent } from "./operator-details/operator-details.component";
@@ -18,3 +23,4 @@ export const routes: Routes = [
   },
   { path: "", redirectTo: "workstations", pathMatch: "full" },
 ];
+

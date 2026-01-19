@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable } from '@angular/core';
 import { CalendarDate, CalendarState } from '../models/calendar-state';
 import { BehaviorSubject, firstValueFrom, forkJoin } from 'rxjs';
@@ -368,3 +373,4 @@ export class AppStoreService {
     return resourcesAsync.then((resources) => resources);
   }
 }
+

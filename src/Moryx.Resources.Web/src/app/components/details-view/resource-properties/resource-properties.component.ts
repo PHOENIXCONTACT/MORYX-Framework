@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { Entry, NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
 import { Subscription } from 'rxjs';
@@ -30,3 +35,4 @@ export class ResourcePropertiesComponent implements OnInit, OnDestroy {
     this.editServiceSubscription?.unsubscribe();
   }
 }
+

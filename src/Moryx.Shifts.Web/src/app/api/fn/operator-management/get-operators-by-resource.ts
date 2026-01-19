@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 /* tslint:disable */
 /* eslint-disable */
 import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
@@ -29,3 +34,4 @@ export function getOperatorsByResource(http: HttpClient, rootUrl: string, params
 }
 
 getOperatorsByResource.PATH = '/api/moryx/operators/get-operators-by-resource/{resourceId}';
+

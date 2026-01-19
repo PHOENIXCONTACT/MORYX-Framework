@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { CellPropertySettings } from '../api/models/cell-property-settings';
 import { CellState } from '../api/models/cell-state';
 import { CellLocationModel } from '../api/models/cell-location-model';
@@ -20,3 +25,4 @@ export default interface Cell extends VisualizableItemModel {
   orderColor: string;
   factoryId: number;
 }
+

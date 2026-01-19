@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { DropdownItemComponent } from "../dropdown-item/dropdown-item.component";
 import { DropdownContainerComponent } from "../dropdown-container/dropdown-container.component";
@@ -20,3 +25,4 @@ export class DropdownSubItemComponent {
     this.onClick.emit(this.closeOnClick);
   }
 }
+

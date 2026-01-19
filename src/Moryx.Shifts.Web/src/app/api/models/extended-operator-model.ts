@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 /* tslint:disable */
 /* eslint-disable */
 import { AttendableResourceModel } from '../models/attendable-resource-model';
@@ -8,3 +13,4 @@ export interface ExtendedOperatorModel {
   lastName?: string | null;
   pseudonym?: string | null;
 }
+

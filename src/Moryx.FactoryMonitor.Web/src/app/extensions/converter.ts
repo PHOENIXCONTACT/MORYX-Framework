@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { OrderModel } from '../api/models/order-model';
 import { ActivityChangedModel } from '../api/models/activity-changed-model';
 import { CellStateChangedModel } from '../api/models/cell-state-changed-model';

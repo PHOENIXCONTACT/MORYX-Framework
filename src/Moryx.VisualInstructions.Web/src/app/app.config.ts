@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ApplicationConfig, importProvidersFrom, Injectable } from "@angular/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
@@ -68,3 +73,4 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
   ],
 };
+

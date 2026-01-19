@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { CommonModule } from '@angular/common';
 import { AfterContentInit, AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { localLanguage } from '../utils';
@@ -33,3 +38,4 @@ export class LanguageSelectorComponent {
     location.reload();
   }
 }
+

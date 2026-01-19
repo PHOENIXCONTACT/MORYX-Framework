@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, signal } from "@angular/core";
 import { TranslationConstants } from "./extensions/translation-constants.extensions";
 import { TranslateService } from "@ngx-translate/core";
@@ -69,3 +74,4 @@ export class AppComponent {
   }
 
 }
+

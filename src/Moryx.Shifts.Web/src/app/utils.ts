@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { AssignmentCardModel, DayOfTheWeek } from './models/assignment-card-model';
 import { CalendarDate } from './models/calendar-state';
 import  moment from 'moment';
@@ -109,3 +114,4 @@ export function secondsToHours(secs:number){
   const hourTosecs = 3600;
   return secs/hourTosecs;
 }
+

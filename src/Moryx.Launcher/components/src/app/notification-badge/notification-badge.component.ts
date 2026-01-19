@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, Input, input, NgZone, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
@@ -44,3 +49,4 @@ export class NotificationBadgeComponent implements OnInit, OnDestroy {
     return this.count;
   }
 }
+

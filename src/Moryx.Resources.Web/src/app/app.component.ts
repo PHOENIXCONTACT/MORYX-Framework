@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, HostListener, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -360,3 +365,4 @@ export interface Position {
   x: string;
   y: string;
 }
+

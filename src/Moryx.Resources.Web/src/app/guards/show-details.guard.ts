@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { PermissionService } from '@moryx/ngx-web-framework';
@@ -29,3 +34,4 @@ export class ShowDetailsGuard implements CanActivate {
       .then(permissions => permissions.any(p => p === Permissions.CAN_VIEW_DETAILS));
   }
 }
+

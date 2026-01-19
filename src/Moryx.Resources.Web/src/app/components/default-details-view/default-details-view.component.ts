@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, OnInit } from '@angular/core';
 import { EmptyStateComponent } from '@moryx/ngx-web-framework';
 import { TranslateModule } from '@ngx-translate/core';
@@ -16,3 +21,4 @@ export class DefaultDetailsViewComponent {
   
   constructor() {}
 }
+

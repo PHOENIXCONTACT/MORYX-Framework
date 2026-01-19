@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
@@ -59,3 +64,4 @@ export class SearchResultComponent implements OnInit {
       this.searchResults.update(_ => result);
   }
 }
+

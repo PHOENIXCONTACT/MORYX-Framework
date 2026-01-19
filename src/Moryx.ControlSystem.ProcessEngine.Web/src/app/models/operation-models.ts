@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { AdviceModel } from "../api/models/advice-model";
 import { OperationModel } from "../api/models/operation-model";
 import { ReportModel } from "../api/models/report-model";
@@ -30,3 +35,4 @@ export enum OperationType {
   Advice,
   Update,
 }
+

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable, signal } from '@angular/core';
 
 const FULLSCREEN_KEY = 'workerInstructions.fullscreenEnabled';
@@ -28,3 +33,4 @@ export class InstructionStateService {
   }
 
 }
+

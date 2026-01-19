@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Routes } from "@angular/router";
 import { DefaultDetailsViewComponent } from "./components/default-details-view/default-details-view.component";
 import { DetailsViewComponent } from "./components/details-view/details-view.component";

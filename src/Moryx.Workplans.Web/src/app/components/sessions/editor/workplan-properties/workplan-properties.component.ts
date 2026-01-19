@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, OnDestroy } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { WorkplanState } from '../../../../api/models';
@@ -41,3 +46,4 @@ export class WorkplanPropertiesComponent implements OnDestroy {
       this.sessionService.updateSession(this.editorState.workplan);
   }
 }
+

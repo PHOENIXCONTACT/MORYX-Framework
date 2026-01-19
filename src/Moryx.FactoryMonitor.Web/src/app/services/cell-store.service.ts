@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { ApplicationRef, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FactoryStateStreamService } from './factory-state-stream.service';
@@ -179,3 +184,4 @@ export class CellStoreService {
     this._cellUpdated.next(cellToUpdate);
   }
 }
+

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { defer } from 'rxjs';
@@ -16,3 +21,4 @@ export const ProductsDetailsViewResolver: ResolveFn<ProductModel> = (route: Acti
     );
   });
 };
+

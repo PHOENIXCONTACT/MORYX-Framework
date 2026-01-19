@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { ApplicationRef, ChangeDetectorRef, Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ActivityChangedModel } from '../api/models/activity-changed-model';
@@ -53,3 +58,4 @@ export class FactoryStateStreamService {
 
   
 }
+

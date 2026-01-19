@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 export class TranslationConstants {
   public static readonly LANGUAGES = {
     EN: 'en',
@@ -127,3 +132,4 @@ export class TranslationConstants {
     ADD: 'SIDEBAR_BUTTONS.ADD'
   }
 }
+

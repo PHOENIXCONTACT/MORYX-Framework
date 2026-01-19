@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { NodeConnectionPoint, NodeConnector } from "../../../api/models";
 import { WorkplanNodeModel } from "../../../api/models/workplan-node-model";
 import { Position } from "./position";

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 /* tslint:disable */
 /* eslint-disable */
 export { AdviceContext } from './models/advice-context';
@@ -43,3 +48,4 @@ export { SkillModel } from './models/skill-model';
 export { SkillTypeCreationContextModel } from './models/skill-type-creation-context-model';
 export { SkillTypeModel } from './models/skill-type-model';
 export { StagingIndicator } from './models/staging-indicator';
+

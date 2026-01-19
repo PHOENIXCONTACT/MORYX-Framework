@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, Inject, signal, ViewChild } from '@angular/core';
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -60,3 +65,4 @@ export class CellIconUploaderDialogComponent {
     return this.data.iconName != this.iconControl.value && this.iconControl.value != null && this.iconControl.value != '';
   }
 }
+

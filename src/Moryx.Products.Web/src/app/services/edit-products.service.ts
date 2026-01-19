@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { formatNumber } from "@angular/common";
 import { HttpErrorResponse, HttpStatusCode } from "@angular/common/http";
 import { Inject, Injectable, LOCALE_ID } from "@angular/core";
@@ -317,3 +322,4 @@ function filterEmpties<TValue>(
 ): value is TValue {
   return value !== null && value !== undefined;
 }
+

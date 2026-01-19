@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, EventEmitter, input, Input, output, Output } from '@angular/core';
 import { CalendarDate, CalendarState } from '../models/calendar-state';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
@@ -66,3 +71,4 @@ export class WeekDayToggleButtonComponent {
 
 
 }
+

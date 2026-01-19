@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
@@ -91,3 +96,4 @@ export class ToolboxComponent implements OnInit, OnDestroy {
     this.subscription?.unsubscribe();
   }
 }
+

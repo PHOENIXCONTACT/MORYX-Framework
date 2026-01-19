@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FactoryMonitorService } from '../api/services';
@@ -57,3 +62,4 @@ export class ChangeBackgroundService {
     this._backgroundChanged.next(url);
   }
 }
+

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component } from '@angular/core';
 
 @Component({
@@ -10,3 +15,4 @@ import { Component } from '@angular/core';
 export class DeleteAssignmentComponent {
 
 }
+

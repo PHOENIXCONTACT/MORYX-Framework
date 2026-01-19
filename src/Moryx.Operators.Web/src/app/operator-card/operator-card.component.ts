@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, computed, EventEmitter, input, Input, output, Output } from '@angular/core';
 import { OperatorViewModel } from '../models/operator-view-model';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
@@ -26,3 +31,4 @@ export class OperatorCardComponent {
   }
 
 }
+

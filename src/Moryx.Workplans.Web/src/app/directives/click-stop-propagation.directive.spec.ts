@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { ClickStopPropagationDirective } from './click-stop-propagation.directive';
 
 describe('ClickStopPropagationDirective', () => {
@@ -6,3 +11,4 @@ describe('ClickStopPropagationDirective', () => {
     expect(directive).toBeTruthy();
   });
 });
+

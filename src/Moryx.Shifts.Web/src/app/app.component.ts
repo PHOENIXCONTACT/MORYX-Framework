@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { AfterViewInit, Component, computed, OnInit, signal, ViewChild } from '@angular/core';
 import { CdkDragDrop, CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
 import { MatDrawer } from '@angular/material/sidenav';
@@ -437,3 +442,4 @@ export class AppComponent implements OnInit {
   }
 
 }
+

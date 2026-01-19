@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component } from '@angular/core';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { MatDialog } from '@angular/material/dialog';
@@ -55,3 +60,4 @@ export class AvailabilitiesComponent {
 
   }
 }
+

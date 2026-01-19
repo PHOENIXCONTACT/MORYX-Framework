@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, effect, inject, input, Input, OnInit, signal, untracked } from '@angular/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { DisplayedMediaContent } from './displayed-media-content';
@@ -59,4 +64,5 @@ export class MediaContentsComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }
+
 

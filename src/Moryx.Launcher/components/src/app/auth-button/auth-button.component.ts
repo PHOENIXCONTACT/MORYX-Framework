@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, input, Input, OnInit } from '@angular/core';
 
 @Component({
@@ -49,3 +54,4 @@ export class SignInButtonComponent implements OnInit {
     this.userName = user;
   }
 }
+

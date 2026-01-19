@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { CommonModule } from "@angular/common";
 import { Component, Inject, signal } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
@@ -55,3 +60,4 @@ export class SkillEditDialogComponent {
     return this.skillTypes().find(x => x.id === id);
   }
 }
+

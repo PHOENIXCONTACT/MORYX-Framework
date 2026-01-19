@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { EditMenuState } from './EditMenutState';
@@ -17,3 +22,4 @@ export class EditMenuService {
     this._activeState.next(state);
   }
 }
+

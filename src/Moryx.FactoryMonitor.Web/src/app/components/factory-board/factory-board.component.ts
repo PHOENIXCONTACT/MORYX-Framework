@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import Cell from 'src/app/models/cell';
@@ -55,3 +60,4 @@ export class FactoryBoardComponent implements OnInit {
   }
 
 }
+

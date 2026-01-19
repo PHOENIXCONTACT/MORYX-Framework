@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Component, effect, OnInit, signal, untracked } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
@@ -109,3 +114,4 @@ export class ProductsImporterComponent implements OnInit {
     this.router.navigate([``]);
   }
 }
+

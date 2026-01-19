@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FactoryStateModel } from '../api/models/factory-state-model';
@@ -34,3 +39,4 @@ export class FactorySelectionService {
     this._defaultFactory.next(factory);
   }
 }
+
