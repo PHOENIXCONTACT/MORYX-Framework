@@ -10,18 +10,18 @@ In the **Startup.cs** file of the **StartProject.Asp** project, find the functio
 services.AddLocalization();
 ```
 
-Next, to the body of the function **Configure(IApplicationBuilder app, IWebHostEnvironment env)** just after *app.UserAuthorization();* add the following line that comes from Moryx.WebShell (install the package if it is not):
+Next, to the body of the function **Configure(IApplicationBuilder app, IWebHostEnvironment env)** just after *app.UserAuthorization();* add the following line that comes from Moryx.Launcher (install the package if it is not):
 
 ```csharp
 services.Configure<RequestLocalizationOptions>(options =>
 {
     var supportedCultures = new[]
     {
-                new CultureInfo("de-DE"),
-                new CultureInfo("en-US"),
-                new CultureInfo("it-it"),
-                new CultureInfo("zh-Hans"),
-                new CultureInfo("pl-PL")
+      new CultureInfo("de-DE"),
+      new CultureInfo("en-US"),
+      new CultureInfo("it-it"),
+      new CultureInfo("zh-Hans"),
+      new CultureInfo("pl-PL")
     };
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
@@ -44,7 +44,7 @@ You can fill in the table with the strings needing translation.
 You can see them being used under the *Pages* folder, the .cshtml file, in the following way:
 
 ```csharp
-@attribute [Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description")]
+@attribute [Display(ResourceType = typeof(Strings), Name = nameof(Strings.Module_Title), Description = "Module_Description")]
 ```
 
 **Important** - If you click on the arrow behind the file, you will see another file opening under it named as **Strings.Designer.cs**. After you update the values in Strings.resx, all the values in that file become internal making them inaccessible in html templates. You will need to replace all the internals with public to be able to use them.
