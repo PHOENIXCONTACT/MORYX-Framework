@@ -8,8 +8,9 @@ The different terms for softare constructs you will (probably) come across when 
 
 - [Components](https://github.com/PHOENIXCONTACT/MORYX-Home/tree/main/development/architecture/components.md)
 - [Endpoints](https://github.com/PHOENIXCONTACT/MORYX-Home/tree/main/development/architecture/endpoints.md)
-- [Resources](https://github.com/PHOENIXCONTACT/MORYX-Framework/blob/dev/docs/articles/Resources/Overview.md) (with their [Drivers](https://github.com/PHOENIXCONTACT/MORYX-Framework/blob/dev/docs/articles/Resources/Types/DriverResource.md))
-- [Products](https://github.com/PHOENIXCONTACT/MORYX-Framework/blob/dev/docs/articles/Products/Concept.md)
+- [Resources](/docs/articles/module-resources/index.md)
+ (with their [Drivers](https://github.com/PHOENIXCONTACT/MORYX-Framework/blob/dev/docs/articles/Resources/Types/DriverResource.md))
+- [Products](/docs/articles/module-products/index.md)
 
 The figure provides an overview of the orchestration of the different concepts while the subsequent statements give a first intuition on how their purposes are separated.
 
