@@ -1,10 +1,10 @@
 # MORYX Architecture Design Guidelines
 
-Within the MORYX-Platform you will encounter several different concepts for implementing different functionalities.
+Within the MORYX-Framework you will encounter several different concepts for implementing different functionalities.
 In the following text, you will get a short summary of what concepts there are with a comprehensive visualization how they are orchestrated.
 To jump directly to a more detailed explanation and a set of Best Practices for the respective concept select it in the list below.
 
-The different terms for softare constructs you will (probably) come across when working within the MORYX-Platform:
+The different terms for softare constructs you will (probably) come across when working within the MORYX-Framework:
 
 - [TODO:Modules](https://github.com/PHOENIXCONTACT/MORYX-Home/tree/main/development/architecture/components.md#modulelifecycle-componentwork) (with their [Components](https://github.com/PHOENIXCONTACT/MORYX-Home/tree/main/development/architecture/components.md) and *TODO:Plugins*)
 - *TODO:Adapters*
@@ -16,7 +16,7 @@ The different terms for softare constructs you will (probably) come across when 
 
 The figure provides an overview of the orchestration of the different concepts while the subsequent statements give a first intuition on how their purposes are separated.
 
-![Moryx-Platform](/docs/images/MORYX-Platform-Overview.png)
+![MORYX-Framework](/docs/images/MORYX-Framework-Overview.png)
 
 *Modules* enclose a reusable piece of functionality accessible through their Facades.
 They are the most complex and most powerful entities in the platform.
