@@ -42,7 +42,7 @@ internal interface IActivityDataPool
     /// </summary>
     /// <param name="activityData">The modified activity</param>
     /// <param name="newState">The new state of the activity</param>
-    void UpdateActivity(ActivityData activityData, ActivityState newState);
+    bool TryUpdateActivity(ActivityData activityData, ActivityState newState, Action<ActivityData> updateAction = default);
 
     /// <summary>
     /// Get all processes from the pool

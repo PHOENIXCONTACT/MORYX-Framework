@@ -166,7 +166,7 @@ internal sealed class ResourceAssignment : IActivityPoolListener, IResourceAssig
 
         Logger.Log(LogLevel.Debug, "Activity '{0}' assigned to '{1}'", activityData, string.Join(",", selectedCells.Select(c => c.Id)));
         activityData.Targets = selectedCells;
-        ActivityPool.UpdateActivity(activityData, ActivityState.Configured);
+        ActivityPool.TryUpdateActivity(activityData, ActivityState.Configured);
         NotificationAdapter.AcknowledgeAll(this, activityData);
     }
 
@@ -217,7 +217,7 @@ internal sealed class ResourceAssignment : IActivityPoolListener, IResourceAssig
             if (previousTargetsCount == 0 && updatedTargetsCount > 0)
             {
                 // Acknowledge any existing Unassigned notification if there are possible targets
-                ActivityPool.UpdateActivity(activityData, ActivityState.Configured);
+                ActivityPool.TryUpdateActivity(activityData, ActivityState.Configured);
                 NotificationAdapter.AcknowledgeAll(this, activityData);
             }
             else if (previousTargetsCount > 0 && updatedTargetsCount == 0)

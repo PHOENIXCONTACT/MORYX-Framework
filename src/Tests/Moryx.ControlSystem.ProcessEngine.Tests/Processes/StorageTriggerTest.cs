@@ -111,7 +111,7 @@ public class StorageTriggerTest : ProcessTestsBase
             DataPool.AddActivity(process, activity);
 
             activity.Activity.Complete(0);
-            DataPool.UpdateActivity(activity, ActivityState.ResultReceived);
+            DataPool.TryUpdateActivity(activity, ActivityState.ResultReceived);
         }
 
         // Assert
@@ -185,7 +185,7 @@ public class StorageTriggerTest : ProcessTestsBase
 
         // Act
         activity.Activity.Complete(0);
-        DataPool.UpdateActivity(activity, activityState);
+        DataPool.TryUpdateActivity(activity, activityState);
 
         // Assert
         if (activityState == ActivityState.ResultReceived)
@@ -224,7 +224,7 @@ public class StorageTriggerTest : ProcessTestsBase
         DataPool.AddActivity(process, activity);
 
         activity.Activity.Complete(0);
-        DataPool.UpdateActivity(activity, ActivityState.ResultReceived);
+        DataPool.TryUpdateActivity(activity, ActivityState.ResultReceived);
 
         // Assert
         Assert.That(process.Rework, Is.True);
@@ -250,7 +250,7 @@ public class StorageTriggerTest : ProcessTestsBase
         DataPool.AddActivity(process, activity);
 
         activity.Activity.Complete(0);
-        DataPool.UpdateActivity(activity, ActivityState.ResultReceived);
+        DataPool.TryUpdateActivity(activity, ActivityState.ResultReceived);
 
         // Assert
         Assert.That(process.Rework, Is.EqualTo(rework));

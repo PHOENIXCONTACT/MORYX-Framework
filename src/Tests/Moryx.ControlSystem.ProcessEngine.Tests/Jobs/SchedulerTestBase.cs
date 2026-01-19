@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Moq;
@@ -21,16 +22,33 @@ public abstract class SchedulerTestBase
     protected Mock<IJobList> JobListMock;
 
     protected ProductionRecipe Recipe;
+    protected ProductionRecipe AnotherRecipe;
+
+    protected SetupRecipe CleanUpRecipe => new()
+    {
+        Id = Recipe.Id + 42,
+        Execution = SetupExecution.AfterProduction,
+        TargetRecipe = Recipe
+    };
+    protected SetupRecipe AnotherCleanUpRecipe => new()
+    {
+        Id = AnotherRecipe.Id + 42,
+        Execution = SetupExecution.AfterProduction,
+        TargetRecipe = AnotherRecipe
+    };
 
     protected Job ScheduledJob;
+    protected bool SlotsAvailableCalled;
 
     [SetUp]
     public void SetUp()
     {
         Recipe = DummyRecipe.BuildRecipe();
+        AnotherRecipe = DummyRecipe.BuildRecipe();
         JobListMock = new Mock<IJobList>();
         JobScheduler = CreateScheduler();
         JobScheduler.Scheduled += OnJobScheduled;
+        JobScheduler.SlotAvailable += OnSlotsAvailable;
         JobScheduler.Start();
     }
 
@@ -40,11 +58,16 @@ public abstract class SchedulerTestBase
     public void Clear()
     {
         ScheduledJob = null;
+        SlotsAvailableCalled = false;
     }
 
     private void OnJobScheduled(object sender, Job e)
     {
         ScheduledJob = e;
+    }
+    private void OnSlotsAvailable(object sender, EventArgs e)
+    {
+        SlotsAvailableCalled = true;
     }
 
     [Test]
@@ -327,5 +350,29 @@ public abstract class SchedulerTestBase
             jobs[i] = new Job(DummyRecipe.BuildRecipe(recipeId), 1);
         }
         return jobs;
+    }
+
+    protected void SetupJobListFor(List<Job> jobs)
+    {
+        JobListMock.Setup(j => j.Previous(It.IsAny<Job>())).Returns<Job>(j =>
+        {
+            var index = jobs.IndexOf(j) - 1;
+            return index >= 0 ? jobs[index] : null;
+        });
+        JobListMock.Setup(j => j.Forward(It.IsAny<Job>())).Returns<Job>(j =>
+        {
+            var index = jobs.IndexOf(j) + 1;
+            return jobs.Skip(index);
+        });
+        JobListMock.Setup(j => j.Next(It.IsAny<Job>())).Returns<Job>(j =>
+        {
+            var index = jobs.IndexOf(j) + 1;
+            return jobs[index];
+        });
+        JobListMock.Setup(j => j.Backward(It.IsAny<Job>())).Returns<Job>(j =>
+        {
+            var index = jobs.IndexOf(j) - 1;
+            return index >= 0 ? jobs.Take(index) : [];
+        });
     }
 }

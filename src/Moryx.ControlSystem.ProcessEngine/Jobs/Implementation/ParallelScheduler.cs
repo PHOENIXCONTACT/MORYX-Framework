@@ -123,7 +123,7 @@ internal class ParallelScheduler : JobSchedulerBase<ParallelSchedulerConfig>
         if (next == null || next.Classification != JobClassification.Waiting)
         {
             // If the completed job was a setup, but the following jobs are already gone (e.g. aborted), release the slot
-            if (classification == JobClassification.Completed && job.IsSetup() && _slots.TryRelease(job))
+            if (classification == JobClassification.Completed && job.IsPrepare() && _slots.TryRelease(job))
             {
                 RaiseSlotAvailable();
             }
