@@ -28,7 +28,7 @@ To build the angular app automatically when you build your C# project, you need 
 (only required if you build the project behind a proxy)
 
 Now, start building your app.
-You can test it using `ng serve` and whenever you want to see your current status in the Moryx Launcher run `npm run build` and continue with the next section.
+You can test it using `ng serve` and whenever you want to see your current status in the MORYX Launcher run `npm run build` and continue with the next section.
 
 ## Reference the Angular build output in your Razor page
 
@@ -54,7 +54,7 @@ root to anchor the angular app into the razor page.
 <app-root></app-root>
 ```
 
-When you start your Moryx application now, you will see the angular app placed within your razor page.
+When you start your MORYX application now, you will see the angular app placed within your razor page.
 
 ## (Optional) Attach building the Angular app to your msbuild process
 
@@ -271,7 +271,7 @@ registry=https://registry.npmjs.org/
 @moryx:registry=https://www.myget.org/F/moryx-ci/auth/4cd70c3b-c8e8-4186-8c35-3d4c8789bbdd/npm/
 ```
 
-Now run `npm i @moryx:ngx-web-framework`, which installs the package. If you want to use the moryx theme settings, add a reference in your `angular.json` file
+Now run `npm i @moryx:ngx-web-framework`, which installs the package. If you want to use the MORYX theme settings, add a reference in your `angular.json` file
 
 ```json
 // angular.json - {"projects":"my-module":"architect":"build":{...}}
