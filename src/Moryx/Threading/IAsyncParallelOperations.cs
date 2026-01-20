@@ -26,6 +26,8 @@ public interface IAsyncParallelOperations
     /// <param name="criticalOperation">Indicates if this is a critical operation for exception handling</param>
     void ExecuteParallel<T>(Func<T, Task> operation, T userState, bool criticalOperation) where T : class;
 
+    #region #region ID-based ScheduleExecution
+
     /// <summary>
     /// Schedules an async operation to execute with a delay and optional periodic execution.
     /// Non-stacking: if an execution takes longer than the period, the next execution is skipped.
@@ -48,13 +50,49 @@ public interface IAsyncParallelOperations
     /// <param name="periodMs">Period in milliseconds for repeated execution. Set to 0 or negative for one-time execution</param>
     /// <param name="criticalOperation">Indicates if this is a critical operation for exception handling</param>
     /// <returns>Unique identifier for the scheduled execution, used to stop it later</returns>
-    int ScheduleExecution<T>(Func<T, Task> operation, T userState, int delayMs, int periodMs, bool criticalOperation) where T : class;
+    int ScheduleExecution<T>(Func<T, Task> operation, T userState, int delayMs, int periodMs, bool criticalOperation)
+        where T : class;
 
     /// <summary>
     /// Stops a scheduled execution by its identifier. 
     /// </summary>
     /// <param name="id">The identifier returned by ScheduleExecution</param>
     void StopExecution(int id);
+
+    #endregion
+
+    #region Token-based ScheduleExecution
+
+    /// <summary>
+    /// Schedules an async operation to execute with a delay and optional periodic execution.
+    /// Non-stacking: if an execution takes longer than the period, the next execution is skipped.
+    /// Use the provided cancellation token to stop the execution.
+    /// </summary>
+    /// <param name="operation">The async operation to execute</param>
+    /// <param name="delayMs">Initial delay in milliseconds before first execution</param>
+    /// <param name="periodMs">Period in milliseconds for repeated execution.   Set to 0 or negative for one-time execution</param>
+    /// <param name="criticalOperation">Indicates if this is a critical operation for exception handling</param>
+    /// <param name="cancellationToken">Cancellation token to stop the scheduled execution</param>
+    /// <returns>A task that completes when the scheduled execution is cancelled or completes</returns>
+    Task ScheduleExecutionAsync(Func<Task> operation, int delayMs, int periodMs, bool criticalOperation, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Schedules an async operation to execute with a delay and optional periodic execution.
+    /// Non-stacking: if an execution takes longer than the period, the next execution is skipped.
+    /// Use the provided cancellation token to stop the execution. 
+    /// </summary>
+    /// <typeparam name="T">Type of the user state object</typeparam>
+    /// <param name="operation">The async operation to execute</param>
+    /// <param name="userState">User state passed to the operation</param>
+    /// <param name="delayMs">Initial delay in milliseconds before first execution</param>
+    /// <param name="periodMs">Period in milliseconds for repeated execution.  Set to 0 or negative for one-time execution</param>
+    /// <param name="criticalOperation">Indicates if this is a critical operation for exception handling</param>
+    /// <param name="cancellationToken">Cancellation token to stop the scheduled execution</param>
+    /// <returns>A task that completes when the scheduled execution is cancelled or completes</returns>
+    Task ScheduleExecutionAsync<T>(Func<T, Task> operation, T userState, int delayMs, int periodMs, bool criticalOperation, CancellationToken cancellationToken = default)
+        where T : class;
+
+    #endregion
 
     /// <summary>
     /// Decouple an async event listener delegate from the event invocation thread. 

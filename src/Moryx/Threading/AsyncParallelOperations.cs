@@ -82,10 +82,11 @@ public class AsyncParallelOperations : IAsyncParallelOperations, IDisposable
 
         _runningSchedules[id] = context;
 
-        // Start the scheduled execution on a background task
+        // Start the scheduled execution on a background task using the combined method
         _ = Task.Run(async () =>
         {
-            await ExecuteScheduledAsync(id, operation, delayMs, periodMs, criticalOperation, context);
+            await ExecuteScheduledAsync(operation, delayMs, periodMs, criticalOperation,
+                context.ExecutionSemaphore, () => StopExecution(id), context.CancellationTokenSource.Token);
         }, context.CancellationTokenSource.Token);
 
         return id;
@@ -98,10 +99,34 @@ public class AsyncParallelOperations : IAsyncParallelOperations, IDisposable
         return ScheduleExecution(() => operation(userState), delayMs, periodMs, criticalOperation);
     }
 
-    private async Task ExecuteScheduledAsync(int id, Func<Task> operation, int delayMs, int periodMs, bool criticalOperation, ScheduledExecutionContext context)
+    /// <inheritdoc />
+    public Task ScheduleExecutionAsync(Func<Task> operation, int delayMs, int periodMs, bool criticalOperation, CancellationToken cancellationToken)
     {
-        var cancellationToken = context.CancellationTokenSource.Token;
+        var executionSemaphore = new SemaphoreSlim(1, 1);
 
+        // Start the scheduled execution on a background task using the combined method
+        return Task.Run(async () =>
+        {
+            try
+            {
+                await ExecuteScheduledAsync(operation, delayMs, periodMs, criticalOperation, executionSemaphore, null, cancellationToken);
+            }
+            finally
+            {
+                executionSemaphore.Dispose();
+            }
+        }, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task ScheduleExecutionAsync<T>(Func<T, Task> operation, T userState, int delayMs, int periodMs, bool criticalOperation, CancellationToken cancellationToken) where T : class
+    {
+        return ScheduleExecutionAsync(() => operation(userState), delayMs, periodMs, criticalOperation, cancellationToken);
+    }
+
+    private async Task ExecuteScheduledAsync(Func<Task> operation, int delayMs, int periodMs, bool criticalOperation,
+        SemaphoreSlim executionSemaphore, Action cleanupAction, CancellationToken cancellationToken)
+    {
         try
         {
             // Initial delay
@@ -114,13 +139,10 @@ public class AsyncParallelOperations : IAsyncParallelOperations, IDisposable
             do
             {
                 if (cancellationToken.IsCancellationRequested)
-                {
                     break;
-                }
 
                 // Non-stacking execution:  only execute if previous execution is complete
-                // Use Wait(0) for non-blocking check - returns true if semaphore was acquired
-                if (await context.ExecutionSemaphore.WaitAsync(0, cancellationToken))
+                if (await executionSemaphore.WaitAsync(0, cancellationToken))
                 {
                     try
                     {
@@ -132,7 +154,7 @@ public class AsyncParallelOperations : IAsyncParallelOperations, IDisposable
                     }
                     finally
                     {
-                        context.ExecutionSemaphore.Release();
+                        executionSemaphore.Release();
                     }
                 }
                 // else: previous execution still running, skip this iteration (non-stacking behavior)
@@ -158,8 +180,8 @@ public class AsyncParallelOperations : IAsyncParallelOperations, IDisposable
         }
         finally
         {
-            // Cleanup
-            StopExecution(id);
+            // Cleanup (for ID-based scheduling)
+            cleanupAction?.Invoke();
         }
     }
 

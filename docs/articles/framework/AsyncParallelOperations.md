@@ -104,6 +104,26 @@ int scheduleId = _asyncParallelOperations.ScheduleExecution(async () =>
 asyncOps.StopExecution(scheduleId);
 ````
 
+### Schedule Periodic Execution with CancellationToken
+
+Schedule periodic execution with usage of cancellation token:
+
+````cs
+// Create by your own or by injection
+private IAsyncParallelOperations _asyncParallelOperations;
+
+// Start
+var cts = new CancellationTokenSource();
+var task = _asyncParallelOperations.ScheduleExecutionAsync(async () =>
+{
+    await DoHealthCheckAsync();
+}, delayMs: 1000, periodMs: 5000, criticalOperation: false, cts.Token);
+
+// Stop and wait
+await cts.CancelAsync();
+await task;
+````
+
 ### Event Decoupling
 
 Decouple event handlers from the event invocation thread:

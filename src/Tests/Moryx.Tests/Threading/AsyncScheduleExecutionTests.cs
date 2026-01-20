@@ -311,4 +311,78 @@ public class AsyncScheduleExecutionTests
         Assert.That(countBeforeDispose, Is.GreaterThan(0));
         Assert.That(countAfterDispose, Is.EqualTo(countBeforeDispose), "Should not execute after dispose");
     }
+
+    [Test(Description = "Cancel ScheduleExecutionAsync by CancellationToken")]
+    public async Task CancelScheduleExecutionAsyncByCancellationToken()
+    {
+        // ReSharper disable MethodSupportsCancellation
+        // Arrange
+        var executionCount = 0;
+        var cts = new CancellationTokenSource();
+
+        Task Operation()
+        {
+            Interlocked.Increment(ref executionCount);
+            return Task.CompletedTask;
+        }
+
+        // Act
+        var task = _asyncParallelOperations.ScheduleExecutionAsync(
+            Operation, 50, 100, false, cts.Token);
+
+
+        await Task.Delay(350);
+        var countBeforeCancel = executionCount;
+
+        await cts.CancelAsync();
+        await task; // Wait for completion
+
+        await Task.Delay(200);
+        var countAfterCancel = executionCount;
+
+        // Assert
+        Assert.That(countBeforeCancel, Is.GreaterThanOrEqualTo(3));
+        Assert.That(countAfterCancel, Is.EqualTo(countBeforeCancel));
+    }
+
+    [Test(Description = "Task of ScheduleExecutionAsync completes when CancellationToken was cancelled.")]
+    public async Task ScheduleExecutionAsyncCompletesWhenCancelled()
+    {
+        // Arrange
+        var cts = new CancellationTokenSource();
+        static Task Operation() => Task.Delay(10);
+
+        // Act
+        var task = _asyncParallelOperations.ScheduleExecutionAsync(
+            Operation, 50, 100, false, cts.Token);
+
+        await Task.Delay(200);
+        await cts.CancelAsync();
+
+        // Assert - Should complete without throwing
+        await task;
+        Assert.That(task.IsCompleted, Is.True);
+    }
+
+    [Test(Description = "ScheduleExecutionAsync stops automatically after timeout")]
+    public async Task ScheduleExecutionAsyncStopsAutomaticallyWithTimeout()
+    {
+        // Arrange
+        var executionCount = 0;
+        using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(250));
+
+        Task Operation()
+        {
+            Interlocked.Increment(ref executionCount);
+            return Task.CompletedTask;
+        }
+
+        // Act
+        await _asyncParallelOperations.ScheduleExecutionAsync(
+            Operation,  0, 50, false, cts.Token);
+
+        // Assert - Should have executed multiple times but stopped due to timeout
+        Assert.That(executionCount, Is.GreaterThanOrEqualTo(4));
+        Assert.That(executionCount, Is.LessThanOrEqualTo(6));
+    }
 }
