@@ -194,6 +194,12 @@ public class AsyncParallelOperations : IAsyncParallelOperations, IDisposable
             runningSchedule.Value.ExecutionSemaphore.Dispose();
         }
         _runningSchedules.Clear();
+
+        // Clear all event decouplers
+        lock (_eventDecouplers)
+        {
+            _eventDecouplers.Clear();
+        }
     }
 
     #region Event Decoupling
