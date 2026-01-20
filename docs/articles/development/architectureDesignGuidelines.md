@@ -17,7 +17,7 @@ The figure provides an overview of the orchestration of the different concepts w
 ![MORYX-Framework](/docs/images/MORYX-Framework-Overview.png)
 
 *Modules* enclose a reusable piece of functionality accessible through their Facades.
-They are the most complex and most powerful entities in the platform.
+They are the most complex and most powerful entities in the framework.
 
 *Adapters* are closely related to Modules and their code structure is fairly similar.
 They differ from a Module in their purpose.
