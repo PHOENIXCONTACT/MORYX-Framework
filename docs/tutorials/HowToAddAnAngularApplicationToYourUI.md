@@ -66,7 +66,9 @@ To build the angular app automatically when you build your C# project, you need 
 
   <PropertyGroup>
     <!-- Helpful if visual studio complains about anything -->
-    <DefaultItemExcludes>src\**;node_modules\**</DefaultItemExcludes>
+    <DefaultItemExcludes>app\**</DefaultItemExcludes>
+    <Content Update="@(Content)" Pack="false" />
+    <Content Update="wwwroot\**" Pack="true" PackagePath="staticwebassets" />
   </PropertyGroup>
 
   <!-- Automatically build the angular app, if it wasn't build before or you are running a release build -->
