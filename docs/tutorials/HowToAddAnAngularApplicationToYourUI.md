@@ -17,79 +17,14 @@ You can develop the app as if it was a standalone solution. Just make sure that 
 ## Configure the build output of your Angular app
 
 To build the angular app automatically when you build your C# project, you need to adjust some configurations in the **angular.json** file.
-Replace the `{"projects":"my-module":"architect":"build":{...}}` element with the following snipped
 
-```json
-// angular.json - {"projects":"my-module":"architect":"build":{...}}
-"build": {
-  "builder": "@angular-devkit/build-angular:browser",
-  "options": {
-    "outputPath": "./wwwroot",
-    "index": "src/index.html",
-    "main": "src/main.ts",
-    "polyfills": [
-      "zone.js"
-    ],
-    "tsConfig": "tsconfig.app.json",
-    "inlineStyleLanguage": "scss",
-    "assets": [
-      "src/favicon.ico",
-      "src/assets"
-    ],
-    "styles": [
-      "src/styles.scss"
-    ],
-    "scripts": [],
-    "stylePreprocessorOptions": {
-      "includePaths": [
-        "node_modules"
-      ]
-    }
-  },
-  "configurations": {
-    "production": {
-      "budgets": [
-        {
-          "type": "initial",
-          "maximumWarning": "500kb",
-          "maximumError": "5mb"
-        },
-        {
-          "type": "anyComponentStyle",
-          "maximumWarning": "2kb",
-          "maximumError": "5mb"
-        }
-      ],
-      "outputHashing": "none",
-      "optimization": {
-          "scripts": true,
-          "styles": true,
-          "fonts": false
-        }
-    },
-    "development": {
-      "buildOptimizer": false,
-      "optimization": false,
-      "vendorChunk": true,
-      "extractLicenses": false,
-      "sourceMap": true,
-      "namedChunks": true,
-      "fileReplacements": []
-    }
-  },
-  "defaultConfiguration": "production"
-},
-```
-
-With the snippet you
-
-1. Replaced the `@angular-devkit/build-angular:application` builder with the `@angular-devkit/build-angular:browser` builder  
+1. Replace the `@angular-devkit/build-angular:application` builder with the `@angular-devkit/build-angular:browser` builder  
 (The application builder is the new way angular builds the app, unfortunately this breaks the deployment in razor inevitably.)
-2. Changed the output path from `dist/` to `./wwwroot/`  
+2. Change the output path from `dist/` to `../wwwroot/`  
 (That's the directory that is packed into nuget packages as static files by default)
-3. Turned off the output hashing (by setting it to `none`)  
-(Otherwise your will have to change the references in the razor page after every build)
-4. Turned off the inline optimization of fonts  
+3. Turn off the output hashing (by setting it to `none`)  
+(Otherwise you will have to change the references in the razor page after every build)
+4. Turn off the inline optimization of fonts  
 (only required if you build the project behind a proxy)
 
 Now, start building your app.
