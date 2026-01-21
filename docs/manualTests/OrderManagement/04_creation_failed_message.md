@@ -4,7 +4,7 @@
 
 Setup a *failed* order, for example by adding a new order with a non-existent `productIdentifier`. You can use any endpoint calling tools like Swagger, Postman, etc.
 
-```
+```yaml
 POST {baseUrl}/api/moryx/orders
 
 {
