@@ -1,7 +1,10 @@
 items:
+- title: Site notice
+  url: https://www.phoenixcontact.com/en-pc/impressum
+- title: Data privacy
+  url: https://www.phoenixcontact.com/de-de/rechtliche-hinweise/datenschutz
 - title: Documentation
   url: https://github.com/PHOENIXCONTACT/MORYX-Framework/tree/future/docs
 - title: Repository
   icon: bi-github
-  test: test
   url: https://github.com/PHOENIXCONTACT/MORYX-Framework
