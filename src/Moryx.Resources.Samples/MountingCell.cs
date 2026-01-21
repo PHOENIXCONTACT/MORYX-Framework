@@ -3,7 +3,6 @@
 
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Moryx.AbstractionLayer;
 using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Serialization;
