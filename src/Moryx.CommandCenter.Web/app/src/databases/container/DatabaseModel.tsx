@@ -23,8 +23,10 @@ import { connect } from "react-redux";
 import { toast } from "react-toastify";
 import { updateShowWaitDialog } from "../../common/redux/CommonActions";
 import { ActionType } from "../../common/redux/Types";
+import EnumEditor from "../../modules/components/ConfigEditor/EnumEditor";
 import { getEnumTypeValue } from "../../modules/converter/EnumTypeHelper";
 import Entry from "../../modules/models/Entry";
+import { EntryValueType } from "../../modules/models/EntryValueType";
 import DatabasesRestClient from "../api/DatabasesRestClient";
 import { MigrationResult } from "../api/responses/MigrationResult";
 import DatabaseConfigModel from "../models/DatabaseConfigModel";
@@ -212,19 +214,29 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
 
   private createEntriesInput(): React.JSX.Element[] {
     return this.state.config.properties.subEntries.map((entry) => {
-      return (
-        <TextField
-          key={entry.identifier + "-input"}
-          label={entry.displayName}
-          placeholder={entry.value.default}
-          value={entry.value.current}
-          onBlur={() => this.onTestConnection()}
-          onChange={(e) => this.onInputChanged(e.target.value, entry)}
-          variant="outlined"
-          size="small"
-          margin="dense"
-        />
-      );
+      if (entry.value.type === EntryValueType.Enum) {
+        return (
+          <EnumEditor
+            Entry={entry}
+            IsReadOnly={false}
+            onValueChanged={(v, e) => this.onInputChanged(v, e)}
+          />
+        );
+      } else {
+        return (
+          <TextField
+            key={entry.identifier + "-input"}
+            label={entry.displayName}
+            placeholder={entry.value.default}
+            value={entry.value.current}
+            onBlur={() => this.onTestConnection()}
+            onChange={(e) => this.onInputChanged(e.target.value, entry)}
+            variant="outlined"
+            size="small"
+            margin="dense"
+          />
+        );
+      }
     });
   }
 
