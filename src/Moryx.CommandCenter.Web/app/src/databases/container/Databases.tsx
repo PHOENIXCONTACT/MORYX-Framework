@@ -60,7 +60,12 @@ interface DatabaseStateModel {
 class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPropModel, DatabaseStateModel> {
     constructor(props: DatabasesPropsModel & DatabasesDispatchPropModel) {
         super(props);
-        this.state = { MenuModel: { MenuItems: [] }, IsLoading: false };
+        this.state = {
+          MenuModel: {
+            MenuItems: []
+          },
+          IsLoading: false
+        };
     }
 
     public componentDidMount(): void {
@@ -74,7 +79,12 @@ class Database extends React.Component<DatabasesPropsModel & DatabasesDispatchPr
             console.log(data);
             const validModels = data.databases.filter((model) => model);
             this.props.onUpdateDatabases(this.mapDatabasesWithConfigurators(data));
-            this.setState({ MenuModel: { MenuItems: validModels.map((dataModel, idx) => Database.createMenuItem(dataModel)) }, IsLoading: false });
+            this.setState({
+              MenuModel: {
+                MenuItems: validModels.map((dataModel, idx) => Database.createMenuItem(dataModel))
+              },
+              IsLoading: false
+            });
         });
     }
 

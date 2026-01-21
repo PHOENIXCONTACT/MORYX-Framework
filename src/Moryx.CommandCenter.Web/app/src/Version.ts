@@ -4,4 +4,3 @@
 */
 
 export const VERSION = "%VERSION%";
-
