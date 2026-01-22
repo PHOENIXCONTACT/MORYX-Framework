@@ -5,9 +5,9 @@
 
 import Chip from "@mui/material/Chip";
 import * as React from "react";
-import { getEnumTypeValue } from "../../modules/converter/EnumTypeHelper";
-import { ModuleServerModuleState } from "../../modules/models/ModuleServerModuleState";
-import { HealthStateToCssClassConverter } from "../converter/HealthStateToCssClassConverter";
+import { getEnumTypeValue } from "../converter/EnumTypeHelper";
+import { ModuleServerModuleState } from "../models/ModuleServerModuleState";
+import { HealthStateToCssClassConverter } from "./HealthStateToCssClassConverter";
 
 interface HealthStateBadgeProps {
     HealthState: ModuleServerModuleState;

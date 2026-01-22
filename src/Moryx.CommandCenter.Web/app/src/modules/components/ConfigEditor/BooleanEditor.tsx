@@ -10,27 +10,27 @@ import * as React from "react";
 import InputEditorBase, { InputEditorBasePropModel } from "./InputEditorBase";
 
 export default class ByteEditor extends InputEditorBase {
-    constructor(props: InputEditorBasePropModel) {
-        super(props);
-        this.state = {};
-    }
+  constructor(props: InputEditorBasePropModel) {
+    super(props);
+    this.state = {};
+  }
 
-    public render(): React.ReactNode {
-        return (
+  public render(): React.ReactNode {
+    return (
 
-            <Tooltip title={this.props.Entry.description} placement="right">
-                <FormControlLabel control={
-                <Switch defaultChecked={this.props.Entry.value.current.toLowerCase() === "true"}
-                    disabled={(this.props.Entry.value.isReadOnly || this.props.IsReadOnly)}
-                    onClick={(e: React.MouseEvent<HTMLElement>) => this.onToggle(e)}
+      <Tooltip title={this.props.Entry.description} placement="right">
+        <FormControlLabel control={
+          <Switch defaultChecked={this.props.Entry.value.current.toLowerCase() === "true"}
+                  disabled={(this.props.Entry.value.isReadOnly || this.props.IsReadOnly)}
+                  onClick={(e: React.MouseEvent<HTMLElement>) => this.onToggle(e)}
 
-                />} label={this.props.Entry.displayName}/>
-            </Tooltip>
-        );
-    }
+          />} label={this.props.Entry.displayName}/>
+      </Tooltip>
+    );
+  }
 
-    private onToggle(e: React.MouseEvent<HTMLElement>): void {
-        this.props.Entry.value.current = this.props.Entry.value.current === "True" ? this.props.Entry.value.current = "False" : this.props.Entry.value.current = "True";
-        this.forceUpdate();
-    }
+  private onToggle(e: React.MouseEvent<HTMLElement>): void {
+    this.props.Entry.value.current = this.props.Entry.value.current === "True" ? this.props.Entry.value.current = "False" : this.props.Entry.value.current = "True";
+    this.forceUpdate();
+  }
 }

@@ -3,13 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiArrowUpBoldCircleOutline, mdiCogPlayOutline, mdiConnection, mdiDatabaseAlert, mdiDatabaseCheckOutline, mdiTableAlert } from "@mdi/js";
+import {mdiArrowUpBoldCircleOutline, mdiCogPlayOutline, mdiConnection, mdiDatabaseAlert, mdiDatabaseCheckOutline, mdiTableAlert} from "@mdi/js";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CircularProgress from "@mui/material/CircularProgress";
-import GridLegacy from "@mui/material/GridLegacy";
+import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import SvgIcon from "@mui/material/SvgIcon";
@@ -109,10 +109,9 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
       return;
     }
 
-    const config = {...this.state.config};
+    const config = new DatabaseConfigModel();
     config.configuratorType = modelConfigurator.configuratorType;
-    config.connectionString = modelConfigurator.connectionStringPrototype;
-    config.properties = {...modelConfigurator.configPrototype};
+    config.properties = structuredClone(modelConfigurator.configPrototype);
 
     // Replace <DatabaseName> placeholder
     const dbNamePlaceholder = "<DatabaseName>";
@@ -134,14 +133,14 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
       modelConfigurator,
       config
     }, () => this.onTestConnection());
+
+    this.forceUpdate();
   }
 
   public onConnectionStringChanged(e: React.ChangeEvent<HTMLInputElement>): void {
     const config = this.state.config;
     const newConnectionString = e.target.value;
     config.connectionString = newConnectionString;
-
-    console.log("Connection string changed to:", newConnectionString);
 
     const parts = newConnectionString.split(";").filter((p) => p.trim() !== "");
 
@@ -394,7 +393,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     return (
       <Card>
         <CardContent>
-          <GridLegacy container={true} direction="column" spacing={1}>
+          <Grid container={true} direction="column" spacing={1}>
             <DatabaseSection title={(
               <Typography variant="h5" gutterBottom={true}>
                 {contextNameWithoutNamespace(this.state.targetModel)} {this.state.testConnectionPending
@@ -403,7 +402,7 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
               </Typography>
             )}
             >
-              <GridLegacy item={true} md={12}>
+              <Grid size={12}>
                 <Stack spacing={1}>
                   <TextField
                     label="Configurator"
@@ -429,13 +428,13 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                   />
                   {this.createEntriesInput()}
                 </Stack>
-              </GridLegacy>
-              <GridLegacy item={true} md={12}>
+              </Grid>
+              <Grid size={12}>
                 <Button color="primary" variant="outlined" onClick={() => this.onSave()}>Save</Button>
-              </GridLegacy>
+              </Grid>
             </DatabaseSection>
             <DatabaseSection title="Database">
-              <GridLegacy item={true} md={12}>
+              <Grid size={12}>
                 <ButtonGroup>
                   <Button color="primary"
                           onClick={() => this.onCreateDatabase()}
@@ -448,25 +447,24 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                     Erase database
                   </Button>
                 </ButtonGroup>
-              </GridLegacy>
-              <GridLegacy container={true} item={true}
-                          md={12} spacing={1}
-                          direction="row"
-
+              </Grid>
+              <Grid container={true}
+                    size={12} spacing={1}
+                    direction="row"
               >
-                <GridLegacy item={true} md={12}>
+                <Grid size={12}>
                   <Tabs value={this.state.activeTab} onChange={this.activeTab}>
                     <Tab label="Migrations" value={1}/>
                     <Tab label="Setups" value={2}/>
                   </Tabs>
-                </GridLegacy>
+                </Grid>
 
-                <GridLegacy container={true} item={true} md={12}
-                            direction="column"
-                            justifyContent="flex-start"
-                            alignItems="stretch"
+                <Grid container={true} size={12}
+                      direction="column"
+                      justifyContent="flex-start"
+                      alignItems="stretch"
                 >
-                  <GridLegacy item={true}>
+                  <Grid>
                     <div hidden={this.state.activeTab !== 1}>
                       {this.props.DataModel.availableMigrations.length !== 0
                         ? (<ExecuterList items={
@@ -506,11 +504,11 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
                         )
                         : (<Typography variant="body2">No setup found.</Typography>)}
                     </div>
-                  </GridLegacy>
-                </GridLegacy>
-              </GridLegacy>
+                  </Grid>
+                </Grid>
+              </Grid>
             </DatabaseSection>
-          </GridLegacy>
+          </Grid>
         </CardContent>
       </Card>
     );

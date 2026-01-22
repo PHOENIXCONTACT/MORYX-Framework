@@ -4,9 +4,9 @@
 */
 
 export enum TestConnectionResult {
-    ConfigurationError = "ConfigurationError",
-    ConnectionError = "ConnectionError",
-    ConnectionOkDbDoesNotExist = "ConnectionOkDbDoesNotExist",
-    Success = "Success",
-    PendingMigrations = "PendingMigrations",
+  ConfigurationError = "ConfigurationError",
+  ConnectionError = "ConnectionError",
+  ConnectionOkDbDoesNotExist = "ConnectionOkDbDoesNotExist",
+  Success = "Success",
+  PendingMigrations = "PendingMigrations",
 }

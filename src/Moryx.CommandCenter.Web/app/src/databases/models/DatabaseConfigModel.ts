@@ -6,7 +6,7 @@
 import Entry from "../../modules/models/Entry";
 
 export default class DatabaseConfigModel {
-    public configuratorType: string;
-    public connectionString: string;
-    public properties: Entry;
+  public configuratorType: string;
+  public connectionString: string;
+  public properties: Entry;
 }

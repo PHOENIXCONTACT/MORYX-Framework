@@ -14,36 +14,37 @@ import { updateFailureBehaviour, updateStartBehaviour } from "../../modules/redu
 import { ActionType } from "../redux/Types";
 
 const mapDispatchToProps = (dispatch: React.Dispatch<ActionType<{}>>): ModuleDispatchPropModel => {
-    return {
-        onUpdateStartBehaviour: (moduleName: string, startBehaviour: ModuleStartBehaviour) => dispatch(updateStartBehaviour(moduleName, startBehaviour)),
-        onUpdateFailureBehaviour: (moduleName: string, failureBehaviour: FailureBehaviour) => dispatch(updateFailureBehaviour(moduleName, failureBehaviour)),
-    };
+  return {
+    onUpdateStartBehaviour: (moduleName: string, startBehaviour: ModuleStartBehaviour) => dispatch(updateStartBehaviour(moduleName, startBehaviour)),
+    onUpdateFailureBehaviour: (moduleName: string, failureBehaviour: FailureBehaviour) => dispatch(updateFailureBehaviour(moduleName, failureBehaviour)),
+  };
 };
 
 interface ModuleHeaderPropModel {
-    ModuleName: string;
-    selectedTab: string;
+  ModuleName: string;
+  selectedTab: string;
 }
 
 export class ModuleHeader extends React.Component<ModuleHeaderPropModel & ModuleDispatchPropModel> {
-    constructor(props: ModuleHeaderPropModel & ModuleDispatchPropModel) {
-        super(props);
-    }
+  constructor(props: ModuleHeaderPropModel & ModuleDispatchPropModel) {
+    super(props);
+  }
 
-    public render(): React.ReactNode {
-        return (
-            <Tabs value={this.props.selectedTab} role="navigation">
-                <Tab label="Overview" value="module" iconPosition="start" component={Link} to={`/modules/${this.props.ModuleName}`} />
-                <Tab label="Configuration" value="configuration" iconPosition="start" component={Link} to={`/modules/${this.props.ModuleName}/configuration`} />
-                <Tab label="Console" value="console" iconPosition="start" component={Link} to={`/modules/${this.props.ModuleName}/console`} />
-            </Tabs>
-        );
-    }
+  public render(): React.ReactNode {
+    return (
+      <Tabs value={this.props.selectedTab} role="navigation">
+        <Tab label="Overview" value="module" iconPosition="start" component={Link} to={`/modules/${this.props.ModuleName}`}/>
+        <Tab label="Configuration" value="configuration" iconPosition="start" component={Link} to={`/modules/${this.props.ModuleName}/configuration`}/>
+        <Tab label="Console" value="console" iconPosition="start" component={Link} to={`/modules/${this.props.ModuleName}/console`}/>
+      </Tabs>
+    );
+  }
 }
 
 interface ModuleDispatchPropModel {
-    onUpdateStartBehaviour?(moduleName: string, startBehaviour: ModuleStartBehaviour): void;
-    onUpdateFailureBehaviour?(moduleName: string, failureBehaviour: FailureBehaviour): void;
+  onUpdateStartBehaviour?(moduleName: string, startBehaviour: ModuleStartBehaviour): void;
+
+  onUpdateFailureBehaviour?(moduleName: string, failureBehaviour: FailureBehaviour): void;
 }
 
 export default connect<{}, ModuleDispatchPropModel>(null, mapDispatchToProps)(ModuleHeader);

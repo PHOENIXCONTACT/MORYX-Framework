@@ -9,7 +9,7 @@ import Tooltip from "@mui/material/Tooltip";
 import * as React from "react";
 import Entry from "../../models/Entry";
 import EntryPossible from "../../models/EntryPossible";
-import {InputEditorBasePropModel} from "./InputEditorBase";
+import { InputEditorBasePropModel } from "./InputEditorBase";
 
 interface SelectionStateModel {
   PossibleValues: EntryPossible[];

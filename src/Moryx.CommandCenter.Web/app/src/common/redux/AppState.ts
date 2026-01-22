@@ -9,21 +9,21 @@ import { CommonState, getCommonReducer, initialCommonState } from "./CommonState
 import { ActionType } from "./Types";
 
 export interface AppState {
-    Common: CommonState;
-    Modules: ModulesState;
-    Databases: DatabaseState;
+  Common: CommonState;
+  Modules: ModulesState;
+  Databases: DatabaseState;
 }
 
 export const initialAppState: AppState = {
-    Common: initialCommonState,
-    Modules: initialModulesState,
-    Databases: initialDatabaseState,
+  Common: initialCommonState,
+  Modules: initialModulesState,
+  Databases: initialDatabaseState,
 };
 
 export function getAppReducer(state: AppState = initialAppState, action: ActionType<{}>): AppState {
-    return {
-        Common: getCommonReducer(state.Common, action),
-        Modules: getModulesReducer(state.Modules, action),
-        Databases: getDatabaseReducer(state.Databases, action),
-    };
+  return {
+    Common: getCommonReducer(state.Common, action),
+    Modules: getModulesReducer(state.Modules, action),
+    Databases: getDatabaseReducer(state.Databases, action),
+  };
 }

@@ -5,7 +5,7 @@
 
 import { ChipPropsColorOverrides } from "@mui/material/Chip";
 import * as React from "react";
-import { ModuleServerModuleState } from "../../modules/models/ModuleServerModuleState";
+import { ModuleServerModuleState } from "../models/ModuleServerModuleState";
 
 export interface ForegroundBackgroundCssClass {
     Foreground: string;
