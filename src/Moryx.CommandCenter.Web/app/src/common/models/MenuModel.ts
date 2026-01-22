@@ -6,10 +6,11 @@
 import MenuItemModel from "./MenuItemModel";
 
 export interface MenuProps {
-    Menu: MenuModel;
-    onActiveMenuItemChanged?(menuItem: MenuItemModel): void;
+  Menu: MenuModel;
+
+  onActiveMenuItemChanged?(menuItem: MenuItemModel): void;
 }
 
 export default interface MenuModel {
-    MenuItems: MenuItemModel[];
+  MenuItems: MenuItemModel[];
 }

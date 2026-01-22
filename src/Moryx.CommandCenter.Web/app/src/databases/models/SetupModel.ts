@@ -4,10 +4,10 @@
 */
 
 export default class SetupModel {
-    public fullname: string;
-    public sortOrder: number;
-    public name: string;
-    public description: string;
-    public supportedFileRegex: string;
-    public setupData: string;
+  public fullname: string;
+  public sortOrder: number;
+  public name: string;
+  public description: string;
+  public supportedFileRegex: string;
+  public setupData: string;
 }

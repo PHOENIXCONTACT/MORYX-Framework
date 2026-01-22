@@ -7,6 +7,6 @@ import DataModel from "./DataModel";
 import { ModelConfiguratorModel } from "./ModelConfiguratorModel";
 
 export default class DatabaseAndConfigurators {
-    public database: DataModel;
-    public configurators: ModelConfiguratorModel[];
+  public database: DataModel;
+  public configurators: ModelConfiguratorModel[];
 }
