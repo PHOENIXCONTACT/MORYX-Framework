@@ -118,14 +118,10 @@ export class ResourceReferencesComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.selectedReference()?.targets?.length) {
-      this.selectedReference.update(ref => ({
-        ...ref,
-        targets: [this.selectedTarget as ResourceModel],
-      }));
-    } else {
-      this.selectedReference()?.targets?.push(this.selectedTarget as ResourceModel);
-    }
+    this.selectedReference.update(ref => {
+      ref!.targets = [this.selectedTarget as ResourceModel];
+      return ref;
+    });
   }
 
   private resetTarget() {
@@ -140,10 +136,10 @@ export class ResourceReferencesComponent implements OnInit, OnDestroy {
   deleteTarget(target: ResourceModel) {
     if (!this.selectedReference) return;
 
-    this.selectedReference.update(ref => ({
-      ...ref,
-      targets: this.selectedReference()?.targets?.filter(t => t.id != target.id),
-    }));
+    this.selectedReference.update(ref => {
+      ref!.targets = this.selectedReference()?.targets?.filter(t => t.id != target.id);
+      return ref;
+    });
 
     this.possibleResources.update(() => this.getPossibleResources());
   }
