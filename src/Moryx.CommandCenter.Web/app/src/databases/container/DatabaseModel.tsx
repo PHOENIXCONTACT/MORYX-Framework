@@ -109,9 +109,9 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
       return;
     }
 
-    const config = {...this.state.config};
+    const config = new DatabaseConfigModel();
     config.configuratorType = modelConfigurator.configuratorType;
-    config.properties = {...modelConfigurator.configPrototype};
+    config.properties = structuredClone(modelConfigurator.configPrototype);
 
     // Replace <DatabaseName> placeholder
     const dbNamePlaceholder = "<DatabaseName>";
@@ -141,8 +141,6 @@ class DatabaseModel extends React.Component<DatabaseModelPropsModel & DatabaseMo
     const config = this.state.config;
     const newConnectionString = e.target.value;
     config.connectionString = newConnectionString;
-
-    console.log("Connection string changed to:", newConnectionString);
 
     const parts = newConnectionString.split(";").filter((p) => p.trim() !== "");
 
