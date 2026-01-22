@@ -3,6 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import { mdiFormatText } from "@mdi/js";
+import InputAdornment from "@mui/material/InputAdornment";
+import SvgIcon from "@mui/material/SvgIcon";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import * as React from "react";
@@ -35,7 +38,16 @@ export default class StringEditor extends SelectionEditorBase {
                      disabled={(this.props.Entry.value.isReadOnly || this.props.IsReadOnly) && !isLoadError}
                      value={currentValue == null ? "" : currentValue}
                      size="small"
-                     margin="dense"/>
+                     margin="dense"
+                     slotProps={{
+                       input: {
+                         endAdornment: (
+                           <InputAdornment position="end">
+                             <SvgIcon><path d={mdiFormatText} /></SvgIcon>
+                           </InputAdornment>
+                         ),
+                       },
+                     }}/>
         </Tooltip>);
   }
 
