@@ -9,6 +9,7 @@ import Entry from "../../models/Entry";
 export interface InputEditorBasePropModel {
   Entry: Entry;
   IsReadOnly: boolean;
+
   onValueChanged?(value: string, entry: Entry): void;
 }
 

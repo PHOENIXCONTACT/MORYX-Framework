@@ -7,7 +7,7 @@ import { InputEditorBasePropModel } from "./InputEditorBase";
 import SelectionEditorBase from "./SelectionEditorBase";
 
 export default class EnumEditor extends SelectionEditorBase {
-    constructor(props: InputEditorBasePropModel) {
-        super(props);
-    }
+  constructor(props: InputEditorBasePropModel) {
+    super(props);
+  }
 }

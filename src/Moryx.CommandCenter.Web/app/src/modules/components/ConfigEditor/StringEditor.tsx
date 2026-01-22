@@ -10,43 +10,43 @@ import { InputEditorBasePropModel } from "./InputEditorBase";
 import SelectionEditorBase from "./SelectionEditorBase";
 
 export default class StringEditor extends SelectionEditorBase {
-    constructor(props: InputEditorBasePropModel) {
-        super(props);
-    }
+  constructor(props: InputEditorBasePropModel) {
+    super(props);
+  }
 
-    private preRenderInput(): React.ReactNode {
-        // LoadError is handled here, which is not the right place and should be
-        // Changed inf the future.
-        const isLoadError = this.props.Entry.displayName === "LoadError";
-        const currentValue = this.props.Entry.value.current;
+  private preRenderInput(): React.ReactNode {
+    // LoadError is handled here, which is not the right place and should be
+    // Changed inf the future.
+    const isLoadError = this.props.Entry.displayName === "LoadError";
+    const currentValue = this.props.Entry.value.current;
 
-        return (
-            isLoadError && currentValue == null
-                ? null
-                : <Tooltip title={this.props.Entry.description} placement="right">
-                    <TextField type={this.props.Entry.validation.isPassword ? "password" : "text"}
-                        onChange={(e) => this.onValueChange(e.target.value, this.props.Entry)}
-                        label={this.props.Entry.displayName}
-                        aria-label={this.props.Entry.description}
-                        fullWidth={true}
-                        error={isLoadError}
-                        multiline={isLoadError}
-                        rows={4}
-                        disabled={(this.props.Entry.value.isReadOnly || this.props.IsReadOnly) && !isLoadError}
-                        value={currentValue == null ? "" : currentValue}
-                        size="small"
-                        margin="dense"/>
-                </Tooltip>);
-    }
+    return (
+      isLoadError && currentValue == null
+        ? null
+        : <Tooltip title={this.props.Entry.description} placement="right">
+          <TextField type={this.props.Entry.validation.isPassword ? "password" : "text"}
+                     onChange={(e) => this.onValueChange(e.target.value, this.props.Entry)}
+                     label={this.props.Entry.displayName}
+                     aria-label={this.props.Entry.description}
+                     fullWidth={true}
+                     error={isLoadError}
+                     multiline={isLoadError}
+                     rows={4}
+                     disabled={(this.props.Entry.value.isReadOnly || this.props.IsReadOnly) && !isLoadError}
+                     value={currentValue == null ? "" : currentValue}
+                     size="small"
+                     margin="dense"/>
+        </Tooltip>);
+  }
 
-    private preRenderPossibleValueList(): React.ReactNode {
-        this.state = { PossibleValues: this.props.Entry.value.possible };
-        return super.render();
-    }
+  private preRenderPossibleValueList(): React.ReactNode {
+    this.state = {PossibleValues: this.props.Entry.value.possible};
+    return super.render();
+  }
 
-    public render(): React.ReactNode {
-        return this.props.Entry.value.possible != null && this.props.Entry.value.possible.length > 0
-            ? this.preRenderPossibleValueList()
-            : this.preRenderInput();
-    }
+  public render(): React.ReactNode {
+    return this.props.Entry.value.possible != null && this.props.Entry.value.possible.length > 0
+      ? this.preRenderPossibleValueList()
+      : this.preRenderInput();
+  }
 }

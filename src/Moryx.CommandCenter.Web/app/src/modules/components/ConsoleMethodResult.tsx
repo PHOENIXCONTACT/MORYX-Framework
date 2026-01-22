@@ -5,51 +5,52 @@
 
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import GridLegacy from "@mui/material/GridLegacy";
+import Grid from "@mui/material/Grid";
 import * as React from "react";
 import Entry from "../models/Entry";
 import MethodEntry from "../models/MethodEntry";
 import NavigableConfigEditor from "./ConfigEditor/NavigableConfigEditor";
 
 export interface ConsoleMethodResultPropModel {
-    Method: MethodEntry;
-    InvokeResult: Entry;
-    onResetInvokeResult(methodName: string): void;
+  Method: MethodEntry;
+  InvokeResult: Entry;
+
+  onResetInvokeResult(methodName: string): void;
 }
 
 function ConsoleMethodResult(props: ConsoleMethodResultPropModel) {
-    const resetInvokeResult = (): void => {
-        props.onResetInvokeResult(props.Method.name);
-    };
+  const resetInvokeResult = (): void => {
+    props.onResetInvokeResult(props.Method.name);
+  };
 
-    return (
-        <div>
-            {props.InvokeResult == null ? (
-                <span className="font-italic">There is no result.</span>
-            ) : (
-                <Container>
-                    <GridLegacy container={true}>
-                        <GridLegacy item={true} md={3}><span className="font-bold">Name:</span></GridLegacy>
-                        <GridLegacy item={true} md={9}><span className="font-italic">{props.Method.displayName}</span></GridLegacy>
-                        <GridLegacy item={true} md={3}><span className="font-bold">Description:</span></GridLegacy>
-                        <GridLegacy item={true} md={9}><span className="font-italic">{props.Method.description}</span></GridLegacy>
-                        <GridLegacy item={true} md={12} className="up-space-lg">
-                            <NavigableConfigEditor
-                                Entries={props.InvokeResult.subEntries}
-                                ParentEntry={null}
-                                Root={props.InvokeResult}
-                                IsReadOnly={true} />
-                        </GridLegacy>
-                        <GridLegacy container={true} item={true} md={12} direction="row" justifyContent="flex-end">
-                            <Button variant="contained" className="float-right" onClick={resetInvokeResult}>
-                                Reset result
-                            </Button>
-                        </GridLegacy>
-                    </GridLegacy>
-                </Container>
-            )}
-        </div>
-    );
+  return (
+    <div>
+      {props.InvokeResult == null ? (
+        <span className="font-italic">There is no result.</span>
+      ) : (
+        <Container>
+          <Grid container={true}>
+            <Grid size={3}><span className="font-bold">Name:</span></Grid>
+            <Grid size={9}><span className="font-italic">{props.Method.displayName}</span></Grid>
+            <Grid size={3}><span className="font-bold">Description:</span></Grid>
+            <Grid size={9}><span className="font-italic">{props.Method.description}</span></Grid>
+            <Grid size={12} className="up-space-lg">
+              <NavigableConfigEditor
+                Entries={props.InvokeResult.subEntries}
+                ParentEntry={null}
+                Root={props.InvokeResult}
+                IsReadOnly={true}/>
+            </Grid>
+            <Grid size={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button variant="contained" className="float-right" onClick={resetInvokeResult}>
+                Reset result
+              </Button>
+            </Grid>
+          </Grid>
+        </Container>
+      )}
+    </div>
+  );
 }
 
 export default ConsoleMethodResult;
