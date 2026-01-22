@@ -94,6 +94,7 @@ public abstract class ServerModuleBase<TConf> : IServerModule, IServerModuleStat
         // Initialize container with server module dll and this dll
         Container = ContainerFactory.Create(Strategies, GetType().Assembly)
             .Register<IParallelOperations, ParallelOperations>()
+            .Register<IAsyncParallelOperations, AsyncParallelOperations>()
             // Register instances for this cycle
             .SetInstance(Config)
             .SetInstance(LoggerFactory)

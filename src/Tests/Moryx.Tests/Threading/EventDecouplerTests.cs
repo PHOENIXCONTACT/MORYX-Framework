@@ -181,9 +181,9 @@ public class EventDecouplerTests
 
         // Act
         // 8 Threads write to the event with increasing numbers
-        for (int run = 4; run >= 1; run--)
+        for (var run = 4; run >= 1; run--)
         {
-            for (int thread = 1; thread <= 8; thread++)
+            for (var thread = 1; thread <= 8; thread++)
             {
                 ThreadPool.QueueUserWorkItem(state =>
                 {

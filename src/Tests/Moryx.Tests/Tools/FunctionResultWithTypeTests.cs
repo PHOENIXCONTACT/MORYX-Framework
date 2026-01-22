@@ -112,7 +112,7 @@ public class FunctionResultWithTypeTests : FunctionResultTestsBase
     public void ResultToStringEqualsTheResultsToStringReturnValue()
     {
         var floatResult = FunctionResult.Ok(3.14f);
-        string floatAsString = Convert.ToString(3.14f); // avoid localization issues
+        var floatAsString = Convert.ToString(3.14f); // avoid localization issues
         var noResult = FunctionResult.Ok(new Nothing());
         var nullResult = FunctionResult.Ok<object>(null);
 

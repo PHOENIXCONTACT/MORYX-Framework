@@ -18,7 +18,7 @@ public class PathPredictionTests
     {
         // Arrange
         var workplan = WorkplanDummy.CreateBig();
-        bool triggered = false;
+        var triggered = false;
         var predictor = WorkplanInstance.PathPrediction(workplan);
         predictor.PathPrediction += (sender, args) => triggered = triggered = true;
 
@@ -41,8 +41,8 @@ public class PathPredictionTests
         var workplan = WorkplanDummy.CreateBig();
         var predictor = WorkplanInstance.PathPrediction(workplan);
 
-        long predictionTime = long.MaxValue;
-        NodeClassification prediction = NodeClassification.Intermediate;
+        var predictionTime = long.MaxValue;
+        var prediction = NodeClassification.Intermediate;
         predictor.PathPrediction += (sender, args) =>
         {
             prediction = args.PredictedOutcome;
@@ -75,7 +75,7 @@ public class PathPredictionTests
         // Arrange
         var workplan = WorkplanDummy.CreateBig();
         var predictor = WorkplanInstance.PathPrediction(workplan);
-        NodeClassification prediction = NodeClassification.Intermediate;
+        var prediction = NodeClassification.Intermediate;
         predictor.PathPrediction += (sender, args) => prediction = args.PredictedOutcome;
         // Start and pause engine in 
         var engine = WorkplanInstance.CreateEngine(workplan, new NullContext());
@@ -116,7 +116,7 @@ public class PathPredictionTests
         var workplan = WorkplanDummy.WithLoop();
         var predictor = WorkplanInstance.PathPrediction(workplan);
         var executor = new SingleLoopExecution();
-        NodeClassification prediction = NodeClassification.Intermediate;
+        var prediction = NodeClassification.Intermediate;
         predictor.PathPrediction += (sender, args) => prediction = args.PredictedOutcome;
 
         var engine = WorkplanInstance.CreateEngine(workplan, new NullContext());

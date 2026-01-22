@@ -17,7 +17,6 @@ public class ParallelOperationTests
 {
     private const string ExceptionMsg = "Hello World!";
     private const int MaxTrows = 3;
-    private const int SleepTime = 1000;
 
     private ParallelOperations _threadFactory;
     private readonly ManualResetEventSlim _callbackReceivedEvent = new(false);
@@ -54,7 +53,7 @@ public class ParallelOperationTests
     [Test]
     public void ExecuteParallel()
     {
-        StateObject state = new StateObject();
+        var state = new StateObject();
 
         _threadFactory.ExecuteParallel(SimpleCallback, state);
 
@@ -67,7 +66,7 @@ public class ParallelOperationTests
     [TestCase(false)]
     public void ExecuteParallelWithException(bool critical)
     {
-        StateObject state = new StateObject();
+        var state = new StateObject();
 
         _threadFactory.ExecuteParallel(ExceptionCallback, state, critical);
 
@@ -81,9 +80,9 @@ public class ParallelOperationTests
     [Test]
     public void ScheduleExecutionWithStop()
     {
-        StateObject state = new StateObject();
+        var state = new StateObject();
 
-        int id = _threadFactory.ScheduleExecution(SimpleCallback, state, 100, 50);
+        var id = _threadFactory.ScheduleExecution(SimpleCallback, state, 100, 50);
 
         Thread.Sleep(75);
 
@@ -107,9 +106,9 @@ public class ParallelOperationTests
     [Test]
     public void ScheduleExecutionWithWrongStop()
     {
-        StateObject state = new StateObject();
+        var state = new StateObject();
 
-        int id = _threadFactory.ScheduleExecution(SimpleCallback, state, 200, 100);
+        var id = _threadFactory.ScheduleExecution(SimpleCallback, state, 200, 100);
 
         Thread.Sleep(150);
 
@@ -134,7 +133,7 @@ public class ParallelOperationTests
     [Test]
     public void ScheduleExecutionWithDispose()
     {
-        StateObject state = new StateObject();
+        var state = new StateObject();
 
         _threadFactory.ScheduleExecution(SimpleCallback, state, 100, 50);
 
@@ -160,7 +159,7 @@ public class ParallelOperationTests
     [Test]
     public void DelayedExecution()
     {
-        StateObject state = new StateObject();
+        var state = new StateObject();
 
         _threadFactory.ScheduleExecution(SimpleCallback, state, 100, Timeout.Infinite);
 
@@ -181,7 +180,7 @@ public class ParallelOperationTests
     [TestCase(false)]
     public void DelayedExecutionWithException(bool critical)
     {
-        StateObject state = new StateObject();
+        var state = new StateObject();
 
         _threadFactory.ScheduleExecution(ExceptionCallback, state, 10, Timeout.Infinite, critical);
 
