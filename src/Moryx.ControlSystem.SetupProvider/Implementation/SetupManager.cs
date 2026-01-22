@@ -54,33 +54,73 @@ internal class SetupManager : ISetupManager, ILoggingComponent
 
     public SetupRecipe RequiredSetup(SetupExecution execution, ProductionRecipe recipe, ISetupTarget targetSystem)
     {
+        Logger.LogTrace("SETUP: Entering RequiredSetup(execution={execution})", execution);
+
         // Determine the triggers
         var triggers = new List<ISetupTrigger>();
+
         // TODO: This loop restores old behavior with the new API, but it has much more potential
         foreach (var trigger in _triggers.Where(t => t.Execution == execution))
         {
+            using var triggerScope = Logger.BeginScope(new Dictionary<string, object>
+            {
+                ["trigger"] = trigger?.ToString(),
+                ["triggerType"] = trigger?.GetType().Name
+            });
+
             var evaluation = TryEvaluate(trigger, recipe);
 
-            // No action => skip
             if (!evaluation.Required)
+            {
+                Logger.LogTrace("SETUP: Skip (reason=NotRequired)");
                 continue;
+            }
 
-            // Skip the trigger if its capabilities are already provided
-            if (execution == SetupExecution.BeforeProduction &&
-                evaluation is SetupEvaluation.Change provide &&
-                targetSystem.Cells(provide.TargetCapabilities).Any())
-                continue;
+            if (evaluation is SetupEvaluation.Change change)
+            {
+                if (execution == SetupExecution.BeforeProduction)
+                {
+                    var targetCells = targetSystem.Cells(change.TargetCapabilities);
+                    var hasTargetCaps = targetCells.Any();
 
-            // Skip the trigger, if the setup wants to remove capabilities that are not present
-            if (execution == SetupExecution.AfterProduction &&
-                evaluation is SetupEvaluation.Change remove &&
-                !targetSystem.Cells(remove.CurrentCapabilities).Any())
-                continue;
+                    Logger.LogTrace("SETUP: Cells(TargetCapabilities)=({cells}), Any()={hasAny}",
+                        string.Join(", ", targetCells),
+                        hasTargetCaps);
+
+                    if (hasTargetCaps)
+                    {
+                        Logger.LogTrace(
+                            "SETUP: Skip (reason=TargetAlreadyHasCapabilities, capabilities={capabilities})",
+                            change.TargetCapabilities);
+                        continue;
+                    }
+                }
+                else if (execution == SetupExecution.AfterProduction)
+                {
+                    var currentCells = targetSystem.Cells(change.CurrentCapabilities);
+                    var hasCurrentCaps = currentCells.Any();
+
+                    Logger.LogTrace(
+                        "SETUP: Cells(CurrentCapabilities)=({cells}), Any()={hasAny}",
+                        string.Join(", ", currentCells),
+                        hasCurrentCaps);
+
+                    if (!hasCurrentCaps)
+                    {
+                        Logger.LogTrace(
+                            "SETUP: Skip (reason=TargetLacksCurrentCapabilities, capabilities={capabilities})",
+                            change.CurrentCapabilities);
+                        continue;
+                    }
+                }
+            }
 
             triggers.Add(trigger);
+            Logger.LogTrace("SETUP: Accepted");
         }
 
-        Logger.LogDebug("Evaluated {totalNumber} setup trigger for execution '{executionType}'. Creating workplan steps for {positiveNumber} of them...",
+
+        Logger.LogDebug("SETUP FINAL: Evaluated {totalNumber} setup trigger for execution '{executionType}'. Creating workplan steps for {positiveNumber} of them...",
             _triggers.Count(t => t.Execution == execution), execution, triggers.Count);
 
         // Create all necessary setup steps
@@ -138,19 +178,31 @@ internal class SetupManager : ISetupManager, ILoggingComponent
         return setupRecipe;
     }
 
+
     private SetupEvaluation TryEvaluate(ISetupTrigger trigger, ProductionRecipe recipe)
     {
+        Logger.LogTrace("SETUP/EVAL: Entering TryEvaluate for trigger={trigger}", trigger);
+
         try
         {
-            return trigger.Evaluate(recipe);
+            var result = trigger.Evaluate(recipe);
+
+            Logger.LogTrace("SETUP/EVAL: Result for trigger={trigger}: required={required}, kind={kind}", trigger, result.Required, result.GetType().Name);
+
+            return result;
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "Calling {method} on {trigger} threw an exception prcessing recipe {id}: {name}",
-                nameof(ISetupTrigger.Evaluate), trigger.GetType().Name, recipe.Id, recipe.Name);
+            Logger.LogError(e, "SETUP/EVAL: Exception calling {method} on {triggerType} for trigger={trigger} processing recipe {recipeId}: {recipeName}",
+                nameof(ISetupTrigger.Evaluate), trigger.GetType().Name, trigger, recipe.Id, recipe.Name);
             throw;
         }
+        finally
+        {
+            Logger.LogTrace("SETUP/EVAL: Leaving TryEvaluate for trigger={trigger}", trigger);
+        }
     }
+
 
     private IReadOnlyList<IWorkplanStep> TryCreateSteps(ISetupTrigger trigger, ProductionRecipe recipe)
     {
