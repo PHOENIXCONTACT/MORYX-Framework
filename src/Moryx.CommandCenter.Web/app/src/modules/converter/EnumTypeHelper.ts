@@ -10,4 +10,3 @@ function getEnumTypeValue<T>(enumType: T, key: string): T[keyof T] | undefined {
 }
 
 export { getEnumTypeValue };
-

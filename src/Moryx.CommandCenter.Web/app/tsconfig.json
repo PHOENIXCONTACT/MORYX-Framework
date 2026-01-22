@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "./wwwroot/",
+        "outDir": "../wwwroot/",
         "sourceMap": true,
         "noImplicitAny": true,
         "module": "commonjs",
