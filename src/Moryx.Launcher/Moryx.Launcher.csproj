@@ -18,12 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\**\*">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Properties\Strings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -38,16 +32,11 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <SourceRoot Include="$(MSBuildProjectDirectory)/"/>
-  </ItemGroup>
-
   <Import Project="..\..\.build\WebProjects.props"/>
-  <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\js\dist\main.js')) And ('$(NoBuild)' != 'true') ">
-    <Exec WorkingDirectory=".\app\" Command="npm config set strict-ssl false" />
+  <Target Name="BuildUI">
     <Exec WorkingDirectory=".\app\" Command="npm ci" />
+    <Exec WorkingDirectory=".\app\" Command="npm run build:prod"/>
     <Exec WorkingDirectory=".\app\" Command="npm run build:css"/>
     <Exec WorkingDirectory=".\app\" Command="npm run copy:componentsfiles"/>
-    <Exec WorkingDirectory=".\app\" Command="npm config set strict-ssl true" />
   </Target>
 </Project>
