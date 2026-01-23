@@ -1,0 +1,74 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
+export class TranslationConstants {
+  public static readonly LANGUAGES = {
+    EN: 'en',
+    DE: 'de',
+    IT: 'it',
+    ZH: 'zh'
+  };
+
+  public static readonly APP = {
+    RESOURCES: 'APP.RESOURCES',
+    NO_NAME: 'APP.NO_NAME'
+  };
+
+  public static readonly DISMISS: 'DISMISS';
+  public static readonly SERVER_NOT_REACHABLE: 'SERVER_NOT_REACHABLE';
+
+  public static readonly SHARED = {
+    DELETE: 'SHARED.DELETE',
+    EDIT: 'SHARED.EDIT',
+    SAVE: 'SHARED.SAVE',
+    NAME: 'SHARED.NAME',
+    ID: 'SHARED.ID',
+    TYPE: 'SHARED.TYPE',
+    DESCRIPTION: 'SHARED.DESCRIPTION',
+    INTERNAL: 'SHARED.INTERNAL',
+    CANCEL: 'SHARED.CANCEL',
+    CREATE: 'SHARED.CREATE',
+    ADD: 'SHARED.ADD',
+    ADD_CHILD: 'SHARED.ADD_CHILD',
+    RELOAD: 'SHARED.RELOAD',
+    NEXT: 'SHARED.NEXT'
+  };
+
+  public static readonly ADD_RESOURCE_DIALOG = {
+    TITLE: 'ADD_RESOURCE_DIALOG.TITLE',
+  };
+
+  public static readonly DEFAULT_VIEW = {
+    FAILED_LOADING: 'DEFAULT_VIEW.FAILED_LOADING',
+    NOT_FOUND: 'DEFAULT_VIEW.NOT_FOUND',
+    EMPTY_STATE_HEADER: 'DEFAULT_VIEW.EMPTY_STATE_HEADER',
+    EMPTY_STATE_TEXT: 'DEFAULT_VIEW.EMPTY_STATE_TEXT',
+  };
+
+  public static readonly DETAILS = {
+    PROPERTIES: 'DETAILS.PROPERTIES',
+    REFERENCES: 'DETAILS.REFERENCES',
+    METHODS: 'DETAILS.METHODS',
+    REFS: {
+      LINK: 'DETAILS.REFS.LINK',
+      LINKED_RESOURCE: 'DETAILS.REFS.LINKED_RESOURCE',
+      PLACEHOLDER: 'DETAILS.REFS.PLACEHOLDER',
+      NO_TARGET: 'DETAILS.REFS.NO_TARGET',
+    },
+    METS: {
+      WAS_INVOKED: 'DETAILS.METS.WAS_INVOKED',
+      INVOKE: 'DETAILS.METS.INVOKE',
+      REPEAT: 'DETAILS.METS.REPEAT',
+      CLEAR: 'DETAILS.METS.CLEAR',
+    },
+  };
+  public static readonly REMOVE_RESOURCE_DIALOG = {
+    TITLE: 'REMOVE_RESOURCE_DIALOG.TITLE',
+    SUB_TITLE: 'REMOVE_RESOURCE_DIALOG.SUB_TITLE',
+    CANCEL: 'REMOVE_RESOURCE_DIALOG.CANCEL',
+    REMOVE: 'REMOVE_RESOURCE_DIALOG.REMOVE',
+  };
+}
+

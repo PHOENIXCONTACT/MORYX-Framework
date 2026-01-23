@@ -6,7 +6,7 @@ namespace Moryx.AbstractionLayer.Drivers;
 /// <summary>
 /// Exception for busy drivers. The driver cannot handle requests.
 /// </summary>
-public class DriverStateException : Exception
+public class DriverStateException : DriverException
 {
     /// <summary>
     /// Information about the required state of the driver for the execution

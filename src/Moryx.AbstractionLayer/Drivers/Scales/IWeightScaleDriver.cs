@@ -16,6 +16,7 @@ public interface IWeightScaleDriver : IInputDriver,
     /// Performs a tare operation on the weight scale, resetting its measurement to zero.
     /// </summary>
     /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    /// <exception cref="DriverException">Thrown when the driver encounters an error during execution.</exception>
     /// <exception cref="DriverStateException">Thrown if the driver is in an invalid state for this operation.</exception>
     /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
     Task TaraAsync(CancellationToken cancellationToken = default);

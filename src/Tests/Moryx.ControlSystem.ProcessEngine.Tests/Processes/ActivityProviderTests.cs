@@ -132,7 +132,7 @@ public class ActivityProviderTests : ProcessTestsBase
         // Act
         ModifiedActivity.Activity.Complete(0);
         var oldActivity = ModifiedActivity;
-        DataPool.UpdateActivity(ModifiedActivity, ActivityState.ResultProcessed);
+        DataPool.TryUpdateActivity(ModifiedActivity, ActivityState.ResultProcessed);
 
         // Assert: Next activity in pool
         Assert.That(oldActivity.State, Is.EqualTo(ActivityState.EngineProceeded));
@@ -150,7 +150,7 @@ public class ActivityProviderTests : ProcessTestsBase
 
         // Act
         ModifiedActivity.Activity.Complete(0);
-        DataPool.UpdateActivity(ModifiedActivity, ActivityState.ResultProcessed);
+        DataPool.TryUpdateActivity(ModifiedActivity, ActivityState.ResultProcessed);
 
         // Assert: Next activity in pool
         Assert.That(ModifiedActivity.State, Is.EqualTo(ActivityState.EngineProceeded));
@@ -181,7 +181,7 @@ public class ActivityProviderTests : ProcessTestsBase
             else
                 activity.Activity.Fail();
 
-            DataPool.UpdateActivity(activity, ActivityState.ResultProcessed); // This call replaces the reference in ModifedActivity
+            DataPool.TryUpdateActivity(activity, ActivityState.ResultProcessed); // This call replaces the reference in ModifedActivity
         } while ((activity = process.Activities.Last()).State < ActivityState.EngineProceeded); // ModifedActivity is not replaced when last task was completed
 
         // Assert
@@ -202,7 +202,7 @@ public class ActivityProviderTests : ProcessTestsBase
 
             uow.SaveChanges();
         }
-        DataPool.UpdateActivity(ModifiedActivity, ActivityState.Configured);
+        DataPool.TryUpdateActivity(ModifiedActivity, ActivityState.Configured);
 
         // Act
         DataPool.UpdateProcess(processData, ProcessState.Interrupted);
@@ -272,7 +272,7 @@ public class ActivityProviderTests : ProcessTestsBase
         do
         {
             currentActivity.Activity.Complete(0);
-            DataPool.UpdateActivity(currentActivity, ActivityState.ResultProcessed);
+            DataPool.TryUpdateActivity(currentActivity, ActivityState.ResultProcessed);
             currentActivity = processData.Activities.Last();
         } while (currentActivity.State < ActivityState.EngineProceeded);
 

@@ -67,6 +67,7 @@ public abstract class ResourceInitializerBase<TConfig> : IResourceInitializer, I
     /// Creates an <see cref="ResourceInitializerResult"/> within a completed task
     /// </summary>
     /// <param name="initializedResources">Initialized resources, only roots should be returned as resources are saved recursively</param>
+    [Obsolete("Will be removed in the next major. Replace with direct 'new ResourceInitializerResult()' instantiation.")]
     protected static Task<ResourceInitializerResult> InitializedAsync(IReadOnlyList<Resource> initializedResources) =>
         InitializedAsync(initializedResources, false);
 
@@ -75,6 +76,7 @@ public abstract class ResourceInitializerBase<TConfig> : IResourceInitializer, I
     /// </summary>
     /// <param name="initializedResources">Initialized resources, only roots should be returned as resources are saved recursively</param>
     /// <param name="saved">If true, the resources will not be saved, but are assumed to already have been saved within the initializer</param>
+    [Obsolete("Will be removed in the next major. Replace with direct 'new ResourceInitializerResult()' instantiation.")]
     protected static Task<ResourceInitializerResult> InitializedAsync(IReadOnlyList<Resource> initializedResources, bool saved) =>
         Task.FromResult(Initialized(initializedResources, saved));
 
@@ -82,6 +84,7 @@ public abstract class ResourceInitializerBase<TConfig> : IResourceInitializer, I
     /// Creates an <see cref="ResourceInitializerResult"/>
     /// </summary>
     /// <param name="initializedResources">Initialized resources, only roots should be returned as resources are saved recursively</param>
+    [Obsolete("Will be removed in the next major. Replace with direct 'new ResourceInitializerResult()' instantiation.")]
     protected static ResourceInitializerResult Initialized(IReadOnlyList<Resource> initializedResources) =>
         Initialized(initializedResources, false);
 
@@ -90,6 +93,7 @@ public abstract class ResourceInitializerBase<TConfig> : IResourceInitializer, I
     /// </summary>
     /// <param name="initializedResources">Initialized resources, only roots should be returned as resources are saved recursively</param>
     /// <param name="saved">If true, the resources will not be saved, but are assumed to already have been saved within the initializer</param>
+    [Obsolete("Will be removed in the next major. Replace with direct 'new ResourceInitializerResult()' instantiation.")]
     protected static ResourceInitializerResult Initialized(IReadOnlyList<Resource> initializedResources, bool saved)
     {
         return new ResourceInitializerResult

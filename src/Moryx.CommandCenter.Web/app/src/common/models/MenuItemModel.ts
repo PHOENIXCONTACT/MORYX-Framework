@@ -1,0 +1,21 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
+import * as React from "react";
+
+export const enum IconType {
+    Image = "Image",
+    Icon = "Icon",
+}
+
+export default interface MenuItemModel {
+    SecondaryName?: string;
+    Name: string;
+    NavPath: string;
+    SubMenuItems: MenuItemModel[];
+    Icon?: any;
+    IconType?: IconType;
+    Content?: React.ReactNode;
+}

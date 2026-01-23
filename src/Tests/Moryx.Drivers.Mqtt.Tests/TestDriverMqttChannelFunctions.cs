@@ -317,8 +317,6 @@ public class TestDriverMqttChannelFunctions
     [Test]
     [TestCase("sdf/+", "sdf/qew")]
     [TestCase("sdf/+/sd", "sdf/qw/sd")]
-    [TestCase("sdf/#/asd", "sdf/fof/sdf/asd")]
-    [TestCase("sdf/#/asd", "sdf/fof/asd")]
     public async Task SendMessageContainingWildcards(string topicResource, string topicMsg)
     {
         var msg = new BoolMqttMessage { Identifier = topicMsg };

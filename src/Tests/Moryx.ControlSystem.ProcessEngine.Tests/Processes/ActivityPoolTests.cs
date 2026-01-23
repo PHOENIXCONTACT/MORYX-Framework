@@ -85,7 +85,7 @@ public class ActivityPoolTests : ProcessTestsBase
         DataPool.AddActivity(proc, activity);
 
         // Act
-        DataPool.UpdateActivity(activity, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activity, ActivityState.Configured);
 
         // Assert
         Assert.That(activity, Is.Not.Null);
@@ -105,7 +105,7 @@ public class ActivityPoolTests : ProcessTestsBase
 
         DataPool.AddProcess(proc);
         DataPool.AddActivity(proc, data);
-        DataPool.UpdateActivity(data, ActivityState.Configured);
+        DataPool.TryUpdateActivity(data, ActivityState.Configured);
 
         // Act
         var procMatch = DataPool.GetProcess(1337);

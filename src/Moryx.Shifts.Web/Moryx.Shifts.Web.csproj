@@ -1,30 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <DefaultItemExcludes>src\**;node_modules\**;package\**</DefaultItemExcludes>
     <IsPackable>true</IsPackable>
     <PackageTags>MORYX;IoT;Manufacturing</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="ng-openapi-gen.json" />
-    <Content Remove="service-config.json" />
-    <Content Remove="tsconfig*.json" />
-    <Content Remove="package.json" />
-    <Content Remove="package-lock.json" />
-    <Content Remove="angular.json" />
-    <Content Remove=".prettierrc.json; prettierrc.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="@(Content)" Pack="false" />
-    <Content Update="wwwroot\**" Pack="true" PackagePath="staticwebassets" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,10 +32,10 @@
     </Compile>
   </ItemGroup>
 
+  <Import Project="..\..\.build\WebProjects.props"/>
   <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\main.js')) And ('$(NoBuild)' != 'true') ">
-    <Exec WorkingDirectory="./" Command="npm config set strict-ssl false"/>
-    <Exec WorkingDirectory="./" Command="npm ci"/>
-    <Exec WorkingDirectory="./" Command="npm run build:prod"/>
-    <Exec WorkingDirectory="./" Command="npm config set strict-ssl true"/>
+    <Exec WorkingDirectory=".\app\" Command="npm ci" />
+    <Exec WorkingDirectory=".\app\" Command="npm run build:prod" />
   </Target>
+
 </Project>

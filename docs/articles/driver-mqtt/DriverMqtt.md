@@ -37,8 +37,6 @@ var topicSensorA = new MqttTopicIByteSerializable
     SentMessageName = nameof(BoolMqttMessage),
 };
 ...
-// Both calls will return topicSensorA
-var channel = driver.Channel<IByteSerializable>(_topicBoolMqtt.Identifier);
-var channelA = driver.Channel<IByteSerializable,IByteSerializable>   (_topicBoolMqtt.Identifier);
+var channel = driver.Channel(_topicBoolMqtt.Identifier);
 ```
  

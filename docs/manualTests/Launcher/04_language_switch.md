@@ -8,3 +8,4 @@ There should be a language menu with at least three languages available by click
 | Step/Instruction | Expected Result | Comment |
 |------------------|-----------------|---------|
 | Click on any of the languages from the language menu | The language of the application will change and there will be a tick beside that selected language |
+| (Polish not working) |

@@ -155,7 +155,7 @@ public class ResourceAssignmentTests : ProcessTestsBase
 
         // Add activity and assign
         DataPool.AddActivity(process, activityData);
-        DataPool.UpdateActivity(activityData, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activityData, ActivityState.Configured);
 
         // Check if activity was assigned
         if (providedBefore)
@@ -231,7 +231,7 @@ public class ResourceAssignmentTests : ProcessTestsBase
 
         // Add activity and assign
         DataPool.AddActivity(process, activityData);
-        DataPool.UpdateActivity(activityData, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activityData, ActivityState.Configured);
 
         // Check if activity was assigned
         Assert.That(activityData.Targets.Count, Is.EqualTo(1));

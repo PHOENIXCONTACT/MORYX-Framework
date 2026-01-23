@@ -1,0 +1,12 @@
+<Project>
+
+  <PropertyGroup>
+    <DefaultItemExcludes>app\**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Update="@(Content)" Pack="false" />
+		<Content Update="wwwroot\**" Pack="true" PackagePath="staticwebassets" />
+  </ItemGroup>
+
+</Project>

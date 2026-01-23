@@ -1,43 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor" InitialTargets="BuildUI">
-  
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <DefaultItemExcludes>src\**;node_modules\**</DefaultItemExcludes>
     <IsPackable>true</IsPackable>
     <PackageTags>MORYX;IoT;Manufacturing</PackageTags>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="ng-openapi-gen.json" />
-    <Content Remove="service-config.json" />
-    <Content Remove="tsconfig*.json" />
-    <Content Remove="package.json" />
-    <Content Remove="package-lock.json" />
-    <Content Remove="angular.json" />
-    <Content Remove=".prettierrc.json; prettierrc.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="@(Content)" Pack="false" />
-    <Content Update="wwwroot\**" Pack="true" PackagePath="staticwebassets" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Moryx\Moryx.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <EmbeddedResource Update="Properties\Strings.resx">
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
-  
+
   <ItemGroup>
     <Compile Update="Properties\Strings.Designer.cs">
       <DependentUpon>Strings.resx</DependentUpon>
@@ -45,12 +29,11 @@
       <AutoGen>True</AutoGen>
     </Compile>
   </ItemGroup>
-  
+
+  <Import Project="..\..\.build\WebProjects.props"/>
   <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\main.js')) And ('$(NoBuild)' != 'true') ">
-    <Exec WorkingDirectory=".\" Command="npm config set strict-ssl false" />
-    <Exec WorkingDirectory=".\" Command="npm ci" />
-    <Exec WorkingDirectory=".\" Command="npm run build:prod" />
-    <Exec WorkingDirectory=".\" Command="npm config set strict-ssl true" />
+    <Exec WorkingDirectory=".\app\" Command="npm ci" />
+    <Exec WorkingDirectory=".\app\" Command="npm run build:prod" />
   </Target>
-  
+
 </Project>

@@ -1,4 +1,7 @@
-﻿using System.ComponentModel;
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Moryx.Configuration;
@@ -49,3 +52,4 @@ public class SqlServerDatabaseConfig : DatabaseConfig
     [ConnectionStringKey("TrustServerCertificate")]
     public string TrustServerCertificate { get; set; }
 }
+

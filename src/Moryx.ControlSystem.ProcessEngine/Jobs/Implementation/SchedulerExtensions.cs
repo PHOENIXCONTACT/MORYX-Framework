@@ -43,7 +43,7 @@ internal static class SchedulerExtensions
         /// </summary>
         public bool IsPrepareOf(Job target)
         {
-            return IsPrepare(one) && ((SetupRecipe)one.Recipe).TargetRecipe == target?.Recipe;
+            return IsPrepare(one) && ((SetupRecipe)one.Recipe).TargetRecipe.Id == target?.Recipe.Id;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ internal static class SchedulerExtensions
         /// </summary>
         public bool IsCleanupOf(Job target)
         {
-            return IsCleanup(one) && ((SetupRecipe)one.Recipe).TargetRecipe == target?.Recipe;
+            return IsCleanup(one) && ((SetupRecipe)one.Recipe).TargetRecipe.Id == target?.Recipe.Id;
         }
     }
 }

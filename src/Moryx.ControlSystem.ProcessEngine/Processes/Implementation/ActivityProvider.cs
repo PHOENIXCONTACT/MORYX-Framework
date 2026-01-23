@@ -249,7 +249,7 @@ internal sealed class ActivityProvider : IActivityPoolListener, ILoggingComponen
         var activityData = args.ActivityData;
         activityData.Task.Completed(activityData.Result);
 
-        ActivityPool.UpdateActivity(activityData, ActivityState.EngineProceeded);
+        ActivityPool.TryUpdateActivity(activityData, ActivityState.EngineProceeded);
     }
 
     #endregion

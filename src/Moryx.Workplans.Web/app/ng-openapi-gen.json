@@ -1,0 +1,16 @@
+{
+    "$schema": "node_modules/ng-openapi-gen/ng-openapi-gen-schema.json",
+    "input": "http://localhost:5000/swagger/v1/swagger.json",
+    "ignoreUnusedModels": true,
+    "includeTags": [
+        "ProductManagement",
+        "Workplan",
+        "WorkplanEditing"
+    ],
+    "module": true,
+    "services": true,
+    "apiService": "",
+    "enumStyle": "pascal",
+    "enumArray": false,
+    "promises": false
+}

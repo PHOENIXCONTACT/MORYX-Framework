@@ -87,8 +87,8 @@ public class ProcessInterruptionTests : ProcessTestsBase
         // Arrange
         _processInterruption.Config.TimeoutCalculation = type;
         var activity = FillPool(new DummyActivity());
-        DataPool.UpdateActivity(activity, ActivityState.Configured); // Add to open activities
-        DataPool.UpdateActivity(activity, ActivityState.Running); // Set to running
+        DataPool.TryUpdateActivity(activity, ActivityState.Configured); // Add to open activities
+        DataPool.TryUpdateActivity(activity, ActivityState.Running); // Set to running
 
         var activities = poolHasActivities ? _activities : Array.Empty<ActivityEntity>();
 

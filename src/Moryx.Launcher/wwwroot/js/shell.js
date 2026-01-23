@@ -1,4 +1,9 @@
-﻿// Function executed when page is unloaded
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
+// Function executed when page is unloaded
 function saveLocation() {
     // Read current location and extract route
     const location = window.location.href.substring(
@@ -27,5 +32,6 @@ function saveLocation() {
 window.onbeforeunload = function () {
     saveLocation();
 }
+
 
 

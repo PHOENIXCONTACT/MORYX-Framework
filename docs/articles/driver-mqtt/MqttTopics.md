@@ -53,7 +53,10 @@ protected internal override object Deserialize(byte[] messageAsBytes)
 ```
 
 ## Defining the MQTT Topic Name
-It is possible to use placeholders (marked with {}) and Wildcards (+ or #) in topics. If you're using placeholders, TMessage must have a property with the same name. If your topic is for example *root/{PcName}/temperature/{SensorNumber}*, TMessage must have a property *PcName* and a property *SensorNumber*. <br/>
-MqttTopic-Resources, which use wildcards in their topics, can only use implementations of `IIdentifierMessage` as TMessage.
+
+It is possible to use placeholders (marked with {} or { |#}) and Wildcards (+ or #) in topics. If you're using placeholders, TMessage must have a property with the same name. If your topic is for example *root/{PcName}/temperature/{SensorNumber}*, TMessage must have a property *PcName* and a property *SensorNumber*.
+If there is not a flat list of sensors but an arbitrary nesting of them, you could match the entire hierachy using {SensorLocation|#} provided TMessage has an appropriate property.
+
+
 
 

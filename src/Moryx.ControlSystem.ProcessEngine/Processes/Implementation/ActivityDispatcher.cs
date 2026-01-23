@@ -233,7 +233,7 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
     {
         var activity = ActivityPool.GetByActivity(activityStart.Activity);
         if (activity != null)
-            ActivityPool.UpdateActivity(activity, ActivityState.Running);
+            ActivityPool.TryUpdateActivity(activity, ActivityState.Running);
     }
 
     private void OnActivityChanged(object sender, ActivityEventArgs args)
@@ -252,7 +252,7 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
             case ActivityState.EngineProceeded:
                 // First complete the session
                 CompleteProcessOnCell(processData, (ICompletableSession)activityData.Session, activityData.Resource);
-                ActivityPool.UpdateActivity(activityData, ActivityState.Completed);
+                ActivityPool.TryUpdateActivity(activityData, ActivityState.Completed);
 
                 // NOW dispatch new activities
                 var configured = processData.Activities.Where(a => a.State == ActivityState.Configured);
@@ -303,7 +303,7 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
         if (match.ReadyToWork != null)
             ParallelOperations.ExecuteParallel(() => StartActivity(match.Resource, match.ReadyToWork, activityData));
         else if (match.Session is ActivityStart)
-            ActivityPool.UpdateActivity(activityData, ActivityState.Running);
+            ActivityPool.TryUpdateActivity(activityData, ActivityState.Running);
         else if (match.Session is ActivityCompleted completedSession)
             HandleActivityCompleted(match.Resource, completedSession);
     }
@@ -376,7 +376,7 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
             if (activity.State <= ActivityState.Configured)
             {
                 // Activities that were not started can be aborted
-                ActivityPool.UpdateActivity(activity, ActivityState.Aborted);
+                ActivityPool.TryUpdateActivity(activity, ActivityState.Aborted);
             }
             else if (activity.State == ActivityState.Running)
             {
@@ -483,17 +483,20 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
     /// </summary>
     private void StartActivity(ICell resource, ReadyToWork message, ActivityData activityData)
     {
-        Logger.Log(LogLevel.Debug, "Dispatching activity '{0}' to resource '{1}'",
+        Logger.Log(LogLevel.Debug, "Dispatching activity '{activity}' to resource '{id}'",
             activityData, resource.Id);
 
-        // Always set the resource, even if this updates the current resource for redelivered activities
-        activityData.Resource = resource;
-
-        // Update activity if it wasn't started yet
-        if (activityData.State < ActivityState.Running)
+        void update(ActivityData data)
         {
-            activityData.Activity.Tracing.Started = DateTime.Now;
-            ActivityPool.UpdateActivity(activityData, ActivityState.Running);
+            // Always set the resource & start time, even if this updates the current resource for redelivered activities
+            data.Resource = resource;
+            data.Activity.Tracing.Started = DateTime.UtcNow;
+        }
+
+        // Update activity if it wasn't completed yet
+        if (!ActivityPool.TryUpdateActivity(activityData, ActivityState.Running, update))
+        {
+            return;
         }
         // Update process if it wasn't started yet
         if (activityData.ProcessData.State < ProcessState.Running)
@@ -560,23 +563,26 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
     {
         Logger.Log(LogLevel.Warning, "{id}-{name} reported aborting of an unkown activity {activity}. " +
                                      "Completing activity immediately.", resource.Id, resource.Name, activity);
-        ActivityPool.UpdateActivity(activity, ActivityState.Completed);
+        ActivityPool.TryUpdateActivity(activity, ActivityState.Completed);
     }
 
     private void HandleActivityCompleted(ICell resource, ActivityCompleted message, ActivityData activity)
     {
         Logger.Log(LogLevel.Debug, "Received result '{result}' for activity '{activity}'", message.CompletedActivity.Result.Numeric, activity);
 
-        // Update session and resource
-        activity.Session = message;
-        activity.Resource = resource;
+            void ApplyDataAfterCompletion(ActivityData data)
+            {
+            // Update session and resource
+            data.Session = message;
+            data.Resource = resource;
 
-        // Update our activity from the reported one, just in case they are not identical
-        activity.Result = message.CompletedActivity.Result;
-        activity.Tracing = message.CompletedActivity.Tracing;
-        activity.Tracing.Completed = DateTime.Now;
+            // Update our activity from the reported one, just in case they are not identical
+            data.Result = message.CompletedActivity.Result;
+            data.Tracing = message.CompletedActivity.Tracing;
+            data.Tracing.Completed = DateTime.Now;
+            }
 
-        ActivityPool.UpdateActivity(activity, ActivityState.ResultReceived);
+        ActivityPool.TryUpdateActivity(activity, ActivityState.ResultReceived, ApplyDataAfterCompletion);
     }
 
     /// <summary>
