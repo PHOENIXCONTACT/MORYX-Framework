@@ -31,10 +31,8 @@
 
   <Import Project="..\..\.build\WebProjects.props"/>
   <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\bundle.js')) And ('$(NoBuild)' != 'true') ">
-    <Exec WorkingDirectory=".\app\" Command="npm config set strict-ssl false" />
     <Exec WorkingDirectory=".\app\" Command="npm ci" />
     <Exec WorkingDirectory=".\app\" Command="npm run build --force" />
-    <Exec WorkingDirectory=".\app\" Command="npm config set strict-ssl true" />
   </Target>
 
 </Project>

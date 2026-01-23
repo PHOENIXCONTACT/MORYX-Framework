@@ -13,10 +13,10 @@
 
   Layout = "_Layout";
 }
-@attribute [WebModule("Notifications", "notifications"), 
+@attribute [WebModule("Notifications", "notifications"),
     ModuleEventStream("/api/moryx/notifications/stream"),
-    Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description"), 
-    Authorize(Policy = NotificationPermissions.CanView), 
+    Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description"),
+    Authorize(Policy = NotificationPermissions.CanView),
     AllowAnonymous]
 
 @section Styles {
@@ -24,7 +24,6 @@
 }
 @section Scripts
 {
-  <script src="/_content/Moryx.Notifications.Web/runtime.js" type="module"></script>
   <script src="/_content/Moryx.Notifications.Web/polyfills.js" type="module"></script>
   <script src="/_content/Moryx.Notifications.Web/main.js" type="module"></script>
 }
