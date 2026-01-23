@@ -9,7 +9,7 @@ If you don't have the the Angular CLI installed yet, follow [these instructions]
 ng new my-module
 ```
 
-> If you don't have preferences youself, choose to use scss and don't select SSR when prompted
+> If you don't have preferences yourself, choose to use scss and don't select SSR when prompted
 
 You can develop the app as if it was a standalone solution. Just make sure that the content of your app adjusts dynamically to the available space in the browser, i.e. set width and height of your top level element to 100%.
 > For more information on how to build an angular app, start with [this tutorial](https://angular.dev/tutorials/first-app).
@@ -18,13 +18,11 @@ You can develop the app as if it was a standalone solution. Just make sure that 
 
 To build the angular app automatically when you build your C# project, you need to adjust some configurations in the **angular.json** file.
 
-1. Replace the `@angular-devkit/build-angular:application` builder with the `@angular-devkit/build-angular:browser` builder  
-(The application builder is the new way angular builds the app, unfortunately this breaks the deployment in razor inevitably.)
-2. Change the output path from `dist/` to `../wwwroot/`  
+1. Change the output path from `dist/` to `../wwwroot/`
 (That's the directory that is packed into nuget packages as static files by default)
-3. Turn off the output hashing (by setting it to `none`)  
+2. Turn off the output hashing (by setting it to `none`)
 (Otherwise you will have to change the references in the razor page after every build)
-4. Turn off the inline optimization of fonts  
+3. Turn off the inline optimization of fonts
 (only required if you build the project behind a proxy)
 
 Now, start building your app.
@@ -45,7 +43,6 @@ root to anchor the angular app into the razor page.
 @* // Add the compiled javascript from the angular project *@
 @section Scripts
 {
-  <script src="/_content/<YourC#ProjectName>/runtime.js" type="module"></script>
   <script src="/_content/<YourC#ProjectName>/polyfills.js" type="module"></script>
   <script src="/_content/<YourC#ProjectName>/main.js" type="module"></script>
 }
