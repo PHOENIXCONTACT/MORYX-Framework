@@ -82,7 +82,7 @@ public class ProcessRemovalTests : ProcessTestsBase
         if (currentlyRunningActivity)
         {
             var activityData = process.Activities[1];
-            DataPool.UpdateActivity(activityData, ActivityState.Completed);
+            DataPool.TryUpdateActivity(activityData, ActivityState.Completed);
         }
 
         // Assert
@@ -116,7 +116,7 @@ public class ProcessRemovalTests : ProcessTestsBase
 
         // Complete activity
         ModifiedActivity.Activity.Complete(0);
-        DataPool.UpdateActivity(ModifiedActivity, ActivityState.ResultReceived);
+        DataPool.TryUpdateActivity(ModifiedActivity, ActivityState.ResultReceived);
 
         // Assert
         Assert.That(ModifiedProcess, Is.Not.Null);
@@ -130,7 +130,7 @@ public class ProcessRemovalTests : ProcessTestsBase
 
         //Make sure there are Activities in the pool
         var activityData = FillPool(new MountActivity(), _productionCellMock.Object);
-        DataPool.UpdateActivity(activityData, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activityData, ActivityState.Configured);
 
         // Act
         _removalResourceMock.Raise(r => r.ProcessRemoved += null, _removalResourceMock.Object, activityData.ProcessData.Process);
@@ -146,7 +146,7 @@ public class ProcessRemovalTests : ProcessTestsBase
 
         //Make sure there are Activities in the pool
         var activityData = FillPool(new MountActivity(), _productionCellMock.Object);
-        DataPool.UpdateActivity(activityData, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activityData, ActivityState.Configured);
 
         // Act
         _removalResourceMock.Raise(r => r.ProcessBroken += null, _removalResourceMock.Object, activityData.ProcessData.Process);

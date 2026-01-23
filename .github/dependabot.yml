@@ -10,16 +10,15 @@ updates:
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: "Microsoft.*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
+      - dependency-name: "OPCFoundation.NetStandard.Opc.Ua.Client"
+        update-types: # The patch value of the version is used as major for this package.
+          - "version-update:semver-major" # OPC Major
+          - "version-update:semver-minor" # OPC Minor
     groups:
-      # All patch updates together, may be merged when CI is green.
-      patch-updates:
-        update-types: ["patch"]
-      # All minor updates together. Requires green CI + manual check.
-      minor-updates:
-        update-types: ["minor"]
-      # All minor updates together. Requires green CI + manual check.
       major-updates:
         update-types: ["major"]
     schedule:
@@ -37,13 +36,11 @@ updates:
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: "@angular/*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
     groups:
-      npm-patch:
-        update-types: ["patch"]
-      npm-minor:
-        update-types: ["minor"]
       npm-major:
         update-types: ["major"]
     schedule:
@@ -59,13 +56,11 @@ updates:
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: "@angular/*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
     groups:
-      npm-patch:
-        update-types: ["patch"]
-      npm-minor:
-        update-types: ["minor"]
       npm-major:
         update-types: ["major"]
     schedule:
@@ -77,17 +72,15 @@ updates:
       - "npm"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "/src/Moryx.ControlSystem.WorkerSupport.Web/"
+    directory: "/src/Moryx.VisualInstructions.Web/"
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: "@angular/*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
     groups:
-      npm-patch:
-        update-types: ["patch"]
-      npm-minor:
-        update-types: ["minor"]
       npm-major:
         update-types: ["major"]
     schedule:
@@ -103,13 +96,11 @@ updates:
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: "@angular/*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
     groups:
-      npm-patch:
-        update-types: ["patch"]
-      npm-minor:
-        update-types: ["minor"]
       npm-major:
         update-types: ["major"]
     schedule:
@@ -125,13 +116,11 @@ updates:
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: "@angular/*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
     groups:
-      npm-patch:
-        update-types: ["patch"]
-      npm-minor:
-        update-types: ["minor"]
       npm-major:
         update-types: ["major"]
     schedule:
@@ -147,13 +136,11 @@ updates:
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: "@angular/*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
     groups:
-      npm-patch:
-        update-types: ["patch"]
-      npm-minor:
-        update-types: ["minor"]
       npm-major:
         update-types: ["major"]
     schedule:
@@ -169,13 +156,11 @@ updates:
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: "@angular/*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
     groups:
-      npm-patch:
-        update-types: ["patch"]
-      npm-minor:
-        update-types: ["minor"]
       npm-major:
         update-types: ["major"]
     schedule:
@@ -191,13 +176,11 @@ updates:
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: "@angular/*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
     groups:
-      npm-patch:
-        update-types: ["patch"]
-      npm-minor:
-        update-types: ["minor"]
       npm-major:
         update-types: ["major"]
     schedule:
@@ -213,13 +196,11 @@ updates:
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: "@angular/*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
     groups:
-      npm-patch:
-        update-types: ["patch"]
-      npm-minor:
-        update-types: ["minor"]
       npm-major:
         update-types: ["major"]
     schedule:
@@ -235,13 +216,11 @@ updates:
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: "@angular/*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
     groups:
-      npm-patch:
-        update-types: ["patch"]
-      npm-minor:
-        update-types: ["minor"]
       npm-major:
         update-types: ["major"]
     schedule:
@@ -257,13 +236,11 @@ updates:
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: "@angular/*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
     groups:
-      npm-patch:
-        update-types: ["patch"]
-      npm-minor:
-        update-types: ["minor"]
       npm-major:
         update-types: ["major"]
     schedule:
@@ -279,13 +256,11 @@ updates:
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: "@angular/*"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
     groups:
-      npm-patch:
-        update-types: ["patch"]
-      npm-minor:
-        update-types: ["minor"]
       npm-major:
         update-types: ["major"]
     schedule:

@@ -32,10 +32,9 @@ public static class ResourceExtensions
         /// <returns>The first resource that occurs in the recursion to match the condition, null otherwise</returns>
         public Resource GetFirstRelatedResource(Predicate<Resource> conditionToMatch, Func<Resource, Resource> methodToNavigate)
         {
-            if (resource is null || conditionToMatch(resource))
-                return resource;
-            else
-                return GetFirstRelatedResource(methodToNavigate(resource), conditionToMatch, (Func<Resource, IEnumerable<Resource>>)methodToNavigate);
+            return resource is null || conditionToMatch(resource)
+                ? resource
+                : GetFirstRelatedResource(methodToNavigate(resource), conditionToMatch, methodToNavigate);
         }
 
         /// <summary>
@@ -51,14 +50,18 @@ public static class ResourceExtensions
         public Resource GetFirstRelatedResource(Predicate<Resource> conditionToMatch, Func<Resource, IEnumerable<Resource>> methodToNavigate)
         {
             if (resource is null || conditionToMatch(resource))
+            {
                 return resource;
+            }
             else
             {
                 foreach (var subsequentResource in methodToNavigate(resource))
                 {
                     var matchingResource = GetFirstRelatedResource(subsequentResource, conditionToMatch, methodToNavigate);
-                    if (!(matchingResource is null))
+                    if (matchingResource is not null)
+                    {
                         return matchingResource;
+                    }
                 }
 
                 return null;

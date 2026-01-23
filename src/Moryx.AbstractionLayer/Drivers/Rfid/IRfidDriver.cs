@@ -18,6 +18,7 @@ public interface IRfidDriver : IInputDriver,
     /// <param name="rfidTag">The RFID tag to be killed.</param>
     /// <param name="options">Options that define how the kill operation should be performed.</param>
     /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    /// <exception cref="DriverException">Thrown when the driver encounters an error during execution.</exception>
     /// <exception cref="OperationCanceledException">The cancellation token was canceled. This exception is stored into the returned task.</exception>
     /// <exception cref="DriverStateException">Thrown if the driver is in an invalid state for this operation.</exception>
     Task<KillTagResult> KillTagAsync(RfidTag rfidTag, KillTagOptions options, CancellationToken cancellationToken = default);

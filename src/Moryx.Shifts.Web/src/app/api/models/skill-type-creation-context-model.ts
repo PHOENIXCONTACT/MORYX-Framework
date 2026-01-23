@@ -1,8 +1,0 @@
-/* tslint:disable */
-/* eslint-disable */
-import { Entry } from '@moryx/ngx-web-framework/entry-editor';
-export interface SkillTypeCreationContextModel {
-  capabilities?: Entry;
-  duration?: string;
-  name?: string | null;
-}

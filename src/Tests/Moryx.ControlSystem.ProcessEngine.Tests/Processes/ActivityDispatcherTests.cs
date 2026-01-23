@@ -72,7 +72,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
         var activity = FillPool(dummy, _productionCellMock.Object);
 
         // Act
-        DataPool.UpdateActivity(activity, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activity, ActivityState.Configured);
         var rtw = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Pull, ValidProcessId);
 
         RaiseReadyToWork(_productionCellMock, rtw);
@@ -90,7 +90,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
         var activity = FillPool(dummy, _serialCellMock.Object);
 
         // Act
-        DataPool.UpdateActivity(activity, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activity, ActivityState.Configured);
         var rtw = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Push, ValidProcessId);
 
         RaiseReadyToWork(_serialCellMock, rtw);
@@ -109,7 +109,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
         var activity = FillPool(dummy, unmountMock.Object);
 
         // Act
-        DataPool.UpdateActivity(activity, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activity, ActivityState.Configured);
         _resourceManagementMock.Raise(rm => rm.ResourceAdded += null,
             _resourceManagementMock.Object, unmountMock.Object);
         var rtw = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Push, ValidProcessId);
@@ -155,7 +155,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
 
         // Act: First the ReadyToWork and then the activity change
         RaiseReadyToWork(_serialCellMock, Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Push));
-        DataPool.UpdateActivity(activity, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activity, ActivityState.Configured);
 
         // Assert
         AssertActivityDispatch(dummy, _serialCellMock);
@@ -226,7 +226,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
                 var possibleResource = reason != SequenceCompletedReason.ResourceMismatch ? _mountCellMock : _productionCellMock;
                 var activityData = FillPool(activity, possibleResource.Object);
                 resourceMock = reason == SequenceCompletedReason.ResourceMismatch ? _mountCellMock : _productionCellMock;
-                DataPool.UpdateActivity(activityData, ActivityState.Configured);
+                DataPool.TryUpdateActivity(activityData, ActivityState.Configured);
                 break;
         }
 
@@ -282,7 +282,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
 
         // Act: Remove rtw and make activity available
         RaiseNotReadyToWork(_serialCellMock, session.PauseSession());
-        DataPool.UpdateActivity(activityData, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activityData, ActivityState.Configured);
 
         // Assert: Make sure the activity was not dispatched
         Assert.DoesNotThrow(() => _serialCellMock.Verify(r => r.StartActivity(It.IsAny<ActivityStart>()), Times.Never),
@@ -295,8 +295,8 @@ public class ActivityDispatcherTests : ProcessTestsBase
         // Arrange: Running activity in pool
         var dummy = new DummyActivity();
         var activityData = FillPool(dummy, _productionCellMock.Object);
-        DataPool.UpdateActivity(activityData, ActivityState.Configured);
-        DataPool.UpdateActivity(activityData, ActivityState.Running);
+        DataPool.TryUpdateActivity(activityData, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activityData, ActivityState.Running);
 
         var activityStart = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Pull, ValidProcessId).StartActivity(dummy);
 
@@ -322,7 +322,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
         var second = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Push);
         RaiseReadyToWork(_serialCellMock, second);
         activityData.Targets = [_serialCellMock.Object];
-        DataPool.UpdateActivity(activityData, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activityData, ActivityState.Configured);
 
         // Assert: Make sure activity was started on second session
         Assert.DoesNotThrow(delegate
@@ -388,7 +388,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
         // Arrange
         var dummy = new AssignIdentityActivity();
         var activity = FillPool(dummy, _serialCellMock.Object);
-        DataPool.UpdateActivity(activity, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activity, ActivityState.Configured);
         var readyToWork = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Pull);
         RaiseReadyToWork(_serialCellMock, readyToWork);
 
@@ -410,7 +410,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
 
         //Make sure there are Activities in the pool
         var activityData = FillPool(new MountActivity(), _productionCellMock.Object);
-        DataPool.UpdateActivity(activityData, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activityData, ActivityState.Configured);
 
         // Act
         DataPool.UpdateProcess(activityData.ProcessData, ProcessState.Failure);
@@ -432,7 +432,7 @@ public class ActivityDispatcherTests : ProcessTestsBase
         var constraints = new[] { constraintMock.Object };
 
         // Act
-        DataPool.UpdateActivity(activity, ActivityState.Configured);
+        DataPool.TryUpdateActivity(activity, ActivityState.Configured);
         var rtw = Session.StartSession(ActivityClassification.Production, ReadyToWorkType.Pull, ValidProcessId, constraints);
 
         RaiseReadyToWork(_productionCellMock, rtw);

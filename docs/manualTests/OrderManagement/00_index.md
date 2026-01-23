@@ -1,16 +1,16 @@
 # Test Cases
 
 ## Document View
+
 | No. |Description       | To be done every iteration | Automated | Comment   |
 |---|----------------|----------------|-----------|-----------|
 |[01](01_show_all_documents.md) | [Show all documents of a selected operation](01_show_all_documents.md) ||||
-
 
 ### Preconditions
 
 In order to execute all of the tests, you need to be able to create an operation and have some products and some corresponding documents.
 
-* Fully setup and running demo project 
+* Fully setup and running demo project
 * At least the DemoImporter was executed to have all needed data for the operation creation
 * Documents are available in the backups folder for the product which should be chosen during the operation creation
 
@@ -23,19 +23,19 @@ In order to execute all of the tests, you need to be able to create an operation
 |[04](04_creation_failed_message.md) | [Error messages shows up if the creation of an operation failed](04_creation_failed_message.md)  | |[ ] | |
 |[05](05_loading_text_during_slow_connection.md)| [Having a slow connection will display a loading text](05_loading_text_during_slow_connection.md)| |[ ] | |
 
-
 ### Preconditions
 
 In order to execute all of the tests, you need to have the orders module set up properly. **All tests assume the orders view to be active** (click on the orders button at the shell)
 
-* Fully setup and running demo project 
+* Fully setup and running demo project
 * At least the DemoImporter was executed to have all needed data for the operation creation.
 
 You will further need
+
 * At least one existing order (see below snippet for an example)
 * The `Guid` of that specific order (you might get it from the browser: *Developer-Tools -> Network -> GET orders request*)
- 
-```
+
+```json
 POST {baseUrl}/api/moryx/orders
 
 {
@@ -58,6 +58,7 @@ POST {baseUrl}/api/moryx/orders
 ```
 
 ## General tests
+
 | No. |Description       | To be done every iteration |Automated | Comment   |
 |----|---------------|-----------|-----------|-----------|
 |[06](06_create_and_start_an_operation.md) | [Create and start an order](06_create_and_start_an_operation.md) | |[]||
@@ -67,4 +68,3 @@ POST {baseUrl}/api/moryx/orders
 |[10](10_search_product_in_creation_dialog.md) | [TBD: Search a product in the creation dialog](10_search_product_in_creation_dialog.md) | | [] | |
 |[11](11_unknown_materialnumber_in_creation_dialog.md) | [TBD: Add a unknown materialnumber in the creation dialog](11_unknown_materialnumber_in_creation_dialog.md) | | [] | |
 |[12](12_show_setup_indicator.md) | [TBD: Show setup indicator at an operation](12_show_setup_indicator.md) | | [] | |
-

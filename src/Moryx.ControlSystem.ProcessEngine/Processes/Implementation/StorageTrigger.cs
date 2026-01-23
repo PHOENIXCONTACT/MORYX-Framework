@@ -123,7 +123,7 @@ internal sealed class StorageTrigger : IActivityPoolListener, IDisposable
 
         SaveCompletedActivity(processData, activityData);
 
-        ActivityPool.UpdateActivity(activityData, ActivityState.ResultProcessed);
+        ActivityPool.TryUpdateActivity(activityData, ActivityState.ResultProcessed);
     }
 
     /// <summary>

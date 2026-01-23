@@ -48,19 +48,24 @@ public abstract class MqttTopic : Resource, IMessageChannel
             switch (validationResult)
             {
                 case TopicValidationResult.Valid:
-                    //replace +
+                    // replace +
                     var pattern = value.Replace("+", @"\w+");
-                    //replace #
-                    pattern = pattern.Replace("#", @"\w+(?:/\w+)*");
-                    //replace placeholder
-                    pattern = value.Contains('{') ?
-                        pattern.Replace("{", "(?<").Replace("}", @">(?:\w|\:)+)") : pattern;
+                    // replace placeholder {example} or {example|#}
+                    pattern = value.Contains('{')
+                        ? pattern.Replace("{", "(?<")
+                            .Replace("|#}", @">[\w-_]+(?:/[\w-_]+)*)")
+                            .Replace("}", @">(?:[\w-_\:])+)")
+                        : pattern;
+                    // replace #
+                    pattern = pattern.Replace("#", @"[\w-_]+(?:/[\w-_]+)*");
                     pattern = pattern.Replace(".", "__");
+                    // $ to match end of string
                     pattern += "$";
                     RegexTopic = new Regex(pattern);
-
-                    var regex = new Regex(@"({\w*})");
-                    SubscribedTopic = regex.Replace(value.Replace(".", "__"), "+");
+                    
+                    var subscribeTopic = value.Replace(".", "__");
+                    subscribeTopic = new Regex(@"\{\w+\|#\}").Replace(subscribeTopic, "#");
+                    SubscribedTopic = new Regex(@"({\w*})").Replace(subscribeTopic, "+");
 
                     var oldTopic = _topicName;
                     _topicName = value;
@@ -95,6 +100,30 @@ public abstract class MqttTopic : Resource, IMessageChannel
     [Display(Name = nameof(Strings.MqttTopic_TraceDecodedMessage), Description = nameof(Strings.MqttTopic_TraceDecodedMessage_Description), ResourceType = typeof(Strings))]
     public bool TraceDecodedMessage { get; set; }
 
+    private static readonly Regex _topicValidationRegex = CreateTopicValidationRegex();
+
+    private static Regex CreateTopicValidationRegex()
+    {
+        // create complex validation regex from a sequence of steps to keep it somewhat understandable.
+        // basic building block for valid identifiers in bindings
+        var word = @"(\w+)";
+        // outside a binding most characters are allowed in a normal topic.
+        var allowedCharactersInLevel = @"[^/\+#\| \{\}]";
+        // a binding can consist of multiple identifiers joined by `.`
+        var bindingContent = $$"""({{word}}\.)*{{word}}""";
+        // a single level binding ist simply an identifier surrounded by braces
+        var simpleBinding = $$"""(\{{{bindingContent}}\})""";
+        // wildcard binding is an identifier plus `|#` to denote that is a multilevel binding
+        var wildCardBinding = $$"""(\{{{bindingContent}}(\|#)\})""";
+        // any topic besides the last topic can only either be a + wildcard, a single level binding or anything that would be normally allowed by mqtt
+        var generalTopic = $$"""(({{allowedCharactersInLevel}}+)|{{simpleBinding}}|\+)""";
+        // the last topic allows everything that is allowed in a normal topic plus `#` and multilevel bindings
+        var lastTopic = $$"""({{generalTopic}}|#|{{wildCardBinding}})""";
+        // the pattern contains at least one topic, the last one, prefixed by as many other topics as you want separated by `/`
+        var pattern = $$"""^({{generalTopic}}/)*{{lastTopic}}$""";
+        return new Regex(pattern);
+    }
+
     private (TopicValidationResult result, string errorMessage) ValidateTopicString(string value)
     {
         if (value is null)
@@ -104,19 +133,12 @@ public abstract class MqttTopic : Resource, IMessageChannel
                 return (TopicValidationResult.Uninitialized, "topic is null");
             }
 
-            return (TopicValidationResult.Invalid, "topic is null"); ;
+            return (TopicValidationResult.Invalid, "topic is null");
         }
 
-        var regexPlaceholders = new Regex(@"(\w|})({\w*})|({\w*})(\w|{)");
-        var regexWildcards = new Regex(@"(([^/](\+|#)|(\+|#)[^/]))");
-        if (regexPlaceholders.IsMatch(value))
+        if (!_topicValidationRegex.IsMatch(value))
         {
-            var logMessage = $"Topic {value} does not match requirements.Things like abv{{foo}} and {{foo}}{{foo2}} are not allowed.";
-            return (TopicValidationResult.Invalid, logMessage);
-        }
-        else if (regexWildcards.IsMatch(value))
-        {
-            var logMessage = $"Topic {value} does not match requirements. Things like abv+, abc#, +as, #sdf and +# are not allowed.";
+            var logMessage = $"Topic {value} does not match requirements. We don't allow most special characters. '+' must be a complete hierarchy step. '#' wildcards may only appear at the end";
             return (TopicValidationResult.Invalid, logMessage);
         }
         else if (value.Contains(' '))
@@ -229,10 +251,10 @@ public abstract class MqttTopic : Resource, IMessageChannel
     /// <inheritdoc />
     public abstract Task SendAsync(object payload, CancellationToken cancellationToken = default);
 
-    //This method has to call MqttDriver.OnSend
+    // This method has to call MqttDriver.OnSend
     internal abstract Task OnSend(object payload, CancellationToken cancellationToken);
 
-    //This method has to call MqttDriver.OnReceive
+    // This method has to call MqttDriver.OnReceive
     internal abstract void OnReceived(string receivedTopic, ReadOnlySequence<byte> messageAsBytes, string responseTopic = null, bool retain = false);
 
     /// <summary>

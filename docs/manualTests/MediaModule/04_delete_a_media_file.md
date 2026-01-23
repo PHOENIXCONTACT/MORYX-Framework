@@ -7,6 +7,7 @@ A media file was uploaded.
 
 | Step/Instruction | Expected Result | Comment |
 |------------------|-----------------|---------|
-| Right click on a media content | A context menu pops up. It shows a Delete entry  |  |
-| Click **DELETE** | The **Remove Content** Dialog opens | |
-| Click **DELETE** | The selected media file is removed from the list | |
+| Click **DELETETION BUTTON** for the media file | The **Delete Content** Dialog opens | |
+| Click **CANCEL** to cancel the deletion | The **Delete Content** Dialog closes | |
+| Click **DELETETION BUTTON** for the media file | The **Delete Content** Dialog opens | |
+| Click **DELETE** to confirm the deletion | The **Delete Content** Dialog closes and the media file disappears | |

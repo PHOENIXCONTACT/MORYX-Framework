@@ -1,0 +1,58 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
+/* tslint:disable */
+/* eslint-disable */
+import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
+
+import { OperatorManagementService } from './services/operator-management.service';
+import { OrderManagementService } from './services/order-management.service';
+import { ShiftManagementService } from './services/shift-management.service';
+import { SkillManagementService } from './services/skill-management.service';
+
+/**
+ * Module that provides all services and configuration.
+ */
+@NgModule({
+  imports: [],
+  exports: [],
+  declarations: [],
+  providers: [
+    OperatorManagementService,
+    OrderManagementService,
+    ShiftManagementService,
+    SkillManagementService,
+    ApiConfiguration
+  ],
+})
+export class ApiModule {
+  static forRoot(params: ApiConfigurationParams): ModuleWithProviders<ApiModule> {
+    return {
+      ngModule: ApiModule,
+      providers: [
+        {
+          provide: ApiConfiguration,
+          useValue: params
+        }
+      ]
+    }
+  }
+
+  constructor( 
+    @Optional() @SkipSelf() parentModule: ApiModule,
+    @Optional() http: HttpClient
+  ) {
+    if (parentModule) {
+      throw new Error('ApiModule is already loaded. Import in your base AppModule only.');
+    }
+    if (!http) {
+      throw new Error('You need to import the HttpClientModule in your AppModule! \n' +
+      'See also https://github.com/angular/angular/issues/20575');
+    }
+  }
+}
+

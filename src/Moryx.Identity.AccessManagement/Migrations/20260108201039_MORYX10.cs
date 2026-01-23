@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Licensed under the Apache License, Version 2.0
+
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -88,3 +91,4 @@ namespace Moryx.Identity.AccessManagement.Migrations
         }
     }
 }
+

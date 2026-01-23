@@ -11,7 +11,7 @@
   Layout = "_Layout";
 }
 @attribute [WebModule("Processes", "ballot", Category = ModuleCategory.Diagnostics),
-  Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description"), 
+  Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description"),
     Authorize(Policy = ProcessPermissions.CanView),
     AllowAnonymous]
 @section Styles {
@@ -19,7 +19,6 @@
 }
 @section Scripts
 {
-  <script src="/_content/Moryx.ControlSystem.ProcessEngine.Web/runtime.js" type="module"></script>
   <script src="/_content/Moryx.ControlSystem.ProcessEngine.Web/polyfills.js" type="module"></script>
   <script src="/_content/Moryx.ControlSystem.ProcessEngine.Web/main.js" type="module"></script>
 }
