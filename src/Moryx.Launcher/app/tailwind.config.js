@@ -8,7 +8,7 @@ const colors = require('tailwindcss/colors')
 module.exports = {
     prefix: 'tw-',
     content: [
-        "./Pages/**/*.{razor,html,cshtml}",
+        "../Pages/**/*.{razor,html,cshtml}",
         "./components/src/**/*.{html,ts}"
     ],
     theme: {
