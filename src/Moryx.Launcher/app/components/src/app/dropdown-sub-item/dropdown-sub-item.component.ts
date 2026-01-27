@@ -10,7 +10,7 @@ import { DropdownMenuComponent } from "../dropdown-menu/dropdown-menu.component"
 
 @Component({
   selector: 'app-dropdown-sub-item',
-  imports: [DropdownItemComponent, DropdownContainerComponent, DropdownMenuComponent],
+  imports: [DropdownMenuComponent],
   templateUrl: './dropdown-sub-item.component.html',
   styleUrl: './dropdown-sub-item.component.css'
 })
