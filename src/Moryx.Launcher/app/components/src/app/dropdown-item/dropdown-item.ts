@@ -9,10 +9,10 @@ import { Component, EventEmitter, HostListener, Input, Output } from '@angular/c
 @Component({
   selector: 'app-dropdown-item',
   imports: [],
-  templateUrl: './dropdown-item.component.html',
-  styleUrl: './dropdown-item.component.css'
+  templateUrl: './dropdown-item.html',
+  styleUrl: './dropdown-item.css'
 })
-export class DropdownItemComponent {
+export class DropdownItem {
 
   @Input() closeOnClick: boolean = true;
   @Output() onClick = new EventEmitter<DropdownItemClickEventArg>();

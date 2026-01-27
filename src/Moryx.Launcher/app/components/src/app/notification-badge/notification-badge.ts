@@ -8,10 +8,10 @@ import { Component, Input, input, NgZone, OnDestroy, OnInit } from '@angular/cor
 @Component({
   selector: 'app-notification-badge',
   imports: [],
-  templateUrl: './notification-badge.component.html',
-  styleUrl: './notification-badge.component.css'
+  templateUrl: './notification-badge.html',
+  styleUrl: './notification-badge.css'
 })
-export class NotificationBadgeComponent implements OnInit, OnDestroy {
+export class NotificationBadge implements OnInit, OnDestroy {
   @Input() eventstream: string = '';
   count: number = 0;
   eventSource: EventSource | undefined;

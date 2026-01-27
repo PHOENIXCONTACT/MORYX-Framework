@@ -10,10 +10,10 @@ import { AfterContentInit, Component, Input, NgZone, OnDestroy, OnInit } from '@
   selector: 'app-notifications',
   imports: [CommonModule],
   providers: [],
-  templateUrl: './notifications.component.html',
-  styleUrl: './notifications.component.css'
+  templateUrl: './notifications.html',
+  styleUrl: './notifications.css'
 })
-export class NotificationsComponent implements OnInit, OnDestroy {
+export class Notifications implements OnInit, OnDestroy {
 
   @Input() url: string = 'notifications';
   @Input() api: string = '/api/moryx/notifications/stream';

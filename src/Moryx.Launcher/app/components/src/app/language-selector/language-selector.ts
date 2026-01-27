@@ -10,10 +10,10 @@ import { localLanguage } from '../utils';
 @Component({
   selector: 'app-language-selector',
   imports: [],
-  templateUrl: './language-selector.component.html',
-  styleUrl: './language-selector.component.css'
+  templateUrl: './language-selector.html',
+  styleUrl: './language-selector.css'
 })
-export class LanguageSelectorComponent {
+export class LanguageSelector {
   @Input() language: string = "de-DE";
   @Input() class: string = "";
 

@@ -6,15 +6,15 @@
 
 import { AfterContentInit, Component, ElementRef, Input, OnDestroy } from '@angular/core';
 import { Constants } from '../constants';
-import { DropdownItemClickEventArg, DropdownItemComponent } from '../dropdown-item/dropdown-item.component';
+import { DropdownItemClickEventArg, DropdownItem } from '../dropdown-item/dropdown-item';
 
 @Component({
   selector: 'app-dropdown-container',
   imports: [],
-  templateUrl: './dropdown-container.component.html',
-  styleUrl: './dropdown-container.component.css'
+  templateUrl: './dropdown-container.html',
+  styleUrl: './dropdown-container.css'
 })
-export class DropdownContainerComponent implements AfterContentInit, OnDestroy {
+export class DropdownContainer implements AfterContentInit, OnDestroy {
 
   @Input() class: string = "";
 

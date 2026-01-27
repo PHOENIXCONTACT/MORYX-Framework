@@ -4,17 +4,17 @@
 */
 
 import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
-import { DropdownItemComponent } from "../dropdown-item/dropdown-item.component";
-import { DropdownContainerComponent } from "../dropdown-container/dropdown-container.component";
-import { DropdownMenuComponent } from "../dropdown-menu/dropdown-menu.component";
+import { DropdownItem } from "../dropdown-item/dropdown-item";
+import { DropdownContainer } from "../dropdown-container/dropdown-container";
+import { DropdownMenu } from "../dropdown-menu/dropdown-menu";
 
 @Component({
   selector: 'app-dropdown-sub-item',
-  imports: [DropdownMenuComponent],
-  templateUrl: './dropdown-sub-item.component.html',
-  styleUrl: './dropdown-sub-item.component.css'
+  imports: [DropdownMenu],
+  templateUrl: './dropdown-sub-item.html',
+  styleUrl: './dropdown-sub-item.css'
 })
-export class DropdownSubItemComponent {
+export class DropdownSubItem {
   @Input() closeOnClick: boolean = false;
   @Output() onClick = new EventEmitter<boolean>();
   @Input() class: string = "";

@@ -12,10 +12,10 @@ import { localLanguage } from '../utils';
 @Component({
   selector: 'app-search-box',
   imports: [FormsModule],
-  templateUrl: './search-box.component.html',
-  styleUrl: './search-box.component.css'
+  templateUrl: './search-box.html',
+  styleUrl: './search-box.css'
 })
-export class SearchBoxComponent implements OnInit {
+export class SearchBox implements OnInit {
 
   @Input() placeholder: string = "Search...";
 

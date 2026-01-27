@@ -16,10 +16,10 @@ import { Constants } from '../constants';
 @Component({
   selector: 'app-dropdown-menu',
   imports: [],
-  templateUrl: './dropdown-menu.component.html',
-  styleUrl: './dropdown-menu.component.css'
+  templateUrl: './dropdown-menu.html',
+  styleUrl: './dropdown-menu.css'
 })
-export class DropdownMenuComponent implements AfterContentInit {
+export class DropdownMenu implements AfterContentInit {
   @Input() align: DropdownMenuAlignement = 'right';
   @Input() position: DropdownMenuPosition = 'bottom';
   id: string = "dropdown-menu-" + Math.floor(Math.random() * 100);

@@ -8,10 +8,10 @@ import { Component, input, Input, OnInit } from '@angular/core';
 @Component({
   selector: 'app-auth-button',
   imports: [],
-  templateUrl: './auth-button.component.html',
-  styleUrl: './auth-button.component.css'
+  templateUrl: './auth-button.html',
+  styleUrl: './auth-button.css'
 })
-export class SignInButtonComponent implements OnInit {
+export class SignInButton implements OnInit {
   @Input() authurl: string | undefined;
   isLoggedIn = false;
   userName = '';

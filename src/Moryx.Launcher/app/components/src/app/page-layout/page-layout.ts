@@ -16,16 +16,16 @@ import {
   LauncherStateService,
 } from '../services/launcher-state.service';
 import { Constants } from '../constants';
-import { NavigationButtonComponent } from '../navigation-button/navigation-button.component';
+import { NavigationButton } from '../navigation-button/navigation-button';
 
 @Component({
   selector: 'app-page-layout',
   imports: [CommonModule],
   providers: [LauncherStateService],
-  templateUrl: './page-layout.component.html',
-  styleUrl: './page-layout.component.css'
+  templateUrl: './page-layout.html',
+  styleUrl: './page-layout.css'
 })
-export class PageLayoutComponent implements AfterContentInit {
+export class PageLayout implements AfterContentInit {
   private KEY_NAME = 'Escape';
   @Input() fullscreenButton: string = 'fullscreen';
   @Input() operatorButton: string = 'operator-mode';
@@ -61,11 +61,11 @@ export class PageLayoutComponent implements AfterContentInit {
     );
     this.fixedButtons = navButtons.filter(
       (x) =>
-        x.getAttribute(NavigationButtonComponent.POSITION_ATTRIBUTE) === 'fixed'
+        x.getAttribute(NavigationButton.POSITION_ATTRIBUTE) === 'fixed'
     );
     this.defaultButtons = navButtons.filter(
       (x) =>
-        x.getAttribute(NavigationButtonComponent.POSITION_ATTRIBUTE) != 'fixed'
+        x.getAttribute(NavigationButton.POSITION_ATTRIBUTE) != 'fixed'
     ).reverse();
     this.hideMenuElementBasedOnScreenSize(
       window.innerWidth,

@@ -8,10 +8,10 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-navigation-button',
   imports: [],
-  templateUrl: './navigation-button.component.html',
-  styleUrl: './navigation-button.component.css'
+  templateUrl: './navigation-button.html',
+  styleUrl: './navigation-button.css'
 })
-export class NavigationButtonComponent {
+export class NavigationButton {
   public static POSITION_ATTRIBUTE = "position";
   @Input() position: NavigationButtonPosition = "default";
 }
