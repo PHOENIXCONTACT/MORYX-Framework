@@ -18,7 +18,7 @@ import {
   UntypedFormControl,
 } from "@angular/forms";
 import { MatDialogModule, MatDialogRef } from "@angular/material/dialog";
-import { MoryxSnackbarService } from "@moryx/ngx-web-framework";
+import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { OperationNumberValidations } from "src/app/validations/operationNumberValidations";
@@ -82,13 +82,13 @@ export class CreateDialogComponent implements OnInit {
   selectedRecipe = signal<OperationRecipeModel>(<OperationRecipeModel>{});
   isLoading = signal(false);
   selectedProduct = signal<ProductModel | undefined>(undefined);
-  canAddOperation = computed(() => 
-      this.orderNumber() !== "" &&
-      this.operationNumber() !== "" &&
-      this.selectedProduct() !== undefined &&
-      this.selectedRecipe() !== undefined &&
-      this.amount() > 0 &&
-      this.operationNumberFormControl.valid
+  canAddOperation = computed(() =>
+    this.orderNumber() !== "" &&
+    this.operationNumber() !== "" &&
+    this.selectedProduct() !== undefined &&
+    this.selectedRecipe() !== undefined &&
+    this.amount() > 0 &&
+    this.operationNumberFormControl.valid
   );
   primaryAction = signal<Action>(Action.AddCreate);
   Action = Action;
@@ -100,7 +100,7 @@ export class CreateDialogComponent implements OnInit {
   });
 
   canAdd = computed(() => !this.isLoading() && this.canAddOperation());
-  
+
   canCreate = computed(() => !this.isLoading() && (this.operations().length > 0 || this.canAddOperation()));
 
   dropdownDisabled = computed(() => !this.canRun(Action.AddCreate) && !this.canRun(Action.AddOnly));
@@ -121,7 +121,7 @@ export class CreateDialogComponent implements OnInit {
 
     assignableRecipes.forEach(async (assignableRecipe) => {
       const recipe = await this.productManagementService
-        .getRecipe({ id: assignableRecipe.id! })
+        .getRecipe({id: assignableRecipe.id!})
         .toAsync();
       this.recipes.update((items) => {
         items.push(recipe);
@@ -139,7 +139,7 @@ export class CreateDialogComponent implements OnInit {
     private productManagementService: ProductManagementService,
     private dialog: MatDialogRef<CreateDialogComponent>,
     public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService
+    private snackbarService: SnackbarService
   ) {
     effect(() => {
       const product = this.selectedProduct();
@@ -159,14 +159,14 @@ export class CreateDialogComponent implements OnInit {
     };
     this.isLoading.update((_) => true);
     await this.productManagementService
-      .getTypes({ body: query })
+      .getTypes({body: query})
       .toAsync()
       // set only products that have a recipe
       .then((value) =>
         this.products.update((_) => value.filter((x) => x.recipes?.length))
       )
       .catch(
-        async (e: HttpErrorResponse) => await this.moryxSnackbar.handleError(e)
+        async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
       );
     this.isLoading.update((_) => false);
   }
@@ -248,7 +248,7 @@ export class CreateDialogComponent implements OnInit {
 
     this.operationNumberFormControl.reset('');
   }
-  
+
   async create(): Promise<void> {
     let failed = false;
     for (const operation of this.operations()) {
@@ -258,7 +258,7 @@ export class CreateDialogComponent implements OnInit {
 
       this.isLoading.update((_) => true);
       await this.orderManagementService
-        .addOperation({ sourceId: "Moryx.Orders.Web", body: operation })
+        .addOperation({sourceId: "Moryx.Orders.Web", body: operation})
         .toAsync()
         .catch(() => {
           failed = true;
@@ -270,11 +270,15 @@ export class CreateDialogComponent implements OnInit {
 
   canRun = (a: Action) => (a === Action.AddCreate ? this.canCreate() : this.canAdd());
 
-  onPrimaryClick = async () => { await this.performAction(this.primaryAction()); };
+  onPrimaryClick = async () => {
+    await this.performAction(this.primaryAction());
+  };
 
-  onSelectAction = (a: Action) => { this.primaryAction.set(a); };
+  onSelectAction = (a: Action) => {
+    this.primaryAction.set(a);
+  };
 
-  isSelected     = (a: Action) => this.primaryAction() === a;
+  isSelected = (a: Action) => this.primaryAction() === a;
 
   private async performAction(a: Action): Promise<void> {
     const canAdd = this.canAddOperation();

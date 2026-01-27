@@ -6,18 +6,12 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, computed, effect, OnInit, signal, untracked } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
-import {
-  MoryxSnackbarService,
-  NavigableEntryEditorComponent,
-} from "@moryx/ngx-web-framework";
+import { SnackbarService } from "@moryx/ngx-web-framework/services";
+import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { environment } from "src/environments/environment";
-
-import {
-  OrderManagementService,
-  ProductManagementService,
-} from "../../api/services";
+import { OrderManagementService, ProductManagementService } from "../../api/services";
 import { WorkplanService } from "../../api/services/workplan.service";
 import { RecipeClassificationModel } from "../../api/models";
 import { RecipeModel } from "../../api/models";
@@ -51,7 +45,7 @@ import {MatSelectModule} from '@angular/material/select';
     MatButtonModule,
     FormsModule,
     MatOptionModule,
-    NavigableEntryEditorComponent,
+    NavigableEntryEditor,
     RouterLink,
     MatInputModule,
     MatFormFieldModule,
@@ -84,7 +78,7 @@ export class OperationRecipesComponent implements OnInit {
     private productManagementService: ProductManagementService,
     private workplanService: WorkplanService,
     public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService
+    private snackbarService: SnackbarService
   ) {
     effect(() => {
       const recipe = this.selectedRecipe();
@@ -105,7 +99,7 @@ export class OperationRecipesComponent implements OnInit {
         .then((value) => this.possibleWorkplans.update((_) => value))
         .catch(
           async (e: HttpErrorResponse) =>
-            await this.moryxSnackbar.handleError(e)
+            await this.snackbarService.handleError(e)
         );
       await this.loadRecipes();
       this.isLoading.update((_) => false);
@@ -122,7 +116,7 @@ export class OperationRecipesComponent implements OnInit {
       .toAsync()
       .then((value) => this.operation.update((_) => value))
       .catch(
-        async (e: HttpErrorResponse) => await this.moryxSnackbar.handleError(e)
+        async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
       );
     this.recipes.update((_) => []);
     for (const recipeId of this.operation().recipeIds!) {
@@ -139,7 +133,7 @@ export class OperationRecipesComponent implements OnInit {
         })
         .catch(
           async (e: HttpErrorResponse) =>
-            await this.moryxSnackbar.handleError(e)
+            await this.snackbarService.handleError(e)
         );
     }
     if (this.selectedRecipe())
@@ -180,7 +174,7 @@ export class OperationRecipesComponent implements OnInit {
       })
       .toAsync()
       .catch(
-        async (e: HttpErrorResponse) => await this.moryxSnackbar.handleError(e)
+        async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
       );
     await this.loadRecipes();
     this.isLoading.update((_) => false);

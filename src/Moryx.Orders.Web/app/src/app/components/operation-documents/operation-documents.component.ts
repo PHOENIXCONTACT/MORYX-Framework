@@ -8,16 +8,16 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, computed, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatList, MatListModule } from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { EmptyStateComponent, MoryxSnackbarService } from '@moryx/ngx-web-framework';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
-import { BehaviorSubject } from 'rxjs';
 import { DocumentModel } from "../../api/models";
 import { OperationModel } from "../../api/models";
 import { OrderManagementService } from 'src/app/api/services';
@@ -36,7 +36,7 @@ import { environment } from 'src/environments/environment';
       TranslateModule,
       MatListModule,
       NgxDocViewerModule,
-      EmptyStateComponent,
+      EmptyState,
       MatButtonModule,
       RouterLink,
       MatIconModule
@@ -50,7 +50,7 @@ export class OperationDocumentsComponent implements OnInit {
   selectedDocument = signal<DocumentModel | undefined> (undefined);
   isImage = computed(() => {
     const document = this.selectedDocument()
-    return document 
+    return document
     ? document?.contentType?.includes('image') ?? false
     : false;
   });
@@ -66,7 +66,7 @@ export class OperationDocumentsComponent implements OnInit {
     private orderManagementSerivce: OrderManagementService,
     private sanitizer: DomSanitizer,
     public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService
+    private snackbarService: SnackbarService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -79,7 +79,7 @@ export class OperationDocumentsComponent implements OnInit {
         .then(value => (this.operation.update(_=> value)))
         .catch(
           async (e: HttpErrorResponse) =>
-            await this.moryxSnackbar.handleError(e)
+            await this.snackbarService.handleError(e)
         );
       this.orderManagementSerivce.getDocuments({ guid: identifier }).subscribe({
         next: data => {
@@ -87,7 +87,7 @@ export class OperationDocumentsComponent implements OnInit {
           this.isLoading.update( _=> false);
         },
         error: async (e: HttpErrorResponse) =>
-          await this.moryxSnackbar.handleError(e),
+          await this.snackbarService.handleError(e),
       });
     });
   }
@@ -116,7 +116,7 @@ export class OperationDocumentsComponent implements OnInit {
           }
         },
         error: async (e: HttpErrorResponse) =>
-          await this.moryxSnackbar.handleError(e),
+          await this.snackbarService.handleError(e),
       });
   }
 }

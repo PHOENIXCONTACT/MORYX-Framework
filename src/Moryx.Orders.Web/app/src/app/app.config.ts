@@ -3,16 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import {
-  HttpClient,
-  provideHttpClient,
-  withInterceptorsFromDi,
-} from "@angular/common/http";
-import {
-  ApplicationConfig,
-  enableProdMode,
-  importProvidersFrom,
-} from "@angular/core";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { ApplicationConfig, enableProdMode, importProvidersFrom } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatBadgeModule } from "@angular/material/badge";
 import { MatButtonModule } from "@angular/material/button";
@@ -35,25 +27,15 @@ import { MatTableModule } from "@angular/material/table";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { BrowserModule } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
-import {
-  ApiInterceptor,
-  API_INTERCEPTOR_PROVIDER,
-  MoryxSnackbarService,
-} from "@moryx/ngx-web-framework";
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { ApiInterceptor, API_INTERCEPTOR_PROVIDER, SnackbarService } from "@moryx/ngx-web-framework";
 import { NgxDocViewerModule } from "ngx-doc-viewer";
 import { environment } from "src/environments/environment";
 import { ApiModule } from "./api/api.module";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { provideRouter } from "@angular/router";
 import { routes } from "./app.routes";
 
-function httpTranslateLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(
-    http,
-    environment.assets + "assets/languages/"
-  );
-}
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 if (environment.production) {
   enableProdMode();
@@ -86,19 +68,19 @@ export const appConfig: ApplicationConfig = {
       MatSidenavModule,
       MatToolbarModule,
       NgxDocViewerModule,
-      ReactiveFormsModule,
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useFactory: httpTranslateLoaderFactory,
-          deps: [HttpClient],
-        },
-      })
+      ReactiveFormsModule
     ),
     ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
-    MoryxSnackbarService,
+    SnackbarService,
     provideHttpClient(withInterceptorsFromDi()),
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({
+        prefix: environment.assets + 'assets/languages/',
+        suffix: '.json'
+      }),
+      fallbackLang: 'en'
+    }),
     provideAnimations(),
   ],
 };

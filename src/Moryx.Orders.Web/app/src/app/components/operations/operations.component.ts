@@ -8,8 +8,9 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, signal, ViewChild } fr
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
-import { EmptyStateComponent, MoryxSnackbarService } from '@moryx/ngx-web-framework';
-import { SearchBarService, SearchRequest } from '@moryx/ngx-web-framework/shell-services';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
+import { SearchBarService, SearchRequest } from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -56,7 +57,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatExpansionModule,
     MatButtonModule,
     MatBadgeModule,
-    EmptyStateComponent,
+    EmptyState,
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatSidenavModule
@@ -81,16 +82,16 @@ export class OperationsComponent implements OnInit, OnDestroy {
     private router: Router,
     private searchbar: SearchBarService,
     public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService,
+    private snackbarService: SnackbarService,
     private operationService: OperationService,
-    changeDetectorRef: ChangeDetectorRef, 
+    changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 1279px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
-  
+
   private _mobileQueryListener: () => void;
 
   ngOnDestroy(): void {
@@ -112,7 +113,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
         this.isLoading.set(false);
       },
       error: async (err: HttpErrorResponse) => {
-        await this.moryxSnackbar.handleError(err);
+        await this.snackbarService.handleError(err);
         this.isLoading.set(false);
       },
     });
@@ -169,7 +170,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
     const context = await this.orderManagementService
       .getBeginContext({ guid: operation.model.identifier! })
       .toAsync()
-      .catch(async (e: HttpErrorResponse) => await this.moryxSnackbar.handleError(e));
+      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
     const beginDialog = this.dialog.open(BeginDialogComponent, {
       data: <BeginDialogData>{
         context: context,
@@ -185,7 +186,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
         body: beginModel,
       })
       .subscribe({
-        error: async (e: HttpErrorResponse) => await this.moryxSnackbar.handleError(e),
+        error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e),
       });
   }
 
@@ -234,7 +235,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
     await this.orderManagementService
       .reload({ guid: operation.model.identifier! })
       .toAsync()
-      .catch(async (e: HttpErrorResponse) => await this.moryxSnackbar.showError(this.translate.instant(TranslationConstants.OPERATIONS.REASSIGN_NOT_POSSIBLE)));
+      .catch(async (e: HttpErrorResponse) => await this.snackbarService.showError(this.translate.instant(TranslationConstants.OPERATIONS.REASSIGN_NOT_POSSIBLE)));
   }
 
   showRecipes(operation: OperationViewModel) {
@@ -260,7 +261,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
       this.closeDrawer();
     } else {
       this.selectedOperation.set(operation);
-      this.drawerContent.set(targetContent);  
+      this.drawerContent.set(targetContent);
     }
   }
 
@@ -276,7 +277,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
   onShowPartList(operation: OperationViewModel) {
     this.modifyDrawer(operation.model, DrawerContent.Parts);
   }
-  
+
   onToggleSource(operation: OperationViewModel) {
     this.modifyDrawer(operation.model, DrawerContent.Source);
   }

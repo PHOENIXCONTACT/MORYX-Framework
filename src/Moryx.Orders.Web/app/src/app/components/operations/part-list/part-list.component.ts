@@ -6,12 +6,11 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, input, OnInit, signal } from '@angular/core';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ProductPartModel } from '../../../api/models';
 import { OrderManagementService } from 'src/app/api/services';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { OperationViewModel } from 'src/app/models/operation-view-model';
 
 @Component({
     selector: 'app-part-list',
@@ -31,7 +30,7 @@ export class PartListComponent implements OnInit {
   constructor(
     private orderManagementService: OrderManagementService,
     public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService
+    private snackbarService: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -42,7 +41,7 @@ export class PartListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: async (e: HttpErrorResponse) => {
-        await this.moryxSnackbar.handleError(e);
+        await this.snackbarService.handleError(e);
         this.isLoading.set(false);
       },
     });

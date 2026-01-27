@@ -4,8 +4,8 @@
 */
 
 
-import { Component, input, Input, OnInit } from '@angular/core';
-import { Entry, NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
+import { Component, input } from '@angular/core';
+import { Entry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 
 @Component({
   selector: 'app-operation-source',
@@ -13,12 +13,12 @@ import { Entry, NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
   styleUrls: ['./operation-source.component.scss'],
   standalone: true,
   imports: [
-    NavigableEntryEditorComponent
+    NavigableEntryEditor
 ]
 })
 export class OperationSourceComponent {
   operationSource = input.required<Entry>();
-  
+
   constructor(
   ) {}
 }
