@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MoryxShell, SearchRequestCallback, SearchSuggestion } from './shell';
@@ -11,26 +11,27 @@ import { localLanguage } from '../utils';
 
 @Component({
   selector: 'app-search-box',
-  standalone: true,
-  imports: [CommonModule, FormsModule ],
-  templateUrl: './search-box.component.html',
-  styleUrl: './search-box.component.css'
+  imports: [FormsModule],
+  templateUrl: './search-box.html',
+  styleUrl: './search-box.css'
 })
-export class SearchBoxComponent implements OnInit {
+export class SearchBox implements OnInit {
 
   @Input() placeholder: string = "Search...";
 
   disabled: boolean = true;
-  subscriber: SearchRequestCallback = function (term: string, complete: boolean) { };
+  subscriber: SearchRequestCallback = function (term: string, complete: boolean) {
+  };
   suggestions: Array<SearchSuggestion> = [];
   searchValue: string = "";
-  id: string = "search-box-"+Math.floor(Math.random() * 100);
+  id: string = "search-box-" + Math.floor(Math.random() * 100);
 
-  constructor(private elementRef: ElementRef) {}
+  constructor(private elementRef: ElementRef) {
+  }
 
   ngOnInit(): void {
     const shell = new Object() as MoryxShell;
-    
+
     shell.initSearchBar = this.initSearchBar.bind(this);
     shell.updateSuggestions = this.updateSuggestions.bind(this);
     shell.initLanguage = this.initLanguage.bind(this);
@@ -43,49 +44,51 @@ export class SearchBoxComponent implements OnInit {
     const element = <HTMLElement>event.target;
     const searchbox = <HTMLElement>this.elementRef.nativeElement;
 
-    if(element.id === this.id ||  searchbox.contains(element)) return;
+    if (element.id === this.id || searchbox.contains(element)) return;
 
     this.suggestions = [];
   }
 
-  updateSuggestions(suggestions: SearchSuggestion[]){
+  updateSuggestions(suggestions: SearchSuggestion[]) {
     this.suggestions = suggestions;
   }
 
-  initLanguage(): string{
-    const localeString =  localLanguage();;
+  initLanguage(): string {
+    const localeString = localLanguage();
+    ;
     const languageString = localeString.slice(0, 2);
     return languageString;
   }
 
-  initSearchBar(callback: SearchRequestCallback  ,disableSearchBox: boolean): void{
+  initSearchBar(callback: SearchRequestCallback, disableSearchBox: boolean): void {
     this.subscriber = callback;
     this.disabled = disableSearchBox;
     this.searchValue = '';
     this.updateSuggestions([]);
   }
 
-  searchKeyUp(event: KeyboardEvent){
+  searchKeyUp(event: KeyboardEvent) {
     const input = <HTMLInputElement>event.target;
     const value = input.value;
     var complete = event.keyCode === 13;
     this.subscriber(value, complete);
-    if (complete || value === '')
-       {
-        this.searchValue = '';
-        this.suggestions = [];
-       }
+    if (complete || value === '') {
+      this.searchValue = '';
+      this.suggestions = [];
+    }
   }
 
-  search(){
-    this.subscriber(this.searchValue,true);
+  search() {
+    this.subscriber(this.searchValue, true);
     this.searchValue = "";
   }
 
 }
 
 declare global {
-  interface Window { shell: MoryxShell;}
+  interface Window {
+    shell: MoryxShell;
+  }
 }
 
 

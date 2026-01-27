@@ -1,7 +1,7 @@
 {
   "name": "moryx.launcher",
-  "version": "1.0.0",
-  "description": "moryx launcher, host for micro-frontends",
+  "version": "10.0.0",
+  "description": "MORYX Launcher, host for micro-frontends",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -14,16 +14,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@angular/animations": "^18.2.0",
-    "@angular/cdk": "^18.2.3",
-    "@angular/common": "^18.2.0",
-    "@angular/compiler": "^18.2.0",
-    "@angular/core": "^18.2.0",
-    "@angular/elements": "^18.2.3",
-    "@angular/forms": "^18.2.0",
-    "@angular/platform-browser": "^18.2.0",
-    "@angular/platform-browser-dynamic": "^18.2.0",
-    "@angular/router": "^18.2.0",
+    "@angular/animations": "^21.1.0",
+    "@angular/common": "^21.1.0",
+    "@angular/compiler": "^21.1.0",
+    "@angular/core": "^21.1.0",
+    "@angular/elements": "^21.1.0",
+    "@angular/forms": "^21.1.0",
+    "@angular/platform-browser": "^21.1.0",
+    "@angular/platform-browser-dynamic": "^21.1.0",
+    "@angular/router": "^21.1.0",
     "autoprefixer": "^10.4.20",
     "css-loader": "^7.1.2",
     "lit": "^3.2.0",
@@ -33,12 +32,12 @@
     "style-loader": "^4.0.0",
     "tailwindcss": "^3.4.10",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.10"
+    "zone.js": "~0.15.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^18.2.3",
-    "@angular/cli": "^18.2.3",
-    "@angular/compiler-cli": "^18.2.0",
+    "@angular/build": "^21.1.0",
+    "@angular/cli": "^21.1.0",
+    "@angular/compiler-cli": "^21.1.0",
     "@types/jasmine": "~5.1.0",
     "autoprefixer": "^10.4.20",
     "copyfiles": "^2.4.1",
@@ -52,7 +51,7 @@
     "postcss": "^8.4.47",
     "sass": "^1.77.8",
     "sass-loader": "^16.0.0",
-    "typescript": "~5.5.2",
+    "typescript": "~5.9.3",
     "webpack": "^5.93.0",
     "webpack-cli": "^5.1.4"
   }

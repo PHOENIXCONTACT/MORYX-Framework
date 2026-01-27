@@ -16,17 +16,16 @@ import {
   LauncherStateService,
 } from '../services/launcher-state.service';
 import { Constants } from '../constants';
-import { NavigationButtonComponent } from '../navigation-button/navigation-button.component';
+import { NavigationButton } from '../navigation-button/navigation-button';
 
 @Component({
   selector: 'app-page-layout',
-  standalone: true,
   imports: [CommonModule],
   providers: [LauncherStateService],
-  templateUrl: './page-layout.component.html',
-  styleUrl: './page-layout.component.css',
+  templateUrl: './page-layout.html',
+  styleUrl: './page-layout.css'
 })
-export class PageLayoutComponent implements AfterContentInit {
+export class PageLayout implements AfterContentInit {
   private KEY_NAME = 'Escape';
   @Input() fullscreenButton: string = 'fullscreen';
   @Input() operatorButton: string = 'operator-mode';
@@ -62,11 +61,11 @@ export class PageLayoutComponent implements AfterContentInit {
     );
     this.fixedButtons = navButtons.filter(
       (x) =>
-        x.getAttribute(NavigationButtonComponent.POSITION_ATTRIBUTE) === 'fixed'
+        x.getAttribute(NavigationButton.POSITION_ATTRIBUTE) === 'fixed'
     );
     this.defaultButtons = navButtons.filter(
       (x) =>
-        x.getAttribute(NavigationButtonComponent.POSITION_ATTRIBUTE) != 'fixed'
+        x.getAttribute(NavigationButton.POSITION_ATTRIBUTE) != 'fixed'
     ).reverse();
     this.hideMenuElementBasedOnScreenSize(
       window.innerWidth,
@@ -93,7 +92,7 @@ export class PageLayoutComponent implements AfterContentInit {
         !operatorModeButtons.some((x) => x.contains(element)))
     )
       return;
-    this.state = { ...this.state, operatorMode: !this.state?.operatorMode };
+    this.state = {...this.state, operatorMode: !this.state?.operatorMode};
   }
 
   handleFullscreen(element: HTMLElement) {
@@ -114,15 +113,15 @@ export class PageLayoutComponent implements AfterContentInit {
     if (eventArg.code != this.KEY_NAME) return;
 
     if (this.state.fullscreen)
-      this.state = { ...this.state, fullscreen: false };
+      this.state = {...this.state, fullscreen: false};
     if (this.state.operatorMode)
-      this.state = { ...this.state, operatorMode: false };
+      this.state = {...this.state, operatorMode: false};
 
     this.launcherState.updateState(this.state);
   }
 
   exitFullscreen() {
-    this.state = { ...this.state, fullscreen: !this.state?.fullscreen };
+    this.state = {...this.state, fullscreen: !this.state?.fullscreen};
   }
 
   @HostListener('window:resize', ['$event'])
