@@ -69,7 +69,7 @@ export class EditProductsService {
 
   loadProduct() {
     let id = 0;
-    const navigation = this.router.getCurrentNavigation();
+    const navigation = this.router.currentNavigation();
     if (
       navigation &&
       (navigation?.finalUrl?.root.children["primary"]?.segments?.length ??
