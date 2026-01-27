@@ -3,13 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { AfterContentInit, AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { localLanguage } from '../utils';
 
 @Component({
   selector: 'app-language-selector',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './language-selector.component.html',
   styleUrl: './language-selector.component.css'
 })

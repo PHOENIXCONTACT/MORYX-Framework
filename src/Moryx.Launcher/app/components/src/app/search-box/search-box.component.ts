@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MoryxShell, SearchRequestCallback, SearchSuggestion } from './shell';
@@ -11,7 +11,7 @@ import { localLanguage } from '../utils';
 
 @Component({
   selector: 'app-search-box',
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './search-box.component.html',
   styleUrl: './search-box.component.css'
 })

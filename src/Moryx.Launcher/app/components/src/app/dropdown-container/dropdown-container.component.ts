@@ -3,14 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { AfterContentInit, Component, ElementRef, Input, OnDestroy } from '@angular/core';
 import { Constants } from '../constants';
 import { DropdownItemClickEventArg, DropdownItemComponent } from '../dropdown-item/dropdown-item.component';
 
 @Component({
   selector: 'app-dropdown-container',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './dropdown-container.component.html',
   styleUrl: './dropdown-container.component.css'
 })

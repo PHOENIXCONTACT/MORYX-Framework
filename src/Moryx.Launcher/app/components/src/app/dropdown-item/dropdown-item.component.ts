@@ -3,12 +3,12 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-dropdown-item',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './dropdown-item.component.html',
   styleUrl: './dropdown-item.component.css'
 })

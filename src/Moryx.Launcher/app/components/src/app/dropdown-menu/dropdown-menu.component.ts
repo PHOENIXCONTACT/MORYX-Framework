@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import {
   AfterContentInit,
   Component,
@@ -15,7 +15,7 @@ import { Constants } from '../constants';
 
 @Component({
   selector: 'app-dropdown-menu',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './dropdown-menu.component.html',
   styleUrl: './dropdown-menu.component.css'
 })
