@@ -3,13 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { ApplicationConfig, importProvidersFrom, provideExperimentalZonelessChangeDetection } from "@angular/core";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { ApplicationConfig, importProvidersFrom } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule } from "@angular/material/dialog";
+import { MatDialogModule } from "@angular/material/dialog";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
@@ -28,23 +28,19 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatTreeModule } from "@angular/material/tree";
 import { BrowserModule } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
-import { AuthModule, ApiInterceptor, API_INTERCEPTOR_PROVIDER, AuthInterceptor, AUTH_INTERCEPTOR_PROVIDER, MoryxSnackbarService } from "@moryx/ngx-web-framework";
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from "@moryx/ngx-web-framework/interceptors";
+import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { environment } from "src/environments/environment";
 import { ApiModule } from "./api/api.module";
 import { provideRouter, withComponentInputBinding, withRouterConfig } from "@angular/router";
 import { routes } from "./app.routes";
 
-export function httpTranslateLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(
-    http,
-    environment.assets + "assets/languages/"
-  );
-}
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes, withComponentInputBinding(), withRouterConfig({ paramsInheritanceStrategy: 'always'})),
+    provideRouter(routes, withComponentInputBinding(), withRouterConfig({paramsInheritanceStrategy: 'always'})),
     importProvidersFrom(
       BrowserModule,
       FormsModule,
@@ -66,26 +62,23 @@ export const appConfig: ApplicationConfig = {
       MatToolbarModule,
       MatSidenavModule,
       MatMenuModule,
-      ApiModule.forRoot({ rootUrl: environment.rootUrl }),
-      AuthModule,
+      ApiModule.forRoot({rootUrl: environment.rootUrl}),
       MatProgressBarModule,
       MatSnackBarModule,
       MatTooltipModule,
-      ReactiveFormsModule,
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useFactory: httpTranslateLoaderFactory,
-          deps: [HttpClient],
-        },
-      })
+      ReactiveFormsModule
     ),
     ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
-    AuthInterceptor,
-    AUTH_INTERCEPTOR_PROVIDER,
-    MoryxSnackbarService,
+    SnackbarService,
     provideHttpClient(withInterceptorsFromDi()),
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({
+        prefix: environment.assets + 'assets/languages/',
+        suffix: '.json'
+      }),
+      fallbackLang: 'en'
+    }),
     provideAnimations(),
   ],
 };

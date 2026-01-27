@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit, signal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { ProductModel, RevisionFilter } from '../../api/models';
@@ -18,19 +18,19 @@ import { MatActionList, MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    selector: 'app-dialog-show-revisions',
-    templateUrl: './dialog-show-revisions.component.html',
-    styleUrls: ['./dialog-show-revisions.component.scss'],
-    standalone: true,
-    imports: [
-      CommonModule,
-      TranslateModule,
-      MatActionList,
-      MatListModule,
-      MatDialogModule,
-      MatButtonModule,
-      MatListModule,
-    ]
+  selector: 'app-dialog-show-revisions',
+  templateUrl: './dialog-show-revisions.component.html',
+  styleUrls: ['./dialog-show-revisions.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MatActionList,
+    MatListModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatListModule,
+  ]
 })
 export class DialogShowRevisionsComponent implements OnInit {
   revisions = signal<ProductModel[]>([]);
@@ -45,9 +45,9 @@ export class DialogShowRevisionsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService
+    private snackbarService: SnackbarService
   ) {
-    this.product.update(_=> data);
+    this.product.update(_ => data);
   }
 
   ngOnInit(): void {
@@ -55,12 +55,12 @@ export class DialogShowRevisionsComponent implements OnInit {
       identifier: this.product()?.identifier,
       revisionFilter: RevisionFilter.All,
     };
-    this.managementService.getTypes({ body: body }).subscribe({
+    this.managementService.getTypes({body: body}).subscribe({
       next: (products) => {
-        if (products !== null) this.revisions.update(_=> products);
+        if (products !== null) this.revisions.update(_ => products);
       },
       error: async (e: HttpErrorResponse) =>
-        await this.moryxSnackbar.handleError(e),
+        await this.snackbarService.handleError(e),
     });
   }
 
@@ -72,7 +72,7 @@ export class DialogShowRevisionsComponent implements OnInit {
     this.dialogRef.close();
     const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
     if (regexSpecificRecipe.test(this.router.url)) {
-      this.router.navigate(['../../'], { relativeTo: this.route }).then(() => {
+      this.router.navigate(['../../'], {relativeTo: this.route}).then(() => {
         this.router
           .navigate([`/details/${product.id}`])
           .then(() => this.editService.loadProductById(product.id ?? 0));

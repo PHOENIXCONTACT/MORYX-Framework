@@ -12,24 +12,23 @@ import {
   signal,
   untracked,
 } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { Entry, NavigableEntryEditorComponent } from "@moryx/ngx-web-framework";
+import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { EditProductsService } from "../../../services/edit-products.service";
 
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { firstValueFrom, lastValueFrom, Subscription } from "rxjs";
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: "app-product-properties",
   templateUrl: "./product-properties.component.html",
   styleUrls: ["./product-properties.component.scss"],
   imports: [
-    NavigableEntryEditorComponent,
+    NavigableEntryEditor,
     MatProgressBarModule,
     MatProgressBarModule,
     MatProgressSpinnerModule
-],
+  ],
   standalone: true,
 })
 export class ProductPropertiesComponent implements OnInit, OnDestroy {
@@ -49,7 +48,7 @@ export class ProductPropertiesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    for(let subscription of this.subscriptions){
+    for (let subscription of this.subscriptions) {
       subscription.unsubscribe();
     }
   }
@@ -59,13 +58,14 @@ export class ProductPropertiesComponent implements OnInit, OnDestroy {
     const subscription = this.editService.currentProduct.subscribe({
       next: product => {
         if (Number(id) === product?.id) {
-          this.properties.set( product.properties);
+          this.properties.set(product.properties);
         }
       }
     });
     this.subscriptions.push(subscription);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 }
 

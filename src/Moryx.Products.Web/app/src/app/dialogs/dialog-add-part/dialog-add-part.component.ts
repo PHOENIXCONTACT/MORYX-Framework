@@ -5,46 +5,40 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, signal } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import {
-  PartConnector,
-  PartModel,
-  ProductModel,
-  RevisionFilter,
-  Selector,
-} from '../../api/models';
+import { PartConnector, ProductModel, RevisionFilter, Selector } from '../../api/models';
 import { ProductManagementService } from '../../api/services';
 import { EditProductsService } from '../../services/edit-products.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatListModule, MatSelectionList, MatSelectionListChange } from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-dialog-add-part',
-    templateUrl: './dialog-add-part.component.html',
-    styleUrls: ['./dialog-add-part.component.scss'],
-    standalone: true,
-    imports: [
-      CommonModule,
-      TranslateModule,
-      FormsModule,
-      ReactiveFormsModule,
-      MatFormFieldModule,
-      MatListModule,
-      MatProgressSpinnerModule,
-      MatDialogModule,
-      MatInputModule,
-      MatButtonModule,
-      MatIconModule,
-    ],
+  selector: 'app-dialog-add-part',
+  templateUrl: './dialog-add-part.component.html',
+  styleUrls: ['./dialog-add-part.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    TranslateModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatListModule,
+    MatProgressSpinnerModule,
+    MatDialogModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+  ],
 })
 export class DialogAddPartComponent {
   possibleParts = signal<ProductModel[]>([]);
@@ -60,7 +54,7 @@ export class DialogAddPartComponent {
     managementService: ProductManagementService,
     public editService: EditProductsService,
     public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService
+    private snackbarService: SnackbarService
   ) {
     const body = {
       includeDeleted: false,
@@ -68,7 +62,7 @@ export class DialogAddPartComponent {
       selector: Selector.Direct,
       type: data?.type,
     };
-    managementService.getTypes({ body: body }).subscribe({
+    managementService.getTypes({body: body}).subscribe({
       next: (products) => {
         let possibleParts = [] as ProductModel[];
         if (data && data.parts?.length && !data.isCollection) {
@@ -79,11 +73,11 @@ export class DialogAddPartComponent {
           possibleParts = products;
         }
 
-        this.possibleParts.update(_=> possibleParts);
-        this.filteredPossibleParts.update(_=> possibleParts);
+        this.possibleParts.update(_ => possibleParts);
+        this.filteredPossibleParts.update(_ => possibleParts);
       },
       error: async (e: HttpErrorResponse) =>
-        await this.moryxSnackbar.handleError(e),
+        await this.snackbarService.handleError(e),
     });
   }
 
@@ -92,11 +86,11 @@ export class DialogAddPartComponent {
   }
 
   onSelectPart(part: ProductModel) {
-    this.selectedPart.update(_=> part);
+    this.selectedPart.update(_ => part);
   }
 
   onSearchTextChanged() {
-    this.filteredPossibleParts.update(_=> this.possibleParts().filter((part) =>
+    this.filteredPossibleParts.update(_ => this.possibleParts().filter((part) =>
       this.partContainsSearchText(part)
     ));
   }

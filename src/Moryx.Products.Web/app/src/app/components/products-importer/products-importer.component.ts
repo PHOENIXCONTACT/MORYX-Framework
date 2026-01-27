@@ -5,17 +5,12 @@
 
 import { Component, effect, OnInit, signal, untracked } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import {
-  Entry,
-  EntryValueType,
-  NavigableEntryEditorComponent,
-  PermissionService,
-} from "@moryx/ngx-web-framework";
+import { Entry, EntryValueType, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { ProductImporter } from "../../api/models";
 import { CacheProductsService } from "../../services/cache-products.service";
-import { Permissions } from "./../../extensions/permissions.extensions";
+import { Permissions } from "../../extensions/permissions.extensions";
 
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -41,22 +36,23 @@ import { MatCardModule } from "@angular/material/card";
     MatInputModule,
     MatOptionModule,
     MatDividerModule,
-    NavigableEntryEditorComponent,
+    NavigableEntryEditor,
     MatIconModule,
     MatProgressBarModule,
     MatSelectModule,
     MatButtonModule,
     MatCardModule
-],
+  ],
 })
 export class ProductsImporterComponent implements OnInit {
   possibleImporters = signal<ProductImporter[]>([]);
   selectedImporter = signal<ProductImporter | undefined>(undefined);
-  importerProperties = signal<Entry>(<Entry>{ value: { type: EntryValueType.Exception} });
+  importerProperties = signal<Entry>(<Entry>{value: {type: EntryValueType.Exception}});
   showProgressBar = signal(false);
 
   TranslationConstants = TranslationConstants;
   Permissions = Permissions;
+
   constructor(
     public cacheService: CacheProductsService,
     private route: ActivatedRoute,
@@ -85,7 +81,8 @@ export class ProductsImporterComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   onImporterChanged(importer: ProductImporter) {
     if (importer.parameters !== undefined) {

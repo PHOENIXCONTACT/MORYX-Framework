@@ -7,10 +7,8 @@ import { formatNumber } from "@angular/common";
 import { HttpErrorResponse, HttpStatusCode } from "@angular/common/http";
 import { Inject, Injectable, LOCALE_ID } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import {
-  MoryxSnackbarService,
-  PrototypeToEntryConverter,
-} from "@moryx/ngx-web-framework";
+import { SnackbarService } from "@moryx/ngx-web-framework/services";
+import { PrototypeToEntryConverter } from "@moryx/ngx-web-framework/entry-editor";
 import { TranslateService } from "@ngx-translate/core";
 import { BehaviorSubject } from "rxjs";
 import {
@@ -31,16 +29,15 @@ import { SessionService } from "./session.service";
 })
 export class EditProductsService {
   public edit: boolean = false;
-  public currentProduct: BehaviorSubject<ProductModel | undefined> =
-    new BehaviorSubject<ProductModel | undefined>(undefined);
-  public references: BehaviorSubject<ProductModel[] | undefined> =
-    new BehaviorSubject<ProductModel[] | undefined>(undefined);
+  public currentProduct: BehaviorSubject<ProductModel | undefined> = new BehaviorSubject<ProductModel | undefined>(undefined);
+  public references: BehaviorSubject<ProductModel[] | undefined> = new BehaviorSubject<ProductModel[] | undefined>(undefined);
   public currentRecipeNumber: number = 0;
   maximumAlreadySavedRecipeId: number = 0;
   public currentPartId: number = 0;
   maximumAlreadySavedPartId: number = 0;
   currentProductId: number = 0;
   TranslationConstants = TranslationConstants;
+
   constructor(
     private managementService: ProductManagementService,
     private router: Router,
@@ -48,21 +45,19 @@ export class EditProductsService {
     private sessionService: SessionService,
     private route: ActivatedRoute,
     @Inject(LOCALE_ID) public locale: string,
-    private moryxSnackbar: MoryxSnackbarService,
+    private snackbarService: SnackbarService,
     private translate: TranslateService
-  ) {}
+  ) {
+  }
 
   loadFromStorage() {
     const productStorageObject = this.sessionService.getWipProduct();
     if (productStorageObject) {
       this.currentProductId = productStorageObject.product.id!;
       this.currentPartId = productStorageObject.details.currentPartId;
-      this.currentRecipeNumber =
-        productStorageObject.details.currentRecipeNumber;
-      this.maximumAlreadySavedPartId =
-        productStorageObject.details.maximumAlreadySavedPartId;
-      this.maximumAlreadySavedRecipeId =
-        productStorageObject.details.maximumAlreadySavedRecipeId;
+      this.currentRecipeNumber = productStorageObject.details.currentRecipeNumber;
+      this.maximumAlreadySavedPartId = productStorageObject.details.maximumAlreadySavedPartId;
+      this.maximumAlreadySavedRecipeId = productStorageObject.details.maximumAlreadySavedRecipeId;
       this.currentProduct.next(productStorageObject.product);
     }
   }
@@ -98,7 +93,7 @@ export class EditProductsService {
   }
 
   loadProductById(id: number) {
-    this.managementService.getTypeById({ id: id }).subscribe({
+    this.managementService.getTypeById({id: id}).subscribe({
       next: (product) => {
         this.currentProduct.next(product);
         this.getReferencesOfCurrentProduct();
@@ -118,9 +113,9 @@ export class EditProductsService {
     }
 
     if (error.error?.title !== undefined) {
-      await this.moryxSnackbar.showError(error.error?.title);
+      await this.snackbarService.showError(error.error?.title);
     } else {
-      await this.moryxSnackbar.handleError(error);
+      await this.snackbarService.handleError(error);
     }
   }
 
@@ -140,12 +135,12 @@ export class EditProductsService {
       revisionFilter: RevisionFilter.Specific,
       selector: Selector.Parent,
     };
-    this.managementService.getTypes({ body: body }).subscribe({
+    this.managementService.getTypes({body: body}).subscribe({
       next: (references) => {
         this.references.next(references);
       },
       error: async (e: HttpErrorResponse) => {
-        await this.moryxSnackbar.handleError(e);
+        await this.snackbarService.handleError(e);
       },
     });
   }
@@ -209,18 +204,18 @@ export class EditProductsService {
     }
 
     this.managementService
-      .updateType({ id: productModel.id, body: productModel })
+      .updateType({id: productModel.id, body: productModel})
       .subscribe((result) => {
         if (result !== productModel?.id) return;
 
         this.cacheService.loadProductsForTree();
-        this.managementService.getTypeById({ id: result }).subscribe({
+        this.managementService.getTypeById({id: result}).subscribe({
           next: (p) => {
             this.currentProduct.next(p);
             this.edit = false;
           },
           error: async (e: HttpErrorResponse) => {
-            await this.moryxSnackbar.handleError(e);
+            await this.snackbarService.handleError(e);
           },
         });
       });
@@ -231,10 +226,10 @@ export class EditProductsService {
     if (!this.currentProduct.value?.id) return;
 
     await this.managementService
-      .getTypeById({ id: this.currentProduct.value.id })
+      .getTypeById({id: this.currentProduct.value.id})
       .toAsync()
       .then(product => this.currentProduct.next(product))
-      .catch(async (error) => await this.moryxSnackbar.handleError(error));
+      .catch(async (error) => await this.snackbarService.handleError(error));
   }
 
   onDuplicate(infos: DuplicateProductInfos) {
@@ -246,14 +241,14 @@ export class EditProductsService {
     );
 
     this.managementService
-      .duplicate({ id: infos.product.id, body: `"${identifier}"` })
+      .duplicate({id: infos.product.id, body: `"${identifier}"`})
       .subscribe({
         next: (product) => {
           this.cacheService.loadProductsForTree();
           const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
           if (regexSpecificRecipe.test(this.router.url)) {
             this.router
-              .navigate(["../../"], { relativeTo: this.route })
+              .navigate(["../../"], {relativeTo: this.route})
               .then(() => {
                 this.router
                   .navigate([`/details/${product.id}`])
@@ -266,7 +261,7 @@ export class EditProductsService {
           }
         },
         error: async (e: HttpErrorResponse) => {
-          await this.moryxSnackbar.handleError(e);
+          await this.snackbarService.handleError(e);
         },
       });
   }

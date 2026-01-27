@@ -6,17 +6,18 @@
 
 import { Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { EmptyStateComponent } from '@moryx/ngx-web-framework';
+import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
+
 @Component({
-    selector: 'app-default-view',
-    templateUrl: './default-view.component.html',
-    styleUrls: ['./default-view.component.scss'],
-    imports: [
-    EmptyStateComponent
-],
-    standalone: true
+  selector: 'app-default-view',
+  templateUrl: './default-view.component.html',
+  styleUrls: ['./default-view.component.scss'],
+  imports: [
+    EmptyState
+  ],
+  standalone: true
 })
 export class DefaultViewComponent implements OnInit {
   headerText = signal('');
@@ -24,7 +25,8 @@ export class DefaultViewComponent implements OnInit {
 
   TranslationConstants = TranslationConstants;
 
-  constructor(private router: Router, public translate: TranslateService) {}
+  constructor(private router: Router, public translate: TranslateService) {
+  }
 
   ngOnInit(): void {
     this.getHeaderAndMessage();
@@ -42,19 +44,19 @@ export class DefaultViewComponent implements OnInit {
       ])
       .subscribe(translations => {
         if (this.router.url.includes('recipes')) {
-          this.headerText.update(_=> translations[TranslationConstants.APP.EMPTY_STATE_RECIPES_HEADER]);
-          this.messageText.update(_=> translations[TranslationConstants.APP.EMPTY_STATE_RECIPES_TEXT]);
+          this.headerText.update(_ => translations[TranslationConstants.APP.EMPTY_STATE_RECIPES_HEADER]);
+          this.messageText.update(_ => translations[TranslationConstants.APP.EMPTY_STATE_RECIPES_TEXT]);
           return;
         }
 
         if (this.router.url.includes('parts')) {
-          this.headerText.update(_=> translations[TranslationConstants.APP.EMPTY_STATE_PARTS_HEADER]);
-          this.messageText.update(_=> translations[TranslationConstants.APP.EMPTY_STATE_PARTS_TEXT]);
+          this.headerText.update(_ => translations[TranslationConstants.APP.EMPTY_STATE_PARTS_HEADER]);
+          this.messageText.update(_ => translations[TranslationConstants.APP.EMPTY_STATE_PARTS_TEXT]);
           return;
         }
 
-        this.headerText.update(_=> translations[TranslationConstants.APP.EMPTY_STATE_HEADER]);
-        this.messageText.update(_=> translations[TranslationConstants.APP.EMPTY_STATE_TEXT]);
+        this.headerText.update(_ => translations[TranslationConstants.APP.EMPTY_STATE_HEADER]);
+        this.messageText.update(_ => translations[TranslationConstants.APP.EMPTY_STATE_TEXT]);
       });
   }
 }

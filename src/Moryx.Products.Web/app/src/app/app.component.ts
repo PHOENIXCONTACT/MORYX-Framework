@@ -25,7 +25,6 @@ import {
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from "@angular/router";
 import {
   LanguageService,
-  PermissionService,
   SearchBarService,
   SearchRequest,
   SearchSuggestion,
@@ -63,29 +62,29 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatInputModule } from "@angular/material/input";
 
 @Component({
-    selector: "app-root",
-    templateUrl: "./app.component.html",
-    styleUrls: ["./app.component.scss"],
-    standalone: true,
-    imports:[ 
-      CommonModule,
-      MatSidenavModule,
-      MatToolbarModule,
-      MatButtonModule,
-      MatTooltipModule,
-      TranslateModule,
-      MatIconModule,
-      FormsModule,
-      MatFormFieldModule,
-      MatSelectModule,
-      MatMenuModule,
-      MatTreeModule,
-      RouterOutlet,
-      MatInputModule
-    ]
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatTooltipModule,
+    TranslateModule,
+    MatIconModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatMenuModule,
+    MatTreeModule,
+    RouterOutlet,
+    MatInputModule
+  ]
 })
 export class AppComponent implements OnInit, OnDestroy {
-  selected = signal<ProductModel| undefined>(undefined);
+  selected = signal<ProductModel | undefined>(undefined);
   products = signal<ProductModel[]>([]);
   productDefinitions = signal<ProductDefinitionModel[]>([]);
   hierarchic = signal(false);
@@ -104,7 +103,7 @@ export class AppComponent implements OnInit, OnDestroy {
   title = "Moryx.Products.Web";
   productsToolbarImage: string =
     environment.assets + "assets/products_toolbar.jpg";
-  
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -115,7 +114,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private sessionService: SessionService,
     private languageService: LanguageService,
-    private permissionService: PermissionService,
     public translate: TranslateService
   ) {
     this.translate.addLangs([
@@ -180,10 +178,9 @@ export class AppComponent implements OnInit, OnDestroy {
       },
     });
 
-    if (!this.ignoreIam)
-    {
+    if (!this.ignoreIam) {
       var permissions = await this.permissionService.getPermissions();
-      this.userPermissions.set( permissions);
+      this.userPermissions.set(permissions);
     }
   }
 
@@ -197,8 +194,8 @@ export class AppComponent implements OnInit, OnDestroy {
     if (!products.length) products = [];
     if (result.submitted) {
       this.searchbar.clearSuggestions();
-      if(products.length > 1)
-        this.router.navigate(["search"], { queryParams: { q: searchterm } });
+      if (products.length > 1)
+        this.router.navigate(["search"], {queryParams: {q: searchterm}});
       else if (products.length === 1)
         this.routeToAnotherProductOnSelect(products[0].id ?? 0);
       this.searchbar.subscribe({
@@ -210,7 +207,7 @@ export class AppComponent implements OnInit, OnDestroy {
       const searchSuggestions = [] as SearchSuggestion[];
       for (let product of products) {
         //TODO: change this in MORYX 10
-        const url = "Products/details/" + product.id; // <= BAD, hard coding a parent url 'Products' is no reliable. 
+        const url = "Products/details/" + product.id; // <= BAD, hard coding a parent url 'Products' is no reliable.
         if (!product.id) continue;
 
         searchSuggestions.push({
@@ -253,7 +250,7 @@ export class AppComponent implements OnInit, OnDestroy {
   createDatasource(hierarchic: boolean) {
     if (this.productDefinitions().length === 0) return;
 
-    this.hierarchic.set( hierarchic);
+    this.hierarchic.set(hierarchic);
 
     let dataSource = [] as ProductNode[];
     if (hierarchic === false) {
@@ -295,7 +292,7 @@ export class AppComponent implements OnInit, OnDestroy {
         currentRecipeNumber: this.editService.currentRecipeNumber,
         maximumAlreadySavedPartId: this.editService.maximumAlreadySavedPartId,
         maximumAlreadySavedRecipeId:
-          this.editService.maximumAlreadySavedRecipeId,
+        this.editService.maximumAlreadySavedRecipeId,
       });
     }
   }
@@ -393,14 +390,14 @@ export class AppComponent implements OnInit, OnDestroy {
   onProductContext(event: MouseEvent, productId: number) {
     event.preventDefault();
     if (productId === 0) return;
-    
-    this.open(event.clientX, event.clientY, productId); 
+
+    this.open(event.clientX, event.clientY, productId);
   }
 
-  private open(x: number, y: number, productId: number){
-    this.trigger().menuData = { id: productId };
+  private open(x: number, y: number, productId: number) {
+    this.trigger().menuData = {id: productId};
     this.menuTopLeftPosition.update(_ => {
-      return { x : `${x}px`, y: `${y}px`}
+      return {x: `${x}px`, y: `${y}px`}
     });
     this.trigger().openMenu();
   }
@@ -422,7 +419,7 @@ export class AppComponent implements OnInit, OnDestroy {
     const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
     const regexParts: RegExp = /(details\/\d*\/parts)/;
     if (regexSpecificRecipe.test(url) || regexParts.test(url)) {
-      this.router.navigate(["../../"], { relativeTo: this.route }).then(() => {
+      this.router.navigate(["../../"], {relativeTo: this.route}).then(() => {
         this.routeToAnotherProductOnSelect(id);
       });
     } else {
@@ -438,7 +435,7 @@ export class AppComponent implements OnInit, OnDestroy {
     const product = this.products().find((p) => p.id === id);
     if (product) {
       this.router
-        .navigate([`details/${product.id}`], { relativeTo: this.route })
+        .navigate([`details/${product.id}`], {relativeTo: this.route})
         .then(() => this.editService.loadProduct());
     } else this.router.navigate([``]);
   }
@@ -460,7 +457,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if ((event.target as HTMLElement).tagName === "MAT-TREE") {
       this.snackBar.dismiss();
       this.router
-        .navigate([``], { relativeTo: this.route })
+        .navigate([``], {relativeTo: this.route})
         .then(() => this.editService.onCancel());
     }
   }
@@ -469,16 +466,16 @@ export class AppComponent implements OnInit, OnDestroy {
     if (!id) return;
     const product = this.products().find((p) => p.id == id);
     if (!product) return;
-    
+
     const dialogRef = this.dialog.open(DialogRemoveProductComponent, {
       data: product,
     });
 
-    dialogRef.afterClosed().subscribe(async(productToBeDeleted) => {
+    dialogRef.afterClosed().subscribe(async (productToBeDeleted) => {
       if (productToBeDeleted) {
-          const actualProduct = productToBeDeleted();
-          await this.cacheService.deleteProduct(actualProduct);
-          this.editService.unloadProduct();
+        const actualProduct = productToBeDeleted();
+        await this.cacheService.deleteProduct(actualProduct);
+        this.editService.unloadProduct();
       }
     });
   }

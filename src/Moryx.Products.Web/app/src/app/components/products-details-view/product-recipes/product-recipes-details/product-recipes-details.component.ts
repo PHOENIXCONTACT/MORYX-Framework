@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -15,21 +15,23 @@ import {
 import { CacheProductsService } from '../../../../services/cache-products.service';
 import { EditProductsService } from '../../../../services/edit-products.service';
 
-import { NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
-import { ProductRecipesDetailsHeaderComponent } from './product-recipes-details-header/product-recipes-details-header.component';
+import { NavigableEntryEditor } from '@moryx/ngx-web-framework';
+import {
+  ProductRecipesDetailsHeaderComponent
+} from './product-recipes-details-header/product-recipes-details-header.component';
 
 @Component({
-    selector: 'app-product-recipes-details',
-    templateUrl: './product-recipes-details.component.html',
-    styleUrls: ['./product-recipes-details.component.scss'],
-    imports: [
+  selector: 'app-product-recipes-details',
+  templateUrl: './product-recipes-details.component.html',
+  styleUrls: ['./product-recipes-details.component.scss'],
+  imports: [
     ProductRecipesDetailsHeaderComponent,
-    NavigableEntryEditorComponent,
+    NavigableEntryEditor,
     TranslateModule
-],
-    standalone: true
+  ],
+  standalone: true
 })
-export class ProductRecipesDetailsComponent  {
+export class ProductRecipesDetailsComponent {
   currentProduct = signal<ProductModel | undefined>(undefined);
   currentRecipe = signal<RecipeModel | undefined>(undefined);
   recipeDefitions = signal<RecipeDefinitionModel[] | undefined>([]);
@@ -52,7 +54,7 @@ export class ProductRecipesDetailsComponent  {
         const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
         if (regexSpecificRecipe.test(url)) {
           this.router
-            .navigate(['../../'], { relativeTo: this.route })
+            .navigate(['../../'], {relativeTo: this.route})
             .then(() => {
               this.routeToDefault(url);
             });
@@ -73,7 +75,8 @@ export class ProductRecipesDetailsComponent  {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   private routeToDefault(url: string) {
     const index = url.lastIndexOf('recipes');

@@ -7,10 +7,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit, signal } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
-import {
-  EmptyStateComponent,
-  MoryxSnackbarService,
-} from "@moryx/ngx-web-framework";
+import { SnackbarService, } from "@moryx/ngx-web-framework/services";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { RecipeModel } from "../../../api/models";
@@ -22,7 +19,6 @@ import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatExpansionModule } from "@angular/material/expansion";
-import { ProductRecipesDetailsComponent } from "./product-recipes-details/product-recipes-details.component";
 
 @Component({
   selector: "app-product-recipes",
@@ -51,8 +47,9 @@ export class ProductRecipesComponent implements OnInit {
     public dialog: MatDialog,
     private managementService: ProductManagementService,
     public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService
-  ) { }
+    private snackbarService: SnackbarService
+  ) {
+  }
 
   ngOnInit(): void {
     const productId = this.route.parent?.snapshot.paramMap.get("id");
@@ -80,11 +77,13 @@ export class ProductRecipesComponent implements OnInit {
       }
     });
   }
+
   setSelectedRecipe(recipeId: String | null) {
     this.selectedRecipe.update((_) =>
       this.recipes().find((recipe) => recipe.id === Number(recipeId))
     );
   }
+
   onAddRecipe() {
     const dialogRef = this.dialog.open(DialogCreateRecipeComponent, {});
 
@@ -93,7 +92,7 @@ export class ProductRecipesComponent implements OnInit {
       if (!result.selectedRecipe) return;
 
       this.managementService
-        .createRecipe({ recipeType: result.selectedRecipe.name })
+        .createRecipe({recipeType: result.selectedRecipe.name})
         .subscribe({
           next: (recipe) => {
             recipe.name = result.recipeName;
@@ -107,7 +106,7 @@ export class ProductRecipesComponent implements OnInit {
             this.router.navigate([url]);
           },
           error: async (e: HttpErrorResponse) =>
-            await this.moryxSnackbar.handleError(e),
+            await this.snackbarService.handleError(e),
         });
     });
   }
