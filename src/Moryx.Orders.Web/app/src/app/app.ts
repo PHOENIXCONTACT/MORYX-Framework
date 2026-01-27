@@ -11,14 +11,14 @@ import { TranslationConstants } from './extensions/translation-constants.extensi
 
 @Component({
     selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
+    templateUrl: './app.html',
+    styleUrls: ['./app.scss'],
     standalone: true,
     imports:[
       RouterOutlet
     ]
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
   title = 'Orders';
   TranslationConstants = TranslationConstants;
 

@@ -18,8 +18,8 @@ import { InterruptDialogData } from "./interrupt-dialog-data";
 
 @Component({
   selector: "app-interrupt-dialog",
-  templateUrl: "./interrupt-dialog.component.html",
-  styleUrls: ["./interrupt-dialog.component.scss"],
+  templateUrl: "./interrupt-dialog.html",
+  styleUrls: ["./interrupt-dialog.scss"],
   standalone: true,
   imports: [
     MatDialogModule,
@@ -28,13 +28,13 @@ import { InterruptDialogData } from "./interrupt-dialog-data";
     MatButtonModule
 ],
 })
-export class InterruptDialogComponent {
+export class InterruptDialog {
   
   isLoading = signal(false);
   TranslationConstants = TranslationConstants;
 
   constructor(
-    private dialog: MatDialogRef<InterruptDialogComponent>,
+    private dialog: MatDialogRef<InterruptDialog>,
     @Inject(MAT_DIALOG_DATA) public data: InterruptDialogData,
     public translate: TranslateService
   ) {}

@@ -9,14 +9,14 @@ import { Entry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-edit
 
 @Component({
   selector: 'app-operation-source',
-  templateUrl: './operation-source.component.html',
-  styleUrls: ['./operation-source.component.scss'],
+  templateUrl: './operation-source.html',
+  styleUrls: ['./operation-source.scss'],
   standalone: true,
   imports: [
     NavigableEntryEditor
 ]
 })
-export class OperationSourceComponent {
+export class OperationSource {
   operationSource = input.required<Entry>();
 
   constructor(

@@ -29,8 +29,8 @@ import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-begin-dialog',
-  templateUrl: './begin-dialog.component.html',
-  styleUrls: ['./begin-dialog.component.scss'],
+  templateUrl: './begin-dialog.html',
+  styleUrls: ['./begin-dialog.scss'],
   standalone: true,
   imports: [
     MatDialogModule,
@@ -50,7 +50,7 @@ import { MatTooltip } from "@angular/material/tooltip";
     MatTooltip
   ],
 })
-export class BeginDialogComponent implements OnInit {
+export class BeginDialog implements OnInit {
   // Class properties for context values
   canBegin: boolean;
   canReduce: boolean;
@@ -107,7 +107,7 @@ export class BeginDialogComponent implements OnInit {
   filteredOperators!: Observable<AssignableOperator[]>;
 
   constructor(
-    public dialog: MatDialogRef<BeginDialogComponent, BeginModel | undefined>,
+    public dialog: MatDialogRef<BeginDialog, BeginModel | undefined>,
     @Inject(MAT_DIALOG_DATA) data: BeginDialogData,
     private operatorService: OperatorsService,
     public translate: TranslateService

@@ -28,8 +28,8 @@ import { MatInputModule } from "@angular/material/input";
 
 @Component({
   selector: "app-report-dialog",
-  templateUrl: "./report-dialog.component.html",
-  styleUrls: ["./report-dialog.component.scss"],
+  templateUrl: "./report-dialog.html",
+  styleUrls: ["./report-dialog.scss"],
   standalone: true,
   imports: [
     CommonModule,
@@ -46,7 +46,7 @@ import { MatInputModule } from "@angular/material/input";
     MatRadioGroup
   ],
 })
-export class ReportDialogComponent implements OnInit {
+export class ReportDialog implements OnInit {
   reportContext = signal<ReportContext | undefined>(undefined);
   isLoading = signal(false);
   success = signal(0);
@@ -72,7 +72,7 @@ export class ReportDialogComponent implements OnInit {
         this.confirmationType.set(value);
     }
   constructor(
-    private dialog: MatDialogRef<ReportDialogComponent>,
+    private dialog: MatDialogRef<ReportDialog>,
     @Inject(MAT_DIALOG_DATA) public data: ReportDialogData,
     public translate: TranslateService
   ) {}

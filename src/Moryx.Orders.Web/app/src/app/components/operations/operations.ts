@@ -16,10 +16,10 @@ import { Observable } from 'rxjs';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { OperationService } from 'src/app/services/operation.service';
 import { OrderManagementService } from '../../api/services/order-management.service';
-import { BeginDialogComponent, BeginDialogData } from '../../dialogs/begin-dialog/begin-dialog.component';
-import { CreateDialogComponent } from '../../dialogs/create-dialog/create-dialog.component';
-import { ReportDialogComponent, ReportDialogData } from '../../dialogs/report-dialog/report-dialog.component';
-import { InterruptDialogComponent } from '../../dialogs/interrupt-dialog/interrupt-dialog.component';
+import { BeginDialog, BeginDialogData } from '../../dialogs/begin-dialog/begin-dialog';
+import { CreateDialog } from '../../dialogs/create-dialog/create-dialog';
+import { ReportDialog, ReportDialogData } from '../../dialogs/report-dialog/report-dialog';
+import { InterruptDialog } from '../../dialogs/interrupt-dialog/interrupt-dialog';
 import { InterruptDialogData } from '../../dialogs/interrupt-dialog/interrupt-dialog-data';
 import '../../extensions/observable.extensions';
 import { OperationViewModel } from '../../models/operation-view-model';
@@ -32,9 +32,9 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { DrawerContent } from './drawer-content';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { LogMessageListComponent } from './log-message-list/log-message-list.component';
-import { PartListComponent } from './part-list/part-list.component';
-import { OperationSourceComponent } from './operation-source/operation-source.component';
+import { LogMessageList } from './log-message-list/log-message-list';
+import { PartList } from './part-list/part-list';
+import { OperationSource } from './operation-source/operation-source';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -43,17 +43,17 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-operations',
-  templateUrl: './operations.component.html',
-  styleUrls: ['./operations.component.scss'],
+  templateUrl: './operations.html',
+  styleUrls: ['./operations.scss'],
   imports: [
     CommonModule,
     TranslateModule,
     MatIconModule,
     MatDrawer,
     MatSidenavModule,
-    LogMessageListComponent,
-    PartListComponent,
-    OperationSourceComponent,
+    LogMessageList,
+    PartList,
+    OperationSource,
     MatExpansionModule,
     MatButtonModule,
     MatBadgeModule,
@@ -64,7 +64,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   ],
   standalone:true
 })
-export class OperationsComponent implements OnInit, OnDestroy {
+export class Operations implements OnInit, OnDestroy {
   operations = signal<OperationViewModel[]>([]);
   DrawerContent = DrawerContent;
   drawerContent = signal<DrawerContent>(DrawerContent.None);
@@ -171,7 +171,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
       .getBeginContext({ guid: operation.model.identifier! })
       .toAsync()
       .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
-    const beginDialog = this.dialog.open(BeginDialogComponent, {
+    const beginDialog = this.dialog.open(BeginDialog, {
       data: <BeginDialogData>{
         context: context,
         operation: operation,
@@ -191,7 +191,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
   }
 
   onInterrupt(operation: OperationViewModel) {
-    this.dialog.open(InterruptDialogComponent, {
+    this.dialog.open(InterruptDialog, {
       data: <InterruptDialogData>{
         operation: operation,
         onSubmit: this.submitInterruption.bind(this),
@@ -206,7 +206,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
   }
 
   onReport(operation: OperationViewModel) {
-    this.dialog.open(ReportDialogComponent, {
+    this.dialog.open(ReportDialog, {
       data: <ReportDialogData>{
         operation: operation,
         isReport: true,
@@ -228,7 +228,7 @@ export class OperationsComponent implements OnInit, OnDestroy {
   }
 
   onCreate() {
-    this.dialog.open(CreateDialogComponent);
+    this.dialog.open(CreateDialog);
   }
 
   async onAssign(operation: OperationViewModel) {

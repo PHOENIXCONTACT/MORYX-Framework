@@ -10,7 +10,7 @@
 export const environment = {
   production: false,
   assets: "/",
-  rootUrl: 'https://localhost:5002',
+  rootUrl: 'https://localhost:5000',
 };
 
 /*

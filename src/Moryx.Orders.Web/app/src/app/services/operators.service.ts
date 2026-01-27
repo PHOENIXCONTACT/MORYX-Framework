@@ -17,7 +17,8 @@ export class OperatorsService {
     return this._available;
   }
 
-  constructor(private operators: OperatorManagementService) {}
+  constructor(private operators: OperatorManagementService) {
+  }
 
   async getOperators(): Promise<AssignableOperator[]> {
     if (!this._available) return [];
@@ -34,7 +35,7 @@ export class OperatorsService {
   async addOperator(identifier: string) {
     if (!this._available) return;
 
-    return await this.operators.add({ body: { identifier: identifier } as OperatorModel }).toAsync();
+    return await this.operators.add({body: {identifier: identifier} as OperatorModel}).toAsync();
   }
 }
 

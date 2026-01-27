@@ -18,23 +18,23 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { FormsModule } from '@angular/forms';
 import {
-  BeginDialogComponent,
+  BeginDialog,
   BeginDialogData
-} from './begin-dialog.component';
+} from './begin-dialog';
 
 class DialogRefMock {
   close(result: any) {}
 }
 
-describe('BeginDialogComponent', () => {
-  let component: BeginDialogComponent;
-  let fixture: ComponentFixture<BeginDialogComponent>;
+describe('BeginDialog', () => {
+  let component: BeginDialog;
+  let fixture: ComponentFixture<BeginDialog>;
   let dialogData = <BeginDialogData>{ context: {}, operation: { model: {} } };
-  let dialogRef: MatDialogRef<BeginDialogComponent>;
+  let dialogRef: MatDialogRef<BeginDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [BeginDialogComponent],
+    declarations: [BeginDialog],
     providers: [
         { provide: MatDialogRef, useClass: DialogRefMock },
         { provide: MAT_DIALOG_DATA, useValue: dialogData },
@@ -52,7 +52,7 @@ describe('BeginDialogComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BeginDialogComponent);
+    fixture = TestBed.createComponent(BeginDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

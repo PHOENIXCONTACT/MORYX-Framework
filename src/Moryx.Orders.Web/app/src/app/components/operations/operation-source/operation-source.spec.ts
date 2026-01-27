@@ -5,21 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PartListComponent } from './part-list.component';
+import { OperationSource } from './operation-source';
 
-describe('PartListComponent', () => {
-  let component: PartListComponent;
-  let fixture: ComponentFixture<PartListComponent>;
+describe('OperationSource', () => {
+  let component: OperationSource;
+  let fixture: ComponentFixture<OperationSource>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [PartListComponent]
-})
+      declarations: [ OperationSource ]
+    })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PartListComponent);
+    fixture = TestBed.createComponent(OperationSource);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

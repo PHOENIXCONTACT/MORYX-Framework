@@ -4,7 +4,6 @@
 */
 
 import { OverlayContainer } from '@angular/cdk/overlay';
-import {} from '@angular/common/http';
 import {
   ComponentFixture,
   fakeAsync,
@@ -24,7 +23,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import {
@@ -38,12 +37,12 @@ import {
   ProductManagementService
 } from 'src/app/api/services';
 
-import { CreateDialogComponent } from './create-dialog.component';
+import { CreateDialog } from './create-dialog';
 
-describe('CreateDialogComponent', () => {
-  let component: CreateDialogComponent;
+describe('CreateDialog', () => {
+  let component: CreateDialog;
   let dialog: MatDialog;
-  let fixture: ComponentFixture<CreateDialogComponent>;
+  let fixture: ComponentFixture<CreateDialog>;
   let overlayContainerElement: HTMLElement;
 
   let recipes = [
@@ -85,12 +84,12 @@ describe('CreateDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [CreateDialogComponent],
+    declarations: [CreateDialog],
     providers: [
         { provide: OrderManagementService, useValue: orderManagementMock },
         { provide: ProductManagementService, useValue: productManagementMock },
         { provide: MatDialogRef, useValue: {} },
-        { provide: MoryxSnackbarService, useValue: {} },
+        { provide: SnackbarService, useValue: {} },
         {
             provide: OverlayContainer,
             useFactory: () => {
@@ -117,7 +116,7 @@ describe('CreateDialogComponent', () => {
 
   beforeEach(() => {
     dialog = TestBed.inject(MatDialog);
-    fixture = TestBed.createComponent(CreateDialogComponent);
+    fixture = TestBed.createComponent(CreateDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -128,12 +127,12 @@ describe('CreateDialogComponent', () => {
 
   it('should set a default recipe', fakeAsync(() => {
     // TODO: also check the DOM for showing the selected element
-    var component = dialog.open(CreateDialogComponent, { data: undefined });
-    component.componentInstance.selectedProduct = {};
+    var component = dialog.open(CreateDialog, { data: undefined });
+    component.componentInstance.selectedProduct.set({});
     tick();
     fixture.detectChanges();
 
-    expect(component.componentInstance.selectedRecipe.name).toBe('Recipe 2');
+    expect(component.componentInstance.selectedRecipe().name).toBe('Recipe 2');
   }));
 });
 

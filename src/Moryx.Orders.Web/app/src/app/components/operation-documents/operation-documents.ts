@@ -26,8 +26,8 @@ import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-operation-documents',
-    templateUrl: './operation-documents.component.html',
-    styleUrls: ['./operation-documents.component.scss'],
+    templateUrl: './operation-documents.html',
+    styleUrls: ['./operation-documents.scss'],
     imports:[
       MatProgressBarModule,
       MatSidenavModule,
@@ -43,7 +43,7 @@ import { environment } from 'src/environments/environment';
     ],
     standalone: true
 })
-export class OperationDocumentsComponent implements OnInit {
+export class OperationDocuments implements OnInit {
   isLoading = signal<boolean>(false);
   operation = signal<OperationModel>(<OperationModel>{});
   documents = signal<DocumentModel[]>([]);

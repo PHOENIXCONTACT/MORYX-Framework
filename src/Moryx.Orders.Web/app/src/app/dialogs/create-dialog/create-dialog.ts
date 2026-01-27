@@ -50,8 +50,8 @@ enum Action {
 
 @Component({
   selector: "app-create-dialog",
-  templateUrl: "./create-dialog.component.html",
-  styleUrls: ["./create-dialog.component.scss"],
+  templateUrl: "./create-dialog.html",
+  styleUrls: ["./create-dialog.scss"],
   standalone: true,
   imports: [
     MatDialogModule,
@@ -72,7 +72,7 @@ enum Action {
   ],
   providers: [],
 })
-export class CreateDialogComponent implements OnInit {
+export class CreateDialog implements OnInit {
   orderNumber = signal("");
   operationNumber = signal("");
   amount = signal(0);
@@ -137,7 +137,7 @@ export class CreateDialogComponent implements OnInit {
   constructor(
     private orderManagementService: OrderManagementService,
     private productManagementService: ProductManagementService,
-    private dialog: MatDialogRef<CreateDialogComponent>,
+    private dialog: MatDialogRef<CreateDialog>,
     public translate: TranslateService,
     private snackbarService: SnackbarService
   ) {

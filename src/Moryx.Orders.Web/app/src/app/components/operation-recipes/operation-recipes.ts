@@ -32,8 +32,8 @@ import {MatSelectModule} from '@angular/material/select';
 
 @Component({
   selector: "app-operation-recipes",
-  templateUrl: "./operation-recipes.component.html",
-  styleUrls: ["./operation-recipes.component.scss"],
+  templateUrl: "./operation-recipes.html",
+  styleUrls: ["./operation-recipes.scss"],
   imports: [
     MatProgressBarModule,
     MatSidenavModule,
@@ -54,7 +54,7 @@ import {MatSelectModule} from '@angular/material/select';
   ],
   standalone: true,
 })
-export class OperationRecipesComponent implements OnInit {
+export class OperationRecipes implements OnInit {
   recipes = signal<RecipeModel[]>([]);
   operation = signal<OperationModel>(<OperationModel>{});
   possibleWorkplans = signal<WorkplanModel[]>([]);

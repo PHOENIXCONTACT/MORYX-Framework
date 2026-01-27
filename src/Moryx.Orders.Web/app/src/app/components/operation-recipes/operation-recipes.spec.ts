@@ -5,21 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OperationRecipesComponent } from './operation-recipes.component';
+import { OperationRecipes } from './operation-recipes';
 
-describe('OperationRecipesComponent', () => {
-  let component: OperationRecipesComponent;
-  let fixture: ComponentFixture<OperationRecipesComponent>;
+describe('OperationRecipes', () => {
+  let component: OperationRecipes;
+  let fixture: ComponentFixture<OperationRecipes>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [OperationRecipesComponent]
+    declarations: [OperationRecipes]
 })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OperationRecipesComponent);
+    fixture = TestBed.createComponent(OperationRecipes);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

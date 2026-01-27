@@ -14,14 +14,14 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
 
 @Component({
     selector: 'app-part-list',
-    templateUrl: './part-list.component.html',
-    styleUrls: ['./part-list.component.scss'],
+    templateUrl: './part-list.html',
+    styleUrls: ['./part-list.scss'],
     standalone: true,
     imports: [
     TranslateModule
 ],
 })
-export class PartListComponent implements OnInit {
+export class PartList implements OnInit {
   guid = input.required<string>();
   isLoading = signal(false);
   parts = signal<ProductPartModel[]>([]);

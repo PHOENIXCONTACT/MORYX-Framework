@@ -5,21 +5,24 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OperationsComponent } from './operations.component';
+import { LogMessageList } from './log-message-list';
 
-describe('OperationsComponent', () => {
-  let component: OperationsComponent;
-  let fixture: ComponentFixture<OperationsComponent>;
+describe('LogMessageList', () => {
+  let component: LogMessageList;
+  let fixture: ComponentFixture<LogMessageList>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [OperationsComponent]
+    declarations: [LogMessageList],
+    providers: [
+        {}
+    ]
 })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OperationsComponent);
+    fixture = TestBed.createComponent(LogMessageList);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

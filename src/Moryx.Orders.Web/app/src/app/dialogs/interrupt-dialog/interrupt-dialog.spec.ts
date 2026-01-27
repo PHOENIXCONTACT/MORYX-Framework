@@ -5,21 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReportDialogComponent } from './report-dialog.component';
+import { InterruptDialog } from './interrupt-dialog';
 
-describe('InterruptDialogComponent', () => {
-  let component: ReportDialogComponent;
-  let fixture: ComponentFixture<ReportDialogComponent>;
+describe('InterruptDialog', () => {
+  let component: InterruptDialog;
+  let fixture: ComponentFixture<InterruptDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [ReportDialogComponent]
+    declarations: [InterruptDialog]
 })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ReportDialogComponent);
+    fixture = TestBed.createComponent(InterruptDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

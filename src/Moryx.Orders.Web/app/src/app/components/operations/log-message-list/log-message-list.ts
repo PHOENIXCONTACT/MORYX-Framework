@@ -15,8 +15,8 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
 
 @Component({
   selector: 'app-log-message-list',
-  templateUrl: './log-message-list.component.html',
-  styleUrls: ['./log-message-list.component.scss'],
+  templateUrl: './log-message-list.html',
+  styleUrls: ['./log-message-list.scss'],
   imports: [
     CommonModule,
     MatExpansionModule,
@@ -24,7 +24,7 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
   ],
   standalone: true
 })
-export class LogMessageListComponent implements OnInit {
+export class LogMessageList implements OnInit {
   guid = input.required<string>();
   logMessages = signal<OperationLogMessageModel[]>([]);
   isLoading = signal<boolean>(false);
