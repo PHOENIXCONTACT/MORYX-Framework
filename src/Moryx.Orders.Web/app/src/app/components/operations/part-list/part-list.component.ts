@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, input, OnInit, signal } from '@angular/core';
 import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
@@ -19,9 +19,8 @@ import { OperationViewModel } from 'src/app/models/operation-view-model';
     styleUrls: ['./part-list.component.scss'],
     standalone: true,
     imports: [
-      CommonModule,
-      TranslateModule,
-    ],
+    TranslateModule
+],
 })
 export class PartListComponent implements OnInit {
   guid = input.required<string>();

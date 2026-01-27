@@ -1,13 +1,15 @@
 <h2 mat-dialog-title class="interrupt-dialog-title">
-  {{ TranslationConstants.INTERRUPT_DIALOG.TITLE | translate }}  
-    {{ data.operation.model.order }} - {{ data.operation.model.number }}
+  {{ TranslationConstants.INTERRUPT_DIALOG.TITLE | translate }}
+  {{ data.operation.model.order }} - {{ data.operation.model.number }}
 </h2>
 <mat-dialog-content>
   <p>
     {{ TranslationConstants.INTERRUPT_DIALOG.PROMPT | translate }}
   </p>
-  
-  <mat-progress-bar mode="indeterminate" *ngIf="isLoading()"></mat-progress-bar>
+
+  @if (isLoading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
   <!-- TODO: Add optional operator selection for the interrupt action -->
 
 </mat-dialog-content>

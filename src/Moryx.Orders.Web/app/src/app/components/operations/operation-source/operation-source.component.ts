@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, input, Input, OnInit } from '@angular/core';
 import { Entry, NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
 
@@ -13,9 +13,8 @@ import { Entry, NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
   styleUrls: ['./operation-source.component.scss'],
   standalone: true,
   imports: [
-    CommonModule,
     NavigableEntryEditorComponent
-  ]
+]
 })
 export class OperationSourceComponent {
   operationSource = input.required<Entry>();
