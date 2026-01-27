@@ -20,11 +20,10 @@ import { NavigationButtonComponent } from '../navigation-button/navigation-butto
 
 @Component({
   selector: 'app-page-layout',
-  standalone: true,
   imports: [CommonModule],
   providers: [LauncherStateService],
   templateUrl: './page-layout.component.html',
-  styleUrl: './page-layout.component.css',
+  styleUrl: './page-layout.component.css'
 })
 export class PageLayoutComponent implements AfterContentInit {
   private KEY_NAME = 'Escape';
@@ -93,7 +92,7 @@ export class PageLayoutComponent implements AfterContentInit {
         !operatorModeButtons.some((x) => x.contains(element)))
     )
       return;
-    this.state = { ...this.state, operatorMode: !this.state?.operatorMode };
+    this.state = {...this.state, operatorMode: !this.state?.operatorMode};
   }
 
   handleFullscreen(element: HTMLElement) {
@@ -114,15 +113,15 @@ export class PageLayoutComponent implements AfterContentInit {
     if (eventArg.code != this.KEY_NAME) return;
 
     if (this.state.fullscreen)
-      this.state = { ...this.state, fullscreen: false };
+      this.state = {...this.state, fullscreen: false};
     if (this.state.operatorMode)
-      this.state = { ...this.state, operatorMode: false };
+      this.state = {...this.state, operatorMode: false};
 
     this.launcherState.updateState(this.state);
   }
 
   exitFullscreen() {
-    this.state = { ...this.state, fullscreen: !this.state?.fullscreen };
+    this.state = {...this.state, fullscreen: !this.state?.fullscreen};
   }
 
   @HostListener('window:resize', ['$event'])

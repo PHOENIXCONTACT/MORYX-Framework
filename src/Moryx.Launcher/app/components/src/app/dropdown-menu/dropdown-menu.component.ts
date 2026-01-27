@@ -15,20 +15,21 @@ import { Constants } from '../constants';
 
 @Component({
   selector: 'app-dropdown-menu',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './dropdown-menu.component.html',
-  styleUrl: './dropdown-menu.component.css',
+  styleUrl: './dropdown-menu.component.css'
 })
 export class DropdownMenuComponent implements AfterContentInit {
   @Input() align: DropdownMenuAlignement = 'right';
   @Input() position: DropdownMenuPosition = 'bottom';
-  id: string = "dropdown-menu-"+Math.floor(Math.random() * 100);
+  id: string = "dropdown-menu-" + Math.floor(Math.random() * 100);
   left: number = 0;
   @Input() level: 'root' | 'child' = 'root';
   container: HTMLElement | undefined;
   top: number = 0;
-  constructor(private elementRef: ElementRef) {}
+
+  constructor(private elementRef: ElementRef) {
+  }
 
   ngAfterContentInit(): void {
     this.container = this.mainContainer();
@@ -45,22 +46,22 @@ export class DropdownMenuComponent implements AfterContentInit {
     const buttonWidth = button.offsetWidth;
 
     if (this.align === 'left') {
-      if(this.position === 'bottom'){
+      if (this.position === 'bottom') {
         this.left = 0;
         this.top = buttonRectangle.y + buttonHeight;
       }
-      if(this.position === 'top'){
+      if (this.position === 'top') {
         this.left = 0;
         this.top = -this.container.offsetHeight;
       }
     }
-    
+
     if (this.align === 'right') {
-      if(this.position === 'bottom'){
+      if (this.position === 'bottom') {
         this.left = -this.container.offsetWidth + buttonWidth;
         this.top = buttonRectangle.top + buttonHeight;
       }
-      if(this.position === 'top'){
+      if (this.position === 'top') {
         this.left = -this.container.offsetWidth + buttonWidth;
         this.top = -this.container.offsetHeight;
       }
@@ -82,7 +83,7 @@ export class DropdownMenuComponent implements AfterContentInit {
       width: window.innerWidth,
       height: window.innerHeight,
     };
-    
+
     // check left side
     if (container.getBoundingClientRect().x < screen.x) {
       container.style.left = screen.x + 'px'; // pull the object back onto the screen
@@ -107,9 +108,9 @@ export class DropdownMenuComponent implements AfterContentInit {
 
   // TO-DO: autoposition sub item container base on visibility in the screen (if the width of the container is visible on the left put it there otherwise put it on the right)
   alignSubitemToContainer(event: Event) {
-    const subItemClicked = this.findParentByTag(Constants.WebComponentNames.DropdownSubItem,<HTMLElement>event.target);
+    const subItemClicked = this.findParentByTag(Constants.WebComponentNames.DropdownSubItem, <HTMLElement>event.target);
 
-    if(!subItemClicked) return;
+    if (!subItemClicked) return;
     const subItemClickedRectangle = subItemClicked.getBoundingClientRect();
     this.left = -subItemClickedRectangle.width;
     this.top = 0;
@@ -160,11 +161,11 @@ export class DropdownMenuComponent implements AfterContentInit {
     return result.length ? <HTMLElement>result[0] : undefined;
   }
 
-  findParentByTag(tag: string , element: HTMLElement): HTMLElement | undefined{
-    if(!element) return undefined;
-    if(tag === element.tagName.toLowerCase()) return element;
+  findParentByTag(tag: string, element: HTMLElement): HTMLElement | undefined {
+    if (!element) return undefined;
+    if (tag === element.tagName.toLowerCase()) return element;
 
-    return this.findParentByTag(tag,<HTMLElement>element.parentElement);
+    return this.findParentByTag(tag, <HTMLElement>element.parentElement);
   }
 }
 

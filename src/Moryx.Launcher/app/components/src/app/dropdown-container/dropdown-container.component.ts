@@ -10,7 +10,6 @@ import { DropdownItemClickEventArg, DropdownItemComponent } from '../dropdown-it
 
 @Component({
   selector: 'app-dropdown-container',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './dropdown-container.component.html',
   styleUrl: './dropdown-container.component.css'
@@ -18,8 +17,9 @@ import { DropdownItemClickEventArg, DropdownItemComponent } from '../dropdown-it
 export class DropdownContainerComponent implements AfterContentInit, OnDestroy {
 
   @Input() class: string = "";
+
   constructor(private elementRef: ElementRef) {
-    
+
   }
 
   ngAfterContentInit(): void {
@@ -36,11 +36,11 @@ export class DropdownContainerComponent implements AfterContentInit, OnDestroy {
     const elements = Array.from(items);
 
     elements.forEach(dropdownItem => {
-      let dropdownItemHtlElement  = <HTMLElement>dropdownItem;
-      dropdownItemHtlElement.removeEventListener("onClick", 
-        ((e: CustomEvent )=>  this.handleDropdownItemClick(e,this.dropdownContainer())) as EventListener);
+      let dropdownItemHtlElement = <HTMLElement>dropdownItem;
+      dropdownItemHtlElement.removeEventListener("onClick",
+        ((e: CustomEvent) => this.handleDropdownItemClick(e, this.dropdownContainer())) as EventListener);
     });
-    
+
   }
 
   subscribe() {
@@ -49,26 +49,26 @@ export class DropdownContainerComponent implements AfterContentInit, OnDestroy {
     const elements = Array.from(items);
 
     elements.forEach(dropdownItem => {
-      let dropdownItemHtlElement  = <HTMLElement>dropdownItem;
-      dropdownItemHtlElement.addEventListener("onClick", 
-        ((e: CustomEvent )=>  this.handleDropdownItemClick(e,this.dropdownContainer())) as EventListener);
+      let dropdownItemHtlElement = <HTMLElement>dropdownItem;
+      dropdownItemHtlElement.addEventListener("onClick",
+        ((e: CustomEvent) => this.handleDropdownItemClick(e, this.dropdownContainer())) as EventListener);
     });
-    
+
   }
 
-  handleDropdownItemClick(event: CustomEvent,container: HTMLElement){
+  handleDropdownItemClick(event: CustomEvent, container: HTMLElement) {
     const dropdownClickEventArg = <DropdownItemClickEventArg>event.detail;
-    if(!dropdownClickEventArg.closeOnClick) return;
-    
+    if (!dropdownClickEventArg.closeOnClick) return;
+
     this.hideContainer(container);
   }
 
-  dropdownContainer(){
+  dropdownContainer() {
     return <HTMLElement>this.elementRef.nativeElement;
   }
 
-  hideContainer(container: HTMLElement){
-    if(!container) return;
+  hideContainer(container: HTMLElement) {
+    if (!container) return;
     container.style.display = "none";
   }
 

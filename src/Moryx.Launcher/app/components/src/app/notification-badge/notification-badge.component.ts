@@ -7,17 +7,17 @@ import { Component, Input, input, NgZone, OnDestroy, OnInit } from '@angular/cor
 
 @Component({
   selector: 'app-notification-badge',
-  standalone: true,
   imports: [],
   templateUrl: './notification-badge.component.html',
-  styleUrl: './notification-badge.component.css',
+  styleUrl: './notification-badge.component.css'
 })
 export class NotificationBadgeComponent implements OnInit, OnDestroy {
   @Input() eventstream: string = '';
   count: number = 0;
   eventSource: EventSource | undefined;
 
-  constructor(private ngZone: NgZone) {}
+  constructor(private ngZone: NgZone) {
+  }
 
   ngOnInit(): void {
     if (!this.eventstream) return;
@@ -27,7 +27,7 @@ export class NotificationBadgeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.eventSource?.removeEventListener('message',this.onReceived);
+    this.eventSource?.removeEventListener('message', this.onReceived);
   }
 
   onReceived(event: any) {
@@ -44,8 +44,8 @@ export class NotificationBadgeComponent implements OnInit, OnDestroy {
     });
   }
 
-  countString(){
-    if(this.count > 9) return '9+';
+  countString() {
+    if (this.count > 9) return '9+';
     return this.count;
   }
 }

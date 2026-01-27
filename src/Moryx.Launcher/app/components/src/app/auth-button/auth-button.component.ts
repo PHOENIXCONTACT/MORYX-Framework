@@ -7,10 +7,9 @@ import { Component, input, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-auth-button',
-  standalone: true,
   imports: [],
   templateUrl: './auth-button.component.html',
-  styleUrl: './auth-button.component.css',
+  styleUrl: './auth-button.component.css'
 })
 export class SignInButtonComponent implements OnInit {
   @Input() authurl: string | undefined;
