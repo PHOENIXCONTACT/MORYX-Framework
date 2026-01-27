@@ -9,7 +9,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { DuplicateProductInfos } from 'src/app/models/DuplicateProductInfos';
 import { ProductModel } from '../../api/models';
-import { CommonModule } from '@angular/common';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -21,14 +21,13 @@ import { MatButtonModule } from '@angular/material/button';
     styleUrls: ['./dialog-duplicate-product.component.scss'],
     standalone: true,
     imports: [
-      CommonModule,
-      MatFormFieldModule,
-      FormsModule,
-      TranslateModule,
-      MatDialogModule,
-      MatInputModule,
-      MatButtonModule
-    ]
+    MatFormFieldModule,
+    FormsModule,
+    TranslateModule,
+    MatDialogModule,
+    MatInputModule,
+    MatButtonModule
+]
 })
 export class DialogDuplicateProductComponent {
   productToDuplicate = signal<ProductModel | undefined>(undefined);

@@ -4,16 +4,17 @@
 
 <div mat-dialog-content class="show-revisions-list">
   <mat-action-list cdkFocusInitial>
-    <mat-list-item
-      class="show-revisions-list-item"
-      *ngFor="let product of revisions()"
-      (click)="onOpen(product)"
-    >
-      {{
+    @for (product of revisions(); track product) {
+      <mat-list-item
+        class="show-revisions-list-item"
+        (click)="onOpen(product)"
+        >
+        {{
         editService.createProductIdentity(product.identifier, product.revision)
-      }}
-      {{ product.name | slice: 0:40 }}
-    </mat-list-item>
+        }}
+        {{ product.name | slice: 0:40 }}
+      </mat-list-item>
+    }
   </mat-action-list>
 </div>
 

@@ -7,33 +7,42 @@
     aria-label="Recipe Name"
     [disabled]="edit() === false"
     [(ngModel)]="recipe().name"
-  />
+    />
 </mat-form-field>
-<mat-form-field appearance="outline" *ngIf="hasWorkplans()">
-  <mat-label>{{ TranslationConstants.SHARED.WORKPLAN | translate }}</mat-label>
-  <mat-select
-    [(ngModel)]="recipe().workplanModel"
-    [disabled]="edit() === false"
-    [compareWith]="byWorkplanId"
-    required
-  >
-    <mat-option *ngFor="let workplan of possibleWorkplans()" [value]="workplan">
-      {{ workplan.name }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+@if (hasWorkplans()) {
+  <mat-form-field appearance="outline">
+    <mat-label>{{ TranslationConstants.SHARED.WORKPLAN | translate }}</mat-label>
+    <mat-select
+      [(ngModel)]="recipe().workplanModel"
+      [disabled]="edit() === false"
+      [compareWith]="byWorkplanId"
+      required
+      >
+      @for (workplan of possibleWorkplans(); track workplan) {
+        <mat-option [value]="workplan">
+          {{ workplan.name }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+}
 <mat-form-field appearance="outline">
   <mat-label>{{
     TranslationConstants.SHARED.CLASSIFICATION | translate
   }}</mat-label>
   <mat-select [(ngModel)]="recipe().classification" [disabled]="edit() === false" [formControl]="recipeControl" restrictKeywordValidator="Unset">
-    <mat-option
-      *ngFor="let classification of recipeClassifications()"
-      [value]="classification"
-    >
-      {{ classification }}
-    </mat-option>
+    @for (classification of recipeClassifications(); track classification) {
+      <mat-option
+        [value]="classification"
+        >
+        {{ classification }}
+      </mat-option>
+    }
   </mat-select>
-  <mat-error *ngIf="recipeControl.hasError('invalidValue')">{{TranslationConstants.DETAILS.RECIPS.CHOOSE_OTHER | translate}}</mat-error>
-  <mat-hint *ngIf="recipeControl.hasError('invalidValue')">{{recipeControl.value !== 'Unset' ? recipeControl.value : TranslationConstants.DETAILS.RECIPS.CHOOSE_OTHER | translate }}</mat-hint>
+  @if (recipeControl.hasError('invalidValue')) {
+    <mat-error>{{TranslationConstants.DETAILS.RECIPS.CHOOSE_OTHER | translate}}</mat-error>
+  }
+  @if (recipeControl.hasError('invalidValue')) {
+    <mat-hint>{{recipeControl.value !== 'Unset' ? recipeControl.value : TranslationConstants.DETAILS.RECIPS.CHOOSE_OTHER | translate }}</mat-hint>
+  }
 </mat-form-field>

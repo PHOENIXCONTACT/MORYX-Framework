@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmptyStateComponent } from '@moryx/ngx-web-framework';
@@ -14,9 +14,8 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
     templateUrl: './default-view.component.html',
     styleUrls: ['./default-view.component.scss'],
     imports: [
-      CommonModule,
-      EmptyStateComponent
-    ],
+    EmptyStateComponent
+],
     standalone: true
 })
 export class DefaultViewComponent implements OnInit {

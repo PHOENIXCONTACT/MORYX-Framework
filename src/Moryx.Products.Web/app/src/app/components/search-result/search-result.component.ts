@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit, signal } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { ActivatedRoute, ParamMap } from '@angular/router';
@@ -18,10 +18,9 @@ import { EditProductsService } from 'src/app/services/edit-products.service';
     styleUrls: ['./search-result.component.scss'],
     standalone: true,
     imports: [
-      CommonModule,
-      MatListModule,
-      EmptyStateComponent
-    ]
+    MatListModule,
+    EmptyStateComponent
+]
 })
 export class SearchResultComponent implements OnInit {
   searchResults = signal<ProductModel[]>([]);

@@ -9,7 +9,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { RecipeDefinitionModel, WorkplanModel } from '../../api/models';
 import { CacheProductsService } from '../../services/cache-products.service';
-import { CommonModule } from '@angular/common';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
@@ -24,17 +24,16 @@ import { MatInputModule } from '@angular/material/input';
     styleUrls: ['./dialog-create-recipe.component.scss'],
     standalone: true,
     imports: [
-      CommonModule,
-      MatFormFieldModule,
-      FormsModule,
-      MatOptionModule,
-      TranslateModule,
-      MatDialogModule,
-      MatListModule,
-      MatSelectModule,
-      MatButtonModule,
-      MatInputModule
-    ],
+    MatFormFieldModule,
+    FormsModule,
+    MatOptionModule,
+    TranslateModule,
+    MatDialogModule,
+    MatListModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatInputModule
+],
 })
 export class DialogCreateRecipeComponent {
   result = signal<CreateRecipeDialogResult>({} as CreateRecipeDialogResult);

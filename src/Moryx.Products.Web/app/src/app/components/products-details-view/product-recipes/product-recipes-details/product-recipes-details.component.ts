@@ -14,7 +14,7 @@ import {
 } from '../../../../api/models';
 import { CacheProductsService } from '../../../../services/cache-products.service';
 import { EditProductsService } from '../../../../services/edit-products.service';
-import { CommonModule } from '@angular/common';
+
 import { NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
 import { ProductRecipesDetailsHeaderComponent } from './product-recipes-details-header/product-recipes-details-header.component';
 
@@ -22,12 +22,11 @@ import { ProductRecipesDetailsHeaderComponent } from './product-recipes-details-
     selector: 'app-product-recipes-details',
     templateUrl: './product-recipes-details.component.html',
     styleUrls: ['./product-recipes-details.component.scss'],
-    imports:[
-      CommonModule,
-      ProductRecipesDetailsHeaderComponent,
-      NavigableEntryEditorComponent,
-      TranslateModule,
-    ],
+    imports: [
+    ProductRecipesDetailsHeaderComponent,
+    NavigableEntryEditorComponent,
+    TranslateModule
+],
     standalone: true
 })
 export class ProductRecipesDetailsComponent  {

@@ -1,15 +1,18 @@
-<div class="product-recipes-details" *ngIf="currentRecipe()">
-  <app-product-recipes-details-header
-    [recipe]="currentRecipe()!"
-    [edit]="editService.edit"
-  >
-  </app-product-recipes-details-header>
-  <navigable-entry-editor
-    class="product-recipes-details-properties"
-    queryParam="productRecipe"
-    *ngIf="currentRecipe()?.properties !== undefined"
-    [entry]="currentRecipe()?.properties!"
-    [disabled]="editService.edit === false"
-  ></navigable-entry-editor>
-  <div></div>
-</div>
+@if (currentRecipe()) {
+  <div class="product-recipes-details">
+    <app-product-recipes-details-header
+      [recipe]="currentRecipe()!"
+      [edit]="editService.edit"
+      >
+    </app-product-recipes-details-header>
+    @if (currentRecipe()?.properties !== undefined) {
+      <navigable-entry-editor
+        class="product-recipes-details-properties"
+        queryParam="productRecipe"
+        [entry]="currentRecipe()?.properties!"
+        [disabled]="editService.edit === false"
+      ></navigable-entry-editor>
+    }
+    <div></div>
+  </div>
+}

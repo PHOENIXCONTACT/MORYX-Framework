@@ -15,7 +15,7 @@ import {
 import { ActivatedRoute } from "@angular/router";
 import { Entry, NavigableEntryEditorComponent } from "@moryx/ngx-web-framework";
 import { EditProductsService } from "../../../services/edit-products.service";
-import { CommonModule } from "@angular/common";
+
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { firstValueFrom, lastValueFrom, Subscription } from "rxjs";
@@ -25,12 +25,11 @@ import { firstValueFrom, lastValueFrom, Subscription } from "rxjs";
   templateUrl: "./product-properties.component.html",
   styleUrls: ["./product-properties.component.scss"],
   imports: [
-    CommonModule,
     NavigableEntryEditorComponent,
     MatProgressBarModule,
     MatProgressBarModule,
-    MatProgressSpinnerModule,
-  ],
+    MatProgressSpinnerModule
+],
   standalone: true,
 })
 export class ProductPropertiesComponent implements OnInit, OnDestroy {

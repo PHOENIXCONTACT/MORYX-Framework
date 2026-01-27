@@ -11,7 +11,7 @@ import { SessionService } from 'src/app/services/session.service';
 import { ProductModel } from '../../api/models';
 import { EditProductsService } from '../../services/edit-products.service';
 import { ProductsDetailsHeaderComponent } from './products-details-header/products-details-header.component';
-import { CommonModule } from '@angular/common';
+
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
 
@@ -21,13 +21,12 @@ import { MatTabsModule } from '@angular/material/tabs';
     styleUrls: ['./products-details-view.component.scss'],
     standalone: true,
     imports: [
-      CommonModule,
-      ProductsDetailsHeaderComponent,
-      MatDividerModule,
-      MatTabsModule,
-      TranslateModule,
-      RouterOutlet
-    ]
+    ProductsDetailsHeaderComponent,
+    MatDividerModule,
+    MatTabsModule,
+    TranslateModule,
+    RouterOutlet
+]
 })
 export class ProductsDetailsViewComponent {
   currentProduct = signal<ProductModel | undefined>(undefined);

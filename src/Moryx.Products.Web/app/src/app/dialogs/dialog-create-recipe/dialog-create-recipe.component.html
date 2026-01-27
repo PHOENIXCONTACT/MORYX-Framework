@@ -9,10 +9,12 @@
     <mat-select
       [(ngModel)]="result()!.selectedRecipe"
       (selectionChange)="onSelectedRecipeTypeChanged()"
-    >
-      <mat-option *ngFor="let recipe of possibleRecipes()" [value]="recipe">
-        {{ recipe.displayName }}
-      </mat-option>
+      >
+      @for (recipe of possibleRecipes(); track recipe) {
+        <mat-option [value]="recipe">
+          {{ recipe.displayName }}
+        </mat-option>
+      }
     </mat-select>
   </mat-form-field>
   <mat-form-field appearance="outline">
@@ -21,16 +23,20 @@
     }}</mat-label>
     <input matInput [(ngModel)]="result()!.recipeName" />
   </mat-form-field>
-  <mat-form-field appearance="outline" *ngIf="hasWorkplans()">
-    <mat-label>{{
-      TranslationConstants.CREATE_RECIPE_DIALOG.WORKPLAN | translate
-    }}</mat-label>
-    <mat-select [(ngModel)]="result()!.workplanModel">
-      <mat-option *ngFor="let workplan of possibleWorkplans()" [value]="workplan">
-        {{ workplan.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  @if (hasWorkplans()) {
+    <mat-form-field appearance="outline">
+      <mat-label>{{
+        TranslationConstants.CREATE_RECIPE_DIALOG.WORKPLAN | translate
+      }}</mat-label>
+      <mat-select [(ngModel)]="result()!.workplanModel">
+        @for (workplan of possibleWorkplans(); track workplan) {
+          <mat-option [value]="workplan">
+            {{ workplan.name }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  }
 </div>
 <div mat-dialog-actions align="end">
   <button mat-button type="submit" color="primary" (click)="onClose()">
@@ -45,7 +51,7 @@
       (hasWorkplans() && !result().workplanModel)
     "
     [mat-dialog-close]="result()"
-  >
+    >
     {{ TranslationConstants.CREATE_RECIPE_DIALOG.CREATE | translate }}
   </button>
 </div>

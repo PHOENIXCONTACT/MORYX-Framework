@@ -9,7 +9,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { EditProductsService } from "src/app/services/edit-products.service";
 import { ProductModel, ProductState } from "../../../api/models";
-import { CommonModule } from "@angular/common";
+
 import { MatInputModule } from "@angular/material/input";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatOptionModule } from "@angular/material/core";
@@ -23,7 +23,6 @@ import { MatSelectModule } from "@angular/material/select";
   styleUrls: ["./products-details-header.component.scss"],
   standalone: true,
   imports: [
-    CommonModule,
     MatInputModule,
     TranslateModule,
     ReactiveFormsModule,
@@ -31,8 +30,8 @@ import { MatSelectModule } from "@angular/material/select";
     MatOptionModule,
     MatDividerModule,
     MatFormFieldModule,
-    MatSelectModule,
-  ],
+    MatSelectModule
+],
 })
 export class ProductsDetailsHeaderComponent implements OnInit {
   currentProduct = input.required<ProductModel>();

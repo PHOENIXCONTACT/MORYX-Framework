@@ -16,7 +16,7 @@ import { TranslationConstants } from "src/app/extensions/translation-constants.e
 import { ProductImporter } from "../../api/models";
 import { CacheProductsService } from "../../services/cache-products.service";
 import { Permissions } from "./../../extensions/permissions.extensions";
-import { CommonModule } from "@angular/common";
+
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
@@ -34,7 +34,6 @@ import { MatCardModule } from "@angular/material/card";
   styleUrls: ["./products-importer.component.scss"],
   standalone: true,
   imports: [
-    CommonModule,
     TranslateModule,
     MatFormFieldModule,
     FormsModule,
@@ -47,8 +46,8 @@ import { MatCardModule } from "@angular/material/card";
     MatProgressBarModule,
     MatSelectModule,
     MatButtonModule,
-    MatCardModule,
-  ],
+    MatCardModule
+],
 })
 export class ProductsImporterComponent implements OnInit {
   possibleImporters = signal<ProductImporter[]>([]);

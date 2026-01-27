@@ -8,7 +8,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { ProductModel } from '../../../api/models';
 import { EditProductsService } from '../../../services/edit-products.service';
-import { CommonModule } from '@angular/common';
+
 import { MatTableModule } from '@angular/material/table';
 import { EmptyStateComponent } from '@moryx/ngx-web-framework';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -21,13 +21,12 @@ import { MatCardModule } from '@angular/material/card';
     styleUrls: ['./product-references.component.scss'],
     standalone: true,
     imports: [
-      CommonModule,
-      MatTableModule,
-      TranslateModule,
-      EmptyStateComponent,
-      MatProgressSpinnerModule,
-      MatCardModule
-    ]
+    MatTableModule,
+    TranslateModule,
+    EmptyStateComponent,
+    MatProgressSpinnerModule,
+    MatCardModule
+]
 })
 export class ProductReferencesComponent {
 

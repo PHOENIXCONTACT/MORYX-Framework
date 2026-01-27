@@ -10,25 +10,28 @@
       }}</mat-label>
       <mat-select
         [(ngModel)]="selectedImporter">
-        <mat-option
-          *ngFor="let importer of possibleImporters()"
-          [value]="importer"
-        >
-          {{ importer.name }}
-        </mat-option>
+        @for (importer of possibleImporters(); track importer) {
+          <mat-option
+            [value]="importer"
+            >
+            {{ importer.name }}
+          </mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </div>
 </div>
 <mat-divider class="importer-header-border"></mat-divider>
 
-<div *ngIf="importerProperties" class="importer-properties">
-  <navigable-entry-editor
-    [entry]="importerProperties()!"
-    queryParam="productImport"
-    [disabled]="false"
-  ></navigable-entry-editor>
-</div>
+@if (importerProperties) {
+  <div class="importer-properties">
+    <navigable-entry-editor
+      [entry]="importerProperties()!"
+      queryParam="productImport"
+      [disabled]="false"
+    ></navigable-entry-editor>
+  </div>
+}
 
 <div class="importer-actions" align="end">
   <button mat-button class="importer-actions-button" (click)="cancelImport()" [disabled]="showProgressBar()">
@@ -40,9 +43,11 @@
     class="importer-actions-button"
     (click)="import()"
     [disabled]="showProgressBar()"
-  >
+    >
     <mat-icon>play_arrow</mat-icon>
     {{ TranslationConstants.IMPORTER.IMPORT | translate }}
   </button>
 </div>
-<div class="progress-bar-container" *ngIf="showProgressBar()"><mat-progress-bar mode="indeterminate"></mat-progress-bar></div>
+@if (showProgressBar()) {
+  <div class="progress-bar-container"><mat-progress-bar mode="indeterminate"></mat-progress-bar></div>
+}

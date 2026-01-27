@@ -13,7 +13,7 @@ import { DuplicateProductInfos } from 'src/app/models/DuplicateProductInfos';
 import { ProductModel } from '../../api/models';
 import { EditProductsService } from '../../services/edit-products.service';
 import { Permissions } from './../../extensions/permissions.extensions';
-import { CommonModule } from '@angular/common';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -23,15 +23,14 @@ import { MatButtonModule } from '@angular/material/button';
     templateUrl: './dialog-create-revision.component.html',
     styleUrls: ['./dialog-create-revision.component.scss'],
     standalone: true,
-    imports:[ 
-      TranslateModule,
-      CommonModule,
-      MatFormFieldModule,
-      FormsModule,
-      MatInputModule,
-      MatButtonModule,
-      MatDialogModule
-    ]
+    imports: [
+    TranslateModule,
+    MatFormFieldModule,
+    FormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatDialogModule
+]
 })
 export class DialogCreateRevisionComponent implements OnInit {
   product = signal<ProductModel| undefined> (undefined);
