@@ -6,7 +6,7 @@
 import Container from "@mui/material/Container";
 import * as React from "react";
 import { connect } from "react-redux";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DatabasesRestClient from "../../databases/api/DatabasesRestClient";

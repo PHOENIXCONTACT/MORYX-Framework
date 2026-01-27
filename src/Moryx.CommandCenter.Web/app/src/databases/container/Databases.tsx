@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import {mdiBriefcase, mdiComment, mdiDatabase} from "@mdi/js";
+import { mdiBriefcase, mdiComment, mdiDatabase } from "@mdi/js";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
@@ -15,7 +15,7 @@ import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import * as React from "react";
 import { connect } from "react-redux";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes } from "react-router";
 import RoutingMenu from "../../common/components/Menu/RoutingMenu";
 import { SectionInfo } from "../../common/components/SectionInfo";
 import MenuItemModel from "../../common/models/MenuItemModel";
@@ -26,7 +26,7 @@ import DatabasesRestClient from "../api/DatabasesRestClient";
 import DatabaseAndConfigurators from "../models/DatabaseAndConfigurators";
 import DatabasesResponse from "../models/DatabasesResponse";
 import DataModel from "../models/DataModel";
-import {ModelConfiguratorModel} from "../models/ModelConfiguratorModel";
+import { ModelConfiguratorModel } from "../models/ModelConfiguratorModel";
 import { updateDatabases } from "../redux/DatabaseActions";
 import DatabaseModel from "./DatabaseModel";
 
