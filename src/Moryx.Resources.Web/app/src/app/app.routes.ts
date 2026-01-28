@@ -9,20 +9,15 @@ import { DetailsViewComponent } from "./components/details-view/details-view.com
 import { ResourceMethodsComponent } from "./components/details-view/resource-methods/resource-methods.component";
 import { ResourcePropertiesComponent } from "./components/details-view/resource-properties/resource-properties.component";
 import { ResourceReferencesComponent } from "./components/details-view/resource-references/resource-references.component";
-import { ShowDetailsGuard } from "./guards/show-details.guard";
 
-export const routes: Routes =  [
+export const routes: Routes = [
   {
     path: 'details/:id',
     component: DetailsViewComponent,
     children: [
-      { path: 'properties', component: ResourcePropertiesComponent, canActivate: [ShowDetailsGuard] },
-      { path: 'references', component: ResourceReferencesComponent, canActivate: [ShowDetailsGuard] },
-      {
-        path: 'methods',
-        component: ResourceMethodsComponent,
-        canActivate: [ShowDetailsGuard],
-      },
+      { path: 'properties', component: ResourcePropertiesComponent },
+      { path: 'references', component: ResourceReferencesComponent },
+      { path: 'methods', component: ResourceMethodsComponent },
     ],
   },
   { path: '', component: DefaultDetailsViewComponent },

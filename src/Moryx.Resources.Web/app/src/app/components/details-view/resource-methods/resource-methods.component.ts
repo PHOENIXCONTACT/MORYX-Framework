@@ -10,7 +10,7 @@ import { ResourceMethodService } from '../../../services/resource-method.service
 import {
   MatExpansionModule,
 } from '@angular/material/expansion';
-import { EntryEditorComponent, NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
+import { EntryEditor, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 
 import { MatButtonModule } from '@angular/material/button';
 
@@ -19,9 +19,9 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './resource-methods.component.html',
   styleUrls: ['./resource-methods.component.scss'],
   imports: [
-    EntryEditorComponent,
+    EntryEditor,
     MatExpansionModule,
-    NavigableEntryEditorComponent,
+    NavigableEntryEditor,
     TranslateModule,
     MatButtonModule
 ],

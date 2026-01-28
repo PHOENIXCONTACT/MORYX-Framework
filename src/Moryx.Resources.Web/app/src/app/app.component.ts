@@ -3,47 +3,44 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, HostListener, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
-import { MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule } from '@angular/material/tree';
-import { Router, RouterOutlet } from '@angular/router';
+import {FlatTreeControl} from '@angular/cdk/tree';
+import {Component, HostListener, OnDestroy, OnInit, signal, viewChild} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
+import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
+import {Router, RouterOutlet} from '@angular/router';
 import {
   LanguageService,
-  MoryxSnackbarService,
-  PermissionService,
+  SnackbarService,
   SearchBarService,
   SearchRequest,
-  SearchSuggestion,
-} from '@moryx/ngx-web-framework';
-
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { environment } from 'src/environments/environment';
-import { ResourceModel, ResourceTypeModel } from './api/models';
-import { ResourceModificationService } from './api/services';
-import { DialogAddResourceComponent } from './dialogs/dialog-add-resource/dialog-add-resource.component';
-import { ResourceConstructionParameters } from './models/ResourceConstructionParameters';
+  SearchSuggestion
+} from '@moryx/ngx-web-framework/services';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {environment} from 'src/environments/environment';
+import {ResourceModel, ResourceTypeModel} from './api/models';
+import {ResourceModificationService} from './api/services';
+import {DialogAddResourceComponent} from './dialogs/dialog-add-resource/dialog-add-resource.component';
+import {ResourceConstructionParameters} from './models/ResourceConstructionParameters';
 import './extensions/array.extensions';
-import { Permissions } from './extensions/permissions.extensions';
-import { TranslationConstants } from './extensions/translation-constants.extensions';
-import { CacheResourceService } from './services/cache-resource.service';
-import { EditResourceService } from './services/edit-resource.service';
-import { FormControlService } from './services/form-control-service.service';
-import { FlatNode, SessionService } from './services/session.service';
-import { Subscription } from 'rxjs';
-import { getHierarchieLineFor } from './models/TypeTree';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { DialogRemoveResourceComponent } from "./dialogs/dialog-remove-resource/dialog-remove-resource.component";
+import {TranslationConstants} from './extensions/translation-constants.extensions';
+import {CacheResourceService} from './services/cache-resource.service';
+import {EditResourceService} from './services/edit-resource.service';
+import {FormControlService} from './services/form-control-service.service';
+import {FlatNode, SessionService} from './services/session.service';
+import {Subscription} from 'rxjs';
+import {getHierarchieLineFor} from './models/TypeTree';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatIconModule} from '@angular/material/icon';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {DialogRemoveResourceComponent} from "./dialogs/dialog-remove-resource/dialog-remove-resource.component";
 
 @Component({
   selector: 'app-root',
@@ -69,20 +66,16 @@ import { DialogRemoveResourceComponent } from "./dialogs/dialog-remove-resource/
 })
 export class AppComponent implements OnInit, OnDestroy {
   private readonly trigger = viewChild.required(MatMenuTrigger);
-  menuTopLeftPosition = signal<Position>({ x: '0px', y: '0px' });
+  menuTopLeftPosition = signal<Position>({x: '0px', y: '0px'});
 
   readonly resourceToolbarImage = environment.assets + 'assets/resource-toolbar.jpg';
 
-  private userPermissions: string[] = [];
-
   resources?: ResourceModel[];
   resourcesFlat?: ResourceModel[];
-  resourceTypes?: ResourceTypeModel[];
   selected?: ResourceModel;
   title = 'Moryx.Resources.Web';
   canSave!: boolean;
   TranslationConstants = TranslationConstants;
-  Permissions = Permissions;
   private treeStateIsInitialized: boolean = false;
   private subscriptions: Subscription[] = [];
 
@@ -131,9 +124,8 @@ export class AppComponent implements OnInit, OnDestroy {
     public translate: TranslateService,
     private searchBarService: SearchBarService,
     private languageService: LanguageService,
-    private moryxSnackbar: MoryxSnackbarService,
-    private formControlService: FormControlService,
-    private permissionService: PermissionService
+    private snackbarService: SnackbarService,
+    private formControlService: FormControlService
   ) {
     this.translate.addLangs([
       TranslationConstants.LANGUAGES.EN,
@@ -141,7 +133,7 @@ export class AppComponent implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.IT,
       TranslationConstants.LANGUAGES.ZH,
     ]);
-    this.translate.setDefaultLang('en');
+    this.translate.setFallbackLang('en');
     this.translate.use(this.languageService.getDefaultLanguage());
     this.formControlService.canSave.subscribe(state => (this.canSave = state));
   }
@@ -184,11 +176,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.onSearch(result);
       },
     });
-
-    // ToDo: Move to service
-    if (!environment.ignoreIam) {
-      this.userPermissions = await this.permissionService.getPermissions();
-    }
   }
 
   private select(resource: ResourceModel | undefined): void {
@@ -201,19 +188,6 @@ export class AppComponent implements OnInit, OnDestroy {
     const toExpand = getHierarchieLineFor(this.selected?.id, this.resources);
     this.treeControl.dataNodes.filter(n => toExpand.find(e => e === n.id)).forEach(n => this.treeControl.expand(n));
     this.treeStateIsInitialized = true;
-  }
-
-  // ToDo: Move to service
-  hasPermission(permission: string) {
-    if (environment.ignoreIam) {
-      return true;
-    }
-
-    if (window.configs && !window.configs.identityUrl) {
-      return true;
-    }
-
-    return this.userPermissions.any(p => p === permission);
   }
 
   onSearch(result: SearchRequest) {
@@ -238,7 +212,7 @@ export class AppComponent implements OnInit, OnDestroy {
         if (!resource.name) continue;
 
         const url = urlBase + resource.id;
-        searchSuggestions.push({ text: resource.name, url: url });
+        searchSuggestions.push({text: resource.name, url: url});
       }
 
       this.searchBarService.provideSuggestions(searchSuggestions);
@@ -250,9 +224,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private openContextMenu(resourceId: number, xCoordinate: number, yCoordinate: number) {
-    this.trigger().menuData = { id: resourceId };
+    this.trigger().menuData = {id: resourceId};
     this.menuTopLeftPosition.update(() => {
-      return { x: `${xCoordinate}px`, y: `${yCoordinate}px` };
+      return {x: `${xCoordinate}px`, y: `${yCoordinate}px`};
     });
     this.trigger().openMenu();
   }
@@ -305,12 +279,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
       const actualResource = resourceToBeDeleted;
       this.modificationService
-        .remove$Response({ id: actualResource.id })
+        .remove$Response({id: actualResource.id})
         .toAsync()
         .then(async () => this.removeResource(actualResource))
-        .catch(async error => await this.moryxSnackbar.handleError(error));
+        .catch(async error => await this.snackbarService.handleError(error));
     });
   }
+
   private removeResource(deletedResource: ResourceModel) {
     this.cacheService.removeResource(deletedResource);
     if (this.selected?.id === deletedResource.id) this.editService.removeResource();
@@ -337,12 +312,13 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onDeselect() {
-    if (this.editService.edit)
+    if (this.editService.edit) {
       this.searchBarService.subscribe({
         next: (result: SearchRequest) => {
           this.onSearch(result);
         },
       });
+    }
     this.editService.onDeselect();
   }
 

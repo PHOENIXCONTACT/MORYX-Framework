@@ -15,7 +15,7 @@ import { ResourceConstructionParameters } from 'src/app/models/ResourceConstruct
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
+import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -34,7 +34,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatProgressSpinnerModule,
     MatIconModule,
     MatDialogModule,
-    NavigableEntryEditorComponent,
+    NavigableEntryEditor,
   ],
   standalone: true,
 })
@@ -52,7 +52,8 @@ export class DialogAddResourceComponent implements OnInit {
     public dialogRef: MatDialogRef<DialogAddResourceComponent>,
     private cache: CacheResourceService,
     public translate: TranslateService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.types.update(() => this.cache.flatTypes?.filter(t => t.creatable).sort((a, b) => this.byName(a, b)));

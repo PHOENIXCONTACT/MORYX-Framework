@@ -2,7 +2,7 @@
   {{ TranslationConstants.ADD_RESOURCE_DIALOG.TITLE | translate }}
 </h2>
 
-@if (types) {
+@if (types()) {
   <mat-dialog-content class="mat-typography">
     <mat-stepper #stepper linear>
       <ng-template matStepperIcon="edit">

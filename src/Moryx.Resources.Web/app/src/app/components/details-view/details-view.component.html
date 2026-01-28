@@ -1,4 +1,4 @@
-@if (resource) {
+@if (resource()) {
   <div class="resource-details">
     <app-details-header
       class="resource-details-header"
@@ -7,7 +7,7 @@
       >
     </app-details-header>
     <nav mat-tab-nav-bar class="resource-details-navigation" [tabPanel]="tabPanel">
-      @if (resource()?.properties !== undefined) {
+      @if (resource().properties !== undefined) {
         <a
           mat-tab-link
           [active]="activeLink() === 1"
@@ -15,7 +15,7 @@
           >{{ TranslationConstants.DETAILS.PROPERTIES | translate }}</a
           >
         }
-        @if (resource()?.references !== undefined) {
+        @if (resource().references !== undefined) {
           <a
             mat-tab-link
             [active]="activeLink() === 2"

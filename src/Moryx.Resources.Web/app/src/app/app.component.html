@@ -50,7 +50,6 @@
               <button
                 type="button"
                 (click)="onEdit()"
-                [disabled]="!hasPermission(Permissions.CAN_EDIT_RESOURCE)"
                 mat-icon-button
                 aria-label="Add child"
                 [matTooltip]="TranslationConstants.SHARED.EDIT | translate"
@@ -63,7 +62,6 @@
               <button
                 type="button"
                 (click)="onAdd()"
-                [disabled]="!hasPermission(Permissions.CAN_ADD_RESOURCE)"
                 mat-icon-button
                 aria-label="Add child"
                 [matTooltip]="TranslationConstants.SHARED.ADD_CHILD | translate"
@@ -75,8 +73,7 @@
             @if (!editService.edit) {
               <button
                 type="button"
-                (click)="onDelete(selected?.id)"
-                [disabled]="!hasPermission(Permissions.CAN_REMOVE_RESOURCE)"
+                (click)="onDelete(selected.id)"
                 mat-icon-button
                 aria-label="Delete resource"
                 [matTooltip]="TranslationConstants.SHARED.DELETE | translate"
@@ -118,19 +115,14 @@
         <ng-template matMenuContent let-id="id">
           <button
             mat-menu-item
-            [disabled]="
-              !hasPermission(Permissions.CAN_REMOVE_RESOURCE) ||
-              editService.edit
-            "
+            [disabled]="editService.edit"
             (click)="onDelete(id)"
             >
             <mat-icon>delete_forever</mat-icon>
             <span>{{ TranslationConstants.SHARED.DELETE | translate }}</span>
           </button>
           <button
-            [disabled]="
-              !hasPermission(Permissions.CAN_EDIT_RESOURCE) || editService.edit
-            "
+            [disabled]="editService.edit"
             mat-menu-item
             (click)="onSelectAndEdit(id)"
             >
@@ -206,7 +198,6 @@
         type="button"
         aria-label="Add resource"
         (click)="onAdd()"
-        [disabled]="!hasPermission(Permissions.CAN_ADD_RESOURCE)"
         [matTooltip]="TranslationConstants.SHARED.ADD | translate"
         matTooltipShowDelay="500"
         >

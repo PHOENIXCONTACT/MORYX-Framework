@@ -13,7 +13,7 @@
         @if (method.name === methodService.selectedMethod?.name) {
           @if (
             method.parameters &&
-            method.parameters?.subEntries?.length &&
+            method.parameters.subEntries?.length &&
             !methodService.resultView
             ) {
             <navigable-entry-editor

@@ -3,13 +3,15 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { ReferenceValue, ResourceModel, ResourceTypeModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
+import '../extensions/observable.extensions';
 
 /**
  * This service handles the set of existing resources and resource types
@@ -32,7 +34,7 @@ export class CacheResourceService {
   constructor(
     private resourceModification: ResourceModificationService,
     public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService
+    private snackbarService: SnackbarService
   ) {
     this.resources.subscribe(resources => this.pushFlattenedResources(resources));
   }
@@ -87,7 +89,7 @@ export class CacheResourceService {
         this.flatTypes = [];
         this.collectflattenedTypes(rootType, this.flatTypes);
       })
-      .catch(async err => await this.moryxSnackbar.handleError(err));
+      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
 
     await this.resourceModification
       .getResources({
@@ -102,7 +104,7 @@ export class CacheResourceService {
       })
       .toAsync()
       .then(resources => this.resources.next(resources))
-      .catch(async err => await this.moryxSnackbar.handleError(err));
+      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
   }
 
   private collectflattenedTypes(root: ResourceTypeModel, flattendTypes: ResourceTypeModel[]) {
