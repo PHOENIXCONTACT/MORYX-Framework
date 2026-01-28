@@ -13,8 +13,8 @@ import { MatInputModule } from "@angular/material/input";
 
 @Component({
     selector: "app-attandance-dialog",
-    templateUrl: "./availability-dialog.component.html",
-    styleUrl: "./availability-dialog.component.scss",
+    templateUrl: "./availability-dialog.html",
+    styleUrl: "./availability-dialog.scss",
     standalone: true,
     imports: [
     MatDialogModule,
@@ -24,10 +24,10 @@ import { MatInputModule } from "@angular/material/input";
     MatButtonModule
 ]
 })
-export class AvailabilityDialogComponent {
+export class AvailabilityDialog {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: AttandanceData,
-    public dialogRef: MatDialogRef<AvailabilityDialogComponent>
+    public dialogRef: MatDialogRef<AvailabilityDialog>
   ) {}
 
   onSave(){

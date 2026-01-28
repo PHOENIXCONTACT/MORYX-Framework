@@ -20,8 +20,8 @@ import { MatInputModule } from '@angular/material/input';
 
 @Component({
     selector: 'app-skill-new-dialog',
-    templateUrl: './skill-new-dialog.component.html',
-    styleUrl: './skill-new-dialog.component.scss',
+    templateUrl: './skill-new-dialog.html',
+    styleUrl: './skill-new-dialog.scss',
     standalone: true,
     imports: [
     MatDialogModule,
@@ -35,13 +35,13 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule
 ]
 })
-export class SkillNewDialogComponent implements OnInit {
+export class SkillNewDialog implements OnInit {
   TranslationConstants = TranslationConstants;
   skillTypes = signal<SkillType[]>([]);
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: OperatorSkill ,
-    public dialogRef: MatDialogRef<SkillNewDialogComponent>,
+    public dialogRef: MatDialogRef<SkillNewDialog>,
     private appStoreService: AppStoreService
   ){
   }

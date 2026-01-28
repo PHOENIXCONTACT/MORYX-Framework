@@ -8,7 +8,7 @@ import { TranslationConstants } from '../extensions/translation-constants.extens
 import { MatDialog } from '@angular/material/dialog';
 import { CalendarState } from '../models/calendar-state';
 import { formatDateDigits, getDayName, getShortDayName, isDayInInterval, isSameDate } from '../models/utils';
-import { AvailabilityDialogComponent } from '../dialogs/availability-dialog/availability-dialog.component';
+import { AvailabilityDialog } from '../dialogs/availability-dialog/availability-dialog';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
@@ -17,8 +17,8 @@ import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-attandances',
-    templateUrl: './availabilities.component.html',
-    styleUrl: './availabilities.component.scss',
+    templateUrl: './availabilities.html',
+    styleUrl: './availabilities.scss',
     standalone: true,
     imports: [
       CommonModule,
@@ -28,7 +28,7 @@ import { RouterLink } from '@angular/router';
       RouterLink
     ]
 })
-export class AvailabilitiesComponent {
+export class Availabilities {
   TranslationConstants = TranslationConstants;
   calendarState!: CalendarState;
   getDayName = getDayName;
@@ -41,7 +41,7 @@ export class AvailabilitiesComponent {
   }
 
   onAddClick(){
-    this.dialog.open(AvailabilityDialogComponent);
+    this.dialog.open(AvailabilityDialog);
   }
 
   navigateToCurrentWeek(){

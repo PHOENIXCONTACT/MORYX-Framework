@@ -22,8 +22,8 @@ import { MatInputModule } from "@angular/material/input";
 
 @Component({
   selector: "app-skill-type-details",
-  templateUrl: "./skill-type-details.component.html",
-  styleUrl: "./skill-type-details.component.scss",
+  templateUrl: "./skill-type-details.html",
+  styleUrl: "./skill-type-details.scss",
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -39,7 +39,7 @@ import { MatInputModule } from "@angular/material/input";
     RouterLink
   ]
 })
-export class SkillTypeDetailsComponent implements OnInit {
+export class SkillTypeDetails implements OnInit {
   id = input.required<number>();
   skillType = signal<SkillType>(<SkillType>{
     id: 0,

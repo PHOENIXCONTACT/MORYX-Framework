@@ -11,8 +11,8 @@ import { OperatorSkill } from "../models/operator-skill-model";
 import { dateToString } from "../models/utils";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { MatDialog } from "@angular/material/dialog";
-import { SkillNewDialogComponent } from "../dialogs/skill-new-dialog/skill-new-dialog.component";
-import { ConfirmationDialogComponent } from "../dialogs/confirmation-dialog/confirmation-dialog.component";
+import { SkillNewDialog } from "../dialogs/skill-new-dialog/skill-new-dialog";
+import { ConfirmationDialog } from "../dialogs/confirmation-dialog/confirmation-dialog";
 import { OperatorViewModel } from "../models/operator-view-model";
 import { AssignableOperator } from "../api/models/assignable-operator";
 import { skillToOperatorSkill, skillTypeToModel } from "../models/model-converter";
@@ -31,8 +31,8 @@ import { MatButtonModule } from "@angular/material/button";
 
 @Component({
     selector: "app-operator-details",
-    templateUrl: "./operator-details.component.html",
-    styleUrl: "./operator-details.component.scss",
+    templateUrl: "./operator-details.html",
+    styleUrl: "./operator-details.scss",
     standalone: true,
     imports: [
     MatIconModule,
@@ -47,7 +47,7 @@ import { MatButtonModule } from "@angular/material/button";
     RouterLink
 ]
 })
-export class OperatorDetailsComponent implements OnInit {
+export class OperatorDetails implements OnInit {
   id = input.required<string>();
   editMode =  signal(false);
   operator = signal<AssignableOperator>({
@@ -134,7 +134,7 @@ export class OperatorDetailsComponent implements OnInit {
   }
 
   onAddSkillClick(){
-    const dialogResult = this.dialog.open(SkillNewDialogComponent,{
+    const dialogResult = this.dialog.open(SkillNewDialog,{
       width: '400px',
       data: <OperatorSkill>{
         operatorId: this.operator().identifier
@@ -156,7 +156,7 @@ export class OperatorDetailsComponent implements OnInit {
             TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TITLE,
             TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_MESSAGE
           ]));
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent,{
+    const dialogRef = this.dialog.open(ConfirmationDialog,{
       data:{
         dialogMessage: translations[TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_MESSAGE],
         dialogTitle: translations[TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TITLE],

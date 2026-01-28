@@ -11,23 +11,23 @@ import { ExtendedOperatorModel } from "../api/models/extended-operator-model";
 import { AssignableOperator } from "../api/models/assignable-operator";
 import { IOperatorAssignable } from "../api/models/i-operator-assignable";
 import { AppStoreService } from "../services/app-store.service";
-import { OperatorCardComponent } from "../operator-card/operator-card.component";
+import { OperatorCard } from "../operator-card/operator-card";
 
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: "app-operators",
-  templateUrl: "./operators.component.html",
-  styleUrl: "./operators.component.scss",
+  templateUrl: "./operators.html",
+  styleUrl: "./operators.scss",
   standalone: true,
   imports: [
-    OperatorCardComponent,
+    OperatorCard,
     EmptyState,
     TranslateModule
   ]
 })
-export class OperatorsComponent implements OnInit {
+export class Operators implements OnInit {
 
   workstation = input.required<WorkstationViewModel>();
   mainContainerStyle = input.required<string>();

@@ -6,8 +6,8 @@
 import { Component, OnInit, signal } from "@angular/core";
 import { OperatorViewModel } from "../models/operator-view-model";
 import { MatDialog } from "@angular/material/dialog";
-import { ConfirmationDialogComponent } from "../dialogs/confirmation-dialog/confirmation-dialog.component";
-import { AddOperatorComponentDialog } from "../dialogs/add-operator/add-operator.component";
+import { ConfirmationDialog } from "../dialogs/confirmation-dialog/confirmation-dialog";
+import { AddOperatorDialog } from "../dialogs/add-operator/add-operator";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OperatorSkill } from "../models/operator-skill-model";
@@ -20,26 +20,26 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatExpansionModule } from "@angular/material/expansion";
-import { OperatorSkillChipsComponent } from "../operator-skill-chips/operator-skill-chips.component";
+import { OperatorSkillChips } from "../operator-skill-chips/operator-skill-chips";
 import { MatButtonModule } from "@angular/material/button";
 
 @Component({
   selector: "app-operators-management",
-  templateUrl: "./operators-management.component.html",
-  styleUrl: "./operators-management.component.scss",
+  templateUrl: "./operators-management.html",
+  styleUrl: "./operators-management.scss",
   standalone: true,
   imports: [
     MatTooltipModule,
     MatIconModule,
     MatSidenavModule,
     MatExpansionModule,
-    OperatorSkillChipsComponent,
+    OperatorSkillChips,
     RouterLink,
     TranslateModule,
     MatButtonModule
   ]
 })
-export class OperatorsManagementComponent implements OnInit {
+export class OperatorsManagement implements OnInit {
 
   operators = signal<OperatorViewModel[]>([]);
   deleteDialogTitle = signal('');
@@ -86,7 +86,7 @@ export class OperatorsManagementComponent implements OnInit {
 
   onDeleteClick(operator: OperatorViewModel) {
 
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
       data: {
         dialogMessage: this.deleteDialogMessage,
         dialogTitle: this.deleteDialogTitle,
@@ -102,7 +102,7 @@ export class OperatorsManagementComponent implements OnInit {
   }
 
   onAddClick() {
-    const dialogResult = this.dialog.open(AddOperatorComponentDialog);
+    const dialogResult = this.dialog.open(AddOperatorDialog);
     //navigate to operator details
     dialogResult.afterClosed()
       .subscribe((result: OperatorViewModel) =>

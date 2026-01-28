@@ -9,7 +9,7 @@ import { WorkstationTogglingState } from './WorkstationTogglingState';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
-import { AddOperatorComponentDialog } from '../dialogs/add-operator/add-operator.component';
+import { AddOperatorDialog } from '../dialogs/add-operator/add-operator';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { OperatorSkill } from '../models/operator-skill-model';
 import { SkillTypeModel } from '../api/models/skill-type-model';
@@ -21,25 +21,25 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslateModule } from '@ngx-translate/core';
-import { OperatorsComponent } from '../operators/operators.component';
+import { Operators } from '../operators/operators';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-workstation-operators',
-  templateUrl: './workstation-operators.component.html',
-  styleUrl: './workstation-operators.component.scss',
+  templateUrl: './workstation-operators.html',
+  styleUrl: './workstation-operators.scss',
   standalone: true,
   imports: [
     MatTooltipModule,
     MatIconModule,
     EmptyState,
     TranslateModule,
-    OperatorsComponent,
+    Operators,
     MatButtonModule,
     RouterLink
   ]
 })
-export class WorkstationOperatorsComponent {
+export class WorkstationOperators {
 
   workstations = signal<WorkstationViewModel[]>([]);
   workstationTogglingState = signal<WorkstationTogglingState | undefined>(undefined);
@@ -102,7 +102,7 @@ export class WorkstationOperatorsComponent {
   }
 
   addOperator() {
-    const dialogResult = this.dialog.open(AddOperatorComponentDialog);
+    const dialogResult = this.dialog.open(AddOperatorDialog);
     //navigate to operator details
     dialogResult.afterClosed()
       .subscribe((result: OperatorViewModel) =>

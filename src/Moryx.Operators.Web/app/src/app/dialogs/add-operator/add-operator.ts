@@ -18,8 +18,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-add-operator',
-    templateUrl: './add-operator.component.html',
-    styleUrl: './add-operator.component.scss',
+    templateUrl: './add-operator.html',
+    styleUrl: './add-operator.scss',
     standalone: true,
     imports: [
     MatDialogModule,
@@ -30,7 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
 ]
 })
-export class AddOperatorComponentDialog {
+export class AddOperatorDialog {
   operatorForm = new FormGroup({
     identifier: new FormControl<string>('', [Validators.required]),
     firstName: new FormControl<string>('', [Validators.required]),
@@ -40,7 +40,7 @@ export class AddOperatorComponentDialog {
 
   constructor(
     private appStoreService: AppStoreService,
-    public dialogRef: MatDialogRef<AddOperatorComponentDialog>){}
+    public dialogRef: MatDialogRef<AddOperatorDialog>){}
 
   getError(control: FormControl<string | null>){
     return control.hasError('required') ? 'This field is required!' : '';

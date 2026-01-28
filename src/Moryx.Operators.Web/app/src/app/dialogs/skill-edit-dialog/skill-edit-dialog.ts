@@ -19,8 +19,8 @@ import { MatInputModule } from "@angular/material/input";
 
 @Component({
     selector: "app-skill-edit-dialog",
-    templateUrl: "./skill-edit-dialog.component.html",
-    styleUrl: "./skill-edit-dialog.component.scss",
+    templateUrl: "./skill-edit-dialog.html",
+    styleUrl: "./skill-edit-dialog.scss",
     standalone: true,
     imports: [
     MatDialogModule,
@@ -32,14 +32,14 @@ import { MatInputModule } from "@angular/material/input";
     MatInputModule
 ]
 })
-export class SkillEditDialogComponent {
+export class SkillEditDialog {
   skillTypes = signal<SkillType[]>([]);
 
   TranslationConstants = TranslationConstants;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: OperatorSkill,
-    public dialogRef: MatDialogRef<SkillEditDialogComponent>,
+    public dialogRef: MatDialogRef<SkillEditDialog>,
     private appStoreService: AppStoreService
   ) {
     this.appStoreService.skillTypes$.subscribe(types => this.skillTypes.update(_=> types));

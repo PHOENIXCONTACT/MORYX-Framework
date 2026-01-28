@@ -11,15 +11,15 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import {MatChipsModule} from '@angular/material/chips';
 @Component({
     selector: "app-operator-skill-chips",
-    templateUrl: "./operator-skill-chips.component.html",
-    styleUrl: "./operator-skill-chips.component.scss",
+    templateUrl: "./operator-skill-chips.html",
+    styleUrl: "./operator-skill-chips.scss",
     standalone: true,
     imports: [
     MatTooltipModule,
     MatChipsModule
 ]
 })
-export class OperatorSkillChipsComponent {
+export class OperatorSkillChips {
   operatorId = input.required<string>();
   skills = input.required<OperatorSkill[]>();
   skillTypes = input.required<SkillTypeModel[]>();

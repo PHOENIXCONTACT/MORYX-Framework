@@ -10,7 +10,7 @@ import { SkillType } from '../models/skill-type-model';
 import { getDurationInDays } from '../models/utils';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationDialogComponent } from '../dialogs/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialog } from '../dialogs/confirmation-dialog/confirmation-dialog';
 import { OperatorSkill } from '../models/operator-skill-model';
 import { AppStoreService } from '../services/app-store.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -22,8 +22,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-skill-types',
-    templateUrl: './skill-types.component.html',
-    styleUrl: './skill-types.component.scss',
+    templateUrl: './skill-types.html',
+    styleUrl: './skill-types.scss',
     standalone: true,
     imports: [
     MatTooltipModule,
@@ -34,7 +34,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
 ]
 })
-export class SkillTypesComponent {
+export class SkillTypes {
   skillTypes = signal<SkillType[]>([]);
   skills = signal<OperatorSkill[]>([]);
   
@@ -66,7 +66,7 @@ export class SkillTypesComponent {
             TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_MESSAGE
           ]));
 
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent,{
+    const dialogRef = this.dialog.open(ConfirmationDialog,{
       data:{
         dialogMessage: translations[TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_MESSAGE],
         dialogTitle: translations[TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_TITLE],

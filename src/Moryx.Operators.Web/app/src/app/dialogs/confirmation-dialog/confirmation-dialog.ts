@@ -11,18 +11,18 @@ import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-confirmation-dialog',
-    templateUrl: './confirmation-dialog.component.html',
-    styleUrl: './confirmation-dialog.component.scss',
+    templateUrl: './confirmation-dialog.html',
+    styleUrl: './confirmation-dialog.scss',
     standalone: true,
     imports: [
     MatDialogModule,
     TranslateModule
 ]
 })
-export class ConfirmationDialogComponent {
+export class ConfirmationDialog {
   TranslationConstants = TranslationConstants;
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData,
-  public dialogRef: MatDialogRef<ConfirmationDialogComponent>) {
+  public dialogRef: MatDialogRef<ConfirmationDialog>) {
 
   }
 
