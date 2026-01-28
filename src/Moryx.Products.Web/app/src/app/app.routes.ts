@@ -4,15 +4,15 @@
 */
 
 import { Routes } from "@angular/router";
-import { DefaultViewComponent } from "./components/default-view/default-view.component";
-import { ProductPartsComponent } from "./components/products-details-view/product-parts/product-parts.component";
-import { ProductPropertiesComponent } from "./components/products-details-view/product-properties/product-properties.component";
-import { ProductRecipesDetailsComponent } from "./components/products-details-view/product-recipes/product-recipes-details/product-recipes-details.component";
-import { ProductRecipesComponent } from "./components/products-details-view/product-recipes/product-recipes.component";
-import { ProductReferencesComponent } from "./components/products-details-view/product-references/product-references.component";
-import { ProductsDetailsViewComponent } from "./components/products-details-view/products-details-view.component";
-import { ProductsImporterComponent } from "./components/products-importer/products-importer.component";
-import { SearchResultComponent } from "./components/search-result/search-result.component";
+import { DefaultViewComponent } from "./components/default-view/default-view";
+import { ProductPartsComponent } from "./components/products-details-view/product-parts/product-parts";
+import { ProductPropertiesComponent } from "./components/products-details-view/product-properties/product-properties";
+import { ProductRecipesDetailsComponent } from "./components/products-details-view/product-recipes/product-recipes-details/product-recipes-details";
+import { ProductRecipesComponent } from "./components/products-details-view/product-recipes/product-recipes";
+import { ProductReferencesComponent } from "./components/products-details-view/product-references/product-references";
+import { ProductsDetailsViewComponent } from "./components/products-details-view/products-details-view";
+import { ProductsImporterComponent } from "./components/products-importer/products-importer";
+import { SearchResultComponent } from "./components/search-result/search-result";
 import { ProductsDetailsViewResolver } from "./components/products-details-view/products-details-view-resolver";
 
 export const routes: Routes = [
