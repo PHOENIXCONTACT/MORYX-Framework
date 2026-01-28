@@ -4,9 +4,11 @@
     <mat-form-field class="tw:w-full tw:mt-2" appearance="outline">
       <mat-label>{{ TranslationConstants.SKILL_NEW_DIALOG.SKILL_TYPE | translate  }}</mat-label>
       <mat-select required [(ngModel)]="data.typeId">
-        <mat-option *ngFor="let skillType of skillTypes()" [value]="skillType.id">
-          {{ skillType.name }}
-        </mat-option>
+        @for (skillType of skillTypes(); track skillType) {
+          <mat-option [value]="skillType.id">
+            {{ skillType.name }}
+          </mat-option>
+        }
       </mat-select>
     </mat-form-field>
 

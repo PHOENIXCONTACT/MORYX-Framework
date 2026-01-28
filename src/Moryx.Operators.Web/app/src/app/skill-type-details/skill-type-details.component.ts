@@ -11,7 +11,7 @@ import { Entry, EntryValueType, NavigableEntryEditorComponent } from "@moryx/ngx
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { firstValueFrom } from "rxjs";
 import { AppStoreService } from "../services/app-store.service";
-import { CommonModule } from "@angular/common";
+
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatIconModule } from "@angular/material/icon";
@@ -26,19 +26,18 @@ import { MatInputModule } from "@angular/material/input";
     styleUrl: "./skill-type-details.component.scss",
     standalone: true,
     imports: [
-      CommonModule,
-      ReactiveFormsModule,
-      FormsModule,
-      MatSidenavModule,
-      MatTooltipModule,
-      MatIconModule,
-      MatFormFieldModule,
-      NavigableEntryEditorComponent,
-      TranslateModule,
-      MatButtonModule,
-      MatInputModule,
-      RouterLink
-    ]
+    ReactiveFormsModule,
+    FormsModule,
+    MatSidenavModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatFormFieldModule,
+    NavigableEntryEditorComponent,
+    TranslateModule,
+    MatButtonModule,
+    MatInputModule,
+    RouterLink
+]
 })
 export class SkillTypeDetailsComponent implements OnInit {
   id = input.required<number>();

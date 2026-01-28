@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from "@angular/common";
+
 import { Component, Inject, signal } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDatepickerModule } from "@angular/material/datepicker";
@@ -24,15 +24,14 @@ import { MatInputModule } from "@angular/material/input";
     styleUrl: "./skill-edit-dialog.component.scss",
     standalone: true,
     imports: [
-      CommonModule,
-      MatDialogModule,
-      MatFormFieldModule,
-      MatSelectModule,
-      MatDatepickerModule,
-      MatButtonModule,
-      TranslateModule,
-      MatInputModule
-    ]
+    MatDialogModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatButtonModule,
+    TranslateModule,
+    MatInputModule
+]
 })
 export class SkillEditDialogComponent {
   skillTypes = signal<SkillType[]>([]);

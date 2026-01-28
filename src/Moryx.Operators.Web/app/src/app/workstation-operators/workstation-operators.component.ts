@@ -16,7 +16,7 @@ import { SkillTypeModel } from '../api/models/skill-type-model';
 import { skillTypeToModel } from '../models/model-converter';
 import { OperatorViewModel } from '../models/operator-view-model';
 import { AppStoreService } from '../services/app-store.service';
-import { CommonModule } from '@angular/common';
+
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { EmptyStateComponent } from '@moryx/ngx-web-framework';
@@ -30,15 +30,14 @@ import { MatButtonModule } from '@angular/material/button';
     styleUrl: './workstation-operators.component.scss',
     standalone: true,
     imports: [
-      CommonModule,
-      MatTooltipModule,
-      MatIconModule,
-      EmptyStateComponent,
-      TranslateModule,
-      OperatorsComponent,
-      MatButtonModule,
-      RouterLink
-    ]
+    MatTooltipModule,
+    MatIconModule,
+    EmptyStateComponent,
+    TranslateModule,
+    OperatorsComponent,
+    MatButtonModule,
+    RouterLink
+]
 })
 export class WorkstationOperatorsComponent {
 

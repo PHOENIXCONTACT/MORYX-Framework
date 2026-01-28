@@ -13,7 +13,7 @@ import { ConfirmationDialogComponent } from '../dialogs/confirmation-dialog/conf
 import { OperatorSkill } from '../models/operator-skill-model';
 import { AppStoreService } from '../services/app-store.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
+
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
@@ -25,14 +25,13 @@ import { MatButtonModule } from '@angular/material/button';
     styleUrl: './skill-types.component.scss',
     standalone: true,
     imports: [
-      CommonModule,
-      MatTooltipModule,
-      MatIconModule,
-      RouterLink,
-      TranslateModule,
-      MatTableModule,
-      MatButtonModule
-    ]
+    MatTooltipModule,
+    MatIconModule,
+    RouterLink,
+    TranslateModule,
+    MatTableModule,
+    MatButtonModule
+]
 })
 export class SkillTypesComponent {
   skillTypes = signal<SkillType[]>([]);

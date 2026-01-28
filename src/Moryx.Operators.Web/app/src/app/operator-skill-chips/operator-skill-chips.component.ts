@@ -6,7 +6,7 @@
 import { Component, computed, input, Input } from "@angular/core";
 import { OperatorSkill } from "../models/operator-skill-model";
 import { SkillTypeModel } from "../api/models/skill-type-model";
-import { CommonModule } from "@angular/common";
+
 import { MatTooltipModule } from "@angular/material/tooltip";
 import {MatChipsModule} from '@angular/material/chips';
 @Component({
@@ -15,10 +15,9 @@ import {MatChipsModule} from '@angular/material/chips';
     styleUrl: "./operator-skill-chips.component.scss",
     standalone: true,
     imports: [
-      CommonModule,
-      MatTooltipModule,
-      MatChipsModule
-    ]
+    MatTooltipModule,
+    MatChipsModule
+]
 })
 export class OperatorSkillChipsComponent {
   operatorId = input.required<string>();

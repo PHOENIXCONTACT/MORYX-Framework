@@ -15,7 +15,7 @@ import { AssignableOperator } from "../api/models/assignable-operator";
 import { IOperatorAssignable } from "../api/models/i-operator-assignable";
 import { AppStoreService } from "../services/app-store.service";
 import { OperatorCardComponent } from "../operator-card/operator-card.component";
-import { CommonModule } from "@angular/common";
+
 import { EmptyStateComponent } from "@moryx/ngx-web-framework";
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -24,12 +24,11 @@ import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-transla
     templateUrl: "./operators.component.html",
     styleUrl: "./operators.component.scss",
     standalone: true,
-    imports:[
-      OperatorCardComponent,
-      CommonModule,
-      EmptyStateComponent,
-      TranslateModule
-    ]
+    imports: [
+    OperatorCardComponent,
+    EmptyStateComponent,
+    TranslateModule
+]
 })
 export class OperatorsComponent implements OnInit {
   

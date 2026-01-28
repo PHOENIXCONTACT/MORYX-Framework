@@ -10,7 +10,7 @@ import { OperatorViewModel } from 'src/app/models/operator-view-model';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { AssignableOperator } from 'src/app/api/models/assignable-operator';
 import { AppStoreService } from 'src/app/services/app-store.service';
-import { CommonModule } from '@angular/common';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -22,14 +22,13 @@ import { MatButtonModule } from '@angular/material/button';
     styleUrl: './add-operator.component.scss',
     standalone: true,
     imports: [
-      CommonModule,
-      MatDialogModule,
-      MatFormFieldModule,
-      ReactiveFormsModule,
-      MatInputModule,
-      TranslateModule,
-      MatButtonModule
-    ]
+    MatDialogModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    TranslateModule,
+    MatButtonModule
+]
 })
 export class AddOperatorComponentDialog {
   operatorForm = new FormGroup({

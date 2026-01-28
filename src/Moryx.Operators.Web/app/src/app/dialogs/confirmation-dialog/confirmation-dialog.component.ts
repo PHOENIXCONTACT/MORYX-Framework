@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -14,11 +14,10 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
     templateUrl: './confirmation-dialog.component.html',
     styleUrl: './confirmation-dialog.component.scss',
     standalone: true,
-    imports:[
-      CommonModule,
-      MatDialogModule,
-      TranslateModule
-    ]
+    imports: [
+    MatDialogModule,
+    TranslateModule
+]
 })
 export class ConfirmationDialogComponent {
   TranslationConstants = TranslationConstants;

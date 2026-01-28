@@ -2,17 +2,17 @@
   <div class="tw:absolute tw:bottom-2 tw:right-2 tw:z-100">
     <div
       class="tw:flex tw:flex-col tw:justify-center tw:items-center tw:gap-1"
-    >
+      >
       <div>
         <a
-          mat-mini-fab 
+          mat-mini-fab
           [matTooltip]="
             TranslationConstants.OPERATORS_MANAGEMENT.MANAGE_OPERATORS | translate
           "
           matTooltipPosition="left"
           routerLink="/management"
           class="management-button"
-        >
+          >
           <mat-icon>manage_accounts</mat-icon>
         </a>
       </div>
@@ -23,22 +23,23 @@
       </button>
     </div>
   </div>
-  <empty-state
-    *ngIf="!workstations().length"
-    [header]="TranslationConstants.WORKSTATION_OPERATORS.EMPTY_TITLE | translate"
+  @if (!workstations().length) {
+    <empty-state
+      [header]="TranslationConstants.WORKSTATION_OPERATORS.EMPTY_TITLE | translate"
     [message]="
       TranslationConstants.WORKSTATION_OPERATORS.EMPTY_MESSAGE | translate
     "
-  ></empty-state>
-  
-  <ng-container *ngIf="!isCardExpanded(); else expandedCard">
+    ></empty-state>
+  }
+
+  @if (!isCardExpanded()) {
     <div class="tw:gap-4 tw:m-2 tw:grid tw:grid-cols-2 tw:auto-rows-auto tw:pb-8">
       <!-- station card -->
-      <div class="tw:w-full tw:h-96 tw:bg-white tw:border tw:border-gray-200 tw:flex tw:flex-col tw:rounded-sm" 
-      *ngFor="let station of workstations()">
-        
-        <!-- card header -->
-        <div class="tw:flex tw:flex-row tw:justify-between tw:items-center tw:border-b tw:border-gray-200 tw:px-2 tw:py-1">
+      @for (station of workstations(); track station) {
+        <div class="tw:w-full tw:h-96 tw:bg-white tw:border tw:border-gray-200 tw:flex tw:flex-col tw:rounded-sm"
+          >
+          <!-- card header -->
+          <div class="tw:flex tw:flex-row tw:justify-between tw:items-center tw:border-b tw:border-gray-200 tw:px-2 tw:py-1">
             <span class="text-xl font-medium">{{ station.data.name }}</span>
             <button
               mat-icon-button
@@ -47,20 +48,18 @@
                 TranslationConstants.WORKSTATION_OPERATORS.EXPAND | translate
               "
               (click)="toggleWorkstationCard(station)"
-            >
+              >
               <mat-icon>fullscreen</mat-icon>
             </button>
+          </div>
+          <!-- card body -->
+          <div class="tw:w-full tw:h-full tw:overflow-y-auto tw:p-2" role="main">
+            <app-operators [workstation]="station" mainContainerStyle="" />
+          </div>
         </div>
-        <!-- card body -->
-        <div class="tw:w-full tw:h-full tw:overflow-y-auto tw:p-2" role="main">
-          <app-operators [workstation]="station" mainContainerStyle="" />
-        </div>
-      </div>
+      }
     </div>
-  </ng-container>
-  
-  <!-- expanded card -->
-  <ng-template #expandedCard>
+  } @else {
     <div class="tw:flex tw:justify-between tw:items-center  tw:bg-white tw:px-2 tw:py-1 tw:border-b tw:border-gray-200">
       <div class="tw:flex tw:items-center tw:gap-2">
         <button
@@ -70,7 +69,7 @@
             TranslationConstants.WORKSTATION_OPERATORS.GO_BACK | translate
           "
           (click)="toggleWorkstationCard(workstationTogglingState()?.station)"
-        >
+          >
           <mat-icon>arrow_back</mat-icon>
         </button>
         <span class="tw:text-xl tw:font-medium">{{
@@ -84,11 +83,13 @@
       </div>
     </div>
     <div class="tw:grid tw:grid-cols-4 tw:auto-rows-auto tw:p-2">
-      <app-operators 
-      [workstation]="workstationTogglingState()?.station!"
-      mainContainerStyle="" 
-       />
+      <app-operators
+        [workstation]="workstationTogglingState()?.station!"
+        mainContainerStyle=""
+        />
     </div>
-  </ng-template>
-  
+  }
+
+  <!-- expanded card -->
+
 </div>

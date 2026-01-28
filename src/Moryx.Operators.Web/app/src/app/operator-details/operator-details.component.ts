@@ -25,7 +25,7 @@ import { timeInterval } from "rxjs";
 import { AppStoreService } from "../services/app-store.service";
 import { IOperatorAssignable } from "../api/models/i-operator-assignable";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { CommonModule } from "@angular/common";
+
 import { MatIconModule } from "@angular/material/icon";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatTooltipModule } from "@angular/material/tooltip";
@@ -40,18 +40,17 @@ import { MatButtonModule } from "@angular/material/button";
     styleUrl: "./operator-details.component.scss",
     standalone: true,
     imports: [
-      CommonModule,
-      MatIconModule,
-      MatSidenavModule,
-      MatTooltipModule,
-      TranslateModule,
-      MatFormFieldModule,
-      MatInputModule,
-      FormsModule,
-      MatTableModule,
-      MatButtonModule,
-      RouterLink
-    ]
+    MatIconModule,
+    MatSidenavModule,
+    MatTooltipModule,
+    TranslateModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatTableModule,
+    MatButtonModule,
+    RouterLink
+]
 })
 export class OperatorDetailsComponent implements OnInit {
   id = input.required<string>();

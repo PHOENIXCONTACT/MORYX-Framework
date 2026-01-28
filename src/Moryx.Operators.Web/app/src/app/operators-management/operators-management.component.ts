@@ -17,7 +17,7 @@ import { SkillType } from "../models/skill-type-model";
 import { skillToOperatorSkill, skillTypeToModel } from "../models/model-converter";
 import { Router, RouterLink } from "@angular/router";
 import { AppStoreService } from "../services/app-store.service";
-import { CommonModule } from "@angular/common";
+
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSidenavModule } from "@angular/material/sidenav";
@@ -31,16 +31,15 @@ import { MatButtonModule } from "@angular/material/button";
     styleUrl: "./operators-management.component.scss",
     standalone: true,
     imports: [
-      CommonModule,
-      MatTooltipModule,
-      MatIconModule,
-      MatSidenavModule,
-      MatExpansionModule,
-      OperatorSkillChipsComponent,
-      RouterLink,
-      TranslateModule,
-      MatButtonModule
-    ]
+    MatTooltipModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatExpansionModule,
+    OperatorSkillChipsComponent,
+    RouterLink,
+    TranslateModule,
+    MatButtonModule
+]
 })
 export class OperatorsManagementComponent implements OnInit {
 

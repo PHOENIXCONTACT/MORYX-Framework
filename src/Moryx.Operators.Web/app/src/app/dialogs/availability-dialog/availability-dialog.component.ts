@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from "@angular/common";
+
 import { Component, Inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDatepickerModule } from "@angular/material/datepicker";
@@ -17,13 +17,12 @@ import { MatInputModule } from "@angular/material/input";
     styleUrl: "./availability-dialog.component.scss",
     standalone: true,
     imports: [
-      CommonModule,
-      MatDialogModule,
-      MatFormFieldModule,
-      MatInputModule,
-      MatDatepickerModule,
-      MatButtonModule
-    ]
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatButtonModule
+]
 })
 export class AvailabilityDialogComponent {
   constructor(
