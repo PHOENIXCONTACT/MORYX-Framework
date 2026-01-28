@@ -13,8 +13,8 @@ import { ResourceModel } from 'src/app/api/models/resource-model';
 
 @Component({
     selector: 'app-dialog-remove-resource',
-    templateUrl: './dialog-remove-resource.component.html',
-    styleUrls: ['./dialog-remove-resource.component.scss'],
+    templateUrl: './dialog-remove-resource.html',
+    styleUrls: ['./dialog-remove-resource.scss'],
     standalone: true,
     imports: [
     TranslateModule,
@@ -22,12 +22,12 @@ import { ResourceModel } from 'src/app/api/models/resource-model';
     MatButtonModule
 ]
 })
-export class DialogRemoveResourceComponent {
+export class DialogRemoveResource {
     resourceToBeRemoved = signal<ResourceModel | undefined>(undefined);
     TranslationConstants = TranslationConstants;
 
     constructor(
-        public dialogRef: MatDialogRef<DialogRemoveResourceComponent>,
+        public dialogRef: MatDialogRef<DialogRemoveResource>,
         @Inject(MAT_DIALOG_DATA) public data: ResourceModel,
         public translate: TranslateService,
     ) {
@@ -38,4 +38,3 @@ export class DialogRemoveResourceComponent {
         this.dialogRef.close();
     }
 }
-

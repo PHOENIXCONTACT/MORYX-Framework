@@ -12,12 +12,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-resource-properties',
-  templateUrl: './resource-properties.component.html',
-  styleUrls: ['./resource-properties.component.scss'],
+  templateUrl: './resource-properties.html',
+  styleUrls: ['./resource-properties.scss'],
   imports: [MatProgressSpinnerModule, NavigableEntryEditor],
   standalone: true,
 })
-export class ResourcePropertiesComponent implements OnInit, OnDestroy {
+export class ResourceProperties implements OnInit, OnDestroy {
   properties = signal<Entry | undefined>(undefined);
   private editServiceSubscription: Subscription | undefined;
 
@@ -36,4 +36,3 @@ export class ResourcePropertiesComponent implements OnInit, OnDestroy {
     this.editServiceSubscription?.unsubscribe();
   }
 }
-

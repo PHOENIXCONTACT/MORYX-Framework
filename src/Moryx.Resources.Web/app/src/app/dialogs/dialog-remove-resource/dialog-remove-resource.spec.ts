@@ -4,20 +4,20 @@
 */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DialogRemoveResourceComponent } from './dialog-remove-resource.component';
+import { DialogRemoveResource } from './dialog-remove-resource';
 
-describe('DialogRemoveResourceComponent', () => {
-    let component: DialogRemoveResourceComponent;
-    let fixture: ComponentFixture<DialogRemoveResourceComponent>;
+describe('DialogRemoveResource', () => {
+    let component: DialogRemoveResource;
+    let fixture: ComponentFixture<DialogRemoveResource>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DialogRemoveResourceComponent],
+            declarations: [DialogRemoveResource],
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(DialogRemoveResourceComponent);
+        fixture = TestBed.createComponent(DialogRemoveResource);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
@@ -26,4 +26,3 @@ describe('DialogRemoveResourceComponent', () => {
         expect(component).toBeTruthy();
     });
 });
-

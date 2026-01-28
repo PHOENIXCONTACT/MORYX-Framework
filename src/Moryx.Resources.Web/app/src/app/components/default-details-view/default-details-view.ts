@@ -10,15 +10,14 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
 
 @Component({
   selector: 'app-default-details-view',
-  templateUrl: './default-details-view.component.html',
-  styleUrls: ['./default-details-view.component.scss'],
+  templateUrl: './default-details-view.html',
+  styleUrls: ['./default-details-view.scss'],
   imports: [TranslateModule, EmptyState,],
   standalone: true
 })
-export class DefaultDetailsViewComponent {
+export class DefaultDetailsView {
   TranslationConstants = TranslationConstants;
 
   constructor() {
   }
 }
-

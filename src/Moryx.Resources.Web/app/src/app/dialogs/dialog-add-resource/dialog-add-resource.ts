@@ -22,8 +22,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-dialog-add-resource',
-  templateUrl: './dialog-add-resource.component.html',
-  styleUrls: ['./dialog-add-resource.component.scss'],
+  templateUrl: './dialog-add-resource.html',
+  styleUrls: ['./dialog-add-resource.scss'],
   imports: [
     TranslateModule,
     CommonModule,
@@ -38,7 +38,7 @@ import { MatButtonModule } from '@angular/material/button';
   ],
   standalone: true,
 })
-export class DialogAddResourceComponent implements OnInit {
+export class DialogAddResource implements OnInit {
   types = signal<ResourceTypeModel[] | undefined>([]);
   resourceType = signal<ResourceTypeModel | undefined>(undefined);
   selectedCtor = signal<MethodEntry | undefined>(undefined);
@@ -49,7 +49,7 @@ export class DialogAddResourceComponent implements OnInit {
   public data = inject<ResourceModel>(MAT_DIALOG_DATA);
 
   constructor(
-    public dialogRef: MatDialogRef<DialogAddResourceComponent>,
+    public dialogRef: MatDialogRef<DialogAddResource>,
     private cache: CacheResourceService,
     public translate: TranslateService
   ) {
@@ -96,4 +96,3 @@ export class DialogAddResourceComponent implements OnInit {
     } as ResourceConstructionParameters;
   }
 }
-

@@ -16,8 +16,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-resource-methods',
-  templateUrl: './resource-methods.component.html',
-  styleUrls: ['./resource-methods.component.scss'],
+  templateUrl: './resource-methods.html',
+  styleUrls: ['./resource-methods.scss'],
   imports: [
     EntryEditor,
     MatExpansionModule,
@@ -27,7 +27,7 @@ import { MatButtonModule } from '@angular/material/button';
 ],
   standalone: true,
 })
-export class ResourceMethodsComponent implements OnInit, OnDestroy {
+export class ResourceMethods implements OnInit, OnDestroy {
   TranslationConstants = TranslationConstants;
 
   constructor(public methodService: ResourceMethodService, public translate: TranslateService) {}
@@ -38,4 +38,3 @@ export class ResourceMethodsComponent implements OnInit, OnDestroy {
     this.methodService.selectedMethod = undefined;
   }
 }
-

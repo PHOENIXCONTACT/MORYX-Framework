@@ -20,7 +20,7 @@ import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import {environment} from 'src/environments/environment';
 import {ResourceModel, ResourceTypeModel} from './api/models';
 import {ResourceModificationService} from './api/services';
-import {DialogAddResourceComponent} from './dialogs/dialog-add-resource/dialog-add-resource.component';
+import {DialogAddResource} from './dialogs/dialog-add-resource/dialog-add-resource';
 import {ResourceConstructionParameters} from './models/ResourceConstructionParameters';
 import './extensions/array.extensions';
 import {TranslationConstants} from './extensions/translation-constants.extensions';
@@ -40,12 +40,12 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
-import {DialogRemoveResourceComponent} from "./dialogs/dialog-remove-resource/dialog-remove-resource.component";
+import {DialogRemoveResource} from "./dialogs/dialog-remove-resource/dialog-remove-resource";
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  templateUrl: './app.html',
+  styleUrls: ['./app.scss'],
   imports: [
     CommonModule,
     FormsModule,
@@ -64,7 +64,7 @@ import {DialogRemoveResourceComponent} from "./dialogs/dialog-remove-resource/di
   ],
   standalone: true,
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class App implements OnInit, OnDestroy {
   private readonly trigger = viewChild.required(MatMenuTrigger);
   menuTopLeftPosition = signal<Position>({x: '0px', y: '0px'});
 
@@ -246,7 +246,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   onAdd() {
-    const dialogRef = this.dialog.open(DialogAddResourceComponent, {
+    const dialogRef = this.dialog.open(DialogAddResource, {
       height: '560px',
       width: '560px',
     });
@@ -270,7 +270,7 @@ export class AppComponent implements OnInit, OnDestroy {
     const resource = this.resourcesFlat?.find(r => r.id === resourceId);
     if (!resource) return;
 
-    const dialogRef = this.dialog.open(DialogRemoveResourceComponent, {
+    const dialogRef = this.dialog.open(DialogRemoveResource, {
       data: resource,
     });
 
@@ -341,4 +341,3 @@ export interface Position {
   x: string;
   y: string;
 }
-

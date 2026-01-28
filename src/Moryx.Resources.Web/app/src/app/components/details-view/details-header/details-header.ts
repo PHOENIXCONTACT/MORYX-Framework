@@ -16,8 +16,8 @@ import { MatInputModule } from "@angular/material/input";
 
 @Component({
   selector: "app-details-header",
-  templateUrl: "./details-header.component.html",
-  styleUrls: ["./details-header.component.scss"],
+  templateUrl: "./details-header.html",
+  styleUrls: ["./details-header.scss"],
   imports: [
     FormsModule,
     MatDividerModule,
@@ -27,7 +27,7 @@ import { MatInputModule } from "@angular/material/input";
 ],
   standalone: true,
 })
-export class DetailsHeaderComponent implements AfterContentChecked {
+export class DetailsHeader implements AfterContentChecked {
   resource = input.required<ResourceModel>();
   editMode = input<boolean>(false);
   TranslationConstants = TranslationConstants;
@@ -48,4 +48,3 @@ export class DetailsHeaderComponent implements AfterContentChecked {
     );
   }
 }
-

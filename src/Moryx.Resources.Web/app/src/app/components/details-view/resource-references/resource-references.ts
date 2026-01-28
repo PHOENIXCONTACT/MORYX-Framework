@@ -22,8 +22,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-resource-references',
-  templateUrl: './resource-references.component.html',
-  styleUrls: ['./resource-references.component.scss'],
+  templateUrl: './resource-references.html',
+  styleUrls: ['./resource-references.scss'],
   imports: [
     MatExpansionModule,
     MatFormFieldModule,
@@ -36,7 +36,7 @@ import { MatButtonModule } from '@angular/material/button';
 ],
   standalone: true,
 })
-export class ResourceReferencesComponent implements OnInit, OnDestroy {
+export class ResourceReferences implements OnInit, OnDestroy {
   resource: ResourceModel | undefined;
   references: ResourceReferenceModel[] | null | undefined;
   selectedTarget: ResourceModel | undefined;
@@ -186,4 +186,3 @@ export class ResourceReferencesComponent implements OnInit, OnDestroy {
     return supportedSubTypes;
   }
 }
-
