@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
-import { MoryxSnackbarService, SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework';
+import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SubscriptionLike } from 'rxjs';
 import { WorkplanSessionModel } from '../../api/models';
@@ -15,7 +15,7 @@ import { WorkplanEditingService } from '../../api/services';
 import {
   ConfirmDialogButton,
   ConfirmDialogComponent,
-  ConfirmDialogData,
+  ConfirmDialogData
 } from '../../dialogs/dialog-confirm/dialog-confirm.component';
 import { TranslationConstants } from '../../extensions/translation-constants.extensions';
 import { SessionsService } from '../../services/sessions.service';
@@ -29,11 +29,11 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    selector: 'app-sessions',
-    templateUrl: './sessions.component.html',
-    styleUrls: ['./sessions.component.scss'],
-    standalone: true,
-    imports: [
+  selector: 'app-sessions',
+  templateUrl: './sessions.component.html',
+  styleUrls: ['./sessions.component.scss'],
+  standalone: true,
+  imports: [
     MatTabsModule,
     MatProgressSpinnerModule,
     RouterOutlet,
@@ -42,20 +42,20 @@ import { MatButtonModule } from '@angular/material/button';
     FormsModule,
     TranslateModule,
     MatButtonModule
-]
+  ]
 })
 export class SessionsComponent implements OnInit, OnDestroy {
   constructor(
     private sessionService: SessionsService,
     private workplanEditing: WorkplanEditingService,
-    private moryxSnackbar: MoryxSnackbarService,
+    private snackbarService: SnackbarService,
     private router: Router,
     public dialog: MatDialog,
     private searchBarService: SearchBarService,
-    private route: ActivatedRoute,
     public translate: TranslateService,
     private editorState: EditorStateService
-  ) {}
+  ) {
+  }
 
   sessions = signal<WorkplanSessionModel[]>([]);
   activeSession = signal<WorkplanSessionModel | undefined>(undefined);
@@ -82,18 +82,18 @@ export class SessionsComponent implements OnInit, OnDestroy {
     this.searchBarService.subscribe({
       next: (request: SearchRequest) => {
         this.onSearch(request);
-      },
+      }
     });
   }
 
   onSessionUpdated(updated: WorkplanSessionModel) {
-    if (this.activeSession()?.sessionToken === updated.sessionToken) this.activeSession.update(_=> updated);
+    if (this.activeSession()?.sessionToken === updated.sessionToken) this.activeSession.update(_ => updated);
 
-    this.sessions.update(_=> this.sessions().filter(s => s.sessionToken !== updated.sessionToken));
-    this.sessions.update(items =>{
+    this.sessions.update(_ => this.sessions().filter(s => s.sessionToken !== updated.sessionToken));
+    this.sessions.update(items => {
       items.push(updated);
       return items;
-    })
+    });
   }
 
   private async onSessionsChanged(tokens: string[]): Promise<void> {
@@ -105,14 +105,14 @@ export class SessionsComponent implements OnInit, OnDestroy {
             .getSession(token)
             .toAsync()
             .then((value: WorkplanSessionModel) => newSessions.push(value))
-            .catch(async (err: HttpErrorResponse) => await this.moryxSnackbar.handleError(err))
+            .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
       )
-    ).then(() => (this.sessions.update(_=> newSessions)));
+    ).then(() => (this.sessions.update(_ => newSessions)));
   }
 
   private async onActiveSessionChanged(token: string | undefined) {
     const result = token ? await this.sessionService.getSession(token).toAsync() : undefined;
-    this.activeSession.update(_=> result);
+    this.activeSession.update(_ => result);
     if (this.activeSession()) this.router.navigate(['session', this.activeSession()?.sessionToken]);
   }
 
@@ -128,7 +128,7 @@ export class SessionsComponent implements OnInit, OnDestroy {
         TranslationConstants.SESSIONS.CONFIRM_DIALOG.MESSAGE,
         TranslationConstants.SESSIONS.CONFIRM_DIALOG.TITLE,
         TranslationConstants.SESSIONS.CONFIRM_DIALOG.CANCEL,
-        TranslationConstants.EDITOR.SNACK_BAR.SUCCESS,
+        TranslationConstants.EDITOR.SNACK_BAR.SUCCESS
       ])
       .toAsync();
   }
@@ -154,7 +154,7 @@ export class SessionsComponent implements OnInit, OnDestroy {
       this.searchBarService.subscribe({
         next: (newRequest: SearchRequest) => {
           this.onSearch(newRequest);
-        },
+        }
       });
     } else {
       const searchSuggestions = [] as SearchSuggestion[];
@@ -180,7 +180,7 @@ export class SessionsComponent implements OnInit, OnDestroy {
           this.router.navigate(['session', this.sessions()[1].sessionToken]);
         } else this.router.navigate(['management']);
       },
-      error: async (err: HttpErrorResponse) => await this.moryxSnackbar.handleError(err),
+      error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)
     });
   }
 
@@ -204,7 +204,7 @@ export class SessionsComponent implements OnInit, OnDestroy {
         buttons: [
           <ConfirmDialogButton>{
             text: translations[TranslationConstants.SESSIONS.CONFIRM_DIALOG.CANCEL],
-            action: () => dialog.close(),
+            action: () => dialog.close()
           },
           <ConfirmDialogButton>{
             text: translations[TranslationConstants.SESSIONS.CONFIRM_DIALOG.CONFIRM],
@@ -212,10 +212,10 @@ export class SessionsComponent implements OnInit, OnDestroy {
             action: () => {
               this.closeSession(sessionToken, sessionIndex);
               dialog.close();
-            },
-          },
-        ],
-      },
+            }
+          }
+        ]
+      }
     });
   }
 
@@ -228,18 +228,18 @@ export class SessionsComponent implements OnInit, OnDestroy {
 
     const session = this.activeSession()!;
     this.sessionService.updateSession(session).toAsync()
-      .catch(async (err: HttpErrorResponse) => await this.moryxSnackbar.handleError(err))
+      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
       .then(_ => this.saveSession(session));
   }
 
   private saveSession(session: WorkplanSessionModel) {
     this.sessionService.saveSession(session).toAsync()
-      .catch(async (err: HttpErrorResponse) => await this.moryxSnackbar.handleError(err))
+      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
       .then(async session => {
-        if (!session) return; 
+        if (!session) return;
         this.editorState.setWorkplan(session);
         const translations = await this.getTranslations();
-        this.moryxSnackbar.showSuccess(translations[TranslationConstants.EDITOR.SNACK_BAR.SUCCESS]);
+        this.snackbarService.showSuccess(translations[TranslationConstants.EDITOR.SNACK_BAR.SUCCESS]);
       });
   }
 
@@ -249,7 +249,7 @@ export class SessionsComponent implements OnInit, OnDestroy {
         this.sessionService.registerUpdatedSession(layoutedSession);
         this.editorState.setWorkplan(layoutedSession);
       },
-      error: async (e: HttpErrorResponse) => await this.moryxSnackbar.handleError(e),
+      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
     });
   }
 }

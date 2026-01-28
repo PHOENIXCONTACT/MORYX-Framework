@@ -11,7 +11,7 @@ import { filter, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { SessionsService } from './services/sessions.service';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -41,7 +41,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Workplan Editor';
   readonly workplansToolbarImage = environment.assets + 'assets/workplans-toolbar.jpg';
-  
+
   changeViewDisabled = signal(true);
   navigatedUrl = signal('');
   changeViewTooltip = signal('');
@@ -55,7 +55,7 @@ export class AppComponent implements OnInit, OnDestroy {
     public router: Router,
     private sessionService: SessionsService,
     private languageService: LanguageService,
-    private moryxSnackbar: MoryxSnackbarService,
+    private snackbarService: SnackbarService,
     public translate: TranslateService
   ) {
     this.translate.addLangs([
@@ -121,7 +121,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.router.navigate(['session', session.sessionToken]);
         this.sessionService.activateSession(session.sessionToken!);
       })
-      .catch(async (err: HttpErrorResponse) => await this.moryxSnackbar.handleError(err));
+      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
   }
 }
 

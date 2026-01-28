@@ -4,7 +4,7 @@
 */
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,7 +27,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from '@moryx/ngx-web-framework';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 import { ApiModule } from './api/api.module';
 import { BrowserStorageService } from './services/browser-storage.service';
@@ -35,11 +34,10 @@ import { EditorStateService } from './services/editor-state.service';
 import { SessionsService } from './services/sessions.service';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-export function httpTranslateLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.assets + 'assets/languages/');
-}
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
@@ -65,14 +63,7 @@ export const appConfig: ApplicationConfig = {
       MatFormFieldModule,
       MatSelectModule,
       MatMenuModule,
-      MatTableModule,
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useFactory: httpTranslateLoaderFactory,
-          deps: [HttpClient],
-        },
-      })
+      MatTableModule
     ),
     BrowserStorageService,
     SessionsService,
@@ -80,6 +71,13 @@ export const appConfig: ApplicationConfig = {
     ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
     provideHttpClient(withInterceptorsFromDi()),
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({
+        prefix: environment.assets + 'assets/languages/',
+        suffix: '.json'
+      }),
+      fallbackLang: 'en'
+    }),
     provideAnimations(),
   ],
 };

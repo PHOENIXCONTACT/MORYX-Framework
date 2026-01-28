@@ -5,13 +5,12 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { WorkplanNodeClassification, WorkplanStepRecipe } from '../../api/models';
 import { WorkplanEditingService } from '../../api/services';
 import { TranslationConstants } from '../../extensions/translation-constants.extensions';
-import { EditorStateService } from '../../services/editor-state.service';
 import { SessionsService } from '../../services/sessions.service';
 import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -19,25 +18,26 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 
 @Component({
-    selector: 'app-toolbox',
-    templateUrl: './toolbox.component.html',
-    styleUrls: ['./toolbox.component.scss'],
-    standalone: true,
-    imports: [
-      CommonModule,
-      MatExpansionModule,
-      MatIconModule,
-      MatCardModule,
-      TranslateModule,
-    ]
+  selector: 'app-toolbox',
+  templateUrl: './toolbox.component.html',
+  styleUrls: ['./toolbox.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatExpansionModule,
+    MatIconModule,
+    MatCardModule,
+    TranslateModule
+  ]
 })
 export class ToolboxComponent implements OnInit, OnDestroy {
   constructor(
     private workplanEditing: WorkplanEditingService,
     public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService,
+    private snackbarService: SnackbarService,
     private sessionService: SessionsService
-  ) {}
+  ) {
+  }
 
   subscription: Subscription | undefined;
   stepRecipes: WorkplanStepRecipe[] = [];
@@ -55,7 +55,7 @@ export class ToolboxComponent implements OnInit, OnDestroy {
   getAvailableSteps() {
     this.workplanEditing.availableSteps().subscribe({
       next: steps => (this.stepRecipes = steps),
-      error: async (e: HttpErrorResponse) => await this.moryxSnackbar.handleError(e),
+      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
     });
   }
 
