@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DeleteAssignmentComponent } from './delete-assignment.component';
+import { DeleteAssignment } from './delete-assignment';
 
-describe('DeleteAssignmentComponent', () => {
-  let component: DeleteAssignmentComponent;
-  let fixture: ComponentFixture<DeleteAssignmentComponent>;
+describe('DeleteAssignment', () => {
+  let component: DeleteAssignment;
+  let fixture: ComponentFixture<DeleteAssignment>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeleteAssignmentComponent]
+      imports: [DeleteAssignment]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(DeleteAssignmentComponent);
+    fixture = TestBed.createComponent(DeleteAssignment);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

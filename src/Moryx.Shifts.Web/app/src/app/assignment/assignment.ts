@@ -11,7 +11,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { ShiftCardModel } from '../models/shift-card-model';
 import { OperatorModel, OperatorStatus } from '../models/operator-model';
-import { WeekAssignmentDialogComponent } from '../dialogs/week-assignment-dialog/week-assignment-dialog.component';
+import { WeekAssignmentDialog } from '../dialogs/week-assignment-dialog/week-assignment-dialog';
 import AssignmentData from '../models/assignment-data';
 import { CalendarDate, CalendarState } from '../models/calendar-state';
 import { AppStoreService } from '../services/app-store.service';
@@ -25,8 +25,8 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-assignment',
-  templateUrl: './assignment.component.html',
-  styleUrl: './assignment.component.scss',
+  templateUrl: './assignment.html',
+  styleUrl: './assignment.scss',
   standalone: true,
   imports : [
     CommonModule,
@@ -36,7 +36,7 @@ import { MatIconModule } from '@angular/material/icon';
     TranslateModule
   ]
 })
-export class AssignmentComponent {
+export class Assignment {
   assignment = model.required<AssignmentCardModel>();
   calendarState = input.required<CalendarState>();
   calendarDate = input.required<CalendarDate>();
@@ -112,7 +112,7 @@ export class AssignmentComponent {
         notes: this.assignment().notes,
         calendarState: this.calendarState()
       };
-      var dialogResult = this.dialog.open(WeekAssignmentDialogComponent, {
+      var dialogResult = this.dialog.open(WeekAssignmentDialog, {
         data: assignmentData
       });
   

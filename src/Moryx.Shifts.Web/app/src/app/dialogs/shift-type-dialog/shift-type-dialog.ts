@@ -16,8 +16,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-shift-type-dialog',
-  templateUrl: './shift-type-dialog.component.html',
-  styleUrl: './shift-type-dialog.component.scss',
+  templateUrl: './shift-type-dialog.html',
+  styleUrl: './shift-type-dialog.scss',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -28,7 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
 ]
 })
-export class ShiftTypeDialogComponent {
+export class ShiftTypeDialog {
   TranslationConstants = TranslationConstants;
   HOURS_REGEX = /^(?:[01][0-9]|2[0-3]):[0-5][0-9](?::[0-5][0-9])?$/
   form = new FormGroup({
@@ -39,7 +39,7 @@ export class ShiftTypeDialogComponent {
   });
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: ShiftTypeModel,
-  public dialogRef: MatDialogRef<ShiftTypeDialogComponent>){
+  public dialogRef: MatDialogRef<ShiftTypeDialog>){
     
   }
 

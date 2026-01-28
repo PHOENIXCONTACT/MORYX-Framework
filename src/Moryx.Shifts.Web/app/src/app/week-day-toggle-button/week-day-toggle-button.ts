@@ -16,8 +16,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-week-day-toggle-button',
-  templateUrl: './week-day-toggle-button.component.html',
-  styleUrl: './week-day-toggle-button.component.scss',
+  templateUrl: './week-day-toggle-button.html',
+  styleUrl: './week-day-toggle-button.scss',
   standalone: true,
   imports: [
     CommonModule,
@@ -27,7 +27,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     TranslateModule
   ]
 })
-export class WeekDayToggleButtonComponent {
+export class WeekDayToggleButton {
 
   startDate = input.required<Date>();
   readOnly = input.required<boolean>();

@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ShiftTypeDialogComponent } from './shift-type-dialog.component';
+import { WeekAssignmentDialog } from './week-assignment-dialog';
 
-describe('ShiftTypeDialogComponent', () => {
-  let component: ShiftTypeDialogComponent;
-  let fixture: ComponentFixture<ShiftTypeDialogComponent>;
+describe('WeekAssignmentDialog', () => {
+  let component: WeekAssignmentDialog;
+  let fixture: ComponentFixture<WeekAssignmentDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ShiftTypeDialogComponent]
+      imports: [WeekAssignmentDialog]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(ShiftTypeDialogComponent);
+    fixture = TestBed.createComponent(WeekAssignmentDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

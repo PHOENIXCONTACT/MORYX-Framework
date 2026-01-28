@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CopyShiftAndAssignmentComponent } from './copy-shift-and-assignment.component';
+import { ShiftTypeDialog } from './shift-type-dialog';
 
-describe('CopyShiftAndAssignmentComponent', () => {
-  let component: CopyShiftAndAssignmentComponent;
-  let fixture: ComponentFixture<CopyShiftAndAssignmentComponent>;
+describe('ShiftTypeDialog', () => {
+  let component: ShiftTypeDialog;
+  let fixture: ComponentFixture<ShiftTypeDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CopyShiftAndAssignmentComponent]
+      imports: [ShiftTypeDialog]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(CopyShiftAndAssignmentComponent);
+    fixture = TestBed.createComponent(ShiftTypeDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

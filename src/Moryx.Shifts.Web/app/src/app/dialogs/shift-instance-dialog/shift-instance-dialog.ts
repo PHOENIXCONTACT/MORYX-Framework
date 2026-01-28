@@ -18,8 +18,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-shift-instance-dialog',
-  templateUrl: './shift-instance-dialog.component.html',
-  styleUrl: './shift-instance-dialog.component.scss',
+  templateUrl: './shift-instance-dialog.html',
+  styleUrl: './shift-instance-dialog.scss',
   standalone: true,
   imports: [
     MatDialogModule,
@@ -32,7 +32,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
 ]
 })
-export class ShiftInstanceDialogComponent {
+export class ShiftInstanceDialog {
   form = new FormGroup({
     startDate: new FormControl<Date>(new Date()),
     endDate: new FormControl<Date>(new Date()),
@@ -40,7 +40,7 @@ export class ShiftInstanceDialogComponent {
   TranslationConstants = TranslationConstants;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ShiftInstanceModel,
-    public dialogRef: MatDialogRef<ShiftInstanceDialogComponent>
+    public dialogRef: MatDialogRef<ShiftInstanceDialog>
   ) {
     this.form.patchValue({
       startDate: data.startDate,

@@ -11,7 +11,7 @@ import { AssignmentCardModel } from './models/assignment-card-model';
 import { MatDialog } from '@angular/material/dialog';
 import { ShiftCardModel } from './models/shift-card-model';
 import AssignmentData from './models/assignment-data';
-import { WeekAssignmentDialogComponent } from './dialogs/week-assignment-dialog/week-assignment-dialog.component';
+import { WeekAssignmentDialog } from './dialogs/week-assignment-dialog/week-assignment-dialog';
 import {
   hasDayInShiftInterval,
   formatDateDigits,
@@ -23,10 +23,10 @@ import {
   shortDayName,
   localizedFormatDate
 } from './utils';
-import { ShiftTypeDialogComponent } from './dialogs/shift-type-dialog/shift-type-dialog.component';
+import { ShiftTypeDialog } from './dialogs/shift-type-dialog/shift-type-dialog';
 import { ShiftTypeModel } from './models/shift-type-model';
 import { ShiftInstanceModel } from './models/shift-instance-model';
-import { ShiftInstanceDialogComponent } from './dialogs/shift-instance-dialog/shift-instance-dialog.component';
+import { ShiftInstanceDialog } from './dialogs/shift-instance-dialog/shift-instance-dialog';
 import { AppStoreService } from './services/app-store.service';
 import { FilterButtonType, ShiftElementTab, ViewType } from './models/types';
 import {
@@ -43,9 +43,9 @@ import { TranslationConstants } from './extensions/translation-constants.extensi
 import { LanguageService, SnackbarService } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import {
-  CopyShiftAndAssignmentComponent,
+  CopyShiftAndAssignment,
   CopyShiftAndAssignmentData
-} from './dialogs/copy-shift-and-assignment/copy-shift-and-assignment.component';
+} from './dialogs/copy-shift-and-assignment/copy-shift-and-assignment';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -54,14 +54,14 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { WorkHoursIconComponent } from './work-hours-icon/work-hours-icon.component';
-import { AssignmentComponent } from './assignment/assignment.component';
-import { OrderItemComponent } from './order-item/order-item.component';
+import { WorkHoursIcon } from './work-hours-icon/work-hours-icon';
+import { Assignment } from './assignment/assignment';
+import { OrderItem } from './order-item/order-item';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  templateUrl: './app.html',
+  styleUrls: ['./app.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -74,14 +74,14 @@ import { OrderItemComponent } from './order-item/order-item.component';
     MatDividerModule,
     MatCheckboxModule,
     EmptyState,
-    WorkHoursIconComponent,
-    AssignmentComponent,
-    OrderItemComponent,
+    WorkHoursIcon,
+    Assignment,
+    OrderItem,
     DragDropModule,
     TranslateModule
   ]
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
   isOperatorFilterPanelOpened = signal(false);
   isResourceFilterPanelOpened = signal(false);
   operators = signal<OperatorModel[]>([]);
@@ -267,7 +267,7 @@ export class AppComponent implements OnInit {
         TranslationConstants.DATE_FORMAT.SHORT_DATE,
       ]).subscribe(translations => {
 
-      var dialogResult = this.dialog.open(WeekAssignmentDialogComponent, {
+      var dialogResult = this.dialog.open(WeekAssignmentDialog, {
         data: <AssignmentData>{
           days: day != undefined ?
             [day] : [...this.calendarState()!.currentViewDates(),
@@ -356,7 +356,7 @@ export class AppComponent implements OnInit {
   }
 
   addShiftType() {
-    var dialogResult = this.dialog.open(ShiftTypeDialogComponent, {
+    var dialogResult = this.dialog.open(ShiftTypeDialog, {
       data: {},
     });
 
@@ -384,7 +384,7 @@ export class AppComponent implements OnInit {
     const shiftInstance = this.shiftInstances().find(x => x.id === shiftInstanceId);
     if (!shiftInstance) return;
 
-    var dialogResult = this.dialog.open(ShiftInstanceDialogComponent, {
+    var dialogResult = this.dialog.open(ShiftInstanceDialog, {
       width: '500px',
       data: shiftInstance,
     });
@@ -432,7 +432,7 @@ export class AppComponent implements OnInit {
           });
           return;
         }
-        var dialogResult = this.dialog.open(CopyShiftAndAssignmentComponent, {
+        var dialogResult = this.dialog.open(CopyShiftAndAssignment, {
           width: '700px',
           data: assignmentsAndShift,
         });

@@ -11,14 +11,14 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-order-item',
-  templateUrl: './order-item.component.html',
-  styleUrl: './order-item.component.scss',
+  templateUrl: './order-item.html',
+  styleUrl: './order-item.scss',
   standalone: true,
   imports: [
     MatIconModule
 ]
 })
-export class OrderItemComponent {
+export class OrderItem {
   prettyMilliseconds = prettyMilliseconds;
   hourToMillisecond = 3600000;
   @Input() order!: OrderModel;
