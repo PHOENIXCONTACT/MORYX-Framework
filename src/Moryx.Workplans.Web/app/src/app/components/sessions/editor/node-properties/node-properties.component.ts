@@ -13,7 +13,7 @@ import { TranslationConstants } from '../../../../extensions/translation-constan
 import { SessionsService } from '../../../../services/sessions.service';
 import { EditorStateService } from '../../../../services/editor-state.service';
 import { Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
+
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,17 +25,15 @@ import { MatInputModule } from '@angular/material/input';
     templateUrl: './node-properties.component.html',
     styleUrls: ['./node-properties.component.scss'],
     standalone: true,
-    imports:
-    [
-      CommonModule,
-      MatSelectModule,
-      FormsModule,
-      NavigableEntryEditorComponent,
-      TranslateModule,
-      MatButtonModule,
-      MatFormFieldModule,
-      MatInputModule
-    ]
+    imports: [
+    MatSelectModule,
+    FormsModule,
+    NavigableEntryEditorComponent,
+    TranslateModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule
+]
 })
 export class NodePropertiesComponent implements OnDestroy {
   node = signal<WorkplanNodeModel | undefined>(undefined);

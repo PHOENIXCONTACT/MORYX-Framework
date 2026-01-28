@@ -9,7 +9,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { WorkplanStepRecipe } from '../../../../api/models';
 import { TranslationConstants } from '../../../../extensions/translation-constants.extensions';
-import { CommonModule } from '@angular/common';
+
 import { NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,12 +20,11 @@ import { MatButtonModule } from '@angular/material/button';
     styleUrls: ['./step-creator.component.scss'],
     standalone: true,
     imports: [
-      CommonModule,
-      NavigableEntryEditorComponent,
-      TranslateModule,
-      MatSelectModule,
-      MatButtonModule
-    ]
+    NavigableEntryEditorComponent,
+    TranslateModule,
+    MatSelectModule,
+    MatButtonModule
+]
 })
 export class StepCreatorComponent implements OnInit, OnDestroy {
   availableSteps = input.required<WorkplanStepRecipe[]>();

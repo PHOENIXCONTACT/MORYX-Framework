@@ -9,76 +9,79 @@
     </mat-expansion-panel-header>
 
     <!-- TODO: Create own component -->
-    <mat-card
-      class="step-card"
-      *ngFor="let stepRecipe of getControlFlow()"
-      [draggable]="true"
-      (dragstart)="handleDragStart(stepRecipe, $event)">
-      <mat-card-header class="step-card-header">
-        <mat-card-subtitle class="step-card-header-text">{{
-          stepRecipe.name ?? (stepRecipe.type | slice: (stepRecipe.type?.lastIndexOf('.') ?? -1) + 1)
-        }}</mat-card-subtitle>
-        <mat-icon [inline]="true" role="complementary" aria-hidden="false" aria-label="Workplan Step Icon">
-          {{ getStepIcon(stepRecipe.classification) }}</mat-icon
-        >
-      </mat-card-header>
-    </mat-card>
-  </mat-expansion-panel>
+    @for (stepRecipe of getControlFlow(); track stepRecipe) {
+      <mat-card
+        class="step-card"
+        [draggable]="true"
+        (dragstart)="handleDragStart(stepRecipe, $event)">
+        <mat-card-header class="step-card-header">
+          <mat-card-subtitle class="step-card-header-text">{{
+            stepRecipe.name ?? (stepRecipe.type | slice: (stepRecipe.type?.lastIndexOf('.') ?? -1) + 1)
+          }}</mat-card-subtitle>
+          <mat-icon [inline]="true" role="complementary" aria-hidden="false" aria-label="Workplan Step Icon">
+            {{ getStepIcon(stepRecipe.classification) }}</mat-icon
+            >
+          </mat-card-header>
+        </mat-card>
+      }
+    </mat-expansion-panel>
 
-  <!-- Panel for steps executing an activity -->
-  <mat-expansion-panel role="listitem" hideToggle>
-    <mat-expansion-panel-header>
-      <mat-panel-description class="step-category">
-        <span class="step-category-header">{{ TranslationConstants.TOOLBOX.STEPS | translate }}</span>
-        <mat-icon>commit</mat-icon>
-      </mat-panel-description>
-    </mat-expansion-panel-header>
+    <!-- Panel for steps executing an activity -->
+    <mat-expansion-panel role="listitem" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-description class="step-category">
+          <span class="step-category-header">{{ TranslationConstants.TOOLBOX.STEPS | translate }}</span>
+          <mat-icon>commit</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
 
-    <!-- TODO: Create own component -->
-    <mat-card
-      class="step-card"
-      *ngFor="let stepRecipe of getExecution()"
-      [draggable]="true"
-      (dragstart)="handleDragStart(stepRecipe, $event)">
-      <mat-card-header class="step-card-header">
-        <mat-card-subtitle class="step-card-header-text">{{
-          stepRecipe.name ?? (stepRecipe.type | slice: (stepRecipe.type?.lastIndexOf('.') ?? -1) + 1)
-        }}</mat-card-subtitle>
-        <mat-icon [inline]="true" role="complementary" aria-hidden="false" aria-label="Workplan Step Icon">
-          {{ getStepIcon(stepRecipe.classification) }}</mat-icon
-        >
-      </mat-card-header>
-    </mat-card>
-  </mat-expansion-panel>
+      <!-- TODO: Create own component -->
+      @for (stepRecipe of getExecution(); track stepRecipe) {
+        <mat-card
+          class="step-card"
+          [draggable]="true"
+          (dragstart)="handleDragStart(stepRecipe, $event)">
+          <mat-card-header class="step-card-header">
+            <mat-card-subtitle class="step-card-header-text">{{
+              stepRecipe.name ?? (stepRecipe.type | slice: (stepRecipe.type?.lastIndexOf('.') ?? -1) + 1)
+            }}</mat-card-subtitle>
+            <mat-icon [inline]="true" role="complementary" aria-hidden="false" aria-label="Workplan Step Icon">
+              {{ getStepIcon(stepRecipe.classification) }}</mat-icon
+              >
+            </mat-card-header>
+          </mat-card>
+        }
+      </mat-expansion-panel>
 
-  <!-- Panel for sub-workplans -->
-  <mat-expansion-panel role="listitem" hideToggle>
-    <mat-expansion-panel-header>
-      <mat-panel-description class="step-category">
-        <span class="step-category-header">{{ TranslationConstants.TOOLBOX.SUB_HEADER | translate }}</span>
-        <mat-icon class="material-icons-outlined">account_tree</mat-icon>
-      </mat-panel-description>
-    </mat-expansion-panel-header>
+      <!-- Panel for sub-workplans -->
+      <mat-expansion-panel role="listitem" hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-description class="step-category">
+            <span class="step-category-header">{{ TranslationConstants.TOOLBOX.SUB_HEADER | translate }}</span>
+            <mat-icon class="material-icons-outlined">account_tree</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
 
-    <!-- TODO: Create own component -->
-    <mat-card
-      class="step-card"
-      *ngFor="let stepRecipe of getSubworkplans()"
-      [draggable]="true"
-      (dragstart)="handleDragStart(stepRecipe, $event)">
-      <mat-card-header class="step-card-header">
-        <mat-card-subtitle class="step-card-header-text">{{
-          stepRecipe.name ?? (stepRecipe.type | slice: (stepRecipe.type?.lastIndexOf('.') ?? -1) + 1)
-        }}</mat-card-subtitle>
-        <mat-icon
-          class="material-icons-outlined"
-          [inline]="true"
-          role="complementary"
-          aria-hidden="false"
-          aria-label="Sub-Workplans Icon"
-          >{{ getStepIcon(stepRecipe.classification) }}</mat-icon
-        >
-      </mat-card-header>
-    </mat-card>
-  </mat-expansion-panel>
-</mat-accordion>
+        <!-- TODO: Create own component -->
+        @for (stepRecipe of getSubworkplans(); track stepRecipe) {
+          <mat-card
+            class="step-card"
+            [draggable]="true"
+            (dragstart)="handleDragStart(stepRecipe, $event)">
+            <mat-card-header class="step-card-header">
+              <mat-card-subtitle class="step-card-header-text">{{
+                stepRecipe.name ?? (stepRecipe.type | slice: (stepRecipe.type?.lastIndexOf('.') ?? -1) + 1)
+              }}</mat-card-subtitle>
+              <mat-icon
+                class="material-icons-outlined"
+                [inline]="true"
+                role="complementary"
+                aria-hidden="false"
+                aria-label="Sub-Workplans Icon"
+                >{{ getStepIcon(stepRecipe.classification) }}</mat-icon
+                >
+              </mat-card-header>
+            </mat-card>
+          }
+        </mat-expansion-panel>
+      </mat-accordion>

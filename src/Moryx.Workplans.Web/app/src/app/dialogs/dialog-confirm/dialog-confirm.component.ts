@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { AfterViewInit, Component, Inject, QueryList, ViewChildren } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -14,10 +14,9 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
     styleUrls: ['./dialog-confirm.component.scss'],
     standalone: true,
     imports: [
-      CommonModule,
-      MatButtonModule,
-      MatDialogModule
-    ]
+    MatButtonModule,
+    MatDialogModule
+]
 })
 export class ConfirmDialogComponent implements AfterViewInit {
   @ViewChildren('actionButton') actionButtons: QueryList<MatButton> | undefined;

@@ -22,7 +22,7 @@ import '../../extensions/observable.extensions';
 import { SessionsService } from '../../services/sessions.service';
 import { TranslationConstants } from '../../extensions/translation-constants.extensions';
 import { Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
+
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -34,17 +34,15 @@ import { MatCardModule } from '@angular/material/card';
     templateUrl: './management.component.html',
     styleUrls: ['./management.component.scss'],
     standalone: true,
-    imports: 
-    [
-      CommonModule,
-      MatTableModule,
-      MatTooltipModule,
-      MatIconModule,
-      MatProgressSpinnerModule,
-      TranslateModule,
-      MatButtonModule,
-      MatCardModule
-    ]
+    imports: [
+    MatTableModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    TranslateModule,
+    MatButtonModule,
+    MatCardModule
+]
 })
 export class ManagementComponent implements OnInit, OnDestroy {
   TranslationConstants = TranslationConstants;

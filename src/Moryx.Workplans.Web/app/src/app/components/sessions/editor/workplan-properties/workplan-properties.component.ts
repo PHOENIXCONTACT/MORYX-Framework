@@ -9,7 +9,7 @@ import { WorkplanState } from '../../../../api/models';
 import { TranslationConstants } from '../../../../extensions/translation-constants.extensions';
 import { EditorStateService } from '../../../../services/editor-state.service';
 import { SessionsService } from '../../../../services/sessions.service';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,16 +20,13 @@ import { MatSelectModule } from '@angular/material/select';
     templateUrl: './workplan-properties.component.html',
     styleUrls: ['./workplan-properties.component.scss'],
     standalone: true,
-    imports: 
-    [
-      CommonModule,
-      FormsModule,
-      MatFormFieldModule,
-      MatInputModule,
-      MatSelectModule,
-      TranslateModule,
-      
-    ]
+    imports: [
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    TranslateModule
+]
 })
 export class WorkplanPropertiesComponent implements OnDestroy {
   TranslationConstants = TranslationConstants;

@@ -1,41 +1,43 @@
 <div class="top-navbar-container">
   <div id="sessionsNav" mat-tab-nav-bar class="top-navbar" [tabPanel]="tabPanel" >
-    <a
-      class="link"
-      mat-tab-link
-      *ngFor="let s of sessions()"
-      (click)="activateSession(s.sessionToken!)"
-      [active]="isSessionActive(s.sessionToken!)">
-      <!-- routerLink="/session/{{ s.sessionToken }}" -->
-      {{ s.name }}
-      <button
-        mat-icon-button
-        (click)="onCloseSession(s.sessionToken!)"
-        class="close-button"
-        [matTooltip]="TranslationConstants.SESSIONS.CLOSE | translate"
-        matTooltipShowDelay="500">
-        <mat-icon class="close-button-icon">close</mat-icon>
-      </button>
-    </a>
+    @for (s of sessions(); track s) {
+      <a
+        class="link"
+        mat-tab-link
+        (click)="activateSession(s.sessionToken!)"
+        [active]="isSessionActive(s.sessionToken!)">
+        <!-- routerLink="/session/{{ s.sessionToken }}" -->
+        {{ s.name }}
+        <button
+          mat-icon-button
+          (click)="onCloseSession(s.sessionToken!)"
+          class="close-button"
+          [matTooltip]="TranslationConstants.SESSIONS.CLOSE | translate"
+          matTooltipShowDelay="500">
+          <mat-icon class="close-button-icon">close</mat-icon>
+        </button>
+      </a>
+    }
   </div>
 
-  <div class="workplan-buttons"> 
+  <div class="workplan-buttons">
     <button mat-icon-button aria-label="Save current workplan" type="submit" (click)="saveWorkplan()" [matTooltip]="TranslationConstants.EDITOR.SAVE| translate"
-    matTooltipShowDelay="500">
+      matTooltipShowDelay="500">
       <mat-icon>save</mat-icon>
-    </button>  
+    </button>
     <button mat-icon-button aria-label="Auto layout" (click)="autoLayout()" [matTooltip]="TranslationConstants.EDITOR.AUTO_LAYOUT | translate"
-    matTooltipShowDelay="500">
+      matTooltipShowDelay="500">
       <mat-icon>layers</mat-icon>
     </button>
   </div>
-</div> 
+</div>
 <mat-tab-nav-panel #tabPanel>
-  <router-outlet *ngIf="activeSession(); else loading"></router-outlet>
-</mat-tab-nav-panel>
-
-<ng-template #loading>
+  @if (activeSession()) {
+    <router-outlet></router-outlet>
+  } @else {
     <div class="moryx-loading-spinner">
       <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     </div>
-</ng-template>
+  }
+</mat-tab-nav-panel>
+

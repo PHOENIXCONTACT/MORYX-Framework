@@ -1,21 +1,21 @@
 <h1 class="side-sheet-title">{{ TranslationConstants.PROPERTIES.TITLE | translate }}</h1>
-<ng-container *ngIf="editorState.workplan">
+@if (editorState.workplan) {
   <mat-form-field appearance="outline">
     <mat-label>{{ TranslationConstants.PROPERTIES.NAME | translate }}</mat-label>
     <input matInput aria-label="Workplan Name" [(ngModel)]="editorState.workplan.name"/>
   </mat-form-field>
-  
   <mat-form-field appearance="outline">
     <mat-label>{{ TranslationConstants.PROPERTIES.STATE | translate }}</mat-label>
     <mat-select [(ngModel)]="editorState.workplan.state" name="state" >
-      <mat-option *ngFor="let state of WorkplanStates" [value]="state">
-        {{ state }}
-      </mat-option>
+      @for (state of WorkplanStates; track state) {
+        <mat-option [value]="state">
+          {{ state }}
+        </mat-option>
+      }
     </mat-select>
   </mat-form-field>
-  
   <mat-form-field appearance="outline">
     <mat-label>{{ TranslationConstants.PROPERTIES.VERSION | translate }}</mat-label>
     <input matInput aria-label="Workplan Version" disabled [value]="editorState.workplan.version" />
-  </mat-form-field>  
-</ng-container>
+  </mat-form-field>
+}

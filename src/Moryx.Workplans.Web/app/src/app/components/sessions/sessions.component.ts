@@ -20,7 +20,7 @@ import {
 import { TranslationConstants } from '../../extensions/translation-constants.extensions';
 import { SessionsService } from '../../services/sessions.service';
 import { EditorStateService } from '../../services/editor-state.service';
-import { CommonModule } from '@angular/common';
+
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,17 +33,16 @@ import { MatButtonModule } from '@angular/material/button';
     templateUrl: './sessions.component.html',
     styleUrls: ['./sessions.component.scss'],
     standalone: true,
-    imports:[
-      CommonModule,
-      MatTabsModule,
-      MatProgressSpinnerModule,
-      RouterOutlet,
-      MatIconModule,
-      MatTooltipModule,
-      FormsModule,
-      TranslateModule,
-      MatButtonModule
-    ]
+    imports: [
+    MatTabsModule,
+    MatProgressSpinnerModule,
+    RouterOutlet,
+    MatIconModule,
+    MatTooltipModule,
+    FormsModule,
+    TranslateModule,
+    MatButtonModule
+]
 })
 export class SessionsComponent implements OnInit, OnDestroy {
   constructor(
