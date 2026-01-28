@@ -39,4 +39,4 @@ The ResourceManagement-facade will always create a proxy type for each resource 
 
 ## References
 
-- [ResourceProxy Documentation](/docs/articles/framework/ResourceProxy.md)
+- [ResourceProxy Documentation](/docs/articles/framework/resource-proxy.md)

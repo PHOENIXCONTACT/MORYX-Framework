@@ -38,7 +38,7 @@ This modules exports the `IOrderManagement` facade.
 
 ## Structure
 
-![Components](images/OrderManagementComponents.png)
+![Components](images/order-management-components.png)
 
 The internal structure of the OrderManagement is shown in the component diagram. On the top is the OrderWcf which uses the OperationPool to get any update of each `OperationData` or perform some operations on each one. The `OperationPool` is an implementation of the Object Pooling Pattern which holds all known OperationData. The `OperationData` is the main component which handles all operation related functionalities. There is the `OperationAssignment` to assign all needed Information to a new or reloaded OperationData to make it producible. The `JobHandler` will be used to communicate with the `JobManagement` of the ProcessEngine to dispatch Jobs for the production.
 
@@ -62,7 +62,7 @@ The [IOperationPool](xref:Moryx.Orders.IOperationPool) is used for all module pl
 
 ### State Machine
 
-![OperationData State Machine](images/OperationsStates.png)
+![OperationData State Machine](images/operations-states.png)
 
 #### Initial
 
