@@ -6,13 +6,13 @@
       <mat-label>{{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.RESOURCE | translate }}</mat-label>
       <mat-select
         [formControl]="form.controls.resourceId"
-      >
+        >
         @for (resource of resources(); track resource.id) {
-        <mat-option [value]="resource.id">{{ resource.name }}</mat-option>
+          <mat-option [value]="resource.id">{{ resource.name }}</mat-option>
         }
       </mat-select>
       @if (form.controls.resourceId.invalid) {
-      <mat-error> {{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.RESOURCE_ERROR | translate }} </mat-error>
+        <mat-error> {{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.RESOURCE_ERROR | translate }} </mat-error>
       }
     </mat-form-field>
 
@@ -21,73 +21,77 @@
       <mat-label>{{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.OPERATOR | translate }}</mat-label>
       <mat-select
         [formControl]="form.controls.operatorId"
-      >
+        >
         @for (operator of operators(); track operator.id) {
-        <mat-option
-          [value]="operator.id"
+          <mat-option
+            [value]="operator.id"
           [disabled]="
             areOperatorStatusEquals(operator.status, onVacation) ||
             areOperatorStatusEquals(operator.status, notAllowed)
           "
-        >
-        <!-- Empty space -->
-        <mat-icon
-        class="font-medium"
-        *ngIf="
-        !areOperatorStatusEquals(operator.status, onVacation) && 
-        !areOperatorStatusEquals(operator.status, notAllowed) && 
-        !areOperatorStatusEquals(operator.status, notQualified)"
-        ></mat-icon
-      >
-          <mat-icon
-            class="font-medium"
-            *ngIf="areOperatorStatusEquals(operator.status, onVacation)"
-            [matTooltip]="TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.ON_VACATION | translate "
-            >event_busy</mat-icon
-          >
-          <mat-icon
-            class="font-medium not-allowed-operator"
-            *ngIf="areOperatorStatusEquals(operator.status, notAllowed)"
-            [matTooltip]="TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.NOT_ALLOWED | translate "
-            >block</mat-icon
-          >
-          <mat-icon
-            class="font-medium not-qualified-operator"
-            *ngIf="areOperatorStatusEquals(operator.status, notQualified)"
-            [matTooltip]="TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.NOT_QUALIFIED | translate "
-            >person_alert</mat-icon
-          >
-          {{ operator.name }}
-        </mat-option>
-        }
-      </mat-select>
-      @if (form.controls.operatorId.invalid) {
-      <mat-error> {{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.OPERATOR_ERROR | translate }} </mat-error>
-      }
-    </mat-form-field>
+            >
+            <!-- Empty space -->
+            @if (
+              !areOperatorStatusEquals(operator.status, onVacation) &&
+              !areOperatorStatusEquals(operator.status, notAllowed) &&
+              !areOperatorStatusEquals(operator.status, notQualified)) {
+              <mat-icon
+                class="font-medium"
+                ></mat-icon
+                >
+              }
+              @if (areOperatorStatusEquals(operator.status, onVacation)) {
+                <mat-icon
+                  class="font-medium"
+                  [matTooltip]="TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.ON_VACATION | translate "
+                  >event_busy</mat-icon
+                  >
+                }
+                @if (areOperatorStatusEquals(operator.status, notAllowed)) {
+                  <mat-icon
+                    class="font-medium not-allowed-operator"
+                    [matTooltip]="TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.NOT_ALLOWED | translate "
+                    >block</mat-icon
+                    >
+                  }
+                  @if (areOperatorStatusEquals(operator.status, notQualified)) {
+                    <mat-icon
+                      class="font-medium not-qualified-operator"
+                      [matTooltip]="TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.NOT_QUALIFIED | translate "
+                      >person_alert</mat-icon
+                      >
+                    }
+                    {{ operator.name }}
+                  </mat-option>
+                }
+              </mat-select>
+              @if (form.controls.operatorId.invalid) {
+                <mat-error> {{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.OPERATOR_ERROR | translate }} </mat-error>
+              }
+            </mat-form-field>
 
-    <app-week-day-toggle-button 
-    [days]="data.days" 
-    (onButtonToggled)="dayButtonClicked($event)" 
-    [calendarState]="data.calendarState" 
-    [shiftNumberOfDay]="shiftNumberOfdays()"
-    [startDate]="data.shift.startDate"
-    [readOnly]="false"
-    [endDate]="data.shift.endDate"/>
-    @if (this.data.days.length === 0) {
-      <mat-error> {{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.DAYS_OF_THE_SHIFT_ERROR | translate }} </mat-error>
-      }
-    <mat-form-field class="w-full mt-2" appearance="outline">
-        <mat-label>{{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.PRIORITY | translate }}</mat-label>
-        <input matInput type="number"   [formControl]="form.controls.priority"/>
-    </mat-form-field>
-    <mat-form-field class="w-full" appearance="outline">
-      <mat-label>{{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.NOTES | translate }}</mat-label>
-      <textarea matInput  [formControl]="form.controls.notes"></textarea>
-    </mat-form-field>
-  </form>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>{{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.CANCEL | translate }}</button>
-  <button mat-flat-button (click)="submit()" color="primary" cdkFocusInitial>{{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.ASSIGN | translate }}</button>
-</mat-dialog-actions>
+            <app-week-day-toggle-button
+              [days]="data.days"
+              (onButtonToggled)="dayButtonClicked($event)"
+              [calendarState]="data.calendarState"
+              [shiftNumberOfDay]="shiftNumberOfdays()"
+              [startDate]="data.shift.startDate"
+              [readOnly]="false"
+              [endDate]="data.shift.endDate"/>
+            @if (this.data.days.length === 0) {
+              <mat-error> {{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.DAYS_OF_THE_SHIFT_ERROR | translate }} </mat-error>
+            }
+            <mat-form-field class="w-full mt-2" appearance="outline">
+              <mat-label>{{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.PRIORITY | translate }}</mat-label>
+              <input matInput type="number"   [formControl]="form.controls.priority"/>
+            </mat-form-field>
+            <mat-form-field class="w-full" appearance="outline">
+              <mat-label>{{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.NOTES | translate }}</mat-label>
+              <textarea matInput  [formControl]="form.controls.notes"></textarea>
+            </mat-form-field>
+          </form>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+          <button mat-button mat-dialog-close>{{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.CANCEL | translate }}</button>
+          <button mat-flat-button (click)="submit()" color="primary" cdkFocusInitial>{{ TranslationConstants.DIALOGS.WEEK_ASSIGNMENT_DIALOG.ASSIGN | translate }}</button>
+        </mat-dialog-actions>

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -22,7 +22,6 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './shift-instance-dialog.component.scss',
   standalone: true,
   imports: [
-    CommonModule,
     MatDialogModule,
     FormsModule,
     MatFormFieldModule,
@@ -31,7 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
     TranslateModule,
     MatButtonModule
-  ]
+]
 })
 export class ShiftInstanceDialogComponent {
   form = new FormGroup({

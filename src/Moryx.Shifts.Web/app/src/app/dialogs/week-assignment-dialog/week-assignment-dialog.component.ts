@@ -35,7 +35,7 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { firstValueFrom } from 'rxjs';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { ShiftInstanceModel } from 'src/app/models/shift-instance-model';
-import { CommonModule } from '@angular/common';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -50,7 +50,6 @@ import { WeekDayToggleButtonComponent } from 'src/app/week-day-toggle-button/wee
   styleUrl: './week-assignment-dialog.component.scss',
   standalone: true,
   imports: [
-    CommonModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -62,7 +61,7 @@ import { WeekDayToggleButtonComponent } from 'src/app/week-day-toggle-button/wee
     MatIconModule,
     MatTooltipModule,
     WeekDayToggleButtonComponent
-  ]
+]
 })
 export class WeekAssignmentDialogComponent implements OnInit {
   operators = signal<OperatorModel[]>([]);

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule, Time } from '@angular/common';
+import { Time } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -20,14 +20,13 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './shift-type-dialog.component.scss',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     TranslateModule,
     MatButtonModule
-  ]
+]
 })
 export class ShiftTypeDialogComponent {
   TranslationConstants = TranslationConstants;
