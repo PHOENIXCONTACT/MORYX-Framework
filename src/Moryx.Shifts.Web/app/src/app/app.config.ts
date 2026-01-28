@@ -4,7 +4,7 @@
 */
 
 import { DragDropModule } from "@angular/cdk/drag-drop";
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ApplicationConfig, importProvidersFrom } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
@@ -30,57 +30,51 @@ import { ApiModule } from "./api/api.module";
 import { AppStoreService } from "./services/app-store.service";
 import { AssignmentService } from "./services/assignment.service";
 import { ShiftService } from "./services/shift.service";
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import {
-    TranslateService,
-    TranslateModule,
-    TranslateLoader,
-  } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { provideRouter } from "@angular/router";
 import { routes } from "./app.routes";
 
-  export function httpTranslateLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http, environment.assets + 'assets/languages/');
-  }
-  
-export const appConfig : ApplicationConfig = {
-    providers : [
-        provideRouter(routes),
-        provideHttpClient(withInterceptorsFromDi()),
-        importProvidersFrom(
-            BrowserModule,
-            MatButtonModule,
-            MatIconModule,
-            MatMenuModule,
-            MatInputModule,
-            MatCheckboxModule,
-            MatDividerModule,
-            MatSidenavModule,
-            MatTabsModule,
-            MatListModule,
-            DragDropModule,
-            MatDialogModule,
-            FormsModule,
-            ReactiveFormsModule,
-            MatSelectModule,
-            MatTooltipModule,
-            MatButtonToggleModule,
-            MatDatepickerModule,
-            MatExpansionModule,
-            ApiModule.forRoot({ rootUrl: environment.rootUrl }),
-            TranslateModule.forRoot({
-              loader: {
-                provide: TranslateLoader,
-                useFactory: httpTranslateLoaderFactory,
-                deps: [HttpClient],
-              },
-            })
-          ),
-          provideAnimationsAsync(),
-          provideNativeDateAdapter(),
-          ShiftService,
-          AppStoreService,
-          AssignmentService,
-          TranslateService
-    ]
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideRouter(routes),
+    importProvidersFrom(
+      BrowserModule,
+      MatButtonModule,
+      MatIconModule,
+      MatMenuModule,
+      MatInputModule,
+      MatCheckboxModule,
+      MatDividerModule,
+      MatSidenavModule,
+      MatTabsModule,
+      MatListModule,
+      DragDropModule,
+      MatDialogModule,
+      FormsModule,
+      ReactiveFormsModule,
+      MatSelectModule,
+      MatTooltipModule,
+      MatButtonToggleModule,
+      MatDatepickerModule,
+      MatExpansionModule,
+      ApiModule.forRoot({rootUrl: environment.rootUrl}),
+    ),
+    provideHttpClient(withInterceptorsFromDi()),
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({
+        prefix: environment.assets + 'assets/languages/',
+        suffix: '.json'
+      }),
+      fallbackLang: 'en'
+    }),
+    provideAnimationsAsync(),
+    provideNativeDateAdapter(),
+    ShiftService,
+    AppStoreService,
+    AssignmentService,
+    TranslateService
+  ]
 }
