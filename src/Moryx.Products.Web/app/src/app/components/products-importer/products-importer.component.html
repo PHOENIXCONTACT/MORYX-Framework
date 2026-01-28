@@ -23,7 +23,7 @@
 </div>
 <mat-divider class="importer-header-border"></mat-divider>
 
-@if (importerProperties) {
+@if (importerProperties()) {
   <div class="importer-properties">
     <navigable-entry-editor
       [entry]="importerProperties()!"

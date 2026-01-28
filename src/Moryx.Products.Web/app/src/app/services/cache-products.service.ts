@@ -33,7 +33,7 @@ export class CacheProductsService {
   definitions: BehaviorSubject<ProductDefinitionModel[] | undefined> = new BehaviorSubject<ProductDefinitionModel[] | undefined>(undefined);
   productsShownInTheTree: BehaviorSubject<ProductModel[] | undefined> = new BehaviorSubject<ProductModel[] | undefined>(undefined);
   importers: BehaviorSubject<ProductImporter[] | undefined> = new BehaviorSubject<ProductImporter[] | undefined>(undefined);
-  recipeDefitions: BehaviorSubject<RecipeDefinitionModel[] | undefined> = new BehaviorSubject<RecipeDefinitionModel[] | undefined>(undefined);
+  recipeDefinitions: BehaviorSubject<RecipeDefinitionModel[] | undefined> = new BehaviorSubject<RecipeDefinitionModel[] | undefined>(undefined);
   selected: ProductModel[] | undefined;
   workplans: BehaviorSubject<WorkplanModel[] | undefined> = new BehaviorSubject<WorkplanModel[] | undefined>(undefined);
   TranslationConstants = TranslationConstants;
@@ -62,7 +62,7 @@ export class CacheProductsService {
         if (configuration.productTypes !== null)
           this.definitions.next(configuration.productTypes);
         if (configuration.recipeTypes !== null)
-          this.recipeDefitions.next(configuration.recipeTypes);
+          this.recipeDefinitions.next(configuration.recipeTypes);
       },
       error: async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
@@ -147,7 +147,7 @@ export class CacheProductsService {
     );
   }
 
-  resetfilter() {
+  resetFilter() {
     this.filterOptions.identifier = '';
     this.filterOptions.name = '';
     this.filterOptions.revision = RevisionFilter.Latest;
@@ -197,7 +197,7 @@ export class CacheProductsService {
     const url = this.router.url;
     const regexDeletedProduct: RegExp = new RegExp(`details\/${product.id}`);
     if (regexDeletedProduct.test(url)) {
-      this.router.navigate([``]);
+      await this.router.navigate([``]);
     }
   }
 
@@ -230,28 +230,6 @@ export class CacheProductsService {
 
       resolve(true);
     });
-  }
-
-  //TODO: move this function to EntryEditor package
-  cloneEntry(prototype: Entry): Entry {
-    const entry = {...prototype};
-    entry.validation = {...prototype.validation};
-    entry.value = {...prototype.value};
-    entry.description = `${prototype.description}`;
-    entry.displayName = `${prototype.displayName}`;
-    if (prototype.subEntries) {
-      entry.subEntries = [] as Entry[];
-      for (let i = 0; i < prototype.subEntries?.length; i++) {
-        entry.subEntries[i] = this.cloneEntry(prototype.subEntries[i]);
-      }
-    }
-    if (prototype.prototypes) {
-      entry.prototypes = [] as Entry[];
-      for (let i = 0; i < prototype.prototypes?.length; i++) {
-        entry.prototypes[i] = this.cloneEntry(prototype.prototypes[i]);
-      }
-    }
-    return entry;
   }
 }
 

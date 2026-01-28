@@ -20,19 +20,19 @@ import { DefaultViewComponent } from '../../default-view/default-view.component'
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    selector: 'app-product-parts',
-    templateUrl: './product-parts.component.html',
-    styleUrls: ['./product-parts.component.scss'],
-    imports: [
-      CommonModule,
-      MatExpansionModule,
-      MatListModule,
-      ProductPartsDetailsComponent,
-      DefaultViewComponent,
-      MatButtonModule,
-      TranslateModule
-    ],
-    standalone: true
+  selector: 'app-product-parts',
+  templateUrl: './product-parts.component.html',
+  styleUrls: ['./product-parts.component.scss'],
+  imports: [
+    CommonModule,
+    MatExpansionModule,
+    MatListModule,
+    ProductPartsDetailsComponent,
+    DefaultViewComponent,
+    MatButtonModule,
+    TranslateModule
+  ],
+  standalone: true
 })
 export class ProductPartsComponent implements OnInit {
   currentProduct = signal<ProductModel | undefined>(undefined);
@@ -69,7 +69,7 @@ export class ProductPartsComponent implements OnInit {
     }
 
     let url = this.getBaseUrl();
-    this.expandedPart.set( this.currentProduct()?.parts?.find(
+    this.expandedPart.set(this.currentProduct()?.parts?.find(
       (p) => p.name === partName
     ));
     if (!this.expandedPart()) {
@@ -140,10 +140,9 @@ export class ProductPartsComponent implements OnInit {
       // Create new Part
       let newPart = <PartModel>{};
       newPart.product = product;
-      if (this.expandedPart()?.propertyTemplates)
-        newPart.properties = this.cacheService.cloneEntry(
-          this.expandedPart()?.propertyTemplates!
-        );
+      if (this.expandedPart()?.propertyTemplates) {
+        newPart.properties = structuredClone(this.expandedPart()?.propertyTemplates!);
+      }
       this.editService.currentPartId++;
       newPart.id = this.editService.currentPartId;
 
@@ -152,9 +151,8 @@ export class ProductPartsComponent implements OnInit {
         this.expandedPart()?.parts?.push(newPart);
       else {
         if (this.expandedPart()?.parts?.length)
-          this.expandedPart.update(item => 
-          {
-             item!.parts![0] = newPart
+          this.expandedPart.update(item => {
+            item!.parts![0] = newPart
             return item;
           });
         else this.expandedPart.update(item => {

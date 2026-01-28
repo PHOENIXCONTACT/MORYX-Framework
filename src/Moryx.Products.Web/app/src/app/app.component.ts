@@ -10,8 +10,7 @@ import {
   OnDestroy,
   OnInit,
   signal,
-  viewChild,
-  ViewChild,
+  viewChild
 } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
@@ -34,7 +33,7 @@ import { environment } from "src/environments/environment";
 import {
   ProductDefinitionModel,
   ProductModel,
-  RecipeClassificationModel,
+  RecipeClassificationModel, RecipeModel,
   RevisionFilter,
   Selector,
 } from "./api/models";
@@ -42,7 +41,6 @@ import { DialogCreateRevisionComponent } from "./dialogs/dialog-create-revision/
 import { DialogDuplicateProductComponent } from "./dialogs/dialog-duplicate-product/dialog-duplicate-product.component";
 import { DialogRemoveProductComponent } from "./dialogs/dialog-remove-product/dialog-remove-product.component";
 import { DialogShowRevisionsComponent } from "./dialogs/dialog-show-revisions/dialog-show-revisions.component";
-import { Permissions } from "./extensions/permissions.extensions";
 import { TranslationConstants } from "./extensions/translation-constants.extensions";
 import { DuplicateProductInfos } from "./models/DuplicateProductInfos";
 import { CacheProductsService } from "./services/cache-products.service";
@@ -95,10 +93,8 @@ export class AppComponent implements OnInit, OnDestroy {
   trigger = viewChild.required(MatMenuTrigger);
 
   TranslationConstants = TranslationConstants;
-  Permissions = Permissions;
 
   private userPermissions = signal<string[]>([]);
-  private ignoreIam = environment.ignoreIam;
 
   title = "Moryx.Products.Web";
   productsToolbarImage: string =
@@ -177,11 +173,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.onSearch(result);
       },
     });
-
-    if (!this.ignoreIam) {
-      var permissions = await this.permissionService.getPermissions();
-      this.userPermissions.set(permissions);
-    }
   }
 
   onSearch(result: SearchRequest) {
@@ -253,7 +244,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.hierarchic.set(hierarchic);
 
     let dataSource = [] as ProductNode[];
-    if (hierarchic === false) {
+    if (!hierarchic) {
       dataSource = this.SortTypesToDefinitions();
     } else {
       const products = this.SortTypesToDefinitions();
@@ -297,43 +288,20 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  hasPermission(permission: string) {
-    if (environment.ignoreIam) {
-      return true;
-    }
-
-    if (window.configs && !window.configs.identityUrl) {
-      return true;
-    }
-
-    return this.userPermissions().any((p) => p === permission);
-  }
-
   importDisabled(): boolean {
-    return (
-      this.editService.edit || !this.hasPermission(Permissions.CAN_IMPORT_REVISIONS)
-    );
+    return this.editService.edit;
   }
 
   editDisabled() {
-    if (!this.selected()) {
-      return true;
-    }
-
-    return !this.hasPermission(this.Permissions.CAN_EDIT_PRODUCT);
+    return !this.selected();
   }
 
   saveDisabled(): boolean {
-    if (
-      this.editService.edit &&
-      this.selected() &&
-      this.selected()?.recipes?.any(
-        (r) => r.classification === RecipeClassificationModel.Unset
-      )
-    ) {
+    const anyUnsetRecipes = this.selected()?.recipes?.some((r) => r.classification === RecipeClassificationModel.Unset);
+
+    if (this.editService.edit && this.selected() && anyUnsetRecipes) {
       return true;
     }
-
     return false;
   }
 
@@ -576,7 +544,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   resetFilter(drawer: MatDrawer) {
-    this.cacheService.resetfilter();
+    this.cacheService.resetFilter();
     drawer.toggle();
   }
 

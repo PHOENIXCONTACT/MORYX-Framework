@@ -20,7 +20,7 @@
           <span class="spacer"></span>
           <button
             mat-icon-button
-            *ngIf="hierarchic() === false"
+            *ngIf="!hierarchic()"
             (click)="setHierarchy(true)"
             aria-label="hierarchic"
             [matTooltip]="
@@ -151,10 +151,7 @@
             <ng-template matMenuContent let-id="id">
               <button
                 mat-menu-item
-                [disabled]="
-                  !hasPermission(Permissions.CAN_REMOVE_PRODUCT) ||
-                  editService.edit
-                "
+                [disabled]="editService.edit"
                 (click)="onDelete(id)"
               >
                 <mat-icon>delete_forever</mat-icon>
@@ -164,10 +161,7 @@
               </button>
               <button
                 mat-menu-item
-                [disabled]="
-                  !hasPermission(Permissions.CAN_EDIT_PRODUCT) ||
-                  editService.edit
-                "
+                [disabled]="editService.edit"
                 (click)="onSelectAndEdit(id)"
               >
                 <mat-icon>edit</mat-icon>
@@ -175,10 +169,7 @@
               </button>
               <button
                 mat-menu-item
-                [disabled]="
-                  !hasPermission(Permissions.CAN_DUPLICATE_PRODUCT) ||
-                  editService.edit
-                "
+                [disabled]="editService.edit"
                 (click)="onDuplicate(id)"
               >
                 <mat-icon>content_copy</mat-icon>
@@ -188,10 +179,7 @@
               </button>
               <button
                 mat-menu-item
-                [disabled]="
-                  !hasPermission(Permissions.CAN_SHOW_REVISIONS) ||
-                  editService.edit
-                "
+                [disabled]="editService.edit"
                 (click)="onRevisions(id)"
               >
                 <mat-icon>history</mat-icon>
@@ -335,7 +323,6 @@
         [matTooltip]="TranslationConstants.SHARED.DUPLICATE | translate"
         matTooltipShowDelay="500"
         type="button"
-        [disabled]="!hasPermission(Permissions.CAN_DUPLICATE_PRODUCT)"
         (click)="onDuplicate(selected()?.id)"
       >
         <span class="material-symbols-outlined">content_copy</span>
@@ -348,7 +335,6 @@
         [matTooltip]="TranslationConstants.SHARED.REVISION | translate"
         matTooltipShowDelay="500"
         type="button"
-        [disabled]="!hasPermission(Permissions.CAN_SHOW_REVISIONS)"
         (click)="onRevisions(selected()?.id)"
       >
         <span class="material-symbols-outlined">history</span>
@@ -360,7 +346,6 @@
         [matTooltip]="TranslationConstants.SHARED.DELETE | translate"
         matTooltipShowDelay="500"
         type="button"
-        [disabled]="!hasPermission(Permissions.CAN_REMOVE_PRODUCT)"
         (click)="onDelete(selected()?.id)"
       >
         <span class="material-symbols-outlined">delete_forever</span>

@@ -10,7 +10,6 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
 import { DuplicateProductInfos } from 'src/app/models/DuplicateProductInfos';
 import { ProductModel } from '../../api/models';
 import { EditProductsService } from '../../services/edit-products.service';
-import { Permissions } from '../../extensions/permissions.extensions';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';

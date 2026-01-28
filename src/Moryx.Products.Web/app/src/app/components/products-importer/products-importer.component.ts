@@ -10,7 +10,6 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { ProductImporter } from "../../api/models";
 import { CacheProductsService } from "../../services/cache-products.service";
-import { Permissions } from "../../extensions/permissions.extensions";
 
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -87,7 +86,7 @@ export class ProductsImporterComponent implements OnInit {
   onImporterChanged(importer: ProductImporter) {
     if (importer.parameters !== undefined) {
       this.importerProperties.update((_) =>
-        this.cacheService.cloneEntry(importer.parameters!)
+        structuredClone(importer.parameters!)
       );
     }
   }

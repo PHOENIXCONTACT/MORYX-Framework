@@ -48,7 +48,7 @@ export class DialogCreateRecipeComponent {
     cacheService: CacheProductsService,
     public translate: TranslateService
   ) {
-    cacheService.recipeDefitions.subscribe((recipeDefintions) => {
+    cacheService.recipeDefinitions.subscribe((recipeDefintions) => {
       this.possibleRecipes.update(_=> recipeDefintions ?? []);
       if (this.possibleRecipes().length > 0
       ) {

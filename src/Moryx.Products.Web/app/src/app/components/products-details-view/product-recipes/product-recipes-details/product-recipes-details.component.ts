@@ -70,7 +70,7 @@ export class ProductRecipesDetailsComponent {
       }
     });
 
-    cacheService.recipeDefitions.subscribe((recipeDefitions) => {
+    cacheService.recipeDefinitions.subscribe((recipeDefitions) => {
       this.recipeDefitions.set(recipeDefitions);
     });
   }

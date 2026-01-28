@@ -13,7 +13,6 @@ import { ProductReferencesComponent } from "./components/products-details-view/p
 import { ProductsDetailsViewComponent } from "./components/products-details-view/products-details-view.component";
 import { ProductsImporterComponent } from "./components/products-importer/products-importer.component";
 import { SearchResultComponent } from "./components/search-result/search-result.component";
-import { ImporterGuard } from "./guards/importer.guard";
 import { ProductsDetailsViewResolver } from "./components/products-details-view/products-details-view-resolver";
 
 export const routes: Routes = [
@@ -36,19 +35,12 @@ export const routes: Routes = [
         component: ProductRecipesComponent,
         children: [
           { path: '', component: DefaultViewComponent, pathMatch: 'full' },
-              {
-                path: ':recipeId',
-                component: ProductRecipesDetailsComponent,
-              },
+          { path: ':recipeId', component: ProductRecipesDetailsComponent },
         ],
       },
     ],
   },
   { path: '', component: DefaultViewComponent, pathMatch: 'full' },
-  {
-    path: 'import/:importer',
-    component: ProductsImporterComponent,
-    canActivate: [ImporterGuard]
-  },
-      {path: 'search', component: SearchResultComponent}
+  { path: 'import/:importer', component: ProductsImporterComponent },
+  { path: 'search', component: SearchResultComponent }
 ]
