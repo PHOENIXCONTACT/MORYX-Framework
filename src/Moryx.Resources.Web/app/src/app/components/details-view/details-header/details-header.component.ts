@@ -9,7 +9,7 @@ import { TranslationConstants } from "src/app/extensions/translation-constants.e
 import { FormControlService } from "src/app/services/form-control-service.service";
 import { ResourceModel } from "../../../api/models";
 import { MatDividerModule } from "@angular/material/divider";
-import { CommonModule } from "@angular/common";
+
 import { FormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
@@ -19,13 +19,12 @@ import { MatInputModule } from "@angular/material/input";
   templateUrl: "./details-header.component.html",
   styleUrls: ["./details-header.component.scss"],
   imports: [
-    CommonModule,
     FormsModule,
     MatDividerModule,
     MatFormFieldModule,
     MatInputModule,
-    TranslateModule,
-  ],
+    TranslateModule
+],
   standalone: true,
 })
 export class DetailsHeaderComponent implements AfterContentChecked {

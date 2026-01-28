@@ -11,7 +11,7 @@ import {
   MatExpansionModule,
 } from '@angular/material/expansion';
 import { EntryEditorComponent, NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -19,13 +19,12 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './resource-methods.component.html',
   styleUrls: ['./resource-methods.component.scss'],
   imports: [
-    CommonModule,
     EntryEditorComponent,
     MatExpansionModule,
     NavigableEntryEditorComponent,
     TranslateModule,
-    MatButtonModule,
-  ],
+    MatButtonModule
+],
   standalone: true,
 })
 export class ResourceMethodsComponent implements OnInit, OnDestroy {

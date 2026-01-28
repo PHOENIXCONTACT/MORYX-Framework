@@ -1,20 +1,6 @@
 <div class="header">
   <div class="header-information">
-    <div *ngIf="editMode(); then form; else header_info"></div>
-
-    <ng-template #header_info>
-      <div>
-        <h2 class="header-information-title">
-          {{
-            resource().name && resource().name?.trim()
-              ? resource().name
-              : (TranslationConstants.APP.NO_NAME | translate)
-          }}
-        </h2>
-        <p class="header-subtitle">{{ resource().description }}</p>
-      </div>
-    </ng-template>
-    <ng-template #form>
+    @if (editMode()) {
       <div class="header-container">
         <mat-form-field class="form-field" appearance="outline" require>
           <mat-label>{{
@@ -27,7 +13,7 @@
             [disabled]="!editMode()"
             required="true"
             (keyup)="onNameChanged()"
-          />
+            />
         </mat-form-field>
         <mat-form-field class="form-field" appearance="outline">
           <mat-label>{{
@@ -38,10 +24,22 @@
             aria-label="Resource Description"
             class="header-information-general-description-input"
             [(ngModel)]="resource().description"
-          />
+            />
         </mat-form-field>
       </div>
-    </ng-template>
+    } @else {
+      <div>
+        <h2 class="header-information-title">
+          {{
+          resource().name && resource().name?.trim()
+          ? resource().name
+          : (TranslationConstants.APP.NO_NAME | translate)
+          }}
+        </h2>
+        <p class="header-subtitle">{{ resource().description }}</p>
+      </div>
+    }
+
   </div>
 </div>
 <mat-divider class="header-border"></mat-divider>

@@ -1,80 +1,77 @@
-<mat-accordion
-  *ngIf="methodService.methods?.length"
-  class="methods method-headers-align"
->
-  <mat-expansion-panel
-    *ngFor="let method of methodService.methods"
-    (opened)="methodService.onSelect(method)"
-  >
-    <mat-expansion-panel-header>
-      <mat-panel-title>{{ method.displayName }}</mat-panel-title>
-      <mat-panel-description>{{ method.description }}</mat-panel-description>
-    </mat-expansion-panel-header>
-
-    <ng-container *ngIf="method.name === methodService.selectedMethod?.name">
-      <navigable-entry-editor
-        *ngIf="
-          method.parameters &&
-          method.parameters?.subEntries?.length &&
-          !methodService.resultView
-        "
-        [entry]="method.parameters"
-        queryParam="methodParameters"
-        [disabled]="false"
-      >
-      </navigable-entry-editor>
-      <ng-container
-        *ngIf="methodService.methodResult && methodService.resultView"
-      >
-        <ng-container
-          *ngIf="
-            methodService.methodResult.subEntries &&
+@if (methodService.methods?.length) {
+  <mat-accordion
+    class="methods method-headers-align"
+    >
+    @for (method of methodService.methods; track method) {
+      <mat-expansion-panel
+        (opened)="methodService.onSelect(method)"
+        >
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{ method.displayName }}</mat-panel-title>
+          <mat-panel-description>{{ method.description }}</mat-panel-description>
+        </mat-expansion-panel-header>
+        @if (method.name === methodService.selectedMethod?.name) {
+          @if (
+            method.parameters &&
+            method.parameters?.subEntries?.length &&
+            !methodService.resultView
+            ) {
+            <navigable-entry-editor
+              [entry]="method.parameters"
+              queryParam="methodParameters"
+              [disabled]="false"
+              >
+            </navigable-entry-editor>
+          }
+          @if (methodService.methodResult && methodService.resultView) {
+            @if (
+              methodService.methodResult.subEntries &&
               methodService.methodResult.subEntries.length > 0 &&
               methodService.methodResult.subEntries[0].subEntries &&
-              methodService.methodResult.subEntries[0].subEntries.length > 0;
-            else ElseBlock
-          "
-        >
-          <navigable-entry-editor
-            [entry]="methodService.methodResult"
-            [disabled]="true"
-            queryParam="methodParametersResult"
-          ></navigable-entry-editor>
-        </ng-container>
-        <ng-template #ElseBlock>
-          <entry-editor [entry]="methodService.methodResult" [disabled]="true">
-          </entry-editor>
-        </ng-template>
-      </ng-container>
-    </ng-container>
-
-    <p *ngIf="!methodService.methodResult && methodService.resultView">
-      {{ TranslationConstants.DETAILS.METS.WAS_INVOKED | translate }}
-    </p>
-
-    <mat-action-row class="method-buttons" align="start">
-      <button
-        *ngIf="!methodService.resultView"
-        mat-flat-button
-        (click)="methodService.onInvoke(method)"
-      >
-        {{ TranslationConstants.DETAILS.METS.INVOKE | translate }}
-      </button>
-
-      <button
-        *ngIf="methodService.resultView"
-        mat-stroked-button
-        (click)="methodService.onInvoke(method)"
-      >
-        {{ TranslationConstants.DETAILS.METS.REPEAT | translate }}
-      </button>
-      <button
-        *ngIf="methodService.resultView"
-        mat-button
-        (click)="methodService.onChangeToParameters(method)"
-      >
-        {{ TranslationConstants.DETAILS.METS.CLEAR | translate }}
-      </button>
-    </mat-action-row>
-  </mat-expansion-panel>
-</mat-accordion>
+              methodService.methodResult.subEntries[0].subEntries.length > 0) {
+              <navigable-entry-editor
+                [entry]="methodService.methodResult"
+                [disabled]="true"
+                queryParam="methodParametersResult"
+              ></navigable-entry-editor>
+            } @else {
+              <entry-editor [entry]="methodService.methodResult" [disabled]="true">
+              </entry-editor>
+            }
+          }
+        }
+        @if (!methodService.methodResult && methodService.resultView) {
+          <p>
+            {{ TranslationConstants.DETAILS.METS.WAS_INVOKED | translate }}
+          </p>
+        }
+        <mat-action-row class="method-buttons" align="start">
+          @if (!methodService.resultView) {
+            <button
+              mat-flat-button
+              (click)="methodService.onInvoke(method)"
+              >
+              {{ TranslationConstants.DETAILS.METS.INVOKE | translate }}
+            </button>
+          }
+          @if (methodService.resultView) {
+            <button
+              mat-stroked-button
+              (click)="methodService.onInvoke(method)"
+              >
+              {{ TranslationConstants.DETAILS.METS.REPEAT | translate }}
+            </button>
+          }
+          @if (methodService.resultView) {
+            <button
+              mat-button
+              (click)="methodService.onChangeToParameters(method)"
+              >
+              {{ TranslationConstants.DETAILS.METS.CLEAR | translate }}
+            </button>
+          }
+        </mat-action-row>
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+}

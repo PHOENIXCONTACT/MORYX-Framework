@@ -45,7 +45,7 @@ export class EditResourceService {
   loadResource() {
     var id = 0;
 
-    var navigation = this.router.getCurrentNavigation();
+    var navigation = this.router.currentNavigation();
     if (navigation?.finalUrl?.root.children['primary']?.segments?.length)
       id = Number(navigation.finalUrl?.root.children['primary'].segments[1].toString());
     else {

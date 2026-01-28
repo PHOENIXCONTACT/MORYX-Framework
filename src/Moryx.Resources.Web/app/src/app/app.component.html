@@ -1,35 +1,118 @@
 <mat-sidenav-container class="resources">
   <mat-sidenav opened role="navigation" mode="side" class="resources-tree" [disableClose]="true">
     <div class="resources-side-bar" (click)="clickContainer($event)">
-      <mat-toolbar
-        *ngIf="!selected; else selectedToolbar"
-        color="primary"
-        [ngStyle]="{ 'background-image': 'url(' + resourceToolbarImage + ')' }"
-      >
-        <mat-toolbar-row>
-          <button mat-icon-button aria-label="Disabled Menu" disabled>
-            <mat-icon></mat-icon>
-          </button>
-          <span class="resources-toolbar-spacer"></span>
-          <button
-            type="button"
-            (click)="onReload()"
-            mat-icon-button
-            aria-label="Reload resources"
-            [matTooltip]="TranslationConstants.SHARED.RELOAD | translate"
-            matTooltipShowDelay="500"
+      @if (!selected) {
+        <mat-toolbar
+          color="primary"
+          [ngStyle]="{ 'background-image': 'url(' + resourceToolbarImage + ')' }"
           >
-            <mat-icon>sync</mat-icon>
-          </button>
-        </mat-toolbar-row>
-
-        <mat-toolbar-row>
-          <button mat-icon-button aria-label="Spacer" disabled="true">
-            <mat-icon></mat-icon>
-          </button>
-          <span>{{ TranslationConstants.APP.RESOURCES | translate }}</span>
-        </mat-toolbar-row>
-      </mat-toolbar>
+          <mat-toolbar-row>
+            <button mat-icon-button aria-label="Disabled Menu" disabled>
+              <mat-icon></mat-icon>
+            </button>
+            <span class="resources-toolbar-spacer"></span>
+            <button
+              type="button"
+              (click)="onReload()"
+              mat-icon-button
+              aria-label="Reload resources"
+              [matTooltip]="TranslationConstants.SHARED.RELOAD | translate"
+              matTooltipShowDelay="500"
+              >
+              <mat-icon>sync</mat-icon>
+            </button>
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <button mat-icon-button aria-label="Spacer" disabled="true">
+              <mat-icon></mat-icon>
+            </button>
+            <span>{{ TranslationConstants.APP.RESOURCES | translate }}</span>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      } @else {
+        <mat-toolbar
+          [ngStyle]="{ 'background-image': 'url(' + resourceToolbarImage + ')' }"
+          class="resources-toolbar"
+          >
+          <mat-toolbar-row>
+            <button
+              type="button"
+              (click)="onDeselect()"
+              mat-icon-button
+              aria-label="Unselect resource"
+              [matTooltip]="TranslationConstants.SHARED.CANCEL | translate"
+              matTooltipShowDelay="500"
+              >
+              <span class="material-symbols-outlined">close</span>
+            </button>
+            <span class="resources-toolbar-spacer"></span>
+            @if (!editService.edit) {
+              <button
+                type="button"
+                (click)="onEdit()"
+                [disabled]="!hasPermission(Permissions.CAN_EDIT_RESOURCE)"
+                mat-icon-button
+                aria-label="Add child"
+                [matTooltip]="TranslationConstants.SHARED.EDIT | translate"
+                matTooltipShowDelay="500"
+                >
+                <span class="material-symbols-outlined">edit</span>
+              </button>
+            }
+            @if (!editService.edit) {
+              <button
+                type="button"
+                (click)="onAdd()"
+                [disabled]="!hasPermission(Permissions.CAN_ADD_RESOURCE)"
+                mat-icon-button
+                aria-label="Add child"
+                [matTooltip]="TranslationConstants.SHARED.ADD_CHILD | translate"
+                matTooltipShowDelay="500"
+                >
+                <span class="material-symbols-outlined">masked_transitions_add</span>
+              </button>
+            }
+            @if (!editService.edit) {
+              <button
+                type="button"
+                (click)="onDelete(selected?.id)"
+                [disabled]="!hasPermission(Permissions.CAN_REMOVE_RESOURCE)"
+                mat-icon-button
+                aria-label="Delete resource"
+                [matTooltip]="TranslationConstants.SHARED.DELETE | translate"
+                matTooltipShowDelay="500"
+                >
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            }
+            @if (editService.edit) {
+              <button
+                type="button"
+                (click)="onSave()"
+                mat-icon-button
+                aria-label="Save resource"
+                [matTooltip]="TranslationConstants.SHARED.SAVE | translate"
+                matTooltipShowDelay="500"
+                >
+                <span class="material-symbols-outlined">save</span>
+              </button>
+            }
+            @if (editService.edit) {
+              <button
+                type="button"
+                (click)="onCancelEditing()"
+                mat-icon-button
+                aria-label="Cancel editing resource"
+                [matTooltip]="TranslationConstants.SHARED.CANCEL | translate"
+                matTooltipShowDelay="500"
+                >
+                <span class="material-symbols-outlined">cancel</span>
+              </button>
+            }
+          </mat-toolbar-row>
+          <mat-toolbar-row></mat-toolbar-row>
+        </mat-toolbar>
+      }
 
       <mat-menu #contextMenu="matMenu">
         <ng-template matMenuContent let-id="id">
@@ -40,7 +123,7 @@
               editService.edit
             "
             (click)="onDelete(id)"
-          >
+            >
             <mat-icon>delete_forever</mat-icon>
             <span>{{ TranslationConstants.SHARED.DELETE | translate }}</span>
           </button>
@@ -50,7 +133,7 @@
             "
             mat-menu-item
             (click)="onSelectAndEdit(id)"
-          >
+            >
             <mat-icon>edit</mat-icon>
             <span>{{ TranslationConstants.SHARED.EDIT | translate }}</span>
           </button>
@@ -68,7 +151,7 @@
         class="resources-tree-contents"
         [dataSource]="dataSource"
         [treeControl]="treeControl"
-      >
+        >
         <mat-tree-node
           *matTreeNodeDef="let node"
           matTreeNodePadding
@@ -81,7 +164,7 @@
             'moryx-selected': selected?.id == node.id,
             'italic': !(node.name && node.name.trim())
           }"
-        >
+          >
           <button mat-icon-button title="Disabled toggle" disabled></button>
           {{ (node.name && node.name.trim()) ? node.name : TranslationConstants.APP.NO_NAME | translate }}
         </mat-tree-node>
@@ -97,16 +180,16 @@
             'moryx-selected': selected?.id == node.id,
             'italic': !(node.name && node.name.trim())
           }"
-        >
+          >
           <button
             mat-icon-button
             matTreeNodeToggle
             [attr.aria-label]="'Toggle ' + node.name"
             type="button"
-          >
+            >
             <mat-icon class="mat-icon-rtl-mirror">
               {{
-                treeControl.isExpanded(node) ? "expand_more" : "chevron_right"
+              treeControl.isExpanded(node) ? "expand_more" : "chevron_right"
               }}
             </mat-icon>
           </button>
@@ -115,20 +198,21 @@
       </mat-tree>
     </div>
 
-    <button
-      *ngIf="!selected"
-      mat-fab
-      color="primary"
-      class="resources-add-button"
-      type="button"
-      aria-label="Add resource"
-      (click)="onAdd()"
-      [disabled]="!hasPermission(Permissions.CAN_ADD_RESOURCE)"
-      [matTooltip]="TranslationConstants.SHARED.ADD | translate"
-      matTooltipShowDelay="500"
-    >
-      <mat-icon>add</mat-icon>
-    </button>
+    @if (!selected) {
+      <button
+        mat-fab
+        color="primary"
+        class="resources-add-button"
+        type="button"
+        aria-label="Add resource"
+        (click)="onAdd()"
+        [disabled]="!hasPermission(Permissions.CAN_ADD_RESOURCE)"
+        [matTooltip]="TranslationConstants.SHARED.ADD | translate"
+        matTooltipShowDelay="500"
+        >
+        <mat-icon>add</mat-icon>
+      </button>
+    }
   </mat-sidenav>
 
   <mat-sidenav-content role="main">
@@ -136,84 +220,3 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-<ng-template #selectedToolbar>
-  <mat-toolbar
-    [ngStyle]="{ 'background-image': 'url(' + resourceToolbarImage + ')' }"
-    class="resources-toolbar"
-  >
-    <mat-toolbar-row>
-      <button
-        type="button"
-        (click)="onDeselect()"
-        mat-icon-button
-        aria-label="Unselect resource"
-        [matTooltip]="TranslationConstants.SHARED.CANCEL | translate"
-        matTooltipShowDelay="500"
-      >
-        <span class="material-symbols-outlined">close</span>
-      </button>
-      <span class="resources-toolbar-spacer"></span>
-      <button
-        *ngIf="!editService.edit"
-        type="button"
-        (click)="onEdit()"
-        [disabled]="!hasPermission(Permissions.CAN_EDIT_RESOURCE)"
-        mat-icon-button
-        aria-label="Add child"
-        [matTooltip]="TranslationConstants.SHARED.EDIT | translate"
-        matTooltipShowDelay="500"
-      >
-        <span class="material-symbols-outlined">edit</span>
-      </button>
-      <button
-        *ngIf="!editService.edit"
-        type="button"
-        (click)="onAdd()"
-        [disabled]="!hasPermission(Permissions.CAN_ADD_RESOURCE)"
-        mat-icon-button
-        aria-label="Add child"
-        [matTooltip]="TranslationConstants.SHARED.ADD_CHILD | translate"
-        matTooltipShowDelay="500"
-      >
-        <span class="material-symbols-outlined">masked_transitions_add</span>
-      </button>
-      <button
-        *ngIf="!editService.edit"
-        type="button"
-        (click)="onDelete(selected?.id)"
-        [disabled]="!hasPermission(Permissions.CAN_REMOVE_RESOURCE)"
-        mat-icon-button
-        aria-label="Delete resource"
-        [matTooltip]="TranslationConstants.SHARED.DELETE | translate"
-        matTooltipShowDelay="500"
-      >
-        <span class="material-symbols-outlined">delete</span>
-      </button>
-
-      <button
-        *ngIf="editService.edit"
-        type="button"
-        (click)="onSave()"
-        mat-icon-button
-        aria-label="Save resource"
-        [matTooltip]="TranslationConstants.SHARED.SAVE | translate"
-        matTooltipShowDelay="500"
-      >
-        <span class="material-symbols-outlined">save</span>
-      </button>
-      <button
-        *ngIf="editService.edit"
-        type="button"
-        (click)="onCancelEditing()"
-        mat-icon-button
-        aria-label="Cancel editing resource"
-        [matTooltip]="TranslationConstants.SHARED.CANCEL | translate"
-        matTooltipShowDelay="500"
-      >
-        <span class="material-symbols-outlined">cancel</span>
-      </button>
-    </mat-toolbar-row>
-
-    <mat-toolbar-row></mat-toolbar-row>
-  </mat-toolbar>
-</ng-template>

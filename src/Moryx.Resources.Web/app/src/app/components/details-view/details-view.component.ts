@@ -14,13 +14,13 @@ import { EditResourceService } from '../../services/edit-resource.service';
 import { Permissions } from './../../extensions/permissions.extensions';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DetailsHeaderComponent } from './details-header/details-header.component';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-details-view',
   templateUrl: './details-view.component.html',
   styleUrls: ['./details-view.component.scss'],
-  imports: [RouterOutlet, TranslateModule, MatTabsModule, RouterLink, DetailsHeaderComponent, CommonModule],
+  imports: [RouterOutlet, TranslateModule, MatTabsModule, RouterLink, DetailsHeaderComponent],
   standalone: true,
 })
 export class DetailsViewComponent implements OnInit, OnDestroy {

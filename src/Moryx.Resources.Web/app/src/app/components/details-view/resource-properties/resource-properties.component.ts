@@ -8,13 +8,13 @@ import { Entry, NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
 import { Subscription } from 'rxjs';
 import { EditResourceService } from '../../../services/edit-resource.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-resource-properties',
   templateUrl: './resource-properties.component.html',
   styleUrls: ['./resource-properties.component.scss'],
-  imports: [MatProgressSpinnerModule, NavigableEntryEditorComponent, CommonModule],
+  imports: [MatProgressSpinnerModule, NavigableEntryEditorComponent],
   standalone: true,
 })
 export class ResourcePropertiesComponent implements OnInit, OnDestroy {
