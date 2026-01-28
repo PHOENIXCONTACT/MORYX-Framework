@@ -16,8 +16,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-step-creator',
-  templateUrl: './step-creator.component.html',
-  styleUrls: ['./step-creator.component.scss'],
+  templateUrl: './step-creator.html',
+  styleUrls: ['./step-creator.scss'],
   standalone: true,
   imports: [
     NavigableEntryEditor,
@@ -26,7 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
   ]
 })
-export class StepCreatorComponent implements OnInit, OnDestroy {
+export class StepCreator implements OnInit, OnDestroy {
   availableSteps = input.required<WorkplanStepRecipe[]>();
   //TODO: remove this and change stepRecipe to type of model.required<..>() in future refactoring of the UI
   created = output<WorkplanStepRecipe>();

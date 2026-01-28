@@ -18,13 +18,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
-import { ToolboxComponent } from './components/toolbox/toolbox.component';
+import { Toolbox } from './components/toolbox/toolbox';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
+    templateUrl: './app.html',
+    styleUrls: ['./app.scss'],
     standalone: true,
     imports:[
       MatSidenavModule,
@@ -33,12 +33,12 @@ import { MatButtonModule } from '@angular/material/button';
       MatTooltipModule,
       MatIconModule,
       TranslateModule,
-      ToolboxComponent,
+      Toolbox,
       RouterModule,
       MatButtonModule
     ]
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class App implements OnInit, OnDestroy {
   title = 'Workplan Editor';
   readonly workplansToolbarImage = environment.assets + 'assets/workplans-toolbar.jpg';
 

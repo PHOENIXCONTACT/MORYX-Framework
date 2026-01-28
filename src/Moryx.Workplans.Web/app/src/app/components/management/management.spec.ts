@@ -5,21 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConfirmDialogComponent } from './dialog-confirm.component';
+import { Management } from './management';
 
-describe('ConfirmDialogComponent', () => {
-  let component: ConfirmDialogComponent;
-  let fixture: ComponentFixture<ConfirmDialogComponent>;
+describe('Management', () => {
+  let component: Management;
+  let fixture: ComponentFixture<Management>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [ConfirmDialogComponent]
+    declarations: [Management]
 })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConfirmDialogComponent);
+    fixture = TestBed.createComponent(Management);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

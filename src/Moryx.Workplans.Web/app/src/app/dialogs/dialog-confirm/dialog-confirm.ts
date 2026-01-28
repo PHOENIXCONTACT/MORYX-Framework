@@ -10,20 +10,20 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 
 @Component({
     selector: 'app-confirm-dialog',
-    templateUrl: './dialog-confirm.component.html',
-    styleUrls: ['./dialog-confirm.component.scss'],
+    templateUrl: './dialog-confirm.html',
+    styleUrls: ['./dialog-confirm.scss'],
     standalone: true,
     imports: [
     MatButtonModule,
     MatDialogModule
 ]
 })
-export class ConfirmDialogComponent implements AfterViewInit {
+export class ConfirmDialog implements AfterViewInit {
   @ViewChildren('actionButton') actionButtons: QueryList<MatButton> | undefined;
   buttons: ConfirmDialogButton[] | undefined;
 
   constructor(
-    public dialogRef: MatDialogRef<ConfirmDialogComponent>,
+    public dialogRef: MatDialogRef<ConfirmDialog>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogData
   ) {
     this.buttons = data.buttons;

@@ -12,7 +12,7 @@ import { SnackbarService, SearchBarService, SearchRequest } from '@moryx/ngx-web
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { WorkplanModel, WorkplanSessionModel } from '../../api/models';
 import { WorkplanService } from '../../api/services';
-import { ConfirmDialogButton, ConfirmDialogComponent, ConfirmDialogData } from '../../dialogs/dialog-confirm/dialog-confirm.component';
+import { ConfirmDialogButton, ConfirmDialog, ConfirmDialogData } from '../../dialogs/dialog-confirm/dialog-confirm';
 import '../../extensions/array.extensions';
 import '../../extensions/observable.extensions';
 import { SessionsService } from '../../services/sessions.service';
@@ -27,8 +27,8 @@ import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-management',
-  templateUrl: './management.component.html',
-  styleUrls: ['./management.component.scss'],
+  templateUrl: './management.html',
+  styleUrls: ['./management.scss'],
   standalone: true,
   imports: [
     MatTableModule,
@@ -40,7 +40,7 @@ import { MatCardModule } from '@angular/material/card';
     MatCardModule
   ]
 })
-export class ManagementComponent implements OnInit, OnDestroy {
+export class Management implements OnInit, OnDestroy {
   TranslationConstants = TranslationConstants;
   private availableSessionsSubscription?: Subscription;
   readonly displayedColumns: string[] = ['name', 'state', 'version', 'actions'];
@@ -154,7 +154,7 @@ export class ManagementComponent implements OnInit, OnDestroy {
       }?`
       : translations[TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.MESSAGE];
 
-    const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
+    const confirmDialog = this.dialog.open(ConfirmDialog, {
       data: <ConfirmDialogData>{
         title: translations[TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.TITLE],
         message: dialogMessage,

@@ -23,8 +23,8 @@ import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-node-properties',
-  templateUrl: './node-properties.component.html',
-  styleUrls: ['./node-properties.component.scss'],
+  templateUrl: './node-properties.html',
+  styleUrls: ['./node-properties.scss'],
   standalone: true,
   imports: [
     MatSelectModule,
@@ -36,7 +36,7 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule
   ]
 })
-export class NodePropertiesComponent implements OnDestroy {
+export class NodeProperties implements OnDestroy {
   node = signal<WorkplanNodeModel | undefined>(undefined);
   properties = signal<Entry | undefined>(undefined);
 

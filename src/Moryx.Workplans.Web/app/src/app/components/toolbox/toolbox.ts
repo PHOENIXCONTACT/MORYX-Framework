@@ -19,8 +19,8 @@ import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-toolbox',
-  templateUrl: './toolbox.component.html',
-  styleUrls: ['./toolbox.component.scss'],
+  templateUrl: './toolbox.html',
+  styleUrls: ['./toolbox.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -30,7 +30,7 @@ import { MatCardModule } from '@angular/material/card';
     TranslateModule
   ]
 })
-export class ToolboxComponent implements OnInit, OnDestroy {
+export class Toolbox implements OnInit, OnDestroy {
   constructor(
     private workplanEditing: WorkplanEditingService,
     public translate: TranslateService,

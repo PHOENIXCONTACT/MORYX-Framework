@@ -5,21 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ManagementComponent } from './management.component';
+import { Editor } from './editor';
 
-describe('ManagementComponent', () => {
-  let component: ManagementComponent;
-  let fixture: ComponentFixture<ManagementComponent>;
+describe('Editor', () => {
+  let component: Editor;
+  let fixture: ComponentFixture<Editor>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [ManagementComponent]
+    declarations: [Editor]
 })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ManagementComponent);
+    fixture = TestBed.createComponent(Editor);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

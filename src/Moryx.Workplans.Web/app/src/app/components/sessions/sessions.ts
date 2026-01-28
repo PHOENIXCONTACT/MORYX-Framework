@@ -14,9 +14,9 @@ import { WorkplanSessionModel } from '../../api/models';
 import { WorkplanEditingService } from '../../api/services';
 import {
   ConfirmDialogButton,
-  ConfirmDialogComponent,
+  ConfirmDialog,
   ConfirmDialogData
-} from '../../dialogs/dialog-confirm/dialog-confirm.component';
+} from '../../dialogs/dialog-confirm/dialog-confirm';
 import { TranslationConstants } from '../../extensions/translation-constants.extensions';
 import { SessionsService } from '../../services/sessions.service';
 import { EditorStateService } from '../../services/editor-state.service';
@@ -30,8 +30,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-sessions',
-  templateUrl: './sessions.component.html',
-  styleUrls: ['./sessions.component.scss'],
+  templateUrl: './sessions.html',
+  styleUrls: ['./sessions.scss'],
   standalone: true,
   imports: [
     MatTabsModule,
@@ -44,7 +44,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
   ]
 })
-export class SessionsComponent implements OnInit, OnDestroy {
+export class Sessions implements OnInit, OnDestroy {
   constructor(
     private sessionService: SessionsService,
     private workplanEditing: WorkplanEditingService,
@@ -196,7 +196,7 @@ export class SessionsComponent implements OnInit, OnDestroy {
 
     const translations = await this.getTranslations();
 
-    const dialog = this.dialog.open(ConfirmDialogComponent, {
+    const dialog = this.dialog.open(ConfirmDialog, {
       autoFocus: false,
       data: <ConfirmDialogData>{
         title: translations[TranslationConstants.SESSIONS.CONFIRM_DIALOG.TITLE],

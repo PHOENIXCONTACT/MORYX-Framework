@@ -17,8 +17,8 @@ import { MatSelectModule } from '@angular/material/select';
 
 @Component({
     selector: 'app-workplan-properties',
-    templateUrl: './workplan-properties.component.html',
-    styleUrls: ['./workplan-properties.component.scss'],
+    templateUrl: './workplan-properties.html',
+    styleUrls: ['./workplan-properties.scss'],
     standalone: true,
     imports: [
     FormsModule,
@@ -28,7 +28,7 @@ import { MatSelectModule } from '@angular/material/select';
     TranslateModule
 ]
 })
-export class WorkplanPropertiesComponent implements OnDestroy {
+export class WorkplanProperties implements OnDestroy {
   TranslationConstants = TranslationConstants;
   readonly WorkplanStates = Object.values(WorkplanState);
 

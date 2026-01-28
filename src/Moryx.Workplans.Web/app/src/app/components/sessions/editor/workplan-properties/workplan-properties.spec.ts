@@ -5,21 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StepCreatorComponent } from './step-creator.component';
+import { WorkplanProperties } from './workplan-properties';
 
-describe('StepCreatorComponent', () => {
-  let component: StepCreatorComponent;
-  let fixture: ComponentFixture<StepCreatorComponent>;
+describe('WorkplanProperties', () => {
+  let component: WorkplanProperties;
+  let fixture: ComponentFixture<WorkplanProperties>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [StepCreatorComponent]
+    declarations: [WorkplanProperties]
 })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StepCreatorComponent);
+    fixture = TestBed.createComponent(WorkplanProperties);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

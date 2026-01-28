@@ -30,9 +30,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { WorkplanPropertiesComponent } from './workplan-properties/workplan-properties.component';
-import { NodePropertiesComponent } from './node-properties/node-properties.component';
-import { StepCreatorComponent } from './step-creator/step-creator.component';
+import { WorkplanProperties } from './workplan-properties/workplan-properties';
+import { NodeProperties } from './node-properties/node-properties';
+import { StepCreator } from './step-creator/step-creator';
 import { MatButtonModule } from '@angular/material/button';
 
 enum EditQueries {
@@ -43,8 +43,8 @@ enum EditQueries {
 
 @Component({
   selector: 'app-editor',
-  templateUrl: './editor.component.html',
-  styleUrls: ['./editor.component.scss'],
+  templateUrl: './editor.html',
+  styleUrls: ['./editor.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -58,13 +58,13 @@ enum EditQueries {
     TranslateModule,
     MatProgressSpinnerModule,
     MatMenuModule,
-    WorkplanPropertiesComponent,
-    NodePropertiesComponent,
-    StepCreatorComponent,
+    WorkplanProperties,
+    NodeProperties,
+    StepCreator,
     MatButtonModule
   ]
 })
-export class EditorComponent implements OnInit {
+export class Editor implements OnInit {
   pathMenuTrigger = viewChild.required<MatMenuTrigger>('pathMenuTrigger');
   stepMenuTrigger = viewChild.required<MatMenuTrigger>('stepMenuTrigger');
   availableSteps = signal<WorkplanStepRecipe[]>([]);
