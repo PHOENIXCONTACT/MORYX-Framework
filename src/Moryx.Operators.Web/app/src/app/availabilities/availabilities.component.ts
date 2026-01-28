@@ -11,7 +11,7 @@ import { formatDateDigits, getDayName, getShortDayName, isDayInInterval, isSameD
 import { AvailabilityDialogComponent } from '../dialogs/availability-dialog/availability-dialog.component';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 
@@ -41,7 +41,7 @@ export class AvailabilitiesComponent {
   }
 
   onAddClick(){
-    this.dialog.open(AvailabilityDialogComponent); 
+    this.dialog.open(AvailabilityDialogComponent);
   }
 
   navigateToCurrentWeek(){

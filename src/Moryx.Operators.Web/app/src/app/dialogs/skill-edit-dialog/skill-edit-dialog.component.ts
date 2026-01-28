@@ -11,11 +11,10 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/materia
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import { SKILL_TYPES } from "src/app/models/dummy-data";
 import { OperatorSkill } from "src/app/models/operator-skill-model";
 import { SkillType } from "src/app/models/skill-type-model";
 import { AppStoreService } from "src/app/services/app-store.service";
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatInputModule } from "@angular/material/input";
 
 @Component({
@@ -35,7 +34,7 @@ import { MatInputModule } from "@angular/material/input";
 })
 export class SkillEditDialogComponent {
   skillTypes = signal<SkillType[]>([]);
-  
+
   TranslationConstants = TranslationConstants;
 
   constructor(

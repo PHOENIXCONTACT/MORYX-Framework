@@ -9,8 +9,6 @@
 </div>
 @if (operators().length === 0) {
   <div class="tw:w-full tw:h-full">
-    <empty-state
-      [message]="TranslationConstants.OPERATORS.EMPTY_MESSAGE | translate"
-    ></empty-state>
+    <empty-state [header]="''" [message]="TranslationConstants.OPERATORS.EMPTY_MESSAGE | translate" />
   </div>
 }

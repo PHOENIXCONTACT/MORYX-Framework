@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { OperatorViewModel } from 'src/app/models/operator-view-model';
@@ -13,7 +13,7 @@ import { AppStoreService } from 'src/app/services/app-store.service';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -42,7 +42,7 @@ export class AddOperatorComponentDialog {
     private appStoreService: AppStoreService,
     public dialogRef: MatDialogRef<AddOperatorComponentDialog>){}
 
-  getError(control: FormControl<string | null>){ 
+  getError(control: FormControl<string | null>){
     return control.hasError('required') ? 'This field is required!' : '';
   }
 
@@ -51,7 +51,7 @@ export class AddOperatorComponentDialog {
   }
 
   save(){
-    
+
     if(!this.operatorForm.valid) return;
 
     var operator = <AssignableOperator>{
@@ -63,10 +63,10 @@ export class AddOperatorComponentDialog {
     };
 
     var data = new OperatorViewModel(operator);
-    
+
       this.appStoreService.addOperator(data);
 
-      this.dialogRef.close(data);  
+      this.dialogRef.close(data);
   }
 }
 

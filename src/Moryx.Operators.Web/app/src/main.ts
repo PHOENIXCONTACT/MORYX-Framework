@@ -4,7 +4,7 @@ import { provideZoneChangeDetection } from "@angular/core";
  * Licensed under the Apache License, Version 2.0
 */
 
-import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
+import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
 

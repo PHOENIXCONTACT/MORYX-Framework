@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, EventEmitter, input, Input, output, Output } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { OperatorViewModel } from '../models/operator-view-model';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { CommonModule } from '@angular/common';

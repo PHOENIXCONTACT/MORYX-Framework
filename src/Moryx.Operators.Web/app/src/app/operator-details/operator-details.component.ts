@@ -4,26 +4,21 @@
 */
 
 import { Component, effect, input, OnInit, signal, untracked } from "@angular/core";
-import { OperatorModel } from "../api/models/operator-model";
-import { OperatorManagementService } from "../api/services";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { OperatorSkillView } from "../models/type";
 import { OperatorSkill } from "../models/operator-skill-model";
-import { SKILLS } from "../models/dummy-data";
 import { dateToString } from "../models/utils";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { MatDialog } from "@angular/material/dialog";
 import { SkillNewDialogComponent } from "../dialogs/skill-new-dialog/skill-new-dialog.component";
-import { SkillEditDialogComponent } from "../dialogs/skill-edit-dialog/skill-edit-dialog.component";
 import { ConfirmationDialogComponent } from "../dialogs/confirmation-dialog/confirmation-dialog.component";
 import { OperatorViewModel } from "../models/operator-view-model";
 import { AssignableOperator } from "../api/models/assignable-operator";
 import { skillToOperatorSkill, skillTypeToModel } from "../models/model-converter";
 import { SkillTypeModel } from "../api/models/skill-type-model";
-import { timeInterval } from "rxjs";
+import { lastValueFrom } from "rxjs";
 import { AppStoreService } from "../services/app-store.service";
-import { IOperatorAssignable } from "../api/models/i-operator-assignable";
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { MatIconModule } from "@angular/material/icon";
@@ -101,7 +96,7 @@ export class OperatorDetailsComponent implements OnInit {
       this.operator.update(_=> result.data);
     });
 
-    
+
    this.loadSkills();
 
     this.appStoreService
@@ -156,12 +151,11 @@ export class OperatorDetailsComponent implements OnInit {
 
 
   async onDeleteSkillClick(skill: OperatorSkill){
-    const translations = await this.translate
+    const translations = await lastValueFrom(this.translate
           .get([
             TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TITLE,
             TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_MESSAGE
-          ])
-          .toAsync();
+          ]));
     const dialogRef = this.dialog.open(ConfirmationDialogComponent,{
       data:{
         dialogMessage: translations[TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_MESSAGE],

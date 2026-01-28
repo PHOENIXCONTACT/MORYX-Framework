@@ -4,6 +4,7 @@
 */
 
 import { Component, signal } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { SkillType } from '../models/skill-type-model';
 import { getDurationInDays } from '../models/utils';
@@ -59,12 +60,11 @@ export class SkillTypesComponent {
   }
 
   async onDeleteClick(skillType: SkillType) {
-    const translations = await this.translate
+    const translations = await lastValueFrom(this.translate
           .get([
             TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_TITLE,
             TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_MESSAGE
-          ])
-          .toAsync();
+          ]));
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent,{
       data:{

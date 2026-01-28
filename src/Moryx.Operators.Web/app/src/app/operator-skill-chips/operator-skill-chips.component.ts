@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, input, Input } from "@angular/core";
+import { Component, computed, input } from "@angular/core";
 import { OperatorSkill } from "../models/operator-skill-model";
 import { SkillTypeModel } from "../api/models/skill-type-model";
 
