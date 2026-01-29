@@ -3,15 +3,15 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit, Input, model, signal, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, model, signal, Output, EventEmitter } from '@angular/core';
 import { ContentDescriptorModel } from '../../../api/models';
 import { MediaService } from '../../../services/media-service/media.service';
 import { environment } from 'src/environments/environment';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { retry } from 'rxjs';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
-import { MatCard, MatCardImage, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardModule } from '@angular/material/card';
-import { CommonModule, NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import { MatCardModule } from '@angular/material/card';
+import { CommonModule } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,11 +22,11 @@ import { MatIconModule } from '@angular/material/icon';
     templateUrl: './media-file.component.html',
     styleUrls: ['./media-file.component.scss'],
     imports: [
-      CommonModule, 
-      MatProgressSpinner, 
-      TranslateModule, 
-      MatCardModule, 
-      MatButtonModule, 
+      CommonModule,
+      MatProgressSpinner,
+      TranslateModule,
+      MatCardModule,
+      MatButtonModule,
       MatIconModule]
 })
 export class MediaFileComponent implements OnInit {
@@ -38,13 +38,13 @@ export class MediaFileComponent implements OnInit {
   selected = model.required<boolean>();
   loaded = signal(false);
   path = signal<string | null | ArrayBuffer>('');
-  
+
   @Output() show = new EventEmitter<ContentDescriptorModel>()
   @Output() delete = new EventEmitter<ContentDescriptorModel>()
   img: any;
 
   constructor(
-    private mediaService: MediaService,private moryxSnackbar: MoryxSnackbarService) { }
+    private mediaService: MediaService,private snackbarService: SnackbarService) { }
 
   ngOnInit(): void {
     this.showFile();
@@ -83,7 +83,7 @@ export class MediaFileComponent implements OnInit {
                 this.loaded.update(_ => true);
               }
             },
-            error : error => this.moryxSnackbar.handleError(error)
+            error : error => this.snackbarService.handleError(error)
           });
       } else {
         this.path.update(_ => environment.assets + 'assets/no_preview.jpg');

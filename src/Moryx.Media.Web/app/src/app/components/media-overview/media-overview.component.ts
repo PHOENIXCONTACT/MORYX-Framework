@@ -4,6 +4,7 @@
 */
 
 import { Component, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
 import { Router } from '@angular/router';
@@ -13,29 +14,25 @@ import { environment } from 'src/environments/environment';
 import { ContentDescriptorModel } from '../../api/models';
 import { DialogDeleteComponent } from '../../dialogs/dialog-delete/dialog-delete.component';
 import { MediaService } from '../../services/media-service/media.service';
-import {
-  EmptyStateComponent,
-  MoryxSnackbarService,
-  SearchBarService,
-  SearchRequest,
-  SearchSuggestion,
-} from '@moryx/ngx-web-framework';
+import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion, } from '@moryx/ngx-web-framework/services';
+import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { NgStyle, CommonModule } from '@angular/common';
 import { FileDragAndDropDirective } from '../../extensions/file-drag-and-drop.directive';
 import { MediaFileComponent } from './media-file/media-file.component';
 import { MatIcon } from '@angular/material/icon';
 import { MatFabButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+
 @Component({
-    selector: 'app-media-overview',
-    templateUrl: './media-overview.component.html',
-    styleUrls: ['./media-overview.component.scss'],
-    imports: [
-      FileDragAndDropDirective, NgStyle, CommonModule, 
-      MediaFileComponent,MatMenu, MatMenuContent, 
-      MatMenuItem, MatIcon, MatMenuTrigger, 
-      MatFabButton, MatProgressSpinner, TranslateModule,
-      EmptyStateComponent]
+  selector: 'app-media-overview',
+  templateUrl: './media-overview.component.html',
+  styleUrls: ['./media-overview.component.scss'],
+  imports: [
+    FileDragAndDropDirective, NgStyle, CommonModule,
+    MediaFileComponent, MatMenu, MatMenuContent,
+    MatMenuItem, MatIcon, MatMenuTrigger,
+    MatFabButton, MatProgressSpinner, TranslateModule,
+    EmptyState]
 })
 export class MediaOverviewComponent implements OnInit, OnDestroy {
   filteredContents = signal<ContentDescriptorModel[]>([]);
@@ -46,7 +43,7 @@ export class MediaOverviewComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
   TranslationConstants = TranslationConstants;
-  menuTopLeftPosition = { x: '0', y: '0' };
+  menuTopLeftPosition = {x: '0', y: '0'};
 
   constructor(
     public dialog: MatDialog,
@@ -54,8 +51,9 @@ export class MediaOverviewComponent implements OnInit, OnDestroy {
     private router: Router,
     public translate: TranslateService,
     private searchBarService: SearchBarService,
-    private moryxSnackbar: MoryxSnackbarService
-  ) { }
+    private snackbarService: SnackbarService
+  ) {
+  }
 
   ngOnDestroy(): void {
     this.searchBarService.unsubscribe();
@@ -69,10 +67,9 @@ export class MediaOverviewComponent implements OnInit, OnDestroy {
         this.isLoading.update(_ => false);
       },
       error: async (err) => {
-        const translations = await this.translate
-          .get([TranslationConstants.MEDIA_OVERVIEW.FAILED_LOADING])
-          .toAsync();
-        this.moryxSnackbar.showError(
+        const translations = await lastValueFrom(this.translate
+          .get([TranslationConstants.MEDIA_OVERVIEW.FAILED_LOADING]));
+        this.snackbarService.showError(
           translations[TranslationConstants.MEDIA_OVERVIEW.FAILED_LOADING]
         );
         this.isLoading.update(_ => false);
@@ -109,22 +106,22 @@ export class MediaOverviewComponent implements OnInit, OnDestroy {
         if (!content.name) continue;
 
         const url = urlBase + content.id;
-        searchSuggestions.push({ text: content.name, url: url });
+        searchSuggestions.push({text: content.name, url: url});
       }
       this.filteredContents.update(_ => contents);
       this.searchBarService.provideSuggestions(searchSuggestions);
     }
   }
 
-  onOpenMenuOnTouch(event: any, content:ContentDescriptorModel){
-    this.trigger.menuData = { content: content };
+  onOpenMenuOnTouch(event: any, content: ContentDescriptorModel) {
+    this.trigger.menuData = {content: content};
     this.menuTopLeftPosition.x = event.pointers[0].clientX + 'px';
     this.menuTopLeftPosition.y = event.pointers[0].clientY + 'px';
     this.trigger.openMenu();
   }
 
   onSelectMedia(content: ContentDescriptorModel) {
-    this.selectedContent.update( _ =>  content.id);
+    this.selectedContent.update(_ => content.id);
     this.router.navigate(['/details/', content.id]);
   }
 
@@ -142,9 +139,8 @@ export class MediaOverviewComponent implements OnInit, OnDestroy {
   //open dialog in order to check if content should really be deleted
   async onDelete(content: ContentDescriptorModel): Promise<void> {
     if (content !== undefined) {
-      const deleteMessage = await this.translate
-        .get(TranslationConstants.MEDIA_OVERVIEW.DELETE_MESSAGE)
-        .toAsync();
+      const deleteMessage = await lastValueFrom(this.translate
+        .get(TranslationConstants.MEDIA_OVERVIEW.DELETE_MESSAGE));
       const dialogRef = this.dialog.open(DialogDeleteComponent, {
         data: {
           type: 'Content',

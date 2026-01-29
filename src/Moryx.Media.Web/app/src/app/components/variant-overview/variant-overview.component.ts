@@ -3,39 +3,37 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnDestroy, OnInit, signal, viewChild, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { VariantDescriptor } from '../../api/models';
 import { ContentDescriptorModel } from '../../api/models/content-descriptor-model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { lastValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem, MatMenuModule } from '@angular/material/menu';
+import { MatMenuTrigger, MatMenuModule } from '@angular/material/menu';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { MediaServerService } from 'src/app/api/services';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { environment } from 'src/environments/environment';
-import {
-  AddVariantResultData,
-  DialogAddVariantComponent
-} from '../../dialogs/dialog-add-variant/dialog-add-variant.component';
+import { AddVariantResultData, DialogAddVariantComponent } from '../../dialogs/dialog-add-variant/dialog-add-variant.component';
 import { DialogDeleteComponent } from '../../dialogs/dialog-delete/dialog-delete.component';
 import { DialogVariantInfoComponent } from '../../dialogs/dialog-variant-info/dialog-variant-info.component';
 import { MediaService } from '../../services/media-service/media.service';
-import { NgStyle, NgClass, DecimalPipe, DatePipe, CommonModule } from '@angular/common';
-import { MatSidenavContainer, MatSidenav, MatSidenavContent, MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbar, MatToolbarModule, MatToolbarRow } from '@angular/material/toolbar';
-import { MatIconButton, MatFabButton, MatButtonModule } from '@angular/material/button';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
-import { MatSelectionList, MatListOption, MatListModule } from '@angular/material/list';
+import { CommonModule } from '@angular/common';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 import { MatTooltip } from '@angular/material/tooltip';
-import { MatProgressSpinner, MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 
 @Component({
-    selector: 'app-variant-overview',
-    templateUrl: './variant-overview.component.html',
-    styleUrls: ['./variant-overview.component.scss'],
+  selector: 'app-variant-overview',
+  templateUrl: './variant-overview.component.html',
+  styleUrls: ['./variant-overview.component.scss'],
   imports: [
     MatSidenavModule,
     MatToolbarModule,
@@ -43,12 +41,12 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
     RouterLink,
     MatMenuModule,
     MatListModule,
-      MatTooltip, MatButtonModule, 
+    MatTooltip, MatButtonModule,
     NgxDocViewerModule,
     CommonModule,
     TranslateModule,
-      MatProgressSpinnerModule
-    ]
+    MatProgressSpinnerModule
+  ]
 })
 export class VariantOverviewComponent implements OnInit, OnDestroy {
   mediaImage = signal(environment.assets + "assets/media-toolbar.webp");
@@ -57,14 +55,14 @@ export class VariantOverviewComponent implements OnInit, OnDestroy {
   // 0: no picture loaded, 1: picture loading, 2: picture loaded
   bigPictureLoadingState = signal(0);
   bigPictureUrl = signal<string | null | ArrayBuffer>('');
-  pdfUrl = signal<string | undefined>( undefined);
-  previews = signal<Map<string, string | ArrayBuffer | null>>( new Map());
+  pdfUrl = signal<string | undefined>(undefined);
+  previews = signal<Map<string, string | ArrayBuffer | null>>(new Map());
   bigPictureIsPdf = signal(false);
   defaultPictureUrl = signal(environment.assets + 'assets/no_preview.jpg');
 
   downloadPictureUrl: string | null | ArrayBuffer = '';
   TranslationConstants = TranslationConstants;
-  menuTopLeftPosition = signal<{ x: string, y: string }>({ x: '0', y: '0' });
+  menuTopLeftPosition = signal<{ x: string, y: string }>({x: '0', y: '0'});
   timeoutHandler: ReturnType<typeof setTimeout> | undefined;
   trigger = viewChild.required(MatMenuTrigger);
   private pdfObjectUrl?: string;
@@ -74,9 +72,10 @@ export class VariantOverviewComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private route: ActivatedRoute,
     private mediaService: MediaService,
-    private moryxSnackbar: MoryxSnackbarService,
+    private snackbarService: SnackbarService,
     public translate: TranslateService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -107,8 +106,8 @@ export class VariantOverviewComponent implements OnInit, OnDestroy {
   onContext(event: MouseEvent, variant: VariantDescriptor) {
     event.preventDefault();
     event.stopPropagation();
-    this.trigger()!.menuData = { variant: variant };
-    this.menuTopLeftPosition.set({x : event.clientX + 'px',y : event.clientY + 'px'});
+    this.trigger()!.menuData = {variant: variant};
+    this.menuTopLeftPosition.set({x: event.clientX + 'px', y: event.clientY + 'px'});
     this.trigger()!.openMenu();
   }
 
@@ -156,7 +155,7 @@ export class VariantOverviewComponent implements OnInit, OnDestroy {
         .getPicture(variantName, contentId, true)
         .subscribe((data) => {
           if (data !== null) {
-            const blob = new Blob([data], { type: data.type });
+            const blob = new Blob([data], {type: data.type});
             const old = this.previewObjectUrls.get(variantName);
             if (old) URL.revokeObjectURL(old);
 
@@ -203,7 +202,7 @@ export class VariantOverviewComponent implements OnInit, OnDestroy {
         .getPicture(variant.name, content.id, false)
         .subscribe((data) => {
           if (data !== null) {
-            const bigPicture = new Blob([data], { type: data.type });
+            const bigPicture = new Blob([data], {type: data.type});
             const reader = new FileReader();
             reader.readAsDataURL(bigPicture);
             reader.onload = (_event) => {
@@ -268,10 +267,9 @@ export class VariantOverviewComponent implements OnInit, OnDestroy {
           return e.name == resultData.variantName;
         }) !== undefined
       ) {
-        const alreadExistsMessage = await this.translate
-          .get(TranslationConstants.VARIANT_OVERVIEW.ALREADY_EXISTS_MESSAGE)
-          .toAsync();
-        this.moryxSnackbar.showError(alreadExistsMessage);
+        const alreadExistsMessage = await lastValueFrom(this.translate
+          .get(TranslationConstants.VARIANT_OVERVIEW.ALREADY_EXISTS_MESSAGE));
+        this.snackbarService.showError(alreadExistsMessage);
       } else {
         this.mediaService
           .uploadVariant(id, resultData.variantName, resultData.file)
@@ -292,7 +290,7 @@ export class VariantOverviewComponent implements OnInit, OnDestroy {
               });
             },
             error: async (e: HttpErrorResponse) =>
-              await this.moryxSnackbar.handleError(e),
+              await this.snackbarService.handleError(e),
           });
       }
     }
@@ -325,7 +323,7 @@ export class VariantOverviewComponent implements OnInit, OnDestroy {
     const content = this.content();
     const selectedVariant = this.selectedVariant();
     if (selectedVariant !== undefined && content !== undefined) {
-      const values = { guid: content.id, variantName: variant.name };
+      const values = {guid: content.id, variantName: variant.name};
       const url =
         location.origin +
         this.interpolateUrl(MediaServerService.GetVariantStreamPath, values);
@@ -350,9 +348,8 @@ export class VariantOverviewComponent implements OnInit, OnDestroy {
       typeof selectedVariant.name === 'string' &&
       selectedVariant.name?.localeCompare('master') !== 0
     ) {
-      const deleteMessage = await this.translate
-        .get(TranslationConstants.VARIANT_OVERVIEW.DELETE_MESSAGE)
-        .toAsync();
+      const deleteMessage = await lastValueFrom(this.translate
+        .get(TranslationConstants.VARIANT_OVERVIEW.DELETE_MESSAGE));
       const dialogRef = this.dialog.open(DialogDeleteComponent, {
         data: {
           type: 'Content',
@@ -376,7 +373,7 @@ export class VariantOverviewComponent implements OnInit, OnDestroy {
                   typeof selectedVariant.name === 'string'
                 ) {
                   this.remove(selectedVariant);
-                  this.previews.update(map =>{
+                  this.previews.update(map => {
                     map.delete(selectedVariant.name!);
                     return map;
                   });
