@@ -1,7 +1,5 @@
-
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
@@ -86,6 +84,7 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
                 if (ShouldSkipForExecution(execution, targetSystem, change, Logger))
                     continue;
             }
+
             triggers.Add(trigger);
             Logger.LogTrace(
                 "Accepted trigger {trigger} (evaluationType={evaluationType}, execution={execution})",
@@ -100,7 +99,7 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         foreach (var trigger in triggers.OrderBy(t => t.SortOrder))
         {
             var index = trigger.SortOrder;
-            // Create step collection for first entry of a sort order
+
             if (!stepGroups.TryGetValue(index, out var value))
             {
                 value = new List<IWorkplanStep>();
@@ -111,11 +110,13 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
             if (value.Count == 0)
             {
-                Logger.LogWarning("{Trigger} with sort index {sortOrder} found the system to require a setup {executionType}, but did not create workplan steps.",
-                    nameof(trigger), index, trigger.Execution);
+                Logger.LogWarning(
+                    "{Trigger} with sort index {sortOrder} found the system to require a setup {executionType}, but did not create workplan steps.",
+                    trigger, index, trigger.Execution);
                 stepGroups.Remove(index);
             }
         }
+
         if (stepGroups.Count == 0) // No setup necessary for this recipe
         {
             return null;
@@ -150,7 +151,6 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         return setupRecipe;
     }
 
-
     private SetupEvaluation TryEvaluate(ISetupTrigger trigger, ProductionRecipe recipe)
     {
         Logger.LogTrace("Entering TryEvaluate (trigger={trigger}, recipeId={recipeId}, recipeName={recipeName})",
@@ -168,13 +168,9 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         catch (Exception e)
         {
             Logger.LogError(e,
-                "Evaluation calling exception {method} on {triggerType} (trigger={trigger}) for recipeId={recipeId}, recipeName={recipeName}",
+                "Evaluation calling exception {method} on evaluating {triggerType} (trigger={trigger}) for recipeId={recipeId}, recipeName={recipeName}",
                 nameof(ISetupTrigger.Evaluate), trigger.GetType().Name, trigger, recipe?.Id, recipe?.Name);
             throw;
-        }
-        finally
-        {
-            Logger.LogTrace("Leaving TryEvaluate (trigger={trigger})", trigger);
         }
     }
 
@@ -249,22 +245,26 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         }
     }
 
+    internal static partial class Log
+    {
+        [LoggerMessage(
+            EventId = 27001,
+            Level = LogLevel.Trace,
+            Message = "Target already provides required capabilities {capabilities} (cells=[{cells}])")]
+        internal static partial void TargetCapabilitiesProvided(
+            ILogger logger,
+            string capabilities,
+            string cells);
 
-    /// <summary>
-    /// Logs that the target already provides the required capabilities.
-    /// </summary>
-    private static partial bool LogTargetCapsProvided(
-        SetupEvaluation.Change change,
-        IEnumerable<ICell> targetCells,
-        ILogger logger);
-
-    /// <summary>
-    /// Logs that the current capabilities were already removed.
-    /// </summary>
-    private static partial bool LogCurrentCapsAlreadyRemoved(
-        SetupEvaluation.Change change,
-        IEnumerable<ICell> currentCells,
-        ILogger logger);
+        [LoggerMessage(
+            EventId = 27002,
+            Level = LogLevel.Trace,
+            Message = "Current capabilities already removed {capabilities} (cells=[{cells}])")]
+        internal static partial void CurrentCapabilitiesAlreadyRemoved(
+            ILogger logger,
+            string capabilities,
+            string cells);
+    }
 
     private static bool ShouldSkipForExecution(
         SetupExecution execution,
@@ -275,17 +275,20 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         switch (execution)
         {
             case SetupExecution.BeforeProduction:
-
                 {
                     var targetCells = targetSystem.Cells(change.TargetCapabilities);
                     var hasTargetCaps = targetCells.Any();
 
                     if (hasTargetCaps)
-                        return LogTargetCapsProvided(change, targetCells, logger);
+                    {
+                        var capabilitiesStr = change.TargetCapabilities?.ToString() ?? string.Empty;
+                        var cellsStr = string.Join(", ", targetCells.Select(c => c?.ToString() ?? string.Empty));
+                        Log.TargetCapabilitiesProvided(logger, capabilitiesStr, cellsStr);
+                        return true;
+                    }
 
                     return false;
                 }
-
 
             case SetupExecution.AfterProduction:
                 {
@@ -293,10 +296,16 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
                     var hasCurrentCaps = currentCells.Any();
 
                     if (!hasCurrentCaps)
-                        return LogCurrentCapsAlreadyRemoved(change, currentCells, logger);
+                    {
+                        var capabilitiesStr = change.CurrentCapabilities?.ToString() ?? string.Empty;
+                        var cellsStr = string.Join(", ", currentCells.Select(c => c?.ToString() ?? string.Empty));
+                        Log.CurrentCapabilitiesAlreadyRemoved(logger, capabilitiesStr, cellsStr);
+                        return true;
+                    }
 
                     return false;
                 }
+
             default:
                 return false;
         }
