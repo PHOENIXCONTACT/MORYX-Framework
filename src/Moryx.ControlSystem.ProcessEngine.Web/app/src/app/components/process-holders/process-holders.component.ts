@@ -3,14 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import {
-  Component,
-  ElementRef,
-  inject,
-  OnInit,
-  signal,
-  viewChild,
-} from "@angular/core";
+import { Component, inject, OnInit, signal, viewChild } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatTree, MatTreeModule } from "@angular/material/tree";
 import { MatIconModule } from "@angular/material/icon";
@@ -18,11 +11,9 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { ProcessHolderStreamService } from "../../services/process-holder-stream.service";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import { HttpErrorResponse } from "@angular/common/module.d-CnjH8Dlt";
-import {
-  EmptyStateComponent,
-  MoryxSnackbarService,
-} from "@moryx/ngx-web-framework";
+import { HttpErrorResponse } from "@angular/common/http";
+import { SnackbarService } from "@moryx/ngx-web-framework/services";
+import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
@@ -34,7 +25,6 @@ import ProcessHolderNode from "../../models/process-holder-node";
 import { Category } from "src/app/api/models/category";
 import { ConvertToNode, ConvertToProcessHolderGroup } from "src/app/models/converter";
 import { ProcessHolderGroupModelArrayApiResponse } from "src/app/api/models/process-holder-group-model-array-api-response";
-import { ProcessHolderGroupModel } from "src/app/api/models/process-holder-group-model";
 
 @Component({
   selector: "app-process-holders",
@@ -45,7 +35,7 @@ import { ProcessHolderGroupModel } from "src/app/api/models/process-holder-group
     MatButtonModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    EmptyStateComponent,
+    EmptyState,
     MatFormFieldModule,
     ReactiveFormsModule,
     FormsModule,
@@ -71,7 +61,7 @@ export class ProcessHoldersComponent implements OnInit {
 
   private _processHolderStreamService = inject(ProcessHolderStreamService);
   private _processService = inject(ProcessEngineService);
-  private _moryxSnackbar = inject(MoryxSnackbarService);
+  private _snackbarService = inject(SnackbarService);
   private _translate = inject(TranslateService);
 
   private _tree = viewChild<MatTree<ProcessHolderNode, ProcessHolderNode>>("tree");
@@ -95,7 +85,7 @@ export class ProcessHoldersComponent implements OnInit {
         this.loading.set(false);
         this.processHolderGroups.set([]);
         this.buildTree([]);
-        this._moryxSnackbar.handleError(e);
+        this._snackbarService.handleError(e);
       },
     });
   }
@@ -138,8 +128,8 @@ export class ProcessHoldersComponent implements OnInit {
         id,
       })
       .subscribe({
-        next: () => this.getTranslations().then(values => this._moryxSnackbar.showSuccess(values[TranslationConstants.PROCESS_HOLDER_GROUPS.OPERATION_SUCCEEDED])),
-        error: (e: HttpErrorResponse) => this._moryxSnackbar.handleError(e),
+        next: () => this.getTranslations().then(values => this._snackbarService.showSuccess(values[TranslationConstants.PROCESS_HOLDER_GROUPS.OPERATION_SUCCEEDED])),
+        error: (e: HttpErrorResponse) => this._snackbarService.handleError(e),
       });
   }
 
@@ -149,8 +139,8 @@ export class ProcessHoldersComponent implements OnInit {
         id,
       })
       .subscribe({
-        next: () => this.getTranslations().then(values => this._moryxSnackbar.showSuccess(values[TranslationConstants.PROCESS_HOLDER_GROUPS.OPERATION_SUCCEEDED])),
-        error: (e: HttpErrorResponse) => this._moryxSnackbar.handleError(e),
+        next: () => this.getTranslations().then(values => this._snackbarService.showSuccess(values[TranslationConstants.PROCESS_HOLDER_GROUPS.OPERATION_SUCCEEDED])),
+        error: (e: HttpErrorResponse) => this._snackbarService.handleError(e),
       });
   }
 

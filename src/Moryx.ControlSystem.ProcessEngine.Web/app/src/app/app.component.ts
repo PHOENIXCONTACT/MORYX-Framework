@@ -34,7 +34,7 @@ export class AppComponent {
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
     ]);
-    this.translate.setDefaultLang("en");
+    this.translate.setFallbackLang("en");
     this.translate.use(this.languageService.getDefaultLanguage());
     this.router.events.subscribe((event) => {
       event instanceof NavigationEnd ? this.updateTitle(event) : null;
@@ -43,7 +43,7 @@ export class AppComponent {
 
   private async getTranslations(): Promise<{ [key: string]: string }> {
     return await this.translate
-      .get([TranslationConstants.PROCESS_HOLDER_GROUPS.PROCESS_HOLDER_GROUP_TITLE, 
+      .get([TranslationConstants.PROCESS_HOLDER_GROUPS.PROCESS_HOLDER_GROUP_TITLE,
         TranslationConstants.PROCESS_HOLDER_GROUPS.PROCESSES_TITLE,
       ])
       .toAsync();
@@ -53,13 +53,13 @@ export class AppComponent {
     switch (event.url) {
       case "/jobs":
         this.getTranslations().then(
-          values => 
+          values =>
             this.header.set(values[TranslationConstants.PROCESS_HOLDER_GROUPS.PROCESSES_TITLE])
         )
         break;
       case "/process-holders":
        this.getTranslations().then(
-          values => 
+          values =>
             this.header.set(values[TranslationConstants.PROCESS_HOLDER_GROUPS.PROCESS_HOLDER_GROUP_TITLE])
         )
         break;

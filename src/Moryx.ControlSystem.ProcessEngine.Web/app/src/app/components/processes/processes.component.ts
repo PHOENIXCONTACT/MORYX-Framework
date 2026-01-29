@@ -5,26 +5,13 @@
 
 import { CommonModule } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
-import {
-  Component,
-  computed,
-  input,
-  Input,
-  OnDestroy,
-  OnInit,
-  signal,
-} from "@angular/core";
+import { Component, computed, input, OnDestroy, OnInit, signal } from "@angular/core";
 import { MatListModule } from "@angular/material/list";
-import {
-  MatSlideToggleChange,
-  MatSlideToggleModule,
-} from "@angular/material/slide-toggle";
-import {
-  MoryxSnackbarService,
-  NavigableEntryEditorComponent,
-} from "@moryx/ngx-web-framework";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { BehaviorSubject, Subscription } from "rxjs";
+import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { SnackbarService } from "@moryx/ngx-web-framework/services";
+import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
+import { TranslateModule } from "@ngx-translate/core";
+import { Subscription } from "rxjs";
 import { JobProcessModel } from "src/app/api/models/job-process-model";
 import { ProcessActivityModel } from "src/app/api/models/process-activity-model";
 import { ProcessEngineService } from "src/app/api/services";
@@ -39,13 +26,13 @@ import { ProcessEngineStreamService } from "src/app/services/process-engine-stre
     CommonModule,
     TranslateModule,
     MatListModule,
-    NavigableEntryEditorComponent,
+    NavigableEntryEditor,
     MatSlideToggleModule,
   ],
   providers: [
     ProcessEngineService,
     ProcessEngineStreamService,
-    MoryxSnackbarService,
+    SnackbarService,
   ],
   styleUrls: ["./processes.component.scss"],
   standalone: true,
@@ -70,8 +57,7 @@ export class ProcessesComponent implements OnInit, OnDestroy {
   constructor(
     public processEngineService: ProcessEngineService,
     public processEngineEvents: ProcessEngineStreamService,
-    public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService
+    private snackbarService: SnackbarService
   ) {
     console.log('loadede')
   }
@@ -89,7 +75,7 @@ export class ProcessesComponent implements OnInit, OnDestroy {
           if (firstProcess) this.onSelectProcess(firstProcess);
         },
         error: async (e: HttpErrorResponse) =>
-          await this.moryxSnackbar.handleError(e),
+          await this.snackbarService.handleError(e),
       });
 
     this.processSubscription =
@@ -181,7 +167,7 @@ export class ProcessesComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => this.updateData(data),
         error: async (e: HttpErrorResponse) =>
-          await this.moryxSnackbar.handleError(e),
+          await this.snackbarService.handleError(e),
       });
   }
 
