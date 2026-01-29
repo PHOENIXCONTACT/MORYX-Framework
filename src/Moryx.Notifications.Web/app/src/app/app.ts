@@ -16,27 +16,27 @@ import { Subscription } from "rxjs";
 import { CommonModule } from "@angular/common";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { NotificationsComponent } from "./components/notifications/notifications.component";
-import { NotificationDetailsComponent } from "./components/notification-details/notification-details.component";
+import { Notifications } from "./components/notifications/notifications";
+import { NotificationDetails } from "./components/notification-details/notification-details";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @Component({
   selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"],
+  templateUrl: "./app.html",
+  styleUrls: ["./app.scss"],
   imports: [
     CommonModule,
     MatSidenavModule,
     MatToolbarModule,
-    NotificationsComponent,
-    NotificationDetailsComponent,
+    Notifications,
+    NotificationDetails,
     TranslateModule,
     MatProgressSpinnerModule,
     EmptyState
   ],
   standalone: true,
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class App implements OnInit, OnDestroy {
   isLoading = signal(true);
   isEmpty = signal(true);
   notificationsToolbarImage = signal(

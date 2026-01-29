@@ -20,8 +20,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'notification-details',
-    templateUrl: './notification-details.component.html',
-    styleUrls: ['./notification-details.component.scss'],
+    templateUrl: './notification-details.html',
+    styleUrls: ['./notification-details.scss'],
     imports: [
       CommonModule,
       MatCardModule,
@@ -34,7 +34,7 @@ import { MatButtonModule } from '@angular/material/button';
     standalone: true,
     providers: [MarkdownService]
 })
-export class NotificationDetailsComponent implements OnInit, OnDestroy {
+export class NotificationDetails implements OnInit, OnDestroy {
   notification = signal<NotificationModel | undefined>(undefined);
 
   subscription: Subscription|undefined;
