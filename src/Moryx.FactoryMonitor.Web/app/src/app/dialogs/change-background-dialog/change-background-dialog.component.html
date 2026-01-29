@@ -3,19 +3,25 @@
 </div>
 <div mat-dialog-content>
   <div>
-    <mat-form-field class="background-input" *ngIf="backgroundChangeService.canSaveBackground$ | async"
-    appearance="outline">
-      <mat-label>{{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.BACKGROUND_URL | translate }}</mat-label>
-      <input
-        matInput
-        [placeholder]="TranslationConstants.CHANGE_BACKGROUND_DIALOG.BACKGROUND_URL | translate"
-        [formControl]="backgroundUrlFormControl"
-        [errorStateMatcher]="matcher" />
-      <mat-error *ngIf="backgroundUrlFormControl.hasError('required')">{{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.ENTER_URL | translate }}</mat-error>
-    </mat-form-field>
-    <p *ngIf="!(backgroundChangeService.canSaveBackground$ | async)">
-      {{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.NO_MANUFACTURING_RESOURCE| translate }}
-    </p>
+    @if (backgroundChangeService.canSaveBackground$ | async) {
+      <mat-form-field class="background-input"
+        appearance="outline">
+        <mat-label>{{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.BACKGROUND_URL | translate }}</mat-label>
+        <input
+          matInput
+          [placeholder]="TranslationConstants.CHANGE_BACKGROUND_DIALOG.BACKGROUND_URL | translate"
+          [formControl]="backgroundUrlFormControl"
+          [errorStateMatcher]="matcher" />
+        @if (backgroundUrlFormControl.hasError('required')) {
+          <mat-error>{{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.ENTER_URL | translate }}</mat-error>
+        }
+      </mat-form-field>
+    }
+    @if (!(backgroundChangeService.canSaveBackground$ | async)) {
+      <p>
+        {{ TranslationConstants.CHANGE_BACKGROUND_DIALOG.NO_MANUFACTURING_RESOURCE| translate }}
+      </p>
+    }
   </div>
 </div>
 <div mat-dialog-actions align="end">

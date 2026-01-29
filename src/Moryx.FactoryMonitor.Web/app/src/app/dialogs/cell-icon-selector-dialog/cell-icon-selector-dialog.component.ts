@@ -19,7 +19,7 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormField, MatLabel, MatInput, MatError, MatInputModule } from '@angular/material/input';
-import { CommonModule, NgIf } from '@angular/common';
+
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,11 +35,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
-    CommonModule,
     MatIconModule,
     MatButtonModule,
-    TranslateModule,
-  ],
+    TranslateModule
+],
   standalone: true,
 })
 export class CellIconUploaderDialogComponent {

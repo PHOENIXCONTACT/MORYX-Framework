@@ -16,7 +16,7 @@ import Cell from './models/cell';
 import { EditMenuComponent } from './components/edit-menu/edit-menu.component';
 import { OrdersContainerComponent } from './components/orders-container/orders-container.component';
 import { CellDetailsComponent } from './components/cell-details/cell-details.component';
-import { CommonModule } from '@angular/common';
+
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -24,12 +24,11 @@ import { RouterOutlet } from '@angular/router';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     imports: [
-      EditMenuComponent, 
-      OrdersContainerComponent, 
-      CellDetailsComponent, 
-      CommonModule,
-      RouterOutlet
-    ],
+    EditMenuComponent,
+    OrdersContainerComponent,
+    CellDetailsComponent,
+    RouterOutlet
+],
     standalone: true
 })
 export class AppComponent implements OnInit {

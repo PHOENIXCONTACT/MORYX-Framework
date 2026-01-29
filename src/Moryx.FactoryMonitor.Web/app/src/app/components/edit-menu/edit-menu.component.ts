@@ -19,18 +19,18 @@ import { FactoryModel } from 'src/app/api/models/factory-model';
 import { MatButtonModule, MatFabButton, MatMiniFabButton } from '@angular/material/button';
 import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
-import { CommonModule, NgFor } from '@angular/common';
+
 
 @Component({
   selector: 'app-edit-menu',
   templateUrl: './edit-menu.component.html',
   styleUrls: ['./edit-menu.component.scss'],
   imports: [
-    CommonModule, 
-    MatTooltipModule, 
-    MatIconModule, 
-    MatButtonModule, 
-    TranslateModule],
+    MatTooltipModule,
+    MatIconModule,
+    MatButtonModule,
+    TranslateModule
+],
   standalone: true,
 })
 export class EditMenuComponent implements OnInit {

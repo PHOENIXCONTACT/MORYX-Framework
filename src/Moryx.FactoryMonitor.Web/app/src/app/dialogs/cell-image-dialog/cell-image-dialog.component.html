@@ -8,8 +8,12 @@
 <div mat-dialog-content class="mat-typography">
   <div class="cell-image-content">
     <div class="image-container">
-      <p *ngIf="!cellSettings()?.image">{{ TranslationConstants.CELL_IMAGE_DIALOG.NO_IMAGE | translate }}</p>
-      <img *ngIf="cellSettings()?.image" [src]="cellSettings()?.image" alt="Cell image" />
+      @if (!cellSettings()?.image) {
+        <p>{{ TranslationConstants.CELL_IMAGE_DIALOG.NO_IMAGE | translate }}</p>
+      }
+      @if (cellSettings()?.image) {
+        <img [src]="cellSettings()?.image" alt="Cell image" />
+      }
     </div>
     <mat-form-field appearance="outline">
       <mat-label>{{ TranslationConstants.CELL_IMAGE_DIALOG.IMAGE_URL | translate }}</mat-label>

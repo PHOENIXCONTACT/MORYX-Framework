@@ -19,7 +19,7 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
 import { TranslateService, TranslatePipe, TranslateModule } from '@ngx-translate/core';
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { NgIf, AsyncPipe, CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { MatFormField, MatLabel, MatInput, MatError, MatInputModule } from '@angular/material/input';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';

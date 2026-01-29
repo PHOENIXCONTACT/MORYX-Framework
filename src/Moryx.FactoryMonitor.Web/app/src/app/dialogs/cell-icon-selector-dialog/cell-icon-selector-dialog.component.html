@@ -12,9 +12,11 @@
         [placeholder]="TranslationConstants.CELL_ICON_SELECTOR_DIALOG.ICON_NAME | translate"
         [formControl]="iconControl"
         [errorStateMatcher]="matcher" />
-      <mat-error *ngIf="iconControl.hasError('required')">
-        {{ TranslationConstants.CELL_ICON_SELECTOR_DIALOG.ICON_NAME_REQUIRED | translate }}
-      </mat-error>
+      @if (iconControl.hasError('required')) {
+        <mat-error>
+          {{ TranslationConstants.CELL_ICON_SELECTOR_DIALOG.ICON_NAME_REQUIRED | translate }}
+        </mat-error>
+      }
     </mat-form-field>
     <div class="cell-icon-container">
       <mat-icon>{{ iconControl.value }}</mat-icon>

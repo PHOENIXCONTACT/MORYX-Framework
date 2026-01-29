@@ -15,7 +15,7 @@ import {
 } from '@angular/material/dialog';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatSelectionList, MatListOption, MatListModule } from '@angular/material/list';
-import { CommonModule, NgFor } from '@angular/common';
+
 import { MatButton, MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -26,9 +26,8 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
     MatDialogModule,
     CdkScrollable,
     MatListModule,
-    CommonModule,
-    MatButtonModule,
-  ],
+    MatButtonModule
+],
   standalone: true
 })
 export class DetailsConfigurationDialogComponent {

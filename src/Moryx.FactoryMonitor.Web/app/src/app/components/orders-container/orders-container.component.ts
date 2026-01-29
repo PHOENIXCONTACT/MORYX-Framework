@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import Order from 'src/app/models/order';
 import { OrderStoreService } from 'src/app/services/order-store.service';
-import { NgFor, AsyncPipe, CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-orders-container',

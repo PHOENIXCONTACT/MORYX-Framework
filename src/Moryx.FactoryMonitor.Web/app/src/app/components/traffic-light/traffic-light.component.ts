@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnInit, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CellState } from 'src/app/api/models/cell-state';
@@ -15,7 +15,7 @@ import { CellStoreService } from 'src/app/services/cell-store.service';
     templateUrl: './traffic-light.component.html',
     styleUrls: ['./traffic-light.component.scss'],
     standalone: true,
-    imports: [ CommonModule]
+    imports: []
 })
 export class TrafficLightComponent implements OnInit {
   currentState = signal<CellState | undefined | null>(undefined);

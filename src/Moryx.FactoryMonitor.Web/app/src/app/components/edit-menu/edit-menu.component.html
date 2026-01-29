@@ -1,18 +1,20 @@
 <div class="edit-menu-container">
-    <div class="edit-menu">
-      <button *ngIf="canGoBack" mat-fab class="go-back-button" color="primary" (click)="goBack()">
+  <div class="edit-menu">
+    @if (canGoBack) {
+      <button mat-fab class="go-back-button" color="primary" (click)="goBack()">
         <mat-icon>
           arrow_back
         </mat-icon>
       </button>
-      <button mat-fab color="{{ editingEnabled() ? 'accent' : 'primary' }}" (click)="onToggleEditingMode()">
-        <mat-icon>
-          {{ editingEnabled() ? 'check' : 'edit' }} 
-        </mat-icon>
-      </button>
-      <div>
+    }
+    <button mat-fab color="{{ editingEnabled() ? 'accent' : 'primary' }}" (click)="onToggleEditingMode()">
+      <mat-icon>
+        {{ editingEnabled() ? 'check' : 'edit' }}
+      </mat-icon>
+    </button>
+    <div>
+      @for (button of buttons; track button) {
         <button
-          *ngFor="let button of buttons"
           mat-mini-fab
           class="fab-secondary menu-button"
           (click)="onClickMenuButton(button.state)"
@@ -20,7 +22,8 @@
           [matTooltip]="button.state === backgroundState ? (TranslationConstants.EDIT_MENU.BACKGROUND | translate) : (TranslationConstants.EDIT_MENU.MOVE | translate)">
           <mat-icon>{{ button.icon }}</mat-icon>
         </button>
-      </div>
+      }
     </div>
   </div>
-  
+</div>
+

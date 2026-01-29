@@ -24,7 +24,7 @@ import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
 import { MatIconButton, MatButton, MatButtonModule } from '@angular/material/button';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { CommonModule, NgIf } from '@angular/common';
+
 import { MatFormField, MatLabel, MatInput, MatInputModule } from '@angular/material/input';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -38,13 +38,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatButtonModule,
     MatIconModule,
     CdkScrollable,
-    CommonModule,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
-    TranslateModule,
-  ],
+    TranslateModule
+],
   standalone: true
 })
 export class CellImageDialogComponent {

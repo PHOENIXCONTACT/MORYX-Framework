@@ -12,7 +12,7 @@ import { CellSettingsModel } from 'src/app/api/models/cell-settings-model';
 import { TranslateService, TranslatePipe, TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import Cell from 'src/app/models/cell';
-import { NgIf, NgFor, KeyValuePipe, CommonModule } from '@angular/common';
+import { KeyValuePipe, CommonModule } from '@angular/common';
 import { MatButtonModule, MatIconButton } from '@angular/material/button';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { TrafficLightComponent } from '../traffic-light/traffic-light.component';
