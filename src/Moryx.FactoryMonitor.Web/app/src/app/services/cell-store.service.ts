@@ -3,13 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ApplicationRef, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FactoryStateStreamService } from './factory-state-stream.service';
 import { OrderStoreService } from './order-store.service';
 import { FactoryMonitorService } from '../api/services';
 import { CellLocationModel } from '../api/models/cell-location-model';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import Cell from '../models/cell';
 import Order from '../models/order';
 import { Converter } from '../extensions/converter';
@@ -20,7 +20,7 @@ import { CellStateChangedModel } from '../api/models/cell-state-changed-model';
 import { FactorySelectionService } from './factory-selection.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class CellStoreService {
   private _cellSelected = new BehaviorSubject<Cell | undefined>(undefined);
@@ -37,8 +37,8 @@ export class CellStoreService {
     private orderService: OrderStoreService,
     private factoryStateStreamService: FactoryStateStreamService,
     private factoryMonitorService: FactoryMonitorService,
-    private factorySelectionService : FactorySelectionService,
-    private moryxSnackbar: MoryxSnackbarService
+    private factorySelectionService: FactorySelectionService,
+    private snackbarService: SnackbarService
   ) {
     this.factoryMonitorService.initialFactoryState().subscribe({
       next: factoryState => {
@@ -88,7 +88,7 @@ export class CellStoreService {
           }
         });
       },
-      error: err => this.moryxSnackbar.handleError(err),
+      error: err => this.snackbarService.handleError(err)
     });
   }
 
@@ -109,12 +109,12 @@ export class CellStoreService {
         if (!this._cells.getValue().length) return;
 
         this.updateCell(cell);
-      },
+      }
     });
   }
 
   public selectCell(id: number | undefined) {
-    if (this._cellSelected.getValue() && this._cellSelected.getValue()?.id === id  || !id) {
+    if (this._cellSelected.getValue() && this._cellSelected.getValue()?.id === id || !id) {
       this._cellSelected.next(undefined);
       return;
     }
@@ -126,7 +126,7 @@ export class CellStoreService {
   public moveCell(e: CellLocationModel) {
     //send cell update to server
     this.factoryMonitorService.moveCell({ body: e }).subscribe({
-      error: err => this.moryxSnackbar.handleError(err),
+      error: err => this.snackbarService.handleError(err)
     });
   }
 
@@ -172,7 +172,7 @@ export class CellStoreService {
       cellToUpdate.operationNumber &&
       cell.operationNumber != ''
     ) {
-      cellToUpdate.orderColor=
+      cellToUpdate.orderColor =
         this.orderService._orders
           .getValue()
           .find(o => o.operationNumber === cellToUpdate.operationNumber && o.orderNumber === cellToUpdate.orderNumber)
