@@ -8,13 +8,13 @@ import { environment } from './environments/environment';
 import 'hammerjs';
 import { bootstrapApplication } from '@angular/platform-browser';
 
-import { AppComponent } from './app/app.component';
+import { App } from './app/app';
 import { appConfig } from './app/app.config';
 
 if (environment.production) {
   enableProdMode();
 }
 
-bootstrapApplication(AppComponent, {...appConfig, providers: [provideZoneChangeDetection(), ...appConfig.providers]})
+bootstrapApplication(App, {...appConfig, providers: [provideZoneChangeDetection(), ...appConfig.providers]})
   .catch(err => console.error(err));
 

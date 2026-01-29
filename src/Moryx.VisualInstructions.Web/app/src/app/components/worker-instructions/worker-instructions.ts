@@ -25,7 +25,7 @@ import { InstructionResponseModel } from "src/app/api/models/instruction-respons
 import { DisplayedMediaContent } from "../media-contents/displayed-media-content";
 
 import { MatCardModule } from "@angular/material/card";
-import { MediaContentsComponent } from "../media-contents/media-contents.component";
+import { MediaContents } from "../media-contents/media-contents";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatButtonModule } from "@angular/material/button";
 import { MarkdownComponent } from "ngx-markdown";
@@ -33,11 +33,11 @@ import { InstructionStateService } from 'src/app/services/instruction-state.serv
 
 @Component({
   selector: "app-worker-instructions",
-  templateUrl: "./worker-instructions.component.html",
-  styleUrls: ["./worker-instructions.component.scss"],
+  templateUrl: "./worker-instructions.html",
+  styleUrls: ["./worker-instructions.scss"],
   imports: [
     MatCardModule,
-    MediaContentsComponent,
+    MediaContents,
     MatDividerModule,
     NavigableEntryEditor,
     EmptyState,
@@ -48,7 +48,7 @@ import { InstructionStateService } from 'src/app/services/instruction-state.serv
   ],
   standalone: true,
 })
-export class WorkerInstructionsComponent implements OnInit, OnDestroy {
+export class WorkerInstructions implements OnInit, OnDestroy {
   clientIdentifier = model.required<string>();
 
   instructions = signal<InstructionModel[]>([]);

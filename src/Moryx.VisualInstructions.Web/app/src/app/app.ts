@@ -10,30 +10,30 @@ import { LanguageService } from '@moryx/ngx-web-framework';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 import {
-  ConfigurationDialogComponent,
+  ConfigurationDialog,
   DialogData,
-} from './dialogs/configuration-dialog/configuration-dialog.component';
+} from './dialogs/configuration-dialog/configuration-dialog';
 import './extensions/observable.extensions';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { CookieService } from './services/cookie.service';
 import { InstructionService } from './services/instruction.service';
 
-import { WorkerInstructionsComponent } from './components/worker-instructions/worker-instructions.component';
+import { WorkerInstructions } from './components/worker-instructions/worker-instructions';
 import { MatButtonModule } from '@angular/material/button';
 
 const COOKIE_NAME = 'moryx-client-identifier';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  templateUrl: './app.html',
+  styleUrls: ['./app.scss'],
   imports: [
-    WorkerInstructionsComponent,
+    WorkerInstructions,
     MatButtonModule
   ],
   standalone: true
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
   environment = environment;
   clientIdentifier: string = '';
 
@@ -65,7 +65,7 @@ export class AppComponent implements OnInit {
   }
 
   openConfigDialog(): void {
-    const dialogRef = this.dialog.open(ConfigurationDialogComponent, {
+    const dialogRef = this.dialog.open(ConfigurationDialog, {
       data: <DialogData>{
         instructorName: this.clientIdentifier,
       },

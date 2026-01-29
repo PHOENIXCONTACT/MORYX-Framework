@@ -5,20 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MediaContentsComponent } from './media-contents.component';
+import { ConfigurationDialog } from './configuration-dialog';
 
-describe('MediaContentsComponent', () => {
-  let component: MediaContentsComponent;
-  let fixture: ComponentFixture<MediaContentsComponent>;
+describe('ConfigurationDialog', () => {
+  let component: ConfigurationDialog;
+  let fixture: ComponentFixture<ConfigurationDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [MediaContentsComponent],
-}).compileComponents();
+    declarations: [ConfigurationDialog]
+})
+    .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MediaContentsComponent);
+    fixture = TestBed.createComponent(ConfigurationDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

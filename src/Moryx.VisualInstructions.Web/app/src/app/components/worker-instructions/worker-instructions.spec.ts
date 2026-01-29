@@ -5,21 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConfigurationDialogComponent } from './configuration-dialog.component';
+import { WorkerInstructions } from './worker-instructions';
 
-describe('ConfigurationDialogComponent', () => {
-  let component: ConfigurationDialogComponent;
-  let fixture: ComponentFixture<ConfigurationDialogComponent>;
+describe('WorkerInstructions', () => {
+  let component: WorkerInstructions;
+  let fixture: ComponentFixture<WorkerInstructions>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [ConfigurationDialogComponent]
+    declarations: [WorkerInstructions]
 })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConfigurationDialogComponent);
+    fixture = TestBed.createComponent(WorkerInstructions);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

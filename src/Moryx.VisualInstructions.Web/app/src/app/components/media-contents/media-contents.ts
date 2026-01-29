@@ -14,8 +14,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
     selector: 'media-contents',
-    templateUrl: './media-contents.component.html',
-    styleUrls: ['./media-contents.component.scss'],
+    templateUrl: './media-contents.html',
+    styleUrls: ['./media-contents.scss'],
     imports: [
       CommonModule,
       NgxDocViewerModule,
@@ -24,7 +24,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
     ],
     standalone: true
 })
-export class MediaContentsComponent implements OnInit {
+export class MediaContents implements OnInit {
 
   medias = signal<DisplayedMediaContent[]>([]);
   displayedContents = input.required<DisplayedMediaContent[]>();

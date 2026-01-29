@@ -16,8 +16,8 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
 
 @Component({
   selector: 'app-configuration-dialog',
-  templateUrl: './configuration-dialog.component.html',
-  styleUrls: ['./configuration-dialog.component.scss'],
+  templateUrl: './configuration-dialog.html',
+  styleUrls: ['./configuration-dialog.scss'],
   imports: [
     MatSelectionList,
     MatListOption,
@@ -27,12 +27,12 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
   ],
   standalone: true
 })
-export class ConfigurationDialogComponent implements OnInit {
+export class ConfigurationDialog implements OnInit {
   instructors: string[] | undefined = undefined;
   TranslationConstants = TranslationConstants;
 
   constructor(
-    public dialogRef: MatDialogRef<ConfigurationDialogComponent>,
+    public dialogRef: MatDialogRef<ConfigurationDialog>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private visualInstructionsService: VisualInstructionsService,
     public translate: TranslateService,

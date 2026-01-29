@@ -5,21 +5,20 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WorkerInstructionsComponent } from './worker-instructions.component';
+import { MediaContents } from './media-contents';
 
-describe('WorkerInstructionsComponent', () => {
-  let component: WorkerInstructionsComponent;
-  let fixture: ComponentFixture<WorkerInstructionsComponent>;
+describe('MediaContents', () => {
+  let component: MediaContents;
+  let fixture: ComponentFixture<MediaContents>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [WorkerInstructionsComponent]
-})
-    .compileComponents();
+    declarations: [MediaContents],
+}).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(WorkerInstructionsComponent);
+    fixture = TestBed.createComponent(MediaContents);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
