@@ -19,8 +19,8 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'app-media-file',
-    templateUrl: './media-file.component.html',
-    styleUrls: ['./media-file.component.scss'],
+    templateUrl: './media-file.html',
+    styleUrls: ['./media-file.scss'],
     imports: [
       CommonModule,
       MatProgressSpinner,
@@ -29,7 +29,7 @@ import { MatIconModule } from '@angular/material/icon';
       MatButtonModule,
       MatIconModule]
 })
-export class MediaFileComponent implements OnInit {
+export class MediaFile implements OnInit {
 
   TranslationConstants = TranslationConstants;
   name = model.required<string>()

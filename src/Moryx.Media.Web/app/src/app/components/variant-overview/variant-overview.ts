@@ -16,9 +16,9 @@ import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { MediaServerService } from 'src/app/api/services';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { environment } from 'src/environments/environment';
-import { AddVariantResultData, DialogAddVariantComponent } from '../../dialogs/dialog-add-variant/dialog-add-variant.component';
-import { DialogDeleteComponent } from '../../dialogs/dialog-delete/dialog-delete.component';
-import { DialogVariantInfoComponent } from '../../dialogs/dialog-variant-info/dialog-variant-info.component';
+import { AddVariantResultData, DialogAddVariant } from '../../dialogs/dialog-add-variant/dialog-add-variant';
+import { DialogDelete } from '../../dialogs/dialog-delete/dialog-delete';
+import { DialogVariantInfo } from '../../dialogs/dialog-variant-info/dialog-variant-info';
 import { MediaService } from '../../services/media-service/media.service';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -32,8 +32,8 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
 
 @Component({
   selector: 'app-variant-overview',
-  templateUrl: './variant-overview.component.html',
-  styleUrls: ['./variant-overview.component.scss'],
+  templateUrl: './variant-overview.html',
+  styleUrls: ['./variant-overview.scss'],
   imports: [
     MatSidenavModule,
     MatToolbarModule,
@@ -48,7 +48,7 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
     MatProgressSpinnerModule
   ]
 })
-export class VariantOverviewComponent implements OnInit, OnDestroy {
+export class VariantOverview implements OnInit, OnDestroy {
   mediaImage = signal(environment.assets + "assets/media-toolbar.webp");
   content = signal<ContentDescriptorModel | undefined>(undefined);
   selectedVariant = signal<VariantDescriptor | undefined>(undefined);
@@ -243,7 +243,7 @@ export class VariantOverviewComponent implements OnInit, OnDestroy {
   onUpload(): void {
     const content = this.content();
     if (content !== undefined) {
-      const dialogRef = this.dialog.open(DialogAddVariantComponent, {
+      const dialogRef = this.dialog.open(DialogAddVariant, {
         data: content.id,
       });
       dialogRef.afterClosed().subscribe(async (result) => {
@@ -327,7 +327,7 @@ export class VariantOverviewComponent implements OnInit, OnDestroy {
       const url =
         location.origin +
         this.interpolateUrl(MediaServerService.GetVariantStreamPath, values);
-      const dialogRef = this.dialog.open(DialogVariantInfoComponent, {
+      const dialogRef = this.dialog.open(DialogVariantInfo, {
         data: {
           name: selectedVariant.name,
           contentName: content.name,
@@ -350,7 +350,7 @@ export class VariantOverviewComponent implements OnInit, OnDestroy {
     ) {
       const deleteMessage = await lastValueFrom(this.translate
         .get(TranslationConstants.VARIANT_OVERVIEW.DELETE_MESSAGE));
-      const dialogRef = this.dialog.open(DialogDeleteComponent, {
+      const dialogRef = this.dialog.open(DialogDelete, {
         data: {
           type: 'Content',
           deleteMessage: deleteMessage,

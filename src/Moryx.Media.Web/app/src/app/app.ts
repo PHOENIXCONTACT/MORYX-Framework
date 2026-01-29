@@ -12,11 +12,11 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
     selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
+    templateUrl: './app.html',
+    styleUrls: ['./app.scss'],
     imports: [RouterOutlet]
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
   title = 'Moryx.Media.Web';
 
   TranslationConstants = TranslationConstants;

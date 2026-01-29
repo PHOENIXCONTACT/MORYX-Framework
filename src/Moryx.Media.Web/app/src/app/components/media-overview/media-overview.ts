@@ -12,29 +12,29 @@ import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { environment } from 'src/environments/environment';
 import { ContentDescriptorModel } from '../../api/models';
-import { DialogDeleteComponent } from '../../dialogs/dialog-delete/dialog-delete.component';
+import { DialogDelete } from '../../dialogs/dialog-delete/dialog-delete';
 import { MediaService } from '../../services/media-service/media.service';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion, } from '@moryx/ngx-web-framework/services';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { NgStyle, CommonModule } from '@angular/common';
 import { FileDragAndDropDirective } from '../../extensions/file-drag-and-drop.directive';
-import { MediaFileComponent } from './media-file/media-file.component';
+import { MediaFile } from './media-file/media-file';
 import { MatIcon } from '@angular/material/icon';
 import { MatFabButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-media-overview',
-  templateUrl: './media-overview.component.html',
-  styleUrls: ['./media-overview.component.scss'],
+  templateUrl: './media-overview.html',
+  styleUrls: ['./media-overview.scss'],
   imports: [
     FileDragAndDropDirective, NgStyle, CommonModule,
-    MediaFileComponent, MatMenu, MatMenuContent,
+    MediaFile, MatMenu, MatMenuContent,
     MatMenuItem, MatIcon, MatMenuTrigger,
     MatFabButton, MatProgressSpinner, TranslateModule,
     EmptyState]
 })
-export class MediaOverviewComponent implements OnInit, OnDestroy {
+export class MediaOverview implements OnInit, OnDestroy {
   filteredContents = signal<ContentDescriptorModel[]>([]);
   backgroundImgPath = signal(environment.assets + 'assets/moryx_transparent_colored.png');
   isLoading = signal(true);
@@ -141,7 +141,7 @@ export class MediaOverviewComponent implements OnInit, OnDestroy {
     if (content !== undefined) {
       const deleteMessage = await lastValueFrom(this.translate
         .get(TranslationConstants.MEDIA_OVERVIEW.DELETE_MESSAGE));
-      const dialogRef = this.dialog.open(DialogDeleteComponent, {
+      const dialogRef = this.dialog.open(DialogDelete, {
         data: {
           type: 'Content',
           deleteMessage: deleteMessage,
