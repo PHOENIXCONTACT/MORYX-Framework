@@ -35,7 +35,7 @@ import { VisualInstructionsService } from "../../api/services";
 import { InstructionService } from "src/app/services/instruction.service";
 import { InstructionResponseModel } from "src/app/api/models/instruction-response-model";
 import { DisplayedMediaContent } from "../media-contents/displayed-media-content";
-import { CommonModule } from "@angular/common";
+
 import { MatCardModule } from "@angular/material/card";
 import { MediaContentsComponent } from "../media-contents/media-contents.component";
 import { MatDividerModule } from "@angular/material/divider";
@@ -48,7 +48,6 @@ import { InstructionStateService } from 'src/app/services/instruction-state.serv
   templateUrl: "./worker-instructions.component.html",
   styleUrls: ["./worker-instructions.component.scss"],
   imports: [
-    CommonModule,
     MatCardModule,
     MediaContentsComponent,
     MatDividerModule,
@@ -58,7 +57,7 @@ import { InstructionStateService } from 'src/app/services/instruction-state.serv
     MatButtonModule,
     MatCardModule,
     MarkdownComponent
-  ],
+],
   standalone: true,
 })
 export class WorkerInstructionsComponent implements OnInit, OnDestroy {

@@ -17,7 +17,7 @@ import './extensions/observable.extensions';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { CookieService } from './services/cookie.service';
 import { InstructionService } from './services/instruction.service';
-import { CommonModule } from '@angular/common';
+
 import { WorkerInstructionsComponent } from './components/worker-instructions/worker-instructions.component';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -28,10 +28,9 @@ const COOKIE_NAME = 'moryx-client-identifier';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
     imports: [
-      CommonModule,
-      WorkerInstructionsComponent,
-      MatButtonModule
-    ],
+    WorkerInstructionsComponent,
+    MatButtonModule
+],
     standalone: true
 })
 export class AppComponent implements OnInit {

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -19,13 +19,12 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
     templateUrl: './configuration-dialog.component.html',
     styleUrls: ['./configuration-dialog.component.scss'],
     imports: [
-      CommonModule,
-      MatSelectionList,
-      MatListOption,
-      MatDialogModule,
-      TranslateModule,
-      MatProgressSpinnerModule
-    ],
+    MatSelectionList,
+    MatListOption,
+    MatDialogModule,
+    TranslateModule,
+    MatProgressSpinnerModule
+],
     standalone: true
 })
 export class ConfigurationDialogComponent implements OnInit {
