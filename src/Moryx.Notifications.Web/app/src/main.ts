@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { enableProdMode, importProvidersFrom } from "@angular/core";
+import { enableProdMode, importProvidersFrom, provideZoneChangeDetection } from "@angular/core";
 import { environment } from "./environments/environment";
 import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
 import { AppComponent } from "./app/app.component";
@@ -13,7 +13,7 @@ if (environment.production) {
   enableProdMode();
 }
 
-bootstrapApplication(AppComponent, appConfig).catch((err) =>
+bootstrapApplication(AppComponent, {...appConfig, providers: [provideZoneChangeDetection(), ...appConfig.providers]}).catch((err) =>
   console.error(err)
 );
 
