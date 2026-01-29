@@ -1,3 +1,4 @@
+import { provideZoneChangeDetection } from "@angular/core";
 /*
  * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
  * Licensed under the Apache License, Version 2.0
@@ -8,6 +9,6 @@ import { AppComponent } from './app/app.component';
 import { appConfig } from './app.config';
 
 
-bootstrapApplication(AppComponent, appConfig)
+bootstrapApplication(AppComponent, {...appConfig, providers: [provideZoneChangeDetection(), ...appConfig.providers]})
   .catch(err => console.error(err));
 
