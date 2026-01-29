@@ -5,6 +5,7 @@
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
+using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Setups;
 using Moryx.Logging;
@@ -14,7 +15,7 @@ using Moryx.Workplans.WorkplanSteps;
 namespace Moryx.ControlSystem.SetupProvider;
 
 [Component(LifeCycle.Singleton, typeof(ISetupManager))]
-internal class SetupManager : ISetupManager, ILoggingComponent
+internal partial class SetupManager : ISetupManager, ILoggingComponent
 {
     private readonly ICollection<ISetupTrigger> _triggers = new List<ISetupTrigger>();
 
@@ -82,52 +83,8 @@ internal class SetupManager : ISetupManager, ILoggingComponent
 
             if (evaluation is SetupEvaluation.Change change)
             {
-                if (execution == SetupExecution.BeforeProduction)
-                {
-                    var targetCells = targetSystem.Cells(change.TargetCapabilities);
-                    var hasTargetCaps = targetCells.Any();
-
-                    if (hasTargetCaps)
-                    {
-                        if (Logger.IsEnabled(LogLevel.Trace))
-                        {
-                            Logger.LogTrace(
-                                "Target already provides required capabilities {capabilities} (cells=[{cells}])",
-                                change.TargetCapabilities,
-                                string.Join(", ", targetCells));
-                        }
-                        else
-                        {
-                            Logger.LogTrace(
-                                "Target already provides required capabilities {capabilities}",
-                                change.TargetCapabilities);
-                        }
-                        continue;
-                    }
-                }
-                else if (execution == SetupExecution.AfterProduction)
-                {
-                    var currentCells = targetSystem.Cells(change.CurrentCapabilities);
-                    var hasCurrentCaps = currentCells.Any();
-
-                    if (!hasCurrentCaps)
-                    {
-                        if (Logger.IsEnabled(LogLevel.Trace))
-                        {
-                            Logger.LogTrace(
-                                "Target does not provide current capabilities {capabilities} (cells=[{cells}])",
-                                change.CurrentCapabilities,
-                                string.Join(", ", currentCells));
-                        }
-                        else
-                        {
-                            Logger.LogTrace(
-                                "Target does not provide current capabilities {capabilities}",
-                                change.CurrentCapabilities);
-                        }
-                        continue;
-                    }
-                }
+                if (ShouldSkipForExecution(execution, targetSystem, change, Logger))
+                    continue;
             }
             triggers.Add(trigger);
             Logger.LogTrace(
@@ -221,7 +178,6 @@ internal class SetupManager : ISetupManager, ILoggingComponent
         }
     }
 
-
     private IReadOnlyList<IWorkplanStep> TryCreateSteps(ISetupTrigger trigger, ProductionRecipe recipe)
     {
         try
@@ -290,6 +246,59 @@ internal class SetupManager : ISetupManager, ILoggingComponent
             }
 
             input = output;
+        }
+    }
+
+
+    /// <summary>
+    /// Logs that the target already provides the required capabilities.
+    /// </summary>
+    private static partial bool LogTargetCapsProvided(
+        SetupEvaluation.Change change,
+        IEnumerable<ICell> targetCells,
+        ILogger logger);
+
+    /// <summary>
+    /// Logs that the current capabilities were already removed.
+    /// </summary>
+    private static partial bool LogCurrentCapsAlreadyRemoved(
+        SetupEvaluation.Change change,
+        IEnumerable<ICell> currentCells,
+        ILogger logger);
+
+    private static bool ShouldSkipForExecution(
+        SetupExecution execution,
+        ISetupTarget targetSystem,
+        SetupEvaluation.Change change,
+        ILogger logger)
+    {
+        switch (execution)
+        {
+            case SetupExecution.BeforeProduction:
+
+                {
+                    var targetCells = targetSystem.Cells(change.TargetCapabilities);
+                    var hasTargetCaps = targetCells.Any();
+
+                    if (hasTargetCaps)
+                        return LogTargetCapsProvided(change, targetCells, logger);
+
+                    return false;
+                }
+
+
+            case SetupExecution.AfterProduction:
+                {
+                    var currentCells = targetSystem.Cells(change.CurrentCapabilities);
+                    var hasCurrentCaps = currentCells.Any();
+
+                    if (!hasCurrentCaps)
+                        return LogCurrentCapsAlreadyRemoved(change, currentCells, logger);
+
+                    return false;
+                }
+            default:
+                return false;
         }
     }
 }
