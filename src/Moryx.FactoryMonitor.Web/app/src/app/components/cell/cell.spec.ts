@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TrafficLightComponent } from './traffic-light.component';
+import { Cell } from './cell';
 
-describe('TrafficLightComponent', () => {
-  let component: TrafficLightComponent;
-  let fixture: ComponentFixture<TrafficLightComponent>;
+describe('Cell', () => {
+  let component: Cell;
+  let fixture: ComponentFixture<Cell>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [TrafficLightComponent]
+    imports: [Cell]
 })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TrafficLightComponent);
+    fixture = TestBed.createComponent(Cell);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

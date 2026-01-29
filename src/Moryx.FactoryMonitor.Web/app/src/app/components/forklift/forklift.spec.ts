@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditMenuComponent } from './edit-menu.component';
+import { Forklift } from './forklift';
 
-describe('EditMenuComponent', () => {
-  let component: EditMenuComponent;
-  let fixture: ComponentFixture<EditMenuComponent>;
+describe('Forklift', () => {
+  let component: Forklift;
+  let fixture: ComponentFixture<Forklift>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [EditMenuComponent]
+    imports: [Forklift]
 })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EditMenuComponent);
+    fixture = TestBed.createComponent(Forklift);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

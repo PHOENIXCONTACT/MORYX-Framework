@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CellIconUploaderDialogComponent } from './cell-icon-selector-dialog.component';
+import { EditMenu } from './edit-menu';
 
-describe('CellIconUploaderDialogComponent', () => {
-  let component: CellIconUploaderDialogComponent;
-  let fixture: ComponentFixture<CellIconUploaderDialogComponent>;
+describe('EditMenu', () => {
+  let component: EditMenu;
+  let fixture: ComponentFixture<EditMenu>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [CellIconUploaderDialogComponent]
+    imports: [EditMenu]
 })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CellIconUploaderDialogComponent);
+    fixture = TestBed.createComponent(EditMenu);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

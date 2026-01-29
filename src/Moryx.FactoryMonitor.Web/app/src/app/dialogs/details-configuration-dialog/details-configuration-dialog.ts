@@ -5,23 +5,18 @@
 
 import { Component } from '@angular/core';
 import {
-  MatDialog,
   MatDialogRef,
-  MatDialogTitle,
-  MatDialogContent,
-  MatDialogActions,
-  MatDialogClose,
   MatDialogModule,
 } from '@angular/material/dialog';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { MatSelectionList, MatListOption, MatListModule } from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
 
-import { MatButton, MatButtonModule } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-details-configuration-dialog',
-  templateUrl: './details-configuration-dialog.component.html',
-  styleUrls: ['./details-configuration-dialog.component.scss'],
+  templateUrl: './details-configuration-dialog.html',
+  styleUrls: ['./details-configuration-dialog.scss'],
   imports: [
     MatDialogModule,
     CdkScrollable,
@@ -30,7 +25,7 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
 ],
   standalone: true
 })
-export class DetailsConfigurationDialogComponent {
+export class DetailsConfigurationDialog {
   propertyNames: string[] = [
     'Boots',
     'Clogs',
@@ -49,6 +44,6 @@ export class DetailsConfigurationDialogComponent {
     'Sneakers',
   ];
 
-  constructor(public propertyConfigurationDialogRef: MatDialogRef<DetailsConfigurationDialogComponent>) {}
+  constructor(public propertyConfigurationDialogRef: MatDialogRef<DetailsConfigurationDialog>) {}
 }
 

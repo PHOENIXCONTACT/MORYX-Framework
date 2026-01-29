@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetailsConfigurationDialogComponent } from './details-configuration-dialog.component';
+import { TrafficLight } from './traffic-light';
 
-describe('DetailsConfigurationDialogComponent', () => {
-  let component: DetailsConfigurationDialogComponent;
-  let fixture: ComponentFixture<DetailsConfigurationDialogComponent>;
+describe('TrafficLight', () => {
+  let component: TrafficLight;
+  let fixture: ComponentFixture<TrafficLight>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [DetailsConfigurationDialogComponent]
+    imports: [TrafficLight]
 })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DetailsConfigurationDialogComponent);
+    fixture = TestBed.createComponent(TrafficLight);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

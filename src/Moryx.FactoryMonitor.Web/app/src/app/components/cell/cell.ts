@@ -3,24 +3,23 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit, Input, ViewChild, ElementRef, viewChild, input, computed, signal, effect, untracked } from '@angular/core';
+import { Component, OnInit, ElementRef, viewChild, input, computed, signal, effect, untracked } from '@angular/core';
 import { EditMenuState } from 'src/app/services/EditMenutState';
 import { CellStoreService } from 'src/app/services/cell-store.service';
 import { CellState } from '../../api/models/cell-state';
 import { EditMenuService } from 'src/app/services/edit-menu.service';
 import { OrderStoreService } from 'src/app/services/order-store.service';
-import { CdkDragEnd, CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
 import { CellSettingsService } from 'src/app/services/cell-settings.service';
-import Cell from 'src/app/models/cell';
+import CellModel from 'src/app/models/cellModel';
 import { FactorySelectionService } from 'src/app/services/factory-selection.service';
-import { ActivityClassification } from 'src/app/api/models/activity-classification';
-import { CommonModule, NgStyle } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-cell',
-  templateUrl: './cell.component.html',
-  styleUrls: ['./cell.component.scss'],
+  templateUrl: './cell.html',
+  styleUrls: ['./cell.scss'],
   imports: [
     CommonModule,
     MatIcon,
@@ -28,32 +27,32 @@ import { MatIcon } from '@angular/material/icon';
   ],
   standalone: true
 })
-export class CellComponent implements OnInit {
+export class Cell implements OnInit {
   cellElement = viewChild<ElementRef<HTMLElement>>('cell');
   container = input<ElementRef<HTMLElement>>();
-  parameters = input.required<Cell>();
+  parameters = input.required<CellModel>();
   isEditMode = computed(() => this.editMenuState() === EditMenuState.EditingCells);
   private editMenuState = signal<EditMenuState | undefined>(undefined);
-  currentCell = signal<Cell | undefined>(undefined);
+  currentCell = signal<CellModel | undefined>(undefined);
   isHighlighted = signal<boolean>(true);
   factoryId!: number;
   backgroundColor = computed(() =>
     this.currentCell()?.state === CellState.NotReadyToWork ? '#e46d6d' : 'white'
-  )
+  );
   borderColor = computed(() => {
     if (this.isHighlighted() && this.currentCell()!.orderColor)
       return this.currentCell()?.orderColor!;
     if (this.currentCell()?.state === CellState.NotReadyToWork)
       return '#e46d6d';
-    return 'white'
-  })
+    return 'white';
+  });
   iconColor = computed(() => {
     if (this.isHighlighted() && this.currentCell()?.orderColor)
       return this.currentCell()?.orderColor!;
     if (this.currentCell()?.state === CellState.NotReadyToWork)
       return 'white';
-    return '#585858'
-  })
+    return '#585858';
+  });
 
   constructor(
     private cellStoreService: CellStoreService,
@@ -66,8 +65,8 @@ export class CellComponent implements OnInit {
       const parameters = this.parameters();
       untracked(() => {
         this.updateCell(parameters);
-      })
-    })
+      });
+    });
   }
 
   ngOnInit(): void {
@@ -77,7 +76,7 @@ export class CellComponent implements OnInit {
       next: factory => {
         this.factoryId = factory?.id ?? 0;
       }
-    })
+    });
 
     // React to toggling of an order
     this.orderStoreService.toggledOrder$.subscribe(o => {
@@ -86,9 +85,9 @@ export class CellComponent implements OnInit {
       this.isHighlighted.set(o.isToggled);
     });
 
-    // Keep the menu state 
+    // Keep the menu state
     this.editMenuService.activeState$.subscribe({
-      next: state => (this.editMenuState.set(state)),
+      next: state => (this.editMenuState.set(state))
     });
 
     // React to updates to the cell data
@@ -103,22 +102,22 @@ export class CellComponent implements OnInit {
         if (!newSettings || newSettings?.cellId != this.currentCell()?.id) return;
 
         //set the new settings
-        this.currentCell.set(<Cell>{
+        this.currentCell.set(<CellModel>{
           iconName: newSettings.cellSettings.icon ?? this.currentCell()?.iconName!,
           image: newSettings.cellSettings.image ?? ''
         });
-      },
+      }
     });
   }
 
-  private updateCell(newParams: Cell) {
+  private updateCell(newParams: CellModel) {
     this.currentCell.set(newParams);
     if (this.currentCell()?.orderNumber && this.currentCell()?.operationNumber)
       if (newParams.state == CellState.Running &&
         this.orderStoreService.getOrder(this.currentCell()?.orderNumber!, this.currentCell()?.operationNumber!)?.isToggled) {
-        this.isHighlighted.set(true)
+        this.isHighlighted.set(true);
       } else {
-        this.isHighlighted.set(false)
+        this.isHighlighted.set(false);
       }
   }
 
@@ -138,7 +137,7 @@ export class CellComponent implements OnInit {
       cell!.location!.positionX = this.clamp(cellX / containerWidth);
       cell!.location!.positionY = this.clamp(cellY / containerHeight);
       return cell;
-    })
+    });
 
     // Save position and reset translation
     this.cellStoreService.moveCell(this.currentCell()?.location!);

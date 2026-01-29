@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import { CellStoreService } from 'src/app/services/cell-store.service';
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
 import { EditMenuState } from 'src/app/services/EditMenutState';
@@ -11,7 +11,7 @@ import { EditMenuService } from 'src/app/services/edit-menu.service';
 import { FactoryStateModel } from 'src/app/api/models/factory-state-model';
 import { FactorySelectionService } from 'src/app/services/factory-selection.service';
 import { CellState } from 'src/app/api/models/cell-state';
-import Cell from 'src/app/models/cell';
+import CellModel from 'src/app/models/cellModel';
 import { VisualizableItemModel } from 'src/app/api/models/visualizable-item-model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -19,15 +19,15 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-factory',
-  templateUrl: './factory.component.html',
+  templateUrl: './factory.html',
   imports: [
     CommonModule,
     DragDropModule,
     MatIconModule
   ],
-  styleUrls: ['./factory.component.scss'],
+  styleUrls: ['./factory.scss'],
 })
-export class FactoryComponent {
+export class Factory {
   @ViewChild('FactoryElement') cellElement!: ElementRef<HTMLElement>;
   @Input() container!: ElementRef<HTMLElement>;
   @Input() set parameters(value: VisualizableItemModel) {
@@ -35,7 +35,7 @@ export class FactoryComponent {
   }
 
   factory!: FactoryStateModel;
-  cells: Cell[] = [];
+  cells: CellModel[] = [];
 
   private editMenuState!: EditMenuState;
 
@@ -92,7 +92,7 @@ export class FactoryComponent {
     });
   }
 
-  updateFactoryCell(cell: Cell) {
+  updateFactoryCell(cell: CellModel) {
     var cellToUpdate = this.cells.find(c => c.id === cell.id);
     if (!cellToUpdate) return;
 

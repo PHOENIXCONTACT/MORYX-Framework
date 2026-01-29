@@ -5,16 +5,16 @@
 
 
 import { Component } from '@angular/core';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'app-forklift',
-    templateUrl: './forklift.component.html',
-    styleUrls: ['./forklift.component.scss'],
+    templateUrl: './forklift.html',
+    styleUrls: ['./forklift.scss'],
     imports: [MatIconModule],
     standalone: true
 })
-export class ForkliftComponent {
+export class Forklift {
 
 }
 

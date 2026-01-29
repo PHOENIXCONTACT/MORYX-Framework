@@ -5,14 +5,13 @@
 
 import { CellPropertySettings } from '../api/models/cell-property-settings';
 import { CellState } from '../api/models/cell-state';
-import { CellLocationModel } from '../api/models/cell-location-model';
 import { ActivityClassification } from '../api/models/activity-classification';
 import { VisualizableItemModel } from '../api/models/visualizable-item-model';
 
 
 
 // flat cell model used in the entire UI
-export default interface Cell extends VisualizableItemModel {
+export default interface CellModel extends VisualizableItemModel {
   image: null | string;
   name: string;
   propertySettings?: null | {

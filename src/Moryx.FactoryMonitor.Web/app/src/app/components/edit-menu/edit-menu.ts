@@ -5,26 +5,26 @@
 
 import { Component, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ChangeBackgroundDialogComponent } from 'src/app/dialogs/change-background-dialog/change-background-dialog.component';
+import { Router } from '@angular/router';
+import { ChangeBackgroundDialog } from 'src/app/dialogs/change-background-dialog/change-background-dialog';
 import { CellStoreService } from 'src/app/services/cell-store.service';
 import { EditMenuService } from 'src/app/services/edit-menu.service';
 import { EditMenuState } from 'src/app/services/EditMenutState';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { TranslateService, TranslatePipe, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { FactorySelectionService } from 'src/app/services/factory-selection.service';
 import { FactoryMonitorService } from 'src/app/api/services';
 import { ChangeBackgroundService } from 'src/app/services/change-background.service';
 import { FactoryModel } from 'src/app/api/models/factory-model';
-import { MatButtonModule, MatFabButton, MatMiniFabButton } from '@angular/material/button';
-import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
   selector: 'app-edit-menu',
-  templateUrl: './edit-menu.component.html',
-  styleUrls: ['./edit-menu.component.scss'],
+  templateUrl: './edit-menu.html',
+  styleUrls: ['./edit-menu.scss'],
   imports: [
     MatTooltipModule,
     MatIconModule,
@@ -33,7 +33,7 @@ import { MatIcon, MatIconModule } from '@angular/material/icon';
 ],
   standalone: true,
 })
-export class EditMenuComponent implements OnInit {
+export class EditMenu implements OnInit {
   private menuButtons = [
     {
       icon: 'open_with',
@@ -86,7 +86,7 @@ export class EditMenuComponent implements OnInit {
         this.factoryMonitorService.getNavigation({ factoryId: factory.id ?? 0 }).subscribe(navigation => {
           this.navigationItem = navigation;
           this.backgroundService.changeLocalBackground(navigation.backgroundURL ?? '');
-          
+
           if (!navigation.parentId) {
             this.canGoBack = false;
             return;
@@ -135,7 +135,7 @@ export class EditMenuComponent implements OnInit {
       case EditMenuState.EditingBackground:
         this.editMenuService.setActiveState(EditMenuState.EditingBackground);
         //display the change background dialog
-        this.matDialog.open(ChangeBackgroundDialogComponent, {});
+        this.matDialog.open(ChangeBackgroundDialog, {});
         break;
       default:
         break;

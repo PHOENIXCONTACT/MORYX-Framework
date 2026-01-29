@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OrdersContainerComponent } from './orders-container.component';
+import { CellImageDialog } from './cell-image-dialog';
 
-describe('OrdersContainerComponent', () => {
-  let component: OrdersContainerComponent;
-  let fixture: ComponentFixture<OrdersContainerComponent>;
+describe('CellImageDialog', () => {
+  let component: CellImageDialog;
+  let fixture: ComponentFixture<CellImageDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [OrdersContainerComponent]
+    imports: [CellImageDialog]
 })
     .compileComponents();
 
-    fixture = TestBed.createComponent(OrdersContainerComponent);
+    fixture = TestBed.createComponent(CellImageDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

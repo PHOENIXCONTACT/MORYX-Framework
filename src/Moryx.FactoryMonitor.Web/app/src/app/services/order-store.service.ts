@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ApplicationRef, Injectable, NgZone, ɵgetUnknownElementStrictMode } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { OrderModel } from '../api/models/order-model';
 import { FactoryStateStreamService } from './factory-state-stream.service';
 import Order from '../models/order';
@@ -105,7 +105,7 @@ export class OrderStoreService {
     }
 
     orders[indexToUpdate] = orderToUpdate;
-    
+
     this._runningOrders.next(orders.filter(o => o.classification == InternalOperationClassification.Running))
     this._orders.next(orders)
   }

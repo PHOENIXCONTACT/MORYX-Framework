@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ForkliftComponent } from './forklift.component';
+import { DetailsItem } from './details-item';
 
-describe('ForkliftComponent', () => {
-  let component: ForkliftComponent;
-  let fixture: ComponentFixture<ForkliftComponent>;
+describe('DetailsItem', () => {
+  let component: DetailsItem;
+  let fixture: ComponentFixture<DetailsItem>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [ForkliftComponent]
+    imports: [DetailsItem]
 })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ForkliftComponent);
+    fixture = TestBed.createComponent(DetailsItem);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

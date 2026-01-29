@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetailsItemComponent } from './details-item.component';
+import { ChangeBackgroundDialog } from './change-background-dialog';
 
-describe('DetailsItemComponent', () => {
-  let component: DetailsItemComponent;
-  let fixture: ComponentFixture<DetailsItemComponent>;
+describe('ChangeBackgroundDialog', () => {
+  let component: ChangeBackgroundDialog;
+  let fixture: ComponentFixture<ChangeBackgroundDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [DetailsItemComponent]
+    imports: [ChangeBackgroundDialog]
 })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DetailsItemComponent);
+    fixture = TestBed.createComponent(ChangeBackgroundDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

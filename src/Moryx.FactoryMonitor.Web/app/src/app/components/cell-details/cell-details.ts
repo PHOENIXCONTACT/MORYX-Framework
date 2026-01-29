@@ -3,37 +3,37 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CellImageDialogComponent } from 'src/app/dialogs/cell-image-dialog/cell-image-dialog.component';
-import { DetailsConfigurationDialogComponent } from 'src/app/dialogs/details-configuration-dialog/details-configuration-dialog.component';
+import { CellImageDialog } from 'src/app/dialogs/cell-image-dialog/cell-image-dialog';
+import { DetailsConfigurationDialog } from 'src/app/dialogs/details-configuration-dialog/details-configuration-dialog';
 import { CellStoreService } from 'src/app/services/cell-store.service';
 import { CellSettingsModel } from 'src/app/api/models/cell-settings-model';
-import { TranslateService, TranslatePipe, TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import Cell from 'src/app/models/cell';
-import { KeyValuePipe, CommonModule } from '@angular/common';
-import { MatButtonModule, MatIconButton } from '@angular/material/button';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
-import { TrafficLightComponent } from '../traffic-light/traffic-light.component';
-import { DetailsItemComponent } from '../details-item/details-item.component';
+import CellModel from 'src/app/models/cellModel';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { TrafficLight } from '../traffic-light/traffic-light';
+import { DetailsItem } from '../details-item/details-item';
 
 @Component({
   selector: 'app-cell-details',
-  templateUrl: './cell-details.component.html',
-  styleUrls: ['./cell-details.component.scss'],
+  templateUrl: './cell-details.html',
+  styleUrls: ['./cell-details.scss'],
   imports: [
     CommonModule,
-    TrafficLightComponent,
-    DetailsItemComponent,
+    TrafficLight,
+    DetailsItem,
     TranslateModule,
     MatButtonModule,
     MatIconModule
   ],
   standalone: true,
 })
-export class CellDetailsComponent implements OnInit {
-  cellDetails = signal<Cell | undefined>(undefined);
+export class CellDetails implements OnInit {
+  cellDetails = signal<CellModel | undefined>(undefined);
   TranslationConstants = TranslationConstants;
   constructor(
     public matDialog: MatDialog,
@@ -48,11 +48,11 @@ export class CellDetailsComponent implements OnInit {
   }
 
   openConfigurationDialog() {
-    this.matDialog.open(DetailsConfigurationDialogComponent, {});
+    this.matDialog.open(DetailsConfigurationDialog, {});
   }
 
   openCellImageDialog() {
-    this.matDialog.open(CellImageDialogComponent, {
+    this.matDialog.open(CellImageDialog, {
       data: {
         cellId: this.cellDetails()?.id,
         name: this.cellDetails()?.name,

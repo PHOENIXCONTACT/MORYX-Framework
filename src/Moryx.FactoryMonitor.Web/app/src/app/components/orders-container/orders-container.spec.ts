@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FactoryBoardComponent } from './factory-board.component';
+import { OrdersContainer } from './orders-container';
 
-describe('FactoryBoardComponent', () => {
-  let component: FactoryBoardComponent;
-  let fixture: ComponentFixture<FactoryBoardComponent>;
+describe('OrdersContainer', () => {
+  let component: OrdersContainer;
+  let fixture: ComponentFixture<OrdersContainer>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FactoryBoardComponent]
-    })
+    imports: [OrdersContainer]
+})
     .compileComponents();
-    
-    fixture = TestBed.createComponent(FactoryBoardComponent);
+
+    fixture = TestBed.createComponent(OrdersContainer);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

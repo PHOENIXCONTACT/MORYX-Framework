@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FactoryComponent } from './factory.component';
+import { CellDetails } from './cell-details';
 
-describe('FactoryComponent', () => {
-  let component: FactoryComponent;
-  let fixture: ComponentFixture<FactoryComponent>;
+describe('CellDetails', () => {
+  let component: CellDetails;
+  let fixture: ComponentFixture<CellDetails>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: []
+    imports: [CellDetails]
 })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FactoryComponent);
+    fixture = TestBed.createComponent(CellDetails);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

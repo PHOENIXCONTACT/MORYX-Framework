@@ -12,31 +12,31 @@ import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { FactorySelectionService } from './services/factory-selection.service';
 import { CellStoreService } from './services/cell-store.service';
-import Cell from './models/cell';
-import { EditMenuComponent } from './components/edit-menu/edit-menu.component';
-import { OrdersContainerComponent } from './components/orders-container/orders-container.component';
-import { CellDetailsComponent } from './components/cell-details/cell-details.component';
+import CellModel from './models/cellModel';
+import { EditMenu } from './components/edit-menu/edit-menu';
+import { OrdersContainer } from './components/orders-container/orders-container';
+import { CellDetails } from './components/cell-details/cell-details';
 
 import { RouterOutlet } from '@angular/router';
 
 @Component({
     selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
+    templateUrl: './app.html',
+    styleUrls: ['./app.scss'],
     imports: [
-    EditMenuComponent,
-    OrdersContainerComponent,
-    CellDetailsComponent,
+    EditMenu,
+    OrdersContainer,
+    CellDetails,
     RouterOutlet
 ],
     standalone: true
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
   backgroundImage: string = '';
   private editMenuState !: EditMenuState;
 
-  constructor(private editMenuService: EditMenuService, 
-    private backgroundService: ChangeBackgroundService, 
+  constructor(private editMenuService: EditMenuService,
+    private backgroundService: ChangeBackgroundService,
     private languageService: LanguageService,
     public translate: TranslateService,
     public elemRef: ElementRef,
@@ -57,7 +57,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.backgroundService.backgroundChanged$.subscribe({
-      next: url => this.backgroundImage = url 
+      next: url => this.backgroundImage = url
     });
 
     this.factorySelectionService.factorySelected$.subscribe({
@@ -65,8 +65,8 @@ export class AppComponent implements OnInit {
     });
   }
 
-  getCell(cellId: number): Cell{
-    const output = this.cellStoreService.getCell(cellId) ?? <Cell> {};
+  getCell(cellId: number): CellModel{
+    const output = this.cellStoreService.getCell(cellId) ?? <CellModel> {};
     return output;
   }
 

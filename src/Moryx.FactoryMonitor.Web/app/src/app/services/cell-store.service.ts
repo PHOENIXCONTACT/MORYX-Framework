@@ -10,7 +10,7 @@ import { OrderStoreService } from './order-store.service';
 import { FactoryMonitorService } from '../api/services';
 import { CellLocationModel } from '../api/models/cell-location-model';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import Cell from '../models/cell';
+import CellModel from '../models/cellModel';
 import Order from '../models/order';
 import { Converter } from '../extensions/converter';
 import { FactoryStateModel } from '../api/models/factory-state-model';
@@ -23,15 +23,15 @@ import { FactorySelectionService } from './factory-selection.service';
   providedIn: 'root'
 })
 export class CellStoreService {
-  private _cellSelected = new BehaviorSubject<Cell | undefined>(undefined);
-  private _cellUpdated = new BehaviorSubject<Cell | undefined>(undefined);
-  private _cells = new BehaviorSubject<Cell[]>([]);
+  private _cellSelected = new BehaviorSubject<CellModel | undefined>(undefined);
+  private _cellUpdated = new BehaviorSubject<CellModel | undefined>(undefined);
+  private _cells = new BehaviorSubject<CellModel[]>([]);
 
   public cellSelected$ = this._cellSelected.asObservable();
   public cellUpdated$ = this._cellUpdated.asObservable();
   public cells$ = this._cells.asObservable();
 
-  updatedCell: BehaviorSubject<Cell | undefined> = new BehaviorSubject<Cell | undefined>(undefined);
+  updatedCell: BehaviorSubject<CellModel | undefined> = new BehaviorSubject<CellModel | undefined>(undefined);
 
   constructor(
     private orderService: OrderStoreService,
@@ -66,7 +66,7 @@ export class CellStoreService {
           const rawCellStateChanges: Array<CellStateChangedModel> = [];
           factoryState.cellStateChangedModels?.forEach(c => rawCellStateChanges.push(c));
 
-          let cells: { [id: string]: Cell } = {};
+          let cells: { [id: string]: CellModel } = {};
 
           for (let raw of rawRecourceChanges) {
             let cell = Converter.resourceChangedModelToCell(raw);
@@ -134,7 +134,7 @@ export class CellStoreService {
     return this._cells.getValue().find(c => c.id === cellId);
   }
 
-  public updateCell(cell: Cell) {
+  public updateCell(cell: CellModel) {
     const cells = this._cells.getValue();
     const indexToUpdate = cells.findIndex(x => x.id === cell.id);
     let cellToUpdate = cells[indexToUpdate];

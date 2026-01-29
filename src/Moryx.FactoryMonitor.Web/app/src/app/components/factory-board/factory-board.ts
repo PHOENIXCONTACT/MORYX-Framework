@@ -5,57 +5,57 @@
 
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import Cell from 'src/app/models/cell';
+import CellModel from 'src/app/models/cellModel';
 import { CellStoreService } from 'src/app/services/cell-store.service';
 import { FactorySelectionService } from 'src/app/services/factory-selection.service';
-import { CellComponent } from '../cell/cell.component';
-import { FactoryComponent } from '../factory/factory.component';
+import { Cell } from '../cell/cell';
+import { Factory } from '../factory/factory';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-factory-board',
-  templateUrl: './factory-board.component.html',
+  templateUrl: './factory-board.html',
   imports: [
-    CellComponent,
-    FactoryComponent,
+    Cell,
+    Factory,
     CommonModule
   ],
-  styleUrl: './factory-board.component.scss'
+  styleUrl: './factory-board.scss'
 })
-export class FactoryBoardComponent implements OnInit {
+export class FactoryBoard implements OnInit {
 
   factoryId !: number | undefined;
-  constructor(    
+
+  constructor(
     public elemRef: ElementRef,
     public factorySelectionService: FactorySelectionService,
     public cellStoreService: CellStoreService,
-    private route: ActivatedRoute,){
+    private route: ActivatedRoute) {
 
-    }
+  }
 
   ngOnInit(): void {
 
-    this.factoryId = Number(this.route.snapshot.paramMap.get("id"));
+    this.factoryId = Number(this.route.snapshot.paramMap.get('id'));
 
     //use the default factory when no factory id provided in the url
     this.factorySelectionService.defaultFactory$.subscribe(item => {
-      if(this.factoryId != undefined && this.factoryId > 0) return;
-      if(!item) return;
+      if (this.factoryId != undefined && this.factoryId > 0) return;
+      if (!item) return;
 
       this.factorySelectionService.selectFactory(item.id);
     });
 
 
-    if(this.factoryId != undefined && this.factoryId > 0)     
-    //select a new factory based on the id in the url
-    this.factorySelectionService.selectFactory(this.factoryId);
-
+    if (this.factoryId != undefined && this.factoryId > 0)
+      //select a new factory based on the id in the url
+      this.factorySelectionService.selectFactory(this.factoryId);
 
 
   }
 
-  getCell(cellId: number): Cell{
-    const output = this.cellStoreService.getCell(cellId) ?? <Cell> {};
+  getCell(cellId: number): CellModel {
+    const output = this.cellStoreService.getCell(cellId) ?? <CellModel>{};
     return output;
   }
 

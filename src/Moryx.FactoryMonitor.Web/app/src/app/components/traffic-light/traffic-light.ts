@@ -8,17 +8,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { lastValueFrom } from 'rxjs';
 import { CellState } from 'src/app/api/models/cell-state';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import Cell from 'src/app/models/cell';
+import CellModel from 'src/app/models/cellModel';
 import { CellStoreService } from 'src/app/services/cell-store.service';
 
 @Component({
   selector: 'app-traffic-light',
-  templateUrl: './traffic-light.component.html',
-  styleUrls: ['./traffic-light.component.scss'],
+  templateUrl: './traffic-light.html',
+  styleUrls: ['./traffic-light.scss'],
   standalone: true,
   imports: []
 })
-export class TrafficLightComponent implements OnInit {
+export class TrafficLight implements OnInit {
   currentState = signal<CellState | undefined | null>(undefined);
   currentStateString = signal<string | undefined>(undefined);
   private id: number | undefined;
@@ -47,7 +47,7 @@ export class TrafficLightComponent implements OnInit {
       ]));
   }
 
-  private async updateState(newCellParameters: Cell | undefined): Promise<void> {
+  private async updateState(newCellParameters: CellModel | undefined): Promise<void> {
     if (!newCellParameters) this.currentState.set(newCellParameters);
     if (newCellParameters?.id != this.id) return;
 

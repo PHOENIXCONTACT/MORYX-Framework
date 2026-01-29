@@ -3,19 +3,19 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, Input, signal } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CellPropertySettings } from 'src/app/api/models/cell-property-settings';
-import { CommonModule, NgStyle } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-details-item',
-    templateUrl: './details-item.component.html',
-    styleUrls: ['./details-item.component.scss'],
+    templateUrl: './details-item.html',
+    styleUrls: ['./details-item.scss'],
     imports: [CommonModule],
     standalone: true
 })
-export class DetailsItemComponent {
-  value = input.required<CellPropertySettings>(); 
+export class DetailsItem {
+  value = input.required<CellPropertySettings>();
   name = input.required<string>();
 }
 
