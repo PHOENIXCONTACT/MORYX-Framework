@@ -4,7 +4,8 @@
 */
 
 import { Component, OnDestroy, OnInit, signal } from "@angular/core";
-import { EmptyStateComponent, LanguageService } from "@moryx/ngx-web-framework";
+import { LanguageService } from "@moryx/ngx-web-framework/services";
+import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { environment } from "src/environments/environment";
 import { TranslationConstants } from "./extensions/translation-constants.extensions";
@@ -31,7 +32,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     NotificationDetailsComponent,
     TranslateModule,
     MatProgressSpinnerModule,
-    EmptyStateComponent
+    EmptyState
   ],
   standalone: true,
 })
@@ -57,7 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
     ]);
-    this.translate.setDefaultLang("en");
+    this.translate.setFallbackLang("en");
     this.translate.use(this.languageService.getDefaultLanguage());
   }
 

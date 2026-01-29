@@ -8,15 +8,14 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { NotificationService } from 'src/app/services/notification.service';
 import { environment } from 'src/environments/environment';
-import { Severity } from '../../api/models';
 import { NotificationModel } from '../../api/models/notification-model';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { getIcon } from 'src/app/utils';
-import { MarkdownComponent, MarkdownModule, MarkdownService } from 'ngx-markdown';
-import { NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
+import { MarkdownComponent, MarkdownService } from 'ngx-markdown';
+import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -29,7 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
       MatIconModule,
       TranslateModule,
       MarkdownComponent,
-      NavigableEntryEditorComponent,
+      NavigableEntryEditor,
       MatButtonModule
     ],
     standalone: true,
