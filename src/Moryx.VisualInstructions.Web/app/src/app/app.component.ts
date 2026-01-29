@@ -24,14 +24,14 @@ import { MatButtonModule } from '@angular/material/button';
 const COOKIE_NAME = 'moryx-client-identifier';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    imports: [
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  imports: [
     WorkerInstructionsComponent,
     MatButtonModule
-],
-    standalone: true
+  ],
+  standalone: true
 })
 export class AppComponent implements OnInit {
   environment = environment;
@@ -61,7 +61,8 @@ export class AppComponent implements OnInit {
     this.translate.use(this.languageService.getDefaultLanguage());
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   openConfigDialog(): void {
     const dialogRef = this.dialog.open(ConfigurationDialogComponent, {

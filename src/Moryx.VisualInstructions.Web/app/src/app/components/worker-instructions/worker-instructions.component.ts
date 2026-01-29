@@ -4,22 +4,10 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import {
-  Component,
-  effect,
-  Input,
-  model,
-  OnDestroy,
-  OnInit,
-  signal,
-  untracked,
-} from "@angular/core";
-import {
-  EmptyStateComponent,
-  Entry,
-  MoryxSnackbarService,
-  NavigableEntryEditorComponent,
-} from "@moryx/ngx-web-framework";
+import { Component, effect, model, OnDestroy, OnInit, signal, untracked } from "@angular/core";
+import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
+import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
+import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ReplaySubject, Subject, Subscription, switchMap } from "rxjs";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
@@ -51,13 +39,13 @@ import { InstructionStateService } from 'src/app/services/instruction-state.serv
     MatCardModule,
     MediaContentsComponent,
     MatDividerModule,
-    NavigableEntryEditorComponent,
-    EmptyStateComponent,
+    NavigableEntryEditor,
+    EmptyState,
     TranslateModule,
     MatButtonModule,
     MatCardModule,
     MarkdownComponent
-],
+  ],
   standalone: true,
 })
 export class WorkerInstructionsComponent implements OnInit, OnDestroy {
@@ -65,7 +53,7 @@ export class WorkerInstructionsComponent implements OnInit, OnDestroy {
 
   instructions = signal<InstructionModel[]>([]);
   activeInstructionIndex = signal(0);
-  inputs = signal<Entry | undefined> (undefined);
+  inputs = signal<Entry | undefined>(undefined);
   mediaItems = signal<InstructionItemModel[]>([]);
   displayedInstruction = signal<InstructionModel | undefined>(undefined);
   mediaItemsContent = signal<DisplayedMediaContent[]>([]);
@@ -75,7 +63,7 @@ export class WorkerInstructionsComponent implements OnInit, OnDestroy {
   InstructionContentType = InstructionContentType;
   environment = environment;
   TranslationConstants = TranslationConstants;
-  
+
   private activeInstructionIndexChange: Subject<number> = new ReplaySubject<number>(
     1
   );
@@ -86,7 +74,7 @@ export class WorkerInstructionsComponent implements OnInit, OnDestroy {
     private visualInstructionsService: VisualInstructionsService,
     private instructionService: InstructionService,
     public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService,
+    private snackbarService: SnackbarService,
     public instructionStateService: InstructionStateService
   ) {
     effect(() => {
@@ -106,7 +94,7 @@ export class WorkerInstructionsComponent implements OnInit, OnDestroy {
   initialize(value: string) {
     this._instructorSubscription?.unsubscribe();
     this._instructorSubscription =
-      this.instructionService.instructions$.subscribe(instructions =>this.onInstructionsUpdated(instructions)
+      this.instructionService.instructions$.subscribe(instructions => this.onInstructionsUpdated(instructions)
       );
   }
 
@@ -137,11 +125,11 @@ export class WorkerInstructionsComponent implements OnInit, OnDestroy {
     if (this.displayedInstruction()?.id === instruction.id)
       return Promise.resolve();
 
-    this.displayedInstruction.update( _ => instruction);
+    this.displayedInstruction.update(_ => instruction);
     this.mediaItems.update(_ => instruction.items?.filter(
       (i) => i.contentType == InstructionContentType.Media
     ) ?? []);
-    this.textItems.update(_ =>  instruction.items?.filter(
+    this.textItems.update(_ => instruction.items?.filter(
       (i) => i.contentType == InstructionContentType.Text
     ) ?? []);
     this.inputs.update(_ => instruction.inputs!);
@@ -216,12 +204,12 @@ export class WorkerInstructionsComponent implements OnInit, OnDestroy {
     this.visualInstructionsService
       .completeInstruction$Response({
         identifier: this.clientIdentifier(),
-        body:response,
+        body: response,
       })
       .subscribe({
         next: () => this.clearCurrentViewOf(target),
         error: async (e: HttpErrorResponse) =>
-          await this.moryxSnackbar.handleError(e),
+          await this.snackbarService.handleError(e),
       });
   }
 
