@@ -43,10 +43,10 @@ import { ProcessHolderGroupModelArrayApiResponse } from "src/app/api/models/proc
     MatInputModule,
     TranslateModule
   ],
-  templateUrl: "./process-holders.component.html",
-  styleUrl: "./process-holders.component.scss",
+  templateUrl: "./process-holders.html",
+  styleUrl: "./process-holders.scss",
 })
-export class ProcessHoldersComponent implements OnInit {
+export class ProcessHolders implements OnInit {
   processHolderGroups = signal<Array<ProcessHolderGroup>>([]);
   dataSource = signal<Array<ProcessHolderNode>>([]);
   loading = signal(false);

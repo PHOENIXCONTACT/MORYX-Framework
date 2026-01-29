@@ -21,7 +21,7 @@ import { ProcessEngineStreamService } from "src/app/services/process-engine-stre
 
 @Component({
   selector: "app-processes",
-  templateUrl: "./processes.component.html",
+  templateUrl: "./processes.html",
   imports: [
     CommonModule,
     TranslateModule,
@@ -34,10 +34,10 @@ import { ProcessEngineStreamService } from "src/app/services/process-engine-stre
     ProcessEngineStreamService,
     SnackbarService,
   ],
-  styleUrls: ["./processes.component.scss"],
+  styleUrls: ["./processes.scss"],
   standalone: true,
 })
-export class ProcessesComponent implements OnInit, OnDestroy {
+export class Processes implements OnInit, OnDestroy {
   processes = signal<JobProcessModel[]>([]);
   processesAvailable = computed(() => this.processes().length > 0);
   selectedProcess = signal<JobProcessModel | undefined>(undefined);

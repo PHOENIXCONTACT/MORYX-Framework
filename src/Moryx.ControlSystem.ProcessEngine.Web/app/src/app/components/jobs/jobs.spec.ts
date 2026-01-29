@@ -5,21 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { JobsComponent } from './jobs.component';
+import { Jobs } from './jobs';
 
-describe('JobsComponent', () => {
-  let component: JobsComponent;
-  let fixture: ComponentFixture<JobsComponent>;
+describe('Jobs', () => {
+  let component: Jobs;
+  let fixture: ComponentFixture<Jobs>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [JobsComponent]
+    declarations: [Jobs]
 })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(JobsComponent);
+    fixture = TestBed.createComponent(Jobs);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

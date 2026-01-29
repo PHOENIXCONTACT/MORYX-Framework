@@ -14,13 +14,13 @@ import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"],
+  templateUrl: "./app.html",
+  styleUrls: ["./app.scss"],
   imports: [RouterOutlet, MatIconModule, MatButtonModule, RouterLink, RouterLinkActive],
   providers: [],
   standalone: true,
 })
-export class AppComponent {
+export class App {
   title = "Moryx.ControlSystem.ProcessEngine.Web";
   header = signal("Processes");
 

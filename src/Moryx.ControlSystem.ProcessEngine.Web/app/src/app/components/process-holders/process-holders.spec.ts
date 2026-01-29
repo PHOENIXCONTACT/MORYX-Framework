@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WpcListComponent } from './process-holders.component';
+import { ProcessHolders } from './process-holders';
 
-describe('WpcListComponent', () => {
-  let component: WpcListComponent;
-  let fixture: ComponentFixture<WpcListComponent>;
+describe('ProcessHolders', () => {
+  let component: ProcessHolders;
+  let fixture: ComponentFixture<ProcessHolders>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WpcListComponent]
+      imports: [ProcessHolders]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(WpcListComponent);
+    fixture = TestBed.createComponent(ProcessHolders);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
