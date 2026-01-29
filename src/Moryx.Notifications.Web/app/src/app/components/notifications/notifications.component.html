@@ -1,38 +1,37 @@
-<mat-card
-  *ngFor="let notification of notificationList()"
-  class="notifications-item"
-  (click)="select(notification)"
-  (mouseover)="onUpdateHoveredIdentifier(notification?.identifier)"
-  (mouseout)="onUpdateHoveredIdentifier(undefined)"
+@for (notification of notificationList(); track notification) {
+  <mat-card
+    class="notifications-item"
+    (click)="select(notification)"
+    (mouseover)="onUpdateHoveredIdentifier(notification?.identifier)"
+    (mouseout)="onUpdateHoveredIdentifier(undefined)"
   [class.hovered]="
     hoveredNotificationIdentifier() == notification.identifier &&
     selectedNotificationIdentifier() != notification.identifier
   "
   [class.selected]="selectedNotificationIdentifier() == notification.identifier
   "
->
-  <div class="notification-container">
-    <mat-card-subtitle>{{ notification.source }}</mat-card-subtitle>
-    <mat-card-title class="notification-item-title">{{ notification.title }}</mat-card-title>
-    <mat-card-content class="padding-0">
-      {{ notification.created | date: "medium" }}
-    </mat-card-content>
-
-    <div
-      class="notifications-item-sideLine"
-      [ngClass]="'has-background-' + notification.severity"
-    ></div>
-
-    <div class="notifications-item-icon-container" [ngClass]="'has-background-' + notification.severity">
-      <mat-icon
-        class="notifications-item-icon"
-        [inline]="true"
-        role="complementary"
-        aria-hidden="false"
-        aria-label="Notification Severity Icon"
-      >
-        {{ getIcon(notification) }}
-      </mat-icon>
+    >
+    <div class="notification-container">
+      <mat-card-subtitle>{{ notification.source }}</mat-card-subtitle>
+      <mat-card-title class="notification-item-title">{{ notification.title }}</mat-card-title>
+      <mat-card-content class="padding-0">
+        {{ notification.created | date: "medium" }}
+      </mat-card-content>
+      <div
+        class="notifications-item-sideLine"
+        [ngClass]="'has-background-' + notification.severity"
+      ></div>
+      <div class="notifications-item-icon-container" [ngClass]="'has-background-' + notification.severity">
+        <mat-icon
+          class="notifications-item-icon"
+          [inline]="true"
+          role="complementary"
+          aria-hidden="false"
+          aria-label="Notification Severity Icon"
+          >
+          {{ getIcon(notification) }}
+        </mat-icon>
+      </div>
     </div>
-  </div>
-</mat-card>
+  </mat-card>
+}
