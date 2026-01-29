@@ -22,7 +22,7 @@ import {
 import { DialogDeleteComponent } from '../../dialogs/dialog-delete/dialog-delete.component';
 import { DialogVariantInfoComponent } from '../../dialogs/dialog-variant-info/dialog-variant-info.component';
 import { MediaService } from '../../services/media-service/media.service';
-import { NgIf, NgStyle, NgFor, NgClass, NgSwitch, NgSwitchCase, DecimalPipe, DatePipe, CommonModule } from '@angular/common';
+import { NgStyle, NgClass, DecimalPipe, DatePipe, CommonModule } from '@angular/common';
 import { MatSidenavContainer, MatSidenav, MatSidenavContent, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbar, MatToolbarModule, MatToolbarRow } from '@angular/material/toolbar';
 import { MatIconButton, MatFabButton, MatButtonModule } from '@angular/material/button';

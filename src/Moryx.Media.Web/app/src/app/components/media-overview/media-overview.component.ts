@@ -20,7 +20,7 @@ import {
   SearchRequest,
   SearchSuggestion,
 } from '@moryx/ngx-web-framework';
-import { NgIf, NgStyle, NgFor, CommonModule } from '@angular/common';
+import { NgStyle, CommonModule } from '@angular/common';
 import { FileDragAndDropDirective } from '../../extensions/file-drag-and-drop.directive';
 import { MediaFileComponent } from './media-file/media-file.component';
 import { MatIcon } from '@angular/material/icon';
