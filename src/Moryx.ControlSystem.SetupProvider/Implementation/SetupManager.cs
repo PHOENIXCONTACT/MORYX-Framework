@@ -91,7 +91,8 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
                 trigger, evaluation.GetType().Name, execution);
         }
 
-        Logger.LogDebug("Evaluation summary: {evaluated} triggers checked for execution '{execution}', {selected} selected for step creation",
+        Logger.LogDebug(
+            "Evaluation summary: {evaluated} triggers checked for execution '{execution}', {selected} selected for step creation",
             _triggers.Count(t => t.Execution == execution), execution, triggers.Count);
 
         // Create all necessary setup steps
@@ -245,27 +246,6 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         }
     }
 
-    internal static partial class Log
-    {
-        [LoggerMessage(
-            EventId = 27001,
-            Level = LogLevel.Trace,
-            Message = "Target already provides required capabilities {capabilities} (cells=[{cells}])")]
-        internal static partial void TargetCapabilitiesProvided(
-            ILogger logger,
-            string capabilities,
-            string cells);
-
-        [LoggerMessage(
-            EventId = 27002,
-            Level = LogLevel.Trace,
-            Message = "Current capabilities already removed {capabilities} (cells=[{cells}])")]
-        internal static partial void CurrentCapabilitiesAlreadyRemoved(
-            ILogger logger,
-            string capabilities,
-            string cells);
-    }
-
     private static bool ShouldSkipForExecution(
         SetupExecution execution,
         ISetupTarget targetSystem,
@@ -281,12 +261,13 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
                     if (hasTargetCaps)
                     {
-                        var capabilitiesStr = change.TargetCapabilities?.ToString() ?? string.Empty;
-                        var cellsStr = string.Join(", ", targetCells.Select(c => c?.ToString() ?? string.Empty));
-                        Log.TargetCapabilitiesProvided(logger, capabilitiesStr, cellsStr);
+                        Log.TargetCapabilitiesProvided(
+                            logger,
+                            change.TargetCapabilities?.ToString(),
+                            string.Join(", ", targetCells.Select(c => c?.ToString()))
+                        );
                         return true;
                     }
-
                     return false;
                 }
 
@@ -297,17 +278,39 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
                     if (!hasCurrentCaps)
                     {
-                        var capabilitiesStr = change.CurrentCapabilities?.ToString() ?? string.Empty;
-                        var cellsStr = string.Join(", ", currentCells.Select(c => c?.ToString() ?? string.Empty));
-                        Log.CurrentCapabilitiesAlreadyRemoved(logger, capabilitiesStr, cellsStr);
+                        Log.CurrentCapabilitiesAlreadyRemoved(
+                            logger,
+                            change.CurrentCapabilities?.ToString(),
+                            string.Join(", ", currentCells.Select(c => c?.ToString()))
+                        );
                         return true;
                     }
-
                     return false;
                 }
-
             default:
                 return false;
         }
+    }
+
+
+    private static partial class Log
+    {
+        [LoggerMessage(
+            EventId = 10000,
+            Level = LogLevel.Trace,
+            Message = "Target already provides required capabilities {capabilities} (cells=[{cells}])")]
+        public static partial void TargetCapabilitiesProvided(
+            ILogger logger,
+            string? capabilities,
+            string? cells);
+
+        [LoggerMessage(
+            EventId = 10001,
+            Level = LogLevel.Trace,
+            Message = "Current capabilities already removed {capabilities} (cells=[{cells}])")]
+        public static partial void CurrentCapabilitiesAlreadyRemoved(
+            ILogger logger,
+            string? capabilities,
+            string? cells);
     }
 }
