@@ -18,7 +18,9 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
     private readonly ICollection<ISetupTrigger> _triggers = new List<ISetupTrigger>();
 
     #region Dependencies
-
+    /// <summary>
+    /// Logger for this component
+    /// </summary>
     public IModuleLogger Logger { get; set; }
 
     /// <summary>
@@ -51,13 +53,8 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
     public SetupRecipe RequiredSetup(SetupExecution execution, ProductionRecipe recipe, ISetupTarget targetSystem)
     {
-        Logger.LogTrace(
-            "Creating required {execution} {setupType} for running production recipe '{productionRecipeName}' (Id={productionRecipeId})",
-            execution,
-            nameof(SetupRecipe),
-            recipe?.Name,
-            recipe?.Id
-        );
+        Logger.LogTrace("Creating required {execution} {setupType} for running production recipe '{productionRecipeName}' (Id={productionRecipeId})",
+            execution, nameof(SetupRecipe), recipe.Name, recipe.Id);
 
         // Determine the triggers
         var triggers = new List<ISetupTrigger>();
@@ -65,30 +62,25 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         // TODO: This loop restores old behavior with the new API, but it has much more potential
         foreach (var trigger in _triggers.Where(t => t.Execution == execution))
         {
-            using var triggerScope = Logger.BeginScope(new Dictionary<string, object>
-            {
-                ["trigger"] = trigger?.ToString(),
-                ["triggerType"] = trigger?.GetType().Name
-            });
 
             var evaluation = TryEvaluate(trigger, recipe);
 
             if (!evaluation.Required)
             {
-                Logger.LogTrace("Evaluation not required for trigger {trigger}", trigger);
+                Logger.LogTrace("Evaluation not required for trigger '{triggerName}' ({trigger})", trigger.GetType().Name, trigger.ToString());
                 continue;
             }
 
             if (evaluation is SetupEvaluation.Change change)
             {
-                if (ShouldSkipForExecution(execution, targetSystem, change, Logger))
+                if (ShouldSkipForExecution(execution, targetSystem, change, Logger, trigger.GetType().Name))
                     continue;
             }
 
             triggers.Add(trigger);
             Logger.LogTrace(
-                "Accepted trigger {trigger} (evaluationType={evaluationType}, execution={execution})",
-                trigger, evaluation.GetType().Name, execution);
+                "Accepted trigger '{triggerName}' ({trigger}) (evaluationType={evaluationType}, execution={execution})",
+                trigger.GetType().Name, trigger.ToString(), evaluation.GetType().Name, execution);
         }
 
         Logger.LogDebug(
@@ -111,9 +103,8 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
             if (value.Count == 0)
             {
-                Logger.LogWarning(
-                    "{Trigger} with sort index {sortOrder} found the system to require a setup {executionType}, but did not create workplan steps.",
-                    trigger, index, trigger.Execution);
+                Logger.LogWarning("Trigger '{triggerName}' with sort index {sortOrder} found the system to require a setup {executionType}, but did not create workplan steps.",
+                    trigger.GetType().Name, index, trigger.Execution);
                 stepGroups.Remove(index);
             }
         }
@@ -123,8 +114,7 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
             return null;
         }
 
-        Logger.LogDebug("Created {totalSteps} workplan steps in {totalGroups}. Wiring workplan...",
-            stepGroups.Values.Sum(g => g.Count), stepGroups.Count);
+        Logger.LogDebug("Created {totalSteps} workplan steps in {totalGroups}. Wiring workplan...", stepGroups.Values.Sum(g => g.Count), stepGroups.Count);
 
         // Add steps to the workplan
         var workplan = new Workplan
@@ -154,23 +144,25 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
     private SetupEvaluation TryEvaluate(ISetupTrigger trigger, ProductionRecipe recipe)
     {
-        Logger.LogTrace("Entering TryEvaluate (trigger={trigger}, recipeId={recipeId}, recipeName={recipeName})",
-            trigger, recipe?.Id, recipe?.Name);
+        var triggerDisplay = trigger.ToString();
+
+        Logger.LogTrace("Entering TryEvaluate (triggerName='{triggerName}', trigger={trigger}, recipeId={recipeId}, recipeName={recipeName})",
+            trigger.GetType().Name, triggerDisplay, recipe.Id, recipe.Name);
 
         try
         {
             var result = trigger.Evaluate(recipe);
 
-            Logger.LogTrace("Evaluation result (trigger={trigger}, required={required}, evaluationType={evaluationType})",
-                trigger, result.Required, result.GetType().Name);
+            Logger.LogTrace("Evaluation result (triggerName='{triggerName}', trigger={trigger}, required={required}, evaluationType={evaluationType})",
+                trigger.GetType().Name, triggerDisplay, result.Required, result.GetType().Name);
 
             return result;
         }
         catch (Exception e)
         {
             Logger.LogError(e,
-                "Evaluation calling exception {method} on evaluating {triggerType} (trigger={trigger}) for recipeId={recipeId}, recipeName={recipeName}",
-                nameof(ISetupTrigger.Evaluate), trigger.GetType().Name, trigger, recipe?.Id, recipe?.Name);
+                "Evaluation calling exception {method} on evaluating {triggerType} (triggerName='{triggerName}', trigger={trigger}) for recipeId={recipeId}, recipeName={recipeName}",
+                nameof(ISetupTrigger.Evaluate), trigger.GetType().Name, trigger.GetType().Name, triggerDisplay, recipe.Id, recipe.Name);
             throw;
         }
     }
@@ -183,8 +175,8 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "Calling {method} on {trigger} threw an exception processing recipe {id}: {name}",
-                nameof(ISetupTrigger.CreateSteps), trigger.GetType().Name, recipe.Id, recipe.Name);
+            Logger.LogError(e, "Calling {method} on trigger '{triggerName}' ({triggerType}) threw an exception processing recipe {id}: {name}",
+                nameof(ISetupTrigger.CreateSteps), trigger.GetType().Name, trigger.GetType().Name, recipe.Id, recipe.Name);
             throw;
         }
     }
@@ -246,11 +238,7 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         }
     }
 
-    private static bool ShouldSkipForExecution(
-        SetupExecution execution,
-        ISetupTarget targetSystem,
-        SetupEvaluation.Change change,
-        ILogger logger)
+    private static bool ShouldSkipForExecution(SetupExecution execution, ISetupTarget targetSystem, SetupEvaluation.Change change, ILogger logger, string triggerName)
     {
         switch (execution)
         {
@@ -261,11 +249,8 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
                     if (hasTargetCaps)
                     {
-                        Log.TargetCapabilitiesProvided(
-                            logger,
-                            change.TargetCapabilities?.ToString(),
-                            string.Join(", ", targetCells.Select(c => c?.ToString()))
-                        );
+                        Log.TargetCellsAlreadyProvidesRequiredCapabilities(logger, triggerName, change.TargetCapabilities?.ToString(),
+                            string.Join(", ", targetCells.Select(c => c?.ToString())));
                         return true;
                     }
                     return false;
@@ -278,9 +263,7 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
                     if (!hasCurrentCaps)
                     {
-                        Log.CurrentCapabilitiesAlreadyRemoved(
-                            logger,
-                            change.CurrentCapabilities?.ToString(),
+                        Log.CurrentCapabilitiesAlreadyRemoved(logger, triggerName, change.CurrentCapabilities?.ToString(),
                             string.Join(", ", currentCells.Select(c => c?.ToString()))
                         );
                         return true;
@@ -298,18 +281,20 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         [LoggerMessage(
             EventId = 10000,
             Level = LogLevel.Trace,
-            Message = "Target already provides required capabilities {capabilities} (cells=[{cells}])")]
-        public static partial void TargetCapabilitiesProvided(
+            Message = "[trigger='{triggerName}'] Target already provides required capabilities {capabilities} (cells=[{cells}])")]
+        public static partial void TargetCellsAlreadyProvidesRequiredCapabilities(
             ILogger logger,
+            string triggerName,
             string? capabilities,
             string? cells);
 
         [LoggerMessage(
             EventId = 10001,
             Level = LogLevel.Trace,
-            Message = "Current capabilities already removed {capabilities} (cells=[{cells}])")]
+            Message = "[trigger='{triggerName}'] Current capabilities already removed {capabilities} (cells=[{cells}])")]
         public static partial void CurrentCapabilitiesAlreadyRemoved(
             ILogger logger,
+            string triggerName,
             string? capabilities,
             string? cells);
     }
