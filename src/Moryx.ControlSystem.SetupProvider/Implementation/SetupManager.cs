@@ -144,25 +144,22 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
     private SetupEvaluation TryEvaluate(ISetupTrigger trigger, ProductionRecipe recipe)
     {
-        var triggerDisplay = trigger.ToString();
-
-        Logger.LogTrace("Entering TryEvaluate (triggerName='{triggerName}', trigger={trigger}, recipeId={recipeId}, recipeName={recipeName})",
-            trigger.GetType().Name, triggerDisplay, recipe.Id, recipe.Name);
+        Logger.LogTrace("Entering TryEvaluate (trigger='{triggerName}', recipeId={recipeId}, recipeName={recipeName})", trigger.GetType().Name, recipe.Id, recipe.Name);
 
         try
         {
             var result = trigger.Evaluate(recipe);
 
-            Logger.LogTrace("Evaluation result (triggerName='{triggerName}', trigger={trigger}, required={required}, evaluationType={evaluationType})",
-                trigger.GetType().Name, triggerDisplay, result.Required, result.GetType().Name);
+            Logger.LogTrace("Evaluation result (triggerName='{triggerName}', required={required}, evaluationType={evaluationType})",
+                trigger.GetType().Name, result.Required, result.GetType().Name);
 
             return result;
         }
         catch (Exception e)
         {
             Logger.LogError(e,
-                "Evaluation calling exception {method} on evaluating {triggerType} (triggerName='{triggerName}', trigger={trigger}) for recipeId={recipeId}, recipeName={recipeName}",
-                nameof(ISetupTrigger.Evaluate), trigger.GetType().Name, trigger.GetType().Name, triggerDisplay, recipe.Id, recipe.Name);
+                "Evaluation calling exception {method} on evaluating (triggerName='{triggerName}') for recipeId={recipeId}, recipeName={recipeName}",
+                nameof(ISetupTrigger.Evaluate), trigger.GetType().Name, recipe.Id, recipe.Name);
             throw;
         }
     }
@@ -175,8 +172,8 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "Calling {method} on trigger '{triggerName}' ({triggerType}) threw an exception processing recipe {id}: {name}",
-                nameof(ISetupTrigger.CreateSteps), trigger.GetType().Name, trigger.GetType().Name, recipe.Id, recipe.Name);
+            Logger.LogError(e, "Calling {method} on trigger '{triggerName}' threw an exception processing recipe {id}: {name}",
+                nameof(ISetupTrigger.CreateSteps), trigger.GetType().Name, recipe.Id, recipe.Name);
             throw;
         }
     }
@@ -249,7 +246,7 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
                 if (hasTargetCaps)
                 {
-                    Log.TargetCellsAlreadyProvidesRequiredCapabilities(logger, triggerName, change.TargetCapabilities?.ToString(),
+                    Log.TargetCellsAlreadyProvidesRequiredCapabilities(logger, triggerName, change.TargetCapabilities.ToString(),
                         string.Join(", ", targetCells.Select(cell => cell.Name)));
                     return true;
                 }
@@ -263,7 +260,7 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
                 if (!hasCurrentCaps)
                 {
-                    Log.CurrentCapabilitiesAlreadyRemoved(logger, triggerName, change.CurrentCapabilities?.ToString(),
+                    Log.CurrentCapabilitiesAlreadyRemoved(logger, triggerName, change.CurrentCapabilities.ToString(),
                         string.Join(", ", currentCells.Select(cell => cell.Name))
                     );
                     return true;
