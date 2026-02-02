@@ -18,7 +18,7 @@ internal sealed class InterruptedAssignFailedState : OperationDataStateBase
     {
     }
 
-    public async Task Assign()
+    public override async Task Assign()
     {
         await NextStateAsync(StateInterruptedAssign);
         Context.HandleReassign();

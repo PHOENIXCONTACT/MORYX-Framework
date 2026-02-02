@@ -689,15 +689,6 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
         return _dispatchHandler.TryDispatch();
     }
 
-    /// <inheritdoc />
-    public async Task UpdateSource(IOperationSource source)
-    {
-        Operation.Source = source;
-
-        await _savingContext.SaveOperation(this);
-        Updated?.Invoke(this, new OperationEventArgs(this));
-    }
-
     private void UpdateProgress()
     {
         var relevantJobs = CountStrategy.RelevantJobs(Operation).ToArray();
