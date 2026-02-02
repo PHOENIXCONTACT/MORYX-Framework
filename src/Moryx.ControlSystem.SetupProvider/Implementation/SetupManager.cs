@@ -243,33 +243,33 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         switch (execution)
         {
             case SetupExecution.BeforeProduction:
-                {
-                    var targetCells = targetSystem.Cells(change.TargetCapabilities);
-                    var hasTargetCaps = targetCells.Any();
+            {
+                var targetCells = targetSystem.Cells(change.TargetCapabilities);
+                var hasTargetCaps = targetCells.Any();
 
-                    if (hasTargetCaps)
-                    {
-                        Log.TargetCellsAlreadyProvidesRequiredCapabilities(logger, triggerName, change.TargetCapabilities?.ToString(),
-                            string.Join(", ", targetCells.Select(c => c?.ToString())));
-                        return true;
-                    }
-                    return false;
+                if (hasTargetCaps)
+                {
+                    Log.TargetCellsAlreadyProvidesRequiredCapabilities(logger, triggerName, change.TargetCapabilities?.ToString(),
+                        string.Join(", ", targetCells.Select(cell => cell.Name)));
+                    return true;
                 }
+                return false;
+            }
 
             case SetupExecution.AfterProduction:
-                {
-                    var currentCells = targetSystem.Cells(change.CurrentCapabilities);
-                    var hasCurrentCaps = currentCells.Any();
+            {
+                var currentCells = targetSystem.Cells(change.CurrentCapabilities);
+                var hasCurrentCaps = currentCells.Any();
 
-                    if (!hasCurrentCaps)
-                    {
-                        Log.CurrentCapabilitiesAlreadyRemoved(logger, triggerName, change.CurrentCapabilities?.ToString(),
-                            string.Join(", ", currentCells.Select(c => c?.ToString()))
-                        );
-                        return true;
-                    }
-                    return false;
+                if (!hasCurrentCaps)
+                {
+                    Log.CurrentCapabilitiesAlreadyRemoved(logger, triggerName, change.CurrentCapabilities?.ToString(),
+                        string.Join(", ", currentCells.Select(cell => cell.Name))
+                    );
+                    return true;
                 }
+                return false;
+            }
             default:
                 return false;
         }
@@ -279,23 +279,21 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
     private static partial class Log
     {
         [LoggerMessage(
-            EventId = 10000,
             Level = LogLevel.Trace,
             Message = "[trigger='{triggerName}'] Target already provides required capabilities {capabilities} (cells=[{cells}])")]
         public static partial void TargetCellsAlreadyProvidesRequiredCapabilities(
             ILogger logger,
             string triggerName,
-            string? capabilities,
-            string? cells);
+            string capabilities,
+            string cells);
 
         [LoggerMessage(
-            EventId = 10001,
             Level = LogLevel.Trace,
             Message = "[trigger='{triggerName}'] Current capabilities already removed {capabilities} (cells=[{cells}])")]
         public static partial void CurrentCapabilitiesAlreadyRemoved(
             ILogger logger,
             string triggerName,
-            string? capabilities,
-            string? cells);
+            string capabilities,
+            string cells);
     }
 }
