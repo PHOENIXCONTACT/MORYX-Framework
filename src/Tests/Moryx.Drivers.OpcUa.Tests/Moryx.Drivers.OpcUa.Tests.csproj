@@ -16,4 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Moryx.Drivers.OpcUa\Moryx.Drivers.OpcUa.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
 </Project>

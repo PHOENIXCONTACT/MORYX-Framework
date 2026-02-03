@@ -9,7 +9,7 @@ using Moryx.Logging;
 using Opc.Ua;
 using Opc.Ua.Client;
 
-namespace Moryx.Drivers.OpcUa;
+namespace Moryx.Drivers.OpcUa.Nodes;
 
 /// <summary>
 /// MessageChannel representing an Opc Ua node
@@ -62,7 +62,7 @@ public class OpcUaNode : IMessageChannel
     /// <summary>
     /// List of all Subnodes. This property is null, when the node is no object node
     /// </summary>
-    public List<OpcUaNode> Nodes { get; set; }
+    public List<OpcUaNode> Nodes { get; set; } = [];
 
     private event EventHandler<object> _received;
 
@@ -73,7 +73,7 @@ public class OpcUaNode : IMessageChannel
     {
         add
         {
-            _driver.AddSubscriptionAsync(this).GetAwaiter().GetResult();
+            _driver.AddSubscriptionAsync(Identifier).GetAwaiter().GetResult();
             _received += value;
         }
         remove
@@ -121,13 +121,6 @@ public class OpcUaNode : IMessageChannel
     }
 
     /// <inheritdoc />
-    public OpcUaNode(IOpcUaDriver driver, IModuleLogger logger, string namespaceUri, string nodeIdValue)
-        : this(driver, logger)
-    {
-        NodeId = new ExpandedNodeId(nodeIdValue, namespaceUri);
-    }
-
-    /// <inheritdoc />
     public OpcUaNode(IOpcUaDriver driver, IModuleLogger logger, ExpandedNodeId nodeId, NamespaceTable namespaceTable)
         : this(driver, logger)
     {
@@ -135,18 +128,13 @@ public class OpcUaNode : IMessageChannel
     }
 
     /// <inheritdoc />
-    public OpcUaNode(IOpcUaDriver driver, IModuleLogger logger, string identifier)
+    public OpcUaNode(IOpcUaDriver driver, IModuleLogger logger, string identifier, NodeClass nodeClass)
+        : this(driver, logger)
     {
-        Driver = driver;
         NodeId = ExpandedNodeId.Parse(identifier);
-        _logger = logger;
+        NodeClass = nodeClass;
     }
     #endregion
-
-    internal void UpdateNodeId(NamespaceTable namespaceTable)
-    {
-        NodeId = new ExpandedNodeId(NodeId.Identifier, (ushort)namespaceTable.GetIndex(NodeId.NamespaceUri), NodeId.NamespaceUri, NodeId.ServerIndex);
-    }
 
     /// <summary>
     /// Write a value to the Node. At the moment this only works for variable nodes

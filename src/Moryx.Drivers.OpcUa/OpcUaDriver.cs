@@ -12,11 +12,13 @@ using Moryx.AbstractionLayer.Drivers.Message;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
 using Moryx.Drivers.OpcUa.Factories;
+using Moryx.Drivers.OpcUa.Nodes;
 using Moryx.Drivers.OpcUa.Properties;
 using Moryx.Drivers.OpcUa.States;
 using Moryx.Serialization;
 using Moryx.StateMachines;
 using Moryx.Threading;
+using Moryx.Tools;
 using Opc.Ua;
 using Opc.Ua.Client;
 
@@ -30,8 +32,6 @@ namespace Moryx.Drivers.OpcUa;
 [Display(Name = nameof(Strings.OpcUaDriver_DisplayName), Description = nameof(Strings.OpcUaDriver_Description), ResourceType = typeof(Strings))]
 public class OpcUaDriver : Driver, IOpcUaDriver
 {
-    private const int NodeLayersShown = 5;
-
     /// <summary>
     /// Current tate of the driver
     /// </summary>
@@ -58,9 +58,14 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     [DataMember]
     internal Dictionary<string, string> _nodeIdAliasDictionary; // TODO: Internal field just for tests, could be private
 
+    /// <summary>
+    /// List of node id aliases to simply node access in code that uses this driver.
+    /// Defining a NodeIdAlias `"switch_pressed"="ns=4;i=123"` can help reducing hard coded
+    /// node ids and makes it possible to move those to any kind of configuration.
+    /// </summary>
     [EntrySerialize]
     [Display(Name = nameof(Strings.OpcUaDriver_NodeIdAlias), ResourceType = typeof(Strings))]
-    internal List<NodeIdAlias> NodeIdAlias
+    public List<NodeIdAlias> NodeIdAlias
     {
         get
         {
@@ -153,19 +158,14 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     #endregion
 
     /// <summary>
-    /// All nodes found on the Opc Ua server
-    /// </summary>
-    [EntrySerialize, ReadOnly(true)]
-    [Display(Name = nameof(Strings.OpcUaDriver_Nodes), ResourceType = typeof(Strings))]
-    internal List<OpcUaDisplayNode> Nodes { get; private set; } = [];
-
-    /// <summary>
     /// Timer used in message queue
     /// </summary>
     public IParallelOperations ParallelOperations { get; set; }
 
+    // TODO: Check if at least some nodes should be read initially.
+    // Should probably be fine to set this to true when connected or ready.
     /// <summary>
-    /// The number of nodes under the driver
+    /// The number of nodes that have been read.
     /// </summary>
     public bool HasChannels => _nodesFlat.Count > 0;
 
@@ -180,56 +180,20 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     /// <inheritdoc />
     public IDriver Driver => this;
 
-    private List<OpcUaNode> _nodes = [];
     private readonly Dictionary<string, OpcUaNode> _nodesFlat = [];
-    private List<OpcUaNode> _nodesToBeSubscribed = [];
-    private readonly HashSet<string> _savedIds = [];
+    private List<string> _nodesToBeSubscribed = [];
 
     internal ISession _session; //TODO: Internal field just for tests
     private SessionReconnectHandler _reconnectHandler;
 
-    private readonly Lock _lock = new();
-    private readonly Lock _stateLock = new();
+    private readonly SemaphoreSlim _lock = new(1, 1);
 
     private Subscription _subscription;
 
     //TODO: Internal property just for tests, use xml also in tests
     internal ApplicationConfigurationFactory ApplicationConfigurationFactory { get; set; } = new();
-
+    internal NodeReaderFactory NodeReaderFactory { get; set; } = new NodeReaderFactory();
     internal SubscriptionFactory SubscriptionFactory { get; set; } = new();
-
-    /// <summary>
-    /// Convert an OpcUaNode to an entity to be shown on the UI
-    /// </summary>
-    /// <param name="nodes"></param>
-    /// <returns></returns>
-    private static List<OpcUaDisplayNode> ConvertToDisplayNodes(List<OpcUaNode> nodes)
-    {
-        var list = new List<OpcUaDisplayNode>();
-        foreach (var node in nodes)
-        {
-            OpcUaDisplayNode displayNode;
-            if (node.NodeClass == NodeClass.Object || node.NodeClass == NodeClass.Variable)
-            {
-                var objectDisplayNode = new OpcUaObjectDisplayNode(node.NodeId)
-                {
-                    Nodes = ConvertToDisplayNodes(node.Nodes)
-                };
-                displayNode = objectDisplayNode;
-            }
-            else
-            {
-                displayNode = new OpcUaDisplayNode(node.NodeId);
-            }
-            displayNode.BrowseName = node.BrowseName.ToString();
-            displayNode.DisplayName = node.DisplayName;
-            displayNode.Description = node.Description;
-            displayNode.ClassType = node.NodeClass;
-            list.Add(displayNode);
-        }
-
-        return list;
-    }
 
     #region Lifecycle
 
@@ -242,7 +206,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         Output = new OpcUaOutput(this);
         _nodeIdAliasDictionary ??= [];
 
-        StateMachine.ForContext(this).With<DriverOpcUaState>();
+        await StateMachine.ForAsyncContext(this).WithAsync<DriverOpcUaState>(cancellationToken);
 
         ServerStatus = ServerState.Unknown;
     }
@@ -253,54 +217,48 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     {
         await base.OnStartAsync(cancellationToken);
         ApplicationConfigurationFactory.ApplicationName += " " + Identifier;
-        Connect();
+        await Connect(cancellationToken);
     }
 
     /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
     /// <inheritdoc/>
     protected override Task OnStopAsync(CancellationToken cancellationToken)
     {
-        State.Disconnect();
-        return Task.CompletedTask;
+        return State.DisconnectAsync(cancellationToken);
     }
     #endregion
 
     #region Connection Handling
 
-    private void Connect()
+    private Task Connect(CancellationToken cancellationToken)
     {
-        lock (_stateLock)
-        {
-            State.Connect();
-        }
+        return State.Semaphore.ExecuteAsync(() => State.ConnectAsync(cancellationToken), cancellationToken);
     }
 
     /// <summary>
     /// Try to connect to the Opc Ua server
     /// </summary>
     /// <exception cref="Exception"></exception>
-    internal async Task TryConnect(bool firstTry)
+    internal async Task TryConnect(bool firstTry, CancellationToken cancellationToken)
     {
         if (_session == null)
         {
-            var result = await CreateSession(firstTry);
+            var result = await CreateSessionAsync(firstTry, cancellationToken);
             if (result == false)
             {
                 return;
             }
         }
 
+        await _session.FetchNamespaceTablesAsync(cancellationToken);
         _session.KeepAlive += ClientKeepAlive;
 
-        lock (_stateLock)
-        {
-            State.OnConnectingCompletedAsync(true).GetAwaiter().GetResult();
-        }
+        await State.Semaphore.ExecuteAsync(async () => await State.OnConnectingCompletedAsync(true, cancellationToken), cancellationToken);
     }
 
-    private async Task<bool> CreateSession(bool firstTry)
+    private async Task<bool> CreateSessionAsync(bool firstTry, CancellationToken cancellationToken)
     {
-        var config = await ApplicationConfigurationFactory.Create(Logger, FilePathClientConfig);
+        var config = await ApplicationConfigurationFactory.Create(Logger, FilePathClientConfig, cancellationToken);
         if (config == null)
         {
             return false;
@@ -314,7 +272,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             builder.Scheme = BuildScheme(builder);
 
             selectedEndpoint = await CoreClientUtils.SelectEndpointAsync(config,
-                builder.Uri.ToString(), UseEncryption);
+                builder.Uri.ToString(), UseEncryption, cancellationToken);
         }
         catch (Exception e)
         {
@@ -322,8 +280,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             {
                 Logger.Log(LogLevel.Error, "Failed to connect {Uri} ({Message})", builder?.Uri.ToString() ?? OpcUaServerUrl, e.Message);
             }
-
-            ParallelOperations?.ScheduleExecution(TryToConnectAgain, ReconnectionPeriod, -1);
+            ParallelOperations?.ScheduleExecution(async () => await TryToConnectAgainAsync(cancellationToken), ReconnectionPeriod, -1);
             return false;
         }
         var endpointConfiguration = EndpointConfiguration.Create(config);
@@ -337,7 +294,8 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
         try
         {
-            _session = await Session.CreateAsync(DefaultSessionFactory.Instance, config, (ITransportWaitingConnection)null, endpoint, false, false, ApplicationConfigurationFactory.ApplicationName, 60000, userIdentity, null);
+            config.TransportQuotas.ChannelLifetime = 3600000;
+            _session = await Session.CreateAsync(DefaultSessionFactory.Instance, config, (ITransportWaitingConnection)null, endpoint, false, false, ApplicationConfigurationFactory.ApplicationName, 1200000, userIdentity, null, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -346,7 +304,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                 Logger.Log(LogLevel.Error, "{Message}", ex.Message);
             }
 
-            ParallelOperations.ScheduleExecution(TryToConnectAgain, ReconnectionPeriod, -1);
+            ParallelOperations.ScheduleExecution(() => TryToConnectAgainAsync(cancellationToken), ReconnectionPeriod, -1);
             return false;
         }
         return true;
@@ -359,12 +317,12 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
     private static bool IsOpcScheme(string scheme) => !string.IsNullOrEmpty(scheme) && scheme.Contains("opc");
 
-    private void TryToConnectAgain()
+    private Task TryToConnectAgainAsync(CancellationToken cancellationToken)
     {
-        State.OnConnectingCompletedAsync(false);
+        return State.OnConnectingCompletedAsync(false, cancellationToken);
     }
 
-    private void ClientKeepAlive(ISession session, KeepAliveEventArgs e)
+    private async void ClientKeepAlive(ISession session, KeepAliveEventArgs e)
     {
 
         // check for events from discarded sessions.
@@ -377,12 +335,12 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         if (ServiceResult.IsBad(e.Status))
         {
             ServerStatus = ServerState.Unknown;
-            State.OnConnectionLostAsync(e).GetAwaiter().GetResult();
+            await State.OnConnectionLostAsync(e, default);
         }
 
     }
 
-    internal async Task Reconnect(KeepAliveEventArgs e)
+    internal void Reconnect(KeepAliveEventArgs e)
     {
         if (ReconnectionPeriod <= 0)
         {
@@ -390,7 +348,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             return;
         }
 
-        lock (_lock)
+        _lock.Execute(() =>
         {
             if (_reconnectHandler == null)
             {
@@ -402,13 +360,13 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                 Logger.Log(LogLevel.Warning, "KeepAlive status {Status}, but reconnection should have already started.", e.Status);
                 return;
             }
-        }
+        });
     }
 
     /// <summary>
     /// Called when the reconnect attempt was successful.
     /// </summary>
-    private void ReconnectComplete(object sender, EventArgs e)
+    private async void ReconnectComplete(object sender, EventArgs e)
     {
         // ignore callbacks from discarded objects.
         if (!ReferenceEquals(sender, _reconnectHandler))
@@ -416,7 +374,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             return;
         }
 
-        lock (_lock)
+        await _lock.ExecuteAsync(async () =>
         {
             // if session recovered, Session property is null
             if (_reconnectHandler.Session != null)
@@ -426,11 +384,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
             _reconnectHandler.Dispose();
             _reconnectHandler = null;
-            lock (_stateLock)
-            {
-                State.OnConnectingCompletedAsync(true).GetAwaiter().GetResult();
-            }
-        }
+            await State.Semaphore.ExecuteAsync(async () => await State.OnConnectingCompletedAsync(true, default), default);
+        },
+        default);
     }
 
     /// <summary>
@@ -458,15 +414,19 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     }
 
     /// <inheritdoc/>
-    public Task<OpcUaNode> GetNodeAsync(string nodeId, CancellationToken cancellationToken = default)
+    public async Task<OpcUaNode> GetNodeAsync(string nodeId, CancellationToken cancellationToken = default)
     {
         var expandedNodeId = OpcUaNode.CreateExpandedNodeId(GetNodeIdAsString(nodeId));
         if (!_nodesFlat.TryGetValue(expandedNodeId, out var node))
         {
-            return null;
+            var browser = NodeReaderFactory.CreateNodeReader(Logger, this);
+            node = await browser.ReadNodeAsync(expandedNodeId, _session.NamespaceUris, _session, cancellationToken);
+            if (node != null)
+            {
+                _nodesFlat.TryAdd(expandedNodeId, node);
+            }
         }
-
-        return Task.FromResult(node);
+        return node;
     }
 
     private string GetNodeIdAsString(string identifier)
@@ -479,32 +439,19 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         return identifier;
     }
 
-    internal OpcUaNode GetNotInitializedNode(string identifier)
-    {
-        var nodeId = ExpandedNodeId.Parse(GetNodeIdAsString(identifier));
-        if (nodeId.NamespaceUri == null || nodeId.NamespaceUri.Equals(""))
-        {
-            return null;
-        }
-
-        var node = new OpcUaNode(this, Logger, identifier);
-        _nodesFlat.Add(node.Identifier, node);
-        return node;
-    }
-
     /// <inheritdoc/>
-    public Task AddSubscriptionAsync(OpcUaNode node, CancellationToken cancellationToken = default)
+    public Task AddSubscriptionAsync(string nodeId, CancellationToken cancellationToken = default)
     {
-        State.AddSubscription(node);
+        State.AddSubscription(nodeId);
         return Task.CompletedTask;
     }
 
-    internal void SaveSubscriptionToBeAdded(OpcUaNode node)
+    internal void SaveSubscriptionToBeAdded(string nodeId)
     {
-        var duplicateNode = _nodesToBeSubscribed.FirstOrDefault(x => x.NodeId.ToString().Equals(node.NodeId.ToString()));
+        var duplicateNode = _nodesToBeSubscribed.FirstOrDefault(x => x == nodeId);
         if (duplicateNode == null)
         {
-            _nodesToBeSubscribed.Add(node);
+            _nodesToBeSubscribed.Add(nodeId);
         }
     }
 
@@ -520,7 +467,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
             node.MonitoredItem.Notification -= OnMonitoredItemNotification;
             node.MonitoredItem = null;
-            _nodesToBeSubscribed.Add(node);
+            _nodesToBeSubscribed.Add(node.Identifier);
         }
         _subscription?.Dispose();
         _subscription = null;
@@ -541,13 +488,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         await _subscription.CreateAsync(cancellationToken);
 
         //Subscribe Saved Nodes
-        foreach (var node in _nodesToBeSubscribed)
+        foreach (var nodeId in _nodesToBeSubscribed ?? [])
         {
-            if (node.NodeClass != NodeClass.Variable)
-            {
-                Logger.Log(LogLevel.Warning, "It was tried to subscribe to the node {NodeId}. But that node is no variable node", node.NodeId);
-                continue;
-            }
+            var node = await GetNodeAsync(nodeId, cancellationToken);
             var monitoredItem = CreateMonitoredItem(node);
             if (monitoredItem == null)
             {
@@ -558,7 +501,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         }
 
         //Subscribe default Nodes
-        foreach (var nodeId in DefaultSubscriptions)
+        foreach (var nodeId in DefaultSubscriptions ?? [])
         {
             var node = State.GetNode(nodeId);
             if (node == null)
@@ -567,7 +510,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                 continue;
             }
 
-            if (_nodesToBeSubscribed.Contains(node))
+            if (_nodesToBeSubscribed.Contains(nodeId))
             {
                 continue;
             }
@@ -588,7 +531,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         _nodesToBeSubscribed = [];
         await _subscription.ApplyChangesAsync(cancellationToken);
 
-        await State.OnSubscriptionsInitializedAsync();
+        await State.OnSubscriptionsInitializedAsync(cancellationToken);
     }
 
     internal Task AddSubscriptionToSession(OpcUaNode node, CancellationToken cancellationToken = default)
@@ -598,6 +541,12 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             Logger.Log(LogLevel.Warning, "It was tried to subscribe to the node {NodeId}. But that node is no variable node", node.NodeId);
             return Task.CompletedTask;
         }
+
+        if (node.MonitoredItem != null)
+        {
+            return Task.CompletedTask;
+        }
+
         var monitoredItem = CreateMonitoredItem(node);
         if (monitoredItem == null)
         {
@@ -612,7 +561,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     {
         if (node.MonitoredItem != null)
         {
-            return null;
+            return node.MonitoredItem;
         }
 
         var monitoredItem = new MonitoredItem(_subscription.DefaultItem)
@@ -661,7 +610,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver
             ServerStatus = ((ServerStatusDataType)((ExtensionObject)value).Body).State;
         }
 
-        var node = State.GetNode(nodeIdString);
+        var index = (ushort)_session.NamespaceUris.GetIndex(nodeId.NamespaceUri);
+        var innerNodeId = new NodeId(nodeId.Identifier, index);
+        var node = State.GetNode(innerNodeId.ExpandedNodeIdString());
         if (node != null && node.Subscribed)
         {
             node.ReceivedMessage(value);
@@ -669,150 +620,6 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
         Received?.Invoke(this, msg);
     }
-
-    #region Browse Nodes
-
-    internal async Task BrowseNodesAsync()
-    {
-
-        var namespaceUris = _session.NamespaceUris;
-        var nodes = new List<OpcUaNode>();
-
-        await BrowseNodesAsync(ObjectIds.RootFolder, namespaceUris, nodes, 0);
-        _nodes = nodes;
-
-        _savedIds.Clear();
-        Nodes = ConvertToDisplayNodes(_nodes);
-        lock (_stateLock)
-        {
-            State.OnBrowsingNodesCompletedAsync();
-        }
-    }
-
-    //todo: Change to BFS
-    private async Task BrowseNodesAsync(NodeId nodeId, NamespaceTable namespaceTable, List<OpcUaNode> list, int layer, HashSet<string> visitedNodes = null, uint referenceTypes = ReferenceTypes.HierarchicalReferences)
-    {
-        visitedNodes ??= [];
-        var branchNodes = new HashSet<string>(visitedNodes);
-
-        if (branchNodes.Contains(nodeId.ToString()))
-        {
-            return;
-        }
-        branchNodes.Add(nodeId.ToString());
-
-        IList<ReferenceDescriptionCollection> nextRefs;
-
-        ByteStringCollection continuationPoints;
-
-        (_, continuationPoints, nextRefs, _) = await _session.BrowseAsync(null, null, [nodeId], uint.MaxValue, BrowseDirection.Forward, new NodeId(referenceTypes), true, (uint)NodeClass.Variable | (uint)NodeClass.Object | (uint)NodeClass.Method);
-
-        var continuationPoint = continuationPoints?.FirstOrDefault();
-
-        //https://reference.opcfoundation.org/Core/Part4/v104/docs/7.6
-        while (continuationPoint != null)
-        {
-            IList<ReferenceDescriptionCollection> ref3;
-
-            (_, continuationPoints, ref3, _) = await _session.BrowseNextAsync(null, [continuationPoint], false);
-
-            var newContinuationPoint = continuationPoints?.FirstOrDefault();
-
-            if (ref3.Count < 1)
-            {
-                if (newContinuationPoint == null)
-                {
-                    break;
-                }
-
-                continue;
-            }
-            foreach (var z in ref3[0])
-            {
-                nextRefs[0].Add(z);
-            }
-
-            continuationPoint = newContinuationPoint;
-        }
-
-        if (nextRefs == null)
-        {
-            return;
-        }
-
-        foreach (var nextRd in nextRefs[0])
-        {
-            var nextRdNodeId = OpcUaNode.CreateExpandedNodeId(nextRd.NodeId.ToString());
-            OpcUaNode node = null;
-            if (_nodesFlat.TryGetValue(nextRdNodeId, out var exisitingNode))
-            {
-                node = exisitingNode;
-            }
-
-            if (node == null)
-            {
-                node = ConvertToNode(nextRd, namespaceTable);
-            }
-            else
-            {
-                node.UpdateNodeId(namespaceTable);
-                node.DisplayName = nextRd.DisplayName.ToString();
-                node.NodeClass = nextRd.NodeClass;
-                node.BrowseName = nextRd.BrowseName;
-            }
-
-            if (node == null)
-            {
-                continue;
-            }
-
-            if (nextRd.NodeClass == NodeClass.Object || nextRd.NodeClass == NodeClass.Variable)
-            {
-                var types = nextRd.NodeClass == NodeClass.Object
-                    ? ReferenceTypes.HierarchicalReferences
-                    : ReferenceTypes.HasComponent;
-
-                var nodesOfObject = new List<OpcUaNode>();
-                await BrowseNodesAsync(ExpandedNodeId.ToNodeId(nextRd.NodeId, namespaceTable), namespaceTable, nodesOfObject, layer + 1, branchNodes, types);
-                node.Nodes = nodesOfObject;
-            }
-
-            _savedIds.Add(node.Identifier);
-
-            _nodesFlat.TryAdd(node.Identifier, node);
-            if (layer < NodeLayersShown)
-            {
-                list.Add(node);
-            }
-        }
-    }
-
-    private OpcUaNode ConvertToNode(ReferenceDescription referenceDescription, NamespaceTable namespaceTable)
-    {
-        var node = new OpcUaNode(this, Logger, referenceDescription.NodeId, namespaceTable)
-        {
-            DisplayName = referenceDescription.DisplayName.ToString(),
-            BrowseName = referenceDescription.BrowseName
-        };
-        switch (referenceDescription.NodeClass)
-        {
-            case NodeClass.Object:
-                node.NodeClass = NodeClass.Object;
-                break;
-            case NodeClass.Method:
-                node.NodeClass = NodeClass.Method;
-                break;
-            case NodeClass.Variable:
-                node.NodeClass = NodeClass.Variable;
-                break;
-            default: return null;
-        }
-
-        return node;
-
-    }
-
-    #endregion
 
     #region Read and write nodes
 
@@ -868,7 +675,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     public async Task<object> ReadNodeAsync(string nodeId, CancellationToken cancellationToken = default)
     {
         var result = await ReadNodeDataValue(nodeId, cancellationToken);
-        return result.Result.Value;
+        return result.Result?.Value;
     }
 
     private async Task<DataValueResult> ReadNodeDataValue(string nodeId, CancellationToken cancellationToken = default)
@@ -892,10 +699,11 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         {
             return DataValueResult.WithError($"The node \"{identifier}\" was not found");
         }
-        if (node.NodeClass != NodeClass.Variable)
-        {
-            return DataValueResult.WithError($"The node \"{identifier}\" was not of type 'variable'");
-        }
+        // TODO: This has to be tested:
+        //if (node.NodeClass != NodeClass.Variable)
+        //{
+        //    return DataValueResult.WithError($"The node \"{identifier}\" was not of type 'variable'");
+        //}
 
         var nodeId = ExpandedNodeId.ToNodeId(node.NodeId, _session.NamespaceUris);
         var value = await _session.ReadValueAsync(nodeId, cancellationToken);
@@ -961,11 +769,11 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     /// <param name="nodeId"></param>
     /// <returns></returns>
     [EntrySerialize]
-    internal string ReadNodeAsString(string nodeId)
+    internal async Task<string> ReadNodeAsString(string nodeId)
     {
         try
         {
-            var value = ReadNodeDataValue(nodeId);
+            var value = await ReadNodeDataValue(nodeId);
             if (value == null)
             {
                 return "There was an error, when trying to read the value of the node. Please look into the log for further information";
@@ -987,7 +795,7 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     /// <param name="valueString"></param>
     /// <param name="cancellationToken"></param>
     [EntrySerialize]
-    internal async Task WriteNode(string identifier, string valueString, CancellationToken cancellationToken = default)
+    internal async Task WriteNode(string identifier, string valueString, CancellationToken cancellationToken)
     {
         var node = State.GetNode(identifier);
         var errormsg = "When trying to read the value of the node, ";
@@ -1067,13 +875,9 @@ public class OpcUaDriver : Driver, IOpcUaDriver
 
     /// <inheritdoc/>
     [EntrySerialize]
-    public Task RebrowseNodesAsync(CancellationToken cancellationToken = default)
+    public Task RebrowseNodesAsync(CancellationToken cancellationToken)
     {
-        lock (_stateLock)
-        {
-            State.RebrowseNodesAsync().GetAwaiter().GetResult();
-        }
-        return Task.CompletedTask;
+        return State.Semaphore.ExecuteAsync(async () => await RebrowseNodesAsync(cancellationToken), cancellationToken);
     }
 
     /// <summary>
@@ -1083,15 +887,14 @@ public class OpcUaDriver : Driver, IOpcUaDriver
     [EntrySerialize]
     internal void SubscribeNode(string identifier)
     {
-        var node = State.GetNode(identifier);
-        AddSubscriptionAsync(node);
+        AddSubscriptionAsync(identifier);
     }
 
     #endregion
 
-    internal void ReadDeviceSet()
+    internal async Task ReadDeviceSetAsync(CancellationToken cancellationToken)
     {
-
+        // TODO: Read nodes here
         var node = _nodesFlat.Select(x => x.Value).FirstOrDefault(x => x.DisplayName != null && x.DisplayName.Equals("DeviceSet"));
         if (node == null)
         {
@@ -1099,17 +902,16 @@ public class OpcUaDriver : Driver, IOpcUaDriver
         }
 
         DeviceSet = [];
-        foreach (var subNode in node.Nodes)
+        var tasks = node.Nodes.Select(async subNode =>
         {
-
             if (subNode.DisplayName.Equals("DeviceFeatures"))
             {
-                continue;
+                return;
             }
 
             if (subNode.NodeClass != NodeClass.Object)
             {
-                continue;
+                return;
             }
 
             var deviceType = new DeviceType()
@@ -1117,16 +919,16 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                 Name = subNode.DisplayName
             };
             var properties = deviceType.GetType().GetProperties();
-            foreach (var subSubNode in subNode.Nodes)
+            var subTasks = subNode.Nodes.Select(async subSubNode =>
             {
                 var propertyName = subSubNode.DisplayName;
                 var property = properties.FirstOrDefault(x => x.Name.Equals(propertyName));
                 if (property == null)
                 {
-                    continue;
+                    return;
                 }
 
-                var value = ReadNode(subSubNode.NodeId.ToString()).ToString();
+                var value = ((await ReadNodeAsync(subSubNode.NodeId.ToString(), cancellationToken)) ?? 0).ToString();
                 if (property.PropertyType == typeof(int))
                 {
                     property.SetValue(deviceType, int.Parse(value, CultureInfo.InvariantCulture));
@@ -1135,12 +937,26 @@ public class OpcUaDriver : Driver, IOpcUaDriver
                 {
                     property.SetValue(deviceType, value);
                 }
-            }
+            });
+
+            await Task.WhenAll(subTasks);
 
             DeviceSet.Add(deviceType);
-        }
+        });
+
+        await Task.WhenAll(tasks);
+    }
+
+    internal void PublishRunningState()
+    {
+        ChangedToRunningState?.Invoke(this, new EventArgs());
     }
 
     /// <inheritdoc/>
     public event EventHandler<object> Received;
+
+    /// <summary>
+    /// Invoked if the driver changes it's state to `Running`
+    /// </summary>
+    public event EventHandler ChangedToRunningState;
 }

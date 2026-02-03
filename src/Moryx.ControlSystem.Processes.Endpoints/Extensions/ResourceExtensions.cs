@@ -9,6 +9,10 @@ internal static class ResourceExtensions
     public static Category ParentCategory(this Resource resource)
     {
         var parentType = resource.Parent?.GetType();
+        if (parentType == null)
+        {
+            return Category.ParentResource;
+        }
         var parentCategory = parentType.IsAssignableTo(typeof(IProcessHolderGroup)) ?
                 Category.ProcessHolderGroup : Category.ParentResource;
         return parentCategory;

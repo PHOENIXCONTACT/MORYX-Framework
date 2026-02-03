@@ -16,6 +16,7 @@ internal static class ProcessHolderPositionsExtensions
         var result = new Dictionary<Resource, IEnumerable<IProcessHolderPosition>>();
         foreach (var position in positions)
         {
+
             if (position is Resource resource && !(resource.ParentCategory() == Category.ProcessHolderGroup))
             {
                 if (result.TryGetValue(resource, out var list))

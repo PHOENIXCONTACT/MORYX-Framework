@@ -3,6 +3,7 @@
 
 using Moryx.AbstractionLayer.Drivers.InOut;
 using Moryx.AbstractionLayer.Drivers.Message;
+using Moryx.Drivers.OpcUa.Nodes;
 
 namespace Moryx.Drivers.OpcUa;
 
@@ -16,9 +17,9 @@ public interface IOpcUaDriver : IMessageDriver, IInOutDriver
     /// <summary>
     /// Subscribes to a variable node. Nothing happens, if the node is not a variable
     /// </summary>
-    /// <param name="node">OpcUaNode to be subscribed</param>
+    /// <param name="nodeId">NodeId to subscribe to</param>
     /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
-    Task AddSubscriptionAsync(OpcUaNode node, CancellationToken cancellationToken = default);
+    Task AddSubscriptionAsync(string nodeId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Read the value of a Node
@@ -31,8 +32,10 @@ public interface IOpcUaDriver : IMessageDriver, IInOutDriver
 
     /// <summary>
     /// Rebrowse Nodes
+    /// This feature will be removed in a future version without any replacement.
     /// </summary>
     /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is None.</param>
+    [Obsolete("Browsing nodes won't be a feature anymore")]
     Task RebrowseNodesAsync(CancellationToken cancellationToken = default);
 
     /// <summary>

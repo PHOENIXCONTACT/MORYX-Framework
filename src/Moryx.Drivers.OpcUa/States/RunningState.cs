@@ -2,16 +2,16 @@
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.AbstractionLayer.Drivers;
+using Moryx.Drivers.OpcUa.Nodes;
 
 namespace Moryx.Drivers.OpcUa.States;
 
 internal class RunningState(OpcUaDriver context, StateMachines.StateBase.StateMap stateMap) : DriverOpcUaState(context, stateMap, StateClassification.Running)
 {
-    internal override async Task RebrowseNodesAsync()
+    public override async Task OnEnterAsync(CancellationToken cancellationToken)
     {
-        Context.RemoveSubscription();
-        NextState(StateBrowsingNodes);
-        await Context.BrowseNodesAsync();
+        Context.PublishRunningState();
+        await base.OnEnterAsync(cancellationToken);
     }
 
     internal override OpcUaNode GetNode(string identifier)
@@ -24,8 +24,9 @@ internal class RunningState(OpcUaDriver context, StateMachines.StateBase.StateMa
         return Context.OnReadValueOfNode(identifier, cancellationToken);
     }
 
-    internal override void AddSubscription(OpcUaNode node)
+    internal override void AddSubscription(string nodeId)
     {
+        var node = GetNode(nodeId);
         Context.AddSubscriptionToSession(node);
     }
 

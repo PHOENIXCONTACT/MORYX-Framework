@@ -29,6 +29,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
             Identifier = node.NodeId.ToString(),
             Payload = 5
         };
+        AwaitRunningState(_driver, 2);
 
         //Act
         _driver.Send(msg);
@@ -44,6 +45,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
         //Arrange
         var node = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable).Value;
         var value = 5;
+        AwaitRunningState(_driver, 2);
 
         //Act
         _driver.Output[node.NodeId.ToString()] = value;
@@ -59,6 +61,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
         var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
         var resultValue = 8;
         SetupRead(resultValue);
+        AwaitRunningState(_driver, 2);
 
         //Act
         var value = _driver.ReadNodeAsync(node.NodeId.ToString());
@@ -90,6 +93,7 @@ public class HandlingWriteAndRead : OpcUaTestBase
         var (nodeId, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
         var resultValue = 8;
         SetupRead(resultValue);
+        AwaitRunningState(_driver, 2);
 
         //Act
         var value = _driver.Output[node.NodeId.ToString()];
@@ -107,19 +111,5 @@ public class HandlingWriteAndRead : OpcUaTestBase
             Assert.That(nodeId.NamespaceIndex, Is.EqualTo(nodeId.NamespaceIndex));
         }).ReturnsAsync(new DataValue() { Value = resultValue, StatusCode = 0 });
 
-    }
-
-    [Test]
-    public void TestFindNode()
-    {
-        //Arrange
-        var (_, node) = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
-        var nodeId = OpcUaNode.CreateExpandedNodeId(node.NodeId.ToString());
-
-        //Act
-        var result = _driver.FindNodeId(node.DisplayName.ToString());
-
-        //Assert
-        Assert.That(result.Any(x => x.Equals(nodeId)), Is.True);
     }
 }

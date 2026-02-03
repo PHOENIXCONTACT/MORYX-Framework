@@ -3,11 +3,10 @@
 
 using Moq;
 using Moryx.AbstractionLayer.Drivers;
-using Moryx.Drivers.OpcUa.States;
+using Moryx.Drivers.OpcUa.Nodes;
 using Moryx.Modules;
 using NUnit.Framework;
 using Opc.Ua;
-using Opc.Ua.Client;
 
 namespace Moryx.Drivers.OpcUa.Tests;
 
@@ -23,67 +22,8 @@ public class NodeHandlingTests : OpcUaTestBase
         _driver._session = _sessionMock.Object;
     }
 
-    [Test(Description = "Number of nodes browsed fits")]
-    public async Task TestBrowsingNodes()
-    {
-        //Arrange
-        var wait = new AutoResetEvent(false);
-        _driver.StateChanged += (sender, e) =>
-        {
-            if (e.Classification == StateClassification.Running)
-            {
-                //Assert II
-                Assert.That(_driver.Nodes, Has.Count.EqualTo(_rootNodes.Count), "Number of browsed nodes doesn't fit");
-                wait.Set();
-            }
-        };
-
-        //Act
-        await ((IAsyncPlugin)_driver).StartAsync();
-
-        //Assert I
-        _sessionMock.Verify(s => s.AddSubscription(It.IsAny<Subscription>()), "Subscription was not added to the session");
-        _sessionMock.Verify(s => s.CreateSubscriptionAsync(null,
-            _driver.PublishingInterval,
-            It.IsAny<uint>(),
-            It.IsAny<uint>(),
-            It.IsAny<uint>(),
-            It.IsAny<bool>(),
-            It.IsAny<byte>(),
-            It.IsAny<CancellationToken>()
-            ), "Subscription was created with the wrong parameters or not created at all");
-
-        Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), "Driver was not running");
-    }
-
-    [Test(Description = "Properties of the nodes are updated after browsing")]
-    public async Task TestUpdatingNodeAfterBrowsing()
-    {
-        //Arrange
-        var expectedNode = _rootNodes.First();
-        var channel = _driver.Channel(OpcUaNode.CreateExpandedNodeId(expectedNode.Value.NodeId.ToString()));
-        var node = channel as OpcUaNode;
-        var wait = new AutoResetEvent(false);
-        _driver.StateChanged += (sender, e) =>
-        {
-            if (e.Classification == StateClassification.Running)
-            {
-                //Assert II
-                Assert.That(node?.DisplayName, Is.EqualTo(expectedNode.Value.DisplayName.Text));
-                Assert.That(node?.BrowseName.ToString(), Is.EqualTo(expectedNode.Value.BrowseName.ToString()));
-                wait.Set();
-            }
-        };
-        //Act
-        await ((IAsyncPlugin)_driver).StartAsync();
-
-        //Assert I
-        Assert.That(node, Is.Not.Null);
-        Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), "Driver was not running");
-    }
-
     [Test(Description = "Channels without namespace uri won't be created before the driver is running")]
-    public void TestReturnChannelBeforeDriverIsRunning()
+    public async Task TestReturnChannelBeforeDriverIsRunning()
     {
         //Arrange
         var expectedNode = _rootNodes.First();
@@ -95,12 +35,11 @@ public class NodeHandlingTests : OpcUaTestBase
         Assert.That(channel, Is.Null);
     }
 
-    [Test(Description = "Subscribe monitored items after browsing")]
-    public async Task TestSubscribingMonitoredItemsAfterBrowsing()
+    [Test(Description = "Nodes can only be subscribed once")]
+    public async Task TestNodesCanOnlyBeSubscribedOnce()
     {
-        //Arrange
         var expectedNode = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
-        var channel = _driver.Channel(expectedNode.Value.NodeId.ToString());
+        var nodeId = expectedNode.Value.NodeId.ToString();
         var wait = new AutoResetEvent(false);
         _driver.StateChanged += (sender, e) =>
         {
@@ -111,47 +50,27 @@ public class NodeHandlingTests : OpcUaTestBase
         };
 
         //Act
-        channel.Received += DoSomething;
         await ((IAsyncPlugin)_driver).StartAsync();
+        var wasRunning = wait.WaitOne(TimeSpan.FromSeconds(2));
+        _driver.SubscribeNode(nodeId);
+        _driver.SubscribeNode(nodeId);
 
         //Assert I
-        MonitoredItemCreateResultCollection results2;
-        DiagnosticInfoCollection diagnosticInfos2;
-        _sessionMock.Verify(s => s.CreateMonitoredItemsAsync(null, It.IsAny<uint>(), It.IsAny<TimestampsToReturn>(), It.IsAny<MonitoredItemCreateRequestCollection>()
-            , It.IsAny<CancellationToken>()));
-        Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), "Driver was not running");
-    }
-
-    private void DoSomething(object? sender, object e)
-    {
-        //
-    }
-
-    [Test(Description = "Nodes can only be subscribed ones")]
-    public async Task TestNodesCanOnlyBeSubscribedOnes()
-    {
-        var expectedNode = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
-        var channel = _driver.Channel(expectedNode.Value.NodeId.ToString());
-        var wait = new AutoResetEvent(false);
-        _driver.StateChanged += (sender, e) =>
-        {
-            if (e.Classification == StateClassification.Running)
-            {
-                wait.Set();
-            }
-        };
-
-        //Act
-        channel.Received += DoSomething;
-        await ((IAsyncPlugin)_driver).StartAsync();
-        _driver.SubscribeNode(channel.Identifier);
-
-        //Assert I
-        MonitoredItemCreateResultCollection results2;
-        DiagnosticInfoCollection diagnosticInfos2;
         _sessionMock.Verify(s => s.CreateMonitoredItemsAsync(null, It.IsAny<uint>(), It.IsAny<TimestampsToReturn>(), It.IsAny<MonitoredItemCreateRequestCollection>()
             , It.IsAny<CancellationToken>()), Times.Once, "Subscription was done never or several times instead of once");
-        Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), "Driver was not running");
+        Assert.That(wasRunning, "Driver was not running");
+    }
+
+    [Test(Description = "Nodes can only be subscribed once")]
+    [Ignore("This conflicts with `TestReturnChannelBeforeDriverIsRunning`. Decision on expected behaviour to be made.")]
+    public async Task CannotReadNodesInDisconnectedState()
+    {
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            // Act
+            var expectedNode = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
+            var channel = _driver.Channel(expectedNode.Value.NodeId.ToString());
+        });
     }
 
     [Test(Description = "Test received events from the driver and the channel, when subscription changed")]
@@ -159,8 +78,11 @@ public class NodeHandlingTests : OpcUaTestBase
     {
         // Arrange
         var expectedNode = _rootNodes.FirstOrDefault(n => n.Value.NodeClass == NodeClass.Variable);
-        var node = (OpcUaNode)_driver.Channel(expectedNode.Value.NodeId.ToString());
         var wait = new AutoResetEvent(false);
+        await ((IAsyncPlugin)_driver).StartAsync();
+        var wasRunning = wait.WaitOne(TimeSpan.FromSeconds(2));
+        var node = (OpcUaNode)_driver.Channel(expectedNode.Value.NodeId.ToString());
+
         var waitSubscription1 = new AutoResetEvent(false);
         var waitSubscription2 = new AutoResetEvent(false);
         var waitSubscription3 = new AutoResetEvent(false);
@@ -193,14 +115,12 @@ public class NodeHandlingTests : OpcUaTestBase
             Assert.That(e.Key, Is.EqualTo(node.NodeId.ToString()));
         };
 
-        await ((IAsyncPlugin)_driver).StartAsync();
         _driver.SubscribeNode(node.Identifier);
 
         // Act
         _driver.OnSubscriptionChanged(node.NodeId, Value);
 
         //Assert I
-        Assert.That(wait.WaitOne(TimeSpan.FromSeconds(2)), "Driver was not running");
         Assert.That(waitSubscription1.WaitOne(TimeSpan.FromSeconds(2)), "Channel doesn't raise received Event");
         Assert.That(waitSubscription2.WaitOne(TimeSpan.FromSeconds(2)), "Driver doesn't raise received Event");
     }
@@ -216,10 +136,19 @@ public class NodeHandlingTests : OpcUaTestBase
     public async Task TestUseNodeIdAliases()
     {
         //Arrange
-        const string alias = "whatever";
+        var wait = new AutoResetEvent(false);
+        const string alias = "nodeAlias";
         var nodeId = NodeId.ToExpandedNodeId(_rootNodes.First().Key, _namespaceTable);
         _driver._nodeIdAliasDictionary.Add(alias, nodeId.ToString());
+        _driver.StateChanged += (sender, e) =>
+        {
+            if (e.Classification == StateClassification.Running)
+            {
+                wait.Set();
+            }
+        };
         await ((IAsyncPlugin)_driver).StartAsync();
+        wait.WaitOne(TimeSpan.FromSeconds(2));
 
         //Act
         var channel = _driver.Channel(alias);
