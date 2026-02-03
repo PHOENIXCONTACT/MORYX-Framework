@@ -67,20 +67,20 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
             if (!evaluation.Required)
             {
-                Logger.LogTrace("Evaluation not required for trigger '{triggerName}' ({trigger})", trigger.GetType().Name, trigger.ToString());
+                Logger.LogTrace("Evaluation not required for trigger '{triggerName}' ", trigger.GetType().Name);
                 continue;
             }
 
             if (evaluation is SetupEvaluation.Change change)
             {
-                if (ShouldSkipForExecution(execution, targetSystem, change, Logger, trigger.GetType().Name))
+                if (ShouldSkipForExecution(execution, targetSystem, change, trigger.GetType().Name))
                     continue;
             }
 
             triggers.Add(trigger);
             Logger.LogTrace(
-                "Accepted trigger '{triggerName}' ({trigger}) (evaluationType={evaluationType}, execution={execution})",
-                trigger.GetType().Name, trigger.ToString(), evaluation.GetType().Name, execution);
+                "Accepted trigger '{triggerName}' (evaluationType={evaluationType}, execution={execution})",
+                trigger.GetType().Name, evaluation.GetType().Name, execution);
         }
 
         Logger.LogDebug(
@@ -235,7 +235,7 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
         }
     }
 
-    private static bool ShouldSkipForExecution(SetupExecution execution, ISetupTarget targetSystem, SetupEvaluation.Change change, ILogger logger, string triggerName)
+    private bool ShouldSkipForExecution(SetupExecution execution, ISetupTarget targetSystem, SetupEvaluation.Change change, string triggerName)
     {
         switch (execution)
         {
@@ -246,7 +246,7 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
                 if (hasTargetCaps)
                 {
-                    Log.TargetCellsAlreadyProvidesRequiredCapabilities(logger, triggerName, change.TargetCapabilities.ToString(),
+                    Log.TargetCellsAlreadyProvidesRequiredCapabilities(Logger, triggerName, change.TargetCapabilities.ToString(),
                         string.Join(", ", targetCells.Select(cell => cell.Name)));
                     return true;
                 }
@@ -260,7 +260,7 @@ internal partial class SetupManager : ISetupManager, ILoggingComponent
 
                 if (!hasCurrentCaps)
                 {
-                    Log.CurrentCapabilitiesAlreadyRemoved(logger, triggerName, change.CurrentCapabilities.ToString(),
+                    Log.CurrentCapabilitiesAlreadyRemoved(Logger, triggerName, change.CurrentCapabilities.ToString(),
                         string.Join(", ", currentCells.Select(cell => cell.Name))
                     );
                     return true;
