@@ -106,17 +106,20 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
     /// <summary>
     /// Flag if operation have reached the amount.
     /// </summary>
-    internal bool AmountReached => CountStrategy.AmountReached(Operation);
+    internal bool AmountReached =>
+        ExecuteCountStrategy(() => CountStrategy.AmountReached(Operation), nameof(CountStrategy.AmountReached), fallback: true);
 
     /// <summary>
     /// Flag if the operation can reach the amount with the current jobs
     /// </summary>
-    internal bool CanReachAmount => CountStrategy.CanReachAmount(Operation);
+    internal bool CanReachAmount =>
+        ExecuteCountStrategy(() => CountStrategy.CanReachAmount(Operation), nameof(CountStrategy.CanReachAmount), fallback: true);
 
     /// <summary>
     /// Sum of SuccessCount and RunningCount of jobs. All running will be classified as "success"
     /// </summary>
-    internal int ReachableAmount => CountStrategy.ReachableAmount(Operation);
+    internal int ReachableAmount =>
+        ExecuteCountStrategy(() => CountStrategy.ReachableAmount(Operation), nameof(CountStrategy.ReachableAmount), fallback: 0);
 
     /// <inheritdoc />
     public async Task<IOperationData> Initialize(OperationCreationContext context, IOrderData orderData, IOperationSource source)
@@ -689,9 +692,26 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
         return _dispatchHandler.TryDispatch();
     }
 
+    private T ExecuteCountStrategy<T>(Func<T> func, string actionName, T fallback)
+    {
+        try
+        {
+            return func();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex,
+                "CountStrategy '{strategy}' threw an exception in {action} for Operation {opId}.",
+                CountStrategy.GetType().Name, actionName, Operation.Identifier);
+
+            return fallback;
+        }
+    }
+
     private void UpdateProgress()
     {
-        var relevantJobs = CountStrategy.RelevantJobs(Operation).ToArray();
+        var relevantJobs = ExecuteCountStrategy(() => CountStrategy.RelevantJobs(Operation).ToArray(), nameof(CountStrategy.RelevantJobs), Array.Empty<Job>());
+
         var progress = Operation.Progress;
 
         // Progress on relevant jobs
@@ -799,7 +819,9 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
                 _isDispatching = true;
             }
 
-            var missingAmounts = _countStrategy.MissingAmounts(_operationData.Operation);
+            var missingAmounts = _operationData.ExecuteCountStrategy(() => _countStrategy.MissingAmounts(_operationData.Operation),
+                nameof(_countStrategy.MissingAmounts),Array.Empty<DispatchContext>());
+
             if (missingAmounts.Count == 0)
             {
                 _operationData.Log(LogLevel.Error, "There is nothing to dispatch. Check the {0}.", _countStrategy.GetType().Name);
