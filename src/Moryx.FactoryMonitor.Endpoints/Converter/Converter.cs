@@ -58,9 +58,9 @@ internal class Converter
         return current == null
             ? null
             : new ActivityChangedModel
-        {
-            ResourceId = current.Id,
-        };
+            {
+                ResourceId = current.Id,
+            };
     }
 
     public static CellStateChangedModel ToCellStateChangedModel(Resource current)
@@ -68,9 +68,9 @@ internal class Converter
         return current == null
             ? null
             : new CellStateChangedModel
-        {
-            Id = current.Id,
-        };
+            {
+                Id = current.Id,
+            };
     }
 
     /// <summary>
@@ -120,24 +120,15 @@ internal class Converter
                 return null;
             }
 
-            var property = new CellPropertySettings
-            {
-                IsDisplayed = false,
-                CurrentValue = cellEntry.Value.Current,
-                IconName = entryVisualizer?.Icon,
-                ValueUnit = entryVisualizer?.Unit,
-            };
+            var property = CreateCellPropertySettings(cellEntry, entryVisualizer);
 
-            if (cellProperties.ContainsKey(cellEntry.DisplayName))
-            {
-                Logger?.LogWarning($"Duplicate DisplayName '{cellEntry.DisplayName}' in resource '{baseType.Name}'. Overwriting previous value.");
+            var key = cellEntry.Identifier;
 
-                cellProperties[cellEntry.DisplayName] = property;
-            }
-            else
+            if (cellProperties.ContainsKey(key))
             {
-                cellProperties[cellEntry.DisplayName] = property;
+                Logger?.LogWarning($"Duplicate DisplayName '{key}' in resource '{baseType.Name}'. Overwriting previous value.");
             }
+            cellProperties[key] = property;
         }
         return cellProperties;
     }
@@ -172,6 +163,17 @@ internal class Converter
         };
     }
 
+    private static CellPropertySettings CreateCellPropertySettings(Entry entry, EntryVisualizationAttribute entryVisualizer)
+    {
+        return new CellPropertySettings
+        {
+            IsDisplayed = false,
+            CurrentValue = entry.Value.Current,
+            IconName = entryVisualizer?.Icon,
+            ValueUnit = entryVisualizer?.Unit,
+            DisplayName = entry.DisplayName
+        };
+    }
     private static InternalOperationClassification GetCorrectOperationState(Operation operation)
     {
         if (operation.Progress.SuccessCount + operation.Progress.FailureCount >= operation.TargetAmount)
