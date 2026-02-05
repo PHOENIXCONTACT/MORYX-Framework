@@ -1,10 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.ControlSystem.Cells;
 using Moryx.Factory;
 using Moryx.FactoryMonitor.Endpoints.Models;
+using Moryx.Logging;
 using Moryx.Orders;
 using Moryx.Serialization;
 using Moryx.Tools;
@@ -16,6 +18,7 @@ namespace Moryx.FactoryMonitor.Endpoints.Converter;
 /// </summary>
 internal class Converter
 {
+    public IModuleLogger Logger { get; set; }
 
     /// <summary>
     /// Constructor
@@ -80,7 +83,16 @@ internal class Converter
                 if (results == null) continue;
                 foreach (var item in results)
                 {
-                    cellProperties.Add(item.Key, item.Value);
+                    if (cellProperties.ContainsKey(item.Key))
+                    {
+                        Logger.LogWarning($"Duplicate DisplayName '{item.Key}' in resource '{baseType.Name}'. Overwriting previous value. Ensure unique DisplayNames.");
+
+                        cellProperties[item.Key] = item.Value;
+                    }
+                    else
+                    {
+                        cellProperties[item.Key] = item.Value;
+                    }
                 }
             }
         }
@@ -96,7 +108,17 @@ internal class Converter
                 IconName = entryVisualizer?.Icon,
                 ValueUnit = entryVisualizer?.Unit,
             };
-            cellProperties.Add(cellEntry.DisplayName, property);
+
+            if (cellProperties.ContainsKey(cellEntry.DisplayName))
+            {
+                Logger.LogWarning($"Duplicate DisplayName '{cellEntry.DisplayName}' in resource '{baseType.Name}'. Overwriting previous value.");
+
+                cellProperties[cellEntry.DisplayName] = property;
+            }
+            else
+            {
+                cellProperties[cellEntry.DisplayName] = property;
+            }
         }
         return cellProperties;
     }
