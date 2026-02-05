@@ -18,15 +18,19 @@ namespace Moryx.FactoryMonitor.Endpoints.Converter;
 /// </summary>
 internal class Converter
 {
+    /// <summary>
+    /// Logger for this resource
+    /// </summary>
     public IModuleLogger Logger { get; set; }
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="serialization"></param>
-    public Converter(ICustomSerialization serialization)
+    public Converter(ICustomSerialization serialization, IModuleLogger logger)
     {
         Serialization = serialization;
+        Logger = logger;
     }
 
     protected ICustomSerialization Serialization { get; }
