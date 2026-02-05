@@ -27,7 +27,8 @@ internal class Converter
     /// Constructor
     /// </summary>
     /// <param name="serialization"></param>
-    public Converter(ICustomSerialization serialization, IModuleLogger logger)
+
+    public Converter(ICustomSerialization serialization, IModuleLogger logger = null)
     {
         Serialization = serialization;
         Logger = logger;
@@ -99,7 +100,7 @@ internal class Converter
                 {
                     if (cellProperties.ContainsKey(item.Key))
                     {
-                        Logger.LogWarning($"Duplicate DisplayName '{item.Key}' in resource '{baseType.Name}'. Overwriting previous value. Ensure unique DisplayNames.");
+                        Logger?.LogWarning($"Duplicate DisplayName '{item.Key}' in resource '{baseType.Name}'. Overwriting previous value. Ensure unique DisplayNames.");
 
                         cellProperties[item.Key] = item.Value;
                     }
@@ -129,7 +130,7 @@ internal class Converter
 
             if (cellProperties.ContainsKey(cellEntry.DisplayName))
             {
-                Logger.LogWarning($"Duplicate DisplayName '{cellEntry.DisplayName}' in resource '{baseType.Name}'. Overwriting previous value.");
+                Logger?.LogWarning($"Duplicate DisplayName '{cellEntry.DisplayName}' in resource '{baseType.Name}'. Overwriting previous value.");
 
                 cellProperties[cellEntry.DisplayName] = property;
             }
