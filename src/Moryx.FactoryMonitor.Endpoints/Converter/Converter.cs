@@ -33,7 +33,10 @@ internal class Converter
 
     public ResourceChangedModel ToResourceChangedModel(Resource current)
     {
-        if (current == null) return null;
+        if (current == null)
+        {
+            return null;
+        }
 
         var cellEntry = EntryConvert.EncodeObject(current.Descriptor, Serialization);
 
@@ -47,9 +50,9 @@ internal class Converter
 
     public static ActivityChangedModel ToActivityChangedModel(ICell current)
     {
-        if (current == null) return null;
-
-        return new ActivityChangedModel
+        return current == null
+            ? null
+            : new ActivityChangedModel
         {
             ResourceId = current.Id,
         };
@@ -57,9 +60,9 @@ internal class Converter
 
     public static CellStateChangedModel ToCellStateChangedModel(Resource current)
     {
-        if (current == null) return null;
-
-        return new CellStateChangedModel
+        return current == null
+            ? null
+            : new CellStateChangedModel
         {
             Id = current.Id,
         };
@@ -72,7 +75,10 @@ internal class Converter
     /// <param name="baseType">Type of the resource</param>
     internal Dictionary<string, CellPropertySettings> ToCellPropertySettings(Entry cellEntry, Type baseType)
     {
-        if (cellEntry == null) return null;
+        if (cellEntry == null)
+        {
+            return null;
+        }
 
         var cellProperties = new Dictionary<string, CellPropertySettings>();
         if (cellEntry.GetType().IsArray || cellEntry.SubEntries.Count > 0)
@@ -80,7 +86,11 @@ internal class Converter
             foreach (var subEntry in cellEntry.SubEntries)
             {
                 var results = ToCellPropertySettings(subEntry, baseType);
-                if (results == null) continue;
+                if (results == null)
+                {
+                    continue;
+                }
+
                 foreach (var item in results)
                 {
                     if (cellProperties.ContainsKey(item.Key))
@@ -100,7 +110,11 @@ internal class Converter
         {
             var entryVisualizer = Serialization.GetProperties(baseType)
                 .FirstOrDefault(x => x.Name == cellEntry.Identifier)?.GetCustomAttribute<EntryVisualizationAttribute>();
-            if (entryVisualizer == null) return null;
+            if (entryVisualizer == null)
+            {
+                return null;
+            }
+
             var property = new CellPropertySettings
             {
                 IsDisplayed = false,
