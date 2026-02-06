@@ -64,10 +64,11 @@ To build the angular app automatically when you build your C# project, you need 
   <PropertyGroup>
     <!-- Helpful if visual studio complains about anything -->
     <DefaultItemExcludes>app\**</DefaultItemExcludes>
+  </PropertyGroup>
+  <ItemGroup>
     <Content Update="@(Content)" Pack="false" />
     <Content Update="wwwroot\**" Pack="true" PackagePath="staticwebassets" />
-  </PropertyGroup>
-
+  </ItemGroup>
   <!-- Automatically build the angular app, if it wasn't build before or you are running a release build -->
   <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\main.js')) And ('$(NoBuild)' != 'true') ">
     <Exec WorkingDirectory="./app/" Command="npm ci" />
@@ -144,13 +145,13 @@ To use it in your components, you first need to provide the ApiModule to the ang
 Therefore, add the following two providers in your *app.config.ts* file
 
 ```ts
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ApiModule } from './api/api.module';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    importProvidersFrom(HttpClientModule),
+    provideHttpClient(withInterceptorsFromDi()),
     importProvidersFrom(ApiModule.forRoot({rootUrl: environment.rootUrl }))
   ]
 };
