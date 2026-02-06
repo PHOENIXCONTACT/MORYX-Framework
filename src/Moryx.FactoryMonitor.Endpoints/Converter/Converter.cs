@@ -96,40 +96,25 @@ internal class Converter
                     continue;
                 }
 
-                foreach (var item in results)
+                foreach (var kv in results)
                 {
-                    if (cellProperties.ContainsKey(item.Key))
-                    {
-                        Logger?.LogWarning($"Duplicate DisplayName '{item.Key}' in resource '{baseType.Name}'. Overwriting previous value. Ensure unique DisplayNames.");
-
-                        cellProperties[item.Key] = item.Value;
-                    }
-                    else
-                    {
-                        cellProperties[item.Key] = item.Value;
-                    }
+                    AddOrReplaceCellProperty(cellProperties, kv.Key, kv.Value, baseType);
                 }
             }
+            return cellProperties;
         }
-        else
+        var entryVisualizer = Serialization.GetProperties(baseType)
+            .FirstOrDefault(x => x.Name == cellEntry.Identifier)?.GetCustomAttribute<EntryVisualizationAttribute>();
+        if (entryVisualizer == null)
         {
-            var entryVisualizer = Serialization.GetProperties(baseType)
-                .FirstOrDefault(x => x.Name == cellEntry.Identifier)?.GetCustomAttribute<EntryVisualizationAttribute>();
-            if (entryVisualizer == null)
-            {
-                return null;
-            }
-
-            var property = CreateCellPropertySettings(cellEntry, entryVisualizer);
-
-            var key = cellEntry.Identifier;
-
-            if (cellProperties.ContainsKey(key))
-            {
-                Logger?.LogWarning($"Duplicate DisplayName '{key}' in resource '{baseType.Name}'. Overwriting previous value.");
-            }
-            cellProperties[key] = property;
+            return null;
         }
+
+        var property = CreateCellPropertySettings(cellEntry, entryVisualizer);
+
+        var key = cellEntry.Identifier;
+
+        AddOrReplaceCellProperty(cellProperties, key, property, baseType);
         return cellProperties;
     }
 
@@ -162,7 +147,14 @@ internal class Converter
             Operation = orderModel?.Operation,
         };
     }
-
+    private void AddOrReplaceCellProperty(Dictionary<string, CellPropertySettings> dictionary, string key, CellPropertySettings value, Type baseType)
+    {
+        if (dictionary.ContainsKey(key))
+        {
+            Logger?.LogWarning($"Duplicate key '{key}' in resource '{baseType.Name}'. Overwriting previous value.");
+        }
+        dictionary[key] = value;
+    }
     private static CellPropertySettings CreateCellPropertySettings(Entry entry, EntryVisualizationAttribute entryVisualizer)
     {
         return new CellPropertySettings
