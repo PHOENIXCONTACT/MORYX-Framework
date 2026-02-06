@@ -68,7 +68,8 @@ public abstract class StateBase
     /// </summary>
     private Exception CreateAndLogInvalidStateException(string methodName)
     {
-        var error = $"The state with the name '{GetType().Name}' cannot handle the method '{methodName}'.";
+        var error = $"The state with the name '{GetType().Name}' cannot handle the method '{methodName}'. " +
+                    $"Responsible context: '{Context.GetType().Name}'.";
 
         // ReSharper disable once SuspiciousTypeConversion.Global
         (Context as ILoggingComponent)?.Logger.Log(LogLevel.Error, error);
