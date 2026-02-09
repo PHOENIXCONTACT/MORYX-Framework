@@ -67,7 +67,7 @@ public abstract class ModelConfiguratorBase<TConfig> : IModelConfigurator
             return TestConnectionResult.ConfigurationError;
 
         // Simple ef independent database connection
-        var connectionResult = await TestDatabaseConnection(config, cancellationToken);
+        var connectionResult = await TestServerConnection(config, cancellationToken);
         if (!connectionResult)
             return TestConnectionResult.ConnectionError;
 
@@ -241,9 +241,9 @@ public abstract class ModelConfiguratorBase<TConfig> : IModelConfigurator
     public abstract Task DeleteDatabaseAsync(DatabaseConfig config, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Generally tests the connection to the database
+    /// Generally tests the connection to the database-server. It does not check for the existence of the database itself.
     /// </summary>
-    private async Task<bool> TestDatabaseConnection(DatabaseConfig config, CancellationToken cancellationToken)
+    private async Task<bool> TestServerConnection(DatabaseConfig config, CancellationToken cancellationToken)
     {
         if (!CheckDatabaseConfig(config))
             return false;

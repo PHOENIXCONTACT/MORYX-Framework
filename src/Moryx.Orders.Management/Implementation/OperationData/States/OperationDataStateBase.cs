@@ -55,8 +55,6 @@ internal abstract class OperationDataStateBase : AsyncStateBase<OperationData>, 
 
     public virtual Task DecreaseTargetBy(int amount, User user) => InvalidStateAsync();
 
-    public virtual void Dispatched() => InvalidState();
-
     public virtual ReportContext GetReportContext()
     {
         InvalidState();
@@ -77,10 +75,6 @@ internal abstract class OperationDataStateBase : AsyncStateBase<OperationData>, 
 
     public virtual Task JobsUpdated(JobStateChangedEventArgs args) => InvalidStateAsync();
 
-    public virtual void UpdateRecipe(IRecipe recipe) => InvalidState();
-
-    public virtual void UpdateRecipes(IReadOnlyList<IProductRecipe> recipes) => InvalidState();
-
     public virtual Task ProgressChanged(Job job)
     {
         return Task.CompletedTask;
@@ -89,6 +83,8 @@ internal abstract class OperationDataStateBase : AsyncStateBase<OperationData>, 
     public OperationStateClassification GetFullClassification()
     {
         var classification = this.Classification;
+
+        // TODO: This overrides the base classification, rework classification in next major. GitHub issue: #1066.
         if (IsFailed)
             classification = OperationStateClassification.Failed;
         if (IsAssigning)
@@ -157,5 +153,4 @@ internal abstract class OperationDataStateBase : AsyncStateBase<OperationData>, 
 
     [StateDefinition(typeof(AbortedState))]
     protected const int StateAborted = CompletedKey + 1;
-
 }

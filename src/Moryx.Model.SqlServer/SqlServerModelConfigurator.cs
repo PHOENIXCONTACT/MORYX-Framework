@@ -38,7 +38,8 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
     {
         var settings = (SqlServerDatabaseConfig)config;
 
-        // Create connection and prepare command
+        // Create connection and prepare command.
+        // Connect to default 'master' database you can't drop a database while connected to it
         await using var connection = new SqlConnection(BuildConnectionString(config, false));
 
         var sqlCommandText = $"ALTER DATABASE {settings.InitialCatalog} SET SINGLE_USER WITH ROLLBACK IMMEDIATE;" +
@@ -51,18 +52,6 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    private static SqlConnectionStringBuilder CreateConnectionStringBuilder(DatabaseConfig config, bool includeModel = true)
-    {
-        var builder = new SqlConnectionStringBuilder(config.ConnectionString);
-
-        if (!includeModel)
-        {
-            builder.InitialCatalog = string.Empty;
-        }
-
-        return builder;
-    }
-
     /// <inheritdoc />
     public override DbContextOptions BuildDbContextOptions(DatabaseConfig config)
     {
@@ -72,9 +61,21 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
         return builder.Options;
     }
 
+    /// <summary>
+    /// Builds a connection string for SqlServer database connections.
+    /// </summary>
+    /// <param name="config">The database configuration containing the connection string.</param>
+    /// <param name="includeModel">If true, uses the configured database; if false, connects to the default 'master' database.</param>
+    /// <returns>The connection string for SqlServer.</returns>
     private static string BuildConnectionString(DatabaseConfig config, bool includeModel)
     {
-        var builder = CreateConnectionStringBuilder(config, includeModel);
+        var builder = new SqlConnectionStringBuilder(config.ConnectionString);
+
+        if (!includeModel)
+        {
+            builder.InitialCatalog = "master";
+        }
+
         builder.PersistSecurityInfo = true;
 
         return builder.ToString();
@@ -86,8 +87,7 @@ public sealed class SqlServerModelConfigurator : ModelConfiguratorBase<SqlServer
         var migrationAssemblyType = FindMigrationAssemblyType(typeof(SqlServerDbContextAttribute));
 
         var builder = new DbContextOptionsBuilder();
-        builder.UseSqlServer(
-            BuildConnectionString(config, true),
+        builder.UseSqlServer(BuildConnectionString(config, true),
             x => x.MigrationsAssembly(migrationAssemblyType.Assembly.FullName));
 
         return CreateContext(migrationAssemblyType, builder.Options);
