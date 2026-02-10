@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
+    <Nullable>enable</Nullable>
     <PackageReadmeFile>services.md</PackageReadmeFile>
   </PropertyGroup>
 

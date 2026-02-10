@@ -1,8 +1,7 @@
-// Copyright (c) 2026, Phoenix Contact GmbH & Co. KG
-// Licensed under the Apache License, Version 2.0
-
 // Modifications Copyright (c) Atlas Lift Tech Inc. All rights reserved.
 // Source https://github.com/Atlas-LiftTech/MQTTnet.AspNetCore.AttributeRouting/blob/17684ada11692549253b4e924e5740cb4c012c72/Routing/MqttRouteTable.cs
+
+// Further modifications by Phoenix Contact GmbH & Co. KG. 2026
 using System.Runtime.CompilerServices;
 
 // this a Moq specific code 

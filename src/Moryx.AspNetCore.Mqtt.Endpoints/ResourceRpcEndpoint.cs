@@ -1,4 +1,4 @@
-// Copyright (c) 2026, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System.Reflection;
@@ -35,7 +35,7 @@ public class ResourceRpcEndpoint(ILogger<ResourceRpcEndpoint> logger, IResourceM
             }
             catch (Exception ex)
             {
-                logger.Log(LogLevel.Error, ex);
+                logger.Log(LogLevel.Error, ex, "Error invoking method '{MethodName}' on resource with identifier '{Identifier}'", methodName, identifier);
                 return GetExceptionMessage(messageBuilder, ex.Message);
             }
         });
