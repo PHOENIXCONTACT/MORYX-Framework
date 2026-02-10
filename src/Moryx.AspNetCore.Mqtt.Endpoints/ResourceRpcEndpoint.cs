@@ -35,7 +35,7 @@ public class ResourceRpcEndpoint(ILogger<ResourceRpcEndpoint> logger, IResourceM
             }
             catch (Exception ex)
             {
-                logger.Log(LogLevel.Error, ex.Message);
+                logger.Log(LogLevel.Error, ex);
                 return GetExceptionMessage(messageBuilder, ex.Message);
             }
         });

@@ -276,7 +276,7 @@ public class ResourceSynchronizationService : IMqttService
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError("Error while deserializing Mqtt Resource Synchronization Payload. Message:'{message}'", ex.Message);
+                    _logger.LogError("Error while deserializing Mqtt Resource Synchronization Payload.", ex);
                 }
             }
         }
