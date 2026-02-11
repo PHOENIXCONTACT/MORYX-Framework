@@ -13,6 +13,7 @@ using Moryx.ControlSystem.Simulation;
 using Moryx.Logging;
 using Moryx.Simulation.Simulator.Extensions;
 using Moryx.Threading;
+using Moryx.Tools;
 using System.Collections.Concurrent;
 
 namespace Moryx.ControlSystem.Simulator.Implementation;
@@ -20,7 +21,13 @@ namespace Moryx.ControlSystem.Simulator.Implementation;
 [Component(LifeCycle.Singleton, typeof(IProcessSimulator))]
 internal sealed class ProcessSimulator : IProcessSimulator
 {
-    private readonly Random _simulationRandomness = new Random();
+    private readonly Random _simulationRandomness = new();
+    private readonly List<ISimulationDriver> _drivers = [];
+    private readonly ConcurrentDictionary<long, SemaphoreSlim> _driverSemaphores = new();
+    // ToDo: ProcessMovement is very inefficient to hash, look for better options
+    // Process.Id is invalid, as in parallel worplans two movements for one process can be triggered
+    private readonly ConcurrentDictionary<ProcessMovement, int> _scheduledMovements = [];
+    private readonly ConcurrentDictionary<long, int> _scheduledActivitis = [];
 
     private bool _running;
 
@@ -39,23 +46,14 @@ internal sealed class ProcessSimulator : IProcessSimulator
 
     #endregion
 
-    private List<ISimulationDriver> _drivers;
-    public IReadOnlyList<ISimulationDriver> Drivers => _drivers;
-
-    // ToDo: ProcessMovement is very inefficient to hash, look for better options
-    private readonly ConcurrentDictionary<ProcessMovement, int> _scheduledMovements = [];
-    public IReadOnlyList<ProcessMovement> Movements => [.. _scheduledMovements.Keys];
-
-    private readonly ConcurrentDictionary<long, int> _scheduledActivitis = [];
 
     public void Start()
     {
         _running = true;
-        _drivers = ResourceManagement.GetResourcesUnsafe<ISimulationDriver>(x => true).ToList();
-        foreach (var driver in _drivers)
-        {
-            driver.SimulatedStateChanged += SimulationStateChanged;
-        }
+        // ToDo: Replace with safe/proxified resources. Currently not possible
+        // as drivers are usually generic and generics cannot be proxified.
+        ResourceManagement.GetResourcesUnsafe<ISimulationDriver>(x => true)
+            .ForEach(RegisterDriver);
 
         ResourceManagement.ResourceAdded += OnResourceAdded;
         ResourceManagement.ResourceRemoved += OnResourceRemoved;
@@ -115,20 +113,35 @@ internal sealed class ProcessSimulator : IProcessSimulator
     {
         if (e is ISimulationDriver driver)
         {
-            _drivers.Add(driver);
-            driver.SimulatedStateChanged += SimulationStateChanged;
+            RegisterDriver(driver);
         }
+    }
+
+    private void RegisterDriver(ISimulationDriver driver)
+    {
+        _drivers.Add(driver);
+        // Note: We intentionally keep the semaphore in the dictionary to avoid races
+        // that could occur when removing/disposing it while another thread tries to use it.
+        _driverSemaphores.TryAdd(driver.Id, new SemaphoreSlim(1, 1));
+        driver.SimulatedStateChanged += SimulationStateChanged;
     }
 
     private void OnResourceRemoved(object sender, IResource e)
     {
         if (e is ISimulationDriver driver)
         {
-            // Dropping scheduled movements is not necessary here,
-            // as each movement needs to be checked for rerouting before completion anyway
+            UnregisterDriver(driver);
             _drivers.Remove(driver);
-            driver.SimulatedStateChanged -= SimulationStateChanged;
         }
+    }
+
+    private void UnregisterDriver(ISimulationDriver driver)
+    {
+        // Dropping scheduled movements is not necessary here,
+        // as each movement needs to be checked for rerouting before completion anyway
+        _driverSemaphores.Remove(driver.Id, out var semaphore);
+        semaphore.Dispose();
+        driver.SimulatedStateChanged -= SimulationStateChanged;
     }
 
     public void Stop()
@@ -138,7 +151,10 @@ internal sealed class ProcessSimulator : IProcessSimulator
 
         FinishSimulatedActivities();
 
-        UnregisterEvents();
+        UnregisterDependencyEvents();
+
+        _drivers.ForEach(UnregisterDriver);
+        _drivers.Clear();
     }
 
     private void StopScheduledMovements()
@@ -158,11 +174,10 @@ internal sealed class ProcessSimulator : IProcessSimulator
         }
     }
 
-    private void UnregisterEvents()
+    private void UnregisterDependencyEvents()
     {
         ResourceManagement.ResourceAdded -= OnResourceAdded;
         ResourceManagement.ResourceRemoved -= OnResourceRemoved;
-        _drivers.ForEach(d => d.SimulatedStateChanged -= SimulationStateChanged);
         ProcessControl.ActivityUpdated -= OnActivityUpdated;
     }
 
@@ -217,22 +232,29 @@ internal sealed class ProcessSimulator : IProcessSimulator
 
     private void SimulateReady(ISimulationDriver target, Activity activity)
     {
-        if (target.SimulatedState > SimulationState.Idle)
-        {
-            Logger.LogDebug("Skipping 'Ready' on driver {0}-{1} for activity '{2}': Awaiting driver state change from {3} to {4}",
-                        target.Id, target.Name, activity.ToString(), target.SimulatedState.ToString(), nameof(SimulationState.Idle));
-            return;
-        }
-        
-        Logger.LogDebug("Simulating 'Ready' on driver {0}-{1} for activity '{2}'.", target.Id, target.Name, activity.ToString());
-        
+        // Ensures calls for the same driver are serialized while calls for different drivers can run in parallel.
+        _driverSemaphores.TryGetValue(target.Id, out var sem);
+        sem.Wait();
+
         try
         {
+            if (target.SimulatedState > SimulationState.Idle)
+            {
+                Logger.LogDebug("Skipping 'Ready' on driver {id}-{name} for activity '{activity}': Awaiting driver state change from {current} to {target}",
+                            target.Id, target.Name, activity, target.SimulatedState, nameof(SimulationState.Idle));
+                return;
+            }
+
+            Logger.LogDebug("Simulating 'Ready' on driver {id}-{name} for activity '{activity}'.", target.Id, target.Name, activity);
             target.Ready(activity);
         }
         catch (Exception ex)
         {
-            Logger.LogError(ex, "Could not simulate 'Ready' on driver {0}-{1}: Unexpected exception.", target.Id, target.Name);
+            Logger.LogError(ex, "Could not simulate 'Ready' on driver {id}-{name}: Unexpected exception.", target.Id, target.Name);
+        }
+        finally
+        {
+            sem.Release();
         }
     }
 
@@ -282,7 +304,7 @@ internal sealed class ProcessSimulator : IProcessSimulator
             return (int)(simulationParameters.ExecutionTime.TotalMilliseconds / Config.Acceleration);
 
         var settings = Config.SpecificExecutionTimeSettings.Where(s => s.Activity.Equals(activity.GetType().FullName));
-        if (settings.Count() == 0)
+        if (!settings.Any())
         {
             return (int)(Config.DefaultExecutionTime / Config.Acceleration);
         }
@@ -312,14 +334,14 @@ internal sealed class ProcessSimulator : IProcessSimulator
 
     private int CalculateDuration()
     {
-        return (int) Math.Ceiling(Convert.ToDouble(Config.MovingDuration) * 1/Convert.ToDouble(Config.Acceleration));
+        return (int)Math.Ceiling(Convert.ToDouble(Config.MovingDuration) * 1 / Convert.ToDouble(Config.Acceleration));
     }
 
     private void CompleteMovement(ProcessMovement movement)
     {
         _scheduledMovements.Remove(movement, out _);
 
-        if (movement.NextActivity.Tracing.Started is not null) 
+        if (movement.NextActivity.Tracing.Started is not null)
         {
             Logger.LogDebug("Skipping 'Ready' on driver {0}-{1} for activity '{2}': Activity has already started or was canceled.",
                     movement.Target.Id, movement.Target.Name, movement.NextActivity.ToString());
