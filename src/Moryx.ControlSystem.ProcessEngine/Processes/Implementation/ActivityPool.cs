@@ -101,7 +101,7 @@ internal sealed class ActivityPool : ILoggingComponent, IActivityDataPool, IActi
             try
         {
             // Validate the change before performing it
-            if (newState <= activityData.State)
+            if (newState < activityData.State)
             {
                 Logger.Log(LogLevel.Warning, "Activity states can only increase! Current state: {current} - New State: {new}", activityData.State, newState);
                 return false;
