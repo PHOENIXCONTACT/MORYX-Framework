@@ -404,10 +404,23 @@ public class FactoryMonitorController : ControllerBase
 
     private bool CellFilterBaseOnLocation(IMachineLocation locationParam)
     {
-        var location = _resourceManager.ReadUnsafe(locationParam.Id, e => (MachineLocation)e);
-        var machine = location.Children?.FirstOrDefault(x => x is ICell);
+        var location = _resourceManager.ReadUnsafe(locationParam.Id, e => e as IMachineLocation);
 
-        if (location is null || machine is null) return false;
+        if (location is null)
+        {
+            return false;
+        }
+        else if (location is ICell)
+        {
+            return true;
+        }
+
+        var machine = (location as Resource).Children.FirstOrDefault(x => x is ICell);
+
+        if (machine is null)
+        {
+            return false;
+        } 
 
         return true;
     }
