@@ -78,7 +78,7 @@
     "COMMENT": "Kommentar",
     "CONFIRMATION": "Rückmeldeart",
     "PARTIAL": "Teilrückmelden",
-    "FINAL": "Endrückmelden",
+    "FINAL": "Endrückmelden"
   },
   "INTERRUPT_DIALOG": {
     "TITLE": "Vorgang unterbrechen",
