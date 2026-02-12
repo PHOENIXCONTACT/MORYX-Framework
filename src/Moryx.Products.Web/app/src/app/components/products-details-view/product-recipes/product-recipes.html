@@ -1,0 +1,39 @@
+<div class="recipes-overview">
+  <mat-list class="recipes-overview-list">
+    @for (recipe of recipes(); track recipe) {
+      <mat-list-item
+        (click)="onSelect(recipe)"
+        [ngClass]="{ 'moryx-selected': selectedRecipe()?.id == recipe.id }"
+        class="recipes-overview-list-item"
+        >
+        <div class="recipes-overview-list-item-content">
+          <span class="recipes-overview-list-item-content-name truncate-name">{{
+            recipe.name
+          }}</span>
+          <button
+            mat-icon-button
+            (click)="onDeleteRecipe($event, recipe)"
+            [disabled]="editService.edit === false"
+            >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </mat-list-item>
+    }
+  </mat-list>
+  <div class="recipes-overview-actions" align="end">
+    <button
+      mat-flat-button
+      class="add-recipe-button"
+      [disabled]="editService.edit === false"
+      (click)="onAddRecipe()"
+      >
+      <mat-icon>add</mat-icon>
+      {{ TranslationConstants.DETAILS.RECIPS.ADD_RECIPE | translate }}
+    </button>
+  </div>
+</div>
+
+<div class="recipes-details">
+  <router-outlet></router-outlet>
+</div>

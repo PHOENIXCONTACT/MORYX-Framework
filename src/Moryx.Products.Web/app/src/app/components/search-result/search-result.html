@@ -1,0 +1,17 @@
+@if (searchResults() && searchResults().length) {
+  <mat-list>
+    @for (product of searchResults(); track product) {
+      <mat-list-item class="search-result-item">
+        <a href="{{getHref(product.id)}}">{{
+          editService.createProductNameWithIdentity(product)
+        }}</a>
+      </mat-list-item>
+    }
+  </mat-list>
+} @else {
+  <empty-state header="Search"
+    icon="search"
+    [message]="`There are no products with the identifier ${searchString()}. Remember that
+    the identifier has to be complete.`">
+  </empty-state>
+}

@@ -1,0 +1,53 @@
+<div class="importer-header">
+  <div class="importer-header-information">
+    <h2 class="importer-header-information-title">
+      {{ TranslationConstants.IMPORTER.TITLE | translate }}
+    </h2>
+    <p>{{ TranslationConstants.IMPORTER.SUB_TITLE | translate }}</p>
+    <mat-form-field appearance="outline" class="importer-selector">
+      <mat-label>{{
+        TranslationConstants.IMPORTER.TITLE | translate
+      }}</mat-label>
+      <mat-select
+        [(ngModel)]="selectedImporter">
+        @for (importer of possibleImporters(); track importer) {
+          <mat-option
+            [value]="importer"
+            >
+            {{ importer.name }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<mat-divider class="importer-header-border"></mat-divider>
+
+@if (importerProperties()) {
+  <div class="importer-properties">
+    <navigable-entry-editor
+      [entry]="importerProperties()!"
+      queryParam="productImport"
+      [disabled]="false"
+    ></navigable-entry-editor>
+  </div>
+}
+
+<div class="importer-actions" align="end">
+  <button mat-button class="importer-actions-button" (click)="cancelImport()" [disabled]="showProgressBar()">
+    <mat-icon>close</mat-icon>
+    {{ TranslationConstants.SHARED.CANCEL | translate }}
+  </button>
+  <button
+    mat-flat-button
+    class="importer-actions-button"
+    (click)="import()"
+    [disabled]="showProgressBar()"
+    >
+    <mat-icon>play_arrow</mat-icon>
+    {{ TranslationConstants.IMPORTER.IMPORT | translate }}
+  </button>
+</div>
+@if (showProgressBar()) {
+  <div class="progress-bar-container"><mat-progress-bar mode="indeterminate"></mat-progress-bar></div>
+}

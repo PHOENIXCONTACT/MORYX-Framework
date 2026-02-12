@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>
+  {{ TranslationConstants.SHOW_REVISION_DIALOG.TITLE | translate }}
+</h2>
+
+<div mat-dialog-content class="show-revisions-list">
+  <mat-action-list cdkFocusInitial>
+    @for (product of revisions(); track product) {
+      <mat-list-item
+        class="show-revisions-list-item"
+        (click)="onOpen(product)"
+        >
+        {{
+        editService.createProductIdentity(product.identifier, product.revision)
+        }}
+        {{ product.name | slice: 0:40 }}
+      </mat-list-item>
+    }
+  </mat-action-list>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button  type="button" (click)="onClose()">
+    {{ TranslationConstants.SHOW_REVISION_DIALOG.CANCEL | translate }}
+  </button>
+  <button mat-flat-button  type="button" [mat-dialog-close]="true">
+    {{ TranslationConstants.SHOW_REVISION_DIALOG.ADD_REVISION | translate }}
+  </button>
+</div>
