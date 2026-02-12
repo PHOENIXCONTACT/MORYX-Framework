@@ -80,7 +80,6 @@ export const appConfig: ApplicationConfig = {
     SnackbarService,
     FormControlService,
     provideHttpClient(withInterceptorsFromDi()),
-    provideHttpClient(withInterceptorsFromDi()),
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: environment.assets + 'assets/languages/',
