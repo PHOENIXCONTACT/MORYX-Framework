@@ -5,20 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DetailsViewComponent } from './details-view.component';
+import { DetailsHeader } from './details-header';
 
-describe('DetailsViewComponent', () => {
-  let component: DetailsViewComponent;
-  let fixture: ComponentFixture<DetailsViewComponent>;
+describe('DetailsHeader', () => {
+  let component: DetailsHeader;
+  let fixture: ComponentFixture<DetailsHeader>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [DetailsViewComponent],
-}).compileComponents();
+    declarations: [DetailsHeader]
+})
+    .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DetailsViewComponent);
+    fixture = TestBed.createComponent(DetailsHeader);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -27,4 +28,3 @@ describe('DetailsViewComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-

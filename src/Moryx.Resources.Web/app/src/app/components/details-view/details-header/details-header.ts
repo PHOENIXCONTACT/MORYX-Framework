@@ -9,26 +9,25 @@ import { TranslationConstants } from "src/app/extensions/translation-constants.e
 import { FormControlService } from "src/app/services/form-control-service.service";
 import { ResourceModel } from "../../../api/models";
 import { MatDividerModule } from "@angular/material/divider";
-import { CommonModule } from "@angular/common";
+
 import { FormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 
 @Component({
   selector: "app-details-header",
-  templateUrl: "./details-header.component.html",
-  styleUrls: ["./details-header.component.scss"],
+  templateUrl: "./details-header.html",
+  styleUrls: ["./details-header.scss"],
   imports: [
-    CommonModule,
     FormsModule,
     MatDividerModule,
     MatFormFieldModule,
     MatInputModule,
-    TranslateModule,
-  ],
+    TranslateModule
+],
   standalone: true,
 })
-export class DetailsHeaderComponent implements AfterContentChecked {
+export class DetailsHeader implements AfterContentChecked {
   resource = input.required<ResourceModel>();
   editMode = input<boolean>(false);
   TranslationConstants = TranslationConstants;
@@ -49,4 +48,3 @@ export class DetailsHeaderComponent implements AfterContentChecked {
     );
   }
 }
-

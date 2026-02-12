@@ -10,25 +10,24 @@ import { ResourceMethodService } from '../../../services/resource-method.service
 import {
   MatExpansionModule,
 } from '@angular/material/expansion';
-import { EntryEditorComponent, NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
-import { CommonModule } from '@angular/common';
+import { EntryEditor, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
+
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-resource-methods',
-  templateUrl: './resource-methods.component.html',
-  styleUrls: ['./resource-methods.component.scss'],
+  templateUrl: './resource-methods.html',
+  styleUrls: ['./resource-methods.scss'],
   imports: [
-    CommonModule,
-    EntryEditorComponent,
+    EntryEditor,
     MatExpansionModule,
-    NavigableEntryEditorComponent,
+    NavigableEntryEditor,
     TranslateModule,
-    MatButtonModule,
-  ],
+    MatButtonModule
+],
   standalone: true,
 })
-export class ResourceMethodsComponent implements OnInit, OnDestroy {
+export class ResourceMethods implements OnInit, OnDestroy {
   TranslationConstants = TranslationConstants;
 
   constructor(public methodService: ResourceMethodService, public translate: TranslateService) {}
@@ -39,4 +38,3 @@ export class ResourceMethodsComponent implements OnInit, OnDestroy {
     this.methodService.selectedMethod = undefined;
   }
 }
-

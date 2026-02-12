@@ -15,15 +15,15 @@ import { ResourceConstructionParameters } from 'src/app/models/ResourceConstruct
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
+import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-dialog-add-resource',
-  templateUrl: './dialog-add-resource.component.html',
-  styleUrls: ['./dialog-add-resource.component.scss'],
+  templateUrl: './dialog-add-resource.html',
+  styleUrls: ['./dialog-add-resource.scss'],
   imports: [
     TranslateModule,
     CommonModule,
@@ -34,11 +34,11 @@ import { MatButtonModule } from '@angular/material/button';
     MatProgressSpinnerModule,
     MatIconModule,
     MatDialogModule,
-    NavigableEntryEditorComponent,
+    NavigableEntryEditor,
   ],
   standalone: true,
 })
-export class DialogAddResourceComponent implements OnInit {
+export class DialogAddResource implements OnInit {
   types = signal<ResourceTypeModel[] | undefined>([]);
   resourceType = signal<ResourceTypeModel | undefined>(undefined);
   selectedCtor = signal<MethodEntry | undefined>(undefined);
@@ -49,10 +49,11 @@ export class DialogAddResourceComponent implements OnInit {
   public data = inject<ResourceModel>(MAT_DIALOG_DATA);
 
   constructor(
-    public dialogRef: MatDialogRef<DialogAddResourceComponent>,
+    public dialogRef: MatDialogRef<DialogAddResource>,
     private cache: CacheResourceService,
     public translate: TranslateService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.types.update(() => this.cache.flatTypes?.filter(t => t.creatable).sort((a, b) => this.byName(a, b)));
@@ -95,4 +96,3 @@ export class DialogAddResourceComponent implements OnInit {
     } as ResourceConstructionParameters;
   }
 }
-

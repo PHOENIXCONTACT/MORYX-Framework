@@ -5,7 +5,7 @@
 
 import { Component, Inject, signal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -13,22 +13,21 @@ import { ResourceModel } from 'src/app/api/models/resource-model';
 
 @Component({
     selector: 'app-dialog-remove-resource',
-    templateUrl: './dialog-remove-resource.component.html',
-    styleUrls: ['./dialog-remove-resource.component.scss'],
+    templateUrl: './dialog-remove-resource.html',
+    styleUrls: ['./dialog-remove-resource.scss'],
     standalone: true,
     imports: [
-        CommonModule,
-        TranslateModule,
-        MatDialogModule,
-        MatButtonModule
-    ]
+    TranslateModule,
+    MatDialogModule,
+    MatButtonModule
+]
 })
-export class DialogRemoveResourceComponent {
+export class DialogRemoveResource {
     resourceToBeRemoved = signal<ResourceModel | undefined>(undefined);
     TranslationConstants = TranslationConstants;
 
     constructor(
-        public dialogRef: MatDialogRef<DialogRemoveResourceComponent>,
+        public dialogRef: MatDialogRef<DialogRemoveResource>,
         @Inject(MAT_DIALOG_DATA) public data: ResourceModel,
         public translate: TranslateService,
     ) {
@@ -39,4 +38,3 @@ export class DialogRemoveResourceComponent {
         this.dialogRef.close();
     }
 }
-

@@ -11,19 +11,17 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
 import { SessionService } from 'src/app/services/session.service';
 import { ResourceModel } from '../../api/models';
 import { EditResourceService } from '../../services/edit-resource.service';
-import { Permissions } from './../../extensions/permissions.extensions';
 import { MatTabsModule } from '@angular/material/tabs';
-import { DetailsHeaderComponent } from './details-header/details-header.component';
-import { CommonModule } from '@angular/common';
+import { DetailsHeader } from './details-header/details-header';
 
 @Component({
   selector: 'app-details-view',
-  templateUrl: './details-view.component.html',
-  styleUrls: ['./details-view.component.scss'],
-  imports: [RouterOutlet, TranslateModule, MatTabsModule, RouterLink, DetailsHeaderComponent, CommonModule],
+  templateUrl: './details-view.html',
+  styleUrls: ['./details-view.scss'],
+  imports: [RouterOutlet, TranslateModule, MatTabsModule, RouterLink, DetailsHeader],
   standalone: true,
 })
-export class DetailsViewComponent implements OnInit, OnDestroy {
+export class DetailsView implements OnInit, OnDestroy {
   activeLink = signal<number | undefined>(undefined);
   resource = signal<ResourceModel>({});
 
@@ -93,4 +91,3 @@ export class DetailsViewComponent implements OnInit, OnDestroy {
     }
   }
 }
-

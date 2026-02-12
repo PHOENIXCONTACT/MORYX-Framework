@@ -16,16 +16,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { CommonModule } from '@angular/common';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-resource-references',
-  templateUrl: './resource-references.component.html',
-  styleUrls: ['./resource-references.component.scss'],
+  templateUrl: './resource-references.html',
+  styleUrls: ['./resource-references.scss'],
   imports: [
-    CommonModule,
     MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
@@ -33,11 +32,11 @@ import { MatButtonModule } from '@angular/material/button';
     MatSelectModule,
     MatTableModule,
     TranslateModule,
-    MatButtonModule,
-  ],
+    MatButtonModule
+],
   standalone: true,
 })
-export class ResourceReferencesComponent implements OnInit, OnDestroy {
+export class ResourceReferences implements OnInit, OnDestroy {
   resource: ResourceModel | undefined;
   references: ResourceReferenceModel[] | null | undefined;
   selectedTarget: ResourceModel | undefined;
@@ -187,4 +186,3 @@ export class ResourceReferencesComponent implements OnInit, OnDestroy {
     return supportedSubTypes;
   }
 }
-

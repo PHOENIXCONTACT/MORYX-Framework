@@ -5,21 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ResourcePropertiesComponent } from './resource-properties.component';
+import { ResourceReferences } from './resource-references';
 
-describe('ResourcePropertiesComponent', () => {
-  let component: ResourcePropertiesComponent;
-  let fixture: ComponentFixture<ResourcePropertiesComponent>;
+describe('ResourceReferences', () => {
+  let component: ResourceReferences;
+  let fixture: ComponentFixture<ResourceReferences>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [ResourcePropertiesComponent]
+    declarations: [ResourceReferences]
 })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ResourcePropertiesComponent);
+    fixture = TestBed.createComponent(ResourceReferences);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -28,4 +28,3 @@ describe('ResourcePropertiesComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-

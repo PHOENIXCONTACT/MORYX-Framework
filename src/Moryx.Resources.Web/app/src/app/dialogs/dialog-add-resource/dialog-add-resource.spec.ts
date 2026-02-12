@@ -5,21 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ResourceMethodsComponent } from './resource-methods.component';
+import { DialogAddResource } from './dialog-add-resource';
 
-describe('ResourceMethodsComponent', () => {
-  let component: ResourceMethodsComponent;
-  let fixture: ComponentFixture<ResourceMethodsComponent>;
+describe('DialogAddResource', () => {
+  let component: DialogAddResource;
+  let fixture: ComponentFixture<DialogAddResource>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [ResourceMethodsComponent]
+    declarations: [DialogAddResource]
 })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ResourceMethodsComponent);
+    fixture = TestBed.createComponent(DialogAddResource);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -28,4 +28,3 @@ describe('ResourceMethodsComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-
