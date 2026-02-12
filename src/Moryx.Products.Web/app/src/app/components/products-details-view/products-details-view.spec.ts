@@ -5,21 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProductsDetailsViewComponent } from './products-details-view';
+import { ProductsDetailsView } from './products-details-view';
 
 describe('ProductsDetailsViewComponent', () => {
-  let component: ProductsDetailsViewComponent;
-  let fixture: ComponentFixture<ProductsDetailsViewComponent>;
+  let component: ProductsDetailsView;
+  let fixture: ComponentFixture<ProductsDetailsView>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [ProductsDetailsViewComponent]
+    declarations: [ProductsDetailsView]
 })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProductsDetailsViewComponent);
+    fixture = TestBed.createComponent(ProductsDetailsView);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

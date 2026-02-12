@@ -35,7 +35,7 @@ import { MatExpansionModule } from "@angular/material/expansion";
   ],
   standalone: true,
 })
-export class ProductRecipesComponent implements OnInit {
+export class ProductRecipes implements OnInit {
   recipes = signal<Array<RecipeModel>>([]);
   selectedRecipe = signal<undefined | RecipeModel>(undefined);
   TranslationConstants = TranslationConstants;

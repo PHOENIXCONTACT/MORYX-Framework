@@ -4,43 +4,43 @@
 */
 
 import { Routes } from "@angular/router";
-import { DefaultViewComponent } from "./components/default-view/default-view";
-import { ProductPartsComponent } from "./components/products-details-view/product-parts/product-parts";
-import { ProductPropertiesComponent } from "./components/products-details-view/product-properties/product-properties";
-import { ProductRecipesDetailsComponent } from "./components/products-details-view/product-recipes/product-recipes-details/product-recipes-details";
-import { ProductRecipesComponent } from "./components/products-details-view/product-recipes/product-recipes";
-import { ProductReferencesComponent } from "./components/products-details-view/product-references/product-references";
-import { ProductsDetailsViewComponent } from "./components/products-details-view/products-details-view";
-import { ProductsImporterComponent } from "./components/products-importer/products-importer";
+import { DefaultView } from "./components/default-view/default-view";
+import { ProductParts } from "./components/products-details-view/product-parts/product-parts";
+import { ProductProperties } from "./components/products-details-view/product-properties/product-properties";
+import { ProductRecipesDetails } from "./components/products-details-view/product-recipes/product-recipes-details/product-recipes-details";
+import { ProductRecipes } from "./components/products-details-view/product-recipes/product-recipes";
+import { ProductReferences } from "./components/products-details-view/product-references/product-references";
+import { ProductsDetailsView } from "./components/products-details-view/products-details-view";
+import { ProductsImporter } from "./components/products-importer/products-importer";
 import { SearchResultComponent } from "./components/search-result/search-result";
 import { ProductsDetailsViewResolver } from "./components/products-details-view/products-details-view-resolver";
 
 export const routes: Routes = [
   {
     path: 'details/:id',
-    component: ProductsDetailsViewComponent,
+    component: ProductsDetailsView,
     resolve: {
       product: ProductsDetailsViewResolver
     },
     children: [
       { path: '', redirectTo: 'properties', pathMatch: 'full' },
-      { path: 'properties', component: ProductPropertiesComponent },
-      { path: 'references', component: ProductReferencesComponent },
+      { path: 'properties', component: ProductProperties },
+      { path: 'references', component: ProductReferences },
       {
         path: 'parts/:partName/:partId',
-        component: ProductPartsComponent,
+        component: ProductParts,
       },
       {
         path: 'recipes',
-        component: ProductRecipesComponent,
+        component: ProductRecipes,
         children: [
-          { path: '', component: DefaultViewComponent, pathMatch: 'full' },
-          { path: ':recipeId', component: ProductRecipesDetailsComponent },
+          { path: '', component: DefaultView, pathMatch: 'full' },
+          { path: ':recipeId', component: ProductRecipesDetails },
         ],
       },
     ],
   },
-  { path: '', component: DefaultViewComponent, pathMatch: 'full' },
-  { path: 'import/:importer', component: ProductsImporterComponent },
+  { path: '', component: DefaultView, pathMatch: 'full' },
+  { path: 'import/:importer', component: ProductsImporter },
   { path: 'search', component: SearchResultComponent }
 ]

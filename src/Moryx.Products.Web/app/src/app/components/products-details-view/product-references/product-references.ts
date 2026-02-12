@@ -28,7 +28,7 @@ import { MatCardModule } from '@angular/material/card';
     MatCardModule
   ]
 })
-export class ProductReferencesComponent {
+export class ProductReferences {
 
   references = signal<ProductModel[]>([]);
   isLoading = signal(false);

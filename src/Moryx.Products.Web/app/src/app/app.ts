@@ -81,7 +81,7 @@ import { MatInputModule } from "@angular/material/input";
     MatInputModule
   ]
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class App implements OnInit, OnDestroy {
   selected = signal<ProductModel | undefined>(undefined);
   products = signal<ProductModel[]>([]);
   productDefinitions = signal<ProductDefinitionModel[]>([]);

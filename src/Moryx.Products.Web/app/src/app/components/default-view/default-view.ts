@@ -19,7 +19,7 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
   ],
   standalone: true
 })
-export class DefaultViewComponent implements OnInit {
+export class DefaultView implements OnInit {
   headerText = signal('');
   messageText = signal('');
 

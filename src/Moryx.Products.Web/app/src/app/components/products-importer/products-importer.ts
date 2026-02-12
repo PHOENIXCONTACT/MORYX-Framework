@@ -43,7 +43,7 @@ import { MatCardModule } from "@angular/material/card";
     MatCardModule
   ],
 })
-export class ProductsImporterComponent implements OnInit {
+export class ProductsImporter implements OnInit {
   possibleImporters = signal<ProductImporter[]>([]);
   selectedImporter = signal<ProductImporter | undefined>(undefined);
   importerProperties = signal<Entry>(<Entry>{value: {type: EntryValueType.Exception}});

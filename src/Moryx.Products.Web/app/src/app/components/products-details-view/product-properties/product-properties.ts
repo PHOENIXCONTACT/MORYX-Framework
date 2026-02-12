@@ -31,7 +31,7 @@ import { Subscription } from 'rxjs';
   ],
   standalone: true,
 })
-export class ProductPropertiesComponent implements OnInit, OnDestroy {
+export class ProductProperties implements OnInit, OnDestroy {
   properties = signal<Entry | undefined>(undefined);
   id = input.required<number>();
   subscriptions: Subscription[] = [];

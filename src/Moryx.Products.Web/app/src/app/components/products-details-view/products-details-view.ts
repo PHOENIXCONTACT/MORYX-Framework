@@ -16,19 +16,19 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
-    selector: 'app-products-details-view',
-    templateUrl: './products-details-view.html',
-    styleUrls: ['./products-details-view.scss'],
-    standalone: true,
-    imports: [
+  selector: 'app-products-details-view',
+  templateUrl: './products-details-view.html',
+  styleUrls: ['./products-details-view.scss'],
+  standalone: true,
+  imports: [
     ProductsDetailsHeaderComponent,
     MatDividerModule,
     MatTabsModule,
     TranslateModule,
     RouterOutlet
-]
+  ]
 })
-export class ProductsDetailsViewComponent {
+export class ProductsDetailsView {
   currentProduct = signal<ProductModel | undefined>(undefined);
   lastProductId = signal<number | undefined>(undefined);
   activeLink = signal<Tabs>(Tabs.Unknown);
@@ -52,9 +52,9 @@ export class ProductsDetailsViewComponent {
 
       if (this.lastProductId() === product?.id) return;
       if (product) this.currentProduct.set(product);
-      
+
       const wipProduct = this.sessionService.getWipProduct();
-      
+
       if (
         this.lastProductId() !== undefined &&
         product?.properties &&
@@ -63,9 +63,9 @@ export class ProductsDetailsViewComponent {
         const newUrl = `details/${product?.id}/properties`;
         this.router.navigate([newUrl]);
       }
-      
+
       this.lastProductId.set(product?.id);
-      
+
       if (wipProduct) {
         this.editService.edit = true;
         this.sessionService.removeWipProduct();
@@ -76,13 +76,13 @@ export class ProductsDetailsViewComponent {
       if (val instanceof NavigationEnd || val instanceof NavigationCancel) {
         let url = this.router.url;
         if (this.regexProperties.test(url)) {
-          this.activeLink.update(_=> Tabs.Properties);
+          this.activeLink.update(_ => Tabs.Properties);
         } else if (this.regexParts.test(url)) {
-          this.activeLink.update(_=> Tabs.Parts);
+          this.activeLink.update(_ => Tabs.Parts);
         } else if (this.regexRecipes.test(url)) {
-          this.activeLink.update(_=> Tabs.Recipes);
+          this.activeLink.update(_ => Tabs.Recipes);
         } else if (this.regexReferences.test(url)) {
-          this.activeLink.update(_=> Tabs.References);
+          this.activeLink.update(_ => Tabs.References);
         }
       }
     });
@@ -93,7 +93,7 @@ export class ProductsDetailsViewComponent {
     const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
     const regexParts: RegExp = /(details\/\d*\/parts)/;
     if (regexSpecificRecipe.test(url) || regexParts.test(url)) {
-      this.router.navigate(['../../'], { relativeTo: this.route }).then(() => {
+      this.router.navigate(['../../'], {relativeTo: this.route}).then(() => {
         this.routeToTab(target);
       });
     } else {

@@ -5,20 +5,20 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DefaultViewComponent } from './default-view';
+import { DefaultView } from './default-view';
 
 describe('DefaultViewComponent', () => {
-  let component: DefaultViewComponent;
-  let fixture: ComponentFixture<DefaultViewComponent>;
+  let component: DefaultView;
+  let fixture: ComponentFixture<DefaultView>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [DefaultViewComponent],
+    declarations: [DefaultView],
 }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DefaultViewComponent);
+    fixture = TestBed.createComponent(DefaultView);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

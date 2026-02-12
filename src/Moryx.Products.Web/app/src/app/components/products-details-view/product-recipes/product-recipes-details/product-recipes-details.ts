@@ -7,41 +7,34 @@ import { Component, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import {
-  ProductModel,
-  RecipeDefinitionModel,
-  RecipeModel
-} from '../../../../api/models';
+import { ProductModel, RecipeDefinitionModel, RecipeModel } from '../../../../api/models';
 import { CacheProductsService } from '../../../../services/cache-products.service';
 import { EditProductsService } from '../../../../services/edit-products.service';
-
-import { NavigableEntryEditor } from '@moryx/ngx-web-framework';
-import {
-  ProductRecipesDetailsHeaderComponent
-} from './product-recipes-details-header/product-recipes-details-header';
+import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
+import { ProductRecipesDetailsHeader } from './product-recipes-details-header/product-recipes-details-header';
 
 @Component({
   selector: 'app-product-recipes-details',
   templateUrl: './product-recipes-details.html',
   styleUrls: ['./product-recipes-details.scss'],
   imports: [
-    ProductRecipesDetailsHeaderComponent,
+    ProductRecipesDetailsHeader,
     NavigableEntryEditor,
     TranslateModule
   ],
   standalone: true
 })
-export class ProductRecipesDetailsComponent {
+export class ProductRecipesDetails {
   currentProduct = signal<ProductModel | undefined>(undefined);
   currentRecipe = signal<RecipeModel | undefined>(undefined);
-  recipeDefitions = signal<RecipeDefinitionModel[] | undefined>([]);
+  recipeDefinitions = signal<RecipeDefinitionModel[] | undefined>([]);
   TranslationConstants = TranslationConstants;
 
   constructor(
     public editService: EditProductsService,
     public route: ActivatedRoute,
     private router: Router,
-    private cacheService: CacheProductsService,
+    cacheService: CacheProductsService,
     public translate: TranslateService
   ) {
     editService.currentProduct.subscribe((product) => {
@@ -71,7 +64,7 @@ export class ProductRecipesDetailsComponent {
     });
 
     cacheService.recipeDefinitions.subscribe((recipeDefitions) => {
-      this.recipeDefitions.set(recipeDefitions);
+      this.recipeDefinitions.set(recipeDefitions);
     });
   }
 

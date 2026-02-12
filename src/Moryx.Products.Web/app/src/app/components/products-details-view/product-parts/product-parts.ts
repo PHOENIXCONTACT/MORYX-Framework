@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
 import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
 import { ProductPartsDetailsComponent } from './product-parts-details/product-parts-details';
-import { DefaultViewComponent } from '../../default-view/default-view';
+import { DefaultView } from '../../default-view/default-view';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -28,13 +28,13 @@ import { MatButtonModule } from '@angular/material/button';
     MatExpansionModule,
     MatListModule,
     ProductPartsDetailsComponent,
-    DefaultViewComponent,
+    DefaultView,
     MatButtonModule,
     TranslateModule
   ],
   standalone: true
 })
-export class ProductPartsComponent implements OnInit {
+export class ProductParts implements OnInit {
   currentProduct = signal<ProductModel | undefined>(undefined);
   expandedPart = signal<PartConnector | undefined>(undefined);
   selectedPart = signal<PartModel | undefined>(undefined);

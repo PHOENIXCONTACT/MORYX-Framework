@@ -44,7 +44,7 @@ import { MatSelectModule } from "@angular/material/select";
 ],
   standalone: true,
 })
-export class ProductRecipesDetailsHeaderComponent {
+export class ProductRecipesDetailsHeader {
   edit = input.required<boolean>();
   recipe = input.required<RecipeModel>();
   hasWorkplans = computed(() => {

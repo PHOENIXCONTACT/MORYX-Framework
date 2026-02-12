@@ -5,20 +5,20 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProductReferencesComponent } from './product-references';
+import { ProductReferences } from './product-references';
 
 describe('ProductReferencesComponent', () => {
-  let component: ProductReferencesComponent;
-  let fixture: ComponentFixture<ProductReferencesComponent>;
+  let component: ProductReferences;
+  let fixture: ComponentFixture<ProductReferences>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [ProductReferencesComponent],
+    declarations: [ProductReferences],
 }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProductReferencesComponent);
+    fixture = TestBed.createComponent(ProductReferences);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
