@@ -8,21 +8,17 @@ import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { MoryxSnackbarService, SearchBarService, SearchRequest } from '@moryx/ngx-web-framework';
+import { SnackbarService, SearchBarService, SearchRequest } from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { WorkplanModel, WorkplanSessionModel } from '../../api/models';
 import { WorkplanService } from '../../api/services';
-import {
-  ConfirmDialogButton,
-  ConfirmDialogComponent,
-  ConfirmDialogData,
-} from '../../dialogs/dialog-confirm/dialog-confirm.component';
+import { ConfirmDialogButton, ConfirmDialog, ConfirmDialogData } from '../../dialogs/dialog-confirm/dialog-confirm';
 import '../../extensions/array.extensions';
 import '../../extensions/observable.extensions';
 import { SessionsService } from '../../services/sessions.service';
 import { TranslationConstants } from '../../extensions/translation-constants.extensions';
 import { Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
+
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -30,23 +26,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
 @Component({
-    selector: 'app-management',
-    templateUrl: './management.component.html',
-    styleUrls: ['./management.component.scss'],
-    standalone: true,
-    imports: 
-    [
-      CommonModule,
-      MatTableModule,
-      MatTooltipModule,
-      MatIconModule,
-      MatProgressSpinnerModule,
-      TranslateModule,
-      MatButtonModule,
-      MatCardModule
-    ]
+  selector: 'app-management',
+  templateUrl: './management.html',
+  styleUrls: ['./management.scss'],
+  standalone: true,
+  imports: [
+    MatTableModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    TranslateModule,
+    MatButtonModule,
+    MatCardModule
+  ]
 })
-export class ManagementComponent implements OnInit, OnDestroy {
+export class Management implements OnInit, OnDestroy {
   TranslationConstants = TranslationConstants;
   private availableSessionsSubscription?: Subscription;
   readonly displayedColumns: string[] = ['name', 'state', 'version', 'actions'];
@@ -60,48 +54,49 @@ export class ManagementComponent implements OnInit, OnDestroy {
   constructor(
     private workplanService: WorkplanService,
     private sessionService: SessionsService,
-    private moryxSnackbar: MoryxSnackbarService,
+    private snackbarService: SnackbarService,
     private router: Router,
     private searchBarService: SearchBarService,
     public dialog: MatDialog,
     public translate: TranslateService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.availableSessionsSubscription = this.sessionService.availableSessions$.subscribe(
       async tokens => await this.onSessionsChanged(tokens)
     );
-    this.isLoading.update(_=> true);
+    this.isLoading.update(_ => true);
     this.workplanService.getAllWorkplans().subscribe({
       next: workplans => {
-        this.workplans.update(_=> workplans);
+        this.workplans.update(_ => workplans);
         this.dataSource = new MatTableDataSource<WorkplanModel>(this.workplans());
-        this.isLoading.update(_=> false);
+        this.isLoading.update(_ => false);
       },
       error: async (e: HttpErrorResponse) => {
-        await this.moryxSnackbar.handleError(e);
-        this.isLoading.update(_=> false);
-      },
+        await this.snackbarService.handleError(e);
+        this.isLoading.update(_ => false);
+      }
     });
 
     this.searchBarService.subscribe({
-      next: this.onSearch,
+      next: this.onSearch
     });
   }
 
   private async onSessionsChanged(tokens: string[]): Promise<void> {
-    this.sessions.update(_=>[]);
+    this.sessions.update(_ => []);
     await Promise.all(
       tokens.map(
         async token =>
           await this.sessionService
             .getSession(token)
             .toAsync()
-            .then((value: WorkplanSessionModel) => this.sessions.update(items =>{
-              items.push(value)
+            .then((value: WorkplanSessionModel) => this.sessions.update(items => {
+              items.push(value);
               return items;
             }))
-            .catch(async (err: HttpErrorResponse) => await this.moryxSnackbar.handleError(err))
+            .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
       )
     );
   }
@@ -118,7 +113,7 @@ export class ManagementComponent implements OnInit, OnDestroy {
       this.searchBarService.subscribe({
         next: (newRequest: SearchRequest) => {
           this.onSearch(newRequest);
-        },
+        }
       });
     } else {
       this.dataSource = new MatTableDataSource<WorkplanModel>(
@@ -141,7 +136,7 @@ export class ManagementComponent implements OnInit, OnDestroy {
         TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.TITLE,
         TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.CANCEL,
         TranslationConstants.MANAGEMENT.SNACK_BAR.SUCCESS_FIRST_PART,
-        TranslationConstants.MANAGEMENT.SNACK_BAR.SUCCESS_SECOND_PART,
+        TranslationConstants.MANAGEMENT.SNACK_BAR.SUCCESS_SECOND_PART
       ])
       .toAsync();
   }
@@ -155,18 +150,18 @@ export class ManagementComponent implements OnInit, OnDestroy {
     const translations = await this.getTranslations();
     const dialogMessage = session
       ? `${translations[TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.MESSAGE_FIRST_PART]} "${session.name}" ${
-          translations[TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.MESSAGE_SECOND_PART]
-        }?`
+        translations[TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.MESSAGE_SECOND_PART]
+      }?`
       : translations[TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.MESSAGE];
 
-    const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
+    const confirmDialog = this.dialog.open(ConfirmDialog, {
       data: <ConfirmDialogData>{
         title: translations[TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.TITLE],
         message: dialogMessage,
         buttons: [
           <ConfirmDialogButton>{
             text: translations[TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.CANCEL],
-            action: () => confirmDialog.close(),
+            action: () => confirmDialog.close()
           },
           <ConfirmDialogButton>{
             text: 'Ok', // ToDo: internationalize
@@ -176,12 +171,12 @@ export class ManagementComponent implements OnInit, OnDestroy {
                   this.completeTheDeletion(session, workplan, translations);
                   confirmDialog.close();
                 },
-                error: async (err: HttpErrorResponse) => await this.moryxSnackbar.handleError(err),
+                error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)
               });
-            },
-          },
-        ],
-      },
+            }
+          }
+        ]
+      }
     });
   }
 
@@ -192,17 +187,17 @@ export class ManagementComponent implements OnInit, OnDestroy {
   ) {
     if (session) {
       this.sessionService.closeSession(session.sessionToken!).subscribe({
-        error: async (err: HttpErrorResponse) => await this.moryxSnackbar.handleError(err),
+        error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)
       });
     }
 
     if (!this.workplans().length) return;
-    this.workplans.update(items =>{
+    this.workplans.update(items => {
       items.remove(workplan);
       return items;
-    } )
+    });
     this.dataSource = new MatTableDataSource<WorkplanModel>(this.workplans());
-    this.moryxSnackbar.showSuccess(
+    this.snackbarService.showSuccess(
       `${translations[TranslationConstants.MANAGEMENT.SNACK_BAR.SUCCESS_FIRST_PART]} "${workplan?.name}" ${
         translations[TranslationConstants.MANAGEMENT.SNACK_BAR.SUCCESS_SECOND_PART]
       }`
@@ -214,7 +209,7 @@ export class ManagementComponent implements OnInit, OnDestroy {
       .getSessionForWorkplan(workplan.id!)
       .toAsync()
       .then(session => this.openSession(session))
-      .catch(async (err: HttpErrorResponse) => await this.moryxSnackbar.handleError(err));
+      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
   }
 
   onDuplicateWorkplan(workplan: WorkplanModel): void {
@@ -222,7 +217,7 @@ export class ManagementComponent implements OnInit, OnDestroy {
       .getSessionForWorkplan(workplan.id!, true)
       .toAsync()
       .then(session => this.openSession(session))
-      .catch(async (err: HttpErrorResponse) => await this.moryxSnackbar.handleError(err));
+      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
   }
 
   private openSession(session: WorkplanSessionModel) {

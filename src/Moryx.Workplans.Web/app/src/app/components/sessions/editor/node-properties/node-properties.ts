@@ -5,7 +5,8 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, signal } from '@angular/core';
-import { Entry, MoryxSnackbarService, NavigableEntryEditorComponent, PrototypeToEntryConverter } from '@moryx/ngx-web-framework';
+import { Entry, NavigableEntryEditor, PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { WorkplanNodeClassification, WorkplanNodeModel } from '../../../../api/models';
 import { WorkplanEditingService } from '../../../../api/services';
@@ -13,7 +14,7 @@ import { TranslationConstants } from '../../../../extensions/translation-constan
 import { SessionsService } from '../../../../services/sessions.service';
 import { EditorStateService } from '../../../../services/editor-state.service';
 import { Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
+
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,23 +22,21 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-    selector: 'app-node-properties',
-    templateUrl: './node-properties.component.html',
-    styleUrls: ['./node-properties.component.scss'],
-    standalone: true,
-    imports:
-    [
-      CommonModule,
-      MatSelectModule,
-      FormsModule,
-      NavigableEntryEditorComponent,
-      TranslateModule,
-      MatButtonModule,
-      MatFormFieldModule,
-      MatInputModule
-    ]
+  selector: 'app-node-properties',
+  templateUrl: './node-properties.html',
+  styleUrls: ['./node-properties.scss'],
+  standalone: true,
+  imports: [
+    MatSelectModule,
+    FormsModule,
+    NavigableEntryEditor,
+    TranslateModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule
+  ]
 })
-export class NodePropertiesComponent implements OnDestroy {
+export class NodeProperties implements OnDestroy {
   node = signal<WorkplanNodeModel | undefined>(undefined);
   properties = signal<Entry | undefined>(undefined);
 
@@ -50,19 +49,19 @@ export class NodePropertiesComponent implements OnDestroy {
   constructor(
     private sessionService: SessionsService,
     private workplanEditing: WorkplanEditingService,
-    private moryxSnackbar: MoryxSnackbarService,
+    private snackbarService: SnackbarService,
     public translate: TranslateService,
     private editorState: EditorStateService
   ) {
     this.subscriptions.push(sessionService.activeSession$.subscribe(s => (this.activeSession = s)));
     this.subscriptions.push(
       editorState.isEditingStep$.subscribe(async step => {
-        // Awaiting this results in a race condition, 
+        // Awaiting this results in a race condition,
         // this.node needs to be set before the observable provides the next value
         if (this.node()) this.updateNode(this.node()!);
 
-        this.node.update(_=> step);
-        this.properties.update(_=> step?.properties?.subEntries?.find(p => p.identifier === 'Parameters'));
+        this.node.update(_ => step);
+        this.properties.update(_ => step?.properties?.subEntries?.find(p => p.identifier === 'Parameters'));
       })
     );
   }
@@ -72,7 +71,7 @@ export class NodePropertiesComponent implements OnDestroy {
 
     if (node.properties)
       PrototypeToEntryConverter.convertToEntry(node.properties);
-    
+
     await this.workplanEditing
       .updateStep({ sessionId: this.activeSession, nodeId: node.id, body: node })
       .toAsync()
@@ -86,8 +85,8 @@ export class NodePropertiesComponent implements OnDestroy {
         this.editorState.workplanChanged();
       })
       .catch(async (e: HttpErrorResponse) => {
-        await this.moryxSnackbar.handleError(e);
-        this.node.update(_=> node);
+        await this.snackbarService.handleError(e);
+        this.node.update(_ => node);
       });
   }
 
@@ -101,7 +100,7 @@ export class NodePropertiesComponent implements OnDestroy {
       .getSessionForWorkplan(this.node()?.subworkplanId!)
       .toAsync()
       .then(session => this.sessionService.activateSession(session.sessionToken!))
-      .catch(async (err: HttpErrorResponse) => await this.moryxSnackbar.handleError(err));
+      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
   }
 }
 

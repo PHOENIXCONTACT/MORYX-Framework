@@ -5,21 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ToolboxComponent } from './toolbox.component';
+import { StepCreator } from './step-creator';
 
-describe('ToolboxComponent', () => {
-  let component: ToolboxComponent;
-  let fixture: ComponentFixture<ToolboxComponent>;
+describe('StepCreator', () => {
+  let component: StepCreator;
+  let fixture: ComponentFixture<StepCreator>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [ToolboxComponent]
+    declarations: [StepCreator]
 })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ToolboxComponent);
+    fixture = TestBed.createComponent(StepCreator);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

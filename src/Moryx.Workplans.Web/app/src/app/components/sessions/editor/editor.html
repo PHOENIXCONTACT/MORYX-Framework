@@ -1,0 +1,175 @@
+@if (!isLoading()) {
+  <mat-drawer-container class="column-layout">
+    <!-- Sidenav -->
+    <mat-drawer opened role="group" mode="side" position="end" disableClose class="small-drawer">
+      <div class="workplans-side-bar-right">
+        <button mat-icon-button (click)="onToggleDrawer()">
+          <mat-icon>{{ drawerIsOpen() ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left' }}</mat-icon>
+        </button>
+      </div>
+    </mat-drawer>
+    <mat-drawer-content class="column-layout">
+      <!-- Drawer with properties -->
+      <mat-drawer-container class="column-layout">
+        <mat-drawer
+          #drawer
+          [opened]="drawerIsOpen()"
+          [mode]="drawerMode()"
+          position="end"
+          mode="side"
+          class="workplans-edit-drawer"
+          disableClose>
+          @if (isEditingProps()) {
+            <app-workplan-properties class="drawer-content"> </app-workplan-properties>
+          }
+          @if (isEditingStep()) {
+            <app-node-properties class="drawer-content"> </app-node-properties>
+          }
+          @if (isCreatingStep()) {
+            <app-step-creator
+              class="drawer-content"
+              [availableSteps]="availableSteps()"
+              (created)="onStepCreated($event)">
+            </app-step-creator>
+          }
+        </mat-drawer>
+        <mat-drawer-content class="column-layout">
+          <mat-tab-nav-panel class="column-layout" #tabPanel>
+            <mat-card class="canvas-container">
+              <div cdkDrag (mousedown)="onRegisterClickStart()" (mouseup)="onRegisterClickEnd()">
+                <div
+                  class="workplan-canvas"
+                  [ngStyle]="getCanvasStyling()"
+                  (wheel)="scaleCanvas($event)"
+                  (dragover)="allowDrop($event)"
+                  (drop)="recipeDropped($event)"
+                  [style]="{ 'background-size': '' + stepSize + 'px ' + stepSize + 'px' }"
+                  cdkDropList>
+                  @for (node of editorState.workplan?.nodes; track node) {
+                    <mat-card
+                      class="workplan-node"
+                  [ngStyle]="{
+                    top: positionOffset(node.positionTop) + 'px',
+                    left: positionOffset(node.positionLeft) + 'px',
+                    height: nodeHeight + 'px',
+                    width: nodeWidth + 'px'
+                  }"
+                      (contextmenu)="openStepContextMenu($event, node)"
+                      (press)="openStepPressMenu($event, node)"
+                      (click)="onClickStep(node)"
+                      (tap)="onClickStep(node)"
+                      [ngClass]="{ 'selected-node': node.id === selectedNode() }"
+                      (cdkDragStarted)="startDragging($event)"
+                      (cdkDragEnded)="endDragging($event, node)"
+                      [cdkDragFreeDragPosition]="dragPosition()"
+                      [cdkDragConstrainPosition]="dragConstrainPoint"
+                      cdkDrag
+                      cdkDragPreviewContainer="parent"
+                      cdkDropListGroup>
+                      <div class="connectors inputs">
+                        @for (input of node.inputs; track input) {
+                          <div
+                            [ngClass]="{ 'selected-node-connector': node.id === selectedNode() }"
+                            id="in_{{ node.id }}-{{ input.index }}"
+                            [matTooltip]="input.name ?? ''"
+                            matTooltipPosition="above"
+                            matTooltipHideDelay="100"
+                            (cdkDropListDropped)="connected($event, node, input)"
+                          cdkDropList></div>
+                        }
+                      </div>
+                      <div class="node-label truncate">
+                        <span>{{ node.displayName ?? node.name }}</span>
+                      </div>
+                      <div
+                        class="connectors outputs"
+                        cdkDropList #listTwo="cdkDropList" [cdkDropListConnectedTo]="inputIds()">
+                        @for (output of node.outputs; track output) {
+                          <div
+                            id="out_{{ node.id }}-{{ output.index }}"
+                            [ngClass]="{ 'selected-node-connector': node.id === selectedNode() }"
+                            [matTooltip]="output.name ?? ''"
+                            matTooltipHideDelay="100"
+                            [cdkDragData]="[node, output]"
+                          cdkDrag></div>
+                        }
+                      </div>
+                    </mat-card>
+                  }
+                  <!-- Placeholder card until step creation is completed -->
+                  @if (isCreatingStep()) {
+                    <mat-card
+                      class="workplan-node selected-node"
+                  [ngStyle]="{
+                    top: positionOffset(newStepPosition()?.top) + 'px',
+                    left: positionOffset(newStepPosition()?.left) + 'px'
+                  }">
+                      <div class="node-label">
+                        <span>{{ TranslationConstants.EDITOR.CREATING | translate }}</span>
+                      </div>
+                    </mat-card>
+                  }
+                  @for (path of workplanPaths(); track path) {
+                    <div class="workplan-path">
+                      @for (segment of path.segments; track segment) {
+                        <span
+                          class="segment"
+                    [ngStyle]="{
+                      top: segment.top + 'px',
+                      left: segment.left + 'px',
+                      width: segment.width + 'px',
+                      height: segment.height + 'px'
+                    }">
+                          <div
+                            (click)="openPathContextMenu($event, path)"
+                            (tap)="openPathTapMenu($event, path)"
+                            class="path-menu-area"
+                          [ngStyle]="getPathMenuAreaStyles(segment)"></div>
+                        </span>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            </mat-card>
+          </mat-tab-nav-panel>
+        </mat-drawer-content>
+      </mat-drawer-container>
+    </mat-drawer-content>
+  </mat-drawer-container>
+} @else {
+  <div class="moryx-loading-spinner">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+}
+
+
+<!-- Delete node path -->
+<div
+  #pathMenuTrigger="matMenuTrigger"
+  [matMenuTriggerFor]="pathMenu"
+  class="menu-trigger"
+  [style.position]="'fixed'"
+  [style.top]="menuY"
+[style.left]="menuX"></div>
+<mat-menu #pathMenu="matMenu">
+  <button mat-menu-item (click)="onPathDeleteClick()">
+    <mat-icon>delete</mat-icon>{{ TranslationConstants.EDITOR.DELETE | translate }}
+  </button>
+</mat-menu>
+
+<!-- Delete step -->
+<div
+  #stepMenuTrigger="matMenuTrigger"
+  [matMenuTriggerFor]="stepMenu"
+  class="menu-trigger"
+  [style.position]="'fixed'"
+  [style.top]="menuY"
+[style.left]="menuX"></div>
+<mat-menu #stepMenu="matMenu">
+  @if (selectedNode()) {
+    <button mat-menu-item (click)="onStepDeleteClick()" [disabled]="isNodeUneditable(selectedNode()!)">
+      <mat-icon>delete</mat-icon>{{ TranslationConstants.EDITOR.DELETE | translate }}
+    </button>
+  }
+</mat-menu>

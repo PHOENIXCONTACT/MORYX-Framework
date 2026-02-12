@@ -5,14 +5,19 @@
 
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, DragDropModule, DragRef } from '@angular/cdk/drag-drop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, signal, viewChild, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, viewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatDrawer, MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav';
 import { ActivatedRoute, ActivatedRouteSnapshot, ParamMap, Params, Router } from '@angular/router';
-import { MoryxSnackbarService, PrototypeToEntryConverter } from '@moryx/ngx-web-framework';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { NodeConnectionPoint, WorkplanNodeClassification, WorkplanNodeModel, WorkplanStepRecipe } from '../../../api/models';
+import {
+  NodeConnectionPoint,
+  WorkplanNodeClassification,
+  WorkplanNodeModel,
+  WorkplanStepRecipe
+} from '../../../api/models';
 import { WorkplanEditingService } from '../../../api/services';
 import { TranslationConstants } from '../../../extensions/translation-constants.extensions';
 import { EditorStateService } from '../../../services/editor-state.service';
@@ -25,9 +30,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { WorkplanPropertiesComponent } from './workplan-properties/workplan-properties.component';
-import { NodePropertiesComponent } from './node-properties/node-properties.component';
-import { StepCreatorComponent } from './step-creator/step-creator.component';
+import { WorkplanProperties } from './workplan-properties/workplan-properties';
+import { NodeProperties } from './node-properties/node-properties';
+import { StepCreator } from './step-creator/step-creator';
 import { MatButtonModule } from '@angular/material/button';
 
 enum EditQueries {
@@ -37,29 +42,29 @@ enum EditQueries {
 }
 
 @Component({
-    selector: 'app-editor',
-    templateUrl: './editor.component.html',
-    styleUrls: ['./editor.component.scss'],
-    standalone: true,
-    imports:[
-      CommonModule,
-      MatSidenavModule,
-      MatIconModule,
-      MatTabsModule,
-      MatCardModule,
-      MatDrawer,
-      MatTooltipModule,
-      DragDropModule,
-      TranslateModule,
-      MatProgressSpinnerModule,
-      MatMenuModule,
-      WorkplanPropertiesComponent,
-      NodePropertiesComponent,
-      StepCreatorComponent,
-      MatButtonModule,
-    ]
+  selector: 'app-editor',
+  templateUrl: './editor.html',
+  styleUrls: ['./editor.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatTabsModule,
+    MatCardModule,
+    MatDrawer,
+    MatTooltipModule,
+    DragDropModule,
+    TranslateModule,
+    MatProgressSpinnerModule,
+    MatMenuModule,
+    WorkplanProperties,
+    NodeProperties,
+    StepCreator,
+    MatButtonModule
+  ]
 })
-export class EditorComponent implements OnInit {
+export class Editor implements OnInit {
   pathMenuTrigger = viewChild.required<MatMenuTrigger>('pathMenuTrigger');
   stepMenuTrigger = viewChild.required<MatMenuTrigger>('stepMenuTrigger');
   availableSteps = signal<WorkplanStepRecipe[]>([]);
@@ -77,8 +82,8 @@ export class EditorComponent implements OnInit {
 
   readonly size = 5000;
   readonly stepSize = 14;
-  readonly nodeWidth = 8*this.stepSize;
-  readonly nodeHeight = 4*this.stepSize;
+  readonly nodeWidth = 8 * this.stepSize;
+  readonly nodeHeight = 4 * this.stepSize;
   readonly editQuery = 'edit';
   readonly selectedQuery = 'selected';
   readonly typeQuery = 'type';
@@ -103,12 +108,11 @@ export class EditorComponent implements OnInit {
     private router: Router,
     private workplanEditing: WorkplanEditingService,
     private sessionService: SessionsService,
-    private moryxSnackbar: MoryxSnackbarService,
-    public dialog: MatDialog,
+    private snackbarService: SnackbarService,
     public translate: TranslateService,
     public editorState: EditorStateService
   ) {
-    // Ammending this strategy to use management, but this piece of code needs refactoring
+    // Amending this strategy to use management, but this piece of code needs refactoring
     router.routeReuseStrategy.shouldReuseRoute = (future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot) => {
       if (future.routeConfig?.path && future.routeConfig?.path !== 'session' && future.routeConfig?.path !== ':token')
         return false;
@@ -120,20 +124,23 @@ export class EditorComponent implements OnInit {
     };
 
     // React to changes in the state of the editor
-    editorState.workplanChangedSubject$.subscribe(() => {this.scheduleRenderPaths(); this.gatherInputIds()});
-    editorState.selectedNode$.subscribe(nodeId => (this.selectedNode.update(_=> nodeId)));
+    editorState.workplanChangedSubject$.subscribe(() => {
+      this.scheduleRenderPaths();
+      this.gatherInputIds();
+    });
+    editorState.selectedNode$.subscribe(nodeId => (this.selectedNode.update(_ => nodeId)));
     editorState.isEditingProps$.subscribe(b => {
-      this.drawerIsOpen.update(_=> b);
-      this.isEditingProps.update(_=> b);
+      this.drawerIsOpen.update(_ => b);
+      this.isEditingProps.update(_ => b);
     });
     editorState.isEditingStep$.subscribe(stepId => {
-      this.drawerIsOpen.update(_=> !!stepId);
-      this.isEditingStep.update(_=> !!stepId);
+      this.drawerIsOpen.update(_ => !!stepId);
+      this.isEditingStep.update(_ => !!stepId);
     });
     editorState.isCreatingStep$.subscribe(type => {
-      this.drawerIsOpen.update(_=> !!type);
-      this.drawerMode.update(_=> !!type ? 'over' : 'side');
-      this.isCreatingStep.update(_=> !!type);
+      this.drawerIsOpen.update(_ => !!type);
+      this.drawerMode.update(_ => !!type ? 'over' : 'side');
+      this.isCreatingStep.update(_ => !!type);
     });
 
     // Configure initial state of the editor from route
@@ -141,17 +148,17 @@ export class EditorComponent implements OnInit {
   }
 
   private gatherInputIds() {
-    const ids = this.editorState.workplan?.nodes!.flatMap(n => n.inputs!.map(i => "in_" + n.id + "-" + i.index));
-    if(ids)
-      this.inputIds.update(_=> ids);
+    const ids = this.editorState.workplan?.nodes!.flatMap(n => n.inputs!.map(i => 'in_' + n.id + '-' + i.index));
+    if (ids)
+      this.inputIds.update(_ => ids);
     else
-      this.inputIds.update(_=> []);
+      this.inputIds.update(_ => []);
   }
 
   processInitialRoute() {
     const routeSnapshotParams = this.activatedRoute.snapshot.paramMap;
     this.sessionToken = String(routeSnapshotParams.get('token'));
-    
+
     const routeSnapshotQueryParams = this.activatedRoute.snapshot.queryParamMap;
     this.checkPropertiesEditing(routeSnapshotQueryParams);
     this.checkStepEditing(routeSnapshotQueryParams);
@@ -175,8 +182,8 @@ export class EditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.workplanEditing.availableSteps().subscribe({
-      next: steps => (this.availableSteps.update(_=> steps)),
-      error: async (e: HttpErrorResponse) => await this.moryxSnackbar.handleError(e),
+      next: steps => (this.availableSteps.update(_ => steps)),
+      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
     });
     this.sessionService.getSession(this.sessionToken).subscribe({
       next: workplan => {
@@ -184,14 +191,14 @@ export class EditorComponent implements OnInit {
         this.editorState.setWorkplan(workplan);
       },
       error: async (e: HttpErrorResponse) => {
-        await this.moryxSnackbar.handleError(e);
+        await this.snackbarService.handleError(e);
         this.sessionService.deactivateSession();
         this.router.navigate(['session', 'management']);
-        this.isLoading.update(_=> false);
+        this.isLoading.update(_ => false);
       },
       complete: () => {
-        this.isLoading.update(_=> false);
-      },
+        this.isLoading.update(_ => false);
+      }
     });
   }
 
@@ -204,16 +211,13 @@ export class EditorComponent implements OnInit {
       // ToDo: Check if query update on editorEvents can be done
       this.updateQuery({ edit: EditQueries.Node, type: null });
       this.editorState.startEditingStep(this.selectedNode()!);
-    }
-    else if (this.selectedNode() && this.drawerIsOpen()) {
+    } else if (this.selectedNode() && this.drawerIsOpen()) {
       this.updateQuery({ edit: null });
       this.editorState.stopEditingStep();
-    }
-    else if (!this.selectedNode() && !this.drawerIsOpen()) {
+    } else if (!this.selectedNode() && !this.drawerIsOpen()) {
       this.updateQuery({ edit: EditQueries.Properties, type: null });
       this.editorState.startEditingProps();
-    }
-    else if (!this.selectedNode() && this.drawerIsOpen()) {
+    } else if (!this.selectedNode() && this.drawerIsOpen()) {
       this.updateQuery({ edit: null, type: null });
       this.editorState.stopEditingProps();
     }
@@ -231,13 +235,13 @@ export class EditorComponent implements OnInit {
     this.editorState.onNodeDeselected();
     this.editorState.stopEditingStep();
     this.editorState.stopEditingProps();
-    
-    this.updateQuery({ edit: null, selected: null, type: null }); 
+
+    this.updateQuery({ edit: null, selected: null, type: null });
   }
 
   positionOffset(position: number | undefined): number {
     const offsetPosition = this.size + (position ?? 0);
-    const lockedPosition = Math.ceil(offsetPosition/this.stepSize) * this.stepSize;
+    const lockedPosition = Math.ceil(offsetPosition / this.stepSize) * this.stepSize;
     return lockedPosition;
   }
 
@@ -253,9 +257,10 @@ export class EditorComponent implements OnInit {
       width: this.size * 2 + 'px',
       top: this.canvasPosition?.top + 'px',
       left: this.canvasPosition?.left + 'px',
-      transform: 'scale(' + this.canvasScale + ')',
+      transform: 'scale(' + this.canvasScale + ')'
     };
   }
+
   //#endregion
 
   //#region Drag and Drop
@@ -270,7 +275,7 @@ export class EditorComponent implements OnInit {
 
     return {
       x: (point.x - this.cursorOffset.x + zoomMoveXDifference) as number,
-      y: (point.y - this.cursorOffset.y + zoomMoveYDifference) as number,
+      y: (point.y - this.cursorOffset.y + zoomMoveYDifference) as number
     };
   };
 
@@ -278,7 +283,7 @@ export class EditorComponent implements OnInit {
     // Consider scaling of parent element when dragging cards
     const position = {
       x: this.dragPosition().x * this.canvasScale,
-      y: this.dragPosition().y * this.canvasScale,
+      y: this.dragPosition().y * this.canvasScale
     };
     let mouseEvent = event.event as MouseEvent;
     this.cursorOffset.x = mouseEvent.clientX - event.source.element.nativeElement.getBoundingClientRect().left;
@@ -295,13 +300,13 @@ export class EditorComponent implements OnInit {
     node.positionLeft = (node.positionLeft ?? 0) + Math.ceil(event.distance.x / this.canvasScale);
     node.positionTop = (node.positionTop ?? 0) + Math.ceil(event.distance.y / this.canvasScale);
     // Reset drag position as the position is now changed on the node
-    this.dragPosition.update(_=> {
-      return {x: 0, y: 0}
+    this.dragPosition.update(_ => {
+      return { x: 0, y: 0 };
     });
 
     this.sessionService.updateSession(this.editorState.workplan).subscribe({
       next: session => this.editorState.setWorkplan(session),
-      error: async (e: HttpErrorResponse) => await this.moryxSnackbar.handleError(e),
+      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
     });
   }
 
@@ -321,7 +326,7 @@ export class EditorComponent implements OnInit {
 
     if (!stepRecipe) return;
 
-    this.newStepPosition.update(_=> new Position(event.offsetX - this.size, event.offsetY - this.size));
+    this.newStepPosition.update(_ => new Position(event.offsetX - this.size, event.offsetY - this.size));
     stepRecipe.positionLeft = this.newStepPosition()?.left;
     stepRecipe.positionTop = this.newStepPosition()?.top;
 
@@ -333,12 +338,13 @@ export class EditorComponent implements OnInit {
       this.onStepCreated(stepRecipe);
     }
   }
+
   //#endregion
 
   onStepCreated(stepRecipe: WorkplanStepRecipe) {
     this.workplanEditing.addStep({ sessionId: this.sessionToken, body: stepRecipe }).subscribe({
       next: step => this.onStepCreationSuccessResponse(step),
-      error: async (e: HttpErrorResponse) => await this.moryxSnackbar.handleError(e),
+      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
     });
   }
 
@@ -350,7 +356,7 @@ export class EditorComponent implements OnInit {
     this.editorState.stopCreatingStep();
     this.updateQuery({ edit: EditQueries.Node, selected: step.id, type: null });
     this.editorState.startEditingStep(step.id!);
-    this.editorState.onNodeSelected(step.id!)
+    this.editorState.onNodeSelected(step.id!);
     this.editorState.workplanChanged();
   }
 
@@ -372,25 +378,26 @@ export class EditorComponent implements OnInit {
         sessionId: this.sessionToken,
         targetNodeId: node.id ?? 0,
         targetIndex: input.index ?? 0,
-        body: { nodeId: sourceNode.id, index: draggedConnector.index },
+        body: { nodeId: sourceNode.id, index: draggedConnector.index }
       })
       .subscribe({
         next: session => {
           this.sessionService.registerUpdatedSession(session);
           this.editorState.setWorkplan(session);
         },
-        error: async (e: HttpErrorResponse) => await this.moryxSnackbar.handleError(e),
+        error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
       });
   }
+
   //---
 
   scheduleRenderPaths() {
     setTimeout(() => this.renderPaths(), 50);
   }
 
-  private renderPaths(){
+  private renderPaths() {
     const nodes = this.editorState.workplan?.nodes ?? [];
-    const result = nodes.flatMap(node => { 
+    const result = nodes.flatMap(node => {
       return node.outputs!.flatMap(output => {
         return output.connections!.map(connection => {
           let path = NodeConnectionPath.findPath(node, output, connection, this.canvasScale, this.stepSize);
@@ -398,9 +405,9 @@ export class EditorComponent implements OnInit {
           path.endInput = path.endNode.inputs?.find(i => i.index === connection.index)!;
           return path;
         });
-      })
+      });
     }) ?? [];
-    this.workplanPaths.update(_=> result);
+    this.workplanPaths.update(_ => result);
   }
 
   onPathDeleteClick() {
@@ -412,16 +419,16 @@ export class EditorComponent implements OnInit {
         sessionId: this.sessionToken,
         targetNodeId: data?.endNode.id ?? 0,
         targetIndex: data?.endInput.index ?? 0,
-        body: { nodeId: data?.startNode.id, index: data?.startInput.index },
+        body: { nodeId: data?.startNode.id, index: data?.startInput.index }
       })
       .subscribe({
         next: session => {
           this.sessionService.registerUpdatedSession(session);
-          this.editorState.setWorkplan(session)
-          this.workplanPaths.update(_=> this.workplanPaths().filter(p => p !== data));
+          this.editorState.setWorkplan(session);
+          this.workplanPaths.update(_ => this.workplanPaths().filter(p => p !== data));
           this.pathMenuTrigger().menuData = undefined;
         },
-        error: async (err: HttpErrorResponse) => await this.moryxSnackbar.handleError(err),
+        error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)
       });
   }
 
@@ -439,7 +446,7 @@ export class EditorComponent implements OnInit {
     this.workplanEditing
       .removeNode({
         sessionId: this.sessionToken,
-        nodeId: data.id ?? 0,
+        nodeId: data.id ?? 0
       })
       .subscribe({
         next: session => {
@@ -447,7 +454,7 @@ export class EditorComponent implements OnInit {
           this.editorState.setWorkplan(session);
           this.stepMenuTrigger().menuData = undefined;
         },
-        error: async (err: HttpErrorResponse) => await this.moryxSnackbar.handleError(err),
+        error: async (err: HttpErrorResponse) => await this.snackbarService.handleError(err)
       });
   }
 
@@ -503,12 +510,13 @@ export class EditorComponent implements OnInit {
       node?.classification === WorkplanNodeClassification.Output
     );
   }
+
   //#endregion
 
   private updateQuery(queryParams: Params): void {
     this.router.navigate([], {
       queryParams: queryParams,
-      queryParamsHandling: 'merge',
+      queryParamsHandling: 'merge'
     });
   }
 }

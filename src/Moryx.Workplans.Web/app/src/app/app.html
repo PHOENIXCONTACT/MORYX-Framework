@@ -25,18 +25,22 @@
         </mat-toolbar-row>
       </mat-toolbar>
 
-      <button
-        class="add"
-        mat-fab
-        (click)="onAdd()"
-        [matTooltip]="TranslationConstants.MANAGEMENT.ADD | translate"
-        matTooltipShowDelay="500"
-        *ngIf="!router.url.includes('session')">
-        <mat-icon>add</mat-icon>
-      </button>
+      @if (!router.url.includes('session')) {
+        <button
+          class="add"
+          mat-fab
+          (click)="onAdd()"
+          [matTooltip]="TranslationConstants.MANAGEMENT.ADD | translate"
+          matTooltipShowDelay="500"
+          >
+          <mat-icon>add</mat-icon>
+        </button>
+      }
 
       <!-- Render the toolbox only when session is open -->
-      <app-toolbox class="workplans-sidebar-contents" *ngIf="router.url.includes('session')"></app-toolbox>
+      @if (router.url.includes('session')) {
+        <app-toolbox class="workplans-sidebar-contents"></app-toolbox>
+      }
     </div>
   </mat-sidenav>
 

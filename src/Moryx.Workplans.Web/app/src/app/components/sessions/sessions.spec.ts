@@ -5,21 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NodePropertiesComponent } from './node-properties.component';
+import { Sessions } from './sessions';
 
-describe('NodePropertiesComponent', () => {
-  let component: NodePropertiesComponent;
-  let fixture: ComponentFixture<NodePropertiesComponent>;
+describe('Sessions', () => {
+  let component: Sessions;
+  let fixture: ComponentFixture<Sessions>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [NodePropertiesComponent]
+    declarations: [Sessions]
 })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NodePropertiesComponent);
+    fixture = TestBed.createComponent(Sessions);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

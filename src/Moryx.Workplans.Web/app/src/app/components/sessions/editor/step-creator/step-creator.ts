@@ -9,25 +9,24 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { WorkplanStepRecipe } from '../../../../api/models';
 import { TranslationConstants } from '../../../../extensions/translation-constants.extensions';
-import { CommonModule } from '@angular/common';
-import { NavigableEntryEditorComponent } from '@moryx/ngx-web-framework';
+
+import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    selector: 'app-step-creator',
-    templateUrl: './step-creator.component.html',
-    styleUrls: ['./step-creator.component.scss'],
-    standalone: true,
-    imports: [
-      CommonModule,
-      NavigableEntryEditorComponent,
-      TranslateModule,
-      MatSelectModule,
-      MatButtonModule
-    ]
+  selector: 'app-step-creator',
+  templateUrl: './step-creator.html',
+  styleUrls: ['./step-creator.scss'],
+  standalone: true,
+  imports: [
+    NavigableEntryEditor,
+    TranslateModule,
+    MatSelectModule,
+    MatButtonModule
+  ]
 })
-export class StepCreatorComponent implements OnInit, OnDestroy {
+export class StepCreator implements OnInit, OnDestroy {
   availableSteps = input.required<WorkplanStepRecipe[]>();
   //TODO: remove this and change stepRecipe to type of model.required<..>() in future refactoring of the UI
   created = output<WorkplanStepRecipe>();
@@ -37,12 +36,13 @@ export class StepCreatorComponent implements OnInit, OnDestroy {
   sub?: Subscription;
   readonly TranslationConstants = TranslationConstants;
 
-  constructor(private activatedRoute: ActivatedRoute, public translate: TranslateService) {}
+  constructor(private activatedRoute: ActivatedRoute, public translate: TranslateService) {
+  }
 
   ngOnInit(): void {
     this.sub = this.activatedRoute.queryParamMap.subscribe(m => {
-      this.recipeType.update(_=> m.get('type') ?? undefined);
-      this.stepRecipe.update(_=> structuredClone(this.availableSteps().find(s => s.type == this.recipeType())));
+      this.recipeType.update(_ => m.get('type') ?? undefined);
+      this.stepRecipe.update(_ => structuredClone(this.availableSteps().find(s => s.type == this.recipeType())));
     });
   }
 

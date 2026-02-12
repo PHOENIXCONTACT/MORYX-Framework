@@ -3,28 +3,27 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { AfterViewInit, Component, Inject, QueryList, ViewChildren } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-confirm-dialog',
-    templateUrl: './dialog-confirm.component.html',
-    styleUrls: ['./dialog-confirm.component.scss'],
+    templateUrl: './dialog-confirm.html',
+    styleUrls: ['./dialog-confirm.scss'],
     standalone: true,
     imports: [
-      CommonModule,
-      MatButtonModule,
-      MatDialogModule
-    ]
+    MatButtonModule,
+    MatDialogModule
+]
 })
-export class ConfirmDialogComponent implements AfterViewInit {
+export class ConfirmDialog implements AfterViewInit {
   @ViewChildren('actionButton') actionButtons: QueryList<MatButton> | undefined;
   buttons: ConfirmDialogButton[] | undefined;
 
   constructor(
-    public dialogRef: MatDialogRef<ConfirmDialogComponent>,
+    public dialogRef: MatDialogRef<ConfirmDialog>,
     @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogData
   ) {
     this.buttons = data.buttons;
