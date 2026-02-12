@@ -9,10 +9,10 @@ import { Component } from '@angular/core';
   selector: 'app-delete-assignment',
   standalone: true,
   imports: [],
-  templateUrl: './delete-assignment.component.html',
-  styleUrl: './delete-assignment.component.scss'
+  templateUrl: './delete-assignment.html',
+  styleUrl: './delete-assignment.scss'
 })
-export class DeleteAssignmentComponent {
+export class DeleteAssignment {
 
 }
 

@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ShiftInstanceDialogComponent } from './shift-instance-dialog.component';
+import { ShiftInstanceDialog } from './shift-instance-dialog';
 
-describe('ShiftInstanceDialogComponent', () => {
-  let component: ShiftInstanceDialogComponent;
-  let fixture: ComponentFixture<ShiftInstanceDialogComponent>;
+describe('ShiftInstanceDialog', () => {
+  let component: ShiftInstanceDialog;
+  let fixture: ComponentFixture<ShiftInstanceDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ShiftInstanceDialogComponent]
+      imports: [ShiftInstanceDialog]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(ShiftInstanceDialogComponent);
+    fixture = TestBed.createComponent(ShiftInstanceDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

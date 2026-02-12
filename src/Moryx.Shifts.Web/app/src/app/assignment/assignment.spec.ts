@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WorkHoursIconComponent } from './work-hours-icon.component';
+import { Assignment } from './assignment';
 
-describe('WorkHoursIconComponent', () => {
-  let component: WorkHoursIconComponent;
-  let fixture: ComponentFixture<WorkHoursIconComponent>;
+describe('Assignment', () => {
+  let component: Assignment;
+  let fixture: ComponentFixture<Assignment>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WorkHoursIconComponent]
+      imports: [Assignment]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(WorkHoursIconComponent);
+    fixture = TestBed.createComponent(Assignment);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

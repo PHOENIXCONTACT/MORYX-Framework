@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WeekDayToggleButtonComponent } from './week-day-toggle-button.component';
+import { CopyShiftAndAssignment } from './copy-shift-and-assignment';
 
-describe('WeekDayToggleButtonComponent', () => {
-  let component: WeekDayToggleButtonComponent;
-  let fixture: ComponentFixture<WeekDayToggleButtonComponent>;
+describe('CopyShiftAndAssignment', () => {
+  let component: CopyShiftAndAssignment;
+  let fixture: ComponentFixture<CopyShiftAndAssignment>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WeekDayToggleButtonComponent]
+      imports: [CopyShiftAndAssignment]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(WeekDayToggleButtonComponent);
+    fixture = TestBed.createComponent(CopyShiftAndAssignment);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

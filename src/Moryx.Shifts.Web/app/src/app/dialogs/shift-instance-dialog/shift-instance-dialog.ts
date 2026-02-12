@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -18,11 +18,10 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-shift-instance-dialog',
-  templateUrl: './shift-instance-dialog.component.html',
-  styleUrl: './shift-instance-dialog.component.scss',
+  templateUrl: './shift-instance-dialog.html',
+  styleUrl: './shift-instance-dialog.scss',
   standalone: true,
   imports: [
-    CommonModule,
     MatDialogModule,
     FormsModule,
     MatFormFieldModule,
@@ -31,9 +30,9 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
     TranslateModule,
     MatButtonModule
-  ]
+]
 })
-export class ShiftInstanceDialogComponent {
+export class ShiftInstanceDialog {
   form = new FormGroup({
     startDate: new FormControl<Date>(new Date()),
     endDate: new FormControl<Date>(new Date()),
@@ -41,7 +40,7 @@ export class ShiftInstanceDialogComponent {
   TranslationConstants = TranslationConstants;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ShiftInstanceModel,
-    public dialogRef: MatDialogRef<ShiftInstanceDialogComponent>
+    public dialogRef: MatDialogRef<ShiftInstanceDialog>
   ) {
     this.form.patchValue({
       startDate: data.startDate,

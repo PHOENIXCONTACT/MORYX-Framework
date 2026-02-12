@@ -5,19 +5,19 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WeekAssignmentDialogComponent } from './week-assignment-dialog.component';
+import { WeekDayToggleButton } from './week-day-toggle-button';
 
-describe('WeekAssignmentDialogComponent', () => {
-  let component: WeekAssignmentDialogComponent;
-  let fixture: ComponentFixture<WeekAssignmentDialogComponent>;
+describe('WeekDayToggleButton', () => {
+  let component: WeekDayToggleButton;
+  let fixture: ComponentFixture<WeekDayToggleButton>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WeekAssignmentDialogComponent]
+      imports: [WeekDayToggleButton]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(WeekAssignmentDialogComponent);
+    fixture = TestBed.createComponent(WeekDayToggleButton);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

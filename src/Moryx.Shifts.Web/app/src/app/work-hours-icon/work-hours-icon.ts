@@ -11,8 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-work-hours-icon',
-  templateUrl: './work-hours-icon.component.html',
-  styleUrl: './work-hours-icon.component.scss',
+  templateUrl: './work-hours-icon.html',
+  styleUrl: './work-hours-icon.scss',
   standalone: true,
   imports : [
     CommonModule,
@@ -20,7 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
     
   ]
 })
-export class WorkHoursIconComponent {
+export class WorkHoursIcon {
   orderHours = input.required<number>();
   operatorHours = input.required<number>();
   size = input.required<IconSize>();

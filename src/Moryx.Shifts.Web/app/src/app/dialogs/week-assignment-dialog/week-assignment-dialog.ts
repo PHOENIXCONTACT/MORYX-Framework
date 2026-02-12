@@ -35,22 +35,21 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { firstValueFrom } from 'rxjs';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { ShiftInstanceModel } from 'src/app/models/shift-instance-model';
-import { CommonModule } from '@angular/common';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { WeekDayToggleButtonComponent } from 'src/app/week-day-toggle-button/week-day-toggle-button.component';
+import { WeekDayToggleButton } from 'src/app/week-day-toggle-button/week-day-toggle-button';
 
 @Component({
   selector: 'app-week-assignment-dialog',
-  templateUrl: './week-assignment-dialog.component.html',
-  styleUrl: './week-assignment-dialog.component.scss',
+  templateUrl: './week-assignment-dialog.html',
+  styleUrl: './week-assignment-dialog.scss',
   standalone: true,
   imports: [
-    CommonModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
@@ -61,10 +60,10 @@ import { WeekDayToggleButtonComponent } from 'src/app/week-day-toggle-button/wee
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    WeekDayToggleButtonComponent
-  ]
+    WeekDayToggleButton
+]
 })
-export class WeekAssignmentDialogComponent implements OnInit {
+export class WeekAssignmentDialog implements OnInit {
   operators = signal<OperatorModel[]>([]);
   resources = signal<AttendableResourceModel[]>([]);
   shiftInstances = signal<ShiftInstanceModel[]>([]);
@@ -89,7 +88,7 @@ export class WeekAssignmentDialogComponent implements OnInit {
   shortDayName = shortDayName;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: AssignmentData,
-    public dialogRef: MatDialogRef<WeekAssignmentDialogComponent>,
+    public dialogRef: MatDialogRef<WeekAssignmentDialog>,
     private appStore: AppStoreService
   ) {
     this.form.patchValue({
