@@ -2,17 +2,24 @@
 // Licensed under the Apache License, Version 2.0
 
 using System.ComponentModel;
+using System;
 using System.Runtime.Serialization;
+using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.AbstractionLayer.Resources.Attributes;
 using Moryx.Serialization;
 
 namespace Moryx.Resources.Samples;
 
 [ResourceRegistration]
-public class Machine : Resource
+[ResourceSynchronization("Synchronization.Machine", Mode = SynchronizationMode.Selective)]
+public class Machine : Resource, IIdentifiableObject
 {
 
+    public IIdentity Identity { get; set; }
+
     [DataMember, EntrySerialize]
+    [SynchronizableMember]
     public string CurrentState { get; set; }
 
     [DataMember, EntrySerialize]

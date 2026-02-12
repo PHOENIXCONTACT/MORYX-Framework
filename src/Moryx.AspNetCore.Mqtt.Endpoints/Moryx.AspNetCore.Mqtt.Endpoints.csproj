@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OutputType>Library</OutputType>
+    <IsPackable>true</IsPackable>
+    <PackageReadmeFile>endpoints.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx.AspNetCore.Mqtt\Moryx.AspNetCore.Mqtt.csproj" />
+    <ProjectReference Include="..\Moryx.AbstractionLayer\Moryx.AbstractionLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\docs\articles\mqtt\endpoints.md" Pack="true"
+      PackagePath="" />
+  </ItemGroup>
+</Project>

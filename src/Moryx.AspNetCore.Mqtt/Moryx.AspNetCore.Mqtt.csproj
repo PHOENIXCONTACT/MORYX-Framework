@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <OutputType>Library</OutputType>
+    <IsPackable>true</IsPackable>
+    <PackageReadmeFile>asp-net-core-mqtt.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Moryx.AspNetCore.Mqtt.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="MQTTnet" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moryx\Moryx.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\docs\articles\mqtt\asp-net-core-mqtt.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+</Project>
