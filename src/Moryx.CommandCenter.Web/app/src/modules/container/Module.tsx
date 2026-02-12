@@ -19,7 +19,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { connect } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 import { toast } from "react-toastify";
 import ModuleHeader from "../../common/components/ModuleHeader";
 import { ActionType } from "../../common/redux/Types";
