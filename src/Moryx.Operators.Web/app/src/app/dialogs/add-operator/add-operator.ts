@@ -3,35 +3,34 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { OperatorViewModel } from 'src/app/models/operator-view-model';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { AssignableOperator } from 'src/app/api/models/assignable-operator';
 import { AppStoreService } from 'src/app/services/app-store.service';
-import { CommonModule } from '@angular/common';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-add-operator',
-    templateUrl: './add-operator.component.html',
-    styleUrl: './add-operator.component.scss',
+    templateUrl: './add-operator.html',
+    styleUrl: './add-operator.scss',
     standalone: true,
     imports: [
-      CommonModule,
-      MatDialogModule,
-      MatFormFieldModule,
-      ReactiveFormsModule,
-      MatInputModule,
-      TranslateModule,
-      MatButtonModule
-    ]
+    MatDialogModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    TranslateModule,
+    MatButtonModule
+]
 })
-export class AddOperatorComponentDialog {
+export class AddOperatorDialog {
   operatorForm = new FormGroup({
     identifier: new FormControl<string>('', [Validators.required]),
     firstName: new FormControl<string>('', [Validators.required]),
@@ -41,9 +40,9 @@ export class AddOperatorComponentDialog {
 
   constructor(
     private appStoreService: AppStoreService,
-    public dialogRef: MatDialogRef<AddOperatorComponentDialog>){}
+    public dialogRef: MatDialogRef<AddOperatorDialog>){}
 
-  getError(control: FormControl<string | null>){ 
+  getError(control: FormControl<string | null>){
     return control.hasError('required') ? 'This field is required!' : '';
   }
 
@@ -52,7 +51,7 @@ export class AddOperatorComponentDialog {
   }
 
   save(){
-    
+
     if(!this.operatorForm.valid) return;
 
     var operator = <AssignableOperator>{
@@ -64,10 +63,10 @@ export class AddOperatorComponentDialog {
     };
 
     var data = new OperatorViewModel(operator);
-    
+
       this.appStoreService.addOperator(data);
 
-      this.dialogRef.close(data);  
+      this.dialogRef.close(data);
   }
 }
 

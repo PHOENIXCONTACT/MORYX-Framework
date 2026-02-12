@@ -2,7 +2,7 @@
   <!-- Header -->
   <div
     class="tw:w-full tw:flex tw:justify-between tw:p-2 tw:items-center tw:bg-white tw:border-b tw:border-b-gray-200"
-  >
+    >
     <div class="tw:flex tw:flex-row tw:items-center tw:gap-2">
       <a
         mat-icon-button
@@ -10,7 +10,7 @@
         matTooltip="Go back"
         class="go-back-button"
         routerLink="/management"
-      >
+        >
         <mat-icon>arrow_back</mat-icon>
       </a>
       <span class="tw:text-lg tw:font-medium"> {{ TranslationConstants.AVAILABILITIES.TITLE | translate }}</span>
@@ -28,7 +28,7 @@
           mat-icon-button
           aria-label="Previous Week"
           (click)="navigateToPreviousWeek()"
-        >
+          >
           <mat-icon>chevron_left</mat-icon>
         </button>
         <!-- Date -->
@@ -37,7 +37,7 @@
           mat-icon-button
           aria-label="Next week"
           (click)="navigateToNextWeek()"
-        >
+          >
           <mat-icon>chevron_right</mat-icon>
         </button>
       </div>
@@ -54,10 +54,11 @@
       <div class="tw:font-bold tw:border-r tw:border-b tw:border-r-gray-200 tw:py-1 tw:pl-2">
         {{ TranslationConstants.AVAILABILITIES.OPERATORS| translate }}
       </div>
-      <div class="tw:py-1  tw:font-bold tw:border-b tw:flex tw:flex-row tw:item tw:justify-center"
+      @for (date of calendarState.currentViewDates(); track date) {
+        <div class="tw:py-1  tw:font-bold tw:border-b tw:flex tw:flex-row tw:item tw:justify-center"
        [ngClass]="{
         'tw:border-r  tw:border-r-gray-200 ': date.date.getDay() !== 6
-       }" *ngFor="let date of calendarState.currentViewDates()">
+       }">
           <span class="tw:rounded-full tw:px-2 tw:py-1" [ngClass]="{
             'tw:bg-primary-800 tw:text-white': isSameDate(date.date,calendarState.today)
           }">
@@ -67,7 +68,8 @@
             {{getShortDayName(date.day)}}
           </span>
         </div>
-   
+      }
+
     </div>
     <!-- body -->
     <div class="tw:grid tw:auto-rows-auto tw:overflow-y-auto">

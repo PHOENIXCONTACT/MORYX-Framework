@@ -4,22 +4,22 @@
 */
 
 import { Routes } from "@angular/router";
-import { AvailabilitiesComponent } from "./availabilities/availabilities.component";
-import { OperatorDetailsComponent } from "./operator-details/operator-details.component";
-import { OperatorsManagementComponent } from "./operators-management/operators-management.component";
-import { SkillTypeDetailsComponent } from "./skill-type-details/skill-type-details.component";
-import { SkillTypesComponent } from "./skill-types/skill-types.component";
-import { WorkstationOperatorsComponent } from "./workstation-operators/workstation-operators.component";
+import { Availabilities } from "./availabilities/availabilities";
+import { OperatorDetails } from "./operator-details/operator-details";
+import { OperatorsManagement } from "./operators-management/operators-management";
+import { SkillTypeDetails } from "./skill-type-details/skill-type-details";
+import { SkillTypes } from "./skill-types/skill-types";
+import { WorkstationOperators } from "./workstation-operators/workstation-operators";
 
 export const routes: Routes = [
-  { path: "workstations", component: WorkstationOperatorsComponent },
-  { path: "management", component: OperatorsManagementComponent },
-  { path: "availabilities", component: AvailabilitiesComponent },
-  { path: "skill-types", component: SkillTypesComponent },
-  { path: "skill-types/:id", component: SkillTypeDetailsComponent },
+  { path: "workstations", component: WorkstationOperators },
+  { path: "management", component: OperatorsManagement },
+  { path: "availabilities", component: Availabilities },
+  { path: "skill-types", component: SkillTypes },
+  { path: "skill-types/:id", component: SkillTypeDetails },
   {
     path: "management/operator/details/:id",
-    component: OperatorDetailsComponent,
+    component: OperatorDetails,
   },
   { path: "", redirectTo: "workstations", pathMatch: "full" },
 ];

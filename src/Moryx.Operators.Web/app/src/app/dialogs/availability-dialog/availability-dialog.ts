@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from "@angular/common";
+
 import { Component, Inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDatepickerModule } from "@angular/material/datepicker";
@@ -13,22 +13,21 @@ import { MatInputModule } from "@angular/material/input";
 
 @Component({
     selector: "app-attandance-dialog",
-    templateUrl: "./availability-dialog.component.html",
-    styleUrl: "./availability-dialog.component.scss",
+    templateUrl: "./availability-dialog.html",
+    styleUrl: "./availability-dialog.scss",
     standalone: true,
     imports: [
-      CommonModule,
-      MatDialogModule,
-      MatFormFieldModule,
-      MatInputModule,
-      MatDatepickerModule,
-      MatButtonModule
-    ]
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatButtonModule
+]
 })
-export class AvailabilityDialogComponent {
+export class AvailabilityDialog {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: AttandanceData,
-    public dialogRef: MatDialogRef<AvailabilityDialogComponent>
+    public dialogRef: MatDialogRef<AvailabilityDialog>
   ) {}
 
   onSave(){

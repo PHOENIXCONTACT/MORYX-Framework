@@ -3,27 +3,26 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
+
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-confirmation-dialog',
-    templateUrl: './confirmation-dialog.component.html',
-    styleUrl: './confirmation-dialog.component.scss',
+    templateUrl: './confirmation-dialog.html',
+    styleUrl: './confirmation-dialog.scss',
     standalone: true,
-    imports:[
-      CommonModule,
-      MatDialogModule,
-      TranslateModule
-    ]
+    imports: [
+    MatDialogModule,
+    TranslateModule
+]
 })
-export class ConfirmationDialogComponent {
+export class ConfirmationDialog {
   TranslationConstants = TranslationConstants;
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData,
-  public dialogRef: MatDialogRef<ConfirmationDialogComponent>) {
+  public dialogRef: MatDialogRef<ConfirmationDialog>) {
 
   }
 

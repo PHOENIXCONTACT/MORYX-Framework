@@ -3,24 +3,23 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, input, Input } from "@angular/core";
+import { Component, computed, input } from "@angular/core";
 import { OperatorSkill } from "../models/operator-skill-model";
 import { SkillTypeModel } from "../api/models/skill-type-model";
-import { CommonModule } from "@angular/common";
+
 import { MatTooltipModule } from "@angular/material/tooltip";
 import {MatChipsModule} from '@angular/material/chips';
 @Component({
     selector: "app-operator-skill-chips",
-    templateUrl: "./operator-skill-chips.component.html",
-    styleUrl: "./operator-skill-chips.component.scss",
+    templateUrl: "./operator-skill-chips.html",
+    styleUrl: "./operator-skill-chips.scss",
     standalone: true,
     imports: [
-      CommonModule,
-      MatTooltipModule,
-      MatChipsModule
-    ]
+    MatTooltipModule,
+    MatChipsModule
+]
 })
-export class OperatorSkillChipsComponent {
+export class OperatorSkillChips {
   operatorId = input.required<string>();
   skills = input.required<OperatorSkill[]>();
   skillTypes = input.required<SkillTypeModel[]>();

@@ -3,20 +3,19 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
     selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
+    templateUrl: './app.html',
+    styleUrls: ['./app.scss'],
     standalone: true,
     imports: [
         RouterOutlet
     ]
 })
-export class AppComponent  {
+export class App  {
 
 }
 
