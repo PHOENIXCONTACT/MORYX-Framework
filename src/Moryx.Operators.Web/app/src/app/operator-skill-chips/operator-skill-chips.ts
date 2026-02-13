@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
+import { Component, computed, input } from "@angular/core";
+import { OperatorSkill } from "../models/operator-skill-model";
+import { SkillTypeModel } from "../api/models/skill-type-model";
+
+import { MatTooltipModule } from "@angular/material/tooltip";
+import {MatChipsModule} from '@angular/material/chips';
+@Component({
+    selector: "app-operator-skill-chips",
+    templateUrl: "./operator-skill-chips.html",
+    styleUrl: "./operator-skill-chips.scss",
+    standalone: true,
+    imports: [
+    MatTooltipModule,
+    MatChipsModule
+]
+})
+export class OperatorSkillChips {
+  operatorId = input.required<string>();
+  skills = input.required<OperatorSkill[]>();
+  skillTypes = input.required<SkillTypeModel[]>();
+  useTagStyle = input<boolean>();
+  operatorSkills = computed(()=> this.skills().filter(x => x.operatorId === this.operatorId()));
+
+  findSkillTypeById(id: number){
+    return this.skillTypes().find(x => x.id === id);
+  }
+
+  skillTooltipText(){
+    let skillNameArray: string[] = [];
+    skillNameArray = this.operatorSkills().map((x,index) => this.findSkillTypeById(x.typeId)?.name ?? 'UNKNOWN');
+    return skillNameArray.join(', ');
+  }
+}
+

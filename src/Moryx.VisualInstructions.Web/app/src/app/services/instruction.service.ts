@@ -11,7 +11,7 @@ import { DisplayedMediaContent } from '../components/media-contents/displayed-me
 import { HttpErrorResponse, HttpClient, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 
 @Injectable({
   providedIn: 'root',
@@ -23,10 +23,10 @@ export class InstructionService {
   private _instructions = new BehaviorSubject<InstructionModel[]>([]);
   public instructions$ = this._instructions.asObservable();
 
-  constructor(private zone: NgZone, 
+  constructor(private zone: NgZone,
     private visualInstructionsService: VisualInstructionsService,
     private httpClient: HttpClient,
-    private snackbar: MoryxSnackbarService, 
+    private snackbarService: SnackbarService,
     private sanitizer: DomSanitizer) {
     this.subscribeToStream();
   }
@@ -64,12 +64,12 @@ export class InstructionService {
   }
 
   private async handleInstructionError(e: HttpErrorResponse) : Promise<DisplayedMediaContent> {
-    await this.snackbar.handleError(e);
+    await this.snackbarService.handleError(e);
     return { type: 'undefined', url: environment.assets + 'assets/broken_image.png' } as DisplayedMediaContent;
   }
 
   private convertBlobResponse(data: HttpEvent<Blob>): DisplayedMediaContent {
-    if (data.type != HttpEventType.Response || data.body == null) 
+    if (data.type != HttpEventType.Response || data.body == null)
       return { type: 'undefined', url: environment.assets + 'assets/broken_image.png' } as DisplayedMediaContent;
 
     const downloadedFile = new Blob([data.body], { type: data.body.type });

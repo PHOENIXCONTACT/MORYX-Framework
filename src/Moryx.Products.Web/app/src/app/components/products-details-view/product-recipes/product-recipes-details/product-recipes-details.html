@@ -1,0 +1,18 @@
+@if (currentRecipe()) {
+  <div class="product-recipes-details">
+    <app-product-recipes-details-header
+      [recipe]="currentRecipe()!"
+      [edit]="editService.edit"
+      >
+    </app-product-recipes-details-header>
+    @if (currentRecipe()?.properties !== undefined) {
+      <navigable-entry-editor
+        class="product-recipes-details-properties"
+        queryParam="productRecipe"
+        [entry]="currentRecipe()?.properties!"
+        [disabled]="editService.edit === false"
+      ></navigable-entry-editor>
+    }
+    <div></div>
+  </div>
+}

@@ -5,8 +5,7 @@
 
 import { ApplicationConfig, importProvidersFrom } from "@angular/core";
 import { environment } from "src/environments/environment";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ApiModule } from "./api/api.module";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatBadgeModule } from "@angular/material/badge";
@@ -32,16 +31,12 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { BrowserModule } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { AppStoreService } from "./services/app-store.service";
-import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { provideRouter, withComponentInputBinding } from "@angular/router";
 import { routes } from "./app.routes";
 
-export function httpTranslateLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(
-    http,
-    environment.assets + "assets/languages/"
-  );
-}
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -72,17 +67,17 @@ export const appConfig: ApplicationConfig = {
       MatBadgeModule,
       MatMenuModule,
       ReactiveFormsModule,
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useFactory: httpTranslateLoaderFactory,
-          deps: [HttpClient],
-        },
-      })
     ),
     AppStoreService,
     TranslateService,
     provideHttpClient(withInterceptorsFromDi()),
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({
+        prefix: environment.assets + 'assets/languages/',
+        suffix: '.json'
+      }),
+      fallbackLang: 'en'
+    }),
     provideAnimations(),
   ],
 };

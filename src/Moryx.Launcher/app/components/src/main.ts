@@ -5,18 +5,18 @@
 
 import { bootstrapApplication, createApplication } from '@angular/platform-browser';
 import { createCustomElement } from '@angular/elements';
-import { DropdownMenuComponent } from './app/dropdown-menu/dropdown-menu.component';
-import { DropdownItemComponent } from './app/dropdown-item/dropdown-item.component';
-import { DropdownContainerComponent } from './app/dropdown-container/dropdown-container.component';
+import { DropdownMenu } from './app/dropdown-menu/dropdown-menu';
+import { DropdownItem } from './app/dropdown-item/dropdown-item';
+import { DropdownContainer } from './app/dropdown-container/dropdown-container';
 import { Constants } from './app/constants';
-import { DropdownSubItemComponent } from './app/dropdown-sub-item/dropdown-sub-item.component';
-import { LanguageSelectorComponent } from './app/language-selector/language-selector.component';
-import { PageLayoutComponent } from './app/page-layout/page-layout.component';
-import { NotificationsComponent } from './app/notifications/notifications.component';
-import { SearchBoxComponent } from './app/search-box/search-box.component';
-import { NotificationBadgeComponent } from './app/notification-badge/notification-badge.component';
-import { SignInButtonComponent } from './app/auth-button/auth-button.component';
-import { NavigationButtonComponent } from './app/navigation-button/navigation-button.component';
+import { DropdownSubItem } from './app/dropdown-sub-item/dropdown-sub-item';
+import { LanguageSelector } from './app/language-selector/language-selector';
+import { PageLayout } from './app/page-layout/page-layout';
+import { Notifications } from './app/notifications/notifications';
+import { SearchBox } from './app/search-box/search-box';
+import { NotificationBadge } from './app/notification-badge/notification-badge';
+import { SignInButton } from './app/auth-button/auth-button';
+import { NavigationButton } from './app/navigation-button/navigation-button';
 
 (async () => {
   const app = await createApplication({
@@ -24,38 +24,38 @@ import { NavigationButtonComponent } from './app/navigation-button/navigation-bu
   });
 
 
-  const dropdownItem = createCustomElement(DropdownItemComponent,{
+  const dropdownItem = createCustomElement(DropdownItem,{
     injector: app.injector
   });
-  const dropdownSubItem = createCustomElement(DropdownSubItemComponent,{
+  const dropdownSubItem = createCustomElement(DropdownSubItem,{
     injector: app.injector
   });
-  const dropdownContainer = createCustomElement(DropdownContainerComponent,{
+  const dropdownContainer = createCustomElement(DropdownContainer,{
     injector: app.injector
   });
 
-  const dropdownMenu = createCustomElement(DropdownMenuComponent,{
+  const dropdownMenu = createCustomElement(DropdownMenu,{
     injector: app.injector
   });
-  const LanguageSelector = createCustomElement(LanguageSelectorComponent,{
+  const languageSelector = createCustomElement(LanguageSelector,{
     injector: app.injector
   });
-  const pageLayout = createCustomElement(PageLayoutComponent,{
+  const pageLayout = createCustomElement(PageLayout,{
     injector: app.injector
   });
-  const searchbox = createCustomElement(SearchBoxComponent,{
+  const searchbox = createCustomElement(SearchBox,{
     injector: app.injector
   });
-  const notifications = createCustomElement(NotificationsComponent,{
+  const notifications = createCustomElement(Notifications,{
     injector: app.injector
   });
-  const notificationBadge = createCustomElement(NotificationBadgeComponent,{
+  const notificationBadge = createCustomElement(NotificationBadge,{
     injector: app.injector
   });
-  const authButtons = createCustomElement(SignInButtonComponent,{
+  const authButtons = createCustomElement(SignInButton,{
     injector: app.injector
   });
-  const navButton = createCustomElement(NavigationButtonComponent,{
+  const navButton = createCustomElement(NavigationButton,{
     injector: app.injector
   });
 
@@ -63,7 +63,7 @@ import { NavigationButtonComponent } from './app/navigation-button/navigation-bu
   customElements.define(Constants.WebComponentNames.DropdownItem,dropdownItem);
   customElements.define(Constants.WebComponentNames.DropdownContainer,dropdownContainer);
   customElements.define(Constants.WebComponentNames.DropdownSubItem,dropdownSubItem);
-  customElements.define(Constants.WebComponentNames.LanguageSelector,LanguageSelector);
+  customElements.define(Constants.WebComponentNames.LanguageSelector,languageSelector);
   customElements.define(Constants.WebComponentNames.PageLayout,pageLayout);
   customElements.define(Constants.WebComponentNames.Searchbox,searchbox);
   customElements.define(Constants.WebComponentNames.Notifications,notifications);

@@ -3,14 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ApplicationRef, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FactoryStateStreamService } from './factory-state-stream.service';
 import { OrderStoreService } from './order-store.service';
 import { FactoryMonitorService } from '../api/services';
 import { CellLocationModel } from '../api/models/cell-location-model';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
-import Cell from '../models/cell';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import CellModel from '../models/cellModel';
 import Order from '../models/order';
 import { Converter } from '../extensions/converter';
 import { FactoryStateModel } from '../api/models/factory-state-model';
@@ -20,25 +20,25 @@ import { CellStateChangedModel } from '../api/models/cell-state-changed-model';
 import { FactorySelectionService } from './factory-selection.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class CellStoreService {
-  private _cellSelected = new BehaviorSubject<Cell | undefined>(undefined);
-  private _cellUpdated = new BehaviorSubject<Cell | undefined>(undefined);
-  private _cells = new BehaviorSubject<Cell[]>([]);
+  private _cellSelected = new BehaviorSubject<CellModel | undefined>(undefined);
+  private _cellUpdated = new BehaviorSubject<CellModel | undefined>(undefined);
+  private _cells = new BehaviorSubject<CellModel[]>([]);
 
   public cellSelected$ = this._cellSelected.asObservable();
   public cellUpdated$ = this._cellUpdated.asObservable();
   public cells$ = this._cells.asObservable();
 
-  updatedCell: BehaviorSubject<Cell | undefined> = new BehaviorSubject<Cell | undefined>(undefined);
+  updatedCell: BehaviorSubject<CellModel | undefined> = new BehaviorSubject<CellModel | undefined>(undefined);
 
   constructor(
     private orderService: OrderStoreService,
     private factoryStateStreamService: FactoryStateStreamService,
     private factoryMonitorService: FactoryMonitorService,
-    private factorySelectionService : FactorySelectionService,
-    private moryxSnackbar: MoryxSnackbarService
+    private factorySelectionService: FactorySelectionService,
+    private snackbarService: SnackbarService
   ) {
     this.factoryMonitorService.initialFactoryState().subscribe({
       next: factoryState => {
@@ -66,7 +66,7 @@ export class CellStoreService {
           const rawCellStateChanges: Array<CellStateChangedModel> = [];
           factoryState.cellStateChangedModels?.forEach(c => rawCellStateChanges.push(c));
 
-          let cells: { [id: string]: Cell } = {};
+          let cells: { [id: string]: CellModel } = {};
 
           for (let raw of rawRecourceChanges) {
             let cell = Converter.resourceChangedModelToCell(raw);
@@ -88,7 +88,7 @@ export class CellStoreService {
           }
         });
       },
-      error: err => this.moryxSnackbar.handleError(err),
+      error: err => this.snackbarService.handleError(err)
     });
   }
 
@@ -109,12 +109,12 @@ export class CellStoreService {
         if (!this._cells.getValue().length) return;
 
         this.updateCell(cell);
-      },
+      }
     });
   }
 
   public selectCell(id: number | undefined) {
-    if (this._cellSelected.getValue() && this._cellSelected.getValue()?.id === id  || !id) {
+    if (this._cellSelected.getValue() && this._cellSelected.getValue()?.id === id || !id) {
       this._cellSelected.next(undefined);
       return;
     }
@@ -126,7 +126,7 @@ export class CellStoreService {
   public moveCell(e: CellLocationModel) {
     //send cell update to server
     this.factoryMonitorService.moveCell({ body: e }).subscribe({
-      error: err => this.moryxSnackbar.handleError(err),
+      error: err => this.snackbarService.handleError(err)
     });
   }
 
@@ -134,7 +134,7 @@ export class CellStoreService {
     return this._cells.getValue().find(c => c.id === cellId);
   }
 
-  public updateCell(cell: Cell) {
+  public updateCell(cell: CellModel) {
     const cells = this._cells.getValue();
     const indexToUpdate = cells.findIndex(x => x.id === cell.id);
     let cellToUpdate = cells[indexToUpdate];
@@ -172,7 +172,7 @@ export class CellStoreService {
       cellToUpdate.operationNumber &&
       cell.operationNumber != ''
     ) {
-      cellToUpdate.orderColor=
+      cellToUpdate.orderColor =
         this.orderService._orders
           .getValue()
           .find(o => o.operationNumber === cellToUpdate.operationNumber && o.orderNumber === cellToUpdate.orderNumber)

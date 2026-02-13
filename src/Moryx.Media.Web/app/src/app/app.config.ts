@@ -4,7 +4,7 @@
 */
 
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { ApplicationConfig, importProvidersFrom } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatBadgeModule } from "@angular/material/badge";
@@ -25,52 +25,52 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { BrowserModule } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { provideRouter } from "@angular/router";
-import { ApiInterceptor, API_INTERCEPTOR_PROVIDER, MoryxSnackbarService } from "@moryx/ngx-web-framework";
+import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from "@moryx/ngx-web-framework/interceptors";
+import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { NgxDocViewerModule } from "ngx-doc-viewer";
 import { environment } from "src/environments/environment";
 import { ApiModule } from "./api/api.module";
 import { routes } from "./app.routes";
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-export function httpTranslateLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(
-      http,
-      environment.assets + 'assets/languages/'
-    );
-  }
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 export const appConfig: ApplicationConfig = {
-    providers: [
-        provideRouter(routes),
-        importProvidersFrom(
-            BrowserModule, 
-            MatBadgeModule, 
-            MatCardModule, 
-            MatButtonModule, 
-            MatGridListModule, 
-            MatProgressSpinnerModule, 
-            MatDialogModule, 
-            MatListModule, 
-            MatIconModule, 
-            MatTooltipModule, 
-            MatFormFieldModule, 
-            MatInputModule, 
-            FormsModule, 
-            MatSnackBarModule, 
-            MatMenuModule, 
-            MatSidenavModule, 
-            MatToolbarModule, 
-            NgxDocViewerModule, 
-            ClipboardModule, 
-            ApiModule.forRoot({ rootUrl: environment.rootUrl }), TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: httpTranslateLoaderFactory,
-                deps: [HttpClient],
-            },
-        })),
-        ApiInterceptor, API_INTERCEPTOR_PROVIDER, MoryxSnackbarService, provideHttpClient(withInterceptorsFromDi()),
-        provideAnimations()
-    ]
+  providers: [
+    provideRouter(routes),
+    importProvidersFrom(
+      BrowserModule,
+      MatBadgeModule,
+      MatCardModule,
+      MatButtonModule,
+      MatGridListModule,
+      MatProgressSpinnerModule,
+      MatDialogModule,
+      MatListModule,
+      MatIconModule,
+      MatTooltipModule,
+      MatFormFieldModule,
+      MatInputModule,
+      FormsModule,
+      MatSnackBarModule,
+      MatMenuModule,
+      MatSidenavModule,
+      MatToolbarModule,
+      NgxDocViewerModule,
+      ClipboardModule,
+      ApiModule.forRoot({rootUrl: environment.rootUrl})
+    ),
+    ApiInterceptor,
+    API_INTERCEPTOR_PROVIDER,
+    SnackbarService,
+    provideHttpClient(withInterceptorsFromDi()),
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({
+        prefix: environment.assets + 'assets/languages/',
+        suffix: '.json'
+      }),
+      fallbackLang: 'en'
+    }),
+    provideAnimations()
+  ]
 }

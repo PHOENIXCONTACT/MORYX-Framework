@@ -1,0 +1,27 @@
+<div mat-dialog-title class="cell-image-header">
+  <button mat-icon-button (click)="openCellIconUploader()">
+    <mat-icon>{{cellSettings()?.icon}}</mat-icon>
+  </button>
+  <span>{{ TranslationConstants.CELL_IMAGE_DIALOG.CELL_IMAGE | translate }}</span>
+</div>
+<span class="subtitle">{{ data.name }}</span>
+<div mat-dialog-content class="mat-typography">
+  <div class="cell-image-content">
+    <div class="image-container">
+      @if (!cellSettings()?.image) {
+        <p>{{ TranslationConstants.CELL_IMAGE_DIALOG.NO_IMAGE | translate }}</p>
+      }
+      @if (cellSettings()?.image) {
+        <img [src]="cellSettings()?.image" alt="Cell image" />
+      }
+    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>{{ TranslationConstants.CELL_IMAGE_DIALOG.IMAGE_URL | translate }}</mat-label>
+      <input matInput [placeholder]="TranslationConstants.CELL_IMAGE_DIALOG.ENTER_IMAGE_URL | translate" [formControl]="imageControl" (change)="urlChanged()" [errorStateMatcher]="matcher" />
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close color="primary" cdkFocusInitial>{{ TranslationConstants.SHARED.CANCEL | translate }}</button>
+  <button mat-flat-button color="primary" cdkFocusInitial (click)="saveCellSettings()">{{ TranslationConstants.SHARED.SAVE | translate }}</button>
+</div>

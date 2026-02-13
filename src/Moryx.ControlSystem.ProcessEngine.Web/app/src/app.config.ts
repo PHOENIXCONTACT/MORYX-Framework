@@ -3,16 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import {
-  HttpClient,
-  provideHttpClient,
-  withInterceptorsFromDi,
-} from "@angular/common/http";
-import {
-  ApplicationConfig,
-  enableProdMode,
-  importProvidersFrom,
-} from "@angular/core";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { ApplicationConfig, enableProdMode, importProvidersFrom } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
@@ -27,34 +19,26 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatTableModule } from "@angular/material/table";
 import { BrowserModule } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
-import {
-  ApiInterceptor,
-  API_INTERCEPTOR_PROVIDER,
-} from "@moryx/ngx-web-framework";
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from "@moryx/ngx-web-framework";
 import { ApiModule } from "./app/api/api.module";
 import { environment } from "./environments/environment";
 import { routes } from "./app.routes";
 import { provideRouter } from "@angular/router";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 if (environment.production) {
   enableProdMode();
 }
 
-export function httpTranslateLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(
-    http,
-    environment.assets + 'assets/languages/'
-  );
-}
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     importProvidersFrom(
       BrowserModule,
-      ApiModule.forRoot({ rootUrl: environment.rootUrl }),
+      ApiModule.forRoot({rootUrl: environment.rootUrl}),
       MatExpansionModule,
       MatListModule,
       MatCardModule,
@@ -66,18 +50,18 @@ export const appConfig: ApplicationConfig = {
       MatTableModule,
       MatDividerModule,
       MatSlideToggleModule,
-      MatSnackBarModule,
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useFactory: httpTranslateLoaderFactory,
-          deps: [HttpClient],
-        },
-      })
+      MatSnackBarModule
     ),
     ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
     provideHttpClient(withInterceptorsFromDi()),
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({
+        prefix: environment.assets + 'assets/languages/',
+        suffix: '.json'
+      }),
+      fallbackLang: 'en'
+    }),
     provideAnimations(),
   ],
 };

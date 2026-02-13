@@ -1,0 +1,29 @@
+<h2 mat-dialog-title> {{ TranslationConstants.SKILL_EDIT_DIALOG.TITLE | translate  }} </h2>
+<mat-dialog-content class="tw:w-full">
+  <section class="tw:w-full">
+    <mat-form-field class="tw:w-full">
+      <mat-label>{{ TranslationConstants.SKILL_EDIT_DIALOG.SKILL_TYPE| translate  }}</mat-label>
+      <mat-select [value]="data.typeId">
+        @for (skillType of skillTypes(); track skillType) {
+          <mat-option [value]="skillType.id">
+            {{ skillType.name }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="tw:w-full">
+      <mat-label>{{ TranslationConstants.OPERATOR_DETAILS.OBTAINED_ON | translate  }}</mat-label>
+      <input matInput [matDatepicker]="picker" [value]="data.obtainedOn">
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </section>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="tw:flex tw:justify-end tw:w-full">
+    <button mat-button  (click)="cancel()">{{ TranslationConstants.SKILL_EDIT_DIALOG.CANCEL | translate  }}</button>
+    <button mat-button cdkFocusInitial (click)="save()">{{ TranslationConstants.SKILL_EDIT_DIALOG.SAVE | translate  }}</button>
+  </div>
+</mat-dialog-actions>

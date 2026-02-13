@@ -4,19 +4,18 @@
 */
 
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, firstValueFrom, Observable } from "rxjs";
+import { BehaviorSubject, firstValueFrom, lastValueFrom } from "rxjs";
 import { WorkstationViewModel } from "../models/workstation-view-model";
 import { OperatorViewModel } from "../models/operator-view-model";
 import {
   OperatorManagementService,
   SkillManagementService,
 } from "../api/services";
-import { MoryxSnackbarService } from "@moryx/ngx-web-framework";
+import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { OperatorModel } from "../api/models/operator-model";
 import { AssignableOperator } from "../api/models/assignable-operator";
 import { OperatorSkill } from "../models/operator-skill-model";
 import { SkillType } from "../models/skill-type-model";
-import { SKILLS, SKILL_TYPES } from "../models/dummy-data";
 import { SkillCreationContextModel } from "../api/models/skill-creation-context-model";
 import {
   skillToOperatorSkill,
@@ -24,8 +23,6 @@ import {
 } from "../models/model-converter";
 import { SkillTypeModel } from "../api/models/skill-type-model";
 import { SkillTypeCreationContextModel } from "../api/models/skill-type-creation-context-model";
-import { AttendableResourceModel } from "../api/models/attendable-resource-model";
-import { SkillModel } from "../api/models/skill-model";
 import { IOperatorAssignable } from "../api/models/i-operator-assignable";
 
 @Injectable({
@@ -47,7 +44,7 @@ export class AppStoreService {
   constructor(
     private operatorManagementService: OperatorManagementService,
     private skillManagementService: SkillManagementService,
-    private moryxSnackbar: MoryxSnackbarService
+    private snackbarService: SnackbarService
   ) {
     this.initialize();
   }
@@ -127,7 +124,7 @@ export class AppStoreService {
               this._operators.next([...this._operators.getValue().filter(e => e.data.identifier!= operatorResult.identifier),operator]);
             });
         },
-        error: (error) => this.moryxSnackbar.handleError(error),
+        error: (error) => this.snackbarService.handleError(error),
       });
   }
 
@@ -136,8 +133,8 @@ export class AppStoreService {
     workstation: WorkstationViewModel
   ) {
     this.operatorManagementService
-      .signOut({ 
-        operatorIdentifier: operator.data.identifier ?? "", 
+      .signOut({
+        operatorIdentifier: operator.data.identifier ?? "",
         resourceId: workstation.data.id ?? 0 })
       .subscribe((operatorResult) => {
 
@@ -146,7 +143,7 @@ export class AppStoreService {
             identifier: operator.data.identifier ?? "",
           })
           .subscribe((operatorResult) => {
-            
+
             operator.data.assignedResources =
               operatorResult.assignedResources?.map(
                 (x) => <IOperatorAssignable>{ id: x.id, name: x.name }
@@ -171,10 +168,8 @@ export class AppStoreService {
       operatorIdentifier: operator.data.identifier ?? "",
     };
 
-    this.operatorManagementService
-      .deleteOperator(params)
-      .toAsync()
-      .catch((error) => this.moryxSnackbar.handleError(error));
+    lastValueFrom(this.operatorManagementService.deleteOperator(params))
+      .catch((error) => this.snackbarService.handleError(error));
   }
 
   public addOperator(operator: OperatorViewModel) {
@@ -184,16 +179,14 @@ export class AppStoreService {
       firstName: operator.data.firstName,
       lastName: operator.data.lastName,
     };
-    this.operatorManagementService
-      .add({
+    lastValueFrom(this.operatorManagementService.add({
         body: data,
-      })
-      .toAsync()
+      }))
       .then((identifier) => {
         const operators = [...this.currentOperatorList(), operator];
         this._operators.next(operators);
       })
-      .catch((error) => this.moryxSnackbar.handleError(error));
+      .catch((error) => this.snackbarService.handleError(error));
   }
 
   updateOperator(operator: AssignableOperator): Promise<void> {
@@ -202,13 +195,11 @@ export class AppStoreService {
     );
     if (!model) return new Promise(() => {});
 
-    return this.operatorManagementService
-      .update({ identifier: model.data.identifier ?? "", body: operator })
-      .toAsync()
+    return lastValueFrom(this.operatorManagementService.update({ identifier: model.data.identifier ?? "", body: operator }))
       .then((result) => {
         return;
       })
-      .catch((error) => this.moryxSnackbar.handleError(error));
+      .catch((error) => this.snackbarService.handleError(error));
   }
 
   cancelEditing(operator: AssignableOperator) {

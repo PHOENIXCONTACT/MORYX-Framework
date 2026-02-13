@@ -1,0 +1,43 @@
+<app-products-details-header
+  class="product-details-header"
+  [currentProduct]="currentProduct()!"
+  [editMode]="editService.edit"
+></app-products-details-header>
+
+<mat-divider></mat-divider>
+
+<nav mat-tab-nav-bar class="product-details-navigation" [tabPanel]="tabPanel">
+  @if (currentProduct()?.properties !== undefined) {
+    <a
+      mat-tab-link
+      [active]="activeLink() == Tabs.Properties"
+      (click)="routeTo(Tabs.Properties)"
+      >{{ TranslationConstants.SHARED.PROPERTIES | translate }}</a
+      >
+    }
+    @if (currentProduct()?.parts && currentProduct()?.parts?.length) {
+      <a
+        mat-tab-link
+        [active]="activeLink() == Tabs.Parts"
+        (click)="routeTo(Tabs.Parts)"
+        >{{ TranslationConstants.DETAILS.PARTS | translate }}</a
+        >
+      }
+      <a
+        mat-tab-link
+        [active]="activeLink() == Tabs.Recipes"
+        (click)="routeTo(Tabs.Recipes)"
+        >{{ TranslationConstants.DETAILS.RECIPES | translate }}</a
+        >
+        <a
+          mat-tab-link
+          [active]="activeLink() == Tabs.References"
+          (click)="routeTo(Tabs.References)"
+
+          >{{ TranslationConstants.DETAILS.REFERENCES | translate }}</a
+          >
+        </nav>
+
+        <mat-tab-nav-panel class="product-details-information" #tabPanel>
+          <router-outlet></router-outlet>
+        </mat-tab-nav-panel>

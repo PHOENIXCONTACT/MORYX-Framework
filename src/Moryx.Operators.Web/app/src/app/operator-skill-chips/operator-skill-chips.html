@@ -1,0 +1,24 @@
+<mat-chip-set class="tw:flex tw:flex-row tw:w-full tw:gap-1">
+  @if(useTagStyle()){
+    @if(operatorSkills().length <= 5){
+      @for (skill of operatorSkills(); track skill) {
+        <mat-chip
+          class="tw:border tw:bg-gray-500 tw:border-gray-500 tw:rounded-sm tw:px-1"
+          >
+          findSkillTypeById(skill.typeId)?.name
+        </mat-chip>
+      }
+    } @else
+      {
+      <mat-chip class="tw:border tw:bg-gray-300 tw:border-gray-200 tw:rounded-sm tw:px-1"
+        [matTooltip]= "skillTooltipText()">
+        {{ operatorSkills().length }} Skills
+      </mat-chip>
+    }
+  }
+</mat-chip-set>
+@if(!useTagStyle()){
+  <mat-chip-set class="tw:w-[550px] tw:truncate tw:text-right">
+    <mat-chip class="tw:font-medium">{{ skillTooltipText() }}</mat-chip>
+  </mat-chip-set>
+}

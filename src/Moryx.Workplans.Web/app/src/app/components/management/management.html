@@ -1,0 +1,55 @@
+@if (!isLoading()) {
+  <section class="main-section">
+    <table mat-table [dataSource]="dataSource" >
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>{{ TranslationConstants.MANAGEMENT.NAME | translate }}</th>
+        <td mat-cell *matCellDef="let workplan">{{ workplan.name }}</td>
+      </ng-container>
+      <ng-container matColumnDef="state">
+        <th mat-header-cell *matHeaderCellDef>{{ TranslationConstants.MANAGEMENT.STATE | translate }}</th>
+        <td mat-cell *matCellDef="let workplan">{{ workplan.state }}</td>
+      </ng-container>
+      <ng-container matColumnDef="version">
+        <th mat-header-cell *matHeaderCellDef>{{ TranslationConstants.MANAGEMENT.VERSION | translate }}</th>
+        <td mat-cell *matCellDef="let workplan" align="right">{{ workplan.version }}</td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let workplan" align="center">
+          <button
+            mat-icon-button
+            click-stop-propagation
+            (click)="onOpenSession(workplan)"
+            [matTooltip]="TranslationConstants.MANAGEMENT.OPEN_SESSION | translate"
+            matTooltipShowDelay="500">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            click-stop-propagation
+            (click)="onDuplicateWorkplan(workplan)"
+            [matTooltip]="TranslationConstants.MANAGEMENT.DUPLICATE | translate"
+            matTooltipShowDelay="500">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            click-stop-propagation
+            (click)="onDeleteWorkplan(workplan)"
+            [matTooltip]="TranslationConstants.MANAGEMENT.DELETE | translate"
+            matTooltipShowDelay="500">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" ></tr>
+    </table>
+  </section>
+}
+
+<div class="loading-container">
+  @if (isLoading()) {
+    <mat-spinner class="dialog-workplans-loading"></mat-spinner>
+  }
+</div>

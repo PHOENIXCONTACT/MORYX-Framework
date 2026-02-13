@@ -1,0 +1,51 @@
+<div class="media-instruction">
+  @if (selectedContent()?.type?.includes('image') || selectedContent()?.type?.includes('undefined') ) {
+    <img
+      class="media-content-detail-image"
+      [src]="selectedContent()?.url"
+      alt=""
+      />
+  }
+  @if (selectedContent()?.type?.includes('application/pdf') ) {
+    <ngx-doc-viewer
+      viewer="url"
+      [url]="selectedContent()?.url ?? ''"
+      class="media-content-detail-image"
+    ></ngx-doc-viewer>
+  }
+  @if (selectedContent()?.type?.includes('text/html')) {
+    <iframe style="width: 100%; height: calc(100vh - 300px); border: 0px"
+    [src]="getSafeUrl(selectedContent()?.url!)">Your browser doesn't support Iframe</iframe>
+  }
+</div>
+@if (medias().length > 1) {
+  <div class="media-navigation">
+    <button
+      class="next-image"
+      mat-mini-fab
+      aria-label="Example icon button with a vertical three dot icon"
+      (click)="onPrevious()"
+      >
+      <mat-icon>navigate_before</mat-icon>
+    </button>
+    <div class="media-navigation">
+      @for (content of medias(); track content) {
+        <button
+          (click)="onSelect(content)"
+          class="image-quick-link"
+          mat-mini-fab
+          [ngClass]="{ selected: selectedContent()?.url == content.url}"
+          aria-label="Example icon button with a vertical three dot icon"
+        ></button>
+      }
+    </div>
+    <button
+      class="next-image"
+      mat-mini-fab
+      aria-label="Example icon button with a vertical three dot icon"
+      (click)="onNext()"
+      >
+      <mat-icon>navigate_next</mat-icon>
+    </button>
+  </div>
+}

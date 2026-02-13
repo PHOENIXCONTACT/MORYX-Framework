@@ -1,0 +1,12 @@
+@if (properties() !== undefined) {
+  <navigable-entry-editor
+    [entry]="properties()!"
+    queryParam = "resourceProperties"
+    [disabled]="!editService.edit"
+    >
+  </navigable-entry-editor>
+} @else {
+  <div class="properties-loading-screen">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+}

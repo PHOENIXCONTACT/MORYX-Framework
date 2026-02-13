@@ -1,0 +1,57 @@
+@if (notification()) {
+  <div class="scaling">
+    <mat-card class="notification-card">
+      <mat-card-header
+        class="notification-header"
+        [ngClass]="'has-background-' + notification()?.severity"
+        >
+        <div mat-card-avatar class="notification-icon">
+          <mat-icon
+            [inline]="true"
+            role="complementary"
+            aria-label="Notification Severity Icon"
+            >
+            {{ getIcon(notification()!) }}
+          </mat-icon>
+        </div>
+        <mat-card-title class="notification-title">
+          <markdown [data]="notification()?.title"> </markdown>
+        </mat-card-title>
+        <mat-card-subtitle>{{
+          notification()?.created | date: "medium"
+        }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="notification-content">
+        <div class="content">
+          <markdown class="notification-message" [data]="notification()?.message"> </markdown>
+          @if (notification()?.properties && isArrayNotEmpty(notification()?.properties?.subEntries!)) {
+            <navigable-entry-editor
+              [entry]="notification()!.properties!"
+              [disabled]="true"
+              queryParam="properties"
+            ></navigable-entry-editor>
+          }
+        </div>
+      </mat-card-content>
+      @if (notification()?.isAcknowledgable) {
+        <mat-card-actions align="end">
+          <button
+            mat-button
+            color="primary"
+            type="button"
+            (click)="onAcknowledge(notification()!)"
+            >
+            {{ TranslationConstants.DETAILS.ACKNOWLEDGE | translate }}
+          </button>
+        </mat-card-actions>
+      }
+    </mat-card>
+  </div>
+} @else {
+  <img
+    src="{{ environment.assets + 'assets/moryx_transparent_colored.png' }}"
+    alt="Semi-transparent Moryx Banner"
+    width="80%"
+    />
+}
+

@@ -1,0 +1,382 @@
+<mat-sidenav-container class="overview">
+  <mat-sidenav
+    opened
+    mode="side"
+    position="start"
+    [disableClose]="true"
+    (click)="clickContainer($event)"
+  >
+    <div class="overview-tree">
+      @if (!selected()) {
+        <mat-toolbar
+          [ngStyle]="{ 'background-image': 'url(' + productsToolbarImage + ')' }"
+          class="overview-tree-header"
+          color="primary"
+        >
+          <mat-toolbar-row>
+            <span class="spacer"></span>
+            @if (!hierarchic()) {
+              <button
+                mat-icon-button
+                (click)="setHierarchy(true)"
+                aria-label="hierarchic"
+                [matTooltip]="
+                  TranslationConstants.SIDEBAR_BUTTONS.HIERARCHY_VIEW | translate
+                "
+                matTooltipShowDelay="500"
+              >
+                <mat-icon class="mat-icon-outlined">account_tree</mat-icon>
+              </button>
+            }
+            @if (hierarchic()) {
+              <button
+                mat-icon-button
+                (click)="setHierarchy(false)"
+                aria-label="non hierarchic"
+                [matTooltip]="
+                  TranslationConstants.SIDEBAR_BUTTONS.LIST_VIEW | translate
+                "
+                matTooltipShowDelay="500"
+              >
+                <mat-icon>list</mat-icon>
+              </button>
+            }
+            <button
+              mat-icon-button
+              aria-label="Refresh"
+              (click)="cacheService.loadProductsForTree()"
+              [matTooltip]="
+                TranslationConstants.SIDEBAR_BUTTONS.REFRESH | translate
+              "
+              matTooltipShowDelay="500"
+            >
+              <mat-icon>sync</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              (click)="drawer.toggle()"
+              aria-label="Filter"
+              [matTooltip]="
+                TranslationConstants.SIDEBAR_BUTTONS.FILTER | translate
+              "
+              matTooltipShowDelay="500"
+            >
+              <mat-icon>filter_alt</mat-icon>
+            </button>
+          </mat-toolbar-row>
+
+          <mat-toolbar-row>
+            <button mat-icon-button title="Disabled toggle" disabled></button>
+            <span>{{ TranslationConstants.APP.PRODUCTS | translate }}</span>
+          </mat-toolbar-row>
+        </mat-toolbar>
+      } @else {
+        <mat-toolbar
+          [ngStyle]="{ 'background-image': 'url(' + productsToolbarImage + ')' }"
+          class="products-toolbar"
+        >
+          <mat-toolbar-row>
+            <!-- Unselect Button -->
+            <button
+              type="button"
+              (click)="onDeselect()"
+              mat-icon-button
+              aria-label="Unselect product"
+              [matTooltip]="TranslationConstants.SHARED.CANCEL | translate"
+              matTooltipShowDelay="500"
+            >
+              <span class="material-symbols-outlined">close</span>
+            </button>
+            <span class="spacer"></span>
+            <!-- Edit Button -->
+            @if (!editService.edit) {
+              <button
+                mat-icon-button
+                aria-label="Start editing the selected product type"
+                [matTooltip]="TranslationConstants.SHARED.EDIT | translate"
+                matTooltipShowDelay="500"
+                type="button"
+                (click)="onEdit()"
+                [disabled]="editDisabled()"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+
+              <!-- Duplicate Button -->
+              <button
+                mat-icon-button
+                aria-label="Duplicate the selected product type"
+                [matTooltip]="TranslationConstants.SHARED.DUPLICATE | translate"
+                matTooltipShowDelay="500"
+                type="button"
+                (click)="onDuplicate(selected()?.id)"
+              >
+                <span class="material-symbols-outlined">content_copy</span>
+              </button>
+              <!-- Revision Button -->
+              <button
+                mat-icon-button
+                aria-label="Show revisions of the selected product type"
+                [matTooltip]="TranslationConstants.SHARED.REVISION | translate"
+                matTooltipShowDelay="500"
+                type="button"
+                (click)="onRevisions(selected()?.id)"
+              >
+                <span class="material-symbols-outlined">history</span>
+              </button>
+              <button
+                mat-icon-button
+                aria-label="Delete product type"
+                [matTooltip]="TranslationConstants.SHARED.DELETE | translate"
+                matTooltipShowDelay="500"
+                type="button"
+                (click)="onDelete(selected()?.id)"
+              >
+                <span class="material-symbols-outlined">delete_forever</span>
+              </button>
+            }
+
+            @if (editService.edit) {
+              <!-- Save Button -->
+              <button
+                mat-icon-button
+                aria-label="Save the edited resource"
+                [matTooltip]="TranslationConstants.SHARED.SAVE | translate"
+                matTooltipShowDelay="500"
+                [disabled]="saveDisabled()"
+                type="submit"
+                (click)="onSave()"
+              >
+                <span class="material-symbols-outlined">save</span>
+              </button>
+              <!-- Cancel Button -->
+              <button
+                type="button"
+                (click)="onCancel()"
+                mat-icon-button
+                aria-label="Cancel editing product type"
+                [matTooltip]="TranslationConstants.SHARED.CANCEL | translate"
+                matTooltipShowDelay="500"
+              >
+                <span class="material-symbols-outlined">cancel</span>
+              </button>
+            }
+          </mat-toolbar-row>
+
+          <mat-toolbar-row></mat-toolbar-row>
+        </mat-toolbar>
+      }
+
+      @if (!importDisabled()) {
+        <button
+          mat-fab
+          color="primary"
+          class="overview-import-button"
+          type="button"
+          aria-label="Import Products"
+          (click)="onImport()"
+          [matTooltip]="TranslationConstants.SIDEBAR_BUTTONS.ADD | translate"
+          matTooltipShowDelay="500"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      }
+
+      <mat-drawer-container class="overview-tree-content">
+        <mat-drawer
+          #drawer
+          position="start"
+          mode="over"
+          class="overview-tree-content-filter"
+        >
+          <div class="overview-tree-content-filter-form">
+            <mat-form-field appearance="outline" class="filter-name">
+              <mat-label>{{
+                TranslationConstants.SHARED.NAME | translate
+              }}</mat-label>
+              <input matInput [(ngModel)]="cacheService.filterOptions.name" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                TranslationConstants.SHARED.IDENTIFIER | translate
+              }}</mat-label>
+              <input
+                matInput
+                [(ngModel)]="cacheService.filterOptions.identifier"
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                TranslationConstants.SHARED.REVISION | translate
+              }}</mat-label>
+              <mat-select [(ngModel)]="cacheService.filterOptions.revision">
+                @for (r of revisionOptions(); track r) {
+                  <mat-option [value]="r">
+                    {{ r }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{
+                TranslationConstants.APP.SELECTOR | translate
+              }}</mat-label>
+              <mat-select [(ngModel)]="cacheService.filterOptions.selector">
+                @for (s of selectorOptions(); track s) {
+                  <mat-option [value]="s">
+                    {{ s }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="overview-tree-content-filter-actions">
+            <button mat-button (click)="resetFilter(drawer)">
+              <mat-icon>filter_alt_off</mat-icon>
+              {{ TranslationConstants.APP.RESET_FILTER | translate }}
+            </button>
+            <button mat-button color="primary" (click)="filter(drawer)">
+              <mat-icon>filter_alt</mat-icon>
+              {{ TranslationConstants.APP.APPLY_FILTER | translate }}
+            </button>
+          </div>
+        </mat-drawer>
+
+        <mat-drawer-content>
+          <mat-menu #contextMenu="matMenu">
+            <ng-template matMenuContent let-id="id">
+              <button
+                mat-menu-item
+                [disabled]="editService.edit"
+                (click)="onDelete(id)"
+              >
+                <mat-icon>delete_forever</mat-icon>
+                <span>{{
+                  TranslationConstants.SHARED.DELETE | translate
+                }}</span>
+              </button>
+              <button
+                mat-menu-item
+                [disabled]="editService.edit"
+                (click)="onSelectAndEdit(id)"
+              >
+                <mat-icon>edit</mat-icon>
+                <span>{{ TranslationConstants.SHARED.EDIT | translate }}</span>
+              </button>
+              <button
+                mat-menu-item
+                [disabled]="editService.edit"
+                (click)="onDuplicate(id)"
+              >
+                <mat-icon>content_copy</mat-icon>
+                <span>{{
+                  TranslationConstants.SHARED.DUPLICATE | translate
+                }}</span>
+              </button>
+              <button
+                mat-menu-item
+                [disabled]="editService.edit"
+                (click)="onRevisions(id)"
+              >
+                <mat-icon>history</mat-icon>
+                <span>{{
+                  TranslationConstants.SHARED.REVISION | translate
+                }}</span>
+              </button>
+            </ng-template>
+          </mat-menu>
+          <!-- A hidden div is created to set the position of the menu-->
+          <div
+            style="visibility: hidden; position: fixed"
+            [style.left]="menuTopLeftPosition().x"
+            [style.top]="menuTopLeftPosition().y"
+            [matMenuTriggerFor]="contextMenu"
+            class="tree-container"
+          ></div>
+
+          <mat-tree
+            class="overview-tree-content-tree"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+          >
+            <mat-tree-node
+              *matTreeNodeDef="let node"
+              (click)="onSelect(node.id)"
+              (press)="onOpenContextMenu($event, node.id)"
+              (contextmenu)="onProductContext($event, node.id)"
+              class="overview-tree-content-tree-items"
+              [ngClass]="{
+                'moryx-selected': selected()?.id == node.id
+              }"
+            >
+              <button mat-icon-button title="Disabled toggle" disabled></button>
+              @if (node.id === 0) {
+                <span class="overview-tree-content-tree-items-text">{{
+                  node.name
+                }}</span>
+              } @else {
+                <span class="overview-tree-content-tree-items-text"
+                  >{{
+                    editService.createProductIdentity(
+                      node.identifier,
+                      node.revision
+                    )
+                  }}
+                  {{ node.name }}</span
+                >
+              }
+            </mat-tree-node>
+            <mat-tree-node
+              *matTreeNodeDef="let node; when: hasChild"
+              (click)="onSelect(node.id)"
+              (contextmenu)="onProductContext($event, node.id)"
+              (press)="onOpenContextMenu($event, node.id)"
+              class="overview-tree-content-tree-items"
+              [ngClass]="{
+                'moryx-selected': selected()?.id == node.id
+              }"
+            >
+              <button
+                mat-icon-button
+                matTreeNodeToggle
+                [attr.aria-label]="'toggle ' + node.name"
+                (click)="onExpandOrCollapseNode(node)"
+              >
+                <mat-icon class="mat-icon-rtl-mirror">
+                  {{
+                    treeControl.isExpanded(node)
+                      ? "expand_more"
+                      : "chevron_right"
+                  }}
+                </mat-icon>
+              </button>
+              @if (node.id === 0) {
+                <span class="overview-tree-content-tree-items-text">{{
+                  node.name
+                }}</span>
+              } @else {
+                <span class="overview-tree-content-tree-items-text"
+                  >{{
+                    editService.createProductIdentity(
+                      node.identifier,
+                      node.revision
+                    )
+                  }}
+                  {{ node.name }}</span
+                >
+              }
+            </mat-tree-node>
+          </mat-tree>
+        </mat-drawer-content>
+      </mat-drawer-container>
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="overview-details">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

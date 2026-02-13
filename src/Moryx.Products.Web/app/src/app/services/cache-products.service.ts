@@ -5,8 +5,9 @@
 
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Entry, MoryxSnackbarService } from '@moryx/ngx-web-framework';
-import { async, BehaviorSubject } from 'rxjs';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import { Entry } from '@moryx/ngx-web-framework/entry-editor';
+import { BehaviorSubject } from 'rxjs';
 import {
   ProductDefinitionModel,
   ProductImporter,
@@ -29,32 +30,29 @@ import { HttpErrorResponse } from '@angular/common/http';
   providedIn: 'root',
 })
 export class CacheProductsService {
-  definitions: BehaviorSubject<ProductDefinitionModel[] | undefined> =
-    new BehaviorSubject<ProductDefinitionModel[] | undefined>(undefined);
-  productsShownInTheTree: BehaviorSubject<ProductModel[] | undefined> =
-    new BehaviorSubject<ProductModel[] | undefined>(undefined);
-  importers: BehaviorSubject<ProductImporter[] | undefined> =
-    new BehaviorSubject<ProductImporter[] | undefined>(undefined);
-  recipeDefitions: BehaviorSubject<RecipeDefinitionModel[] | undefined> =
-    new BehaviorSubject<RecipeDefinitionModel[] | undefined>(undefined);
+  definitions: BehaviorSubject<ProductDefinitionModel[] | undefined> = new BehaviorSubject<ProductDefinitionModel[] | undefined>(undefined);
+  productsShownInTheTree: BehaviorSubject<ProductModel[] | undefined> = new BehaviorSubject<ProductModel[] | undefined>(undefined);
+  importers: BehaviorSubject<ProductImporter[] | undefined> = new BehaviorSubject<ProductImporter[] | undefined>(undefined);
+  recipeDefinitions: BehaviorSubject<RecipeDefinitionModel[] | undefined> = new BehaviorSubject<RecipeDefinitionModel[] | undefined>(undefined);
   selected: ProductModel[] | undefined;
-  workplans: BehaviorSubject<WorkplanModel[] | undefined> = new BehaviorSubject<
-    WorkplanModel[] | undefined
-  >(undefined);
+  workplans: BehaviorSubject<WorkplanModel[] | undefined> = new BehaviorSubject<WorkplanModel[] | undefined>(undefined);
   TranslationConstants = TranslationConstants;
+
   public filterOptions: FilterOptions = {
     name: '',
     identifier: '',
     revision: RevisionFilter.Latest,
     selector: Selector.Direct,
   } as FilterOptions;
+
   constructor(
     private service: ProductManagementService,
     private workplanService: WorkplanService,
     private router: Router,
-    private moryxSnackbar: MoryxSnackbarService,
+    private snackbarService: SnackbarService,
     public translate: TranslateService
-  ) {}
+  ) {
+  }
 
   loadConfiguration() {
     this.service.getProductCustomization().subscribe({
@@ -64,10 +62,10 @@ export class CacheProductsService {
         if (configuration.productTypes !== null)
           this.definitions.next(configuration.productTypes);
         if (configuration.recipeTypes !== null)
-          this.recipeDefitions.next(configuration.recipeTypes);
+          this.recipeDefinitions.next(configuration.recipeTypes);
       },
       error: async (e: HttpErrorResponse) => {
-        await this.moryxSnackbar.handleError(e);
+        await this.snackbarService.handleError(e);
       },
     });
 
@@ -76,7 +74,7 @@ export class CacheProductsService {
         this.workplans.next(workplans);
       },
       error: async (e: HttpErrorResponse) => {
-        await this.moryxSnackbar.handleError(e);
+        await this.snackbarService.handleError(e);
       },
     });
   }
@@ -91,7 +89,7 @@ export class CacheProductsService {
         revisionFilter:
           RevisionFilter[
             this.filterOptions.revision as keyof typeof RevisionFilter
-          ],
+            ],
         selector:
           Selector[this.filterOptions.selector as keyof typeof Selector],
       };
@@ -102,7 +100,7 @@ export class CacheProductsService {
         revisionFilter:
           RevisionFilter[
             this.filterOptions.revision as keyof typeof RevisionFilter
-          ],
+            ],
         selector:
           Selector[this.filterOptions.selector as keyof typeof Selector],
       };
@@ -113,7 +111,7 @@ export class CacheProductsService {
         revisionFilter:
           RevisionFilter[
             this.filterOptions.revision as keyof typeof RevisionFilter
-          ],
+            ],
         selector:
           Selector[this.filterOptions.selector as keyof typeof Selector],
       };
@@ -123,13 +121,13 @@ export class CacheProductsService {
         revisionFilter:
           RevisionFilter[
             this.filterOptions.revision as keyof typeof RevisionFilter
-          ],
+            ],
         selector:
           Selector[this.filterOptions.selector as keyof typeof Selector],
       };
     }
 
-    this.service.getTypes({ body: body }).subscribe({
+    this.service.getTypes({body: body}).subscribe({
       next: (products) => {
         if (products !== null) this.productsShownInTheTree.next(products);
       },
@@ -144,12 +142,12 @@ export class CacheProductsService {
         TranslationConstants.DISMISS,
       ])
       .toAsync();
-    await this.moryxSnackbar.showError(
+    await this.snackbarService.showError(
       translations[TranslationConstants.APP.FAILED_LOADING]
     );
   }
 
-  resetfilter() {
+  resetFilter() {
     this.filterOptions.identifier = '';
     this.filterOptions.name = '';
     this.filterOptions.revision = RevisionFilter.Latest;
@@ -162,11 +160,11 @@ export class CacheProductsService {
 
     let success: boolean = false;
     await this.service
-      .deleteType({ id: product.id })
+      .deleteType({id: product.id})
       .toAsync()
       .then((res) => (success = res))
       .catch(
-        async (e: HttpErrorResponse) => await this.moryxSnackbar.handleError(e)
+        async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
       );
     if (!success) return;
 
@@ -179,27 +177,27 @@ export class CacheProductsService {
     };
 
     await this.service
-    .getTypes({ body: body })
-    .toAsync()
-    .then((results) => {
-      if (results && results[0]) {
-        const existingRevision = newProductsForTree.find(p => p.id === results[0].id);
-        if(!existingRevision) {
-          const otherRevision = results[0];
-          newProductsForTree.push(otherRevision);
+      .getTypes({body: body})
+      .toAsync()
+      .then((results) => {
+        if (results && results[0]) {
+          const existingRevision = newProductsForTree.find(p => p.id === results[0].id);
+          if (!existingRevision) {
+            const otherRevision = results[0];
+            newProductsForTree.push(otherRevision);
+          }
         }
-      }
-      this.productsShownInTheTree.next(newProductsForTree);
-    })
-    .catch(
-      async (e: HttpErrorResponse) => await this.moryxSnackbar.handleError(e)
+        this.productsShownInTheTree.next(newProductsForTree);
+      })
+      .catch(
+        async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
       );
 
     //check if current route contains id
     const url = this.router.url;
     const regexDeletedProduct: RegExp = new RegExp(`details\/${product.id}`);
     if (regexDeletedProduct.test(url)) {
-      this.router.navigate([``]);
+      await this.router.navigate([``]);
     }
   }
 
@@ -226,34 +224,12 @@ export class CacheProductsService {
           this.productsShownInTheTree.next(newProductsOfTree);
         },
         error: async (e: HttpErrorResponse) => {
-          await this.moryxSnackbar.handleError(e);
+          await this.snackbarService.handleError(e);
         },
       });
 
       resolve(true);
     });
-  }
-
-  //TODO: move this function to EntryEditor package
-  cloneEntry(prototype: Entry): Entry {
-    const entry = { ...prototype };
-    entry.validation = { ...prototype.validation };
-    entry.value = { ...prototype.value };
-    entry.description = `${prototype.description}`;
-    entry.displayName = `${prototype.displayName}`;
-    if (prototype.subEntries) {
-      entry.subEntries = [] as Entry[];
-      for (let i = 0; i < prototype.subEntries?.length; i++) {
-        entry.subEntries[i] = this.cloneEntry(prototype.subEntries[i]);
-      }
-    }
-    if (prototype.prototypes) {
-      entry.prototypes = [] as Entry[];
-      for (let i = 0; i < prototype.prototypes?.length; i++) {
-        entry.prototypes[i] = this.cloneEntry(prototype.prototypes[i]);
-      }
-    }
-    return entry;
   }
 }
 

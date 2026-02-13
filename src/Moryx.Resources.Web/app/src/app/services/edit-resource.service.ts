@@ -14,7 +14,8 @@ import { ResourceStorageDetails, SessionService } from './session.service';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { MoryxSnackbarService, PrototypeToEntryConverter } from '@moryx/ngx-web-framework';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import { PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
 import { ResourceConstructionParameters } from '../models/ResourceConstructionParameters';
 
 /**
@@ -39,13 +40,13 @@ export class EditResourceService {
     private router: Router,
     private sessionService: SessionService,
     private translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService
+    private snackbarService: SnackbarService
   ) { }
 
   loadResource() {
     var id = 0;
 
-    var navigation = this.router.getCurrentNavigation();
+    var navigation = this.router.currentNavigation();
     if (navigation?.finalUrl?.root.children['primary']?.segments?.length)
       id = Number(navigation.finalUrl?.root.children['primary'].segments[1].toString());
     else {
@@ -91,7 +92,7 @@ export class EditResourceService {
     } else {
       translation = (await this.getTranslation(TranslationConstants.DEFAULT_VIEW.FAILED_LOADING)) + ` ${error.status}`;
     }
-    await this.moryxSnackbar.showError(translation);
+    await this.snackbarService.showError(translation);
   }
 
   private async getTranslation(key: string) {
@@ -149,7 +150,7 @@ export class EditResourceService {
   }
 
   async onSave(): Promise<ResourceModel | undefined> {
-    var resourceModel = this.resource.getValue();
+    const resourceModel = this.resource.getValue();
     if (!resourceModel) return;
 
     if (resourceModel.properties) PrototypeToEntryConverter.convertToEntry(resourceModel.properties);
@@ -203,7 +204,7 @@ export class EditResourceService {
   }
 
   assignReferences(resource: ResourceModel, parent: ResourceModel) {
-    var referenceToParent = resource.references?.find(r => r.name == 'Parent');
+    const referenceToParent = resource.references?.find(r => r.name == 'Parent');
     if (referenceToParent) referenceToParent.targets = [parent] as ResourceModel[];
     else
       resource.references?.push({

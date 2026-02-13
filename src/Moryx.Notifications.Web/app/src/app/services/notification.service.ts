@@ -9,7 +9,7 @@ import { NotificationPublisherService } from '../api/services';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ConnectionState } from '../models/ConnectionState';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework/moryx-snackbar';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 
 @Injectable({
   providedIn: 'root',
@@ -17,27 +17,27 @@ import { MoryxSnackbarService } from '@moryx/ngx-web-framework/moryx-snackbar';
 export class NotificationService implements OnDestroy {
   private eventSource: EventSource;
   private notificationSubject: BehaviorSubject<NotificationModel[]> = new BehaviorSubject<NotificationModel[]>([]);
-  private selectionSubject: BehaviorSubject<string|undefined> = new BehaviorSubject<string|undefined>(undefined) 
+  private selectionSubject: BehaviorSubject<string|undefined> = new BehaviorSubject<string|undefined>(undefined)
   private stateSubject: BehaviorSubject<ConnectionState> = new BehaviorSubject<ConnectionState>(ConnectionState.Initializing);
 
   public notifications$: Observable<NotificationModel[]> = this.notificationSubject.asObservable();
   public selection$: Observable<string|undefined> = this.selectionSubject.asObservable();
   public state$: Observable<ConnectionState> = this.stateSubject.asObservable();
-  
+
   constructor(
-    private zone: NgZone, 
-    private api: NotificationPublisherService, 
-    private snackbar: MoryxSnackbarService) {
-      
-    this.eventSource = new EventSource(this.api.rootUrl + '/api/moryx/notifications/stream');      
+    private zone: NgZone,
+    private api: NotificationPublisherService,
+    private snackbarService: SnackbarService) {
+
+    this.eventSource = new EventSource(this.api.rootUrl + '/api/moryx/notifications/stream');
     this.eventSource.onmessage = (event) => this.processNotifications(event);
     this.eventSource.onerror = (error) => this.processError(error);
   }
- 
+
   private processNotifications(event: MessageEvent) : void {
     const data: NotificationModel[] = JSON.parse(event.data);
     const notifications = data.filter(n => !!n.identifier).sortBySeverity();
-    
+
     this.zone.run(() => {
       if (this.stateSubject.value != ConnectionState.Connected)
         this.stateSubject.next(ConnectionState.Connected)
@@ -45,14 +45,14 @@ export class NotificationService implements OnDestroy {
       this.checkSelection();
     });
   }
-  
+
   private processError(event: Event) : void {
     this.zone.run(() => {
       this.stateSubject.next(ConnectionState.Reconnecting)
       this.notificationSubject.error(event);
     });
   }
-  
+
   ngOnDestroy(): void {
     this.eventSource.close();
   }
@@ -67,7 +67,7 @@ export class NotificationService implements OnDestroy {
       selected = identifier;
     else
       selected = notifications[0].identifier;
-    
+
     this.selectionSubject.next(selected);
   }
 
@@ -79,7 +79,7 @@ export class NotificationService implements OnDestroy {
     if(!identifier) return;
 
     this.api.acknowledge$Response({ guid: identifier }).subscribe({
-      error: async (e: HttpErrorResponse) => await this.snackbar.handleError(e),
+      error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e),
     });
   }
 

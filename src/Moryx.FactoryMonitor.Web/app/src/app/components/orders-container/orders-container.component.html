@@ -1,8 +1,0 @@
-<div *ngFor="let order of orderStoreService.runningOrders$ | async">
-    <div class="order-container" [class.isToggled]="order.isToggled" (click)="orderStoreService.toggleOrder(order)">
-        <div class="order-color-indicator" [style.background]="order.orderColor"></div>
-        <div>
-            <h4>{{order.orderNumber}}-{{order.operationNumber}}</h4>
-        </div>
-    </div>
-</div>

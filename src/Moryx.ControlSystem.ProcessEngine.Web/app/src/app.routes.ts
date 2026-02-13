@@ -4,17 +4,17 @@
 */
 
 import { Routes } from "@angular/router";
-import { JobsComponent } from "./app/components/jobs/jobs.component";
-import { ProcessHoldersComponent } from "./app/components/process-holders/process-holders.component";
+import { Jobs } from "./app/components/jobs/jobs";
+import { ProcessHolders } from "./app/components/process-holders/process-holders";
 
 export const routes: Routes = [
   {
     path: "jobs",
-    component: JobsComponent
+    component: Jobs
   },
   {
     path: 'process-holders',
-    component: ProcessHoldersComponent
+    component: ProcessHolders
   },
   {
     path: '', redirectTo: "jobs", pathMatch: 'full' 

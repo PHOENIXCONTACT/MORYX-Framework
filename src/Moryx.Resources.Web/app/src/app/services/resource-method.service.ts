@@ -7,13 +7,8 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { MethodEntry } from '../api/models';
-import {
-  Entry,
-  EntryValue,
-  EntryValueType,
-  MoryxSnackbarService,
-  PrototypeToEntryConverter,
-} from '@moryx/ngx-web-framework';
+import { Entry, EntryValue, EntryValueType, PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { ResourceModificationService } from '../api/services';
 import { EditResourceService } from './edit-resource.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -34,7 +29,7 @@ export class ResourceMethodService {
     private router: Router,
     private service: ResourceModificationService,
     private snackBar: MatSnackBar,
-    private moryxSnackbar: MoryxSnackbarService,
+    private snackbarService: SnackbarService,
   ) {
     this.editService.activeResource$.subscribe((resource) => {
       if (!resource)
@@ -115,7 +110,7 @@ export class ResourceMethodService {
           this.resultView = true;
         },
         error: async (e: HttpErrorResponse) =>
-          await this.moryxSnackbar.handleError(e),
+          await this.snackbarService.handleError(e),
       });
   }
 

@@ -1,0 +1,52 @@
+<h2 mat-dialog-title>
+  {{ TranslationConstants.ADD_DIALOG.TITLE | translate }}
+</h2>
+
+<div mat-dialog-content class="add-part">
+  <p>{{ TranslationConstants.ADD_DIALOG.SUB_TITLE | translate }}</p>
+  @if (possibleParts() !== undefined) {
+    <mat-form-field appearance="outline">
+      <mat-icon matSuffix>search</mat-icon>
+      <mat-label>{{
+        TranslationConstants.ADD_DIALOG.SEARCH | translate
+      }}</mat-label>
+      <input
+        type="text"
+        placeholder="Search"
+        aria-label="Search"
+        matInput
+        [(ngModel)]="searchText"
+        (input)="onSearchTextChanged()"
+        />
+    </mat-form-field>
+    <div class="add-part-list">
+      <mat-list>
+        @for (part of filteredPossibleParts(); track part) {
+          <mat-list-item
+            (click)="onSelectPart(part)"
+            class="add-part-list-item"
+            [ngClass]="{ 'moryx-selected': selectedPart()?.id == part.id }"
+            >
+            {{ editService.createProductNameWithIdentity(part, true) }}
+          </mat-list-item>
+        }
+      </mat-list>
+    </div>
+  } @else {
+    <mat-spinner class="add-part-loading"></mat-spinner>
+  }
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button type="submit" color="primary" (click)="onClose()">
+    {{ TranslationConstants.ADD_DIALOG.CANCEL | translate }}
+  </button>
+  <button
+    mat-flat-button
+    [disabled]="!selectedPart()"
+    type="submit"
+    [mat-dialog-close]="selectedPart()"
+    >
+    {{ TranslationConstants.ADD_DIALOG.SELECT | translate }}
+  </button>
+</div>

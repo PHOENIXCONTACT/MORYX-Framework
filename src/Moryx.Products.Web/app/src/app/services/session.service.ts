@@ -6,7 +6,7 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Injectable } from '@angular/core';
 import { ProductModel } from '../api/models';
-import { FlatNode } from '../app.component';
+import { FlatNode } from '../app';
 
 @Injectable({
   providedIn: 'root'

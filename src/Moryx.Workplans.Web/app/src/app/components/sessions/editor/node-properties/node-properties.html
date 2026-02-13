@@ -1,0 +1,25 @@
+@if (node()?.id) {
+  <h1 class="side-sheet-title truncate">{{ node()?.displayName ?? node()?.type }}</h1>
+  <mat-hint class="side-sheet-subtitle">{{ TranslationConstants.PROPERTIES.TITLE | translate }}</mat-hint>
+  @if (node()?.displayName !== undefined) {
+    <mat-form-field appearance="outline">
+      <mat-label>{{ TranslationConstants.PROPERTIES.DISPLAY_NAME | translate }}</mat-label>
+      <input matInput aria-label="Node Name" [(ngModel)]="node()!.displayName" [placeholder]="TranslationConstants.PLACEHOLDER.DISPLAY_NAME | translate" />
+    </mat-form-field>
+  }
+  @if (this.node()?.classification === WorkplanNodeClassification.Subworkplan) {
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="onNavigateClick()"
+      appearance="outline">
+      {{ TranslationConstants.PROPERTIES.NAVIGATE | translate }}
+    </button>
+  }
+  @if (properties()?.subEntries?.length) {
+    <navigable-entry-editor
+      [entry]="properties()!"
+      [disabled]="false"
+    queryParam="nodePropertiesEditor"></navigable-entry-editor>
+  }
+}
