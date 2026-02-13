@@ -61,7 +61,7 @@ internal class SimpleGraph
             }
 
             var resourcesAtThisLocation = resource.Children.Where(x => x is ICell || x is IManufacturingFactory).ToArray();
-            if(resourcesAtThisLocation.Length == 0 && resource is ICell)
+            if(resource is ICell)
             {
                 resourcesAtThisLocation = [resource];
             }
