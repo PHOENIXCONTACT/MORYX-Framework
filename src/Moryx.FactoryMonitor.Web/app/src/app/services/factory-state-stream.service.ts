@@ -3,14 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ApplicationRef, ChangeDetectorRef, Injectable, NgZone } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ActivityChangedModel } from '../api/models/activity-changed-model';
 import { CellStateChangedModel } from '../api/models/cell-state-changed-model';
 import { ResourceChangedModel } from '../api/models/resource-changed-model';
 import { OrderModel } from '../api/models/order-model';
 import { FactoryMonitorService } from '../api/services/factory-monitor.service';
-import Cell from '../models/cell';
+import CellModel from '../models/cellModel';
 import Order from '../models/order';
 import { Converter } from '../extensions/converter';
 import { OrderChangedModel } from '../api/models/order-changed-model';
@@ -19,7 +19,7 @@ import { OrderChangedModel } from '../api/models/order-changed-model';
   providedIn: 'root'
 })
 export class FactoryStateStreamService {
-  updatedCell: BehaviorSubject<Cell | undefined> = new BehaviorSubject<Cell | undefined>(undefined);
+  updatedCell: BehaviorSubject<CellModel | undefined> = new BehaviorSubject<CellModel | undefined>(undefined);
   updatedOrder: BehaviorSubject<Order | undefined> = new BehaviorSubject<Order | undefined>(undefined);
 
 
@@ -56,6 +56,6 @@ export class FactoryStateStreamService {
     };
   }
 
-  
+
 }
 
