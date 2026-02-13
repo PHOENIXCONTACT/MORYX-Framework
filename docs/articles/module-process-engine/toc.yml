@@ -2,7 +2,7 @@
   href: ProcessEngine.md
 
 - name: Job Management
-  href: JobManagement.md
+  href: job-management.md
 
 - name: Process Controller
-  href: ProcessController.md
+  href: process-controller.md

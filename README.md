@@ -126,13 +126,13 @@ Here we list all available packages in the MORYX ecosystem separated into compon
 At the core MORYX is a .NET based framework to quickly build three-tier applications. Its architecture is a modular monolith using the service and facade pattern to isolate and decouple functionality. It uses a 2-level Dependency Injection structure to isolate a modules composition and offer a per-module life-cycle with all instances hidden behind the previously mentioned facades. It also offers a range of tools and components to speed up development, increase stability and drastically reduce boilerplate code. To improve flexibility of modules and applications the core has built in support for configuration management as well as plugin loading.
 
 <p align="center">
-    <img src="docs/images/arch_level1.png" width="400px"/>
+    <img src="docs/images/arch-level-1.png" width="400px"/>
 </p>
 
 Each modules composition is constructed by its own DI-container instance. This makes it possible to dispose the container in order to restart the module and reconstruct the composition with a different configuration or to recover from a fatal error. The `ModuleController` and `Facade` instances are preserved through the lifecycle of the application as part of the level 1 composition. The  Components (_always present_) and plugins (_configurable_) are created when a module is started and disposed when the module stops. For each lifecycle the references of the facade are updated.
 
 <p align="center">
-    <img src="docs/images/arch_level2.png" width="400px"/>
+    <img src="docs/images/arch-level-2.png" width="400px"/>
 </p>
 
 ## Key Features of the factory automation components
