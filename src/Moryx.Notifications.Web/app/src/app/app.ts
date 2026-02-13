@@ -4,7 +4,8 @@
 */
 
 import { Component, OnDestroy, OnInit, signal } from "@angular/core";
-import { EmptyStateComponent, LanguageService } from "@moryx/ngx-web-framework";
+import { LanguageService } from "@moryx/ngx-web-framework/services";
+import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { environment } from "src/environments/environment";
 import { TranslationConstants } from "./extensions/translation-constants.extensions";
@@ -15,27 +16,27 @@ import { Subscription } from "rxjs";
 import { CommonModule } from "@angular/common";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { NotificationsComponent } from "./components/notifications/notifications.component";
-import { NotificationDetailsComponent } from "./components/notification-details/notification-details.component";
+import { Notifications } from "./components/notifications/notifications";
+import { NotificationDetails } from "./components/notification-details/notification-details";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @Component({
   selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"],
+  templateUrl: "./app.html",
+  styleUrls: ["./app.scss"],
   imports: [
     CommonModule,
     MatSidenavModule,
     MatToolbarModule,
-    NotificationsComponent,
-    NotificationDetailsComponent,
+    Notifications,
+    NotificationDetails,
     TranslateModule,
     MatProgressSpinnerModule,
-    EmptyStateComponent
+    EmptyState
   ],
   standalone: true,
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class App implements OnInit, OnDestroy {
   isLoading = signal(true);
   isEmpty = signal(true);
   notificationsToolbarImage = signal(
@@ -57,7 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
     ]);
-    this.translate.setDefaultLang("en");
+    this.translate.setFallbackLang("en");
     this.translate.use(this.languageService.getDefaultLanguage());
   }
 

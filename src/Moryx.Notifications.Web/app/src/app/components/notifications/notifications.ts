@@ -15,8 +15,8 @@ import { getIcon } from 'src/app/utils';
 
 @Component({
     selector: 'moryx-notifications',
-    templateUrl: './notifications.component.html',
-    styleUrls: ['./notifications.component.scss'],
+    templateUrl: './notifications.html',
+    styleUrls: ['./notifications.scss'],
     imports: [
       CommonModule,
       MatCardModule,
@@ -24,7 +24,7 @@ import { getIcon } from 'src/app/utils';
     ],
     standalone: true
 })
-export class NotificationsComponent implements OnInit, OnDestroy {
+export class Notifications implements OnInit, OnDestroy {
   notificationList = signal<NotificationModel[]>([]);
   hoveredNotificationIdentifier = signal<string | undefined>(undefined);
   selectedNotificationIdentifier = signal<string | undefined>(undefined);

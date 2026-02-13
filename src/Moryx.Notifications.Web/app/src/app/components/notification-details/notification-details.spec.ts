@@ -5,21 +5,21 @@
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NotificationsComponent } from './notifications.component';
+import { NotificationDetails } from './notification-details';
 
-describe('NotificationsComponent', () => {
-  let component: NotificationsComponent;
-  let fixture: ComponentFixture<NotificationsComponent>;
+describe('NotificationDetails', () => {
+  let component: NotificationDetails;
+  let fixture: ComponentFixture<NotificationDetails>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    declarations: [NotificationsComponent]
+    declarations: [NotificationDetails]
 })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NotificationsComponent);
+    fixture = TestBed.createComponent(NotificationDetails);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
