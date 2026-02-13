@@ -7,7 +7,6 @@ import { Component, Inject, signal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -16,23 +15,23 @@ import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-dialog-add-variant',
-    templateUrl: './dialog-add-variant.component.html',
-    styleUrls: ['./dialog-add-variant.component.scss'],
+    templateUrl: './dialog-add-variant.html',
+    styleUrls: ['./dialog-add-variant.scss'],
     imports: [
-      MatDialogTitle, CdkScrollable, MatDialogContent, 
-      MatFormField, MatLabel, MatInput, 
-      FormsModule, MatIconButton, MatSuffix, 
-      MatIcon, MatDialogActions, MatButton, 
+      MatDialogTitle, MatDialogContent,
+      MatFormField, MatLabel, MatInput,
+      FormsModule, MatIconButton, MatSuffix,
+      MatIcon, MatDialogActions, MatButton,
       MatDialogClose, TranslateModule]
 })
-export class DialogAddVariantComponent {
+export class DialogAddVariant {
   TranslationConstants = TranslationConstants;
   fileName = signal<string | undefined>(undefined);
   resultData = signal<AddVariantResultData>({} as AddVariantResultData);
   selectedFileLoaded = signal<boolean>(false);
 
   constructor(
-    public dialogRef: MatDialogRef<DialogAddVariantComponent>,
+    public dialogRef: MatDialogRef<DialogAddVariant>,
     public translate: TranslateService,
     @Inject(MAT_DIALOG_DATA) public data: string
   ) {
