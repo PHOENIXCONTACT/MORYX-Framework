@@ -4,11 +4,8 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, importProvidersFrom, OnInit, signal } from "@angular/core";
-import {
-  JobManagementService,
-  OrderManagementService,
-} from "src/app/api/services";
+import { Component, OnInit, signal } from "@angular/core";
+import { JobManagementService, OrderManagementService } from "src/app/api/services";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { JobViewModel } from "src/app/models/job-view-model";
 import { OperationType } from "src/app/models/operation-models";
@@ -17,16 +14,13 @@ import { OrderManagementStreamService } from "src/app/services/order-management-
 import { environment } from "src/environments/environment";
 import "../../extensions/observable.extensions";
 import "./../../extensions/observable.extensions";
-import { MatSnackBarModule } from "@angular/material/snack-bar";
-import {
-  EmptyStateComponent,
-  MoryxSnackbarService,
-} from "@moryx/ngx-web-framework";
+import { SnackbarService } from "@moryx/ngx-web-framework/services";
+import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { CommonModule } from "@angular/common";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatIconModule } from "@angular/material/icon";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { ProcessesComponent } from "../processes/processes.component";
+import { TranslateModule } from "@ngx-translate/core";
+import { Processes } from "../processes/processes";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatButtonModule } from "@angular/material/button";
@@ -35,23 +29,23 @@ import { OperationModel } from "src/app/api/models/operation-model";
 
 @Component({
   selector: "app-jobs",
-  templateUrl: "./jobs.component.html",
-  styleUrls: ["./jobs.component.scss"],
+  templateUrl: "./jobs.html",
+  styleUrls: ["./jobs.scss"],
   imports: [
     CommonModule,
     MatExpansionModule,
     MatIconModule,
     TranslateModule,
-    ProcessesComponent,
+    Processes,
     MatProgressSpinnerModule,
-    EmptyStateComponent,
+    EmptyState,
     MatProgressBarModule,
     MatButtonModule
   ],
   providers: [],
   standalone: true,
 })
-export class JobsComponent implements OnInit {
+export class Jobs implements OnInit {
   jobCollection = signal<JobViewModel[]>([]);
   operations = signal<OperationModel[]>([]);
   isLoading = signal<boolean>(true);
@@ -63,10 +57,10 @@ export class JobsComponent implements OnInit {
     public jobManagementService: JobManagementService,
     public jobManagementEvents: JobManagementStreamService,
     public orderManagementService: OrderManagementService,
-    public translate: TranslateService,
     private orderManagementEvents: OrderManagementStreamService,
-    private moryxSnackbar: MoryxSnackbarService
-  ) { }
+    private snackbarService: SnackbarService
+  ) {
+  }
 
   ngOnInit(): void {
     this.fetchJobs();
@@ -78,7 +72,7 @@ export class JobsComponent implements OnInit {
     this.orderManagementService.getOperations().subscribe({
       next: (value) => this.operations.update(_ => value),
       error: async (e: HttpErrorResponse) =>
-        await this.moryxSnackbar.handleError(e),
+        await this.snackbarService.handleError(e),
     });
 
     this.orderManagementEvents.stream(
@@ -122,7 +116,7 @@ export class JobsComponent implements OnInit {
         this.isLoading.update(_ => false);
       },
       error: async (err: HttpErrorResponse) => {
-        await this.moryxSnackbar.handleError(err);
+        await this.snackbarService.handleError(err);
         this.isLoading.update(_ => false);
       },
     });
@@ -130,16 +124,16 @@ export class JobsComponent implements OnInit {
 
   async onComplete(job: JobModel) {
     await this.jobManagementService
-      .complete({ jobId: job.id! })
+      .complete({jobId: job.id!})
       .toAsync()
-      .catch(async (error) => await this.moryxSnackbar.handleError(error));
+      .catch(async (error) => await this.snackbarService.handleError(error));
   }
 
   async onAbort(job: JobModel) {
     await this.jobManagementService
-      .abort({ jobId: job.id! })
+      .abort({jobId: job.id!})
       .toAsync()
-      .catch(async (error) => await this.moryxSnackbar.handleError(error));
+      .catch(async (error) => await this.snackbarService.handleError(error));
   }
 
   getOrderNumber(job: JobModel): string {
