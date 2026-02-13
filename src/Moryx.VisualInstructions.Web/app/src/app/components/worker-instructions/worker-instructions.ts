@@ -4,22 +4,10 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import {
-  Component,
-  effect,
-  Input,
-  model,
-  OnDestroy,
-  OnInit,
-  signal,
-  untracked,
-} from "@angular/core";
-import {
-  EmptyStateComponent,
-  Entry,
-  MoryxSnackbarService,
-  NavigableEntryEditorComponent,
-} from "@moryx/ngx-web-framework";
+import { Component, effect, model, OnDestroy, OnInit, signal, untracked } from "@angular/core";
+import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
+import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
+import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ReplaySubject, Subject, Subscription, switchMap } from "rxjs";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
@@ -35,9 +23,9 @@ import { VisualInstructionsService } from "../../api/services";
 import { InstructionService } from "src/app/services/instruction.service";
 import { InstructionResponseModel } from "src/app/api/models/instruction-response-model";
 import { DisplayedMediaContent } from "../media-contents/displayed-media-content";
-import { CommonModule } from "@angular/common";
+
 import { MatCardModule } from "@angular/material/card";
-import { MediaContentsComponent } from "../media-contents/media-contents.component";
+import { MediaContents } from "../media-contents/media-contents";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatButtonModule } from "@angular/material/button";
 import { MarkdownComponent } from "ngx-markdown";
@@ -45,15 +33,14 @@ import { InstructionStateService } from 'src/app/services/instruction-state.serv
 
 @Component({
   selector: "app-worker-instructions",
-  templateUrl: "./worker-instructions.component.html",
-  styleUrls: ["./worker-instructions.component.scss"],
+  templateUrl: "./worker-instructions.html",
+  styleUrls: ["./worker-instructions.scss"],
   imports: [
-    CommonModule,
     MatCardModule,
-    MediaContentsComponent,
+    MediaContents,
     MatDividerModule,
-    NavigableEntryEditorComponent,
-    EmptyStateComponent,
+    NavigableEntryEditor,
+    EmptyState,
     TranslateModule,
     MatButtonModule,
     MatCardModule,
@@ -61,12 +48,12 @@ import { InstructionStateService } from 'src/app/services/instruction-state.serv
   ],
   standalone: true,
 })
-export class WorkerInstructionsComponent implements OnInit, OnDestroy {
+export class WorkerInstructions implements OnInit, OnDestroy {
   clientIdentifier = model.required<string>();
 
   instructions = signal<InstructionModel[]>([]);
   activeInstructionIndex = signal(0);
-  inputs = signal<Entry | undefined> (undefined);
+  inputs = signal<Entry | undefined>(undefined);
   mediaItems = signal<InstructionItemModel[]>([]);
   displayedInstruction = signal<InstructionModel | undefined>(undefined);
   mediaItemsContent = signal<DisplayedMediaContent[]>([]);
@@ -76,7 +63,7 @@ export class WorkerInstructionsComponent implements OnInit, OnDestroy {
   InstructionContentType = InstructionContentType;
   environment = environment;
   TranslationConstants = TranslationConstants;
-  
+
   private activeInstructionIndexChange: Subject<number> = new ReplaySubject<number>(
     1
   );
@@ -87,7 +74,7 @@ export class WorkerInstructionsComponent implements OnInit, OnDestroy {
     private visualInstructionsService: VisualInstructionsService,
     private instructionService: InstructionService,
     public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService,
+    private snackbarService: SnackbarService,
     public instructionStateService: InstructionStateService
   ) {
     effect(() => {
@@ -107,7 +94,7 @@ export class WorkerInstructionsComponent implements OnInit, OnDestroy {
   initialize(value: string) {
     this._instructorSubscription?.unsubscribe();
     this._instructorSubscription =
-      this.instructionService.instructions$.subscribe(instructions =>this.onInstructionsUpdated(instructions)
+      this.instructionService.instructions$.subscribe(instructions => this.onInstructionsUpdated(instructions)
       );
   }
 
@@ -138,11 +125,11 @@ export class WorkerInstructionsComponent implements OnInit, OnDestroy {
     if (this.displayedInstruction()?.id === instruction.id)
       return Promise.resolve();
 
-    this.displayedInstruction.update( _ => instruction);
+    this.displayedInstruction.update(_ => instruction);
     this.mediaItems.update(_ => instruction.items?.filter(
       (i) => i.contentType == InstructionContentType.Media
     ) ?? []);
-    this.textItems.update(_ =>  instruction.items?.filter(
+    this.textItems.update(_ => instruction.items?.filter(
       (i) => i.contentType == InstructionContentType.Text
     ) ?? []);
     this.inputs.update(_ => instruction.inputs!);
@@ -217,12 +204,12 @@ export class WorkerInstructionsComponent implements OnInit, OnDestroy {
     this.visualInstructionsService
       .completeInstruction$Response({
         identifier: this.clientIdentifier(),
-        body:response,
+        body: response,
       })
       .subscribe({
         next: () => this.clearCurrentViewOf(target),
         error: async (e: HttpErrorResponse) =>
-          await this.moryxSnackbar.handleError(e),
+          await this.snackbarService.handleError(e),
       });
   }
 
