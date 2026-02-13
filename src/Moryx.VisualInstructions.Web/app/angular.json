@@ -30,6 +30,11 @@
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
+              "@fontsource/roboto/300.css",
+              "@fontsource/roboto/400.css",
+              "@fontsource/roboto/500.css",
+              "material-icons/iconfont/material-icons.css",
+              "material-symbols/outlined.css",
               "node_modules/@moryx/ngx-web-framework/styles/theme.scss",
               "src/styles.scss"
             ],
