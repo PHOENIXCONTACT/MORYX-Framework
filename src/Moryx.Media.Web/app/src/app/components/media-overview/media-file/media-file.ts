@@ -11,7 +11,6 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
 import { retry } from 'rxjs';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { MatCardModule } from '@angular/material/card';
-import { CommonModule } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,7 +21,6 @@ import { MatIconModule } from '@angular/material/icon';
     templateUrl: './media-file.html',
     styleUrls: ['./media-file.scss'],
     imports: [
-      CommonModule,
       MatProgressSpinner,
       TranslateModule,
       MatCardModule,
