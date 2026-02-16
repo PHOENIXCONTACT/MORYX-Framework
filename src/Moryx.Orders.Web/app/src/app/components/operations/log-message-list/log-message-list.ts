@@ -4,7 +4,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, effect, input, Input, OnInit, signal, untracked } from '@angular/core';
+import { Component, effect, inject, input, Input, OnInit, signal, untracked } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { delay, tap } from 'rxjs';
@@ -28,10 +28,12 @@ export class LogMessageList implements OnInit {
   logMessages = signal<OperationLogMessageModel[]>([]);
   isLoading = signal<boolean>(false);
   notification = signal<string>('');
+  private translate = inject(TranslateService);
+  private orderManagementService = inject(OrderManagementService);
   TranslationConstants = TranslationConstants;
   translations: Record<string, string> = {};
 
-  constructor(public translate: TranslateService, private orderManagementService: OrderManagementService) {
+  constructor() {
     effect(() => {
       const guid = this.guid();
       untracked(() => this.fetchMessages(guid));

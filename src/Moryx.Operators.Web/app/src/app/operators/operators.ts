@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, OnInit, signal } from "@angular/core";
+import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { OperatorViewModel } from "../models/operator-view-model";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { WorkstationViewModel } from "../models/workstation-view-model";
@@ -32,10 +32,8 @@ export class Operators implements OnInit {
   mainContainerStyle = input.required<string>();
   operators = signal<OperatorViewModel[]>([]);
 
+  private appStoreService = inject(AppStoreService);
   TranslationConstants = TranslationConstants;
-
-  constructor(private appStoreService: AppStoreService) {
-  }
 
   ngOnInit(): void {
     //load operators

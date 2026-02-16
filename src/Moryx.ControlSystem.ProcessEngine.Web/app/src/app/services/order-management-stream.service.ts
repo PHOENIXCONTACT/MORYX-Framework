@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable, NgZone } from '@angular/core';
+import { inject, Injectable, NgZone } from '@angular/core';
 import { ApiConfiguration } from 'src/app/api/api-configuration';
 import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, OperationType } from 'src/app/models/operation-models';
 import { OperationModel } from '../api/models/operation-model';
@@ -12,7 +12,8 @@ import { OperationModel } from '../api/models/operation-model';
   providedIn: 'root',
 })
 export class OrderManagementStreamService {
-  constructor(private config: ApiConfiguration, private zone: NgZone) { }
+  private config = inject(ApiConfiguration);
+  private zone = inject(NgZone);
 
   public stream(operationType: OperationType, callbackFunction: Function) {
     const eventSource = new EventSource(this.config.rootUrl + '/api/moryx/orders/stream');

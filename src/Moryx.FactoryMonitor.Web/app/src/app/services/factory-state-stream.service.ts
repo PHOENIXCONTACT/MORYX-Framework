@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable, NgZone } from '@angular/core';
+import { inject, Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ActivityChangedModel } from '../api/models/activity-changed-model';
 import { CellStateChangedModel } from '../api/models/cell-state-changed-model';
@@ -19,11 +19,12 @@ import { OrderChangedModel } from '../api/models/order-changed-model';
   providedIn: 'root'
 })
 export class FactoryStateStreamService {
+  private factoryMonitorService = inject(FactoryMonitorService);
+  private zone = inject(NgZone);
   updatedCell: BehaviorSubject<CellModel | undefined> = new BehaviorSubject<CellModel | undefined>(undefined);
   updatedOrder: BehaviorSubject<Order | undefined> = new BehaviorSubject<Order | undefined>(undefined);
 
-
-  constructor(private factoryMonitorService: FactoryMonitorService, private zone: NgZone) {
+  constructor() {
     const eventSource = new EventSource(this.factoryMonitorService.rootUrl + FactoryMonitorService.FactoryStatesStreamPath);
     eventSource.onmessage = event => {
       const activityChangedModel = <ActivityChangedModel>JSON.parse(event.data);

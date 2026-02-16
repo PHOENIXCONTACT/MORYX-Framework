@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, EventEmitter, input, Input, OnDestroy, OnInit, output, Output, signal } from '@angular/core';
+import { Component, inject, input, OnDestroy, OnInit, output, Output, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { WorkplanStepRecipe } from '../../../../api/models';
 import { TranslationConstants } from '../../../../extensions/translation-constants.extensions';
@@ -32,11 +32,9 @@ export class StepCreator implements OnInit, OnDestroy {
   stepRecipe = signal<WorkplanStepRecipe | undefined>(undefined);
   recipeType = signal<String | undefined>(undefined);
 
+  private activatedRoute = inject(ActivatedRoute);
   sub?: Subscription;
   readonly TranslationConstants = TranslationConstants;
-
-  constructor(private activatedRoute: ActivatedRoute, public translate: TranslateService) {
-  }
 
   ngOnInit(): void {
     this.sub = this.activatedRoute.queryParamMap.subscribe(m => {

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Severity } from '../../api/models';
 import { NotificationModel } from '../../api/models/notification-model';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -30,10 +30,9 @@ export class Notifications implements OnInit, OnDestroy {
 
   getIcon = getIcon;
 
+  private notificationService = inject(NotificationService);
   private notificationSubscription: Subscription|undefined;
-  private selectionSubscription: Subscription|undefined;;
-
-  constructor(private notificationService: NotificationService) {}
+  private selectionSubscription: Subscription|undefined;
     
   ngOnInit(): void {
     this.notificationSubscription = this.notificationService.notifications$.subscribe(notifications => {

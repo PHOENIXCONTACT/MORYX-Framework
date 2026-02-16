@@ -4,7 +4,6 @@
 */
 
 import { Component, inject } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { OrderStoreService } from 'src/app/services/order-store.service';
 import { CommonModule } from '@angular/common';
@@ -17,7 +16,6 @@ import { CommonModule } from '@angular/common';
 })
 export class OrdersContainer {
   TranslationConstants = TranslationConstants;
-  orderStoreService= inject(OrderStoreService);
-  translate = inject(TranslateService);
+  orderStoreService = inject(OrderStoreService);
 }
 

@@ -11,7 +11,7 @@ import {
 } from '@angular/material/dialog';
 import { ChangeBackgroundService } from 'src/app/services/change-background.service';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
@@ -38,9 +38,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 export class ChangeBackgroundDialog {
   backgroundUrlFormControl = new FormControl<string>('', Validators.required);
   TranslationConstants = TranslationConstants;
-  dialogRef = inject(MatDialogRef<ChangeBackgroundDialog>);
+  private dialogRef = inject(MatDialogRef<ChangeBackgroundDialog>);
   backgroundChangeService = inject(ChangeBackgroundService);
-  translate = inject(TranslateService);
   matcher = new MyErrorStateMatcher();
 
   //save the link

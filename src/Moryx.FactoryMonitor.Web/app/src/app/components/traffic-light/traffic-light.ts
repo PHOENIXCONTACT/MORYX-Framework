@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { lastValueFrom } from 'rxjs';
 import { CellState } from 'src/app/api/models/cell-state';
@@ -20,12 +20,11 @@ import { CellStoreService } from 'src/app/services/cell-store.service';
 export class TrafficLight implements OnInit {
   currentState = signal<CellState | undefined | null>(undefined);
   currentStateString = signal<string | undefined>(undefined);
+  private cellStoreService = inject(CellStoreService);
+  private translate = inject(TranslateService);
   private id: number | undefined;
   CellState = CellState;
   TranslationConstants = TranslationConstants;
-
-  constructor(private cellStoreService: CellStoreService, public translate: TranslateService) {
-  }
 
   ngOnInit(): void {
     this.cellStoreService.cellSelected$.subscribe({

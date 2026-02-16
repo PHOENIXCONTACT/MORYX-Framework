@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { MatDialog } from '@angular/material/dialog';
 import { CalendarState } from '../models/calendar-state';
@@ -34,8 +34,10 @@ export class Availabilities {
   isDayInInterval = isDayInInterval;
   formatDateDigits = formatDateDigits;
   getShortDayName = getShortDayName;
+  private dialog = inject(MatDialog);
   isSameDate = isSameDate;
-  constructor(private dialog: MatDialog){
+
+  constructor() {
     this.calendarState = new CalendarState();
   }
 

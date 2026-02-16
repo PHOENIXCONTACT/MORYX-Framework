@@ -4,7 +4,7 @@
 */
 
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,10 +22,9 @@ export class DefaultView implements OnInit {
   headerText = signal('');
   messageText = signal('');
 
+  private router = inject(Router);
+  private translate = inject(TranslateService);
   TranslationConstants = TranslationConstants;
-
-  constructor(private router: Router, public translate: TranslateService) {
-  }
 
   ngOnInit(): void {
     this.getHeaderAndMessage();

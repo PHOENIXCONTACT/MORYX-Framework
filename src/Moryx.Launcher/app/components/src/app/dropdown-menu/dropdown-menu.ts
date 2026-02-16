@@ -9,6 +9,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  inject,
   Input,
 } from '@angular/core';
 import { Constants } from '../constants';
@@ -25,11 +26,9 @@ export class DropdownMenu implements AfterContentInit {
   id: string = "dropdown-menu-" + Math.floor(Math.random() * 100);
   left: number = 0;
   @Input() level: 'root' | 'child' = 'root';
+  private elementRef = inject(ElementRef);
   container: HTMLElement | undefined;
   top: number = 0;
-
-  constructor(private elementRef: ElementRef) {
-  }
 
   ngAfterContentInit(): void {
     this.container = this.mainContainer();

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, catchError, from, map, tap, throwError } from 'rxjs';
 import { Observable } from 'rxjs';
 import { WorkplanSessionModel } from '../api/models';
@@ -23,13 +23,15 @@ export class SessionsService {
   private sessionUpdated = new Subject<WorkplanSessionModel>();
   sessionUpdated$ = this.sessionUpdated.asObservable();
 
+  private workplanEditing = inject(WorkplanEditingService);
+  private browserStorage = inject(BrowserStorageService);
   private cachedSessionModels = new Map<string, WorkplanSessionModel>();
 
-  constructor(private workplanEditing: WorkplanEditingService, private browserStorage: BrowserStorageService) {
-    this.activeSession = new BehaviorSubject<string | undefined>(browserStorage.getActiveSession());
+  constructor() {
+    this.activeSession = new BehaviorSubject<string | undefined>(this.browserStorage.getActiveSession());
     this.activeSession$ = this.activeSession.asObservable();
     this.availableSessions = new BehaviorSubject<string[]>(
-      browserStorage.getStorageSessions().map(sso => sso.sessionToken)
+      this.browserStorage.getStorageSessions().map(sso => sso.sessionToken)
     );
     this.availableSessions$ = this.availableSessions.asObservable();
   }
@@ -104,7 +106,7 @@ export class SessionsService {
     if (!this.availableSessions.value.any(t => t === sessionToken)) {
       await this.getSession(sessionToken).toAsync();
     }
-          
+
     this.browserStorage.setActiveSession(sessionToken);
     this.activeSession.next(sessionToken);
   }

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FactoryStateModel } from '../api/models/factory-state-model';
 import { FactoryMonitorService } from '../api/services';
@@ -17,10 +17,10 @@ export class FactorySelectionService {
   private _defaultFactory = new BehaviorSubject<FactoryStateModel|undefined>(undefined);
   private _selectedFactoryContent = new BehaviorSubject<VisualizableItemModel[]>([]);
 
+  private factoryMonitorService = inject(FactoryMonitorService);
   public factorySelected$ = this._selectedFactory.asObservable();
   public defaultFactory$ = this._defaultFactory.asObservable();
   public factoryContent$ = this._selectedFactoryContent.asObservable();
-  constructor(private factoryMonitorService: FactoryMonitorService) { }
 
   public selectFactory(factoryId: number|undefined){
 

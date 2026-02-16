@@ -4,7 +4,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { AfterContentInit, Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { AfterContentInit, Component, inject, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-notifications',
@@ -17,11 +17,9 @@ export class Notifications implements OnInit, OnDestroy {
 
   @Input() url: string = 'notifications';
   @Input() api: string = '/api/moryx/notifications/stream';
+  private ngZone = inject(NgZone);
   notifications: Array<Notification> = [];
   eventSource: EventSource | undefined;
-
-  constructor(private ngZone: NgZone) {
-  }
 
   ngOnDestroy(): void {
     this.eventSource?.removeEventListener('message', this.onMessageReceived);

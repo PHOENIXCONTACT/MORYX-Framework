@@ -4,7 +4,7 @@
 */
 
 
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MoryxShell, SearchRequestCallback, SearchSuggestion } from './shell';
 import { localLanguage } from '../utils';
@@ -23,11 +23,9 @@ export class SearchBox implements OnInit {
   subscriber: SearchRequestCallback = function (term: string, complete: boolean) {
   };
   suggestions: Array<SearchSuggestion> = [];
+  private elementRef = inject(ElementRef);
   searchValue: string = "";
   id: string = "search-box-" + Math.floor(Math.random() * 100);
-
-  constructor(private elementRef: ElementRef) {
-  }
 
   ngOnInit(): void {
     const shell = new Object() as MoryxShell;

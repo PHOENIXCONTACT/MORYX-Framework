@@ -28,7 +28,7 @@ export class MediaContents implements OnInit {
   medias = signal<DisplayedMediaContent[]>([]);
   displayedContents = input.required<DisplayedMediaContent[]>();
   selectedContent = signal<DisplayedMediaContent | undefined>(undefined) ;
-  sanitizer = inject(DomSanitizer);
+  private sanitizer = inject(DomSanitizer);
   TranslationConstants = TranslationConstants;
 
   constructor(){

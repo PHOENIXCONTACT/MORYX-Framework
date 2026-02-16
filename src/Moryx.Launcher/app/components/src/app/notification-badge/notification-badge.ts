@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Input, input, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, input, NgZone, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-notification-badge',
@@ -12,12 +12,10 @@ import { Component, Input, input, NgZone, OnDestroy, OnInit } from '@angular/cor
   styleUrl: './notification-badge.css'
 })
 export class NotificationBadge implements OnInit, OnDestroy {
+  private ngZone = inject(NgZone);
   @Input() eventstream: string = '';
   count: number = 0;
   eventSource: EventSource | undefined;
-
-  constructor(private ngZone: NgZone) {
-  }
 
   ngOnInit(): void {
     if (!this.eventstream) return;
