@@ -15,7 +15,6 @@ import { CellStoreService } from 'src/app/services/cell-store.service';
   selector: 'app-traffic-light',
   templateUrl: './traffic-light.html',
   styleUrls: ['./traffic-light.scss'],
-  standalone: true,
   imports: []
 })
 export class TrafficLight implements OnInit {

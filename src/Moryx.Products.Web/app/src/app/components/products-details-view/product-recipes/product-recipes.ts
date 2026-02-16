@@ -32,8 +32,7 @@ import { MatExpansionModule } from "@angular/material/expansion";
     TranslateModule,
     MatExpansionModule,
     RouterOutlet
-  ],
-  standalone: true,
+  ]
 })
 export class ProductRecipes implements OnInit {
   recipes = signal<Array<RecipeModel>>([]);
@@ -106,7 +105,7 @@ export class ProductRecipes implements OnInit {
             this.router.navigate([url]);
           },
           error: async (e: HttpErrorResponse) =>
-            await this.snackbarService.handleError(e),
+            await this.snackbarService.handleError(e)
         });
     });
   }

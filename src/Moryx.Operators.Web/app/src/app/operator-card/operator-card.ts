@@ -13,7 +13,6 @@ import { MatIconModule } from '@angular/material/icon';
     selector: 'app-operator-card',
     templateUrl: './operator-card.html',
     styleUrl: './operator-card.scss',
-    standalone: true,
     imports: [
       CommonModule,
       MatIconModule

@@ -21,8 +21,7 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
     CommonModule,
     MatExpansionModule,
     TranslateModule,
-  ],
-  standalone: true
+  ]
 })
 export class LogMessageList implements OnInit {
   guid = input.required<string>();
@@ -63,7 +62,7 @@ export class LogMessageList implements OnInit {
         error: (err: any) => {
           this.notification.update(_ => err.message);
           this.isLoading.update(_ => false);
-        },
+        }
       });
   }
 

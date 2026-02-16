@@ -20,7 +20,6 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-dialog-create-revision',
   templateUrl: './dialog-create-revision.html',
   styleUrls: ['./dialog-create-revision.scss'],
-  standalone: true,
   imports: [
     TranslateModule,
     MatFormFieldModule,

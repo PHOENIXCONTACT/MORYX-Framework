@@ -10,7 +10,6 @@ import { RouterOutlet } from '@angular/router';
     selector: 'app-root',
     templateUrl: './app.html',
     styleUrls: ['./app.scss'],
-    standalone: true,
     imports: [
         RouterOutlet
     ]

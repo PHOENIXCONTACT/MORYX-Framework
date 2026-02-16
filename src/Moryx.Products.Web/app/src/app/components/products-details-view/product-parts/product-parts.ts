@@ -31,8 +31,7 @@ import { MatButtonModule } from '@angular/material/button';
     DefaultView,
     MatButtonModule,
     TranslateModule
-  ],
-  standalone: true
+  ]
 })
 export class ProductParts implements OnInit {
   currentProduct = signal<ProductModel | undefined>(undefined);
@@ -131,7 +130,7 @@ export class ProductParts implements OnInit {
   addPart() {
     const dialogRef = this.dialog.open(DialogAddPartComponent, {
       data: this.expandedPart(),
-      width: '500px',
+      width: '500px'
     });
 
     dialogRef.afterClosed().subscribe((product) => {

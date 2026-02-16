@@ -19,7 +19,6 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-dialog-remove-product',
   templateUrl: './dialog-remove-product.html',
   styleUrls: ['./dialog-remove-product.scss'],
-  standalone: true,
   imports: [
     CommonModule,
     TranslateModule,

@@ -18,8 +18,7 @@ import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
   imports: [
     NavigableEntryEditor,
     TranslateModule
-  ],
-  standalone: true
+  ]
 })
 export class ProductPartsDetailsComponent implements OnInit {
   partConnector = input.required<PartConnector>();

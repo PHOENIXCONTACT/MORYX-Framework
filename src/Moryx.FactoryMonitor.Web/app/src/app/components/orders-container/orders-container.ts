@@ -13,8 +13,7 @@ import { CommonModule } from '@angular/common';
     selector: 'app-orders-container',
     templateUrl: './orders-container.html',
     styleUrls: ['./orders-container.scss'],
-    imports: [CommonModule],
-    standalone: true
+    imports: [CommonModule]
 })
 export class OrdersContainer {
   TranslationConstants = TranslationConstants;

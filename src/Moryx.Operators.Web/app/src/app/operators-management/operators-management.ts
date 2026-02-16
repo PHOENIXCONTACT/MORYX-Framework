@@ -27,7 +27,6 @@ import { MatButtonModule } from "@angular/material/button";
   selector: "app-operators-management",
   templateUrl: "./operators-management.html",
   styleUrl: "./operators-management.scss",
-  standalone: true,
   imports: [
     MatTooltipModule,
     MatIconModule,

@@ -42,8 +42,7 @@ import { OperationModel } from "src/app/api/models/operation-model";
     MatProgressBarModule,
     MatButtonModule
   ],
-  providers: [],
-  standalone: true,
+  providers: []
 })
 export class Jobs implements OnInit {
   jobCollection = signal<JobViewModel[]>([]);
@@ -72,7 +71,7 @@ export class Jobs implements OnInit {
     this.orderManagementService.getOperations().subscribe({
       next: (value) => this.operations.update(_ => value),
       error: async (e: HttpErrorResponse) =>
-        await this.snackbarService.handleError(e),
+        await this.snackbarService.handleError(e)
     });
 
     this.orderManagementEvents.stream(
@@ -118,7 +117,7 @@ export class Jobs implements OnInit {
       error: async (err: HttpErrorResponse) => {
         await this.snackbarService.handleError(err);
         this.isLoading.update(_ => false);
-      },
+      }
     });
   }
 

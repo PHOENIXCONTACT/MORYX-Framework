@@ -31,7 +31,6 @@ import { MatButtonModule } from '@angular/material/button';
       NavigableEntryEditor,
       MatButtonModule
     ],
-    standalone: true,
     providers: [MarkdownService]
 })
 export class NotificationDetails implements OnInit, OnDestroy {

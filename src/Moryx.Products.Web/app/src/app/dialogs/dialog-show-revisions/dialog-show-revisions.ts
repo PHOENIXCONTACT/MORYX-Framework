@@ -21,7 +21,6 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-dialog-show-revisions',
   templateUrl: './dialog-show-revisions.html',
   styleUrls: ['./dialog-show-revisions.scss'],
-  standalone: true,
   imports: [
     CommonModule,
     TranslateModule,
@@ -60,7 +59,7 @@ export class DialogShowRevisionsComponent implements OnInit {
         if (products !== null) this.revisions.update(_ => products);
       },
       error: async (e: HttpErrorResponse) =>
-        await this.snackbarService.handleError(e),
+        await this.snackbarService.handleError(e)
     });
   }
 

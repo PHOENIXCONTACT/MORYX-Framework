@@ -28,7 +28,6 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-workstation-operators',
   templateUrl: './workstation-operators.html',
   styleUrl: './workstation-operators.scss',
-  standalone: true,
   imports: [
     MatTooltipModule,
     MatIconModule,
@@ -87,14 +86,14 @@ export class WorkstationOperators {
     //expand this workstation card
     this.workstationTogglingState.update(_ => <WorkstationTogglingState>{
       station,
-      isExpanded: true,
+      isExpanded: true
     });
   }
 
   toggleWorkstationCard(station: WorkstationViewModel | undefined) {
     this.workstationTogglingState.update(_ => <WorkstationTogglingState>{
       station,
-      isExpanded: !this.workstationTogglingState()?.isExpanded,
+      isExpanded: !this.workstationTogglingState()?.isExpanded
     });
     if (this.workstationTogglingState()?.isExpanded)
       this.updateUrlParam(station?.data.id ?? null);
@@ -115,7 +114,7 @@ export class WorkstationOperators {
 
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
-      queryParams: queryParams,
+      queryParams: queryParams
     });
   }
 }

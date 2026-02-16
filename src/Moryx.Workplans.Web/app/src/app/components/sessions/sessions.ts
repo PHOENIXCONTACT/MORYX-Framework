@@ -32,7 +32,6 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-sessions',
   templateUrl: './sessions.html',
   styleUrls: ['./sessions.scss'],
-  standalone: true,
   imports: [
     MatTabsModule,
     MatProgressSpinnerModule,

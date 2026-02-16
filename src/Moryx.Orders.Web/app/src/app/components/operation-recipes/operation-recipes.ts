@@ -51,8 +51,7 @@ import {MatSelectModule} from '@angular/material/select';
     MatFormFieldModule,
     ReactiveFormsModule,
     MatSelectModule
-  ],
-  standalone: true,
+  ]
 })
 export class OperationRecipes implements OnInit {
   recipes = signal<RecipeModel[]>([]);
@@ -170,7 +169,7 @@ export class OperationRecipes implements OnInit {
     await this.productManagementService
       .updateRecipe({
         id: this.selectedRecipe()!.id!,
-        body: this.selectedRecipe(),
+        body: this.selectedRecipe()
       })
       .toAsync()
       .catch(

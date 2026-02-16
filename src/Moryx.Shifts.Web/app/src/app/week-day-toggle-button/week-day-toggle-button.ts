@@ -18,7 +18,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   selector: 'app-week-day-toggle-button',
   templateUrl: './week-day-toggle-button.html',
   styleUrl: './week-day-toggle-button.scss',
-  standalone: true,
   imports: [
     CommonModule,
     MatDialogModule,

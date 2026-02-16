@@ -25,7 +25,6 @@ import { MatInputModule } from '@angular/material/input';
   selector: 'app-copy-shift-and-assignment',
   templateUrl: './copy-shift-and-assignment.html',
   styleUrl: './copy-shift-and-assignment.scss',
-  standalone: true,
   imports: [
     MatFormFieldModule,
     MatInputModule,

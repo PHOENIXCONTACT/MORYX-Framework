@@ -20,7 +20,6 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: "app-operators",
   templateUrl: "./operators.html",
   styleUrl: "./operators.scss",
-  standalone: true,
   imports: [
     OperatorCard,
     EmptyState,
@@ -65,7 +64,7 @@ export class Operators implements OnInit {
                         id: x.id,
                         name: x.name,
                       }
-                  ),
+                  )
                 })
             ))
           ));

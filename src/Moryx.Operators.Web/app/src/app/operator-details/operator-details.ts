@@ -33,7 +33,6 @@ import { MatButtonModule } from "@angular/material/button";
     selector: "app-operator-details",
     templateUrl: "./operator-details.html",
     styleUrl: "./operator-details.scss",
-    standalone: true,
     imports: [
     MatIconModule,
     MatSidenavModule,

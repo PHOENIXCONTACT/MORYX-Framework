@@ -39,8 +39,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     FormsModule,
     ReactiveFormsModule,
     TranslateModule
-],
-  standalone: true
+]
 })
 export class CellImageDialog {
   cellSettings = signal< CellSettingsModel | undefined>(undefined);
@@ -66,7 +65,7 @@ export class CellImageDialog {
       data: {
         cellName: this.name,
         iconName: this.cellSettings()?.icon,
-      },
+      }
     });
 
     cellIconDialog.afterClosed().subscribe(result => {

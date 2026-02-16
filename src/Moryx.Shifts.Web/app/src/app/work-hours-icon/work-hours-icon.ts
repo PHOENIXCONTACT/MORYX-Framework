@@ -13,7 +13,6 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-work-hours-icon',
   templateUrl: './work-hours-icon.html',
   styleUrl: './work-hours-icon.scss',
-  standalone: true,
   imports : [
     CommonModule,
     MatIconModule,

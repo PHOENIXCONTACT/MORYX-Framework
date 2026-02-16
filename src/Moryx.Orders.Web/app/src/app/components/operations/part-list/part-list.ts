@@ -16,10 +16,9 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
     selector: 'app-part-list',
     templateUrl: './part-list.html',
     styleUrls: ['./part-list.scss'],
-    standalone: true,
     imports: [
     TranslateModule
-],
+]
 })
 export class PartList implements OnInit {
   guid = input.required<string>();
@@ -43,7 +42,7 @@ export class PartList implements OnInit {
       error: async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
         this.isLoading.set(false);
-      },
+      }
     });
 
   }

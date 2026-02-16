@@ -18,7 +18,6 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-step-creator',
   templateUrl: './step-creator.html',
   styleUrls: ['./step-creator.scss'],
-  standalone: true,
   imports: [
     NavigableEntryEditor,
     TranslateModule,

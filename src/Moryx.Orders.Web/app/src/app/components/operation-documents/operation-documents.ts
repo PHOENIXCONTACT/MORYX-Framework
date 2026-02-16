@@ -40,8 +40,7 @@ import { environment } from 'src/environments/environment';
       MatButtonModule,
       RouterLink,
       MatIconModule
-    ],
-    standalone: true
+    ]
 })
 export class OperationDocuments implements OnInit {
   isLoading = signal<boolean>(false);
@@ -87,7 +86,7 @@ export class OperationDocuments implements OnInit {
           this.isLoading.update( _=> false);
         },
         error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e),
+          await this.snackbarService.handleError(e)
       });
     });
   }
@@ -98,13 +97,13 @@ export class OperationDocuments implements OnInit {
     this.orderManagementSerivce
       .getDocumentStream({
         guid: this.operation().identifier!,
-        identifier: this.selectedDocument()?.identifier!,
+        identifier: this.selectedDocument()?.identifier!
       })
       .subscribe({
         next: data => {
           if (data !== null && document.contentType) {
             let downloadedFile = new Blob([data], {
-              type: document.contentType,
+              type: document.contentType
             });
             this.url.update(_=> URL.createObjectURL(downloadedFile));
             let reader = new FileReader();
@@ -116,7 +115,7 @@ export class OperationDocuments implements OnInit {
           }
         },
         error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e),
+          await this.snackbarService.handleError(e)
       });
   }
 }

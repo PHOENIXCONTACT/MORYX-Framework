@@ -22,7 +22,6 @@ import { MatInputModule } from '@angular/material/input';
     selector: 'app-skill-new-dialog',
     templateUrl: './skill-new-dialog.html',
     styleUrl: './skill-new-dialog.scss',
-    standalone: true,
     imports: [
     MatDialogModule,
     MatFormFieldModule,

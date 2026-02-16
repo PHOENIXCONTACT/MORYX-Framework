@@ -31,7 +31,6 @@ import { MatTooltip } from "@angular/material/tooltip";
   selector: 'app-begin-dialog',
   templateUrl: './begin-dialog.html',
   styleUrls: ['./begin-dialog.scss'],
-  standalone: true,
   imports: [
     MatDialogModule,
     CommonModule,
@@ -48,7 +47,7 @@ import { MatTooltip } from "@angular/material/tooltip";
     MatAutocompleteModule,
     MatButtonToggleModule,
     MatTooltip
-  ],
+  ]
 })
 export class BeginDialog implements OnInit {
   // Class properties for context values
@@ -126,7 +125,7 @@ export class BeginDialog implements OnInit {
 
     this.targetAmountControl = new FormControl({
       value: this.currentPartialAmount,
-      disabled: !this.canBegin && !this.canReduce,
+      disabled: !this.canBegin && !this.canReduce
     });
     this.targetAmountControl.valueChanges.subscribe(value => this.newTargetAmount.update(_ => value));
   }

@@ -21,8 +21,7 @@ import { getIcon } from 'src/app/utils';
       CommonModule,
       MatCardModule,
       MatIconModule
-    ],
-    standalone: true
+    ]
 })
 export class Notifications implements OnInit, OnDestroy {
   notificationList = signal<NotificationModel[]>([]);

@@ -34,8 +34,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatIconModule,
     MatButtonModule,
     TranslateModule
-],
-  standalone: true,
+]
 })
 export class CellIconUploaderDialog {
   iconControl = new FormControl<string | null>(null, Validators.required);

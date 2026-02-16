@@ -63,7 +63,6 @@ import { MatInputModule } from "@angular/material/input";
   selector: "app-root",
   templateUrl: "./app.html",
   styleUrls: ["./app.scss"],
-  standalone: true,
   imports: [
     CommonModule,
     MatSidenavModule,
@@ -171,7 +170,7 @@ export class App implements OnInit, OnDestroy {
     this.searchbar.subscribe({
       next: (result: SearchRequest) => {
         this.onSearch(result);
-      },
+      }
     });
   }
 
@@ -192,7 +191,7 @@ export class App implements OnInit, OnDestroy {
       this.searchbar.subscribe({
         next: (newRequest: SearchRequest) => {
           this.onSearch(newRequest);
-        },
+        }
       });
     } else {
       const searchSuggestions = [] as SearchSuggestion[];
@@ -203,7 +202,7 @@ export class App implements OnInit, OnDestroy {
 
         searchSuggestions.push({
           text: this.editService.createProductNameWithIdentity(product),
-          url: url,
+          url: url
         });
       }
 
@@ -283,7 +282,7 @@ export class App implements OnInit, OnDestroy {
         currentRecipeNumber: this.editService.currentRecipeNumber,
         maximumAlreadySavedPartId: this.editService.maximumAlreadySavedPartId,
         maximumAlreadySavedRecipeId:
-        this.editService.maximumAlreadySavedRecipeId,
+        this.editService.maximumAlreadySavedRecipeId
       });
     }
   }
@@ -436,7 +435,7 @@ export class App implements OnInit, OnDestroy {
     if (!product) return;
 
     const dialogRef = this.dialog.open(DialogRemoveProductComponent, {
-      data: product,
+      data: product
     });
 
     dialogRef.afterClosed().subscribe(async (productToBeDeleted) => {
@@ -451,7 +450,7 @@ export class App implements OnInit, OnDestroy {
   async onImport() {
     if (this.importer()) {
       this.router.navigate([`/import/${this.importer()}`], {
-        relativeTo: this.route,
+        relativeTo: this.route
       });
     } else {
       const translations = await this.getTranslations();
@@ -477,7 +476,7 @@ export class App implements OnInit, OnDestroy {
     this.searchbar.subscribe({
       next: (result: SearchRequest) => {
         this.onSearch(result);
-      },
+      }
     });
   }
 
@@ -486,7 +485,7 @@ export class App implements OnInit, OnDestroy {
     this.searchbar.subscribe({
       next: (result: SearchRequest) => {
         this.onSearch(result);
-      },
+      }
     });
   }
 
@@ -516,7 +515,7 @@ export class App implements OnInit, OnDestroy {
     if (!product) return;
 
     const dialogRef = this.dialog.open(DialogDuplicateProductComponent, {
-      data: product,
+      data: product
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -531,13 +530,13 @@ export class App implements OnInit, OnDestroy {
     if (!product) return;
 
     const dialogRef = this.dialog.open(DialogShowRevisionsComponent, {
-      data: product,
+      data: product
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === true) {
         this.dialog.open(DialogCreateRevisionComponent, {
-          data: product,
+          data: product
         });
       }
     });

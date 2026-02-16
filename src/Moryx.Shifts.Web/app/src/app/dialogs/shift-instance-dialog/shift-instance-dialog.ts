@@ -20,7 +20,6 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-shift-instance-dialog',
   templateUrl: './shift-instance-dialog.html',
   styleUrl: './shift-instance-dialog.scss',
-  standalone: true,
   imports: [
     MatDialogModule,
     FormsModule,
@@ -35,7 +34,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class ShiftInstanceDialog {
   form = new FormGroup({
     startDate: new FormControl<Date>(new Date()),
-    endDate: new FormControl<Date>(new Date()),
+    endDate: new FormControl<Date>(new Date())
   });
   TranslationConstants = TranslationConstants;
   constructor(
@@ -44,7 +43,7 @@ export class ShiftInstanceDialog {
   ) {
     this.form.patchValue({
       startDate: data.startDate,
-      endDate: data.endDate,
+      endDate: data.endDate
     });
   }
 

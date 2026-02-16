@@ -29,7 +29,6 @@ import { MatCardModule } from '@angular/material/card';
   selector: 'app-management',
   templateUrl: './management.html',
   styleUrls: ['./management.scss'],
-  standalone: true,
   imports: [
     MatTableModule,
     MatTooltipModule,

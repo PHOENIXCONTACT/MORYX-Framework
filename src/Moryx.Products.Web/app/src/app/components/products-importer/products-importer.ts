@@ -26,7 +26,6 @@ import { MatCardModule } from "@angular/material/card";
   selector: "app-products-importer",
   templateUrl: "./products-importer.html",
   styleUrls: ["./products-importer.scss"],
-  standalone: true,
   imports: [
     TranslateModule,
     MatFormFieldModule,
@@ -41,7 +40,7 @@ import { MatCardModule } from "@angular/material/card";
     MatSelectModule,
     MatButtonModule,
     MatCardModule
-  ],
+  ]
 })
 export class ProductsImporter implements OnInit {
   possibleImporters = signal<ProductImporter[]>([]);

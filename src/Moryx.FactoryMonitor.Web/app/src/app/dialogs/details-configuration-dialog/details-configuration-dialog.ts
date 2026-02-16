@@ -22,8 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
     CdkScrollable,
     MatListModule,
     MatButtonModule
-],
-  standalone: true
+  ]
 })
 export class DetailsConfigurationDialog {
   propertyNames: string[] = [
@@ -44,6 +43,7 @@ export class DetailsConfigurationDialog {
     'Sneakers',
   ];
 
-  constructor(public propertyConfigurationDialogRef: MatDialogRef<DetailsConfigurationDialog>) {}
+  constructor(public propertyConfigurationDialogRef: MatDialogRef<DetailsConfigurationDialog>) {
+  }
 }
 

@@ -19,7 +19,6 @@ import { RouterLink } from '@angular/router';
     selector: 'app-attandances',
     templateUrl: './availabilities.html',
     styleUrl: './availabilities.scss',
-    standalone: true,
     imports: [
       CommonModule,
       MatIconModule,

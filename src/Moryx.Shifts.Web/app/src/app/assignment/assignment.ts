@@ -27,7 +27,6 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-assignment',
   templateUrl: './assignment.html',
   styleUrl: './assignment.scss',
-  standalone: true,
   imports : [
     CommonModule,
     MatButtonModule,

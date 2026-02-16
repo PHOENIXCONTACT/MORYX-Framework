@@ -25,7 +25,6 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-dialog-add-part',
   templateUrl: './dialog-add-part.html',
   styleUrls: ['./dialog-add-part.scss'],
-  standalone: true,
   imports: [
     CommonModule,
     TranslateModule,
@@ -38,7 +37,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-  ],
+  ]
 })
 export class DialogAddPartComponent {
   possibleParts = signal<ProductModel[]>([]);
@@ -77,7 +76,7 @@ export class DialogAddPartComponent {
         this.filteredPossibleParts.update(_ => possibleParts);
       },
       error: async (e: HttpErrorResponse) =>
-        await this.snackbarService.handleError(e),
+        await this.snackbarService.handleError(e)
     });
   }
 

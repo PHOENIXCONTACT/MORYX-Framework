@@ -21,7 +21,6 @@ import { MatInputModule } from "@angular/material/input";
     selector: "app-skill-edit-dialog",
     templateUrl: "./skill-edit-dialog.html",
     styleUrl: "./skill-edit-dialog.scss",
-    standalone: true,
     imports: [
     MatDialogModule,
     MatFormFieldModule,

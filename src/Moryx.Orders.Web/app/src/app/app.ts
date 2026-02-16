@@ -13,7 +13,6 @@ import { TranslationConstants } from './extensions/translation-constants.extensi
     selector: 'app-root',
     templateUrl: './app.html',
     styleUrls: ['./app.scss'],
-    standalone: true,
     imports:[
       RouterOutlet
     ]

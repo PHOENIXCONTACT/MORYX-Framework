@@ -22,7 +22,6 @@ import { MatInputModule } from '@angular/material/input';
     selector: 'app-dialog-create-recipe',
     templateUrl: './dialog-create-recipe.html',
     styleUrls: ['./dialog-create-recipe.scss'],
-    standalone: true,
     imports: [
     MatFormFieldModule,
     FormsModule,
@@ -33,7 +32,7 @@ import { MatInputModule } from '@angular/material/input';
     MatSelectModule,
     MatButtonModule,
     MatInputModule
-],
+]
 })
 export class DialogCreateRecipeComponent {
   result = signal<CreateRecipeDialogResult>({} as CreateRecipeDialogResult);

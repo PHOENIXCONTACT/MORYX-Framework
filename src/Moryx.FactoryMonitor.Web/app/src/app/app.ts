@@ -20,30 +20,29 @@ import { CellDetails } from './components/cell-details/cell-details';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.html',
-    styleUrls: ['./app.scss'],
-    imports: [
+  selector: 'app-root',
+  templateUrl: './app.html',
+  styleUrls: ['./app.scss'],
+  imports: [
     EditMenu,
     OrdersContainer,
     CellDetails,
     RouterOutlet
-],
-    standalone: true
+  ]
 })
 export class App implements OnInit {
   backgroundImage: string = '';
   private editMenuState !: EditMenuState;
 
   constructor(private editMenuService: EditMenuService,
-    private backgroundService: ChangeBackgroundService,
-    private languageService: LanguageService,
-    public translate: TranslateService,
-    public elemRef: ElementRef,
-    public cellStoreService: CellStoreService,
-    public factorySelectionService: FactorySelectionService) {
+              private backgroundService: ChangeBackgroundService,
+              private languageService: LanguageService,
+              public translate: TranslateService,
+              public elemRef: ElementRef,
+              public cellStoreService: CellStoreService,
+              public factorySelectionService: FactorySelectionService) {
     this.editMenuService.activeState$.subscribe({
-      next : state => this.editMenuState = state
+      next: state => this.editMenuState = state
     });
 
     this.translate.addLangs([
@@ -65,12 +64,12 @@ export class App implements OnInit {
     });
   }
 
-  getCell(cellId: number): CellModel{
-    const output = this.cellStoreService.getCell(cellId) ?? <CellModel> {};
+  getCell(cellId: number): CellModel {
+    const output = this.cellStoreService.getCell(cellId) ?? <CellModel>{};
     return output;
   }
 
-  get isEditMode(){
+  get isEditMode() {
     return this.editMenuState === EditMenuState.EditingCells;
   }
 }

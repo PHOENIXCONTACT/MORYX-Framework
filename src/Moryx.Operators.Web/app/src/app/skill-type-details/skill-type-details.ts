@@ -24,7 +24,6 @@ import { MatInputModule } from "@angular/material/input";
   selector: "app-skill-type-details",
   templateUrl: "./skill-type-details.html",
   styleUrl: "./skill-type-details.scss",
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     FormsModule,
@@ -48,12 +47,12 @@ export class SkillTypeDetails implements OnInit {
       value: {
         type: EntryValueType.Class,
       },
-    },
+    }
   });
 
   form = new FormGroup({
     name: new FormControl("", [Validators.required]),
-    duration: new FormControl(0, [Validators.min(1)]),
+    duration: new FormControl(0, [Validators.min(1)])
   });
 
   TranslationConstants = TranslationConstants;
@@ -80,7 +79,7 @@ export class SkillTypeDetails implements OnInit {
           id: 0,
           name: "",
           acquiredCapabilities: prototype.capabilities,
-          duration: "",
+          duration: ""
         });
       });
       return;
@@ -95,14 +94,14 @@ export class SkillTypeDetails implements OnInit {
       const skillData = skillType;
       this.form.patchValue({
         name: skillData.name,
-        duration: Number(skillData.duration?.split(".")[0] ?? 0),
+        duration: Number(skillData.duration?.split(".")[0] ?? 0)
       });
 
       this.skillType.update(_ => <SkillType>{
         id: skillData.id,
         name: skillData.name,
         acquiredCapabilities: skillData.capabilities,
-        duration: skillData.duration,
+        duration: skillData.duration
       });
     });
   }

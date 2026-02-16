@@ -21,7 +21,6 @@ import { MatCardModule } from '@angular/material/card';
   selector: 'app-toolbox',
   templateUrl: './toolbox.html',
   styleUrls: ['./toolbox.scss'],
-  standalone: true,
   imports: [
     CommonModule,
     MatExpansionModule,

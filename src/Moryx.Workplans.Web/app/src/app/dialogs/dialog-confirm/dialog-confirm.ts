@@ -12,7 +12,6 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
     selector: 'app-confirm-dialog',
     templateUrl: './dialog-confirm.html',
     styleUrls: ['./dialog-confirm.scss'],
-    standalone: true,
     imports: [
     MatButtonModule,
     MatDialogModule

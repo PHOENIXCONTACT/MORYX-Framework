@@ -24,7 +24,6 @@ import { MatButtonModule } from '@angular/material/button';
     selector: 'app-skill-types',
     templateUrl: './skill-types.html',
     styleUrl: './skill-types.scss',
-    standalone: true,
     imports: [
     MatTooltipModule,
     MatIconModule,

@@ -13,7 +13,6 @@ import { TranslateModule } from '@ngx-translate/core';
     selector: 'app-confirmation-dialog',
     templateUrl: './confirmation-dialog.html',
     styleUrl: './confirmation-dialog.scss',
-    standalone: true,
     imports: [
     MatDialogModule,
     TranslateModule

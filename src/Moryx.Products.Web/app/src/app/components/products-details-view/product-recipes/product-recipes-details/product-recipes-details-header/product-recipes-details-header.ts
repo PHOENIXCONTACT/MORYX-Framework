@@ -41,8 +41,7 @@ import { MatSelectModule } from "@angular/material/select";
     ReactiveFormsModule,
     MatInput,
     MatSelectModule
-],
-  standalone: true,
+]
 })
 export class ProductRecipesDetailsHeader {
   edit = input.required<boolean>();
@@ -55,7 +54,7 @@ export class ProductRecipesDetailsHeader {
   recipeClassifications = signal(Object.keys(RecipeClassificationModel));
 
   recipeControl = new UntypedFormControl({
-    value: RecipeClassificationModel.Unset,
+    value: RecipeClassificationModel.Unset
   });
   TranslationConstants = TranslationConstants;
 

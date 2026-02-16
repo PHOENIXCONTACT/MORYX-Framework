@@ -16,8 +16,7 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
   styleUrls: ['./default-view.scss'],
   imports: [
     EmptyState
-  ],
-  standalone: true
+  ]
 })
 export class DefaultView implements OnInit {
   headerText = signal('');

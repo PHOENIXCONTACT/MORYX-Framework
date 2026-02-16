@@ -52,7 +52,6 @@ enum Action {
   selector: "app-create-dialog",
   templateUrl: "./create-dialog.html",
   styleUrls: ["./create-dialog.scss"],
-  standalone: true,
   imports: [
     MatDialogModule,
     MatFormFieldModule,
@@ -70,7 +69,7 @@ enum Action {
     MatMenuModule,
     MatTooltipModule
   ],
-  providers: [],
+  providers: []
 })
 export class CreateDialog implements OnInit {
   orderNumber = signal("");
@@ -115,7 +114,7 @@ export class CreateDialog implements OnInit {
     const assignableRecipes = await this.orderManagementService
       .getAssignableRecipes({
         identifier: this.selectedProduct()?.identifier!,
-        revision: this.selectedProduct()?.revision,
+        revision: this.selectedProduct()?.revision
       })
       .toAsync();
 
@@ -213,7 +212,7 @@ export class CreateDialog implements OnInit {
       OperationNumberValidations.isOperationNumberNotValid
     );
     this.operationNumberFormControl.updateValueAndValidity({
-      onlySelf: true,
+      onlySelf: true
     });
   }
 
@@ -242,7 +241,7 @@ export class CreateDialog implements OnInit {
         OperationNumberValidations.isOperationNumberNotValid
       );
       this.operationNumberFormControl.updateValueAndValidity({
-        onlySelf: true,
+        onlySelf: true
       });
     }
 

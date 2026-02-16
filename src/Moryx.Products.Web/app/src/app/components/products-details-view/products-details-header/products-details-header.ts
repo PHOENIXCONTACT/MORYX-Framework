@@ -21,7 +21,6 @@ import { MatSelectModule } from "@angular/material/select";
   selector: "app-products-details-header",
   templateUrl: "./products-details-header.html",
   styleUrls: ["./products-details-header.scss"],
-  standalone: true,
   imports: [
     MatInputModule,
     TranslateModule,
@@ -31,7 +30,7 @@ import { MatSelectModule } from "@angular/material/select";
     MatDividerModule,
     MatFormFieldModule,
     MatSelectModule
-],
+]
 })
 export class ProductsDetailsHeaderComponent implements OnInit {
   currentProduct = input.required<ProductModel>();

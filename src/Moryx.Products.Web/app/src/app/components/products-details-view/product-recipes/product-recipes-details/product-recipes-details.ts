@@ -21,8 +21,7 @@ import { ProductRecipesDetailsHeader } from './product-recipes-details-header/pr
     ProductRecipesDetailsHeader,
     NavigableEntryEditor,
     TranslateModule
-  ],
-  standalone: true
+  ]
 })
 export class ProductRecipesDetails {
   currentProduct = signal<ProductModel | undefined>(undefined);

@@ -24,8 +24,7 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
     MatDialogModule,
     TranslateModule,
     MatProgressSpinnerModule
-  ],
-  standalone: true
+  ]
 })
 export class ConfigurationDialog implements OnInit {
   instructors: string[] | undefined = undefined;
@@ -44,7 +43,7 @@ export class ConfigurationDialog implements OnInit {
     this.visualInstructionsService.getInstructors().subscribe({
       next: (result) => this.instructors = result.sort((a, b) => a.localeCompare(b)),
       error: async (e: HttpErrorResponse) =>
-        await this.snackbarService.handleError(e),
+        await this.snackbarService.handleError(e)
     });
   }
 

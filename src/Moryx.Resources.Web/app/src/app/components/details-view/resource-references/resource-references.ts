@@ -33,8 +33,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatTableModule,
     TranslateModule,
     MatButtonModule
-],
-  standalone: true,
+]
 })
 export class ResourceReferences implements OnInit, OnDestroy {
   resource: ResourceModel | undefined;

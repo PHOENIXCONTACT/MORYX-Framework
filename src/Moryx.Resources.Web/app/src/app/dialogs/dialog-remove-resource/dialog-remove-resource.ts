@@ -15,7 +15,6 @@ import { ResourceModel } from 'src/app/api/models/resource-model';
     selector: 'app-dialog-remove-resource',
     templateUrl: './dialog-remove-resource.html',
     styleUrls: ['./dialog-remove-resource.scss'],
-    standalone: true,
     imports: [
     TranslateModule,
     MatDialogModule,

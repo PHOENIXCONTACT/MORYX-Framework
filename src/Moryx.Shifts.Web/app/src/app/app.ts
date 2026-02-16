@@ -62,7 +62,6 @@ import { OrderItem } from './order-item/order-item';
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
-  standalone: true,
   imports: [
     CommonModule,
     MatButtonModule,
@@ -277,7 +276,7 @@ export class App implements OnInit {
           operator: operator,
           resource: resource,
           calendarState: this.calendarState()!
-        },
+        }
       });
 
       dialogResult
@@ -357,7 +356,7 @@ export class App implements OnInit {
 
   addShiftType() {
     var dialogResult = this.dialog.open(ShiftTypeDialog, {
-      data: {},
+      data: {}
     });
 
     dialogResult
@@ -386,7 +385,7 @@ export class App implements OnInit {
 
     var dialogResult = this.dialog.open(ShiftInstanceDialog, {
       width: '500px',
-      data: shiftInstance,
+      data: shiftInstance
     });
 
     dialogResult
@@ -434,7 +433,7 @@ export class App implements OnInit {
         }
         var dialogResult = this.dialog.open(CopyShiftAndAssignment, {
           width: '700px',
-          data: assignmentsAndShift,
+          data: assignmentsAndShift
         });
 
         dialogResult

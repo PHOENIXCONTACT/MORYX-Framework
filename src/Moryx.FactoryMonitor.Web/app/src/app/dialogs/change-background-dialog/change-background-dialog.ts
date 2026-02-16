@@ -33,8 +33,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     ReactiveFormsModule,
     MatButtonModule,
     TranslateModule,
-  ],
-  standalone: true,
+  ]
 })
 export class ChangeBackgroundDialog {
   backgroundUrlFormControl = new FormControl<string>('', Validators.required);

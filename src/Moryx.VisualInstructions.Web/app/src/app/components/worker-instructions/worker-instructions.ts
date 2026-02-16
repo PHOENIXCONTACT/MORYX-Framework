@@ -45,8 +45,7 @@ import { InstructionStateService } from 'src/app/services/instruction-state.serv
     MatButtonModule,
     MatCardModule,
     MarkdownComponent
-  ],
-  standalone: true,
+  ]
 })
 export class WorkerInstructions implements OnInit, OnDestroy {
   clientIdentifier = model.required<string>();
@@ -204,12 +203,12 @@ export class WorkerInstructions implements OnInit, OnDestroy {
     this.visualInstructionsService
       .completeInstruction$Response({
         identifier: this.clientIdentifier(),
-        body: response,
+        body: response
       })
       .subscribe({
         next: () => this.clearCurrentViewOf(target),
         error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e),
+          await this.snackbarService.handleError(e)
       });
   }
 

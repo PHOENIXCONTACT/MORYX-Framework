@@ -19,7 +19,6 @@ import { MatTabsModule } from '@angular/material/tabs';
   selector: 'app-products-details-view',
   templateUrl: './products-details-view.html',
   styleUrls: ['./products-details-view.scss'],
-  standalone: true,
   imports: [
     ProductsDetailsHeaderComponent,
     MatDividerModule,

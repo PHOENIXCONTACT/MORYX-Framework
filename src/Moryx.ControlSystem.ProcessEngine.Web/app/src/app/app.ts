@@ -17,8 +17,7 @@ import { MatIconModule } from "@angular/material/icon";
   templateUrl: "./app.html",
   styleUrls: ["./app.scss"],
   imports: [RouterOutlet, MatIconModule, MatButtonModule, RouterLink, RouterLinkActive],
-  providers: [],
-  standalone: true,
+  providers: []
 })
 export class App {
   title = "Moryx.ControlSystem.ProcessEngine.Web";

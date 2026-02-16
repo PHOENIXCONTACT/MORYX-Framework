@@ -61,8 +61,7 @@ import {DialogRemoveResource} from "./dialogs/dialog-remove-resource/dialog-remo
     MatTreeModule,
     RouterOutlet,
     TranslateModule,
-  ],
-  standalone: true,
+  ]
 })
 export class App implements OnInit, OnDestroy {
   private readonly trigger = viewChild.required(MatMenuTrigger);
@@ -174,7 +173,7 @@ export class App implements OnInit, OnDestroy {
     this.searchBarService.subscribe({
       next: (result: SearchRequest) => {
         this.onSearch(result);
-      },
+      }
     });
   }
 
@@ -204,7 +203,7 @@ export class App implements OnInit, OnDestroy {
       this.searchBarService.subscribe({
         next: (newRequest: SearchRequest) => {
           this.onSearch(newRequest);
-        },
+        }
       });
     } else {
       const searchSuggestions = [] as SearchSuggestion[];
@@ -248,7 +247,7 @@ export class App implements OnInit, OnDestroy {
   onAdd() {
     const dialogRef = this.dialog.open(DialogAddResource, {
       height: '560px',
-      width: '560px',
+      width: '560px'
     });
 
     dialogRef.afterClosed().subscribe(async (result: ResourceConstructionParameters | undefined) => {
@@ -271,7 +270,7 @@ export class App implements OnInit, OnDestroy {
     if (!resource) return;
 
     const dialogRef = this.dialog.open(DialogRemoveResource, {
-      data: resource,
+      data: resource
     });
 
     dialogRef.afterClosed().subscribe(async (resourceToBeDeleted) => {
@@ -307,7 +306,7 @@ export class App implements OnInit, OnDestroy {
     this.searchBarService.subscribe({
       next: (result: SearchRequest) => {
         this.onSearch(result);
-      },
+      }
     });
   }
 
@@ -316,7 +315,7 @@ export class App implements OnInit, OnDestroy {
       this.searchBarService.subscribe({
         next: (result: SearchRequest) => {
           this.onSearch(result);
-        },
+        }
       });
     }
     this.editService.onDeselect();
@@ -331,7 +330,7 @@ export class App implements OnInit, OnDestroy {
     this.searchBarService.subscribe({
       next: (result: SearchRequest) => {
         this.onSearch(result);
-      },
+      }
     });
   }
 }

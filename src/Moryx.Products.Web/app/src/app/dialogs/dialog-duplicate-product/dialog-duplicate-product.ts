@@ -19,7 +19,6 @@ import { MatButtonModule } from '@angular/material/button';
     selector: 'app-dialog-duplicate-product',
     templateUrl: './dialog-duplicate-product.html',
     styleUrls: ['./dialog-duplicate-product.scss'],
-    standalone: true,
     imports: [
     MatFormFieldModule,
     FormsModule,

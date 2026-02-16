@@ -13,7 +13,6 @@ import {MatChipsModule} from '@angular/material/chips';
     selector: "app-operator-skill-chips",
     templateUrl: "./operator-skill-chips.html",
     styleUrl: "./operator-skill-chips.scss",
-    standalone: true,
     imports: [
     MatTooltipModule,
     MatChipsModule

@@ -24,8 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
     NavigableEntryEditor,
     TranslateModule,
     MatButtonModule
-],
-  standalone: true,
+]
 })
 export class ResourceMethods implements OnInit, OnDestroy {
   TranslationConstants = TranslationConstants;

@@ -21,8 +21,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
       NgxDocViewerModule,
       MatIconModule,
       MatButtonModule
-    ],
-    standalone: true
+    ]
 })
 export class MediaContents implements OnInit {
 

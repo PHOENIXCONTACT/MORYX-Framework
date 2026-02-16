@@ -34,8 +34,7 @@ import { ProcessEngineStreamService } from "src/app/services/process-engine-stre
     ProcessEngineStreamService,
     SnackbarService,
   ],
-  styleUrls: ["./processes.scss"],
-  standalone: true,
+  styleUrls: ["./processes.scss"]
 })
 export class Processes implements OnInit, OnDestroy {
   processes = signal<JobProcessModel[]>([]);
@@ -66,7 +65,7 @@ export class Processes implements OnInit, OnDestroy {
     this.processEngineService
       .getRunningProcessesOfJob({
         jobId: this.job().model.id,
-        allProcesses: this.showAll(),
+        allProcesses: this.showAll()
       })
       .subscribe({
         next: (data) => {
@@ -75,7 +74,7 @@ export class Processes implements OnInit, OnDestroy {
           if (firstProcess) this.onSelectProcess(firstProcess);
         },
         error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e),
+          await this.snackbarService.handleError(e)
       });
 
     this.processSubscription =
@@ -162,12 +161,12 @@ export class Processes implements OnInit, OnDestroy {
     this.processEngineService
       .getRunningProcessesOfJob({
         jobId: this.job().model.id,
-        allProcesses: this.showAll(),
+        allProcesses: this.showAll()
       })
       .subscribe({
         next: (data) => this.updateData(data),
         error: async (e: HttpErrorResponse) =>
-          await this.snackbarService.handleError(e),
+          await this.snackbarService.handleError(e)
       });
   }
 

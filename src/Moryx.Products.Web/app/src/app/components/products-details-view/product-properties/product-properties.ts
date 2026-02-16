@@ -28,8 +28,7 @@ import { Subscription } from 'rxjs';
     MatProgressBarModule,
     MatProgressBarModule,
     MatProgressSpinnerModule
-  ],
-  standalone: true,
+  ]
 })
 export class ProductProperties implements OnInit, OnDestroy {
   properties = signal<Entry | undefined>(undefined);

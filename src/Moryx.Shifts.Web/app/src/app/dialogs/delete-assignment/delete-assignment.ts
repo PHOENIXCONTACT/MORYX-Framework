@@ -7,7 +7,6 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-delete-assignment',
-  standalone: true,
   imports: [],
   templateUrl: './delete-assignment.html',
   styleUrl: './delete-assignment.scss'

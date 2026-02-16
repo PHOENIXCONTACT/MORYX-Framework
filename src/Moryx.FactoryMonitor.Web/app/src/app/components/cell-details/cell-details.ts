@@ -29,8 +29,7 @@ import { DetailsItem } from '../details-item/details-item';
     TranslateModule,
     MatButtonModule,
     MatIconModule
-  ],
-  standalone: true,
+  ]
 })
 export class CellDetails implements OnInit {
   cellDetails = signal<CellModel | undefined>(undefined);
@@ -43,7 +42,7 @@ export class CellDetails implements OnInit {
 
   ngOnInit(): void {
     this.cellStoreService.cellSelected$.subscribe({
-      next: result => this.cellDetails.set(result),
+      next: result => this.cellDetails.set(result)
     });
   }
 
@@ -60,7 +59,7 @@ export class CellDetails implements OnInit {
           image: this.cellDetails()?.image,
           icon: this.cellDetails()?.iconName,
         },
-      },
+      }
     });
   }
 }

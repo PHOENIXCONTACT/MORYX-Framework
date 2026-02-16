@@ -33,8 +33,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     TranslateModule,
     MatProgressSpinnerModule,
     EmptyState
-  ],
-  standalone: true,
+  ]
 })
 export class App implements OnInit, OnDestroy {
   isLoading = signal(true);

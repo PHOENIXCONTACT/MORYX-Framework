@@ -14,8 +14,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   selector: 'app-resource-properties',
   templateUrl: './resource-properties.html',
   styleUrls: ['./resource-properties.scss'],
-  imports: [MatProgressSpinnerModule, NavigableEntryEditor],
-  standalone: true,
+  imports: [MatProgressSpinnerModule, NavigableEntryEditor]
 })
 export class ResourceProperties implements OnInit, OnDestroy {
   properties = signal<Entry | undefined>(undefined);

@@ -18,8 +18,7 @@ import { DetailsHeader } from './details-header/details-header';
   selector: 'app-details-view',
   templateUrl: './details-view.html',
   styleUrls: ['./details-view.scss'],
-  imports: [RouterOutlet, TranslateModule, MatTabsModule, RouterLink, DetailsHeader],
-  standalone: true,
+  imports: [RouterOutlet, TranslateModule, MatTabsModule, RouterLink, DetailsHeader]
 })
 export class DetailsView implements OnInit, OnDestroy {
   activeLink = signal<number | undefined>(undefined);

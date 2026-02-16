@@ -48,7 +48,6 @@ import { WeekDayToggleButton } from 'src/app/week-day-toggle-button/week-day-tog
   selector: 'app-week-assignment-dialog',
   templateUrl: './week-assignment-dialog.html',
   styleUrl: './week-assignment-dialog.scss',
-  standalone: true,
   imports: [
     MatDialogModule,
     MatFormFieldModule,
@@ -78,7 +77,7 @@ export class WeekAssignmentDialog implements OnInit {
     operatorId: new FormControl<string>('', [Validators.required]),
     resourceId: new FormControl<number>(0, [Validators.min(0)]),
     priority: new FormControl<number>(0, [Validators.min(0)]),
-    notes: new FormControl(''),
+    notes: new FormControl('')
   });
   formatDateDigits = formatDateDigits;
   getDayName = getDayName;
@@ -95,7 +94,7 @@ export class WeekAssignmentDialog implements OnInit {
       operatorId: data.operator?.id ?? '',
       resourceId: data.resource?.id ?? -1,
       notes: data.notes ?? '',
-      priority: data.priority ?? 0,
+      priority: data.priority ?? 0
     });
 
     this.appStore.operators$.subscribe(

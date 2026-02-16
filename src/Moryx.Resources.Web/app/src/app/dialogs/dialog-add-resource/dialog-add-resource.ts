@@ -35,8 +35,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatDialogModule,
     NavigableEntryEditor,
-  ],
-  standalone: true,
+  ]
 })
 export class DialogAddResource implements OnInit {
   types = signal<ResourceTypeModel[] | undefined>([]);

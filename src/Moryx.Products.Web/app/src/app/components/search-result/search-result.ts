@@ -16,7 +16,6 @@ import { EditProductsService } from 'src/app/services/edit-products.service';
   selector: 'app-search-result',
   templateUrl: './search-result.html',
   styleUrls: ['./search-result.scss'],
-  standalone: true,
   imports: [
     MatListModule,
     EmptyState

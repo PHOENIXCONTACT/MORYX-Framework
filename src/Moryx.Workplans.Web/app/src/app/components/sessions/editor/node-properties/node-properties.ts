@@ -25,7 +25,6 @@ import { MatInputModule } from '@angular/material/input';
   selector: 'app-node-properties',
   templateUrl: './node-properties.html',
   styleUrls: ['./node-properties.scss'],
-  standalone: true,
   imports: [
     MatSelectModule,
     FormsModule,

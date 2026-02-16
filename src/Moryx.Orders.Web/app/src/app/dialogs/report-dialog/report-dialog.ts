@@ -30,7 +30,6 @@ import { MatInputModule } from "@angular/material/input";
   selector: "app-report-dialog",
   templateUrl: "./report-dialog.html",
   styleUrls: ["./report-dialog.scss"],
-  standalone: true,
   imports: [
     CommonModule,
     MatDialogModule,
@@ -44,7 +43,7 @@ import { MatInputModule } from "@angular/material/input";
     MatButtonModule,
     MatInputModule,
     MatRadioGroup
-  ],
+  ]
 })
 export class ReportDialog implements OnInit {
   reportContext = signal<ReportContext | undefined>(undefined);

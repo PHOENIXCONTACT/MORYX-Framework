@@ -20,13 +20,12 @@ import { InterruptDialogData } from "./interrupt-dialog-data";
   selector: "app-interrupt-dialog",
   templateUrl: "./interrupt-dialog.html",
   styleUrls: ["./interrupt-dialog.scss"],
-  standalone: true,
   imports: [
     MatDialogModule,
     TranslateModule,
     MatProgressBarModule,
     MatButtonModule
-],
+]
 })
 export class InterruptDialog {
   

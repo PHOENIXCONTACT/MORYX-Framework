@@ -20,7 +20,6 @@ import { MatButtonModule } from '@angular/material/button';
     selector: 'app-add-operator',
     templateUrl: './add-operator.html',
     styleUrl: './add-operator.scss',
-    standalone: true,
     imports: [
     MatDialogModule,
     MatFormFieldModule,

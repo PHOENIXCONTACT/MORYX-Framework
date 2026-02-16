@@ -13,7 +13,6 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-order-item',
   templateUrl: './order-item.html',
   styleUrl: './order-item.scss',
-  standalone: true,
   imports: [
     MatIconModule
 ]

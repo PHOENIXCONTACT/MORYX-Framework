@@ -11,7 +11,6 @@ import { Entry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-edit
   selector: 'app-operation-source',
   templateUrl: './operation-source.html',
   styleUrls: ['./operation-source.scss'],
-  standalone: true,
   imports: [
     NavigableEntryEditor
 ]

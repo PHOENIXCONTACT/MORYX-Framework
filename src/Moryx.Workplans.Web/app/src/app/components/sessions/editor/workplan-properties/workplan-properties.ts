@@ -19,7 +19,6 @@ import { MatSelectModule } from '@angular/material/select';
     selector: 'app-workplan-properties',
     templateUrl: './workplan-properties.html',
     styleUrls: ['./workplan-properties.scss'],
-    standalone: true,
     imports: [
     FormsModule,
     MatFormFieldModule,

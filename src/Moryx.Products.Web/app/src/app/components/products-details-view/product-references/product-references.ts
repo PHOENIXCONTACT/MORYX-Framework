@@ -19,7 +19,6 @@ import { MatCardModule } from '@angular/material/card';
   selector: 'app-product-references',
   templateUrl: './product-references.html',
   styleUrls: ['./product-references.scss'],
-  standalone: true,
   imports: [
     MatTableModule,
     TranslateModule,

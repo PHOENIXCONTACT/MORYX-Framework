@@ -30,8 +30,7 @@ const COOKIE_NAME = 'moryx-client-identifier';
   imports: [
     WorkerInstructions,
     MatButtonModule
-  ],
-  standalone: true
+  ]
 })
 export class App implements OnInit {
   environment = environment;
@@ -68,7 +67,7 @@ export class App implements OnInit {
     const dialogRef = this.dialog.open(ConfigurationDialog, {
       data: <DialogData>{
         instructorName: this.clientIdentifier,
-      },
+      }
     });
 
     dialogRef

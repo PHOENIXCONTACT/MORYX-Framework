@@ -61,8 +61,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatSidenavModule
-  ],
-  standalone:true
+  ]
 })
 export class Operations implements OnInit, OnDestroy {
   operations = signal<OperationViewModel[]>([]);
@@ -115,7 +114,7 @@ export class Operations implements OnInit, OnDestroy {
       error: async (err: HttpErrorResponse) => {
         await this.snackbarService.handleError(err);
         this.isLoading.set(false);
-      },
+      }
     });
 
     // Register events
@@ -143,7 +142,7 @@ export class Operations implements OnInit, OnDestroy {
     this.searchbar.subscribe({
       next: (request: SearchRequest) => {
         this.onSearch(request);
-      },
+      }
     });
   }
 
@@ -154,7 +153,7 @@ export class Operations implements OnInit, OnDestroy {
       this.searchbar.subscribe({
         next: (newRequest: SearchRequest) => {
           this.onSearch(newRequest);
-        },
+        }
       });
     } else this.searchTerm.set(request.term);
   }
@@ -175,7 +174,7 @@ export class Operations implements OnInit, OnDestroy {
       data: <BeginDialogData>{
         context: context,
         operation: operation,
-      },
+      }
     });
     const beginModel = await beginDialog.afterClosed().toAsync();
     if (!beginModel || !operation.model.identifier) return;
@@ -183,10 +182,10 @@ export class Operations implements OnInit, OnDestroy {
     this.orderManagementService
       .beginOperation({
         guid: operation.model.identifier,
-        body: beginModel,
+        body: beginModel
       })
       .subscribe({
-        error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e),
+        error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
       });
   }
 
@@ -195,13 +194,13 @@ export class Operations implements OnInit, OnDestroy {
       data: <InterruptDialogData>{
         operation: operation,
         onSubmit: this.submitInterruption.bind(this),
-      },
+      }
     });
   }
 
   private submitInterruption(guid: string): Observable<void> {
     return this.orderManagementService.interruptOperation({
-      guid: guid,
+      guid: guid
     });
   }
 
@@ -212,7 +211,7 @@ export class Operations implements OnInit, OnDestroy {
         isReport: true,
         onGetContext: this.getReportContext.bind(this),
         onSubmit: this.submitReport.bind(this),
-      },
+      }
     });
   }
 
@@ -223,7 +222,7 @@ export class Operations implements OnInit, OnDestroy {
   private submitReport(guid: string, body: ReportModel): Observable<void> {
     return this.orderManagementService.reportOperation({
       guid: guid,
-      body: body,
+      body: body
     });
   }
 

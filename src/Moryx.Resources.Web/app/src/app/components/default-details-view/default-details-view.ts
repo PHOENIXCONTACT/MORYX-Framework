@@ -12,8 +12,7 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
   selector: 'app-default-details-view',
   templateUrl: './default-details-view.html',
   styleUrls: ['./default-details-view.scss'],
-  imports: [TranslateModule, EmptyState,],
-  standalone: true
+  imports: [TranslateModule, EmptyState,]
 })
 export class DefaultDetailsView {
   TranslationConstants = TranslationConstants;

@@ -24,8 +24,7 @@ import { MatIcon } from '@angular/material/icon';
     CommonModule,
     MatIcon,
     DragDropModule
-  ],
-  standalone: true
+  ]
 })
 export class Cell implements OnInit {
   cellElement = viewChild<ElementRef<HTMLElement>>('cell');

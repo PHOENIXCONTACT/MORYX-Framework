@@ -24,8 +24,7 @@ import { MatInputModule } from "@angular/material/input";
     MatFormFieldModule,
     MatInputModule,
     TranslateModule
-],
-  standalone: true,
+]
 })
 export class DetailsHeader implements AfterContentChecked {
   resource = input.required<ResourceModel>();

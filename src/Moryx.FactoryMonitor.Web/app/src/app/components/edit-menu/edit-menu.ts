@@ -30,8 +30,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
     MatButtonModule,
     TranslateModule
-],
-  standalone: true,
+]
 })
 export class EditMenu implements OnInit {
   private menuButtons = [
@@ -95,7 +94,7 @@ export class EditMenu implements OnInit {
           this.canGoBack = true;
           this.goBackToFactory = navigation.parentId ?? 0;
         });
-      },
+      }
     });
   }
 

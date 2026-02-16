@@ -45,7 +45,6 @@ enum EditQueries {
   selector: 'app-editor',
   templateUrl: './editor.html',
   styleUrls: ['./editor.scss'],
-  standalone: true,
   imports: [
     CommonModule,
     MatSidenavModule,

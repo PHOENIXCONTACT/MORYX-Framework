@@ -25,7 +25,6 @@ import { MatButtonModule } from '@angular/material/button';
     selector: 'app-root',
     templateUrl: './app.html',
     styleUrls: ['./app.scss'],
-    standalone: true,
     imports:[
       MatSidenavModule,
       MatToolbarModule,

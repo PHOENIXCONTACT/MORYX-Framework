@@ -18,7 +18,6 @@ import { MatButtonModule } from '@angular/material/button';
   selector: 'app-shift-type-dialog',
   templateUrl: './shift-type-dialog.html',
   styleUrl: './shift-type-dialog.scss',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatDialogModule,
@@ -35,7 +34,7 @@ export class ShiftTypeDialog {
     name: new FormControl('', [Validators.required]),
     duration: new FormControl<number>(7, [Validators.min(1),Validators.required]),
     startTime: new FormControl<string>('',[Validators.pattern(this.HOURS_REGEX),Validators.required]),
-    endTime: new FormControl<string>('',[Validators.pattern(this.HOURS_REGEX),Validators.required]),
+    endTime: new FormControl<string>('',[Validators.pattern(this.HOURS_REGEX),Validators.required])
   });
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: ShiftTypeModel,

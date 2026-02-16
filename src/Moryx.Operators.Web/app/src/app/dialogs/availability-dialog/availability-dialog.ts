@@ -15,7 +15,6 @@ import { MatInputModule } from "@angular/material/input";
     selector: "app-attandance-dialog",
     templateUrl: "./availability-dialog.html",
     styleUrl: "./availability-dialog.scss",
-    standalone: true,
     imports: [
     MatDialogModule,
     MatFormFieldModule,

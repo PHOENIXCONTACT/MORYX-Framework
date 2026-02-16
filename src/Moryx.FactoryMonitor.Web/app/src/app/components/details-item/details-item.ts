@@ -11,8 +11,7 @@ import { CommonModule } from '@angular/common';
     selector: 'app-details-item',
     templateUrl: './details-item.html',
     styleUrls: ['./details-item.scss'],
-    imports: [CommonModule],
-    standalone: true
+    imports: [CommonModule]
 })
 export class DetailsItem {
   value = input.required<CellPropertySettings>();
