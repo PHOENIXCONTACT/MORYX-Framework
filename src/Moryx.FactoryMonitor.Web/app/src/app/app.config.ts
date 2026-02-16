@@ -14,7 +14,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { environment } from 'src/environments/environment';
 import { ApiModule } from './api/api.module';
 import { CellSettingsService } from './services/cell-settings.service';
@@ -59,6 +59,6 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
-    provideAnimations()
+    provideAnimationsAsync()
   ]
 };

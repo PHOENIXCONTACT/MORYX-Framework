@@ -26,7 +26,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatTableModule } from "@angular/material/table";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { BrowserModule } from "@angular/platform-browser";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { ApiInterceptor, API_INTERCEPTOR_PROVIDER, SnackbarService } from "@moryx/ngx-web-framework";
 import { NgxDocViewerModule } from "ngx-doc-viewer";
 import { environment } from "src/environments/environment";
@@ -81,7 +81,7 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
-    provideAnimations(),
+    provideAnimationsAsync(),
   ],
 };
 
