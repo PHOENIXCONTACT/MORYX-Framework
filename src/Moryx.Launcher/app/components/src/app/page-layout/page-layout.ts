@@ -3,32 +3,26 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { CommonModule } from '@angular/common';
-import {
-  AfterContentInit,
-  Component,
-  ElementRef,
-  HostListener,
-  Input,
-} from '@angular/core';
-import {
-  LauncherState,
-  LauncherStateService,
-} from '../services/launcher-state.service';
+import { AfterContentInit, Component, ElementRef, input } from '@angular/core';
+import { LauncherState, LauncherStateService } from '../services/launcher-state.service';
 import { Constants } from '../constants';
 import { NavigationButton } from '../navigation-button/navigation-button';
 
 @Component({
   selector: 'app-page-layout',
-  imports: [CommonModule],
   providers: [LauncherStateService],
   templateUrl: './page-layout.html',
-  styleUrl: './page-layout.css'
+  styleUrl: './page-layout.css',
+  host: {
+    '(click)': 'onClick($event)',
+    '(window:keyup)': 'onKeyUp($event)',
+    '(window:resize)': 'onScreenResize($event)'
+  }
 })
 export class PageLayout implements AfterContentInit {
   private KEY_NAME = 'Escape';
-  @Input() fullscreenButton: string = 'fullscreen';
-  @Input() operatorButton: string = 'operator-mode';
+  fullscreenButton = input('fullscreen');
+  operatorButton = input('operator-mode');
   state: LauncherState = <LauncherState>{
     fullscreen: false,
     operatorMode: false,
@@ -54,7 +48,7 @@ export class PageLayout implements AfterContentInit {
 
   ngAfterContentInit(): void {
     this.layout = <HTMLElement>this.elementRef.nativeElement;
-    var navButtons = Array.from(
+    const navButtons = Array.from(
       this.layout?.getElementsByTagName(
         Constants.WebComponentNames.NavigationButton
       ) ?? []
@@ -73,7 +67,6 @@ export class PageLayout implements AfterContentInit {
     );
   }
 
-  @HostListener('click', ['$event'])
   onClick(eventArg: Event) {
     const element: HTMLElement = <HTMLElement>eventArg.target;
     this.handleFullscreen(element);
@@ -84,11 +77,11 @@ export class PageLayout implements AfterContentInit {
 
   handleOperatorMode(element: HTMLElement) {
     const operatorModeButtons = Array.from(
-      document.getElementsByName(this.operatorButton)
+      document.getElementsByName(this.operatorButton())
     );
     if (
       !operatorModeButtons.length ||
-      (element.getAttribute('name') != this.operatorButton &&
+      (element.getAttribute('name') != this.operatorButton() &&
         !operatorModeButtons.some((x) => x.contains(element)))
     )
       return;
@@ -97,18 +90,17 @@ export class PageLayout implements AfterContentInit {
 
   handleFullscreen(element: HTMLElement) {
     const fullscreenModeButtons = Array.from(
-      document.getElementsByName(this.fullscreenButton)
+      document.getElementsByName(this.fullscreenButton())
     );
     if (
       !fullscreenModeButtons.length ||
-      (element.getAttribute('name') != this.fullscreenButton &&
+      (element.getAttribute('name') != this.fullscreenButton() &&
         !fullscreenModeButtons.some((x) => x.contains(element)))
     )
       return;
     this.exitFullscreen();
   }
 
-  @HostListener('window:keyup', ['$event'])
   onKeyUp(eventArg: KeyboardEvent) {
     if (eventArg.code != this.KEY_NAME) return;
 
@@ -124,7 +116,6 @@ export class PageLayout implements AfterContentInit {
     this.state = {...this.state, fullscreen: !this.state?.fullscreen};
   }
 
-  @HostListener('window:resize', ['$event'])
   onScreenResize(event: UIEvent) {
     if (!this.state.operatorMode || this.state.fullscreen) return;
 

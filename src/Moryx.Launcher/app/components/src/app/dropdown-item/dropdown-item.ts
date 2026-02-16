@@ -3,25 +3,24 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-dropdown-item',
   imports: [],
   templateUrl: './dropdown-item.html',
-  styleUrl: './dropdown-item.css'
+  styleUrl: './dropdown-item.css',
+  host: {
+    '(click)': 'handleClick($event)'
+  }
 })
 export class DropdownItem {
+  closeOnClick = input(true);
+  onClick = output<DropdownItemClickEventArg>();
 
-  @Input() closeOnClick: boolean = true;
-  @Output() onClick = new EventEmitter<DropdownItemClickEventArg>();
-
-  @HostListener('click', ['$event'])
   handleClick(event: Event) {
-    this.onClick.emit(<DropdownItemClickEventArg>{closeOnClick: this.closeOnClick});
+    this.onClick.emit(<DropdownItemClickEventArg>{closeOnClick: this.closeOnClick()});
   }
-
 }
 
 export interface DropdownItemClickEventArg {

@@ -8,9 +8,8 @@ import {
   AfterContentInit,
   Component,
   ElementRef,
-  HostListener,
   inject,
-  Input,
+  input,
 } from '@angular/core';
 import { Constants } from '../constants';
 
@@ -18,14 +17,17 @@ import { Constants } from '../constants';
   selector: 'app-dropdown-menu',
   imports: [],
   templateUrl: './dropdown-menu.html',
-  styleUrl: './dropdown-menu.css'
+  styleUrl: './dropdown-menu.css',
+  host: {
+    '(window:click)': 'click($event)'
+  }
 })
 export class DropdownMenu implements AfterContentInit {
-  @Input() align: DropdownMenuAlignement = 'right';
-  @Input() position: DropdownMenuPosition = 'bottom';
+  align = input<DropdownMenuAlignement>('right');
+  position = input<DropdownMenuPosition>('bottom');
   id: string = "dropdown-menu-" + Math.floor(Math.random() * 100);
   left: number = 0;
-  @Input() level: 'root' | 'child' = 'root';
+  level = input<'root' | 'child'>('root');
   private elementRef = inject(ElementRef);
   container: HTMLElement | undefined;
   top: number = 0;
@@ -37,30 +39,30 @@ export class DropdownMenu implements AfterContentInit {
   }
 
   initializePosition() {
-    if (!this.container || this.level != 'root') return;
+    if (!this.container || this.level() != 'root') return;
 
     const button = <HTMLElement>this.dropdownButton();
     const buttonRectangle = button.getBoundingClientRect();
     const buttonHeight = button.offsetHeight;
     const buttonWidth = button.offsetWidth;
 
-    if (this.align === 'left') {
-      if (this.position === 'bottom') {
+    if (this.align() === 'left') {
+      if (this.position() === 'bottom') {
         this.left = 0;
         this.top = buttonRectangle.y + buttonHeight;
       }
-      if (this.position === 'top') {
+      if (this.position() === 'top') {
         this.left = 0;
         this.top = -this.container.offsetHeight;
       }
     }
 
-    if (this.align === 'right') {
-      if (this.position === 'bottom') {
+    if (this.align() === 'right') {
+      if (this.position() === 'bottom') {
         this.left = -this.container.offsetWidth + buttonWidth;
         this.top = buttonRectangle.top + buttonHeight;
       }
-      if (this.position === 'top') {
+      if (this.position() === 'top') {
         this.left = -this.container.offsetWidth + buttonWidth;
         this.top = -this.container.offsetHeight;
       }
@@ -100,7 +102,7 @@ export class DropdownMenu implements AfterContentInit {
   }
 
   onClick(event: Event) {
-    if (this.level === 'child') this.alignSubitemToContainer(event);
+    if (this.level() === 'child') this.alignSubitemToContainer(event);
 
     this.toggleVisibility();
   }
@@ -120,7 +122,6 @@ export class DropdownMenu implements AfterContentInit {
     return this.dropdownElement().childNodes[0];
   }
 
-  @HostListener('window:click', ['$event'])
   click(event: Event) {
     const element = <HTMLElement>event.target;
     if (this.dropdownElement()?.contains(element)) return;

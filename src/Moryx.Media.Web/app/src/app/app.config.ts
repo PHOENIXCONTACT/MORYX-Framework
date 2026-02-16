@@ -71,6 +71,6 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en'
     }),
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
   ]
 }

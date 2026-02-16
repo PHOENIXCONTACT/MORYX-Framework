@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-navigation-button',
@@ -13,7 +13,7 @@ import { Component, Input } from '@angular/core';
 })
 export class NavigationButton {
   public static POSITION_ATTRIBUTE = "position";
-  @Input() position: NavigationButtonPosition = "default";
+  position = input<NavigationButtonPosition>('default');
 }
 
 export type NavigationButtonPosition = "fixed" | "default";

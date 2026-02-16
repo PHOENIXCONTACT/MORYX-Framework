@@ -4,7 +4,7 @@
 */
 
 import {FlatTreeControl} from '@angular/cdk/tree';
-import {Component, HostListener, OnDestroy, OnInit, signal, viewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, signal, viewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
 import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
@@ -61,7 +61,10 @@ import {DialogRemoveResource} from "./dialogs/dialog-remove-resource/dialog-remo
     MatTreeModule,
     RouterOutlet,
     TranslateModule,
-  ]
+  ],
+  host: {
+    '(window:beforeunload)': 'beforeUnloadHander()'
+  }
 })
 export class App implements OnInit, OnDestroy {
   private readonly trigger = viewChild.required(MatMenuTrigger);
@@ -107,7 +110,6 @@ export class App implements OnInit, OnDestroy {
 
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
-  @HostListener('window:beforeunload')
   beforeUnloadHander() {
     if (this.editService.edit) this.editService.stashResource();
     this.sessionService.storeTreeState(this.treeControl);

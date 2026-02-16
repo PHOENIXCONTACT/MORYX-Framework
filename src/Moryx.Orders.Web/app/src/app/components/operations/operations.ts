@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
@@ -73,7 +73,7 @@ export class Operations implements OnInit, OnDestroy {
   isLoading = signal<boolean>(true);
   mobileQuery: MediaQueryList;
   private searchTerm = signal<string>('');
-  @ViewChild('drawer') public drawer!: MatDrawer;
+  drawer = viewChild.required<MatDrawer>('drawer');
 
   constructor(
     public orderManagementService: OrderManagementService,
@@ -255,7 +255,7 @@ export class Operations implements OnInit, OnDestroy {
     if(this.drawerContent() === DrawerContent.None) {
       this.selectedOperation.set(operation);
       this.drawerContent.set(targetContent);
-      this.drawer.open();
+      this.drawer().open();
     } else if(this.drawerContent() === targetContent) {
       this.closeDrawer();
     } else {
@@ -303,7 +303,7 @@ export class Operations implements OnInit, OnDestroy {
 
   closeDrawer() {
     this.drawerContent.set(DrawerContent.None);
-    this.drawer.close();
+    this.drawer().close();
   }
 }
 

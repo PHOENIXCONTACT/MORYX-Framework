@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable, NgZone } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ApiConfiguration } from 'src/app/api/api-configuration';
 import { OperationModel } from '../api/models';
 import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, OperationType } from 'src/app/models/operation-models';
@@ -13,7 +13,6 @@ import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, O
 })
 export class OperationService {
   private config = inject(ApiConfiguration);
-  private zone = inject(NgZone);
   private eventSource: EventSource;
 
   constructor() {
@@ -26,15 +25,15 @@ export class OperationService {
     this.eventSource.addEventListener(OperationType[OperationType.Progress], event => {
       const operationModel = JSON.parse(event.data) as OperationModel;
       if (operationModel) {
-        this.zone.run(() => callback(operationModel!));
-      }      
+        callback(operationModel!);
+      }
     });
     // And updated
     this.eventSource.addEventListener(OperationType[OperationType.Update], event => {
       const operationModel = JSON.parse(event.data) as OperationModel;
       if (operationModel) {
-        this.zone.run(() => callback(operationModel!));
-      }      
+        callback(operationModel!);
+      }
     });
   }
 
@@ -51,7 +50,7 @@ export class OperationService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationStartedModel.operationModel!, operationStartedModel.userId!));
+      callbackFunction(operationStartedModel.operationModel!, operationStartedModel.userId!);
     });
 
     this.eventSource.addEventListener(OperationType[OperationType.Progress], event => {
@@ -60,7 +59,7 @@ export class OperationService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationModel!));
+      callbackFunction(operationModel!);
     });
 
     this.eventSource.addEventListener(OperationType[OperationType.Completed], event => {
@@ -73,7 +72,7 @@ export class OperationService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!));
+      callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
     this.eventSource.addEventListener(OperationType[OperationType.Interrupted], event => {
@@ -86,7 +85,7 @@ export class OperationService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!));
+      callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
     this.eventSource.addEventListener(OperationType[OperationType.Report], event => {
@@ -99,7 +98,7 @@ export class OperationService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!));
+      callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
     this.eventSource.addEventListener(OperationType[OperationType.Advice], event => {
@@ -112,7 +111,7 @@ export class OperationService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationadvicedModel.operationModel!, operationadvicedModel.adviceModel!));
+      callbackFunction(operationadvicedModel.operationModel!, operationadvicedModel.adviceModel!);
     });
 
     this.eventSource.addEventListener(OperationType[OperationType.Update], event => {
@@ -120,8 +119,8 @@ export class OperationService {
       if (!operationModel || operationType !== OperationType.Update) {
         return;
       }
-      
-      this.zone.run(() => callbackFunction(operationModel!));
+
+      callbackFunction(operationModel!);
     });
   }
 }

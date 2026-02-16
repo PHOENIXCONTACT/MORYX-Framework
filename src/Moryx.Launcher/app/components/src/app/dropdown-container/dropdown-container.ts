@@ -4,7 +4,7 @@
 */
 
 
-import { AfterContentInit, Component, ElementRef, inject, Input, OnDestroy } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, inject, input, OnDestroy } from '@angular/core';
 import { Constants } from '../constants';
 import { DropdownItemClickEventArg, DropdownItem } from '../dropdown-item/dropdown-item';
 
@@ -17,7 +17,7 @@ import { DropdownItemClickEventArg, DropdownItem } from '../dropdown-item/dropdo
 export class DropdownContainer implements AfterContentInit, OnDestroy {
 
   private elementRef = inject(ElementRef);
-  @Input() class: string = "";
+  class = input('');
 
   ngAfterContentInit(): void {
     this.subscribe();

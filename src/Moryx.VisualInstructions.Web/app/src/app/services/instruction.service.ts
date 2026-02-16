@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { InstructionItemModel, InstructionModel } from '../api/models';
 import { VisualInstructionsService } from '../api/services';
 import { BehaviorSubject } from 'rxjs';
@@ -23,7 +23,7 @@ export class InstructionService {
   private _instructions = new BehaviorSubject<InstructionModel[]>([]);
   public instructions$ = this._instructions.asObservable();
 
-  constructor(private zone: NgZone,
+  constructor(
     private visualInstructionsService: VisualInstructionsService,
     private httpClient: HttpClient,
     private snackbarService: SnackbarService,
@@ -40,7 +40,7 @@ export class InstructionService {
     this.eventSource = new EventSource(this.visualInstructionsService.rootUrl + '/api/moryx/instructions/stream', { withCredentials: !environment.production });
     this.eventSource.onmessage = event => {
       const instructions = JSON.parse(event.data);
-      this.zone.run(() => this._instructions.next(instructions));
+      this._instructions.next(instructions);
     };
   }
 

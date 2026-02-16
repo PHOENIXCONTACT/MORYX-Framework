@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable, NgZone } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ActivityChangedModel } from '../api/models/activity-changed-model';
 import { CellStateChangedModel } from '../api/models/cell-state-changed-model';
@@ -20,7 +20,6 @@ import { OrderChangedModel } from '../api/models/order-changed-model';
 })
 export class FactoryStateStreamService {
   private factoryMonitorService = inject(FactoryMonitorService);
-  private zone = inject(NgZone);
   updatedCell: BehaviorSubject<CellModel | undefined> = new BehaviorSubject<CellModel | undefined>(undefined);
   updatedOrder: BehaviorSubject<Order | undefined> = new BehaviorSubject<Order | undefined>(undefined);
 
@@ -36,23 +35,23 @@ export class FactoryStateStreamService {
 
       if(activityChangedModel?.resourceId){
         const cell = Converter.activityChangedModelToCell(activityChangedModel);
-        this.zone.run(() => this.updatedCell.next(cell));
+        this.updatedCell.next(cell);
       }
       else if(resourceChangedModel?.cellName){
         const cell = Converter.resourceChangedModelToCell(resourceChangedModel);
-        this.zone.run(() => this.updatedCell.next(cell));
+        this.updatedCell.next(cell);
       }
       else if(cellStateChangedModel?.id &&cellStateChangedModel?.state){
         const cell = Converter.cellStateChangedModelToCell(cellStateChangedModel);
-        this.zone.run(() => this.updatedCell.next(cell));
+        this.updatedCell.next(cell);
       }
       else if(orderModel?.color){
         const order = Converter.orderModelToOrder(orderModel);
-        this.zone.run(() => this.updatedOrder.next(order));
+        this.updatedOrder.next(order);
       }
       else if(orderChangedModel?.state){
         const order = Converter.orderChangedModelToOrder(orderChangedModel);
-        this.zone.run(() => this.updatedOrder.next(order));
+        this.updatedOrder.next(order);
       }
     };
   }

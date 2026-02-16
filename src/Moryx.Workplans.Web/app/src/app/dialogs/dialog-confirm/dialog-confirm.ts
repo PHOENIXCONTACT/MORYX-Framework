@@ -4,7 +4,7 @@
 */
 
 
-import { AfterViewInit, Component, Inject, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, Inject, viewChildren } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
@@ -18,7 +18,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/materia
 ]
 })
 export class ConfirmDialog implements AfterViewInit {
-  @ViewChildren('actionButton') actionButtons: QueryList<MatButton> | undefined;
+  actionButtons = viewChildren<MatButton>('actionButton');
   buttons: ConfirmDialogButton[] | undefined;
 
   constructor(
@@ -30,9 +30,9 @@ export class ConfirmDialog implements AfterViewInit {
 
   ngAfterViewInit(): void {
     const focusedButtonIndex = this.buttons?.findIndex(b => b.focused);
-    if (!focusedButtonIndex || !this.actionButtons) return;
+    if (focusedButtonIndex === undefined || focusedButtonIndex < 0) return;
 
-    const focusedButton = this.actionButtons?.get(focusedButtonIndex!);
+    const focusedButton = this.actionButtons()[focusedButtonIndex];
     if (focusedButton) {
       focusedButton.focus();
     }

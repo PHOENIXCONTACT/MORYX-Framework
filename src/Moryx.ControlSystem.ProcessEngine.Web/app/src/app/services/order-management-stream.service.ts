@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { inject, Injectable, NgZone } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ApiConfiguration } from 'src/app/api/api-configuration';
 import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, OperationType } from 'src/app/models/operation-models';
 import { OperationModel } from '../api/models/operation-model';
@@ -13,7 +13,6 @@ import { OperationModel } from '../api/models/operation-model';
 })
 export class OrderManagementStreamService {
   private config = inject(ApiConfiguration);
-  private zone = inject(NgZone);
 
   public stream(operationType: OperationType, callbackFunction: Function) {
     const eventSource = new EventSource(this.config.rootUrl + '/api/moryx/orders/stream');
@@ -28,7 +27,7 @@ export class OrderManagementStreamService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationStartedModel.operationModel!, operationStartedModel.userId!));
+      callbackFunction(operationStartedModel.operationModel!, operationStartedModel.userId!);
     });
 
     eventSource.addEventListener(OperationType[OperationType.Progress], event => {
@@ -37,7 +36,7 @@ export class OrderManagementStreamService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationModel!));
+      callbackFunction(operationModel!);
     });
 
     eventSource.addEventListener(OperationType[OperationType.Completed], event => {
@@ -50,7 +49,7 @@ export class OrderManagementStreamService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!));
+      callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
     eventSource.addEventListener(OperationType[OperationType.Interrupted], event => {
@@ -63,7 +62,7 @@ export class OrderManagementStreamService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!));
+      callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
     eventSource.addEventListener(OperationType[OperationType.Report], event => {
@@ -76,7 +75,7 @@ export class OrderManagementStreamService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!));
+      callbackFunction(operationReportedModel.operationModel!, operationReportedModel.reportModel!);
     });
 
     eventSource.addEventListener(OperationType[OperationType.Advice], event => {
@@ -89,7 +88,7 @@ export class OrderManagementStreamService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationadvicedModel.operationModel!, operationadvicedModel.adviceModel!));
+      callbackFunction(operationadvicedModel.operationModel!, operationadvicedModel.adviceModel!);
     });
 
     eventSource.addEventListener(OperationType[OperationType.Update], event => {
@@ -98,7 +97,7 @@ export class OrderManagementStreamService {
         return;
       }
 
-      this.zone.run(() => callbackFunction(operationModel!));
+      callbackFunction(operationModel!);
     });
   }
 }

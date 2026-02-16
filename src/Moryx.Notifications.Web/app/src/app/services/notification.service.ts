@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable, NgZone, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { NotificationModel } from '../api/models';
 import { NotificationPublisherService } from '../api/services';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -25,7 +25,6 @@ export class NotificationService implements OnDestroy {
   public state$: Observable<ConnectionState> = this.stateSubject.asObservable();
 
   constructor(
-    private zone: NgZone,
     private api: NotificationPublisherService,
     private snackbarService: SnackbarService) {
 
@@ -38,19 +37,15 @@ export class NotificationService implements OnDestroy {
     const data: NotificationModel[] = JSON.parse(event.data);
     const notifications = data.filter(n => !!n.identifier).sortBySeverity();
 
-    this.zone.run(() => {
-      if (this.stateSubject.value != ConnectionState.Connected)
-        this.stateSubject.next(ConnectionState.Connected)
-      this.notificationSubject.next(notifications);
-      this.checkSelection();
-    });
+    if (this.stateSubject.value != ConnectionState.Connected)
+      this.stateSubject.next(ConnectionState.Connected)
+    this.notificationSubject.next(notifications);
+    this.checkSelection();
   }
 
   private processError(event: Event) : void {
-    this.zone.run(() => {
-      this.stateSubject.next(ConnectionState.Reconnecting)
-      this.notificationSubject.error(event);
-    });
+    this.stateSubject.next(ConnectionState.Reconnecting)
+    this.notificationSubject.error(event);
   }
 
   ngOnDestroy(): void {

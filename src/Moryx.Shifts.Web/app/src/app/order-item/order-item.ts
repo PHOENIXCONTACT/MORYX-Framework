@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { OrderModel } from '../models/order-model';
 import prettyMilliseconds from 'pretty-ms';
 
@@ -20,6 +20,6 @@ import { MatIconModule } from '@angular/material/icon';
 export class OrderItem {
   prettyMilliseconds = prettyMilliseconds;
   hourToMillisecond = 3600000;
-  @Input() order!: OrderModel;
+  order = input.required<OrderModel>();
 }
 

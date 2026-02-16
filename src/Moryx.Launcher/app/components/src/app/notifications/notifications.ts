@@ -4,7 +4,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { AfterContentInit, Component, inject, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, input, OnDestroy, OnInit, signal } from '@angular/core';
 
 @Component({
   selector: 'app-notifications',
@@ -14,11 +14,9 @@ import { AfterContentInit, Component, inject, Input, NgZone, OnDestroy, OnInit }
   styleUrl: './notifications.css'
 })
 export class Notifications implements OnInit, OnDestroy {
-
-  @Input() url: string = 'notifications';
-  @Input() api: string = '/api/moryx/notifications/stream';
-  private ngZone = inject(NgZone);
-  notifications: Array<Notification> = [];
+  url = input('notifications');
+  api = input('/api/moryx/notifications/stream');
+  notifications = signal<Array<Notification>>([]);
   eventSource: EventSource | undefined;
 
   ngOnDestroy(): void {
@@ -26,23 +24,21 @@ export class Notifications implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (!this.api) return;
+    if (!this.api()) return;
     // listen to notification stream
-    this.eventSource = new EventSource(this.api);
+    this.eventSource = new EventSource(this.api());
     this.eventSource.onmessage = this.onMessageReceived.bind(this);
   }
 
   private onMessageReceived(event: any) {
-    this.ngZone.run(() => {
-      //send notifications to listeners
-      const datas = <Array<Notification>>JSON.parse(event.data);
-      this.notifications = datas;
-    });
+    //send notifications to listeners
+    const datas = <Array<Notification>>JSON.parse(event.data);
+    this.notifications.set(datas);
   }
 
   getNotificationToDisplay() {
-    if (!this.notifications.length) return undefined;
-    const highSeverityNotifications = this.getHighSeverityNotifications(this.notifications);
+    if (!this.notifications().length) return undefined;
+    const highSeverityNotifications = this.getHighSeverityNotifications(this.notifications());
     const latestNotifications = highSeverityNotifications.reverse(); // Descending order latest to oldest
     const latestNotification = latestNotifications[0];
     return latestNotification;

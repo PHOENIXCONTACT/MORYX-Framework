@@ -75,6 +75,6 @@ export const appConfig: ApplicationConfig = {
     ShiftService,
     AppStoreService,
     AssignmentService,
-    TranslateService
+    TranslateService,
   ]
 }

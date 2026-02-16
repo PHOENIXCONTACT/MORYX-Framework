@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { DropdownItem } from "../dropdown-item/dropdown-item";
 import { DropdownContainer } from "../dropdown-container/dropdown-container";
 import { DropdownMenu } from "../dropdown-menu/dropdown-menu";
@@ -15,13 +15,12 @@ import { DropdownMenu } from "../dropdown-menu/dropdown-menu";
   styleUrl: './dropdown-sub-item.css'
 })
 export class DropdownSubItem {
-  @Input() closeOnClick: boolean = false;
-  @Output() onClick = new EventEmitter<boolean>();
-  @Input() class: string = "";
-
+  closeOnClick = input(false);
+  onClick = output<boolean>();
+  class = input('');
 
   handleClick() {
-    this.onClick.emit(this.closeOnClick);
+    this.onClick.emit(this.closeOnClick());
   }
 }
 

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit, model, signal, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, model, signal, output } from '@angular/core';
 import { ContentDescriptorModel } from '../../../api/models';
 import { MediaService } from '../../../services/media-service/media.service';
 import { environment } from 'src/environments/environment';
@@ -37,8 +37,8 @@ export class MediaFile implements OnInit {
   loaded = signal(false);
   path = signal<string | null | ArrayBuffer>('');
 
-  @Output() show = new EventEmitter<ContentDescriptorModel>()
-  @Output() delete = new EventEmitter<ContentDescriptorModel>()
+  show = output<ContentDescriptorModel>();
+  delete = output<ContentDescriptorModel>();
   img: any;
 
   constructor(

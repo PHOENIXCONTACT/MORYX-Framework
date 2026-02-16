@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, Input, OnInit } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-auth-button',
@@ -12,7 +12,7 @@ import { Component, input, Input, OnInit } from '@angular/core';
   styleUrl: './auth-button.css'
 })
 export class SignInButton implements OnInit {
-  @Input() authurl: string | undefined;
+  authurl = input<string | undefined>(undefined);
   isLoggedIn = false;
   userName = '';
 
@@ -21,11 +21,11 @@ export class SignInButton implements OnInit {
   }
 
   signIn() {
-    window.location.assign(`${this.authurl}/login?returnUrl=${location.href}`);
+    window.location.assign(`${this.authurl()}/login?returnUrl=${location.href}`);
   }
 
   async signOut() {
-    await fetch(this.authurl + '/api/auth/signOut', {
+    await fetch(this.authurl() + '/api/auth/signOut', {
       method: 'POST',
       credentials: 'include',
       headers: {

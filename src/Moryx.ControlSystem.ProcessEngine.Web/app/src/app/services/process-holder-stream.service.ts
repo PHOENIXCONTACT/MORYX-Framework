@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ProcessHolderGroupModel } from '../api/models/process-holder-group-model';
 import { ProcessEngineService } from '../api/services';
@@ -15,9 +15,7 @@ export class ProcessHolderStreamService {
 
   $updatedWpc = new BehaviorSubject<ProcessHolderGroupModel | undefined>(undefined);
 
-  constructor(private ngZone: NgZone,
-    private processService: ProcessEngineService
-  ) {
+  constructor(private processService: ProcessEngineService) {
     this.publishUpdates();
   }
 
@@ -25,10 +23,8 @@ export class ProcessHolderStreamService {
     const eventSource = new EventSource(this.processService.rootUrl + ProcessEngineService.GroupStreamPath);
     eventSource.onmessage = event => {
       const wpcGroup = JSON.parse(event.data);
-      this.ngZone.run(() => {
-        console.log('update received :', wpcGroup);
-        this.$updatedWpc.next(wpcGroup)
-      });
+      console.log('update received :', wpcGroup);
+      this.$updatedWpc.next(wpcGroup);
     };
   }
 

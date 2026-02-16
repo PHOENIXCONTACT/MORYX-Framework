@@ -19,9 +19,7 @@
             },
             "index": "components/src/index.html",
             "browser": "components/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": [],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {

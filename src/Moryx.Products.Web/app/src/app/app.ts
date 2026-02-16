@@ -6,7 +6,6 @@
 import { FlatTreeControl } from "@angular/cdk/tree";
 import {
   Component,
-  HostListener,
   OnDestroy,
   OnInit,
   signal,
@@ -78,7 +77,10 @@ import { MatInputModule } from "@angular/material/input";
     MatTreeModule,
     RouterOutlet,
     MatInputModule
-  ]
+  ],
+  host: {
+    '(window:beforeunload)': 'beforeUnloadHander()'
+  }
 })
 export class App implements OnInit, OnDestroy {
   selected = signal<ProductModel | undefined>(undefined);
@@ -274,7 +276,6 @@ export class App implements OnInit, OnDestroy {
     this.sessionService.expandNodesAccordingToStorage(this.treeControl);
   }
 
-  @HostListener("window:beforeunload")
   beforeUnloadHander() {
     if (this.editService.edit && this.selected()) {
       this.sessionService.setWipProduct(this.selected()!, <ProductStorageDetails>{

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, Input, input, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, input, OnDestroy, OnInit, signal } from '@angular/core';
 
 @Component({
   selector: 'app-notification-badge',
@@ -12,15 +12,14 @@ import { Component, inject, Input, input, NgZone, OnDestroy, OnInit } from '@ang
   styleUrl: './notification-badge.css'
 })
 export class NotificationBadge implements OnInit, OnDestroy {
-  private ngZone = inject(NgZone);
-  @Input() eventstream: string = '';
-  count: number = 0;
+  eventstream = input('');
+  count = signal(0);
   eventSource: EventSource | undefined;
 
   ngOnInit(): void {
-    if (!this.eventstream) return;
+    if (!this.eventstream()) return;
 
-    this.eventSource = new EventSource(this.eventstream);
+    this.eventSource = new EventSource(this.eventstream());
     this.eventSource.onmessage = this.onReceived.bind(this);
   }
 
@@ -29,22 +28,20 @@ export class NotificationBadge implements OnInit, OnDestroy {
   }
 
   onReceived(event: any) {
-    this.ngZone.run(() => {
-      // Check if data is plain number
-      var integer = parseInt(event.data);
-      // Parse data assuming collection
-      if (!integer) {
-        const list = JSON.parse(event.data);
-        integer = list.length;
-      }
+    // Check if data is plain number
+    var integer = parseInt(event.data);
+    // Parse data assuming collection
+    if (!integer) {
+      const list = JSON.parse(event.data);
+      integer = list.length;
+    }
 
-      this.count = integer;
-    });
+    this.count.set(integer);
   }
 
   countString() {
-    if (this.count > 9) return '9+';
-    return this.count;
+    if (this.count() > 9) return '9+';
+    return this.count();
   }
 }
 

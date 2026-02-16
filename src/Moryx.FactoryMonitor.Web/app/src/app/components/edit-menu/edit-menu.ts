@@ -48,11 +48,11 @@ export class EditMenu implements OnInit {
     },
   ];
   editingEnabled = signal(false);
-  buttons: any[] = [];
-  activeState: EditMenuState = EditMenuState.Closed;
+  buttons = signal<any[]>([]);
+  activeState = signal<EditMenuState>(EditMenuState.Closed);
   backgroundState: EditMenuState = EditMenuState.EditingBackground;
   TranslationConstants = TranslationConstants;
-  canGoBack: boolean = false;
+  canGoBack = signal(false);
   goBackToFactory!: number;
   navigationItem!: FactoryModel;
 
@@ -78,7 +78,7 @@ export class EditMenu implements OnInit {
     this.factorySelectionService.factorySelected$.subscribe({
       next: factory => {
         if (!factory) {
-          this.canGoBack = false;
+          this.canGoBack.set(false);
           return;
         }
 
@@ -87,11 +87,11 @@ export class EditMenu implements OnInit {
           this.backgroundService.changeLocalBackground(navigation.backgroundURL ?? '');
 
           if (!navigation.parentId) {
-            this.canGoBack = false;
+            this.canGoBack.set(false);
             return;
           }
 
-          this.canGoBack = true;
+          this.canGoBack.set(true);
           this.goBackToFactory = navigation.parentId ?? 0;
         });
       }
@@ -115,11 +115,11 @@ export class EditMenu implements OnInit {
   }
 
   showMenu() {
-    this.buttons = this.menuButtons;
+    this.buttons.set(this.menuButtons);
   }
 
   hideMenu() {
-    this.buttons = [];
+    this.buttons.set([]);
     this.editMenuService.setActiveState(EditMenuState.Closed);
   }
 

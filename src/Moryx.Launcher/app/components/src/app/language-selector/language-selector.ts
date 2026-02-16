@@ -4,7 +4,7 @@
 */
 
 
-import { AfterContentInit, AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { localLanguage } from '../utils';
 
 @Component({
@@ -14,21 +14,21 @@ import { localLanguage } from '../utils';
   styleUrl: './language-selector.css'
 })
 export class LanguageSelector {
-  @Input() language: string = "de-DE";
-  @Input() class: string = "";
+  language = input('de-DE');
+  class = input('');
 
   currentLanguage() {
     return localLanguage();
   }
 
   isChecked() {
-    return this.currentLanguage() === this.language;
+    return this.currentLanguage() === this.language();
   }
 
   onClick() {
     let CookieDate = new Date;
     CookieDate.setFullYear(CookieDate.getFullYear() + 1);
-    const cookieString = `c=${this.language}|uic=${this.language}`;
+    const cookieString = `c=${this.language()}|uic=${this.language()}`;
     const encodedCookie = escape(cookieString);
     document.cookie =
       '.AspNetCore.Culture=' + encodedCookie +

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
@@ -41,7 +41,7 @@ export class MediaOverview implements OnInit, OnDestroy {
   contents = signal<ContentDescriptorModel[]>([]);
   selectedContent = signal<string | undefined>(undefined);
 
-  @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
+  trigger = viewChild.required(MatMenuTrigger);
   TranslationConstants = TranslationConstants;
   menuTopLeftPosition = {x: '0', y: '0'};
 
@@ -114,10 +114,10 @@ export class MediaOverview implements OnInit, OnDestroy {
   }
 
   onOpenMenuOnTouch(event: any, content: ContentDescriptorModel) {
-    this.trigger.menuData = {content: content};
+    this.trigger().menuData = {content: content};
     this.menuTopLeftPosition.x = event.pointers[0].clientX + 'px';
     this.menuTopLeftPosition.y = event.pointers[0].clientY + 'px';
-    this.trigger.openMenu();
+    this.trigger().openMenu();
   }
 
   onSelectMedia(content: ContentDescriptorModel) {
@@ -128,7 +128,7 @@ export class MediaOverview implements OnInit, OnDestroy {
 
   //upload new content
   onUpload(event: any) {
-    for (var fileElement of event.target.files) {
+    for (const fileElement of event.target.files) {
       const file: File = fileElement;
       if (file) {
         this.mediaService.uploadContent(file);
@@ -174,4 +174,3 @@ export class MediaOverview implements OnInit, OnDestroy {
     this.onUpload(arg);
   }
 }
-

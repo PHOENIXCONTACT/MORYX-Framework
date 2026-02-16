@@ -4,7 +4,7 @@
 */
 
 
-import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, inject, input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MoryxShell, SearchRequestCallback, SearchSuggestion } from './shell';
 import { localLanguage } from '../utils';
@@ -13,11 +13,14 @@ import { localLanguage } from '../utils';
   selector: 'app-search-box',
   imports: [FormsModule],
   templateUrl: './search-box.html',
-  styleUrl: './search-box.css'
+  styleUrl: './search-box.css',
+  host: {
+    '(window:click)': 'handleClickOutSideTheSearchBar($event)'
+  }
 })
 export class SearchBox implements OnInit {
 
-  @Input() placeholder: string = "Search...";
+  placeholder = input('Search...');
 
   disabled: boolean = true;
   subscriber: SearchRequestCallback = function (term: string, complete: boolean) {
@@ -37,7 +40,6 @@ export class SearchBox implements OnInit {
     window.shell = shell;
   }
 
-  @HostListener('window:click', ['$event'])
   handleClickOutSideTheSearchBar(event: Event) {
     const element = <HTMLElement>event.target;
     const searchbox = <HTMLElement>this.elementRef.nativeElement;
