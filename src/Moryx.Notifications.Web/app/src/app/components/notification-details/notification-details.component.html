@@ -14,7 +14,7 @@
         </mat-icon>
       </div>
       <mat-card-title class="notification-title">
-        <markdown [data]="notification()?.title"> </markdown>
+        <markdown [data]="notification()?.title"  [disableSanitizer]="true"> </markdown>
       </mat-card-title>
       <mat-card-subtitle>{{
         notification()?.created | date: "medium"
@@ -23,7 +23,7 @@
 
     <mat-card-content class="notification-content">
       <div class="content">
-        <markdown class="notification-message" [data]="notification()?.message"> </markdown>
+        <markdown class="notification-message" [data]="notification()?.message"  [disableSanitizer]="true"> </markdown>
         <navigable-entry-editor
         *ngIf="notification()?.properties && isArrayNotEmpty(notification()?.properties?.subEntries!)"
           [entry]="notification()!.properties!"
