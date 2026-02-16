@@ -1,0 +1,34 @@
+{
+  "version": "1.0",
+  "defaultProvider": "jsdelivr",
+  "libraries": [
+    {
+      "library": "@fontsource/roboto@5.2.9",
+      "destination": "wwwroot/lib/fontsource-roboto",
+      "files": [
+        "400.css",
+        "files/roboto-latin-400-normal.woff2"
+      ]
+    },
+    {
+      "library": "material-icons@1.13.14",
+      "destination": "wwwroot/lib/material-icons",
+      "files": [
+        "iconfont/material-icons.css",
+        "iconfont/material-icons.woff2"
+      ]
+    },
+    {
+      "library": "material-symbols@0.40.2",
+      "destination": "wwwroot/lib/material-symbols",
+      "files": [
+        "outlined.css",
+        "rounded.css",
+        "sharp.css",
+        "material-symbols-outlined.woff2",
+        "material-symbols-rounded.woff2",
+        "material-symbols-sharp.woff2"
+      ]
+    }
+  ]
+}

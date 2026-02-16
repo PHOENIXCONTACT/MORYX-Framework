@@ -34,6 +34,8 @@
 
   <Import Project="..\..\.build\WebProjects.props"/>
   <Target Name="BuildUI">
+    <Exec Command="dotnet tool restore" />
+    <Exec Command="dotnet libman restore" />
     <Exec WorkingDirectory=".\app\" Command="npm ci" />
     <Exec WorkingDirectory=".\app\" Command="npm run build:prod"/>
     <Exec WorkingDirectory=".\app\" Command="npm run build:css"/>
