@@ -55,20 +55,23 @@ internal class SimpleGraph
     {
         var result = resourceManager.ReadUnsafe(Id, resource =>
         {
-            if (resource is not MachineLocation machineLocation)
+            if (resource is not IMachineLocation machineLocation)
             {
                 return null;
             }
 
-            var resourcesAtThisLocation = machineLocation.Children.Where(x => x is ICell || x is IManufacturingFactory).ToArray();
-            if (resourcesAtThisLocation.Length == 0)
+            var resourcesAtThisLocation = resource.Children.Where(x => x is ICell || x is IManufacturingFactory).ToArray();
+            if(resource is ICell)
+            {
+                resourcesAtThisLocation = [resource];
+            }
+            else if (resourcesAtThisLocation.Length == 0)
             {
                 logger.LogError("There is no resource type Cell or ManufacturingFactory found under Location '{Name}'",
                     machineLocation.Name);
                 return null;
             }
-
-            if (resourcesAtThisLocation.Length > 1)
+            else if (resourcesAtThisLocation.Length > 1)
             {
                 logger.Log(LogLevel.Warning, "More than one resource were found under Location '{Name}'. The first child will be used",
                     machineLocation.Name);
@@ -80,10 +83,10 @@ internal class SimpleGraph
 
             switch (resourceAtThisLocation)
             {
-                case ManufacturingFactory factory:
+                case IManufacturingFactory factory:
                     model = Converter.Converter.ToFactoryStateModel(factory);
                     break;
-                case Cell cell:
+                case ICell cell:
                     model = cell.GetResourceChangedModel(converter, resourceManager, filter);
                     model.IsACell = true;
                     break;
