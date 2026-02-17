@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit, ElementRef, viewChild, input, computed, signal, effect, untracked } from '@angular/core';
+import { Component, OnInit, ElementRef, viewChild, input, computed, signal, effect, untracked, inject } from '@angular/core';
 import { EditMenuState } from 'src/app/services/EditMenutState';
 import { CellStoreService } from 'src/app/services/cell-store.service';
 import { CellState } from '../../api/models/cell-state';
@@ -27,6 +27,12 @@ import { MatIcon } from '@angular/material/icon';
   ]
 })
 export class Cell implements OnInit {
+  private cellStoreService = inject(CellStoreService);
+  private orderStoreService = inject(OrderStoreService);
+  private editMenuService = inject(EditMenuService);
+  private cellSettingsService = inject(CellSettingsService);
+  private factorySelectionService = inject(FactorySelectionService);
+
   cellElement = viewChild<ElementRef<HTMLElement>>('cell');
   container = input<ElementRef<HTMLElement>>();
   parameters = input.required<CellModel>();
@@ -53,13 +59,7 @@ export class Cell implements OnInit {
     return '#585858';
   });
 
-  constructor(
-    private cellStoreService: CellStoreService,
-    private orderStoreService: OrderStoreService,
-    private editMenuService: EditMenuService,
-    private cellSettingsService: CellSettingsService,
-    private factorySelectionService: FactorySelectionService
-  ) {
+  constructor() {
     effect(() => {
       const parameters = this.parameters();
       untracked(() => {

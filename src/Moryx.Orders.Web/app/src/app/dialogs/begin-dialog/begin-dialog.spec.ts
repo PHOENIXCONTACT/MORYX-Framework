@@ -71,7 +71,7 @@ describe('BeginDialog', () => {
 
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      var submitButton = fixture.debugElement
+      const submitButton = fixture.debugElement
         .queryAll(By.css('button'))
         .find(
           element =>
@@ -92,7 +92,7 @@ describe('BeginDialog', () => {
   it('should return -1 when canceled', done => {
     const dialogCloseSpy = spyOn(dialogRef, 'close');
 
-    var cancelButton = fixture.debugElement
+    const cancelButton = fixture.debugElement
       .queryAll(By.css('button'))
       .find(
         element => element.nativeElement.textContent === ' BEGIN_DIALOG.CANCEL '

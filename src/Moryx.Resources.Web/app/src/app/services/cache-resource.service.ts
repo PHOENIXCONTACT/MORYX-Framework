@@ -4,9 +4,8 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { ReferenceValue, ResourceModel, ResourceTypeModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
@@ -21,6 +20,9 @@ import '../extensions/observable.extensions';
   providedIn: 'root',
 })
 export class CacheResourceService {
+  private resourceModificationService = inject(ResourceModificationService);
+  private snackbarService = inject(SnackbarService);
+
   TranslationConstants = TranslationConstants;
   private readonly ChildReferenceName = 'Children';
 
@@ -31,16 +33,12 @@ export class CacheResourceService {
     undefined
   );
 
-  constructor(
-    private resourceModification: ResourceModificationService,
-    public translate: TranslateService,
-    private snackbarService: SnackbarService
-  ) {
+  constructor() {
     this.resources.subscribe(resources => this.pushFlattenedResources(resources));
   }
 
   private pushFlattenedResources(resources: ResourceModel[] | undefined) {
-    var flattendResources = [] as ResourceModel[];
+    const flattendResources = [] as ResourceModel[];
     if (resources) resources.forEach(r => this.collectflattenedResources(r, flattendResources));
 
     this.flatResources.next(flattendResources);
@@ -55,14 +53,14 @@ export class CacheResourceService {
   }
 
   removeResource(resource: ResourceModel) {
-    var newResources = this.resources.getValue() ?? [];
+    const newResources = this.resources.getValue() ?? [];
 
     //Handle children's references
-    var childReferences = resource.references?.find(r => r.name === this.ChildReferenceName)?.targets;
+    const childReferences = resource.references?.find(r => r.name === this.ChildReferenceName)?.targets;
     childReferences?.forEach(c => newResources.push(c));
 
     //Handle parent's reference
-    var parent = this.flatResources
+    const parent = this.flatResources
       .getValue()
       ?.find(p =>
         p.references?.find(r => r.name === this.ChildReferenceName)?.targets?.find(r => r.id === resource.id)
@@ -76,12 +74,12 @@ export class CacheResourceService {
   }
 
   private removeChildFromParent(parent: ResourceModel, child: ResourceModel) {
-    var childrenReferences = parent?.references?.find(ref => ref.name === this.ChildReferenceName);
+    const childrenReferences = parent?.references?.find(ref => ref.name === this.ChildReferenceName);
     if (childrenReferences) childrenReferences.targets = childrenReferences.targets?.filter(t => t.id != child.id);
   }
 
   async loadResources() {
-    await this.resourceModification
+    await this.resourceModificationService
       .getTypeTree()
       .toAsync()
       .then(rootType => {
@@ -91,7 +89,7 @@ export class CacheResourceService {
       })
       .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
 
-    await this.resourceModification
+    await this.resourceModificationService
       .getResources({
         body: {
           referenceCondition: {
@@ -99,7 +97,7 @@ export class CacheResourceService {
             valueConstraint: ReferenceValue.NullOrEmpty,
           },
           referenceRecursion: true,
-          includedReferences: [{ name: this.ChildReferenceName }],
+          includedReferences: [{name: this.ChildReferenceName}],
         },
       })
       .toAsync()

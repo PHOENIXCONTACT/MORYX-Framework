@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Inject, signal } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -25,21 +25,21 @@ import { InterruptDialogData } from "./interrupt-dialog-data";
     TranslateModule,
     MatProgressBarModule,
     MatButtonModule
-]
+  ]
 })
 export class InterruptDialog {
-  
+
   isLoading = signal(false);
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    private dialog: MatDialogRef<InterruptDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: InterruptDialogData,
-    public translate: TranslateService
-  ) {}
+  private dialog = inject(MatDialogRef<InterruptDialog>);
+  data = inject<InterruptDialogData>(MAT_DIALOG_DATA);
+
+  constructor() {
+  }
 
   async submit(): Promise<void> {
-    this.isLoading.update(_=> true);
+    this.isLoading.update(_ => true);
     let failed = false;
 
     await this.data
@@ -47,7 +47,7 @@ export class InterruptDialog {
       .toAsync()
       .catch(() => {
         failed = true;
-        this.isLoading.update(_=> false);
+        this.isLoading.update(_ => false);
       });
     if (!failed) this.dialog.close();
   }

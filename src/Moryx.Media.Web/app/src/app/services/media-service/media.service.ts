@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -15,20 +15,14 @@ import { MediaServerService } from '../../api/services';
   providedIn: 'root',
 })
 export class MediaService {
-  contents: BehaviorSubject<ContentDescriptorModel[]> = new BehaviorSubject<
-    ContentDescriptorModel[]
-  >([] as ContentDescriptorModel[]);
+  private mediaServerService = inject(MediaServerService);
+  private snackbarService = inject(SnackbarService);
+
+  contents: BehaviorSubject<ContentDescriptorModel[]> = new BehaviorSubject<ContentDescriptorModel[]>([] as ContentDescriptorModel[]);
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    private media: MediaServerService,
-    private snackbarService: SnackbarService,
-  ) {
-
-  }
-
   loadContents(): void {
-    this.media
+    this.mediaServerService
       .getAll()
       .pipe(
         catchError(
@@ -41,7 +35,7 @@ export class MediaService {
   }
 
   loadContent(id: string): Observable<ContentDescriptorModel> {
-    return this.media
+    return this.mediaServerService
       .get({guid: id})
       .pipe(
         catchError(
@@ -56,19 +50,19 @@ export class MediaService {
   }
 
   removeContent(id: string): Observable<any> {
-    return this.media
+    return this.mediaServerService
       .removeContent({guid: id})
       .pipe(catchError(this.handleError<any>('Removing content')));
   }
 
   removeVariant(id: string, variantName: string): Observable<any> {
-    return this.media
+    return this.mediaServerService
       .removeVariant({guid: id, variantName: variantName})
       .pipe(catchError(this.handleError<any>('Removing variant')));
   }
 
   uploadContent(file: File): void {
-    this.media.addMaster({body: {formFile: file}}).subscribe({
+    this.mediaServerService.addMaster({body: {formFile: file}}).subscribe({
       next: (data) => {
         this.loadContent(data).subscribe({
           next: (x) => {
@@ -92,7 +86,7 @@ export class MediaService {
     variantName: string,
     file: File
   ): Observable<string> {
-    return this.media
+    return this.mediaServerService
       .addVariant({
         contentId: id,
         variantName: variantName,
@@ -108,7 +102,7 @@ export class MediaService {
     contentGuid: string,
     preview: boolean
   ): Observable<Blob> {
-    return this.media
+    return this.mediaServerService
       .getVariantStream$Json({
         guid: contentGuid,
         variantName: variantName,
@@ -120,7 +114,7 @@ export class MediaService {
     variantName: string,
     contentGuid: string
   ): Observable<VariantDescriptor> {
-    return this.media
+    return this.mediaServerService
       .getVariant({guid: contentGuid, variantName: variantName})
       .pipe(
         catchError(this.handleError<VariantDescriptor>('Retrieving variant'))

@@ -71,7 +71,7 @@ export function totalOperatorForTheDay(from: Date, to: Date,
                                        assignements: AssignmentCardModel[],
                                        shiftInstance?: ShiftInstanceModel): number {
   if (!shiftInstance) return 0;
-  var operators = assignements.filter(assignment => assignment.shiftInstanceId === shiftInstance.id && assignment.days
+  const operators = assignements.filter(assignment => assignment.shiftInstanceId === shiftInstance.id && assignment.days
       .some(e => moment(e.date).diff(moment(calendarDate.date), 'days') === 0) &&
     isDayInInterval(calendarDate.date, shiftInstance.startDate, shiftInstance.endDate) && isDayInInterval(calendarDate.date, from, to)) ?? [];
   return operators.length ?? 0;

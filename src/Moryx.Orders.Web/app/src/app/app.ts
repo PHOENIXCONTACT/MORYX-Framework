@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
@@ -18,24 +18,24 @@ import { TranslationConstants } from './extensions/translation-constants.extensi
     ]
 })
 export class App implements OnInit {
+  private translateService = inject(TranslateService);
+  private languageService = inject(LanguageService);
+
   title = 'Orders';
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    public translate: TranslateService,
-    private languageService: LanguageService
-  ) {
-    this.translate.addLangs([
+  constructor() {
+    this.translateService.addLangs([
       TranslationConstants.LANGUAGES.EN,
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
     ]);
-    this.translate.setFallbackLang('en');
-    this.translate.use(this.languageService.getDefaultLanguage());
+    this.translateService.setFallbackLang('en');
+    this.translateService.use(this.languageService.getDefaultLanguage());
   }
 
   ngOnInit(): void {
-    this.translate.get([TranslationConstants.APP.TITLE]).subscribe(title => {
+    this.translateService.get([TranslationConstants.APP.TITLE]).subscribe(title => {
       this.title = title;
     });
   }

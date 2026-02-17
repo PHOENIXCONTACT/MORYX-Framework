@@ -107,7 +107,7 @@ export class Assignment {
         notes: this.assignment().notes,
         calendarState: this.calendarState()
       };
-      var dialogResult = this.dialog.open(WeekAssignmentDialog, {
+      const dialogResult = this.dialog.open(WeekAssignmentDialog, {
         data: assignmentData
       });
 

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -23,7 +23,6 @@ import { MatButton } from '@angular/material/button';
   styleUrls: ['./dialog-delete.scss'],
   imports: [
     MatDialogTitle,
-    CdkScrollable,
     MatDialogContent,
     MatDialogActions,
     MatButton,
@@ -32,13 +31,12 @@ import { MatButton } from '@angular/material/button';
   ]
 })
 export class DialogDelete {
+  private dialogRef = inject(MatDialogRef<DialogDelete>);
+  data = inject<DeleteDialogData>(MAT_DIALOG_DATA);
+
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    public dialogRef: MatDialogRef<DialogDelete>,
-    public translate: TranslateService,
-    @Inject(MAT_DIALOG_DATA) public data: DeleteDialogData
-  ) {
+  constructor() {
   }
 
   onNoClick(): void {

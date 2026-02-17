@@ -3,13 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, Inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BeginModel } from '../../api/models';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { OperationViewModel } from 'src/app/models/operation-view-model';
-import { FormControl, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { RestrictionDescription } from '../../api/models';
 import { OperatorsService } from 'src/app/services/operators.service';
 import { AssignableOperator } from '../../api/models';
@@ -23,8 +23,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
@@ -105,23 +105,23 @@ export class BeginDialog implements OnInit {
   operators: AssignableOperator[] = [];
   filteredOperators!: Observable<AssignableOperator[]>;
 
-  constructor(
-    public dialog: MatDialogRef<BeginDialog, BeginModel | undefined>,
-    @Inject(MAT_DIALOG_DATA) data: BeginDialogData,
-    private operatorService: OperatorsService,
-    public translate: TranslateService
-  ) {
-    this.canBegin = data.context.canBegin || false;
-    this.canReduce = data.context.canReduce || false;
-    this.currentPartialAmount = data.context.partialAmount || 0;
-    this.successCount = data.context.successCount || 0;
-    this.scrapCount = data.context.scrapCount || 0;
-    this.runningCount = data.operation.model.runningCount || 0;
-    this.residualAmount = data.context.residualAmount || 0;
-    this.minimalTargetAmount = data.context.minimalTargetAmount || 0;
-    this.restrictions = data.context.restrictions || [];
-    this.operation = data.operation;
-    this.newTargetAmount = signal(data.context.partialAmount || 0);
+  private dialog = inject(MatDialogRef<BeginDialog, BeginModel | undefined>);
+  private data = inject<BeginDialogData>(MAT_DIALOG_DATA);
+  private operatorService = inject(OperatorsService);
+  private translateService = inject(TranslateService);
+
+  constructor() {
+    this.canBegin = this.data.context.canBegin || false;
+    this.canReduce = this.data.context.canReduce || false;
+    this.currentPartialAmount = this.data.context.partialAmount || 0;
+    this.successCount = this.data.context.successCount || 0;
+    this.scrapCount = this.data.context.scrapCount || 0;
+    this.runningCount = this.data.operation.model.runningCount || 0;
+    this.residualAmount = this.data.context.residualAmount || 0;
+    this.minimalTargetAmount = this.data.context.minimalTargetAmount || 0;
+    this.restrictions = this.data.context.restrictions || [];
+    this.operation = this.data.operation;
+    this.newTargetAmount = signal(this.data.context.partialAmount || 0);
 
     this.targetAmountControl = new FormControl({
       value: this.currentPartialAmount,
@@ -168,19 +168,19 @@ export class BeginDialog implements OnInit {
   closeDialog() {
     const operatorIdentifier = this.operatorFormControl.value?.trim();
     if (!operatorIdentifier) {
-      this.dialog.close({ amount: this.newPartialAmount() });
+      this.dialog.close({amount: this.newPartialAmount()});
       return;
     }
 
     const selectedOperator = this.operators.find(o => o.identifier === operatorIdentifier);
     if (selectedOperator) {
-      this.dialog.close({ amount: this.newPartialAmount(), userId: selectedOperator.identifier });
+      this.dialog.close({amount: this.newPartialAmount(), userId: selectedOperator.identifier});
       return;
     }
 
     this.operatorService
       .addOperator(operatorIdentifier)
-      .then(o => this.dialog.close({ amount: this.newPartialAmount(), userId: operatorIdentifier }))
+      .then(o => this.dialog.close({amount: this.newPartialAmount(), userId: operatorIdentifier}))
       .catch(e =>
         this.operatorFormControl.setErrors({
           failed: e.error ?? 'An unknown error occured',

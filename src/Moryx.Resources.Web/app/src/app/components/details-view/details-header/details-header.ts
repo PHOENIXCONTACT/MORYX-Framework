@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { AfterContentChecked, Component, input } from "@angular/core";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { AfterContentChecked, Component, inject, input } from "@angular/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { FormControlService } from "src/app/services/form-control-service.service";
 import { ResourceModel } from "../../../api/models";
@@ -24,23 +24,25 @@ import { MatInputModule } from "@angular/material/input";
     MatFormFieldModule,
     MatInputModule,
     TranslateModule
-]
+  ]
 })
 export class DetailsHeader implements AfterContentChecked {
+  private formControlService = inject(FormControlService);
+
   resource = input.required<ResourceModel>();
   editMode = input<boolean>(false);
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    public translate: TranslateService,
-    private formControlService: FormControlService
-  ) { }
+  constructor() {
+
+  }
 
   ngAfterContentChecked(): void {
     this.formControlService.onCanSave(
       this.resource().name?.length ? true : false
     );
   }
+
   onNameChanged() {
     this.formControlService.onCanSave(
       this.resource().name?.length ? true : false

@@ -6,6 +6,7 @@
 import { FlatTreeControl } from "@angular/cdk/tree";
 import {
   Component,
+  inject,
   OnDestroy,
   OnInit,
   signal,
@@ -83,6 +84,17 @@ import { MatInputModule } from "@angular/material/input";
   }
 })
 export class App implements OnInit, OnDestroy {
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private dialog = inject(MatDialog);
+  private searchbar = inject(SearchBarService);
+  cacheService = inject(CacheProductsService);
+  editService = inject(EditProductsService);
+  private snackBar = inject(MatSnackBar);
+  private sessionService = inject(SessionService);
+  private languageService = inject(LanguageService);
+  private translateService = inject(TranslateService);
+
   selected = signal<ProductModel | undefined>(undefined);
   products = signal<ProductModel[]>([]);
   productDefinitions = signal<ProductDefinitionModel[]>([]);
@@ -95,36 +107,23 @@ export class App implements OnInit, OnDestroy {
 
   TranslationConstants = TranslationConstants;
 
-  private userPermissions = signal<string[]>([]);
-
   title = "Moryx.Products.Web";
   productsToolbarImage: string =
     environment.assets + "assets/products_toolbar.jpg";
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    public dialog: MatDialog,
-    private searchbar: SearchBarService,
-    public cacheService: CacheProductsService,
-    public editService: EditProductsService,
-    private snackBar: MatSnackBar,
-    private sessionService: SessionService,
-    private languageService: LanguageService,
-    public translate: TranslateService
-  ) {
-    this.translate.addLangs([
+  constructor() {
+    this.translateService.addLangs([
       TranslationConstants.LANGUAGES.EN,
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
       TranslationConstants.LANGUAGES.ZH,
     ]);
-    this.translate.setFallbackLang("en");
-    this.translate.use(this.languageService.getDefaultLanguage());
+    this.translateService.setFallbackLang("en");
+    this.translateService.use(this.languageService.getDefaultLanguage());
   }
 
   private async getTranslations(): Promise<{ [key: string]: string }> {
-    return await this.translate
+    return await this.translateService
       .get([TranslationConstants.APP.SNACK_BAR])
       .toAsync();
   }

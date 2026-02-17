@@ -27,7 +27,7 @@
             class="add-part-list-item"
             [ngClass]="{ 'moryx-selected': selectedPart()?.id == part.id }"
             >
-            {{ editService.createProductNameWithIdentity(part, true) }}
+            {{ editProductsService.createProductNameWithIdentity(part, true) }}
           </mat-list-item>
         }
       </mat-list>

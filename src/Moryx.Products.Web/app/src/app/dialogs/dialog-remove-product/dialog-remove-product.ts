@@ -4,10 +4,10 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { ProductModel, ProductQuery, RevisionFilter, Selector } from '../../api/models';
 import { ProductManagementService } from '../../api/services';
@@ -28,18 +28,17 @@ import { MatButtonModule } from '@angular/material/button';
   ]
 })
 export class DialogRemoveProductComponent {
+  private dialogRef = inject(MatDialogRef<DialogRemoveProductComponent>);
+  private data = inject<ProductModel>(MAT_DIALOG_DATA);
+  private productManagementService = inject(ProductManagementService);
+  private snackbarService = inject(SnackbarService);
+
   productToBeRemoved = signal<ProductModel | undefined>(undefined);
   productsWhichContainProduct = signal<ProductModel[]>([]);
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    public dialogRef: MatDialogRef<DialogRemoveProductComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ProductModel,
-    private managementService: ProductManagementService,
-    public translate: TranslateService,
-    private snackbarService: SnackbarService
-  ) {
-    this.productToBeRemoved.update(_ => data);
+  constructor() {
+    this.productToBeRemoved.update(_ => this.data);
     const body = <ProductQuery>{
       includeDeleted: false,
       identifier: this.productToBeRemoved()?.identifier,
@@ -47,7 +46,7 @@ export class DialogRemoveProductComponent {
       revisionFilter: RevisionFilter.Specific,
       selector: Selector.Parent,
     };
-    this.managementService.getTypes({body: body}).subscribe({
+    this.productManagementService.getTypes({body: body}).subscribe({
       next: (references) => {
         this.productsWhichContainProduct.update(_ => references);
       },

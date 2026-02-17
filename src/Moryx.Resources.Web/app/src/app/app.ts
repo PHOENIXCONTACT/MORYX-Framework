@@ -3,12 +3,12 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import {FlatTreeControl} from '@angular/cdk/tree';
-import {Component, OnDestroy, OnInit, signal, viewChild} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
-import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
-import {Router, RouterOutlet} from '@angular/router';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { Component, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule } from '@angular/material/tree';
+import { Router, RouterOutlet } from '@angular/router';
 import {
   LanguageService,
   SnackbarService,
@@ -16,31 +16,31 @@ import {
   SearchRequest,
   SearchSuggestion
 } from '@moryx/ngx-web-framework/services';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
-import {environment} from 'src/environments/environment';
-import {ResourceModel, ResourceTypeModel} from './api/models';
-import {ResourceModificationService} from './api/services';
-import {DialogAddResource} from './dialogs/dialog-add-resource/dialog-add-resource';
-import {ResourceConstructionParameters} from './models/ResourceConstructionParameters';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { environment } from 'src/environments/environment';
+import { ResourceModel } from './api/models';
+import { ResourceModificationService } from './api/services';
+import { DialogAddResource } from './dialogs/dialog-add-resource/dialog-add-resource';
+import { ResourceConstructionParameters } from './models/ResourceConstructionParameters';
 import './extensions/array.extensions';
-import {TranslationConstants} from './extensions/translation-constants.extensions';
-import {CacheResourceService} from './services/cache-resource.service';
-import {EditResourceService} from './services/edit-resource.service';
-import {FormControlService} from './services/form-control-service.service';
-import {FlatNode, SessionService} from './services/session.service';
-import {Subscription} from 'rxjs';
-import {getHierarchieLineFor} from './models/TypeTree';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatIconModule} from '@angular/material/icon';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectModule} from '@angular/material/select';
-import {DialogRemoveResource} from "./dialogs/dialog-remove-resource/dialog-remove-resource";
+import { TranslationConstants } from './extensions/translation-constants.extensions';
+import { CacheResourceService } from './services/cache-resource.service';
+import { EditResourceService } from './services/edit-resource.service';
+import { FormControlService } from './services/form-control-service.service';
+import { FlatNode, SessionService } from './services/session.service';
+import { Subscription } from 'rxjs';
+import { getHierarchieLineFor } from './models/TypeTree';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { DialogRemoveResource } from "./dialogs/dialog-remove-resource/dialog-remove-resource";
 
 @Component({
   selector: 'app-root',
@@ -67,6 +67,18 @@ import {DialogRemoveResource} from "./dialogs/dialog-remove-resource/dialog-remo
   }
 })
 export class App implements OnInit, OnDestroy {
+  private router = inject(Router);
+  private dialog = inject(MatDialog);
+  private cacheService = inject(CacheResourceService);
+  editService = inject(EditResourceService);
+  private modificationService = inject(ResourceModificationService);
+  private sessionService = inject(SessionService);
+  private translateService = inject(TranslateService);
+  private searchBarService = inject(SearchBarService);
+  private languageService = inject(LanguageService);
+  private snackbarService = inject(SnackbarService);
+  private formControlService = inject(FormControlService);
+
   private readonly trigger = viewChild.required(MatMenuTrigger);
   menuTopLeftPosition = signal<Position>({x: '0px', y: '0px'});
 
@@ -115,27 +127,15 @@ export class App implements OnInit, OnDestroy {
     this.sessionService.storeTreeState(this.treeControl);
   }
 
-  constructor(
-    private router: Router,
-    public dialog: MatDialog,
-    private cacheService: CacheResourceService,
-    public editService: EditResourceService,
-    private modificationService: ResourceModificationService,
-    private sessionService: SessionService,
-    public translate: TranslateService,
-    private searchBarService: SearchBarService,
-    private languageService: LanguageService,
-    private snackbarService: SnackbarService,
-    private formControlService: FormControlService
-  ) {
-    this.translate.addLangs([
+  constructor() {
+    this.translateService.addLangs([
       TranslationConstants.LANGUAGES.EN,
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
       TranslationConstants.LANGUAGES.ZH,
     ]);
-    this.translate.setFallbackLang('en');
-    this.translate.use(this.languageService.getDefaultLanguage());
+    this.translateService.setFallbackLang('en');
+    this.translateService.use(this.languageService.getDefaultLanguage());
     this.formControlService.canSave.subscribe(state => (this.canSave = state));
   }
 
@@ -254,7 +254,7 @@ export class App implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(async (result: ResourceConstructionParameters | undefined) => {
       if (!result) return;
-      var model = await this.editService.addNewResource(result, this.selected);
+      const model = await this.editService.addNewResource(result, this.selected);
       if (model)
         this.navigateToResource(model);
     });

@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -40,6 +40,14 @@ import { MatCardModule } from '@angular/material/card';
   ]
 })
 export class Management implements OnInit, OnDestroy {
+  private workplanService = inject(WorkplanService);
+  private sessionService = inject(SessionsService);
+  private snackbarService = inject(SnackbarService);
+  private router = inject(Router);
+  private searchBarService = inject(SearchBarService);
+  private dialog = inject(MatDialog);
+  private translateService = inject(TranslateService);
+
   TranslationConstants = TranslationConstants;
   private availableSessionsSubscription?: Subscription;
   readonly displayedColumns: string[] = ['name', 'state', 'version', 'actions'];
@@ -50,15 +58,7 @@ export class Management implements OnInit, OnDestroy {
 
   dataSource!: MatTableDataSource<WorkplanModel>;
 
-  constructor(
-    private workplanService: WorkplanService,
-    private sessionService: SessionsService,
-    private snackbarService: SnackbarService,
-    private router: Router,
-    private searchBarService: SearchBarService,
-    public dialog: MatDialog,
-    public translate: TranslateService
-  ) {
+  constructor() {
   }
 
   ngOnInit(): void {
@@ -127,7 +127,7 @@ export class Management implements OnInit, OnDestroy {
   }
 
   async getTranslations(): Promise<{ [key: string]: string }> {
-    return await this.translate
+    return await this.translateService
       .get([
         TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.MESSAGE_FIRST_PART,
         TranslationConstants.MANAGEMENT.CONFRIM_DIALOG.MESSAGE_SECOND_PART,
@@ -165,7 +165,7 @@ export class Management implements OnInit, OnDestroy {
           <ConfirmDialogButton>{
             text: 'Ok', // ToDo: internationalize
             action: () => {
-              this.workplanService.deleteWorkplan({ id: workplan?.id! }).subscribe({
+              this.workplanService.deleteWorkplan({id: workplan?.id!}).subscribe({
                 next: () => {
                   this.completeTheDeletion(session, workplan, translations);
                   confirmDialog.close();

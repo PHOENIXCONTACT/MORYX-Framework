@@ -5,12 +5,12 @@
 
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatListOption, MatSelectionList } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { VisualInstructionsService } from 'src/app/api/services/visual-instructions.service';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 
@@ -27,16 +27,15 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
   ]
 })
 export class ConfigurationDialog implements OnInit {
+  private dialogRef = inject(MatDialogRef<ConfigurationDialog>);
+  data = inject<DialogData>(MAT_DIALOG_DATA);
+  private visualInstructionsService = inject(VisualInstructionsService);
+  private snackbarService = inject(SnackbarService);
+
   instructors: string[] | undefined = undefined;
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    public dialogRef: MatDialogRef<ConfigurationDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private visualInstructionsService: VisualInstructionsService,
-    public translate: TranslateService,
-    private snackbarService: SnackbarService
-  ) {
+  constructor() {
   }
 
   ngOnInit(): void {

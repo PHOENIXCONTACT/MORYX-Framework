@@ -4,10 +4,10 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { PartConnector, ProductModel, RevisionFilter, Selector } from '../../api/models';
 import { ProductManagementService } from '../../api/services';
@@ -40,6 +40,12 @@ import { MatIconModule } from '@angular/material/icon';
   ]
 })
 export class DialogAddPartComponent {
+  private dialogRef = inject(MatDialogRef<DialogAddPartComponent>);
+  private data = inject<PartConnector>(MAT_DIALOG_DATA);
+  private productManagementService = inject(ProductManagementService);
+  editProductsService = inject(EditProductsService);
+  private snackbarService = inject(SnackbarService);
+
   possibleParts = signal<ProductModel[]>([]);
   filteredPossibleParts = signal<ProductModel[]>([]);
   selectedPart = signal<ProductModel | undefined>(undefined);
@@ -47,26 +53,19 @@ export class DialogAddPartComponent {
 
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    public dialogRef: MatDialogRef<DialogAddPartComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: PartConnector,
-    managementService: ProductManagementService,
-    public editService: EditProductsService,
-    public translate: TranslateService,
-    private snackbarService: SnackbarService
-  ) {
+  constructor() {
     const body = {
       includeDeleted: false,
       revisionFilter: RevisionFilter.All,
       selector: Selector.Direct,
-      type: data?.type,
+      type: this.data?.type,
     };
-    managementService.getTypes({body: body}).subscribe({
+    this.productManagementService.getTypes({body: body}).subscribe({
       next: (products) => {
         let possibleParts = [] as ProductModel[];
-        if (data && data.parts?.length && !data.isCollection) {
+        if (this.data && this.data.parts?.length && !this.data.isCollection) {
           possibleParts = products.filter(
-            (p) => !data.parts?.some((s) => s.product?.id === p.id)
+            (p) => !this.data.parts?.some((s) => s.product?.id === p.id)
           );
         } else {
           possibleParts = products;
@@ -95,7 +94,7 @@ export class DialogAddPartComponent {
   }
 
   partContainsSearchText(part: ProductModel): boolean {
-    const name = this.editService.createProductNameWithIdentity(part);
+    const name = this.editProductsService.createProductNameWithIdentity(part);
     const indexSearchText = name
       .toLowerCase()
       .indexOf(this.searchText().toLowerCase());

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -19,32 +19,29 @@ import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    selector: 'notification-details',
-    templateUrl: './notification-details.html',
-    styleUrls: ['./notification-details.scss'],
-    imports: [
-      CommonModule,
-      MatCardModule,
-      MatIconModule,
-      TranslateModule,
-      MarkdownComponent,
-      NavigableEntryEditor,
-      MatButtonModule
-    ],
-    providers: [MarkdownService]
+  selector: 'notification-details',
+  templateUrl: './notification-details.html',
+  styleUrls: ['./notification-details.scss'],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatIconModule,
+    TranslateModule,
+    MarkdownComponent,
+    NavigableEntryEditor,
+    MatButtonModule
+  ],
+  providers: [MarkdownService]
 })
 export class NotificationDetails implements OnInit, OnDestroy {
+  private notificationService = inject(NotificationService);
+
   notification = signal<NotificationModel | undefined>(undefined);
 
-  subscription: Subscription|undefined;
+  subscription: Subscription | undefined;
   TranslationConstants = TranslationConstants;
   getIcon = getIcon;
   environment = environment;
-
-  constructor(
-    private notificationService: NotificationService,
-    public translate: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     this.subscription = this.notificationService.selection$.subscribe(
@@ -60,7 +57,7 @@ export class NotificationDetails implements OnInit, OnDestroy {
     this.notificationService.acknowledge(notification.identifier);
   }
 
-  isArrayNotEmpty(array: any[] | undefined | null) :boolean{
+  isArrayNotEmpty(array: any[] | undefined | null): boolean {
     return array !== undefined && array !== null && array.length > 0;
   }
 }

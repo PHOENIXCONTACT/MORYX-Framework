@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatDialogRef,
@@ -37,17 +37,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 ]
 })
 export class CellIconUploaderDialog {
+  private dialogRef = inject(MatDialogRef<CellIconUploaderDialog>);
+  private data = inject<{ cellName: string; iconName: string }>(MAT_DIALOG_DATA);
+
   iconControl = new FormControl<string | null>(null, Validators.required);
   TranslationConstants = TranslationConstants;
   cellName = signal<string | undefined>(undefined);
   matcher = new MyErrorStateMatcher();
 
-  constructor(
-    public dialogRef: MatDialogRef<CellIconUploaderDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: { cellName: string; iconName: string },
-    public translate: TranslateService
-  ) {
-    this.cellName.set(data.cellName);
+  constructor() {
+    this.cellName.set(this.data.cellName);
     this.iconControl.patchValue(this.data.iconName);
   }
 

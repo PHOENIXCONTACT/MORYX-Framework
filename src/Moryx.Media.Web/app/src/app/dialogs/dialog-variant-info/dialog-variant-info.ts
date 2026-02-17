@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -12,7 +12,7 @@ import {
   MatDialogActions,
   MatDialogClose
 } from '@angular/material/dialog';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { MatLine } from '@angular/material/core';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
@@ -36,13 +36,12 @@ import { DecimalPipe } from '@angular/common';
   ]
 })
 export class DialogVariantInfo {
+  private dialogRef = inject(MatDialogRef<DialogVariantInfo>);
+  data = inject<VariantInfoDialogData>(MAT_DIALOG_DATA);
+
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    public translate: TranslateService,
-    public dialogRef: MatDialogRef<DialogVariantInfo>,
-    @Inject(MAT_DIALOG_DATA) public data: VariantInfoDialogData
-  ) {
+  constructor() {
   }
 
   onNoClick(): void {

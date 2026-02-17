@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, signal } from '@angular/core';
-import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { Component, inject, signal } from '@angular/core';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { RecipeDefinitionModel, WorkplanModel } from '../../api/models';
@@ -19,10 +19,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-    selector: 'app-dialog-create-recipe',
-    templateUrl: './dialog-create-recipe.html',
-    styleUrls: ['./dialog-create-recipe.scss'],
-    imports: [
+  selector: 'app-dialog-create-recipe',
+  templateUrl: './dialog-create-recipe.html',
+  styleUrls: ['./dialog-create-recipe.scss'],
+  imports: [
     MatFormFieldModule,
     FormsModule,
     MatOptionModule,
@@ -32,9 +32,12 @@ import { MatInputModule } from '@angular/material/input';
     MatSelectModule,
     MatButtonModule,
     MatInputModule
-]
+  ]
 })
 export class DialogCreateRecipeComponent {
+  private dialogRef = inject(MatDialogRef<DialogCreateRecipeComponent>);
+  private cacheService = inject(CacheProductsService);
+
   result = signal<CreateRecipeDialogResult>({} as CreateRecipeDialogResult);
   possibleRecipes = signal<RecipeDefinitionModel[]>([]);
   possibleWorkplans = signal<WorkplanModel[]>([]);
@@ -42,13 +45,9 @@ export class DialogCreateRecipeComponent {
 
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    public dialogRef: MatDialogRef<DialogCreateRecipeComponent>,
-    cacheService: CacheProductsService,
-    public translate: TranslateService
-  ) {
-    cacheService.recipeDefinitions.subscribe((recipeDefintions) => {
-      this.possibleRecipes.update(_=> recipeDefintions ?? []);
+  constructor() {
+    this.cacheService.recipeDefinitions.subscribe((recipeDefintions) => {
+      this.possibleRecipes.update(_ => recipeDefintions ?? []);
       if (this.possibleRecipes().length > 0
       ) {
         this.result.update(e => {
@@ -59,7 +58,7 @@ export class DialogCreateRecipeComponent {
       }
     });
 
-    cacheService.workplans.subscribe((workplans) => {
+    this.cacheService.workplans.subscribe((workplans) => {
       this.possibleWorkplans.set(workplans ?? []);
     });
   }

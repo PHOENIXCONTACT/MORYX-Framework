@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FactoryStateStreamService } from './factory-state-stream.service';
 import { OrderStoreService } from './order-store.service';
@@ -23,6 +23,12 @@ import { FactorySelectionService } from './factory-selection.service';
   providedIn: 'root'
 })
 export class CellStoreService {
+  private orderService = inject(OrderStoreService);
+  private factoryStateStreamService = inject(FactoryStateStreamService);
+  private factoryMonitorService = inject(FactoryMonitorService);
+  private factorySelectionService = inject(FactorySelectionService);
+  private snackbarService = inject(SnackbarService);
+
   private _cellSelected = new BehaviorSubject<CellModel | undefined>(undefined);
   private _cellUpdated = new BehaviorSubject<CellModel | undefined>(undefined);
   private _cells = new BehaviorSubject<CellModel[]>([]);
@@ -33,13 +39,7 @@ export class CellStoreService {
 
   updatedCell: BehaviorSubject<CellModel | undefined> = new BehaviorSubject<CellModel | undefined>(undefined);
 
-  constructor(
-    private orderService: OrderStoreService,
-    private factoryStateStreamService: FactoryStateStreamService,
-    private factoryMonitorService: FactoryMonitorService,
-    private factorySelectionService: FactorySelectionService,
-    private snackbarService: SnackbarService
-  ) {
+  constructor() {
     this.factoryMonitorService.initialFactoryState().subscribe({
       next: factoryState => {
         //only set default

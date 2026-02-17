@@ -3,32 +3,17 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import {
-  Component,
-  computed,
-  effect,
-  input,
-  Input,
-  signal,
-  untracked,
-} from "@angular/core";
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  UntypedFormControl,
-} from "@angular/forms";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { Component, computed, effect, inject, input, signal, untracked } from "@angular/core";
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from "@angular/forms";
+import { TranslateModule } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
-import {
-  RecipeClassificationModel,
-  RecipeModel,
-  WorkplanModel,
-} from "../../../../../api/models";
+import { RecipeClassificationModel, RecipeModel, WorkplanModel } from "../../../../../api/models";
 import { CacheProductsService } from "../../../../../services/cache-products.service";
 
 import { MatInput, MatInputModule } from "@angular/material/input";
 import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
+
 @Component({
   selector: "app-product-recipes-details-header",
   templateUrl: "./product-recipes-details-header.html",
@@ -41,9 +26,11 @@ import { MatSelectModule } from "@angular/material/select";
     ReactiveFormsModule,
     MatInput,
     MatSelectModule
-]
+  ]
 })
 export class ProductRecipesDetailsHeader {
+  private cacheService = inject(CacheProductsService);
+
   edit = input.required<boolean>();
   recipe = input.required<RecipeModel>();
   hasWorkplans = computed(() => {
@@ -58,14 +45,11 @@ export class ProductRecipesDetailsHeader {
   });
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    private cacheService: CacheProductsService,
-    public translate: TranslateService
-  ) {
-    effect(()=>{
+  constructor() {
+    effect(() => {
       const edit = this.edit();
-      untracked(() =>{
-        if(edit)
+      untracked(() => {
+        if (edit)
           this.recipeControl.enable();
         else
           this.recipeControl.disable();
@@ -76,7 +60,7 @@ export class ProductRecipesDetailsHeader {
     });
   }
 
-  byWorkplanId(workplan1: WorkplanModel , workplan2: WorkplanModel){
+  byWorkplanId(workplan1: WorkplanModel, workplan2: WorkplanModel) {
     return workplan1?.id === workplan2?.id;
   }
 }

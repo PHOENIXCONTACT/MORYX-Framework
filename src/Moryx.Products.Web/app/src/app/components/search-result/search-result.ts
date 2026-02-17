@@ -4,7 +4,7 @@
 */
 
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { EmptyState } from '@moryx/ngx-web-framework/empty-state';
@@ -22,15 +22,12 @@ import { EditProductsService } from 'src/app/services/edit-products.service';
   ]
 })
 export class SearchResultComponent implements OnInit {
+  editProductsService = inject(EditProductsService);
+  private managementService = inject(ProductManagementService);
+  private activatedRoute = inject(ActivatedRoute);
+
   searchResults = signal<ProductModel[]>([]);
   searchString = signal('');
-
-  constructor(
-    public editService: EditProductsService,
-    private managementService: ProductManagementService,
-    private activatedRoute: ActivatedRoute
-  ) {
-  }
 
   ngOnInit(): void {
     this.activatedRoute.queryParamMap.subscribe((queryParam) => {

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger, MatMenu, MatMenuContent, MatMenuItem } from '@angular/material/menu';
@@ -35,6 +35,13 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     EmptyState]
 })
 export class MediaOverview implements OnInit, OnDestroy {
+  private dialog = inject(MatDialog);
+  private mediaService = inject(MediaService);
+  private router = inject(Router);
+  private translateService = inject(TranslateService);
+  private searchBarService = inject(SearchBarService);
+  private snackbarService = inject(SnackbarService);
+
   filteredContents = signal<ContentDescriptorModel[]>([]);
   backgroundImgPath = signal(environment.assets + 'assets/moryx_transparent_colored.png');
   isLoading = signal(true);
@@ -45,14 +52,7 @@ export class MediaOverview implements OnInit, OnDestroy {
   TranslationConstants = TranslationConstants;
   menuTopLeftPosition = {x: '0', y: '0'};
 
-  constructor(
-    public dialog: MatDialog,
-    private mediaService: MediaService,
-    private router: Router,
-    public translate: TranslateService,
-    private searchBarService: SearchBarService,
-    private snackbarService: SnackbarService
-  ) {
+  constructor() {
   }
 
   ngOnDestroy(): void {
@@ -67,7 +67,7 @@ export class MediaOverview implements OnInit, OnDestroy {
         this.isLoading.update(_ => false);
       },
       error: async (err) => {
-        const translations = await lastValueFrom(this.translate
+        const translations = await lastValueFrom(this.translateService
           .get([TranslationConstants.MEDIA_OVERVIEW.FAILED_LOADING]));
         this.snackbarService.showError(
           translations[TranslationConstants.MEDIA_OVERVIEW.FAILED_LOADING]
@@ -87,7 +87,7 @@ export class MediaOverview implements OnInit, OnDestroy {
 
   onSearch(result: SearchRequest) {
     const urlBase = 'Media/details/';
-    var contents = this.contents().filter((c) =>
+    const contents = this.contents().filter((c) =>
       c.name?.toLowerCase()?.includes(result.term.toLowerCase())
     );
     if (!contents) return;
@@ -139,7 +139,7 @@ export class MediaOverview implements OnInit, OnDestroy {
   //open dialog in order to check if content should really be deleted
   async onDelete(content: ContentDescriptorModel): Promise<void> {
     if (content !== undefined) {
-      const deleteMessage = await lastValueFrom(this.translate
+      const deleteMessage = await lastValueFrom(this.translateService
         .get(TranslationConstants.MEDIA_OVERVIEW.DELETE_MESSAGE));
       const dialogRef = this.dialog.open(DialogDelete, {
         data: {
@@ -158,7 +158,7 @@ export class MediaOverview implements OnInit, OnDestroy {
   remove(content: ContentDescriptorModel) {
     if (typeof content.id === 'string') {
       this.mediaService.removeContent(content.id).subscribe(() => {
-        var index = this.contents().findIndex((c) => c.id === content.id);
+        const index = this.contents().findIndex((c) => c.id === content.id);
         if (index > -1) {
           this.contents.update(items => {
             items.splice(index, 1);

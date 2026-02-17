@@ -5,10 +5,9 @@
 
 import { Component, inject, model, OnInit, signal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { MethodEntry, ResourceModel, ResourceTypeModel } from '../../api/models';
-import { Permissions } from './../../extensions/permissions.extensions';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { CacheResourceService } from 'src/app/services/cache-resource.service';
 import { ResourceConstructionParameters } from 'src/app/models/ResourceConstructionParameters';
@@ -43,15 +42,12 @@ export class DialogAddResource implements OnInit {
   selectedCtor = signal<MethodEntry | undefined>(undefined);
 
   TranslationConstants = TranslationConstants;
-  Permissions = Permissions;
 
-  public data = inject<ResourceModel>(MAT_DIALOG_DATA);
+  private data = inject<ResourceModel>(MAT_DIALOG_DATA);
+  private dialogRef = inject(MatDialogRef<DialogAddResource>);
+  private cache = inject(CacheResourceService);
 
-  constructor(
-    public dialogRef: MatDialogRef<DialogAddResource>,
-    private cache: CacheResourceService,
-    public translate: TranslateService
-  ) {
+  constructor() {
   }
 
   ngOnInit(): void {

@@ -8,6 +8,7 @@ import {
   Component,
   computed,
   effect,
+  inject,
   OnInit,
   signal,
   untracked,
@@ -94,8 +95,8 @@ export class CreateDialog implements OnInit {
 
   primaryActionLabel = computed(() => {
     return this.primaryAction() === Action.AddCreate
-      ? this.translate.instant(TranslationConstants.CREATE_DIALOG.CREATE)
-      : this.translate.instant(TranslationConstants.CREATE_DIALOG.ADD);
+      ? this.translateService.instant(TranslationConstants.CREATE_DIALOG.CREATE)
+      : this.translateService.instant(TranslationConstants.CREATE_DIALOG.ADD);
   });
 
   canAdd = computed(() => !this.isLoading() && this.canAddOperation());
@@ -109,6 +110,12 @@ export class CreateDialog implements OnInit {
   operationNumberFormControl = new UntypedFormControl("", [
     OperationNumberValidations.isOperationNumberNotValid,
   ]);
+
+  private orderManagementService = inject(OrderManagementService);
+  private productManagementService = inject(ProductManagementService);
+  private dialog = inject(MatDialogRef<CreateDialog>);
+  private translateService = inject(TranslateService);
+  private snackbarService = inject(SnackbarService);
 
   async setProduct() {
     const assignableRecipes = await this.orderManagementService
@@ -133,13 +140,7 @@ export class CreateDialog implements OnInit {
     });
   }
 
-  constructor(
-    private orderManagementService: OrderManagementService,
-    private productManagementService: ProductManagementService,
-    private dialog: MatDialogRef<CreateDialog>,
-    public translate: TranslateService,
-    private snackbarService: SnackbarService
-  ) {
+  constructor() {
     effect(() => {
       const product = this.selectedProduct();
       untracked(() => {

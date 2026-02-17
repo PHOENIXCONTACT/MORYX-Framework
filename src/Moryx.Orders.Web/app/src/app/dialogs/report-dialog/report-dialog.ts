@@ -3,12 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, Inject, OnInit, signal } from "@angular/core";
-import {
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-} from "@angular/material/dialog";
+import { Component, computed, inject, OnInit, signal } from "@angular/core";
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { Observable } from "rxjs";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
@@ -65,16 +61,11 @@ export class ReportDialog implements OnInit {
 
     return true;
   })
+
   TranslationConstants = TranslationConstants;
 
-    setConfirmationType(value: "partial" | "final") {
-        this.confirmationType.set(value);
-    }
-  constructor(
-    private dialog: MatDialogRef<ReportDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: ReportDialogData,
-    public translate: TranslateService
-  ) {}
+  private dialog = inject(MatDialogRef<ReportDialog>);
+  data = inject<ReportDialogData>(MAT_DIALOG_DATA);
 
   async ngOnInit() {
     this.isLoading.update(_=> true);

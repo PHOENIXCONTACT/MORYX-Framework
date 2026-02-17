@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, ElementRef, signal, computed, input, viewChild } from '@angular/core';
+import { Component, ElementRef, inject, signal, computed, input, viewChild } from '@angular/core';
 import { CellStoreService } from 'src/app/services/cell-store.service';
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
 import { EditMenuState } from 'src/app/services/EditMenutState';
@@ -28,6 +28,11 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./factory.scss']
 })
 export class Factory {
+  private cellStoreService = inject(CellStoreService);
+  private editMenuService = inject(EditMenuService);
+  private factorySelectionService = inject(FactorySelectionService);
+  private router = inject(Router);
+
   cellElement = viewChild<ElementRef<HTMLElement>>('FactoryElement');
   container = input.required<ElementRef<HTMLElement>>();
   parameters = input.required<VisualizableItemModel>();
@@ -54,14 +59,6 @@ export class Factory {
     if (this.isHighlighted() && workingCell?.orderColor) return workingCell.orderColor;
     return '#585858';
   });
-
-  constructor(
-    private cellStoreService: CellStoreService,
-    private editMenuService: EditMenuService,
-    private factorySelectionService: FactorySelectionService,
-    private router: Router
-  ) {
-  }
 
   ngOnInit(): void {
     // Keep the menu state

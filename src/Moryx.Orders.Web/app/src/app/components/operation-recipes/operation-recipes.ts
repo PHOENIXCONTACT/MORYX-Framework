@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, computed, effect, OnInit, signal, untracked } from "@angular/core";
+import { Component, computed, effect, inject, OnInit, signal, untracked } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
@@ -28,7 +28,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatOptionModule } from "@angular/material/core";
 import { MatInputModule } from "@angular/material/input";
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: "app-operation-recipes",
@@ -71,14 +71,13 @@ export class OperationRecipes implements OnInit {
   TranslationConstants = TranslationConstants;
   identifier: string = "";
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private orderManagementService: OrderManagementService,
-    private productManagementService: ProductManagementService,
-    private workplanService: WorkplanService,
-    public translate: TranslateService,
-    private snackbarService: SnackbarService
-  ) {
+  private activatedRoute = inject(ActivatedRoute);
+  private orderManagementService = inject(OrderManagementService);
+  private productManagementService = inject(ProductManagementService);
+  private workplanService = inject(WorkplanService);
+  private snackbarService = inject(SnackbarService);
+
+  constructor() {
     effect(() => {
       const recipe = this.selectedRecipe();
       untracked(() => {
@@ -104,14 +103,16 @@ export class OperationRecipes implements OnInit {
       this.isLoading.update((_) => false);
     });
   }
+
   getCurrentWorkplan(recipe: RecipeModel | undefined) {
     return this.possibleWorkplans()?.find(
       (w) => w.id === recipe?.workplanModel?.id
     );
   }
+
   private async loadRecipes(): Promise<void> {
     await this.orderManagementService
-      .getOperation({ guid: this.identifier })
+      .getOperation({guid: this.identifier})
       .toAsync()
       .then((value) => this.operation.update((_) => value))
       .catch(
@@ -120,7 +121,7 @@ export class OperationRecipes implements OnInit {
     this.recipes.update((_) => []);
     for (const recipeId of this.operation().recipeIds!) {
       await this.productManagementService
-        .getRecipe({ id: recipeId })
+        .getRecipe({id: recipeId})
         .toAsync()
         .then(async (value) => {
           this.recipes.update((items) => {
@@ -142,7 +143,7 @@ export class OperationRecipes implements OnInit {
   async fetchWorkplan(recipe: RecipeModel) {
     if (!recipe.workplanModel?.id) return;
     await this.workplanService
-      .getWorkplan({ id: recipe.workplanModel?.id })
+      .getWorkplan({id: recipe.workplanModel?.id})
       .subscribe((value) => {
         this.possibleWorkplans.update((items) => {
           items.push(value);
@@ -150,6 +151,7 @@ export class OperationRecipes implements OnInit {
         });
       });
   }
+
   onSelect(recipe: RecipeModel) {
     this.selectedRecipe.update((_) => recipe);
   }

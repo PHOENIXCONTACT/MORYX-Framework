@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { OperatorViewModel } from 'src/app/models/operator-view-model';
@@ -13,47 +13,47 @@ import { AppStoreService } from 'src/app/services/app-store.service';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    selector: 'app-add-operator',
-    templateUrl: './add-operator.html',
-    styleUrl: './add-operator.scss',
-    imports: [
+  selector: 'app-add-operator',
+  templateUrl: './add-operator.html',
+  styleUrl: './add-operator.scss',
+  imports: [
     MatDialogModule,
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
     TranslateModule,
     MatButtonModule
-]
+  ]
 })
 export class AddOperatorDialog {
+  private appStoreService = inject(AppStoreService);
+  private dialogRef = inject(MatDialogRef<AddOperatorDialog>);
+
   operatorForm = new FormGroup({
     identifier: new FormControl<string>('', [Validators.required]),
     firstName: new FormControl<string>('', [Validators.required]),
     lastName: new FormControl<string>('', [Validators.required]),
-    pseudonym: new FormControl<string>('', [Validators.required])  });
+    pseudonym: new FormControl<string>('', [Validators.required])
+  });
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    private appStoreService: AppStoreService,
-    public dialogRef: MatDialogRef<AddOperatorDialog>){}
-
-  getError(control: FormControl<string | null>){
+  getError(control: FormControl<string | null>) {
     return control.hasError('required') ? 'This field is required!' : '';
   }
 
-  isValid(control: FormControl<string | null>){
+  isValid(control: FormControl<string | null>) {
     return control.valid;
   }
 
-  save(){
+  save() {
 
-    if(!this.operatorForm.valid) return;
+    if (!this.operatorForm.valid) return;
 
-    var operator = <AssignableOperator>{
+    const operator = <AssignableOperator>{
       firstName: this.operatorForm.value.firstName,
       lastName: this.operatorForm.value.lastName,
       identifier: this.operatorForm.value.identifier,
@@ -61,11 +61,11 @@ export class AddOperatorDialog {
       signedIn: false
     };
 
-    var data = new OperatorViewModel(operator);
+    const data = new OperatorViewModel(operator);
 
-      this.appStoreService.addOperator(data);
+    this.appStoreService.addOperator(data);
 
-      this.dialogRef.close(data);
+    this.dialogRef.close(data);
   }
 }
 

@@ -1,7 +1,7 @@
 <h2>
   {{ partConnector().name }}:
   {{
-  editService.createProductIdentity(
+  editProductsService.createProductIdentity(
   productPart().product?.identifier,
   productPart().product?.revision
   )
@@ -11,7 +11,7 @@
 @if (productPart().properties && productPart().properties?.subEntries?.length) {
   <p>{{ TranslationConstants.PARTS.DETAILS.TITLE | translate }}</p>
   <navigable-entry-editor
-    [disabled]="editService.edit === false"
+    [disabled]="editProductsService.edit === false"
     [entry]="productPart().properties!"
     queryParam="productPart"
   ></navigable-entry-editor>

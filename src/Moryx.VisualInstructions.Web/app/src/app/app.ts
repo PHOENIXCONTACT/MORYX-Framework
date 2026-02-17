@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LanguageService } from '@moryx/ngx-web-framework/services';
@@ -33,17 +33,17 @@ const COOKIE_NAME = 'moryx-client-identifier';
   ]
 })
 export class App implements OnInit {
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
+  private translateService = inject(TranslateService);
+  private cookieService = inject(CookieService);
+  private instructionService = inject(InstructionService);
+  private languageService = inject(LanguageService);
+
   environment = environment;
   clientIdentifier: string = '';
 
-  constructor(
-    public dialog: MatDialog,
-    public snackBar: MatSnackBar,
-    public translate: TranslateService,
-    private cookieService: CookieService,
-    private instructionService: InstructionService,
-    private languageService: LanguageService
-  ) {
+  constructor() {
     const cookie = this.cookieService.getCookie(COOKIE_NAME);
     if (cookie) {
       this.clientIdentifier = cookie;
@@ -51,13 +51,13 @@ export class App implements OnInit {
       this.openConfigDialog();
     }
 
-    this.translate.addLangs([
+    this.translateService.addLangs([
       TranslationConstants.LANGUAGES.EN,
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
     ]);
-    this.translate.setFallbackLang('en');
-    this.translate.use(this.languageService.getDefaultLanguage());
+    this.translateService.setFallbackLang('en');
+    this.translateService.use(this.languageService.getDefaultLanguage());
   }
 
   ngOnInit(): void {
@@ -88,7 +88,7 @@ export class App implements OnInit {
   }
 
   private async showNoInstructorWarning(): Promise<void> {
-    const snackbarTexts = await this.translate
+    const snackbarTexts = await this.translateService
       .get([
         TranslationConstants.APP.NO_INSTRUCTOR_MESSAGE,
         TranslationConstants.DISMISS,

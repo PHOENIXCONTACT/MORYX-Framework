@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   MatDialogRef,
   MatDialog,
@@ -42,20 +42,20 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 ]
 })
 export class CellImageDialog {
+  private cellImageDialogRef = inject(MatDialogRef<CellImageDialog>);
+  private matDialog = inject(MatDialog);
+  data = inject<{ name: string; cellId: number; cellSettings: CellSettingsModel }>(MAT_DIALOG_DATA);
+  private cellSettingsService = inject(CellSettingsService);
+
   cellSettings = signal< CellSettingsModel | undefined>(undefined);
   name!: string;
   imageControl = new FormControl<string | null>(null, Validators.required);
   TranslationConstants = TranslationConstants;
   matcher = new MyErrorStateMatcher();
 
-  constructor(
-    public cellImageDialogRef: MatDialogRef<CellImageDialog>,
-    public matDialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: { name: string; cellId: number; cellSettings: CellSettingsModel },
-    private cellSettingsService: CellSettingsService
-  ) {
+  constructor() {
     this.cellSettings.set(this.data.cellSettings);
-    this.name = data.name;
+    this.name = this.data.name;
     //checks if there is an image url
     if (this.cellSettings()?.image) this.imageControl.patchValue(this.cellSettings()?.image!);
   }

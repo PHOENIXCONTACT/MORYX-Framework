@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { WorkplanState } from '../../../../api/models';
 import { TranslationConstants } from '../../../../extensions/translation-constants.extensions';
@@ -16,26 +16,24 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 @Component({
-    selector: 'app-workplan-properties',
-    templateUrl: './workplan-properties.html',
-    styleUrls: ['./workplan-properties.scss'],
-    imports: [
+  selector: 'app-workplan-properties',
+  templateUrl: './workplan-properties.html',
+  styleUrls: ['./workplan-properties.scss'],
+  imports: [
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     TranslateModule
-]
+  ]
 })
 export class WorkplanProperties implements OnDestroy {
+  translate = inject(TranslateService);
+  editorState = inject(EditorStateService);
+  private sessionService = inject(SessionsService);
+
   TranslationConstants = TranslationConstants;
   readonly WorkplanStates = Object.values(WorkplanState);
-
-  constructor(
-    public translate: TranslateService,
-    public editorState: EditorStateService,
-    private sessionService: SessionsService
-  ) {}
 
   ngOnDestroy(): void {
     if (this.editorState.workplan)

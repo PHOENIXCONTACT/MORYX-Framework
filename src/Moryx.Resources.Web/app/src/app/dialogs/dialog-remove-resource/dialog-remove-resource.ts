@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -12,28 +12,27 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
 import { ResourceModel } from 'src/app/api/models/resource-model';
 
 @Component({
-    selector: 'app-dialog-remove-resource',
-    templateUrl: './dialog-remove-resource.html',
-    styleUrls: ['./dialog-remove-resource.scss'],
-    imports: [
+  selector: 'app-dialog-remove-resource',
+  templateUrl: './dialog-remove-resource.html',
+  styleUrls: ['./dialog-remove-resource.scss'],
+  imports: [
     TranslateModule,
     MatDialogModule,
     MatButtonModule
-]
+  ]
 })
 export class DialogRemoveResource {
-    resourceToBeRemoved = signal<ResourceModel | undefined>(undefined);
-    TranslationConstants = TranslationConstants;
+  private dialogRef = inject(MatDialogRef<DialogRemoveResource>);
+  private data = inject<ResourceModel>(MAT_DIALOG_DATA);
 
-    constructor(
-        public dialogRef: MatDialogRef<DialogRemoveResource>,
-        @Inject(MAT_DIALOG_DATA) public data: ResourceModel,
-        public translate: TranslateService,
-    ) {
-        this.resourceToBeRemoved.update(_ => data);
-    }
+  resourceToBeRemoved = signal<ResourceModel | undefined>(undefined);
+  TranslationConstants = TranslationConstants;
 
-    onClose() {
-        this.dialogRef.close();
-    }
+  constructor() {
+    this.resourceToBeRemoved.update(_ => this.data);
+  }
+
+  onClose() {
+    this.dialogRef.close();
+  }
 }

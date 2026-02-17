@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CellImageDialog } from 'src/app/dialogs/cell-image-dialog/cell-image-dialog';
 import { DetailsConfigurationDialog } from 'src/app/dialogs/details-configuration-dialog/details-configuration-dialog';
@@ -32,13 +32,11 @@ import { DetailsItem } from '../details-item/details-item';
   ]
 })
 export class CellDetails implements OnInit {
+  private matDialog = inject(MatDialog);
+  private cellStoreService = inject(CellStoreService);
+
   cellDetails = signal<CellModel | undefined>(undefined);
   TranslationConstants = TranslationConstants;
-  constructor(
-    public matDialog: MatDialog,
-    private cellStoreService: CellStoreService,
-    public translate: TranslateService
-  ) {}
 
   ngOnInit(): void {
     this.cellStoreService.cellSelected$.subscribe({

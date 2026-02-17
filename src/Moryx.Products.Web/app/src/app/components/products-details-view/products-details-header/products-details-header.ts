@@ -3,9 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, input, Input, OnInit, signal } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { Component, effect, inject, input, signal } from "@angular/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { EditProductsService } from "src/app/services/edit-products.service";
 import { ProductModel, ProductState } from "../../../api/models";
@@ -17,6 +16,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { untracked } from "@angular/core/primitives/signals";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
+
 @Component({
   selector: "app-products-details-header",
   templateUrl: "./products-details-header.html",
@@ -30,9 +30,11 @@ import { MatSelectModule } from "@angular/material/select";
     MatDividerModule,
     MatFormFieldModule,
     MatSelectModule
-]
+  ]
 })
-export class ProductsDetailsHeaderComponent implements OnInit {
+export class ProductsDetailsHeader {
+  private editService = inject(EditProductsService);
+
   currentProduct = input.required<ProductModel>();
   identifier = signal<string | undefined>(undefined);
   editMode = input.required<boolean>();
@@ -40,11 +42,7 @@ export class ProductsDetailsHeaderComponent implements OnInit {
 
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    public editService: EditProductsService,
-    public dialog: MatDialog,
-    public translate: TranslateService
-  ) {
+  constructor() {
     effect(() => {
       const product = this.currentProduct();
       untracked(() => {
@@ -59,7 +57,5 @@ export class ProductsDetailsHeaderComponent implements OnInit {
       });
     });
   }
-
-  ngOnInit(): void {}
 }
 

@@ -7,7 +7,7 @@
       <input matInput aria-label="Node Name" [(ngModel)]="node()!.displayName" [placeholder]="TranslationConstants.PLACEHOLDER.DISPLAY_NAME | translate" />
     </mat-form-field>
   }
-  @if (this.node()?.classification === WorkplanNodeClassification.Subworkplan) {
+  @if (this.node()?.classification === workplanNodeClassification.Subworkplan) {
     <button
       mat-stroked-button
       color="primary"

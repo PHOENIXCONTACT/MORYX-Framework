@@ -3,10 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, input, OnInit, signal, untracked } from "@angular/core";
+import { Component, effect, inject, input, OnInit, signal, untracked } from "@angular/core";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { SkillType } from "../models/skill-type-model";
-import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { Entry, EntryValueType, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { firstValueFrom } from "rxjs";
@@ -50,6 +50,9 @@ export class SkillTypeDetails implements OnInit {
     }
   });
 
+  private route = inject(Router);
+  private appStoreService = inject(AppStoreService);
+
   form = new FormGroup({
     name: new FormControl("", [Validators.required]),
     duration: new FormControl(0, [Validators.min(1)])
@@ -57,11 +60,7 @@ export class SkillTypeDetails implements OnInit {
 
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private route: Router,
-    private appStoreService: AppStoreService
-  ) {
+  constructor() {
     effect(() => {
       const id = this.id();
       untracked(() => this.initialize(id));

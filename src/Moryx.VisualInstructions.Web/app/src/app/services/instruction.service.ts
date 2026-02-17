@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { InstructionItemModel, InstructionModel } from '../api/models';
 import { VisualInstructionsService } from '../api/services';
 import { BehaviorSubject } from 'rxjs';
@@ -17,66 +17,66 @@ import { SnackbarService } from '@moryx/ngx-web-framework/services';
   providedIn: 'root',
 })
 export class InstructionService {
+  private visualInstructionsService = inject(VisualInstructionsService);
+  private httpClient = inject(HttpClient);
+  private snackbarService = inject(SnackbarService);
+  private domSanitizer = inject(DomSanitizer);
 
   private eventSource?: EventSource;
 
   private _instructions = new BehaviorSubject<InstructionModel[]>([]);
   public instructions$ = this._instructions.asObservable();
 
-  constructor(
-    private visualInstructionsService: VisualInstructionsService,
-    private httpClient: HttpClient,
-    private snackbarService: SnackbarService,
-    private sanitizer: DomSanitizer) {
+  constructor() {
     this.subscribeToStream();
   }
 
   public subscribeToStream() {
-    if(this.eventSource) {
+    if (this.eventSource) {
       this.eventSource.close();
       this._instructions.next([]);
     }
 
-    this.eventSource = new EventSource(this.visualInstructionsService.rootUrl + '/api/moryx/instructions/stream', { withCredentials: !environment.production });
+    this.eventSource = new EventSource(this.visualInstructionsService.rootUrl + '/api/moryx/instructions/stream', {withCredentials: !environment.production});
     this.eventSource.onmessage = event => {
       const instructions = JSON.parse(event.data);
       this._instructions.next(instructions);
     };
   }
 
-  async requestMediaContentsAsync(mediaItems: InstructionItemModel[]) : Promise<DisplayedMediaContent[]> {
+  async requestMediaContentsAsync(mediaItems: InstructionItemModel[]): Promise<DisplayedMediaContent[]> {
     return await Promise.all(mediaItems.map(async (i) => await this.requestMediaContentAsync(i)));
   }
 
-  async requestMediaContentAsync(mediaItem: InstructionItemModel) : Promise<DisplayedMediaContent> {
+  async requestMediaContentAsync(mediaItem: InstructionItemModel): Promise<DisplayedMediaContent> {
     return await this.httpClient.request<Blob>(
       new HttpRequest('GET', mediaItem.content ?? environment.assets + 'assets/moryx_transparent_colored.png', null, {
-            reportProgress: true,
-            responseType: 'blob',
-        })
+        reportProgress: true,
+        responseType: 'blob',
+      })
     ).toAsync()
-    .then((response) => {
-      return this.convertBlobResponse(response);
-    })
-    .catch((error) => {
-      return this.handleInstructionError(error);
-    });
+      .then((response) => {
+        return this.convertBlobResponse(response);
+      })
+      .catch((error) => {
+        return this.handleInstructionError(error);
+      });
   }
 
-  private async handleInstructionError(e: HttpErrorResponse) : Promise<DisplayedMediaContent> {
+  private async handleInstructionError(e: HttpErrorResponse): Promise<DisplayedMediaContent> {
     await this.snackbarService.handleError(e);
-    return { type: 'undefined', url: environment.assets + 'assets/broken_image.png' } as DisplayedMediaContent;
+    return {type: 'undefined', url: environment.assets + 'assets/broken_image.png'} as DisplayedMediaContent;
   }
 
   private convertBlobResponse(data: HttpEvent<Blob>): DisplayedMediaContent {
     if (data.type != HttpEventType.Response || data.body == null)
-      return { type: 'undefined', url: environment.assets + 'assets/broken_image.png' } as DisplayedMediaContent;
+      return {type: 'undefined', url: environment.assets + 'assets/broken_image.png'} as DisplayedMediaContent;
 
-    const downloadedFile = new Blob([data.body], { type: data.body.type });
+    const downloadedFile = new Blob([data.body], {type: data.body.type});
     const url = window.URL.createObjectURL(downloadedFile);
     return {
       type: data.body?.type,
-      url: data.body?.type == 'application/pdf' || 'text/html' ? url : this.sanitizer.bypassSecurityTrustUrl(url),
+      url: data.body?.type == 'application/pdf' || 'text/html' ? url : this.domSanitizer.bypassSecurityTrustUrl(url),
     } as DisplayedMediaContent;
   }
 }

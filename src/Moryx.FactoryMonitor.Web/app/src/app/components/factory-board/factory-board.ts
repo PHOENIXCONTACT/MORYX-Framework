@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import CellModel from 'src/app/models/cellModel';
 import { CellStoreService } from 'src/app/services/cell-store.service';
@@ -23,20 +23,16 @@ import { CommonModule } from '@angular/common';
   styleUrl: './factory-board.scss'
 })
 export class FactoryBoard implements OnInit {
+  elemRef = inject(ElementRef);
+  factorySelectionService = inject(FactorySelectionService);
+  private cellStoreService = inject(CellStoreService);
+  private activatedRoute = inject(ActivatedRoute);
 
   factoryId !: number | undefined;
 
-  constructor(
-    public elemRef: ElementRef,
-    public factorySelectionService: FactorySelectionService,
-    public cellStoreService: CellStoreService,
-    private route: ActivatedRoute) {
-
-  }
-
   ngOnInit(): void {
 
-    this.factoryId = Number(this.route.snapshot.paramMap.get('id'));
+    this.factoryId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
 
     //use the default factory when no factory id provided in the url
     this.factorySelectionService.defaultFactory$.subscribe(item => {

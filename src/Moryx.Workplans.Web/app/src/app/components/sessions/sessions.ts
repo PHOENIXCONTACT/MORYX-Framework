@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { SnackbarService, SearchBarService, SearchRequest, SearchSuggestion } from '@moryx/ngx-web-framework/services';
@@ -44,17 +44,14 @@ import { MatButtonModule } from '@angular/material/button';
   ]
 })
 export class Sessions implements OnInit, OnDestroy {
-  constructor(
-    private sessionService: SessionsService,
-    private workplanEditing: WorkplanEditingService,
-    private snackbarService: SnackbarService,
-    private router: Router,
-    public dialog: MatDialog,
-    private searchBarService: SearchBarService,
-    public translate: TranslateService,
-    private editorState: EditorStateService
-  ) {
-  }
+  private sessionService = inject(SessionsService);
+  private workplanEditingService = inject(WorkplanEditingService);
+  private snackbarService = inject(SnackbarService);
+  private router = inject(Router);
+  private dialog = inject(MatDialog);
+  private searchBarService = inject(SearchBarService);
+  private translateService = inject(TranslateService);
+  private editorStateService = inject(EditorStateService);
 
   sessions = signal<WorkplanSessionModel[]>([]);
   activeSession = signal<WorkplanSessionModel | undefined>(undefined);
@@ -121,7 +118,7 @@ export class Sessions implements OnInit, OnDestroy {
   }
 
   async getTranslations(): Promise<{ [key: string]: string }> {
-    return await this.translate
+    return await this.translateService
       .get([
         TranslationConstants.SESSIONS.CONFIRM_DIALOG.CONFIRM,
         TranslationConstants.SESSIONS.CONFIRM_DIALOG.MESSAGE,
@@ -161,7 +158,7 @@ export class Sessions implements OnInit, OnDestroy {
         if (!session.sessionToken || !session.name) continue;
 
         const url = urlWorkplans + urlSession + session.sessionToken;
-        searchSuggestions.push({ text: session.name, url: url });
+        searchSuggestions.push({text: session.name, url: url});
       }
 
       this.searchBarService.provideSuggestions(searchSuggestions);
@@ -236,17 +233,17 @@ export class Sessions implements OnInit, OnDestroy {
       .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err))
       .then(async session => {
         if (!session) return;
-        this.editorState.setWorkplan(session);
+        this.editorStateService.setWorkplan(session);
         const translations = await this.getTranslations();
         this.snackbarService.showSuccess(translations[TranslationConstants.EDITOR.SNACK_BAR.SUCCESS]);
       });
   }
 
   autoLayout() {
-    this.workplanEditing.autoLayout({ sessionId: this.activeSession()?.sessionToken! }).subscribe({
+    this.workplanEditingService.autoLayout({sessionId: this.activeSession()?.sessionToken!}).subscribe({
       next: layoutedSession => {
         this.sessionService.registerUpdatedSession(layoutedSession);
-        this.editorState.setWorkplan(layoutedSession);
+        this.editorStateService.setWorkplan(layoutedSession);
       },
       error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
     });

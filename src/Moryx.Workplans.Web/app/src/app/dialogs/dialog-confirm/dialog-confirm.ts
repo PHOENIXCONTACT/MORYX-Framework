@@ -4,28 +4,28 @@
 */
 
 
-import { AfterViewInit, Component, Inject, viewChildren } from '@angular/core';
+import { AfterViewInit, Component, inject, viewChildren } from '@angular/core';
 import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
-    selector: 'app-confirm-dialog',
-    templateUrl: './dialog-confirm.html',
-    styleUrls: ['./dialog-confirm.scss'],
-    imports: [
+  selector: 'app-confirm-dialog',
+  templateUrl: './dialog-confirm.html',
+  styleUrls: ['./dialog-confirm.scss'],
+  imports: [
     MatButtonModule,
     MatDialogModule
-]
+  ]
 })
 export class ConfirmDialog implements AfterViewInit {
+  private dialogRef = inject(MatDialogRef<ConfirmDialog>);
+  data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
+
   actionButtons = viewChildren<MatButton>('actionButton');
   buttons: ConfirmDialogButton[] | undefined;
 
-  constructor(
-    public dialogRef: MatDialogRef<ConfirmDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogData
-  ) {
-    this.buttons = data.buttons;
+  constructor() {
+    this.buttons = this.data.buttons;
   }
 
   ngAfterViewInit(): void {

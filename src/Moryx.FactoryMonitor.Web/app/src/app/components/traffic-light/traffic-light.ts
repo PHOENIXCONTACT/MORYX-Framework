@@ -21,7 +21,7 @@ export class TrafficLight implements OnInit {
   currentState = signal<CellState | undefined | null>(undefined);
   currentStateString = signal<string | undefined>(undefined);
   private cellStoreService = inject(CellStoreService);
-  private translate = inject(TranslateService);
+  private translateService = inject(TranslateService);
   private id: number | undefined;
   CellState = CellState;
   TranslationConstants = TranslationConstants;
@@ -37,7 +37,7 @@ export class TrafficLight implements OnInit {
   }
 
   async getTranslations(): Promise<{ [key: string]: string }> {
-    return await lastValueFrom(this.translate
+    return await lastValueFrom(this.translateService
       .get([
         TranslationConstants.CELL_DETAILS.IDLE_STATE,
         TranslationConstants.CELL_DETAILS.RUNNING_STATE,

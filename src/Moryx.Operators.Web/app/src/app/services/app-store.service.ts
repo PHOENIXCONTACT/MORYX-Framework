@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { BehaviorSubject, firstValueFrom, lastValueFrom } from "rxjs";
 import { WorkstationViewModel } from "../models/workstation-view-model";
 import { OperatorViewModel } from "../models/operator-view-model";
@@ -29,6 +29,10 @@ import { IOperatorAssignable } from "../api/models/i-operator-assignable";
   providedIn: "root",
 })
 export class AppStoreService {
+  private operatorManagementService = inject(OperatorManagementService);
+  private skillManagementService = inject(SkillManagementService);
+  private snackbarService = inject(SnackbarService);
+
   private _workstations = new BehaviorSubject<WorkstationViewModel[]>([]);
   private _operators = new BehaviorSubject<OperatorViewModel[]>([]);
   private _skills = new BehaviorSubject<OperatorSkill[]>([]);
@@ -41,11 +45,7 @@ export class AppStoreService {
   public skillTypes$ = this._skillTypes.asObservable();
   public workstationSelected$ = this._workstationSelected.asObservable();
 
-  constructor(
-    private operatorManagementService: OperatorManagementService,
-    private skillManagementService: SkillManagementService,
-    private snackbarService: SnackbarService
-  ) {
+  constructor() {
     this.initialize();
   }
 

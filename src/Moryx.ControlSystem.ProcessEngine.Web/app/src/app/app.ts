@@ -1,4 +1,4 @@
-import { Component, signal } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { TranslationConstants } from "./extensions/translation-constants.extensions";
 import { TranslateService } from "@ngx-translate/core";
 import { LanguageService } from "@moryx/ngx-web-framework/services";
@@ -20,28 +20,28 @@ import { MatIconModule } from "@angular/material/icon";
   providers: []
 })
 export class App {
+  private translateService = inject(TranslateService);
+  private languageService = inject(LanguageService);
+  private router = inject(Router);
+
   title = "Moryx.ControlSystem.ProcessEngine.Web";
   header = signal("Processes");
 
-  constructor(
-    public translate: TranslateService,
-    private languageService: LanguageService,
-    private router: Router
-  ) {
-    this.translate.addLangs([
+  constructor() {
+    this.translateService.addLangs([
       TranslationConstants.LANGUAGES.EN,
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
     ]);
-    this.translate.setFallbackLang("en");
-    this.translate.use(this.languageService.getDefaultLanguage());
+    this.translateService.setFallbackLang("en");
+    this.translateService.use(this.languageService.getDefaultLanguage());
     this.router.events.subscribe((event) => {
       event instanceof NavigationEnd ? this.updateTitle(event) : null;
     });
   }
 
   private async getTranslations(): Promise<{ [key: string]: string }> {
-    return await this.translate
+    return await this.translateService
       .get([TranslationConstants.PROCESS_HOLDER_GROUPS.PROCESS_HOLDER_GROUP_TITLE,
         TranslationConstants.PROCESS_HOLDER_GROUPS.PROCESSES_TITLE,
       ])

@@ -70,7 +70,7 @@ export class SearchBox implements OnInit {
   searchKeyUp(event: KeyboardEvent) {
     const input = <HTMLInputElement>event.target;
     const value = input.value;
-    var complete = event.keyCode === 13;
+    const complete = event.keyCode === 13;
     this.subscriber(value, complete);
     if (complete || value === '') {
       this.searchValue = '';

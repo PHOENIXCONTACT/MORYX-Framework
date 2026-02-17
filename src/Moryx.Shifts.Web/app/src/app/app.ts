@@ -83,7 +83,7 @@ import { OrderItem } from './order-item/order-item';
 export class App implements OnInit {
   private dialog = inject(MatDialog);
   private appStore = inject(AppStoreService);
-  private translate = inject(TranslateService);
+  private translateService = inject(TranslateService);
   private snackbarService = inject(SnackbarService);
   private languageService = inject(LanguageService);
 
@@ -138,18 +138,18 @@ export class App implements OnInit {
   localizedFormatDate = localizedFormatDate;
 
   constructor() {
-    this.translate.addLangs([
+    this.translateService.addLangs([
       TranslationConstants.LANGUAGES.EN,
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
       TranslationConstants.LANGUAGES.ZH
     ]);
-    this.translate.setFallbackLang('en');
-    this.translate.use(this.languageService.getDefaultLanguage());
+    this.translateService.setFallbackLang('en');
+    this.translateService.use(this.languageService.getDefaultLanguage());
   }
 
   ngOnInit(): void {
-    this.calendarState.set(new CalendarState(this.translate));
+    this.calendarState.set(new CalendarState(this.translateService));
 
     //subscribe to store events (only source of truth)
     this.appStore.isOperatorFilterPanelOpened$.subscribe(
@@ -254,19 +254,19 @@ export class App implements OnInit {
     shift?: ShiftCardModel,
     day?: CalendarDate
   ) {
-    var operator: OperatorModel | undefined = undefined;
-    var resource: AttendableResourceModel | undefined = undefined;
+    let operator: OperatorModel | undefined = undefined;
+    let resource: AttendableResourceModel | undefined = undefined;
     //operator was dropped
     if (instanceOfOperator(event.item.data))
       operator = <OperatorModel>event.item.data;
     else resource = <AttendableResourceModel>event.item.data;
 
-    this.translate
+    this.translateService
       .get([
         TranslationConstants.DATE_FORMAT.SHORT_DATE,
       ]).subscribe(translations => {
 
-      var dialogResult = this.dialog.open(WeekAssignmentDialog, {
+      const dialogResult = this.dialog.open(WeekAssignmentDialog, {
         data: <AssignmentData>{
           days: day != undefined ?
             [day] : [...this.calendarState()!.currentViewDates(),
@@ -291,7 +291,7 @@ export class App implements OnInit {
               x.shiftInstanceId === shift?.id
           );
           this.appStore.handleAssignment(foundAssignment, weekAssigmentResult);
-          this.translate
+          this.translateService
             .get([
               TranslationConstants.APP_COMPONENT.ASSIGNMENTS_SAVED,
             ]).subscribe(translations => {
@@ -303,7 +303,7 @@ export class App implements OnInit {
 
 
   navigateToNextWeek() {
-    this.translate
+    this.translateService
       .get([
         TranslationConstants.DATE_FORMAT.SHORT_DATE,
       ]).subscribe(translations => {
@@ -312,7 +312,7 @@ export class App implements OnInit {
   }
 
   navigateToPreviousWeek() {
-    this.translate
+    this.translateService
       .get([
         TranslationConstants.DATE_FORMAT.SHORT_DATE,
       ]).subscribe(translations => {
@@ -355,7 +355,7 @@ export class App implements OnInit {
   }
 
   addShiftType() {
-    var dialogResult = this.dialog.open(ShiftTypeDialog, {
+    const dialogResult = this.dialog.open(ShiftTypeDialog, {
       data: {}
     });
 
@@ -366,7 +366,7 @@ export class App implements OnInit {
         if (!shiftTypeResult) return;
 
         this.appStore.addShiftType(shiftTypeResult, this.calendarState()!);
-        this.translate
+        this.translateService
           .get([
             TranslationConstants.APP_COMPONENT.SHIFT_CREATED,
           ]).subscribe(translations => {
@@ -383,7 +383,7 @@ export class App implements OnInit {
     const shiftInstance = this.shiftInstances().find(x => x.id === shiftInstanceId);
     if (!shiftInstance) return;
 
-    var dialogResult = this.dialog.open(ShiftInstanceDialog, {
+    const dialogResult = this.dialog.open(ShiftInstanceDialog, {
       width: '500px',
       data: shiftInstance
     });
@@ -398,7 +398,7 @@ export class App implements OnInit {
         shiftInstance.endDate = shiftInstanceResult.endDate;
         shiftInstance.startDate = shiftInstanceResult.startDate;
         this.appStore.updateShiftInstance(shiftInstance);
-        this.translate
+        this.translateService
           .get([
             TranslationConstants.APP_COMPONENT.SHIFT_UPDATED,
           ]).subscribe(translations => {
@@ -423,7 +423,7 @@ export class App implements OnInit {
     this.appStore.getCopyOfAssignmentAndShiftForPeriod(this.calendarState()!.startDate, this.calendarState()!.endDate, this.calendarState()!)
       .then(assignmentsAndShift => {
         if (!assignmentsAndShift.shiftInstances.length) {
-          this.translate
+          this.translateService
             .get([
               TranslationConstants.APP_COMPONENT.NO_SHIFT_TO_COPY,
             ]).subscribe(translations => {
@@ -431,7 +431,7 @@ export class App implements OnInit {
           });
           return;
         }
-        var dialogResult = this.dialog.open(CopyShiftAndAssignment, {
+        const dialogResult = this.dialog.open(CopyShiftAndAssignment, {
           width: '700px',
           data: assignmentsAndShift
         });
@@ -442,7 +442,7 @@ export class App implements OnInit {
             if (!shiftAndAssignmentsCopy?.shiftInstances.length) return;
 
             this.appStore.createNewAssignmentAndShift(shiftAndAssignmentsCopy).then(() => {
-              this.translate
+              this.translateService
                 .get([
                   TranslationConstants.APP_COMPONENT.SHIFT_TO_COPIED,
                 ]).subscribe(translations => {

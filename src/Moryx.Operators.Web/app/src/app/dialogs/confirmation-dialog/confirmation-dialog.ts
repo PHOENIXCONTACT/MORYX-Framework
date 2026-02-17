@@ -4,33 +4,32 @@
 */
 
 
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-confirmation-dialog',
-    templateUrl: './confirmation-dialog.html',
-    styleUrl: './confirmation-dialog.scss',
-    imports: [
+  selector: 'app-confirmation-dialog',
+  templateUrl: './confirmation-dialog.html',
+  styleUrl: './confirmation-dialog.scss',
+  imports: [
     MatDialogModule,
     TranslateModule
-]
+  ]
 })
 export class ConfirmationDialog {
+  data = inject<DialogData>(MAT_DIALOG_DATA);
+  private dialogRef = inject(MatDialogRef<ConfirmationDialog>);
+
   TranslationConstants = TranslationConstants;
-  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData,
-  public dialogRef: MatDialogRef<ConfirmationDialog>) {
 
-  }
-
-  onYesclick(){
+  onYesclick() {
     this.data.dialogResult = 'YES';
     this.dialogRef.close(this.data);
   }
 
-  onNoClick(){
+  onNoClick() {
     this.data.dialogResult = 'NO';
     this.dialogRef.close(this.data);
   }

@@ -28,7 +28,7 @@ export class LogMessageList implements OnInit {
   logMessages = signal<OperationLogMessageModel[]>([]);
   isLoading = signal<boolean>(false);
   notification = signal<string>('');
-  private translate = inject(TranslateService);
+  private translateService = inject(TranslateService);
   private orderManagementService = inject(OrderManagementService);
   TranslationConstants = TranslationConstants;
   translations: Record<string, string> = {};
@@ -41,7 +41,7 @@ export class LogMessageList implements OnInit {
   }
 
   async ngOnInit() {
-    this.translations = await this.translate.get([TranslationConstants.OPERATIONS.EMPTY_LOG]).toAsync();
+    this.translations = await this.translateService.get([TranslationConstants.OPERATIONS.EMPTY_LOG]).toAsync();
   }
 
   private fetchMessages(guid: string) {

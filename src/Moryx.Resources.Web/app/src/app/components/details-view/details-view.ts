@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Event, NavigationCancel, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { SessionService } from 'src/app/services/session.service';
@@ -21,6 +21,10 @@ import { DetailsHeader } from './details-header/details-header';
   imports: [RouterOutlet, TranslateModule, MatTabsModule, RouterLink, DetailsHeader]
 })
 export class DetailsView implements OnInit, OnDestroy {
+  private router = inject(Router);
+  private sessionService = inject(SessionService);
+  editResourceService = inject(EditResourceService);
+
   activeLink = signal<number | undefined>(undefined);
   resource = signal<ResourceModel>({});
 
@@ -30,16 +34,11 @@ export class DetailsView implements OnInit, OnDestroy {
   private oldResourceId?: number;
   private editServiceSubscription?: Subscription;
 
-  constructor(
-    private router: Router,
-    private sessionService: SessionService,
-    public editService: EditResourceService,
-    public translate: TranslateService
-  ) {}
+  constructor() {}
 
   ngOnInit() {
     this.router.events.subscribe(event => this.onRoutingEvent(event));
-    this.editServiceSubscription = this.editService.activeResource$.subscribe(resource => this.onNewResource(resource));
+    this.editServiceSubscription = this.editResourceService.activeResource$.subscribe(resource => this.onNewResource(resource));
   }
 
   ngOnDestroy(): void {
@@ -69,7 +68,7 @@ export class DetailsView implements OnInit, OnDestroy {
     this.oldResourceId = resource?.id;
 
     if (wipResource) {
-      this.editService.edit = true;
+      this.editResourceService.edit = true;
       this.sessionService.removeWipResource();
     }
   }

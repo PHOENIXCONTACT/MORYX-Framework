@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, OnInit } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Component, inject, input } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { PartConnector, PartModel } from '../../../../api/models';
 import { EditProductsService } from '../../../../services/edit-products.service';
@@ -20,19 +20,12 @@ import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
     TranslateModule
   ]
 })
-export class ProductPartsDetailsComponent implements OnInit {
+export class ProductPartsDetailsComponent {
+  editProductsService = inject(EditProductsService);
+
   partConnector = input.required<PartConnector>();
   productPart = input.required<PartModel>();
 
   TranslationConstants = TranslationConstants;
-
-  constructor(
-    public editService: EditProductsService,
-    public translate: TranslateService
-  ) {
-  }
-
-  ngOnInit(): void {
-  }
 }
 

@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
@@ -75,19 +75,19 @@ export class Operations implements OnInit, OnDestroy {
   private searchTerm = signal<string>('');
   drawer = viewChild.required<MatDrawer>('drawer');
 
-  constructor(
-    public orderManagementService: OrderManagementService,
-    public dialog: MatDialog,
-    private router: Router,
-    private searchbar: SearchBarService,
-    public translate: TranslateService,
-    private snackbarService: SnackbarService,
-    private operationService: OperationService,
-    changeDetectorRef: ChangeDetectorRef,
-    media: MediaMatcher
-  ) {
-    this.mobileQuery = media.matchMedia('(max-width: 1279px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+  private orderManagementService = inject(OrderManagementService);
+  private dialog = inject(MatDialog);
+  private router = inject(Router);
+  private searchBarService = inject(SearchBarService);
+  private translateService = inject(TranslateService);
+  private snackbarService = inject(SnackbarService);
+  private operationService = inject(OperationService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+  private mediaMatcher = inject(MediaMatcher);
+
+  constructor() {
+    this.mobileQuery = this.mediaMatcher.matchMedia('(max-width: 1279px)');
+    this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
     this.mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
 
@@ -95,7 +95,7 @@ export class Operations implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
-    this.searchbar.unsubscribe();
+    this.searchBarService.unsubscribe();
   }
 
   ngOnInit() {
@@ -105,7 +105,7 @@ export class Operations implements OnInit, OnDestroy {
         this.operations.set(operationResponse
           .filter(operation => operation.classification !== OperationStateClassification.Completed)
           .map(model => {
-            var viewModel = new OperationViewModel(model);
+            const viewModel = new OperationViewModel(model);
             this.subscribeForMessagesCount(viewModel);
             return viewModel;
           }))
@@ -127,7 +127,7 @@ export class Operations implements OnInit, OnDestroy {
         ));
         return;
       }
-      var existent = this.operations().find(o => o.model.identifier == updatedOperation.identifier);
+      const existent = this.operations().find(o => o.model.identifier == updatedOperation.identifier);
       if (existent) {
         existent.updateModel(updatedOperation);
       } else {
@@ -139,7 +139,7 @@ export class Operations implements OnInit, OnDestroy {
     });
 
     // Searchbar
-    this.searchbar.subscribe({
+    this.searchBarService.subscribe({
       next: (request: SearchRequest) => {
         this.onSearch(request);
       }
@@ -148,9 +148,9 @@ export class Operations implements OnInit, OnDestroy {
 
   onSearch(request: SearchRequest) {
     if (request.submitted) {
-      this.searchbar.clearSuggestions();
+      this.searchBarService.clearSuggestions();
       this.searchTerm.set('');
-      this.searchbar.subscribe({
+      this.searchBarService.subscribe({
         next: (newRequest: SearchRequest) => {
           this.onSearch(newRequest);
         }
@@ -159,7 +159,7 @@ export class Operations implements OnInit, OnDestroy {
   }
 
   filteringOperations(operations: OperationViewModel[]): OperationViewModel[] {
-    var filteredOperations = <OperationViewModel[]>[];
+    let filteredOperations = <OperationViewModel[]>[];
     if (!this.searchTerm()) filteredOperations = operations;
     else filteredOperations = operations.filter(o => o.model.order?.includes(this.searchTerm()));
     return filteredOperations;
@@ -167,7 +167,7 @@ export class Operations implements OnInit, OnDestroy {
 
   async onBegin(operation: OperationViewModel) {
     const context = await this.orderManagementService
-      .getBeginContext({ guid: operation.model.identifier! })
+      .getBeginContext({guid: operation.model.identifier!})
       .toAsync()
       .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
     const beginDialog = this.dialog.open(BeginDialog, {
@@ -216,7 +216,7 @@ export class Operations implements OnInit, OnDestroy {
   }
 
   private getReportContext(guid: string): Observable<ReportContext> {
-    return this.orderManagementService.getReportContext({ guid: guid });
+    return this.orderManagementService.getReportContext({guid: guid});
   }
 
   private submitReport(guid: string, body: ReportModel): Observable<void> {
@@ -232,9 +232,9 @@ export class Operations implements OnInit, OnDestroy {
 
   async onAssign(operation: OperationViewModel) {
     await this.orderManagementService
-      .reload({ guid: operation.model.identifier! })
+      .reload({guid: operation.model.identifier!})
       .toAsync()
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.showError(this.translate.instant(TranslationConstants.OPERATIONS.REASSIGN_NOT_POSSIBLE)));
+      .catch(async (e: HttpErrorResponse) => await this.snackbarService.showError(this.translateService.instant(TranslationConstants.OPERATIONS.REASSIGN_NOT_POSSIBLE)));
   }
 
   showRecipes(operation: OperationViewModel) {
@@ -252,11 +252,11 @@ export class Operations implements OnInit, OnDestroy {
   }
 
   modifyDrawer(operation: OperationModel, targetContent: DrawerContent) {
-    if(this.drawerContent() === DrawerContent.None) {
+    if (this.drawerContent() === DrawerContent.None) {
       this.selectedOperation.set(operation);
       this.drawerContent.set(targetContent);
       this.drawer().open();
-    } else if(this.drawerContent() === targetContent) {
+    } else if (this.drawerContent() === targetContent) {
       this.closeDrawer();
     } else {
       this.selectedOperation.set(operation);
@@ -265,7 +265,7 @@ export class Operations implements OnInit, OnDestroy {
   }
 
   subscribeForMessagesCount(operation: OperationViewModel) {
-    this.orderManagementService.getLogs({ guid: operation.model.identifier!}).subscribe(
+    this.orderManagementService.getLogs({guid: operation.model.identifier!}).subscribe(
       messages =>
         (operation.errorMessagesCount = messages.filter(
           m => m.logLevel === LogLevel.Error || m.logLevel == LogLevel.Critical

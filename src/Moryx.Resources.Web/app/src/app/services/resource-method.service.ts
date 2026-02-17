@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { MethodEntry } from '../api/models';
@@ -18,20 +18,21 @@ import { TranslationConstants } from '../extensions/translation-constants.extens
   providedIn: 'root',
 })
 export class ResourceMethodService {
+  private editResourceService = inject(EditResourceService);
+  private router = inject(Router);
+  private resourceModificationService = inject(ResourceModificationService);
+  private snackBar = inject(MatSnackBar);
+  private snackbarService = inject(SnackbarService);
+
   public methods: MethodEntry[] | undefined | null;
   public selectedMethod: MethodEntry | undefined;
   public resourceId?: number;
   public methodResult: Entry | undefined;
   public resultView: boolean = false;
   TranslationConstants = TranslationConstants;
-  constructor(
-    private editService: EditResourceService,
-    private router: Router,
-    private service: ResourceModificationService,
-    private snackBar: MatSnackBar,
-    private snackbarService: SnackbarService,
-  ) {
-    this.editService.activeResource$.subscribe((resource) => {
+
+  constructor() {
+    this.editResourceService.activeResource$.subscribe((resource) => {
       if (!resource)
         return;
 
@@ -45,14 +46,14 @@ export class ResourceMethodService {
   private getUrl(): string {
     let url = this.router.url;
     const index = url.lastIndexOf('methods');
-    var newUrl = url.substring(0, index);
+    let newUrl = url.substring(0, index);
     newUrl += 'methods';
     return newUrl;
   }
 
   onSelect(method: MethodEntry) {
     this.selectedMethod = method;
-    var newUrl = this.getUrl();
+    const newUrl = this.getUrl();
     this.resultView = false;
     this.snackBar.dismiss();
     this.router.navigate([newUrl]);
@@ -61,12 +62,12 @@ export class ResourceMethodService {
   public onInvoke(method: MethodEntry) {
     if (!method.name) return;
 
-    var param = {};
+    let param = {};
     if (
       method.parameters?.subEntries &&
       method.parameters.subEntries.length > 0
     ) {
-      for (var p of method.parameters.subEntries) {
+      for (let p of method.parameters.subEntries) {
         if (!p.value) return;
         if (!p.value.current) {
           if (p.value.default) p.value.current = p.value.default;
@@ -94,7 +95,7 @@ export class ResourceMethodService {
         body: {},
       };
     }
-    this.service
+    this.resourceModificationService
       .invokeMethod(
         param as { id: number; method: string; body?: Entry | undefined }
       )
@@ -119,7 +120,7 @@ export class ResourceMethodService {
     this.snackBar.dismiss();
     //clear the entry parameter values for boolean types
     if (method.parameters?.subEntries?.length) {
-      for (var p of method.parameters.subEntries) {
+      for (let p of method.parameters.subEntries) {
         if (p.value?.type === EntryValueType.Boolean)
           p.value.current = 'false';
       }

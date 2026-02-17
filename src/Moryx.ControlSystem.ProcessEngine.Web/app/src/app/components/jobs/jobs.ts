@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, OnInit, signal } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { JobManagementService, OrderManagementService } from "src/app/api/services";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { JobViewModel } from "src/app/models/job-view-model";
@@ -45,21 +45,18 @@ import { OperationModel } from "src/app/api/models/operation-model";
   providers: []
 })
 export class Jobs implements OnInit {
+  private jobManagementService = inject(JobManagementService);
+  private jobManagementEvents = inject(JobManagementStreamService);
+  private orderManagementService = inject(OrderManagementService);
+  private orderManagementEvents = inject(OrderManagementStreamService);
+  private snackbarService = inject(SnackbarService);
+
   jobCollection = signal<JobViewModel[]>([]);
   operations = signal<OperationModel[]>([]);
   isLoading = signal<boolean>(true);
 
   environment = environment;
   TranslationConstants = TranslationConstants;
-
-  constructor(
-    public jobManagementService: JobManagementService,
-    public jobManagementEvents: JobManagementStreamService,
-    public orderManagementService: OrderManagementService,
-    private orderManagementEvents: OrderManagementStreamService,
-    private snackbarService: SnackbarService
-  ) {
-  }
 
   ngOnInit(): void {
     this.fetchJobs();
@@ -94,10 +91,10 @@ export class Jobs implements OnInit {
   private updateOperations(updatedOperation: OperationModel | undefined) {
     if (!updatedOperation) return;
 
-    var existent = this.operations().find(
-      (o) => o.identifier === updatedOperation.identifier
-    );
-    if (existent) {
+      const existent = this.operations().find(
+          (o) => o.identifier === updatedOperation.identifier
+      );
+      if (existent) {
       let index = this.operations().indexOf(existent);
       this.operations.update(items => {
         items[index] = updatedOperation;

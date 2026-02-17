@@ -3,10 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, OnInit, signal, untracked } from "@angular/core";
+import { Component, effect, inject, signal, untracked } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Entry, EntryValueType, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { ProductImporter } from "../../api/models";
 import { CacheProductsService } from "../../services/cache-products.service";
@@ -42,7 +42,11 @@ import { MatCardModule } from "@angular/material/card";
     MatCardModule
   ]
 })
-export class ProductsImporter implements OnInit {
+export class ProductsImporter {
+  private cacheService = inject(CacheProductsService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
   possibleImporters = signal<ProductImporter[]>([]);
   selectedImporter = signal<ProductImporter | undefined>(undefined);
   importerProperties = signal<Entry>(<Entry>{value: {type: EntryValueType.Exception}});
@@ -51,12 +55,7 @@ export class ProductsImporter implements OnInit {
   TranslationConstants = TranslationConstants;
   Permissions = Permissions;
 
-  constructor(
-    public cacheService: CacheProductsService,
-    private route: ActivatedRoute,
-    private router: Router,
-    public translate: TranslateService,
-  ) {
+  constructor() {
     this.cacheService.importers.subscribe((importers) => {
       if (importers) {
         this.possibleImporters.update((_) => importers);
@@ -77,9 +76,6 @@ export class ProductsImporter implements OnInit {
         }
       });
     });
-  }
-
-  ngOnInit(): void {
   }
 
   onImporterChanged(importer: ProductImporter) {

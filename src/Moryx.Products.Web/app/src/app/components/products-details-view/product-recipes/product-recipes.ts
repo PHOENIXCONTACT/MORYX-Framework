@@ -4,11 +4,11 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, OnInit, signal } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
 import { SnackbarService, } from "@moryx/ngx-web-framework/services";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { RecipeModel } from "../../../api/models";
 import { ProductManagementService } from "../../../api/services";
@@ -35,33 +35,29 @@ import { MatExpansionModule } from "@angular/material/expansion";
   ]
 })
 export class ProductRecipes implements OnInit {
+  editProductsService = inject(EditProductsService);
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
+  private dialog = inject(MatDialog);
+  private productManagementService = inject(ProductManagementService);
+  private snackbarService = inject(SnackbarService);
+
   recipes = signal<Array<RecipeModel>>([]);
   selectedRecipe = signal<undefined | RecipeModel>(undefined);
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    public editService: EditProductsService,
-    private route: ActivatedRoute,
-    private router: Router,
-    public dialog: MatDialog,
-    private managementService: ProductManagementService,
-    public translate: TranslateService,
-    private snackbarService: SnackbarService
-  ) {
-  }
-
   ngOnInit(): void {
-    const productId = this.route.parent?.snapshot.paramMap.get("id");
+    const productId = this.activatedRoute.parent?.snapshot.paramMap.get("id");
     if (productId == null) return;
 
-    this.editService.currentProduct.subscribe((product) => {
+    this.editProductsService.currentProduct.subscribe((product) => {
       if (Number(productId) === product?.id) {
         if (product.recipes === null) this.recipes.update((_) => []);
         else {
           this.recipes.update((_) => product.recipes ?? []);
           let recipeId: String | null =
             product.recipes?.[0]?.id?.toString() ?? "";
-          // Check if a recipe was already selected according to the route
+          // Check if a recipe was already selected according to the activatedRoute
           const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
           if (!regexSpecificRecipe.test(this.router.url) && recipeId) {
             this.setSelectedRecipe(recipeId);
@@ -70,7 +66,7 @@ export class ProductRecipes implements OnInit {
             this.router.navigate([url]);
             return;
           }
-          recipeId = this.route.children[0].snapshot.paramMap.get("recipeId");
+          recipeId = this.activatedRoute.children[0].snapshot.paramMap.get("recipeId");
           this.setSelectedRecipe(recipeId);
         }
       }
@@ -90,15 +86,15 @@ export class ProductRecipes implements OnInit {
       if (!result) return;
       if (!result.selectedRecipe) return;
 
-      this.managementService
+      this.productManagementService
         .createRecipe({recipeType: result.selectedRecipe.name})
         .subscribe({
           next: (recipe) => {
             recipe.name = result.recipeName;
             recipe.workplanModel = result.workplanModel;
-            this.editService.currentRecipeNumber++;
-            recipe.id = this.editService.currentRecipeNumber;
-            this.editService.addRecipe(recipe);
+            this.editProductsService.currentRecipeNumber++;
+            recipe.id = this.editProductsService.currentRecipeNumber;
+            this.editProductsService.addRecipe(recipe);
             this.selectedRecipe.update((_) => recipe);
             let url = this.getBaseUrl();
             url += recipe.id;
@@ -123,10 +119,10 @@ export class ProductRecipes implements OnInit {
 
   onDeleteRecipe(event: Event, recipe: RecipeModel) {
     event.stopPropagation();
-    this.editService.removeRecipe(recipe);
+    this.editProductsService.removeRecipe(recipe);
   }
 
-  // Get route up to details/{productId}/recipes/
+  // Get activatedRoute up to details/{productId}/recipes/
   private getBaseUrl(): string {
     const url = this.router.url;
     const index = url.lastIndexOf("recipes");

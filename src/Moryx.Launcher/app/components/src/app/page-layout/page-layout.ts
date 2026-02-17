@@ -148,7 +148,7 @@ export class PageLayout implements AfterContentInit {
   }
 
   handleScreenWidth(width: number) {
-    var displayableElementsCount = this.numberOfElementByScreenWidth(width);
+    const displayableElementsCount = this.numberOfElementByScreenWidth(width);
     if (!this.fixedButtons.length && !this.defaultButtons.length) return;
 
     if (
@@ -157,7 +157,7 @@ export class PageLayout implements AfterContentInit {
     )
       return;
 
-    var numberOfElementsToHide =
+    const numberOfElementsToHide =
       this.defaultButtons.length +
       this.fixedButtons.length -
       displayableElementsCount;

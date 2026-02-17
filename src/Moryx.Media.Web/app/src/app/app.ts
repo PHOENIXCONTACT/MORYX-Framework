@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
@@ -17,26 +17,26 @@ import { RouterOutlet } from '@angular/router';
     imports: [RouterOutlet]
 })
 export class App implements OnInit {
+  private mediaService = inject(MediaService);
+  private languageService = inject(LanguageService);
+  private translateService = inject(TranslateService);
+
   title = 'Moryx.Media.Web';
 
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    private mediaservice: MediaService,
-    private languageService: LanguageService,
-    public translate: TranslateService
-  ) {
-    this.translate.addLangs([
+  constructor() {
+    this.translateService.addLangs([
       TranslationConstants.LANGUAGES.EN,
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
     ]);
-    this.translate.setFallbackLang('en');
-    this.translate.use(this.languageService.getDefaultLanguage());
+    this.translateService.setFallbackLang('en');
+    this.translateService.use(this.languageService.getDefaultLanguage());
   }
 
   ngOnInit(): void {
-    this.mediaservice.loadContents();
+    this.mediaService.loadContents();
   }
 }
 

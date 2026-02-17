@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { Entry } from '@moryx/ngx-web-framework/entry-editor';
@@ -30,6 +30,12 @@ import { HttpErrorResponse } from '@angular/common/http';
   providedIn: 'root',
 })
 export class CacheProductsService {
+  private service = inject(ProductManagementService);
+  private workplanService = inject(WorkplanService);
+  private router = inject(Router);
+  private snackbarService = inject(SnackbarService);
+  private translateService = inject(TranslateService);
+
   definitions: BehaviorSubject<ProductDefinitionModel[] | undefined> = new BehaviorSubject<ProductDefinitionModel[] | undefined>(undefined);
   productsShownInTheTree: BehaviorSubject<ProductModel[] | undefined> = new BehaviorSubject<ProductModel[] | undefined>(undefined);
   importers: BehaviorSubject<ProductImporter[] | undefined> = new BehaviorSubject<ProductImporter[] | undefined>(undefined);
@@ -44,15 +50,6 @@ export class CacheProductsService {
     revision: RevisionFilter.Latest,
     selector: Selector.Direct,
   } as FilterOptions;
-
-  constructor(
-    private service: ProductManagementService,
-    private workplanService: WorkplanService,
-    private router: Router,
-    private snackbarService: SnackbarService,
-    public translate: TranslateService
-  ) {
-  }
 
   loadConfiguration() {
     this.service.getProductCustomization().subscribe({
@@ -136,7 +133,7 @@ export class CacheProductsService {
   }
 
   private async showErrorSnackbar() {
-    const translations = await this.translate
+    const translations = await this.translateService
       .get([
         TranslationConstants.APP.FAILED_LOADING,
         TranslationConstants.DISMISS,

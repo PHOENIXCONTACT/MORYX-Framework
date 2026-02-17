@@ -5,7 +5,7 @@
 
 import { CommonModule } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, computed, input, OnDestroy, OnInit, signal } from "@angular/core";
+import { Component, computed, inject, input, OnDestroy, OnInit, signal } from "@angular/core";
 import { MatListModule } from "@angular/material/list";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
@@ -37,6 +37,10 @@ import { ProcessEngineStreamService } from "src/app/services/process-engine-stre
   styleUrls: ["./processes.scss"]
 })
 export class Processes implements OnInit, OnDestroy {
+  private processEngineService = inject(ProcessEngineService);
+  private processEngineEvents = inject(ProcessEngineStreamService);
+  private snackbarService = inject(SnackbarService);
+
   processes = signal<JobProcessModel[]>([]);
   processesAvailable = computed(() => this.processes().length > 0);
   selectedProcess = signal<JobProcessModel | undefined>(undefined);
@@ -53,11 +57,7 @@ export class Processes implements OnInit, OnDestroy {
   private processSubscription!: Subscription;
   private activitySubscription!: Subscription;
 
-  constructor(
-    public processEngineService: ProcessEngineService,
-    public processEngineEvents: ProcessEngineStreamService,
-    private snackbarService: SnackbarService
-  ) {
+  constructor() {
     console.log('loadede')
   }
 

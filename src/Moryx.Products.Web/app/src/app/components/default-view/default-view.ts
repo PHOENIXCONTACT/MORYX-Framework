@@ -23,7 +23,7 @@ export class DefaultView implements OnInit {
   messageText = signal('');
 
   private router = inject(Router);
-  private translate = inject(TranslateService);
+  private translateService = inject(TranslateService);
   TranslationConstants = TranslationConstants;
 
   ngOnInit(): void {
@@ -31,7 +31,7 @@ export class DefaultView implements OnInit {
   }
 
   getHeaderAndMessage() {
-    this.translate
+    this.translateService
       .get([
         TranslationConstants.APP.EMPTY_STATE_HEADER,
         TranslationConstants.APP.EMPTY_STATE_TEXT,

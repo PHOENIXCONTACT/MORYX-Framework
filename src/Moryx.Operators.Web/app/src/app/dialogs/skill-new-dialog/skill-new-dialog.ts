@@ -4,7 +4,7 @@
 */
 
 
-import { Component, Inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -19,10 +19,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-    selector: 'app-skill-new-dialog',
-    templateUrl: './skill-new-dialog.html',
-    styleUrl: './skill-new-dialog.scss',
-    imports: [
+  selector: 'app-skill-new-dialog',
+  templateUrl: './skill-new-dialog.html',
+  styleUrl: './skill-new-dialog.scss',
+  imports: [
     MatDialogModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -32,31 +32,27 @@ import { MatInputModule } from '@angular/material/input';
     TranslateModule,
     MatButtonModule,
     MatInputModule
-]
+  ]
 })
 export class SkillNewDialog implements OnInit {
+  data = inject<OperatorSkill>(MAT_DIALOG_DATA);
+  private dialogRef = inject(MatDialogRef<SkillNewDialog>);
+  private appStoreService = inject(AppStoreService);
+
   TranslationConstants = TranslationConstants;
   skillTypes = signal<SkillType[]>([]);
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: OperatorSkill ,
-    public dialogRef: MatDialogRef<SkillNewDialog>,
-    private appStoreService: AppStoreService
-  ){
-  }
-
-
   ngOnInit(): void {
     this.appStoreService.skillTypes$.subscribe(types => {
-      this.skillTypes.update(_=> types);
+      this.skillTypes.update(_ => types);
     })
   }
 
-  save(){
+  save() {
     this.dialogRef.close(this.data);
   }
 
-  cancel(){
+  cancel() {
     this.dialogRef.close();
   }
 

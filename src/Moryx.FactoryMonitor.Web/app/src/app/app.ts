@@ -33,7 +33,7 @@ export class App implements OnInit {
   private editMenuService = inject(EditMenuService);
   private backgroundService = inject(ChangeBackgroundService);
   private languageService = inject(LanguageService);
-  private translate = inject(TranslateService);
+  private translateService = inject(TranslateService);
   private cellStoreService = inject(CellStoreService);
   private factorySelectionService = inject(FactorySelectionService);
 
@@ -45,13 +45,13 @@ export class App implements OnInit {
       next: state => this.editMenuState = state
     });
 
-    this.translate.addLangs([
+    this.translateService.addLangs([
       TranslationConstants.LANGUAGES.EN,
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
     ]);
-    this.translate.setFallbackLang('en');
-    this.translate.use(this.languageService.getDefaultLanguage());
+    this.translateService.setFallbackLang('en');
+    this.translateService.use(this.languageService.getDefaultLanguage());
   }
 
   ngOnInit(): void {

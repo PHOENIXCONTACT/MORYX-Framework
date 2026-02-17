@@ -3,7 +3,7 @@
     @for (product of searchResults(); track product) {
       <mat-list-item class="search-result-item">
         <a href="{{getHref(product.id)}}">{{
-          editService.createProductNameWithIdentity(product)
+          editProductsService.createProductNameWithIdentity(product)
         }}</a>
       </mat-list-item>
     }

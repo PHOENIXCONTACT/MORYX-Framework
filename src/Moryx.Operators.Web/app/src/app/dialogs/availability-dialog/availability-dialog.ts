@@ -4,7 +4,7 @@
 */
 
 
-import { Component, Inject } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
@@ -24,10 +24,8 @@ import { MatInputModule } from "@angular/material/input";
 ]
 })
 export class AvailabilityDialog {
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: AttandanceData,
-    public dialogRef: MatDialogRef<AvailabilityDialog>
-  ) {}
+  private data = inject<AttandanceData>(MAT_DIALOG_DATA);
+  private dialogRef = inject(MatDialogRef<AvailabilityDialog>);
 
   onSave(){
     this.dialogRef.close(this.data);

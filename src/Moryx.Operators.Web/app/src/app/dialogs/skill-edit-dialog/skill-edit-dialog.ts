@@ -4,7 +4,7 @@
 */
 
 
-import { Component, Inject, signal } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
@@ -32,15 +32,15 @@ import { MatInputModule } from "@angular/material/input";
 ]
 })
 export class SkillEditDialog {
+  private data = inject<OperatorSkill>(MAT_DIALOG_DATA);
+  private dialogRef = inject(MatDialogRef<SkillEditDialog>);
+  private appStoreService = inject(AppStoreService);
+
   skillTypes = signal<SkillType[]>([]);
 
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public data: OperatorSkill,
-    public dialogRef: MatDialogRef<SkillEditDialog>,
-    private appStoreService: AppStoreService
-  ) {
+  constructor() {
     this.appStoreService.skillTypes$.subscribe(types => this.skillTypes.update(_=> types));
   }
 

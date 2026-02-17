@@ -127,7 +127,7 @@ describe('CreateDialog', () => {
 
   it('should set a default recipe', fakeAsync(() => {
     // TODO: also check the DOM for showing the selected element
-    var component = dialog.open(CreateDialog, { data: undefined });
+    const component = dialog.open(CreateDialog, {data: undefined});
     component.componentInstance.selectedProduct.set({});
     tick();
     fixture.detectChanges();

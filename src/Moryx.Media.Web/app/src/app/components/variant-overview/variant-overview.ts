@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { VariantDescriptor } from '../../api/models';
 import { ContentDescriptorModel } from '../../api/models/content-descriptor-model';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -60,6 +60,12 @@ export class VariantOverview implements OnInit, OnDestroy {
   bigPictureIsPdf = signal(false);
   defaultPictureUrl = signal(environment.assets + 'assets/no_preview.jpg');
 
+  private dialog = inject(MatDialog);
+  private activatedRoute = inject(ActivatedRoute);
+  private mediaService = inject(MediaService);
+  private snackbarService = inject(SnackbarService);
+  private translateService = inject(TranslateService);
+
   downloadPictureUrl: string | null | ArrayBuffer = '';
   TranslationConstants = TranslationConstants;
   menuTopLeftPosition = signal<{ x: string, y: string }>({x: '0', y: '0'});
@@ -68,17 +74,11 @@ export class VariantOverview implements OnInit, OnDestroy {
   private pdfObjectUrl?: string;
   private previewObjectUrls = new Map<string, string>();
 
-  constructor(
-    public dialog: MatDialog,
-    private route: ActivatedRoute,
-    private mediaService: MediaService,
-    private snackbarService: SnackbarService,
-    public translate: TranslateService
-  ) {
+  constructor() {
   }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
     if (id !== null) {
       this.content.set(this.mediaService.getContent(id));
 
@@ -267,7 +267,7 @@ export class VariantOverview implements OnInit, OnDestroy {
           return e.name == resultData.variantName;
         }) !== undefined
       ) {
-        const alreadExistsMessage = await lastValueFrom(this.translate
+        const alreadExistsMessage = await lastValueFrom(this.translateService
           .get(TranslationConstants.VARIANT_OVERVIEW.ALREADY_EXISTS_MESSAGE));
         this.snackbarService.showError(alreadExistsMessage);
       } else {
@@ -348,7 +348,7 @@ export class VariantOverview implements OnInit, OnDestroy {
       typeof selectedVariant.name === 'string' &&
       selectedVariant.name?.localeCompare('master') !== 0
     ) {
-      const deleteMessage = await lastValueFrom(this.translate
+      const deleteMessage = await lastValueFrom(this.translateService
         .get(TranslationConstants.VARIANT_OVERVIEW.DELETE_MESSAGE));
       const dialogRef = this.dialog.open(DialogDelete, {
         data: {
@@ -400,7 +400,7 @@ export class VariantOverview implements OnInit, OnDestroy {
       content.variants !== undefined &&
       content.variants !== null
     ) {
-      var index = content.variants.findIndex(
+      const index = content.variants.findIndex(
         (c) => c.name === variant.name
       );
       if (index > -1) {

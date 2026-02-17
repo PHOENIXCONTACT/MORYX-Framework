@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { WorkstationViewModel } from '../models/workstation-view-model';
 import { WorkstationTogglingState } from './WorkstationTogglingState';
 import { environment } from 'src/environments/environment';
@@ -39,6 +39,10 @@ import { MatButtonModule } from '@angular/material/button';
   ]
 })
 export class WorkstationOperators {
+  private appStoreService = inject(AppStoreService);
+  private dialog = inject(MatDialog);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
 
   workstations = signal<WorkstationViewModel[]>([]);
   workstationTogglingState = signal<WorkstationTogglingState | undefined>(undefined);
@@ -52,14 +56,6 @@ export class WorkstationOperators {
   })
 
   TranslationConstants = TranslationConstants;
-
-  constructor(
-    private appStoreService: AppStoreService,
-    public dialog: MatDialog,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {
-  }
 
   ngOnInit(): void {
     this.appStoreService.workstations$.subscribe((stations) => {

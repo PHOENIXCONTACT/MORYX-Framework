@@ -105,7 +105,7 @@ export class WeekAssignmentDialog implements OnInit {
       this.appStore.resources$.subscribe((resources) => {
         this.resources.set( resources.filter((x) => x.id === data.resource?.id));
         this.form.controls.resourceId.disable();
-        if (data.resource?.id) 
+        if (data.resource?.id)
           this.refreshOperators(data.resource?.id);
       });
     } else {
@@ -185,10 +185,10 @@ export class WeekAssignmentDialog implements OnInit {
   }
 
   dayButtonClicked(calendarDate: CalendarDate) {
-    var foundClickedDay = this.data.days.some(
-      (x) => moment(x.date).diff(moment(calendarDate.date), 'days') === 0
-    );
-    if (foundClickedDay)
+      const foundClickedDay = this.data.days.some(
+          (x) => moment(x.date).diff(moment(calendarDate.date), 'days') === 0
+      );
+      if (foundClickedDay)
       this.data.days = this.data.days.filter(
         (e) => moment(e.date).diff(moment(calendarDate.date), 'days') != 0
       );

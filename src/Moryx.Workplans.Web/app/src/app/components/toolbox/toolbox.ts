@@ -4,9 +4,9 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { WorkplanNodeClassification, WorkplanStepRecipe } from '../../api/models';
 import { WorkplanEditingService } from '../../api/services';
@@ -30,17 +30,16 @@ import { MatCardModule } from '@angular/material/card';
   ]
 })
 export class Toolbox implements OnInit, OnDestroy {
-  constructor(
-    private workplanEditing: WorkplanEditingService,
-    public translate: TranslateService,
-    private snackbarService: SnackbarService,
-    private sessionService: SessionsService
-  ) {
-  }
+  private workplanEditing = inject(WorkplanEditingService);
+  private snackbarService = inject(SnackbarService);
+  private sessionService = inject(SessionsService);
 
   subscription: Subscription | undefined;
   stepRecipes: WorkplanStepRecipe[] = [];
   TranslationConstants = TranslationConstants;
+
+  constructor() {
+  }
 
   ngOnInit(): void {
     this.subscription = this.sessionService.activeSession$.subscribe(changed => {

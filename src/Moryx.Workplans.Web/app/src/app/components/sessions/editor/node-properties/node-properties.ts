@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, signal } from '@angular/core';
+import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { Entry, NavigableEntryEditor, PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -36,25 +36,24 @@ import { MatInputModule } from '@angular/material/input';
   ]
 })
 export class NodeProperties implements OnDestroy {
+  private sessionsService = inject(SessionsService);
+  private workplanEditingService = inject(WorkplanEditingService);
+  private snackbarService = inject(SnackbarService);
+  private editorStateService = inject(EditorStateService);
+
   node = signal<WorkplanNodeModel | undefined>(undefined);
   properties = signal<Entry | undefined>(undefined);
 
-  readonly WorkplanNodeClassification = WorkplanNodeClassification;
+  readonly workplanNodeClassification = WorkplanNodeClassification;
   readonly TranslationConstants = TranslationConstants;
 
   private subscriptions: Subscription[] = [];
   private activeSession: string | undefined;
 
-  constructor(
-    private sessionService: SessionsService,
-    private workplanEditing: WorkplanEditingService,
-    private snackbarService: SnackbarService,
-    public translate: TranslateService,
-    private editorState: EditorStateService
-  ) {
-    this.subscriptions.push(sessionService.activeSession$.subscribe(s => (this.activeSession = s)));
+  constructor() {
+    this.subscriptions.push(this.sessionsService.activeSession$.subscribe(s => (this.activeSession = s)));
     this.subscriptions.push(
-      editorState.isEditingStep$.subscribe(async step => {
+      this.editorStateService.isEditingStep$.subscribe(async step => {
         // Awaiting this results in a race condition,
         // this.node needs to be set before the observable provides the next value
         if (this.node()) this.updateNode(this.node()!);
@@ -66,22 +65,22 @@ export class NodeProperties implements OnDestroy {
   }
 
   async updateNode(node: WorkplanNodeModel) {
-    if (!this.activeSession || !node.id || !this.editorState.workplan) return;
+    if (!this.activeSession || !node.id || !this.editorStateService.workplan) return;
 
     if (node.properties)
       PrototypeToEntryConverter.convertToEntry(node.properties);
 
-    await this.workplanEditing
-      .updateStep({ sessionId: this.activeSession, nodeId: node.id, body: node })
+    await this.workplanEditingService
+      .updateStep({sessionId: this.activeSession, nodeId: node.id, body: node})
       .toAsync()
       .then(updatedNode => {
-        if (!this.editorState.workplan) return;
-        const newNodes = this.editorState.workplan.nodes?.filter(keep => keep.id != updatedNode?.id);
-        if (newNodes?.length === this.editorState.workplan.nodes?.length) return;
-        this.editorState.workplan.nodes = newNodes;
-        this.editorState.workplan.nodes?.push(updatedNode);
-        this.sessionService.registerUpdatedSession(this.editorState.workplan);
-        this.editorState.workplanChanged();
+        if (!this.editorStateService.workplan) return;
+        const newNodes = this.editorStateService.workplan.nodes?.filter(keep => keep.id != updatedNode?.id);
+        if (newNodes?.length === this.editorStateService.workplan.nodes?.length) return;
+        this.editorStateService.workplan.nodes = newNodes;
+        this.editorStateService.workplan.nodes?.push(updatedNode);
+        this.sessionsService.registerUpdatedSession(this.editorStateService.workplan);
+        this.editorStateService.workplanChanged();
       })
       .catch(async (e: HttpErrorResponse) => {
         await this.snackbarService.handleError(e);
@@ -95,10 +94,10 @@ export class NodeProperties implements OnDestroy {
 
   onNavigateClick() {
     if (!this.node()?.subworkplanId) return;
-    this.sessionService
+    this.sessionsService
       .getSessionForWorkplan(this.node()?.subworkplanId!)
       .toAsync()
-      .then(session => this.sessionService.activateSession(session.sessionToken!))
+      .then(session => this.sessionsService.activateSession(session.sessionToken!))
       .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
   }
 }

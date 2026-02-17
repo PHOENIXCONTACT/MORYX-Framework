@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit, signal } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { OperatorViewModel } from "../models/operator-view-model";
 import { MatDialog } from "@angular/material/dialog";
 import { ConfirmationDialog } from "../dialogs/confirmation-dialog/confirmation-dialog";
@@ -39,6 +39,10 @@ import { MatButtonModule } from "@angular/material/button";
   ]
 })
 export class OperatorsManagement implements OnInit {
+  private appStoreService = inject(AppStoreService);
+  private dialog = inject(MatDialog);
+  private router = inject(Router);
+  private translateService = inject(TranslateService);
 
   operators = signal<OperatorViewModel[]>([]);
   deleteDialogTitle = signal('');
@@ -48,13 +52,6 @@ export class OperatorsManagement implements OnInit {
   skillTypes = signal<SkillTypeModel[]>([]);
 
   TranslationConstants = TranslationConstants;
-
-  constructor(
-    private appStoreService: AppStoreService,
-    private dialog: MatDialog,
-    private router: Router,
-    private translate: TranslateService) {
-  }
 
   ngOnInit(): void {
     this.appStoreService.operators$
@@ -68,7 +65,7 @@ export class OperatorsManagement implements OnInit {
 
     this.appStoreService.skillTypes$.subscribe(types => this.skillTypes.update(_ => types.map(skillTypeToModel)));
 
-    this.translate
+    this.translateService
       .get([
         TranslationConstants.OPERATORS_MANAGEMENT.DELETE_TITLE,
         TranslationConstants.OPERATORS_MANAGEMENT.DELETE_MESSAGE,

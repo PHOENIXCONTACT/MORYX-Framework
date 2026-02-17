@@ -4,12 +4,11 @@
 */
 
 import { formatNumber } from "@angular/common";
-import { HttpErrorResponse, HttpStatusCode } from "@angular/common/http";
-import { Inject, Injectable, LOCALE_ID } from "@angular/core";
+import { HttpErrorResponse } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { PrototypeToEntryConverter } from "@moryx/ngx-web-framework/entry-editor";
-import { TranslateService } from "@ngx-translate/core";
 import { BehaviorSubject } from "rxjs";
 import {
   ProductModel,
@@ -28,6 +27,13 @@ import { SessionService } from "./session.service";
   providedIn: "root",
 })
 export class EditProductsService {
+  private productManagementService = inject(ProductManagementService);
+  private router = inject(Router);
+  private cacheProductsService = inject(CacheProductsService);
+  private sessionService = inject(SessionService);
+  private activatedRoute = inject(ActivatedRoute);
+  private snackbarService = inject(SnackbarService);
+
   public edit: boolean = false;
   public currentProduct: BehaviorSubject<ProductModel | undefined> = new BehaviorSubject<ProductModel | undefined>(undefined);
   public references: BehaviorSubject<ProductModel[] | undefined> = new BehaviorSubject<ProductModel[] | undefined>(undefined);
@@ -37,18 +43,6 @@ export class EditProductsService {
   maximumAlreadySavedPartId: number = 0;
   currentProductId: number = 0;
   TranslationConstants = TranslationConstants;
-
-  constructor(
-    private managementService: ProductManagementService,
-    private router: Router,
-    private cacheService: CacheProductsService,
-    private sessionService: SessionService,
-    private route: ActivatedRoute,
-    @Inject(LOCALE_ID) public locale: string,
-    private snackbarService: SnackbarService,
-    private translate: TranslateService
-  ) {
-  }
 
   loadFromStorage() {
     const productStorageObject = this.sessionService.getWipProduct();
@@ -93,7 +87,7 @@ export class EditProductsService {
   }
 
   loadProductById(id: number) {
-    this.managementService.getTypeById({id: id}).subscribe({
+    this.productManagementService.getTypeById({id: id}).subscribe({
       next: (product) => {
         this.currentProduct.next(product);
         this.getReferencesOfCurrentProduct();
@@ -135,7 +129,7 @@ export class EditProductsService {
       revisionFilter: RevisionFilter.Specific,
       selector: Selector.Parent,
     };
-    this.managementService.getTypes({body: body}).subscribe({
+    this.productManagementService.getTypes({body: body}).subscribe({
       next: (references) => {
         this.references.next(references);
       },
@@ -203,13 +197,13 @@ export class EditProductsService {
       }
     }
 
-    this.managementService
+    this.productManagementService
       .updateType({id: productModel.id, body: productModel})
       .subscribe((result) => {
         if (result !== productModel?.id) return;
 
-        this.cacheService.loadProductsForTree();
-        this.managementService.getTypeById({id: result}).subscribe({
+        this.cacheProductsService.loadProductsForTree();
+        this.productManagementService.getTypeById({id: result}).subscribe({
           next: (p) => {
             this.currentProduct.next(p);
             this.edit = false;
@@ -225,7 +219,7 @@ export class EditProductsService {
     this.edit = false;
     if (!this.currentProduct.value?.id) return;
 
-    await this.managementService
+    await this.productManagementService
       .getTypeById({id: this.currentProduct.value.id})
       .toAsync()
       .then(product => this.currentProduct.next(product))
@@ -240,15 +234,15 @@ export class EditProductsService {
       infos.revision
     );
 
-    this.managementService
+    this.productManagementService
       .duplicate({id: infos.product.id, body: `"${identifier}"`})
       .subscribe({
         next: (product) => {
-          this.cacheService.loadProductsForTree();
+          this.cacheProductsService.loadProductsForTree();
           const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
           if (regexSpecificRecipe.test(this.router.url)) {
             this.router
-              .navigate(["../../"], {relativeTo: this.route})
+              .navigate(["../../"], {relativeTo: this.activatedRoute})
               .then(() => {
                 this.router
                   .navigate([`/details/${product.id}`])

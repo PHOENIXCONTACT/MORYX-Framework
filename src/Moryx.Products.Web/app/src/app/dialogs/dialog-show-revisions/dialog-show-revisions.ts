@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
@@ -32,21 +32,20 @@ import { MatButtonModule } from '@angular/material/button';
   ]
 })
 export class DialogShowRevisionsComponent implements OnInit {
+  private dialogRef = inject(MatDialogRef<DialogShowRevisionsComponent>);
+  private data = inject<ProductModel>(MAT_DIALOG_DATA);
+  editService = inject(EditProductsService);
+  private managementService = inject(ProductManagementService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private snackbarService = inject(SnackbarService);
+
   revisions = signal<ProductModel[]>([]);
   product = signal<ProductModel | undefined>(undefined);
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    public dialogRef: MatDialogRef<DialogShowRevisionsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ProductModel,
-    public editService: EditProductsService,
-    private managementService: ProductManagementService,
-    private router: Router,
-    private route: ActivatedRoute,
-    public translate: TranslateService,
-    private snackbarService: SnackbarService
-  ) {
-    this.product.update(_ => data);
+  constructor() {
+    this.product.update(_ => this.data);
   }
 
   ngOnInit(): void {

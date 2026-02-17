@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnDestroy, OnInit, signal } from "@angular/core";
+import { Component, inject, OnDestroy, OnInit, signal } from "@angular/core";
 import { LanguageService } from "@moryx/ngx-web-framework/services";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -36,6 +36,10 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
   ]
 })
 export class App implements OnInit, OnDestroy {
+  private languageService = inject(LanguageService);
+  private translateService = inject(TranslateService);
+  private notificationService = inject(NotificationService);
+
   isLoading = signal(true);
   isEmpty = signal(true);
   notificationsToolbarImage = signal(
@@ -47,18 +51,14 @@ export class App implements OnInit, OnDestroy {
   private stateSubscription: Subscription | undefined;
   private notificationSubscription: Subscription | undefined;
 
-  constructor(
-    private languageService: LanguageService,
-    public translate: TranslateService,
-    private notificationService: NotificationService
-  ) {
-    this.translate.addLangs([
+  constructor() {
+    this.translateService.addLangs([
       TranslationConstants.LANGUAGES.EN,
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
     ]);
-    this.translate.setFallbackLang("en");
-    this.translate.use(this.languageService.getDefaultLanguage());
+    this.translateService.setFallbackLang("en");
+    this.translateService.use(this.languageService.getDefaultLanguage());
   }
 
   ngOnInit(): void {
@@ -69,7 +69,7 @@ export class App implements OnInit, OnDestroy {
     );
     this.notificationSubscription =
       this.notificationService.notifications$.subscribe((n) => {
-        this.isEmpty.update(_ =>  !n.length);
+        this.isEmpty.update(_ => !n.length);
       });
   }
 

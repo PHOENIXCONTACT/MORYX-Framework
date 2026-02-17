@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -53,12 +53,12 @@ export class ResourceReferences implements OnInit, OnDestroy {
     return o1?.id === o2?.id;
   };
 
-  constructor(
-    private cacheService: CacheResourceService,
-    public editService: EditResourceService,
-    public translate: TranslateService,
-    private router: Router
-  ) { }
+  private cacheService = inject(CacheResourceService);
+  editService = inject(EditResourceService);
+  translate = inject(TranslateService);
+  private router = inject(Router);
+
+  constructor() { }
 
   ngOnInit(): void {
     this.serviceSubscription = this.editService.activeResource$.subscribe(resource => {
@@ -68,7 +68,7 @@ export class ResourceReferences implements OnInit, OnDestroy {
   }
 
   loadReferences(resource: ResourceModel) {
-    var resourceType = this.cacheService.flatTypes?.find(t => t.name === resource?.type);
+    const resourceType = this.cacheService.flatTypes?.find(t => t.name === resource?.type);
 
     // In the unlikely case that the resource types haven't been loaded yet,
     // navigate to the empty details screen.
@@ -142,19 +142,14 @@ export class ResourceReferences implements OnInit, OnDestroy {
     this.possibleResources.update(() => this.getPossibleResources());
   }
 
-  getReferenceForType(type: ReferenceTypeModel): ResourceReferenceModel {
-    return this.references?.find(r => r.name == type.name) ?? {};
-  }
-
   /**
    * Search through the list of available resources and list all resources
    * of the supported types and their subtypes.
-   * @param referenceType The reference type the Resources should be compatible with
    * @returns A list of resources that can be linked using the referenceType
    */
   getPossibleResources(): ResourceModel[] {
-    var possibleResources = [] as ResourceModel[];
-    var supportedTypes = this.getAllSupportedTypes(this.selectedReferenceType()?.supportedTypes);
+    let possibleResources = [] as ResourceModel[];
+    const supportedTypes = this.getAllSupportedTypes(this.selectedReferenceType()?.supportedTypes);
     this.cacheService.flatResources.getValue()?.forEach(r => {
       if (supportedTypes.find(t => r.type === t) && this.resource?.id != r.id) possibleResources.push(r);
     });
@@ -174,9 +169,9 @@ export class ResourceReferences implements OnInit, OnDestroy {
   private getAllSupportedTypes(supportedRootTypes: string[] | null | undefined): string[] {
     if (!supportedRootTypes) return [];
 
-    var supportedSubTypes = Object.assign<string[], string[]>([], supportedRootTypes);
+    const supportedSubTypes = Object.assign<string[], string[]>([], supportedRootTypes);
     for (let index = 0; index < supportedSubTypes.length; index++) {
-      var rootType = this.cacheService.flatTypes?.find(t => t.name == supportedSubTypes[index]);
+      const rootType = this.cacheService.flatTypes?.find(t => t.name == supportedSubTypes[index]);
       rootType?.derivedTypes?.forEach(t => {
         if (t.name && !supportedSubTypes.find(et => t.name === et)) supportedSubTypes.push(t.name);
       });

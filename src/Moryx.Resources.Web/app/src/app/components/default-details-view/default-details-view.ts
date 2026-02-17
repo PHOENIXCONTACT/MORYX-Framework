@@ -16,7 +16,4 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
 })
 export class DefaultDetailsView {
   TranslationConstants = TranslationConstants;
-
-  constructor() {
-  }
 }

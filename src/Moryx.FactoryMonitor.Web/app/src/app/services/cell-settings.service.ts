@@ -3,11 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FactoryMonitorService } from '../api/services';
 import { Subject } from 'rxjs';
 import { CellSettingsModel } from '../api/models/cell-settings-model';
-import { TranslateService } from '@ngx-translate/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { CellStoreService } from './cell-store.service';
 
@@ -15,15 +14,15 @@ import { CellStoreService } from './cell-store.service';
   providedIn: 'root'
 })
 export class CellSettingsService {
+  private factoryMonitorService = inject(FactoryMonitorService);
+  private snackbarService = inject(SnackbarService);
+  private cellStoreService = inject(CellStoreService);
+
   private _cellSettingsChanged = new Subject<{ cellId: number; cellSettings: CellSettingsModel }>();
 
   public cellSettingsChanged$ = this._cellSettingsChanged.asObservable();
 
-  constructor(
-    private factoryMonitorService: FactoryMonitorService,
-    public translate: TranslateService,
-    public snackbarService: SnackbarService,
-    private cellStoreService: CellStoreService) {
+  constructor() {
 
   }
 
@@ -35,7 +34,7 @@ export class CellSettingsService {
       })
       .subscribe({
         next: _ => {
-          this._cellSettingsChanged.next({ cellId, cellSettings });
+          this._cellSettingsChanged.next({cellId, cellSettings});
           const cell = this.cellStoreService.getCell(cellId);
           if (!cell) return;
           cell.iconName = cellSettings.icon ?? 'build';

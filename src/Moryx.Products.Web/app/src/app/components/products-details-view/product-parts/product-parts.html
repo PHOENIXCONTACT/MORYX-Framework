@@ -24,7 +24,7 @@
                         [ngClass]="{ 'moryx-selected': selectedPart()?.id == partElement.id }"
                         >
                         {{
-                        editService.createProductNameWithIdentity(
+                          editProductsService.createProductNameWithIdentity(
                         partElement.product,
                         true,
                         30
@@ -64,14 +64,14 @@
           @if (part.isCollection) {
             <button
               mat-button
-              [disabled]="editService.edit === false || !selectedPart()"
+              [disabled]="editProductsService.edit === false || !selectedPart()"
               (click)="removePart()"
               >
               {{ TranslationConstants.PARTS.REMOVE | translate }}
             </button>
             <button
               mat-flat-button
-              [disabled]="editService.edit === false"
+              [disabled]="editProductsService.edit === false"
               (click)="addPart()"
               >
               {{ TranslationConstants.PARTS.ADD | translate }}
@@ -79,14 +79,14 @@
           } @else {
             <button
               mat-button
-              [disabled]="editService.edit === false || !selectedPart()"
+              [disabled]="editProductsService.edit === false || !selectedPart()"
               (click)="removePart()"
               >
               {{ TranslationConstants.PARTS.REMOVE | translate }}
             </button>
             <button
               mat-flat-button
-              [disabled]="editService.edit === false"
+              [disabled]="editProductsService.edit === false"
               (click)="addPart()"
               >
               {{ TranslationConstants.PARTS.REPLACE | translate }}

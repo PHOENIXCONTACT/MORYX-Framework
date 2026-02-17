@@ -3,11 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { CalendarDate, CalendarState } from '../models/calendar-state';
 import { BehaviorSubject, firstValueFrom, forkJoin } from 'rxjs';
 import { OperatorModel } from '../models/operator-model';
-import { OPERATORS, ORDERS, RESOURCES, SHIFTS } from '../models/dummy-data';
 import { ShiftTypeModel } from '../models/shift-type-model';
 import { ShiftInstanceModel } from '../models/shift-instance-model';
 import { ShiftCardModel } from '../models/shift-card-model';
@@ -16,12 +15,7 @@ import { ShiftService } from './shift.service';
 import moment from 'moment';
 import { AssignmentCardModel } from '../models/assignment-card-model';
 import AssignmentData from '../models/assignment-data';
-import {
-  hasDayInShiftInterval,
-  isDayInInterval,
-  secondsToHours,
-  randomNumber,
-} from '../utils';
+import { isDayInInterval, secondsToHours } from '../utils';
 import { ViewType } from '../models/types';
 import { OrderModel } from '../models/order-model';
 import {
@@ -43,24 +37,25 @@ import { CopyShiftAndAssignmentData } from '../dialogs/copy-shift-and-assignment
   providedIn: 'root',
 })
 export class AppStoreService {
+  private assignmentService = inject(AssignmentService);
+  private shiftService = inject(ShiftService);
+  private shiftAssignmentService = inject(ShiftManagementService);
+  private operatorManagementService = inject(OperatorManagementService);
+  private orderManagementService = inject(OrderManagementService);
+
   // events
 
-  extendedAssignableOPeratorToOperatorModel =
-    extendedAssignableOPeratorToOperatorModel;
   private isOperatorFilterPanelOpened = new BehaviorSubject(false);
   private isResourceFilterPanelOpened = new BehaviorSubject(false);
   private isDraggingItem = new BehaviorSubject(false);
   private operatorsSelectedForFilter = new BehaviorSubject<OperatorModel[]>([]);
   private resourcesSelectedForFilter = new BehaviorSubject<AttendableResourceModel[]>([]);
-  private droppableElementSearchString = new BehaviorSubject<
-    string | undefined
-  >(undefined);
-  private searchOperatorInCalendarString = new BehaviorSubject<
-    string | undefined
-  >(undefined);
-  private searchResourceInCalendarString = new BehaviorSubject<
-    string | undefined
-  >(undefined);
+  private droppableElementSearchString
+    = new BehaviorSubject<string | undefined>(undefined);
+  private searchOperatorInCalendarString
+    = new BehaviorSubject<string | undefined>(undefined);
+  private searchResourceInCalendarString
+    = new BehaviorSubject<string | undefined>(undefined);
   private shifts = new BehaviorSubject<ShiftCardModel[]>([]);
   private currentView = new BehaviorSubject<ViewType>('Assignments');
   private orders = new BehaviorSubject<OrderModel[]>([]);
@@ -81,26 +76,14 @@ export class AppStoreService {
     this.operatorsSelectedForFilter.asObservable();
   public resourcesSelectedForFilter$ =
     this.resourcesSelectedForFilter.asObservable();
-  public droppableElementSearchString$ =
-    this.droppableElementSearchString.asObservable();
-  public searchOperatorInCalendarString$ =
-    this.searchOperatorInCalendarString.asObservable();
-  public searchResourceInCalendarString$ =
-    this.searchResourceInCalendarString.asObservable();
   public shiftTypes$ = this.shiftService.shiftTypes.asObservable();
   public shiftInstances$ = this.shiftService.shiftInstances.asObservable();
   public assignments$ = this.assignmentService.assignments.asObservable();
   public currentView$ = this.currentView.asObservable();
   public orders$ = this.orders.asObservable();
 
-  constructor(
-    private assignmentService: AssignmentService,
-    private shiftService: ShiftService,
-    private shiftAssignmentService: ShiftManagementService,
-    private operatorService: OperatorManagementService,
-    private orderService: OrderManagementService
-  ) {
-    this.orderService.getOperations().subscribe((operations) => {
+  constructor() {
+    this.orderManagementService.getOperations().subscribe((operations) => {
       const orderModels = operations.map(
         (x) =>
           <OrderModel>{
@@ -120,8 +103,8 @@ export class AppStoreService {
 
     //fetch resources and operator elements from the API in parallel
     forkJoin([
-      this.operatorService.getResources_1(),
-      this.operatorService.getAll_5(),
+      this.operatorManagementService.getResources_1(),
+      this.operatorManagementService.getAll_5(),
     ]).subscribe((results) => {
       const resources = results[0];
       const operators = results[1];
@@ -353,22 +336,18 @@ export class AppStoreService {
     this.shiftService.updateInstance(shiftInstance.id, shiftInstance);
   }
 
-  getOperatorsBasedOnResource(
-    resourceId: number
-  ): Promise<Array<OperatorModel>> {
-    var operatorsAsync = firstValueFrom(
-      this.operatorService.getOperatorsByResource({ resourceId })
+  getOperatorsBasedOnResource(resourceId: number): Promise<Array<OperatorModel>> {
+    const operatorsAsync = firstValueFrom(
+      this.operatorManagementService.getOperatorsByResource({resourceId})
     );
     return operatorsAsync.then((operators) =>
       operators.map(extendedAssignableOPeratorToOperatorModel)
     );
   }
 
-  getResourcesBasedOnOperator(
-    operatorId: string
-  ): Promise<Array<AttendableResourceModel>> {
-    var resourcesAsync = firstValueFrom(
-      this.operatorService.getResources({ operatorIdentifier: operatorId })
+  getResourcesBasedOnOperator(operatorId: string): Promise<Array<AttendableResourceModel>> {
+    const resourcesAsync = firstValueFrom(
+      this.operatorManagementService.getResources({operatorIdentifier: operatorId})
     );
     return resourcesAsync.then((resources) => resources);
   }

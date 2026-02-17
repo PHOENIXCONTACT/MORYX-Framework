@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, Inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -30,18 +30,16 @@ import { MatButtonModule } from '@angular/material/button';
   ]
 })
 export class DialogCreateRevisionComponent implements OnInit {
+  private dialogRef = inject(MatDialogRef<DialogCreateRevisionComponent>);
+  private data = inject<ProductModel>(MAT_DIALOG_DATA);
+  editService = inject(EditProductsService);
+
   product = signal<ProductModel | undefined>(undefined);
   revision = signal<number | undefined>(undefined);
   TranslationConstants = TranslationConstants;
-  Permissions = Permissions;
 
-  constructor(
-    public dialogRef: MatDialogRef<DialogCreateRevisionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ProductModel,
-    public editService: EditProductsService,
-    public translate: TranslateService,
-  ) {
-    this.product.update(_ => data);
+  constructor() {
+    this.product.update(_ => this.data);
   }
 
   onClose() {

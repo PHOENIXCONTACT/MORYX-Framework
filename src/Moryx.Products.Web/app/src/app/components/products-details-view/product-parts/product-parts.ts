@@ -3,17 +3,16 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { PartConnector, PartModel, ProductModel } from '../../../api/models';
 import { DialogAddPartComponent } from '../../../dialogs/dialog-add-part/dialog-add-part';
-import { CacheProductsService } from '../../../services/cache-products.service';
 import { EditProductsService } from '../../../services/edit-products.service';
 import { CommonModule } from '@angular/common';
-import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
 import { ProductPartsDetailsComponent } from './product-parts-details/product-parts-details';
 import { DefaultView } from '../../default-view/default-view';
@@ -34,20 +33,18 @@ import { MatButtonModule } from '@angular/material/button';
   ]
 })
 export class ProductParts implements OnInit {
+  editProductsService = inject(EditProductsService);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+  private dialog = inject(MatDialog);
+
   currentProduct = signal<ProductModel | undefined>(undefined);
   expandedPart = signal<PartConnector | undefined>(undefined);
   selectedPart = signal<PartModel | undefined>(undefined);
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    public editService: EditProductsService,
-    private cacheService: CacheProductsService,
-    private router: Router,
-    private route: ActivatedRoute,
-    public dialog: MatDialog,
-    public translate: TranslateService
-  ) {
-    this.editService.currentProduct.subscribe((product) => {
+  constructor() {
+    this.editProductsService.currentProduct.subscribe((product) => {
       this.currentProduct.set(product);
       this.init();
     });
@@ -58,7 +55,7 @@ export class ProductParts implements OnInit {
   }
 
   init() {
-    const partName = this.route.snapshot.paramMap.get('partName');
+    const partName = this.activatedRoute.snapshot.paramMap.get('partName');
 
     if (partName === 'base') return;
 
@@ -76,7 +73,7 @@ export class ProductParts implements OnInit {
       this.router.navigate([url]);
       return;
     }
-    const partId = Number(this.route.snapshot.paramMap.get('partId'));
+    const partId = Number(this.activatedRoute.snapshot.paramMap.get('partId'));
     if (partId === 0) {
       return;
     }
@@ -142,8 +139,8 @@ export class ProductParts implements OnInit {
       if (this.expandedPart()?.propertyTemplates) {
         newPart.properties = structuredClone(this.expandedPart()?.propertyTemplates!);
       }
-      this.editService.currentPartId++;
-      newPart.id = this.editService.currentPartId;
+      this.editProductsService.currentPartId++;
+      newPart.id = this.editProductsService.currentPartId;
 
       // Add new Part to PartLink
       if (this.expandedPart()?.isCollection)

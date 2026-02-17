@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, effect, model, OnDestroy, OnInit, signal, untracked } from "@angular/core";
+import { Component, effect, inject, model, OnDestroy, OnInit, signal, untracked } from "@angular/core";
 import { EmptyState } from "@moryx/ngx-web-framework/empty-state";
 import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
@@ -63,19 +63,19 @@ export class WorkerInstructions implements OnInit, OnDestroy {
   environment = environment;
   TranslationConstants = TranslationConstants;
 
+  private visualInstructionsService = inject(VisualInstructionsService);
+  private instructionService = inject(InstructionService);
+  private translateService = inject(TranslateService);
+  private snackbarService = inject(SnackbarService);
+  instructionStateService = inject(InstructionStateService);
+
   private activeInstructionIndexChange: Subject<number> = new ReplaySubject<number>(
     1
   );
   private _instructorSubscription?: Subscription;
   private _instructionSubscription?: Subscription;
 
-  constructor(
-    private visualInstructionsService: VisualInstructionsService,
-    private instructionService: InstructionService,
-    public translate: TranslateService,
-    private snackbarService: SnackbarService,
-    public instructionStateService: InstructionStateService
-  ) {
+  constructor() {
     effect(() => {
       const identifier = this.clientIdentifier();
       untracked(() => {
@@ -83,7 +83,7 @@ export class WorkerInstructions implements OnInit, OnDestroy {
       })
     });
 
-    this.translate.addLangs([
+    this.translateService.addLangs([
       TranslationConstants.LANGUAGES.EN,
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,

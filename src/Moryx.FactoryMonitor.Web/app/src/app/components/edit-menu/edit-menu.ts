@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ChangeBackgroundDialog } from 'src/app/dialogs/change-background-dialog/change-background-dialog';
@@ -33,6 +33,15 @@ import { MatIconModule } from '@angular/material/icon';
 ]
 })
 export class EditMenu implements OnInit {
+  private editMenuService = inject(EditMenuService);
+  private matDialog = inject(MatDialog);
+  private translateService = inject(TranslateService);
+  private router = inject(Router);
+  private factorySelectionService = inject(FactorySelectionService);
+  private factoryMonitorService = inject(FactoryMonitorService);
+  private cellStoreService = inject(CellStoreService);
+  private backgroundService = inject(ChangeBackgroundService);
+
   private menuButtons = [
     {
       icon: 'open_with',
@@ -56,22 +65,13 @@ export class EditMenu implements OnInit {
   goBackToFactory!: number;
   navigationItem!: FactoryModel;
 
-  constructor(
-    public editMenuService: EditMenuService,
-    public matDialog: MatDialog,
-    public translate: TranslateService,
-    private router: Router,
-    private factorySelectionService: FactorySelectionService,
-    private factoryMonitorService: FactoryMonitorService,
-    private cellStoreService: CellStoreService,
-    private backgroundService: ChangeBackgroundService
-  ) {
-    this.translate.addLangs([
+  constructor() {
+    this.translateService.addLangs([
       TranslationConstants.LANGUAGES.EN,
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
     ]);
-    this.translate.setFallbackLang('en');
+    this.translateService.setFallbackLang('en');
   }
 
   ngOnInit(): void {

@@ -5,7 +5,7 @@
 
 import { CdkDragDrop, CdkDragEnd, CdkDragStart, DragDropModule, DragRef } from '@angular/cdk/drag-drop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, signal, viewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatDrawer, MatDrawerMode, MatSidenavModule } from '@angular/material/sidenav';
@@ -77,7 +77,7 @@ export class Editor implements OnInit {
   isLoading = signal(true);
   drawerIsOpen = signal(false);
   drawerMode = signal<MatDrawerMode>('side');
-  dragPosition = signal<{ x: number; y: number }>({ x: 0, y: 0 });
+  dragPosition = signal<{ x: number; y: number }>({x: 0, y: 0});
 
   readonly size = 5000;
   readonly stepSize = 14;
@@ -96,23 +96,22 @@ export class Editor implements OnInit {
 
   canvasPosition: Position = new Position(-this.size, -this.size);
   canvasScale: number = 1.0;
-  cursorOffset = { x: 0, y: 0 };
+  cursorOffset = {x: 0, y: 0};
   menuX: string = '0';
   menuY: string = '0';
 
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
+  private workplanEditingService = inject(WorkplanEditingService);
+  private sessionService = inject(SessionsService);
+  private snackbarService = inject(SnackbarService);
+  editorState = inject(EditorStateService);
+
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private workplanEditing: WorkplanEditingService,
-    private sessionService: SessionsService,
-    private snackbarService: SnackbarService,
-    public translate: TranslateService,
-    public editorState: EditorStateService
-  ) {
+  constructor() {
     // Amending this strategy to use management, but this piece of code needs refactoring
-    router.routeReuseStrategy.shouldReuseRoute = (future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot) => {
+    this.router.routeReuseStrategy.shouldReuseRoute = (future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot) => {
       if (future.routeConfig?.path && future.routeConfig?.path !== 'session' && future.routeConfig?.path !== ':token')
         return false;
 
@@ -123,20 +122,20 @@ export class Editor implements OnInit {
     };
 
     // React to changes in the state of the editor
-    editorState.workplanChangedSubject$.subscribe(() => {
+    this.editorState.workplanChangedSubject$.subscribe(() => {
       this.scheduleRenderPaths();
       this.gatherInputIds();
     });
-    editorState.selectedNode$.subscribe(nodeId => (this.selectedNode.update(_ => nodeId)));
-    editorState.isEditingProps$.subscribe(b => {
+    this.editorState.selectedNode$.subscribe(nodeId => (this.selectedNode.update(_ => nodeId)));
+    this.editorState.isEditingProps$.subscribe(b => {
       this.drawerIsOpen.update(_ => b);
       this.isEditingProps.update(_ => b);
     });
-    editorState.isEditingStep$.subscribe(stepId => {
+    this.editorState.isEditingStep$.subscribe(stepId => {
       this.drawerIsOpen.update(_ => !!stepId);
       this.isEditingStep.update(_ => !!stepId);
     });
-    editorState.isCreatingStep$.subscribe(type => {
+    this.editorState.isCreatingStep$.subscribe(type => {
       this.drawerIsOpen.update(_ => !!type);
       this.drawerMode.update(_ => !!type ? 'over' : 'side');
       this.isCreatingStep.update(_ => !!type);
@@ -180,7 +179,7 @@ export class Editor implements OnInit {
   }
 
   ngOnInit(): void {
-    this.workplanEditing.availableSteps().subscribe({
+    this.workplanEditingService.availableSteps().subscribe({
       next: steps => (this.availableSteps.update(_ => steps)),
       error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
     });
@@ -208,16 +207,16 @@ export class Editor implements OnInit {
 
     if (this.selectedNode() && !this.drawerIsOpen()) {
       // ToDo: Check if query update on editorEvents can be done
-      this.updateQuery({ edit: EditQueries.Node, type: null });
+      this.updateQuery({edit: EditQueries.Node, type: null});
       this.editorState.startEditingStep(this.selectedNode()!);
     } else if (this.selectedNode() && this.drawerIsOpen()) {
-      this.updateQuery({ edit: null });
+      this.updateQuery({edit: null});
       this.editorState.stopEditingStep();
     } else if (!this.selectedNode() && !this.drawerIsOpen()) {
-      this.updateQuery({ edit: EditQueries.Properties, type: null });
+      this.updateQuery({edit: EditQueries.Properties, type: null});
       this.editorState.startEditingProps();
     } else if (!this.selectedNode() && this.drawerIsOpen()) {
-      this.updateQuery({ edit: null, type: null });
+      this.updateQuery({edit: null, type: null});
       this.editorState.stopEditingProps();
     }
   }
@@ -235,7 +234,7 @@ export class Editor implements OnInit {
     this.editorState.stopEditingStep();
     this.editorState.stopEditingProps();
 
-    this.updateQuery({ edit: null, selected: null, type: null });
+    this.updateQuery({edit: null, selected: null, type: null});
   }
 
   positionOffset(position: number | undefined): number {
@@ -300,7 +299,7 @@ export class Editor implements OnInit {
     node.positionTop = (node.positionTop ?? 0) + Math.ceil(event.distance.y / this.canvasScale);
     // Reset drag position as the position is now changed on the node
     this.dragPosition.update(_ => {
-      return { x: 0, y: 0 };
+      return {x: 0, y: 0};
     });
 
     this.sessionService.updateSession(this.editorState.workplan).subscribe({
@@ -330,7 +329,7 @@ export class Editor implements OnInit {
     stepRecipe.positionTop = this.newStepPosition()?.top;
 
     if (stepRecipe?.constructor && stepRecipe?.type) {
-      this.updateQuery({ edit: EditQueries.New, selected: null, type: stepRecipe.type });
+      this.updateQuery({edit: EditQueries.New, selected: null, type: stepRecipe.type});
       this.editorState.onNodeDeselected();
       this.editorState.startCreatingStep(stepRecipe.type);
     } else {
@@ -341,7 +340,7 @@ export class Editor implements OnInit {
   //#endregion
 
   onStepCreated(stepRecipe: WorkplanStepRecipe) {
-    this.workplanEditing.addStep({ sessionId: this.sessionToken, body: stepRecipe }).subscribe({
+    this.workplanEditingService.addStep({sessionId: this.sessionToken, body: stepRecipe}).subscribe({
       next: step => this.onStepCreationSuccessResponse(step),
       error: async (e: HttpErrorResponse) => await this.snackbarService.handleError(e)
     });
@@ -353,7 +352,7 @@ export class Editor implements OnInit {
     this.editorState.workplan.nodes?.push(step);
     this.sessionService.registerUpdatedSession(this.editorState.workplan);
     this.editorState.stopCreatingStep();
-    this.updateQuery({ edit: EditQueries.Node, selected: step.id, type: null });
+    this.updateQuery({edit: EditQueries.Node, selected: step.id, type: null});
     this.editorState.startEditingStep(step.id!);
     this.editorState.onNodeSelected(step.id!);
     this.editorState.workplanChanged();
@@ -363,7 +362,7 @@ export class Editor implements OnInit {
     if (!node.id) return;
 
     // ToDo: Check if query update on editorEvents can be done
-    this.updateQuery({ edit: EditQueries.Node, selected: node.id });
+    this.updateQuery({edit: EditQueries.Node, selected: node.id});
     this.editorState.onNodeSelected(node.id);
     this.editorState.startEditingStep(node.id);
   }
@@ -371,13 +370,13 @@ export class Editor implements OnInit {
   //--- Connect output to input
   connected(event: CdkDragDrop<WorkplanNodeModel[]>, node: WorkplanNodeModel, input: NodeConnectionPoint) {
     let sourceNode = <WorkplanNodeModel>event.item.data[0];
-    var draggedConnector = <NodeConnectionPoint>event.item.data[1];
-    this.workplanEditing
+    const draggedConnector = <NodeConnectionPoint>event.item.data[1];
+    this.workplanEditingService
       .connectStep({
         sessionId: this.sessionToken,
         targetNodeId: node.id ?? 0,
         targetIndex: input.index ?? 0,
-        body: { nodeId: sourceNode.id, index: draggedConnector.index }
+        body: {nodeId: sourceNode.id, index: draggedConnector.index}
       })
       .subscribe({
         next: session => {
@@ -413,12 +412,12 @@ export class Editor implements OnInit {
     if (!this.pathMenuTrigger().menuData) return;
 
     const data = this.pathMenuTrigger().menuData as NodeConnectionPath;
-    this.workplanEditing
+    this.workplanEditingService
       .disconnectStep({
         sessionId: this.sessionToken,
         targetNodeId: data?.endNode.id ?? 0,
         targetIndex: data?.endInput.index ?? 0,
-        body: { nodeId: data?.startNode.id, index: data?.startInput.index }
+        body: {nodeId: data?.startNode.id, index: data?.startInput.index}
       })
       .subscribe({
         next: session => {
@@ -437,12 +436,12 @@ export class Editor implements OnInit {
     const data = this.stepMenuTrigger().menuData as WorkplanNodeModel;
     this.editorState.stopEditingStep();
     this.editorState.onNodeDeselected();
-    this.updateQuery({ edit: null, selected: null });
+    this.updateQuery({edit: null, selected: null});
     this.deleteStep(data);
   }
 
   deleteStep(data: WorkplanNodeModel) {
-    this.workplanEditing
+    this.workplanEditingService
       .removeNode({
         sessionId: this.sessionToken,
         nodeId: data.id ?? 0
@@ -498,8 +497,8 @@ export class Editor implements OnInit {
 
   getPathMenuAreaStyles(segment: Segment): { [klass: string]: any } {
     return segment.width > segment.height
-      ? { width: `${segment.width}px`, height: `${segment.height * 5}px`, top: `${-4}px` }
-      : { width: `${segment.width * 5}px`, height: `${segment.height}px`, left: `${-4}px` };
+      ? {width: `${segment.width}px`, height: `${segment.height * 5}px`, top: `${-4}px`}
+      : {width: `${segment.width * 5}px`, height: `${segment.height}px`, left: `${-4}px`};
   }
 
   isNodeUneditable(nodeId: number): boolean {

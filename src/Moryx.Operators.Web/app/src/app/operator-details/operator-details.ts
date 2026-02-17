@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, input, OnInit, signal, untracked } from "@angular/core";
-import { ActivatedRoute, RouterLink } from "@angular/router";
+import { Component, effect, inject, input, OnInit, signal, untracked } from "@angular/core";
+import { RouterLink } from "@angular/router";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { OperatorSkillView } from "../models/type";
 import { OperatorSkill } from "../models/operator-skill-model";
@@ -30,10 +30,10 @@ import { FormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 
 @Component({
-    selector: "app-operator-details",
-    templateUrl: "./operator-details.html",
-    styleUrl: "./operator-details.scss",
-    imports: [
+  selector: "app-operator-details",
+  templateUrl: "./operator-details.html",
+  styleUrl: "./operator-details.scss",
+  imports: [
     MatIconModule,
     MatSidenavModule,
     MatTooltipModule,
@@ -44,11 +44,15 @@ import { MatButtonModule } from "@angular/material/button";
     MatTableModule,
     MatButtonModule,
     RouterLink
-]
+  ]
 })
 export class OperatorDetails implements OnInit {
+  private appStoreService = inject(AppStoreService);
+  private dialog = inject(MatDialog);
+  private translateService = inject(TranslateService);
+
   id = input.required<string>();
-  editMode =  signal(false);
+  editMode = signal(false);
   operator = signal<AssignableOperator>({
     assignedResources: [],
     firstName: '',
@@ -66,65 +70,60 @@ export class OperatorDetails implements OnInit {
   dataSource!: MatTableDataSource<OperatorSkill>;
   skillToOperatorSkill = skillToOperatorSkill;
   skillTypeToModel = skillTypeToModel;
-  displayedColumns: string[] = ['type','obtainedOn','expiresOn','actions'];
+  displayedColumns: string[] = ['type', 'obtainedOn', 'expiresOn', 'actions'];
 
-  constructor(
-    private appStoreService: AppStoreService,
-    private activatedRoute: ActivatedRoute,
-    private dialog: MatDialog,
-    public translate: TranslateService,
-  ) {
+  constructor() {
     effect(() => {
       const id = this.id();
-     untracked(() => this.initialize(id))
+      untracked(() => this.initialize(id))
     })
   }
 
   ngOnInit(): void {
   }
 
-  initialize(id: string){
+  initialize(id: string) {
     const identifier = id;
-    if(!identifier) return;
+    if (!identifier) return;
     const operatorDataPromise = this.appStoreService.getOperator(identifier);
 
     operatorDataPromise.then(result => {
-      if(!result) return;
+      if (!result) return;
 
-      this.operatorViewModel.update(_=> result);
-      this.operator.update(_=> result.data);
+      this.operatorViewModel.update(_ => result);
+      this.operator.update(_ => result.data);
     });
 
 
-   this.loadSkills();
+    this.loadSkills();
 
     this.appStoreService
       .skillTypes$
-      .subscribe(types => this.skillTypes.update(_=> types.map(skillTypeToModel)));
+      .subscribe(types => this.skillTypes.update(_ => types.map(skillTypeToModel)));
   }
 
-  loadSkills(){
+  loadSkills() {
     this.appStoreService.getSkillFromRemoteSource()
-    .subscribe(skills =>{
-      const skillModels = skills.filter(e => e.operatorIdentifier === this.operator().identifier).map(skillToOperatorSkill);
-      this.dataSource = new MatTableDataSource(skillModels);
-    });
+      .subscribe(skills => {
+        const skillModels = skills.filter(e => e.operatorIdentifier === this.operator().identifier).map(skillToOperatorSkill);
+        this.dataSource = new MatTableDataSource(skillModels);
+      });
   }
 
   onStopEditing() {
-    this.operator.update(_=> this.appStoreService.cancelEditing(this.operator()));
-    this.editMode.update(_=> false);
+    this.operator.update(_ => this.appStoreService.cancelEditing(this.operator()));
+    this.editMode.update(_ => false);
   }
 
   onStartEditing() {
-    this.editMode.update(_=> true);
+    this.editMode.update(_ => true);
   }
 
   async onSave() {
     await this.appStoreService.updateOperator(this.operator())
-    .then(() => {
-      this.editMode.update(_=> false);
-    });
+      .then(() => {
+        this.editMode.update(_ => false);
+      });
   }
 
   applyFilter(event: Event) {
@@ -132,31 +131,31 @@ export class OperatorDetails implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  onAddSkillClick(){
-    const dialogResult = this.dialog.open(SkillNewDialog,{
+  onAddSkillClick() {
+    const dialogResult = this.dialog.open(SkillNewDialog, {
       width: '400px',
       data: <OperatorSkill>{
         operatorId: this.operator().identifier
       }
     });
 
-    dialogResult.afterClosed().subscribe(result =>{
-      if(!result) result;
+    dialogResult.afterClosed().subscribe(result => {
+      if (!result) result;
 
-      this.appStoreService.addSkill(this.operatorViewModel()!,result);
-      setTimeout(() => this.loadSkills(),500);
+      this.appStoreService.addSkill(this.operatorViewModel()!, result);
+      setTimeout(() => this.loadSkills(), 500);
     });
   }
 
 
-  async onDeleteSkillClick(skill: OperatorSkill){
-    const translations = await lastValueFrom(this.translate
-          .get([
-            TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TITLE,
-            TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_MESSAGE
-          ]));
-    const dialogRef = this.dialog.open(ConfirmationDialog,{
-      data:{
+  async onDeleteSkillClick(skill: OperatorSkill) {
+    const translations = await lastValueFrom(this.translateService
+      .get([
+        TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TITLE,
+        TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_MESSAGE
+      ]));
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
+      data: {
         dialogMessage: translations[TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_MESSAGE],
         dialogTitle: translations[TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TITLE],
         dialogResult: 'NO'
@@ -164,14 +163,14 @@ export class OperatorDetails implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result.dialogResult === 'NO') return;
+      if (result.dialogResult === 'NO') return;
 
       this.appStoreService.deleteSkill(skill);
-      setTimeout(() => this.loadSkills(),500);
+      setTimeout(() => this.loadSkills(), 500);
     });
   }
 
-  findSkillTypeById(id: number){
+  findSkillTypeById(id: number) {
     return this.skillTypes().find(x => x.id === id);
   }
 }

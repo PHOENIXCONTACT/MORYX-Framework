@@ -6,9 +6,9 @@
 import {
   Component,
   effect,
+  inject,
   input,
   OnDestroy,
-  OnInit,
   signal,
   untracked,
 } from "@angular/core";
@@ -30,14 +30,14 @@ import { Subscription } from 'rxjs';
     MatProgressSpinnerModule
   ]
 })
-export class ProductProperties implements OnInit, OnDestroy {
+export class ProductProperties implements OnDestroy {
+  editProductsService = inject(EditProductsService);
+
   properties = signal<Entry | undefined>(undefined);
   id = input.required<number>();
   subscriptions: Subscription[] = [];
 
-  constructor(
-    public editService: EditProductsService
-  ) {
+  constructor() {
     effect(() => {
       const id = this.id();
       untracked(async () => {
@@ -54,7 +54,7 @@ export class ProductProperties implements OnInit, OnDestroy {
 
   async initialize(id: number) {
     if (id == null) return;
-    const subscription = this.editService.currentProduct.subscribe({
+    const subscription = this.editProductsService.currentProduct.subscribe({
       next: product => {
         if (Number(id) === product?.id) {
           this.properties.set(product.properties);
@@ -62,9 +62,6 @@ export class ProductProperties implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(subscription);
-  }
-
-  ngOnInit(): void {
   }
 }
 

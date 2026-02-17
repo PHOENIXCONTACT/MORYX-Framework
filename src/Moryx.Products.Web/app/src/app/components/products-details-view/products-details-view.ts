@@ -3,14 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { SessionService } from 'src/app/services/session.service';
 import { ProductModel } from '../../api/models';
 import { EditProductsService } from '../../services/edit-products.service';
-import { ProductsDetailsHeaderComponent } from './products-details-header/products-details-header';
+import { ProductsDetailsHeader } from './products-details-header/products-details-header';
 
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -20,7 +20,7 @@ import { MatTabsModule } from '@angular/material/tabs';
   templateUrl: './products-details-view.html',
   styleUrls: ['./products-details-view.scss'],
   imports: [
-    ProductsDetailsHeaderComponent,
+    ProductsDetailsHeader,
     MatDividerModule,
     MatTabsModule,
     TranslateModule,
@@ -28,6 +28,11 @@ import { MatTabsModule } from '@angular/material/tabs';
   ]
 })
 export class ProductsDetailsView {
+  private router = inject(Router);
+  private sessionService = inject(SessionService);
+  editService = inject(EditProductsService);
+  private activatedRoute = inject(ActivatedRoute);
+
   currentProduct = signal<ProductModel | undefined>(undefined);
   lastProductId = signal<number | undefined>(undefined);
   activeLink = signal<Tabs>(Tabs.Unknown);
@@ -39,14 +44,8 @@ export class ProductsDetailsView {
   regexReferences: RegExp = /(details\/\d*\/references)/;
   regexProperties: RegExp = /(details\/\d*\/properties)/;
 
-  constructor(
-    private router: Router,
-    private sessionService: SessionService,
-    public editService: EditProductsService,
-    public route: ActivatedRoute,
-    public translate: TranslateService
-  ) {
-    this.route.data.subscribe(data => {
+  constructor() {
+    this.activatedRoute.data.subscribe(data => {
       const product = data['product'];
 
       if (this.lastProductId() === product?.id) return;
@@ -71,7 +70,7 @@ export class ProductsDetailsView {
       }
     });
 
-    router.events.subscribe((val) => {
+    this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd || val instanceof NavigationCancel) {
         let url = this.router.url;
         if (this.regexProperties.test(url)) {
@@ -92,7 +91,7 @@ export class ProductsDetailsView {
     const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
     const regexParts: RegExp = /(details\/\d*\/parts)/;
     if (regexSpecificRecipe.test(url) || regexParts.test(url)) {
-      this.router.navigate(['../../'], {relativeTo: this.route}).then(() => {
+      this.router.navigate(['../../'], {relativeTo: this.activatedRoute}).then(() => {
         this.routeToTab(target);
       });
     } else {

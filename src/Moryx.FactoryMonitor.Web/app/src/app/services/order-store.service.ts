@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { OrderModel } from '../api/models/order-model';
 import { FactoryStateStreamService } from './factory-state-stream.service';
@@ -14,6 +14,8 @@ import { InternalOperationClassification } from '../api/models/internal-operatio
   providedIn: 'root',
 })
 export class OrderStoreService {
+  private factoryStateStreamService = inject(FactoryStateStreamService);
+
   public _orders = new BehaviorSubject<Order[]>([]);
   private _runningOrders = new BehaviorSubject<Order[]>([]);
   private _toggledOrder = new Subject<Order>();
@@ -22,8 +24,7 @@ export class OrderStoreService {
   public runningOrders$: Observable<Order[]>;
   public toggledOrder$: Observable<Order>;
 
-  constructor(
-    private factoryStateStreamService: FactoryStateStreamService) {
+  constructor() {
     this.factoryStateStreamService.updatedOrder.subscribe({
       next: order => {
         if (!order?.orderNumber) return;

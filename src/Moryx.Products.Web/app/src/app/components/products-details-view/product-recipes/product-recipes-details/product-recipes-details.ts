@@ -3,9 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { ProductModel, RecipeDefinitionModel, RecipeModel } from '../../../../api/models';
 import { CacheProductsService } from '../../../../services/cache-products.service';
@@ -24,19 +24,18 @@ import { ProductRecipesDetailsHeader } from './product-recipes-details-header/pr
   ]
 })
 export class ProductRecipesDetails {
+  editProductsService = inject(EditProductsService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private cacheService = inject(CacheProductsService);
+
   currentProduct = signal<ProductModel | undefined>(undefined);
   currentRecipe = signal<RecipeModel | undefined>(undefined);
   recipeDefinitions = signal<RecipeDefinitionModel[] | undefined>([]);
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    public editService: EditProductsService,
-    public route: ActivatedRoute,
-    private router: Router,
-    cacheService: CacheProductsService,
-    public translate: TranslateService
-  ) {
-    editService.currentProduct.subscribe((product) => {
+  constructor() {
+    this.editProductsService.currentProduct.subscribe((product) => {
       this.currentProduct.set(product);
       this.setCurrentRecipe();
       if (this.currentRecipe === undefined) {
@@ -56,13 +55,13 @@ export class ProductRecipesDetails {
       }
     });
 
-    router.events.subscribe((val) => {
+    this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
         this.setCurrentRecipe();
       }
     });
 
-    cacheService.recipeDefinitions.subscribe((recipeDefitions) => {
+    this.cacheService.recipeDefinitions.subscribe((recipeDefitions) => {
       this.recipeDefinitions.set(recipeDefitions);
     });
   }

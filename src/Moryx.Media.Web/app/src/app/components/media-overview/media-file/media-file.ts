@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnInit, model, signal, output } from '@angular/core';
+import { Component, inject, OnInit, model, signal, output } from '@angular/core';
 import { ContentDescriptorModel } from '../../../api/models';
 import { MediaService } from '../../../services/media-service/media.service';
 import { environment } from 'src/environments/environment';
@@ -17,17 +17,19 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-    selector: 'app-media-file',
-    templateUrl: './media-file.html',
-    styleUrls: ['./media-file.scss'],
-    imports: [
-      MatProgressSpinner,
-      TranslateModule,
-      MatCardModule,
-      MatButtonModule,
-      MatIconModule]
+  selector: 'app-media-file',
+  templateUrl: './media-file.html',
+  styleUrls: ['./media-file.scss'],
+  imports: [
+    MatProgressSpinner,
+    TranslateModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule]
 })
 export class MediaFile implements OnInit {
+  private mediaService = inject(MediaService);
+  private snackbarService = inject(SnackbarService);
 
   TranslationConstants = TranslationConstants;
   name = model.required<string>()
@@ -40,9 +42,6 @@ export class MediaFile implements OnInit {
   show = output<ContentDescriptorModel>();
   delete = output<ContentDescriptorModel>();
   img: any;
-
-  constructor(
-    private mediaService: MediaService,private snackbarService: SnackbarService) { }
 
   ngOnInit(): void {
     this.showFile();
@@ -65,14 +64,14 @@ export class MediaFile implements OnInit {
           .pipe(
             retry({
               count: 3,
-              delay:1000,
+              delay: 1000,
               resetOnSuccess: true
             })
           )
           .subscribe({
-            next : (data) => {
+            next: (data) => {
               if (data !== null) {
-                let downloadedFile = new Blob([data], { type: data.type });
+                let downloadedFile = new Blob([data], {type: data.type});
                 const reader = new FileReader();
                 reader.readAsDataURL(downloadedFile); //FileStream response from .NET core backend
                 reader.onload = (_event) => {
@@ -81,7 +80,7 @@ export class MediaFile implements OnInit {
                 this.loaded.update(_ => true);
               }
             },
-            error : error => this.snackbarService.handleError(error)
+            error: error => this.snackbarService.handleError(error)
           });
       } else {
         this.path.update(_ => environment.assets + 'assets/no_preview.jpg');
@@ -91,7 +90,7 @@ export class MediaFile implements OnInit {
   }
 
   onClick(event: MouseEvent) {
-    if((<HTMLElement>event.target).nodeName === 'MAT-ICON')
+    if ((<HTMLElement>event.target).nodeName === 'MAT-ICON')
       this.delete.emit(this.content());
     else
       this.show.emit(this.content());

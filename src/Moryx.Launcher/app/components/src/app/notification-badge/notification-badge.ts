@@ -29,8 +29,8 @@ export class NotificationBadge implements OnInit, OnDestroy {
 
   onReceived(event: any) {
     // Check if data is plain number
-    var integer = parseInt(event.data);
-    // Parse data assuming collection
+      let integer = parseInt(event.data);
+      // Parse data assuming collection
     if (!integer) {
       const list = JSON.parse(event.data);
       integer = list.length;

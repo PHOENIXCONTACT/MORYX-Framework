@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, signal } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Component, inject, signal } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { ProductModel } from '../../../api/models';
 import { EditProductsService } from '../../../services/edit-products.service';
@@ -28,18 +28,16 @@ import { MatCardModule } from '@angular/material/card';
   ]
 })
 export class ProductReferences {
+  private editProductsService = inject(EditProductsService);
+  private router = inject(Router);
 
   references = signal<ProductModel[]>([]);
   isLoading = signal(false);
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    editService: EditProductsService,
-    public translate: TranslateService,
-    private router: Router
-  ) {
+  constructor() {
     this.isLoading.update(_ => true);
-    editService.references.subscribe((references) => {
+    this.editProductsService.references.subscribe((references) => {
       this.references.update(_ => references ?? []);
       this.isLoading.update(_ => false);
     });
