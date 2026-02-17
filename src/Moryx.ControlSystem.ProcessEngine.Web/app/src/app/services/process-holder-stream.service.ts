@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ProcessHolderGroupModel } from '../api/models/process-holder-group-model';
 import { ProcessEngineService } from '../api/services';
@@ -12,10 +12,11 @@ import { ProcessEngineService } from '../api/services';
   providedIn: 'root'
 })
 export class ProcessHolderStreamService {
+  private processService = inject(ProcessEngineService);
 
   $updatedWpc = new BehaviorSubject<ProcessHolderGroupModel | undefined>(undefined);
 
-  constructor(private processService: ProcessEngineService) {
+  constructor() {
     this.publishUpdates();
   }
 

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FactoryMonitorService } from '../api/services';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
@@ -15,6 +15,10 @@ import { FactoryStateModel } from '../api/models/factory-state-model';
   providedIn: 'root'
 })
 export class ChangeBackgroundService {
+  private factoryMonitorService = inject(FactoryMonitorService);
+  private snackbarService = inject(SnackbarService);
+  private factorySelectionService = inject(FactorySelectionService);
+
   defaultUrl = environment.rootUrl + '/background.PNG';
   private _factory?: FactoryStateModel;
   private _backgroundChanged = new BehaviorSubject<string>(this.defaultUrl);
@@ -22,9 +26,7 @@ export class ChangeBackgroundService {
   private _canSaveBackground = new BehaviorSubject<boolean>(false);
   public canSaveBackground$ = this._canSaveBackground.asObservable();
 
-  constructor(private factoryMonitorService: FactoryMonitorService,
-              private snackbarService: SnackbarService,
-              private factorySelectionService: FactorySelectionService) {
+  constructor() {
     this.factorySelectionService.factorySelected$.subscribe({
       next: factorySelected => {
         this._factory = factorySelected;

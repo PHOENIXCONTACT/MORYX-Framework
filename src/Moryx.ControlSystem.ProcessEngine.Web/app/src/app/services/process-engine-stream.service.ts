@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ProcessEngineService } from '../api/services';
 import { JobProcessModel } from '../api/models/job-process-model';
@@ -13,10 +13,12 @@ import { ProcessActivityModel } from '../api/models/process-activity-model';
   providedIn: 'root'
 })
 export class ProcessEngineStreamService {
+  private processEngineService = inject(ProcessEngineService);
+
   updatedProcess: BehaviorSubject<JobProcessModel | undefined> = new BehaviorSubject<JobProcessModel | undefined>(undefined);
   updatedActivity: BehaviorSubject<ProcessActivityModel | undefined> = new BehaviorSubject<ProcessActivityModel | undefined>(undefined);
 
-  constructor(private processEngineService: ProcessEngineService) {
+  constructor() {
     this.publishActivityUpdates();
     this.publishProcessUpdates();
   }

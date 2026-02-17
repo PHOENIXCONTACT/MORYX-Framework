@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, OnInit, signal } from '@angular/core';
-import { CdkDragDrop, CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { OperatorModel, instanceOfOperator } from './models/operator-model';
 import { CalendarDate, CalendarState } from './models/calendar-state';
 import { AssignmentCardModel } from './models/assignment-card-model';
@@ -81,6 +81,12 @@ import { OrderItem } from './order-item/order-item';
   ]
 })
 export class App implements OnInit {
+  private dialog = inject(MatDialog);
+  private appStore = inject(AppStoreService);
+  private translate = inject(TranslateService);
+  private snackbarService = inject(SnackbarService);
+  private languageService = inject(LanguageService);
+
   isOperatorFilterPanelOpened = signal(false);
   isResourceFilterPanelOpened = signal(false);
   operators = signal<OperatorModel[]>([]);
@@ -131,12 +137,7 @@ export class App implements OnInit {
   shortDayName = shortDayName;
   localizedFormatDate = localizedFormatDate;
 
-  constructor(public dialog: MatDialog,
-              public appStore: AppStoreService,
-              public translate: TranslateService,
-              public snackbarService: SnackbarService,
-              private languageService: LanguageService) {
-
+  constructor() {
     this.translate.addLangs([
       TranslationConstants.LANGUAGES.EN,
       TranslationConstants.LANGUAGES.DE,
@@ -145,7 +146,6 @@ export class App implements OnInit {
     ]);
     this.translate.setDefaultLang('en');
     this.translate.use(this.languageService.getDefaultLanguage());
-
   }
 
   ngOnInit(): void {

@@ -3,14 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component } from '@angular/core';
-import {
-  MatDialogRef,
-  MatDialogModule,
-} from '@angular/material/dialog';
+import { Component, inject } from '@angular/core';
+import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatListModule } from '@angular/material/list';
-
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -25,6 +21,8 @@ import { MatButtonModule } from '@angular/material/button';
   ]
 })
 export class DetailsConfigurationDialog {
+  propertyConfigurationDialogRef = inject(MatDialogRef<DetailsConfigurationDialog>);
+
   propertyNames: string[] = [
     'Boots',
     'Clogs',
@@ -42,8 +40,5 @@ export class DetailsConfigurationDialog {
     'Moccasins',
     'Sneakers',
   ];
-
-  constructor(public propertyConfigurationDialogRef: MatDialogRef<DetailsConfigurationDialog>) {
-  }
 }
 

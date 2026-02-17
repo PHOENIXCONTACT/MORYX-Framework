@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { EditMenuService } from './services/edit-menu.service';
 import { EditMenuState } from './services/EditMenutState';
 import { ChangeBackgroundService } from './services/change-background.service';
@@ -16,7 +16,6 @@ import CellModel from './models/cellModel';
 import { EditMenu } from './components/edit-menu/edit-menu';
 import { OrdersContainer } from './components/orders-container/orders-container';
 import { CellDetails } from './components/cell-details/cell-details';
-
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -31,16 +30,17 @@ import { RouterOutlet } from '@angular/router';
   ]
 })
 export class App implements OnInit {
+  private editMenuService = inject(EditMenuService);
+  private backgroundService = inject(ChangeBackgroundService);
+  private languageService = inject(LanguageService);
+  private translate = inject(TranslateService);
+  private cellStoreService = inject(CellStoreService);
+  private factorySelectionService = inject(FactorySelectionService);
+
   backgroundImage: string = '';
   private editMenuState !: EditMenuState;
 
-  constructor(private editMenuService: EditMenuService,
-              private backgroundService: ChangeBackgroundService,
-              private languageService: LanguageService,
-              public translate: TranslateService,
-              public elemRef: ElementRef,
-              public cellStoreService: CellStoreService,
-              public factorySelectionService: FactorySelectionService) {
+  constructor() {
     this.editMenuService.activeState$.subscribe({
       next: state => this.editMenuState = state
     });

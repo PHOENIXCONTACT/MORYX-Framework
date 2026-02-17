@@ -6,7 +6,7 @@
     "start": "ng serve --configuration development",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "build:prod": "ng  build --delete-output-path --configuration production --progress false",
+    "build:prod": "ng build --delete-output-path --configuration production --progress false",
     "test": "ng test"
   },
   "private": true,

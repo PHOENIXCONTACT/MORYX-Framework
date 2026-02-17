@@ -3,12 +3,11 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { Entry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { Subscription } from 'rxjs';
 import { EditResourceService } from '../../../services/edit-resource.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
 
 @Component({
   selector: 'app-resource-properties',
@@ -17,11 +16,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [MatProgressSpinnerModule, NavigableEntryEditor]
 })
 export class ResourceProperties implements OnInit, OnDestroy {
+  editService = inject(EditResourceService);
+
   properties = signal<Entry | undefined>(undefined);
   private editServiceSubscription: Subscription | undefined;
-
-  constructor(public editService: EditResourceService) {
-  }
 
   ngOnInit(): void {
     this.editServiceSubscription = this.editService.activeResource$.subscribe(resource => {

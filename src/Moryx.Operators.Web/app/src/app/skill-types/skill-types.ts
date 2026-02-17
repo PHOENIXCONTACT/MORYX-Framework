@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { SkillType } from '../models/skill-type-model';
@@ -21,52 +21,52 @@ import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-    selector: 'app-skill-types',
-    templateUrl: './skill-types.html',
-    styleUrl: './skill-types.scss',
-    imports: [
+  selector: 'app-skill-types',
+  templateUrl: './skill-types.html',
+  styleUrl: './skill-types.scss',
+  imports: [
     MatTooltipModule,
     MatIconModule,
     RouterLink,
     TranslateModule,
     MatTableModule,
     MatButtonModule
-]
+  ]
 })
 export class SkillTypes {
+  private dialog = inject(MatDialog);
+  private appStoreService = inject(AppStoreService);
+  translateService = inject(TranslateService);
+
   skillTypes = signal<SkillType[]>([]);
   skills = signal<OperatorSkill[]>([]);
-  
+
   getDurationInDays = getDurationInDays;
   dataSource!: MatTableDataSource<SkillType>;
   TranslationConstants = TranslationConstants;
-  displayedColumns: string[] = ['name','duration','trainedOperators','actions'];
-  
-  constructor(private dialog: MatDialog,
-    private appStoreService: AppStoreService,
-    public translate: TranslateService,
-  ){
+  displayedColumns: string[] = ['name', 'duration', 'trainedOperators', 'actions'];
 
+  constructor() {
     this.appStoreService
-    .skillTypes$.subscribe(results => {
-      this.skillTypes.update(_=> results);
+      .skillTypes$.subscribe(results => {
+      this.skillTypes.update(_ => results);
       this.dataSource = new MatTableDataSource(results)
     });
 
     this.appStoreService
-    .skills$
-    .subscribe(skills => this.skills.update(_=> skills));
+      .skills$
+      .subscribe(skills => this.skills.update(_ => skills));
   }
 
   async onDeleteClick(skillType: SkillType) {
-    const translations = await lastValueFrom(this.translate
-          .get([
-            TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_TITLE,
-            TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_MESSAGE
-          ]));
+    const translations = await lastValueFrom(this.translateService
+      .get([
+        TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_TITLE,
+        TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_MESSAGE
+      ]));
 
-    const dialogRef = this.dialog.open(ConfirmationDialog,{
-      data:{
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
+      data: {
         dialogMessage: translations[TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_MESSAGE],
         dialogTitle: translations[TranslationConstants.CONFIRMATION_DIALOG.DELETE_SKILL_TYPE_TITLE],
         dialogResult: 'NO'
@@ -74,13 +74,13 @@ export class SkillTypes {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result.dialogResult === 'NO') return;
+      if (result.dialogResult === 'NO') return;
 
       this.appStoreService.deleteSkillType(skillType);
     });
   }
 
-  operatorWithSkillCount(typeId: number){
+  operatorWithSkillCount(typeId: number) {
     return this.skills().filter(x => x.typeId === typeId).length;
   }
 
