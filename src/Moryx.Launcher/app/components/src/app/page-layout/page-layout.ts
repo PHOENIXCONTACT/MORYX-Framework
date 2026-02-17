@@ -3,6 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import { CommonModule } from '@angular/common';
 import { AfterContentInit, Component, ElementRef, input } from '@angular/core';
 import { LauncherState, LauncherStateService } from '../services/launcher-state.service';
 import { Constants } from '../constants';
@@ -13,6 +14,7 @@ import { NavigationButton } from '../navigation-button/navigation-button';
   providers: [LauncherStateService],
   templateUrl: './page-layout.html',
   styleUrl: './page-layout.css',
+  imports: [CommonModule],
   host: {
     '(click)': 'onClick($event)',
     '(window:keyup)': 'onKeyUp($event)',

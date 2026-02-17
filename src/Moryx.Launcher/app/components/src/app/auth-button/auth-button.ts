@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, OnInit } from '@angular/core';
+import { Component, input, OnInit, signal } from '@angular/core';
 
 @Component({
   selector: 'app-auth-button',
@@ -13,8 +13,8 @@ import { Component, input, OnInit } from '@angular/core';
 })
 export class SignInButton implements OnInit {
   authurl = input<string | undefined>(undefined);
-  isLoggedIn = false;
-  userName = '';
+  isLoggedIn = signal<boolean>(false);
+  userName = signal<string>('');
 
   ngOnInit(): void {
     this.checkSignedIn();
@@ -33,8 +33,8 @@ export class SignInButton implements OnInit {
       },
     })
       .then(() => {
-        this.isLoggedIn = false;
-        this.userName = '';
+        this.isLoggedIn.set(false);
+        this.userName.set('');
         window.location.assign('/');
       })
       .catch((err) => console.log(err));
@@ -49,8 +49,8 @@ export class SignInButton implements OnInit {
 
     const equalSignIndex = userCookie[0].indexOf('=');
     const user = userCookie[0].substring(equalSignIndex + 1);
-    this.isLoggedIn = true;
-    this.userName = user;
+    this.isLoggedIn.set(true);
+    this.userName.set(user);
   }
 }
 
