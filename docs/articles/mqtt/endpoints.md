@@ -23,20 +23,7 @@
 
     ```csharp
     // Program.cs
-    builder.Services.AddMqttClient((provider, options) =>
-    {
-        var configManager = provider.GetRequiredService<IConfigManager>();
-        //Setup Mqtt client connection
-        var config = configManager.GetConfiguration<MqttConnectionConfig>();
-        // If configuration is generated, save it back to persist defaults
-        if (config.ConfigState == ConfigState.Generated)
-        {
-            config.ConfigState = ConfigState.Valid;
-            configManager.SaveConfiguration(config);
-        }
-        // Mqtt Client configuration
-        options.Connection = config;
-        }).AddMqttEndpoints(); // <-- this add supports for the endpoints
+    builder.Services.AddMqttClient().AddMqttEndpoints(); // <-- this add supports for the endpoints
     ```
 
 2. **Available Endpoint topics** :

@@ -21,8 +21,7 @@
   </Folder>
   <Folder Name="/Mqtt/">
     <Project Path="src/Moryx.AspNetCore.Mqtt/Moryx.AspNetCore.Mqtt.csproj" />
-    <Project Path="src/Moryx.AspNetCore.Mqtt.Endpoints/Moryx.AspNetCore.Mqtt.Endpoints.csproj" />
-    <Project Path="src/Moryx.AspNetCore.Mqtt.Services/Moryx.AspNetCore.Mqtt.Services.csproj" />
+    <Project Path="src/Moryx.AbstractionLayer.Resources.Mqtt.Endpoints/Moryx.AbstractionLayer.Resources.Mqtt.Endpoints.csproj" />
   </Folder>
   <Folder Name="/FactoryMonitor/">
     <Project Path="src/Moryx.Factory/Moryx.Factory.csproj" />

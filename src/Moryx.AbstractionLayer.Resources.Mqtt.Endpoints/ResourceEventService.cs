@@ -3,11 +3,12 @@
 
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.AspNetCore.Mqtt;
 using Moryx.AspNetCore.Mqtt.Builders;
 using Moryx.AspNetCore.Mqtt.Components;
 using Moryx.Runtime.Modules;
 
-namespace Moryx.AspNetCore.Mqtt.Services;
+namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 
 /// <summary>
 /// Sends messages to the broker when a public event or event exposed using the <see cref="ResourceAvailableAsAttribute"/>

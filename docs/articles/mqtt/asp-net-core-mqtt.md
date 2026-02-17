@@ -167,5 +167,6 @@ _Checking those repositories will give you an idea of what the `ManagedMqtt` is 
     RequestBodyObject()
     ```
 
-
-
+## More resources:
+1.  [Mqtt Services](./services.md)
+2.  [Managed Mqtt](./managed-mqtt.md)

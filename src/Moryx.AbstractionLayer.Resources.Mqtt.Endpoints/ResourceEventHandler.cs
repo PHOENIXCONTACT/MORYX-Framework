@@ -4,10 +4,11 @@
 using System.Text.Json;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.AspNetCore.Mqtt;
 using Moryx.AspNetCore.Mqtt.Components;
 using MQTTnet;
 
-namespace Moryx.AspNetCore.Mqtt.Services;
+namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 
 /// <summary>
 /// Handles a given resource event with argument type  <typeparamref name="T"/>

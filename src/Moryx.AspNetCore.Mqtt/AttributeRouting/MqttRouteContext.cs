@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-// Further modifications by Phoenix Contact GmbH & Co. KG. 2026
 using Microsoft.AspNetCore.Routing;
 
 namespace Moryx.AspNetCore.Mqtt.AttributeRouting;

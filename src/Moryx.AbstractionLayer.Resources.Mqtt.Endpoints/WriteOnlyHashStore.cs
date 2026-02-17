@@ -1,18 +1,16 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
 using Moryx.Threading;
 
-namespace Moryx.Collections;
+namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 
 /// <summary>
 /// Hash store with auto-clear functionality
 /// </summary>
 /// <typeparam name="T"></typeparam>
 /// <param name="parallelOperations"></param>
-public class WriteOnlyHashStore<T>(IParallelOperations parallelOperations) : IDisposable
+internal class WriteOnlyHashStore<T>(IParallelOperations parallelOperations) : IDisposable
 {
     readonly List<T> _cache = [];
     readonly Lock _lock = new();

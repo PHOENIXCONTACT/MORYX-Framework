@@ -7,11 +7,12 @@ using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.AspNetCore.Mqtt.Builders;
 using Moryx.AspNetCore.Mqtt.Components;
+using Moryx.AspNetCore.Mqtt.Endpoints;
 using Moryx.AspNetCore.Mqtt.Exceptions;
 using Moryx.Serialization;
 using MQTTnet;
 
-namespace Moryx.AspNetCore.Mqtt.Endpoints;
+namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 
 /// <summary>
 /// Endpoint to remote call a procedure/method on a resource

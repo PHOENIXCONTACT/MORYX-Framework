@@ -3,7 +3,8 @@
 
 using Moryx.AspNetCore.Mqtt.Builders;
 
-namespace Moryx.AspNetCore.Mqtt.Services;
+
+namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 
 /// <summary>
 /// Extensions to add Mqtt services to the builder

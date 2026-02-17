@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer.Resources.Attributes;
-using Moryx.Collections;
+using Moryx.AspNetCore.Mqtt;
 using Moryx.AspNetCore.Mqtt.Builders;
 using Moryx.AspNetCore.Mqtt.Components;
 using Moryx.Threading;
@@ -17,7 +17,7 @@ using Moryx.Tools;
 using MQTTnet;
 using MQTTnet.Packets;
 
-namespace Moryx.AspNetCore.Mqtt.Services;
+namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 
 /// <summary>
 /// Sends messages to the broker when the <see cref="Resource.Changed"/> is raised

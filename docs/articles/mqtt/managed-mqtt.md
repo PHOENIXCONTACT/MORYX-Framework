@@ -22,8 +22,6 @@
         QoS = MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce,
         RootTopic = "mqtt/moryx"
         };
-        //  add your custom converter/serializer if needed
-        options.JsonSerializerOptions.Converters.Add(new MyConverter())
     })
     ```
 
