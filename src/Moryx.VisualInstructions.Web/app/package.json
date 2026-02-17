@@ -39,14 +39,9 @@
     "@angular/cli": "^21.1.0",
     "@angular/compiler-cli": "^21.1.0",
     "@types/hammerjs": "^2.0.46",
-    "@types/jasmine": "^5.1.5",
     "@types/node": "^22.13.1",
-    "jasmine-core": "^5.5.0",
-    "karma": "~6.4.4",
-    "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage": "~2.1.0",
-    "karma-jasmine": "~4.0.0",
-    "karma-jasmine-html-reporter": "~1.7.0",
-    "typescript": "~5.9.3"
+    "jsdom": "^26.0.0",
+    "typescript": "~5.9.3",
+    "vitest": "^4.0.8"
   }
 }
