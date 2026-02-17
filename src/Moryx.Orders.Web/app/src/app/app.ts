@@ -5,7 +5,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { LanguageService } from '@moryx/ngx-web-framework';
+import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 

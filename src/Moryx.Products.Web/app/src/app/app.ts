@@ -26,7 +26,7 @@ import {
   SearchBarService,
   SearchRequest,
   SearchSuggestion,
-} from "@moryx/ngx-web-framework";
+} from "@moryx/ngx-web-framework/services";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { environment } from "src/environments/environment";
 import {

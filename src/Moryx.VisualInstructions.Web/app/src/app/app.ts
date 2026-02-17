@@ -6,7 +6,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { LanguageService } from '@moryx/ngx-web-framework';
+import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 import {

@@ -5,7 +5,7 @@
 
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { LanguageService } from '@moryx/ngx-web-framework';
+import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { filter, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';

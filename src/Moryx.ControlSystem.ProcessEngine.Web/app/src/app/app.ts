@@ -1,7 +1,7 @@
 import { Component, signal } from "@angular/core";
 import { TranslationConstants } from "./extensions/translation-constants.extensions";
 import { TranslateService } from "@ngx-translate/core";
-import { LanguageService } from "@moryx/ngx-web-framework";
+import { LanguageService } from "@moryx/ngx-web-framework/services";
 import {
   NavigationEnd,
   Router,

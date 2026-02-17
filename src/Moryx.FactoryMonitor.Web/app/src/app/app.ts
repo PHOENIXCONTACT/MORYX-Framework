@@ -7,7 +7,7 @@ import { Component, ElementRef, OnInit } from '@angular/core';
 import { EditMenuService } from './services/edit-menu.service';
 import { EditMenuState } from './services/EditMenutState';
 import { ChangeBackgroundService } from './services/change-background.service';
-import { LanguageService } from '@moryx/ngx-web-framework';
+import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 import { FactorySelectionService } from './services/factory-selection.service';
