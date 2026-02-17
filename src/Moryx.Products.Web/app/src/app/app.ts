@@ -119,7 +119,7 @@ export class App implements OnInit, OnDestroy {
       TranslationConstants.LANGUAGES.IT,
       TranslationConstants.LANGUAGES.ZH,
     ]);
-    this.translate.setDefaultLang("en");
+    this.translate.setFallbackLang("en");
     this.translate.use(this.languageService.getDefaultLanguage());
   }
 

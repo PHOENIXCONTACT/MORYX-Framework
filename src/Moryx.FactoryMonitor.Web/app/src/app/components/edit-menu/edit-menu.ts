@@ -71,7 +71,7 @@ export class EditMenu implements OnInit {
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
     ]);
-    this.translate.setDefaultLang('en');
+    this.translate.setFallbackLang('en');
   }
 
   ngOnInit(): void {

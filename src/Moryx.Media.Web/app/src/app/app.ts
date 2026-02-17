@@ -31,7 +31,7 @@ export class App implements OnInit {
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
     ]);
-    this.translate.setDefaultLang('en');
+    this.translate.setFallbackLang('en');
     this.translate.use(this.languageService.getDefaultLanguage());
   }
 
