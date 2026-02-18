@@ -3,9 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, input, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { IconSize } from '../models/types';
-import prettyMilliseconds from 'pretty-ms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -16,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
   imports : [
     CommonModule,
     MatIconModule,
-    
+
   ]
 })
 export class WorkHoursIcon {

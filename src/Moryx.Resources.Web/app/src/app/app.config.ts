@@ -28,7 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { provideAppInitializer, inject, importProvidersFrom } from '@angular/core';
 import { ApiInterceptor, API_INTERCEPTOR_PROVIDER } from '@moryx/ngx-web-framework/interceptors';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { provideHttpClient, withInterceptorsFromDi, HttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { environment } from "src/environments/environment";
 import { BrowserModule } from "@angular/platform-browser";
 import { ApiModule } from "./api/api.module";

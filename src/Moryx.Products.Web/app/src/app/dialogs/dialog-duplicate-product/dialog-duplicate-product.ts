@@ -5,7 +5,7 @@
 
 import { Component, inject, signal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { DuplicateProductInfos } from 'src/app/models/DuplicateProductInfos';
 import { ProductModel } from '../../api/models';

@@ -5,7 +5,6 @@
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import * as React from "react";
-import * as ReactDOM from "react-dom";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { HashRouter } from "react-router";

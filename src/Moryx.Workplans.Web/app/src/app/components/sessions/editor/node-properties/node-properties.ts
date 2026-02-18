@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { Entry, NavigableEntryEditor, PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { WorkplanNodeClassification, WorkplanNodeModel } from '../../../../api/models';
 import { WorkplanEditingService } from '../../../../api/services';
 import { TranslationConstants } from '../../../../extensions/translation-constants.extensions';

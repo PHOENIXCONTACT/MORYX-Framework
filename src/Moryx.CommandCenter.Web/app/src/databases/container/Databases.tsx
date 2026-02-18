@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { mdiBriefcase, mdiComment, mdiDatabase } from "@mdi/js";
+import { mdiBriefcase, mdiDatabase } from "@mdi/js";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";

@@ -4,7 +4,6 @@
 */
 
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { Severity } from '../../api/models';
 import { NotificationModel } from '../../api/models/notification-model';
 import { NotificationService } from 'src/app/services/notification.service';
 import { Subscription } from 'rxjs';
@@ -33,7 +32,7 @@ export class Notifications implements OnInit, OnDestroy {
   private notificationService = inject(NotificationService);
   private notificationSubscription: Subscription|undefined;
   private selectionSubscription: Subscription|undefined;
-    
+
   ngOnInit(): void {
     this.notificationSubscription = this.notificationService.notifications$.subscribe(notifications => {
       this.notificationList.update(_ => notifications);

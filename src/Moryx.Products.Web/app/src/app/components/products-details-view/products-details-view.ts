@@ -5,7 +5,7 @@
 
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { SessionService } from 'src/app/services/session.service';
 import { ProductModel } from '../../api/models';

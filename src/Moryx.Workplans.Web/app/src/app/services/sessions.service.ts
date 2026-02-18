@@ -4,7 +4,7 @@
 */
 
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, catchError, from, map, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Subject, catchError, from, tap, throwError } from 'rxjs';
 import { Observable } from 'rxjs';
 import { WorkplanSessionModel } from '../api/models';
 import { WorkplanEditingService } from '../api/services';

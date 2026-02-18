@@ -5,7 +5,7 @@
 
 import { Component, computed, inject, OnInit, signal } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { Observable } from "rxjs";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { OperationViewModel } from "../../models/operation-view-model";

@@ -11,7 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { ShiftTypeModel } from 'src/app/models/shift-type-model';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
@@ -39,7 +39,7 @@ export class ShiftTypeDialog {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: ShiftTypeModel,
   public dialogRef: MatDialogRef<ShiftTypeDialog>){
-    
+
   }
 
   submit(){
@@ -58,7 +58,7 @@ export class ShiftTypeDialog {
     this.data.name = this.form.value.name ?? '';
     this.data.duration = this.form.value.duration ?? 0;
     this.dialogRef.close(this.data);
-  } 
+  }
 
 }
 

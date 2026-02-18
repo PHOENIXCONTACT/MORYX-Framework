@@ -3,21 +3,17 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, EventEmitter, Inject, OnInit, signal } from '@angular/core';
+import { Component, Inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import AssignmentData from '../../models/assignment-data';
-import { OPERATORS, RESOURCES } from 'src/app/models/dummy-data';
 import { OperatorModel, OperatorStatus } from 'src/app/models/operator-model';
 import {
-  AbstractControl,
-  FormArray,
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { DayOfTheWeek } from 'src/app/models/assignment-card-model';
 import {
   formatDateDigits,
   getDayName,
@@ -26,19 +22,18 @@ import {
   localizedDayName,
   shortDayName,
 } from 'src/app/utils';
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { CalendarDate } from 'src/app/models/calendar-state';
 import  moment from 'moment';
 import { AppStoreService } from 'src/app/services/app-store.service';
 import { AttendableResourceModel } from 'src/app/api/models/attendable-resource-model';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { firstValueFrom } from 'rxjs';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { ShiftInstanceModel } from 'src/app/models/shift-instance-model';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';

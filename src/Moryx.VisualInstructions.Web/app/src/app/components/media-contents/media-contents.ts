@@ -3,11 +3,11 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, Input, OnInit, signal, untracked } from '@angular/core';
+import { Component, effect, inject, input, OnInit, signal, untracked } from '@angular/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { DisplayedMediaContent } from './displayed-media-content';
 import { CommonModule } from '@angular/common';
-import { NgxDocViewerComponent, NgxDocViewerModule } from 'ngx-doc-viewer';
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -58,7 +58,7 @@ export class MediaContents implements OnInit {
     const previousIndex = (this.medias().length - 1 + currentIndex) % this.medias().length;
     this.selectedContent.update(_ => this.medias()[previousIndex]);
   }
-  
+
   getSafeUrl(url: string): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }

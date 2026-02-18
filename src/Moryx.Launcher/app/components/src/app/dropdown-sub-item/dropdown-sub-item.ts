@@ -4,8 +4,6 @@
 */
 
 import { Component, input, output } from '@angular/core';
-import { DropdownItem } from "../dropdown-item/dropdown-item";
-import { DropdownContainer } from "../dropdown-container/dropdown-container";
 import { DropdownMenu } from "../dropdown-menu/dropdown-menu";
 
 @Component({

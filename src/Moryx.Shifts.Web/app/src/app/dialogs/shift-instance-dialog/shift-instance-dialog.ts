@@ -13,7 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import  moment from 'moment';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { ShiftInstanceModel } from 'src/app/models/shift-instance-model';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({

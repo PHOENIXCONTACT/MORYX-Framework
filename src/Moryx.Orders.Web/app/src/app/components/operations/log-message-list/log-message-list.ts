@@ -4,7 +4,7 @@
 */
 
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input, Input, OnInit, signal, untracked } from '@angular/core';
+import { Component, effect, inject, input, OnInit, signal, untracked } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { delay, tap } from 'rxjs';

@@ -28,7 +28,7 @@ import {
   assignmentToAssignmentCardModel,
   extendedAssignableOPeratorToOperatorModel,
   shiftInstanceToShiftCardModel,
-  shiftTypeToShiftTypeModel,
+
 } from '../models/model-converter';
 import { AttendableResourceModel } from '../api/models/attendable-resource-model';
 import { CopyShiftAndAssignmentData } from '../dialogs/copy-shift-and-assignment/copy-shift-and-assignment';

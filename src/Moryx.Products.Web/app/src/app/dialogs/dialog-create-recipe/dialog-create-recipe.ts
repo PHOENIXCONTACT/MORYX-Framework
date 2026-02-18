@@ -5,7 +5,7 @@
 
 import { Component, inject, signal } from '@angular/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { RecipeDefinitionModel, WorkplanModel } from '../../api/models';
 import { CacheProductsService } from '../../services/cache-products.service';

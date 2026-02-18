@@ -7,7 +7,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { ProductPartModel } from '../../../api/models';
 import { OrderManagementService } from 'src/app/api/services';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';

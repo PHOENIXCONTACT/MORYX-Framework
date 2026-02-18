@@ -8,7 +8,7 @@ import { Component, computed, effect, inject, OnInit, signal, untracked } from "
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { environment } from "src/environments/environment";
 import { OrderManagementService, ProductManagementService } from "../../api/services";

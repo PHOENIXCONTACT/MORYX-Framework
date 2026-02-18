@@ -10,7 +10,7 @@ import {
   MAT_DIALOG_DATA,
   MatDialogModule,
 } from '@angular/material/dialog';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { MyErrorStateMatcher } from '../MyErrorStateMatcher';
 import { CdkScrollable } from '@angular/cdk/scrolling';

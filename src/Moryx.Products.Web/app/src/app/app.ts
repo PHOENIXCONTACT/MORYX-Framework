@@ -33,8 +33,7 @@ import { environment } from "src/environments/environment";
 import {
   ProductDefinitionModel,
   ProductModel,
-  RecipeClassificationModel, RecipeModel,
-  RevisionFilter,
+  RecipeClassificationModel, RevisionFilter,
   Selector,
 } from "./api/models";
 import { DialogCreateRevisionComponent } from "./dialogs/dialog-create-revision/dialog-create-revision";

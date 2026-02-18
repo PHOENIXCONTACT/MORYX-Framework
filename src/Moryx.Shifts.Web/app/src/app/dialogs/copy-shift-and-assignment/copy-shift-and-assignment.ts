@@ -5,7 +5,6 @@
 
 import { Component, Inject, signal } from '@angular/core';
 import { ShiftInstanceModel } from 'src/app/models/shift-instance-model';
-import { ShiftInstanceDialog } from '../shift-instance-dialog/shift-instance-dialog';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import AssignmentData from 'src/app/models/assignment-data';
 import { CalendarState } from 'src/app/models/calendar-state';

@@ -6,7 +6,7 @@
 
 import { AfterContentInit, Component, ElementRef, inject, input, OnDestroy } from '@angular/core';
 import { Constants } from '../constants';
-import { DropdownItemClickEventArg, DropdownItem } from '../dropdown-item/dropdown-item';
+import { DropdownItemClickEventArg } from '../dropdown-item/dropdown-item';
 
 @Component({
   selector: 'app-dropdown-container',

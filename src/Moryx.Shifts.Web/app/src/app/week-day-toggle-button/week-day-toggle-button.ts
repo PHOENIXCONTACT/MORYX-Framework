@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, EventEmitter, input, Input, output, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { CalendarDate, CalendarState } from '../models/calendar-state';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { formatDateDigits, getDayName, getShortDayName, isDayInInterval, localizedDayName, shortDayName } from '../utils';
@@ -12,7 +12,7 @@ import { MatButtonToggleChange, MatButtonToggleModule } from '@angular/material/
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-week-day-toggle-button',
@@ -35,7 +35,7 @@ export class WeekDayToggleButton {
   shiftNumberOfDay= input.required<number>();
   days = input.required<CalendarDate[]>();
   onButtonToggled = output<CalendarDate>();
-  
+
   TranslationConstants = TranslationConstants;
   formatDateDigits = formatDateDigits;
   getDayName = getDayName;
@@ -43,7 +43,7 @@ export class WeekDayToggleButton {
   isDayInInterval = isDayInInterval;
   localizedDayName = localizedDayName;
   shortDayName = shortDayName;
-  
+
   getCalendarDaysPerWeek() {
     let weeksAndDays: Array<CalendarDate[]> = [];
     const numberOfWeeks = Math.ceil(this.shiftNumberOfDay() / 7);

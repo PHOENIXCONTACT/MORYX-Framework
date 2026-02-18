@@ -6,7 +6,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { WorkstationViewModel } from '../models/workstation-view-model';
 import { WorkstationTogglingState } from './WorkstationTogglingState';
-import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { AddOperatorDialog } from '../dialogs/add-operator/add-operator';

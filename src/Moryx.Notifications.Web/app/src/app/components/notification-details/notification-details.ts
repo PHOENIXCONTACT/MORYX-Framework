@@ -4,7 +4,7 @@
 */
 
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { NotificationService } from 'src/app/services/notification.service';
 import { environment } from 'src/environments/environment';
