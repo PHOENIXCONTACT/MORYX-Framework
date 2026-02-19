@@ -15,7 +15,7 @@ internal sealed class ManagedMqttClientStorageManager(IManagedMqttClientStorage 
     /// Add message to storage
     /// </summary>
     /// <param name="message">Message to add to storage</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     public async Task AddAsync(MqttApplicationMessage message, CancellationToken cancellationToken)
     {
         var messages = await messageStorage.LoadQueuedMessagesAsync(cancellationToken);
@@ -27,7 +27,7 @@ internal sealed class ManagedMqttClientStorageManager(IManagedMqttClientStorage 
     /// Remove message from storage
     /// </summary>
     /// <param name="message">Message to remove from storage</param>
-    /// <returns></returns>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     public async Task<bool> RemoveAsync(MqttApplicationMessage message, CancellationToken cancellationToken)
     {
         var messages = await messageStorage.LoadQueuedMessagesAsync(cancellationToken);
@@ -39,19 +39,20 @@ internal sealed class ManagedMqttClientStorageManager(IManagedMqttClientStorage 
     /// <summary>
     /// Load message that are queued to be sent to the broker.
     /// </summary>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     /// <returns> Messages queued to be sent to the broker</returns>
-    public async Task<IList<MqttApplicationMessage>> LoadQueuedMessagesAsync(CancellationToken cancellationToken)
+    public Task<IList<MqttApplicationMessage>> LoadQueuedMessagesAsync(CancellationToken cancellationToken)
     {
-        return await messageStorage.LoadQueuedMessagesAsync(cancellationToken);
+        return messageStorage.LoadQueuedMessagesAsync(cancellationToken);
     }
 
     /// <summary>
     /// Save message to be sent to the broker when client re-connect
     /// </summary>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     /// <param name="messages">Messages to save</param>
-    /// <returns></returns>
-    public async Task SaveQueuedMessagesAsync(IList<MqttApplicationMessage> messages, CancellationToken cancellationToken)
+    public Task SaveQueuedMessagesAsync(IList<MqttApplicationMessage> messages, CancellationToken cancellationToken)
     {
-        await messageStorage.SaveQueuedMessagesAsync(messages, cancellationToken);
+        return messageStorage.SaveQueuedMessagesAsync(messages, cancellationToken);
     }
 }

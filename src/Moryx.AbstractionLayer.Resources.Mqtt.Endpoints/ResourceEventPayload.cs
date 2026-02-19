@@ -9,6 +9,8 @@ namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 public class ResourceEventPayload
 {
     public required ResourceModel Resource { get; set; }
+
     public required string Event { get; set; }
+
     public object? EventData { get; set; }
 }

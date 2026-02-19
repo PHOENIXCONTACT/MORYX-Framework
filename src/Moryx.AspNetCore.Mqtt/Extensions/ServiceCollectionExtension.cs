@@ -1,60 +1,59 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 using Moryx.AspNetCore.Mqtt.Builders;
 using Moryx.AspNetCore.Mqtt.Components;
 using Moryx.AspNetCore.Mqtt.Services;
 using Moryx.Configuration;
 using MQTTnet;
-using MQTTnet.Diagnostics;
 using MQTTnet.Diagnostics.Logger;
 
-namespace Moryx.AspNetCore.Mqtt.Extensions;
+namespace Moryx.AspNetCore.Mqtt;
 
 /// <summary>
 /// <see cref="IServiceCollection"/> extension methods to add and configure <see cref="IManagedMqttClient"/>
 /// </summary>
 public static class ServiceCollectionExtension
 {
-    /// <summary>
-    /// Adds the <see cref="IManagedMqttClient"/> to the current application
-    /// </summary>
     /// <param name="services">The service collection</param>
-    /// <param name="builder">The option builder for the <see cref="IManagedMqttClient"/></param>
-    /// <returns>Return the <see cref="IMqttBuilder"/> for chained configuration</returns>
-    public static IMqttBuilder AddMqttClient(this IServiceCollection services,
-        Action<IServiceProvider, MqttClientUserOptions> builder)
+    extension(IServiceCollection services)
     {
-        services.AddTransient<IMqttNetLogger, MqttClientLogger>();
-        services.AddTransient(provider =>
+        /// <summary>
+        /// Adds the <see cref="IManagedMqttClient"/> to the current application
+        /// </summary>
+        /// <param name="builder">The option builder for the <see cref="IManagedMqttClient"/></param>
+        /// <returns>Return the <see cref="IMqttBuilder"/> for chained configuration</returns>
+        public IMqttBuilder AddMqttClient(Action<IServiceProvider, MqttClientUserOptions> builder)
         {
-            var options = new MqttClientUserOptions();
-            var configManager = provider.GetRequiredService<IConfigManager>();
-            var config = configManager.GetConfiguration<MqttConnectionConfig>();
-            // If configuration is generated, save it back to persist defaults
-            if (config.ConfigState == ConfigState.Generated)
+            services.AddTransient<IMqttNetLogger, MqttClientLogger>();
+            services.AddTransient(provider =>
             {
-                config.ConfigState = ConfigState.Valid;
-                configManager.SaveConfiguration(config);
-            }
-            options.Connection = config;
-            builder.Invoke(provider, options);
-            return options;
-        });
+                var options = new MqttClientUserOptions();
+                var configManager = provider.GetRequiredService<IConfigManager>();
+                var config = configManager.GetConfiguration<MqttConnectionConfig>();
+                // If configuration is generated, save it back to persist defaults
+                if (config.ConfigState == ConfigState.Generated)
+                {
+                    config.ConfigState = ConfigState.Valid;
+                    configManager.SaveConfiguration(config);
+                }
+                options.Connection = config;
+                builder.Invoke(provider, options);
+                return options;
+            });
 
-        return CreateBuilder(services);
-    }
+            return CreateBuilder(services);
+        }
 
-    /// <summary>
-    /// Adds the <see cref="IManagedMqttClient"/> to the current application
-    /// </summary>
-    /// <param name="services">The service collection</param>
-    /// <returns>Return the <see cref="IMqttBuilder"/> for chained configuration</returns>
-    public static IMqttBuilder AddMqttClient(this IServiceCollection services)
-    {
-        return AddMqttClient(services, (_, opt) => { });
+        /// <summary>
+        /// Adds the <see cref="IManagedMqttClient"/> to the current application
+        /// </summary>
+        /// <returns>Return the <see cref="IMqttBuilder"/> for chained configuration</returns>
+        public IMqttBuilder AddMqttClient()
+        {
+            return AddMqttClient(services, (_, opt) => { });
+        }
     }
 
     private static MqttBuilder CreateBuilder(IServiceCollection services)

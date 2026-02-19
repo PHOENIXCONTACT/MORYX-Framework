@@ -1,16 +1,12 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources.Attributes;
-using Moryx.Tools;
 
 namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 
@@ -18,14 +14,10 @@ namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 /// Converts any <see cref="IResource"/> that has the <see cref="ResourceSynchronizationAttribute"/> to JSON
 /// </summary>
 /// <param name="resourceManagement">Resource Management facade</param>
-internal class ResourceToJsonConverter(IResourceManagement resourceManagement)
-    : JsonConverter<IResource>
+internal class ResourceToJsonConverter(IResourceManagement resourceManagement) : JsonConverter<IResource>
 {
     //</inherit>
-    public override IResource? Read(
-        ref Utf8JsonReader reader,
-        Type typeToConvert,
-        JsonSerializerOptions options)
+    public override IResource? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         string? identifier = null;
         var jsonObj = JsonNode.Parse(ref reader)!.AsObject();
@@ -35,10 +27,11 @@ internal class ResourceToJsonConverter(IResourceManagement resourceManagement)
         {
             identifier = identityObj[nameof(IIdentity.Identifier)].ToString();
         }
+
         var matchingResource = resourceManagement
             .GetResource<Resource>(x =>
-                    x is IIdentifiableObject identifiable && identifiable.Identity.Identifier.Equals(identifier)
-                    || x.Name.Equals(name));
+                x is IIdentifiableObject identifiable && identifiable.Identity.Identifier.Equals(identifier)
+                || x.Name.Equals(name));
 
         return matchingResource is null
             ? HandleUnknownResource(jsonObj, options)
@@ -53,15 +46,16 @@ internal class ResourceToJsonConverter(IResourceManagement resourceManagement)
             throw new InvalidOperationException("Cannot handle unknown resource without SynchronizationTypeId");
         }
 
-        var matchingResourceType = resourceManagement.GetResourcesUnsafe<Resource>(x => x.GetType().GetCustomAttribute<ResourceSynchronizationAttribute>()?.SynchronizationTypeId == synchronizationTypeId)
+        var matchingResourceType = resourceManagement.GetResourcesUnsafe<Resource>(x =>
+                x.GetType().GetCustomAttribute<ResourceSynchronizationAttribute>()?.SynchronizationTypeId == synchronizationTypeId)
             .FirstOrDefault()?
             .GetType();
+
         return matchingResourceType is null
             ? throw new InvalidOperationException($"No resource type found for SynchronizationTypeId {synchronizationTypeId}")
             : jsonObj.Deserialize(matchingResourceType, options) as Resource;
     }
 
-    //</inherit>
     public override void Write(Utf8JsonWriter writer, IResource value, JsonSerializerOptions options)
     {
         var synchronizationAttribute = value.GetType().GetCustomAttribute<ResourceSynchronizationAttribute>();
@@ -83,6 +77,7 @@ internal class ResourceToJsonConverter(IResourceManagement resourceManagement)
             {
                 property.WriteTo(writer);
             }
+
             writer.WriteEndObject();
         }
         else
@@ -90,17 +85,21 @@ internal class ResourceToJsonConverter(IResourceManagement resourceManagement)
             var selectedProperties = actualType
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Where(x => x.GetCustomAttribute<SynchronizableMemberAttribute>() is not null
-                || x.Name == nameof(Resource.Name)
-                || x.Name == nameof(Resource.Description)) ?? [];
+                            || x.Name == nameof(Resource.Name)
+                            || x.Name == nameof(Resource.Description)) ?? [];
             var jsonObject = new JsonObject
             {
-                { nameof(ResourceSynchronizationAttribute.SynchronizationTypeId), ConvertToJsonNode(synchronizationAttribute.SynchronizationTypeId, typeof(string), options) }
+                {
+                    nameof(ResourceSynchronizationAttribute.SynchronizationTypeId),
+                    ConvertToJsonNode(synchronizationAttribute.SynchronizationTypeId, typeof(string), options)
+                }
             };
             foreach (var property in selectedProperties)
             {
                 var valueObj = property.GetValue(value, null);
                 jsonObject.Add(property.Name, ConvertToJsonNode(valueObj, property.PropertyType, options));
             }
+
             jsonObject.WriteTo(writer);
         }
     }
@@ -109,18 +108,19 @@ internal class ResourceToJsonConverter(IResourceManagement resourceManagement)
     {
         //General cleanup
         var properties = json.EnumerateObject().Where(x =>
-              x.Name != nameof(Resource.Descriptor)
-              && x.Name != nameof(Resource.Id)
-              && x.Name != nameof(Resource.Capabilities)
-              && x.Name != nameof(Resource.Logger)
-              && x.Name != nameof(Resource.Graph)
-              && x.Name != "$id");
+            x.Name != nameof(Resource.Descriptor)
+            && x.Name != nameof(Resource.Id)
+            && x.Name != nameof(Resource.Capabilities)
+            && x.Name != nameof(Resource.Logger)
+            && x.Name != nameof(Resource.Graph)
+            && x.Name != "$id");
 
         //TODO: in the future we can shallow serialization only consisting of the identity(List<Identity>) ?
         var referenceProperties = actualType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy)
             .Where(x => x.GetCustomAttribute<ResourceReferenceAttribute>() is not null
-            || x.PropertyType == typeof(IReferences<>));
-        return properties.Where(x => !referenceProperties.Any(r => r.Name == x.Name));
+                        || x.PropertyType == typeof(IReferences<>));
+
+        return properties.Where(x => referenceProperties.All(r => r.Name != x.Name));
     }
 
     private static JsonNode? ConvertToJsonNode(object? value, Type type, JsonSerializerOptions options)
@@ -129,21 +129,12 @@ internal class ResourceToJsonConverter(IResourceManagement resourceManagement)
         {
             return null;
         }
-        else
-        {
-            if (type.IsPrimitive ||
-            type == typeof(string) ||
-            type == typeof(decimal) ||
-            type == typeof(DateTime) ||
-            type == typeof(Guid))
-            {
-                return JsonValue.Create(value);
-            }
-            else
-            {
-                return JsonSerializer.SerializeToNode(value, options);
-            }
-        }
-    }
 
+        if (type.IsPrimitive || type == typeof(string) || type == typeof(decimal) || type == typeof(DateTime) || type == typeof(Guid))
+        {
+            return JsonValue.Create(value);
+        }
+
+        return JsonSerializer.SerializeToNode(value, options);
+    }
 }

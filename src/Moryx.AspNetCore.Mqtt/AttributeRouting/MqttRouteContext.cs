@@ -14,10 +14,12 @@ public sealed class MqttRouteContext(string requestUrl)
     /// Url of the request
     /// </summary>
     public string RequestUrl { get; } = requestUrl;
+
     /// <summary>
     /// Route that matches the current request.
     /// </summary>
     public MqttRoute? Route { get; set; }
+
     /// <summary>
     /// Parameters of the current route
     /// </summary>

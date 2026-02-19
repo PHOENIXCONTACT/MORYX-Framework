@@ -3,7 +3,6 @@
 
 using Microsoft.Extensions.Hosting;
 using Moryx.AspNetCore.Mqtt.Components;
-using Moryx.AspNetCore.Mqtt.Extensions;
 using MQTTnet;
 
 namespace Moryx.AspNetCore.Mqtt.Services;
@@ -13,24 +12,20 @@ namespace Moryx.AspNetCore.Mqtt.Services;
 /// </summary>
 internal sealed class MqttClientConnectionService : IHostedService
 {
-    readonly MqttClientOptions _options;
-    readonly MqttClientUserOptions _userOptions;
-    readonly IManagedMqttClient _client;
+    private readonly MqttClientOptions _options;
+    private readonly IManagedMqttClient _client;
 
     public MqttClientConnectionService(MqttClientUserOptions options, IManagedMqttClient client)
     {
-        _userOptions = options;
         var clientOptionBuilder = new MqttClientOptionsBuilder();
-        clientOptionBuilder.WithConnectionConfig(_userOptions.Connection);
+        clientOptionBuilder.WithConnectionConfig(options.Connection);
         _options = clientOptionBuilder.Build();
         _client = client;
     }
 
-    #region HostedService
     public Task StartAsync(CancellationToken cancellationToken)
         => _client.StartAsync(_options, cancellationToken);
 
     public Task StopAsync(CancellationToken cancellationToken)
         => _client.StopAsync(cancellationToken);
-    #endregion
 }

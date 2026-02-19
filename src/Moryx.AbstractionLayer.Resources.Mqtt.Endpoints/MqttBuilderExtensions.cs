@@ -11,26 +11,27 @@ namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 /// </summary>
 public static class MqttBuilderExtensions
 {
-
-    /// <summary>
-    /// Adds the resource synchronization service to the mqtt builder
-    /// </summary>
     /// <param name="builder"></param>
-    /// <returns></returns>
-    public static IMqttBuilder AddResourceSynchronization(this IMqttBuilder builder)
+    extension(IMqttBuilder builder)
     {
-        builder.AddMqttService<ResourceSynchronizationService>();
-        return builder;
-    }
+        /// <summary>
+        /// Adds the resource synchronization service to the mqtt builder
+        /// </summary>
+        /// <returns></returns>
+        public IMqttBuilder AddResourceSynchronization()
+        {
+            builder.AddMqttService<ResourceSynchronizationService>();
+            return builder;
+        }
 
-    /// <summary>
-    /// Adds the resource event service to the mqtt builder
-    /// </summary>
-    /// <param name="builder"></param>
-    /// <returns></returns>
-    public static IMqttBuilder AddResourceEvents(this IMqttBuilder builder)
-    {
-        builder.AddMqttService<ResourceEventService>();
-        return builder;
+        /// <summary>
+        /// Adds the resource event service to the mqtt builder
+        /// </summary>
+        /// <returns></returns>
+        public IMqttBuilder AddResourceEvents()
+        {
+            builder.AddMqttService<ResourceEventService>();
+            return builder;
+        }
     }
 }

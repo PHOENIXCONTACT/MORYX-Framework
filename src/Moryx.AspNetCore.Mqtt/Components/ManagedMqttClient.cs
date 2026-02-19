@@ -10,14 +10,13 @@ using MQTTnet.Protocol;
 namespace Moryx.AspNetCore.Mqtt.Components;
 
 /// <summary>
-/// Provides a managed MQTT client that handles automatic reconnections, 
+/// Provides a managed MQTT client that handles automatic reconnections,
 /// message queuing, and connection management for MQTT communication.
 /// </summary>
 internal sealed class ManagedMqttClient : IManagedMqttClient
 {
-    readonly Queue<MqttApplicationMessage> _messageQueue = new();
-    readonly AsyncLock _messageQueueLock = new();
-    public bool IsConnected => _internalClient.IsConnected;
+    private readonly Queue<MqttApplicationMessage> _messageQueue = new();
+    private readonly AsyncLock _messageQueueLock = new();
     private readonly MqttNetSourceLogger _logger;
     private readonly IMqttClient _internalClient;
     private readonly MqttClientUserOptions _options;
@@ -26,8 +25,9 @@ internal sealed class ManagedMqttClient : IManagedMqttClient
     private Task? _publishingTask;
     private readonly HashSet<MqttTopicFilter> _subscriptions = new();
     private readonly SemaphoreSlim _subscriptionLock = new(1, 1);
-    public event Func<MqttApplicationMessage, Task>? MessageSkipped;
     private MqttClientConnectedEventArgs? _lastConnectEventArgs;
+
+    public bool IsConnected => _internalClient.IsConnected;
 
     public event Func<MqttApplicationMessageReceivedEventArgs, Task> ApplicationMessageReceivedAsync
     {
@@ -446,4 +446,6 @@ internal sealed class ManagedMqttClient : IManagedMqttClient
             _subscriptionLock.Release();
         }
     }
+
+    public event Func<MqttApplicationMessage, Task>? MessageSkipped;
 }

@@ -14,31 +14,14 @@ namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 /// Sends messages to the broker when a public event or event exposed using the <see cref="ResourceAvailableAsAttribute"/>
 /// is raised
 /// </summary>
-/// <param name="resourceManagement">Resource management facade</param>
 public class ResourceEventService : IMqttService
 {
-    class ResourceEventSubscription
-    {
-        public object Resource { get; }
-        public string EventName { get; }
-        public Delegate Handler { get; }
-
-        public ResourceEventSubscription(object resource, string eventName, Delegate handler)
-        {
-            Resource = resource;
-            EventName = eventName;
-            Handler = handler;
-        }
-    }
-
     private readonly IManagedMqttClient _client;
     private readonly IResourceManagement _resourceManagement;
     private readonly MqttClientUserOptions _options;
     private readonly Dictionary<long, List<ResourceEventSubscription>> _eventHandlers = new();
-    public ResourceEventService(
-        IManagedMqttClient client,
-        IResourceManagement resourceManagement,
-        MqttClientUserOptions options)
+
+    public ResourceEventService(IManagedMqttClient client, IResourceManagement resourceManagement, MqttClientUserOptions options)
     {
         ArgumentNullException.ThrowIfNull(resourceManagement);
         ArgumentNullException.ThrowIfNull(client);
@@ -49,6 +32,7 @@ public class ResourceEventService : IMqttService
     }
 
     #region Hosted Service
+
     public Task StartAsync(CancellationToken cancellationToken)
     {
         if (_resourceManagement is ILifeCycleBoundFacade lifeCycleBoundFacade)
@@ -66,8 +50,10 @@ public class ResourceEventService : IMqttService
         {
             lifeCycleBoundFacade.StateChanged -= FacadeStateChanged;
         }
+
         return Task.CompletedTask;
     }
+
     #endregion
 
     private void FacadeStateChanged(object? sender, bool activated)
@@ -89,6 +75,7 @@ public class ResourceEventService : IMqttService
         {
             RemoveEventHandlers(resource);
         }
+
         _resourceManagement.ResourceAdded -= ResourceManagement_ResourceAdded;
         _resourceManagement.ResourceRemoved -= ResourceManagement_ResourceRemoved;
     }
@@ -100,6 +87,7 @@ public class ResourceEventService : IMqttService
         {
             CreateEventHandlers(resource);
         }
+
         _resourceManagement.ResourceAdded += ResourceManagement_ResourceAdded;
         _resourceManagement.ResourceRemoved += ResourceManagement_ResourceRemoved;
     }
@@ -118,8 +106,9 @@ public class ResourceEventService : IMqttService
     {
         var eventHandlerAddMethods = resource.GetType()
             .GetInterfaces()
-            .SelectMany(x => x.GetMethods().Where(w => w.Name.StartsWith("add_")));
-        if (!eventHandlerAddMethods.Any())
+            .SelectMany(x => x.GetMethods().Where(w => w.Name.StartsWith("add_"))).ToArray();
+
+        if (eventHandlerAddMethods.Length == 0)
         {
             return;
         }
@@ -138,6 +127,7 @@ public class ResourceEventService : IMqttService
             {
                 continue;
             }
+
             var helperInstance = eventHelper.MakeGenericType(typeOfTheGeneric);
 
             var eventHandler = helperInstance
@@ -148,16 +138,18 @@ public class ResourceEventService : IMqttService
             }
 
             var eventName = eventAddHandlerMethod.Name.Replace("add_", "");
-            var identifier = resource is IIdentifiableObject obj ? obj.Identity.Identifier : resource.Id.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var identifier = resource is IIdentifiableObject obj
+                ? obj.Identity.Identifier
+                : resource.Id.ToString(System.Globalization.CultureInfo.InvariantCulture);
             var responseTopic = string.IsNullOrEmpty(_options.Connection.RootTopic)
-                                ? $"resources/{identifier}/event/{eventName}"
-                                : $"{_options.Connection.RootTopic}/resources/{identifier}/event/{eventName}";
+                ? $"resources/{identifier}/event/{eventName}"
+                : $"{_options.Connection.RootTopic}/resources/{identifier}/event/{eventName}";
             var target = Activator.CreateInstance(helperInstance,
-                    _client,
-                    _options.JsonSerializerOptions,
-                    responseTopic,
-                    eventName
-                );
+                _client,
+                _options.JsonSerializerOptions,
+                responseTopic,
+                eventName
+            );
 
             var newDelegate = Delegate.CreateDelegate(
                 type: eventAddHandlerMethod.GetParameters()[0].ParameterType,
@@ -171,6 +163,7 @@ public class ResourceEventService : IMqttService
                 existingHandlers = [];
                 _eventHandlers[resource.Id] = existingHandlers;
             }
+
             existingHandlers.Add(new ResourceEventSubscription(resource, eventName, newDelegate));
         }
     }
@@ -201,4 +194,17 @@ public class ResourceEventService : IMqttService
         _eventHandlers.Remove(resource.Id);
     }
 
+    private class ResourceEventSubscription
+    {
+        public object Resource { get; }
+        public string EventName { get; }
+        public Delegate Handler { get; }
+
+        public ResourceEventSubscription(object resource, string eventName, Delegate handler)
+        {
+            Resource = resource;
+            EventName = eventName;
+            Handler = handler;
+        }
+    }
 }

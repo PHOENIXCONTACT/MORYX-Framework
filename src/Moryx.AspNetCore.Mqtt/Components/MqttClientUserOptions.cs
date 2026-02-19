@@ -12,7 +12,7 @@ namespace Moryx.AspNetCore.Mqtt.Components;
 public class MqttClientUserOptions
 {
     /// <summary>
-    /// Options for the Json Serializer
+    /// Options for the JSON Serializer
     /// </summary>
     public JsonSerializerOptions JsonSerializerOptions { get; set; } = new();
 
@@ -41,20 +41,4 @@ public class MqttClientUserOptions
     /// Default topic strategy for subscriptions
     /// </summary>
     public TopicStrategy DefaultTopicStrategy { get; set; } = new TopicStrategy();
-}
-
-/// <summary>
-/// Strategy for topic subscriptions
-/// </summary>
-public class TopicStrategy
-{
-    /// <summary>
-    /// Gets or sets a value indicating whether the sender will not receive its own published application messages. MQTT 5.0.0+ feature.
-    /// </summary>
-    public bool NoLocal { get; set; }
-
-    /// <summary>
-    ///  Gets or sets a value indicating whether messages are retained as published or not. MQTT 5.0.0+ feature.
-    /// </summary>
-    public bool RetainAsPublished { get; set; }
 }
