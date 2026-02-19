@@ -19,6 +19,10 @@
     <Project Path="src/Moryx.Drivers.OpcUa/Moryx.Drivers.OpcUa.csproj" />
     <Project Path="src/Moryx.Drivers.Simulation/Moryx.Drivers.Simulation.csproj" />
   </Folder>
+  <Folder Name="/Mqtt/">
+    <Project Path="src/Moryx.AspNetCore.Mqtt/Moryx.AspNetCore.Mqtt.csproj" />
+    <Project Path="src/Moryx.AbstractionLayer.Resources.Mqtt.Endpoints/Moryx.AbstractionLayer.Resources.Mqtt.Endpoints.csproj" />
+  </Folder>
   <Folder Name="/FactoryMonitor/">
     <Project Path="src/Moryx.Factory/Moryx.Factory.csproj" />
     <Project Path="src/Moryx.FactoryMonitor.Endpoints/Moryx.FactoryMonitor.Endpoints.csproj" />
@@ -116,6 +120,7 @@
     <Project Path="src/Tests/Moryx.Shifts.Management.IntegrationTests/Moryx.Shifts.Management.IntegrationTests.csproj" />
   </Folder>
   <Folder Name="/Tests/UnitTests/">
+    <Project Path="src/Tests/Moryx.AspNetCore.Mqtt.Tests/Moryx.AspNetCore.Mqtt.Tests.csproj" />
     <Project Path="src/Tests/Moryx.AbstractionLayer.Tests/Moryx.AbstractionLayer.Tests.csproj" />
     <Project Path="src/Tests/Moryx.Container.Tests/Moryx.Container.Tests.csproj" />
     <Project Path="src/Tests/Moryx.ControlSystem.ProcessEngine.Tests/Moryx.ControlSystem.ProcessEngine.Tests.csproj" />
