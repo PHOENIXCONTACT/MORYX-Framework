@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
+    <Description>MQTT for ASP.NET Core</Description>
     <PackageReadmeFile>asp-net-core-mqtt.md</PackageReadmeFile>
   </PropertyGroup>
 

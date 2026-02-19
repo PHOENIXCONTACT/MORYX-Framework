@@ -1,4 +1,4 @@
-// Copyright (c) 2025, Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using System;
@@ -12,13 +12,13 @@ using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources.Attributes;
 using Moryx.Tools;
 
-namespace Moryx.AbstractionLayer.Resources.Converters;
+namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 
 /// <summary>
 /// Converts any <see cref="IResource"/> that has the <see cref="ResourceSynchronizationAttribute"/> to JSON
 /// </summary>
 /// <param name="resourceManagement">Resource Management facade</param>
-public class ResourceToJsonConverter(IResourceManagement resourceManagement)
+internal class ResourceToJsonConverter(IResourceManagement resourceManagement)
     : JsonConverter<IResource>
 {
     //</inherit>
