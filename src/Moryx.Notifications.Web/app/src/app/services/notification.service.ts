@@ -28,7 +28,7 @@ export class NotificationService implements OnDestroy {
   public state$: Observable<ConnectionState> = this.stateSubject.asObservable();
 
   constructor() {
-    this.eventSource = new EventSource(this.notificationPublisherService.rootUrl + '/notificationPublisherService/moryx/notifications/stream');
+    this.eventSource = new EventSource(this.notificationPublisherService.rootUrl + '/api/moryx/notifications/stream');
     this.eventSource.onmessage = (event) => this.processNotifications(event);
     this.eventSource.onerror = (error) => this.processError(error);
   }

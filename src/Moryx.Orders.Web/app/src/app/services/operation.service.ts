@@ -12,13 +12,12 @@ import { OperationAdvicedModel, OperationReportedModel, OperationStartedModel, O
   providedIn: 'root',
 })
 export class OperationService {
-  private config = inject(ApiConfiguration);
+  private apiConfiguration = inject(ApiConfiguration);
   private eventSource: EventSource;
 
   constructor() {
-    this.eventSource = new EventSource(this.config.rootUrl + '/api/moryx/orders/stream');
+    this.eventSource = new EventSource(this.apiConfiguration.rootUrl + '/api/moryx/orders/stream');
   }
-
 
   public operationChanged(callback: (operationModel: OperationModel) => void) {
     // Register to progress

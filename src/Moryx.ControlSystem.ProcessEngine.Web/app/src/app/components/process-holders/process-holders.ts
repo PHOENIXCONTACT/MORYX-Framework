@@ -75,7 +75,7 @@ export class ProcessHolders implements OnInit {
         this.buildTree(this.processHolderGroups());
         this.loading.set(false);
 
-        this._processHolderStreamService.$updatedWpc.subscribe((group) => {
+        this._processHolderStreamService.$updatedProcessHolderGroups.subscribe((group) => {
           if (group) {
             this.updateTree(ConvertToProcessHolderGroup(group));
           }

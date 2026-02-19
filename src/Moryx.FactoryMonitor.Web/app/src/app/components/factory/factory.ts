@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, ElementRef, inject, signal, computed, input, viewChild } from '@angular/core';
+import { Component, ElementRef, inject, signal, computed, input, viewChild, OnInit } from '@angular/core';
 import { CellStoreService } from 'src/app/services/cell-store.service';
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
 import { EditMenuState } from 'src/app/services/EditMenutState';
@@ -27,7 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
   ],
   styleUrls: ['./factory.scss']
 })
-export class Factory {
+export class Factory implements OnInit {
   private cellStoreService = inject(CellStoreService);
   private editMenuService = inject(EditMenuService);
   private factorySelectionService = inject(FactorySelectionService);
@@ -65,11 +65,20 @@ export class Factory {
     this.editMenuService.activeState$.subscribe({
       next: state => this.editMenuState.set(state)
     });
-    this.cellStoreService.cells$.subscribe(c => this.cells.set(c.filter(cell => cell.factoryId === this.factory().id)));
+
+    this.cellStoreService.cells$.subscribe(c =>
+      this.cells.set(c.filter(cell => cell.factoryId === this.factory().id))
+    );
+
     // React to updates to the cell data
     this.cellStoreService.cellUpdated$.subscribe(cell => {
-      if (!cell) return;
-      if (cell.id != this.factory().id && !this.cells().some(c => c.id === cell.id)) return;
+      if (!cell) {
+        return;
+      }
+
+      if (cell.id != this.factory().id && !this.cells().some(c => c.id === cell.id)) {
+        return;
+      }
 
       this.updateFactoryCell(cell);
     });

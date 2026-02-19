@@ -5,7 +5,7 @@
 
 import { CommonModule } from "@angular/common";
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, computed, inject, input, OnDestroy, OnInit, signal } from "@angular/core";
+import { ChangeDetectorRef, Component, computed, inject, input, OnDestroy, OnInit, signal } from "@angular/core";
 import { MatListModule } from "@angular/material/list";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
@@ -40,6 +40,7 @@ export class Processes implements OnInit, OnDestroy {
   private processEngineService = inject(ProcessEngineService);
   private processEngineEvents = inject(ProcessEngineStreamService);
   private snackbarService = inject(SnackbarService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
   processes = signal<JobProcessModel[]>([]);
   processesAvailable = computed(() => this.processes().length > 0);
@@ -98,7 +99,9 @@ export class Processes implements OnInit, OnDestroy {
       // Extract job id
       // TODO: Extend model
       const jobId = BigInt(updatedProcess.id!) >> 14n;
-      if (jobId !== BigInt(this.job().model.id!)) return;
+      if (jobId !== BigInt(this.job().model.id!)){
+        return;
+      }
 
       // Find old model and its index
       const oldProcess = this.processes().find(
@@ -125,23 +128,38 @@ export class Processes implements OnInit, OnDestroy {
   }
 
   onActivityUpdated(updatedActivity: ProcessActivityModel | undefined) {
-    if (!updatedActivity) return;
+    if (!updatedActivity) {
+      return;
+    }
+
     // Extract process id
     // TODO: Replace with extended model
     const processId = BigInt(updatedActivity.id!) >> 14n;
     // Find this activities process
     const process = this.processes().find((p) => BigInt(p.id!) === processId);
-    if (!process) return;
+    if (!process) {
+      return;
+    }
 
     // Find old model and its index
     const index = process.activities?.findIndex(
       (a) => a.id === updatedActivity.id
     );
 
-    // Replace with new object from stream
-    if (index! >= 0) process.activities![index!] = updatedActivity;
-    // Or add to activities of the process
-    else process.activities?.push(updatedActivity);
+    if (index! >= 0) {
+      // Replace with new object from stream
+      process.activities![index!] = updatedActivity;
+
+    }
+    else {
+      // Or add to activities of the process
+      process.activities?.push(updatedActivity);
+    }
+
+    // TODO: This is a workaround to trigger change detection for the activity list,
+    //  as the process object reference does not change with the updated activity.
+    //  This should be fixed by using immutable data structures or by extending the model with a method to update activities.
+    this.changeDetectorRef.markForCheck();
 
     if (this.selectedActivity()?.id === updatedActivity.id)
       this.selectedActivity.update((_) => updatedActivity);

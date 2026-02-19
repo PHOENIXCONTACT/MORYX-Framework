@@ -12,14 +12,16 @@ import { Component, input, OnDestroy, OnInit, signal } from '@angular/core';
   styleUrl: './notification-badge.css'
 })
 export class NotificationBadge implements OnInit, OnDestroy {
-  eventstream = input('');
+  eventStream = input('');
   count = signal(0);
   eventSource: EventSource | undefined;
 
   ngOnInit(): void {
-    if (!this.eventstream()) return;
+    if (!this.eventStream()) {
+      return;
+    }
 
-    this.eventSource = new EventSource(this.eventstream());
+    this.eventSource = new EventSource(this.eventStream());
     this.eventSource.onmessage = this.onReceived.bind(this);
   }
 

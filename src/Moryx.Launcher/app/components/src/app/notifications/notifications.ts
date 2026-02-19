@@ -24,7 +24,10 @@ export class Notifications implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (!this.api()) return;
+    if (!this.api()) {
+      return;
+    }
+
     // listen to notification stream
     this.eventSource = new EventSource(this.api());
     this.eventSource.onmessage = this.onMessageReceived.bind(this);
@@ -37,7 +40,10 @@ export class Notifications implements OnInit, OnDestroy {
   }
 
   getNotificationToDisplay() {
-    if (!this.notifications().length) return undefined;
+    if (!this.notifications().length) {
+      return undefined;
+    }
+    
     const highSeverityNotifications = this.getHighSeverityNotifications(this.notifications());
     const latestNotifications = highSeverityNotifications.reverse(); // Descending order latest to oldest
     const latestNotification = latestNotifications[0];

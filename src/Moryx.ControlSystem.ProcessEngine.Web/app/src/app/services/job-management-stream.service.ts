@@ -32,6 +32,5 @@ export class JobManagementStreamService {
       this.updatedJob.next(undefined);
     }
   }
-
 }
 

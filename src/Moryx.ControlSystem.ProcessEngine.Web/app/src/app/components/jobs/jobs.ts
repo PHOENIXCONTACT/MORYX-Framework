@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { Component, inject, OnInit, signal, ChangeDetectorRef } from "@angular/core";
 import { JobManagementService, OrderManagementService } from "src/app/api/services";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { JobViewModel } from "src/app/models/job-view-model";
@@ -50,6 +50,7 @@ export class Jobs implements OnInit {
   private orderManagementService = inject(OrderManagementService);
   private orderManagementEvents = inject(OrderManagementStreamService);
   private snackbarService = inject(SnackbarService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
   jobCollection = signal<JobViewModel[]>([]);
   operations = signal<OperationModel[]>([]);
@@ -71,30 +72,38 @@ export class Jobs implements OnInit {
         await this.snackbarService.handleError(e)
     });
 
-    this.orderManagementEvents.stream(
-      OperationType.Update,
-      (updatedOperation: OperationModel) =>
+    this.orderManagementEvents.stream(OperationType.Update, (updatedOperation: OperationModel) =>
         this.updateOperations(updatedOperation)
     );
   }
 
   private updateJobs(updatedJob: JobModel | undefined) {
-    if (!updatedJob) return;
+    if (!updatedJob) {
+      return;
+    }
 
-    const jobVM = this.jobCollection().find((j) => j.model.id === updatedJob.id);
-    if (!jobVM) this.jobCollection().push(new JobViewModel(updatedJob));
-    else if (updatedJob.state === "Completed")
-      this.jobCollection.update(_ => this.jobCollection().filter((jVm) => jVm !== jobVM));
-    else jobVM.updateModel(updatedJob);
+    const existingJob = this.jobCollection().find((j) => j.model.id === updatedJob.id);
+    if (!existingJob) {
+      this.jobCollection().push(new JobViewModel(updatedJob));
+    } else if (updatedJob.state === "Completed") {
+      this.jobCollection.update(_ => this.jobCollection().filter((jVm) => jVm !== existingJob));
+    } else {
+      existingJob.updateModel(updatedJob);
+
+      // TODO: This is a workaround to trigger change detection for the updated job.
+      //  The JobViewModel is mutable and Angular does not detect changes to its properties.
+      //  Consider refactoring JobViewModel to be immutable to avoid this issue.
+      this.changeDetectorRef.markForCheck();
+    }
   }
 
   private updateOperations(updatedOperation: OperationModel | undefined) {
     if (!updatedOperation) return;
 
-      const existent = this.operations().find(
-          (o) => o.identifier === updatedOperation.identifier
-      );
-      if (existent) {
+    const existent = this.operations().find(
+      (o) => o.identifier === updatedOperation.identifier
+    );
+    if (existent) {
       let index = this.operations().indexOf(existent);
       this.operations.update(items => {
         items[index] = updatedOperation;

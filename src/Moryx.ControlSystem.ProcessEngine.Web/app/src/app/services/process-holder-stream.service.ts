@@ -12,20 +12,20 @@ import { ProcessEngineService } from '../api/services';
   providedIn: 'root'
 })
 export class ProcessHolderStreamService {
-  private processService = inject(ProcessEngineService);
+  private processEngineService = inject(ProcessEngineService);
 
-  $updatedWpc = new BehaviorSubject<ProcessHolderGroupModel | undefined>(undefined);
+  $updatedProcessHolderGroups = new BehaviorSubject<ProcessHolderGroupModel | undefined>(undefined);
 
   constructor() {
     this.publishUpdates();
   }
 
   publishUpdates() {
-    const eventSource = new EventSource(this.processService.rootUrl + ProcessEngineService.GroupStreamPath);
+    const eventSource = new EventSource(this.processEngineService.rootUrl + ProcessEngineService.GroupStreamPath);
     eventSource.onmessage = event => {
-      const wpcGroup = JSON.parse(event.data);
-      console.log('update received :', wpcGroup);
-      this.$updatedWpc.next(wpcGroup);
+      const holderGroup = JSON.parse(event.data);
+      console.log('update received :', holderGroup);
+      this.$updatedProcessHolderGroups.next(holderGroup);
     };
   }
 

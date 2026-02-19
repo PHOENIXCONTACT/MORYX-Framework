@@ -119,7 +119,10 @@ export class Operations implements OnInit, OnDestroy {
 
     // Register events
     this.operationService.operationChanged((updatedOperation: OperationModel) => {
-      if (!updatedOperation) return;
+      if (!updatedOperation) {
+        return;
+      }
+
       //filter the list after the update of a completed operation
       if (updatedOperation?.classification === OperationStateClassification.Completed) {
         this.operations.update(operations => operations.filter(
@@ -130,6 +133,11 @@ export class Operations implements OnInit, OnDestroy {
       const existent = this.operations().find(o => o.model.identifier == updatedOperation.identifier);
       if (existent) {
         existent.updateModel(updatedOperation);
+
+        // TODO: This is a workaround to trigger change detection for the updated job.
+        //  The OperationViewModel is mutable and Angular does not detect changes to its properties.
+        //  Consider refactoring OperationViewModel to be immutable to avoid this issue.
+        this.changeDetectorRef.markForCheck();
       } else {
         this.operations.update(operations => {
           operations.push(new OperationViewModel(updatedOperation));

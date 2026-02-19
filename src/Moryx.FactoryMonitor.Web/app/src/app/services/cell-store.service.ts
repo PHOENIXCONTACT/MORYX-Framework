@@ -105,8 +105,12 @@ export class CellStoreService {
   private subscribe() {
     this.factoryStateStreamService.updatedCell.subscribe({
       next: cell => {
-        if (!cell?.id) return;
-        if (!this._cells.getValue().length) return;
+        if (!cell?.id) {
+          return;
+        }
+        if (!this._cells.getValue().length) {
+          return;
+        }
 
         this.updateCell(cell);
       }
