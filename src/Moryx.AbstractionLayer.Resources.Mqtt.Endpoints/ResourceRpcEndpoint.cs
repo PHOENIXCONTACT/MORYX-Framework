@@ -4,11 +4,10 @@
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Identity;
-using Moryx.AbstractionLayer.Resources;
 using Moryx.AspNetCore.Mqtt.Builders;
 using Moryx.AspNetCore.Mqtt.Components;
+using Moryx.AspNetCore.Mqtt.Converters;
 using Moryx.AspNetCore.Mqtt.Endpoints;
-using Moryx.AspNetCore.Mqtt.Exceptions;
 using Moryx.Serialization;
 using MQTTnet;
 
@@ -44,22 +43,19 @@ public class ResourceRpcEndpoint(ILogger<ResourceRpcEndpoint> logger, IResourceM
 
     private static MethodInfo FindMethod(IResource resource, string methodName)
     {
-        var interfaces = resource.GetType().GetInterfaces();
+        var resourceType = resource.GetType();
+        var interfaces = resourceType.GetInterfaces();
         var methodToInvoke = interfaces.SelectMany(i => i.GetMethods().Where(m => m.ReturnType == typeof(Task) || (m.ReturnType.IsGenericType && m.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))))
                       .FirstOrDefault(x => x.Name.Equals(methodName, StringComparison.OrdinalIgnoreCase));
         return resource is null
             ? throw new ResourceNotFoundException()
-            : methodToInvoke is null
-            ? throw new MethodNotFoundException(resource.Name, methodName)
-            : methodToInvoke;
+            : methodToInvoke ?? throw new MissingMethodException(resourceType.Name, methodName);
     }
 
     private MqttApplicationMessage InvokeMethod(MqttEndpointContext context, MqttApplicationMessageBuilder responseBuilder, IResource resource, MethodInfo methodToInvoke)
     {
-        object methodResult;
-
         var parameters = GetMethodParametersFromPayload(methodToInvoke, context);
-        methodResult = methodToInvoke.Invoke(resource, parameters);
+        var methodResult = methodToInvoke.Invoke(resource, parameters);
 
         if (methodResult?.GetType() == typeof(void))
         {
@@ -77,7 +73,7 @@ public class ResourceRpcEndpoint(ILogger<ResourceRpcEndpoint> logger, IResourceM
         {
             Value = payload,
             ValueType = EntryConvert.TransformType(methodToInvoke.ReturnType)
-        }, options.JsonSerializerOptions) ?? string.Empty;
+        }, options.JsonSerializerOptions);
         return responseBuilder.WithPayload(jsonPayload).Build();
     }
 

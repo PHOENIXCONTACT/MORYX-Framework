@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
 using Microsoft.Extensions.Logging;
 using MQTTnet.Diagnostics.Logger;
 
@@ -12,7 +13,7 @@ internal class MqttClientLogger(ILogger<MqttClientLogger> logger) : IMqttNetLogg
 
     public void Publish(MqttNetLogLevel logLevel, string source, string message, object[] parameters, Exception exception)
     {
-        var logMessage = string.Format("{0} - {1}", source, message);
+        var logMessage = string.Format(CultureInfo.InvariantCulture, "{0} - {1}", source, message);
         switch (logLevel)
         {
             case MqttNetLogLevel.Verbose:

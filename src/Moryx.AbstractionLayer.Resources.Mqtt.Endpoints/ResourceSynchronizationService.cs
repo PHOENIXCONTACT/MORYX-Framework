@@ -7,11 +7,11 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Identity;
-using Moryx.AbstractionLayer.Resources;
 using Moryx.AbstractionLayer.Resources.Attributes;
 using Moryx.AspNetCore.Mqtt;
 using Moryx.AspNetCore.Mqtt.Builders;
 using Moryx.AspNetCore.Mqtt.Components;
+using Moryx.AspNetCore.Mqtt.Converters;
 using Moryx.Threading;
 using Moryx.Tools;
 using MQTTnet;
@@ -21,18 +21,16 @@ namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 
 /// <summary>
 /// Sends messages to the broker when the <see cref="Resource.Changed"/> is raised
-/// or the <see cref="IResourceManagementChanges.ResourceChanged"/> is raised
+/// or the <see cref="IResourceManagement.ResourceChanged"/> is raised
 /// </summary>
-/// <param name="resourceManagementChanges"></param>
-/// <param name="logger"></param>
-/// <param name="parallelOperations"></param>
 public class ResourceSynchronizationService : IMqttService
 {
-    private readonly int _cleanupIntervalMs = 60 * 1000;
     // TODO: these routes should be configurable in the future
-    const string ResourceChangedTopic = "moryx/resources/changed";
-    const string ResourceAddedTopic = "moryx/resources/added";
-    const string ResourceRemovedTopic = "moryx/resources/removed";
+    private const string ResourceChangedTopic = "moryx/resources/changed";
+    private const string ResourceAddedTopic = "moryx/resources/added";
+    private const string ResourceRemovedTopic = "moryx/resources/removed";
+
+    private const int CleanupIntervalMs = 60 * 1000;
     private WriteOnlyHashStore<string>? _messageCache;
     private readonly IManagedMqttClient _client;
     private readonly IResourceManagement _resourceManagement;
@@ -57,10 +55,11 @@ public class ResourceSynchronizationService : IMqttService
     }
 
     #region IHostedService
+
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _messageCache = new WriteOnlyHashStore<string>(_parallelOperations);
-        _messageCache.Initialize(_cleanupIntervalMs);
+        _messageCache.Initialize(CleanupIntervalMs);
 
         _client.ConnectedAsync += OnConnectedAsync;
         _client.DisconnectedAsync += OnDisconnectedAsync;
@@ -80,6 +79,7 @@ public class ResourceSynchronizationService : IMqttService
     #endregion
 
     #region Mqtt Client State Events
+
     private Task OnDisconnectedAsync(MqttClientDisconnectedEventArgs arg)
     {
         _resourceManagement.ResourceAdded -= ResourceAdded;
@@ -118,13 +118,15 @@ public class ResourceSynchronizationService : IMqttService
     }
 
     private Task OnMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
-        => arg.ApplicationMessage.Topic switch
+    {
+        return arg.ApplicationMessage.Topic switch
         {
             ResourceChangedTopic => HandleResourceChangedMessageAsync(arg),
             ResourceAddedTopic => HandleResourceAddedMessageAsync(arg),
             ResourceRemovedTopic => HandleResourceRemovedMessageAsync(arg),
             _ => Task.CompletedTask,
         };
+    }
 
     private async Task HandleResourceAddedMessageAsync(MqttApplicationMessageReceivedEventArgs arg)
     {
@@ -135,7 +137,7 @@ public class ResourceSynchronizationService : IMqttService
 
         var addedResourceObject = await MqttMessageSerialization
             .DeserializeAsync(arg.ApplicationMessage, _options.JsonSerializerOptions);
-        if (addedResourceObject is not null && addedResourceObject is JsonElement document)
+        if (addedResourceObject is JsonElement document)
         {
             var jsonProperties = document.EnumerateObject();
             var synchronizationTypeId = jsonProperties.FirstOrDefault(x => x.Name == nameof(ResourceSynchronizationAttribute.SynchronizationTypeId));
@@ -147,7 +149,7 @@ public class ResourceSynchronizationService : IMqttService
                 return;
             }
 
-            await _resourceManagement.CreateUnsafeAsync(matchingResourceType, async emptyResource =>
+            await _resourceManagement.CreateUnsafeAsync(matchingResourceType, emptyResource =>
             {
                 SetInstanceValue(jsonProperties, emptyResource);
                 if (emptyResource is IIdentifiableObject identifiableObject)
@@ -160,7 +162,8 @@ public class ResourceSynchronizationService : IMqttService
 
                 var message = MqttMessageSerialization.GetJsonPayload<IResource>(emptyResource, _options.JsonSerializerOptions);
                 TryAddToMessageCache(GetHashString(message));
-                return;
+
+                return Task.CompletedTask;
             });
         }
     }
@@ -198,17 +201,16 @@ public class ResourceSynchronizationService : IMqttService
     private async Task CompleteResourceProcessingAsync(JsonElement document, ExistingResourceChangeType changeType)
     {
         var jsonProperties = document.EnumerateObject();
-        var identity = jsonProperties.FirstOrDefault(X => X.Name == nameof(IIdentifiableObject.Identity));
-        var name = jsonProperties.FirstOrDefault(X => X.Name == nameof(Resource.Name));
+        var identity = jsonProperties.FirstOrDefault(x => x.Name == nameof(IIdentifiableObject.Identity));
+        var name = jsonProperties.FirstOrDefault(x => x.Name == nameof(Resource.Name));
 
         //This is done just for casting purpose to access Identity.Identifier
         var identityValue = NullOrValue<BatchIdentity>(identity.Value);
         var nameValue = NullOrValue<string>(name.Value);
-        var matchingResources = _resourceManagement
-            .GetResources<IResource>(x =>
-                x is IIdentifiableObject obj && obj.Identity.Identifier.Equals(identityValue?.Identifier)
-                || x.Name.Equals(nameValue));
-        if (matchingResources.Count() > 1)
+        var matchingResources = _resourceManagement.GetResources<IResource>(x =>
+                x is IIdentifiableObject obj && obj.Identity.Identifier.Equals(identityValue?.Identifier) || x.Name.Equals(nameValue)).ToArray();
+
+        if (matchingResources.Length > 1)
         {
             _logger.LogWarning("Multiple resources found matching the identity '{identity}' or name '{name}'. Resource synchronization skipped.", identityValue?.Identifier, nameValue);
             return;
@@ -230,7 +232,6 @@ public class ResourceSynchronizationService : IMqttService
         {
             _logger.LogWarning("No matching resource found for identity '{identity}' or name '{name}'. Resource synchronization skipped.", identityValue?.Identifier, nameValue);
         }
-
     }
 
     private bool TryAddToMessageCache(string messageHash)
@@ -244,40 +245,42 @@ public class ResourceSynchronizationService : IMqttService
         return true;
     }
 
-    private async Task UpdateLocalInstanceAsync(IResourceManagement resourceManagement, JsonElement.ObjectEnumerator jsonProperties, IResource matchingResource)
+    private Task UpdateLocalInstanceAsync(IResourceManagement resourceManagement, JsonElement.ObjectEnumerator jsonProperties, IResource matchingResource)
     {
-        await resourceManagement.ModifyUnsafeAsync(matchingResource.Id, async resource =>
+        return resourceManagement.ModifyUnsafeAsync(matchingResource.Id, resource =>
         {
             SetInstanceValue(jsonProperties, resource);
-            return true;
+            return Task.FromResult(true);
         });
     }
 
-    private async Task RemoveLocalInstanceAsync(IResourceManagement resourceManagement, IResource matchingResource)
+    private Task RemoveLocalInstanceAsync(IResourceManagement resourceManagement, IResource matchingResource)
     {
-        var message = MqttMessageSerialization.GetJsonPayload<IResource>(matchingResource, _options.JsonSerializerOptions);
+        var message = MqttMessageSerialization.GetJsonPayload(matchingResource, _options.JsonSerializerOptions);
         TryAddToMessageCache(GetHashString(message));
-        await resourceManagement.DeleteAsync(matchingResource.Id);
+
+        return resourceManagement.DeleteAsync(matchingResource.Id);
     }
 
     private void SetInstanceValue(JsonElement.ObjectEnumerator jsonProperties, Resource resource)
     {
-        var resourceProperties = resource?.GetType().GetProperties() ?? [];
+        var resourceProperties = resource.GetType().GetProperties();
         foreach (var jsonProperty in jsonProperties)
         {
-            var matchingProperty = resourceProperties
-                .FirstOrDefault(x => x.Name == jsonProperty.Name);
-            if (matchingProperty is not null)
+            var matchingProperty = resourceProperties.FirstOrDefault(x => x.Name == jsonProperty.Name);
+            if (matchingProperty is null)
             {
-                try
-                {
-                    var propertyValue = NullOrValue(jsonProperty.Value, matchingProperty.PropertyType);
-                    matchingProperty?.SetValue(resource, propertyValue);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError("Error while deserializing Mqtt Resource Synchronization Payload.", ex);
-                }
+                continue;
+            }
+
+            try
+            {
+                var propertyValue = NullOrValue(jsonProperty.Value, matchingProperty.PropertyType);
+                matchingProperty.SetValue(resource, propertyValue);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex , "Error while deserializing Mqtt Resource Synchronization Payload.");
             }
         }
     }
@@ -291,14 +294,14 @@ public class ResourceSynchronizationService : IMqttService
 
     private static object? NullOrValue(JsonElement element, Type valueType)
     {
-        return element.ValueKind == JsonValueKind.Null || element.ValueKind == JsonValueKind.Undefined
-                    ? default
-                    : element.Deserialize(valueType);
+        return element.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined
+                    ? null : element.Deserialize(valueType);
     }
 
     #endregion
 
     #region Resource Events
+
     private void ResourceChanged(object? sender, IResource e)
     {
         _resourceManagement.ReadUnsafe(e.Id, resource =>
@@ -310,38 +313,28 @@ public class ResourceSynchronizationService : IMqttService
 
     private void ResourceAdded(object? sender, IResource e)
     {
-        _resourceManagement.ReadUnsafe(e.Id, resource =>
-        {
-            return ProcessResource(resource, ResourceAddedTopic);
-        });
-
+        _resourceManagement.ReadUnsafe(e.Id, resource => ProcessResource(resource, ResourceAddedTopic));
     }
 
     private void ResourceRemoved(object? sender, IResource e)
     {
-        //e is a Proxy, so we have to use reflection to get the Identity
-        var target = e.GetType().GetProperties()?.FirstOrDefault(x => x.Name == "Target")?.GetValue(e);
-        var identity = target?.GetType().GetProperty("Identity")?.GetValue(target);
+        // e is a Proxy, so we have to use reflection to get the Identity
+        // TODO: Using reflection in the same framework is not ideal, the api must be improved in the future to avoid this
+        var target = e.GetType().GetProperties().FirstOrDefault(x => x.Name == "Target")?.GetValue(e);
+        var identity = target?.GetType().GetProperty(nameof(IIdentifiableObject.Identity))?.GetValue(target);
+
         var payload = new DeletedResourceMessage
         {
             SynchronizationTypeId = target?.GetType().GetCustomAttribute<ResourceSynchronizationAttribute>()?.SynchronizationTypeId,
             Identity = identity as IIdentity,
             Name = e.Name
         };
+
         var json = JsonSerializer.Serialize(payload, _options.JsonSerializerOptions);
         var hash = GetHashString(json);
+
         PublishMessage(ResourceRemovedTopic, json, hash);
         TryAddToMessageCache(hash);
-    }
-
-    /// <summary>
-    /// Message for deleted resource synchronization
-    /// </summary>
-    private class DeletedResourceMessage
-    {
-        public string? SynchronizationTypeId { get; set; }
-        public IIdentity? Identity { get; set; }
-        public string? Name { get; set; }
     }
 
     private void SendChanges(Resource resource, string topic)
@@ -392,10 +385,24 @@ public class ResourceSynchronizationService : IMqttService
         return stringBuilder.ToString();
     }
 
-    enum ExistingResourceChangeType
+    private enum ExistingResourceChangeType
     {
         Removed,
         Changed
     }
+
+
+    /// <summary>
+    /// Message for deleted resource synchronization
+    /// </summary>
+    private class DeletedResourceMessage
+    {
+        public string? SynchronizationTypeId { get; set; }
+
+        public IIdentity? Identity { get; set; }
+
+        public string? Name { get; set; }
+    }
+
     #endregion
 }

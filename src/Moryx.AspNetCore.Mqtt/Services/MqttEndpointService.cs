@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moryx.AspNetCore.Mqtt.AttributeRouting;
 using Moryx.AspNetCore.Mqtt.Builders;
 using Moryx.AspNetCore.Mqtt.Components;
+using Moryx.AspNetCore.Mqtt.Converters;
 using Moryx.AspNetCore.Mqtt.Endpoints;
 using MQTTnet;
 

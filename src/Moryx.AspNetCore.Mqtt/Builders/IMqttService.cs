@@ -7,7 +7,4 @@ namespace Moryx.AspNetCore.Mqtt.Builders;
 /// <summary>
 ///  Hosted MQTT Service
 /// </summary>
-public interface IMqttService : IHostedService
-{
-
-}
+public interface IMqttService : IHostedService;

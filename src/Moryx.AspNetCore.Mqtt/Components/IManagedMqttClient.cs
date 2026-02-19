@@ -4,10 +4,10 @@
 using MQTTnet;
 using MQTTnet.Packets;
 
-namespace Moryx.AspNetCore.Mqtt;
+namespace Moryx.AspNetCore.Mqtt.Components;
 
 /// <summary>
-/// Provides a managed MQTT client interface that handles automatic reconnections, 
+/// Provides a managed MQTT client interface that handles automatic reconnections,
 /// message queuing, and connection management for MQTT communication.
 /// </summary>
 /// <remarks>
@@ -77,7 +77,7 @@ public interface IManagedMqttClient : IDisposable
     /// </remarks>
     Task StopAsync(CancellationToken cancellationToken, bool cleanDisconnect = true);
 
-    /// <summary>  
+    /// <summary>
     /// Subscribes to one or more MQTT topics with the specified topic filters.
     /// </summary>
     /// <param name="topicFilters">A collection of topic filters defining the subscriptions.</param>

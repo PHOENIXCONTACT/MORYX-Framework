@@ -42,7 +42,7 @@ public class MqttEndpointContext(MqttApplicationMessage request, RouteValueDicti
     /// <summary>
     /// Given a <paramref name="propertyName"/>, returns the value matching the property name from the <see cref="RequestMessage"/> body
     /// </summary>
-    /// <typeparam name="T">Type of the the property</typeparam>
+    /// <typeparam name="T">Type of the property</typeparam>
     /// <param name="propertyName">Name of the property</param>
     /// <returns>Value of the property</returns>
     public async Task<T?> FromBody<T>(string propertyName)
@@ -51,7 +51,7 @@ public class MqttEndpointContext(MqttApplicationMessage request, RouteValueDicti
     /// <summary>
     /// Given a <paramref name="propertyName"/> and <paramref name="type"/>, returns the value from the RequestMessage body
     /// </summary>
-    /// <param name="type">Type of the the property</param>
+    /// <param name="type">Type of the property</param>
     /// <param name="propertyName">Name of the property</param>
     /// <returns>Value of the property</returns>
     public async Task<object?> FromBody(string propertyName, Type type)
@@ -64,7 +64,7 @@ public class MqttEndpointContext(MqttApplicationMessage request, RouteValueDicti
 
         if (jsonElement.Value.TryGetProperty(propertyName, out var property))
         {
-            return JsonSerializer.Deserialize(property, type);
+            return property.Deserialize(type);
         }
 
         return null;
@@ -76,7 +76,7 @@ public class MqttEndpointContext(MqttApplicationMessage request, RouteValueDicti
     /// <typeparam name="T">Type of the parameter</typeparam>
     /// <param name="parameterName">Name of the parameter as defined in the topic template</param>
     /// <returns></returns>
-    public T FromParameterValues<T>(string parameterName)
+    public T? FromParameterValues<T>(string parameterName)
         where T : notnull
     {
         ParameterValues.TryGetValue(parameterName, out var value);

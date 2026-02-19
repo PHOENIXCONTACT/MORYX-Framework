@@ -4,7 +4,7 @@
 using Moryx.AspNetCore.Mqtt.Components;
 using MQTTnet;
 
-namespace Moryx.AspNetCore.Mqtt.Extensions;
+namespace Moryx.AspNetCore.Mqtt;
 
 /// <summary>
 ///<see cref="MqttClientOptionsBuilder"/> extension method to configure the <see cref="IMqttClient"/>

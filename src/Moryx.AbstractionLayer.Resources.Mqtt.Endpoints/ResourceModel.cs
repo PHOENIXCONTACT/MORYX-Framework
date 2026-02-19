@@ -6,7 +6,7 @@ namespace Moryx.AbstractionLayer.Resources.Mqtt.Endpoints;
 /// <summary>
 /// Simple DTO for a resource
 /// </summary>
-/// <param name="Id">Identifier of the resource</param>
+/// <param name="Identifier">Identifier of the resource</param>
 /// <param name="Name">Name of the Resource</param>
 public record ResourceModel(string Identifier, string Name);
 

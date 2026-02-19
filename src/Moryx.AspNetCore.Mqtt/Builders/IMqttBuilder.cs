@@ -3,10 +3,12 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Moryx.AspNetCore.Mqtt.Components;
+using Moryx.AspNetCore.Mqtt.Endpoints;
+
 namespace Moryx.AspNetCore.Mqtt.Builders;
 
 /// <summary>
-/// Adds the <see cref="IManagedMqttClient"/> and related services to the <see cref="IServiceCollection"/>. 
+/// Adds the <see cref="IManagedMqttClient"/> and related services to the <see cref="IServiceCollection"/>.
 /// </summary>
 public interface IMqttBuilder
 {
@@ -16,14 +18,12 @@ public interface IMqttBuilder
     /// </summary>
     /// <typeparam name="T">The Service type</typeparam>
     /// <returns></returns>
-    IMqttBuilder AddMqttService<T>()
-        where T : class, IMqttService;
+    IMqttBuilder AddMqttService<T>() where T : class, IMqttService;
 
     /// <summary>
     /// Adds <see cref="IMqttEndpoint"/> to the <see cref="IServiceCollection"/>. Allows the usage of MapGet and MapPost
     /// </summary>
     /// <param name="builder"></param>
     /// <returns></returns>
-    IMqttBuilder AddMqttEndpoints(
-      Action<MqttRouteBuilder>? builder = null);
+    IMqttBuilder AddMqttEndpoints(Action<MqttRouteBuilder>? builder = null);
 }

@@ -4,18 +4,19 @@
 using System.Text.Json;
 using MQTTnet;
 
+namespace Moryx.AspNetCore.Mqtt.Converters;
 
 /// <summary>
-/// Provide methods to serialize/deserialize an <see cref="MqttApplicationMessage"/> using the provided
-/// <see cref="JsonSerializerOptions"/>
+/// Provide methods to serialize/deserialize an <see cref="MqttApplicationMessage"/> using the provided <see cref="JsonSerializerOptions"/>
 /// </summary>
-public class MqttMessageSerialization
+public static class MqttMessageSerialization
 {
     /// <summary>
     /// Given the <paramref name="payload"/>, returns a JSON serialized string of the response payload
     /// </summary>
     /// <typeparam name="T">Type of the payload</typeparam>
     /// <param name="payload">The payload</param>
+    /// <param name="options">Options for the JSON serializer</param>
     /// <returns>Returns the JSON string of the payload</returns>k
     public static string GetJsonPayload<T>(T payload, JsonSerializerOptions? options = null)
     {
@@ -28,9 +29,11 @@ public class MqttMessageSerialization
     /// </summary>
     /// <typeparam name="T">The target type after deserializing</typeparam>
     /// <param name="message">The message to deserialize</param>
-    /// <param name="cancellationToken">Cancellation token</param>
+    /// <param name="options">Options for the JSON serializer</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     /// <returns>Returns a deserialized value <typeparamref name="T"/></returns>
-    public static ValueTask<T> DeserializeAsync<T>(MqttApplicationMessage message, JsonSerializerOptions options = null, CancellationToken cancellationToken = default)
+    public static ValueTask<T?> DeserializeAsync<T>(MqttApplicationMessage message, JsonSerializerOptions? options = null,
+        CancellationToken cancellationToken = default)
     {
         options ??= JsonSerializerOptions.Default;
         var payloadString = message.ConvertPayloadToString();
@@ -41,11 +44,13 @@ public class MqttMessageSerialization
     /// <summary>
     /// Deserialize a given <paramref name="message"/> to <typeparamref name="T"/>
     /// </summary>
-    /// <typeparam name="returnType">The target type after deserializing</typeparam>
+    /// <param name="returnType">The target type after deserializing</param>
     /// <param name="message">The message to deserialize</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Returns a deserialized value <typeparamref name="returnType"/></returns>
-    public static ValueTask<object> DeserializeAsync(MqttApplicationMessage message, Type returnType, JsonSerializerOptions options = null, CancellationToken cancellationToken = default)
+    /// <param name="options">Options for the JSON serializer</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+    /// <returns>Returns a deserialized value <param name="returnType"/></returns>
+    public static ValueTask<object?> DeserializeAsync(MqttApplicationMessage message, Type returnType, JsonSerializerOptions? options = null,
+        CancellationToken cancellationToken = default)
     {
         options ??= JsonSerializerOptions.Default;
         var payloadString = message.ConvertPayloadToString();
@@ -57,9 +62,11 @@ public class MqttMessageSerialization
     /// Deserialize a given <paramref name="message"/> to <typeparamref name="T"/>
     /// </summary>
     /// <param name="message">The message to deserialize</param>
-    /// <param name="cancellationToken">Cancellation token</param>
+    /// <param name="options">Options for the JSON serializer</param>
+    /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
     /// <returns>Returns a deserialized value as an object.</returns>
-    public static ValueTask<object?> DeserializeAsync(MqttApplicationMessage message, JsonSerializerOptions? options = null, CancellationToken cancellationToken = default)
+    public static ValueTask<object?> DeserializeAsync(MqttApplicationMessage message, JsonSerializerOptions? options = null,
+        CancellationToken cancellationToken = default)
     {
         options ??= JsonSerializerOptions.Default;
         var payloadString = message.ConvertPayloadToString();
