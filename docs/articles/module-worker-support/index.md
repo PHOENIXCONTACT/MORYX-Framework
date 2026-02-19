@@ -13,7 +13,7 @@ Display instructions are instructions without a result. The instruction will be 
 
 ### Display Clear
 
-Every displayed instruction have to be cleared manually!
+Every displayed instruction has either to be cleared manually or an auto clear timeout has to be provided, when `IVisualInstructor.Display()` is called.
 
 ### Sample
 
@@ -23,18 +23,22 @@ public IVisualInstructor Instructor { get; set; }
 
 public void DisplaySomething()
 {
-    var instructions = new []
+    var activeInstruction = new ActiveInstruction
     {
-        new VisualInstruction {Content = "Hello World", Type = InstructionContentType.Text},
-        new VisualInstruction 
+        Title = "Some Name",
+        Instructions = new []
         {
-            Type = InstructionContentType.Media
-            Content = "https://moryx-server/files/da1512-1241/master",
-            Preview = "https://moryx-server/files/da1512-1241/master/preview",
+            new VisualInstruction {Content = "Hello World", Type = InstructionContentType.Text},
+            new VisualInstruction 
+            {
+                Type = InstructionContentType.Media
+                Content = "https://moryx-server/files/da1512-1241/master",
+                Preview = "https://moryx-server/files/da1512-1241/master/preview",
+            }
         }
     };
 
-    var instructionId = Instructor.Display("Some Name", instructions)
+    var instructionId = Instructor.Display(activeInstruction)
     // Work => Instruction no longer necessary => Clear
     Instructor.Clear(instructionId);
 }
@@ -46,8 +50,8 @@ Execute instructions are instructions with possible results. The client will dis
 
 ### Results
 
-An implementation of `IInstructionResults` must be used. An sample implementation is the `EnumInstructionResult`. It will convert an enum type to possible results. I does the conversion with respect of the `DisplayAttribute` which will give the possibility to hide a result from the enum or add special texts for the buttons.
+Possible results can be delcared by using instances of the `InstructionResult` class, which can be passed to the `ActiveInstruction.Results` property. Enums can be converted automatically to a collection of `InstructionResult` instances by using the `EnumInstructionResult` helper class. It does the conversion with respect to the `DisplayAttribute`, which allows to add special texts to the buttons. Additionally `EnumInstructionAttribute.Hide` can be used to skip an enum value during `InstructionResult` construction.
 
 ### Execute Clear
 
-An executed instruction have not to be cleared. It will be cleared automatically after calling the given callback and if an button was pressed on the client. It can however be cleared if an event renders the instruction obsolete.
+An executed instruction has not to be cleared. It will be cleared automatically after calling the given callback and if a button was pressed on the client. It can however be cleared if an event renders the instruction obsolete.

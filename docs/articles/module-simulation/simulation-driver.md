@@ -1,16 +1,16 @@
 # Simulation Driver
 
-If none of the existing, commercial drivers from `Moryx.Drivers.Simulation` fits your requirements, you can easily implement your own driver. All you need to do is implement the interface `Moryx.ControlSystem.ISimulationDriver` as well as the interface of the driver you want to replace like `IMessageDriver<object>` or `IInOutDriver`.
+You can easily implement your own simulation driver. All you need to do is to implement the interface `Moryx.ControlSystem.Simulation.ISimulationDriver` as well as the interface of the driver you want to replace like `IMessageDriver<object>` or `IInOutDriver`.
 
-A module like the commercial simulator will call `Ready` and `Result` on your instance as a replacement for the events usually received from real drivers and sensors. You need to translate them into values or events of you driver interface like `IMessageDriver.Received`. The methods references the activity which you can use to extract the relevant attributes like process id, carrier or product identifiers as needed by your cell. Process execution initiated by the drivers API like parameter values or `Send` methods need to be represented by the `SimulatedState`.
+An underlying simulator will call `Ready` and `Result` on your instance as a replacement for the events usually received from real drivers and sensors. You need to translate them into values or events of you driver interface like `IMessageDriver.Received`. The methods `Ready` and `Result` pass an activity as argument directly or inside a `SimulationResult`, which you can use to extract the relevant attributes like process id, carrier or product identifiers as needed by your cell. Process execution initiated by the drivers API like parameter values or `Send` methods need to be represented by the `SimulatedState`.
 
 ## Example of simulated driver
 
-So here is an example of how your mock driver can implement `Moryx.ControlSystem.ISimulationDriver`:
+So here is an example of how your mock driver can implement `Moryx.ControlSystem.Simulation.ISimulationDriver`:
 ```cs
     [ResourceRegistration]
-    public class TestMockDriver : Driver, IMessageDriver<object>,ISimulationDriver {
-
+    public class TestMockDriver : Driver, IMessageDriver<object>, ISimulationDriver
+    {
         public bool HasChannels => false;
 
         public IDriver Driver => this;
@@ -18,6 +18,7 @@ So here is an example of how your mock driver can implement `Moryx.ControlSystem
         public string Identifier => Name;
 
         private SimulationState _simulatedState;
+
         // simulated state of the driver
         public SimulationState SimulatedState
         {
@@ -88,11 +89,11 @@ So here is an example of how your mock driver can implement `Moryx.ControlSystem
     }
 ```
 
-Note: The `Send()` method might differ from cell to cell.You can override the `Send()` and do your implementation of what needs to happened when your "mock" driver receives something from the cell. In case your driver doesn't have a `send()` method, you can use your own method and react upon the type of message you received just like described inside the `TestMockDriver.Send()` method above.
+Note: The `Send()` method might differ from cell to cell. You can override the `Send()` and do your implementation of what needs to happen when your "mock" driver receives something from the cell. In case your driver doesn't have a `Send()` method, you can use your own method and react upon the type of message you received just like described inside the `TestMockDriver.Send()` method above.
 
  # How does my Cell use my `MockDriver` ?
 
-In your cell definition/Class you can use the following example based on the type of driver you're trying to simulate. Let's say we are trying to "mock" an `MQTT driver` since Moryx MQTT driver implements from `IMessageDriver<object>` in your cell you can have the following case:
+In your cell definition you can use the following example based on the type of driver you're trying to simulate. Let's say we are trying to "mock" an `MQTT driver` since Moryx MQTT driver implements from `IMessageDriver<object>` in your cell you can have the following case:
 ```csharp
     // SolderingCell.cs
 
@@ -108,7 +109,7 @@ In your cell definition/Class you can use the following example based on the typ
     }
 ```
 
-Since the our "mock" driver has the following property defined:
+Since our "mock" driver has the following property defined:
 ```csharp
     //... rest of the codes//
 
@@ -151,7 +152,7 @@ Moryx will take care of the relationship once you assign the driver to the cell.
         public long ProcessId { get; set; }
     }
  ```
- In the cell when you need to send a data to the driver you can do as described bellow:
+ In the cell when you need to send data to the driver you can do as described bellow:
  ```csharp
  //AssemblyCell.cs
     //... rest of the codes//
@@ -165,7 +166,7 @@ Moryx will take care of the relationship once you assign the driver to the cell.
  ```
  As you can see inside the `StartActivity` method we want the cell to send data to the driver.
 
- Now in our driver `TestMockDriver` class above. Inside the `public void Send(object payload)` method we are filtering the payload based on the message type that we just define. We can act upon the type of message received. For instance:
+ Now in our `TestMockDriver.Send(object payload)` method we are filtering the payload based on the message type that we have just defined. We can act upon the type of message received. For instance:
  ```csharp
     //... rest of the codes//
 

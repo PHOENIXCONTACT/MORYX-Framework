@@ -5,7 +5,7 @@ uid: VisualInstructions
 
 ## Binding
 
-Visual structions can use binding to include values from the process into text instructions. Each binding must have the form `"{Base.Property}"` where
+Visual instructions can use binding to include values from the process into text instructions. Each binding must have the form `"{Base.Property}"` where
 `Base` can have four different values that define which object is used to resolve the binding. The property is optional and if present must refer to
 a property with a public getter on the object.
 
@@ -38,33 +38,3 @@ sample = new VisualInstruction
 }
 ````
 
-## HowTo use in Parameters
-
-To use this feature in activity parameters that have visual instructions you need to create `IBindingResolver` in your implementation of `ParametersBase.ResolveBinding(process)`. It is recommended to cache the instance in the parameters object because in most cases the parameters of
-a workplan will be bound multiple times to different processes. See the example for `MountingParameters` below.
-
-````cs
-private IInstructionBindingResolver[] _resolvers;
-
-/// <see cref="ParametersBase"/>
-protected override ParametersBase ResolveBinding(IProcess process)
-{
-    if (_resolvers == null)
-    {
-        _resolvers = Instructions.Select(InstructionResolverFactory.Create).ToArray();
-    }
-
-    // Resolve bindings
-    var instructions = new VisualInstruction[Instructions.Length];
-    for (int index = 0; index < Instructions.Length; index++)
-    {
-        instructions[index] = _resolvers[index].Resolve(process);
-    }
-
-    // Return copy with resolved instructions
-    return new MountingParameters
-    {
-        Instructions = instructions
-    };
-}
-````

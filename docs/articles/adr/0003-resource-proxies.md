@@ -26,8 +26,8 @@ This pattern allows external consumers to interact with resource interfaces with
 
 The ResourceManagement-facade will always create a proxy type for each resource type with the following exceptions:
 
-- Modification methods like `IResourceManagement.Create`, `IResourceManagement.Read`, `IResourceManagement.Modify`: They provide the original resource instance to have full access to it. The resource should only be used in the provided accessor-delegate and should never be exported from that.
-- Method `IResourceManagement.GetAllResources`: Used for endpoint-controllers to export all properties from the resource e.g. internal properties or methods marked with `EntrySerialize` which are not part of any interface.
+- Modification methods like `IResourceManagement.CreateUnsafeAsync`, `IResourceManagement.ReadUnsafe`, `IResourceManagement.ModifyUnsafeAsync`: They provide the original resource instance to have full access to it. The resource should only be used in the provided accessor-delegate and should never be exported from that.
+- Method `IResourceManagement.GetResourcesUnsafe`: Used for endpoint-controllers to export all properties from the resource e.g. internal properties or methods marked with `EntrySerialize` which are not part of any interface.
 
 ## Consequences
 

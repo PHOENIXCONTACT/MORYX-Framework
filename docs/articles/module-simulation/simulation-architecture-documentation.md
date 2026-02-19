@@ -2,9 +2,9 @@
 
 The following image shows the architecture of the simulation.
 
-![alt text](/docs/articles/module-simulation/simulated_driver_architecture.jpg)
+![alt text](./images/simulated_driver_architecture.jpg)
 
-The architecture is divided in 3 parts : MORYX Cells ,MORYX Drivers and PLCs.
+The architecture is divided in 3 parts : MORYX Cells, MORYX Drivers and PLCs.
 
 In the architecture we have : Cells that are digital twins of a physical cell; Drivers that the digital twin (cell) uses to communicate with the physical device (PLC).
 

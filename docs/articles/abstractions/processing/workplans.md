@@ -7,7 +7,7 @@ As part of the _Moryx-package_ the namespace _Moryx.Workplans_ and its static cl
 
 ## Workplan Modeling
 
-The model of a workplan instance is called `Workplan` and implemented as an object graph of two types of classes - steps ([IWorkplanStep](/src/Moryx/Workflows/API/Type/IWorkplanStep.cs)) and connectors ([IConnector](/src/Moryx/Workflows/API/Type/IConnector.cs)). The workplan declares a collection for each type of object, namely `Steps` and `Connectors`. The two `IConnector`-arrays `Inputs` and `Outputs` on `IWorkplanStep` create the graph of the executable workplan instance as two steps referencing the same connector (one as output and one as input) are implicitly connected.
+The model of a workplan instance is called `Workplan` and implemented as an object graph of two types of classes - steps ([IWorkplanStep](/src/Moryx/Workplans/API/Type/IWorkplanStep.cs)) and connectors ([IConnector](/src/Moryx/Workplans/API/Type/IConnector.cs)). The workplan declares a collection for each type of object, namely `Steps` and `Connectors`. The two `IConnector`-arrays `Inputs` and `Outputs` on `IWorkplanStep` create the graph of the executable workplan instance as two steps referencing the same connector (one as output and one as input) are implicitly connected.
 
 ### Definitions
 
@@ -25,9 +25,9 @@ The model of a workplan instance is called `Workplan` and implemented as an obje
 
 ### Workplan Nodes
 
-The previously mentioned connectors and steps share the common interface [IWorkplanNode](/src/Moryx/Workflows/API/Type/IWorkplanNode.cs). A workplan node declares two properties `Id` and `Name`. The `Name` is set manually while the `Id` is assigned when the node is added to the workplan. The `Id` is only unique to the workplan the node was added to but remains unchanged for its entire lifecycle.
+The previously mentioned connectors and steps share the common interface [IWorkplanNode](/src/Moryx/Workplans/API/Type/IWorkplanNode.cs). A workplan node declares two properties `Id` and `Name`. The `Name` is set manually while the `Id` is assigned when the node is added to the workplan. The `Id` is only unique to the workplan the node was added to but remains unchanged for its entire lifecycle.
 
-**Connectors** define the connection between two steps to define the possible paths from the start of the workplan over the used tasks until an endpoint is reached. They are rather plain objects that, besides inherited properties, only declare their [classification](/src/Moryx/Workflows/API/NodeClassification.cs). The _classification_ distinguishes between _Entry_ and _Exit_ points of the workplan or simple connections between two steps.
+**Connectors** define the connection between two steps to define the possible paths from the start of the workplan over the used tasks until an endpoint is reached. They are rather plain objects that, besides inherited properties, only declare their [classification](/src/Moryx/Workplans/API/NodeClassification.cs). The _classification_ distinguishes between _Entry_ and _Exit_ points of the workplan or simple connections between two steps.
 
 **WorkplanSteps** are basically the Tasks which must be implemented in an application to define the needed step in the production. The task will create the corresponding activity during the processing of the workplan. The workplan engine, as most of MORYX, was created in the context of industrial automation where the steps represent manufacturing steps of a product. Independent from its origin the workplan engine was designed to be domain-independent. For this purpose users of the workplan engine need to create implementations of `IWorkplanStep` for the actions of their domain.
 
@@ -41,21 +41,21 @@ To implement `IWorkplanStep` it is recommended to derive from `WorkplanStepBase`
 !["Petri Net](images/petrinet.png)
 
 Unlike MORYX Classic, there shall be not one single large workplan but separate small workplans to get from one construction level to the next one.
-In addition to the work plan steps, work plans may contains splits and joins to support parallel processing. Therefore there will be not one single token inside the net as in MORYX Classic but a group of tokens.
+In addition to the work plan steps, workplans may contain splits and joins to support parallel processing. Therefore there will be not one single token inside the net as in MORYX Classic but a group of tokens.
 
 The ProcessController will be changed to get a list of activities instead of a single one. The list may be empty if there is a join still waiting for other tokens. The workflow finishes if the list of activities is null.
 
 Using reflection, it is quite easy to navigate through the properties of an object tree. The workflow editor could load the product definition from the control system or directly from TeamCenter. The reference to the property could be stored like an XPath.
 
-The work plan editor validates the work plan for soundness.
+The workplan editor validates the work plan for soundness.
 
-To support identical (or at least compatible) production facilities, the work plan editor can push a work plan to more than one facility.
+To support identical (or at least compatible) production facilities, the workplan editor can push a work plan to more than one facility.
 
 The Control System checks the workplan on import for compatibility.
 
-A work plan has a version identifier. There is some kind of release management needed. The process tracing data refers one distinct version of the work plan.
+A workplan has a version identifier. There is some kind of release management needed. The process tracing data refers to one distinct version of the workplan.
 
-To reduce waste there must be a possibility to change the work plan version while the process is running. To change should be allowed only if the finished and the current steps are equal to the new definition. It should be quite easy to check the tracing data whether the new definition would have led to the same tracing result. It should be forbidden to change the version if the tracing data does not fit to the new one.
+To reduce waste there must be a possibility to change the workplan version while the process is running. The change should be allowed only if the finished and the current steps are equal to the new definition. It should be quite easy to check the tracing data whether the new definition would have led to the same tracing result. It should be forbidden to change the version if the tracing data does not fit to the new one.
 
 For each group of splits and joins leading to parallel threads there must be a bounding box with exactly one entry and one exit. The only exception of this rule is a global abort, if the process shall be terminated in case of an error. It is difficult (or even impossible) to validate termination if loops are allowed, because the termination of the loop cannot be validated at all.
 
@@ -99,11 +99,11 @@ workplan.Validate();
 RecipeStorage.ToWorkplanEntity(openContext, workplan);
 ````
 
-The method `AddStep` of the workplan takes a list of connectors which must fit the result enum of the corresponding activity of the used task. If it does not fit then the validation will throw an exception. In the shown example has the MountTask only two outputs where the first one is the `Mounted` connector and the last goes directly to the `Failed` output. The other activities have three possible results where two of them go directly to the failed output. The `UnmountTask` is the last task and its first output, which is the success path, goes to the `End` output to close the good path of this workplan.
+The method `AddStep` of the workplan takes a list of connectors which must fit the result enum of the corresponding activity of the used task. If it does not fit then the validation will throw an exception. In the shown example the MountTask has only two outputs where the first one is the `Mounted` connector and the last goes directly to the `Failed` output. The other activities have three possible results where two of them go directly to the failed output. The `UnmountTask` is the last task and its first output, which is the success path, goes to the `End` output to close the good path of this workplan.
 
 ## Workplan Instance Execution
 
-For execution the above mentioned _Workplans_ are instantiated to _WorkplanInstances_, which can then be executed by an instance of the [workplan engine](/src/Moryx/Workflows/API/IWorkplanEngine.cs). The internal architecture is based on [the concept of petri-nets](https://en.wikipedia.org/wiki/Petri_net) with its transition and places. The execution is performed by tokens that are moved by transitions from one place to another.
+For execution the above mentioned _Workplans_ are instantiated to _WorkplanInstances_, which can then be executed by an instance of the [workplan engine](/src/Moryx/Workplans/API/IWorkplanEngine.cs). The internal architecture is based on [the concept of petri-nets](https://en.wikipedia.org/wiki/Petri_net) with its transitions and places. The execution is performed by tokens that are moved by transitions from one place to another.
 
 ````cs
 var workplan = MethodThatReturnsWorkplan();
@@ -114,13 +114,13 @@ engine.Completed += OnEngineCompleted;
 engine.Start();
 ````
 
- It is possible to pass a [context](/src/Moryx/Workflows/API/Type/IWorkplanContext.cs) to the workplan instantiation. This makes it possible to create workplans in a more universal way and add details during the creation of an individual instance. The context, like steps and transitions, are created domain specific. The context can contain instance specific parameters likes names or ids to avoid including them in the workplan. During creation of `ITransition` those values can be written to the new object from the context.
+It is possible to pass a [context](/src/Moryx/Workplans/API/Type/IWorkplanContext.cs) to the workplan instantiation. This makes it possible to create workplans in a more universal way and add details during the creation of an individual instance. The context, like steps and transitions, are created domain specific. The context can contain instance specific parameters likes names or ids to avoid including them in the workplan. During creation of `ITransition` those values can be written to the new object from the context.
 
 ### Path Prediction
 
 Sometimes the result of a workplan instance execution is foreseeable during execution even though the engine has not completed yet because the workplan defines final steps before the instance was truly completed. However in order to save time it might make sense to process the expected result without awaiting the engines completion. Path prediction refers to the ability to analyze a workplan and identify paths that lead to only one possible outcome. Once the workplan engine enters that path during execution the result can be predicted **before** the workplan instance was completed.
 
-In _Moryx.Workplans_ this feature is available via the [PathPredictor](/src/Moryx/Workflows/API/IPathPredictor.cs). An instance of the path predictor can be created per workplan and then used to monitor all engines executing an instance of  the afore-mentioned workplan. During creation the workplan is analyzed for predictable paths and once an instance enters that path an event is published that contains the expected result in the form of a `NodeClassification`.
+In _Moryx.Workplans_ this feature is available via the [PathPredictor](/src/Moryx/Workplans/API/IPathPredictor.cs). An instance of the path predictor can be created per workplan and then used to monitor all engines executing an instance of  the afore-mentioned workplan. During creation the workplan is analyzed for predictable paths and once an instance enters that path an event is published that contains the expected result in the form of a `NodeClassification`.
 
 ````cs
 var workplan = MethodThatReturnsWorkplan();
