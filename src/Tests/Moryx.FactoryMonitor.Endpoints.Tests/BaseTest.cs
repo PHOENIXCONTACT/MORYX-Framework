@@ -80,7 +80,7 @@ public abstract class BaseTest
         _resourceManagementMock.Setup(rm =>
                 rm.GetResource<IMachineLocation>(It.Is<Func<IMachineLocation, bool>>(f => f(_assemblyCellLocation))))
             .Returns(_assemblyCellLocation);
-        _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_assemblyCellLocation.Id, It.IsAny<Func<Resource, MachineLocation>>()))
+        _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_assemblyCellLocation.Id, It.IsAny<Func<Resource, IMachineLocation>>()))
             .Returns(_assemblyCellLocation);
         //_solderingCell location
         _solderingCellLocation = _graph.Instantiate<MachineLocation>();
@@ -91,7 +91,7 @@ public abstract class BaseTest
         _resourceManagementMock.Setup(rm =>
                 rm.GetResource<IMachineLocation>(It.Is<Func<IMachineLocation, bool>>(f => f(_solderingCellLocation))))
             .Returns(_solderingCellLocation);
-        _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_solderingCellLocation.Id, It.IsAny<Func<Resource, MachineLocation>>()))
+        _resourceManagementMock.Setup(rm => rm.ReadUnsafe(_solderingCellLocation.Id, It.IsAny<Func<Resource, IMachineLocation>>()))
             .Returns(_solderingCellLocation);
 
         // resource management cells
