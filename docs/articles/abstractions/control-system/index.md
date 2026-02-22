@@ -4,7 +4,7 @@ The goal of the ControlSystem is to fulfill the SCADA layer of the automation py
 
 The classic automation pyramid model shows a series of well-defined layers structured in such a way that information flows upwards from devices to enterprise via levels of control, supervision and management.
 
-![Automation Pyramid](images/automationPyramid.jpg)
+![Automation Pyramid](images/automation-pyramid.jpg)
 
 - The first level or *field level* comprises the physical devices existing in industry such as actuators and sensors.
 - The second level or *control level* includes logical devices such as PCs, PLCs, PIDs, etc.
@@ -146,7 +146,7 @@ For the production of the bread we need a recipe which matches our ingredients a
 
 The workplan is quiet simple. All ingredients will be put into the mixer bowl. After that, the bowl will be covered and have to sit. After the sitting process, more ingredients will be added and mixed. If the base for the bread is ready, it have to be baked. To serve it, it have to be sliced.
 
-![Bake bread Activity Flow](images/BakeBreadActivityFlow.png)
+![Bake bread Activity Flow](images/bake-bread-activity-flow.png)
 
 With all these information and tools a worker can bake the farmers bread. Please note that it is very important to do not mix the product description and the recipe. On another kitchen, the recipe can be another version for example the workplan can be another with merged or more extended steps or the oven have other capabilities (e.g. no capability to bake with circulating air).
 
@@ -187,11 +187,11 @@ Process 1<----->n Activities
 
 Activities are instructions given to a resource. An activity defines parameters and required capabilities. An activity is supposed to be an abstract operation like Insert Part, Assign Serial or Open Shades rather than concrete actions like setting the value of an actuator. The resource is responsible to translate the instruction into concrete actions.
 
-In order to execute an activity, a [cell implementation](CellResource.md) is selected which is capable to perform the activity.
+In order to execute an activity, a [cell implementation](cell-resource.md) is selected which is capable to perform the activity.
 In addition to the capabilities a cell selector can be used to fine tune the otherwise first-come-first-serve selection of the process engine.
 
-- [Cell implementation](CellResource.md): Implement a cell resource and interact with the process engine 
-- [Cell selection](CellSelector.md): Learn how to customize the selection of an activities targets
+- [Cell implementation](cell-resource.md): Implement a cell resource and interact with the process engine 
+- [Cell selection](cell-selector.md): Learn how to customize the selection of an activities targets
 
 ## Notifications
 
@@ -207,8 +207,8 @@ With all the described sections in this document a big picture of the ControlSys
 - [ProcessEngine](xref:ProcessEngine)
 - [NotificationPublisher](xref:NotificationPublisher)
 
-![Big Picture](./images/BigPicture.png)
+![Big Picture](./images/big-picture.png)
 
 The following picture shows the flow of information from an order to a single activity handled by some resource.
 
-![Information Flow](./images/InformationFlowOfSingleOrder.svg)
+![Information Flow](./images/information-flow-of-single-order.svg)

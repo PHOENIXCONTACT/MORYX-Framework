@@ -1,6 +1,6 @@
 # Visual Instructions
 
-Defines the types and API for resources, that display visual instructions to users. For more information on how to use visual instructions in your own activities, take a look [here](VisualInstructions.md).
+Defines the types and API for resources, that display visual instructions to users. For more information on how to use visual instructions in your own activities, take a look [here](visual-instructions.md).
 
 ## Content-Types
 

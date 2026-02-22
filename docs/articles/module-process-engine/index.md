@@ -5,8 +5,8 @@ uid: ProcessEngine
 
 The Process Engine is a server module hosting some of the control system's major components groups:
 
-- [Job Management](./JobManagement.md)
-- [Process Controller](./ProcessController.md)
+- [Job Management](./job-management.md)
+- [Process Controller](./process-controller.md)
 
 Its mission is to provide these components with a common life cycle and to export public APIs to be used by other components.
 In addition it imports all global components which are needed.
@@ -39,9 +39,9 @@ The Process Engine depends on the following APIs and data-models. Detailed docum
 As described above, one of the Process Engines major task is to forward request from the outside to the embedded plugins. 
 This is reflected by the module's architecture. The module provides the facades to the outside and holds the plugins.
 
-![ProcessEngine Overview](images/ProcessEngineOverview.png)
+![ProcessEngine Overview](images/process-engine-overview.png)
 
-![General Class Structure](images/GeneralClassStructure.png)
+![General Class Structure](images/general-class-structure.png)
 
 ## Scheduling
 

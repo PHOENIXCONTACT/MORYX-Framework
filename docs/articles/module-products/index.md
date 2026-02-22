@@ -14,11 +14,11 @@ In the following sections are short descriptions about each part of the product 
 
 In the context of MORYX, the `product type` is mainly the instance independent description and contains the rule how to produce a `product instance`. 
 The rule itself is provided by a [Recipe](/src/Moryx.AbstractionLayer/Recipes/Recipe.cs). 
-For more information regarding the definition of a product including a detailed example see [this article](ProductDefinition.md).
+For more information regarding the definition of a product including a detailed example see [this article](product-definition.md).
 
 ### Recipe
 
-A recipe is used to provide a [Workplan](/docs/articles/abstractions/processing/Workplans.md) for a [Process](/docs/articles/abstractions/processing/Processes.md) in which a product is processed. It can also provides additional parameters related to the `workplan`. All recipes are derived from [Recipe](/src/Moryx.AbstractionLayer/Recipes/Recipe.cs).
+A recipe is used to provide a [Workplan](/docs/articles/abstractions/processing/workplans.md) for a [Process](/docs/articles/abstractions/processing/processes.md) in which a product is processed. It can also provides additional parameters related to the `workplan`. All recipes are derived from [Recipe](/src/Moryx.AbstractionLayer/Recipes/Recipe.cs).
 
 The Abstraction Layer provides the [IProductRecipe](/src/Moryx.AbstractionLayer/Recipes/IProductRecipe.cs) and [IWorkplanRecipe](/src/Moryx.AbstractionLayer/Recipes/IWorkplanRecipe.cs) which can be used separatly or combined. 
 In a production environment, for example, we have the `process` with the belonging `product` and the corresponding `workplan`. 
@@ -28,7 +28,7 @@ The parameters regarding the products production (e.g. the material needed, tech
 
 The workplan defines the steps needed to run a `process`. 
 For each step it defines the successors to be used depending on the result of the step. 
-Each step basically represents an [Activity](/docs/articles/abstractions/processing/Activities.md). 
+Each step basically represents an [Activity](/docs/articles/abstractions/processing/activities.md).
 Workplans are represented inside MORYX by objects implementing [IWorkplan](/src/Moryx/Workflows/API/Type/IWorkplan.cs) and usually just [Workplan](/src/Moryx/Workflows/Implementation/Workplan.cs) is used.
 
 ### Process
@@ -43,6 +43,6 @@ If it is inserted again later on, a new ProductionProcess is created. The `produ
 ## Further Readings regarding Products
 
 There are additional contents available to take a closer look into 
- * the [storage of products](ProductStorage.md) and [recipes](RecipeStorage.md)
- * the [product management](ProductManagement.md) as well as the available [UI on the client side](ProductManagementUI.md)
- * the possibility to [import products](ProductImport.md)
+ * the [storage of products](product-storage.md) and [recipes](recipe-storage.md)
+ * the [product management](product-management.md) as well as the available [UI on the client side](ProductManagementUI.md)
+ * the possibility to [import products](product-import.md)

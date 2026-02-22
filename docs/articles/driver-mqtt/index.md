@@ -1,17 +1,17 @@
 # MORYX MQTT
 
 This repository contains tools for communication with resources via MQTT. <br/>
-[MQTT](MqttGeneralInformation.md) is a light weight protocol using the publish/subscribe-architecture.
+[MQTT](mqtt-general-information.md) is a light weight protocol using the publish/subscribe-architecture.
 
 ### Add a MQTT-Driver
-In order to communicate with a resource using MQTT, first you need a [MQTT-Broker](SetUpTestEnvironment.md). Then you have to create a [DriverMqtt](DriverMqtt.md):
+In order to communicate with a resource using MQTT, first you need a [MQTT-Broker](set-up-test-environment.md). Then you have to create a [DriverMqtt](driver-mqtt.md):
 1. Run *Application.sln* and *Application.UI.sln*
 2. Open the tab *Resources* in the UI
 3. Create a new DriverMqtt
 4. Add topics to the driver by selecting it and pressing the button *Add*
 
 ### Select the right topic
-The [topic](MqttTopics.md) you have to use depends on the datatype of your messages. The already existing topic-types can serialize and deserialize the following data types:
+The [topic](mqtt-topics.md) you have to use depends on the datatype of your messages. The already existing topic-types can serialize and deserialize the following data types:
 - **MqttTopicIByteSerializable**: for classes derived from IByteSerializable
 - **MqttTopicJson**: for classes which will be send as Json objects
 - **MqttTopicPrimitive**: for primitive data types and strings
@@ -73,4 +73,4 @@ public class MqttSensorResource : PublicResource
 }
 ```
 
-For more code examples, look into the documentation of the [DriverMqtt](DriverMqtt.md) and the [MqttTopic](MqttTopics.md).
+For more code examples, look into the documentation of the [DriverMqtt](driver-mqtt.md) and the [MqttTopic](mqtt-topics.md).

@@ -19,7 +19,7 @@ The CastleContainer will be used for the Component Composition as the DI Contain
 
 ## Configuration
 
-- [Configuration](Configuration.md)
+- [Configuration](configuration.md)
 
 ## Logging
 
@@ -29,7 +29,7 @@ The loggers are structured hierarchical. Structures can be instantiated manually
 ## Collections
 
 - [Collections](Collections)
-- [DelayQueue](Collections/DelayQueue.md)
+- [DelayQueue](Collections/delay-queue.md)
 
 ## Bindings
 
@@ -40,7 +40,7 @@ For more details see @subpage bindings.
 
 ## BinaryConnection
 
-- [BinaryConnection](BinaryConnection.md)
+- [BinaryConnection](binary-connection.md)
 
 ## Serialization
 
@@ -50,4 +50,4 @@ For more details see @subpage bindings.
 
 The MORYX Framework provides a state machine implementation that can be used to add state machine capabilities to resources, drivers or modules.
 
-- [State Machine](StateMachine.md)
+- [State Machine](state-machine.md)

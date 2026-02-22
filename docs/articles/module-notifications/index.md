@@ -29,7 +29,7 @@ A `INotificationProcessor` is responsible to process a specific notification typ
 
 The `NotificationPublisher` itself is a singleton component within the module.
 
-![Overview](images/NotificationsOverview.png)
+![Overview](images/notifications-overview.png)
 
 **Start Behavior**
 While starting the `NotificationPublisher`, all processors will be started as well. All notifications will be restored from the processor who was responsible to manage the notification type. After loading the notifications the injected module facades `INotificationSource` will be triggered to restore them if available. Also all events will be registered to the source.

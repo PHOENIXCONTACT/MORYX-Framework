@@ -19,15 +19,15 @@ This article gives you an overview which base classes, storage techniques, proce
 
 ## Activities
 
-An [Activity](processing/Activities.md) is the smallest separately executable step of a Process.
+An [Activity](processing/activities.md) is the smallest separately executable step of a Process.
 
 ## Capabilities
 
-[Capabilities](processing/Capabilities.md) are used to find a matching *Resource* for an Activity.
+[Capabilities](processing/capabilities.md) are used to find a matching *Resource* for an Activity.
 
 ## Constraints
 
-[Constraints](processing/Constraints.md) have a similar impact on the mapping between activities and resources. 
+[Constraints](processing/constraints.md) have a similar impact on the mapping between activities and resources. 
 In contrast to the capabilities, constraints aren't sets of provided and required abilities, but boolean conditions that might restrict the possibility to execute an activity on a resource.
 The constraint is also not based on an inherent property of the activity or resource but arises from the current context in the system.
 
@@ -37,7 +37,7 @@ The constraint is also not based on an inherent property of the activity or reso
 
 ## Process
 
-A [Process](processing/Processes.md) consists of a series of activities and outside of the process engine should live in a [Process Holder Position](./processing/ProcessHolders.md).
+A [Process](processing/processes.md) consists of a series of activities and outside of the process engine should live in a [Process Holder Position](./processing/process-holders.md).
 
 ## Products
 
@@ -49,21 +49,21 @@ A [Recipe](/src/Moryx.AbstractionLayer/Recipes/Recipe.cs) is the base for all re
 
 A [ProductRecipe](/src/Moryx.AbstractionLayer/Recipes/ProductRecipe.cs) provides a basic structure to use a product for production cases.
 
-A [WorkplanRecipe](/src/Moryx.AbstractionLayer/Recipes/WorkplanRecipe.cs) provides a Workplan and a set of parameters to define all the [Activities](processing/Activities.md) needed for a Process.
+A [WorkplanRecipe](/src/Moryx.AbstractionLayer/Recipes/WorkplanRecipe.cs) provides a Workplan and a set of parameters to define all the [Activities](processing/activities.md) needed for a Process.
 
 A [ProductionRecipe](/src/Moryx.AbstractionLayer/Recipes/ProductionRecipe.cs) is the combination of a `ProductRecipe` and `WorkplanRecipe`.
 
 ## Resources
 
-The Resources package of the AbstractionLayer contains several basic classes to be used by the [Resources](/src/Moryx.AbstractionLayer/Resources/IResource.cs) and the [Resource Management](/docs/articles/module-resources/ResourceManagement.md).
+The Resources package of the AbstractionLayer contains several basic classes to be used by the [Resources](/src/Moryx.AbstractionLayer/Resources/IResource.cs) and the [Resource Management](/docs/articles/module-resources/resource-management.md).
 
 ## Tasks
 
-[Tasks](processing/Tasks.md) are used within a Workplan to define the Activity for each step.
+[Tasks](processing/tasks.md) are used within a Workplan to define the Activity for each step.
 
 ## Workplan
 
-The [Workplan](processing/Workplans.md) package of the AbstractionLayer contains several helper classes to be used by the Workflow package.
+The [Workplan](processing/workplans.md) package of the AbstractionLayer contains several helper classes to be used by the Workflow package.
 
 ## Tutorials
 

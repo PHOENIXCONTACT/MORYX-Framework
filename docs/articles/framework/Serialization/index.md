@@ -8,6 +8,6 @@ The platform uses two different ways of serializing objects - JSON and our custo
 
 The three sections below explain the entry format, how it is created from objects or classes on the server and how to use it on the client.
 
-* [Entry Format](EntryFormat.md)
-* [Entry Convert](EntryConvert.md)
-* [PossibleValues](PossibleValues.md)
+* [Entry Format](entry-format.md)
+* [Entry Convert](entry-convert.md)
+* [PossibleValues](possible-values.md)

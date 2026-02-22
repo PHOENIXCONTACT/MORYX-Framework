@@ -1,9 +1,9 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
-
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Recipes;
 using Moryx.Container;
+using Moryx.ControlSystem.Cells;
 using Moryx.ControlSystem.Recipes;
 using Moryx.ControlSystem.Setups;
 using Moryx.Logging;
@@ -13,12 +13,11 @@ using Moryx.Workplans.WorkplanSteps;
 namespace Moryx.ControlSystem.SetupProvider;
 
 [Component(LifeCycle.Singleton, typeof(ISetupManager))]
-internal class SetupManager : ISetupManager, ILoggingComponent
+internal partial class SetupManager : ISetupManager, ILoggingComponent
 {
     private readonly ICollection<ISetupTrigger> _triggers = new List<ISetupTrigger>();
 
     #region Dependencies
-
     /// <summary>
     /// Logger for this component
     /// </summary>
@@ -54,33 +53,38 @@ internal class SetupManager : ISetupManager, ILoggingComponent
 
     public SetupRecipe RequiredSetup(SetupExecution execution, ProductionRecipe recipe, ISetupTarget targetSystem)
     {
+        Logger.LogTrace("Creating required {execution} {setupType} for running production recipe '{productionRecipeName}' (Id={productionRecipeId})",
+            execution, nameof(SetupRecipe), recipe.Name, recipe.Id);
+
         // Determine the triggers
         var triggers = new List<ISetupTrigger>();
+
         // TODO: This loop restores old behavior with the new API, but it has much more potential
         foreach (var trigger in _triggers.Where(t => t.Execution == execution))
         {
+
             var evaluation = TryEvaluate(trigger, recipe);
 
-            // No action => skip
             if (!evaluation.Required)
+            {
+                Logger.LogTrace("Evaluation not required for trigger '{triggerName}' ", trigger.GetType().Name);
                 continue;
+            }
 
-            // Skip the trigger if its capabilities are already provided
-            if (execution == SetupExecution.BeforeProduction &&
-                evaluation is SetupEvaluation.Change provide &&
-                targetSystem.Cells(provide.TargetCapabilities).Any())
-                continue;
-
-            // Skip the trigger, if the setup wants to remove capabilities that are not present
-            if (execution == SetupExecution.AfterProduction &&
-                evaluation is SetupEvaluation.Change remove &&
-                !targetSystem.Cells(remove.CurrentCapabilities).Any())
-                continue;
+            if (evaluation is SetupEvaluation.Change change)
+            {
+                if (ShouldSkipForExecution(execution, targetSystem, change, trigger.GetType().Name))
+                    continue;
+            }
 
             triggers.Add(trigger);
+            Logger.LogTrace(
+                "Accepted trigger '{triggerName}' (evaluationType={evaluationType}, execution={execution})",
+                trigger.GetType().Name, evaluation.GetType().Name, execution);
         }
 
-        Logger.LogDebug("Evaluated {totalNumber} setup trigger for execution '{executionType}'. Creating workplan steps for {positiveNumber} of them...",
+        Logger.LogDebug(
+            "Evaluation summary: {evaluated} triggers checked for execution '{execution}', {selected} selected for step creation",
             _triggers.Count(t => t.Execution == execution), execution, triggers.Count);
 
         // Create all necessary setup steps
@@ -88,7 +92,7 @@ internal class SetupManager : ISetupManager, ILoggingComponent
         foreach (var trigger in triggers.OrderBy(t => t.SortOrder))
         {
             var index = trigger.SortOrder;
-            // Create step collection for first entry of a sort order
+
             if (!stepGroups.TryGetValue(index, out var value))
             {
                 value = new List<IWorkplanStep>();
@@ -99,18 +103,18 @@ internal class SetupManager : ISetupManager, ILoggingComponent
 
             if (value.Count == 0)
             {
-                Logger.LogWarning("{Trigger} with sort index {sortOrder} found the system to require a setup {executionType}, but did not create workplan steps.",
-                    nameof(trigger), index, trigger.Execution);
+                Logger.LogWarning("Trigger '{triggerName}' with sort index {sortOrder} found the system to require a setup {executionType}, but did not create workplan steps.",
+                    trigger.GetType().Name, index, trigger.Execution);
                 stepGroups.Remove(index);
             }
         }
+
         if (stepGroups.Count == 0) // No setup necessary for this recipe
         {
             return null;
         }
 
-        Logger.LogDebug("Created {totalSteps} workplan steps in {totalGroups}. Wiring workplan...",
-            stepGroups.Values.Sum(g => g.Count), stepGroups.Count);
+        Logger.LogDebug("Created {totalSteps} workplan steps in {totalGroups}. Wiring workplan...", stepGroups.Values.Sum(g => g.Count), stepGroups.Count);
 
         // Add steps to the workplan
         var workplan = new Workplan
@@ -140,13 +144,21 @@ internal class SetupManager : ISetupManager, ILoggingComponent
 
     private SetupEvaluation TryEvaluate(ISetupTrigger trigger, ProductionRecipe recipe)
     {
+        Logger.LogTrace("Entering TryEvaluate (trigger='{triggerName}', recipeId={recipeId}, recipeName={recipeName})", trigger.GetType().Name, recipe.Id, recipe.Name);
+
         try
         {
-            return trigger.Evaluate(recipe);
+            var result = trigger.Evaluate(recipe);
+
+            Logger.LogTrace("Evaluation result (triggerName='{triggerName}', required={required}, evaluationType={evaluationType})",
+                trigger.GetType().Name, result.Required, result.GetType().Name);
+
+            return result;
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "Calling {method} on {trigger} threw an exception prcessing recipe {id}: {name}",
+            Logger.LogError(e,
+                "Evaluation calling exception {method} on evaluating (triggerName='{triggerName}') for recipeId={recipeId}, recipeName={recipeName}",
                 nameof(ISetupTrigger.Evaluate), trigger.GetType().Name, recipe.Id, recipe.Name);
             throw;
         }
@@ -160,7 +172,7 @@ internal class SetupManager : ISetupManager, ILoggingComponent
         }
         catch (Exception e)
         {
-            Logger.LogError(e, "Calling {method} on {trigger} threw an exception processing recipe {id}: {name}",
+            Logger.LogError(e, "Calling {method} on trigger '{triggerName}' threw an exception processing recipe {id}: {name}",
                 nameof(ISetupTrigger.CreateSteps), trigger.GetType().Name, recipe.Id, recipe.Name);
             throw;
         }
@@ -221,5 +233,64 @@ internal class SetupManager : ISetupManager, ILoggingComponent
 
             input = output;
         }
+    }
+
+    private bool ShouldSkipForExecution(SetupExecution execution, ISetupTarget targetSystem, SetupEvaluation.Change change, string triggerName)
+    {
+        switch (execution)
+        {
+            case SetupExecution.BeforeProduction:
+            {
+                var targetCells = targetSystem.Cells(change.TargetCapabilities);
+                var hasTargetCaps = targetCells.Any();
+
+                if (hasTargetCaps)
+                {
+                    Log.TargetCellsAlreadyProvidesRequiredCapabilities(Logger, triggerName, change.TargetCapabilities.ToString(),
+                        string.Join(", ", targetCells.Select(cell => cell.Name)));
+                    return true;
+                }
+                return false;
+            }
+
+            case SetupExecution.AfterProduction:
+            {
+                var currentCells = targetSystem.Cells(change.CurrentCapabilities);
+                var hasCurrentCaps = currentCells.Any();
+
+                if (!hasCurrentCaps)
+                {
+                    Log.CurrentCapabilitiesAlreadyRemoved(Logger, triggerName, change.CurrentCapabilities.ToString(),
+                        string.Join(", ", currentCells.Select(cell => cell.Name))
+                    );
+                    return true;
+                }
+                return false;
+            }
+            default:
+                return false;
+        }
+    }
+
+
+    private static partial class Log
+    {
+        [LoggerMessage(
+            Level = LogLevel.Trace,
+            Message = "[trigger='{triggerName}'] Target already provides required capabilities {capabilities} (cells=[{cells}])")]
+        public static partial void TargetCellsAlreadyProvidesRequiredCapabilities(
+            ILogger logger,
+            string triggerName,
+            string capabilities,
+            string cells);
+
+        [LoggerMessage(
+            Level = LogLevel.Trace,
+            Message = "[trigger='{triggerName}'] Current capabilities already removed {capabilities} (cells=[{cells}])")]
+        public static partial void CurrentCapabilitiesAlreadyRemoved(
+            ILogger logger,
+            string triggerName,
+            string capabilities,
+            string cells);
     }
 }

@@ -37,7 +37,7 @@ public interface IProcessDataMonitor
 
 ## Architecture
 
-![ProcessDataMonitor Architecture](images/ProcessDataMonitor.png)
+![ProcessDataMonitor Architecture](images/process-data-monitor.png)
 
 The PDM is implemented as simple as possible. It implements the `IProcessDataMonitor` facade. The actions of the facade are linked to the `IProcessDataCollector`.
 
@@ -130,7 +130,7 @@ The PDM does not have any facade dependencies to other module to secure the life
 
 A sample for the process data monitor is a module which is referencing the `IProcessControl` facacde and also the `IProcessDataMonitor` facade. The task for this module is to convert facade events from the `IProcessControl` to measurements for the PDM.
 
-![ProcessEngine Adapter](images/sampleAdapterOrchestration.png)
+![ProcessEngine Adapter](images/sample-adapter-orchestration.png)
 
 This architecture makes the PDM fully independet. Adapters are named like the adopted module with the prefix "Pdm". This is just a naming convention and makes it more easy to identify adapter modules.
 

@@ -12,6 +12,7 @@ using NUnit.Framework;
 using Moryx.Logging;
 using Moryx.TestTools.UnitTest;
 using Moryx.ControlSystem.Simulation;
+using Moryx.ControlSystem.Simulator.Implementation;
 
 namespace Moryx.Simulation.Tests;
 
@@ -43,8 +44,8 @@ internal class BaseTest
         };
 
         //driver
-        _assemblyCellDriver = new SimulatedDummyTestDriver();
-        _anotherAssemblyCellDriver = new SimulatedDummyTestDriver();
+        _assemblyCellDriver = new SimulatedDummyTestDriver() { Id = 10 };
+        _anotherAssemblyCellDriver = new SimulatedDummyTestDriver() { Id = 20 };
 
         //cell
         _assemblyCell = Builder.CellBuilder(1, _assemblyCellDriver);

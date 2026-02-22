@@ -95,7 +95,9 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
             field = value;
             //Update the state of the internal operation
             if (_state is not null)
+            {
                 Operation.State = _state.GetFullClassification();
+            }
         }
     }
 
@@ -106,17 +108,20 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
     /// <summary>
     /// Flag if operation have reached the amount.
     /// </summary>
-    internal bool AmountReached => CountStrategy.AmountReached(Operation);
+    internal bool AmountReached =>
+        ExecuteCountStrategy(() => CountStrategy.AmountReached(Operation), nameof(CountStrategy.AmountReached), fallback: true);
 
     /// <summary>
     /// Flag if the operation can reach the amount with the current jobs
     /// </summary>
-    internal bool CanReachAmount => CountStrategy.CanReachAmount(Operation);
+    internal bool CanReachAmount =>
+        ExecuteCountStrategy(() => CountStrategy.CanReachAmount(Operation), nameof(CountStrategy.CanReachAmount), fallback: true);
 
     /// <summary>
     /// Sum of SuccessCount and RunningCount of jobs. All running will be classified as "success"
     /// </summary>
-    internal int ReachableAmount => CountStrategy.ReachableAmount(Operation);
+    internal int ReachableAmount =>
+        ExecuteCountStrategy(() => CountStrategy.ReachableAmount(Operation), nameof(CountStrategy.ReachableAmount), fallback: 0);
 
     /// <inheritdoc />
     public async Task<IOperationData> Initialize(OperationCreationContext context, IOrderData orderData, IOperationSource source)
@@ -153,13 +158,17 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
 
         var overDeliveryAmount = context.OverDeliveryAmount;
         if (overDeliveryAmount < context.TotalAmount)
+        {
             overDeliveryAmount = context.TotalAmount;
+        }
 
         Operation.OverDeliveryAmount = overDeliveryAmount;
 
         var underDeliveryAmount = context.UnderDeliveryAmount;
         if (underDeliveryAmount > context.TotalAmount)
+        {
             underDeliveryAmount = context.TotalAmount;
+        }
 
         Operation.UnderDeliveryAmount = underDeliveryAmount;
 
@@ -267,14 +276,16 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
     {
         Log(LogLevel.Information, "Starting assignment");
 
-        return _stateLock.ExecuteAsync(() => _state.Assign());
+        return _stateLock.ExecuteAsync(_state.Assign);
     }
 
     /// <inheritdoc cref="IOperationData"/>
     public Task AssignCompleted(bool success)
     {
         if (success)
+        {
             Operation.CreationContext = null;
+        }
 
         return _stateLock.ExecuteAsync(() => _state.AssignCompleted(success));
     }
@@ -304,7 +315,7 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
     {
         Log(LogLevel.Information, "Aborting operation");
 
-        return _stateLock.ExecuteAsync(() => _state.Abort());
+        return _stateLock.ExecuteAsync(_state.Abort);
     }
 
     internal async Task HandleAbort()
@@ -356,7 +367,7 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
     public async Task Resume()
     {
         // Restore on state
-        await _stateLock.ExecuteAsync(() => _state.Resume());
+        await _stateLock.ExecuteAsync(_state.Resume);
     }
 
     /// <inheritdoc cref="IOperationData"/>
@@ -498,7 +509,7 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
     /// <inheritdoc cref="IOperationData"/>
     public AdviceContext GetAdviceContext()
     {
-        var adviceContext = _stateLock.Execute(() => _state.GetAdviceContext());
+        var adviceContext = _stateLock.Execute(_state.GetAdviceContext);
 
         return adviceContext;
     }
@@ -526,13 +537,19 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
         }
 
         if (orderAdvice is { Amount: <= 0 })
+        {
             ThrowError("Amount less then or equals zero cannot be adviced!");
+        }
 
         if (pickPartAdvice != null && !Operation.Parts.Contains(pickPartAdvice.Part))
+        {
             ThrowError("The part to advice is not part of the operation!");
+        }
 
         if (orderAdvice == null && pickPartAdvice == null)
+        {
             ThrowError("Advices of type " + advice.GetType().Name + " cannot be handled.");
+        }
 
         return _stateLock.ExecuteAsync(() => _state.Advice(advice));
     }
@@ -589,7 +606,7 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
     /// <inheritdoc cref="IOperationData"/>
     public ReportContext GetReportContext()
     {
-        var reportContext = _stateLock.Execute(() => _state.GetReportContext());
+        var reportContext = _stateLock.Execute(_state.GetReportContext);
         return reportContext;
     }
 
@@ -600,11 +617,15 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
 
         var unreportedFailure = Operation.Progress.ScrapCount - reportedFailure;
         if (unreportedFailure < 0)
+        {
             unreportedFailure = 0;
+        }
 
         var unreportedSuccess = Operation.Progress.SuccessCount - reportedSuccess;
         if (unreportedSuccess < 0)
+        {
             unreportedSuccess = 0;
+        }
 
         var context = GetOperationInfo<ReportContext>();
 
@@ -651,7 +672,9 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
             // Only update a recipe if it is part of the current recipes
             var affectedRecipe = Operation.Recipes.FirstOrDefault(r => r.Id == productRecipe.Id);
             if (affectedRecipe == null)
+            {
                 return;
+            }
 
             Operation.Recipes.Remove(affectedRecipe);
             Operation.Recipes.Add(productRecipe);
@@ -689,18 +712,26 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
         return _dispatchHandler.TryDispatch();
     }
 
-    /// <inheritdoc />
-    public async Task UpdateSource(IOperationSource source)
+    private T ExecuteCountStrategy<T>(Func<T> func, string actionName, T fallback)
     {
-        Operation.Source = source;
+        try
+        {
+            return func();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex,
+                "CountStrategy '{strategy}' threw an exception in {action} for Operation {opId}.",
+                CountStrategy.GetType().Name, actionName, Operation.Identifier);
 
-        await _savingContext.SaveOperation(this);
-        Updated?.Invoke(this, new OperationEventArgs(this));
+            return fallback;
+        }
     }
 
     private void UpdateProgress()
     {
-        var relevantJobs = CountStrategy.RelevantJobs(Operation).ToArray();
+        var relevantJobs = ExecuteCountStrategy(() => CountStrategy.RelevantJobs(Operation).ToArray(), nameof(CountStrategy.RelevantJobs), Array.Empty<Job>());
+
         var progress = Operation.Progress;
 
         // Progress on relevant jobs
@@ -740,7 +771,9 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
         var scrapCount = Operation.Progress.ScrapCount;
 
         if (scrapCount < 0)
+        {
             scrapCount = 0;
+        }
 
         info.SuccessCount = successCount;
         info.ScrapCount = scrapCount;
@@ -808,7 +841,9 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
                 _isDispatching = true;
             }
 
-            var missingAmounts = _countStrategy.MissingAmounts(_operationData.Operation);
+            var missingAmounts = _operationData.ExecuteCountStrategy(() => _countStrategy.MissingAmounts(_operationData.Operation),
+                nameof(_countStrategy.MissingAmounts),Array.Empty<DispatchContext>());
+
             if (missingAmounts.Count == 0)
             {
                 _operationData.Log(LogLevel.Error, "There is nothing to dispatch. Check the {0}.", _countStrategy.GetType().Name);
@@ -830,7 +865,9 @@ internal class OperationData : IOperationData, IAsyncStateContext, ILoggingCompo
                 _isDispatching = false;
 
                 if (!_isDispatchingRequested)
+                {
                     return;
+                }
 
                 // Dispatch again if a dispatch was requested during the last dispatching
                 _isDispatchingRequested = false;

@@ -42,7 +42,8 @@ public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase<NpgsqlDataba
         // Its not possible to delete the database while there are open connections.
         NpgsqlConnection.ClearAllPools();
 
-        // Create connection and prepare command
+        // Create connection and prepare command.
+        // Connect to default 'postgres' database you can't drop a database while connected to it
         var connection = new NpgsqlConnection(BuildConnectionString(config, false));
         var command = CreateCommand($"DROP DATABASE \"{settings.Database}\";", connection);
 
@@ -50,52 +51,6 @@ public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase<NpgsqlDataba
         await connection.OpenAsync(cancellationToken);
         await command.ExecuteNonQueryAsync(cancellationToken);
         await connection.CloseAsync();
-    }
-
-    private static NpgsqlConnectionStringBuilder CreateConnectionStringBuilder(DatabaseConfig config, bool includeModel = true)
-    {
-        var builder = new NpgsqlConnectionStringBuilder(config.ConnectionString);
-
-        if (!includeModel)
-        {
-            builder.Database = string.Empty;
-        }
-
-        return builder;
-    }
-
-    /// <summary>
-    /// Replaces given config's database with "postgres".
-    /// This config can be used to check availability of
-    /// the database server.
-    /// </summary>
-    /// <param name="config"></param>
-    /// <returns>Modified copy of given config</returns>
-    private static DatabaseConfig CreateTestDatabaseConfig(DatabaseConfig config)
-    {
-        var testConfig = new NpgsqlDatabaseConfig
-        {
-            ConnectionString = config.ConnectionString,
-            ConfigState = config.ConfigState,
-            LoadError = config.LoadError
-        };
-
-        var builder = new NpgsqlConnectionStringBuilder(testConfig.ConnectionString)
-        {
-            Database = "postgres"
-        };
-
-        testConfig.ConnectionString = builder.ConnectionString;
-
-        return testConfig;
-    }
-
-    /// <inheritdoc/>
-    public override Task<TestConnectionResult> TestConnectionAsync(DatabaseConfig config, CancellationToken cancellationToken = default)
-    {
-        // Using the "postgres" database to check the server's availability.
-        // might lead to edge-case when "postgres" database has been deleted.
-        return base.TestConnectionAsync(CreateTestDatabaseConfig(config), cancellationToken);
     }
 
     /// <inheritdoc />
@@ -107,9 +62,21 @@ public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase<NpgsqlDataba
         return builder.Options;
     }
 
+    /// <summary>
+    /// Builds a connection string for PostgreSQL database connections.
+    /// </summary>
+    /// <param name="config">The database configuration containing the connection string.</param>
+    /// <param name="includeModel">If true, uses the configured database; if false, connects to the default 'postgres' database.</param>
+    /// <returns>The connection string for PostgreSQL.</returns>
     private static string BuildConnectionString(DatabaseConfig config, bool includeModel)
     {
-        var builder = CreateConnectionStringBuilder(config, includeModel);
+        var builder = new NpgsqlConnectionStringBuilder(config.ConnectionString);
+
+        if (!includeModel)
+        {
+            builder.Database = "postgres";
+        }
+
         builder.PersistSecurityInfo = true;
 
         return builder.ToString();
@@ -121,8 +88,7 @@ public sealed class NpgsqlModelConfigurator : ModelConfiguratorBase<NpgsqlDataba
         var migrationAssemblyType = FindMigrationAssemblyType(typeof(NpgsqlDbContextAttribute));
 
         var builder = new DbContextOptionsBuilder();
-        builder.UseNpgsql(
-            BuildConnectionString(config, true),
+        builder.UseNpgsql(BuildConnectionString(config, true),
             x => x.MigrationsAssembly(migrationAssemblyType.Assembly.FullName));
 
         return CreateContext(migrationAssemblyType, builder.Options);
