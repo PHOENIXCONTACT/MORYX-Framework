@@ -1,5 +1,6 @@
 @use "@angular/material" as mat;
 @use "@moryx/ngx-web-framework/styles/variables" as *;
+@use 'sass:map';
 
 .multi-progress-container {
   display: flex;
@@ -15,24 +16,39 @@
   transition: flex-basis 0.3s ease-in-out;
 }
 
+$progress-colors: (
+  success: $success,
+  scrap: #e9545d,
+  running: #99cbce,
+  pending: #cfd8dc,
+  residual: #ffa726,
+);
+
+$state-colors: (
+  disabled: #e9545d,
+  interrupting: goldenrod,
+  canbegin: $primary,
+  running: $success,
+);
+
 .success {
-  background-color: #4caf50;
+  background-color: map.get($progress-colors, success);
 }
 
 .scrap {
-  background-color: #f44336;
+  background-color: map.get($progress-colors, scrap);
 }
 
 .running {
-  background-color: #42a5f5;
+  background-color: map.get($progress-colors, running);
 }
 
 .pending {
-  background-color: #cfd8dc;
+  background-color: map.get($progress-colors, pending);
 }
 
 .residual {
-  background-color: #ffa726;
+  background-color: map.get($progress-colors, residual);
 }
 
 mat-panel-title,
@@ -138,7 +154,7 @@ mat-grid-list {
 .operation-details {
   box-sizing: border-box;
   width: 100%;
-  padding: 8px 8px 8px 48px; 
+  padding: 8px 8px 8px 48px;
   display: flex;
   justify-content:stretch;
   align-items: center;
@@ -147,7 +163,7 @@ mat-grid-list {
 
 .operation-details-buttons {
   margin-left: 48px;
-  padding-top: 8px; 
+  padding-top: 8px;
   display: flex;
   gap: 8px;
 }
@@ -185,12 +201,20 @@ mat-grid-list {
   margin-top: 8px;
 }
 
-.operation-indicator-disabled {
-  color:#e3232f;
+.operation-indicator-error {
+  color: map.get($state-colors, failed);
 }
 
 .operation-indicator-interrupting {
-  color: goldenrod;
+  color: map.get($state-colors, interrupting);
+}
+
+.operation-indicator-can-begin {
+  color: map.get($state-colors, canbegin);
+}
+
+.operation-indicator-running {
+  color: map.get($state-colors, running);
 }
 
 .operation-state-indicator {

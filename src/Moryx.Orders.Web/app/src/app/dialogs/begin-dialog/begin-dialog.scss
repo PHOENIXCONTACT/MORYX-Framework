@@ -1,4 +1,5 @@
 @use "@moryx/ngx-web-framework/styles/variables" as *;
+@use 'sass:map';
 
 .multi-progress-container {
   display: flex;
@@ -15,20 +16,28 @@
   transition: flex-basis 0.3s ease-in-out;
 }
 
+$progress-colors: (
+  success: $success,
+  scrap: #e9545d,
+  running: #99cbce,
+  pending: #cfd8dc,
+  residual: #ffa726,
+);
+
 .success {
-  background-color: #4caf50;
+  background-color: map.get($progress-colors, success);
 }
 
 .scrap {
-  background-color: #f44336;
+  background-color: map.get($progress-colors, scrap);
 }
 
 .partial {
-  background-color: #42a5f5;
+  background-color: map.get($progress-colors, pending);
 }
 
 .residual {
-  background-color: #ffa726;
+  background-color: map.get($progress-colors, residual);
 }
 
 .content-data-entry {
