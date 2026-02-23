@@ -1,8 +1,8 @@
 <h1 mat-dialog-title>{{ TranslationConstants.APP.SELECT_INSTRUCTOR | translate }}</h1>
-@if (instructors) {
+@if (instructors()) {
   <div mat-dialog-content>
     <mat-selection-list #instructorList [multiple]="false">
-      @for (instructor of instructors; track instructor) {
+      @for (instructor of instructors(); track instructor) {
         <mat-list-option
           [value]="instructor"
           [selected]="instructor === data.instructorName"
