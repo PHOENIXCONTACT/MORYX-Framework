@@ -4,7 +4,7 @@
 */
 
 
-import { Component, ElementRef, inject, input, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, input, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MoryxShell, SearchRequestCallback, SearchSuggestion } from './shell';
 import { localLanguage } from '../utils';
@@ -22,9 +22,8 @@ export class SearchBox implements OnInit {
 
   placeholder = input('Search...');
 
-  disabled: boolean = true;
-  subscriber: SearchRequestCallback = function (term: string, complete: boolean) {
-  };
+  disabled = signal(true);
+  subscriber: SearchRequestCallback = function (term: string, complete: boolean) {};
   suggestions: Array<SearchSuggestion> = [];
   private elementRef = inject(ElementRef);
   searchValue: string = "";
@@ -55,14 +54,13 @@ export class SearchBox implements OnInit {
 
   initLanguage(): string {
     const localeString = localLanguage();
-    ;
     const languageString = localeString.slice(0, 2);
     return languageString;
   }
 
   initSearchBar(callback: SearchRequestCallback, disableSearchBox: boolean): void {
     this.subscriber = callback;
-    this.disabled = disableSearchBox;
+    this.disabled.set(disableSearchBox);
     this.searchValue = '';
     this.updateSuggestions([]);
   }
