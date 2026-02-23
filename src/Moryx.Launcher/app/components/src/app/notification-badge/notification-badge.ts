@@ -12,16 +12,16 @@ import { Component, input, OnDestroy, OnInit, signal } from '@angular/core';
   styleUrl: './notification-badge.css'
 })
 export class NotificationBadge implements OnInit, OnDestroy {
-  eventStream = input('');
+  eventstream = input(''); // Do fix naming here, must be lower-case for HTML attribute
   count = signal(0);
   eventSource: EventSource | undefined;
 
   ngOnInit(): void {
-    if (!this.eventStream()) {
+    if (!this.eventstream()) {
       return;
     }
 
-    this.eventSource = new EventSource(this.eventStream());
+    this.eventSource = new EventSource(this.eventstream());
     this.eventSource.onmessage = this.onReceived.bind(this);
   }
 
