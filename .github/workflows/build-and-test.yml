@@ -36,7 +36,7 @@ jobs:
 
   Build:
     needs: [EnvVar]
-    uses: phoenixcontact/tools/.github/workflows/build-tool.yml@fix-integration
+    uses: phoenixcontact/tools/.github/workflows/build-tool.yml@main
     with:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
@@ -79,7 +79,7 @@ jobs:
 
   Publish:
     needs: [EnvVar, Build] #, UnitTests]
-    uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@fix-integration
+    uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@main
     with:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
