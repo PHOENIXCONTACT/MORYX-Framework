@@ -3,14 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { EditMenuService } from './services/edit-menu.service';
 import { EditMenuState } from './services/EditMenutState';
 import { ChangeBackgroundService } from './services/change-background.service';
 import { LanguageService } from '@moryx/ngx-web-framework/services';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
-import { FactorySelectionService } from './services/factory-selection.service';
 import { CellStoreService } from './services/cell-store.service';
 import CellModel from './models/cellModel';
 import { EditMenu } from './components/edit-menu/edit-menu';
@@ -35,9 +34,8 @@ export class App implements OnInit {
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
   private cellStoreService = inject(CellStoreService);
-  private factorySelectionService = inject(FactorySelectionService);
 
-  backgroundImage: string = '';
+  backgroundImage = signal<string>('');
   private editMenuState !: EditMenuState;
 
   constructor() {
@@ -56,11 +54,7 @@ export class App implements OnInit {
 
   ngOnInit(): void {
     this.backgroundService.backgroundChanged$.subscribe({
-      next: url => this.backgroundImage = url
-    });
-
-    this.factorySelectionService.factorySelected$.subscribe({
-      next: factory => this.backgroundImage = factory?.backgroundURL ?? ''
+      next: url => this.backgroundImage.update(_ => url)
     });
   }
 

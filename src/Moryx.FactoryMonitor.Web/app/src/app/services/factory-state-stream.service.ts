@@ -31,7 +31,6 @@ export class FactoryStateStreamService {
       const cellStateChangedModel = <CellStateChangedModel>JSON.parse(event.data);
       const orderModel = <OrderModel>JSON.parse(event.data);
       const orderChangedModel = <OrderChangedModel>JSON.parse(event.data);
-      //const orderReferenceModel = <OrderReferenceModel>JSON.parse(event.data);
 
       if(activityChangedModel?.resourceId){
         const cell = Converter.activityChangedModelToCell(activityChangedModel);
