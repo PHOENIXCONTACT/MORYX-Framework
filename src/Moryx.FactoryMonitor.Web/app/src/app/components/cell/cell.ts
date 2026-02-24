@@ -10,7 +10,6 @@ import { CellState } from '../../api/models/cell-state';
 import { EditMenuService } from 'src/app/services/edit-menu.service';
 import { OrderStoreService } from 'src/app/services/order-store.service';
 import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
-import { CellSettingsService } from 'src/app/services/cell-settings.service';
 import CellModel from 'src/app/models/cellModel';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
@@ -29,7 +28,6 @@ export class Cell implements OnInit {
   private cellStoreService = inject(CellStoreService);
   private orderStoreService = inject(OrderStoreService);
   private editMenuService = inject(EditMenuService);
-  private cellSettingsService = inject(CellSettingsService);
 
   cellElement = viewChild<ElementRef<HTMLElement>>('cell');
   container = input<ElementRef<HTMLElement>>();
@@ -66,7 +64,6 @@ export class Cell implements OnInit {
   }
 
   ngOnInit(): void {
-
     // React to toggling of an order
     this.orderStoreService.toggledOrder$.subscribe(o => {
       if (this.currentCell()?.orderNumber !== o.orderNumber || this.currentCell()?.operationNumber !== o.operationNumber)
@@ -83,19 +80,6 @@ export class Cell implements OnInit {
     this.cellStoreService.cellUpdated$.subscribe(c => {
       if (c?.id != this.currentCell()?.id) return;
       this.updateCell(c!);
-    });
-
-    // React to updates to the cell settings
-    this.cellSettingsService.cellSettingsChanged$.subscribe({
-      next: newSettings => {
-        if (!newSettings || newSettings?.cellId != this.currentCell()?.id) return;
-
-        //set the new settings
-        this.currentCell.set(<CellModel>{
-          iconName: newSettings.cellSettings.icon ?? this.currentCell()?.iconName!,
-          image: newSettings.cellSettings.image ?? ''
-        });
-      }
     });
   }
 
