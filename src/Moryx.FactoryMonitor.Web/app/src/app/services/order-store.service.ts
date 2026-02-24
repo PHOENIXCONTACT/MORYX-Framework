@@ -65,7 +65,6 @@ export class OrderStoreService {
   public toggleOrder(order: Order) {
     order.isToggled = !order.isToggled;
     this._toggledOrder.next(order);
-    //this.appRef.tick();
   }
 
   //Groupes the orders to creates a Map<string,OrderModel[]>
