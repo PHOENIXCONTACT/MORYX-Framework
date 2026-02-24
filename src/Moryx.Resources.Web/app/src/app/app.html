@@ -46,7 +46,7 @@
               <span class="material-symbols-outlined">close</span>
             </button>
             <span class="resources-toolbar-spacer"></span>
-            @if (!editService.edit) {
+            @if (!isEditMode()) {
               <button
                 type="button"
                 (click)="onEdit()"
@@ -58,7 +58,7 @@
                 <span class="material-symbols-outlined">edit</span>
               </button>
             }
-            @if (!editService.edit) {
+            @if (!isEditMode()) {
               <button
                 type="button"
                 (click)="onAdd()"
@@ -70,7 +70,7 @@
                 <span class="material-symbols-outlined">masked_transitions_add</span>
               </button>
             }
-            @if (!editService.edit) {
+            @if (!isEditMode()) {
               <button
                 type="button"
                 (click)="onDelete(selected.id)"
@@ -82,7 +82,7 @@
                 <span class="material-symbols-outlined">delete</span>
               </button>
             }
-            @if (editService.edit) {
+            @if (isEditMode()) {
               <button
                 type="button"
                 (click)="onSave()"
@@ -94,7 +94,7 @@
                 <span class="material-symbols-outlined">save</span>
               </button>
             }
-            @if (editService.edit) {
+            @if (isEditMode()) {
               <button
                 type="button"
                 (click)="onCancelEditing()"
@@ -115,14 +115,14 @@
         <ng-template matMenuContent let-id="id">
           <button
             mat-menu-item
-            [disabled]="editService.edit"
+            [disabled]="isEditMode()"
             (click)="onDelete(id)"
             >
             <mat-icon>delete_forever</mat-icon>
             <span>{{ TranslationConstants.SHARED.DELETE | translate }}</span>
           </button>
           <button
-            [disabled]="editService.edit"
+            [disabled]="isEditMode()"
             mat-menu-item
             (click)="onSelectAndEdit(id)"
             >

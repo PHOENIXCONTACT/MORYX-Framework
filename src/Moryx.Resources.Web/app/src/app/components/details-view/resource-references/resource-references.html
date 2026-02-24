@@ -41,7 +41,7 @@
                 <button
                   mat-icon-button
                   (click)="deleteTarget(element)"
-                  [disabled]="editService.edit === false"
+                  [disabled]="!isEditMode()"
                   class="delete-reference"
                   aria-label="Delete link in this row"
                   >
@@ -58,7 +58,7 @@
               *matRowDef="let row; columns: ['id', 'name', 'type', 'delete']"
             ></tr>
           </table>
-          @if (editService.edit) {
+          @if (isEditMode()) {
             <div class="reference-targets-actions">
               <mat-form-field class="reference-targets-selector" appearance="outline">
                 <mat-label>{{
@@ -88,7 +88,7 @@
                 TranslationConstants.DETAILS.REFS.LINKED_RESOURCE | translate
               }}</mat-label>
               <mat-select
-                [disabled]="!editService.edit"
+                [disabled]="!isEditMode()"
                 [(value)]="selectedTarget"
             placeholder="{{
               TranslationConstants.DETAILS.REFS.PLACEHOLDER | translate

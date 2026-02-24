@@ -4,6 +4,7 @@
 */
 
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Entry, NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 import { Subscription } from 'rxjs';
 import { EditResourceService } from '../../../services/edit-resource.service';
@@ -16,13 +17,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [MatProgressSpinnerModule, NavigableEntryEditor]
 })
 export class ResourceProperties implements OnInit, OnDestroy {
-  editService = inject(EditResourceService);
+  private editResourceService = inject(EditResourceService);
 
+  isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
   properties = signal<Entry | undefined>(undefined);
   private editServiceSubscription: Subscription | undefined;
 
   ngOnInit(): void {
-    this.editServiceSubscription = this.editService.activeResource$.subscribe(resource => {
+    this.editServiceSubscription = this.editResourceService.activeResource$.subscribe(resource => {
       if (resource?.properties) {
         this.properties.update(() => resource.properties);
       }
