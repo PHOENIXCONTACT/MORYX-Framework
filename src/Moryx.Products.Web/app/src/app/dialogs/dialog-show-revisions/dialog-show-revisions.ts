@@ -31,10 +31,10 @@ import { MatButtonModule } from '@angular/material/button';
     MatListModule,
   ]
 })
-export class DialogShowRevisionsComponent implements OnInit {
-  private dialogRef = inject(MatDialogRef<DialogShowRevisionsComponent>);
+export class DialogShowRevisions implements OnInit {
+  private dialogRef = inject(MatDialogRef<DialogShowRevisions>);
   private data = inject<ProductModel>(MAT_DIALOG_DATA);
-  editService = inject(EditProductsService);
+  private editService = inject(EditProductsService);
   private managementService = inject(ProductManagementService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -78,6 +78,10 @@ export class DialogShowRevisionsComponent implements OnInit {
     } else {
       this.router.navigate([`/details/${product.id}`]).then(() => this.editService.loadProduct());
     }
+  }
+
+  createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
+    return this.editService.createProductIdentity(identifier, revision);
   }
 }
 

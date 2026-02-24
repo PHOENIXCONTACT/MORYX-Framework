@@ -4,6 +4,7 @@
 */
 
 import { Component, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -24,11 +25,12 @@ import { ProductRecipesDetailsHeader } from './product-recipes-details-header/pr
   ]
 })
 export class ProductRecipesDetails {
-  editProductsService = inject(EditProductsService);
+  private editProductsService = inject(EditProductsService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private cacheService = inject(CacheProductsService);
 
+  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
   currentProduct = signal<ProductModel | undefined>(undefined);
   currentRecipe = signal<RecipeModel | undefined>(undefined);
   recipeDefinitions = signal<RecipeDefinitionModel[] | undefined>([]);

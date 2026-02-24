@@ -4,9 +4,7 @@
 <div mat-dialog-content class="create-revision">
   <p>
     {{ TranslationConstants.CREATE_REVISION_DIALOG.SUB_TITLE | translate }}
-    {{
-      editService.createProductIdentity(product()!.identifier, product()!.revision)
-    }}
+    {{ createProductIdentity(product()!.identifier, product()!.revision) }}
     {{ product()!.name }}
   </p>
   <mat-form-field appearance="outline">

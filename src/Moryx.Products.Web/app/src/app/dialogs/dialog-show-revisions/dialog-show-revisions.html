@@ -7,11 +7,8 @@
     @for (product of revisions(); track product) {
       <mat-list-item
         class="show-revisions-list-item"
-        (click)="onOpen(product)"
-        >
-        {{
-        editService.createProductIdentity(product.identifier, product.revision)
-        }}
+        (click)="onOpen(product)">
+        {{ createProductIdentity(product.identifier, product.revision) }}
         {{ product.name | slice: 0:40 }}
       </mat-list-item>
     }

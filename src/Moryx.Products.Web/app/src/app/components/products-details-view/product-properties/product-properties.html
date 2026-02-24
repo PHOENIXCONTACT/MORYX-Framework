@@ -2,7 +2,7 @@
   <navigable-entry-editor
     [entry]="properties()!"
     queryParam="productProperty"
-    [disabled]="editProductsService.edit === false"
+    [disabled]="!isEditMode()"
     class="property-navigation"
   ></navigable-entry-editor>
 } @else {

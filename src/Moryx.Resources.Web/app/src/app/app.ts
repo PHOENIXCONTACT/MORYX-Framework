@@ -5,6 +5,7 @@
 
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule } from '@angular/material/tree';
@@ -69,8 +70,8 @@ import { DialogRemoveResource } from "./dialogs/dialog-remove-resource/dialog-re
 export class App implements OnInit, OnDestroy {
   private router = inject(Router);
   private dialog = inject(MatDialog);
-  private cacheService = inject(CacheResourceService);
-  editService = inject(EditResourceService);
+  private cacheResourceService = inject(CacheResourceService);
+  private editResourceService = inject(EditResourceService);
   private modificationService = inject(ResourceModificationService);
   private sessionService = inject(SessionService);
   private translateService = inject(TranslateService);
@@ -80,6 +81,7 @@ export class App implements OnInit, OnDestroy {
   private formControlService = inject(FormControlService);
 
   private readonly trigger = viewChild.required(MatMenuTrigger);
+  isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
   menuTopLeftPosition = signal<Position>({x: '0px', y: '0px'});
 
   readonly resourceToolbarImage = environment.assets + 'assets/resource-toolbar.jpg';
@@ -123,7 +125,7 @@ export class App implements OnInit, OnDestroy {
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
   beforeUnloadHander() {
-    if (this.editService.edit) this.editService.stashResource();
+    if (this.isEditMode()) this.editResourceService.stashResource();
     this.sessionService.storeTreeState(this.treeControl);
   }
 
@@ -147,7 +149,7 @@ export class App implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.subscriptions.push(
-      this.cacheService.resources.subscribe(resources => {
+      this.cacheResourceService.resources.subscribe(resources => {
         if (this.treeStateIsInitialized) this.sessionService.storeTreeState(this.treeControl);
         else this.treeStateIsInitialized = true;
         this.resources = resources;
@@ -157,19 +159,19 @@ export class App implements OnInit, OnDestroy {
     );
 
     this.subscriptions.push(
-      this.cacheService.flatResources.subscribe(resources => {
+      this.cacheResourceService.flatResources.subscribe(resources => {
         this.resourcesFlat = resources;
       })
     );
 
-    this.subscriptions.push(this.editService.activeResource$.subscribe(resource => this.select(resource)));
+    this.subscriptions.push(this.editResourceService.activeResource$.subscribe(resource => this.select(resource)));
 
     // ToDo: move to edit service
     const wipResource = this.sessionService.getWipResource();
     if (wipResource) {
-      this.editService.loadFromStorage();
+      this.editResourceService.loadFromStorage();
     } else {
-      this.editService.loadResource();
+      this.editResourceService.loadResource();
     }
 
     this.searchBarService.subscribe({
@@ -233,8 +235,8 @@ export class App implements OnInit, OnDestroy {
   }
 
   selectResource(id: number) {
-    if (this.editService.edit || this.selected?.id === id) return;
-    this.router.navigate([`/details/${id}`]).then(() => this.editService.loadResource());
+    if (this.isEditMode() || this.selected?.id === id) return;
+    this.router.navigate([`/details/${id}`]).then(() => this.editResourceService.loadResource());
   }
 
   clickContainer(event: MouseEvent) {
@@ -254,7 +256,7 @@ export class App implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(async (result: ResourceConstructionParameters | undefined) => {
       if (!result) return;
-      const model = await this.editService.addNewResource(result, this.selected);
+      const model = await this.editResourceService.addNewResource(result, this.selected);
       if (model)
         this.navigateToResource(model);
     });
@@ -288,14 +290,14 @@ export class App implements OnInit, OnDestroy {
   }
 
   private removeResource(deletedResource: ResourceModel) {
-    this.cacheService.removeResource(deletedResource);
-    if (this.selected?.id === deletedResource.id) this.editService.removeResource();
+    this.cacheResourceService.removeResource(deletedResource);
+    if (this.selected?.id === deletedResource.id) this.editResourceService.removeResource();
   }
 
   onEdit() {
     this.searchBarService.clearSuggestions();
     this.searchBarService.unsubscribe();
-    this.editService.onEdit();
+    this.editResourceService.onEdit();
   }
 
   onSelectAndEdit(resourceId: number) {
@@ -304,7 +306,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   onCancelEditing() {
-    this.editService.onCancel();
+    this.editResourceService.onCancel();
     this.searchBarService.subscribe({
       next: (result: SearchRequest) => {
         this.onSearch(result);
@@ -313,22 +315,22 @@ export class App implements OnInit, OnDestroy {
   }
 
   onDeselect() {
-    if (this.editService.edit) {
+    if (this.isEditMode()) {
       this.searchBarService.subscribe({
         next: (result: SearchRequest) => {
           this.onSearch(result);
         }
       });
     }
-    this.editService.onDeselect();
+    this.editResourceService.onDeselect();
   }
 
   async onReload() {
-    await this.cacheService.loadResources();
+    await this.cacheResourceService.loadResources();
   }
 
   async onSave() {
-    await this.editService.onSave();
+    await this.editResourceService.onSave();
     this.searchBarService.subscribe({
       next: (result: SearchRequest) => {
         this.onSearch(result);

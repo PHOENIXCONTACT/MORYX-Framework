@@ -34,7 +34,7 @@ export class EditProductsService {
   private activatedRoute = inject(ActivatedRoute);
   private snackbarService = inject(SnackbarService);
 
-  public edit: boolean = false;
+  public edit$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public currentProduct: BehaviorSubject<ProductModel | undefined> = new BehaviorSubject<ProductModel | undefined>(undefined);
   public references: BehaviorSubject<ProductModel[] | undefined> = new BehaviorSubject<ProductModel[] | undefined>(undefined);
   public currentRecipeNumber: number = 0;
@@ -162,7 +162,7 @@ export class EditProductsService {
       this.maximumAlreadySavedPartId = this.currentPartId;
     }
 
-    this.edit = true;
+    this.edit$.next(true);
   }
 
   onSave() {
@@ -206,7 +206,7 @@ export class EditProductsService {
         this.productManagementService.getTypeById({id: result}).subscribe({
           next: (p) => {
             this.currentProduct.next(p);
-            this.edit = false;
+            this.edit$.next(false);
           },
           error: async (e: HttpErrorResponse) => {
             await this.snackbarService.handleError(e);
@@ -216,7 +216,7 @@ export class EditProductsService {
   }
 
   async onCancel() {
-    this.edit = false;
+    this.edit$.next(false);
     if (!this.currentProduct.value?.id) return;
 
     await this.productManagementService

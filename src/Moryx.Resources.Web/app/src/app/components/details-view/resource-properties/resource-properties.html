@@ -2,7 +2,7 @@
   <navigable-entry-editor
     [entry]="properties()!"
     queryParam = "resourceProperties"
-    [disabled]="!editService.edit"
+    [disabled]="!isEditMode()"
     >
   </navigable-entry-editor>
 } @else {

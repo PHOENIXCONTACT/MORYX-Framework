@@ -12,6 +12,7 @@ import {
   signal,
   untracked,
 } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { Entry, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { EditProductsService } from "../../../services/edit-products.service";
 
@@ -31,8 +32,9 @@ import { Subscription } from 'rxjs';
   ]
 })
 export class ProductProperties implements OnDestroy {
-  editProductsService = inject(EditProductsService);
+  private editProductsService = inject(EditProductsService);
 
+  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
   properties = signal<Entry | undefined>(undefined);
   id = input.required<number>();
   subscriptions: Subscription[] = [];

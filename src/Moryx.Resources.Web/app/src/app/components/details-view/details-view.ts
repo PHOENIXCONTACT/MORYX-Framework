@@ -4,6 +4,7 @@
 */
 
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Event, NavigationCancel, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -23,13 +24,13 @@ import { DetailsHeader } from './details-header/details-header';
 export class DetailsView implements OnInit, OnDestroy {
   private router = inject(Router);
   private sessionService = inject(SessionService);
-  editResourceService = inject(EditResourceService);
+  private editResourceService = inject(EditResourceService);
 
+  isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
   activeLink = signal<number | undefined>(undefined);
   resource = signal<ResourceModel>({});
 
   TranslationConstants = TranslationConstants;
-  Permissions = Permissions;
 
   private oldResourceId?: number;
   private editServiceSubscription?: Subscription;
@@ -68,7 +69,7 @@ export class DetailsView implements OnInit, OnDestroy {
     this.oldResourceId = resource?.id;
 
     if (wipResource) {
-      this.editResourceService.edit = true;
+      this.editResourceService.edit$.next(true);
       this.sessionService.removeWipResource();
     }
   }

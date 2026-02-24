@@ -4,12 +4,13 @@
 */
 
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { PartConnector, PartModel, ProductModel } from '../../../api/models';
-import { DialogAddPartComponent } from '../../../dialogs/dialog-add-part/dialog-add-part';
+import { DialogAddPart } from '../../../dialogs/dialog-add-part/dialog-add-part';
 import { EditProductsService } from '../../../services/edit-products.service';
 import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -33,11 +34,12 @@ import { MatButtonModule } from '@angular/material/button';
   ]
 })
 export class ProductParts implements OnInit {
-  editProductsService = inject(EditProductsService);
+  private editProductsService = inject(EditProductsService);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
 
+  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
   currentProduct = signal<ProductModel | undefined>(undefined);
   expandedPart = signal<PartConnector | undefined>(undefined);
   selectedPart = signal<PartModel | undefined>(undefined);
@@ -125,7 +127,7 @@ export class ProductParts implements OnInit {
   }
 
   addPart() {
-    const dialogRef = this.dialog.open(DialogAddPartComponent, {
+    const dialogRef = this.dialog.open(DialogAddPart, {
       data: this.expandedPart(),
       width: '500px'
     });
@@ -191,6 +193,10 @@ export class ProductParts implements OnInit {
     let newUrl = url.substring(0, index);
     newUrl += 'parts/';
     return newUrl;
+  }
+
+  createProductNameWithIdentity(product: ProductModel | undefined, shortened: boolean = false, maxLength: number = 40): string {
+    return this.editProductsService.createProductNameWithIdentity(product, shortened, maxLength);
   }
 }
 

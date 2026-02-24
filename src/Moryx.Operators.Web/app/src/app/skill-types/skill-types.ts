@@ -36,7 +36,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class SkillTypes {
   private dialog = inject(MatDialog);
   private appStoreService = inject(AppStoreService);
-  translateService = inject(TranslateService);
+  private translateService = inject(TranslateService);
 
   skillTypes = signal<SkillType[]>([]);
   skills = signal<OperatorSkill[]>([]);

@@ -12,6 +12,7 @@ import {
   signal,
   viewChild
 } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { MatDialog } from "@angular/material/dialog";
 import { MatMenuModule, MatMenuTrigger } from "@angular/material/menu";
 import { MatDrawer, MatSidenavModule } from "@angular/material/sidenav";
@@ -36,10 +37,10 @@ import {
   RecipeClassificationModel, RevisionFilter,
   Selector,
 } from "./api/models";
-import { DialogCreateRevisionComponent } from "./dialogs/dialog-create-revision/dialog-create-revision";
-import { DialogDuplicateProductComponent } from "./dialogs/dialog-duplicate-product/dialog-duplicate-product";
-import { DialogRemoveProductComponent } from "./dialogs/dialog-remove-product/dialog-remove-product";
-import { DialogShowRevisionsComponent } from "./dialogs/dialog-show-revisions/dialog-show-revisions";
+import { DialogCreateRevision } from "./dialogs/dialog-create-revision/dialog-create-revision";
+import { DialogDuplicateProduct } from "./dialogs/dialog-duplicate-product/dialog-duplicate-product";
+import { DialogRemoveProduct } from "./dialogs/dialog-remove-product/dialog-remove-product";
+import { DialogShowRevisions } from "./dialogs/dialog-show-revisions/dialog-show-revisions";
 import { TranslationConstants } from "./extensions/translation-constants.extensions";
 import { DuplicateProductInfos } from "./models/DuplicateProductInfos";
 import { CacheProductsService } from "./services/cache-products.service";
@@ -87,13 +88,14 @@ export class App implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
   private searchbar = inject(SearchBarService);
-  cacheService = inject(CacheProductsService);
-  editService = inject(EditProductsService);
+  private cacheService = inject(CacheProductsService);
+  private editService = inject(EditProductsService);
   private snackBar = inject(MatSnackBar);
   private sessionService = inject(SessionService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
 
+  isEditMode = toSignal(this.editService.edit$, { initialValue: false });
   selected = signal<ProductModel | undefined>(undefined);
   products = signal<ProductModel[]>([]);
   productDefinitions = signal<ProductDefinitionModel[]>([]);
@@ -275,7 +277,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   beforeUnloadHander() {
-    if (this.editService.edit && this.selected()) {
+    if (this.isEditMode() && this.selected()) {
       this.sessionService.setWipProduct(this.selected()!, <ProductStorageDetails>{
         currentPartId: this.editService.currentPartId,
         currentRecipeNumber: this.editService.currentRecipeNumber,
@@ -287,7 +289,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   importDisabled(): boolean {
-    return this.editService.edit;
+    return this.isEditMode();
   }
 
   editDisabled() {
@@ -297,7 +299,7 @@ export class App implements OnInit, OnDestroy {
   saveDisabled(): boolean {
     const anyUnsetRecipes = this.selected()?.recipes?.some((r) => r.classification === RecipeClassificationModel.Unset);
 
-    if (this.editService.edit && this.selected() && anyUnsetRecipes) {
+    if (this.isEditMode() && this.selected() && anyUnsetRecipes) {
       return true;
     }
     return false;
@@ -369,13 +371,13 @@ export class App implements OnInit, OnDestroy {
   }
 
   async onDeselect() {
-    if (this.editService.edit)
+    if (this.isEditMode())
       await this.onCancel();
     this.editService.unloadProduct();
   }
 
   onSelect(id: number) {
-    if (this.editService.edit) return;
+    if (this.isEditMode()) return;
 
     if (id == 0) return;
 
@@ -433,7 +435,7 @@ export class App implements OnInit, OnDestroy {
     const product = this.products().find((p) => p.id == id);
     if (!product) return;
 
-    const dialogRef = this.dialog.open(DialogRemoveProductComponent, {
+    const dialogRef = this.dialog.open(DialogRemoveProduct, {
       data: product
     });
 
@@ -513,7 +515,7 @@ export class App implements OnInit, OnDestroy {
     const product = this.products().find((p) => p.id == id);
     if (!product) return;
 
-    const dialogRef = this.dialog.open(DialogDuplicateProductComponent, {
+    const dialogRef = this.dialog.open(DialogDuplicateProduct, {
       data: product
     });
 
@@ -528,13 +530,13 @@ export class App implements OnInit, OnDestroy {
     const product = this.products().find((p) => p.id == id);
     if (!product) return;
 
-    const dialogRef = this.dialog.open(DialogShowRevisionsComponent, {
+    const dialogRef = this.dialog.open(DialogShowRevisions, {
       data: product
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === true) {
-        this.dialog.open(DialogCreateRevisionComponent, {
+        this.dialog.open(DialogCreateRevision, {
           data: product
         });
       }
@@ -549,6 +551,18 @@ export class App implements OnInit, OnDestroy {
   filter(drawer: MatDrawer) {
     this.cacheService.loadProductsForTree();
     drawer.toggle();
+  }
+
+  createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
+    return this.editService.createProductIdentity(identifier, revision);
+  }
+
+  get filterOptions() {
+    return this.cacheService.filterOptions;
+  }
+
+  refreshProducts(): void {
+    this.cacheService.loadProductsForTree();
   }
 }
 

@@ -21,9 +21,9 @@ import { EditProductsService } from 'src/app/services/edit-products.service';
     EmptyState
   ]
 })
-export class SearchResultComponent implements OnInit {
-  editProductsService = inject(EditProductsService);
-  private managementService = inject(ProductManagementService);
+export class SearchResult implements OnInit {
+  private editProductsService = inject(EditProductsService);
+  private productManagementService = inject(ProductManagementService);
   private activatedRoute = inject(ActivatedRoute);
 
   searchResults = signal<ProductModel[]>([]);
@@ -53,10 +53,14 @@ export class SearchResultComponent implements OnInit {
       revisionFilter: RevisionFilter[RevisionFilter.All],
       selector: Selector[Selector.Direct],
     };
-    const result = await this.managementService
+    const result = await this.productManagementService
       .getTypes({body: body})
       .toAsync();
     this.searchResults.update(_ => result);
+  }
+
+  createProductNameWithIdentity(product: ProductModel | undefined): string {
+    return this.editProductsService.createProductNameWithIdentity(product);
   }
 }
 
