@@ -27,8 +27,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
   ]
 })
-export class DialogRemoveProductComponent {
-  private dialogRef = inject(MatDialogRef<DialogRemoveProductComponent>);
+export class DialogRemoveProduct {
+  private dialogRef = inject(MatDialogRef<DialogRemoveProduct>);
   private data = inject<ProductModel>(MAT_DIALOG_DATA);
   private productManagementService = inject(ProductManagementService);
   private snackbarService = inject(SnackbarService);

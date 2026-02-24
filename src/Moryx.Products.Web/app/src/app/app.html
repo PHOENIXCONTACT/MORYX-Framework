@@ -89,7 +89,7 @@
             </button>
             <span class="spacer"></span>
             <!-- Edit Button -->
-            @if (!editService.edit) {
+            @if (!isEditMode()) {
               <button
                 mat-icon-button
                 aria-label="Start editing the selected product type"
@@ -136,7 +136,7 @@
               </button>
             }
 
-            @if (editService.edit) {
+            @if (isEditMode()) {
               <!-- Save Button -->
               <button
                 mat-icon-button
@@ -251,7 +251,7 @@
             <ng-template matMenuContent let-id="id">
               <button
                 mat-menu-item
-                [disabled]="editService.edit"
+                [disabled]="isEditMode()"
                 (click)="onDelete(id)"
               >
                 <mat-icon>delete_forever</mat-icon>
@@ -261,7 +261,7 @@
               </button>
               <button
                 mat-menu-item
-                [disabled]="editService.edit"
+                [disabled]="isEditMode()"
                 (click)="onSelectAndEdit(id)"
               >
                 <mat-icon>edit</mat-icon>
@@ -269,7 +269,7 @@
               </button>
               <button
                 mat-menu-item
-                [disabled]="editService.edit"
+                [disabled]="isEditMode()"
                 (click)="onDuplicate(id)"
               >
                 <mat-icon>content_copy</mat-icon>
@@ -279,7 +279,7 @@
               </button>
               <button
                 mat-menu-item
-                [disabled]="editService.edit"
+                [disabled]="isEditMode()"
                 (click)="onRevisions(id)"
               >
                 <mat-icon>history</mat-icon>
@@ -319,15 +319,9 @@
                   node.name
                 }}</span>
               } @else {
-                <span class="overview-tree-content-tree-items-text"
-                  >{{
-                    editService.createProductIdentity(
-                      node.identifier,
-                      node.revision
-                    )
-                  }}
-                  {{ node.name }}</span
-                >
+                <span class="overview-tree-content-tree-items-text">
+                  {{ createProductIdentity(node.identifier, node.revision) }} {{ node.name }}
+                </span>
               }
             </mat-tree-node>
             <mat-tree-node
@@ -361,7 +355,7 @@
               } @else {
                 <span class="overview-tree-content-tree-items-text"
                   >{{
-                    editService.createProductIdentity(
+                    createProductIdentity(
                       node.identifier,
                       node.revision
                     )

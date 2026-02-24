@@ -34,8 +34,8 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule
   ]
 })
-export class DialogCreateRecipeComponent {
-  private dialogRef = inject(MatDialogRef<DialogCreateRecipeComponent>);
+export class DialogCreateRecipe {
+  private dialogRef = inject(MatDialogRef<DialogCreateRecipe>);
   private cacheService = inject(CacheProductsService);
 
   result = signal<CreateRecipeDialogResult>({} as CreateRecipeDialogResult);

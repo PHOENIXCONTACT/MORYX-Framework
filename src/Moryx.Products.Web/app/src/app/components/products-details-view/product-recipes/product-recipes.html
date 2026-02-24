@@ -13,7 +13,7 @@
           <button
             mat-icon-button
             (click)="onDeleteRecipe($event, recipe)"
-            [disabled]="editProductsService.edit === false"
+            [disabled]="!isEditMode()"
             >
             <mat-icon>delete</mat-icon>
           </button>
@@ -25,7 +25,7 @@
     <button
       mat-flat-button
       class="add-recipe-button"
-      [disabled]="editProductsService.edit === false"
+      [disabled]="!isEditMode()"
       (click)="onAddRecipe()"
       >
       <mat-icon>add</mat-icon>
