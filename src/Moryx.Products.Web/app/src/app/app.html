@@ -44,7 +44,7 @@
             <button
               mat-icon-button
               aria-label="Refresh"
-              (click)="cacheService.loadProductsForTree()"
+              (click)="refreshProducts()"
               [matTooltip]="
                 TranslationConstants.SIDEBAR_BUTTONS.REFRESH | translate
               "
@@ -194,7 +194,7 @@
               <mat-label>{{
                 TranslationConstants.SHARED.NAME | translate
               }}</mat-label>
-              <input matInput [(ngModel)]="cacheService.filterOptions.name" />
+              <input matInput [(ngModel)]="filterOptions.name" />
             </mat-form-field>
 
             <mat-form-field appearance="outline">
@@ -203,7 +203,7 @@
               }}</mat-label>
               <input
                 matInput
-                [(ngModel)]="cacheService.filterOptions.identifier"
+                [(ngModel)]="filterOptions.identifier"
               />
             </mat-form-field>
 
@@ -211,7 +211,7 @@
               <mat-label>{{
                 TranslationConstants.SHARED.REVISION | translate
               }}</mat-label>
-              <mat-select [(ngModel)]="cacheService.filterOptions.revision">
+              <mat-select [(ngModel)]="filterOptions.revision">
                 @for (r of revisionOptions(); track r) {
                   <mat-option [value]="r">
                     {{ r }}
@@ -224,7 +224,7 @@
               <mat-label>{{
                 TranslationConstants.APP.SELECTOR | translate
               }}</mat-label>
-              <mat-select [(ngModel)]="cacheService.filterOptions.selector">
+              <mat-select [(ngModel)]="filterOptions.selector">
                 @for (s of selectorOptions(); track s) {
                   <mat-option [value]="s">
                     {{ s }}

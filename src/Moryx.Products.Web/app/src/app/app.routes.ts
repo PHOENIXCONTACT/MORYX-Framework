@@ -12,7 +12,7 @@ import { ProductRecipes } from "./components/products-details-view/product-recip
 import { ProductReferences } from "./components/products-details-view/product-references/product-references";
 import { ProductsDetailsView } from "./components/products-details-view/products-details-view";
 import { ProductsImporter } from "./components/products-importer/products-importer";
-import { SearchResultComponent } from "./components/search-result/search-result";
+import { SearchResult } from "./components/search-result/search-result";
 import { ProductsDetailsViewResolver } from "./components/products-details-view/products-details-view-resolver";
 
 export const routes: Routes = [
@@ -42,5 +42,5 @@ export const routes: Routes = [
   },
   { path: '', component: DefaultView, pathMatch: 'full' },
   { path: 'import/:importer', component: ProductsImporter },
-  { path: 'search', component: SearchResultComponent }
+  { path: 'search', component: SearchResult }
 ]

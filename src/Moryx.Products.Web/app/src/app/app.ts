@@ -88,7 +88,7 @@ export class App implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
   private searchbar = inject(SearchBarService);
-  cacheService = inject(CacheProductsService);
+  private cacheService = inject(CacheProductsService);
   private editService = inject(EditProductsService);
   private snackBar = inject(MatSnackBar);
   private sessionService = inject(SessionService);
@@ -555,6 +555,14 @@ export class App implements OnInit, OnDestroy {
 
   createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
     return this.editService.createProductIdentity(identifier, revision);
+  }
+
+  get filterOptions() {
+    return this.cacheService.filterOptions;
+  }
+
+  refreshProducts(): void {
+    this.cacheService.loadProductsForTree();
   }
 }
 
