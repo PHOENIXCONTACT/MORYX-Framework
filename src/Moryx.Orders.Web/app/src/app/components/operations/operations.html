@@ -68,32 +68,27 @@
                   class="operation-header flex-row-center"
                 >
                   <div class="flex-row-center">
-                    @if (!operation.model.canBegin) {
-                      <mat-icon class="operation-state-indicator operation-indicator-error">error</mat-icon>
-                    }
-                    @if (operation.model.canBegin &&
-                    operation.model.classification !== OperationStateClassification.Running &&
-                    operation.model.classification !== OperationStateClassification.Interrupting) {
-                      <mat-icon color="primary" class="operation-state-indicator operation-indicator-can-begin">
-                        settings
-                      </mat-icon>
-                    }
-                    @if (operation.model.classification === OperationStateClassification.Running &&
-                    !operation.isProducing) {
-                      <mat-icon color="accent" class="operation-state-indicator operation-indicator-running">
-                        settings
-                      </mat-icon>
-                    }
-                    @if (operation.model.classification === OperationStateClassification.Running &&
-                    operation.isProducing) {
-                      <mat-icon color="accent" class="operation-state-indicator operation-indicator-animation operation-indicator-running">
-                        settings
-                      </mat-icon>
-                    }
-                    @if (operation.model.classification === OperationStateClassification.Interrupting) {
-                      <mat-icon class="flex-row-center operation-state-indicator operation-indicator-interrupting operation-indicator-animation">
-                        settings
-                      </mat-icon>
+                    @switch (operation.model.classification) {
+                      @case (OperationStateClassification.Completed) {
+                        <mat-icon class="operation-indicator completed">check</mat-icon>
+                      }
+                      @case (OperationStateClassification.Running) {
+                        <mat-icon color="accent"
+                                  class="operation-indicator running"
+                                  [class.animation]="operation.isProducing">
+                          settings
+                        </mat-icon>
+                      }
+                      @case (OperationStateClassification.Interrupting) {
+                        <mat-icon class="operation-indicator interrupting animation">settings</mat-icon>
+                      }
+                      @default {
+                        @if (operation.model.canBegin) {
+                          <mat-icon color="primary" class="operation-indicator can-begin">settings</mat-icon>
+                        } @else {
+                          <mat-icon class="operation-indicator error">error</mat-icon>
+                        }
+                      }
                     }
                   </div>
                   <div class="operation-header-content">
@@ -137,20 +132,20 @@
                     <div class="operation-header-row operation-progress">
                       <div class="multi-progress-container">
                         <div class="bar success"
-                          [style.flex-basis.%]="operation.progressSuccessPercent"
-                          matTooltip="{{ TranslationConstants.OPERATIONS.SUCCESS | translate }}: {{ operation.model.successCount }}">
+                             [style.flex-basis.%]="operation.progressSuccessPercent"
+                             matTooltip="{{ TranslationConstants.OPERATIONS.SUCCESS | translate }}: {{ operation.model.successCount }}">
                         </div>
                         <div class="bar scrap"
-                          [style.flex-basis.%]="operation.progressScrapPercent"
-                          matTooltip="{{ TranslationConstants.OPERATIONS.SCRAP | translate }}: {{ operation.model.scrapCount }}">
+                             [style.flex-basis.%]="operation.progressScrapPercent"
+                             matTooltip="{{ TranslationConstants.OPERATIONS.SCRAP | translate }}: {{ operation.model.scrapCount }}">
                         </div>
                         <div class="bar running"
-                          [style.flex-basis.%]="operation.progressRunningPercent"
-                          matTooltip="{{ TranslationConstants.OPERATIONS.RUNNING | translate }}: {{ operation.model.runningCount }}">
+                             [style.flex-basis.%]="operation.progressRunningPercent"
+                             matTooltip="{{ TranslationConstants.OPERATIONS.RUNNING | translate }}: {{ operation.model.runningCount }}">
                         </div>
                         <div class="bar pending"
-                          [style.flex-basis.%]="operation.progressPendingPercent"
-                          matTooltip="{{ TranslationConstants.OPERATIONS.PENDING | translate }}: {{ operation.model.pendingCount }}">
+                             [style.flex-basis.%]="operation.progressPendingPercent"
+                             matTooltip="{{ TranslationConstants.OPERATIONS.PENDING | translate }}: {{ operation.model.pendingCount }}">
                         </div>
                       </div>
                     </div>
@@ -345,14 +340,18 @@
       message="{{ TranslationConstants.OPERATIONS.EMPTY_STATE_TEXT | translate }}"
     ></empty-state>
   }
-  <button
-    class="operation-create-fab-button"
-    mat-mini-fab
-    color="primary"
-    (click)="onCreate()"
-  >
-    <mat-icon>add</mat-icon>
-  </button>
+  <div class="fab-button-row">
+    <div class="fab-flex-container">
+      <button mat-fab extended color="primary" (click)="onToggleHideCompleted()">
+        <mat-icon>{{ hideCompleted() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+        Hide Completed
+      </button>
+      <button mat-fab extended color="primary" (click)="onCreate()">
+        <mat-icon>add</mat-icon>
+        Create
+      </button>
+    </div>
+  </div>
 } @else {
   <div class="operations-loading">
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>

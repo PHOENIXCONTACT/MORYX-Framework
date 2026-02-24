@@ -21,14 +21,13 @@ $progress-colors: (
   scrap: #e9545d,
   running: #99cbce,
   pending: #cfd8dc,
-  residual: #ffa726,
 );
 
 $state-colors: (
-  disabled: #e9545d,
   interrupting: goldenrod,
   canbegin: $primary,
   running: $success,
+  completed: #000
 );
 
 .success {
@@ -45,10 +44,6 @@ $state-colors: (
 
 .pending {
   background-color: map.get($progress-colors, pending);
-}
-
-.residual {
-  background-color: map.get($progress-colors, residual);
 }
 
 mat-panel-title,
@@ -115,11 +110,7 @@ mat-grid-list {
   flex: 4;
 }
 
-::ng-deep .operation-pending-parts .mat-progress-bar-fill::after {
-  background-color: #808080;
-}
-
-.operation-create-fab-button {
+.fab-button-row {
   position: absolute;
   bottom: 16px;
   right: 16px;
@@ -201,36 +192,41 @@ mat-grid-list {
   margin-top: 8px;
 }
 
-.operation-indicator-error {
-  color: map.get($state-colors, failed);
-}
-
-.operation-indicator-interrupting {
-  color: map.get($state-colors, interrupting);
-}
-
-.operation-indicator-can-begin {
-  color: map.get($state-colors, canbegin);
-}
-
-.operation-indicator-running {
-  color: map.get($state-colors, running);
-}
-
-.operation-state-indicator {
+.operation-indicator {
   margin-right: 16px;
   font-size: 32px;
   width: 32px;
   height: 32px;
   line-height: 32px;
-}
 
-.operation-indicator-animation {
-  animation-duration: 2s;
-  animation-name: rotation;
-  animation-iteration-count: infinite;
-  transform-origin: 50% 50%;
-  animation-timing-function: linear;
+  &.error {
+    color: map.get($state-colors, failed);
+  }
+
+  &.interrupting {
+    color: map.get($state-colors, interrupting);
+  }
+
+  &.can-begin {
+    color: map.get($state-colors, canbegin);
+  }
+
+  &.running {
+    color: map.get($state-colors, running);
+  }
+
+  &.completed {
+    color: map.get($state-colors, completed);
+    font-weight: bold;
+  }
+
+  &.animation {
+    animation-duration: 2s;
+    animation-name: rotation;
+    animation-iteration-count: infinite;
+    transform-origin: 50% 50%;
+    animation-timing-function: linear;
+  }
 }
 
 .operations-loading {
@@ -242,42 +238,14 @@ mat-grid-list {
   justify-content: center;
 }
 
-.drawer-close-button{
-  margin: 8px;
-}
-
-.progress-accent-color {
-  @include mat.progress-bar-overrides(
-    (
-      active-indicator-color: $accent,
-    )
-  );
-}
-.progress-error-color {
-  @include mat.progress-bar-overrides(
-    (
-      track-color: $danger,
-    )
-  );
-}
-.progress-warn-color {
-  @include mat.progress-bar-overrides(
-    (
-      active-indicator-color: $warning,
-    )
-  );
-}
-
-.icon-primary-color {
-  color: $primary;
-}
-
-.icon-accent-color {
-  color: $accent;
-}
-
 @keyframes rotation {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.fab-flex-container {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
 }

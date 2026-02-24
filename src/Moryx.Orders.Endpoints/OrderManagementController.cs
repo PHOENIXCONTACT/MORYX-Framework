@@ -51,10 +51,12 @@ public class OrderManagementController : ControllerBase
     [Authorize(Policy = OrderPermissions.CanView)]
     public ActionResult<OperationModel[]> GetOperations(string orderNumber = null, string operationNumber = null)
     {
-        return _orderManagement.GetOperations(_ => true)
+        var operations = _orderManagement.GetOperations(_ => true)
             .Where(o => orderNumber is null || o.Order.Number == orderNumber)
             .Where(o => operationNumber is null || o.Number == operationNumber)
             .Select(Converter.ToModel).ToArray();
+
+        return operations;
     }
 
     [HttpGet("stream")]

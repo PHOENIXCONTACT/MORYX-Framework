@@ -74,6 +74,7 @@ export class Operations implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
   private searchTerm = signal<string>('');
   drawer = viewChild.required<MatDrawer>('drawer');
+  hideCompleted = signal<boolean>(true);
 
   private orderManagementService = inject(OrderManagementService);
   private dialog = inject(MatDialog);
@@ -85,7 +86,12 @@ export class Operations implements OnInit, OnDestroy {
   private changeDetectorRef = inject(ChangeDetectorRef);
   private mediaMatcher = inject(MediaMatcher);
 
+  private hideCompletedStorageKey = 'operations-hide-completed';
+
   constructor() {
+    const value = window.localStorage.getItem(this.hideCompletedStorageKey);
+    this.hideCompleted.set(value === null ? true : value === 'true');
+
     this.mobileQuery = this.mediaMatcher.matchMedia('(max-width: 1279px)');
     this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
     this.mobileQuery.addEventListener('change', this._mobileQueryListener);
@@ -103,7 +109,6 @@ export class Operations implements OnInit, OnDestroy {
     this.orderManagementService.getOperations().subscribe({
       next: (operationResponse: OperationModel[]) => {
         this.operations.set(operationResponse
-          .filter(operation => operation.classification !== OperationStateClassification.Completed)
           .map(model => {
             const viewModel = new OperationViewModel(model);
             this.subscribeForMessagesCount(viewModel);
@@ -123,13 +128,6 @@ export class Operations implements OnInit, OnDestroy {
         return;
       }
 
-      //filter the list after the update of a completed operation
-      if (updatedOperation?.classification === OperationStateClassification.Completed) {
-        this.operations.update(operations => operations.filter(
-          operation => operation.model.identifier !== updatedOperation.identifier
-        ));
-        return;
-      }
       const existent = this.operations().find(o => o.model.identifier == updatedOperation.identifier);
       if (existent) {
         existent.updateModel(updatedOperation);
@@ -167,10 +165,24 @@ export class Operations implements OnInit, OnDestroy {
   }
 
   filteringOperations(operations: OperationViewModel[]): OperationViewModel[] {
-    let filteredOperations = <OperationViewModel[]>[];
-    if (!this.searchTerm()) filteredOperations = operations;
-    else filteredOperations = operations.filter(o => o.model.order?.includes(this.searchTerm()));
-    return filteredOperations;
+    const searchTerm = this.searchTerm();
+    const hideCompleted = this.hideCompleted();
+
+    return operations
+      .filter(o =>
+        (!searchTerm || o.model.order?.includes(searchTerm)) &&
+        (o.model.classification !== OperationStateClassification.Completed || !hideCompleted)
+      )
+      .sort((a, b) => {
+        // Primary sort by sortOrder
+        const orderDiff = (a.model.sortOrder ?? 0) - (b.model.sortOrder ?? 0);
+        if (orderDiff !== 0) return orderDiff;
+
+        // Secondary sort by plannedStart - (works because ISO date strings sort lexicographically)
+        const startA = a.model.plannedStart ?? '';
+        const startB = b.model.plannedStart ?? '';
+        return startA.localeCompare(startB);
+      });
   }
 
   async onBegin(operation: OperationViewModel) {
@@ -312,6 +324,14 @@ export class Operations implements OnInit, OnDestroy {
   closeDrawer() {
     this.drawerContent.set(DrawerContent.None);
     this.drawer().close();
+  }
+
+  onToggleHideCompleted() {
+    this.hideCompleted.update(value => {
+      const newValue = !value;
+      window.localStorage.setItem(this.hideCompletedStorageKey, newValue.toString());
+      return newValue
+    });
   }
 }
 
