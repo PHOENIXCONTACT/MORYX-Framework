@@ -3,7 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -37,11 +38,12 @@ import { HttpErrorResponse } from '@angular/common/http';
   ]
 })
 export class ResourceMethods {
-  private editResourceService = inject(EditResourceService);
   private router = inject(Router);
   private resourceModificationService = inject(ResourceModificationService);
   private snackBar = inject(MatSnackBar);
   private snackbarService = inject(SnackbarService);
+
+  private activeResource = toSignal(inject(EditResourceService).activeResource$);
 
   public methods = signal<MethodEntry[] | undefined | null>([]);
   private resourceId?: number;
@@ -53,7 +55,8 @@ export class ResourceMethods {
   TranslationConstants = TranslationConstants;
 
   constructor() {
-    this.editResourceService.activeResource$.subscribe((resource) => {
+    effect(() => {
+      const resource = this.activeResource();
       if (!resource) {
         return;
       }
