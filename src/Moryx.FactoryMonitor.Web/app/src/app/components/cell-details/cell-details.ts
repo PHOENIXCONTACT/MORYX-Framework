@@ -6,7 +6,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CellImageDialog } from 'src/app/dialogs/cell-image-dialog/cell-image-dialog';
-import { DetailsConfigurationDialog } from 'src/app/dialogs/details-configuration-dialog/details-configuration-dialog';
 import { CellStoreService } from 'src/app/services/cell-store.service';
 import { CellSettingsModel } from 'src/app/api/models/cell-settings-model';
 import { TranslateModule } from '@ngx-translate/core';
@@ -42,10 +41,6 @@ export class CellDetails implements OnInit {
     this.cellStoreService.cellSelected$.subscribe({
       next: result => this.cellDetails.set(result)
     });
-  }
-
-  openConfigurationDialog() {
-    this.matDialog.open(DetailsConfigurationDialog, {});
   }
 
   openCellImageDialog() {
