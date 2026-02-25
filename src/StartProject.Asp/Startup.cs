@@ -8,9 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
-using Polly;
-using System.Buffers;
-using System.Text;
 
 namespace StartProject.Asp;
 
