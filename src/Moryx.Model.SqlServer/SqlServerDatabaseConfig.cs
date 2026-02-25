@@ -19,7 +19,16 @@ public class SqlServerDatabaseConfig : DatabaseConfig
     public override string ConfiguratorType => typeof(SqlServerModelConfigurator).AssemblyQualifiedName;
 
     /// <summary>
-    /// Name of the database associated with the connection
+    /// Name or network address of the instance of SQL Server to connect to.
+    /// </summary>
+    [Required]
+    [DefaultValue("localhost,1433")]
+    [Description("Name or network address of the instance of SQL Server to connect to.")]
+    [ConnectionStringKey("Server")]
+    public string Server { get; set; }
+
+    /// <summary>
+    /// Name of the database associated with the connection.
     /// </summary>
     [Required]
     [DefaultValue("<DatabaseName>")]
@@ -28,7 +37,7 @@ public class SqlServerDatabaseConfig : DatabaseConfig
     public string InitialCatalog { get; set; }
 
     /// <summary>
-    /// User ID to be used when connecting to SQL Server
+    /// User ID to be used when connecting to SQL Server.
     /// </summary>
     [DefaultValue("sa")]
     [Description("User ID to be used when connecting to SQL Server")]
@@ -36,7 +45,7 @@ public class SqlServerDatabaseConfig : DatabaseConfig
     public string UserId { get; set; }
 
     /// <summary>
-    /// Password to be used when connecting to SQL Server
+    /// Password to be used when connecting to SQL Server.
     /// </summary>
     [Password]
     [DefaultValue("password")]
