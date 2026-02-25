@@ -16,6 +16,8 @@ export default class RestClientBase {
 
     }
 
+    // reimplementation of getPathBase from @moryx/ngx-web-framework/environments, 
+    // because I don't think it's smart to entagle the angualr and react dependencies for this small function
     private static getPathBase(modulePrefix: string): string {
 
         const baseElement = document.querySelector("base");
