@@ -155,7 +155,7 @@
                             if (splitRoute.Length <= 1) return;
                             var isActive = splitRoute[1].Equals(item.Route);
                             var activeClass = isActive ? "active tw-border-primary-600" : "tw-border-transparent";
-                            var route = cookie == null || isActive ? item.Route : cookie;
+                            var route = cookie == null || isActive ? Url.Content(item.Route) : cookie;
                             <li class="tw-group tw-relative tw-w-full hover:tw-cursor-pointer hover:tw-bg-primary-200
                                                                         hover:tw-text-primary-600
                                                                                     tw-border-l-4 hover:tw-rounded tw-p-1 @(activeClass) ">

@@ -3,8 +3,9 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-let node = document.head.getElementsByTagName("meta")?.namedItem("moryx-pathbase");
-let path_base = node?.content ?? "";
+import { getPathBase } from '@moryx/ngx-web-framework/environments';
+
+let path_base = getPathBase("/ShiftManagement");
 
 export const environment = {
   production: true,
