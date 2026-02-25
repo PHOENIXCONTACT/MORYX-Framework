@@ -21,6 +21,7 @@ $progress-colors: (
   scrap: #e9545d,
   running: #99cbce,
   pending: #cfd8dc,
+  residual: #ffa726
 );
 
 $state-colors: (
@@ -44,6 +45,10 @@ $state-colors: (
 
 .pending {
   background-color: map.get($progress-colors, pending);
+}
+
+.residual {
+  background-color: map.get($progress-colors, residual);
 }
 
 mat-panel-title,

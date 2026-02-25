@@ -271,7 +271,7 @@ export class Operations implements OnInit, OnDestroy {
     this.modifyDrawer(operationViewModel.model, DrawerContent.Messages);
   }
 
-  modifyDrawer(operation: OperationModel, targetContent: DrawerContent) {
+  private modifyDrawer(operation: OperationModel, targetContent: DrawerContent) {
     if (this.drawerContent() === DrawerContent.None) {
       this.selectedOperation.set(operation);
       this.drawerContent.set(targetContent);
