@@ -2,10 +2,13 @@
  * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
  * Licensed under the Apache License, Version 2.0
 */
+let node = document.head.getElementsByTagName("meta")?.namedItem("moryx-pathbase");
+let path_base = node?.content ?? "";
+
 
 export const environment = {
   production: true,
-  assets: "/_content/Moryx.Notifications.Web/",
-  rootUrl: '',
+  assets: path_base + "/_content/Moryx.Notifications.Web/",
+  rootUrl: path_base,
 };
 

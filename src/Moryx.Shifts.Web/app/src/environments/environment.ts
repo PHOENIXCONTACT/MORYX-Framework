@@ -3,9 +3,11 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-export const environment = 
-{
-    production: true,
-    assets: "/_content/Moryx.Shifts.Web/",
-    rootUrl: ''
+let node = document.head.getElementsByTagName("meta")?.namedItem("moryx-pathbase");
+let path_base = node?.content ?? "";
+
+export const environment = {
+  production: true,
+  assets: path_base + "/_content/Moryx.Shifts.Web/",
+  rootUrl: path_base,
 };
