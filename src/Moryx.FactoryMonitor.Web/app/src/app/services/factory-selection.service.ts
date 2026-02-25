@@ -13,7 +13,7 @@ import { VisualizableItemModel } from '../api/models/visualizable-item-model';
   providedIn: 'root'
 })
 export class FactorySelectionService {
-  private _selectedFactory = new BehaviorSubject<FactoryStateModel|undefined>(undefined);
+  private _selectedFactory = new BehaviorSubject<number|undefined>(undefined);
   private _defaultFactory = new BehaviorSubject<FactoryStateModel|undefined>(undefined);
   private _selectedFactoryContent = new BehaviorSubject<VisualizableItemModel[]>([]);
 
@@ -28,11 +28,11 @@ export class FactorySelectionService {
 
     //factory content, items to be displayed
     this.factoryMonitorService.factoryContent({factoryId: factoryId ?? 0})
-    .subscribe(items => {
-      this._selectedFactoryContent.next(items);
-      //manufacturing factory
-      this._selectedFactory.next(<FactoryStateModel>{ id: factoryId });
-    });
+      .subscribe(items => {
+        this._selectedFactoryContent.next(items);
+        //manufacturing factory
+        this._selectedFactory.next(factoryId);
+      });
   }
 
   public setDefaultFactory(factory: FactoryStateModel | undefined){

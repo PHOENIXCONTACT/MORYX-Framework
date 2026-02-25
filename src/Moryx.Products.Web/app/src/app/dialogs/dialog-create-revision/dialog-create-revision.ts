@@ -29,10 +29,10 @@ import { MatButtonModule } from '@angular/material/button';
     MatDialogModule
   ]
 })
-export class DialogCreateRevisionComponent implements OnInit {
-  private dialogRef = inject(MatDialogRef<DialogCreateRevisionComponent>);
+export class DialogCreateRevision implements OnInit {
+  private dialogRef = inject(MatDialogRef<DialogCreateRevision>);
   private data = inject<ProductModel>(MAT_DIALOG_DATA);
-  editService = inject(EditProductsService);
+  private editService = inject(EditProductsService);
 
   product = signal<ProductModel | undefined>(undefined);
   revision = signal<number | undefined>(undefined);
@@ -58,6 +58,10 @@ export class DialogCreateRevisionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
+    return this.editService.createProductIdentity(identifier, revision);
   }
 }
 

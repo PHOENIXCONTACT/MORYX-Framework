@@ -28,8 +28,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
   ]
 })
-export class DialogDuplicateProductComponent {
-  private dialogRef = inject(MatDialogRef<DialogDuplicateProductComponent>);
+export class DialogDuplicateProduct {
+  private dialogRef = inject(MatDialogRef<DialogDuplicateProduct>);
   private data = inject<ProductModel>(MAT_DIALOG_DATA);
 
   productToDuplicate = signal<ProductModel | undefined>(undefined);

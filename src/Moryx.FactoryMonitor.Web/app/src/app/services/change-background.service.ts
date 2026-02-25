@@ -20,7 +20,7 @@ export class ChangeBackgroundService {
   private factorySelectionService = inject(FactorySelectionService);
 
   defaultUrl = environment.rootUrl + '/background.PNG';
-  private _factory?: FactoryStateModel;
+  private _factory?: number;
   private _backgroundChanged = new BehaviorSubject<string>(this.defaultUrl);
   public backgroundChanged$ = this._backgroundChanged.asObservable();
   private _canSaveBackground = new BehaviorSubject<boolean>(false);
@@ -30,30 +30,22 @@ export class ChangeBackgroundService {
     this.factorySelectionService.factorySelected$.subscribe({
       next: factorySelected => {
         this._factory = factorySelected;
-        this._factory = factorySelected;
-        this.changeLocalBackground(factorySelected?.backgroundURL ?? this.defaultUrl);
         this._canSaveBackground.next(true);
       }
     });
     this.factoryMonitorService.initialFactoryState().subscribe({
-      next: () => {
-        this._backgroundChanged.next(this._backgroundChanged.getValue());
-        this.factoryMonitorService.initialFactoryState().subscribe({
-          next: () => {
-            this._backgroundChanged.next(this._backgroundChanged.getValue());
-          }
-        });
-
+      next: (fsm: FactoryStateModel) => {
+        this._backgroundChanged.next(fsm.backgroundURL ?? this.defaultUrl);
       }
     });
   }
 
   public changeBackground(url: string) {
-    if (!url || !this._factory?.id) return;
+    if (!url || !this._factory) return;
 
     this.factoryMonitorService
       .changeBackground({
-        resourceId: this._factory.id,
+        resourceId: this._factory,
         url: url
       })
       .subscribe({

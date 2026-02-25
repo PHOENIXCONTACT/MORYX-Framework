@@ -4,6 +4,7 @@
 */
 
 import { Component, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationCancel, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -30,9 +31,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 export class ProductsDetailsView {
   private router = inject(Router);
   private sessionService = inject(SessionService);
-  editService = inject(EditProductsService);
+  private editProductsService = inject(EditProductsService);
   private activatedRoute = inject(ActivatedRoute);
 
+  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
   currentProduct = signal<ProductModel | undefined>(undefined);
   lastProductId = signal<number | undefined>(undefined);
   activeLink = signal<Tabs>(Tabs.Unknown);
@@ -65,7 +67,7 @@ export class ProductsDetailsView {
       this.lastProductId.set(product?.id);
 
       if (wipProduct) {
-        this.editService.edit = true;
+        this.editProductsService.edit$.next(true);
         this.sessionService.removeWipProduct();
       }
     });

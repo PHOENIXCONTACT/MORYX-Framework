@@ -5,6 +5,7 @@
 
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, inject, OnInit, signal } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router, RouterOutlet } from "@angular/router";
 import { SnackbarService, } from "@moryx/ngx-web-framework/services";
@@ -12,7 +13,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { RecipeModel } from "../../../api/models";
 import { ProductManagementService } from "../../../api/services";
-import { DialogCreateRecipeComponent } from "../../../dialogs/dialog-create-recipe/dialog-create-recipe";
+import { DialogCreateRecipe } from "../../../dialogs/dialog-create-recipe/dialog-create-recipe";
 import { EditProductsService } from "../../../services/edit-products.service";
 import { CommonModule } from "@angular/common";
 import { MatListModule } from "@angular/material/list";
@@ -35,13 +36,14 @@ import { MatExpansionModule } from "@angular/material/expansion";
   ]
 })
 export class ProductRecipes implements OnInit {
-  editProductsService = inject(EditProductsService);
+  private editProductsService = inject(EditProductsService);
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private dialog = inject(MatDialog);
   private productManagementService = inject(ProductManagementService);
   private snackbarService = inject(SnackbarService);
 
+  isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
   recipes = signal<Array<RecipeModel>>([]);
   selectedRecipe = signal<undefined | RecipeModel>(undefined);
   TranslationConstants = TranslationConstants;
@@ -80,7 +82,7 @@ export class ProductRecipes implements OnInit {
   }
 
   onAddRecipe() {
-    const dialogRef = this.dialog.open(DialogCreateRecipeComponent, {});
+    const dialogRef = this.dialog.open(DialogCreateRecipe, {});
 
     dialogRef.afterClosed().subscribe((result) => {
       if (!result) return;

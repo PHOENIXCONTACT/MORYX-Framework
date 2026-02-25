@@ -33,16 +33,13 @@ export class EditResourceService {
   private translateService = inject(TranslateService);
   private snackbarService = inject(SnackbarService);
 
-  public edit: boolean = false;
+  public edit$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private resource: BehaviorSubject<ResourceModel | undefined> = new BehaviorSubject<ResourceModel | undefined>(
     undefined
   );
   public activeResource$: Observable<ResourceModel | undefined> = this.resource.asObservable();
   public editingUnsavedResource: boolean = false;
   TranslationConstants = TranslationConstants;
-
-  constructor() {
-  }
 
   loadResource() {
     let id = 0;
@@ -73,7 +70,7 @@ export class EditResourceService {
   }
 
   private resetEditor() {
-    this.edit = false;
+    this.edit$.next(false);
     this.editingUnsavedResource = false;
     this.resource.next(undefined);
     // ToDo: Navigating in a service doesn't follow the seperation of concern principle
@@ -136,7 +133,7 @@ export class EditResourceService {
     if (parent) this.assignReferences(resource, parent);
 
     this.resource.next(resource);
-    this.edit = true;
+    this.edit$.next(true);
     return resource;
     //this.navigateToResource(resource);
   }
@@ -147,7 +144,7 @@ export class EditResourceService {
   }
 
   onEdit() {
-    this.edit = true;
+    this.edit$.next(true);
   }
 
   async onSave(): Promise<ResourceModel | undefined> {
@@ -179,7 +176,7 @@ export class EditResourceService {
   async handleUpdateResponse(response: StrictHttpResponse<ResourceModel>): Promise<ResourceModel> {
     await this.cacheResourceService.loadResources();
     this.resource.next(response.body);
-    this.edit = false;
+    this.edit$.next(false);
     return response.body;
   }
 
@@ -189,14 +186,14 @@ export class EditResourceService {
     await this.cacheResourceService.loadResources();
     const resourceModel = response.body;
     this.editingUnsavedResource = false;
-    this.edit = false;
+    this.edit$.next(false);
 
     this.resource.next(resourceModel);
     return resourceModel;
   }
 
   onCancel() {
-    this.edit = false;
+    this.edit$.next(false);
     this.loadResource();
   }
 

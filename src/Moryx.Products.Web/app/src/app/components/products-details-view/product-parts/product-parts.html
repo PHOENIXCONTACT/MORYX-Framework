@@ -5,8 +5,7 @@
         class="parts-part"
         [expanded]="expandedPart()?.name === part.name"
         (opened)="onSelectPartConnector(part)"
-        (closed)="onDeselectPartConnector(part)"
-        >
+        (closed)="onDeselectPartConnector(part)">
         <mat-expansion-panel-header>
           <mat-panel-title>{{ part.displayName ? part.displayName : part.name }}</mat-panel-title>
         </mat-expansion-panel-header>
@@ -21,15 +20,8 @@
                       <mat-list-item
                         (click)="onSelectPartElement(partElement)"
                         class="parts-part-list-list-item"
-                        [ngClass]="{ 'moryx-selected': selectedPart()?.id == partElement.id }"
-                        >
-                        {{
-                          editProductsService.createProductNameWithIdentity(
-                        partElement.product,
-                        true,
-                        30
-                        )
-                        }}
+                        [ngClass]="{ 'moryx-selected': selectedPart()?.id == partElement.id }">
+                        {{ createProductNameWithIdentity(partElement.product, true, 30) }}
                       </mat-list-item>
                     }
                   </mat-list>
@@ -53,8 +45,7 @@
             <div>
               <app-product-parts-details
                 [partConnector]="part"
-                [productPart]="selectedPart()!"
-                >
+                [productPart]="selectedPart()!">
               </app-product-parts-details>
             </div>
           }
@@ -64,14 +55,14 @@
           @if (part.isCollection) {
             <button
               mat-button
-              [disabled]="editProductsService.edit === false || !selectedPart()"
+              [disabled]="!isEditMode() || !selectedPart()"
               (click)="removePart()"
               >
               {{ TranslationConstants.PARTS.REMOVE | translate }}
             </button>
             <button
               mat-flat-button
-              [disabled]="editProductsService.edit === false"
+              [disabled]="!isEditMode()"
               (click)="addPart()"
               >
               {{ TranslationConstants.PARTS.ADD | translate }}
@@ -79,14 +70,14 @@
           } @else {
             <button
               mat-button
-              [disabled]="editProductsService.edit === false || !selectedPart()"
+              [disabled]="!isEditMode() || !selectedPart()"
               (click)="removePart()"
               >
               {{ TranslationConstants.PARTS.REMOVE | translate }}
             </button>
             <button
               mat-flat-button
-              [disabled]="editProductsService.edit === false"
+              [disabled]="!isEditMode()"
               (click)="addPart()"
               >
               {{ TranslationConstants.PARTS.REPLACE | translate }}

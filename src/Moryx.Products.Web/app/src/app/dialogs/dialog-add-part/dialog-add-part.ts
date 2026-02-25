@@ -39,11 +39,11 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
   ]
 })
-export class DialogAddPartComponent {
-  private dialogRef = inject(MatDialogRef<DialogAddPartComponent>);
+export class DialogAddPart {
+  private dialogRef = inject(MatDialogRef<DialogAddPart>);
   private data = inject<PartConnector>(MAT_DIALOG_DATA);
   private productManagementService = inject(ProductManagementService);
-  editProductsService = inject(EditProductsService);
+  private editProductsService = inject(EditProductsService);
   private snackbarService = inject(SnackbarService);
 
   possibleParts = signal<ProductModel[]>([]);
@@ -100,6 +100,10 @@ export class DialogAddPartComponent {
       .indexOf(this.searchText().toLowerCase());
     if (indexSearchText >= 0) return true;
     return false;
+  }
+
+  createProductNameWithIdentity(product: ProductModel | undefined, shortened: boolean = false, maxLength: number = 40): string {
+    return this.editProductsService.createProductNameWithIdentity(product, shortened, maxLength);
   }
 }
 

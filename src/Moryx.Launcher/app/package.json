@@ -41,7 +41,7 @@
     "autoprefixer": "^10.4.20",
     "copyfiles": "^2.4.1",
     "eslint": "^9.9.1",
-    "jsdom": "^26.0.0",
+    "jsdom": "^28.1.0",
     "postcss": "^8.4.47",
     "sass": "^1.77.8",
     "sass-loader": "^16.0.0",

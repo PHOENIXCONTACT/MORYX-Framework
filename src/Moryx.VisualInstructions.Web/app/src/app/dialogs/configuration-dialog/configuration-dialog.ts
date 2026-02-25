@@ -5,8 +5,8 @@
 
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatListOption, MatSelectionList } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
@@ -27,20 +27,16 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
   ]
 })
 export class ConfigurationDialog implements OnInit {
-  private dialogRef = inject(MatDialogRef<ConfigurationDialog>);
   data = inject<DialogData>(MAT_DIALOG_DATA);
   private visualInstructionsService = inject(VisualInstructionsService);
   private snackbarService = inject(SnackbarService);
 
-  instructors: string[] | undefined = undefined;
+  instructors = signal<string[]|undefined>(undefined);
   TranslationConstants = TranslationConstants;
-
-  constructor() {
-  }
 
   ngOnInit(): void {
     this.visualInstructionsService.getInstructors().subscribe({
-      next: (result) => this.instructors = result.sort((a, b) => a.localeCompare(b)),
+      next: (result) => this.instructors.update(_ => result.sort((a, b) => a.localeCompare(b))),
       error: async (e: HttpErrorResponse) =>
         await this.snackbarService.handleError(e)
     });

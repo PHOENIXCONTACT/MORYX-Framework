@@ -4,6 +4,7 @@
 */
 
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -36,10 +37,14 @@ import { MatButtonModule } from '@angular/material/button';
 ]
 })
 export class ResourceReferences implements OnInit, OnDestroy {
+  private cacheResourceService = inject(CacheResourceService);
+  private editResourceService = inject(EditResourceService);
+
   resource: ResourceModel | undefined;
   references: ResourceReferenceModel[] | null | undefined;
   selectedTarget: ResourceModel | undefined;
 
+  isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
   referenceTypes = signal<ReferenceTypeModel[] | null | undefined>(undefined);
   selectedReferenceType = signal<ReferenceTypeModel | undefined>(undefined);
   selectedReference = signal<ResourceReferenceModel | undefined>(undefined);
@@ -52,23 +57,17 @@ export class ResourceReferences implements OnInit, OnDestroy {
   compareWith = (o1: any, o2: any) => {
     return o1?.id === o2?.id;
   };
-
-  private cacheService = inject(CacheResourceService);
-  editService = inject(EditResourceService);
-  translate = inject(TranslateService);
   private router = inject(Router);
 
-  constructor() { }
-
   ngOnInit(): void {
-    this.serviceSubscription = this.editService.activeResource$.subscribe(resource => {
+    this.serviceSubscription = this.editResourceService.activeResource$.subscribe(resource => {
       if (!resource) return;
       this.loadReferences(resource);
     });
   }
 
   loadReferences(resource: ResourceModel) {
-    const resourceType = this.cacheService.flatTypes?.find(t => t.name === resource?.type);
+    const resourceType = this.cacheResourceService.flatTypes?.find(t => t.name === resource?.type);
 
     // In the unlikely case that the resource types haven't been loaded yet,
     // navigate to the empty details screen.
@@ -150,7 +149,7 @@ export class ResourceReferences implements OnInit, OnDestroy {
   getPossibleResources(): ResourceModel[] {
     let possibleResources = [] as ResourceModel[];
     const supportedTypes = this.getAllSupportedTypes(this.selectedReferenceType()?.supportedTypes);
-    this.cacheService.flatResources.getValue()?.forEach(r => {
+    this.cacheResourceService.flatResources.getValue()?.forEach(r => {
       if (supportedTypes.find(t => r.type === t) && this.resource?.id != r.id) possibleResources.push(r);
     });
 
@@ -171,7 +170,7 @@ export class ResourceReferences implements OnInit, OnDestroy {
 
     const supportedSubTypes = Object.assign<string[], string[]>([], supportedRootTypes);
     for (let index = 0; index < supportedSubTypes.length; index++) {
-      const rootType = this.cacheService.flatTypes?.find(t => t.name == supportedSubTypes[index]);
+      const rootType = this.cacheResourceService.flatTypes?.find(t => t.name == supportedSubTypes[index]);
       rootType?.derivedTypes?.forEach(t => {
         if (t.name && !supportedSubTypes.find(et => t.name === et)) supportedSubTypes.push(t.name);
       });

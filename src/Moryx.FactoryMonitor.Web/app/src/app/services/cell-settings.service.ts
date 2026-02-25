@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 import { CellSettingsModel } from '../api/models/cell-settings-model';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { CellStoreService } from './cell-store.service';
+import CellModel from '../models/cellModel';
 
 @Injectable({
   providedIn: 'root'
@@ -18,13 +19,6 @@ export class CellSettingsService {
   private snackbarService = inject(SnackbarService);
   private cellStoreService = inject(CellStoreService);
 
-  private _cellSettingsChanged = new Subject<{ cellId: number; cellSettings: CellSettingsModel }>();
-
-  public cellSettingsChanged$ = this._cellSettingsChanged.asObservable();
-
-  constructor() {
-
-  }
 
   changeCellSettings(cellId: number, cellSettings: CellSettingsModel) {
     this.factoryMonitorService
@@ -34,11 +28,11 @@ export class CellSettingsService {
       })
       .subscribe({
         next: _ => {
-          this._cellSettingsChanged.next({cellId, cellSettings});
-          const cell = this.cellStoreService.getCell(cellId);
-          if (!cell) return;
-          cell.iconName = cellSettings.icon ?? 'build';
-          cell.image = cellSettings.image ?? '';
+          const cell = <CellModel>{
+            id: cellId,
+            iconName: cellSettings.icon,
+            image: cellSettings.image
+          }
           this.cellStoreService.updateCell(cell);
         },
         error: err => this.snackbarService.handleError(err)
