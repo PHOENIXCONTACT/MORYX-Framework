@@ -9,12 +9,28 @@ export default class RestClientBase {
     private url: string;
 
     constructor(baseUrl: string = "") {
-        const node = document.head.getElementsByTagName("meta")?.namedItem("moryx-pathbase");
-        const path_base = node?.content ?? "";
 
-        this.url = (baseUrl
+       this.url = baseUrl
             ? baseUrl
-            : RestClientBase.baseUrl()) + path_base;
+            : RestClientBase.getPathBase("/CommandCenter");
+
+    }
+
+    private static getPathBase(modulePrefix: string): string {
+
+        const baseElement = document.querySelector("base");
+        const href = baseElement?.href; // RoutingPrefix/commandcenter
+        if (modulePrefix == null || modulePrefix == undefined || modulePrefix == "") {
+            return href;
+        }
+
+        if (!modulePrefix.startsWith("/")) {
+            modulePrefix = "/" + modulePrefix;
+        }
+        if (href?.endsWith(modulePrefix)) {
+            return href.substring(0, href.length - modulePrefix.length);  // RoutingPrefix
+        }
+        throw Error("Not implemented");
     }
 
     public static baseUrl(): string {
