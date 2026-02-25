@@ -3,8 +3,9 @@
     "TITLE": "Aufträge"
   },
   "OPERATIONS": {
-    "TITLE": "Meldungen",
-    "SUB_TITLE": "Stückliste",
+    "LOG_TITLE": "Meldungen",
+    "PARTS_TITLE": "Stückliste",
+    "FILTER_TITLE": "Filter",
     "SOURCE_TITLE": "Vorgangsquelle",
     "AMOUNT": "Menge",
     "SUCCESS": "Gutmenge",
@@ -40,6 +41,9 @@
       "QUANTITY": "Menge",
       "UNIT": "Einheit",
       "STAGING_INDICATOR": "Bereitstellungskennzeichen"
+    },
+    "FILTERS": {
+      "HIDE_COMPLETED": "Abgeschlossene ausblenden"
     },
     "EMPTY_LOG": "Dieses Protokoll ist leer",
     "FAILED_LOADING": "Die Verbindung zum Server ist leider fehlgeschlagen. Bitte überprüfe deine Netzwerkverbindung oder versuch es später nochmal.",

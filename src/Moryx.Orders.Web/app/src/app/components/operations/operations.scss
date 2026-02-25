@@ -2,6 +2,22 @@
 @use "@moryx/ngx-web-framework/styles/variables" as *;
 @use 'sass:map';
 
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.toolbar {
+  .icon-button {
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+}
+
 .multi-progress-container {
   display: flex;
   width: 100%;
@@ -21,7 +37,7 @@ $progress-colors: (
   scrap: #e9545d,
   running: #99cbce,
   pending: #cfd8dc,
-  residual: #ffa726
+  residual: #cfd8dc
 );
 
 $state-colors: (
@@ -113,13 +129,6 @@ mat-grid-list {
   flex-flow: column;
   gap: 4px;
   flex: 4;
-}
-
-.fab-button-row {
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
-  z-index: 1;
 }
 
 .operation-list {

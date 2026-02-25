@@ -1,20 +1,34 @@
 @if (!isLoading()) {
+  <mat-toolbar class="toolbar">
+    <span>{{ TranslationConstants.APP.TITLE | translate }}</span>
+    <span class="toolbar-spacer"></span>
+    <button matIconButton class="icon-button" (click)="onCreate()">
+      <mat-icon>add</mat-icon>
+    </button>
+    <button matIconButton class="icon-button" (click)="onToggleFilter()">
+      <mat-icon>filter_alt</mat-icon>
+    </button>
+  </mat-toolbar>
   @if (operations().length) {
-    <mat-drawer-container
-      class="operations-drawer-container"
-      [hasBackdrop]="mobileQuery.matches"
-    >
-      <mat-drawer
-        #drawer
-        [mode]="mobileQuery.matches ? 'over' : 'side'"
-        position="end"
-        class="operations-drawer"
-      >
+    <mat-drawer-container class="operations-drawer-container" [hasBackdrop]="mobileQuery.matches">
+      <mat-drawer #drawer [mode]="mobileQuery.matches ? 'over' : 'side'"
+        position="end" class="operations-drawer">
         @switch (drawerContent()) {
+          @case (DrawerContent.Filter) {
+            <div class="operations-drawer-content">
+              <div class="operations-drawer-title">
+                <h2>{{ TranslationConstants.OPERATIONS.FILTER_TITLE | translate }}</h2>
+                <a mat-icon-button (click)="closeDrawer()">
+                  <mat-icon>close</mat-icon>
+                </a>
+              </div>
+              <app-operations-filter />
+            </div>
+          }
           @case (DrawerContent.Messages) {
             <div class="operations-drawer-content">
               <div class="operations-drawer-title">
-                <h2>{{ TranslationConstants.OPERATIONS.TITLE | translate }}</h2>
+                <h2>{{ TranslationConstants.OPERATIONS.LOG_TITLE | translate }}</h2>
                 <a mat-icon-button (click)="closeDrawer()">
                   <mat-icon>close</mat-icon>
                 </a>
@@ -27,7 +41,7 @@
           @case (DrawerContent.Parts) {
             <div class="operations-drawer-content">
               <div class="operations-drawer-title">
-                <h2>{{ TranslationConstants.OPERATIONS.SUB_TITLE | translate }}</h2>
+                <h2>{{ TranslationConstants.OPERATIONS.PARTS_TITLE | translate }}</h2>
                 <a mat-icon-button (click)="drawer.close()">
                   <mat-icon>close</mat-icon>
                 </a>
@@ -148,7 +162,7 @@
                         </div>
                         <div class="bar residual"
                              [style.flex-basis.%]="operation.progressResidualPercent"
-                             matTooltip="{{ TranslationConstants.OPERATIONS.RESIDUAL | translate }}: {{ operation.progressResidualCount }}%">
+                             matTooltip="{{ TranslationConstants.OPERATIONS.RESIDUAL | translate }}: {{ operation.progressResidualCount }}">
                         </div>
                       </div>
                     </div>
@@ -343,18 +357,6 @@
       message="{{ TranslationConstants.OPERATIONS.EMPTY_STATE_TEXT | translate }}"
     ></empty-state>
   }
-  <div class="fab-button-row">
-    <div class="fab-flex-container">
-      <button mat-fab extended color="primary" (click)="onToggleHideCompleted()">
-        <mat-icon>{{ hideCompleted() ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
-        Hide Completed
-      </button>
-      <button mat-fab extended color="primary" (click)="onCreate()">
-        <mat-icon>add</mat-icon>
-        Create
-      </button>
-    </div>
-  </div>
 } @else {
   <div class="operations-loading">
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>

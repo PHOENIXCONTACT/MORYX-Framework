@@ -40,6 +40,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { FilterService } from '../../services/filter.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { OperationsFilter } from './operations-filter/operations-filter';
 
 @Component({
   selector: 'app-operations',
@@ -52,6 +56,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatDrawer,
     MatSidenavModule,
     LogMessageList,
+    OperationsFilter,
     PartList,
     OperationSource,
     MatExpansionModule,
@@ -60,10 +65,22 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     EmptyState,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatToolbarModule
   ]
 })
 export class Operations implements OnInit, OnDestroy {
+  private orderManagementService = inject(OrderManagementService);
+  private dialog = inject(MatDialog);
+  private router = inject(Router);
+  private searchBarService = inject(SearchBarService);
+  private translateService = inject(TranslateService);
+  private snackbarService = inject(SnackbarService);
+  private operationService = inject(OperationService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+  private mediaMatcher = inject(MediaMatcher);
+  private filterService = inject(FilterService);
+
   operations = signal<OperationViewModel[]>([]);
   DrawerContent = DrawerContent;
   drawerContent = signal<DrawerContent>(DrawerContent.None);
@@ -74,30 +91,15 @@ export class Operations implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
   private searchTerm = signal<string>('');
   drawer = viewChild.required<MatDrawer>('drawer');
-  hideCompleted = signal<boolean>(true);
-
-  private orderManagementService = inject(OrderManagementService);
-  private dialog = inject(MatDialog);
-  private router = inject(Router);
-  private searchBarService = inject(SearchBarService);
-  private translateService = inject(TranslateService);
-  private snackbarService = inject(SnackbarService);
-  private operationService = inject(OperationService);
-  private changeDetectorRef = inject(ChangeDetectorRef);
-  private mediaMatcher = inject(MediaMatcher);
-
-  private hideCompletedStorageKey = 'operations-hide-completed';
+  hideCompleted = toSignal(this.filterService.hideCompleted$, { initialValue: true });
 
   constructor() {
-    const value = window.localStorage.getItem(this.hideCompletedStorageKey);
-    this.hideCompleted.set(value === null ? true : value === 'true');
-
     this.mobileQuery = this.mediaMatcher.matchMedia('(max-width: 1279px)');
     this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
     this.mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
 
-  private _mobileQueryListener: () => void;
+  private readonly _mobileQueryListener: () => void;
 
   ngOnDestroy(): void {
     this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
@@ -161,7 +163,9 @@ export class Operations implements OnInit, OnDestroy {
           this.onSearch(newRequest);
         }
       });
-    } else this.searchTerm.set(request.term);
+    } else {
+      this.searchTerm.set(request.term);
+    }
   }
 
   filteringOperations(operations: OperationViewModel[]): OperationViewModel[] {
@@ -271,6 +275,15 @@ export class Operations implements OnInit, OnDestroy {
     this.modifyDrawer(operationViewModel.model, DrawerContent.Messages);
   }
 
+  onToggleFilter() {
+    if (this.drawerContent() === DrawerContent.Filter) {
+      this.closeDrawer();
+    } else  {
+      this.drawerContent.set(DrawerContent.Filter);
+      this.drawer().open();
+    }
+  }
+
   private modifyDrawer(operation: OperationModel, targetContent: DrawerContent) {
     if (this.drawerContent() === DrawerContent.None) {
       this.selectedOperation.set(operation);
@@ -315,7 +328,9 @@ export class Operations implements OnInit, OnDestroy {
     if (this.selectedOperation()?.identifier === operation.model.identifier) {
       // User clicked to close the panel
       this.selectedOperation.set(undefined);
-      this.closeDrawer();
+      if (this.drawerContent() !== DrawerContent.Filter) {
+        this.closeDrawer();
+      }
     } else {
       // Panel collapsed because another was opened
     }
@@ -324,14 +339,6 @@ export class Operations implements OnInit, OnDestroy {
   closeDrawer() {
     this.drawerContent.set(DrawerContent.None);
     this.drawer().close();
-  }
-
-  onToggleHideCompleted() {
-    this.hideCompleted.update(value => {
-      const newValue = !value;
-      window.localStorage.setItem(this.hideCompletedStorageKey, newValue.toString());
-      return newValue
-    });
   }
 }
 

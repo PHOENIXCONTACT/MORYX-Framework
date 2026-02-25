@@ -3,8 +3,9 @@
     "TITLE": "Ordini"
   },
   "OPERATIONS": {
-    "TITLE": "Messaggi",
-    "SUB_TITLE": "Elenco dei pezzi",
+    "LOG_TITLE": "Messaggi",
+    "PARTS_TITLE": "Elenco dei pezzi",
+    "FILTER_TITLE": "Filtro",
     "SOURCE_TITLE": "Fonte dell'operazione",
     "AMOUNT": "Quantità",
     "SUCCESS": "Successo",
@@ -40,6 +41,9 @@
       "QUANTITY": "Quantità",
       "UNIT": "Unità",
       "STAGING_INDICATOR": "Indicatore di gestione temporanea"
+    },
+    "FILTERS": {
+      "HIDE_COMPLETED": "Nascondi completati"
     },
     "EMPTY_LOG": "Questo registro è vuoto",
     "FAILED_LOADING": "Non è stato possibile stabilire la connessione al server. Controllare la connessione di rete o riprovare più tardi.",
