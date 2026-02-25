@@ -38,8 +38,8 @@
     "@angular/cli": "^21.1.0",
     "@angular/compiler-cli": "^21.1.0",
     "@types/hammerjs": "^2.0.46",
-    "@types/node": "^22.13.1",
-    "jsdom": "^26.0.0",
+    "@types/node": "^25.3.0",
+    "jsdom": "^28.1.0",
     "typescript": "~5.9.3",
     "vitest": "^4.0.8"
   }
