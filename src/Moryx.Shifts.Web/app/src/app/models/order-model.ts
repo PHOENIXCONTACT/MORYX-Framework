@@ -12,7 +12,7 @@ export interface OrderModel {
   date: Date;
 }
 
-//given a list of order and total hours of work per operators we return a 
+//given a list of order and total hours of work per operators we return a
 //list of order that can be completed within the total hours of work.
 export function getOrderOfTheDayBasedOnOperatorHours(
   orders: OrderModel[],
@@ -54,7 +54,7 @@ export function totalOrderHours(orders: OrderModel[]){
     return sum;
 }
 
-export function getOrdersBasedOnOperatorHours(startDate: Date | undefined, 
+export function getOrdersBasedOnOperatorHours(startDate: Date | undefined,
     endDate: Date | undefined,
     orders: OrderModel[],operatorHours: number): OrderModel[] {
     if(!startDate || !endDate) return [];
@@ -65,7 +65,7 @@ export function getOrdersBasedOnOperatorHours(startDate: Date | undefined,
     for (let now = start; now.diff(end,'days') <= 0; now =  now.add(1,'days')) {
         if(totalHoursLeft <= 0) break;
 
-        var ordersOfTheDay = getOrderOfTheDayBasedOnOperatorHours(orders,now.toDate(),operatorHours);
+        const ordersOfTheDay = getOrderOfTheDayBasedOnOperatorHours(orders, now.toDate(), operatorHours);
         if(!ordersOfTheDay.length) continue;
 
         orderList.push(...ordersOfTheDay);

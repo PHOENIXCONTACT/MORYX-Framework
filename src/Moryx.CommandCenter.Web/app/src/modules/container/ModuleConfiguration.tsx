@@ -11,7 +11,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import SvgIcon from "@mui/material/SvgIcon";
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import ModuleHeader from "../../common/components/ModuleHeader";
 import ModulesRestClient from "../api/ModulesRestClient";

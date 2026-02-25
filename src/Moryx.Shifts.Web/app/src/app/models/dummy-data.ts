@@ -4,7 +4,7 @@
 */
 
 import { AttendableResourceModel } from '../api/models/attendable-resource-model';
-import { AssignmentCardModel, DayOfTheWeek } from './assignment-card-model';
+import { AssignmentCardModel } from './assignment-card-model';
 import { OperatorModel, OperatorStatus } from './operator-model';
 import { OrderModel } from './order-model';
 import { ShiftCardModel } from './shift-card-model';

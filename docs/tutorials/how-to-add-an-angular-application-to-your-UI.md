@@ -43,7 +43,6 @@ root to anchor the angular app into the razor page.
 @* // Add the compiled javascript from the angular project *@
 @section Scripts
 {
-  <script src="/_content/<YourC#ProjectName>/polyfills.js" type="module"></script>
   <script src="/_content/<YourC#ProjectName>/main.js" type="module"></script>
 }
 
@@ -201,12 +200,11 @@ and insert the following part into your *angular.json* file
 ### Call the API in your component
 
 Now, get back to the component or service where you want the data to be retrieved.
-Here is an example to call a methodnin the *app.component.ts*
+Here is an example to call a methodnin the *app.ts*
 
 ```ts
 export class AppComponent implements OnInit {
-  constructor(private api: MyFacadeService) {
-  }
+  private api = inject(MyFacadeService);
 
   ngOnInit(): void {
     this.api.accessFacade$Json().subscribe(r => this.example = r)

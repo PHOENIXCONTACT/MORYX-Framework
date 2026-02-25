@@ -3,18 +3,18 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Directive, HostListener } from '@angular/core';
+import { Directive } from '@angular/core';
 
 @Directive({
-    selector: '[click-stop-propagation]',
-    standalone: false
+  selector: '[click-stop-propagation]',
+  host: {
+    '(click)': 'onClick($event)'
+  }
 })
 export class ClickStopPropagationDirective {
 
-  @HostListener("click", ["$event"])
-  public onClick(event: any): void
-  {
-      event.stopPropagation();
+  onClick(event: any): void {
+    event.stopPropagation();
   }
 
 }

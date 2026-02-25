@@ -6,7 +6,6 @@
 import { AbstractControl, ValidationErrors } from "@angular/forms";
 
 export class OperationNumberValidations{
-    
 
     static isOperationNumberNotValid(control:AbstractControl): ValidationErrors | null{
 

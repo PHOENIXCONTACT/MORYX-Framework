@@ -4,11 +4,11 @@
 */
 
 import { Routes } from "@angular/router";
-import { VariantOverviewComponent } from "./components/variant-overview/variant-overview.component";
-import { MediaOverviewComponent } from "./components/media-overview/media-overview.component";
+import { VariantOverview } from "./components/variant-overview/variant-overview";
+import { MediaOverview } from "./components/media-overview/media-overview";
 
 export const routes: Routes = [
-    { path: 'details/:id', component: VariantOverviewComponent },
-    { path: '', component: MediaOverviewComponent },
+    { path: 'details/:id', component: VariantOverview },
+    { path: '', component: MediaOverview },
   ];
-  
+

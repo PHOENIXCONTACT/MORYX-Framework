@@ -4,7 +4,7 @@
 */
 
 import { Observable } from 'rxjs';
-import { Notification } from '../notifications/notifications.component';
+import { Notification } from '../notifications/notifications';
 export interface MoryxShell extends Object {
   initSearchBar(
     callback: SearchRequestCallback,

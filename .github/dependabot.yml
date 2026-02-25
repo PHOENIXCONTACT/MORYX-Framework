@@ -32,7 +32,7 @@ updates:
       - "nuget"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "/src/Moryx.CommandCenter.Web/"
+    directory: "/src/Moryx.CommandCenter.Web/app/"
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
@@ -52,7 +52,7 @@ updates:
       - "npm"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "/src/Moryx.ControlSystem.ProcessEngine.Web/"
+    directory: "/src/Moryx.ControlSystem.ProcessEngine.Web/app/"
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
@@ -72,7 +72,7 @@ updates:
       - "npm"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "/src/Moryx.VisualInstructions.Web/"
+    directory: "/src/Moryx.VisualInstructions.Web/app/"
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
@@ -92,7 +92,7 @@ updates:
       - "npm"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "/src/Moryx.FactoryMonitor.Web/"
+    directory: "/src/Moryx.FactoryMonitor.Web/app/"
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
@@ -112,7 +112,7 @@ updates:
       - "npm"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "/src/Moryx.Media.Web/"
+    directory: "/src/Moryx.Media.Web/app/"
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
@@ -132,7 +132,7 @@ updates:
       - "npm"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "/src/Moryx.Notifications.Web/"
+    directory: "/src/Moryx.Notifications.Web/app/"
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
@@ -152,7 +152,7 @@ updates:
       - "npm"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "/src/Moryx.Operators.Web/"
+    directory: "/src/Moryx.Operators.Web/app/"
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
@@ -172,7 +172,7 @@ updates:
       - "npm"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "/src/Moryx.Orders.Web/"
+    directory: "/src/Moryx.Orders.Web/app/"
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
@@ -192,7 +192,7 @@ updates:
       - "npm"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "/src/Moryx.Products.Web/"
+    directory: "/src/Moryx.Products.Web/app/"
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
@@ -212,7 +212,7 @@ updates:
       - "npm"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "/src/Moryx.Resources.Web/"
+    directory: "/src/Moryx.Resources.Web/app/"
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
@@ -232,7 +232,7 @@ updates:
       - "npm"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "/src/Moryx.Shifts.Web/"
+    directory: "/src/Moryx.Shifts.Web/app/"
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:
@@ -252,7 +252,7 @@ updates:
       - "npm"
       - "dependencies"
   - package-ecosystem: "npm"
-    directory: "/src/Moryx.Workplans.Web/"
+    directory: "/src/Moryx.Workplans.Web/app/"
     target-branch: "future"
     open-pull-requests-limit: 10
     ignore:

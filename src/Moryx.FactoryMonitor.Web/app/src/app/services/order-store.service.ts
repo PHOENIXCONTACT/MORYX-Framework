@@ -3,8 +3,8 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ApplicationRef, Injectable, NgZone, ɵgetUnknownElementStrictMode } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { OrderModel } from '../api/models/order-model';
 import { FactoryStateStreamService } from './factory-state-stream.service';
 import Order from '../models/order';
@@ -14,6 +14,8 @@ import { InternalOperationClassification } from '../api/models/internal-operatio
   providedIn: 'root',
 })
 export class OrderStoreService {
+  private factoryStateStreamService = inject(FactoryStateStreamService);
+
   public _orders = new BehaviorSubject<Order[]>([]);
   private _runningOrders = new BehaviorSubject<Order[]>([]);
   private _toggledOrder = new Subject<Order>();
@@ -22,8 +24,7 @@ export class OrderStoreService {
   public runningOrders$: Observable<Order[]>;
   public toggledOrder$: Observable<Order>;
 
-  constructor(
-    private factoryStateStreamService: FactoryStateStreamService) {
+  constructor() {
     this.factoryStateStreamService.updatedOrder.subscribe({
       next: order => {
         if (!order?.orderNumber) return;
@@ -64,7 +65,6 @@ export class OrderStoreService {
   public toggleOrder(order: Order) {
     order.isToggled = !order.isToggled;
     this._toggledOrder.next(order);
-    //this.appRef.tick();
   }
 
   //Groupes the orders to creates a Map<string,OrderModel[]>
@@ -105,7 +105,7 @@ export class OrderStoreService {
     }
 
     orders[indexToUpdate] = orderToUpdate;
-    
+
     this._runningOrders.next(orders.filter(o => o.classification == InternalOperationClassification.Running))
     this._orders.next(orders)
   }

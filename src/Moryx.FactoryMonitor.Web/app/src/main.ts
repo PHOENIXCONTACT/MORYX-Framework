@@ -3,11 +3,10 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import { AppComponent } from './app/app.component';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { App } from './app/app';
 import { appConfig } from './app/app.config';
 
-
-bootstrapApplication(AppComponent, appConfig)
-.catch(err => console.error(err));
+bootstrapApplication(App, appConfig)
+  .catch(err => console.error(err));
 

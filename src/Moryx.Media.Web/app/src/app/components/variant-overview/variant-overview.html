@@ -1,0 +1,109 @@
+@if (content()) {
+  <mat-sidenav-container class="content-details">
+    <mat-sidenav opened role="navigation" mode="side" position="start" class="media-sidenav">
+      <div class="media-side-bar">
+        <mat-toolbar
+          color="primary"
+          [ngStyle]="{ 'background-image': 'url(' + mediaImage() + ')' }"
+          class="media-toolbar"
+          >
+          <mat-toolbar-row>
+            <button mat-icon-button class="media-toolbar-button" [routerLink]="['../../']" aria-label="Back Button">
+              <mat-icon>arrow_back</mat-icon>
+            </button>
+            <span class="toolbar-spacer"></span>
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <button mat-icon-button aria-label="Spacer" disabled="true">
+              <mat-icon></mat-icon>
+            </button>
+            <span>{{ TranslationConstants.MEDIA_FILE_VARIANTS | translate }}</span>
+          </mat-toolbar-row>
+        </mat-toolbar>
+        <mat-menu #contextMenu="matMenu">
+          <ng-template matMenuContent let-variant="variant">
+            <button mat-menu-item type="button" (click)="onInfo(variant)">
+              <mat-icon>info</mat-icon>
+              <span>{{ TranslationConstants.CONTEXT_MENU.INFO | translate }}</span>
+            </button>
+            <button mat-menu-item type="button" (click)="onDownload(variant)">
+              <mat-icon>download</mat-icon>
+              <span>{{ TranslationConstants.CONTEXT_MENU.DOWNLOAD | translate }}</span>
+            </button>
+            @if (variant.name !== 'master') {
+              <button mat-menu-item type="button" (click)="onDelete(variant)">
+                <mat-icon>delete_forever</mat-icon>
+                <span>{{ TranslationConstants.CONTEXT_MENU.DELETE | translate }}</span>
+              </button>
+            }
+          </ng-template>
+        </mat-menu>
+        <!-- A hidden div is created to set the position of the menu-->
+        <div
+          style="visibility: hidden; position: fixed"
+          [style.left]="menuTopLeftPosition().x"
+          [style.top]="menuTopLeftPosition().y"
+          [matMenuTriggerFor]="contextMenu"
+        ></div>
+        <mat-selection-list class="variant-list" [multiple]="false" [hideSingleSelectionIndicator]="true">
+          @for (variant of content()?.variants; track variant) {
+            <mat-list-option
+              (mousedown)="onMouseDown($event, variant)"
+              (mouseup)="onMouseUp($event, variant)"
+              (contextmenu)="onContext($event, variant)"
+              class="variant-item"
+              [ngClass]="{ selected: selectedVariant()?.name == variant.name }"
+              >
+              @if (variant.name) {
+                <img src="{{ previews().get(variant.name) }}" alt="..." />
+              }
+              <div class="variant-item-details">
+                <h3>
+                  <b>{{ variant.name }}</b>
+                </h3>
+                <p [matTooltip]="TranslationConstants.VARIANT_OVERVIEW.CREATION_DATE | translate" >
+                  {{ variant.creationDate | date: 'dd/MM/yyyy H:mm' }}
+                </p>
+                <p [matTooltip]="TranslationConstants.VARIANT_OVERVIEW.SIZE | translate" >
+                  {{ (variant.size ? variant.size/1024 : 0) | number: '1.0-2'}} KB
+                </p>
+              </div>
+            </mat-list-option>
+          }
+        </mat-selection-list>
+      </div>
+      <button
+        mat-fab
+        class="upload-button"
+        type="button"
+        aria-label="Upload Media"
+        (click)="onUpload()"
+        >
+        <mat-icon>upload</mat-icon>
+      </button>
+    </mat-sidenav>
+    <mat-sidenav-content class="variant-container">
+      @switch (bigPictureLoadingState()) {
+        @case (1) {
+          <mat-spinner></mat-spinner>
+        }
+        @case (2) {
+          @if (!bigPictureIsPdf()) {
+            <img
+              src="{{ bigPictureUrl() }}"
+              alt="Image could not be loaded"
+              class="variant-image"
+              />
+          }
+          @if (bigPictureIsPdf()) {
+            <ngx-doc-viewer
+              [url]="pdfUrl()!"
+              viewer="url"
+              class="variant-pdf"
+            ></ngx-doc-viewer>
+          }
+        }
+      }
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+}

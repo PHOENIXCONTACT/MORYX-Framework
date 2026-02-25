@@ -33,7 +33,9 @@
   </ItemGroup>
 
   <Import Project="..\..\.build\WebProjects.props"/>
-  <Target Name="BuildUI">
+  <Target Name="BuildUI" Condition="('$(Configuration)'!='Debug' Or !Exists('wwwroot\js\dist\main.js')) And ('$(NoBuild)' != 'true')">
+    <Exec Command="dotnet tool restore" />
+    <Exec Command="dotnet libman restore" />
     <Exec WorkingDirectory=".\app\" Command="npm ci" />
     <Exec WorkingDirectory=".\app\" Command="npm run build:prod"/>
     <Exec WorkingDirectory=".\app\" Command="npm run build:css"/>

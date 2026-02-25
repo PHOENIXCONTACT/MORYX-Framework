@@ -1,0 +1,14 @@
+<div class="tw:grid tw:grid-cols-2 tw:auto-rows-auto tw:gap-2">
+  @for (operator of operators(); track operator) {
+    <app-operator-card
+      [workstationId]="workstation().data.id ?? 0"
+      [operator]="operator"
+      (toggleAssignment)="handleToggleAssignment($event)"
+      />
+  }
+</div>
+@if (operators().length === 0) {
+  <div class="tw:w-full tw:h-full">
+    <empty-state [header]="''" [message]="TranslationConstants.OPERATORS.EMPTY_MESSAGE | translate" />
+  </div>
+}
