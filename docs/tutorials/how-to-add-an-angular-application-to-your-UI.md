@@ -37,13 +37,13 @@ root to anchor the angular app into the razor page.
 ```cshtml
 @* // Add the styles from the angular project *@
 @section Styles {
-  <link rel="stylesheet" href="/_content/<YourC#ProjectName>/styles.css">
+  <link rel="stylesheet" href="~/_content/<YourC#ProjectName>/styles.css">
 }
 
 @* // Add the compiled javascript from the angular project *@
 @section Scripts
 {
-  <script src="/_content/<YourC#ProjectName>/main.js" type="module"></script>
+  <script src="~/_content/<YourC#ProjectName>/main.js" type="module"></script>
 }
 
 @* // Add the application root *@

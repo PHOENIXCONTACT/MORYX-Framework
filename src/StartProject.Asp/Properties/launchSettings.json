@@ -4,12 +4,21 @@
         "commandName": "Project",
         "dotnetRunMessages": true,
         "launchBrowser": true,
-        "useSSL": true,
         "applicationUrl": "https://localhost:5000/",
-        "launchUrl": "https://localhost:5000/test",
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    },
+    "StartProject.Asp - Path Base test": {
+          "commandName": "Project",
+          "dotnetRunMessages": true,
+          "launchBrowser": true,
+          "useSSL": true,
+          "applicationUrl": "https://localhost:5000/",
+          "launchUrl": "https://localhost:5000/test",
+          "environmentVariables": {
+              "ASPNETCORE_ENVIRONMENT": "PathBase"
+        }
     }
   }
 }

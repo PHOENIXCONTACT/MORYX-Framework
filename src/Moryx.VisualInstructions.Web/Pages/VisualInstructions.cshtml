@@ -11,7 +11,7 @@
   Layout = "_Layout";
 }
 @attribute [WebModule("VisualInstructions", "assignment"),
-ModuleEventStream("~/api/moryx/instructions/stream"),
+  ModuleEventStream("~/api/moryx/instructions/stream"),
   Display(ResourceType = typeof(Strings), Name = "Module_Title", Description = "Module_Description"),
     Authorize(Policy = VisualInstructionsPermissions.CanView),
     AllowAnonymous]
