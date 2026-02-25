@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable, NgZone } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ProcessEngineService } from '../api/services';
 import { JobProcessModel } from '../api/models/job-process-model';
@@ -13,12 +13,12 @@ import { ProcessActivityModel } from '../api/models/process-activity-model';
   providedIn: 'root'
 })
 export class ProcessEngineStreamService {
+  private processEngineService = inject(ProcessEngineService);
+
   updatedProcess: BehaviorSubject<JobProcessModel | undefined> = new BehaviorSubject<JobProcessModel | undefined>(undefined);
   updatedActivity: BehaviorSubject<ProcessActivityModel | undefined> = new BehaviorSubject<ProcessActivityModel | undefined>(undefined);
 
-  constructor(
-    private processEngineService: ProcessEngineService,
-    private ngZone: NgZone) {
+  constructor() {
     this.publishActivityUpdates();
     this.publishProcessUpdates();
   }
@@ -27,7 +27,7 @@ export class ProcessEngineStreamService {
     const eventSource = new EventSource(this.processEngineService.rootUrl + ProcessEngineService.ProcessUpdatesStreamPath);
     eventSource.onmessage = event => {
       const process = JSON.parse(event.data);
-      this.ngZone.run(() => this.updatedProcess.next(process));
+      this.updatedProcess.next(process);
     };
   }
 
@@ -35,7 +35,7 @@ export class ProcessEngineStreamService {
     const eventSource = new EventSource(this.processEngineService.rootUrl + ProcessEngineService.ActivitiesUpdatesStreamPath);
     eventSource.onmessage = event => {
       const activity = JSON.parse(event.data);
-      this.ngZone.run(() => this.updatedActivity.next(activity));
+      this.updatedActivity.next(activity);
     };
   }
 

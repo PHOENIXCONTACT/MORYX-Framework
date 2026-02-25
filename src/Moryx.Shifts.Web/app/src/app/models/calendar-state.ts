@@ -23,7 +23,7 @@ export class CalendarState {
   private state: CalendarModel = <CalendarModel>{calendarWeek:0, startDate: new Date(), intervalDays:0, datesDisplayed: ''};
   private calendarDates: CalendarDate[] = [];
   private lang = 'en';
-  
+
   constructor(private translate: TranslateService) {
 
       this.reset();
@@ -55,7 +55,7 @@ export class CalendarState {
         datesDisplayed: `${now.startOf('week').format(dateFormat)} - ${now
           .endOf('week').format(dateFormat)}`,
       };
-  
+
       this.calendarDates = this.generateDates(this.state.intervalDays);
     });
   }
@@ -78,7 +78,7 @@ export class CalendarState {
   }
 
   public viewDatesStartingFrom(date: Date, numberOfDays: number = 0): CalendarDate[] {
-    var lenght = 7;
+    let lenght = 7;
     if(numberOfDays > 0) lenght = numberOfDays;
     return this.generateDates(lenght,date);
   }
@@ -86,7 +86,7 @@ export class CalendarState {
   public getNextWeek(format: string): CalendarModel {
     this.initLang();
     const current = moment(this.state.startDate);
-    
+
     const nextStartDate = current.endOf('week').add(1, 'days').startOf('week');
     return <CalendarModel>{
       calendarWeek: this.state.calendarWeek + 1,
@@ -127,14 +127,14 @@ export class CalendarState {
 
   public generateDates(numberOfDays: number = 7, startDate?: Date): CalendarDate[] {
     this.initLang();
- 
-    var dates : CalendarDate[] = [];
-    var currentMoment: moment.Moment;
+
+    const dates: CalendarDate[] = [];
+    let currentMoment: moment.Moment;
 
     if(!startDate) currentMoment =  moment(this.state.startDate);
     else currentMoment = moment(startDate);
 
-    var end = moment(currentMoment).add(numberOfDays, 'days');
+    const end = moment(currentMoment).add(numberOfDays, 'days');
     for (
       let currentDate = currentMoment;
       currentDate.diff(end, 'days') < 0;

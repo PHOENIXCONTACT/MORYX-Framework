@@ -3,32 +3,27 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { ShiftTypeModel } from '../models/shift-type-model';
-import { ShiftCardModel } from '../models/shift-card-model';
 import { ShiftInstanceModel } from '../models/shift-instance-model';
-import { SHIFTS, SHIFT_INSTANCES, SHIFT_TYPES } from '../models/dummy-data';
 import { ShiftManagementService } from '../api/services';
-import { Time } from '@angular/common';
 import { ShiftModel } from '../api/models/shift-model';
 import { formatDateDigits } from '../utils';
 import moment from 'moment';
 import { ShiftCreationContextModel } from '../api/models/shift-creation-context-model';
 import { ShiftTypeCreationContextModel } from '../api/models/shift-type-creation-context-model';
-import {
-  shiftToShitInstanceModel,
-  shiftTypeToShiftTypeModel,
-} from '../models/model-converter';
+import { shiftToShitInstanceModel, shiftTypeToShiftTypeModel } from '../models/model-converter';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShiftService {
+  private shiftManagement = inject(ShiftManagementService);
   public shiftTypes = new BehaviorSubject<ShiftTypeModel[]>([]);
   public shiftInstances = new BehaviorSubject<ShiftInstanceModel[]>([]);
 
-  constructor(private shiftManagement: ShiftManagementService) {
+  constructor() {
     //fetch shift types
     this.shiftManagement.getShiftTypes()
       .subscribe((shifts) => {
@@ -54,9 +49,7 @@ export class ShiftService {
     this.shiftTypes.next([...this.shiftTypes.value, type]);
   }
 
-  public addType(
-    shift: ShiftTypeModel
-  ) {
+  public addType(shift: ShiftTypeModel) {
     //format the startTime & endTime to time format hh:mm:ss.ms
     const from = `${formatDateDigits(shift.startTime.hours)}:${formatDateDigits(
       shift.startTime.minutes
