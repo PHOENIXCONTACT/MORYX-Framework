@@ -9,9 +9,30 @@ export default class RestClientBase {
     private url: string;
 
     constructor(baseUrl: string = "") {
-        this.url = baseUrl
+
+       this.url = baseUrl
             ? baseUrl
-            : RestClientBase.baseUrl();
+            : RestClientBase.getPathBase("/CommandCenter");
+
+    }
+
+    // reimplementation of getPathBase from @moryx/ngx-web-framework/environments, 
+    // because I don't think it's smart to entagle the angualr and react dependencies for this small function
+    private static getPathBase(modulePrefix: string): string {
+
+        const baseElement = document.querySelector("base");
+        const href = baseElement?.href; // RoutingPrefix/commandcenter
+        if (modulePrefix == null || modulePrefix == undefined || modulePrefix == "") {
+            return href;
+        }
+
+        if (!modulePrefix.startsWith("/")) {
+            modulePrefix = "/" + modulePrefix;
+        }
+        if (href?.endsWith(modulePrefix)) {
+            return href.substring(0, href.length - modulePrefix.length);  // RoutingPrefix
+        }
+        throw Error("Not implemented");
     }
 
     public static baseUrl(): string {
