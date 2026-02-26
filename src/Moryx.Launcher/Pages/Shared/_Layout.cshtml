@@ -176,8 +176,9 @@
                 </aside>
             }
         }
-        <div class="tw-flex-1 tw-flex tw-flex-col tw-overflow-auto tw-h-full tw-w-full tw-box-border" main>
-            @Html.Partial("AboutModal")
+        <div class="tw-flex-1 tw-flex tw-h-full tw-w-full tw-box-border" main>
+            <div class="tw-flex-1 tw-flex tw-overflow-auto tw-flex-col">
+                @Html.Partial("AboutModal")
 
             @if (Url.RouteUrl(ViewContext.RouteData.Values).Split('/').Length > 1 &&
             !Url.RouteUrl(ViewContext.RouteData.Values).Split('/')[1].Contains("Notifications"))
@@ -188,6 +189,10 @@
             <div class="tw-overflow-hidden tw-h-screen tw-w-full tw-box-border">
                 @RenderBody()
             </div>
+            @if (_navigator.GetRegion(LauncherRegion.Right) is LauncherRegionItem rightRegion)
+            {
+                <aside class="tw-flex-initial tw-overflow-hidden">@await Html.PartialAsync(rightRegion.PartialView)</aside>
+            }
         </div>
         <div class="tw-w-full tw-h-14 tw-shadow-md tw-bg-white tw-drop-shadow" id="launcher-bottom-nav-bar" bottombar>
             <div class="tw-relative tw-flex tw-items-center tw-justify-around">

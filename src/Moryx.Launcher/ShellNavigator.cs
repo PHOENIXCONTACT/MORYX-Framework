@@ -54,26 +54,7 @@ public class ShellNavigator : IShellNavigator
     /// <inheritdoc />
     public async Task<IReadOnlyList<ModuleItem>> GetModuleItemsAsync(HttpContext context)
     {
-        // Filter pages
-        var pageActionDescriptors = _endpointsDataSource.Endpoints.SelectMany(endpoint => endpoint.Metadata)
-            .OfType<PageActionDescriptor>()
-            .Where(pad => !pad.ViewEnginePath.Contains("Index"));
-        // Retrieve all Metadata
-        var compiledPageActionDescriptors = await Task.WhenAll(pageActionDescriptors.Select(async pad => await _pageLoader.LoadAsync(pad, EndpointMetadataCollection.Empty)));
-
-        // Filter permission
-        if (context is not null && _client is not null)
-        {
-            var token = context.Request.Cookies[MoryxIdentityDefaults.JWT_COOKIE_NAME];
-            var refreshToken = context.Request.Cookies[MoryxIdentityDefaults.REFRESH_TOKEN_COOKIE_NAME];
-
-            var permissions = await _client.GetPermissionsAsync(token, refreshToken);
-            compiledPageActionDescriptors = compiledPageActionDescriptors.Where(cpad =>
-            {
-                var requiredPolicy = (cpad.EndpointMetadata.SingleOrDefault(a => a is AuthorizeAttribute) as AuthorizeAttribute)?.Policy;
-                return requiredPolicy is null || permissions?.Contains(requiredPolicy) == true;
-            }).ToArray();
-        }
+        var compiledPageActionDescriptors = await CompiledPageActionDescriptors(context);
 
         // Load modules
         var modules = compiledPageActionDescriptors.Select(CreateWebModuleItem)
@@ -98,6 +79,58 @@ public class ShellNavigator : IShellNavigator
 
         return modules;
     }
+    
+    /// <inheritdoc />
+    public LauncherRegionConfig? GetRegionConfig(LauncherRegion region) => _launcherConfig.Regions;
+
+    private async Task<CompiledPageActionDescriptor[]> CompiledPageActionDescriptors(HttpContext context)
+    {
+        // Filter pages
+        var pageActionDescriptors = _endpointsDataSource.Endpoints.SelectMany(endpoint => endpoint.Metadata)
+            .OfType<PageActionDescriptor>()
+            .Where(pad => !pad.ViewEnginePath.Contains("Index"));
+        // Retrieve all Metadata
+        var compiledPageActionDescriptors = await Task.WhenAll(pageActionDescriptors.Select(async pad =>
+            await _pageLoader.LoadAsync(pad, EndpointMetadataCollection.Empty)));
+
+        // Filter permission
+        if (context is not null && _client is not null)
+        {
+            var token = context.Request.Cookies[MoryxIdentityDefaults.JWT_COOKIE_NAME];
+            var refreshToken = context.Request.Cookies[MoryxIdentityDefaults.REFRESH_TOKEN_COOKIE_NAME];
+
+            var permissions = await _client.GetPermissionsAsync(token, refreshToken);
+            compiledPageActionDescriptors = compiledPageActionDescriptors.Where(cpad =>
+            {
+                var requiredPolicy =
+                    (cpad.EndpointMetadata.SingleOrDefault(a => a is AuthorizeAttribute) as AuthorizeAttribute)?.Policy;
+                return requiredPolicy is null || permissions?.Contains(requiredPolicy) == true;
+            }).ToArray();
+        }
+
+        return compiledPageActionDescriptors;
+    }
+
+    /// <inheritdoc />
+    public LauncherRegionItem GetRegion(LauncherRegion region)
+    {
+        var config = _launcherConfig.Regions?.FirstOrDefault(x => x.Region == region);
+        if (config is null)
+        {
+            return null;
+        }
+        //TODO: how to use ReflectionTool here ?
+        var partialViewAssembly = AppDomain.CurrentDomain.GetAssemblies();
+        var plugins = partialViewAssembly.SelectMany(x => x.GetTypes()).Where(t => t.IsClass && t.GetCustomAttribute<LauncherPluginAttribute>() != null);
+        var plugin = plugins.FirstOrDefault(x => config?.PluginName == x.GetCustomAttribute<LauncherPluginAttribute>().Name);
+        if (plugin is null)
+        {
+            return null;
+        }
+        var pluginAttribute = plugin.GetCustomAttribute<LauncherPluginAttribute>();
+        var viewName = plugin.Name[("Page_".Length + 1)..];
+        return new LauncherRegionItem { PartialView = viewName };
+    }
 
     private ExternalModuleItem[] LoadExternalModules()
     {
@@ -117,14 +150,16 @@ public class ShellNavigator : IShellNavigator
             Route = $"external/{externalModuleConfig.Route}"
         };
     }
-
     private static WebModuleItem CreateWebModuleItem(CompiledPageActionDescriptor pageActionDescriptor)
     {
-        var webModuleAttribute = pageActionDescriptor.EndpointMetadata.SingleOrDefault(a => a is WebModuleAttribute) as WebModuleAttribute;
+        var webModuleAttribute =
+            pageActionDescriptor.EndpointMetadata.SingleOrDefault(a => a is WebModuleAttribute) as WebModuleAttribute;
         if (webModuleAttribute is null)
             return null;
 
-        var streamAttribute = pageActionDescriptor.EndpointMetadata.SingleOrDefault(a => a is ModuleEventStreamAttribute) as ModuleEventStreamAttribute;
+        var streamAttribute =
+            pageActionDescriptor.EndpointMetadata.SingleOrDefault(a => a is ModuleEventStreamAttribute) as
+                ModuleEventStreamAttribute;
         return new WebModuleItem
         {
             Title = pageActionDescriptor.PageTypeInfo.GetDisplayName() ?? webModuleAttribute.Route,
