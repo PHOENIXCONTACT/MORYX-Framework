@@ -48,7 +48,9 @@
     "EMPTY_LOG": "此日志为空",
     "FAILED_LOADING": "无法建立与服务器的连接。请检查您的网络连接或稍后重试。",
     "EMPTY_STATE_HEADER": "没有订单",
-    "EMPTY_STATE_TEXT": "单击加号创建订单并开始配置。"
+    "EMPTY_STATE_TEXT": "单击加号创建订单并开始配置。",
+    "CREATE": "创建",
+    "FILTER": "筛选"
   },
   "RECIPES": {
     "RECIPES_OF": "配方 -",

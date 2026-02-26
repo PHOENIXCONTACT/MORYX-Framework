@@ -1,3 +1,5 @@
-<mat-checkbox [checked]="hideCompleted()" (change)="toggleHideCompleted()">
-  {{ TranslationConstants.OPERATIONS.FILTERS.HIDE_COMPLETED | translate }}
-</mat-checkbox>
+<p>
+  <mat-slide-toggle [checked]="hideCompleted()" (change)="toggleHideCompleted()">
+    {{ TranslationConstants.OPERATIONS.FILTERS.HIDE_COMPLETED | translate }}
+  </mat-slide-toggle>
+</p>

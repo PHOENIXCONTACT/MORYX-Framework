@@ -2,22 +2,6 @@
 @use "@moryx/ngx-web-framework/styles/variables" as *;
 @use 'sass:map';
 
-.toolbar-spacer {
-  flex: 1 1 auto;
-}
-
-.toolbar {
-  .icon-button {
-    width: 40px;
-    height: 40px;
-    padding: 8px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-  }
-}
-
 .multi-progress-container {
   display: flex;
   width: 100%;
@@ -143,10 +127,6 @@ mat-grid-list {
   width: 840px;
 }
 
-.operation-progress mat-progress-bar {
-  height: 6px;
-}
-
 .operation-title {
   margin: 0px;
   font-weight: bold;
@@ -258,8 +238,56 @@ mat-grid-list {
   }
 }
 
-.fab-flex-container {
+.sidenav-container {
+  @include mat.sidenav-overrides((
+    container-background-color: white,
+  ));
+  height: 100%;
+}
+
+.sidenav-toolbar {
+  width: auto;
+}
+
+.sidenav-toolbar-buttons {
   display: flex;
-  flex-direction: row;
-  gap: 8px;
+  flex-direction: column;
+  padding: 12px 0;
+  gap: 12px;
+}
+
+.sidenav-toolbar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+
+  .material-symbols-outlined {
+    font-size: 24px;
+    width: 56px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    transition: background-color 0.2s;
+  }
+
+  .label {
+    font-size: 12px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.87);
+  }
+
+  &:hover .material-symbols-outlined {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+
+  &:active .material-symbols-outlined {
+    background-color: rgba(0, 0, 0, 0.12);
+  }
 }

@@ -1,218 +1,222 @@
 @if (!isLoading()) {
-  <mat-toolbar class="toolbar">
-    <span>{{ TranslationConstants.APP.TITLE | translate }}</span>
-    <span class="toolbar-spacer"></span>
-    <button matIconButton class="icon-button" (click)="onCreate()">
-      <mat-icon>add</mat-icon>
-    </button>
-    <button matIconButton class="icon-button" (click)="onToggleFilter()">
-      <mat-icon>filter_alt</mat-icon>
-    </button>
-  </mat-toolbar>
-  @if (operations().length) {
-    <mat-drawer-container class="operations-drawer-container" [hasBackdrop]="mobileQuery.matches">
-      <mat-drawer #drawer [mode]="mobileQuery.matches ? 'over' : 'side'"
-        position="end" class="operations-drawer">
-        @switch (drawerContent()) {
-          @case (DrawerContent.Filter) {
-            <div class="operations-drawer-content">
-              <div class="operations-drawer-title">
-                <h2>{{ TranslationConstants.OPERATIONS.FILTER_TITLE | translate }}</h2>
-                <a mat-icon-button (click)="closeDrawer()">
-                  <mat-icon>close</mat-icon>
-                </a>
-              </div>
-              <app-operations-filter />
-            </div>
-          }
-          @case (DrawerContent.Messages) {
-            <div class="operations-drawer-content">
-              <div class="operations-drawer-title">
-                <h2>{{ TranslationConstants.OPERATIONS.LOG_TITLE | translate }}</h2>
-                <a mat-icon-button (click)="closeDrawer()">
-                  <mat-icon>close</mat-icon>
-                </a>
-              </div>
-              <app-log-message-list
-                [guid]="selectedOperation()?.identifier!"
-              ></app-log-message-list>
-            </div>
-          }
-          @case (DrawerContent.Parts) {
-            <div class="operations-drawer-content">
-              <div class="operations-drawer-title">
-                <h2>{{ TranslationConstants.OPERATIONS.PARTS_TITLE | translate }}</h2>
-                <a mat-icon-button (click)="drawer.close()">
-                  <mat-icon>close</mat-icon>
-                </a>
-              </div>
-              <app-part-list
-                [guid]="selectedOperation()?.identifier!"
-              ></app-part-list>
-            </div>
-          }
-          @case (DrawerContent.Source) {
-            <div class="operations-drawer-content">
-              <div class="operations-drawer-title">
-                <h2>
-                  {{ TranslationConstants.OPERATIONS.SOURCE_TITLE | translate }}
-                </h2>
-                <a mat-icon-button (click)="drawer.close()">
-                  <mat-icon>close</mat-icon>
-                </a>
-              </div>
-              <app-operation-source
-                [operationSource]="selectedOperation()?.operationSource!"
-              ></app-operation-source>
-            </div>
-          }
-        }
-      </mat-drawer>
-      <mat-drawer-content>
-        <div class="operation-list">
-          <mat-accordion>
-            @for (operation of filteringOperations(operations()); track operation) {
-              <mat-expansion-panel
-                class="operation"
-                (expandedChange)="onPanelExpandedChange($event, operation)"
-              >
-                <mat-expansion-panel-header
-                  [collapsedHeight]="'128px'"
-                  [expandedHeight]="'128px'"
-                  class="operation-header flex-row-center"
-                >
-                  <div class="flex-row-center">
-                    @switch (operation.model.classification) {
-                      @case (OperationStateClassification.Completed) {
-                        <mat-icon class="operation-indicator completed">check</mat-icon>
-                      }
-                      @case (OperationStateClassification.Running) {
-                        <mat-icon class="operation-indicator running"
-                                  [class.animation]="operation.isProducing">
-                          settings
-                        </mat-icon>
-                      }
-                      @case (OperationStateClassification.Interrupting) {
-                        <mat-icon class="operation-indicator interrupting animation">settings</mat-icon>
-                      }
-                      @default {
-                        @if (operation.model.canBegin) {
-                          <mat-icon class="operation-indicator can-begin">settings</mat-icon>
-                        } @else {
-                          <mat-icon class="operation-indicator error">error</mat-icon>
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav mode="side" position="end" opened class="sidenav-toolbar">
+      <div class="sidenav-toolbar-buttons">
+        <a class="sidenav-toolbar-item" (click)="onCreate()">
+          <span class="material-symbols-outlined">add</span>
+          <div class="label">{{ TranslationConstants.OPERATIONS.CREATE | translate }}</div>
+        </a>
+        <a class="sidenav-toolbar-item" (click)="onToggleFilter()">
+          <span class="material-symbols-outlined">filter_alt</span>
+          <div class="label">{{ TranslationConstants.OPERATIONS.FILTER | translate }}</div>
+        </a>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      @if (operations().length) {
+        <mat-drawer-container class="operations-drawer-container" [hasBackdrop]="mobileQuery.matches">
+          <mat-drawer #drawer [mode]="mobileQuery.matches ? 'over' : 'side'"
+                      position="end" class="operations-drawer">
+            @switch (drawerContent()) {
+              @case (DrawerContent.Filter) {
+                <div class="operations-drawer-content">
+                  <div class="operations-drawer-title">
+                    <h2>{{ TranslationConstants.OPERATIONS.FILTER_TITLE | translate }}</h2>
+                    <a mat-icon-button (click)="closeDrawer()">
+                      <mat-icon>close</mat-icon>
+                    </a>
+                  </div>
+                  <app-operations-filter />
+                </div>
+              }
+              @case (DrawerContent.Messages) {
+                <div class="operations-drawer-content">
+                  <div class="operations-drawer-title">
+                    <h2>{{ TranslationConstants.OPERATIONS.LOG_TITLE | translate }}</h2>
+                    <a mat-icon-button (click)="closeDrawer()">
+                      <mat-icon>close</mat-icon>
+                    </a>
+                  </div>
+                  <app-log-message-list
+                    [guid]="selectedOperation()?.identifier!"
+                  ></app-log-message-list>
+                </div>
+              }
+              @case (DrawerContent.Parts) {
+                <div class="operations-drawer-content">
+                  <div class="operations-drawer-title">
+                    <h2>{{ TranslationConstants.OPERATIONS.PARTS_TITLE | translate }}</h2>
+                    <a mat-icon-button (click)="drawer.close()">
+                      <mat-icon>close</mat-icon>
+                    </a>
+                  </div>
+                  <app-part-list
+                    [guid]="selectedOperation()?.identifier!"
+                  ></app-part-list>
+                </div>
+              }
+              @case (DrawerContent.Source) {
+                <div class="operations-drawer-content">
+                  <div class="operations-drawer-title">
+                    <h2>
+                      {{ TranslationConstants.OPERATIONS.SOURCE_TITLE | translate }}
+                    </h2>
+                    <a mat-icon-button (click)="drawer.close()">
+                      <mat-icon>close</mat-icon>
+                    </a>
+                  </div>
+                  <app-operation-source
+                    [operationSource]="selectedOperation()?.operationSource!"
+                  ></app-operation-source>
+                </div>
+              }
+            }
+          </mat-drawer>
+          <mat-drawer-content>
+            <div class="operation-list">
+              <mat-accordion>
+                @for (operation of filteringOperations(operations()); track operation) {
+                  <mat-expansion-panel
+                    class="operation"
+                    (expandedChange)="onPanelExpandedChange($event, operation)"
+                  >
+                    <mat-expansion-panel-header
+                      [collapsedHeight]="'128px'"
+                      [expandedHeight]="'128px'"
+                      class="operation-header flex-row-center"
+                    >
+                      <div class="flex-row-center">
+                        @switch (operation.model.classification) {
+                          @case (OperationStateClassification.Completed) {
+                            <mat-icon class="operation-indicator completed">check</mat-icon>
+                          }
+                          @case (OperationStateClassification.Running) {
+                            <mat-icon class="operation-indicator running"
+                                      [class.animation]="operation.isProducing">
+                              settings
+                            </mat-icon>
+                          }
+                          @case (OperationStateClassification.Interrupting) {
+                            <mat-icon class="operation-indicator interrupting animation">settings</mat-icon>
+                          }
+                          @default {
+                            @if (operation.model.canBegin) {
+                              <mat-icon class="operation-indicator can-begin">settings</mat-icon>
+                            } @else {
+                              <mat-icon class="operation-indicator error">error</mat-icon>
+                            }
+                          }
                         }
-                      }
-                    }
-                  </div>
-                  <div class="operation-header-content">
-                    <div class="operation-header-row">
-                      <h2 class="operation-title">
-                        {{ operation.model.order }} - {{ operation.model.number }}
-                      </h2>
-                    </div>
-                    <div class="operation-header-row">
-                      <h3 class="operation-subtitle">
-                        {{ TranslationConstants.OPERATIONS.PRODUCT | translate }}:
-                        {{ operation.model.productIdentifier }}-{{
-                          operation.model.productRevision | number : "2.0"
-                        }}
-                        {{ operation.model.productName }} |
-                        {{
-                          (operation.model.recipeIds?.length ?? 0) > 1
-                            ? operation.model.recipeName + ", ..."
-                            : operation.model.recipeName
-                        }}
-                      </h3>
-                    </div>
-                    <div class="operation-header-row">
-                      <div>
-                        {{ TranslationConstants.OPERATIONS.AMOUNT | translate }}:
-                        {{ operation.model.totalAmount }}
                       </div>
-                      <div>
-                        {{ TranslationConstants.OPERATIONS.SUCCESS | translate }}:
-                        {{ operation.model.successCount }}
+                      <div class="operation-header-content">
+                        <div class="operation-header-row">
+                          <h2 class="operation-title">
+                            {{ operation.model.order }} - {{ operation.model.number }}
+                          </h2>
+                        </div>
+                        <div class="operation-header-row">
+                          <h3 class="operation-subtitle">
+                            {{ TranslationConstants.OPERATIONS.PRODUCT | translate }}:
+                            {{ operation.model.productIdentifier }}-{{
+                              operation.model.productRevision | number : "2.0"
+                            }}
+                            {{ operation.model.productName }} |
+                            {{
+                              (operation.model.recipeIds?.length ?? 0) > 1
+                                ? operation.model.recipeName + ", ..."
+                                : operation.model.recipeName
+                            }}
+                          </h3>
+                        </div>
+                        <div class="operation-header-row">
+                          <div>
+                            {{ TranslationConstants.OPERATIONS.AMOUNT | translate }}:
+                            {{ operation.model.totalAmount }}
+                          </div>
+                          <div>
+                            {{ TranslationConstants.OPERATIONS.SUCCESS | translate }}:
+                            {{ operation.model.successCount }}
+                          </div>
+                          <div>
+                            {{ TranslationConstants.OPERATIONS.RUNNING | translate }}:
+                            {{ operation.model.progressRunning }}
+                          </div>
+                          <div>
+                            {{ TranslationConstants.OPERATIONS.SCRAP | translate }}:
+                            {{ operation.model.scrapCount }}
+                          </div>
+                        </div>
+                        <div class="operation-header-row operation-progress">
+                          <div class="multi-progress-container">
+                            <div class="bar success"
+                                 [style.flex-basis.%]="operation.progressSuccessPercent"
+                                 matTooltip="{{ TranslationConstants.OPERATIONS.SUCCESS | translate }}: {{ operation.model.successCount }}">
+                            </div>
+                            <div class="bar scrap"
+                                 [style.flex-basis.%]="operation.progressScrapPercent"
+                                 matTooltip="{{ TranslationConstants.OPERATIONS.SCRAP | translate }}: {{ operation.model.scrapCount }}">
+                            </div>
+                            <div class="bar running"
+                                 [style.flex-basis.%]="operation.progressRunningPercent"
+                                 matTooltip="{{ TranslationConstants.OPERATIONS.RUNNING | translate }}: {{ operation.model.runningCount }}">
+                            </div>
+                            <div class="bar pending"
+                                 [style.flex-basis.%]="operation.progressPendingPercent"
+                                 matTooltip="{{ TranslationConstants.OPERATIONS.PENDING | translate }}: {{ operation.model.pendingCount }}">
+                            </div>
+                            <div class="bar residual"
+                                 [style.flex-basis.%]="operation.progressResidualPercent"
+                                 matTooltip="{{ TranslationConstants.OPERATIONS.RESIDUAL | translate }}: {{ operation.progressResidualCount }}">
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        {{ TranslationConstants.OPERATIONS.RUNNING | translate }}:
-                        {{ operation.model.progressRunning }}
+                    </mat-expansion-panel-header>
+                    <div class="operation-details flex-row-center">
+                      <div class="operation-details-content">
+                        <div>
+                          {{ TranslationConstants.OPERATIONS.RECIPE | translate }}:
+                          {{ operation.model.recipeName }}
+                        </div>
+                        <div>
+                          {{
+                            TranslationConstants.OPERATIONS.REPORTED_SUCCESS
+                              | translate
+                          }}:
+                          {{ operation.model.reportedSuccessCount }}
+                        </div>
+                        <div>
+                          {{
+                            TranslationConstants.OPERATIONS.REPORTED_SCRAP | translate
+                          }}:
+                          {{ operation.model.reportedFailureCount }}
+                        </div>
+                        <div>
+                          {{
+                            TranslationConstants.OPERATIONS.OVERDELIVERY | translate
+                          }}:
+                          {{ operation.model.overDeliveryAmount }}
+                        </div>
+                        <div>
+                          {{
+                            TranslationConstants.OPERATIONS.UNDERDELIVERY | translate
+                          }}:
+                          {{ operation.model.underDeliveryAmount }}
+                        </div>
                       </div>
-                      <div>
-                        {{ TranslationConstants.OPERATIONS.SCRAP | translate }}:
-                        {{ operation.model.scrapCount }}
-                      </div>
-                    </div>
-                    <div class="operation-header-row operation-progress">
-                      <div class="multi-progress-container">
-                        <div class="bar success"
-                             [style.flex-basis.%]="operation.progressSuccessPercent"
-                             matTooltip="{{ TranslationConstants.OPERATIONS.SUCCESS | translate }}: {{ operation.model.successCount }}">
-                        </div>
-                        <div class="bar scrap"
-                             [style.flex-basis.%]="operation.progressScrapPercent"
-                             matTooltip="{{ TranslationConstants.OPERATIONS.SCRAP | translate }}: {{ operation.model.scrapCount }}">
-                        </div>
-                        <div class="bar running"
-                             [style.flex-basis.%]="operation.progressRunningPercent"
-                             matTooltip="{{ TranslationConstants.OPERATIONS.RUNNING | translate }}: {{ operation.model.runningCount }}">
-                        </div>
-                        <div class="bar pending"
-                             [style.flex-basis.%]="operation.progressPendingPercent"
-                             matTooltip="{{ TranslationConstants.OPERATIONS.PENDING | translate }}: {{ operation.model.pendingCount }}">
-                        </div>
-                        <div class="bar residual"
-                             [style.flex-basis.%]="operation.progressResidualPercent"
-                             matTooltip="{{ TranslationConstants.OPERATIONS.RESIDUAL | translate }}: {{ operation.progressResidualCount }}">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </mat-expansion-panel-header>
-                <div class="operation-details flex-row-center">
-                  <div class="operation-details-content">
-                    <div>
-                      {{ TranslationConstants.OPERATIONS.RECIPE | translate }}:
-                      {{ operation.model.recipeName }}
-                    </div>
-                    <div>
-                      {{
-                        TranslationConstants.OPERATIONS.REPORTED_SUCCESS
-                          | translate
-                      }}:
-                      {{ operation.model.reportedSuccessCount }}
-                    </div>
-                    <div>
-                      {{
-                        TranslationConstants.OPERATIONS.REPORTED_SCRAP | translate
-                      }}:
-                      {{ operation.model.reportedFailureCount }}
-                    </div>
-                    <div>
-                      {{
-                        TranslationConstants.OPERATIONS.OVERDELIVERY | translate
-                      }}:
-                      {{ operation.model.overDeliveryAmount }}
-                    </div>
-                    <div>
-                      {{
-                        TranslationConstants.OPERATIONS.UNDERDELIVERY | translate
-                      }}:
-                      {{ operation.model.underDeliveryAmount }}
-                    </div>
-                  </div>
-                  <div
-                    class="operation-details-state"
-                    [ngStyle]="{
+                      <div
+                        class="operation-details-state"
+                        [ngStyle]="{
                   color:
                     operation.model.classification === OperationStateClassification.Failed
                       ? '#e3232f'
                       : 'inherit'
                 }"
-                  >
-                    {{ operation.model.stateDisplayName }}
-                  </div>
-                </div>
-                <div class="operation-details-buttons">
+                      >
+                        {{ operation.model.stateDisplayName }}
+                      </div>
+                    </div>
+                    <div class="operation-details-buttons">
                         <span
                           [matTooltip]="
                   !operation.model.canAssign
@@ -245,118 +249,122 @@
                             {{ TranslationConstants.OPERATIONS.REFRESH_DATA | translate }}
                           </button>
                         </span>
-                  <button
-                    mat-stroked-button
-                    color="primary"
-                    (click)="onShowMessages(operation)"
-                    [matBadge]="operation.errorMessagesCount"
-                    [matBadgeHidden]="operation.errorMessagesCount < 1"
-                    matBadgeColor="warn"
-                  >
-                    <mat-icon>chat_alt</mat-icon>
-                    {{ TranslationConstants.OPERATIONS.MESSAGES | translate }}
-                  </button>
-                  @if (operation.model.operationSource) {
-                    <button
-                      mat-stroked-button
-                      color="primary"
-                      (click)="onToggleSource(operation)"
-                    >
-                      <mat-icon>move_to_inbox</mat-icon>
-                      {{ TranslationConstants.OPERATIONS.SOURCE | translate }}
-                    </button>
-                  }
-                  @if (!operation.model.isFailed && operation.model.hasPartList) {
-                    <button
-                      mat-stroked-button
-                      color="primary"
-                      (click)="onShowPartList(operation)"
-                    >
-                      <mat-icon>summarize</mat-icon>
-                      {{ TranslationConstants.OPERATIONS.PART_LIST | translate }}
-                    </button>
-                  }
-                  @if (!operation.model.isFailed && operation.model.hasDocuments) {
-                    <button
-                      mat-stroked-button
-                      color="primary"
-                      (click)="showDocuments(operation)"
-                    >
-                      <mat-icon>perm_media</mat-icon>
-                      {{ TranslationConstants.OPERATIONS.DOCUMENTS | translate }}
-                    </button>
-                  }
-                  @if (!operation.model.isFailed &&
-                  !operation.model.isAssigning &&
-                  operation.model.recipeIds &&
-                  operation.model.recipeIds.length > 0) {
-                    <button
-                      mat-stroked-button
-                      color="primary"
-                      (click)="showRecipes(operation)"
-                    >
-                      <mat-icon>tune</mat-icon>
-                      {{ TranslationConstants.OPERATIONS.RECIPES | translate }}
-                    </button>
-                  }
-                </div>
-                <mat-action-row>
-                  @if (operation.model.canAssign && !operation.model.isCreated) {
-                    <button
-                      mat-flat-button
-                      color="primary"
-                      (click)="onAssign(operation)"
-                    >
-                      {{ TranslationConstants.OPERATIONS.TRY_AGAIN | translate }}
-                    </button>
-                  }
-                  <button
-                    mat-flat-button
-                    color="primary"
-                    (click)="onBegin(operation)"
-                    [disabled]="!operation.model.canBegin"
-                  >
-                    {{
-                      operation.model.classification !==
-                      OperationStateClassification.Running &&
-                      operation.model.classification !==
-                      OperationStateClassification.Interrupting
-                        ? (TranslationConstants.OPERATIONS.BEGIN | translate)
-                        : (TranslationConstants.OPERATIONS.CHANGE_AMOUNT
-                          | translate)
-                    }}
-                  </button>
-                  <button
-                    mat-flat-button
-                    color="primary"
-                    (click)="onInterrupt(operation)"
-                    [disabled]="!operation.model.canInterrupt"
-                  >
-                    {{ TranslationConstants.OPERATIONS.INTERRUPT | translate }}
-                  </button>
-                  <button
-                    mat-flat-button
-                    color="primary"
-                    [disabled]="!operation.model.canReport"
-                    (click)="onReport(operation)"
-                  >
-                    {{ TranslationConstants.OPERATIONS.REPORT | translate }}
-                  </button>
-                </mat-action-row>
-              </mat-expansion-panel>
-            }
-          </mat-accordion>
-        </div>
-      </mat-drawer-content>
-    </mat-drawer-container>
-  } @else {
-    <empty-state
-      header="{{
+                      <button
+                        mat-stroked-button
+                        color="primary"
+                        (click)="onShowMessages(operation)"
+                        [matBadge]="operation.errorMessagesCount"
+                        [matBadgeHidden]="operation.errorMessagesCount < 1"
+                        matBadgeColor="warn"
+                      >
+                        <mat-icon>chat_alt</mat-icon>
+                        {{ TranslationConstants.OPERATIONS.MESSAGES | translate }}
+                      </button>
+                      @if (operation.model.operationSource) {
+                        <button
+                          mat-stroked-button
+                          color="primary"
+                          (click)="onToggleSource(operation)"
+                        >
+                          <mat-icon>move_to_inbox</mat-icon>
+                          {{ TranslationConstants.OPERATIONS.SOURCE | translate }}
+                        </button>
+                      }
+                      @if (!operation.model.isFailed && operation.model.hasPartList) {
+                        <button
+                          mat-stroked-button
+                          color="primary"
+                          (click)="onShowPartList(operation)"
+                        >
+                          <mat-icon>summarize</mat-icon>
+                          {{ TranslationConstants.OPERATIONS.PART_LIST | translate }}
+                        </button>
+                      }
+                      @if (!operation.model.isFailed && operation.model.hasDocuments) {
+                        <button
+                          mat-stroked-button
+                          color="primary"
+                          (click)="showDocuments(operation)"
+                        >
+                          <mat-icon>perm_media</mat-icon>
+                          {{ TranslationConstants.OPERATIONS.DOCUMENTS | translate }}
+                        </button>
+                      }
+                      @if (!operation.model.isFailed &&
+                      !operation.model.isAssigning &&
+                      operation.model.recipeIds &&
+                      operation.model.recipeIds.length > 0) {
+                        <button
+                          mat-stroked-button
+                          color="primary"
+                          (click)="showRecipes(operation)"
+                        >
+                          <mat-icon>tune</mat-icon>
+                          {{ TranslationConstants.OPERATIONS.RECIPES | translate }}
+                        </button>
+                      }
+                    </div>
+                    <mat-action-row>
+                      @if (operation.model.canAssign && !operation.model.isCreated) {
+                        <button
+                          mat-flat-button
+                          color="primary"
+                          (click)="onAssign(operation)"
+                        >
+                          {{ TranslationConstants.OPERATIONS.TRY_AGAIN | translate }}
+                        </button>
+                      }
+                      <button
+                        mat-flat-button
+                        color="primary"
+                        (click)="onBegin(operation)"
+                        [disabled]="!operation.model.canBegin"
+                      >
+                        {{
+                          operation.model.classification !==
+                          OperationStateClassification.Running &&
+                          operation.model.classification !==
+                          OperationStateClassification.Interrupting
+                            ? (TranslationConstants.OPERATIONS.BEGIN | translate)
+                            : (TranslationConstants.OPERATIONS.CHANGE_AMOUNT
+                              | translate)
+                        }}
+                      </button>
+                      <button
+                        mat-flat-button
+                        color="primary"
+                        (click)="onInterrupt(operation)"
+                        [disabled]="!operation.model.canInterrupt"
+                      >
+                        {{ TranslationConstants.OPERATIONS.INTERRUPT | translate }}
+                      </button>
+                      <button
+                        mat-flat-button
+                        color="primary"
+                        [disabled]="!operation.model.canReport"
+                        (click)="onReport(operation)"
+                      >
+                        {{ TranslationConstants.OPERATIONS.REPORT | translate }}
+                      </button>
+                    </mat-action-row>
+                  </mat-expansion-panel>
+                }
+              </mat-accordion>
+            </div>
+          </mat-drawer-content>
+        </mat-drawer-container>
+      } @else {
+        <empty-state
+          header="{{
       TranslationConstants.OPERATIONS.EMPTY_STATE_HEADER | translate
     }}"
-      message="{{ TranslationConstants.OPERATIONS.EMPTY_STATE_TEXT | translate }}"
-    ></empty-state>
-  }
+          message="{{ TranslationConstants.OPERATIONS.EMPTY_STATE_TEXT | translate }}"
+        ></empty-state>
+      }
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+
 } @else {
   <div class="operations-loading">
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>

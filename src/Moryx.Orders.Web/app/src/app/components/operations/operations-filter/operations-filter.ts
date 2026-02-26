@@ -1,14 +1,14 @@
 import { Component, inject } from '@angular/core';
-import { MatCheckbox } from '@angular/material/checkbox';
 import { FilterService } from '../../../services/filter.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslationConstants } from '../../../extensions/translation-constants.extensions';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-operations-filter',
   imports: [
-    MatCheckbox,
+    MatSlideToggleModule,
     TranslateModule
   ],
   templateUrl: './operations-filter.html',
