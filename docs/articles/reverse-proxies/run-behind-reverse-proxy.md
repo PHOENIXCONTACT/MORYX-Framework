@@ -12,6 +12,7 @@ This can be done in one of two ways. Either by hostname based routing or by path
 ## Setup
 If you want to follow along with the examples you can use this docker-compose file together with the nginx configuration examples to setup a reverse proxy and modify the StartProject.Asp project to see if everything works as expected.
 The nginx configuration needs to be placed in a file named `nginx.conf` next to your `docker-compose.yml` when executing `docker compose up`.
+
 ```yaml
 services:
   nginx-proxy:
@@ -23,19 +24,12 @@ services:
       # prefix instead of removing it in asp.net
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     network_mode: host
-```
-
-
-
-## Host based routing
-An example for host based routing would be to have a server `example.com` with two subdomains `app1.example.com` and `app2.example.com`.
 This is very convenient for us, because it "just works" from our perspective as an app developer.
 The disadvantage is the required infrastructure. We need DNS Entries for the subdomains that point to our server and if we server our content over HTTPs we need either a wildcard certificate for our subdomain or a certificate that explicitly lists all our applications.
 
 ## Path based routing
 That's why it might be more interesting to use path based routing. In this case we only have one hostname `example.com` and use the route after it to distinguish the different apps, like example.com/app1 and example.com/app2. 
 There are two different ways to handle this scenario in our reverse proxy. The reverse proxy can either strip this prefix for passing the request along to our application or it can leave it as is. In both cases we need to enable support in our app.
-
 
 ### Changes to the frontend code
 Regardless of the specific method, we need support not only in our backend, but also in our frontend applications. This support is already available in all MORYX Modules that are in this repository, but for your own UIs we need a few simple steps.
@@ -51,7 +45,7 @@ This is shorthand for the razor engine to automatically include the correct path
 <script src="~/_content/<YourC#ProjectName>/main.js" type="module"></script>
 
 <!-- Example eventstream annotation from VisualInstructions.cshtml -- >
-[ModuleEventStream("~/api/moryx/instructions/stream")]
+[ModuleEventStream("~/api/moryx/<your-api>/stream")]
 ```
 
 Additionally we need to make sure the API Clients in the JS/TS Applications don't try to access the wrong endpoint. 
@@ -64,7 +58,6 @@ import { getPathBase } from '@moryx/ngx-web-framework/environments';
 
 let path_base = getPathBase("/<Your Module Route>");
 
-
 export const environment = {
   production: true,
   assets: path_base + "/_content/<YourC#ProjectName>/",
@@ -76,6 +69,7 @@ export const environment = {
 ### Stripping proxy
 
 If the proxy strips the prefix, it should set Headers to inform our application what the original request path was. An example configuration for nginx could look like this:
+
 ```conf
 events {}
 # make sure "PathBase" is either empty or not present in appsettings
