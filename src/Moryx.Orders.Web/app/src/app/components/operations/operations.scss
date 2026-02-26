@@ -2,54 +2,12 @@
 @use "@moryx/ngx-web-framework/styles/variables" as *;
 @use 'sass:map';
 
-.multi-progress-container {
-  display: flex;
-  width: 100%;
-  height: 6px;
-  border-radius: 4px;
-  overflow: hidden;
-  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
-}
-
-.bar {
-  height: 100%;
-  transition: flex-basis 0.3s ease-in-out;
-}
-
-$progress-colors: (
-  success: $success,
-  scrap: #e9545d,
-  running: #99cbce,
-  pending: #cfd8dc,
-  residual: #cfd8dc
-);
-
 $state-colors: (
   interrupting: goldenrod,
   canbegin: $primary,
   running: $success,
   completed: #000
 );
-
-.success {
-  background-color: map.get($progress-colors, success);
-}
-
-.scrap {
-  background-color: map.get($progress-colors, scrap);
-}
-
-.running {
-  background-color: map.get($progress-colors, running);
-}
-
-.pending {
-  background-color: map.get($progress-colors, pending);
-}
-
-.residual {
-  background-color: map.get($progress-colors, residual);
-}
 
 mat-panel-title,
 span {

@@ -147,28 +147,13 @@
                           </div>
                         </div>
                         <div class="operation-header-row operation-progress">
-                          <div class="multi-progress-container">
-                            <div class="bar success"
-                                 [style.flex-basis.%]="operation.progressSuccessPercent"
-                                 matTooltip="{{ TranslationConstants.OPERATIONS.SUCCESS | translate }}: {{ operation.model.successCount }}">
-                            </div>
-                            <div class="bar scrap"
-                                 [style.flex-basis.%]="operation.progressScrapPercent"
-                                 matTooltip="{{ TranslationConstants.OPERATIONS.SCRAP | translate }}: {{ operation.model.scrapCount }}">
-                            </div>
-                            <div class="bar running"
-                                 [style.flex-basis.%]="operation.progressRunningPercent"
-                                 matTooltip="{{ TranslationConstants.OPERATIONS.RUNNING | translate }}: {{ operation.model.runningCount }}">
-                            </div>
-                            <div class="bar pending"
-                                 [style.flex-basis.%]="operation.progressPendingPercent"
-                                 matTooltip="{{ TranslationConstants.OPERATIONS.PENDING | translate }}: {{ operation.model.pendingCount }}">
-                            </div>
-                            <div class="bar residual"
-                                 [style.flex-basis.%]="operation.progressResidualPercent"
-                                 matTooltip="{{ TranslationConstants.OPERATIONS.RESIDUAL | translate }}: {{ operation.progressResidualCount }}">
-                            </div>
-                          </div>
+                          <app-multi-progress-bar
+                            [totalAmount]="operation.model.totalAmount!"
+                            [successCount]="operation.model.progressSuccess ?? 0"
+                            [scrapCount]="operation.model.progressScrap ?? 0"
+                            [activeCount]="operation.model.progressRunning ?? 0"
+                            [pendingCount]="operation.model.progressPending ?? 0"
+                            [activeLabel]="TranslationConstants.OPERATIONS.RUNNING" />
                         </div>
                       </div>
                     </mat-expansion-panel-header>
@@ -204,15 +189,7 @@
                           {{ operation.model.underDeliveryAmount }}
                         </div>
                       </div>
-                      <div
-                        class="operation-details-state"
-                        [ngStyle]="{
-                  color:
-                    operation.model.classification === OperationStateClassification.Failed
-                      ? '#e3232f'
-                      : 'inherit'
-                }"
-                      >
+                      <div class="operation-details-state" >
                         {{ operation.model.stateDisplayName }}
                       </div>
                     </div>

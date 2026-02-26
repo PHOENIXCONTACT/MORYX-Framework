@@ -44,6 +44,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { FilterService } from '../../services/filter.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { OperationsFilter } from './operations-filter/operations-filter';
+import { MultiProgressBar } from '../../multi-progress-bar/multi-progress-bar';
 
 @Component({
   selector: 'app-operations',
@@ -66,7 +67,8 @@ import { OperationsFilter } from './operations-filter/operations-filter';
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatSidenavModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MultiProgressBar
   ]
 })
 export class Operations implements OnInit, OnDestroy {
