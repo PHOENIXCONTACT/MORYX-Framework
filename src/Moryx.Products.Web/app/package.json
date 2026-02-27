@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "build:prod": "ng build --delete-output-path --configuration production --progress false",
     "test": "ng test",
-    "generate-api": "NODE_TLS_REJECT_UNAUTHORIZED=0 ng-openapi-gen -c openapi-gen.json"
+    "generate-api": "NODE_TLS_REJECT_UNAUTHORIZED=0 ng-openapi-gen -c openapi-gen.json && node ../../fix-openapi-gen.js"
   },
   "private": true,
   "dependencies": {

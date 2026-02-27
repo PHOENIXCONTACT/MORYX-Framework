@@ -1,5 +1,4 @@
 {
-  "_NOTE": "Note: You will need to revert the changes related to the Entry format, as they are provided by the ngx-web-framework.",
   "$schema": "node_modules/ng-openapi-gen/ng-openapi-gen-schema.json",
   "input": "https://localhost:5000/swagger/v1/swagger.json",
   "output": "src/app/api",
