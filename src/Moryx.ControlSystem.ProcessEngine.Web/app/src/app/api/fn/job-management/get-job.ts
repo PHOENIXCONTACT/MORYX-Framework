@@ -35,4 +35,3 @@ export function getJob(http: HttpClient, rootUrl: string, params: GetJob$Params,
 }
 
 getJob.PATH = '/api/moryx/jobs/{jobId}';
-

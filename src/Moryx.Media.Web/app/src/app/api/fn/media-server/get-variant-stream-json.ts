@@ -38,4 +38,3 @@ export function getVariantStream$Json(http: HttpClient, rootUrl: string, params:
 }
 
 getVariantStream$Json.PATH = '/api/moryx/media/{guid}/{variantName}/stream';
-

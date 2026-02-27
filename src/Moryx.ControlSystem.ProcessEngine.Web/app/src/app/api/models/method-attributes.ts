@@ -30,4 +30,3 @@ export enum MethodAttributes {
   RequireSecObject = 'RequireSecObject',
   ReservedMask = 'ReservedMask'
 }
-

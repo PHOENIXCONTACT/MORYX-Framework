@@ -13,4 +13,3 @@ export enum WorkplanNodeClassification {
   ControlFlow = 'ControlFlow',
   Subworkplan = 'Subworkplan'
 }
-

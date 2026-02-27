@@ -29,4 +29,3 @@ export interface EventInfo {
   reflectedType?: Type;
   removeMethod?: MethodInfo;
 }
-

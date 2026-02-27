@@ -34,4 +34,3 @@ export function deleteType(http: HttpClient, rootUrl: string, params: DeleteType
 }
 
 deleteType.PATH = '/api/moryx/products/types/{id}';
-

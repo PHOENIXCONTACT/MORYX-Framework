@@ -10,4 +10,3 @@ export enum Category {
   ProcessHolderGroup = 'ProcessHolderGroup',
   ParentResource = 'ParentResource'
 }
-

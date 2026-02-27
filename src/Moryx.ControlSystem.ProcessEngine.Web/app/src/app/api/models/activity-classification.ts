@@ -13,4 +13,3 @@ export enum ActivityClassification {
   Maintenance = 'Maintenance',
   Preparation = 'Preparation'
 }
-

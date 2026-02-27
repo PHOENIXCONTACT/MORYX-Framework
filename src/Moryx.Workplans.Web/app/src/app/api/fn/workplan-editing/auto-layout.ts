@@ -35,4 +35,3 @@ export function autoLayout(http: HttpClient, rootUrl: string, params: AutoLayout
 }
 
 autoLayout.PATH = '/api/moryx/workplans/sessions/{sessionId}/autolayout';
-

@@ -18,4 +18,3 @@ export interface WorkplanStepRecipe {
   subworkplanId?: number;
   type?: string | null;
 }
-

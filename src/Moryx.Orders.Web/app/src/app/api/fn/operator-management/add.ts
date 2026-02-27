@@ -35,4 +35,3 @@ export function add(http: HttpClient, rootUrl: string, params?: Add$Params, cont
 }
 
 add.PATH = '/api/moryx/operators';
-

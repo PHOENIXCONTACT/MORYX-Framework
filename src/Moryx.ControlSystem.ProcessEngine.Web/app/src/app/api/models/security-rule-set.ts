@@ -11,4 +11,3 @@ export enum SecurityRuleSet {
   Level1 = 'Level1',
   Level2 = 'Level2'
 }
-

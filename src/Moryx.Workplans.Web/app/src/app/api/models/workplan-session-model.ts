@@ -16,4 +16,3 @@ export interface WorkplanSessionModel {
   version?: number;
   workplanId?: number;
 }
-

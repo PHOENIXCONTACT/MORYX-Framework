@@ -14,4 +14,3 @@ export enum StagingIndicator {
   ManualStaging = 'ManualStaging',
   EwmStaging = 'EwmStaging'
 }
-

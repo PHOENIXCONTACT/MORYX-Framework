@@ -17,4 +17,3 @@ export interface ProductPartModel {
   stagingIndicator?: StagingIndicator;
   unit?: string | null;
 }
-

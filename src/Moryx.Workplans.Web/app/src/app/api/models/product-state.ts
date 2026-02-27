@@ -9,6 +9,6 @@
 export enum ProductState {
   Created = 'Created',
   Released = 'Released',
-  Deprecated = 'Deprecated'
+  Deprecated = 'Deprecated',
+  Generated = 'Generated'
 }
-

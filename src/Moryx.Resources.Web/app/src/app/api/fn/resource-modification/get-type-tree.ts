@@ -33,4 +33,3 @@ export function getTypeTree(http: HttpClient, rootUrl: string, params?: GetTypeT
 }
 
 getTypeTree.PATH = '/api/moryx/resources/types';
-

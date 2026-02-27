@@ -14,4 +14,3 @@ export enum PartClassification {
   ScrapMaterial = 'ScrapMaterial',
   BranchMaterial = 'BranchMaterial'
 }
-

@@ -11,4 +11,3 @@ export type { PreviewDescriptor } from './models/preview-descriptor';
 export { PreviewState } from './models/preview-state';
 export type { ProblemDetails } from './models/problem-details';
 export type { VariantDescriptor } from './models/variant-descriptor';
-

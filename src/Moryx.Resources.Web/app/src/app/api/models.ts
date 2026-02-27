@@ -17,4 +17,3 @@ export type { ResourceReferenceModel } from './models/resource-reference-model';
 export { ResourceReferenceRole } from './models/resource-reference-role';
 export { ResourceRelationType } from './models/resource-relation-type';
 export type { ResourceTypeModel } from './models/resource-type-model';
-

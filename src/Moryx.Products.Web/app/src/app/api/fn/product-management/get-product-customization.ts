@@ -33,4 +33,3 @@ export function getProductCustomization(http: HttpClient, rootUrl: string, param
 }
 
 getProductCustomization.PATH = '/api/moryx/products/configuration';
-
