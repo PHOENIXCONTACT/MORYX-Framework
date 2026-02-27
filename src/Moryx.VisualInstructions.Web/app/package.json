@@ -7,7 +7,8 @@
     "build": "ng build",
     "build:prod": "ng build --delete-output-path --configuration production --progress false",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "generate-api": "NODE_TLS_REJECT_UNAUTHORIZED=0 ng-openapi-gen -c openapi-gen.json"
   },
   "private": true,
   "dependencies": {
@@ -39,6 +40,7 @@
     "@angular/compiler-cli": "^21.1.0",
     "@types/hammerjs": "^2.0.46",
     "jsdom": "^28.1.0",
+    "ng-openapi-gen": "^1.0.5",
     "typescript": "~5.9.3",
     "vitest": "^4.0.8"
   }
