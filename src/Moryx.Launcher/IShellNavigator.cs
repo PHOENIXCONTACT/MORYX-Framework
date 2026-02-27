@@ -18,5 +18,5 @@ public interface IShellNavigator
     /// <summary>
     /// Get the region configuration
     /// </summary>
-    LauncherRegionItem GetRegion(LauncherRegion region);
+    RegionItem GetRegion(LauncherRegion region);
 }

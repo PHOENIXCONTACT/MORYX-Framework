@@ -17,10 +17,16 @@ public class LauncherRegionConfig
     [DataMember]
     public LauncherRegion Region { get; set; }
 
+    /// <summary>
+    /// The name of the region for the launcher
+    /// </summary>
     [DataMember]
-    public string PluginName { get; set; }
+    public string Name { get; set; }
 }
 
+/// <summary>
+/// Area where to place the region in the launcher
+/// </summary>
 public enum LauncherRegion
 {
     Right,

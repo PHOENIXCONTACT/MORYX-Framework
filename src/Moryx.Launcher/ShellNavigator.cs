@@ -109,24 +109,24 @@ public class ShellNavigator : IShellNavigator
     }
 
     /// <inheritdoc />
-    public LauncherRegionItem GetRegion(LauncherRegion region)
+    public RegionItem GetRegion(LauncherRegion region)
     {
-        var config = _launcherConfig.Regions?.FirstOrDefault(x => x.Region == region);
+        var config = _launcherConfig.Regions.FirstOrDefault(x => x.Region == region);
         if (config is null)
         {
             return null;
         }
 
         var partialViewAssembly = ReflectionTool.GetAssemblies();
-        var launcherPluginTypes = partialViewAssembly.SelectMany(x => x.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherPluginAttribute>() != null));
-        var launcherPluginType = launcherPluginTypes.FirstOrDefault(x => config.PluginName == x.GetCustomAttribute<LauncherPluginAttribute>().Name);
+        var launcherPluginTypes = partialViewAssembly.SelectMany(x => x.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherRegionAttribute>() != null));
+        var launcherPluginType = launcherPluginTypes.FirstOrDefault(x => config.Name == x.GetCustomAttribute<LauncherRegionAttribute>().Name);
         if (launcherPluginType is null)
         {
             return null;
         }
         // the name of the Pages/_MyPartialView.cshtml when compiled is ex: ...Pages__MyPartialView
         var viewName = launcherPluginType.Name[("Pages_".Length)..];
-        return new LauncherRegionItem { PartialView = viewName };
+        return new RegionItem { PartialView = viewName };
     }
 
     private ExternalModuleItem[] LoadExternalModules()

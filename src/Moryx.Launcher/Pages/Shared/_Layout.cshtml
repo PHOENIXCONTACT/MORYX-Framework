@@ -189,7 +189,7 @@
             <div class="tw-overflow-hidden tw-h-screen tw-w-full tw-box-border">
                 @RenderBody()
             </div>
-            @if (_navigator.GetRegion(LauncherRegion.Right) is LauncherRegionItem rightRegion)
+            @if (_navigator.GetRegion(LauncherRegion.Right) is RegionItem rightRegion)
             {
                 <aside class="tw-flex-initial tw-overflow-hidden">@await Html.PartialAsync(rightRegion.PartialView)</aside>
             }
