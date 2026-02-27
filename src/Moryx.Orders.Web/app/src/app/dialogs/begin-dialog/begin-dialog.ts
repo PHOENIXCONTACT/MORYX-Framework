@@ -25,7 +25,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatTooltip } from "@angular/material/tooltip";
+import { MultiProgressBar } from "../../multi-progress-bar/multi-progress-bar";
 
 @Component({
   selector: 'app-begin-dialog',
@@ -45,8 +45,7 @@ import { MatTooltip } from "@angular/material/tooltip";
     MatButtonToggleModule,
     MatCardModule,
     MatAutocompleteModule,
-    MatButtonToggleModule,
-    MatTooltip
+    MultiProgressBar
   ]
 })
 export class BeginDialog implements OnInit {
@@ -62,20 +61,16 @@ export class BeginDialog implements OnInit {
   restrictions: RestrictionDescription[];
   operation: OperationViewModel;
 
-  // Percentage values for progress bars
-  successPercent = computed(() => (this.successCount * 100) / this.estimatedTotal());
-  scrapPercent = computed(() => (this.scrapCount * 100) / this.estimatedTotal());
-  partialPercent = computed(() => {
-    const partial =
-      (this.newTargetAmount() * 100) / this.estimatedTotal() - this.successPercent() - this.scrapPercent();
-    return partial < 0 ? 0 : partial;
-  });
-  residualPercent = computed(() => 100 - this.successPercent() - this.scrapPercent() - this.partialPercent());
-  private estimatedTotal = computed(() => {
+  // Count values for progress bar
+  estimatedTotal = computed(() => {
     const residual = this.residualAmount > this.newPartialAmount() ? this.residualAmount - this.newPartialAmount() : 0;
     const active = this.scrapCount + this.successCount + this.runningCount;
     const current = this.newTargetAmount() > active ? this.newTargetAmount() : active;
     return current + residual;
+  });
+  partialCount = computed(() => {
+    const partial = this.newTargetAmount() - this.successCount - this.scrapCount;
+    return partial < 0 ? 0 : partial;
   });
 
   overDeliveryReached = computed(() => {
@@ -108,7 +103,6 @@ export class BeginDialog implements OnInit {
   private dialog = inject(MatDialogRef<BeginDialog, BeginModel | undefined>);
   private data = inject<BeginDialogData>(MAT_DIALOG_DATA);
   private operatorService = inject(OperatorsService);
-  private translateService = inject(TranslateService);
 
   constructor() {
     this.canBegin = this.data.context.canBegin || false;
