@@ -31,6 +31,7 @@ public class MqttTopicPrimitive : MqttTopic<IConvertible>
     [EntrySerialize]
     [DataMember]
     [DisplayName("MessageName")]
+    [DeniedValues(TypeCode.DateTime, TypeCode.DBNull, TypeCode.Decimal, TypeCode.Empty, TypeCode.Object, TypeCode.SByte)]
     public TypeCode MessageNameEnum
     {
         get => Type.GetTypeCode(MessageType);
@@ -41,87 +42,22 @@ public class MqttTopicPrimitive : MqttTopic<IConvertible>
     /// <inheritdoc />
     protected override byte[] Serialize(object payload)
     {
-        if (payload is bool b)
+        return payload switch
         {
-            return BitConverter.GetBytes(b);
-        }
-
-        if (payload is char c)
-        {
-            return BitConverter.GetBytes(c);
-        }
-
-        if (payload is double d)
-        {
-            return BitConverter.GetBytes(d);
-        }
-
-        if (payload is short s)
-        {
-            return BitConverter.GetBytes(s);
-        }
-
-        if (payload is int i)
-        {
-            return BitConverter.GetBytes(i);
-        }
-
-        if (payload is long l)
-        {
-            return BitConverter.GetBytes(l);
-        }
-
-        if (payload is float f)
-        {
-            return BitConverter.GetBytes(f);
-        }
-
-        if (payload is ushort us)
-        {
-            return BitConverter.GetBytes(us);
-        }
-
-        if (payload is uint ui)
-        {
-            return BitConverter.GetBytes(ui);
-        }
-
-        if (payload is ulong ul)
-        {
-            return BitConverter.GetBytes(ul);
-        }
-
-        if (payload is string str)
-        {
-            return Encoding.ASCII.GetBytes(str);
-        }
-
-        if (payload is byte byteMessage)
-        {
-            return [byteMessage];
-        }
-
-        if (payload is Enum e)
-        {
-            throw new NotImplementedException();
-        }
-        if (payload is decimal dec)
-        {
-            throw new NotImplementedException();
-        }
-        if (payload is DateTime dt)
-        {
-            throw new NotImplementedException();
-        }
-        if (payload is DBNull dbNull)
-        {
-            throw new NotImplementedException();
-        }
-        if (payload is sbyte sByte)
-        {
-            throw new NotImplementedException();
-        }
-        throw new NotImplementedException();
+            bool b => BitConverter.GetBytes(b),
+            char c => BitConverter.GetBytes(c),
+            float f => BitConverter.GetBytes(f),
+            double d => BitConverter.GetBytes(d),
+            short s => BitConverter.GetBytes(s),
+            ushort us => BitConverter.GetBytes(us),
+            int i => BitConverter.GetBytes(i),
+            uint ui => BitConverter.GetBytes(ui),
+            long l => BitConverter.GetBytes(l),
+            ulong ul => BitConverter.GetBytes(ul),
+            string str => Encoding.UTF8.GetBytes(str),
+            byte byteMessage => [byteMessage],
+            _ => throw new NotImplementedException(),
+        };
     }
 
     private IConvertible DeserializeInternal(ReadOnlySpan<byte> messageSpan)
@@ -173,7 +109,7 @@ public class MqttTopicPrimitive : MqttTopic<IConvertible>
 
         if (MessageType == typeof(string))
         {
-            return Encoding.ASCII.GetString(messageSpan);
+            return Encoding.UTF8.GetString(messageSpan);
         }
 
         if (MessageType == typeof(byte))
@@ -206,70 +142,25 @@ public class MqttTopicPrimitive : MqttTopic<IConvertible>
     }
 
     #region private methodes
-    private TypeCode StringToTypeCode(string messageName)
-    {
-        switch (messageName)
-        {
-            case "System.Boolean":
-                return TypeCode.Boolean;
-            case "System.Byte":
-                return TypeCode.Byte;
-            case "System.Char":
-                return TypeCode.Char;
-            case "System.String":
-                return TypeCode.String;
-            case "System.Double":
-                return TypeCode.Double;
-            case "System.Single":
-                return TypeCode.Single;
-            case "System.Int16":
-                return TypeCode.Int16;
-            case "System.Int32":
-                return TypeCode.Int32;
-            case "System.Int64":
-                return TypeCode.Int64;
-            case "System.UInt16":
-                return TypeCode.UInt16;
-            case "System.UInt32":
-                return TypeCode.UInt32;
-            case "System.UInt64":
-                return TypeCode.UInt64;
-            default:
-                return TypeCode.Empty;
-        }
-    }
 
     private static string TypeCodeToString(TypeCode type)
     {
-        switch (type)
+        return type switch
         {
-            case TypeCode.Boolean:
-                return "System.Boolean";
-            case TypeCode.Byte:
-                return "System.Byte";
-            case TypeCode.Char:
-                return "System.Char";
-            case TypeCode.Double:
-                return "System.Double";
-            case TypeCode.Single:
-                return "System.Single";
-            case TypeCode.Int16:
-                return "System.Int16";
-            case TypeCode.Int32:
-                return "System.Int32";
-            case TypeCode.Int64:
-                return "System.Int64";
-            case TypeCode.UInt16:
-                return "System.UInt16";
-            case TypeCode.UInt32:
-                return "System.UInt32";
-            case TypeCode.UInt64:
-                return "System.UInt64";
-            case TypeCode.String:
-                return "System.String";
-            default:
-                throw new NotImplementedException("This MessageType is not implemented");
-        }
+            TypeCode.Boolean => "System.Boolean",
+            TypeCode.Byte => "System.Byte",
+            TypeCode.Char => "System.Char",
+            TypeCode.Double => "System.Double",
+            TypeCode.Single => "System.Single",
+            TypeCode.Int16 => "System.Int16",
+            TypeCode.Int32 => "System.Int32",
+            TypeCode.Int64 => "System.Int64",
+            TypeCode.UInt16 => "System.UInt16",
+            TypeCode.UInt32 => "System.UInt32",
+            TypeCode.UInt64 => "System.UInt64",
+            TypeCode.String => "System.String",
+            _ => throw new NotImplementedException("This MessageType is not implemented"),
+        };
     }
     #endregion
 }
