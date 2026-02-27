@@ -80,9 +80,6 @@ public class ShellNavigator : IShellNavigator
         return modules;
     }
     
-    /// <inheritdoc />
-    public LauncherRegionConfig? GetRegionConfig(LauncherRegion region) => _launcherConfig.Regions;
-
     private async Task<CompiledPageActionDescriptor[]> CompiledPageActionDescriptors(HttpContext context)
     {
         // Filter pages
@@ -119,16 +116,16 @@ public class ShellNavigator : IShellNavigator
         {
             return null;
         }
-        //TODO: how to use ReflectionTool here ?
-        var partialViewAssembly = AppDomain.CurrentDomain.GetAssemblies();
-        var plugins = partialViewAssembly.SelectMany(x => x.GetTypes()).Where(t => t.IsClass && t.GetCustomAttribute<LauncherPluginAttribute>() != null);
-        var plugin = plugins.FirstOrDefault(x => config?.PluginName == x.GetCustomAttribute<LauncherPluginAttribute>().Name);
-        if (plugin is null)
+
+        var partialViewAssembly = ReflectionTool.GetAssemblies();
+        var launcherPluginTypes = partialViewAssembly.SelectMany(x => x.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherPluginAttribute>() != null));
+        var launcherPluginType = launcherPluginTypes.FirstOrDefault(x => config.PluginName == x.GetCustomAttribute<LauncherPluginAttribute>().Name);
+        if (launcherPluginType is null)
         {
             return null;
         }
-        var pluginAttribute = plugin.GetCustomAttribute<LauncherPluginAttribute>();
-        var viewName = plugin.Name[("Page_".Length + 1)..];
+        // the name of the Pages/_MyPartialView.cshtml when compiled is ex: ...Pages__MyPartialView
+        var viewName = launcherPluginType.Name[("Pages_".Length)..];
         return new LauncherRegionItem { PartialView = viewName };
     }
 
