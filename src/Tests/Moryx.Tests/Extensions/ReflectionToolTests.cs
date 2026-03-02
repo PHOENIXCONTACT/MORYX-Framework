@@ -25,7 +25,7 @@ public class ReflectionToolTests
     [TestCase(typeof(BaseClass))]
     public void BasicTest(Type type)
     {
-        Type[] result = ReflectionTool.GetPublicClasses(type);
+        var result = ReflectionTool.GetPublicClasses(type);
 
         Assert.That(result.Length, Is.EqualTo(5), "Unexpected number of classes.");
 
@@ -39,7 +39,7 @@ public class ReflectionToolTests
     [Test]
     public void ChildClass1Test()
     {
-        Type[] result = ReflectionTool.GetPublicClasses<ChildClass1>();
+        var result = ReflectionTool.GetPublicClasses<ChildClass1>();
 
         Assert.That(result.Length, Is.EqualTo(3), "Unexpected number of classes.");
 
@@ -53,7 +53,7 @@ public class ReflectionToolTests
     [TestCase(typeof(GranChildClass2))]
     public void SingleClassTest(Type type)
     {
-        Type[] result = ReflectionTool.GetPublicClasses(type);
+        var result = ReflectionTool.GetPublicClasses(type);
 
         Assert.That(result.Length, Is.EqualTo(1), "Unexpected number of classes.");
 
@@ -153,7 +153,7 @@ public class ReflectionToolTests
         // Act
         var stopWatch = new Stopwatch();
         stopWatch.Start();
-        for (int i = 0; i < 100; i++)
+        for (var i = 0; i < 100; i++)
         {
             var next = (int)prop.GetValue(child1) + i;
             prop.SetValue(child1, next);
@@ -161,7 +161,7 @@ public class ReflectionToolTests
         stopWatch.Stop();
         var reflection = stopWatch.ElapsedTicks;
         stopWatch.Restart();
-        for (int i = 0; i < 100; i++)
+        for (var i = 0; i < 100; i++)
         {
             var next = accessor.ReadProperty(child2) + i;
             accessor.WriteProperty(child2, next);

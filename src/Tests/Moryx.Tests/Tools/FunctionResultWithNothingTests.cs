@@ -97,7 +97,7 @@ public class FunctionResultWithNothingTests : FunctionResultTestsBase
     [Test]
     public void ErrorResultWithExceptionGetsCreatedByUsingExtension()
     {
-        FunctionResult result = FunctionResult.WithError(new Exception(ExceptionMessage));
+        var result = FunctionResult.WithError(new Exception(ExceptionMessage));
 
         Assert.That(result.Success, Is.False);
         Assert.That(result.Result, Is.Null);
