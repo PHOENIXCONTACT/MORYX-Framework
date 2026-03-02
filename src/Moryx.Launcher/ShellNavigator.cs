@@ -108,29 +108,18 @@ public class ShellNavigator : IShellNavigator, ILauncher
         return compiledPageActionDescriptors;
     }
 
-    /// <inheritdoc />
-    private IEnumerable<RegionItem> GetRegions()
+    RegionItem ILauncher.GetRegion(LauncherRegion region)
     {
         var partialViewAssembly = ReflectionTool.GetAssemblies();
         var partialViews = partialViewAssembly.SelectMany(x => x.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherRegionAttribute>() != null));
-        foreach (var partialView in partialViews)
-        {
-            var name = partialView.Name[("Pages_".Length)..];
-            var attribute = partialView.GetCustomAttribute<LauncherRegionAttribute>();
-            var config = _launcherConfig.Regions.First(x => x.Name == attribute.Name);
-            var item = new RegionItem
-            {
-                PartialView = name,
-                Region = config.Region
-            };
-            yield return item;
-        }
-        yield break;
-    }
 
-    public RegionItem GetRegion(Func<RegionItem, bool> filter)
-    {
-        return GetRegions().FirstOrDefault(filter);
+        var configuredRegions = from pV in partialViews
+                                let regionAttr = pV.GetCustomAttribute<LauncherRegionAttribute>()
+                                let config = _launcherConfig.Regions.FirstOrDefault(x => x.Name == regionAttr.Name)
+                                where config != null
+                                select new RegionItem { PartialView = regionAttr.Name, Region = config.Region };
+
+        return configuredRegions.FirstOrDefault(r => r.Region == region);
     }
 
     private ExternalModuleItem[] LoadExternalModules()

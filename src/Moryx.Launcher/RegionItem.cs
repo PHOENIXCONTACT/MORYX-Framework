@@ -6,7 +6,7 @@ namespace Moryx.Launcher;
 /// <summary>
 /// Describes a region in the launcher
 /// </summary>
-public class RegionItem
+internal class RegionItem
 {
     /// <summary>
     /// Name of the partial for the given region
