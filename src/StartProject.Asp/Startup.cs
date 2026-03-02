@@ -25,8 +25,7 @@ public class Startup
     // This method is optional for the Startup class.
     public void ConfigureServices(IServiceCollection services)
     {
-
-        services.AddSingleton<IShellNavigator, ShellNavigator>();
+        services.AddMoryxLauncher();
 
         services.AddLocalization();
 
