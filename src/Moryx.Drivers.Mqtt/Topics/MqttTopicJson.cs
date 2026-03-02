@@ -5,7 +5,6 @@ using System.Buffers;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.DataContracts;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Moryx.AbstractionLayer.Resources;
@@ -97,14 +96,9 @@ public class MqttTopicJson : MqttTopic<object>
     {
         var options = new JsonSerializerOptions()
         {
-            PropertyNamingPolicy = Format == JsonFormat.CamelCase ? JsonNamingPolicy.CamelCase : null,
-            DefaultIgnoreCondition = (System.Text.Json.Serialization.JsonIgnoreCondition)IgnoreCondition,
-            Encoder = EncoderOption switch
-            {
-                JsonEncoderOption.Default => JavaScriptEncoder.Default,
-                JsonEncoderOption.UnsafeRelaxedJsonEscaping => JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                _ => throw new NotImplementedException($"EncoderOption {EncoderOption} is not defined"),
-            }
+            PropertyNamingPolicy = Format.ForSystemTextJson(),
+            DefaultIgnoreCondition = IgnoreCondition.ForSystemTextJson(),
+            Encoder = EncoderOption.ForSystemTextJson(),
         };
         options.Converters.Clear();
         if (EnumsAsStrings)

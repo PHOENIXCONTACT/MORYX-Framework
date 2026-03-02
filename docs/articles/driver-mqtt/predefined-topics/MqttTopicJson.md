@@ -5,7 +5,7 @@ Other valid JSON values like Lists or simple values are not supported right now.
 
 It uses System.Text.Json to serialize and deserialize messages. Native options are
 
-- **Format** Decides how Property names are serialized. The default value PascalCase just maintains the c# Property name which is PascalCase by convention. camelCase is currently the only other option.
+- **Format** Decides how Property names are serialized. The default value just maintains the c# Property name which is PascalCase by convention. camelCase, SNAKE_CASE_UPPER, snake_case_lower, KEBAP-CASE-UPPER and kebap-case-lower are supported.
 - **EnumsAsString** True if enums should be serialized as strings and not as integers
 - **IgnoreCondition** controls when serialization of properties should be skipped. 
     - **Never** skips only Properties explicitly marked with JsonIgnore
