@@ -270,4 +270,22 @@
   <data name="MqttTopic_TraceDecodedMessage_Description" xml:space="preserve">
     <value>Determines if the decoded message is stored as part of the activity span for debugging purposes</value>
   </data>
+  <data name="MqttDocumentationGenerator_DisplayName" xml:space="preserve">
+    <value>MQTT Documentation Generator</value>
+  </data>
+  <data name="MqttDocumentationGenerator_Description" xml:space="preserve">
+    <value>Resource that allows generating a documentation file for the topics connected to an MQTT Driver</value>
+  </data>
+  <data name="MqttDocumentationGenerator_AutoGenerateOnStart" xml:space="preserve">
+    <value>Auto generate documentation on startup</value>
+  </data>
+  <data name="MqttDocumentationGenerator_OutputPath" xml:space="preserve">
+    <value>Output path</value>
+  </data>
+  <data name="MqttDocumentationGenerator_GenerateDocumentationFile" xml:space="preserve">
+    <value>Generate documentation file</value>
+  </data>
+  <data name="MqttDocumentationGenerator_GenerateDocumentationFile_Description" xml:space="preserve">
+    <value>The path were the documentation should be placed. (Empty or whitespace uses the configured output path property)</value>
+  </data>
 </root>

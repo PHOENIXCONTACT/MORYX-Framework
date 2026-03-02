@@ -270,4 +270,22 @@
   <data name="MqttTopic_TraceDecodedMessage_Description" xml:space="preserve">
     <value>Entscheidet, ob die dekodierte Nachricht für debugging Zwecke aufgezeichnet werden soll</value>
   </data>
+  <data name="MqttDocumentationGenerator_DisplayName" xml:space="preserve">
+    <value>MQTT Dokumentationsgenerator</value>
+  </data>
+  <data name="MqttDocumentationGenerator_Description" xml:space="preserve">
+    <value>Ressource, die es erlaubt eine Dokumentationsdatei für alle an einen MQTT Broker angeschlossenen Topics zu generieren</value>
+  </data>
+  <data name="MqttDocumentationGenerator_AutoGenerateOnStart" xml:space="preserve">
+    <value>Dokumentation automatisch beim Start erzeugen</value>
+  </data>
+  <data name="MqttDocumentationGenerator_OutputPath" xml:space="preserve">
+    <value>Ausgabepfad</value>
+  </data>
+  <data name="MqttDocumentationGenerator_GenerateDocumentationFile" xml:space="preserve">
+    <value>Dokumentationsdatei generieren</value>
+  </data>
+  <data name="MqttDocumentationGenerator_GenerateDocumentationFile_Description" xml:space="preserve">
+    <value>Pfad wo die Dokumentation abgelegt werden soll. (Leer oder Leerzeichen, um die Ausgabepfad Eigenschaft zu nutzen)</value>
+  </data>
 </root>

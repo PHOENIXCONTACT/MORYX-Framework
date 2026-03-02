@@ -19,7 +19,7 @@ namespace Moryx.Drivers.Mqtt.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Strings {
@@ -57,6 +57,60 @@ namespace Moryx.Drivers.Mqtt.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto generate documentation on startup.
+        /// </summary>
+        public static string MqttDocumentationGenerator_AutoGenerateOnStart {
+            get {
+                return ResourceManager.GetString("MqttDocumentationGenerator_AutoGenerateOnStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resource that allows generating a documentation file for the topics connected to an MQTT Driver.
+        /// </summary>
+        public static string MqttDocumentationGenerator_Description {
+            get {
+                return ResourceManager.GetString("MqttDocumentationGenerator_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MQTT Documentation Generator.
+        /// </summary>
+        public static string MqttDocumentationGenerator_DisplayName {
+            get {
+                return ResourceManager.GetString("MqttDocumentationGenerator_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate documentation file.
+        /// </summary>
+        public static string MqttDocumentationGenerator_GenerateDocumentationFile {
+            get {
+                return ResourceManager.GetString("MqttDocumentationGenerator_GenerateDocumentationFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The path were the documentation should be placed. (Empty or whitespace uses the configured output path property).
+        /// </summary>
+        public static string MqttDocumentationGenerator_GenerateDocumentationFile_Description {
+            get {
+                return ResourceManager.GetString("MqttDocumentationGenerator_GenerateDocumentationFile_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output path.
+        /// </summary>
+        public static string MqttDocumentationGenerator_OutputPath {
+            get {
+                return ResourceManager.GetString("MqttDocumentationGenerator_OutputPath", resourceCulture);
             }
         }
         
