@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -8,6 +8,11 @@
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot\.gitignore" />
+    <None Include="wwwroot\.gitignore" Pack="false" />
+  </ItemGroup>
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" PrivateAssets="All" />
   </ItemGroup>
@@ -27,4 +32,5 @@
     <ProjectReference Include="..\Moryx.Identity\Moryx.Identity.csproj" />
     <ProjectReference Include="..\Moryx.Model.PostgreSQL\Moryx.Model.PostgreSQL.csproj" />
   </ItemGroup>
+
 </Project>
