@@ -12,5 +12,5 @@ internal interface ILauncher : IShellNavigator
     /// <summary>
     /// Get the regions configuration
     /// </summary>
-    RegionItem GetRegion(Func<RegionItem, bool> filter);
+    RegionItem GetRegion(LauncherRegion region);
 }
