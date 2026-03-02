@@ -17,7 +17,7 @@ using Moryx.Tools;
 namespace Moryx.Launcher;
 
 /// <inheritdoc />
-public class ShellNavigator : IShellNavigator
+public class ShellNavigator : IShellNavigator, ILauncher
 {
     private readonly ILogger _logger;
     private readonly MoryxAccessManagementClient _client;
@@ -79,7 +79,7 @@ public class ShellNavigator : IShellNavigator
 
         return modules;
     }
-    
+
     private async Task<CompiledPageActionDescriptor[]> CompiledPageActionDescriptors(HttpContext context)
     {
         // Filter pages
@@ -109,24 +109,25 @@ public class ShellNavigator : IShellNavigator
     }
 
     /// <inheritdoc />
-    public RegionItem GetRegion(LauncherRegion region)
+    public IEnumerable<RegionItem> GetRegions()
     {
-        var config = _launcherConfig.Regions.FirstOrDefault(x => x.Region == region);
-        if (config is null)
-        {
-            return null;
-        }
-
         var partialViewAssembly = ReflectionTool.GetAssemblies();
-        var launcherPluginTypes = partialViewAssembly.SelectMany(x => x.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherRegionAttribute>() != null));
-        var launcherPluginType = launcherPluginTypes.FirstOrDefault(x => config.Name == x.GetCustomAttribute<LauncherRegionAttribute>().Name);
-        if (launcherPluginType is null)
-        {
-            return null;
-        }
+        var partialViews = partialViewAssembly.SelectMany(x => x.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherRegionAttribute>() != null));
+        return partialViews.Select(GetRegion);
+    }
+
+    private RegionItem GetRegion(Type partialView)
+    {
         // the name of the Pages/_MyPartialView.cshtml when compiled is ex: ...Pages__MyPartialView
-        var viewName = launcherPluginType.Name[("Pages_".Length)..];
-        return new RegionItem { PartialView = viewName };
+        var name = partialView.Name[("Pages_".Length)..];
+        var attribute = partialView.GetCustomAttribute<LauncherRegionAttribute>();
+        var config = _launcherConfig.Regions.First(x => x.Name == attribute.Name);
+        var item = new RegionItem
+        {
+            PartialView = name,
+            Region = config.Region
+        };
+        return item;
     }
 
     private ExternalModuleItem[] LoadExternalModules()

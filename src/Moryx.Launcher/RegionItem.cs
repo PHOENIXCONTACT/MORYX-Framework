@@ -3,10 +3,18 @@
 
 namespace Moryx.Launcher;
 
+/// <summary>
+/// Describes a region in the launcher
+/// </summary>
 public class RegionItem
 {
     /// <summary>
     /// Name of the partial for the given region
     /// </summary>
     public string PartialView { get; set; }
+
+    /// <summary>
+    /// The name of the region for the launcher
+    /// </summary>
+    public LauncherRegion Region { get; set; }
 }

@@ -14,9 +14,4 @@ public interface IShellNavigator
     /// Gathers the available Web Modules to display in the shell
     /// </summary>
     Task<IReadOnlyList<ModuleItem>> GetModuleItemsAsync(HttpContext context);
-
-    /// <summary>
-    /// Get the region configuration
-    /// </summary>
-    RegionItem GetRegion(LauncherRegion region);
 }
