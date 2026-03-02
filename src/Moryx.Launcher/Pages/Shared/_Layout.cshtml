@@ -7,7 +7,6 @@
 @using Moryx.Launcher.Properties
 @using Moryx.Modules
 @inject IShellNavigator _navigator
-@inject ILauncher _launcher
 @inject IConfiguration _configuration
 @inject IOptionsMonitor<RequestLocalizationOptions> _localizationOptions
 @inject IOptionsMonitor<MoryxIdentityOptions> _identityOptions
@@ -190,7 +189,7 @@
             <div class="tw-overflow-hidden tw-h-screen tw-w-full tw-box-border">
                 @RenderBody()
             </div>
-            @if (_launcher.GetRegion(r => r.Region == LauncherRegion.Right ) is RegionItem rightRegion)
+            @if (_navigator is ILauncher launcher && launcher.GetRegion(r => r.Region == LauncherRegion.Right ) is RegionItem rightRegion)
             {
                 <aside class="tw-flex-initial tw-overflow-hidden">@await Html.PartialAsync(rightRegion.PartialView)</aside>
             }

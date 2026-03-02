@@ -15,7 +15,7 @@ using Moryx.Modules;
 using Moryx.Tools;
 
 namespace Moryx.Launcher;
-
+//TODO: make it internal in next major
 /// <inheritdoc />
 public class ShellNavigator : IShellNavigator, ILauncher
 {
@@ -109,25 +109,28 @@ public class ShellNavigator : IShellNavigator, ILauncher
     }
 
     /// <inheritdoc />
-    public IEnumerable<RegionItem> GetRegions()
+    private IEnumerable<RegionItem> GetRegions()
     {
         var partialViewAssembly = ReflectionTool.GetAssemblies();
         var partialViews = partialViewAssembly.SelectMany(x => x.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherRegionAttribute>() != null));
-        return partialViews.Select(GetRegion);
+        foreach (var partialView in partialViews)
+        {
+            var name = partialView.Name[("Pages_".Length)..];
+            var attribute = partialView.GetCustomAttribute<LauncherRegionAttribute>();
+            var config = _launcherConfig.Regions.First(x => x.Name == attribute.Name);
+            var item = new RegionItem
+            {
+                PartialView = name,
+                Region = config.Region
+            };
+            yield return item;
+        }
+        yield break;
     }
 
-    private RegionItem GetRegion(Type partialView)
+    public RegionItem GetRegion(Func<RegionItem, bool> filter)
     {
-        // the name of the Pages/_MyPartialView.cshtml when compiled is ex: ...Pages__MyPartialView
-        var name = partialView.Name[("Pages_".Length)..];
-        var attribute = partialView.GetCustomAttribute<LauncherRegionAttribute>();
-        var config = _launcherConfig.Regions.First(x => x.Name == attribute.Name);
-        var item = new RegionItem
-        {
-            PartialView = name,
-            Region = config.Region
-        };
-        return item;
+        return GetRegions().FirstOrDefault(filter);
     }
 
     private ExternalModuleItem[] LoadExternalModules()

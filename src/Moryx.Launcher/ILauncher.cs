@@ -7,10 +7,10 @@ namespace Moryx.Launcher;
 /// <summary>
 /// Component to determine items for the shell
 /// </summary>
-public interface ILauncher : IShellNavigator
+internal interface ILauncher : IShellNavigator
 {
     /// <summary>
     /// Get the regions configuration
     /// </summary>
-    IEnumerable<RegionItem> GetRegions();
+    RegionItem GetRegion(Func<RegionItem, bool> filter);
 }
