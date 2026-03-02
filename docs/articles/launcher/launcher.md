@@ -1,5 +1,13 @@
 # Launcher
 
+## Usage
+
+To register the launcher to your application use the `AddMoryxLauncher()` extension on the service collection. It registers all required components to use the Launcher.
+
+```csharp
+services.AddMoryxLauncher();
+```
+
 ## Configuration
 
 The launcher generates a config file named `Moryx.Launcher.LauncherConfig.json` in your configuration directory. This file contains settings for the launcher, including module sort-indices and external modules.
