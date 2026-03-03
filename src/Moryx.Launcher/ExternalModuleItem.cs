@@ -3,7 +3,7 @@
 
 namespace Moryx.Launcher;
 
-public class ExternalModuleItem : ModuleItem
+internal class ExternalModuleItem : ModuleItem
 {
     public string Url { get; set; }
 }

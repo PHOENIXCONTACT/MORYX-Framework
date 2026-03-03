@@ -17,7 +17,7 @@ public static class ServiceCollectionExtensions
     /// <returns>>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
     public static IServiceCollection AddMoryxLauncher(this IServiceCollection services)
     {
-        services.AddSingleton<IShellNavigator, ShellNavigator>();
+        services.AddSingleton<INavigation, Navigation>();
 
         return services;
     }
