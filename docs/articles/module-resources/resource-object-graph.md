@@ -6,7 +6,7 @@ uid: ResourceObjectGraph
 The [Resource Type Tree](resource-type-tree.md) has uniﬁed the different types of plugins within the [Resource Management](resource-management.md).
 The [Resource Graph](/src/Moryx.AbstractionLayer/Resources/IResourceGraph.cs) standardizes their creation, conﬁguration, references and dependencies.
 Except for the meta components required to construct the type tree, build and manage the resource graph and provide access to the resources, all plugins of the resource management are [Resources](/src/Moryx.AbstractionLayer/Resources/IResource.cs).
-At module startup the resource manager loads all resource and relation entities from the database and for each one creates a instance of the type declared on the entity.
+At module startup the resource manager loads all resource and relation entities from the database and for each one creates an instance of the type declared on the entity.
 It copies all standard properties to the instance and populates the rest from the JSON extension data.
 Additional properties or ﬁelds of a resource that should be saved to and loaded from the database are decorated with the `DataMember` attribute for the NewtonSoft JSON serializer used in the MORYX ecosystem.
 
@@ -58,7 +58,7 @@ Additionally, the [ResourceTypes](/src/Moryx.AbstractionLayer/Resources/Attribut
 ```cs
 public class DynamicTree : Resource
 {
-    [EntrySerialize, ResourceTypes(typeof(IBranch ))]
+    [EntrySerialize, ResourceTypes(typeof(IBranch))]
     public string BranchType { get; set; }
 
     public void Grow()
@@ -73,7 +73,7 @@ public class DynamicTree : Resource
 
     public void Shrink()
     {
-        var child = Children.First ();
+        var child = Children.First();
         // Remove reversible
         Graph.Destroy(child);
         // Remove permanently
@@ -83,4 +83,4 @@ public class DynamicTree : Resource
 
 ```
 
-The `Shrink`-method shows the two alternatives for destroying resource instances. The caller can specify whether to remove the object permanently, thereby ﬂagging it as deleted or actually deleting the entry from the database. The call with a single argument is a shortcut for the second one with permanent = false. In both cases the object is removed from the resource graph and all references it occurs in to allow proper garbage collection.
+The `Shrink`-method shows the two alternatives for destroying resource instances. The caller can specify whether to remove the object by ﬂagging it as deleted or actually deleting the entry from the database. The call with a single argument is a shortcut for the second one with permanent = false. In both cases the object is removed from the resource graph and all references it occurs in to allow proper garbage collection.

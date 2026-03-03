@@ -15,7 +15,7 @@ If you are unfamiliar with the Repository and Unit of Work pattern we recommend 
 
 As the logic in MORYX is separated in modules each of them might need their own database to execute its tasks.
 With a growing number of modules you will, however, find that a disadvantage of the pattern in general is that you have to write a lot of boiler plate code to access your data.
-This leads to typical problems of boiler plate code: It needs to be maintained and may consists of bugs.
+This leads to typical problems of boiler plate code: It needs to be maintained and may consist of bugs.
 
 ## The MORYX way
 

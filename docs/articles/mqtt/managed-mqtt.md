@@ -45,15 +45,10 @@
     //.. other code
     ```
 
-   if you want to implement your custom service based on the   `IManagedMqttClient` the recommended way is as follow :
-    - In your `program.cs` add the following:
-
-    ```csharp
-    builder.Services.AddMqttClient(); // this adds the IManagedMqttClient to the service collection
-    ```
-    - Create a new C# class and inherit from `IMqttService`. `Note: Dependency injection is supported `. Now your service has access to the
-      `IManagedMqttClient`,
-      Example:
+   If you want to implement your custom service based on the `IManagedMqttClient` the recommended way is as follows:
+    
+   Create a new C# class and inherit from `IMqttService`. Note: Dependency injection is supported. Now your service has access to the
+      `IManagedMqttClient`. Example:
 
     ```csharp
     public class BlablaService : IMqttService
@@ -83,7 +78,6 @@
         }
     }
     ```
-
    To add your new service to the service collection do the following:
     ```csharp
     builder.Services.AddMqttClient();
@@ -94,14 +88,17 @@
 
 4. **Endpoints**
 
-   If you need something with topic template and constraint support, you can use the `IMqttEndpoint`. Here is an example:
-    - In your `program.cs` add the following:
+     If you need something with topic template and constraint support, you can use the `IMqttEndpoint`. Here is an example:
+    - In your `Program.cs` add the following:
 
     ```csharp
     builder.Services.AddMqttClient() // must be present
                     .AddMqttEndpoints(); // <-- this add supports for the endpoints
     ```
-    - Create a new C# class that implements the `IMqttEndpoint`:
+    - Create a new C# class that implements the `IMqttEndpoint`.
+
+   There is a minimal version of the Mqtt endpoint, that you can use directly in the `Program.cs`:
+
     ```csharp
     public class Blabla : IMqttEndpoint
     {
@@ -125,7 +122,7 @@
     }
     ```
 
-   There is a minimal version of the Mqtt endpoint, that you can use directly in the `program.cs`:
+   There is a minimal version of the Mqtt endpoint, that you can use directly in the `Program.cs`:
 
     ```csharp
     builder.Services.AddMqttClient()
@@ -157,12 +154,11 @@
 
 5. **Available features in endpoints**
 
-   Endpoints topics support constraint just like in ASP.net controller route.
+   Endpoint topics support constraints just like in ASP.net controller route.
 
 6. **Route constraint**
 
-   Find the list of available
-   constraints [Here](https://learn.microsoft.com/en-us/aspnet/web-api/overview/web-api-routing-and-actions/attribute-routing-in-web-api-2#route-constraints)
+   Find the list of available constraints [Here](https://learn.microsoft.com/en-us/aspnet/web-api/overview/web-api-routing-and-actions/attribute-routing-in-web-api-2#route-constraints)
 
 6. **Message Body and Parameters inside a Topic**
 

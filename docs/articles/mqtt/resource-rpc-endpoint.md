@@ -1,13 +1,11 @@
 # ResourceRpcEndpoint
 
- Endpoint to remote call a procedure/method on a resource. It uses topic templates and route constraint just like `ASP.net routes` .
+Endpoint to remote call a procedure/method on a resource. It uses topic templates and route constraints just like `ASP.net routes`.
 Find the list of available constraints [Here](https://learn.microsoft.com/en-us/aspnet/web-api/overview/web-api-routing-and-actions/attribute-routing-in-web-api-2#route-constraints).
 
 1. **Why do we need a ResourceRpcEndpoint ?**
 
-    - Scenario :
-
-        Here is a scenario where i need the `ResourceRpcEndpoint`. We have 2 MORYX instances running on different machine. One is a Raspberry pi and one is a desktop, both on the same WiFi network. The Raspberry pi only has one MORYX resource called `Camera` with a physical camera connected. And the desktop has all the station of the `Machine` (Note: the physical machine is an entire factory floor). At one particular station `Printing` we need to take pictures. For that the `Printing` station needs to send a `Take a picture and send it to me` command to the `Camera` (Which is on the Raspberry pi).
+    Here is a scenario where i need the `ResourceRpcEndpoint`. We have 2 MORYX instances running on different machine. One is a Raspberry pi and one is a desktop, both on the same WiFi network. The Raspberry pi only has one MORYX resource called `Camera` with a physical camera connected. And the desktop has all the station of the `Machine` (Note: the physical machine is an entire factory floor). At one particular station `Printing` we need to take pictures. For that the `Printing` station needs to send a `Take a picture and send it to me` command to the `Camera` (Which is on the Raspberry pi).
 
 2. **Setup**
 
@@ -15,16 +13,16 @@ Find the list of available constraints [Here](https://learn.microsoft.com/en-us/
 
     ```json
     {
-    "Id": "my-id",
-    "Host": "localhost",
-    "Port": 1883,
-    "Username": null,
-    "Password": null,
-    "Tls": false,
-    "QoS": 1, // check the MqttQualityOfServiceLevel enum for more info
-    "ReconnectDelayMs": 30000,
-    "ReconnectWithClientSession": true,
-    "RootTopic": "" // optional
+        "Id": "my-id",
+        "Host": "localhost",
+        "Port": 1883,
+        "Username": null,
+        "Password": null,
+        "Tls": false,
+        "QoS": 1, // check the MqttQualityOfServiceLevel enum for more info
+        "ReconnectDelayMs": 30000,
+        "ReconnectWithClientSession": true,
+        "RootTopic": "" // optional
     }
     ```
 
@@ -36,30 +34,30 @@ Find the list of available constraints [Here](https://learn.microsoft.com/en-us/
 3. **Response Payload (Schema)**:
 
     ```json
-        {
+    {
         "Value" : object,
         "ValueType" : number // check EntryValueType for more infos
-        }
+    }
     ```
 
 4. **Request Payload (Schema)**:
 
     ```json
-        {
+    {
         [Key] : [Value] // if your method expect parameters, these should match the name of those parameters
-        }
+    }
     ```
 
     - Example:
 
-        ```json
-        {
+    ```json
+    {
         "Path": "c://users/documents/my-documents/private/image.jpeg",
         "Action": "Save"
-        }
-        ```
+    }
+    ```
 
-    the method to invoke will look like this :
+    The method to invoke will look like this:
 
     ```csharp
     //code
@@ -72,57 +70,56 @@ Find the list of available constraints [Here](https://learn.microsoft.com/en-us/
 
 5. **Example**:
 
-    Given the following Resource:
+    Given is the following Resource:
 
-        ```csharp
-        public interface IMyPublicMethods
-        {
-            void MethodWithParams(int value){
-                //code
-            }
-
-            int MethodWithResult()
-            {
-                return 1;
-            }
+    ```csharp
+    public interface IMyPublicMethods
+    {
+        void MethodWithParams(int value){
+            //code
         }
 
-        [ResourceAvailableAs(typeof(IMyPublicMethod)))]
-        public class ExampleResource : Resource, IMyPublicMethods
+        int MethodWithResult()
         {
-            public long Id => 1; // example
-            public void MethodWithParams(int value)
-            {
-                //code
-            }
-
-            public int MethodWithResult()
-            {
-                return 1
-            }
-            // codes...
+            return 1;
         }
-        ```
+    }
 
-    - When a client sends a message to the following topic : `moryx/device-2/resources/1/invoke/MethodWithParams` with this payload
+    [ResourceAvailableAs(typeof(IMyPublicMethod)))]
+    public class ExampleResource : Resource, IMyPublicMethods
+    {
+        public long Id => 1; // example
+        public void MethodWithParams(int value)
+        {
+            //code
+        }
+
+        public int MethodWithResult()
+        {
+            return 1;
+        }
+        // codes...
+    }
+    ```
+
+    - When a client sends a message to the following topic : `moryx/device-2/resources/1/invoke/MethodWithParams` with this payload:
 
         ```json
         {
-        "Value": 152
+            "Value": 152
         }
         ```
 
-    - The `ResourceRpcEndpoint` will be triggered and the method `MethodWithParams` will be invoked. The payload inside the message is used as value for the method parameters , in this case `Value = 123` the name matches the parameter name (not case sensitive). The response message has the following schema:
+    - The `ResourceRpcEndpoint` will be triggered and the method `MethodWithParams` will be invoked. The payload inside the message is used as value for the method parameters, in this case `Value = 123` the name matches the parameter name (not case sensitive). The response message has the following schema:
 
         ```json
-            {
-            "Value" = {}, // any object/type
-            "ValueType" = number // check EntryValueType for more infos
-            }
+        {
+            "Value": {}, // any object/type
+            "ValueType": number // check EntryValueType for more infos
+        }
         ```
 
-    - When a client sends a message to the following topic : `resources/1/invoke/MethodWithResult` with an empty payload
-    and a response topic `device-125/resources/1/MethodWithResult/response`
+    - When a client sends a message to the following topic : `resources/1/invoke/MethodWithResult` with an empty payload and a response topic `device-125/resources/1/MethodWithResult/response`
 
     - The `ResourceRpcEndpoint` will be triggered and the method `MethodWithResult` will be invoked. And the return value `1` will be sent back to the broker using the topic `device-125/resources/1/MethodWithResult/response`.
 

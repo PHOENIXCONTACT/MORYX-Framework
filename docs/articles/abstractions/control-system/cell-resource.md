@@ -13,4 +13,4 @@ The interaction between a cell and the process engine to execute an activity is 
    2. A push event can be revoked via `NotReadyToWork`
 2. The cell executes the activity wrapped by `ActivityStart` and reports its result upon completion by raising `ActivityCompleted`.
 3. The control system closes the sequence with `SequenceCompleted`. The object also indicates if the process is still active (`ProcessActive`) and where it should go next (`NextCells`).
-4. The session can be continued, but that only makes sense if the process is still active and the current cell one of the next cells.
+4. The session can be continued, but that only makes sense if the process is still active and the current cell is one of the next cells.
