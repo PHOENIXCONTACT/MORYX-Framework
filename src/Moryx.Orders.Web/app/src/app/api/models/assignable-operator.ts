@@ -15,4 +15,3 @@ export interface AssignableOperator {
   pseudonym?: string | null;
   signedIn?: boolean;
 }
-

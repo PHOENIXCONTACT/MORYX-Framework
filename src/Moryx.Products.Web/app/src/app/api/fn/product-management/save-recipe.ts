@@ -35,4 +35,3 @@ export function saveRecipe(http: HttpClient, rootUrl: string, params?: SaveRecip
 }
 
 saveRecipe.PATH = '/api/moryx/products/recipes';
-

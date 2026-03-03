@@ -11,4 +11,3 @@ export enum Selector {
   Parent = 'Parent',
   Parts = 'Parts'
 }
-

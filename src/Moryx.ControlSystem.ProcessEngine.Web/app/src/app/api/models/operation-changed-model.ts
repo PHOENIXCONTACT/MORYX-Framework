@@ -14,4 +14,3 @@ export interface OperationChangedModel {
   reportedModel?: OperationReportedModel;
   startedModel?: OperationStartedModel;
 }
-

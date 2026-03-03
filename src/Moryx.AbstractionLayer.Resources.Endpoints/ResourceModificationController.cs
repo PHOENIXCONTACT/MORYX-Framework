@@ -25,6 +25,7 @@ namespace Moryx.AbstractionLayer.Resources.Endpoints;
 [ApiController]
 [Route("api/moryx/resources/")]
 [Produces("application/json")]
+//TODO: Rename to ResourceManagementController in next major version
 public class ResourceModificationController : ControllerBase
 {
     private readonly IResourceManagement _resourceManagement;

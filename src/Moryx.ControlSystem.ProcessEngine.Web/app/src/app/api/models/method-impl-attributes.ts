@@ -20,6 +20,6 @@ export enum MethodImplAttributes {
   AggressiveInlining = 'AggressiveInlining',
   AggressiveOptimization = 'AggressiveOptimization',
   InternalCall = 'InternalCall',
+  Async = 'Async',
   MaxMethodImplVal = 'MaxMethodImplVal'
 }
-

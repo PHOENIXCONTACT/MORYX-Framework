@@ -35,4 +35,3 @@ export function saveInstance(http: HttpClient, rootUrl: string, params?: SaveIns
 }
 
 saveInstance.PATH = '/api/moryx/products/instances';
-

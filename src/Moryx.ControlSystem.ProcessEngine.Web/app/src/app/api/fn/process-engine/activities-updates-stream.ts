@@ -33,4 +33,3 @@ export function activitiesUpdatesStream(http: HttpClient, rootUrl: string, param
 }
 
 activitiesUpdatesStream.PATH = '/api/moryx/processes/stream/activities';
-

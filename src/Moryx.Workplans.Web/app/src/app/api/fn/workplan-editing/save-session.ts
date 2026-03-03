@@ -37,4 +37,3 @@ export function saveSession(http: HttpClient, rootUrl: string, params: SaveSessi
 }
 
 saveSession.PATH = '/api/moryx/workplans/sessions/{sessionId}/save';
-

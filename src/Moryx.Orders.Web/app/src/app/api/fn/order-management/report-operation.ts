@@ -37,4 +37,3 @@ export function reportOperation(http: HttpClient, rootUrl: string, params: Repor
 }
 
 reportOperation.PATH = '/api/moryx/orders/{guid}/report';
-

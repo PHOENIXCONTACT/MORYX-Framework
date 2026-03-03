@@ -104,7 +104,7 @@ export class AppStoreService {
     //fetch resources and operator elements from the API in parallel
     forkJoin([
       this.operatorManagementService.getResources_1(),
-      this.operatorManagementService.getAll_5(),
+      this.operatorManagementService.getAll(),
     ]).subscribe((results) => {
       const resources = results[0];
       const operators = results[1];

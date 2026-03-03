@@ -37,4 +37,3 @@ export function updateWorkplan(http: HttpClient, rootUrl: string, params: Update
 }
 
 updateWorkplan.PATH = '/api/moryx/workplans/{id}';
-

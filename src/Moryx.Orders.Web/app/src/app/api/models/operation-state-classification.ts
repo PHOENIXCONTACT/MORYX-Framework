@@ -23,4 +23,3 @@ export enum OperationStateClassification {
   CanAdvice = 'CanAdvice',
   IsAmountReached = 'IsAmountReached'
 }
-

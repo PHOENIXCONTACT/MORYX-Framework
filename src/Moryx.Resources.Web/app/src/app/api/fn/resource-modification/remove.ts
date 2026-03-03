@@ -34,4 +34,3 @@ export function remove(http: HttpClient, rootUrl: string, params: Remove$Params,
 }
 
 remove.PATH = '/api/moryx/resources/{id}';
-

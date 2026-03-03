@@ -11,4 +11,3 @@ export enum RecipeState {
   Released = 'Released',
   Revoked = 'Revoked'
 }
-

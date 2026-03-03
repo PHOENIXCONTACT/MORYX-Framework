@@ -35,4 +35,3 @@ export function getDocuments(http: HttpClient, rootUrl: string, params: GetDocum
 }
 
 getDocuments.PATH = '/api/moryx/orders/{guid}/documents';
-

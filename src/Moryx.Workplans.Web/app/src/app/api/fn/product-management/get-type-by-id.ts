@@ -35,4 +35,3 @@ export function getTypeById(http: HttpClient, rootUrl: string, params: GetTypeBy
 }
 
 getTypeById.PATH = '/api/moryx/products/types/{id}';
-

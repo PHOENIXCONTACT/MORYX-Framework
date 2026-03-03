@@ -33,4 +33,3 @@ export function getDefaultOperator(http: HttpClient, rootUrl: string, params?: G
 }
 
 getDefaultOperator.PATH = '/api/moryx/operators/default';
-

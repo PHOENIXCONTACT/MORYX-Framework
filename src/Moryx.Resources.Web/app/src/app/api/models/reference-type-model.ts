@@ -18,4 +18,3 @@ export interface ReferenceTypeModel {
   role?: ResourceReferenceRole;
   supportedTypes?: Array<string> | null;
 }
-

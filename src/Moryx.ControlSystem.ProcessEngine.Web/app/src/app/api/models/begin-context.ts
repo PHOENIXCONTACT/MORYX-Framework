@@ -17,4 +17,3 @@ export interface BeginContext {
   scrapCount?: number;
   successCount?: number;
 }
-

@@ -48,4 +48,3 @@ export interface ConstructorInfo {
   name?: string | null;
   reflectedType?: Type;
 }
-

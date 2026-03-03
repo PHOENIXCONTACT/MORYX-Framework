@@ -39,4 +39,3 @@ export function createInstance(http: HttpClient, rootUrl: string, params?: Creat
 }
 
 createInstance.PATH = '/api/moryx/products/instances';
-
