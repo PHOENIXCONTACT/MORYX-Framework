@@ -20,16 +20,18 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
   imports: [
     CommonModule,
     MatExpansionModule,
-    TranslateModule,
+    TranslateModule
   ]
 })
 export class LogMessageList implements OnInit {
+  private translateService = inject(TranslateService);
+  private orderManagementService = inject(OrderManagementService);
+
   guid = input.required<string>();
   logMessages = signal<OperationLogMessageModel[]>([]);
   isLoading = signal<boolean>(false);
   notification = signal<string>('');
-  private translateService = inject(TranslateService);
-  private orderManagementService = inject(OrderManagementService);
+
   TranslationConstants = TranslationConstants;
   translations: Record<string, string> = {};
 
@@ -47,7 +49,7 @@ export class LogMessageList implements OnInit {
   private fetchMessages(guid: string) {
     this.isLoading.update(_ => true);
     this.orderManagementService
-      .getLogs({ guid: guid })
+      .getLogs({guid: guid})
       .pipe(
         delay(1),
         tap(messages => {

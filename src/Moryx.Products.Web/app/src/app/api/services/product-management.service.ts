@@ -549,4 +549,3 @@ export class ProductManagementService extends BaseService {
   }
 
 }
-

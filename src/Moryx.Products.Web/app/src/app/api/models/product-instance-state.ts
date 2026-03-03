@@ -13,4 +13,3 @@ export enum ProductInstanceState {
   Success = 'Success',
   Failure = 'Failure'
 }
-

@@ -140,4 +140,3 @@ export class NotificationPublisherService extends BaseService {
   }
 
 }
-

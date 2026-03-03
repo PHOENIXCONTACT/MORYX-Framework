@@ -18,4 +18,3 @@ export interface ResourceTypeModel {
   name?: string | null;
   references?: Array<ReferenceTypeModel> | null;
 }
-

@@ -42,4 +42,3 @@ export function connectStep(http: HttpClient, rootUrl: string, params: ConnectSt
 }
 
 connectStep.PATH = '/api/moryx/workplans/sessions/{sessionId}/nodes/{targetNodeId}/{targetIndex}';
-

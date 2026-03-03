@@ -37,4 +37,3 @@ export function getRecipes(http: HttpClient, rootUrl: string, params: GetRecipes
 }
 
 getRecipes.PATH = '/api/moryx/products/types/{id}/recipes/{classification}';
-

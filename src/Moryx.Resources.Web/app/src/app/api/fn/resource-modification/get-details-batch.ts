@@ -35,4 +35,3 @@ export function getDetailsBatch(http: HttpClient, rootUrl: string, params?: GetD
 }
 
 getDetailsBatch.PATH = '/api/moryx/resources';
-

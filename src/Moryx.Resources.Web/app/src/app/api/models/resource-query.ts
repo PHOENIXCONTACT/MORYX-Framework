@@ -13,4 +13,3 @@ export interface ResourceQuery {
   referenceRecursion?: boolean;
   types?: Array<string> | null;
 }
-

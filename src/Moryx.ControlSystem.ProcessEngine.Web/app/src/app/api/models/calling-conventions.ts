@@ -13,4 +13,3 @@ export enum CallingConventions {
   HasThis = 'HasThis',
   ExplicitThis = 'ExplicitThis'
 }
-

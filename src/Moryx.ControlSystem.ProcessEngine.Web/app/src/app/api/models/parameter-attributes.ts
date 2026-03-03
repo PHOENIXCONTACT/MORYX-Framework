@@ -19,4 +19,3 @@ export enum ParameterAttributes {
   Reserved4 = 'Reserved4',
   ReservedMask = 'ReservedMask'
 }
-

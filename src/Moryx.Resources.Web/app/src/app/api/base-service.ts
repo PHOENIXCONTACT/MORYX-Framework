@@ -38,4 +38,3 @@ export class BaseService {
     this._rootUrl = rootUrl;
   }
 }
-

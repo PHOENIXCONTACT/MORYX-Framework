@@ -10,4 +10,3 @@ export interface NodeConnector {
   index?: number;
   nodeId?: number;
 }
-

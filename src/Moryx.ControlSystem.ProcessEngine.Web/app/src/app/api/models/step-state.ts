@@ -11,4 +11,3 @@ export enum StepState {
   Running = 'Running',
   Completed = 'Completed'
 }
-

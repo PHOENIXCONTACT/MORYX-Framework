@@ -34,4 +34,3 @@ export function closeSession(http: HttpClient, rootUrl: string, params: CloseSes
 }
 
 closeSession.PATH = '/api/moryx/workplans/sessions/{sessionId}';
-

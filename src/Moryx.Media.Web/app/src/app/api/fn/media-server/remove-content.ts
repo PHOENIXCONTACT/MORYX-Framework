@@ -34,4 +34,3 @@ export function removeContent(http: HttpClient, rootUrl: string, params: RemoveC
 }
 
 removeContent.PATH = '/api/moryx/media/{guid}';
-

@@ -12,4 +12,3 @@ export enum Severity {
   Error = 'Error',
   Fatal = 'Fatal'
 }
-

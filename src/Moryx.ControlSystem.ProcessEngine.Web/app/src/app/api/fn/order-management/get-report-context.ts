@@ -35,4 +35,3 @@ export function getReportContext(http: HttpClient, rootUrl: string, params: GetR
 }
 
 getReportContext.PATH = '/api/moryx/orders/{guid}/report';
-

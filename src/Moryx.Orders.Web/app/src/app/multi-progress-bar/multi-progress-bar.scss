@@ -1,0 +1,48 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *;
+@use "sass:map";
+
+$segment-colors: (
+  success: $success,
+  scrap: #e9545d,
+  active: #99cbce,
+  pending: #cfd8dc,
+  residual: #cfd8dc
+);
+
+:host {
+  display: flex;
+  width: 100%;
+  height: 6px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+.bar {
+  height: 100%;
+  transition: flex-basis 0.3s ease-in-out;
+
+  &:last-child {
+    flex-grow: 1;
+  }
+
+  &.success {
+    background-color: map.get($segment-colors, success);
+  }
+
+  &.scrap {
+    background-color: map.get($segment-colors, scrap);
+  }
+
+  &.active {
+    background-color: map.get($segment-colors, active);
+  }
+
+  &.pending {
+    background-color: map.get($segment-colors, pending);
+  }
+
+  &.residual {
+    background-color: map.get($segment-colors, residual);
+  }
+}

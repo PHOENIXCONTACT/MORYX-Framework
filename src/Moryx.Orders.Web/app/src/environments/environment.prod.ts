@@ -3,9 +3,13 @@
  * Licensed under the Apache License, Version 2.0
 */
 
+import { getPathBase } from '@moryx/ngx-web-framework/environments';
+
+let path_base = getPathBase("/Orders");
+
 export const environment = {
   production: true,
-  assets: "/_content/Moryx.Orders.Web/",
-  rootUrl: '',
+  assets: path_base + "/_content/Moryx.Orders.Web/",
+  rootUrl: path_base,
 };
 
