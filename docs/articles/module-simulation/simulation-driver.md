@@ -9,7 +9,7 @@ An underlying simulator will call `Ready` and `Result` on your instance as a rep
 So here is an example of how your mock driver can implement `Moryx.ControlSystem.Simulation.ISimulationDriver`:
 ```cs
     [ResourceRegistration]
-    public class TestMockDriver : Driver, IMessageDriver<object>, ISimulationDriver
+    public class TestMockDriver : Driver, IMessageDriver, ISimulationDriver
     {
         public bool HasChannels => false;
 
