@@ -3,6 +3,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using Moryx.Modules;
@@ -11,7 +12,8 @@ namespace Moryx.Runtime.Modules
 {
     internal class ServerNotificationCollection : INotificationCollection
     {
-        private readonly List<IModuleNotification> _internalList = new List<IModuleNotification>();
+        private const int MaxCollectionSize = 2500;
+        private readonly Collection<IModuleNotification> _internalList = new Collection<IModuleNotification>();
         private readonly object _lockObj = new object();
 
         // ReSharper disable once InconsistentlySynchronizedField
@@ -32,10 +34,23 @@ namespace Moryx.Runtime.Modules
 
         public void Add(IModuleNotification item)
         {
+            IModuleNotification removedItem = null;
             lock (_lockObj)
+            {
                 _internalList.Add(item);
-
+                if (_internalList.Count > MaxCollectionSize) ;
+                {
+                    removedItem = _internalList.First();
+                    _internalList.Remove(removedItem);
+                }
+            }
+            
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
+
+            if (removedItem != null)
+            {
+                CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+            }
         }
 
         public void Clear()

@@ -48,11 +48,7 @@ namespace Moryx.Runtime.Endpoints.Modules.Endpoint
             var models = new List<ServerModuleModel>(_moduleManager.AllModules.Count());
             foreach (var module in _moduleManager.AllModules)
             {
-                const int MaxNotificationsPerPage = 100;
-                var notifications = module.Notifications
-                    .TakeLast(MaxNotificationsPerPage)
-                    .OrderByDescending(n => n.Timestamp)
-                    .ToArray();
+                var notifications = module.Notifications.ToArray();
 
                 var model = new ServerModuleModel
                 {
