@@ -38,3 +38,26 @@ sample = new VisualInstruction
 }
 ````
 
+## Binding Resolution
+
+When a new activity type is defined, the type of the activity parameters must be provided through the generic `Activity` base class:
+
+````cs
+[ActivityResults(typeof(DefaultActivityResult))]
+public class SolderingActivity : Activity<SolderingActivityParameters>
+{
+}
+````
+
+If the activity is an activity with visual instructions support, the activity parameters type must derive from [VisualInstructionParameters](/src/Moryx.VisualInstructions/VisualInstructionParameters.cs):
+
+````cs
+public class SolderingActivityParameters : VisualInstructionParameters
+{
+}
+````
+
+This base class provides the binding resolution for the binding sources in the table above.
+
+
+
