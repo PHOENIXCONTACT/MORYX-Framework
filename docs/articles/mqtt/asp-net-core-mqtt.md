@@ -103,9 +103,9 @@ _Checking those repositories will give you an idea of what the `ManagedMqtt` is 
 
     ```csharp
     builder.Services.AddMqttClient() // must be present
-                    .AddMqttEndpoints(); // <-- this add supports for the endpoints
+                    .AddMqttEndpoints(); // <-- this adds supports for the endpoints
     ```
-    - Create a new C# class that implements the `IMqttEndpoint`.
+    - Create a new C# class that implements the `IMqttEndpoint` [Example](/src/Moryx.AbstractionLayer.Resources.Mqtt.Endpoints/ResourceRpcEndpoint.cs).
 
    There is a minimal version of the Mqtt endpoint, that you can use directly in the `Program.cs`:
 
