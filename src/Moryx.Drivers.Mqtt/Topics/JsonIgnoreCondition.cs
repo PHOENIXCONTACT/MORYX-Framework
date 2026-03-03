@@ -9,9 +9,9 @@ namespace Moryx.Drivers.Mqtt.Topics;
 public enum JsonIgnoreCondition
 {
     /// <see cref="System.Text.Json.Serialization.JsonIgnoreCondition.Never" />
-    Never = 0,
+    Never,
     /// <see cref="System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault" />
-    WhenWritingDefault = 2,
+    WhenWritingDefault,
     /// <see cref="System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull" />
-    WhenWritingNull = 3,
+    WhenWritingNull,
 }
