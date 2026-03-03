@@ -23,4 +23,10 @@ public class LauncherConfig : ConfigBase
     /// </summary>
     [DataMember]
     public ExternalModuleConfig[] ExternalModules { get; set; }
+
+    /// <summary>
+    /// Definition of regions
+    /// </summary>
+    [DataMember]
+    public LauncherRegionConfig[] Regions { get; set; }
 }
