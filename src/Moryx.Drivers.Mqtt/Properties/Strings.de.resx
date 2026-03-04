@@ -270,4 +270,16 @@
   <data name="MqttTopic_TraceDecodedMessage_Description" xml:space="preserve">
     <value>Entscheidet, ob die dekodierte Nachricht für debugging Zwecke aufgezeichnet werden soll</value>
   </data>
+  <data name="MqttTopicJson_IgnoreCondition" xml:space="preserve">
+    <value>Ignorier Bedingung</value>
+  </data>
+  <data name="MqttTopicJson_IgnoreCondition_Description" xml:space="preserve">
+    <value>Beschreibt die Standardbedingung unter der Felder aus dem Serialisierungsergebnis ausgelassen werden sollen</value>
+  </data>
+  <data name="MqttTopicJson_EncoderOption" xml:space="preserve">
+    <value>Codierer option</value>
+  </data>
+  <data name="MqttTopicJson_EncoderOption_Description" xml:space="preserve">
+    <value>Codierer, der beim Schreiben von Json verwendet werden soll</value>
+  </data>
 </root>
