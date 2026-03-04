@@ -30,12 +30,9 @@
 
     ```csharp
     // Program.cs
-    builder.Services.AddTransient<ResourceToJsonConvert>(); // Required
     builder.Services.AddMqttClient((provider, options) =>
     {
         // Json Serialization options
-        var resourceJsonConverter = provider.GetRequiredService<ResourceToJsonConverter>();
-        options.JsonSerializerOptions.Converters.Add(resourceJsonConverter);
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         options.DefaultTopicStrategy.NoLocal = true; // optional
         options.DefaultTopicStrategy.RetainAsPublished = true; // optional
