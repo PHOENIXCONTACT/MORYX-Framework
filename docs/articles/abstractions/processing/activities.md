@@ -104,7 +104,7 @@ The method `ResolveBinding` will be called during the creation of the activity a
 
 ```` cs
 // some resource code
-private void OnMyActivtiy(StartActivity activity, MyActivity activity)
+private void OnMyActivity(StartActivity startActivity, MyActivity activity)
 {
     var adapterNumber = activity.parameters.AdapterNumber;
 

@@ -35,4 +35,3 @@ export function createRecipe(http: HttpClient, rootUrl: string, params: CreateRe
 }
 
 createRecipe.PATH = '/api/moryx/products/recipe/construct/{recipeType}';
-

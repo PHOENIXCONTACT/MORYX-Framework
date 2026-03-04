@@ -37,13 +37,13 @@ root to anchor the angular app into the razor page.
 ```cshtml
 @* // Add the styles from the angular project *@
 @section Styles {
-  <link rel="stylesheet" href="/_content/<YourC#ProjectName>/styles.css">
+  <link rel="stylesheet" href="~/_content/<YourC#ProjectName>/styles.css">
 }
 
 @* // Add the compiled javascript from the angular project *@
 @section Scripts
 {
-  <script src="/_content/<YourC#ProjectName>/main.js" type="module"></script>
+  <script src="~/_content/<YourC#ProjectName>/main.js" type="module"></script>
 }
 
 @* // Add the application root *@
@@ -200,7 +200,7 @@ and insert the following part into your *angular.json* file
 ### Call the API in your component
 
 Now, get back to the component or service where you want the data to be retrieved.
-Here is an example to call a methodnin the *app.ts*
+Here is an example to call a method in the *app.ts*
 
 ```ts
 export class AppComponent implements OnInit {
@@ -214,9 +214,9 @@ export class AppComponent implements OnInit {
 
 ## (Optional) Configure asset paths in your Angular app to work in the Launcher
 
-If you haven't done this for the last section, create two file in `src/environments/environment.ts` and `src/environments/environment.prod.ts`.
-Here, you need to add a variable to change the path to your assets depending on whether you develop using `ng serve` or are running the app in the Launcher.
-The following snippets provide an example of the new content of the files
+If you haven't done this for the last section, create the files `src/environments/environment.ts` and `src/environments/environment.prod.ts`.
+In each file add a variable to change the path to your assets depending on whether you develop using `ng serve` or are running the app in the Launcher.
+The following snippets provide an example of the new content of the files:
 
 ```ts
 // environment.ts
@@ -235,7 +235,7 @@ export const environment = {
 
 * `assets` defines the path, in which Razor pages place assets of referenced class libraries. Replace the placeholder by your actual projects name
 To access these environment variables in your code, refer to sources on the web like [this one](https://angular.io/guide/build).
-For your assets, you then have to prefix the filenames. So, that your code would for example look like this:
+For your assets you have to prefix the filenames, so that your code would for example look like this:
 
 ```ts
   myImage = environment.assets + "assets/my-image.jpg"

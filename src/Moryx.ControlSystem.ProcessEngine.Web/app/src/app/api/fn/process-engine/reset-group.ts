@@ -34,4 +34,3 @@ export function resetGroup(http: HttpClient, rootUrl: string, params: ResetGroup
 }
 
 resetGroup.PATH = '/api/moryx/processes/holders/groups/{id}/reset';
-

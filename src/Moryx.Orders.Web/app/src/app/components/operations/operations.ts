@@ -40,6 +40,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { FilterService } from '../../services/filter.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { OperationsFilter } from './operations-filter/operations-filter';
+import { MultiProgressBar } from '../../multi-progress-bar/multi-progress-bar';
 
 @Component({
   selector: 'app-operations',
@@ -52,6 +57,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatDrawer,
     MatSidenavModule,
     LogMessageList,
+    OperationsFilter,
     PartList,
     OperationSource,
     MatExpansionModule,
@@ -60,10 +66,23 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     EmptyState,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatToolbarModule,
+    MultiProgressBar
   ]
 })
 export class Operations implements OnInit, OnDestroy {
+  private orderManagementService = inject(OrderManagementService);
+  private dialog = inject(MatDialog);
+  private router = inject(Router);
+  private searchBarService = inject(SearchBarService);
+  private translateService = inject(TranslateService);
+  private snackbarService = inject(SnackbarService);
+  private operationService = inject(OperationService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
+  private mediaMatcher = inject(MediaMatcher);
+  private filterService = inject(FilterService);
+
   operations = signal<OperationViewModel[]>([]);
   DrawerContent = DrawerContent;
   drawerContent = signal<DrawerContent>(DrawerContent.None);
@@ -74,16 +93,7 @@ export class Operations implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
   private searchTerm = signal<string>('');
   drawer = viewChild.required<MatDrawer>('drawer');
-
-  private orderManagementService = inject(OrderManagementService);
-  private dialog = inject(MatDialog);
-  private router = inject(Router);
-  private searchBarService = inject(SearchBarService);
-  private translateService = inject(TranslateService);
-  private snackbarService = inject(SnackbarService);
-  private operationService = inject(OperationService);
-  private changeDetectorRef = inject(ChangeDetectorRef);
-  private mediaMatcher = inject(MediaMatcher);
+  hideCompleted = toSignal(this.filterService.hideCompleted$, { initialValue: true });
 
   constructor() {
     this.mobileQuery = this.mediaMatcher.matchMedia('(max-width: 1279px)');
@@ -91,7 +101,7 @@ export class Operations implements OnInit, OnDestroy {
     this.mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
 
-  private _mobileQueryListener: () => void;
+  private readonly _mobileQueryListener: () => void;
 
   ngOnDestroy(): void {
     this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
@@ -103,7 +113,6 @@ export class Operations implements OnInit, OnDestroy {
     this.orderManagementService.getOperations().subscribe({
       next: (operationResponse: OperationModel[]) => {
         this.operations.set(operationResponse
-          .filter(operation => operation.classification !== OperationStateClassification.Completed)
           .map(model => {
             const viewModel = new OperationViewModel(model);
             this.subscribeForMessagesCount(viewModel);
@@ -123,13 +132,6 @@ export class Operations implements OnInit, OnDestroy {
         return;
       }
 
-      //filter the list after the update of a completed operation
-      if (updatedOperation?.classification === OperationStateClassification.Completed) {
-        this.operations.update(operations => operations.filter(
-          operation => operation.model.identifier !== updatedOperation.identifier
-        ));
-        return;
-      }
       const existent = this.operations().find(o => o.model.identifier == updatedOperation.identifier);
       if (existent) {
         existent.updateModel(updatedOperation);
@@ -163,14 +165,30 @@ export class Operations implements OnInit, OnDestroy {
           this.onSearch(newRequest);
         }
       });
-    } else this.searchTerm.set(request.term);
+    } else {
+      this.searchTerm.set(request.term);
+    }
   }
 
   filteringOperations(operations: OperationViewModel[]): OperationViewModel[] {
-    let filteredOperations = <OperationViewModel[]>[];
-    if (!this.searchTerm()) filteredOperations = operations;
-    else filteredOperations = operations.filter(o => o.model.order?.includes(this.searchTerm()));
-    return filteredOperations;
+    const searchTerm = this.searchTerm();
+    const hideCompleted = this.hideCompleted();
+
+    return operations
+      .filter(o =>
+        (!searchTerm || o.model.order?.includes(searchTerm)) &&
+        (o.model.classification !== OperationStateClassification.Completed || !hideCompleted)
+      )
+      .sort((a, b) => {
+        // Primary sort by sortOrder
+        const orderDiff = (a.model.sortOrder ?? 0) - (b.model.sortOrder ?? 0);
+        if (orderDiff !== 0) return orderDiff;
+
+        // Secondary sort by plannedStart - (works because ISO date strings sort lexicographically)
+        const startA = a.model.plannedStart ?? '';
+        const startB = b.model.plannedStart ?? '';
+        return startA.localeCompare(startB);
+      });
   }
 
   async onBegin(operation: OperationViewModel) {
@@ -259,7 +277,16 @@ export class Operations implements OnInit, OnDestroy {
     this.modifyDrawer(operationViewModel.model, DrawerContent.Messages);
   }
 
-  modifyDrawer(operation: OperationModel, targetContent: DrawerContent) {
+  onToggleFilter() {
+    if (this.drawerContent() === DrawerContent.Filter) {
+      this.closeDrawer();
+    } else  {
+      this.drawerContent.set(DrawerContent.Filter);
+      this.drawer().open();
+    }
+  }
+
+  private modifyDrawer(operation: OperationModel, targetContent: DrawerContent) {
     if (this.drawerContent() === DrawerContent.None) {
       this.selectedOperation.set(operation);
       this.drawerContent.set(targetContent);
@@ -303,7 +330,9 @@ export class Operations implements OnInit, OnDestroy {
     if (this.selectedOperation()?.identifier === operation.model.identifier) {
       // User clicked to close the panel
       this.selectedOperation.set(undefined);
-      this.closeDrawer();
+      if (this.drawerContent() !== DrawerContent.Filter) {
+        this.closeDrawer();
+      }
     } else {
       // Panel collapsed because another was opened
     }

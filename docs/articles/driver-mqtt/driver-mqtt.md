@@ -5,7 +5,7 @@ The DriverMqtt is a resource which allows sending and receiving messages via MQT
 
 The following parameters are configurable in the UI:
 - **Root**: This is written in front of the Identifiers of all MqttTopic-Resources. The MqttClient in the driver subscribes only to the specific topic defined in a MqttTopic-Resource, which is a child of the driver
-- **BrokerUrl**: IP oder URL or the MQTT Broker
+- **BrokerUrl**: IP or URL of the MQTT Broker
 - **Port**: Port of the MQTT Broker
 - **MqttVersion**: MQTT protocol version. Possible versions are 3.1.0, 3.1.1 and 5.0.0. In versions lesser than 5 the driver will receive its own messages.
 - **UseTls** Allows using MQTTs. The encrypted variant of MQTT

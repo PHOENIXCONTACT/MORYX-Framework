@@ -11,4 +11,3 @@ export interface CustomAttributeTypedArgument {
   argumentType?: Type;
   value?: any | null;
 }
-

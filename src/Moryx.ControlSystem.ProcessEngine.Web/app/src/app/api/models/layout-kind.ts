@@ -11,4 +11,3 @@ export enum LayoutKind {
   Explicit = 'Explicit',
   Auto = 'Auto'
 }
-

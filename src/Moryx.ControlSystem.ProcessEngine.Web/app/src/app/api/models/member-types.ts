@@ -17,4 +17,3 @@ export enum MemberTypes {
   NestedType = 'NestedType',
   All = 'All'
 }
-

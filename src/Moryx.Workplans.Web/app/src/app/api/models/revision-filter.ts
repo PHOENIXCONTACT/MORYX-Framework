@@ -11,4 +11,3 @@ export enum RevisionFilter {
   Latest = 'Latest',
   Specific = 'Specific'
 }
-

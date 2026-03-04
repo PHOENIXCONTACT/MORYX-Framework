@@ -3,8 +3,9 @@
     "TITLE": "订单"
   },
   "OPERATIONS": {
-    "TITLE": "消息",
-    "SUB_TITLE": "零件清单",
+    "LOG_TITLE": "消息",
+    "PARTS_TITLE": "零件清单",
+    "FILTER_TITLE": "过滤器",
     "SOURCE_TITLE": "操作源",
     "AMOUNT": "数量",
     "SUCCESS": "成功",
@@ -41,10 +42,15 @@
       "UNIT": "单位",
       "STAGING_INDICATOR": "暂存指示器"
     },
+    "FILTERS": {
+      "HIDE_COMPLETED": "隐藏已完成"
+    },
     "EMPTY_LOG": "此日志为空",
     "FAILED_LOADING": "无法建立与服务器的连接。请检查您的网络连接或稍后重试。",
     "EMPTY_STATE_HEADER": "没有订单",
-    "EMPTY_STATE_TEXT": "单击加号创建订单并开始配置。"
+    "EMPTY_STATE_TEXT": "单击加号创建订单并开始配置。",
+    "CREATE": "创建",
+    "FILTER": "筛选"
   },
   "RECIPES": {
     "RECIPES_OF": "配方 -",

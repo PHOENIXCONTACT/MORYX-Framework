@@ -13,7 +13,7 @@ Interfaces derived from `IResource` are those contracts that can be defined by a
 
 Storage of resources and their information is done by storing it as part of a resource itself or by using a dedicated resource. 
 Thereby, the complete type information is taken from the class definition. 
-Base type, provided interfaces, dependencies and typed references to other resource can all be expressed with C# code. 
+Base type, provided interfaces, dependencies and typed references to other resources can all be expressed with C# code. 
 The minimal required code to create a plugin for the resource management is shown in an example below.
 
 ```cs
@@ -30,4 +30,4 @@ Especially the ability to directly access all derived types is an advantage over
 Besides the base and derived types, each node also exports the system type, its name and information how to construct instances of the type.
 
 ## Resource types
-The abstraction layer allows for grouping similar resources types in branches. Look [here](Types/Overview.md) for more information on that.
+The abstraction layer allows for grouping similar resources types in branches. Look [here](Types/overview.md) for more information on that.

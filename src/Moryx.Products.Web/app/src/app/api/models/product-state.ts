@@ -12,4 +12,3 @@ export enum ProductState {
   Deprecated = 'Deprecated',
   Generated = 'Generated'
 }
-

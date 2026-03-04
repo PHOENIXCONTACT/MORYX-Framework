@@ -11,4 +11,3 @@ export enum PropertyFilterOperator {
   GreaterThen = 'GreaterThen',
   LessThen = 'LessThen'
 }
-

@@ -10,12 +10,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from './extensions/translation-constants.extensions';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.html',
-    styleUrls: ['./app.scss'],
-    imports:[
-      RouterOutlet
-    ]
+  selector: 'app-root',
+  templateUrl: './app.html',
+  styleUrls: ['./app.scss'],
+  imports: [
+    RouterOutlet
+  ]
 })
 export class App implements OnInit {
   private translateService = inject(TranslateService);

@@ -35,4 +35,3 @@ export function saveType(http: HttpClient, rootUrl: string, params?: SaveType$Pa
 }
 
 saveType.PATH = '/api/moryx/products/types';
-

@@ -6,7 +6,7 @@
 - open source, supported by the eclipse foundation
 - https://mosquitto.org/
 
-You can start the mosquitto-broker using the Task Manager. After that you can publish and subscribe topis using mosquitto and the cmd.
+You can start the mosquitto-broker using the Task Manager. After that you can publish and subscribe topics using mosquitto and the cmd.
 
 ## How to publish a message using mosquitto
 1. open cmd

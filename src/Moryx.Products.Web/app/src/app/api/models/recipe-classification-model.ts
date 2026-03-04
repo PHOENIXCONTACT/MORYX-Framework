@@ -13,4 +13,3 @@ export enum RecipeClassificationModel {
   Intermediate = 'Intermediate',
   Part = 'Part'
 }
-

@@ -10,7 +10,7 @@ This document describes how to build (the basis for) a new ServerModule from scr
 
 Add a new project to your solution. The name of the project should be the name of your new ServerModule. (In the following examples the name "Execution" is chosen.)
 
-Your new ServerModule-Project gets at least one folder: "ModuleController". The "ModuleController" consists at least of three files.
+Your new ServerModule-Project gets at least one folder: "ModuleController". The "ModuleController" consists of at least of three files.
 
 For implementation details click on the file name:
 - [ServerModule](#servermodule)
@@ -19,13 +19,13 @@ For implementation details click on the file name:
   - [The ModuleConsole.cs - File](#the-moduleconsolecs---file)
 
 ## The ModuleController.cs
-The ModuleController.cs-File is the key point of your module. Here, all the components of your module come together and you are responsible to initialize, start and stop them in the right way. Because every ServerModule can have its own architecture, there is not _the correct way_ to do so, but there are some _usual points_ a ModuleController.cs-File covers. These points are:
+The ModuleController.cs-File is the key point of your module. Here, all the components of your module come together and you are responsible to initialize, start and stop them in the right way. Because every ServerModule can have its own architecture, there is no _correct way_ to do so, but there are some _usual points_ a ModuleController.cs-File covers. These points are:
 
 1. Import the global components your ServerModule needs
 2. Register imported _global_ components to the internal container
 3. Resolve the desired components from the container and **start** them
 4. Stop the started components when the ServerModule is stopped
-5. Export and Import facades -> this topic of its own, take a look into [this guide](facades.md)
+5. Export and Import facades -> this topic is described [here](facades.md)
 
 Now we will look at examples for these points. But first create your your class implementing `ServerModuleBase`. If your ServerModule exports facades, use `ServerModuleFacadeControllerBase` instead and specify those facades using `IFacadeContainer<TFacade>`.
 
@@ -72,7 +72,7 @@ public ModuleController(IModuleContainerFactory containerFactory, IConfigManager
 }
 ````
 
-Now we will register the global components to the internal container of our module. We will also load the components of this module. Components can be for example Plugins or Strategies. We do this in the `OnInitializeAsync` method we must override form our base class:
+Now we will register the global components to the internal container of our module. All internal components of a module are registered automatically. Components can be for example Plugins or Strategies. We do this in the `OnInitializeAsync` method we must override from our base class:
 
 ````cs
 /// <summary>
@@ -81,17 +81,14 @@ Now we will register the global components to the internal container of our modu
 protected override Task OnInitializeAsync(CancellationToken cancellationToken)
 {
     // Register all imported components
-    Container.SetInstances(ResourceManagement, ProductManagement);
-
-    // Load all components
-    Container.LoadComponents<IExamplePlugin>();
-    Container.LoadComponents<IExampleStrategy>();
+    Container.SetInstance(ResourceManagement)
+        .SetInstance(ProductManagement);
 
     return Task.CompletedTask;
 }
 ````
 
-After the initialization we have to start the custom plugins of our ServerModule activate facades. We do so in the derived `OnStartAsync` method.
+After the initialization we have to start the custom plugins of our ServerModule and activate facades. We do so in the derived `OnStartAsync` method.
 
 ````cs
 protected override async Task OnStartAsync(CancellationToken cancellationToken)
@@ -151,9 +148,9 @@ public class ModuleConfig : ConfigBase
 
 ## The ModuleConsole.cs - File
 
-The module console provides a way to execute methods using the maintenance. It can be used for initial testing, debugging or 'admin access'-features. For this feature you need to create a `ModuleConsole.cs` file in your `ModuleController` folder, implement `IServerModuleConsole` and add methods using the `EntrySerializeAttribute` in order to see them on the UI. Although the interface is empty, it's needed for the export.
+The module console provides a way to execute methods using the maintenance. It can be used for initial testing, debugging or 'admin access'-features. For this feature you need to create a `ModuleConsole.cs` file in your `ModuleController` folder, implement `IServerModuleConsole` and add methods using the `EntrySerializeAttribute` in order to see them on the UI. Although the interface is empty, it is needed for the export.
 
-````C#
+````cs
 [ServerModuleConsole]
 internal class ModuleConsole : IServerModuleConsole
 {

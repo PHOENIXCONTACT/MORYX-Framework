@@ -36,4 +36,3 @@ export function editWorkplan(http: HttpClient, rootUrl: string, params?: EditWor
 }
 
 editWorkplan.PATH = '/api/moryx/workplans/sessions';
-

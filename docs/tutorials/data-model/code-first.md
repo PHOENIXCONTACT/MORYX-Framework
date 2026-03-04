@@ -256,7 +256,7 @@ public interface IAsteroidRepository : IRepository<Asteroid>
 
 If you got scared that you have to implement all these functions you are lucky, they will be implemented automatically.
 So you only have to define the interfaces.
-If you want to know more about the automatic repository instantiation please have a look into the [Repository Proxy Builder](/docs/articles/Core/DataModel/RepositoryProxyBuilder.md).
+If you want to know more about the automatic repository instantiation please have a look into the [Repository Proxy Builder](/docs/articles/framework/DataModel/repository-proxy-builder.md).
 The example functions defined above are also not necessary.
 Only add functions that you really need.
 
@@ -284,7 +284,7 @@ await uow.SaveChangesAsync();
 
 ````
 
-You do not need to implement your repository interface, this is completely done by the [Repository Proxy Builder](/docs/articles/framework/DataModel/RepositoryProxyBuilder.md).
+You do not need to implement your repository interface, this is completely done by the [Repository Proxy Builder](/docs/articles/framework/DataModel/repository-proxy-builder.md).
 
 ## Database Migration
 
@@ -305,8 +305,8 @@ When EF guys are talking about the *CodeFirst Migrations* approach they mean exa
 
 ### Creation of migration configuration
 
-Before we implement the UnitOfWork you can configure your migration. The ef migration every time needs an executable for the startup project.
-It is necessary to have one if you project is just a class library.
+Before we implement the UnitOfWork you can configure your migration. The ef migration needs an executable for the startup project.
+It is necessary to create one if your project is just a class library.
 We use the default StartProject of an application to create the migration. Keep in mind that the project must be referenced in the start project. The migration tool needs to know the data model connection string for the migration. MORYX cannot configure the migration process therefore we provide two options by default:
 
 - Pass the connection string as parameter to the migration command
@@ -365,7 +365,7 @@ Second change the `Name` parameter of the script to a speaking version name.
 But how to access the data? The next snippet shows an example call of the database. Note that usually a `DbContextFactory` is injected.
 
 ````cs
-var context = DbContextFactory.Create<SolarSystemContext>();
+using var context = DbContextFactory.Create<SolarSystemContext>();
 var planets = context.Planets;
 ````
 

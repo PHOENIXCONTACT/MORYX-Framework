@@ -37,4 +37,3 @@ export function updateSession(http: HttpClient, rootUrl: string, params: UpdateS
 }
 
 updateSession.PATH = '/api/moryx/workplans/sessions/{sessionId}';
-

@@ -10,7 +10,6 @@ The MORYX Access Management repository contains the following projects
 Refer to the following articles for instruction on setting up your application with a working IAM integration
 - [How to configure your application to connect to a running MORYX Access Management Server](./how-to-integrate-in-your-application.md)
 - [How to setup your endpoint and controller to run with an IAM](./how-to-integrate-in-endpoints.md)
-- [How to integrate login via EntraID / AzureAD](./how-to-integrate-login-via-entra-id.md)
 
 ## Demo Application
 A demo application for the identity server and a consuming application is given in the [Identity Demo](https://github.com/PHOENIXCONTACT/MORYX-Identity-Demo) repository.

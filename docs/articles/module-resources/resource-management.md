@@ -12,18 +12,18 @@ Users of the resource management can resolve instances by type, name or capabili
 // Get by name
 var res = Facade.GetResource<IMyResource>("Some");
 // Get by capabilities
-res = Facade.GetResource<IMyResource>(new MyCapabilities ());
+res = Facade.GetResource<IMyResource>(new MyCapabilities());
 // Get all
 var all = Facade.GetResources<IMyResource>();
 // Get filtered
-all = Facade.GetResources<IMyResource>(r => r . Id > 42);
+all = Facade.GetResources<IMyResource>(r => r.Id > 42);
 ```
 
 The API and interaction is decoupled from the resource graph. The user code resolves a single instance or list of instances to work with, but never the whole graph. 
 This seems like a limitation at ﬁrst, but it ensures structure independent user code limited to the interface of each resource and the capabilities to distinguish instances of the same interface. 
 For example, the underlying system's structure can be as simple as a single, manually operated resource or a completely automatic working system of resources composed of different devices, utility providers, etc.
 There could even be an underlying redundant architecture.
-In all cases, the module responsible for mapping `Activities` to `Resources` always sees an enumeration of [IPublicResource](/src/Moryx.AbstractionLayer/Resources/IResource.cs).
+In all cases, the module responsible for mapping `Activities` to `Resources` always sees an enumeration of [IResource](/src/Moryx.AbstractionLayer/Resources/IResource.cs).
 
 Since the architecture of Moryx includes an internal DI-Container for each module, it imposes a restriction on using components from inside the container outside of the [Facade](/src/Moryx.Resources.Management/Facades/ResourceManagementFacade.cs).
 Because of that, the resource management applies the proxy pattern to provide access to the resources API while simultaneously hiding the resource instance from the user.

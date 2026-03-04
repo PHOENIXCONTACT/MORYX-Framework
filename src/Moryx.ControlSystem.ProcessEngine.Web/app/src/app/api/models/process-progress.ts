@@ -12,4 +12,3 @@ export enum ProcessProgress {
   Interrupted = 'Interrupted',
   Completed = 'Completed'
 }
-

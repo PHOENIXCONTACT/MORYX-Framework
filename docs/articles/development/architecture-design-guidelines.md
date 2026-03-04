@@ -4,7 +4,7 @@ Within the MORYX-Framework you will encounter several different concepts for imp
 In the following text, you will get a short summary of what concepts there are with a comprehensive visualization how they are orchestrated.
 To jump directly to a more detailed explanation and a set of Best Practices for the respective concept select it in the list below.
 
-The different terms for softare constructs you will (probably) come across when working within the MORYX-Framework:
+The different terms for software constructs you will (probably) come across when working within the MORYX-Framework:
 
 - [Components](https://github.com/PHOENIXCONTACT/MORYX-Home/tree/main/development/architecture/components.md)
 - [Endpoints](https://github.com/PHOENIXCONTACT/MORYX-Home/tree/main/development/architecture/endpoints.md)

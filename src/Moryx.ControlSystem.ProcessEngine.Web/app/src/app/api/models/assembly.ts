@@ -32,4 +32,3 @@ export interface Assembly {
   reflectionOnly?: boolean;
   securityRuleSet?: SecurityRuleSet;
 }
-

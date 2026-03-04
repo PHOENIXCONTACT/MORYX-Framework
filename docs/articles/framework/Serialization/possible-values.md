@@ -30,7 +30,7 @@ and you can provide denied values as follows. All other enum values are automati
 public SomeEnum MyEnumValues { get; set; }
 ````
 
-It is not supported to use `AllowedValues` and `DeniedValues` in combination. `AllowedValues` are always be prefered.
+It is not supported to use `AllowedValues` and `DeniedValues` in combination. `AllowedValues` are always be preferred.
 
 ## PossibleValuesAttribute
 
@@ -63,7 +63,7 @@ public abstract class PossibleValuesAttribute : Attribute
     public virtual IEnumerable<string> GetValues(IContainer container, IServiceProvider serviceProvider);
 
     /// <summary>
-    /// String to value conversion. Must be override if <see cref="OverridesConversion"/> is set to true"/>
+    /// String to value conversion. Must be overriden if <see cref="OverridesConversion"/> is set to true"/>
     /// </summary>
     public virtual object Parse(IContainer container, IServiceProvider serviceProvider), string value)
     {
@@ -104,7 +104,7 @@ public string ActiveStrategy { get; set; }
 
 ### PluginConfigsAttribute
 
-Similar to the `PluginNameSelectorAttribute` this attribute provides a list of component configurations. These configurations are expected by the implementations of a certain interface and allow each implementation to define its own configuration. This does require the implementation to be decorated with the attribute `[ExpectedConfig(typeof(MyConfig))]`. This attribute can be used on single properties or collections. Therefor you can either select the type of a new entry or change the entries type. All configs will be presented as list of their respective types name and converted into in object if one is selected. When decorating a config member with this attribute the configs base type can be excluded if it is abstract. Always make sure to specify the interface type and not the base config type!
+Similar to the `PluginNameSelectorAttribute` this attribute provides a list of component configurations. These configurations are expected by the implementations of a certain interface and allow each implementation to define its own configuration. This does require the implementation to be decorated with the attribute `[ExpectedConfig(typeof(MyConfig))]`. This attribute can be used on single properties or collections. Therefor you can either select the type of a new entry or change an existing entry's type. All configs will be presented as a list of their respective type names and converted into an object if a type name is selected. When decorating a config member with this attribute the configs base type can be excluded if it is abstract. Always make sure to specify the interface type and not the base config type!
 
 ````cs
 [DataMember]

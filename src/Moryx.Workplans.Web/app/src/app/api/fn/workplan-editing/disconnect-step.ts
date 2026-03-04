@@ -42,4 +42,3 @@ export function disconnectStep(http: HttpClient, rootUrl: string, params: Discon
 }
 
 disconnectStep.PATH = '/api/moryx/workplans/sessions/{sessionId}/nodes/{targetNodeId}/{targetIndex}';
-

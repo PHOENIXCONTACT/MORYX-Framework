@@ -53,4 +53,3 @@ export interface MethodInfo {
   returnType?: Type;
   returnTypeCustomAttributes?: ICustomAttributeProvider;
 }
-

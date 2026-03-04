@@ -35,4 +35,3 @@ export function getVersions(http: HttpClient, rootUrl: string, params: GetVersio
 }
 
 getVersions.PATH = '/api/moryx/workplans/{id}/versions';
-

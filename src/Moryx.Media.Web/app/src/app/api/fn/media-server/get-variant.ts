@@ -37,4 +37,3 @@ export function getVariant(http: HttpClient, rootUrl: string, params: GetVariant
 }
 
 getVariant.PATH = '/api/moryx/media/{guid}/{variantName}';
-

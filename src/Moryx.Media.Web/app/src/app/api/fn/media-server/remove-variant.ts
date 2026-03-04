@@ -36,4 +36,3 @@ export function removeVariant(http: HttpClient, rootUrl: string, params: RemoveV
 }
 
 removeVariant.PATH = '/api/moryx/media/{guid}/{variantName}';
-
