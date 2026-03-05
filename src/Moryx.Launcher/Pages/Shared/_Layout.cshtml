@@ -109,7 +109,7 @@
                                     @foreach (var module in categoryModules)
                                     {
                                         <moryx-dropdown-item class="tw-p-1 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200">
-                                            <a href="~/@module.Route" class="tw-flex tw-items-center tw-w-full tw-h-full">
+                                            <a asp-page="@module.Route" class="tw-flex tw-items-center tw-w-full tw-h-full">
                                                 <span class="material-symbols-outlined">@module.Icon</span>
                                                 <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@module.Title</span>
                                             </a>
@@ -180,14 +180,15 @@
             <div class="tw-flex-1 tw-flex tw-overflow-auto tw-flex-col">
                 @Html.Partial("AboutModal")
 
-            @if (Url.RouteUrl(ViewContext.RouteData.Values).Split('/').Length > 1 &&
-            !Url.RouteUrl(ViewContext.RouteData.Values).Split('/')[1].Contains("Notifications"))
-            {
-                <moryx-notifications-bar api="@(Url.Content("~/api/moryx/notifications/stream"))">@Strings.Layout_Details</moryx-notifications-bar>
-            }
+                @if (Url.RouteUrl(ViewContext.RouteData.Values).Split('/').Length > 1 &&
+                     !Url.RouteUrl(ViewContext.RouteData.Values).Split('/')[1].Contains("Notifications"))
+                {
+                    <moryx-notifications-bar api="@(Url.Content("~/api/moryx/notifications/stream"))">@Strings.Layout_Details</moryx-notifications-bar>
+                }
 
-            <div class="tw-overflow-hidden tw-h-screen tw-w-full tw-box-border">
-                @RenderBody()
+                <div class="tw-overflow-hidden tw-h-screen tw-w-full tw-box-border">
+                    @RenderBody()
+                </div>  
             </div>
             @if (_navigator is ILauncher launcher && launcher.GetRegion(LauncherRegion.Right) is RegionItem rightRegion)
             {
@@ -209,7 +210,7 @@
                                 <div class="tw-grid tw-grid-cols-2 tw-auto-rows-auto tw-gap-2  tw-p-2 tw-mb-2">
                                     @foreach (var item in modules.Where(m => m.Category == ModuleCategory.User))
                                     {
-                                        <a class="tw-w-full tw-flex tw-flex-col tw-items-center tw-justify-center tw-border tw-border-gray-200 tw-rounded tw-p-2" href="@item.Route">
+                                        <a class="tw-w-full tw-flex tw-flex-col tw-items-center tw-justify-center tw-border tw-border-gray-200 tw-rounded tw-p-2" asp-page="@item.Route">
                                             <span id="@item.Route" class="material-symbols-outlined">@item.Icon</span>
                                             <span class="tw-truncate tw-w-20 tw-text-center">@item.Title</span>
                                         </a>
@@ -302,7 +303,7 @@
                                     @foreach (var module in categoryModules)
                                     {
                                         <moryx-dropdown-item class="tw-p-3 tw-w-full tw-h-full hover:tw-cursor-pointer hover:tw-bg-primary-200">
-                                            <a href="~/@module.Route" class="tw-flex tw-items-center tw-w-full tw-h-full">
+                                            <a asp-page="@module.Route" class="tw-flex tw-items-center tw-w-full tw-h-full">
                                                 <span class="material-symbols-outlined">@module.Icon</span>
                                                 <span class="tw-whitespace-nowrap tw-w-full tw-pl-3">@module.Title</span>
                                             </a>
