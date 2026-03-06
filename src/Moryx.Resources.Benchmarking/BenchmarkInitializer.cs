@@ -48,6 +48,10 @@ public class BenchmarkInitializer : ResourceInitializerBase
             reporter.Children.Add(instance);
         }
 
-        return InitializedAsync([reporter]);
+        return Task.FromResult(new ResourceInitializerResult
+        {
+            InitializedResources = [reporter],
+            Saved = false
+        });
     }
 }

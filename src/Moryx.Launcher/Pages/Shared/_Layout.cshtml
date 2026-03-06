@@ -6,7 +6,7 @@
 @using Moryx.Launcher
 @using Moryx.Launcher.Properties
 @using Moryx.Modules
-@inject IShellNavigator _navigator
+@inject INavigation _navigation
 @inject IConfiguration _configuration
 @inject IOptionsMonitor<RequestLocalizationOptions> _localizationOptions
 @inject IOptionsMonitor<MoryxIdentityOptions> _identityOptions
@@ -20,7 +20,7 @@
         Context.Response.Cookies.Append(".AspNetCore.Culture", "c=en-US|uic=en-US");
     }
 
-    var modules = (await _navigator.GetModuleItemsAsync(Context)).OrderBy(wmi => wmi.SortIndex);
+    var modules = (await _navigation.GetModuleItemsAsync(Context)).OrderBy(wmi => wmi.SortIndex);
 }
 
 <!DOCTYPE html>
@@ -189,7 +189,10 @@
             <div class="tw-overflow-hidden tw-h-screen tw-w-full tw-box-border">
                 @RenderBody()
             </div>
-            @if (_navigator is ILauncher launcher && launcher.GetRegion(LauncherRegion.Right) is RegionItem rightRegion)
+            @{
+                var rightRegion = _navigation.GetRegion(LauncherRegion.Right);
+            }
+            @if (rightRegion != null)
             {
                 <aside class="tw-flex-initial tw-overflow-hidden">@await Html.PartialAsync(rightRegion.PartialView)</aside>
             }
