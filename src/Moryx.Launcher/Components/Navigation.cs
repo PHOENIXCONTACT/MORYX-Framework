@@ -110,8 +110,16 @@ internal class Navigation : INavigation
 
     public RegionItem GetRegion(LauncherRegion region)
     {
-        var partialViewAssembly = ReflectionTool.GetAssemblies();
-        var partialViews = partialViewAssembly.SelectMany(x => x.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherRegionAttribute>() != null));
+        var partialViewAssembly = ReflectionTool.GetAssemblies().Where(a => !a.FullName.StartsWith("Microsoft"));
+        IEnumerable<Type> partialViews = [];
+        try
+        {
+            partialViews = partialViewAssembly.SelectMany(x => x.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherRegionAttribute>() != null));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load partial views classes for an assembly.");
+        }
 
         var configuredRegions = from pV in partialViews
                                 let regionAttr = pV.GetCustomAttribute<LauncherRegionAttribute>()

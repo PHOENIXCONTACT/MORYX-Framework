@@ -3,13 +3,13 @@ uid: ProductsStorage
 ---
 # Product Storage
 
-Section [Product Definition](product-definition.md) describes how applications can create their own product structures in form of custom classes. In order to save and load those to and from the database it is also necessary to configure the product storage. The product model defines [`IGenericColumns`](/src/Moryx.Products.Model/Entities/IGenericColumns.cs) for all entities that represent business objects, which are usually derived and extended in applications. The product management comes with a range of plugins to store and load user defined product types, instances, partlinks and recipes in these structures. They can be configured through the maintenance web UI or using the modules configure console command. The configure command attempts to automatically map a product type, its part links, properties and instance to database columns using a range of conversion strategies.
+Section [Product Definition](product-definition.md) describes how applications can create their own product structures in form of custom classes. In order to save and load those to and from the database it is also necessary to configure the product storage. The product model defines [`IGenericColumns`](/src/Moryx.Products.Management/Model/Entities/IGenericColumns.cs) for all entities that represent business objects, which are usually derived and extended in applications. The product management comes with a range of plugins to store and load user defined product types, instances, partlinks and recipes in these structures. They can be configured through the maintenance web UI or using the modules configure console command. The configure command attempts to automatically map a product type, its part links, properties and instance to database columns using a range of conversion strategies.
 
 Make sure that all your product definitions have properly configured mappings. Refer to the [Generic Strategies Documentation](generic-strategies.md) on how to configure the generic strategies for product types, instances, part links and recipes.
 
 ## Product Type Strategy
 
-For each product of the application the storage must provide an [IProductTypeStrategy](/src/Moryx.Products.Management/Components/IProductTypeStrategy.cs). That can be either a custom implementation or the GenericProductStrategy for most products. The strategy defines different properties and methods that need to be implemented. To avoid redundant code it is recommended to derive all implementations from [TypeStrategyBase](/src/Moryx.Products.Management/Implementation/Storage/TypeStrategyBase.cs).
+For each product of the application the storage must provide an [IProductTypeStrategy](/src/Moryx.Products.Management/Components/IProductTypeStrategy.cs). That can be either a custom implementation or the [GenericTypeStrategy](/src/Moryx.Products.Management/Plugins/GenericStrategies/GenericTypeStrategy.cs) for most products. The strategy defines different properties and methods that need to be implemented. To avoid redundant code it is recommended to derive all implementations from [TypeStrategyBase](/src/Moryx.Products.Management/Implementation/Storage/TypeStrategyBase.cs).
 
 ### Target Type
 
@@ -17,7 +17,7 @@ The target type property defines the scope of the strategy. It must return the s
 
 ### HasChanged
 
-The storage saves each version of a product as a separate entity. To avoid duplicates the strategy needs to determine of anything has changed.
+The storage saves each version of a product as a separate entity. To avoid duplicates the strategy needs to determine if anything has changed.
 
 ````cs
 // In class WatchStrategy
@@ -101,7 +101,7 @@ We only have to configure the instance strategy for the root instance. Watchface
 ````cs
 public void LoadInstance(IGenericColumns source, ProductInstance target);
 {
-    var watchInstance = (WatchInstance)instance;
+    var watchInstance = (WatchInstance)target;
 
     // Restore instance attributes
     watchInstance.DeliveryDate = DateTime.FromBinary(source.Integer1);
@@ -111,9 +111,7 @@ public void LoadInstance(IGenericColumns source, ProductInstance target);
 
 ### Save Instances
 
-The recommendations for instance storage obviously apply to `SaveInstance` as well. When writing the instance to the database keep in mind what information need to be stored and which can be recreated from the product and its parts. Once you identified those attributes split them into three groups:
-
-* can be stored in the generic columns
+The recommendations for instance storage obviously apply to `SaveInstance` as well. When writing the instance to the database keep in mind what information needs to be stored and which can be recreated from the product and its parts.
 
 #### Sample Code
 

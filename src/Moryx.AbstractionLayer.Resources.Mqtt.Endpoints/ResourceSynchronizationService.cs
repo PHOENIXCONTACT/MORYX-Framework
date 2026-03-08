@@ -8,7 +8,6 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Moryx.AbstractionLayer.Identity;
 using Moryx.AbstractionLayer.Resources.Attributes;
-using Moryx.AspNetCore.Mqtt;
 using Moryx.AspNetCore.Mqtt.Builders;
 using Moryx.AspNetCore.Mqtt.Components;
 using Moryx.AspNetCore.Mqtt.Converters;
@@ -52,6 +51,7 @@ public class ResourceSynchronizationService : IMqttService
         _client = client;
         _logger = logger;
         _options = options;
+        EnsureResourceConverterAdded();
     }
 
     #region IHostedService
@@ -165,6 +165,14 @@ public class ResourceSynchronizationService : IMqttService
 
                 return Task.CompletedTask;
             });
+        }
+    }
+
+    private void EnsureResourceConverterAdded()
+    {
+        if (!_options.JsonSerializerOptions.Converters.Any(x => x is ResourceToJsonConverter))
+        {
+            _options.JsonSerializerOptions.Converters.Add(new ResourceToJsonConverter(_resourceManagement));
         }
     }
 

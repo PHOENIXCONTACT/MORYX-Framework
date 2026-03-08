@@ -1,9 +1,9 @@
 # The goal:
 
-The goal is to allow any MORYX developer to create their own Mqtt To MORYX facade, that way you can use Mqtt to communicate to with any MORYX facade ex:
+The goal is to allow any MORYX developer to create their own Mqtt To MORYX facade, that way you can use Mqtt to communicate with any MORYX facade like:
 `ProductManagement`,`ResourceManagement` etc.
 
-To achieve that, we took inspiration from 3 repositories :
+To achieve that, we took inspiration from 3 repositories:
 
 - [Hosted Mqtt Server](https://github.com/dotnet/MQTTnet/wiki/Server)
 - [How to use Mqtt as a service in asp.net controller](https://github.com/rafiulgits/mqtt-client-dotnet-core)
@@ -27,17 +27,17 @@ _Checking those repositories will give you an idea of what the `ManagedMqtt` is 
     ```csharp
     builder.Services.AddMqttClient();
     ```
-   Optionally you can also configure the Mqtt client connection details like so :
+   Optionally you can also configure the Mqtt client connection details like so:
     ```csharp
     builder.Services.AddMqttClient((provider, options) =>
     {
         options.Connection = new MqttConnectionConfig
         {
-        Port = 1883,
-        Id = "EndpointDemo1",
-        Host = "localhost",
-        QoS = MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce,
-        RootTopic = "mqtt/moryx"
+            Port = 1883,
+            Id = "EndpointDemo1",
+            Host = "localhost",
+            QoS = MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce,
+            RootTopic = "mqtt/moryx"
         };
         // optional: add your custom converter/serializer
         options.JsonSerializerOptions.Converters.Add(new MyConverter())
@@ -45,11 +45,7 @@ _Checking those repositories will give you an idea of what the `ManagedMqtt` is 
     ```
 
    You can also configure the Mqtt client using a configuration file just like any `MORYX` module.
-    ```csharp
-        builder.Services.AddMqttClient();
-    ```
-
-   The configuration file can be found inside the default MORYX Config folder. The content is as follow:
+   The configuration file can be found inside the default MORYX Config folder. The content is as follows:
 
     ``` json
     {
@@ -84,15 +80,13 @@ _Checking those repositories will give you an idea of what the `ManagedMqtt` is 
     //.. other code
     ```
 
-   if you want to implement your custom service based on the   `IManagedMqttClient` the recommended way is as follow :
-    - In your `program.cs` add the following:
+   If you want to implement your custom service based on the `IManagedMqttClient` the recommended way is the following:
+    - In your `Program.cs` add the following:
 
     ```csharp
     builder.Services.AddMqttClient(); // this adds the IManagedMqttClient to the service collection
     ```
-    - Create a new C# class and inherit from `IMqttService`. `Note: Dependency injection is supported `. Now your service has access to the
-      `IManagedMqttClient`,
-      [ResourceEventService Example](../../src/Moryx.AspNetCore.Mqtt.Services/ResourceEventService.cs)
+    - Create a new C# class and inherit from `IMqttService`. Note: Dependency injection is supported. Now your service has access to the `IManagedMqttClient`.
 
    To add your new service to the service collection do the following:
     ```csharp
@@ -109,11 +103,11 @@ _Checking those repositories will give you an idea of what the `ManagedMqtt` is 
 
     ```csharp
     builder.Services.AddMqttClient() // must be present
-                    .AddMqttEndpoints(); // <-- this add supports for the endpoints
+                    .AddMqttEndpoints(); // <-- this adds supports for the endpoints
     ```
-    - Create a new C# class that implements the `IMqttEndpoint` [Example](../../src/Moryx.AspNetCore.Mqtt.Endpoints/ResourceRpcEndpoint.cs).
+    - Create a new C# class that implements the `IMqttEndpoint` [Example](/src/Moryx.AbstractionLayer.Resources.Mqtt.Endpoints/ResourceRpcEndpoint.cs).
 
-   There is a minimal version of the Mqtt endpoint, that you can use directly in the `program.cs`:
+   There is a minimal version of the Mqtt endpoint, that you can use directly in the `Program.cs`:
 
     ```csharp
     builder.Services.AddMqttClient()

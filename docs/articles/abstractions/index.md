@@ -41,7 +41,7 @@ A [Process](processing/processes.md) consists of a series of activities and outs
 
 ## Products
 
-A [ProductType](/src/Moryx.AbstractionLayer/Products/ProductType.cs) or better a *product description* is used by a [ProductRecipe](/src/Moryx.AbstractionLayer/Recipes/ProductRecipe.cs) to provide a basic structure to produce a [ProductInstance](/src/Moryx.AbstractionLayer/Products/ProductInstance.cs)
+A [ProductType](/src/Moryx.AbstractionLayer/Products/ProductType.cs) or better a *product description* is used by a [ProductRecipe](/src/Moryx.AbstractionLayer/Recipes/ProductRecipe.cs) to provide a basic structure to produce a [ProductInstance](/src/Moryx.AbstractionLayer/Products/ProductInstance.cs).
 
 ## Recipes
 
@@ -69,5 +69,5 @@ The [Workplan](processing/workplans.md) package of the AbstractionLayer contains
 
 To start using the AbstractionLayer for your own projects you can jump into these tutorials:
 
-* [How to create a Resource](/docs/tutorials/HowToCreateResource.md)
-* [How to build a Driver](/docs/tutorials/HowToBuildADriver.md)
+* [How to create a Resource](/docs/tutorials/how-to-create-resource.md)
+* [How to build a Driver](/docs/tutorials/how-to-build-a-driver.md)
