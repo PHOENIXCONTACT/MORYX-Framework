@@ -14,4 +14,3 @@ export interface PreviewDescriptor {
   size?: number;
   state?: PreviewState;
 }
-

@@ -8,19 +8,19 @@ import { ActivityChangedModel } from '../api/models/activity-changed-model';
 import { CellStateChangedModel } from '../api/models/cell-state-changed-model';
 import { OrderChangedModel } from '../api/models/order-changed-model';
 import { ResourceChangedModel } from '../api/models/resource-changed-model';
-import Cell from '../models/cell';
+import CellModel from '../models/cellModel';
 import Order from '../models/order';
 
 export class Converter {
 
-  public static activityChangedModelToCell(activityModel: ActivityChangedModel): Cell {
-    const cell = <Cell>{};
+  public static activityChangedModelToCell(activityModel: ActivityChangedModel): CellModel {
+    const cell = <CellModel>{};
     cell.id = activityModel.resourceId ?? 0;
 
     return this.addActivityChangedModelToCell(cell, activityModel)
   }
 
-  public static addActivityChangedModelToCell(cell: Cell, activityModel: ActivityChangedModel): Cell {
+  public static addActivityChangedModelToCell(cell: CellModel, activityModel: ActivityChangedModel): CellModel {
     cell.classification = activityModel.classification;
     cell.operationNumber = activityModel.orderReferenceModel?.operation ?? '';
     cell.orderNumber = activityModel.orderReferenceModel?.order ?? '';
@@ -28,17 +28,17 @@ export class Converter {
     return cell
   }
 
-  public static cellStateChangedModelToCell(cellModel: CellStateChangedModel): Cell {
-    const cell = <Cell>{};
+  public static cellStateChangedModelToCell(cellModel: CellStateChangedModel): CellModel {
+    const cell = <CellModel>{};
     cell.id = cellModel.id ?? 0;
     cell.state = cellModel.state;
 
     return cell
   }
 
-  public static resourceChangedModelToCell(resourceModel: ResourceChangedModel): Cell {
+  public static resourceChangedModelToCell(resourceModel: ResourceChangedModel): CellModel {
     if (!resourceModel.id) throw new TypeError("cannot create resource without id");
-    const cell = <Cell>{};
+    const cell = <CellModel>{};
     cell.id = resourceModel.id;
 
     return this.addResourceDataToCell(cell, resourceModel)
@@ -67,7 +67,7 @@ export class Converter {
     return order
   }
 
-  public static addResourceDataToCell(cell: Cell, model: ResourceChangedModel): Cell {
+  public static addResourceDataToCell(cell: CellModel, model: ResourceChangedModel): CellModel {
     if (model.cellName) {
       cell.name = model.cellName ?? ''
     }
@@ -86,11 +86,11 @@ export class Converter {
     if (model.cellPropertySettings) {
       cell.propertySettings = model.cellPropertySettings
     }
-    
+
     return cell
   }
 
-  public static addStateDataToCell(cell: Cell, model: CellStateChangedModel): Cell {
+  public static addStateDataToCell(cell: CellModel, model: CellStateChangedModel): CellModel {
     if (!cell.state) {
       cell.state = model.state
     }

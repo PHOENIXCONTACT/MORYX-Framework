@@ -20,4 +20,3 @@ export interface MemberInfo {
   name?: string | null;
   reflectedType?: Type;
 }
-

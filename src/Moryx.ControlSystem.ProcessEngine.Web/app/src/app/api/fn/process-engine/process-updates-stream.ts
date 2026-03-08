@@ -33,4 +33,3 @@ export function processUpdatesStream(http: HttpClient, rootUrl: string, params?:
 }
 
 processUpdatesStream.PATH = '/api/moryx/processes/stream/processes';
-

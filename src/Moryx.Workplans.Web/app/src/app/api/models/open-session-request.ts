@@ -10,4 +10,3 @@ export interface OpenSessionRequest {
   duplicate?: boolean;
   workplanId?: number;
 }
-

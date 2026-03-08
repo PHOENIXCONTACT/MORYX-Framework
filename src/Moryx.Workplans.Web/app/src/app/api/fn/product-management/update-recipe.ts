@@ -37,4 +37,3 @@ export function updateRecipe(http: HttpClient, rootUrl: string, params: UpdateRe
 }
 
 updateRecipe.PATH = '/api/moryx/products/recipes/{id}';
-

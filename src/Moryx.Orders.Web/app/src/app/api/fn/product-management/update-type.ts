@@ -37,4 +37,3 @@ export function updateType(http: HttpClient, rootUrl: string, params: UpdateType
 }
 
 updateType.PATH = '/api/moryx/products/types/{id}';
-

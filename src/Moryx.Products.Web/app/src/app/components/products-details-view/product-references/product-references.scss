@@ -1,0 +1,21 @@
+@use "@moryx/ngx-web-framework/styles/variables" as *; 
+
+.table-description-header-row{
+  height: 24px;
+}
+
+.table-description-header{
+  font-size: var(--mat-typography-caption-font-size);
+  line-height: var(--mat-typography-caption-line-height);
+  font-weight: var(--mat-typography-caption-font-weight);
+  letter-spacing: var(--mat-typography-caption-letter-spacing);
+  font-style: italic;
+}
+
+.product-references-loading {
+  flex: 1 1;
+  align-self: center;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+}

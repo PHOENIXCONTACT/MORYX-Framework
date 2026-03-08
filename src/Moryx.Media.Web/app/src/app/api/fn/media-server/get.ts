@@ -35,4 +35,3 @@ export function get(http: HttpClient, rootUrl: string, params: Get$Params, conte
 }
 
 get.PATH = '/api/moryx/media/{guid}';
-

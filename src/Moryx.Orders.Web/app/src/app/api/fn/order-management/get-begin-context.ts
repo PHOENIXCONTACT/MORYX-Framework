@@ -35,4 +35,3 @@ export function getBeginContext(http: HttpClient, rootUrl: string, params: GetBe
 }
 
 getBeginContext.PATH = '/api/moryx/orders/{guid}/begin';
-

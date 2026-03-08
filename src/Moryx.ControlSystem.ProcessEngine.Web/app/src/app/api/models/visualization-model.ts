@@ -11,4 +11,3 @@ export interface VisualizationModel {
   category?: Category;
   icon?: string | null;
 }
-

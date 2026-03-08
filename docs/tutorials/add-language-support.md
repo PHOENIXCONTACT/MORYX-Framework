@@ -118,7 +118,7 @@ this.translate.addLangs([
       TranslationConstants.LANGUAGES.DE,
       TranslationConstants.LANGUAGES.IT,
     ]);
-    this.translate.setDefaultLang(this.languageService.getDefaultLanguage());
+    this.translate.setFallbackLang(this.languageService.getDefaultLanguage());
 ```
 
 Besides, wherever you have defined the variables for this module, add the following variable in the following way. You should be able to import it as you created the class earlier. Notice the equal sign instead of colons:

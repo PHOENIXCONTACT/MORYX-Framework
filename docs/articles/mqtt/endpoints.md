@@ -1,23 +1,23 @@
 # [ResourceRpcEndpoint](https://github.com/PHOENIXCONTACT/MORYX-Framework/blob/dev/docs/articles/mqtt/resource-endpoint.md)
 
-    Endpoint to remote call a procedure/method on a resource.
+Endpoint to remote call a procedure/method on a resource.
 
 1. **Setup** :
 
-    When run your project for the first time a configuration file will be generated inside the default MORYX Config folder. The content will be as follow:
+    When run your project for the first time a configuration file will be generated inside the default MORYX Config folder. The content will be as follows:
 
     ```json
     {
-    "Id": "my-id",
-    "Host": "localhost",
-    "Port": 1883,
-    "Username": "",
-    "Password": "",
-    "Tls": false,
-    "QoS": "ExactlyOnce", // check the MqttQualityOfServiceLevel enum for more info
-    "ReconnectDelayMs": 30000,
-    "ReconnectWithClientSession": false,
-    "RootTopic": ""
+        "Id": "my-id",
+        "Host": "localhost",
+        "Port": 1883,
+        "Username": "",
+        "Password": "",
+        "Tls": false,
+        "QoS": "ExactlyOnce", // check the MqttQualityOfServiceLevel enum for more info
+        "ReconnectDelayMs": 30000,
+        "ReconnectWithClientSession": false,
+        "RootTopic": ""
     }
     ```
 
@@ -30,9 +30,9 @@
 
     `[root topic of the endpoint client]/resources/{identifier}/invoke/{methodName}`, example: `moryx/device-2/resources/123654/invoke/ChangeCapabilities`
 
-    if no root topic was configured the topic become `resources/{identifier}/invoke/{methodName}`, example: `resources/123654/invoke/ChangeCapabilities`
+    If no root topic was configured the topic becomes `resources/{identifier}/invoke/{methodName}`, example: `resources/123654/invoke/ChangeCapabilities`
 
-    If the method you are invoking has parameters , you should put the value of those parameters in your payload ex:
+    If the method you are invoking has parameters, you should put the value of those parameters in your payload:
 
     ```csharp
     // MyResource.cs
@@ -44,7 +44,7 @@
     //code..
     ```
 
-    Given the previous method your json `payload` should look like the following :
+    Given the previous method your json `payload` should look like the following:
 
     ```js
     {
@@ -55,11 +55,11 @@
 
 3. **Response Topic** :
 
-    In MQTT v5+ you can specify a response topic in your message. If a response topic is present the endpoint will sent the response of the invocation to that topic. If a response topic was not define the default response topic is as follow: `resources/{identifier}/invoked/{methodName}` example based on the previous topic ex: `resources/123654/invoked/ChangeCapabilities`
+    In MQTT v5+ you can specify a response topic in your message. If a response topic is present the endpoint will sent the response of the invocation to that topic. If a response topic was not defined the default response topic will have the structure `resources/{identifier}/invoked/{methodName}`. Here is an example: `resources/123654/invoked/ChangeCapabilities`
 
 4. **Response Payload** :
 
-    If the method you are calling has a return value :
+    If the method you are calling has a return value:
 
     ```csharp
     // MyResource.cs
@@ -77,16 +77,7 @@
 
     ```json
     {
-    "Value" = object,
-    "ValueType" = EntryValueType //   EntryConvert.TransformType(methodToInvoke.ReturnType)
-    }
-    ```
-
-    Based on this schema our example will look like the following:
-
-    ```json
-    {
-    "Value" = 10,
-    "ValueType" = 4 //  check EntryValueType for more infos
+        "Value": 10,
+        "ValueType": 4 //  check EntryValueType for more infos
     }
     ```

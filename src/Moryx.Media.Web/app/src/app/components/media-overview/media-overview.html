@@ -1,0 +1,72 @@
+@if (!isLoading()) {
+  <div
+    class="overall-container"
+    appFileDragAndDrop
+    (fileDropped)="fileDropped($event)"
+    >
+    @if (filteredContents().length) {
+      <div
+        [ngStyle]="{ 'background-image': 'url(' + backgroundImgPath() + ')' }"
+        class="contents-list"
+        >
+        @for (content of filteredContents(); track content) {
+          <app-media-file
+            (show)="onSelectMedia($event)"
+            (delete)="onDelete($event)"
+            name="{{ content.name }}"
+            amount="{{ content.variants?.length }}"
+            [selected]="selectedContent() === content.id"
+            [content]="content"
+            class="contents-list-item"
+          ></app-media-file>
+        }
+      </div>
+    } @else {
+      <empty-state
+    header="{{
+      TranslationConstants.MEDIA_OVERVIEW.EMPTY_STATE_HEADER | translate
+    }}"
+    message="{{
+      TranslationConstants.MEDIA_OVERVIEW.EMPTY_STATE_TEXT | translate
+    }}"
+      ></empty-state>
+    }
+    <mat-menu #contextMenu="matMenu">
+      <ng-template matMenuContent let-content="content">
+        <button mat-menu-item type="button" (click)="onDelete(content)">
+          <mat-icon>delete_forever</mat-icon>
+          <span>{{ TranslationConstants.CONTEXT_MENU.DELETE | translate }}</span>
+        </button>
+      </ng-template>
+    </mat-menu>
+    <!-- A hidden div is created to set the position of the menu-->
+    <div
+      style="visibility: hidden; position: fixed"
+      [style.left]="menuTopLeftPosition.x"
+      [style.top]="menuTopLeftPosition.y"
+      [matMenuTriggerFor]="contextMenu"
+    ></div>
+  </div>
+} @else {
+  <div class="overall-container loading">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+}
+<input
+  title="Upload Content"
+  type="file"
+  class="file-input"
+  (change)="onUpload($event)"
+  multiple
+  #fileUpload
+  />
+<button
+  class="upload-button"
+  mat-fab
+  type="submit"
+  title="Upload new content"
+  color="primary"
+  (click)="fileUpload.click()"
+  >
+  <mat-icon>file_upload</mat-icon>
+</button>

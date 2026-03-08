@@ -19,7 +19,7 @@ namespace Moryx.Drivers.Mqtt.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Strings {
@@ -457,6 +457,24 @@ namespace Moryx.Drivers.Mqtt.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Encoder option.
+        /// </summary>
+        public static string MqttTopicJson_EncoderOption {
+            get {
+                return ResourceManager.GetString("MqttTopicJson_EncoderOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Encoder to use when encoding JsonContent.
+        /// </summary>
+        public static string MqttTopicJson_EncoderOption_Description {
+            get {
+                return ResourceManager.GetString("MqttTopicJson_EncoderOption_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enums as string.
         /// </summary>
         public static string MqttTopicJson_EnumsAsStrings {
@@ -480,6 +498,24 @@ namespace Moryx.Drivers.Mqtt.Properties {
         public static string MqttTopicJson_Format {
             get {
                 return ResourceManager.GetString("MqttTopicJson_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore Condition.
+        /// </summary>
+        public static string MqttTopicJson_IgnoreCondition {
+            get {
+                return ResourceManager.GetString("MqttTopicJson_IgnoreCondition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Describes the default condition, under which fields should not be written to the serialized output.
+        /// </summary>
+        public static string MqttTopicJson_IgnoreCondition_Description {
+            get {
+                return ResourceManager.GetString("MqttTopicJson_IgnoreCondition_Description", resourceCulture);
             }
         }
         

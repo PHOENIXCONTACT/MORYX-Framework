@@ -4,7 +4,6 @@
 */
 
 import { Time } from "@angular/common";
-import { DayOfTheWeek } from "./assignment-card-model";
 
 export interface ShiftCardModel{
     id: number;

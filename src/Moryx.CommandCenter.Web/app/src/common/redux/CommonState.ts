@@ -5,7 +5,7 @@
 
 require("../../types/constants");
 import CommonRestClient from "../api/CommonRestClient";
-import { UPDATE_IS_CONNECTED, UPDATE_NOTIFICATION_INSTANCE, UPDATE_SERVER_TIME, UPDATE_SHOW_WAIT_DIALOG } from "./CommonActions";
+import { UPDATE_IS_CONNECTED, UPDATE_SERVER_TIME, UPDATE_SHOW_WAIT_DIALOG } from "./CommonActions";
 import { ActionType } from "./Types";
 
 export interface CommonState {

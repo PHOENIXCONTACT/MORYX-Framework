@@ -48,4 +48,3 @@ export interface MethodBase {
   name?: string | null;
   reflectedType?: Type;
 }
-

@@ -36,4 +36,3 @@ export function getDocumentStream(http: HttpClient, rootUrl: string, params: Get
 }
 
 getDocumentStream.PATH = '/api/moryx/orders/{guid}/document/{identifier}/stream';
-

@@ -3,13 +3,14 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
-import { MoryxSnackbarService } from '@moryx/ngx-web-framework';
-import { TranslateService } from '@ngx-translate/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { BehaviorSubject } from 'rxjs';
 import { ReferenceValue, ResourceModel, ResourceTypeModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
+import '../extensions/observable.extensions';
 
 /**
  * This service handles the set of existing resources and resource types
@@ -19,6 +20,9 @@ import { TranslationConstants } from '../extensions/translation-constants.extens
   providedIn: 'root',
 })
 export class CacheResourceService {
+  private resourceModificationService = inject(ResourceModificationService);
+  private snackbarService = inject(SnackbarService);
+
   TranslationConstants = TranslationConstants;
   private readonly ChildReferenceName = 'Children';
 
@@ -29,16 +33,12 @@ export class CacheResourceService {
     undefined
   );
 
-  constructor(
-    private resourceModification: ResourceModificationService,
-    public translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService
-  ) {
+  constructor() {
     this.resources.subscribe(resources => this.pushFlattenedResources(resources));
   }
 
   private pushFlattenedResources(resources: ResourceModel[] | undefined) {
-    var flattendResources = [] as ResourceModel[];
+    const flattendResources = [] as ResourceModel[];
     if (resources) resources.forEach(r => this.collectflattenedResources(r, flattendResources));
 
     this.flatResources.next(flattendResources);
@@ -53,14 +53,14 @@ export class CacheResourceService {
   }
 
   removeResource(resource: ResourceModel) {
-    var newResources = this.resources.getValue() ?? [];
+    const newResources = this.resources.getValue() ?? [];
 
     //Handle children's references
-    var childReferences = resource.references?.find(r => r.name === this.ChildReferenceName)?.targets;
+    const childReferences = resource.references?.find(r => r.name === this.ChildReferenceName)?.targets;
     childReferences?.forEach(c => newResources.push(c));
 
     //Handle parent's reference
-    var parent = this.flatResources
+    const parent = this.flatResources
       .getValue()
       ?.find(p =>
         p.references?.find(r => r.name === this.ChildReferenceName)?.targets?.find(r => r.id === resource.id)
@@ -74,12 +74,12 @@ export class CacheResourceService {
   }
 
   private removeChildFromParent(parent: ResourceModel, child: ResourceModel) {
-    var childrenReferences = parent?.references?.find(ref => ref.name === this.ChildReferenceName);
+    const childrenReferences = parent?.references?.find(ref => ref.name === this.ChildReferenceName);
     if (childrenReferences) childrenReferences.targets = childrenReferences.targets?.filter(t => t.id != child.id);
   }
 
   async loadResources() {
-    await this.resourceModification
+    await this.resourceModificationService
       .getTypeTree()
       .toAsync()
       .then(rootType => {
@@ -87,9 +87,9 @@ export class CacheResourceService {
         this.flatTypes = [];
         this.collectflattenedTypes(rootType, this.flatTypes);
       })
-      .catch(async err => await this.moryxSnackbar.handleError(err));
+      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
 
-    await this.resourceModification
+    await this.resourceModificationService
       .getResources({
         body: {
           referenceCondition: {
@@ -97,12 +97,12 @@ export class CacheResourceService {
             valueConstraint: ReferenceValue.NullOrEmpty,
           },
           referenceRecursion: true,
-          includedReferences: [{ name: this.ChildReferenceName }],
+          includedReferences: [{name: this.ChildReferenceName}],
         },
       })
       .toAsync()
       .then(resources => this.resources.next(resources))
-      .catch(async err => await this.moryxSnackbar.handleError(err));
+      .catch(async (err: HttpErrorResponse) => await this.snackbarService.handleError(err));
   }
 
   private collectflattenedTypes(root: ResourceTypeModel, flattendTypes: ResourceTypeModel[]) {

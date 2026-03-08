@@ -14,7 +14,6 @@ import { ShiftInstanceModel } from './shift-instance-model';
 import { ShiftModel } from '../api/models/shift-model';
 import { stringToDate } from '../utils';
 import moment from 'moment';
-import { AssignedDays } from '../api/models/assigned-days';
 import { CalendarDate } from './calendar-state';
 import { PossibleAssignedDays } from './types';
 import { ShiftCardModel } from './shift-card-model';

@@ -1,0 +1,70 @@
+/*
+ * Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+ * Licensed under the Apache License, Version 2.0
+*/
+
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { EditMenuService } from './services/edit-menu.service';
+import { EditMenuState } from './services/EditMenutState';
+import { ChangeBackgroundService } from './services/change-background.service';
+import { LanguageService } from '@moryx/ngx-web-framework/services';
+import { TranslateService } from '@ngx-translate/core';
+import { TranslationConstants } from './extensions/translation-constants.extensions';
+import { CellStoreService } from './services/cell-store.service';
+import CellModel from './models/cellModel';
+import { EditMenu } from './components/edit-menu/edit-menu';
+import { OrdersContainer } from './components/orders-container/orders-container';
+import { CellDetails } from './components/cell-details/cell-details';
+import { RouterOutlet } from '@angular/router';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.html',
+  styleUrls: ['./app.scss'],
+  imports: [
+    EditMenu,
+    OrdersContainer,
+    CellDetails,
+    RouterOutlet
+  ]
+})
+export class App implements OnInit {
+  private editMenuService = inject(EditMenuService);
+  private backgroundService = inject(ChangeBackgroundService);
+  private languageService = inject(LanguageService);
+  private translateService = inject(TranslateService);
+  private cellStoreService = inject(CellStoreService);
+
+  backgroundImage = signal<string>('');
+  private editMenuState !: EditMenuState;
+
+  constructor() {
+    this.editMenuService.activeState$.subscribe({
+      next: state => this.editMenuState = state
+    });
+
+    this.translateService.addLangs([
+      TranslationConstants.LANGUAGES.EN,
+      TranslationConstants.LANGUAGES.DE,
+      TranslationConstants.LANGUAGES.IT,
+    ]);
+    this.translateService.setFallbackLang('en');
+    this.translateService.use(this.languageService.getDefaultLanguage());
+  }
+
+  ngOnInit(): void {
+    this.backgroundService.backgroundChanged$.subscribe({
+      next: url => this.backgroundImage.update(_ => url)
+    });
+  }
+
+  getCell(cellId: number): CellModel {
+    const output = this.cellStoreService.getCell(cellId) ?? <CellModel>{};
+    return output;
+  }
+
+  get isEditMode() {
+    return this.editMenuState === EditMenuState.EditingCells;
+  }
+}
+

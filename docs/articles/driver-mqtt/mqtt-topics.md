@@ -1,12 +1,28 @@
 # Using MqttTopics
+
+## MqttTopic
+
+MqttTopic (without a generic type) serves as the base class for all implementations of MQTT Topics.
+
+MqttTopics are Resources that implement the IMessageChannel interface. This allows using the directly in other Resources to send and receive messages only from a single topic.
+Topics have a suite of common configuration Options
+
+- **Identifier** the topic that get's subscribed on the browser with wildcard support [see](#defining-the-mqtt-topic-identifier)
+- **TopicType** Configures if a topic can be used for sending, receiving or both
+- **Retain** Marks messages send by this topic as retain, so that the last message on the topic will be stored by the broker.
+- **ResponseTopic** (MQTT5 Feature) adds this topic as the default ResponseTopic to each message send
+- **TraceDecodedMessage** (Open Telemetry support) Adds a Json Serialized version of the decoded message to the Open Telemetry span. Only advisable for debugging purposes.
+
 ## MqttTopic<TMessage>
-This abstract class represents a MQTT-Topic and implements the interface `IMessageChannel<TMessage>`. It is derived from the abstract class MqttTopic, which implements `MessageChannel<object>`. The topic serializes and deserializes messages. Different data types need different implementations of `MqttTopic<TMessage>`.
+This abstract class represents a MQTT-Topic and implements the interface `IMessageChannel`. It is derived from the abstract class MqttTopic, which implements `IMessageChannel`. The topic serializes and deserializes messages. Different data types need different implementations of `MqttTopic`.
 
 ## Already existing topic types
 The already existing topic-types can serialize and deserialize the following data types:
 - **MqttTopicIByteSerializable**: for classes derived from IByteSerializable
 - **MqttTopicJson**: for classes which will be send as Json objects
 - **MqttTopicPrimitive**: for primitive data types and strings
+
+More thorough explainations of the existing topic types can be found in the `prefined-topics` folder.
   
 ## Sending Messages via the topic
 ```C#
@@ -27,35 +43,22 @@ If a message is received, the received-Event will be raised.
 _mqttTopicInt.Receive += OnReceived;
 ```
 ## Creating a new Topic
-In order to create a new topic, the abstract class `IMqttTopic<TSend, TReceive>` has to be implemented. <br/>
+In order to create a new topic, the abstract class `MqttTopic` has to be implemented. <br/>
 If a dropdown menu for SentMessageName and ReceivedMessageName is wanted, the appropriate attributes have to be added to the properties:
 ```C#
 [DataMember, EntrySerialize]
 [PossibleTypes(typeof(IByteSerializable))]
 public override string ReceivedMessageName { get; set; }
 ```
-The methods `protected internal abstract byte[] Serialize(object payload)` and `protected internal abstract TReceive Deserialize(byte[] messageAsBytes)` are used to serialize and deserialize messages. <br/>
+The methods `protected internal abstract byte[] Serialize(object payload)` and `protected internal abstract TReceive Deserialize(ReadOnlySequence<byte> messageAsBytes)` are used to serialize and deserialize messages. <br/>
 The base class will send the messages using the driver and raise the appropriate events. <br/>
-The following code snippet is an exemplary implementation for JSON.
-```C#
-protected internal override byte[] Serialize(object payload)
-{
-    return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(payload));
-}
-```
-```C#
-protected internal override object Deserialize(byte[] messageAsBytes)
-{
-    var msg = Constructor();
-    JsonConvert.PopulateObject(Encoding.UTF8.GetString(messageAsBytes, 0, messageAsBytes.Length), msg);
-    return msg;
-}
-```
 
-## Defining the MQTT Topic Name
+
+# Defining the MQTT Topic Identifier #defining-the-mqtt-topic-identifier
 
 It is possible to use placeholders (marked with {} or { |#}) and Wildcards (+ or #) in topics. If you're using placeholders, TMessage must have a property with the same name. If your topic is for example *root/{PcName}/temperature/{SensorNumber}*, TMessage must have a property *PcName* and a property *SensorNumber*.
 If there is not a flat list of sensors but an arbitrary nesting of them, you could match the entire hierachy using {SensorLocation|#} provided TMessage has an appropriate property.
+
 
 
 

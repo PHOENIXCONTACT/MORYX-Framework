@@ -37,4 +37,3 @@ export function update(http: HttpClient, rootUrl: string, params: Update$Params,
 }
 
 update.PATH = '/api/moryx/resources/{id}';
-

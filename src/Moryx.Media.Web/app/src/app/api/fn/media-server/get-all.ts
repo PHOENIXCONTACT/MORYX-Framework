@@ -33,4 +33,3 @@ export function getAll(http: HttpClient, rootUrl: string, params?: GetAll$Params
 }
 
 getAll.PATH = '/api/moryx/media';
-

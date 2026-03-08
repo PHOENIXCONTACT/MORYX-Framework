@@ -11,4 +11,3 @@ export interface OperationStartedModel {
   operationModel?: OperationModel;
   userId?: string | null;
 }
-

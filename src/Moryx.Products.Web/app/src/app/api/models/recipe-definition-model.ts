@@ -11,4 +11,3 @@ export interface RecipeDefinitionModel {
   hasWorkplans?: boolean;
   name?: string | null;
 }
-

@@ -34,4 +34,3 @@ export enum TypeAttributes {
   BeforeFieldInit = 'BeforeFieldInit',
   CustomFormatMask = 'CustomFormatMask'
 }
-

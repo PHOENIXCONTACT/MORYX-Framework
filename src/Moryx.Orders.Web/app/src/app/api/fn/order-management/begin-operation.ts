@@ -37,4 +37,3 @@ export function beginOperation(http: HttpClient, rootUrl: string, params: BeginO
 }
 
 beginOperation.PATH = '/api/moryx/orders/{guid}/begin';
-

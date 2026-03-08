@@ -13,4 +13,3 @@ export interface OperationLogMessageModel {
   message?: string | null;
   timeStamp?: string;
 }
-

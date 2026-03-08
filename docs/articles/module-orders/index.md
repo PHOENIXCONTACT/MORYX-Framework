@@ -16,7 +16,7 @@ This includes the responsibility for ...
 - loading documents of a product for an operation
 - providing access to the JobManagement for creating, starting and completing Jobs for an operation.
 - providing persisting abilities for operations.
-- accepting orders from Hydra and reporting of progress updates to Hydra.
+- accepting orders from a MES system and reporting of progress updates to a MES system.
 - accepting advices with a given loading equipment and an amount of articles
 - managing the state of the machine
 
@@ -46,17 +46,17 @@ Each of the components is described separately in the next sections.
 
 ## OperationDataPool
 
-The [IOperationDataPool](xref:Moryx.Orders.Management.IOperationPool) is responsible for:
+The [IOperationDataPool](xref:Moryx.Orders.Management.IOperationDataPool) is responsible for:
 
 - Adding new operations to the pool and add them to a given order
   - If the order is not existent then a new one will be created
-  - If the the order is already created then it will be loaded and the operation will be added
+  - If the order is already created then it will be loaded and the operation will be added
 - Restore the operations from the database after a restart
   - Only not completed operations will be loaded after a restart to reduce the amount of operations to restore
 
 ## OperationPool
 
-The [IOperationPool](xref:Moryx.Orders.IOperationPool) is used for all module plugin api implementations. It is also implemented by the same OperationPool but exports only the public API.
+The [IOperationPool](xref:Moryx.Orders.IOperationPool) is used for all module plugin api implementations. It is also implemented by the same OperationDataPool but exports only the public API.
 
 ## OperationData
 
@@ -66,7 +66,7 @@ The [IOperationPool](xref:Moryx.Orders.IOperationPool) is used for all module pl
 
 #### Initial
 
-The state machine of the OperationData is designed to fit the needs of Hydra and provide some flexibility to the user. The first part of the StateMachine is the application specific part. The states `Initial`, `InitialAssign` and `InitialAssignFailed` is handled by the OperationAssignment which includes strategies to import an OperationData and make it `Ready` for production. This first part is classified as [Initial](xref:Moryx.Orders.OperationClassification).
+The state machine of the OperationData is designed to fit the needs of MES systems and provide some flexibility to the user. The first part of the StateMachine is the application specific part. The states `Initial`, `InitialAssign` and `InitialAssignFailed` is handled by the OperationAssignment which includes strategies to import an OperationData and make it `Ready` for production. This first part is classified as [Initial](xref:Moryx.Orders.OperationClassification).
 
 #### Ready
 
@@ -86,7 +86,7 @@ The OperationData is still running in this state until the User decides to start
 
 #### Interrupted
 
-The OperationData can be Interrupted if the it is in the RunningState or AmountReachedState (both of the states have the state classification [Running](xref:Moryx.Orders.OperationClassification)). In both case all jobs will be completed. The OperationData switches from the RunningState to the InterruptingState first to wait until all jobs are completed. After all jobs are completed the state switches to the InterruptedState which leads to a Interrupted event. In the AmountReachedState all jobs are already completed so there is no reason to wait for some jobs.
+The OperationData can be Interrupted if it is in the RunningState or AmountReachedState (both of the states have the state classification [Running](xref:Moryx.Orders.OperationClassification)). In both case all jobs will be completed. The OperationData switches from the RunningState to the InterruptingState first to wait until all jobs are completed. After all jobs are completed the state switches to the InterruptedState which leads to a Interrupted event. In the AmountReachedState all jobs are already completed so there is no reason to wait for some jobs.
 
 #### Completed
 
@@ -125,8 +125,8 @@ Now the BeginContext includes all production necessary information which will be
 
 ### Reporting
 
-As mentioned in the AmountReachedState the OperationData can be stay in the this state or can switch to the Interrupted or Completed state.
-In all cases a reporting will be performed. The reporting information are encapsulated in the [OperationReport](xref:Moryx.Orders.OperationReport) which includes the following information:
+As mentioned in the AmountReachedState the OperationData can stay in the this state or can switch to the Interrupted or Completed state.
+In all cases a reporting will be performed. The reporting information is encapsulated in the [OperationReport](xref:Moryx.Orders.OperationReport) which includes the following parts:
 
 - Id: A report will be stored in the Database to have a reporting history of an OperationData
 - [ConfirmationType](xref:Moryx.Orders.ConfirmationType): Type of the report to decide if it is a partial (normal report or interrupt) or final (complete) report.
@@ -134,11 +134,11 @@ In all cases a reporting will be performed. The reporting information are encaps
 - Comment: Optional information
 - UserId: The id of the user which was selected to document who has done the report
 
-Each report is depending to the machine state and only possible if the state has the classification `Production`. It is possible that there is are no states or no production state. In this case the reports are independent to the machine state. A state change to the production state will lead to a state change task followed by a report task if there is something to report. If the state switches from the production state to a non production state then this will lead to a report task followed by a state change task to ensure that everything will be reported in the production state.
+Each report is depending to the machine state and only possible if the state has the classification `Production`. It is possible that there are no states or no production state. In this case the reports are independent to the machine state. A state change to the production state will lead to a state change task followed by a report task if there is something to report. If the state switches from the production state to a non production state then this will lead to a report task followed by a state change task to ensure that everything will be reported in the production state.
 
 ### Advice PickParts/Order
 
-An advice is possible after the operation is Ready and until it is Completed. All information are encapsulated in [OperationAdvice](xref:Moryx.Orders.OperationAdvice) which exists in two variants. The first is the `OrderAdvice` which is used to advice *produced parts*. The second is the `PickPartAdvice` which is used to advice *pick parts*. Every advice type needs a tote box number.
+An advice is possible after the operation is Ready and until it is Completed. All information is encapsulated in [OperationAdvice](xref:Moryx.Orders.OperationAdvice) which exists in two variants. The first is the `OrderAdvice` which is used to advice *produced parts*. The second is the `PickPartAdvice` which is used to advice *pick parts*. Every advice type needs a tote box number.
 
 An advice will raise an event to inform other components about the advice with the containing information.
 There is an [AdviceContext](xref:Moryx.Orders.Management.AdviceContext) available which will be requested for a new advice to provide the already advised amount for `OrderAdvice`s.
@@ -204,8 +204,8 @@ Therefore there `OperationAssignment` has a `Restore` method to add the Product 
 
 #### Events
 
-The OperationPool is the central point to get information about the OperationData. It is possible to extend the OrderManagement with some plugins which also can be pool user like the HydraCommunication plugin. So it should be possible to get informed about a `Begin`, `Report`, `Interrupt`, `Complete` and an `Advice` of an OperationData.
-So each OperationData provides this events and the OperationPool adds himself as a listener to the events of each OperationData. The OperationPool provides the same events and invokes an event it the same event occurs from an OperationData. So a PoolUser can register to the OperationPool events which will be invoked if an OperationData event occurs.
+The OperationPool is the central point to get information about the OperationData. So it should be possible to get informed about a `Begin`, `Report`, `Interrupt`, `Complete` and an `Advice` of an OperationData.
+So each OperationData provides these events and the OperationPool adds himself as a listener to the events of each OperationData. The OperationPool provides the same events and invokes an event it the same event occurs from an OperationData. So a PoolUser can register to the OperationPool events which will be invoked if an OperationData event occurs.
 
 The following events are provided:
 
@@ -238,17 +238,17 @@ To implement a custom product assignment the custom implementation should derive
 
 ### Recipe Assignment
 
-After the product assignment, the recipe will assigned inside of the `RecipeAssignStep` by using the [IRecipeAssignment](xref:Moryx.Orders.Management.IRecipeAssignment) plugin. The default implementation selects the current recipe of the product. After creation, the recipe will be used for the job creation. After selecting the source recipe, the recipe will be processed. The default implementation don't do any processing but in some applications it is necessary to add some operation specific information like the operation number or some material parameters.
+After the product assignment, the recipe will assigned inside of the `RecipeAssignStep` by using the [IRecipeAssignment](xref:Moryx.Orders.Management.IRecipeAssignment) plugin. The default implementation selects the current recipe of the product. After creation, the recipe will be used for the job creation. After selecting the source recipe, the recipe will be processed. The default implementation does not process anything but in some applications it is necessary to add some operation specific information like the operation number or some material parameters.
 
 To implement a custom recipe assignment the custom implementation should derive from [RecipeAssignmentBase](xref:Moryx.Orders.Management.RecipeAssignmentBase`1).
 
 ### Documents
 
-The `DocumentAssignStep` loads the available documents of a product for the new operation. The loading will be handled during the assignment to ensure that a ready operation has all available documents. The `DocumentProvider` uses a [IDocumentLoader](@ref Moryx.Orders.Management.IDocumentLoader) to load the documents from a specific source which can be configured. The provided documents from the `DocumentLoader` will be used to store the files at the file system. Each document will be represented with the downloaded file and a json file which contains information like the document number or revision to restore the document information. Other components have the possibility to change the source from a document. So the client used the source to provide a filtering by source.
+The `DocumentAssignStep` loads the available documents of a product for a new operation. The loading will be handled during the assignment to ensure that a ready operation has all available documents. The `DocumentProvider` uses a [IDocumentLoader](@ref Moryx.Orders.Management.IDocumentLoader) to load the documents from a specific source which can be configured. The provided documents from the `DocumentLoader` will be used to store the files at the file system. Each document will be represented with the downloaded file and a json file which contains information like the document number or revision to restore the document information. Other components have the possibility to change the source from a document. So the client uses the source to provide a filtering by source.
 
 ### Material Parameters
 
-The creation context of the operation and order can contain material parameters from the source which creates the creation context. There is a list of [IMaterialParameter](xref:Moryx.Orders.IMaterialParameter) which must be casted to the needed material parameter type. The types are application specific which can depend a MES or other systems. The material parameters will typically used in the product or recipe assignment.
+The creation context of the operation and order can contain material parameters from the source which creates the creation context. There is a list of [IMaterialParameter](xref:Moryx.Orders.IMaterialParameter) which must be casted to the needed material parameter type. The types are application specific which can depend on a MES or other systems. The material parameters will typically be used in the product or recipe assignment.
 
 ### Validation
 
@@ -285,29 +285,29 @@ If the OrderManagement will be restarted, it is necessary to reload the jobs whi
 
 ### Order UI
 
-The ui of the order management will be used to show all orders to produce on the current machine. It is also possible to create order without an external system like HYDRA or SAP.
+The ui of the order management will be used to show all orders to produce on the current machine. It is also possible to create an order without an external MES system.
 
 **Concept**
-The orders ui contains a list of orders for a first overview. The details of each order can be displayed by selecting it.
+The order ui contains a list of orders for a first overview. The details of each order can be displayed by selecting it.
 The ui has an area for all order details. This contains general information like order number and the due date, information about the product to produce and a list of operations of the selected order.
 
 **Hide completed**
 If the checkbox *Hide Completed* is checked, all completed operations are hidden from the list.
 
 **Create an Order**
-The order ui provides an order creator which can be access over the *Create Order* button.
+The order ui provides an order creator which can be accessed over the *Create Order* button.
 The order creator has some text fields for the information which are necessary to create an order.
-The *Create* button will activated if all necessary information are provided by the user.
+The *Create* button will be activated if all necessary information is provided by the user.
 Currently all text fields must be filled and the list of operations must have at least one operation entry.
 
 ### Job UI
 
-The job UI mainly will be used to have an overview of all current jobs, there current production state, the sort order and to create some test jobs to test e.g. new workplans or resources.
+The job UI mainly will be used to have an overview of all current jobs, their current production state, the sort order and to create some test jobs to test e.g. new workplans or resources.
 The job UI provides also the possibility to start, abort and reorder each job.
 
 **Concept**
-The job UI is basically a list of all current jobs. There are some buttons on the bottom side to start, abort and moving each job.
-To start, abort or moving a job it is necessary to select the job and click on the button you want.
-The buttons will be automatically disabled and enabled depending if the action is executable with the selected job.
+The job UI is basically a list of all current jobs. There are some buttons on the bottom side to start, abort and move each job.
+To start, abort or move a job it is necessary to select the job and click on the button you want.
+The buttons will be automatically disabled and enabled depending on whether the action is executable with the selected job.
 
 

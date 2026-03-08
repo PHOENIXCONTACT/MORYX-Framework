@@ -3,8 +3,9 @@
     "TITLE": "Orders"
   },
   "OPERATIONS": {
-    "TITLE": "Messages",
-    "SUB_TITLE": "Part list",
+    "LOG_TITLE": "Messages",
+    "PARTS_TITLE": "Part list",
+    "FILTER_TITLE": "Filter",
     "SOURCE_TITLE": "Operation Source",
     "AMOUNT": "Amount",
     "SUCCESS": "Success",
@@ -41,10 +42,15 @@
       "UNIT": "Unit",
       "STAGING_INDICATOR": "Staging indicator"
     },
+    "FILTERS": {
+      "HIDE_COMPLETED": "Hide completed"
+    },
     "EMPTY_LOG": "This log is empty",
     "FAILED_LOADING": "The connection to the server could not be established. Please check your network connection or try again later.",
     "EMPTY_STATE_HEADER": "No Orders",
-    "EMPTY_STATE_TEXT": "To create an order click on the plus sign and start the configuration."
+    "EMPTY_STATE_TEXT": "To create an order click on the plus sign and start the configuration.",
+    "CREATE": "Create",
+    "FILTER": "Filter"
   },
   "RECIPES": {
     "RECIPES_OF": "Recipes of",

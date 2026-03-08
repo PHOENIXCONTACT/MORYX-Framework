@@ -8,8 +8,6 @@ They are used in derived projects only.
 The following picture shows the stucture how a product is placed in an application and which components will use it. 
 In the following sections are short descriptions about each part of the product concept.
 
-![Product concept structure](images/product_concept)
-
 ## Product
 
 In the context of MORYX, the `product type` is mainly the instance independent description and contains the rule how to produce a `product instance`. 
@@ -18,9 +16,9 @@ For more information regarding the definition of a product including a detailed 
 
 ### Recipe
 
-A recipe is used to provide a [Workplan](/docs/articles/abstractions/processing/workplans.md) for a [Process](/docs/articles/abstractions/processing/processes.md) in which a product is processed. It can also provides additional parameters related to the `workplan`. All recipes are derived from [Recipe](/src/Moryx.AbstractionLayer/Recipes/Recipe.cs).
+A recipe is used to provide a [Workplan](/docs/articles/abstractions/processing/workplans.md) for a [Process](/docs/articles/abstractions/processing/processes.md) in which a product is processed. It can also provide additional parameters related to the `workplan`. All recipes are derived from [Recipe](/src/Moryx.AbstractionLayer/Recipes/Recipe.cs).
 
-The Abstraction Layer provides the [IProductRecipe](/src/Moryx.AbstractionLayer/Recipes/IProductRecipe.cs) and [IWorkplanRecipe](/src/Moryx.AbstractionLayer/Recipes/IWorkplanRecipe.cs) which can be used separatly or combined. 
+The Abstraction Layer provides the [IProductRecipe](/src/Moryx.AbstractionLayer/Recipes/IProductRecipe.cs) and [IWorkplanRecipe](/src/Moryx.AbstractionLayer/Recipes/IWorkplanRecipe.cs) which can be used separately or combined. 
 In a production environment, for example, we have the `process` with the belonging `product` and the corresponding `workplan`. 
 The parameters regarding the products production (e.g. the material needed, technical parameters for automatic testing, etc) are provided with the `product recipe` while the `workplan` and parameters to configure it come with the `workplan recipe`.
 
@@ -44,5 +42,5 @@ If it is inserted again later on, a new ProductionProcess is created. The `produ
 
 There are additional contents available to take a closer look into 
  * the [storage of products](product-storage.md) and [recipes](recipe-storage.md)
- * the [product management](product-management.md) as well as the available [UI on the client side](ProductManagementUI.md)
+ * the [product management](product-management.md)
  * the possibility to [import products](product-import.md)

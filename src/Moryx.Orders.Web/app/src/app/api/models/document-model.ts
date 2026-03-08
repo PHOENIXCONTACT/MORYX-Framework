@@ -15,4 +15,3 @@ export interface DocumentModel {
   source?: string | null;
   type?: string | null;
 }
-

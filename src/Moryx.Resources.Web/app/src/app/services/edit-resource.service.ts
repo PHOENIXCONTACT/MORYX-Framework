@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { ResourceModel, ResourceReferenceModel } from '../api/models';
@@ -14,7 +14,8 @@ import { ResourceStorageDetails, SessionService } from './session.service';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
-import { MoryxSnackbarService, PrototypeToEntryConverter } from '@moryx/ngx-web-framework';
+import { SnackbarService } from '@moryx/ngx-web-framework/services';
+import { PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
 import { ResourceConstructionParameters } from '../models/ResourceConstructionParameters';
 
 /**
@@ -25,7 +26,14 @@ import { ResourceConstructionParameters } from '../models/ResourceConstructionPa
   providedIn: 'root',
 })
 export class EditResourceService {
-  public edit: boolean = false;
+  private resourceModificationService = inject(ResourceModificationService);
+  private cacheResourceService = inject(CacheResourceService);
+  private router = inject(Router);
+  private sessionService = inject(SessionService);
+  private translateService = inject(TranslateService);
+  private snackbarService = inject(SnackbarService);
+
+  public edit$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private resource: BehaviorSubject<ResourceModel | undefined> = new BehaviorSubject<ResourceModel | undefined>(
     undefined
   );
@@ -33,23 +41,14 @@ export class EditResourceService {
   public editingUnsavedResource: boolean = false;
   TranslationConstants = TranslationConstants;
 
-  constructor(
-    private modificationService: ResourceModificationService,
-    private cacheService: CacheResourceService,
-    private router: Router,
-    private sessionService: SessionService,
-    private translate: TranslateService,
-    private moryxSnackbar: MoryxSnackbarService
-  ) { }
-
   loadResource() {
-    var id = 0;
+    let id = 0;
 
-    var navigation = this.router.getCurrentNavigation();
+    const navigation = this.router.currentNavigation();
     if (navigation?.finalUrl?.root.children['primary']?.segments?.length)
       id = Number(navigation.finalUrl?.root.children['primary'].segments[1].toString());
     else {
-      var url = this.router.url;
+      const url = this.router.url;
       const regexId: RegExp = /(details\/\d*)/;
       if (regexId.test(url)) id = Number(url.split('/')[2]);
     }
@@ -59,7 +58,7 @@ export class EditResourceService {
       return;
     }
 
-    this.modificationService.getDetails({ id: id }).subscribe({
+    this.resourceModificationService.getDetails({id: id}).subscribe({
       next: r => {
         this.resource.next(r);
       },
@@ -71,7 +70,7 @@ export class EditResourceService {
   }
 
   private resetEditor() {
-    this.edit = false;
+    this.edit$.next(false);
     this.editingUnsavedResource = false;
     this.resource.next(undefined);
     // ToDo: Navigating in a service doesn't follow the seperation of concern principle
@@ -91,11 +90,11 @@ export class EditResourceService {
     } else {
       translation = (await this.getTranslation(TranslationConstants.DEFAULT_VIEW.FAILED_LOADING)) + ` ${error.status}`;
     }
-    await this.moryxSnackbar.showError(translation);
+    await this.snackbarService.showError(translation);
   }
 
   private async getTranslation(key: string) {
-    const translations = await this.translate.get([key]).toAsync();
+    const translations = await this.translateService.get([key]).toAsync();
     return translations[key];
   }
 
@@ -116,7 +115,7 @@ export class EditResourceService {
   }
 
   async addNewResource(parameters: ResourceConstructionParameters, parent: ResourceModel | undefined): Promise<ResourceModel | undefined> {
-    const resource = await this.modificationService
+    const resource = await this.resourceModificationService
       .constructWithParameters({
         type: parameters.name,
         method: parameters?.method?.name ?? undefined,
@@ -129,12 +128,12 @@ export class EditResourceService {
     this.editingUnsavedResource = resource.id === 0;
 
     // When the resource was already save, other resources might also be
-    if (!this.editingUnsavedResource) await this.cacheService.loadResources();
+    if (!this.editingUnsavedResource) await this.cacheResourceService.loadResources();
 
     if (parent) this.assignReferences(resource, parent);
 
     this.resource.next(resource);
-    this.edit = true;
+    this.edit$.next(true);
     return resource;
     //this.navigateToResource(resource);
   }
@@ -145,18 +144,18 @@ export class EditResourceService {
   }
 
   onEdit() {
-    this.edit = true;
+    this.edit$.next(true);
   }
 
   async onSave(): Promise<ResourceModel | undefined> {
-    var resourceModel = this.resource.getValue();
+    const resourceModel = this.resource.getValue();
     if (!resourceModel) return;
 
     if (resourceModel.properties) PrototypeToEntryConverter.convertToEntry(resourceModel.properties);
 
     if (this.editingUnsavedResource)
-      return await this.modificationService
-        .save$Response({ body: resourceModel })
+      return await this.resourceModificationService
+        .save$Response({body: resourceModel})
         .toAsync()
         .then(async response => await this.handleSaveResponse(response))
         .catch(async error => {
@@ -164,8 +163,8 @@ export class EditResourceService {
           return undefined;
         });
     else
-      return await this.modificationService
-        .update$Response({ id: resourceModel.id!, body: resourceModel })
+      return await this.resourceModificationService
+        .update$Response({id: resourceModel.id!, body: resourceModel})
         .toAsync()
         .then(async response => await this.handleUpdateResponse(response))
         .catch(async (e: HttpErrorResponse) => {
@@ -175,26 +174,26 @@ export class EditResourceService {
   }
 
   async handleUpdateResponse(response: StrictHttpResponse<ResourceModel>): Promise<ResourceModel> {
-    await this.cacheService.loadResources();
+    await this.cacheResourceService.loadResources();
     this.resource.next(response.body);
-    this.edit = false;
+    this.edit$.next(false);
     return response.body;
   }
 
   async handleSaveResponse(response: StrictHttpResponse<ResourceModel>): Promise<ResourceModel> {
     // load all resources in order to also find resources, which were created automatically in the backend
     // ToDo: Handing over the event through both services seems suboptimal, violates the SR principle for this method.
-    await this.cacheService.loadResources();
+    await this.cacheResourceService.loadResources();
     const resourceModel = response.body;
     this.editingUnsavedResource = false;
-    this.edit = false;
+    this.edit$.next(false);
 
     this.resource.next(resourceModel);
     return resourceModel;
   }
 
   onCancel() {
-    this.edit = false;
+    this.edit$.next(false);
     this.loadResource();
   }
 
@@ -203,7 +202,7 @@ export class EditResourceService {
   }
 
   assignReferences(resource: ResourceModel, parent: ResourceModel) {
-    var referenceToParent = resource.references?.find(r => r.name == 'Parent');
+    const referenceToParent = resource.references?.find(r => r.name == 'Parent');
     if (referenceToParent) referenceToParent.targets = [parent] as ResourceModel[];
     else
       resource.references?.push({

@@ -4,6 +4,7 @@
 using System.Buffers;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.DataContracts;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Moryx.AbstractionLayer.Resources;
@@ -48,6 +49,28 @@ public class MqttTopicJson : MqttTopic<object>
     )]
     public bool EnumsAsStrings { get; set; }
 
+    /// <summary>
+    /// Describes the default condition, under which fields should not be written to the serialized output
+    /// </summary>
+    [DataMember, EntrySerialize]
+    [Display(
+        Name = nameof(Strings.MqttTopicJson_IgnoreCondition),
+        Description = nameof(Strings.MqttTopicJson_IgnoreCondition_Description),
+        ResourceType = typeof(Strings)
+    )]
+    public JsonIgnoreCondition IgnoreCondition { get; set; }
+
+    /// <summary>
+    /// Encoder to use when encoding JsonContent
+    /// </summary>
+    [Display(
+        Name = nameof(Strings.MqttTopicJson_EncoderOption),
+        Description = nameof(Strings.MqttTopicJson_EncoderOption_Description),
+        ResourceType = typeof(Strings)
+    )]
+    [DataMember, EntrySerialize]
+    public JsonEncoderOption EncoderOption { get; set; }
+
     /// <inheritdoc />
     protected override byte[] Serialize(object payload)
     {
@@ -62,11 +85,20 @@ public class MqttTopicJson : MqttTopic<object>
         return JsonDocument.Parse(payload).Deserialize(MessageType, options);
     }
 
-    private JsonSerializerOptions GetSystemTextJsonOptions()
+    /// <summary>
+    /// Get's the options for the JsonConverter to apply when serializing or deserializing each message.
+    /// Overwriting this method allows customization that can't easily be done via the configuration properties
+    /// like adding new JsonConverters, adding complex NaminPolicies and so on.
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    protected virtual JsonSerializerOptions GetSystemTextJsonOptions()
     {
         var options = new JsonSerializerOptions()
         {
-            PropertyNamingPolicy = Format == JsonFormat.CamelCase ? JsonNamingPolicy.CamelCase : null,
+            PropertyNamingPolicy = Format.ForSystemTextJson(),
+            DefaultIgnoreCondition = IgnoreCondition.ForSystemTextJson(),
+            Encoder = EncoderOption.ForSystemTextJson(),
         };
         options.Converters.Clear();
         if (EnumsAsStrings)

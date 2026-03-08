@@ -35,4 +35,3 @@ export function getAdviceContext(http: HttpClient, rootUrl: string, params: GetA
 }
 
 getAdviceContext.PATH = '/api/moryx/orders/{guid}/advice';
-

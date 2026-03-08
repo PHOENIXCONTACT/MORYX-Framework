@@ -4,26 +4,21 @@
 */
 
 import { Routes } from "@angular/router";
-import { DefaultDetailsViewComponent } from "./components/default-details-view/default-details-view.component";
-import { DetailsViewComponent } from "./components/details-view/details-view.component";
-import { ResourceMethodsComponent } from "./components/details-view/resource-methods/resource-methods.component";
-import { ResourcePropertiesComponent } from "./components/details-view/resource-properties/resource-properties.component";
-import { ResourceReferencesComponent } from "./components/details-view/resource-references/resource-references.component";
-import { ShowDetailsGuard } from "./guards/show-details.guard";
+import { DefaultDetailsView } from "./components/default-details-view/default-details-view";
+import { DetailsView } from "./components/details-view/details-view";
+import { ResourceMethods } from "./components/details-view/resource-methods/resource-methods";
+import { ResourceProperties } from "./components/details-view/resource-properties/resource-properties";
+import { ResourceReferences } from "./components/details-view/resource-references/resource-references";
 
-export const routes: Routes =  [
+export const routes: Routes = [
   {
     path: 'details/:id',
-    component: DetailsViewComponent,
+    component: DetailsView,
     children: [
-      { path: 'properties', component: ResourcePropertiesComponent, canActivate: [ShowDetailsGuard] },
-      { path: 'references', component: ResourceReferencesComponent, canActivate: [ShowDetailsGuard] },
-      {
-        path: 'methods',
-        component: ResourceMethodsComponent,
-        canActivate: [ShowDetailsGuard],
-      },
+      { path: 'properties', component: ResourceProperties },
+      { path: 'references', component: ResourceReferences },
+      { path: 'methods', component: ResourceMethods },
     ],
   },
-  { path: '', component: DefaultDetailsViewComponent },
+  { path: '', component: DefaultDetailsView },
 ]

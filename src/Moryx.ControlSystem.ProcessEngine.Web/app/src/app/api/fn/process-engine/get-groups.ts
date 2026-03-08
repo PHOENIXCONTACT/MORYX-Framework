@@ -33,4 +33,3 @@ export function getGroups(http: HttpClient, rootUrl: string, params?: GetGroups$
 }
 
 getGroups.PATH = '/api/moryx/processes/holders/groups';
-

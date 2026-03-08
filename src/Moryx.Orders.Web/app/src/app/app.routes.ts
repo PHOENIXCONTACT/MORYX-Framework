@@ -4,13 +4,13 @@
 */
 
 import { Routes } from "@angular/router";
-import { OperationDocumentsComponent } from "./components/operation-documents/operation-documents.component";
-import { OperationRecipesComponent } from "./components/operation-recipes/operation-recipes.component";
-import { OperationsComponent } from "./components/operations/operations.component";
+import { OperationDocuments } from "./components/operation-documents/operation-documents";
+import { OperationRecipes } from "./components/operation-recipes/operation-recipes";
+import { Operations } from "./components/operations/operations";
 
 export const routes: Routes = [
-  { path: 'operations', component: OperationsComponent },
-  { path: 'operation-recipes/:identifier', component: OperationRecipesComponent },
-  { path: 'operation-documents/:identifier', component: OperationDocumentsComponent },
+  { path: 'operations', component: Operations },
+  { path: 'operation-recipes/:identifier', component: OperationRecipes },
+  { path: 'operation-documents/:identifier', component: OperationDocuments },
   { path: '', redirectTo: 'operations', pathMatch: 'full' }
 ];

@@ -9,4 +9,3 @@
 export interface AdviceContext {
   advicedAmount?: number;
 }
-

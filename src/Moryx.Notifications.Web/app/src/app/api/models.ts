@@ -9,4 +9,3 @@
 export type { MoryxExceptionResponse } from './models/moryx-exception-response';
 export type { NotificationModel } from './models/notification-model';
 export { Severity } from './models/severity';
-

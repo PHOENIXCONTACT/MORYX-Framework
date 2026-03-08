@@ -36,4 +36,3 @@ export type { WorkplanNodeModel } from './models/workplan-node-model';
 export type { WorkplanSessionModel } from './models/workplan-session-model';
 export { WorkplanState } from './models/workplan-state';
 export type { WorkplanStepRecipe } from './models/workplan-step-recipe';
-

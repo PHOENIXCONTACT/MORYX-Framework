@@ -12,4 +12,3 @@ export interface OperationAdvicedModel {
   advice?: AdviceModel;
   operationModel?: OperationModel;
 }
-

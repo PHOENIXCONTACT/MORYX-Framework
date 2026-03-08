@@ -26,7 +26,7 @@ public interface IExampleDriver : IDriver
 {
 }
 ````
-If you are implementing a Driver that is sending messages, [IMessageDriver](../../src/Moryx.AbstractionLayer/Drivers/Message/IMessageDriver.cs) is probably the beter choice. An `IMessageDriver<TMessage>` can be used for a specific type of message. It contains several channels, which can represent for example Mqtt-Topics or OPC UA nodes.
+If you are implementing a Driver that is sending messages, [IMessageDriver](../../src/Moryx.AbstractionLayer/Drivers/Message/IMessageDriver.cs) is probably the better choice. An `IMessageDriver<TMessage>` can be used for a specific type of message. It contains several channels, which can represent for example Mqtt-Topics or OPC UA nodes.
 
 ### The implementation
 

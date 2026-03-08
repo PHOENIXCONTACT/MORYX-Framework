@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { OperatorManagementService } from '../api/services';
 import { AssignableOperator } from '../api/models';
 import { OperatorModel } from '../api/models';
@@ -13,11 +13,10 @@ import { OperatorModel } from '../api/models';
 })
 export class OperatorsService {
   private _available: boolean = true;
+  private operators = inject(OperatorManagementService);
   public get available(): boolean {
     return this._available;
   }
-
-  constructor(private operators: OperatorManagementService) {}
 
   async getOperators(): Promise<AssignableOperator[]> {
     if (!this._available) return [];
@@ -34,7 +33,7 @@ export class OperatorsService {
   async addOperator(identifier: string) {
     if (!this._available) return;
 
-    return await this.operators.add({ body: { identifier: identifier } as OperatorModel }).toAsync();
+    return await this.operators.add({body: {identifier: identifier} as OperatorModel}).toAsync();
   }
 }
 

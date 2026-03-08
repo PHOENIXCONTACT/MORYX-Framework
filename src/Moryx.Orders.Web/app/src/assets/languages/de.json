@@ -3,8 +3,9 @@
     "TITLE": "Aufträge"
   },
   "OPERATIONS": {
-    "TITLE": "Meldungen",
-    "SUB_TITLE": "Stückliste",
+    "LOG_TITLE": "Meldungen",
+    "PARTS_TITLE": "Stückliste",
+    "FILTER_TITLE": "Filter",
     "SOURCE_TITLE": "Vorgangsquelle",
     "AMOUNT": "Menge",
     "SUCCESS": "Gutmenge",
@@ -41,10 +42,15 @@
       "UNIT": "Einheit",
       "STAGING_INDICATOR": "Bereitstellungskennzeichen"
     },
+    "FILTERS": {
+      "HIDE_COMPLETED": "Abgeschlossene ausblenden"
+    },
     "EMPTY_LOG": "Dieses Protokoll ist leer",
     "FAILED_LOADING": "Die Verbindung zum Server ist leider fehlgeschlagen. Bitte überprüfe deine Netzwerkverbindung oder versuch es später nochmal.",
     "EMPTY_STATE_HEADER": "Keine Aufträge",
-    "EMPTY_STATE_TEXT": "Um einen Auftrag zu erstellen klicke auf das Plus und starte die Konfiguration."
+    "EMPTY_STATE_TEXT": "Um einen Auftrag zu erstellen klicke auf das Plus und starte die Konfiguration.",
+    "CREATE": "Erstellen",
+    "FILTER": "Filter"
   },
   "RECIPES": {
     "RECIPES_OF": "Rezepte von",
@@ -78,7 +84,7 @@
     "COMMENT": "Kommentar",
     "CONFIRMATION": "Rückmeldeart",
     "PARTIAL": "Teilrückmelden",
-    "FINAL": "Endrückmelden",
+    "FINAL": "Endrückmelden"
   },
   "INTERRUPT_DIALOG": {
     "TITLE": "Vorgang unterbrechen",
