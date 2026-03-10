@@ -10,18 +10,14 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { SnackbarService } from "@moryx/ngx-web-framework/services";
 import { PrototypeToEntryConverter } from "@moryx/ngx-web-framework/entry-editor";
 import { BehaviorSubject } from "rxjs";
-import {
-  ProductModel,
-  ProductQuery,
-  RecipeModel,
-  RevisionFilter,
-  Selector,
-} from "../api/models";
+import { map } from "rxjs/operators";
+import { ProductModel, RecipeModel } from "../api/models";
 import { ProductManagementService } from "../api/services/product-management.service";
 import { TranslationConstants } from "../extensions/translation-constants.extensions";
 import { DuplicateProductInfos } from "../models/DuplicateProductInfos";
 import { CacheProductsService } from "./cache-products.service";
-import { SessionService } from "./session.service";
+import { ProductStorageObject } from "./session.service";
+import { toSignal } from "@angular/core/rxjs-interop";
 
 @Injectable({
   providedIn: "root",
@@ -30,117 +26,45 @@ export class EditProductsService {
   private productManagementService = inject(ProductManagementService);
   private router = inject(Router);
   private cacheProductsService = inject(CacheProductsService);
-  private sessionService = inject(SessionService);
   private activatedRoute = inject(ActivatedRoute);
   private snackbarService = inject(SnackbarService);
 
   public edit$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  public currentProduct: BehaviorSubject<ProductModel | undefined> = new BehaviorSubject<ProductModel | undefined>(undefined);
-  public references: BehaviorSubject<ProductModel[] | undefined> = new BehaviorSubject<ProductModel[] | undefined>(undefined);
+  private currentProduct: BehaviorSubject<ProductModel | undefined> = new BehaviorSubject<ProductModel | undefined>(undefined);
+  public currentProduct$ = this.currentProduct.asObservable();
+  public currentProductId = toSignal(this.currentProduct$.pipe(map((p) => p?.id)));
+
+  private references: BehaviorSubject<ProductModel[] | undefined> = new BehaviorSubject<ProductModel[] | undefined>(undefined);
+  public references$ = this.references.asObservable();
+
   public currentRecipeNumber: number = 0;
   maximumAlreadySavedRecipeId: number = 0;
+
   public currentPartId: number = 0;
   maximumAlreadySavedPartId: number = 0;
-  currentProductId: number = 0;
   TranslationConstants = TranslationConstants;
 
-  loadFromStorage() {
-    const productStorageObject = this.sessionService.getWipProduct();
-    if (productStorageObject) {
-      this.currentProductId = productStorageObject.product.id!;
-      this.currentPartId = productStorageObject.details.currentPartId;
-      this.currentRecipeNumber = productStorageObject.details.currentRecipeNumber;
-      this.maximumAlreadySavedPartId = productStorageObject.details.maximumAlreadySavedPartId;
-      this.maximumAlreadySavedRecipeId = productStorageObject.details.maximumAlreadySavedRecipeId;
-      this.currentProduct.next(productStorageObject.product);
-    }
+  setProductFromStorage(productStorageObject: ProductStorageObject) {
+    this.currentPartId = productStorageObject.details.currentPartId;
+    this.currentRecipeNumber = productStorageObject.details.currentRecipeNumber;
+    this.maximumAlreadySavedPartId = productStorageObject.details.maximumAlreadySavedPartId;
+    this.maximumAlreadySavedRecipeId = productStorageObject.details.maximumAlreadySavedRecipeId;
+    this.currentProduct.next(productStorageObject.product);
+
+    this.edit$.next(true);
   }
 
-  // ToDo: Remove the whole load product logic from this service, there is already a product details view resolver
-  // which loads products based on the route. This should be moved to an app wide resolver and the only place the
-  // current product is loaded. Also make the behaviour subject readonly then.
-  // NO ONE ELSE SHOULD LOAD OR MODIFY THE CURRENT PRODUCT THAN THE RESOLVER FROM THE ROUTE!
-  loadProduct() {
-    let id = 0;
-    const navigation = this.router.currentNavigation();
-    if (
-      navigation &&
-      (navigation?.finalUrl?.root.children["primary"]?.segments?.length ??
-        0 > 1)
-    )
-      id = Number(
-        navigation.finalUrl?.root.children["primary"].segments[1].toString()
-      );
-    else {
-      const url = this.router.url;
-      const regexId: RegExp = /(details\/\d*)/;
-      if (!regexId.test(url)) {
-        this.currentProduct.next(undefined);
-        return;
-      }
-      id = Number(url.split("/")[2]);
-    }
-
-    this.currentProductId = id;
-
-    if (id === 0) {
-      this.unloadProduct();
-      return;
-    }
-    this.loadProductById(id);
+  setProduct(product: ProductModel | undefined) {
+    this.currentProduct.next(product);
   }
 
-  loadProductById(id: number) {
-    this.productManagementService.getTypeById({id: id}).subscribe({
-      next: (product) => {
-        this.currentProduct.next(product);
-        this.getReferencesOfCurrentProduct();
-      },
-      error: async (e: HttpErrorResponse) => {
-        await this.handleLoadError(e);
-        this.unloadProduct();
-      },
-    });
-  }
-
-  private async handleLoadError(error: HttpErrorResponse) {
-    if (error.status === 0) {
-      // Unknown errors occur most commonly when the server is not reachable.
-      // That is handled somewhere else, so there is no need to show that here.
-      return;
-    }
-
-    if (error.error?.title !== undefined) {
-      await this.snackbarService.showError(error.error?.title);
-    } else {
-      await this.snackbarService.handleError(error);
-    }
-  }
-
-  unloadProduct() {
+  resetProduct() {
     this.currentProduct.next(undefined);
-    this.router.navigate([""]);
+    this.references.next(undefined);
   }
 
-  private getReferencesOfCurrentProduct() {
-    const product = this.currentProduct.value;
-    if (!product) return;
-
-    const body = <ProductQuery>{
-      includeDeleted: false,
-      identifier: product.identifier,
-      revision: product.revision,
-      revisionFilter: RevisionFilter.Specific,
-      selector: Selector.Parent,
-    };
-    this.productManagementService.getTypes({body: body}).subscribe({
-      next: (references) => {
-        this.references.next(references);
-      },
-      error: async (e: HttpErrorResponse) => {
-        await this.snackbarService.handleError(e);
-      },
-    });
+  setReferences(references: ProductModel[] | undefined) {
+    this.references.next(references);
   }
 
   onEdit() {
@@ -221,10 +145,11 @@ export class EditProductsService {
 
   async onCancel() {
     this.edit$.next(false);
-    if (!this.currentProduct.value?.id) return;
+    const currentId = this.currentProductId();
+    if (!currentId) return;
 
     await this.productManagementService
-      .getTypeById({id: this.currentProduct.value.id})
+      .getTypeById({id: currentId})
       .toAsync()
       .then(product => this.currentProduct.next(product))
       .catch(async (error) => await this.snackbarService.handleError(error));
@@ -244,19 +169,18 @@ export class EditProductsService {
       .subscribe({
         next: () => {
           this.cacheProductsService.loadProductsForTree();
+          // ToDo: Verify why recipe regex and why different navigations
           const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
           if (regexSpecificRecipe.test(this.router.url)) {
             this.router
               .navigate(["../../"], {relativeTo: this.activatedRoute})
               .then(() => {
                 this.router
-                  .navigate([`/details/${id}`])
-                  .then(() => this.loadProductById(id));
+                  .navigate([`/details/${id}`]);
               });
           } else {
             this.router
-              .navigate([`/details/${id}`])
-              .then(() => this.loadProductById(id));
+              .navigate([`/details/${id}`]);
           }
         },
         error: async (e: HttpErrorResponse) => {

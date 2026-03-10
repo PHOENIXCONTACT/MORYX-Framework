@@ -6,6 +6,7 @@
 import { FlatTreeControl } from "@angular/cdk/tree";
 import {
   Component,
+  computed,
   inject,
   OnDestroy,
   OnInit,
@@ -96,7 +97,7 @@ export class App implements OnInit, OnDestroy {
   private translateService = inject(TranslateService);
 
   isEditMode = toSignal(this.editService.edit$, { initialValue: false });
-  selected = signal<ProductModel | undefined>(undefined);
+  selected = computed(() => this.products()?.find((p) => p.id === this.editService.currentProductId()));
   products = signal<ProductModel[]>([]);
   productDefinitions = signal<ProductDefinitionModel[]>([]);
   hierarchic = signal(false);
@@ -151,23 +152,9 @@ export class App implements OnInit, OnDestroy {
         this.importer.set(importers[0].name!);
     });
 
-    this.editService.currentProduct.subscribe((product) => {
-      this.selected.set(product);
-    });
-
-    this.router.events.subscribe((e) => {
-      if (e instanceof NavigationEnd) this.selectCurrentProduct();
-    });
-
+    // ToDo: MOve to route resolver for base path
     this.cacheService.loadConfiguration();
     this.cacheService.loadProductsForTree();
-
-    const wipProduct = this.sessionService.getWipProduct();
-    if (wipProduct) {
-      this.editService.loadFromStorage();
-    } else {
-      this.editService.loadProduct();
-    }
 
     this.searchbar.subscribe({
       next: (result: SearchRequest) => {
@@ -189,7 +176,7 @@ export class App implements OnInit, OnDestroy {
       if (products.length > 1)
         this.router.navigate(["search"], {queryParams: {q: searchterm}});
       else if (products.length === 1)
-        this.routeToAnotherProductOnSelect(products[0].id ?? 0);
+        this.router.navigate(['/details', products[0].id ?? 0]);
       this.searchbar.subscribe({
         next: (newRequest: SearchRequest) => {
           this.onSearch(newRequest);
@@ -277,13 +264,13 @@ export class App implements OnInit, OnDestroy {
   }
 
   beforeUnloadHander() {
-    if (this.isEditMode() && this.selected()) {
-      this.sessionService.setWipProduct(this.selected()!, <ProductStorageDetails>{
+    const product = this.selected();
+    if (this.isEditMode() && product) {
+      this.sessionService.pushWipProduct(product, <ProductStorageDetails>{
         currentPartId: this.editService.currentPartId,
         currentRecipeNumber: this.editService.currentRecipeNumber,
         maximumAlreadySavedPartId: this.editService.maximumAlreadySavedPartId,
-        maximumAlreadySavedRecipeId:
-        this.editService.maximumAlreadySavedRecipeId
+        maximumAlreadySavedRecipeId: this.editService.maximumAlreadySavedRecipeId
       });
     }
   }
@@ -365,7 +352,7 @@ export class App implements OnInit, OnDestroy {
   async onDeselect() {
     if (this.isEditMode())
       await this.onCancel();
-    this.editService.unloadProduct();
+    this.editService.resetProduct();
   }
 
   onSelect(id: number) {
@@ -375,42 +362,11 @@ export class App implements OnInit, OnDestroy {
 
     if (id === this.selected()?.id) return;
 
-    const url = this.router.url;
-    const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
-    const regexParts: RegExp = /(details\/\d*\/parts)/;
-    if (regexSpecificRecipe.test(url) || regexParts.test(url)) {
-      this.router.navigate(["../../"], {relativeTo: this.route}).then(() => {
-        this.routeToAnotherProductOnSelect(id);
-      });
-    } else {
-      this.routeToAnotherProductOnSelect(id);
-    }
+    this.router.navigate(['/details', id]);
   }
 
   onOpenContextMenu(event: any, id: number) {
     this.open(event.pointers[0].clientX, event.pointers[0].clientY, id);
-  }
-
-  private routeToAnotherProductOnSelect(id: number) {
-    const product = this.products().find((p) => p.id === id);
-    if (product) {
-      this.router
-        .navigate([`details/${id}`], {relativeTo: this.route})
-        .then(() => this.editService.loadProductById(id));
-    } else this.router.navigate([``]);
-  }
-
-  selectCurrentProduct() {
-    const url = this.router.url;
-    const regexId: RegExp = /(details\/\d*)/;
-    if (!regexId.test(url)) {
-      this.selected.set(undefined);
-      return;
-    }
-
-    const id = Number(url.split("/")[2]);
-    if (this.selected()?.id != id)
-      this.selected.set(this.products()?.find((p) => p.id === id));
   }
 
   clickContainer(event: MouseEvent) {
@@ -435,7 +391,7 @@ export class App implements OnInit, OnDestroy {
       if (productToBeDeleted) {
         const actualProduct = productToBeDeleted();
         await this.cacheService.deleteProduct(actualProduct);
-        this.editService.unloadProduct();
+        this.editService.resetProduct();
       }
     });
   }
@@ -483,22 +439,16 @@ export class App implements OnInit, OnDestroy {
   }
 
   onSelectAndEdit(id: number) {
-    const product = this.products().find((p) => p.id == id);
     this.searchbar.clearSuggestions();
     this.searchbar.unsubscribe();
-    if (id == 0 || product === undefined) {
+
+    if (this.editService.currentProductId() === id) {
+      this.editService.onEdit();
       return;
     }
-    if (this.selected()?.id === id) {
-      this.editService.onEdit();
-    } else {
-      this.router
-        .navigate([`/details/${id}`])
-        .then(() => this.editService.loadProductById(id))
-        .then(() => {
-          this.editService.onEdit();
-        });
-    }
+
+    this.router.navigate(['/details', id])
+      .then(() => this.editService.onEdit());
   }
 
   onDuplicate(id: number | undefined) {
