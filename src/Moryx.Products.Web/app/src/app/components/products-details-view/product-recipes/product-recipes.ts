@@ -49,10 +49,11 @@ export class ProductRecipes implements OnInit {
   TranslationConstants = TranslationConstants;
 
   ngOnInit(): void {
+    // ToDo: Add resipce resolver
     const productId = this.activatedRoute.parent?.snapshot.paramMap.get("id");
     if (productId == null) return;
 
-    this.editProductsService.currentProduct.subscribe((product) => {
+    this.editProductsService.currentProduct$.subscribe((product) => {
       if (Number(productId) === product?.id) {
         if (product.recipes === null) this.recipes.update((_) => []);
         else {
