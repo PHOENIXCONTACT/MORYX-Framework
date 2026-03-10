@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -110,17 +111,24 @@ public class ShellNavigator : IShellNavigator, ILauncher
 
     RegionItem ILauncher.GetRegion(LauncherRegion region)
     {
-        var partialViewAssembly = ReflectionTool.GetAssemblies().Where(a => !a.FullName.StartsWith("Microsoft"));
-        IEnumerable<Type> partialViews = [];
-        try
+        var availableAssemblies = ReflectionTool.GetAssemblies();
+
+        // Retrieve views
+        var partialViews = new List<Type>(availableAssemblies.Length * 30);
+        foreach (var assembly in availableAssemblies)
         {
-            partialViews = partialViewAssembly.SelectMany(x => x.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherRegionAttribute>() != null));
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to load partial views classes for an assembly.");
+            try
+            {
+                var types = assembly.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<LauncherRegionAttribute>() != null);
+                partialViews.AddRange(types);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to check for partial views classes in assembly {name}.", assembly.FullName);
+            }
         }
 
+        // Transform to models
         var configuredRegions = from pV in partialViews
                                 let regionAttr = pV.GetCustomAttribute<LauncherRegionAttribute>()
                                 let config = _launcherConfig.Regions.FirstOrDefault(x => x.Name == regionAttr.Name)
