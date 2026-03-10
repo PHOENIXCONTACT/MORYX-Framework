@@ -56,6 +56,10 @@ export class EditProductsService {
     }
   }
 
+  // ToDo: Remove the whole load product logic from this service, there is already a product details view resolver
+  // which loads products based on the route. This should be moved to an app wide resolver and the only place the
+  // current product is loaded. Also make the behaviour subject readonly then.
+  // NO ONE ELSE SHOULD LOAD OR MODIFY THE CURRENT PRODUCT THAN THE RESOLVER FROM THE ROUTE!
   loadProduct() {
     let id = 0;
     const navigation = this.router.currentNavigation();
@@ -229,15 +233,16 @@ export class EditProductsService {
   onDuplicate(infos: DuplicateProductInfos) {
     if (!infos.revision || !infos.identifier || !infos.product?.id) return;
 
+    const id = infos.product.id;
     const identifier = this.createProductIdentity(
       infos.identifier,
       infos.revision
     );
 
     this.productManagementService
-      .duplicate({id: infos.product.id, body: `"${identifier}"`})
+      .duplicate({id: id, body: `"${identifier}"`})
       .subscribe({
-        next: (product) => {
+        next: () => {
           this.cacheProductsService.loadProductsForTree();
           const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
           if (regexSpecificRecipe.test(this.router.url)) {
@@ -245,13 +250,13 @@ export class EditProductsService {
               .navigate(["../../"], {relativeTo: this.activatedRoute})
               .then(() => {
                 this.router
-                  .navigate([`/details/${product.id}`])
-                  .then(() => this.loadProduct());
+                  .navigate([`/details/${id}`])
+                  .then(() => this.loadProductById(id));
               });
           } else {
             this.router
-              .navigate([`/details/${product.id}`])
-              .then(() => this.loadProduct());
+              .navigate([`/details/${id}`])
+              .then(() => this.loadProductById(id));
           }
         },
         error: async (e: HttpErrorResponse) => {

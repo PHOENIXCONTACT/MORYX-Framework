@@ -76,7 +76,8 @@ export class DialogShowRevisions implements OnInit {
           .then(() => this.editService.loadProductById(product.id ?? 0));
       });
     } else {
-      this.router.navigate([`/details/${product.id}`]).then(() => this.editService.loadProduct());
+      this.router.navigate([`/details/${product.id}`])
+        .then(() => this.editService.loadProductById(product.id ?? 0));
     }
   }
 
