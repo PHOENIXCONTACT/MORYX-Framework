@@ -465,16 +465,28 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
             }
         }
 
-        // If we found an activity, start it!
+        // If we found an activity, dispatch it!
         if (activity != null)
         {
-            StartActivity(cell, message, activity);
+            DispatchActivity(cell, message, activity);
         }
         // Otherwise respond with finish. All conditions for queueing were handled above
         else
         {
             Logger.Log(LogLevel.Debug, "Sending outfeed to resource '{0}'", cell.Name);
             CompleteProcessOnCell(process, message, cell);
+        }
+    }
+
+    private void DispatchActivity(ICell cell, ReadyToWork message, ActivityData activity)
+    {
+        if (activity.State == ActivityState.Running)
+        {
+            ReDispatchActivity(cell, message, activity);
+        }
+        else
+        {
+            StartActivity(cell, message, activity);
         }
     }
 
@@ -506,6 +518,17 @@ internal sealed class ActivityDispatcher : IActivityPoolListener, IActivityDispa
 
         // Start activity in cell after setting state
         var activityStart = message.StartActivity(activityData.Activity);
+        activityData.Session = activityStart;
+        Decouple(() => resource.StartActivity(activityStart), nameof(ICell.StartActivity), resource);
+    }
+
+    private void ReDispatchActivity(ICell resource, ReadyToWork message, ActivityData activityData)
+    {
+        Logger.Log(LogLevel.Debug, "Re-Dispatching running activity '{activity}' to resource '{id}'",
+            activityData, resource.Id);
+
+        var activityStart = message.StartActivity(activityData.Activity);
+        activityData.Resource = resource;
         activityData.Session = activityStart;
         Decouple(() => resource.StartActivity(activityStart), nameof(ICell.StartActivity), resource);
     }

@@ -95,29 +95,29 @@ internal sealed class ActivityPool : ILoggingComponent, IActivityDataPool, IActi
     }
 
     public bool TryUpdateActivity(ActivityData activityData, ActivityState newState, Action<ActivityData> updateAction)
-        {
-            // Update the activity
-            _activitiesLock.EnterUpgradeableReadLock();
-            try
+    {
+        // Update the activity
+        _activitiesLock.EnterUpgradeableReadLock();
+        try
         {
             // Validate the change before performing it
             if (newState <= activityData.State)
             {
                 Logger.Log(LogLevel.Warning, "Activity states can only increase! Current state: {current} - New State: {new}", activityData.State, newState);
                 return false;
-                }
-
-                _activitiesLock.EnterWriteLock();
-                updateAction?.Invoke(activityData);
-                activityData.State = newState;
             }
-            finally
+
+            _activitiesLock.EnterWriteLock();
+            updateAction?.Invoke(activityData);
+            activityData.State = newState;
+        }
+        finally
+        {
+            if (_activitiesLock.IsWriteLockHeld)
             {
-                if (_activitiesLock.IsWriteLockHeld)
-                {
-                    _activitiesLock.ExitWriteLock();
-                }
-                _activitiesLock.ExitUpgradeableReadLock();
+                _activitiesLock.ExitWriteLock();
+            }
+            _activitiesLock.ExitUpgradeableReadLock();
         }
 
         // Update the _openActivities collection
