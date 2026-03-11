@@ -1,4 +1,4 @@
-name: CI
+name:  CI
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 on:
@@ -23,6 +23,7 @@ env:
 
 jobs:
   EnvVar:
+    name: Prepare environment
     runs-on: ubuntu-latest
     steps:
       - run: echo ""
@@ -35,6 +36,7 @@ jobs:
       MORYX_PACKAGE_TARGET_V3_RELEASE: ${{ env.MORYX_PACKAGE_TARGET_V3_RELEASE }}
 
   Build:
+    name: Build
     needs: [EnvVar]
     uses: phoenixcontact/tools/.github/workflows/build-tool.yml@main
     with:
@@ -42,6 +44,7 @@ jobs:
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   UnitTests:
+    name: Unit Tests
     needs: [EnvVar, Build]
     uses: phoenixcontact/tools/.github/workflows/unittest-tool.yml@main
     with:
@@ -49,36 +52,30 @@ jobs:
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   IntegrationTests:
+    name: Integration Tests
     needs: [EnvVar, Build]
     uses: phoenixcontact/tools/.github/workflows/integrationtest-tool.yml@main
     with:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
-  ReportGenerator:
+  TestReport:
+    name: Coverage Reports
     needs: [EnvVar, UnitTests, IntegrationTests]
     uses: phoenixcontact/tools/.github/workflows/reportgenerator-tool.yml@main
     with:
       REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
-  Publish-Test-Coverage:
-    needs: [EnvVar, ReportGenerator]
-    uses: phoenixcontact/tools/.github/workflows/publish-test-coverage-tool.yml@main
-    with:
-      REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-  # currently not working
   # Documentation:
-  #   needs: [EnvVar, UnitTests]
+  #   name: Documentation
+  #   needs: [EnvVar, UnitTests, IntegrationTests]
   #   uses: phoenixcontact/tools/.github/workflows/documentation-tool.yml@main
   #   with:
   #     REPOSITORY_NAME: ${{ needs.EnvVar.outputs.REPOSITORY_NAME }}
 
   Publish:
-    needs: [EnvVar, Build] #, UnitTests]
+    name: Publish Packages
+    needs: [EnvVar, UnitTests, IntegrationTests]
     uses: phoenixcontact/tools/.github/workflows/publish-tool.yml@main
     with:
       dotnet_sdk_version: ${{ needs.EnvVar.outputs.dotnet_sdk_version }}
