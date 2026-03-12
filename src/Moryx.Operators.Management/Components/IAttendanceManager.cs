@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
+// Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
 using Moryx.Modules;
@@ -35,5 +35,6 @@ internal interface IAttendanceManager : IPlugin
     /// Event to inform that an operator was signed out
     /// </summary>
     event EventHandler<OperatorData> OperatorSignedOut;
+    event EventHandler<SignInStatusChangedArgs> SignInStatusChanged;
 }
 
