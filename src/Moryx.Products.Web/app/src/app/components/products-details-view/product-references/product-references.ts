@@ -36,13 +36,15 @@ export class ProductReferences {
   TranslationConstants = TranslationConstants;
 
   constructor() {
+    // ToDo: Remove loading indicator and use resolver for references
     this.isLoading.update(_ => true);
-    this.editProductsService.references.subscribe((references) => {
+    this.editProductsService.references$.subscribe((references) => {
       this.references.update(_ => references ?? []);
       this.isLoading.update(_ => false);
     });
   }
 
+  // ToDo: Add clickable indicator to reference list item
   referenceClicked(reference: ProductModel) {
     this.router.navigate(['/details', reference.id, 'properties'])
   }

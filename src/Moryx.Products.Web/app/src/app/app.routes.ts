@@ -14,6 +14,8 @@ import { ProductsDetailsView } from "./components/products-details-view/products
 import { ProductsImporter } from "./components/products-importer/products-importer";
 import { SearchResult } from "./components/search-result/search-result";
 import { ProductsDetailsViewResolver } from "./components/products-details-view/products-details-view-resolver";
+import { WorkInProgressGuard } from "./app-guard";
+import { ProductReferencesResolver } from "./components/products-details-view/product-references/products-references-resolver";
 
 export const routes: Routes = [
   {
@@ -25,7 +27,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'properties', pathMatch: 'full' },
       { path: 'properties', component: ProductProperties },
-      { path: 'references', component: ProductReferences },
+      { path: 'references', component: ProductReferences, resolve: { references: ProductReferencesResolver } },
       {
         path: 'parts/:partName/:partId',
         component: ProductParts,
@@ -40,7 +42,7 @@ export const routes: Routes = [
       },
     ],
   },
-  { path: '', component: DefaultView, pathMatch: 'full' },
+  { path: '', component: DefaultView, pathMatch: 'full', canActivate: [WorkInProgressGuard] },
   { path: 'import/:importer', component: ProductsImporter },
   { path: 'search', component: SearchResult }
 ]
