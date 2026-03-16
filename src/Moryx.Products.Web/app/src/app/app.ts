@@ -356,6 +356,10 @@ export class App implements OnInit, OnDestroy {
   }
 
   onProductContext(event: MouseEvent, productId: number) {
+    // Only handle right-click, not touch long-press
+    if ((event as any).pointerType === 'touch') {
+      return;
+    }
     event.preventDefault();
     if (productId === 0) return;
 
@@ -393,10 +397,6 @@ export class App implements OnInit, OnDestroy {
     } else {
       this.routeToAnotherProductOnSelect(id);
     }
-  }
-
-  onOpenContextMenu(event: any, id: number) {
-    this.open(event.pointers[0].clientX, event.pointers[0].clientY, id);
   }
 
   private routeToAnotherProductOnSelect(id: number) {
