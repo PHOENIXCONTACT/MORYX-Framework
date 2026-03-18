@@ -42,8 +42,9 @@ public class ProductManagementController : ControllerBase
     [Authorize(Policy = ProductPermissions.CanViewTypes)]
     public ActionResult<ProductCustomization> GetProductCustomization()
     {
-        var parameterSerialization = new PossibleValuesSerialization(_productConverter.ProductManagerContainer, _productConverter.GlobalContainer,
+        var parameterSerialization = new ProductImportParametersSerialization(_productConverter.ProductManagerContainer, _productConverter.GlobalContainer,
             new ValueProviderExecutor(new ValueProviderExecutorSettings().AddDefaultValueProvider()));
+
         return new ProductCustomization
         {
             ProductTypes = GetProductTypes(),
@@ -64,6 +65,7 @@ public class ProductManagementController : ControllerBase
             typeModels.Add(_productConverter.ConvertProductType(type));
         return typeModels.ToArray();
     }
+
     private RecipeDefinitionModel[] GetRecipeTypes()
     {
         var recipeTypes = _productManagement.RecipeTypes;
