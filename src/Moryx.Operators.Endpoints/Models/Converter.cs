@@ -43,6 +43,18 @@ internal static class Converter
         AssignedResources = @operator.AssignedResources.Select(ToModel)
     };
 
+    internal static ExtendedOperatorModel ToModel(this Operator @operator) => new()
+    {
+        FirstName = @operator.FirstName,
+        LastName = @operator.LastName,
+        Pseudonym = @operator.Pseudonym,
+        Identifier = @operator.Identifier,
+        AssignedResources = @operator switch {
+            AssignableOperator assignable => assignable.AssignedResources.Select(ToModel),
+            _ => []
+        }
+    };
+
     internal static SkillTypeModel ToModel(this SkillType type, bool full)
     {
         var model = new SkillTypeModel { Id = type.Id, Name = type.Name, Duration = type.Duration };
