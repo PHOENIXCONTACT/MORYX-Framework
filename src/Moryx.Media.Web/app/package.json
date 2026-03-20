@@ -28,7 +28,7 @@
     "material-symbols": "^0.40.2",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
-    "ngx-doc-viewer": "^15.0.1",
+    "ngx-doc-viewer": "^21.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.6.0"
   },
@@ -36,7 +36,7 @@
     "@angular/build": "^21.1.0",
     "@angular/cli": "^21.1.0",
     "@angular/compiler-cli": "^21.1.0",
-    "jsdom": "^28.1.0",
+    "jsdom": "^29.0.1",
     "ng-openapi-gen": "^1.0.5",
     "typescript": "~5.9.3",
     "vitest": "^4.0.8"
