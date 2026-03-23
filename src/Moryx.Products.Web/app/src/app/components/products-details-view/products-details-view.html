@@ -1,6 +1,7 @@
 <app-products-details-header
   class="product-details-header"
-  [currentProduct]="currentProduct()!"
+  [currentProduct]="currentProduct()"
+  (currentProductChange)="onCurrentProductChangeFromHeader($event)"
   [editMode]="isEditMode()"
 ></app-products-details-header>
 
