@@ -8,14 +8,14 @@ using Moryx.Serialization;
 
 namespace Moryx.AbstractionLayer.Products.Endpoints;
 
-internal class ProductImportParametersSerialization : PossibleValuesSerialization
+internal class FullSerialization : PossibleValuesSerialization
 {
     /// <summary>
     /// Instance for <see cref="EntrySerializeSerialization"/> we use to filter properties and methods
     /// </summary>
     private readonly EntrySerializeSerialization _memberFilter = new();
 
-    public ProductImportParametersSerialization(IContainer container, IServiceProvider serviceProvider, IEmptyPropertyProvider emptyPropertyProvider)
+    public FullSerialization(IContainer container, IServiceProvider serviceProvider, IEmptyPropertyProvider emptyPropertyProvider)
         : base(container, serviceProvider, emptyPropertyProvider)
     {
     }
