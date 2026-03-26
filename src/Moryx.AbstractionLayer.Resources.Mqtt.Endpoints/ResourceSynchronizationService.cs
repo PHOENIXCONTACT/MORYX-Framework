@@ -275,7 +275,7 @@ public class ResourceSynchronizationService : IMqttService
         var resourceProperties = resource.GetType().GetProperties();
         foreach (var jsonProperty in jsonProperties)
         {
-            var matchingProperty = resourceProperties.FirstOrDefault(x => x.Name == jsonProperty.Name);
+            var matchingProperty = resourceProperties.FirstOrDefault(x => x.Name == jsonProperty.Name && !x.PropertyType.IsAbstract && !x.PropertyType.IsInterface);
             if (matchingProperty is null)
             {
                 continue;
