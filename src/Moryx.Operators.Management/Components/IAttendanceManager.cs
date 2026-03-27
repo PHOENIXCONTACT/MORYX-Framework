@@ -35,6 +35,10 @@ internal interface IAttendanceManager : IPlugin
     /// Event to inform that an operator was signed out
     /// </summary>
     event EventHandler<OperatorData> OperatorSignedOut;
+
+    /// <summary>
+    /// Event to inform that an operator was signed in or signed out of a specific resource
+    /// </summary>
     event EventHandler<SignInStatusChangedArgs> SignInStatusChanged;
 }
 

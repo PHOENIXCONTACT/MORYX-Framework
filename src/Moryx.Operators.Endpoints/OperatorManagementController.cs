@@ -1,25 +1,26 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using System.Globalization;
+using System.Net;
+using System.Net.ServerSentEvents;
+using System.Runtime.CompilerServices;
+using System.Threading.Channels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moryx.AbstractionLayer.Resources;
+using Moryx.Operators.Attendances;
+using Moryx.Operators.Endpoints.Models;
 using Moryx.Operators.Exceptions;
 using Moryx.Operators.Skills;
 using Moryx.Runtime.Modules;
-using System.Net;
-using Moryx.Operators.Attendances;
-using Moryx.Operators.Endpoints.Models;
-using System.Threading.Channels;
-using System.Runtime.CompilerServices;
-using System.Net.ServerSentEvents;
-using System.Globalization;
 
 namespace Moryx.Operators.Endpoints;
 
 /// <summary>
 /// Definition of a REST API on the <see cref="IOperatorManagement"/> facade.
+/// TODO: Remove unused resourceManagement paramter in next major
 /// </summary>
 [ApiController]
 [Route("api/moryx/operators/")]
@@ -30,7 +31,6 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
     private const string ModuleStateChangedEventType = "moduleStateChanged";
     private readonly IOperatorManagement _operatorManagement = operatorManagement;
     private readonly IAttendanceManagementExtended _attendanceManagement = attendanceManagement;
-    private readonly IResourceManagement _resourceManagement = resourceManagement;
     private readonly ISkillManagement _skillManagement = skillManagement;
     private readonly IModuleManager _moduleManager = moduleManager;
 
@@ -111,9 +111,12 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
     {
         return Response(() =>
          {
-             var attendableResources = _resourceManagement.GetAssignableResources();
+             var attendableResources = _attendanceManagement.Assignables;
              // return all the resources
-             if (string.IsNullOrEmpty(operatorIdentifier)) return attendableResources.Select(Converter.ToModel);
+             if (string.IsNullOrEmpty(operatorIdentifier))
+             {
+                 return attendableResources.Select(Converter.ToModel);
+             }
 
              var @operator = RetrieveOperator(operatorIdentifier);
 
@@ -159,12 +162,8 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
 
     private void NotifyResource(IOperatorAssignable resource)
     {
-        var attandanceChangeArgs = _attendanceManagement.Operators
-            .Where(o => o.AssignedResources.Any(r => r.Id == resource.Id))
-            .Select(o => new AttendanceChangedArgs(o, _skillManagement.GetSkills(o).ToArray()))
-            .ToArray();
-
-        resource.AttendanceChanged(attandanceChangeArgs);
+        var attendance = _attendanceManagement.GetAttendingOperators(resource);
+        resource.AttendanceChanged(attendance);
     }
 
     [HttpPut]
@@ -191,12 +190,12 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
         return TypedResults.ServerSentEvents(stream);
     }
 
-    private async IAsyncEnumerable<SseItem<object>> GetChangeStream([EnumeratorCancellation]CancellationToken token)
+    private async IAsyncEnumerable<SseItem<object>> GetChangeStream([EnumeratorCancellation] CancellationToken token)
     {
         var channel = Channel.CreateUnbounded<SseItem<object>>();
         void OnStatusChanged(object? sender, SignInStatusChangedArgs e)
         {
-            channel.Writer.WriteAsync(new (Converter.ToModel(e.Operator), OperatorChange.Update.ToString()), token);
+            channel.Writer.WriteAsync(new(Converter.ToModel(e.Operator), OperatorChange.Update.ToString()), token);
         }
 
         void OnOperatorChanged(object? sender, OperatorChangedEventArgs e)
@@ -212,7 +211,7 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
             {
                 return;
             }
-            channel.Writer.WriteAsync(new(eventArgs.NewState.ToString(CultureInfo.InvariantCulture), ModuleStateChangedEventType));
+            channel.Writer.WriteAsync(new(eventArgs.NewState.ToString(CultureInfo.InvariantCulture), ModuleStateChangedEventType), token);
         }
 
         _operatorManagement.OperatorChanged += OnOperatorChanged;
@@ -279,6 +278,6 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
         => _attendanceManagement.GetOperator(WebUtility.HtmlEncode(operatorIdentifier)) ?? throw new OperatorNotFoundException(operatorIdentifier);
 
     private IOperatorAssignable RetrieveResource(long resourceId)
-        => _resourceManagement.GetAssignableResource(resourceId) ?? throw new ResourceNotFoundException(resourceId);
+        => _attendanceManagement.GetAssignable(resourceId) ?? throw new ResourceNotFoundException(resourceId);
 }
 

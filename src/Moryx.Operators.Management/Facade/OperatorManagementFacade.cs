@@ -128,9 +128,32 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         AttendanceManager.SignOut(VerifiedExisting(@operator), resource);
     }
 
+    /// <inheritdoc />
     public event EventHandler<AssignableOperator>? OperatorSignedIn;
 
+    /// <inheritdoc />
     public event EventHandler<AssignableOperator>? OperatorSignedOut;
+
+    /// <inheritdoc/>
+    public event EventHandler<SignInStatusChangedArgs>? SignInStatusChanged;
+
+    /// <inheritdoc />
+    public IEnumerable<IOperatorAssignable> Assignables => ResourceManagement.GetResources<IOperatorAssignable>();
+
+    /// <inheritdoc />
+    public IOperatorAssignable GetAssignable(long id)
+    {
+        return ResourceManagement.GetResource<IOperatorAssignable>(id);
+    }
+
+    /// <inheritdoc />
+    public IReadOnlyList<AttendanceChangedArgs> GetAttendingOperators(IOperatorAssignable resource)
+    {
+        return ((IAttendanceManagement)this).Operators
+            .Where(o => o.AssignedResources.Any(r => r.Id == resource.Id))
+            .Select(o => new AttendanceChangedArgs(o, this.GetSkills(o).ToArray()))
+            .ToArray();
+    }
 
     #endregion
 
@@ -273,7 +296,6 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
 
     /// <inheritdoc/>
     public event EventHandler<User>? UserSignedOut;
-    public event EventHandler<SignInStatusChangedArgs> SignInStatusChanged;
 
     #endregion
 
@@ -323,16 +345,6 @@ internal class OperatorManagementFacade : FacadeBase, IOperatorManagement, IAtte
         SkillManager.SkillTypeChanged -= ParallelOperations.RemoveListener<SkillTypeChangedEventArgs>(OnSkillTypeChanged);
 
         base.Deactivate();
-    }
-
-    public void NotifyResource(IOperatorAssignable resource)
-    {
-        var attandanceChangeArgs = ((IAttendanceManagement)this).Operators
-            .Where(o => o.AssignedResources.Any(r => r.Id == resource.Id))
-            .Select(o => new AttendanceChangedArgs(o, this.GetSkills(o).ToArray()))
-            .ToArray();
-
-        resource.AttendanceChanged(attandanceChangeArgs);
     }
 
     #endregion
