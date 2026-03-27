@@ -14,6 +14,7 @@ using Moryx.Operators.Endpoints.Models;
 using System.Threading.Channels;
 using System.Runtime.CompilerServices;
 using System.Net.ServerSentEvents;
+using System.Globalization;
 
 namespace Moryx.Operators.Endpoints;
 
@@ -24,12 +25,14 @@ namespace Moryx.Operators.Endpoints;
 [Route("api/moryx/operators/")]
 [Produces("application/json")]
 public class OperatorManagementController(IOperatorManagement operatorManagement,
-    IAttendanceManagementExtended attendanceManagement, IResourceManagement resourceManagement, ISkillManagement skillManagement) : ControllerBase
+    IAttendanceManagementExtended attendanceManagement, IResourceManagement resourceManagement, ISkillManagement skillManagement, IModuleManager moduleManager) : ControllerBase
 {
+    private const string ModuleStateChangedEventType = "moduleStateChanged";
     private readonly IOperatorManagement _operatorManagement = operatorManagement;
     private readonly IAttendanceManagementExtended _attendanceManagement = attendanceManagement;
     private readonly IResourceManagement _resourceManagement = resourceManagement;
     private readonly ISkillManagement _skillManagement = skillManagement;
+    private readonly IModuleManager _moduleManager = moduleManager;
 
     #region IOperatorManagement
 
@@ -188,24 +191,33 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
         return TypedResults.ServerSentEvents(stream);
     }
 
-    private async IAsyncEnumerable<SseItem<ExtendedOperatorModel>> GetChangeStream([EnumeratorCancellation]CancellationToken token)
+    private async IAsyncEnumerable<SseItem<object>> GetChangeStream([EnumeratorCancellation]CancellationToken token)
     {
-        var channel = Channel.CreateUnbounded<SseItem<ExtendedOperatorModel>>();
+        var channel = Channel.CreateUnbounded<SseItem<object>>();
         void OnStatusChanged(object? sender, SignInStatusChangedArgs e)
         {
-            var sse = new SseItem<ExtendedOperatorModel>(Converter.ToModel(e.Operator), OperatorChange.Update.ToString());
-            channel.Writer.WriteAsync(sse, token);
+            channel.Writer.WriteAsync(new (Converter.ToModel(e.Operator), OperatorChange.Update.ToString()), token);
         }
 
         void OnOperatorChanged(object? sender, OperatorChangedEventArgs e)
         {
-            var sse = new SseItem<ExtendedOperatorModel>(
+            var sse = new SseItem<object>(
                     Converter.ToModel(e.Operator),
                     e.Change.ToString());
             channel.Writer.WriteAsync(sse, token);
         }
+        void ModuleStateChanged(object sender, ModuleStateChangedEventArgs eventArgs)
+        {
+            if (sender is not IServerModule module || module is not IFacadeContainer<IOperatorManagement> facadeContainer)
+            {
+                return;
+            }
+            channel.Writer.WriteAsync(new(eventArgs.NewState.ToString(CultureInfo.InvariantCulture), ModuleStateChangedEventType));
+        }
+
         _operatorManagement.OperatorChanged += OnOperatorChanged;
         _attendanceManagement.SignInStatusChanged += OnStatusChanged;
+        _moduleManager.ModuleStateChanged += ModuleStateChanged;
 
         await foreach (var item in channel.Reader.ReadAllAsync(token))
         {
