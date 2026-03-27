@@ -11,6 +11,9 @@ using Moryx.Runtime.Modules;
 using System.Net;
 using Moryx.Operators.Attendances;
 using Moryx.Operators.Endpoints.Models;
+using System.Threading.Channels;
+using System.Runtime.CompilerServices;
+using System.Net.ServerSentEvents;
 
 namespace Moryx.Operators.Endpoints;
 
@@ -21,10 +24,10 @@ namespace Moryx.Operators.Endpoints;
 [Route("api/moryx/operators/")]
 [Produces("application/json")]
 public class OperatorManagementController(IOperatorManagement operatorManagement,
-    IAttendanceManagement attendanceManagement, IResourceManagement resourceManagement, ISkillManagement skillManagement) : ControllerBase
+    IAttendanceManagementExtended attendanceManagement, IResourceManagement resourceManagement, ISkillManagement skillManagement) : ControllerBase
 {
     private readonly IOperatorManagement _operatorManagement = operatorManagement;
-    private readonly IAttendanceManagement _attendanceManagement = attendanceManagement;
+    private readonly IAttendanceManagementExtended _attendanceManagement = attendanceManagement;
     private readonly IResourceManagement _resourceManagement = resourceManagement;
     private readonly ISkillManagement _skillManagement = skillManagement;
 
@@ -178,6 +181,40 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
         }));
     }
 
+    
+    [HttpGet("operatorchanged")]
+    public async IAsyncEnumerable<SseItem<ExtendedOperatorModel>> ChangeStream([EnumeratorCancellation]CancellationToken token)
+    {
+        var channel = Channel.CreateUnbounded<SseItem<ExtendedOperatorModel>>();
+        void OnStatusChanged(object? sender, SignInStatusChangedArgs e) {
+            var sse = new SseItem<ExtendedOperatorModel>(
+                    Converter.ToModel(e.Operator),
+                    OperatorChange.Update.ToString());
+            channel.Writer.WriteAsync(sse, token);
+        }
+
+        void OnOperatorChanged(object? sender, OperatorChangedEventArgs e)
+        {
+            var sse = new SseItem<ExtendedOperatorModel>(
+                    Converter.ToModel(e.Operator),
+                    e.Change.ToString());
+            channel.Writer.WriteAsync(sse, token);
+        }
+        _operatorManagement.OperatorChanged += OnOperatorChanged;
+        _attendanceManagement.SignInStatusChanged += OnStatusChanged;
+
+        await foreach (var item in channel.Reader.ReadAllAsync(token))
+        {
+            yield return item;
+        }
+
+        _attendanceManagement.SignInStatusChanged -= OnStatusChanged;
+        _operatorManagement.OperatorChanged -= OnOperatorChanged;
+    }
+
+    
+
+
     #endregion
 
     private new ActionResult<TResult> Response<TResult>(Func<TResult> func, Func<TResult, ActionResult<TResult>>? onSuccess = null)
@@ -217,7 +254,7 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
     {
         ResourceNotFoundException _ => NotFound(ex.Message),
         OperatorNotFoundException _ => NotFound(ex.Message),
-        AlreadyExistsException _ => BadRequest(ex.Message),
+        AlreadyExistsException _ => Conflict(ex.Message),
         ArgumentNullException _ => BadRequest(ex.Message),
         ArgumentException _ => BadRequest(ex.Message),
         KeyNotFoundException _ => StatusCode(500, ex.Message),
