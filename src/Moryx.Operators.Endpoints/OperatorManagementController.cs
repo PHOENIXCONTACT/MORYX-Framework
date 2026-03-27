@@ -1,7 +1,6 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
-using System.Globalization;
 using System.Net;
 using System.Net.ServerSentEvents;
 using System.Runtime.CompilerServices;
@@ -25,12 +24,16 @@ namespace Moryx.Operators.Endpoints;
 [ApiController]
 [Route("api/moryx/operators/")]
 [Produces("application/json")]
-public class OperatorManagementController(IOperatorManagement operatorManagement,
-    IAttendanceManagementExtended attendanceManagement, IResourceManagement resourceManagement, ISkillManagement skillManagement, IModuleManager moduleManager) : ControllerBase
+public class OperatorManagementController(
+    IOperatorManagement operatorManagement,
+    IAttendanceManagement attendanceManagement,
+    IResourceManagement resourceManagement,
+    ISkillManagement skillManagement,
+    IModuleManager moduleManager) : ControllerBase
 {
     private const string ModuleStateChangedEventType = "moduleStateChanged";
     private readonly IOperatorManagement _operatorManagement = operatorManagement;
-    private readonly IAttendanceManagementExtended _attendanceManagement = attendanceManagement;
+    private readonly IAttendanceManagement _attendanceManagement = attendanceManagement;
     private readonly ISkillManagement _skillManagement = skillManagement;
     private readonly IModuleManager _moduleManager = moduleManager;
 
@@ -110,20 +113,22 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
     public ActionResult<IEnumerable<AttendableResourceModel>> GetResources(string? operatorIdentifier = null)
     {
         return Response(() =>
-         {
-             var attendableResources = _attendanceManagement.Assignables;
-             // return all the resources
-             if (string.IsNullOrEmpty(operatorIdentifier))
-             {
-                 return attendableResources.Select(Converter.ToModel);
-             }
-
-             var @operator = RetrieveOperator(operatorIdentifier);
-
-             return attendableResources
-              .Where(attendableResource => attendableResource.RequiredSkills.ProvidedBy(_skillManagement.GetAcquiredCapabilities(@operator)))
-              .Select(Converter.ToModel);
-         });
+        {
+           
+            var attendableResources =
+                _attendanceManagement is IAttendanceManagementExtended extended
+                ? extended.Assignables
+                : resourceManagement.GetAssignableResources();
+            // return all the resources
+            if (string.IsNullOrEmpty(operatorIdentifier))
+            {
+                return attendableResources.Select(Converter.ToModel);
+            }
+            var @operator = RetrieveOperator(operatorIdentifier);
+            return attendableResources
+                .Where(attendableResource => attendableResource.RequiredSkills.ProvidedBy(_skillManagement.GetAcquiredCapabilities(@operator)))
+                .Select(Converter.ToModel);
+        });
     }
 
     [HttpGet]
@@ -162,7 +167,14 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
 
     private void NotifyResource(IOperatorAssignable resource)
     {
-        var attendance = _attendanceManagement.GetAttendingOperators(resource);
+        var attendance =
+                _attendanceManagement is IAttendanceManagementExtended extended
+                ? extended.GetAttendingOperators(resource)
+                :  _attendanceManagement.Operators
+                    .Where(o => o.AssignedResources.Any(r => r.Id == resource.Id))
+                    .Select(o => new AttendanceChangedArgs(o, _skillManagement.GetSkills(o).ToArray()))
+                    .ToArray();
+
         resource.AttendanceChanged(attendance);
     }
 
@@ -205,25 +217,32 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
                     e.Change.ToString());
             channel.Writer.WriteAsync(sse, token);
         }
-        void ModuleStateChanged(object sender, ModuleStateChangedEventArgs eventArgs)
+        void ModuleStateChanged(object? sender, ModuleStateChangedEventArgs eventArgs)
         {
             if (sender is not IServerModule module || module is not IFacadeContainer<IOperatorManagement> facadeContainer)
             {
                 return;
             }
-            channel.Writer.WriteAsync(new(eventArgs.NewState.ToString(CultureInfo.InvariantCulture), ModuleStateChangedEventType), token);
+            channel.Writer.WriteAsync(new(eventArgs.NewState.ToString(), ModuleStateChangedEventType), token);
         }
 
         _operatorManagement.OperatorChanged += OnOperatorChanged;
-        _attendanceManagement.SignInStatusChanged += OnStatusChanged;
+        if (_attendanceManagement is IAttendanceManagementExtended extended)
+        {
+            extended.SignInStatusChanged += OnStatusChanged;
+        }
+
         _moduleManager.ModuleStateChanged += ModuleStateChanged;
 
         await foreach (var item in channel.Reader.ReadAllAsync(token))
         {
             yield return item;
         }
+        if (_attendanceManagement is IAttendanceManagementExtended extended2)
+        {
+            extended2.SignInStatusChanged -= OnStatusChanged;
+        }
 
-        _attendanceManagement.SignInStatusChanged -= OnStatusChanged;
         _operatorManagement.OperatorChanged -= OnOperatorChanged;
     }
 
@@ -278,6 +297,15 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
         => _attendanceManagement.GetOperator(WebUtility.HtmlEncode(operatorIdentifier)) ?? throw new OperatorNotFoundException(operatorIdentifier);
 
     private IOperatorAssignable RetrieveResource(long resourceId)
-        => _attendanceManagement.GetAssignable(resourceId) ?? throw new ResourceNotFoundException(resourceId);
+    {
+        if (_attendanceManagement is IAttendanceManagementExtended extended)
+        {
+            return extended.GetAssignable(resourceId) ?? throw new ResourceNotFoundException(resourceId);
+        }
+        else
+        {
+            return resourceManagement.GetAssignableResource(resourceId) ?? throw new ResourceNotFoundException(resourceId);
+        }
+    }
 }
 
