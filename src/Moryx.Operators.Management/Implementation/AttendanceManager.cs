@@ -28,25 +28,45 @@ internal class AttendanceManager : IAttendanceManager
     public void SignIn(OperatorData operatorData, IOperatorAssignable resource)
     {
         if (operatorData.AssignedResources.Any(r => r.Id == resource.Id))
+        {
             return;
+        }
 
         operatorData.AssignedResources.Add(resource);
         OperatorManager.Update(operatorData.Operator);
         OperatorSignedIn?.Invoke(this, operatorData);
+        SignInStatusChanged?.Invoke(this, new()
+        {
+            Operator = operatorData.Operator,
+            Resource = resource,
+            Status = SignInStatus.SignedIn
+        });
     }
 
     public void SignOut(OperatorData operatorData, IOperatorAssignable resource)
     {
         if (!operatorData.AssignedResources.Remove(resource))
+        {
             return;
+        }
+
         OperatorManager.Update(operatorData.Operator);
         OperatorSignedOut?.Invoke(this, operatorData);
+        SignInStatusChanged?.Invoke(this, new()
+        {
+            Operator = operatorData.Operator,
+            Resource = resource,
+            Status = SignInStatus.SignedOut
+        });
+
     }
 
 #pragma warning disable CS8618 // Facade always subscribes
     public event EventHandler<OperatorData> OperatorSignedIn;
 
     public event EventHandler<OperatorData> OperatorSignedOut;
+
+    public event EventHandler<SignInStatusChangedArgs> SignInStatusChanged;
 #pragma warning restore CS8618 // Facade always subscribes
 
     #endregion
@@ -62,11 +82,15 @@ internal class AttendanceManager : IAttendanceManager
     private OperatorData? GetOrCreateDefaultOperator()
     {
         if (string.IsNullOrEmpty(ModuleConfig.DefaultOperator))
+        {
             return null;
+        }
 
         var defaultOperatorData = OperatorManager.Operators.FirstOrDefault(o => o.Identifier.Equals(ModuleConfig.DefaultOperator));
         if (defaultOperatorData != null)
+        {
             return defaultOperatorData;
+        }
 
         var defaultOperator = new Operator(ModuleConfig.DefaultOperator)
         {
