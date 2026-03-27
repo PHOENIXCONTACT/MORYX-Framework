@@ -181,15 +181,19 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
         }));
     }
 
-    
-    [HttpGet("operatorchanged")]
-    public async IAsyncEnumerable<SseItem<ExtendedOperatorModel>> ChangeStream([EnumeratorCancellation]CancellationToken token)
+    [HttpGet("operator-changed")]
+    public IResult Stream(CancellationToken token)
+    {
+        var stream = GetChangeStream(token);
+        return TypedResults.ServerSentEvents(stream);
+    }
+
+    private async IAsyncEnumerable<SseItem<ExtendedOperatorModel>> GetChangeStream([EnumeratorCancellation]CancellationToken token)
     {
         var channel = Channel.CreateUnbounded<SseItem<ExtendedOperatorModel>>();
-        void OnStatusChanged(object? sender, SignInStatusChangedArgs e) {
-            var sse = new SseItem<ExtendedOperatorModel>(
-                    Converter.ToModel(e.Operator),
-                    OperatorChange.Update.ToString());
+        void OnStatusChanged(object? sender, SignInStatusChangedArgs e)
+        {
+            var sse = new SseItem<ExtendedOperatorModel>(Converter.ToModel(e.Operator), OperatorChange.Update.ToString());
             channel.Writer.WriteAsync(sse, token);
         }
 
@@ -211,9 +215,6 @@ public class OperatorManagementController(IOperatorManagement operatorManagement
         _attendanceManagement.SignInStatusChanged -= OnStatusChanged;
         _operatorManagement.OperatorChanged -= OnOperatorChanged;
     }
-
-    
-
 
     #endregion
 
