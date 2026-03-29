@@ -1,6 +1,9 @@
-@if (properties() !== undefined) {
+@let entry = properties();
+
+@if (entry) {
   <navigable-entry-editor
-    [entry]="properties()!"
+    [entry]="entry"
+    (entryChange)="propertiesChanged($event)"
     queryParam = "resourceProperties"
     [disabled]="!isEditMode()"
     >
