@@ -8,14 +8,14 @@ namespace Moryx.Operators.Management.Tests;
 [TestFixture]
 internal class IAttendanceManagementTests : TestsBase
 {
-    private IAttendanceManagement _facade;
+    private IAttendanceManagementExtended _facade;
     private readonly string _defaultOperatorIdentifier = "Default Operator Identifier";
 
     [SetUp]
     public override void SetUp()
     {
         base.SetUp();
-        _facade = _env.GetTestModule<IAttendanceManagement>();
+        _facade = _env.GetTestModule<IAttendanceManagementExtended>();
         _env.GetTestModule<IOperatorManagement>().AddOperator(AssignableOperator);
     }
 
@@ -88,12 +88,21 @@ internal class IAttendanceManagementTests : TestsBase
         // Arrange
         var eventArgs = InvalidAssignableOperator;
         _facade.OperatorSignedIn += (sender, op) => eventArgs = op;
+        SignInStatusChangedArgs? signInStatus = null;
+        _facade.SignInStatusChanged += (sender, args) => signInStatus = args;
 
         // Act
         _facade.SignIn(AssignableOperator, FirstResourceMock.Object);
 
         // Assert
+        using var _ = Assert.EnterMultipleScope();
         Assert.That(ObjectsAreEqual(AssignableOperator, eventArgs));
+        AssertSignInEventEquals(signInStatus, new SignInStatusChangedArgs()
+        {
+            Status = SignInStatus.SignedIn,
+            Operator = AssignableOperator,
+            Resource = FirstResourceMock.Object,
+        });
     }
 
     [Test]
@@ -101,8 +110,13 @@ internal class IAttendanceManagementTests : TestsBase
     {
         // Arrange
         var eventArgs = InvalidAssignableOperator;
+        SignInStatusChangedArgs? signInStatusArgs = null;
+
+
         _facade.SignIn(AssignableOperator, FirstResourceMock.Object);
         _facade.OperatorSignedIn += (sender, op) => eventArgs = op;
+        _facade.SignInStatusChanged += (sender, args) => signInStatusArgs = args;
+
 
         // Act
         // Assert
@@ -110,6 +124,7 @@ internal class IAttendanceManagementTests : TestsBase
         {
             Assert.DoesNotThrow(() => _facade.SignIn(AssignableOperator, FirstResourceMock.Object));
             Assert.That(ObjectsAreEqual(InvalidAssignableOperator, eventArgs));
+            Assert.That(signInStatusArgs, Is.Null);
         });
     }
 
@@ -167,14 +182,25 @@ internal class IAttendanceManagementTests : TestsBase
     {
         // Arrange
         var eventArgs = InvalidAssignableOperator;
+        SignInStatusChangedArgs? signinStatusArgs = null;
+
         _facade.OperatorSignedOut += (sender, op) => eventArgs = op;
+        _facade.SignInStatusChanged += (sender, args) => signinStatusArgs = args;
+
         _facade.SignIn(AssignableOperator, FirstResourceMock.Object);
 
         // Act
         _facade.SignOut(AssignableOperator, FirstResourceMock.Object);
 
         // Assert
+        using var _ = Assert.EnterMultipleScope();
         Assert.That(ObjectsAreEqual(AssignableOperator, eventArgs));
+        AssertSignInEventEquals(signinStatusArgs, new SignInStatusChangedArgs()
+        {
+            Status = SignInStatus.SignedOut,
+            Operator = AssignableOperator,
+            Resource = FirstResourceMock.Object,
+        });
     }
 
     [Test]
@@ -200,7 +226,10 @@ internal class IAttendanceManagementTests : TestsBase
     {
         // Arrange
         var eventArgs = InvalidAssignableOperator;
+        SignInStatusChangedArgs? signInStatus = null;
+
         _facade.OperatorSignedOut += (sender, op) => eventArgs = op;
+        _facade.SignInStatusChanged += (sender, args) => signInStatus = args;
 
         // Act
         // Assert
@@ -208,6 +237,20 @@ internal class IAttendanceManagementTests : TestsBase
         {
             Assert.DoesNotThrow(() => _facade.SignOut(AssignableOperator, FirstResourceMock.Object));
             Assert.That(ObjectsAreEqual(InvalidAssignableOperator, eventArgs));
+            Assert.That(signInStatus, Is.Null);
         });
+    }
+
+    private void AssertSignInEventEquals(SignInStatusChangedArgs? received, SignInStatusChangedArgs expected)
+    {
+        using var _ = Assert.EnterMultipleScope();
+        Assert.That(received, Is.Not.Null);
+        Assert.That(received, Has.Property(nameof(SignInStatusChangedArgs.Status)).EqualTo(expected.Status));
+        Assert.That(received, Has.Property(nameof(SignInStatusChangedArgs.Operator))
+            .Matches<AssignableOperator>(op =>
+                ObjectsAreEqual(expected.Operator, op)));
+        Assert.That(received, Has.Property(nameof(SignInStatusChangedArgs.Resource))
+            .Matches<IOperatorAssignable>(res =>
+                ObjectsAreEqual([res], [expected.Resource])));
     }
 }
