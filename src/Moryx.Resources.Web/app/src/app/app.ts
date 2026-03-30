@@ -75,7 +75,6 @@ export class App implements OnInit, OnDestroy {
   private modificationService = inject(ResourceModificationService);
   private sessionService = inject(SessionService);
   private translateService = inject(TranslateService);
-  private searchBarService = inject(SearchBarService);
   private languageService = inject(LanguageService);
   private snackbarService = inject(SnackbarService);
   private formControlService = inject(FormControlService);
@@ -142,7 +141,6 @@ export class App implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.searchBarService.unsubscribe();
     this.formControlService.canSave.unsubscribe();
     this.subscriptions.forEach(s => s.unsubscribe());
   }
@@ -173,12 +171,6 @@ export class App implements OnInit, OnDestroy {
     } else {
       this.editResourceService.loadResource();
     }
-
-    this.searchBarService.subscribe({
-      next: (result: SearchRequest) => {
-        this.onSearch(result);
-      }
-    });
   }
 
   private select(resource: ResourceModel | undefined): void {
@@ -191,35 +183,6 @@ export class App implements OnInit, OnDestroy {
     const toExpand = getHierarchieLineFor(this.selected?.id, this.resources);
     this.treeControl.dataNodes.filter(n => toExpand.find(e => e === n.id)).forEach(n => this.treeControl.expand(n));
     this.treeStateIsInitialized = true;
-  }
-
-  onSearch(result: SearchRequest) {
-    const urlBase = 'Resources/details/';
-    if (!this.resourcesFlat) return;
-
-    const searchTerm = result.term;
-    let resources = this.resourcesFlat.filter(r => r.name?.toLowerCase()?.includes(searchTerm.toLowerCase()));
-    if (!resources) resources = [];
-
-    if (result.submitted) {
-      this.searchBarService.clearSuggestions();
-      if (resources.length === 1 && resources[0].id) this.selectResource(resources[0].id);
-      this.searchBarService.subscribe({
-        next: (newRequest: SearchRequest) => {
-          this.onSearch(newRequest);
-        }
-      });
-    } else {
-      const searchSuggestions = [] as SearchSuggestion[];
-      for (let resource of resources) {
-        if (!resource.name) continue;
-
-        const url = urlBase + resource.id;
-        searchSuggestions.push({text: resource.name, url: url});
-      }
-
-      this.searchBarService.provideSuggestions(searchSuggestions);
-    }
   }
 
   openContextMenuByPressing(event: any, id: number) {
@@ -236,6 +199,7 @@ export class App implements OnInit, OnDestroy {
 
   selectResource(id: number) {
     if (this.isEditMode() || this.selected?.id === id) return;
+    // ToDo: Move loading to route resolver
     this.router.navigate([`/details/${id}`]).then(() => this.editResourceService.loadResource());
   }
 
@@ -295,8 +259,6 @@ export class App implements OnInit, OnDestroy {
   }
 
   onEdit() {
-    this.searchBarService.clearSuggestions();
-    this.searchBarService.unsubscribe();
     this.editResourceService.onEdit();
   }
 
@@ -307,21 +269,9 @@ export class App implements OnInit, OnDestroy {
 
   onCancelEditing() {
     this.editResourceService.onCancel();
-    this.searchBarService.subscribe({
-      next: (result: SearchRequest) => {
-        this.onSearch(result);
-      }
-    });
   }
 
   onDeselect() {
-    if (this.isEditMode()) {
-      this.searchBarService.subscribe({
-        next: (result: SearchRequest) => {
-          this.onSearch(result);
-        }
-      });
-    }
     this.editResourceService.onDeselect();
   }
 
@@ -331,14 +281,8 @@ export class App implements OnInit, OnDestroy {
 
   async onSave() {
     await this.editResourceService.onSave();
-    this.searchBarService.subscribe({
-      next: (result: SearchRequest) => {
-        this.onSearch(result);
-      }
-    });
   }
 }
-
 
 export interface Position {
   x: string;
