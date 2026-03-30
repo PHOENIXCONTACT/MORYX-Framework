@@ -26,6 +26,8 @@ public class ProductManagementController : ControllerBase
 {
     private readonly IProductManagement _productManagement;
     private readonly ProductConverter _productConverter;
+    private readonly FullSerialization _productImportParametersSerialization;
+
     public ProductManagementController(IProductManagement productManagement,
         IModuleManager moduleManager,
         IServiceProvider serviceProvider)
@@ -34,6 +36,9 @@ public class ProductManagementController : ControllerBase
 
         var module = moduleManager.AllModules.FirstOrDefault(module => module is IFacadeContainer<IProductManagement>);
         _productConverter = new ProductConverter(_productManagement, module.Container, serviceProvider);
+
+        _productImportParametersSerialization = new FullSerialization(_productConverter.ProductManagerContainer, _productConverter.GlobalContainer,
+           new ValueProviderExecutor(new ValueProviderExecutorSettings().AddDefaultValueProvider()));
     }
 
     #region importers
@@ -42,8 +47,6 @@ public class ProductManagementController : ControllerBase
     [Authorize(Policy = ProductPermissions.CanViewTypes)]
     public ActionResult<ProductCustomization> GetProductCustomization()
     {
-        var parameterSerialization = new PossibleValuesSerialization(_productConverter.ProductManagerContainer, _productConverter.GlobalContainer,
-            new ValueProviderExecutor(new ValueProviderExecutorSettings().AddDefaultValueProvider()));
         return new ProductCustomization
         {
             ProductTypes = GetProductTypes(),
@@ -51,7 +54,7 @@ public class ProductManagementController : ControllerBase
             Importers = _productManagement.Importers.Select(i => new ProductImporter
             {
                 Name = i.Key,
-                Parameters = EntryConvert.EncodeObject(i.Value, parameterSerialization)
+                Parameters = EntryConvert.EncodeObject(i.Value, _productImportParametersSerialization)
             }).ToArray()
         };
     }
@@ -64,6 +67,7 @@ public class ProductManagementController : ControllerBase
             typeModels.Add(_productConverter.ConvertProductType(type));
         return typeModels.ToArray();
     }
+
     private RecipeDefinitionModel[] GetRecipeTypes()
     {
         var recipeTypes = _productManagement.RecipeTypes;
