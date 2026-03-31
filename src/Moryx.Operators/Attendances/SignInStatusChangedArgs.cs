@@ -26,5 +26,5 @@ public class SignInStatusChangedArgs : EventArgs
     /// <summary>
     /// The resource in which the user signed in
     /// </summary>
-    public required IOperatorAssignable Resource { get; set; }
+    public required IOperatorAssignable Assignable { get; set; }
 }

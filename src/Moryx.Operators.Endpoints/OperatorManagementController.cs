@@ -31,11 +31,11 @@ public class OperatorManagementController(
     ISkillManagement skillManagement,
     IModuleManager moduleManager) : ControllerBase
 {
-    private const string ModuleStateChangedEventType = "moduleStateChanged";
+    
+    private const string SignInStatusChangedEventType = "signInChanged";
     private readonly IOperatorManagement _operatorManagement = operatorManagement;
     private readonly IAttendanceManagement _attendanceManagement = attendanceManagement;
     private readonly ISkillManagement _skillManagement = skillManagement;
-    private readonly IModuleManager _moduleManager = moduleManager;
 
     #region IOperatorManagement
 
@@ -195,7 +195,29 @@ public class OperatorManagementController(
         }));
     }
 
-    [HttpGet("operator-changed")]
+    public enum OperatorChange
+{
+    Creation,
+    Update,
+    Deletion
+}
+
+    /// <summary>
+    /// Provides events related to operators
+    /// <list type="termdef">
+    /// <item>
+    /// <term>signInChanged</term>
+    /// <description><see cref="SignInStatusChangedModel"/></description>
+    /// </item>
+    /// <item>
+    /// <term>Creation|Update|Deletion</term>
+    /// <description><see cref="OperatorModel"/></description>
+    /// </item>
+    /// </list>
+    /// </summary>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    [HttpGet("stream")]
     public IResult Stream(CancellationToken token)
     {
         var stream = GetChangeStream(token);
@@ -207,7 +229,7 @@ public class OperatorManagementController(
         var channel = Channel.CreateUnbounded<SseItem<object>>();
         void OnStatusChanged(object? sender, SignInStatusChangedArgs e)
         {
-            channel.Writer.WriteAsync(new(Converter.ToModel(e.Operator), OperatorChange.Update.ToString()), token);
+            channel.Writer.WriteAsync(new(Converter.ToModel(e), SignInStatusChangedEventType), token);
         }
 
         void OnOperatorChanged(object? sender, OperatorChangedEventArgs e)
@@ -217,22 +239,12 @@ public class OperatorManagementController(
                     e.Change.ToString());
             channel.Writer.WriteAsync(sse, token);
         }
-        void ModuleStateChanged(object? sender, ModuleStateChangedEventArgs eventArgs)
-        {
-            if (sender is not IServerModule module || module is not IFacadeContainer<IOperatorManagement> facadeContainer)
-            {
-                return;
-            }
-            channel.Writer.WriteAsync(new(eventArgs.NewState.ToString(), ModuleStateChangedEventType), token);
-        }
 
         _operatorManagement.OperatorChanged += OnOperatorChanged;
         if (_attendanceManagement is IAttendanceManagementExtended extended)
         {
             extended.SignInStatusChanged += OnStatusChanged;
         }
-
-        _moduleManager.ModuleStateChanged += ModuleStateChanged;
 
         await foreach (var item in channel.Reader.ReadAllAsync(token))
         {

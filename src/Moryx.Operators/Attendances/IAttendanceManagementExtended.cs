@@ -28,5 +28,5 @@ public interface IAttendanceManagementExtended : IAttendanceManagement
     /// </summary>
     /// <param name="resource"></param>
     /// <returns></returns>
-    IReadOnlyList<AttendanceChangedArgs> GetAttendingOperators(IOperatorAssignable resource);
+    IReadOnlyList<AttendanceChangedArgs> GetAttendingOperators(IOperatorAssignable assignable);
 }

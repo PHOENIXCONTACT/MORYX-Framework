@@ -101,7 +101,7 @@ internal class IAttendanceManagementTests : TestsBase
         {
             Status = SignInStatus.SignedIn,
             Operator = AssignableOperator,
-            Resource = FirstResourceMock.Object,
+            Assignable = FirstResourceMock.Object,
         });
     }
 
@@ -199,7 +199,7 @@ internal class IAttendanceManagementTests : TestsBase
         {
             Status = SignInStatus.SignedOut,
             Operator = AssignableOperator,
-            Resource = FirstResourceMock.Object,
+            Assignable = FirstResourceMock.Object,
         });
     }
 
@@ -249,8 +249,8 @@ internal class IAttendanceManagementTests : TestsBase
         Assert.That(received, Has.Property(nameof(SignInStatusChangedArgs.Operator))
             .Matches<AssignableOperator>(op =>
                 ObjectsAreEqual(expected.Operator, op)));
-        Assert.That(received, Has.Property(nameof(SignInStatusChangedArgs.Resource))
+        Assert.That(received, Has.Property(nameof(SignInStatusChangedArgs.Assignable))
             .Matches<IOperatorAssignable>(res =>
-                ObjectsAreEqual([res], [expected.Resource])));
+                ObjectsAreEqual([res], [expected.Assignable])));
     }
 }

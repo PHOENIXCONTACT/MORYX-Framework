@@ -38,7 +38,7 @@ internal class AttendanceManager : IAttendanceManager
         SignInStatusChanged?.Invoke(this, new()
         {
             Operator = operatorData.Operator,
-            Resource = resource,
+            Assignable = resource,
             Status = SignInStatus.SignedIn
         });
     }
@@ -55,7 +55,7 @@ internal class AttendanceManager : IAttendanceManager
         SignInStatusChanged?.Invoke(this, new()
         {
             Operator = operatorData.Operator,
-            Resource = resource,
+            Assignable = resource,
             Status = SignInStatus.SignedOut
         });
 
