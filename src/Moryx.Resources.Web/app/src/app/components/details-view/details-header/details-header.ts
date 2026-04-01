@@ -29,6 +29,7 @@ import { MatInputModule } from "@angular/material/input";
 export class DetailsHeader implements AfterContentChecked {
   private formControlService = inject(FormControlService);
 
+  // ToDo: Replace input with service reference
   resource = input.required<ResourceModel>();
   editMode = input<boolean>(false);
   TranslationConstants = TranslationConstants;

@@ -43,7 +43,7 @@ export class ResourceMethods {
   private snackBar = inject(MatSnackBar);
   private snackbarService = inject(SnackbarService);
 
-  private activeResource = toSignal(inject(EditResourceService).activeResource$);
+  private editService = inject(EditResourceService);
 
   public methods = signal<MethodEntry[] | undefined | null>([]);
   private resourceId?: number;
@@ -56,7 +56,7 @@ export class ResourceMethods {
 
   constructor() {
     effect(() => {
-      const resource = this.activeResource();
+      const resource = this.editService.activeResource();
       if (!resource) {
         return;
       }

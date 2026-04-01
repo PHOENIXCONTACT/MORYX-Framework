@@ -14,8 +14,6 @@ export class SessionService {
   private readonly RESOURCE_TREE: string = 'resource-tree';
   private readonly WIP_RESOURCE: string = 'wip-resource';
 
-  constructor() { }
-
   storeTreeState(treeControl: FlatTreeControl<FlatNode, FlatNode>) {
     const nodes = treeControl.dataNodes.filter(n => treeControl.isExpanded(n)).map(n => n.id);
     const nodesString = nodes.join(",");
@@ -44,10 +42,11 @@ export class SessionService {
     return item ? JSON.parse(item) : undefined;
   }
 
-  removeWipResource() {
+  popWipResource(): ResourceStorageObject | undefined {
+    const product = this.getWipResource();
     sessionStorage.removeItem(this.WIP_RESOURCE);
+    return product;
   }
-
 }
 
 export interface ResourceStorageObject {

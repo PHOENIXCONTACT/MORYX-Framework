@@ -17,7 +17,6 @@ export class SearchService {
 
   private blockedByEditing = toSignal(this.editService.edit$);
   private resources = toSignal(this.cacheService.flatResources);
-  private selected = toSignal(this.editService.activeResource$);
 
   constructor() {
     effect(() => {
@@ -97,9 +96,8 @@ export class SearchService {
   }
 
   private selectResource(id: number) {
-    if (this.blockedByEditing() || this.selected()?.id === id) return;
-    // ToDo: Move loading to route resolver
-    this.router.navigate([`/details/${id}`]).then(() => this.editService.loadResource());
+    if (this.blockedByEditing() || this.editService.activeResource()?.id === id) return;
+    this.router.navigate([`/details/${id}`]);
   }
 
   private updateSuggestions(possibleResults: ResourceModel[]) {

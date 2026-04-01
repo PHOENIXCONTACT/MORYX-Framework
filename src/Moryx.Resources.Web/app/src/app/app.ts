@@ -4,7 +4,7 @@
 */
 
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit, signal, untracked, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
@@ -138,6 +138,12 @@ export class App implements OnInit, OnDestroy {
     this.translateService.setFallbackLang('en');
     this.translateService.use(this.languageService.getDefaultLanguage());
     this.formControlService.canSave.subscribe(state => (this.canSave = state));
+    
+    effect(() => {
+      const resource = this.editResourceService.activeResource();
+      if (!resource || this.selected?.id === resource.id) return;
+      untracked(() => this.select(resource));
+    });
   }
 
   ngOnDestroy(): void {
@@ -161,16 +167,6 @@ export class App implements OnInit, OnDestroy {
         this.resourcesFlat = resources;
       })
     );
-
-    this.subscriptions.push(this.editResourceService.activeResource$.subscribe(resource => this.select(resource)));
-
-    // ToDo: move to edit service
-    const wipResource = this.sessionService.getWipResource();
-    if (wipResource) {
-      this.editResourceService.loadFromStorage();
-    } else {
-      this.editResourceService.loadResource();
-    }
   }
 
   private select(resource: ResourceModel | undefined): void {
@@ -199,8 +195,7 @@ export class App implements OnInit, OnDestroy {
 
   selectResource(id: number) {
     if (this.isEditMode() || this.selected?.id === id) return;
-    // ToDo: Move loading to route resolver
-    this.router.navigate([`/details/${id}`]).then(() => this.editResourceService.loadResource());
+    this.router.navigate(['details', id]);
   }
 
   clickContainer(event: MouseEvent) {
@@ -255,7 +250,8 @@ export class App implements OnInit, OnDestroy {
 
   private removeResource(deletedResource: ResourceModel) {
     this.cacheResourceService.removeResource(deletedResource);
-    if (this.selected?.id === deletedResource.id) this.editResourceService.removeResource();
+    if (this.selected?.id === deletedResource.id)
+      this.router.navigate(['']);
   }
 
   onEdit() {
@@ -272,7 +268,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   onDeselect() {
-    this.editResourceService.onDeselect();
+    this.router.navigate(['']);
   }
 
   async onReload() {
