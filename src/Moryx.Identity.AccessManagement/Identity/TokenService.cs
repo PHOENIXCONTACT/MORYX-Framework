@@ -150,9 +150,9 @@ internal class TokenService : ITokenService
             if (jtiClaim == null)
                 return FailureResult($"The token does not contain an ID.", tokenRequest);
 
-                var storedRefreshToken = await _dbContext.RefreshTokens.FirstOrDefaultAsync(x => x.Token == tokenRequest.RefreshToken);
-                if (storedRefreshToken == null)
-                    return FailureResult("The token does not exist.", tokenRequest);
+            var storedRefreshToken = await _dbContext.RefreshTokens.FirstOrDefaultAsync(x => x.Token == tokenRequest.RefreshToken);
+            if (storedRefreshToken == null)
+                return FailureResult("The token does not exist.", tokenRequest);
 
             if (DateTime.UtcNow > storedRefreshToken.ExpiryDate)
                 return FailureResult("The token has expired, user needs to login again.", tokenRequest);
