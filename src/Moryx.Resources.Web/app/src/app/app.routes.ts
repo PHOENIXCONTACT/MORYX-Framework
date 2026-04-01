@@ -10,6 +10,7 @@ import { ResourceMethods } from "./components/details-view/resource-methods/reso
 import { ResourceProperties } from "./components/details-view/resource-properties/resource-properties";
 import { ResourceReferences } from "./components/details-view/resource-references/resource-references";
 import { DetailsViewResolver } from "./components/details-view/details-view-resolver";
+import { AppResolver } from "./app-resolver";
 
 export const routes: Routes = [
   {
@@ -24,5 +25,11 @@ export const routes: Routes = [
       { path: 'methods', component: ResourceMethods },
     ],
   },
-  { path: '', component: DefaultDetailsView },
+  { 
+    path: '', 
+    component: DefaultDetailsView,
+    resolve: {
+      resource: AppResolver
+    }
+  },
 ]

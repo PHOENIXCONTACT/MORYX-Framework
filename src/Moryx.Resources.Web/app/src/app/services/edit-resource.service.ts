@@ -4,8 +4,8 @@
 */
 
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, lastValueFrom, Observable } from 'rxjs';
-import { ResourceModel, ResourceReferenceModel } from '../api/models';
+import { BehaviorSubject, lastValueFrom } from 'rxjs';
+import { ResourceModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
 import { StrictHttpResponse } from '../api/strict-http-response';
 import { CacheResourceService } from './cache-resource.service';
@@ -14,7 +14,6 @@ import { TranslationConstants } from '../extensions/translation-constants.extens
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
-import { ResourceConstructionParameters } from '../models/ResourceConstructionParameters';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 /**
@@ -57,7 +56,6 @@ export class EditResourceService {
     this.resource.next(undefined);
   }
 
-  // ToDo: Call in on destroy
   public stashResource() {
     if (!this.resource.value) return;
 
@@ -72,30 +70,15 @@ export class EditResourceService {
     this.edit$.next(true);
   }
 
-  public async addNewResource(parameters: ResourceConstructionParameters, parent: ResourceModel | undefined): Promise<ResourceModel | undefined> {
-    const resource = await lastValueFrom(this.resourceModificationService
-      .constructWithParameters({
-        type: parameters.name,
-        method: parameters?.method?.name ?? undefined,
-        body: parameters.method?.parameters,
-      }))
-      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
-    if (!resource) return;
-
-    this.editingUnsavedResource = resource.id === 0;
-
+  public async registerNewResource(constructed: ResourceModel) {
+    this.editingUnsavedResource = constructed.id === 0;
     // When the resource was already save, other resources might also be
     if (!this.editingUnsavedResource){
       await this.cacheResourceService.loadResources();
-    } 
-
-    if (parent) {
-      this.assignReferences(resource, parent);
     }
 
-    this.resource.next(resource);
+    this.resource.next(constructed);
     this.edit$.next(true);
-    return resource;
   }
 
   public onEdit() {
@@ -125,13 +108,13 @@ export class EditResourceService {
     }
   }
 
-  async handleUpdateResponse(response: StrictHttpResponse<ResourceModel>) {
+  private async handleUpdateResponse(response: StrictHttpResponse<ResourceModel>) {
     await this.cacheResourceService.loadResources();
     this.resource.next(response.body);
     this.edit$.next(false);
   }
 
-  async handleSaveResponse(response: StrictHttpResponse<ResourceModel>) {
+  private async handleSaveResponse(response: StrictHttpResponse<ResourceModel>) {
     // load all resources in order to also find resources, which were created automatically in the backend
     // ToDo: Handing over the event through both services seems suboptimal, violates the SR principle for this method.
     await this.cacheResourceService.loadResources();
@@ -141,24 +124,20 @@ export class EditResourceService {
     this.resource.next(resourceModel);
   }
 
-  async onCancel() {
+  public async onCancel() {
     const resourceId = this.activeResource()?.id;
     if (!resourceId) {
       this.resetEditor();
       return;
     }
     this.edit$.next(false);
-    const resource = await lastValueFrom(this.resourceModificationService.getDetails({id: resourceId}));
-  }
-
-  private assignReferences(resource: ResourceModel, parent: ResourceModel) {
-    const referenceToParent = resource.references?.find(r => r.name == 'Parent');
-    if (referenceToParent) referenceToParent.targets = [parent] as ResourceModel[];
-    else
-      resource.references?.push({
-        name: 'Parent',
-        targets: [parent] as ResourceModel[],
-      } as ResourceReferenceModel);
+    try {
+      const resource = await lastValueFrom(this.resourceModificationService.getDetails({id: resourceId}));
+      this.resource.next(resource);
+    }
+    catch (e) {
+      await this.snackbarService.handleError(e as HttpErrorResponse);
+    } 
   }
 }
 

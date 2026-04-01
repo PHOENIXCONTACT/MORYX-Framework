@@ -4,7 +4,6 @@
 */
 
 import { Component, effect, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -14,14 +13,15 @@ import { Router } from '@angular/router';
 import { ResourceModificationService } from '../../../api/services/resource-modification.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
-import { MethodEntry } from '../../../api/models/method-entry'; // TODO: Replace if part of ngx-web-framework (21.1.0)
+
 import {
   Entry,
   EntryValue,
   EntryValueType,
   EntryEditor,
   NavigableEntryEditor,
-  PrototypeToEntryConverter
+  PrototypeToEntryConverter,
+  MethodEntry
 } from '@moryx/ngx-web-framework/entry-editor';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -43,7 +43,7 @@ export class ResourceMethods {
   private snackBar = inject(MatSnackBar);
   private snackbarService = inject(SnackbarService);
 
-  private editService = inject(EditResourceService);
+  private editResourceService = inject(EditResourceService);
 
   public methods = signal<MethodEntry[] | undefined | null>([]);
   private resourceId?: number;
@@ -56,7 +56,7 @@ export class ResourceMethods {
 
   constructor() {
     effect(() => {
-      const resource = this.editService.activeResource();
+      const resource = this.editResourceService.activeResource();
       if (!resource) {
         return;
       }

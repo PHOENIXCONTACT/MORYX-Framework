@@ -42,7 +42,7 @@ export class SessionService {
     return item ? JSON.parse(item) : undefined;
   }
 
-  popWipResource(): ResourceStorageObject | undefined {
+  removeWipResource(): ResourceStorageObject | undefined {
     const product = this.getWipResource();
     sessionStorage.removeItem(this.WIP_RESOURCE);
     return product;

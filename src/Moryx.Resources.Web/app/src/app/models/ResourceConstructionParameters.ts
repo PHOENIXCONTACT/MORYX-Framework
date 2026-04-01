@@ -3,8 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { MethodEntry } from "../api/models";
-
+import { MethodEntry } from "@moryx/ngx-web-framework/entry-editor";
 
 export interface ResourceConstructionParameters {
   name: string;

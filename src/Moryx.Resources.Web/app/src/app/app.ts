@@ -12,14 +12,10 @@ import { MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule } from '@angular
 import { Router, RouterOutlet } from '@angular/router';
 import {
   LanguageService,
-  SnackbarService,
-  SearchBarService,
-  SearchRequest,
-  SearchSuggestion
-} from '@moryx/ngx-web-framework/services';
+  SnackbarService} from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
-import { ResourceModel } from './api/models';
+import { ResourceModel, ResourceReferenceModel } from './api/models';
 import { ResourceModificationService } from './api/services';
 import { DialogAddResource } from './dialogs/dialog-add-resource/dialog-add-resource';
 import { ResourceConstructionParameters } from './models/ResourceConstructionParameters';
@@ -29,7 +25,7 @@ import { CacheResourceService } from './services/cache-resource.service';
 import { EditResourceService } from './services/edit-resource.service';
 import { FormControlService } from './services/form-control-service.service';
 import { FlatNode, SessionService } from './services/session.service';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { getHierarchieLineFor } from './models/TypeTree';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
@@ -42,6 +38,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { DialogRemoveResource } from "./dialogs/dialog-remove-resource/dialog-remove-resource";
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -87,8 +84,7 @@ export class App implements OnInit, OnDestroy {
 
   resources?: ResourceModel[];
   resourcesFlat?: ResourceModel[];
-  selected?: ResourceModel;
-  title = 'Moryx.Resources.Web';
+  selected = signal<ResourceModel | undefined>(undefined);
   canSave!: boolean;
   TranslationConstants = TranslationConstants;
   private treeStateIsInitialized: boolean = false;
@@ -141,7 +137,9 @@ export class App implements OnInit, OnDestroy {
     
     effect(() => {
       const resource = this.editResourceService.activeResource();
-      if (!resource || this.selected?.id === resource.id) return;
+      if (this.selected()?.id === resource?.id) {
+        return;
+      }
       untracked(() => this.select(resource));
     });
   }
@@ -170,13 +168,13 @@ export class App implements OnInit, OnDestroy {
   }
 
   private select(resource: ResourceModel | undefined): void {
-    this.selected = resource;
+    this.selected.set(resource);
     if (this.treeStateIsInitialized || !resource) return;
     this.expandSelectedBranch();
   }
 
   private expandSelectedBranch() {
-    const toExpand = getHierarchieLineFor(this.selected?.id, this.resources);
+    const toExpand = getHierarchieLineFor(this.selected()?.id, this.resources);
     this.treeControl.dataNodes.filter(n => toExpand.find(e => e === n.id)).forEach(n => this.treeControl.expand(n));
     this.treeStateIsInitialized = true;
   }
@@ -194,7 +192,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   selectResource(id: number) {
-    if (this.isEditMode() || this.selected?.id === id) return;
+    if (this.isEditMode() || this.selected()?.id === id) return;
     this.router.navigate(['details', id]);
   }
 
@@ -208,6 +206,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   onAdd() {
+    const parent = this.selected();
     const dialogRef = this.dialog.open(DialogAddResource, {
       height: '560px',
       width: '560px'
@@ -215,15 +214,28 @@ export class App implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(async (result: ResourceConstructionParameters | undefined) => {
       if (!result) return;
-      const model = await this.editResourceService.addNewResource(result, this.selected);
-      if (model)
-        this.navigateToResource(model);
-    });
-  }
+      const constructed = await lastValueFrom(this.modificationService
+        .constructWithParameters({
+          type: result.name,
+          method: result.method?.name,
+          body: result.method?.parameters,
+        }))
+      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+      
+      if (!constructed) return;
+      this.editResourceService.registerNewResource(constructed);
+      this.router.navigate(['details', constructed.id]);
 
-  private navigateToResource(resourceModel: ResourceModel) {
-    if (resourceModel.properties) this.router.navigate([`/details/${resourceModel.id}/properties`]);
-    else this.router.navigate([`/details/${resourceModel.id}`]);
+      if (!parent) return;
+
+      const referenceToParent = constructed.references?.find(r => r.name == 'Parent');
+      if (referenceToParent) referenceToParent.targets = [parent] as ResourceModel[];
+      else
+        constructed.references?.push({
+          name: 'Parent',
+          targets: [parent] as ResourceModel[],
+        } as ResourceReferenceModel);
+    });
   }
 
   onDelete(resourceId: number | undefined) {
@@ -250,7 +262,7 @@ export class App implements OnInit, OnDestroy {
 
   private removeResource(deletedResource: ResourceModel) {
     this.cacheResourceService.removeResource(deletedResource);
-    if (this.selected?.id === deletedResource.id)
+    if (this.selected()?.id === deletedResource.id)
       this.router.navigate(['']);
   }
 
@@ -264,7 +276,10 @@ export class App implements OnInit, OnDestroy {
   }
 
   onCancelEditing() {
-    this.editResourceService.onCancel();
+    if(this.editResourceService.editingUnsavedResource)
+      this.router.navigate(['']);
+    else
+      this.editResourceService.onCancel();
   }
 
   onDeselect() {

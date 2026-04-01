@@ -1,12 +1,7 @@
 @let resource = activeResource();
 @if (resource) {
   <div class="resource-details">
-    <app-details-header
-      class="resource-details-header"
-      [resource]="resource"
-      [editMode]="isEditMode()"
-      >
-    </app-details-header>
+    <app-details-header class="resource-details-header" />
     <nav mat-tab-nav-bar class="resource-details-navigation" [tabPanel]="tabPanel">
       @if (resource.properties !== undefined) {
         <a

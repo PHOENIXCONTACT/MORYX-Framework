@@ -1,7 +1,9 @@
+@let active = this.selected();
+
 <mat-sidenav-container class="resources">
   <mat-sidenav opened role="navigation" mode="side" class="resources-tree" [disableClose]="true">
     <div class="resources-side-bar" (click)="clickContainer($event)">
-      @if (!selected) {
+      @if (!active) {
         <mat-toolbar
           color="primary"
           [ngStyle]="{ 'background-image': 'url(' + resourceToolbarImage + ')' }"
@@ -73,7 +75,7 @@
             @if (!isEditMode()) {
               <button
                 type="button"
-                (click)="onDelete(selected.id)"
+                (click)="onDelete(active.id)"
                 mat-icon-button
                 aria-label="Delete resource"
                 [matTooltip]="TranslationConstants.SHARED.DELETE | translate"
@@ -153,7 +155,7 @@
           (press)="openContextMenuByPressing($event, node.id)"
           class="resources-tree-item"
           [ngClass]="{
-            'moryx-selected': selected?.id == node.id,
+            'moryx-selected': active?.id == node.id,
             'italic': !(node.name && node.name.trim())
           }"
           >
@@ -169,7 +171,7 @@
           (press)="openContextMenuByPressing($event, node.id)"
           class="resources-tree-item"
           [ngClass]="{
-            'moryx-selected': selected?.id == node.id,
+            'moryx-selected': active?.id == node.id,
             'italic': !(node.name && node.name.trim())
           }"
           >
@@ -190,7 +192,7 @@
       </mat-tree>
     </div>
 
-    @if (!selected) {
+    @if (!active) {
       <button
         mat-fab
         color="primary"
