@@ -23,6 +23,7 @@ public interface IAttendanceManagementExtended : IAttendanceManagement
     /// <returns></returns>
     IOperatorAssignable GetAssignable(long id);
 
+    // TODO: Change return type in moryx 12 as discussed in https://github.com/PHOENIXCONTACT/MORYX-Framework/pull/1185/changes#r3008187999
     /// <summary>
     /// Retrieves a list of signed in operators and their skills
     /// </summary>
