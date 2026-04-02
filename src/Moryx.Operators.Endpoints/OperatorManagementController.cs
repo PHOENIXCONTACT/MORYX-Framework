@@ -28,10 +28,8 @@ public class OperatorManagementController(
     IOperatorManagement operatorManagement,
     IAttendanceManagement attendanceManagement,
     IResourceManagement resourceManagement,
-    ISkillManagement skillManagement,
-    IModuleManager moduleManager) : ControllerBase
+    ISkillManagement skillManagement) : ControllerBase
 {
-    
     private const string SignInStatusChangedEventType = "signInChanged";
     private readonly IOperatorManagement _operatorManagement = operatorManagement;
     private readonly IAttendanceManagement _attendanceManagement = attendanceManagement;
@@ -114,7 +112,6 @@ public class OperatorManagementController(
     {
         return Response(() =>
         {
-           
             var attendableResources =
                 _attendanceManagement is IAttendanceManagementExtended extended
                 ? extended.Assignables
@@ -170,7 +167,7 @@ public class OperatorManagementController(
         var attendance =
                 _attendanceManagement is IAttendanceManagementExtended extended
                 ? extended.GetAttendingOperators(resource)
-                :  _attendanceManagement.Operators
+                : _attendanceManagement.Operators
                     .Where(o => o.AssignedResources.Any(r => r.Id == resource.Id))
                     .Select(o => new AttendanceChangedArgs(o, _skillManagement.GetSkills(o).ToArray()))
                     .ToArray();
@@ -222,7 +219,7 @@ public class OperatorManagementController(
         var channel = Channel.CreateUnbounded<SseItem<object>>();
         void OnStatusChanged(object? sender, SignInStatusChangedArgs e)
         {
-            channel.Writer.WriteAsync(new(Converter.ToModel(e), SignInStatusChangedEventType), token);
+            channel.Writer.TryWrite(new(Converter.ToModel(e), SignInStatusChangedEventType));
         }
 
         void OnOperatorChanged(object? sender, OperatorChangedEventArgs e)
@@ -230,7 +227,7 @@ public class OperatorManagementController(
             var sse = new SseItem<object>(
                     Converter.ToModel(e.Operator),
                     e.Change.ToString());
-            channel.Writer.WriteAsync(sse, token);
+            channel.Writer.TryWrite(sse);
         }
 
         _operatorManagement.OperatorChanged += OnOperatorChanged;
