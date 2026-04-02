@@ -195,13 +195,6 @@ public class OperatorManagementController(
         }));
     }
 
-    public enum OperatorChange
-{
-    Creation,
-    Update,
-    Deletion
-}
-
     /// <summary>
     /// Provides events related to operators
     /// <list type="termdef">

@@ -3,11 +3,6 @@
 
 namespace Moryx.Operators.Attendances;
 
-public enum SignInStatus
-{
-    SignedOut, SignedIn
-}
-
 /// <summary>
 /// Event when an operator is signed in or signed out of a resource
 /// </summary>
