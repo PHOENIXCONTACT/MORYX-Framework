@@ -148,6 +148,15 @@ public class ResourceSynchronizationService : IMqttService
                 _logger.LogWarning("No resource type found for synchronization type id '{synchronizationTypeId}'. Resource creation skipped.", synchronizationTypeIdValue);
                 return;
             }
+            var identityProperty = jsonProperties.FirstOrDefault(x => x.Name == nameof(IIdentifiableObject.Identity));
+            var identityValue = NullOrValue<BatchIdentity>(identityProperty.Value);
+            var matchingResources = _resourceManagement.GetResources<IResource>(x =>
+                x is IIdentifiableObject obj && obj.Identity.Identifier.Equals(identityValue?.Identifier)).ToArray();
+            if (matchingResources.Length > 0)
+            {
+                _logger.LogWarning("A Resource of type {ResourceType} with that Identifier already exists. Resource creation skipped.", matchingResourceType.Name);
+                return;
+            }
 
             await _resourceManagement.CreateUnsafeAsync(matchingResourceType, emptyResource =>
             {
@@ -155,9 +164,14 @@ public class ResourceSynchronizationService : IMqttService
                 if (emptyResource is IIdentifiableObject identifiableObject)
                 {
                     // Ensure that identity is set
-                    var identityProperty = jsonProperties.FirstOrDefault(x => x.Name == nameof(IIdentifiableObject.Identity));
-                    var identityValue = NullOrValue<BatchIdentity>(identityProperty.Value);
-                    identifiableObject.Identity?.SetIdentifier(identityValue?.Identifier ?? string.Empty);
+                    if(identifiableObject.Identity != null)
+                    {
+                        identifiableObject.Identity.SetIdentifier(identityValue?.Identifier ?? string.Empty);
+                    }
+                    else
+                    {
+                        identifiableObject.Identity = identityValue;
+                    }
                 }
 
                 var message = MqttMessageSerialization.GetJsonPayload<IResource>(emptyResource, _options.JsonSerializerOptions);
