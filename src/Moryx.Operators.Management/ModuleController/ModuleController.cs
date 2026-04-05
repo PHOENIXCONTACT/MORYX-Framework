@@ -3,13 +3,13 @@
 
 using System.ComponentModel;
 using Microsoft.Extensions.Logging;
+using Moryx.AbstractionLayer.Resources;
 using Moryx.Configuration;
 using Moryx.Container;
 using Moryx.Model;
-using Moryx.Runtime.Modules;
-using Moryx.AbstractionLayer.Resources;
 using Moryx.Operators.Attendances;
 using Moryx.Operators.Skills;
+using Moryx.Runtime.Modules;
 using Moryx.Users;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -22,7 +22,7 @@ namespace Moryx.Operators.Management;
 [Description("Manages operators, with their skills and availabilities.")]
 public class ModuleController(IModuleContainerFactory containerFactory, IConfigManager configManager, ILoggerFactory loggerFactory, IDbContextManager dbContextManager) :
     ServerModuleBase<ModuleConfig>(containerFactory, configManager, loggerFactory),
-    IFacadeContainer<IOperatorManagement>, IFacadeContainer<IAttendanceManagement>,
+    IFacadeContainer<IOperatorManagement>, IFacadeContainer<IAttendanceManagement>, IFacadeContainer<IAttendanceManagementExtended>,
     IFacadeContainer<IUserManagement>,
     IFacadeContainer<ISkillManagement>
 {
@@ -72,6 +72,7 @@ public class ModuleController(IModuleContainerFactory containerFactory, IConfigM
 
     IOperatorManagement IFacadeContainer<IOperatorManagement>.Facade => _facade;
     IAttendanceManagement IFacadeContainer<IAttendanceManagement>.Facade => _facade;
+    IAttendanceManagementExtended IFacadeContainer<IAttendanceManagementExtended>.Facade => _facade;
     ISkillManagement IFacadeContainer<ISkillManagement>.Facade => _facade;
     IUserManagement IFacadeContainer<IUserManagement>.Facade => _facade;
 }
