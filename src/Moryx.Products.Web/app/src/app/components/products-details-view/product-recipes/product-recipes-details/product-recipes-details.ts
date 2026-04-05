@@ -40,7 +40,7 @@ export class ProductRecipesDetails {
     this.editProductsService.currentProduct.subscribe((product) => {
       this.currentProduct.set(product);
       this.setCurrentRecipe();
-      if (this.currentRecipe === undefined) {
+      if (this.currentRecipe() === undefined) {
         let url = this.router.url;
         // If the current route is a child child route, move to the parent route first
         // in order to have no "Cannot match any routes. URL Segment:" error

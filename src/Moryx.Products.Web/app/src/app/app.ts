@@ -288,14 +288,6 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
-  importDisabled(): boolean {
-    return this.isEditMode();
-  }
-
-  editDisabled() {
-    return !this.selected();
-  }
-
   saveDisabled(): boolean {
     const anyUnsetRecipes = this.selected()?.recipes?.some((r) => r.classification === RecipeClassificationModel.Unset);
 
@@ -403,8 +395,8 @@ export class App implements OnInit, OnDestroy {
     const product = this.products().find((p) => p.id === id);
     if (product) {
       this.router
-        .navigate([`details/${product.id}`], {relativeTo: this.route})
-        .then(() => this.editService.loadProduct());
+        .navigate([`details/${id}`], {relativeTo: this.route})
+        .then(() => this.editService.loadProductById(id));
     } else this.router.navigate([``]);
   }
 
@@ -501,8 +493,8 @@ export class App implements OnInit, OnDestroy {
       this.editService.onEdit();
     } else {
       this.router
-        .navigate([`/details/${product.id}`])
-        .then(() => this.editService.loadProduct())
+        .navigate([`/details/${id}`])
+        .then(() => this.editService.loadProductById(id))
         .then(() => {
           this.editService.onEdit();
         });
