@@ -4,19 +4,17 @@
 */
 
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Router } from '@angular/router';
-import { ResourceModel, ResourceReferenceModel } from '../api/models';
+import { BehaviorSubject, lastValueFrom } from 'rxjs';
+import { ResourceModel } from '../api/models';
 import { ResourceModificationService } from '../api/services';
 import { StrictHttpResponse } from '../api/strict-http-response';
 import { CacheResourceService } from './cache-resource.service';
-import { ResourceStorageDetails, SessionService } from './session.service';
-import { TranslateService } from '@ngx-translate/core';
+import { ResourceStorageDetails, ResourceStorageObject, SessionService } from './session.service';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
-import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { PrototypeToEntryConverter } from '@moryx/ngx-web-framework/entry-editor';
-import { ResourceConstructionParameters } from '../models/ResourceConstructionParameters';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 /**
  * This service tracks and manages the resource that is currently edited in the edit view.
@@ -26,47 +24,21 @@ import { ResourceConstructionParameters } from '../models/ResourceConstructionPa
   providedIn: 'root',
 })
 export class EditResourceService {
-  private resourceModificationService = inject(ResourceModificationService);
-  private cacheResourceService = inject(CacheResourceService);
-  private router = inject(Router);
-  private sessionService = inject(SessionService);
-  private translateService = inject(TranslateService);
-  private snackbarService = inject(SnackbarService);
+  private readonly resourceModificationService = inject(ResourceModificationService);
+  private readonly cacheResourceService = inject(CacheResourceService);
+  private readonly sessionService = inject(SessionService);
+  private readonly snackbarService = inject(SnackbarService);
 
-  public edit$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private resource: BehaviorSubject<ResourceModel | undefined> = new BehaviorSubject<ResourceModel | undefined>(
+  public readonly edit$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private readonly resource: BehaviorSubject<ResourceModel | undefined> = new BehaviorSubject<ResourceModel | undefined>(
     undefined
   );
-  public activeResource$: Observable<ResourceModel | undefined> = this.resource.asObservable();
+  public activeResource = toSignal(this.resource);
   public editingUnsavedResource: boolean = false;
   TranslationConstants = TranslationConstants;
-
-  loadResource() {
-    let id = 0;
-
-    const navigation = this.router.currentNavigation();
-    if (navigation?.finalUrl?.root.children['primary']?.segments?.length)
-      id = Number(navigation.finalUrl?.root.children['primary'].segments[1].toString());
-    else {
-      const url = this.router.url;
-      const regexId: RegExp = /(details\/\d*)/;
-      if (regexId.test(url)) id = Number(url.split('/')[2]);
-    }
-
-    if (id === 0) {
-      this.resetEditor();
-      return;
-    }
-
-    this.resourceModificationService.getDetails({id: id}).subscribe({
-      next: r => {
-        this.resource.next(r);
-      },
-      error: async error => {
-        await this.showErrorSnackbar(error);
-        this.resetEditor();
-      },
-    });
+  
+  public setResource(resource: ResourceModel | undefined) {
+    this.resource.next(resource);
   }
 
   /**
@@ -78,37 +50,13 @@ export class EditResourceService {
     this.resource.next(resource);
   }
 
-  private resetEditor() {
+  public resetEditor() {
     this.edit$.next(false);
     this.editingUnsavedResource = false;
     this.resource.next(undefined);
-    // ToDo: Navigating in a service doesn't follow the seperation of concern principle
-    this.router.navigate(['']);
   }
 
-  private async showErrorSnackbar(error: HttpErrorResponse) {
-    if (error.status === 0) {
-      // Unknown errors occur most commonly when the server is not reachable.
-      // That is handled somewhere else, so there is no need to show that here.
-      return;
-    }
-
-    let translation: string;
-    if (error.status === HttpStatusCode.NotFound) {
-      translation = await this.getTranslation(TranslationConstants.DEFAULT_VIEW.NOT_FOUND);
-    } else {
-      translation = (await this.getTranslation(TranslationConstants.DEFAULT_VIEW.FAILED_LOADING)) + ` ${error.status}`;
-    }
-    await this.snackbarService.showError(translation);
-  }
-
-  private async getTranslation(key: string) {
-    const translations = await this.translateService.get([key]).toAsync();
-    return translations[key];
-  }
-
-  // ToDo: Call in on destroy
-  stashResource() {
+  public stashResource() {
     if (!this.resource.value) return;
 
     this.sessionService.setWipResource(this.resource.value, <ResourceStorageDetails>{
@@ -116,107 +64,80 @@ export class EditResourceService {
     });
   }
 
-  loadFromStorage() {
-    const resourceStorageObject = this.sessionService.getWipResource();
-    if (!resourceStorageObject) return;
+  public setResourceFromStorage(resourceStorageObject: ResourceStorageObject) {
     this.editingUnsavedResource = resourceStorageObject.details.createNewResource;
     this.resource.next(resourceStorageObject.resource);
+    this.edit$.next(true);
   }
 
-  async addNewResource(parameters: ResourceConstructionParameters, parent: ResourceModel | undefined): Promise<ResourceModel | undefined> {
-    const resource = await this.resourceModificationService
-      .constructWithParameters({
-        type: parameters.name,
-        method: parameters?.method?.name ?? undefined,
-        body: parameters.method?.parameters,
-      })
-      .toAsync()
-      .catch(async (e: HttpErrorResponse) => await this.showErrorSnackbar(e));
-    if (!resource) return;
-
-    this.editingUnsavedResource = resource.id === 0;
-
+  public async registerNewResource(constructed: ResourceModel) {
+    this.editingUnsavedResource = constructed.id === 0;
     // When the resource was already save, other resources might also be
-    if (!this.editingUnsavedResource) await this.cacheResourceService.loadResources();
+    if (!this.editingUnsavedResource){
+      await this.cacheResourceService.loadResources();
+    }
 
-    if (parent) this.assignReferences(resource, parent);
-
-    this.resource.next(resource);
-    this.edit$.next(true);
-    return resource;
-    //this.navigateToResource(resource);
-  }
-
-  removeResource() {
-    this.resetEditor();
-  }
-
-  onEdit() {
+    this.resource.next(constructed);
     this.edit$.next(true);
   }
 
-  async onSave(): Promise<ResourceModel | undefined> {
+  public onEdit() {
+    this.edit$.next(true);
+  }
+
+  public async onSave() {
     const resourceModel = this.resource.getValue();
     if (!resourceModel) return;
 
-    if (resourceModel.properties) PrototypeToEntryConverter.convertToEntry(resourceModel.properties);
+    if (resourceModel.properties) 
+    {
+      PrototypeToEntryConverter.convertToEntry(resourceModel.properties);
+    }
 
-    if (this.editingUnsavedResource)
-      return await this.resourceModificationService
-        .save$Response({body: resourceModel})
-        .toAsync()
+    if (this.editingUnsavedResource) 
+    {
+      await lastValueFrom(this.resourceModificationService.save$Response({body: resourceModel}))
         .then(async response => await this.handleSaveResponse(response))
-        .catch(async error => {
-          await this.showErrorSnackbar(error);
-          return undefined;
-        });
+        .catch(async e => await this.snackbarService.handleError(e));
+    }
     else
-      return await this.resourceModificationService
-        .update$Response({id: resourceModel.id!, body: resourceModel})
-        .toAsync()
+    {
+      await lastValueFrom(this.resourceModificationService.update$Response({id: resourceModel.id!, body: resourceModel}))
         .then(async response => await this.handleUpdateResponse(response))
-        .catch(async (e: HttpErrorResponse) => {
-          await this.showErrorSnackbar(e);
-          return undefined;
-        });
+        .catch(async e => await this.snackbarService.handleError(e));
+    }
   }
 
-  async handleUpdateResponse(response: StrictHttpResponse<ResourceModel>): Promise<ResourceModel> {
+  private async handleUpdateResponse(response: StrictHttpResponse<ResourceModel>) {
     await this.cacheResourceService.loadResources();
     this.resource.next(response.body);
     this.edit$.next(false);
-    return response.body;
   }
 
-  async handleSaveResponse(response: StrictHttpResponse<ResourceModel>): Promise<ResourceModel> {
+  private async handleSaveResponse(response: StrictHttpResponse<ResourceModel>) {
     // load all resources in order to also find resources, which were created automatically in the backend
     // ToDo: Handing over the event through both services seems suboptimal, violates the SR principle for this method.
     await this.cacheResourceService.loadResources();
     const resourceModel = response.body;
     this.editingUnsavedResource = false;
     this.edit$.next(false);
-
     this.resource.next(resourceModel);
-    return resourceModel;
   }
 
-  onCancel() {
+  public async onCancel() {
+    const resourceId = this.activeResource()?.id;
+    if (!resourceId) {
+      this.resetEditor();
+      return;
+    }
     this.edit$.next(false);
-    this.loadResource();
-  }
-
-  onDeselect() {
-    this.resetEditor();
-  }
-
-  assignReferences(resource: ResourceModel, parent: ResourceModel) {
-    const referenceToParent = resource.references?.find(r => r.name == 'Parent');
-    if (referenceToParent) referenceToParent.targets = [parent] as ResourceModel[];
-    else
-      resource.references?.push({
-        name: 'Parent',
-        targets: [parent] as ResourceModel[],
-      } as ResourceReferenceModel);
+    try {
+      const resource = await lastValueFrom(this.resourceModificationService.getDetails({id: resourceId}));
+      this.resource.next(resource);
+    }
+    catch (e) {
+      await this.snackbarService.handleError(e as HttpErrorResponse);
+    } 
   }
 }
 
