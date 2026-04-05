@@ -35,7 +35,8 @@ export class ProductsDetailsView {
   private activatedRoute = inject(ActivatedRoute);
 
   isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  currentProduct = signal<ProductModel | undefined>(undefined);
+  currentProduct = toSignal(this.editProductsService.currentProduct, { initialValue: undefined });
+
   lastProductId = signal<number | undefined>(undefined);
   activeLink = signal<Tabs>(Tabs.Unknown);
 
@@ -51,7 +52,6 @@ export class ProductsDetailsView {
       const product = data['product'];
 
       if (this.lastProductId() === product?.id) return;
-      if (product) this.currentProduct.set(product);
 
       const wipProduct = this.sessionService.getWipProduct();
 
@@ -93,7 +93,7 @@ export class ProductsDetailsView {
     const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
     const regexParts: RegExp = /(details\/\d*\/parts)/;
     if (regexSpecificRecipe.test(url) || regexParts.test(url)) {
-      this.router.navigate(['../../'], {relativeTo: this.activatedRoute}).then(() => {
+      this.router.navigate(['../../'], { relativeTo: this.activatedRoute }).then(() => {
         this.routeToTab(target);
       });
     } else {
@@ -119,6 +119,12 @@ export class ProductsDetailsView {
     }
 
     this.router.navigate([url]);
+  }
+
+  onCurrentProductChangeFromHeader(product: ProductModel | undefined) {
+    if (this.isEditMode() && product) {
+      this.editProductsService.currentProduct.next(product);
+    }
   }
 }
 

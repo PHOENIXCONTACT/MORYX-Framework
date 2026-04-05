@@ -1,6 +1,9 @@
+@let resource = activeResource();
+@let isEditing = editMode();
+
 <div class="header">
   <div class="header-information">
-    @if (editMode()) {
+    @if (isEditing) {
       <div class="header-container">
         <mat-form-field class="form-field" appearance="outline" require>
           <mat-label>{{
@@ -9,8 +12,9 @@
           <input
             matInput
             aria-label="Resource Name"
-            [(ngModel)]="resource().name"
-            [disabled]="!editMode()"
+            [(ngModel)]="resource.name"
+            (ngModelChange)="updateResource()"
+            [disabled]="!isEditing"
             required="true"
             (keyup)="onNameChanged()"
             />
@@ -23,7 +27,9 @@
             matInput
             aria-label="Resource Description"
             class="header-information-general-description-input"
-            [(ngModel)]="resource().description"
+            [(ngModel)]="resource.description"
+            (ngModelChange)="updateResource()"
+            [disabled]="!isEditing"
             />
         </mat-form-field>
       </div>
@@ -31,12 +37,12 @@
       <div>
         <h2 class="header-information-title">
           {{
-          resource().name && resource().name?.trim()
-          ? resource().name
+          resource.name && resource.name.trim()
+          ? resource.name
           : (TranslationConstants.APP.NO_NAME | translate)
           }}
         </h2>
-        <p class="header-subtitle">{{ resource().description }}</p>
+        <p class="header-subtitle">{{ resource.description }}</p>
       </div>
     }
 

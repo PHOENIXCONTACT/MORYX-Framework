@@ -51,35 +51,25 @@ public class EntraIdAuthController : ControllerBase
     [HttpGet("signIn/microsoft")]
     public async Task<IActionResult> SignInViaMicrosoft([FromQuery] string redirectUrl)
     {
-        // try to get the username
-        if (User.Identity?.Name == null || User.Identity.Name.Contains('@') == false)
+        var userName = await GetSamAccountNameAsync();
+        if (userName == null)
         {
             return BadRequest(new AuthResult
             {
-                Errors = ["Failed to identify the user."],
+                Errors = new List<string> { "Failed to identify the user." },
                 Success = false
             });
         }
 
-        var userName = User.Identity.Name.Split('@')[0];
-
-        var user = await _userManager.FindByNameAsync(userName);
+        var user = await _userManager.FindByNameAsync(userName.ToUpper());
 
         if (user == null)
         {
-            user = new MoryxUser
+            return StatusCode(401, new AuthResult
             {
-                UserName = userName
-            };
-            var userCreateResult = await _userManager.CreateAsync(user);
-            if (userCreateResult.Succeeded == false)
-            {
-                return StatusCode(500, new AuthResult
-                {
-                    Errors = ["Failed to create the user."],
-                    Success = false
-                });
-            }
+                Errors = new List<string> { "User is not registered." },
+                Success = false
+            });
         }
 
         try
@@ -104,9 +94,35 @@ public class EntraIdAuthController : ControllerBase
         return Redirect(redirectUrl);
     }
 
+    /// <summary>
+    /// This function intentionally uses the onPremisesSamAccountName instead of
+    /// the UPN. In hybrid AD/Entra ID environments, the UPN (user principle name) can change due to domain
+    /// renaming, alternate UPN suffixes, or cloud-only domain configurations. The
+    /// SAMAccountName, however, remains a stable, legacy-compatible identifier from
+    /// on-premises Active Directory. It provides a consistent and immutable value,
+    /// which makes it more reliable for systems or processes that depend on a fixed,
+    /// short-format username that does not vary with domain structure.
+    /// </summary>
+    /// <returns>The SAM account name or null it not found.</returns>
+    private async Task<string> GetSamAccountNameAsync()
+    {
+        using var response = await _downstreamWebApi.CallApiForUserAsync("DownstreamApi", options =>
+        {
+            options.RelativePath = "me?$select=onPremisesSamAccountName";
+        });
+
+        response.EnsureSuccessStatusCode();
+
+        var rawUserInfo = await response.Content.ReadFromJsonAsync<JsonDocument>();
+        if (rawUserInfo.RootElement.TryGetProperty("onPremisesSamAccountName", out JsonElement onPremisesSamAccountName))
+        {
+            return onPremisesSamAccountName.GetString();
+        }
+        return null;
+    }
+
     private async Task UpdateUserByEntraIdInformationAsync(MoryxUser user)
     {
-
         // get user information from microsoft graph API
         using var response = await _downstreamWebApi.CallApiForUserAsync("DownstreamApi");
         response.EnsureSuccessStatusCode();

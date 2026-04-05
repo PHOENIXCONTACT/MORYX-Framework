@@ -55,7 +55,7 @@
             >
             @for (ctor of resourceType()?.constructors; track ctor) {
               <mat-list-option [value]="ctor" lines="3">
-                <span matListItemTitle>{{ ctor.displayName ?? ctor.name }}</span>
+                <span matListItemTitle>{{ ctor.displayName }}</span>
                 <span>{{ ctor.description }}</span>
               </mat-list-option>
             }

@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, input, signal } from "@angular/core";
+import { Component, effect, inject, input, signal, model } from "@angular/core";
 import { TranslateModule } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
 import { EditProductsService } from "src/app/services/edit-products.service";
@@ -35,7 +35,8 @@ import { MatSelectModule } from "@angular/material/select";
 export class ProductsDetailsHeader {
   private editService = inject(EditProductsService);
 
-  currentProduct = input.required<ProductModel>();
+  currentProduct = model.required<ProductModel | undefined>();
+
   identifier = signal<string | undefined>(undefined);
   editMode = input.required<boolean>();
   possibleStates = signal<string[]>(Object.values(ProductState));
@@ -45,8 +46,10 @@ export class ProductsDetailsHeader {
   constructor() {
     effect(() => {
       const product = this.currentProduct();
+
       untracked(() => {
         if (!product || product.revision === undefined) return;
+
         if (product.identifier)
           this.identifier.update((_) =>
             this.editService.createProductIdentity(
@@ -56,6 +59,15 @@ export class ProductsDetailsHeader {
           );
       });
     });
+  }
+
+  updateCurrentProduct(patch: Partial<ProductModel>) {
+    if (this.currentProduct()) {
+      this.currentProduct.update(currentProduct => ({
+        ...currentProduct,
+        ...patch
+      }));
+    }
   }
 }
 

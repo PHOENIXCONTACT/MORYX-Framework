@@ -4,7 +4,7 @@
 */
 
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit, signal, untracked, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
@@ -12,14 +12,10 @@ import { MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule } from '@angular
 import { Router, RouterOutlet } from '@angular/router';
 import {
   LanguageService,
-  SnackbarService,
-  SearchBarService,
-  SearchRequest,
-  SearchSuggestion
-} from '@moryx/ngx-web-framework/services';
+  SnackbarService} from '@moryx/ngx-web-framework/services';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
-import { ResourceModel } from './api/models';
+import { ResourceModel, ResourceReferenceModel } from './api/models';
 import { ResourceModificationService } from './api/services';
 import { DialogAddResource } from './dialogs/dialog-add-resource/dialog-add-resource';
 import { ResourceConstructionParameters } from './models/ResourceConstructionParameters';
@@ -29,7 +25,7 @@ import { CacheResourceService } from './services/cache-resource.service';
 import { EditResourceService } from './services/edit-resource.service';
 import { FormControlService } from './services/form-control-service.service';
 import { FlatNode, SessionService } from './services/session.service';
-import { Subscription } from 'rxjs';
+import { lastValueFrom, Subscription } from 'rxjs';
 import { getHierarchieLineFor } from './models/TypeTree';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
@@ -42,6 +38,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { DialogRemoveResource } from "./dialogs/dialog-remove-resource/dialog-remove-resource";
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -75,7 +72,6 @@ export class App implements OnInit, OnDestroy {
   private modificationService = inject(ResourceModificationService);
   private sessionService = inject(SessionService);
   private translateService = inject(TranslateService);
-  private searchBarService = inject(SearchBarService);
   private languageService = inject(LanguageService);
   private snackbarService = inject(SnackbarService);
   private formControlService = inject(FormControlService);
@@ -88,8 +84,7 @@ export class App implements OnInit, OnDestroy {
 
   resources?: ResourceModel[];
   resourcesFlat?: ResourceModel[];
-  selected?: ResourceModel;
-  title = 'Moryx.Resources.Web';
+  selected = signal<ResourceModel | undefined>(undefined);
   canSave!: boolean;
   TranslationConstants = TranslationConstants;
   private treeStateIsInitialized: boolean = false;
@@ -139,10 +134,17 @@ export class App implements OnInit, OnDestroy {
     this.translateService.setFallbackLang('en');
     this.translateService.use(this.languageService.getDefaultLanguage());
     this.formControlService.canSave.subscribe(state => (this.canSave = state));
+    
+    effect(() => {
+      const resource = this.editResourceService.activeResource();
+      if (this.selected()?.id === resource?.id) {
+        return;
+      }
+      untracked(() => this.select(resource));
+    });
   }
 
   ngOnDestroy(): void {
-    this.searchBarService.unsubscribe();
     this.formControlService.canSave.unsubscribe();
     this.subscriptions.forEach(s => s.unsubscribe());
   }
@@ -163,63 +165,18 @@ export class App implements OnInit, OnDestroy {
         this.resourcesFlat = resources;
       })
     );
-
-    this.subscriptions.push(this.editResourceService.activeResource$.subscribe(resource => this.select(resource)));
-
-    // ToDo: move to edit service
-    const wipResource = this.sessionService.getWipResource();
-    if (wipResource) {
-      this.editResourceService.loadFromStorage();
-    } else {
-      this.editResourceService.loadResource();
-    }
-
-    this.searchBarService.subscribe({
-      next: (result: SearchRequest) => {
-        this.onSearch(result);
-      }
-    });
   }
 
   private select(resource: ResourceModel | undefined): void {
-    this.selected = resource;
+    this.selected.set(resource);
     if (this.treeStateIsInitialized || !resource) return;
     this.expandSelectedBranch();
   }
 
   private expandSelectedBranch() {
-    const toExpand = getHierarchieLineFor(this.selected?.id, this.resources);
+    const toExpand = getHierarchieLineFor(this.selected()?.id, this.resources);
     this.treeControl.dataNodes.filter(n => toExpand.find(e => e === n.id)).forEach(n => this.treeControl.expand(n));
     this.treeStateIsInitialized = true;
-  }
-
-  onSearch(result: SearchRequest) {
-    const urlBase = 'Resources/details/';
-    if (!this.resourcesFlat) return;
-
-    const searchTerm = result.term;
-    let resources = this.resourcesFlat.filter(r => r.name?.toLowerCase()?.includes(searchTerm.toLowerCase()));
-    if (!resources) resources = [];
-
-    if (result.submitted) {
-      this.searchBarService.clearSuggestions();
-      if (resources.length === 1 && resources[0].id) this.selectResource(resources[0].id);
-      this.searchBarService.subscribe({
-        next: (newRequest: SearchRequest) => {
-          this.onSearch(newRequest);
-        }
-      });
-    } else {
-      const searchSuggestions = [] as SearchSuggestion[];
-      for (let resource of resources) {
-        if (!resource.name) continue;
-
-        const url = urlBase + resource.id;
-        searchSuggestions.push({text: resource.name, url: url});
-      }
-
-      this.searchBarService.provideSuggestions(searchSuggestions);
-    }
   }
 
   openContextMenuByPressing(event: any, id: number) {
@@ -235,8 +192,8 @@ export class App implements OnInit, OnDestroy {
   }
 
   selectResource(id: number) {
-    if (this.isEditMode() || this.selected?.id === id) return;
-    this.router.navigate([`/details/${id}`]).then(() => this.editResourceService.loadResource());
+    if (this.isEditMode() || this.selected()?.id === id) return;
+    this.router.navigate(['details', id]);
   }
 
   clickContainer(event: MouseEvent) {
@@ -249,6 +206,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   onAdd() {
+    const parent = this.selected();
     const dialogRef = this.dialog.open(DialogAddResource, {
       height: '560px',
       width: '560px'
@@ -256,15 +214,28 @@ export class App implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(async (result: ResourceConstructionParameters | undefined) => {
       if (!result) return;
-      const model = await this.editResourceService.addNewResource(result, this.selected);
-      if (model)
-        this.navigateToResource(model);
-    });
-  }
+      const constructed = await lastValueFrom(this.modificationService
+        .constructWithParameters({
+          type: result.name,
+          method: result.method?.name,
+          body: result.method?.parameters,
+        }))
+      .catch(async (e: HttpErrorResponse) => await this.snackbarService.handleError(e));
+      
+      if (!constructed) return;
+      this.editResourceService.registerNewResource(constructed);
+      this.router.navigate(['details', constructed.id]);
 
-  private navigateToResource(resourceModel: ResourceModel) {
-    if (resourceModel.properties) this.router.navigate([`/details/${resourceModel.id}/properties`]);
-    else this.router.navigate([`/details/${resourceModel.id}`]);
+      if (!parent) return;
+
+      const referenceToParent = constructed.references?.find(r => r.name == 'Parent');
+      if (referenceToParent) referenceToParent.targets = [parent] as ResourceModel[];
+      else
+        constructed.references?.push({
+          name: 'Parent',
+          targets: [parent] as ResourceModel[],
+        } as ResourceReferenceModel);
+    });
   }
 
   onDelete(resourceId: number | undefined) {
@@ -291,12 +262,11 @@ export class App implements OnInit, OnDestroy {
 
   private removeResource(deletedResource: ResourceModel) {
     this.cacheResourceService.removeResource(deletedResource);
-    if (this.selected?.id === deletedResource.id) this.editResourceService.removeResource();
+    if (this.selected()?.id === deletedResource.id)
+      this.router.navigate(['']);
   }
 
   onEdit() {
-    this.searchBarService.clearSuggestions();
-    this.searchBarService.unsubscribe();
     this.editResourceService.onEdit();
   }
 
@@ -306,23 +276,14 @@ export class App implements OnInit, OnDestroy {
   }
 
   onCancelEditing() {
-    this.editResourceService.onCancel();
-    this.searchBarService.subscribe({
-      next: (result: SearchRequest) => {
-        this.onSearch(result);
-      }
-    });
+    if(this.editResourceService.editingUnsavedResource)
+      this.router.navigate(['']);
+    else
+      this.editResourceService.onCancel();
   }
 
   onDeselect() {
-    if (this.isEditMode()) {
-      this.searchBarService.subscribe({
-        next: (result: SearchRequest) => {
-          this.onSearch(result);
-        }
-      });
-    }
-    this.editResourceService.onDeselect();
+    this.router.navigate(['']);
   }
 
   async onReload() {
@@ -331,14 +292,8 @@ export class App implements OnInit, OnDestroy {
 
   async onSave() {
     await this.editResourceService.onSave();
-    this.searchBarService.subscribe({
-      next: (result: SearchRequest) => {
-        this.onSearch(result);
-      }
-    });
   }
 }
-
 
 export interface Position {
   x: string;

@@ -52,3 +52,10 @@ public class OverrideSample : Resource
     public IReferences<IMyChild> MyChildren { get; set; }
 }
 ```
+
+
+## In the Database
+
+Resource relations are stored in a seperate table with their role and name (if any)
+
+![Resource Reference in the Database](./images/resource-reference.png)
