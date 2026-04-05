@@ -37,7 +37,8 @@ export class ProductRecipesDetails {
   TranslationConstants = TranslationConstants;
 
   constructor() {
-    this.editProductsService.currentProduct.subscribe((product) => {
+    // ToDo: Add recipe resolver and map recipe directly to signal
+    this.editProductsService.currentProduct$.subscribe((product) => {
       this.currentProduct.set(product);
       this.setCurrentRecipe();
       if (this.currentRecipe() === undefined) {

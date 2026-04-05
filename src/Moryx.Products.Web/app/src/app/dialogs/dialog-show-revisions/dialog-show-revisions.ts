@@ -6,13 +6,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { ProductModel, RevisionFilter } from '../../api/models';
 import { ProductManagementService } from '../../api/services';
 import { EditProductsService } from '../../services/edit-products.service';
+// ToDo: Remove CommonModule
 import { CommonModule } from '@angular/common';
 import { MatActionList, MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
@@ -37,7 +38,6 @@ export class DialogShowRevisions implements OnInit {
   private editService = inject(EditProductsService);
   private managementService = inject(ProductManagementService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private snackbarService = inject(SnackbarService);
 
   revisions = signal<ProductModel[]>([]);
@@ -68,17 +68,7 @@ export class DialogShowRevisions implements OnInit {
 
   onOpen(product: ProductModel) {
     this.dialogRef.close();
-    const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
-    if (regexSpecificRecipe.test(this.router.url)) {
-      this.router.navigate(['../../'], {relativeTo: this.route}).then(() => {
-        this.router
-          .navigate([`/details/${product.id}`])
-          .then(() => this.editService.loadProductById(product.id ?? 0));
-      });
-    } else {
-      this.router.navigate([`/details/${product.id}`])
-        .then(() => this.editService.loadProductById(product.id ?? 0));
-    }
+    this.router.navigate(['/details', product.id]);
   }
 
   createProductIdentity(identifier: string | undefined | null, revision: number | undefined): string {
