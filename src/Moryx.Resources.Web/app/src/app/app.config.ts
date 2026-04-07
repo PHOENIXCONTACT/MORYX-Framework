@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { ApplicationConfig } from "@angular/core";
+import { ApplicationConfig, provideEnvironmentInitializer } from "@angular/core";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTreeModule } from '@angular/material/tree';
@@ -39,6 +39,7 @@ import { routes } from "./app.routes";
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { SearchService } from "./services/search.service";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -75,6 +76,7 @@ export const appConfig: ApplicationConfig = {
       )(inject(CacheResourceService));
       return initializerFn();
     }),
+    provideEnvironmentInitializer(() => inject(SearchService)),
     ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
     SnackbarService,

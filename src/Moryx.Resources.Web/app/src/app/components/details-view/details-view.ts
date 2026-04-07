@@ -3,13 +3,11 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, linkedSignal, signal, untracked } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Event, NavigationCancel, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
-import { SessionService } from 'src/app/services/session.service';
 import { ResourceModel } from '../../api/models';
 import { EditResourceService } from '../../services/edit-resource.service';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -21,41 +19,29 @@ import { DetailsHeader } from './details-header/details-header';
   styleUrls: ['./details-view.scss'],
   imports: [RouterOutlet, TranslateModule, MatTabsModule, RouterLink, DetailsHeader]
 })
-export class DetailsView implements OnInit, OnDestroy {
+export class DetailsView {
   private router = inject(Router);
-  private sessionService = inject(SessionService);
   private editResourceService = inject(EditResourceService);
 
   isEditMode = toSignal(this.editResourceService.edit$, { initialValue: false });
   activeLink = signal<number | undefined>(undefined);
-  resource = signal<ResourceModel>({});
+  activeResource = linkedSignal(() => this.editResourceService.activeResource());
 
   TranslationConstants = TranslationConstants;
 
   private oldResourceId?: number;
-  private editServiceSubscription?: Subscription;
 
-  constructor() {}
-
-  ngOnInit() {
+  constructor() {
     this.router.events.subscribe(event => this.onRoutingEvent(event));
-    this.editServiceSubscription = this.editResourceService.activeResource$.subscribe(resource => this.onNewResource(resource));
+    effect(() => {
+      const resource = this.activeResource();
+      if (!resource) return;
+      if (this.oldResourceId === resource.id) return;
+      untracked(() => this.onNewResource(resource));
+    });
   }
 
-  ngOnDestroy(): void {
-    this.editServiceSubscription?.unsubscribe();
-  }
-
-  private onNewResource(resource: ResourceModel | undefined) {
-    if (!resource) return;
-
-    this.resource.update(() => resource);
-
-    if (this.oldResourceId === resource?.id) return;
-
-    // ToDo: move to edit resource service
-    const wipResource = this.sessionService.getWipResource();
-
+  private onNewResource(resource: ResourceModel) {
     const url = this.router.url;
     const regexMethods: RegExp = /(details\/\d*\/methods)/;
     const regexReferences: RegExp = /(details\/\d*\/references)/;
@@ -67,11 +53,6 @@ export class DetailsView implements OnInit, OnDestroy {
       this.router.navigate([`details/${resource.id}/properties`]);
     }
     this.oldResourceId = resource?.id;
-
-    if (wipResource) {
-      this.editResourceService.edit$.next(true);
-      this.sessionService.removeWipResource();
-    }
   }
 
   private onRoutingEvent(event: Event) {

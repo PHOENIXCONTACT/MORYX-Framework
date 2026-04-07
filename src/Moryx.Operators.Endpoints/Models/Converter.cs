@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Phoenix Contact GmbH & Co. KG
 // Licensed under the Apache License, Version 2.0
 
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Moryx.AbstractionLayer.Capabilities;
 using Moryx.Operators.Attendances;
 using Moryx.Operators.Skills;
@@ -43,6 +44,18 @@ internal static class Converter
         AssignedResources = @operator.AssignedResources.Select(ToModel)
     };
 
+    internal static ExtendedOperatorModel ToModel(this Operator @operator) => new()
+    {
+        FirstName = @operator.FirstName,
+        LastName = @operator.LastName,
+        Pseudonym = @operator.Pseudonym,
+        Identifier = @operator.Identifier,
+        AssignedResources = @operator switch {
+            AssignableOperator assignable => assignable.AssignedResources.Select(ToModel),
+            _ => []
+        }
+    };
+
     internal static SkillTypeModel ToModel(this SkillType type, bool full)
     {
         var model = new SkillTypeModel { Id = type.Id, Name = type.Name, Duration = type.Duration };
@@ -71,6 +84,14 @@ internal static class Converter
         ObtainedOn = skill.ObtainedOn,
         IsExpired = skill.IsExpired,
         ExpiresOn = skill.ObtainedOn.AddDays((int)skill.Type.Duration.TotalDays)
+    };
+
+
+    internal static SignInStatusChangedModel ToModel(this SignInStatusChangedArgs eventArgs) => new ()
+    {
+        Status = eventArgs.Status,
+        Operator = ToModel(eventArgs.Operator),
+        Assignable = ToModel(eventArgs.Assignable),
     };
 
     internal static Operator ToType(this OperatorModel @operator) => new(VerifyNotNull(@operator.Identifier))

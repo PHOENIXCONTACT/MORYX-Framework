@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit, signal, untracked } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -36,7 +36,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
 ]
 })
-export class ResourceReferences implements OnInit, OnDestroy {
+export class ResourceReferences {
   private cacheResourceService = inject(CacheResourceService);
   private editResourceService = inject(EditResourceService);
 
@@ -51,7 +51,6 @@ export class ResourceReferences implements OnInit, OnDestroy {
 
   possibleResources = signal<ResourceModel[]>([]);
 
-  private serviceSubscription?: Subscription;
   TranslationConstants = TranslationConstants;
 
   compareWith = (o1: any, o2: any) => {
@@ -59,10 +58,11 @@ export class ResourceReferences implements OnInit, OnDestroy {
   };
   private router = inject(Router);
 
-  ngOnInit(): void {
-    this.serviceSubscription = this.editResourceService.activeResource$.subscribe(resource => {
+  constructor() {
+    effect(() => {
+      const resource = this.editResourceService.activeResource();
       if (!resource) return;
-      this.loadReferences(resource);
+      untracked(() => this.loadReferences(resource));
     });
   }
 
@@ -82,10 +82,6 @@ export class ResourceReferences implements OnInit, OnDestroy {
     if (this.selectedReferenceType()) {
       this.onReferenceChanged(undefined);
     }
-  }
-
-  ngOnDestroy(): void {
-    this.serviceSubscription?.unsubscribe();
   }
 
   onReferenceChanged(type: ReferenceTypeModel | undefined) {

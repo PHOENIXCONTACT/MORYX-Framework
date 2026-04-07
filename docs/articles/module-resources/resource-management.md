@@ -29,6 +29,7 @@ Since the architecture of Moryx includes an internal DI-Container for each modul
 Because of that, the resource management applies the proxy pattern to provide access to the resources API while simultaneously hiding the resource instance from the user.
 For more information on the structure of Moryx look into [this article](/docs/articles/framework/index.md).
 
+## Resource Proxies
 
 ![Resource proxy pattern](images/resource-proxy-pattern.png)
 
