@@ -97,7 +97,7 @@ export class App implements OnInit, OnDestroy {
   private translateService = inject(TranslateService);
 
   isEditMode = toSignal(this.editService.edit$, { initialValue: false });
-  selected = computed(() => this.products()?.find((p) => p.id === this.editService.currentProductId()));
+  selected = toSignal(this.editService.currentProduct$);
   products = signal<ProductModel[]>([]);
   productDefinitions = signal<ProductDefinitionModel[]>([]);
   hierarchic = signal(false);

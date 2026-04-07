@@ -16,6 +16,7 @@ import { SearchResult } from "./components/search-result/search-result";
 import { ProductsDetailsViewResolver } from "./components/products-details-view/products-details-view-resolver";
 import { WorkInProgressGuard } from "./app-guard";
 import { ProductReferencesResolver } from "./components/products-details-view/product-references/products-references-resolver";
+import { RecipeDetailsViewResolver as RecipeResolver } from "./components/products-details-view/product-recipes/product-recipes-details/recipe-details-view-resolver";
 
 export const routes: Routes = [
   {
@@ -37,7 +38,8 @@ export const routes: Routes = [
         component: ProductRecipes,
         children: [
           { path: '', component: DefaultView, pathMatch: 'full' },
-          { path: ':recipeId', component: ProductRecipesDetails },
+          // ToDo: Unify resolver names
+          { path: ':recipeId', component: ProductRecipesDetails, resolve: { references: RecipeResolver } },
         ],
       },
     ],

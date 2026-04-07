@@ -3,7 +3,7 @@
     @for (recipe of recipes(); track recipe) {
       <mat-list-item
         (click)="onSelect(recipe)"
-        [ngClass]="{ 'moryx-selected': selectedRecipe()?.id == recipe.id }"
+        [class.moryx-selected]="selectedRecipe()?.id == recipe.id"
         class="recipes-overview-list-item"
         >
         <div class="recipes-overview-list-item-content">

@@ -13,6 +13,7 @@ import { ProductsDetailsHeader } from './products-details-header/products-detail
 
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTabsModule } from '@angular/material/tabs';
+import { ProductModel } from 'src/app/api/models';
 
 @Component({
   selector: 'app-products-details-view',
@@ -94,7 +95,7 @@ export class ProductsDetailsView {
 
   onCurrentProductChangeFromHeader(product: ProductModel | undefined) {
     if (this.isEditMode() && product) {
-      this.editProductsService.currentProduct.next(product);
+      this.editProductsService.updateCurrentProduct(product);
     }
   }
 }
