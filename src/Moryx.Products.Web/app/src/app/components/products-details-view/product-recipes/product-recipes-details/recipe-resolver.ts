@@ -13,7 +13,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
  * Sets the current recipe in the EditProductsService based on the recipeId route parameter. 
  * If the recipe is not found, it redirects to the product details page.
  */
-export const RecipeDetailsViewResolver: ResolveFn<RecipeModel> = async (route: ActivatedRouteSnapshot) => {
+export const RecipeResolver: ResolveFn<RecipeModel> = async (route: ActivatedRouteSnapshot) => {
   const editService = inject(EditProductsService);
   const router = inject(Router);
   const currentProduct = toSignal(editService.currentProduct$)

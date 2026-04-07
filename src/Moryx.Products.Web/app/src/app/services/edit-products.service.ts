@@ -185,7 +185,7 @@ export class EditProductsService {
     // ToDo: Update references and parts
   }
 
-  onDuplicate(infos: DuplicateProductInfos) {
+  async onDuplicate(infos: DuplicateProductInfos) {
     if (!infos.revision || !infos.identifier || !infos.product?.id) return;
 
     const id = infos.product.id;
@@ -194,29 +194,13 @@ export class EditProductsService {
       infos.revision
     );
 
-    this.productManagementService
-      .duplicate({id: id, body: `"${identifier}"`})
-      .subscribe({
-        next: () => {
-          this.cacheProductsService.loadProductsForTree();
-          // ToDo: Verify why recipe regex and why different navigations
-          const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
-          if (regexSpecificRecipe.test(this.router.url)) {
-            this.router
-              .navigate(["../../"], {relativeTo: this.activatedRoute})
-              .then(() => {
-                this.router
-                  .navigate([`/details/${id}`]);
-              });
-          } else {
-            this.router
-              .navigate([`/details/${id}`]);
-          }
-        },
-        error: async (e: HttpErrorResponse) => {
-          await this.snackbarService.handleError(e);
-        },
-      });
+    try {
+      const product = await lastValueFrom(this.productManagementService.duplicate({id: id, body: `"${identifier}"`}));
+      this.cacheProductsService.loadProductsForTree();  
+      this.router.navigate(['details', product.id]);  
+    } catch (error) {
+      await this.snackbarService.handleError(error as HttpErrorResponse);
+    }
   }
 
   createProductIdentity(

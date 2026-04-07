@@ -13,8 +13,6 @@ import { TranslationConstants } from 'src/app/extensions/translation-constants.e
 import { ProductModel, RevisionFilter } from '../../api/models';
 import { ProductManagementService } from '../../api/services';
 import { EditProductsService } from '../../services/edit-products.service';
-// ToDo: Remove CommonModule
-import { CommonModule } from '@angular/common';
 import { MatActionList, MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -23,7 +21,6 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './dialog-show-revisions.html',
   styleUrls: ['./dialog-show-revisions.scss'],
   imports: [
-    CommonModule,
     TranslateModule,
     MatActionList,
     MatListModule,

@@ -19,7 +19,7 @@ import { ProductModel, ProductQuery, RevisionFilter, Selector } from 'src/app/ap
  * This ought to be the only place where the product details are retrieved from the API.
  * The retrieved product is stored in the EditProductsService and can be accessed by all child components of the details view.
  */
-export const ProductReferencesResolver: ResolveFn<ProductModel[]> = async () => {
+export const ReferencesResolver: ResolveFn<ProductModel[]> = async () => {
   const apiService = inject(ProductManagementService);
   const editService = inject(EditProductsService);
   const snackbarService = inject(SnackbarService);
@@ -48,4 +48,3 @@ export const ProductReferencesResolver: ResolveFn<ProductModel[]> = async () => 
     return new RedirectCommand(router.parseUrl(`/details/${product.id}`));
   }
 };
-

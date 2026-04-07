@@ -129,9 +129,7 @@ export class ProductParts implements OnInit {
 
   addPart() {
     const dialogRef = this.dialog.open(DialogAddPart, {
-      data: this.expandedPart(),
-      // ToDo: Remove hardcoded width and define centrally
-      width: '500px'
+      data: this.expandedPart()
     });
 
     dialogRef.afterClosed().subscribe((product) => {

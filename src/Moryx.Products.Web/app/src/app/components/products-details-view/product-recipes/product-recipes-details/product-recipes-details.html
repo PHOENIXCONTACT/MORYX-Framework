@@ -1,17 +1,14 @@
 @let recipe = currentRecipe();
 
 @if (recipe) {
-  <!-- ToDo remove div and add styling to host -->
-  <div class="product-recipes-details">
-    <app-product-recipes-details-header />
-    @if (recipe.properties !== undefined) {
-      <navigable-entry-editor
-        class="product-recipes-details-properties"
-        queryParam="productRecipe"
-        [entry]="currentRecipe()?.properties!"
-        (entryChange)="updateRecipe($event)"
-        [disabled]="!isEditMode()"
-      ></navigable-entry-editor>
-    }
-  </div>
+  <app-product-recipes-details-header />
+  @if (recipe.properties !== undefined) {
+    <navigable-entry-editor
+      class="product-recipes-details-properties"
+      queryParam="productRecipe"
+      [entry]="currentRecipe()?.properties!"
+      (entryChange)="updateRecipe($event)"
+      [disabled]="!isEditMode()"
+    />
+  }
 }

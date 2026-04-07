@@ -185,7 +185,7 @@ export class App implements OnInit, OnDestroy {
     } else {
       const searchSuggestions = [] as SearchSuggestion[];
       for (let product of products) {
-        //TODO: change this in MORYX 10
+        //TODO: change this in MORYX 12
         const url = "Products/details/" + product.id; // <= BAD, hard coding a parent url 'Products' is no reliable.
         if (!product.id) continue;
 

@@ -17,7 +17,6 @@ export class SessionService {
   private readonly WIP_PRODUCT: string = 'wip-product';
 
   pushWipProduct(product: ProductModel, details: ProductStorageDetails) {
-    // ToDo Property values 0?
     const productStorageObject: ProductStorageObject = {product: product, details: details};
     sessionStorage.setItem(this.WIP_PRODUCT, JSON.stringify(productStorageObject));
   }

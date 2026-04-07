@@ -13,22 +13,22 @@ import { ProductReferences } from "./components/products-details-view/product-re
 import { ProductsDetailsView } from "./components/products-details-view/products-details-view";
 import { ProductsImporter } from "./components/products-importer/products-importer";
 import { SearchResult } from "./components/search-result/search-result";
-import { ProductsDetailsViewResolver } from "./components/products-details-view/products-details-view-resolver";
+import { ProductResolver } from "./components/products-details-view/products-resolver";
 import { WorkInProgressGuard } from "./app-guard";
-import { ProductReferencesResolver } from "./components/products-details-view/product-references/products-references-resolver";
-import { RecipeDetailsViewResolver as RecipeResolver } from "./components/products-details-view/product-recipes/product-recipes-details/recipe-details-view-resolver";
+import { ReferencesResolver } from "./components/products-details-view/product-references/references-resolver";
+import { RecipeResolver } from "./components/products-details-view/product-recipes/product-recipes-details/recipe-resolver";
 
 export const routes: Routes = [
   {
     path: 'details/:id',
     component: ProductsDetailsView,
     resolve: {
-      product: ProductsDetailsViewResolver
+      product: ProductResolver
     },
     children: [
       { path: '', redirectTo: 'properties', pathMatch: 'full' },
       { path: 'properties', component: ProductProperties },
-      { path: 'references', component: ProductReferences, resolve: { references: ProductReferencesResolver } },
+      { path: 'references', component: ProductReferences, resolve: { references: ReferencesResolver } },
       {
         path: 'parts/:partName/:partId',
         component: ProductParts,
@@ -38,7 +38,6 @@ export const routes: Routes = [
         component: ProductRecipes,
         children: [
           { path: '', component: DefaultView, pathMatch: 'full' },
-          // ToDo: Unify resolver names
           { path: ':recipeId', component: ProductRecipesDetails, resolve: { references: RecipeResolver } },
         ],
       },

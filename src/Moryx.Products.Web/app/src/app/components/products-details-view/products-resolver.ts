@@ -20,7 +20,7 @@ import { SessionService } from 'src/app/services/session.service';
  * This ought to be the only place where the product details are retrieved from the API.
  * The retrieved product is stored in the EditProductsService and can be accessed by all child components of the details view.
  */
-export const ProductsDetailsViewResolver: ResolveFn<ProductModel> = async (route: ActivatedRouteSnapshot) => {
+export const ProductResolver: ResolveFn<ProductModel> = async (route: ActivatedRouteSnapshot) => {
   const apiService = inject(ProductManagementService);
   const sessionService = inject(SessionService);
   const editService = inject(EditProductsService);
@@ -46,28 +46,5 @@ export const ProductsDetailsViewResolver: ResolveFn<ProductModel> = async (route
     editService.resetProduct();
     return new RedirectCommand(router.parseUrl(''));
   }
-
-  // ToDo: Move to resolvefn for references getReferencesOfCurrentProduct();
-
-  // private getReferencesOfCurrentProduct() {
-  //   const product = this.currentProduct.value;
-  //   if (!product) return;
-
-  //   const body = <ProductQuery>{
-  //     includeDeleted: false,
-  //     identifier: product.identifier,
-  //     revision: product.revision,
-  //     revisionFilter: RevisionFilter.Specific,
-  //     selector: Selector.Parent,
-  //   };
-  //   this.productManagementService.getTypes({body: body}).subscribe({
-  //     next: (references) => {
-  //       this.references.next(references);
-  //     },
-  //     error: async (e: HttpErrorResponse) => {
-  //       await this.snackbarService.handleError(e);
-  //     },
-  //   });
-  // }
 };
 
