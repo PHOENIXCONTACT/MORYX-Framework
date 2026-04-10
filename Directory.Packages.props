@@ -66,5 +66,8 @@
     <PackageVersion Include="MimeTypeMapOfficial" Version="1.0.17" />
     <PackageVersion Include="SixLabors.ImageSharp" Version="3.1.12" />
 
+    <!--Dependencies for sbom creation -->
+    <PackageVersion Include="Microsoft.Sbom.Targets" Version="4.1.5" PrivateAssets="All" />
+
   </ItemGroup>
 </Project>

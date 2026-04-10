@@ -1,12 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Description>Simulator to simualte a production with process and transport handling</Description>
+    <Description>Simulator to simulate a production with process and transport handling</Description>
     <IsPackable>true</IsPackable>
+    <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
     <PackageTags>MORYX;IoT;Manufacturing;Resource;Simulation</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup>
+		<PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
+	</ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Moryx.ControlSystem\Moryx.ControlSystem.csproj" />
     <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
   </ItemGroup>
+
 </Project>

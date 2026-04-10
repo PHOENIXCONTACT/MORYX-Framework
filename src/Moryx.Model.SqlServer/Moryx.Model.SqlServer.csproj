@@ -6,6 +6,9 @@
     <Description>Adapter for Moryx.Model on SqlServer</Description>
     <PackageTags>MORYX;Entity;Framework;EntityFramework;DataModel;Model;Database;SqlServer</PackageTags>
     <IsPackable>true</IsPackable>
+    <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,5 +17,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
   </ItemGroup>
 </Project>

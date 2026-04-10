@@ -5,11 +5,15 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>REST Api in order to interact with the resource management</Description>
     <PackageTags>MORYX;IIoT;IoT;Resource</PackageTags>
-	<IsPackable>true</IsPackable>
+	  <IsPackable>true</IsPackable>
+    <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
   </PropertyGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

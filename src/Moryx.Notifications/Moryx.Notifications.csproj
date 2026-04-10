@@ -5,8 +5,15 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Types and interfaces for notifications within MORYX applications</Description>
     <PackageTags>MORYX;IIoT;IoT;Notifications</PackageTags>
-	<IsPackable>true</IsPackable>
+    <IsPackable>true</IsPackable>
+	  <GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
+  </ItemGroup>
 
   <ItemGroup>
 	  <ProjectReference Include="..\Moryx.Runtime\Moryx.Runtime.csproj" />
