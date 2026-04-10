@@ -179,17 +179,8 @@ export class EditProductsService {
 
   async onCancel() {
     this.edit$.next(false);
-    const currentProductId = this.currentProductId();
-    if (!currentProductId) return;
-
-    let product: ProductModel = {};
-    try {
-      product = await lastValueFrom(this.productManagementService.getTypeById({id: currentProductId}));  
-    } catch (error) {
-      await this.snackbarService.handleError(error as HttpErrorResponse);
-      return;
-    }
-    this.currentProduct.next(product);    
+    const to = this.router.url;
+    await this.router.navigate(['/cancel'], { queryParams: { to: encodeURIComponent(to) }, replaceUrl: true, });   
   }
 
   async onDuplicate(infos: DuplicateProductInfos) {

@@ -18,6 +18,7 @@ import { WorkInProgressGuard } from "./app-guard";
 import { ReferencesResolver } from "./components/products-details-view/product-references/references-resolver";
 import { RecipeResolver } from "./components/products-details-view/product-recipes/product-recipes-details/recipe-resolver";
 import { PartsResolver } from "./components/products-details-view/product-parts/part-resolver";
+import { CancellationComponent } from "./components/cancellation/cancellation.component";
 
 export const routes: Routes = [
   {
@@ -43,5 +44,6 @@ export const routes: Routes = [
   },
   { path: '', component: DefaultView, pathMatch: 'full', canActivate: [WorkInProgressGuard] },
   { path: 'import/:importer', component: ProductsImporter },
-  { path: 'search', component: SearchResult }
+  { path: 'search', component: SearchResult },
+  { path: 'cancel', component: CancellationComponent }
 ]
