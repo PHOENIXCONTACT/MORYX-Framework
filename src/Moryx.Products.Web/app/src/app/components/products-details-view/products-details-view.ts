@@ -64,6 +64,7 @@ export class ProductsDetailsView {
     const url = this.router.url;
     const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
     const regexParts: RegExp = /(details\/\d*\/parts)/;
+    // ToDo: Simplify, no need for 2 navigations
     if (regexSpecificRecipe.test(url) || regexParts.test(url)) {
       this.router.navigate(['../../'], { relativeTo: this.activatedRoute }).then(() => {
         this.routeToTab(target);

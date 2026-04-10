@@ -16,15 +16,19 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export const RecipeResolver: ResolveFn<RecipeModel> = async (route: ActivatedRouteSnapshot) => {
   const editService = inject(EditProductsService);
   const router = inject(Router);
-  const currentProduct = toSignal(editService.currentProduct$)
+  const currentProduct = toSignal(editService.currentProduct$)();
   const recipeId = Number(route.paramMap.get('recipeId'));
 
-  const recipe = currentProduct()?.recipes?.find(r => r.id === recipeId);
+  if (!currentProduct) {
+    throw new Error('Invalid State: Tried to resolve product recipes without a current product');
+  }
+
+  const recipe = currentProduct.recipes?.find(r => r.id === recipeId);
   editService.setRecipe(recipe);
   if (recipe) {
     return recipe;
   }
   else {
-    return new RedirectCommand(router.createUrlTree(['details', currentProduct()?.id]));
+    return new RedirectCommand(router.createUrlTree(['details', currentProduct.id]));
   }
 };

@@ -1,26 +1,30 @@
-@if (currentProduct()?.parts?.length) {
+@let connectors = currentProduct()?.parts;
+@let currentConnector = expandedPart();
+@let currentPart = selectedPart();
+
+@if (connectors?.length) {
   <mat-accordion class="parts">
-    @for (part of currentProduct()?.parts; track part) {
+    @for (connector of connectors; track connector.name) {
       <mat-expansion-panel
         class="parts-part"
-        [expanded]="expandedPart()?.name === part.name"
-        (opened)="onSelectPartConnector(part)"
-        (closed)="onDeselectPartConnector(part)">
+        [expanded]="currentConnector?.name === connector.name"
+        (afterCollapse)="onDeselectPartConnector(connector)"
+        (opened)="onSelectPartConnector(connector)">
         <mat-expansion-panel-header>
-          <mat-panel-title>{{ part.displayName ? part.displayName : part.name }}</mat-panel-title>
+          <mat-panel-title>{{ connector.displayName ? connector.displayName : connector.name }}</mat-panel-title>
         </mat-expansion-panel-header>
         <!-- part is collection -->
-        @if (part.isCollection) {
-          @if (expandedPart()?.name === part.name) {
+        @if (connector.isCollection) {
+          @if (currentConnector?.name === connector.name) {
             <div class="parts-part-list">
               <div class="parts-part-list-list">
-                @if (part.parts) {
+                @if (connector.parts) {
                   <mat-list>
-                    @for (partElement of part.parts; track partElement) {
+                    @for (partElement of connector.parts; track partElement.id) {
                       <mat-list-item
                         (click)="onSelectPartElement(partElement)"
                         class="parts-part-list-list-item"
-                        [ngClass]="{ 'moryx-selected': selectedPart()?.id == partElement.id }">
+                        [ngClass]="{ 'moryx-selected': currentPart?.id == partElement.id }">
                         {{ createProductNameWithIdentity(partElement.product, true, 30) }}
                       </mat-list-item>
                     }
@@ -28,10 +32,10 @@
                 }
               </div>
               <div class="parts-part-list-details">
-                @if (selectedPart()) {
+                @if (currentPart) {
                   <app-product-parts-details
-                    [partConnector]="part"
-                    [productPart]="selectedPart()!"
+                    [partConnector]="connector"
+                    [productPart]="currentPart"
                     >
                   </app-product-parts-details>
                 } @else {
@@ -41,21 +45,21 @@
             </div>
           }
         } @else {
-          @if (expandedPart()?.name === part.name && selectedPart()) {
+          @if (currentConnector?.name === connector.name && currentPart) {
             <div>
               <app-product-parts-details
-                [partConnector]="part"
-                [productPart]="selectedPart()!">
+                [partConnector]="connector"
+                [productPart]="currentPart">
               </app-product-parts-details>
             </div>
           }
         }
         <!-- part is not a collection -->
         <mat-action-row>
-          @if (part.isCollection) {
+          @if (connector.isCollection) {
             <button
               mat-button
-              [disabled]="!isEditMode() || !selectedPart()"
+              [disabled]="!isEditMode() || !currentPart"
               (click)="removePart()"
               >
               {{ TranslationConstants.PARTS.REMOVE | translate }}
@@ -70,7 +74,7 @@
           } @else {
             <button
               mat-button
-              [disabled]="!isEditMode() || !selectedPart()"
+              [disabled]="!isEditMode() || !currentPart"
               (click)="removePart()"
               >
               {{ TranslationConstants.PARTS.REMOVE | translate }}

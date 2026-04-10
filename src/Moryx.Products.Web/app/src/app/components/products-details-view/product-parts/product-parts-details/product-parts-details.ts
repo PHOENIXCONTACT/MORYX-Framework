@@ -24,6 +24,7 @@ import { NavigableEntryEditor } from '@moryx/ngx-web-framework/entry-editor';
 export class ProductPartsDetailsComponent {
   private editProductsService = inject(EditProductsService);
 
+  // ToDo: Replace with service injection
   partConnector = input.required<PartConnector>();
   productPart = input.required<PartModel>();
 

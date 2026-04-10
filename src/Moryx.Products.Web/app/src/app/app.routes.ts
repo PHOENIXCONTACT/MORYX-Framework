@@ -17,6 +17,7 @@ import { ProductResolver } from "./components/products-details-view/products-res
 import { WorkInProgressGuard } from "./app-guard";
 import { ReferencesResolver } from "./components/products-details-view/product-references/references-resolver";
 import { RecipeResolver } from "./components/products-details-view/product-recipes/product-recipes-details/recipe-resolver";
+import { PartsResolver } from "./components/products-details-view/product-parts/part-resolver";
 
 export const routes: Routes = [
   {
@@ -29,10 +30,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'properties', pathMatch: 'full' },
       { path: 'properties', component: ProductProperties },
       { path: 'references', component: ProductReferences, resolve: { references: ReferencesResolver } },
-      {
-        path: 'parts/:partName/:partId',
-        component: ProductParts,
-      },
+      { path: 'parts/:partName/:partId', component: ProductParts, resolve: { references: PartsResolver }},
       {
         path: 'recipes',
         component: ProductRecipes,
