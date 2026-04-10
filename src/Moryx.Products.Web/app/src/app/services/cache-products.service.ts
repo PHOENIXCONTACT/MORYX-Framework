@@ -76,6 +76,7 @@ export class CacheProductsService {
     });
   }
 
+  // ToDo Make async
   loadProductsForTree() {
     let body = <ProductQuery>{};
     if (this.filterOptions.name && this.filterOptions.identifier) {

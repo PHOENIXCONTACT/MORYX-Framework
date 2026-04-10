@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, computed, effect, inject, signal, untracked } from "@angular/core";
+import { Component, computed, effect, inject, linkedSignal, signal, untracked } from "@angular/core";
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { TranslationConstants } from "src/app/extensions/translation-constants.extensions";
@@ -37,7 +37,7 @@ export class ProductRecipesDetailsHeader {
   private editProductsService = inject(EditProductsService);
 
   isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  currentRecipe = toSignal(this.editProductsService.currentRecipe$, { initialValue: undefined });
+  currentRecipe = linkedSignal(this.editProductsService.currentRecipe);
   
   hasWorkplans = computed(() => {
     if (this.currentRecipe()?.workplanModel === undefined) return false;

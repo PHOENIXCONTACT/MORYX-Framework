@@ -33,17 +33,23 @@ export class EditProductsService {
   private currentProduct: BehaviorSubject<ProductModel | undefined> = new BehaviorSubject<ProductModel | undefined>(undefined);
   public currentProduct$ = this.currentProduct.asObservable();
   public currentProductId = toSignal(this.currentProduct$.pipe(map((p) => p?.id)));
+  private productSignal = toSignal(this.currentProduct$, { initialValue: undefined });
 
   private references: BehaviorSubject<ProductModel[] | undefined> = new BehaviorSubject<ProductModel[] | undefined>(undefined);
   public references$ = this.references.asObservable();
 
-  // ToDo: Could be changed to linked signal if product observable becomes signal
-  private currentRecipe: BehaviorSubject<RecipeModel | undefined> = new BehaviorSubject<RecipeModel | undefined>(undefined);
-  public currentRecipe$ = this.currentRecipe.asObservable();
+  private recipe = linkedSignal<ProductModel | undefined, RecipeModel | undefined>({
+    source: this.productSignal,
+    computation: (currentProduct, previous) => {
+    if (!currentProduct) {
+      return undefined;
+    }
+    return currentProduct.recipes?.find(r => r.id === previous?.value?.id);
+  }});
+  public currentRecipe = this.recipe.asReadonly();
   public currentRecipeNumber: number = 0;
   maximumAlreadySavedRecipeId: number = 0;
 
-  private productSignal = toSignal(this.currentProduct$, { initialValue: undefined });
   private partConnector = linkedSignal<ProductModel | undefined, PartConnector | undefined>({
     source: this.productSignal,
     computation: (currentProduct, previous) => {
@@ -63,7 +69,7 @@ export class EditProductsService {
     }});
   public currentPart = this.part.asReadonly();
   public currentPartId: number = 0;
-  maximumAlreadySavedPartId: number = 0;
+  public maximumAlreadySavedPartId: number = 0;
   TranslationConstants = TranslationConstants;
 
   setProductFromStorage(productStorageObject: ProductStorageObject) {
@@ -72,7 +78,7 @@ export class EditProductsService {
     this.maximumAlreadySavedPartId = productStorageObject.details.maximumAlreadySavedPartId;
     this.maximumAlreadySavedRecipeId = productStorageObject.details.maximumAlreadySavedRecipeId;
     this.currentProduct.next(productStorageObject.product);
-    this.currentRecipe.next(productStorageObject.product.recipes?.find(r => r.id === productStorageObject.details.currentRecipeNumber));
+    this.recipe.set(productStorageObject.product.recipes?.find(r => r.id === productStorageObject.details.currentRecipeNumber));
 
     this.edit$.next(true);
   }
@@ -80,7 +86,6 @@ export class EditProductsService {
   setProduct(product: ProductModel | undefined) {
     this.currentProduct.next(product);
     this.references.next(undefined);
-    this.currentRecipe.next(undefined);
   }
 
   updateCurrentProduct(product: ProductModel) {
@@ -97,7 +102,6 @@ export class EditProductsService {
   resetProduct() {
     this.currentProduct.next(undefined);
     this.references.next(undefined);
-    this.currentRecipe.next(undefined);
   }
 
   setReferences(references: ProductModel[] | undefined) {
@@ -130,7 +134,7 @@ export class EditProductsService {
     this.edit$.next(true);
   }
 
-  onSave() {
+  async onSave() {
     const productModel = this.currentProduct.value;
     if (!productModel || productModel.id === undefined) return;
 
@@ -138,47 +142,39 @@ export class EditProductsService {
     if (productModel.properties)
       PrototypeToEntryConverter.convertToEntry(productModel.properties);
 
-    if (productModel.recipes) {
-      for (let recipe of productModel.recipes) {
-        // Recipes with the id 0 will be created and saved as new recipes in the backend
-        if (!recipe.id) recipe.id = 0;
-        else if (recipe.id > this.maximumAlreadySavedRecipeId) recipe.id = 0;
-
-        if (recipe.properties)
-          PrototypeToEntryConverter.convertToEntry(recipe.properties);
+    for (let recipe of productModel.recipes ?? []) {
+      // Recipes with the id 0 will be created and saved as new recipes in the backend
+      if (!recipe.id || recipe.id > this.maximumAlreadySavedRecipeId) {
+        recipe.id = 0;
       }
+
+      if (recipe.properties)
+        PrototypeToEntryConverter.convertToEntry(recipe.properties);
     }
 
-    if (productModel?.parts?.length) {
-      for (let partConnector of productModel.parts) {
-        if (!partConnector.parts?.length) continue;
-        for (let part of partConnector.parts) {
-          if (!part.id) part.id = 0;
-          else if (part.id > this.maximumAlreadySavedPartId) part.id = 0;
-
-          if (part.properties)
-            PrototypeToEntryConverter.convertToEntry(part.properties);
+    for (let partConnector of productModel?.parts ?? []) {
+      for (let part of partConnector.parts ?? []) {
+        if (!part.id || part.id > this.maximumAlreadySavedPartId) {
+          part.id = 0;
         }
+
+        if (part.properties)
+          PrototypeToEntryConverter.convertToEntry(part.properties);
       }
     }
 
-    this.productManagementService
-      .updateType({id: productModel.id, body: productModel})
-      .subscribe((result) => {
-        if (result !== productModel?.id) return;
-
-        this.cacheProductsService.loadProductsForTree();
-        this.productManagementService.getTypeById({id: result}).subscribe({
-          next: (p) => {
-            // ToDo: Update recipes, references and parts
-            this.currentProduct.next(p);
-            this.edit$.next(false);
-          },
-          error: async (e: HttpErrorResponse) => {
-            await this.snackbarService.handleError(e);
-          },
-        });
-      });
+    let updated: ProductModel = {};
+    try {
+      await lastValueFrom(this.productManagementService.updateType({id: productModel.id, body: productModel}));
+      this.cacheProductsService.loadProductsForTree();
+      updated = await lastValueFrom(this.productManagementService.getTypeById({id: productModel.id}));  
+    } catch (error) {
+      await this.snackbarService.handleError(error as HttpErrorResponse);
+      return;
+    }
+    
+    this.currentProduct.next(updated);
+    this.edit$.next(false);
   }
 
   async onCancel() {
@@ -193,14 +189,7 @@ export class EditProductsService {
       await this.snackbarService.handleError(error as HttpErrorResponse);
       return;
     }
-    this.currentProduct.next(product);
-
-    const currentRecipe = this.currentRecipe.value;
-    if (!currentRecipe) return;
-    const recipe = product.recipes?.find(r => r.id === currentRecipe.id);
-    this.currentRecipe.next(recipe);
-
-    // ToDo: Update references and parts
+    this.currentProduct.next(product);    
   }
 
   async onDuplicate(infos: DuplicateProductInfos) {
@@ -259,11 +248,11 @@ export class EditProductsService {
   }
 
   setRecipe(recipe: RecipeModel | undefined) {
-    this.currentRecipe.next(recipe);
+    this.recipe.set(recipe);
   }
   
   updateCurrentRecipe(recipe: RecipeModel) {
-    const currentRecipe = this.currentRecipe.value;
+    const currentRecipe = this.recipe();
     if (Object.is(recipe, currentRecipe)) {
       return;
     }
@@ -278,7 +267,7 @@ export class EditProductsService {
     if (recipeIndex === undefined || recipeIndex < 0) {
       throw new Error("Invalid State: Tried to update recipe with id " + recipe.id + " but it was not found in current product");
     }
-    this.currentRecipe.next(recipe);
+    this.recipe.set(recipe);
     currentProduct.recipes![recipeIndex] = recipe;
     this.currentProduct.next({...currentProduct, recipes: [...currentProduct.recipes!]});
   }

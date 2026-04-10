@@ -57,10 +57,7 @@
   "PARTS": {
     "REMOVE": "RIMUOVI",
     "ADD": "AGGIUNGI",
-    "REPLACE": "SOSTITUISCI",
-    "DETAILS": {
-      "TITLE": "Configurazione per la connessione tra il prodotto e i suoi pezzi"
-    }
+    "REPLACE": "SOSTITUISCI"
   },
   "ADD_DIALOG": {
     "TITLE": "Seleziona Pezzo",

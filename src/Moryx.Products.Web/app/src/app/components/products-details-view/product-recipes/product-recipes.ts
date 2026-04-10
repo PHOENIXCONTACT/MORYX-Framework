@@ -4,7 +4,7 @@
 */
 
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject } from "@angular/core";
+import { Component, inject, linkedSignal } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { MatDialog } from "@angular/material/dialog";
 import { Router, RouterOutlet } from "@angular/router";
@@ -43,7 +43,7 @@ export class ProductRecipes {
 
   isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
   recipes = toSignal(this.editProductsService.currentProduct$.pipe(map(p => p?.recipes ?? []) ), { initialValue: [] });
-  selectedRecipe = toSignal(this.editProductsService.currentRecipe$);
+  selectedRecipe = linkedSignal(this.editProductsService.currentRecipe);
   TranslationConstants = TranslationConstants;
 
   onAddRecipe() {

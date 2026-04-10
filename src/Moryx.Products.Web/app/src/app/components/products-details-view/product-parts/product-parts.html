@@ -12,49 +12,28 @@
         (opened)="onSelectPartConnector(connector)">
         <mat-expansion-panel-header>
           <mat-panel-title>{{ connector.displayName ? connector.displayName : connector.name }}</mat-panel-title>
+          <mat-panel-description>{{ getConnectorPreview(connector) }}</mat-panel-description>
         </mat-expansion-panel-header>
         <!-- part is collection -->
-        @if (connector.isCollection) {
-          @if (currentConnector?.name === connector.name) {
+        @if (currentConnector?.name === connector.name) {
+          @if (connector.isCollection) {
             <div class="parts-part-list">
-              <div class="parts-part-list-list">
-                @if (connector.parts) {
-                  <mat-list>
-                    @for (partElement of connector.parts; track partElement.id) {
-                      <mat-list-item
-                        (click)="onSelectPartElement(partElement)"
-                        class="parts-part-list-list-item"
-                        [ngClass]="{ 'moryx-selected': currentPart?.id == partElement.id }">
-                        {{ createProductNameWithIdentity(partElement.product, true, 30) }}
-                      </mat-list-item>
-                    }
-                  </mat-list>
+              <mat-list class="parts-part-list-list">
+                @for (partElement of connector.parts; track partElement.id) {
+                  <mat-list-item
+                    (click)="onSelectPartElement(partElement)"
+                    class="parts-part-list-list-item"
+                    [ngClass]="{ 'moryx-selected': currentPart?.id == partElement.id }">
+                    {{ createProductNameWithIdentity(partElement.product, true, 30) }}
+                  </mat-list-item>
                 }
-              </div>
-              <div class="parts-part-list-details">
-                @if (currentPart) {
-                  <app-product-parts-details
-                    [partConnector]="connector"
-                    [productPart]="currentPart"
-                    >
-                  </app-product-parts-details>
-                } @else {
-                  <app-default-view></app-default-view>
-                }
-              </div>
+              </mat-list>
+              <app-product-parts-details class="parts-part-list-details" />
             </div>
-          }
-        } @else {
-          @if (currentConnector?.name === connector.name && currentPart) {
-            <div>
-              <app-product-parts-details
-                [partConnector]="connector"
-                [productPart]="currentPart">
-              </app-product-parts-details>
-            </div>
+          } @else{
+            <app-product-parts-details class="parts-part-list-details" />     
           }
         }
-        <!-- part is not a collection -->
         <mat-action-row>
           @if (connector.isCollection) {
             <button

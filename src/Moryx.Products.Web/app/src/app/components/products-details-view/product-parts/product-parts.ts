@@ -16,7 +16,6 @@ import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
 import { ProductPartsDetailsComponent } from './product-parts-details/product-parts-details';
-import { DefaultView } from '../../default-view/default-view';
 import { MatButtonModule } from '@angular/material/button';
 import { firstValueFrom } from 'rxjs';
 
@@ -29,7 +28,6 @@ import { firstValueFrom } from 'rxjs';
     MatExpansionModule,
     MatListModule,
     ProductPartsDetailsComponent,
-    DefaultView,
     MatButtonModule,
     TranslateModule
   ]
@@ -56,7 +54,7 @@ export class ProductParts {
   }
 
   onSelectPartElement(part: PartModel) {
-    this.router.navigate(['details', this.currentProduct()!.id, 'parts', this.expandedPart()!.name, part.id]);
+    this.router.navigate(['details', this.currentProduct()!.id, 'parts', this.expandedPart()!.name, part.id], { queryParamsHandling: 'preserve' });
   }
 
   async addPart() {
@@ -81,7 +79,7 @@ export class ProductParts {
     const connector = this.expandedPart();
     if (!connector) {
       return;
-    } 
+    }
 
     this.editProductsService.removePartFromConnector();
 
@@ -94,5 +92,13 @@ export class ProductParts {
 
   createProductNameWithIdentity(product: ProductModel | undefined, shortened: boolean = false, maxLength: number = 40): string {
     return this.editProductsService.createProductNameWithIdentity(product, shortened, maxLength);
+  }
+
+  getConnectorPreview(connector: PartConnector): string {
+    if (!connector.parts || connector.parts.length === 0) {
+      return '';
+    }
+    const partNames = connector.parts.map(p => p.product ? this.createProductNameWithIdentity(p.product, true) : 'Unnamed Product');
+    return partNames.join(', ');
   }
 }

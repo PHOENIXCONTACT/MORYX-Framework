@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, linkedSignal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
@@ -28,8 +28,8 @@ export class ProductRecipesDetails {
   private cacheService = inject(CacheProductsService);
 
   isEditMode = toSignal(this.editProductsService.edit$, { initialValue: false });
-  currentProduct = toSignal(this.editProductsService.currentProduct$, { initialValue: undefined });
-  currentRecipe = toSignal(this.editProductsService.currentRecipe$, { initialValue: undefined });
+  currentProduct = toSignal(this.editProductsService.currentProduct$);
+  currentRecipe = linkedSignal(this.editProductsService.currentRecipe);
   recipeDefinitions = toSignal(this.cacheService.recipeDefinitions, { initialValue: [] });
   TranslationConstants = TranslationConstants;
 

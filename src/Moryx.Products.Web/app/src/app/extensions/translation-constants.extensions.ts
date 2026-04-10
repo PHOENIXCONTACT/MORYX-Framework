@@ -70,10 +70,7 @@ export class TranslationConstants {
   public static readonly PARTS = {
     REMOVE: 'PARTS.REMOVE',
     ADD: 'PARTS.ADD',
-    REPLACE: 'PARTS.REPLACE',
-    DETAILS: {
-      TITLE: 'PARTS.DETAILS.TITLE',
-    },
+    REPLACE: 'PARTS.REPLACE'
   };
 
   public static readonly ADD_DIALOG = {
