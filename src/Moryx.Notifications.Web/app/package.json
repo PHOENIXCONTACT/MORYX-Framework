@@ -36,9 +36,9 @@
     "@angular/build": "^21.1.0",
     "@angular/cli": "^21.1.0",
     "@angular/compiler-cli": "^21.1.0",
-    "jsdom": "^28.1.0",
+    "jsdom": "^29.0.2",
     "ng-openapi-gen": "^1.0.5",
-    "typescript": "~5.9.3",
+    "typescript": "~6.0.2",
     "vitest": "^4.0.8"
   }
 }
