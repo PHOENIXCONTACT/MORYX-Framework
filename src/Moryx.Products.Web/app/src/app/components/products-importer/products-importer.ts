@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
 */
 
-import { Component, effect, inject, signal, untracked } from "@angular/core";
+import { Component, computed, effect, inject, signal, untracked } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Entry, EntryValueType, NavigableEntryEditor } from "@moryx/ngx-web-framework/entry-editor";
 import { TranslateModule } from "@ngx-translate/core";
@@ -21,6 +21,10 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatSelectModule } from "@angular/material/select";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { map } from "rxjs/operators";
+import { MatToolbarModule } from "@angular/material/toolbar";
+
 
 @Component({
   selector: "app-products-importer",
@@ -39,16 +43,24 @@ import { MatCardModule } from "@angular/material/card";
     MatProgressBarModule,
     MatSelectModule,
     MatButtonModule,
-    MatCardModule
-  ]
+    MatCardModule,
+    MatToolbarModule
+]
 })
 export class ProductsImporter {
   private cacheService = inject(CacheProductsService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
-  possibleImporters = signal<ProductImporter[]>([]);
-  selectedImporter = signal<ProductImporter | undefined>(undefined);
+  possibleImporters = toSignal(this.cacheService.importers$, { initialValue: [] });
+  currentImporterName = toSignal(this.route.paramMap.pipe(map((pm) => pm.get("importer"))), {
+    initialValue: this.route.snapshot.paramMap.get("importer"),
+  });
+  selectedImporter = computed(() => {
+    const name = this.currentImporterName();
+    const importers = this.possibleImporters() ?? [];
+    return importers.find((i) => i.name === name);
+  });
   importerProperties = signal<Entry>(<Entry>{value: {type: EntryValueType.Exception}});
   showProgressBar = signal(false);
 
@@ -56,18 +68,6 @@ export class ProductsImporter {
   Permissions = Permissions;
 
   constructor() {
-    this.cacheService.importers.subscribe((importers) => {
-      if (importers) {
-        this.possibleImporters.update((_) => importers);
-        const importerName = this.route.snapshot.paramMap.get("importer");
-        if (!importerName) return;
-
-        this.selectedImporter.update((_) =>
-          this.possibleImporters()?.find((i) => i.name === importerName)
-        );
-      }
-    });
-
     effect(() => {
       const importer = this.selectedImporter();
       untracked(() => {
@@ -77,27 +77,27 @@ export class ProductsImporter {
       });
     });
   }
+  
+  selectImporter(importer: ProductImporter) {
+    this.router.navigate(['import', importer.name]);
+  }
 
   onImporterChanged(importer: ProductImporter) {
     if (importer.parameters !== undefined) {
-      this.importerProperties.update((_) =>
-        structuredClone(importer.parameters!)
-      );
+      this.importerProperties.set(structuredClone(importer.parameters!));
     }
   }
 
-  import() {
-    this.showProgressBar.update((_) => true);
-    if (this.selectedImporter() && this.selectedImporter()?.name)
-      this.cacheService
-        .importProducts(this.selectedImporter()?.name!, this.importerProperties())
-        .then((resolved) => {
-          //refresh/go to default hom page
-          if (resolved) {
-            this.showProgressBar.update((_) => false);
-            this.router.navigate([``]);
-          }
-        });
+  async import() {
+    this.showProgressBar.set(true);
+    const importer = this.selectedImporter();
+    if (!importer?.name) {
+      return;
+    }
+    await this.cacheService.importProducts(importer.name, this.importerProperties());
+
+    this.showProgressBar.set(false);
+    this.router.navigate([``]);
   }
 
   cancelImport() {

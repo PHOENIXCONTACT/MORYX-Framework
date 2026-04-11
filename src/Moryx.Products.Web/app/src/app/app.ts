@@ -103,7 +103,7 @@ export class App implements OnInit, OnDestroy {
   hierarchic = signal(false);
   revisionOptions = signal<string[]>(Object.keys(RevisionFilter));
   selectorOptions = signal<string[]>(Object.keys(Selector));
-  importer = signal<string | undefined>(undefined);
+  importers = toSignal(this.cacheService.importers$, { initialValue: [] });
   menuTopLeftPosition = signal<{ x: String, y: String }>({x: '0', y: '0'});
   trigger = viewChild.required(MatMenuTrigger);
 
@@ -145,11 +145,6 @@ export class App implements OnInit, OnDestroy {
     this.cacheService.definitions.subscribe((definitions) => {
       this.productDefinitions.set(definitions ?? []);
       this.createDatasource(this.hierarchic());
-    });
-
-    this.cacheService.importers.subscribe((importers) => {
-      if (importers && importers.length > 0 && importers[0].name)
-        this.importer.set(importers[0].name!);
     });
 
     // ToDo: MOve to route resolver for base path
@@ -349,10 +344,12 @@ export class App implements OnInit, OnDestroy {
     this.trigger().openMenu();
   }
 
-  async onDeselect() {
-    if (this.isEditMode())
-      await this.onCancel();
+  async onDeselect() {    
+    if (this.isEditMode()) {
+      await this.editService.onCancel();
+    }
     this.editService.resetProduct();
+    await this.router.navigate([``]);
   }
 
   onSelect(id: number) {
@@ -369,13 +366,11 @@ export class App implements OnInit, OnDestroy {
     this.open(event.pointers[0].clientX, event.pointers[0].clientY, id);
   }
 
-  clickContainer(event: MouseEvent) {
-    if ((event.target as HTMLElement).tagName === "MAT-TREE") {
-      this.snackBar.dismiss();
-      this.router
-        .navigate([``], {relativeTo: this.route})
-        .then(() => this.editService.onCancel());
+  async clickContainer(event: MouseEvent) {
+    if ((event.target as HTMLElement).tagName !== "MAT-TREE") {
+      return;
     }
+    this.onDeselect();
   }
 
   onDelete(id: number | undefined) {
@@ -397,10 +392,10 @@ export class App implements OnInit, OnDestroy {
   }
 
   async onImport() {
-    if (this.importer()) {
-      this.router.navigate([`/import/${this.importer()}`], {
-        relativeTo: this.route
-      });
+    const importers = this.importers();
+    const target = importers?.length ? importers[0].name : undefined;
+    if (target) {
+      this.router.navigate(['import', target]);
     } else {
       const translations = await this.getTranslations();
       this.snackBar.open(

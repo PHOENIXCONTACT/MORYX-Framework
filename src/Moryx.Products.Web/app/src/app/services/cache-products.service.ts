@@ -7,7 +7,7 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { SnackbarService } from '@moryx/ngx-web-framework/services';
 import { Entry } from '@moryx/ngx-web-framework/entry-editor';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, lastValueFrom } from 'rxjs';
 import {
   ProductDefinitionModel,
   ProductImporter,
@@ -25,6 +25,7 @@ import '../extensions/observable.extensions';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslationConstants } from '../extensions/translation-constants.extensions';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Import$Params } from '../api/functions';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +39,8 @@ export class CacheProductsService {
 
   definitions: BehaviorSubject<ProductDefinitionModel[] | undefined> = new BehaviorSubject<ProductDefinitionModel[] | undefined>(undefined);
   productsShownInTheTree: BehaviorSubject<ProductModel[] | undefined> = new BehaviorSubject<ProductModel[] | undefined>(undefined);
-  importers: BehaviorSubject<ProductImporter[] | undefined> = new BehaviorSubject<ProductImporter[] | undefined>(undefined);
+  private importers: BehaviorSubject<ProductImporter[] | undefined> = new BehaviorSubject<ProductImporter[] | undefined>(undefined);
+  importers$ = this.importers.asObservable();
   recipeDefinitions: BehaviorSubject<RecipeDefinitionModel[] | undefined> = new BehaviorSubject<RecipeDefinitionModel[] | undefined>(undefined);
   selected: ProductModel[] | undefined;
   workplans: BehaviorSubject<WorkplanModel[] | undefined> = new BehaviorSubject<WorkplanModel[] | undefined>(undefined);
@@ -199,35 +201,18 @@ export class CacheProductsService {
     }
   }
 
-  importProducts(importerName: string, importParameters: Entry | undefined) {
-    return new Promise<boolean>((resolve) => {
-      let body = {} as { importerName: string; body?: Entry | undefined };
-      if (importParameters) {
-        body = {
-          importerName: importerName,
-          body: importParameters,
-        };
-      } else {
-        body = {
-          importerName: importerName,
-        };
-      }
+  async importProducts(importerName: string, importParameters: Entry | undefined) {
+    const body = {
+      importerName: importerName,
+      body: importParameters,
+    } as Import$Params;
 
-      this.service.import(body).subscribe({
-        next: (products) => {
-          let newProductsOfTree = this.productsShownInTheTree.value ?? [];
-          for (let product of products) {
-            newProductsOfTree.push(product);
-          }
-          this.productsShownInTheTree.next(newProductsOfTree);
-        },
-        error: async (e: HttpErrorResponse) => {
-          await this.snackbarService.handleError(e);
-        },
-      });
-
-      resolve(true);
-    });
+    try {
+      await lastValueFrom(this.service.import(body));  
+      await this.loadProductsForTree();
+    } catch (error) {
+      await this.snackbarService.handleError(error as HttpErrorResponse);    
+    }
   }
 }
 
