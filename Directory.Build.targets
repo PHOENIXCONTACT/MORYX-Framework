@@ -6,6 +6,7 @@
   <!-- Package refereces for all projects if IsPackable=true -->
   <ItemGroup Condition="'$(IsPackable)' == 'true'">
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />
   </ItemGroup>
   
 	<ItemGroup>

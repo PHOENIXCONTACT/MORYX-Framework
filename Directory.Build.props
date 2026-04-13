@@ -2,6 +2,10 @@
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
+	<GenerateSBOM>true</GenerateSBOM>
+    <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
+    <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
+	<SbomGenerationEnablePackageMetadataParsing>true</SbomGenerationEnablePackageMetadataParsing>
   </PropertyGroup>
 
 	<PropertyGroup>
