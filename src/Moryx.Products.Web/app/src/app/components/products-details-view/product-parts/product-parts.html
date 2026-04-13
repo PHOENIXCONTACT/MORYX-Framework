@@ -21,7 +21,8 @@
               <mat-nav-list class="parts-part-list-list">
                 @for (partElement of connector.parts; track partElement.id) {
                   <a mat-list-item
-                    (click)="onSelectPartElement(partElement)"
+                    [routerLink]="['/details', this.currentProduct()!.id, 'parts', this.expandedPart()!.name, partElement.id]"
+                    [queryParamsHandling]="'preserve'"
                     class="parts-part-list-list-item"
                     [class.moryx-selected]="currentPart?.id == partElement.id">
                     <a matListItemMeta 

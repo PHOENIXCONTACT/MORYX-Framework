@@ -6,7 +6,7 @@
 import { Component, inject, linkedSignal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationConstants } from 'src/app/extensions/translation-constants.extensions';
 import { PartConnector, PartModel, ProductModel } from '../../../api/models';
@@ -33,7 +33,8 @@ import { MatTooltip } from "@angular/material/tooltip";
     MatButtonModule,
     TranslateModule,
     MatIcon,
-    MatTooltip
+    MatTooltip,
+    RouterLink
 ]
 })
 export class ProductParts {
@@ -55,10 +56,6 @@ export class ProductParts {
   onDeselectPartConnector(part: PartConnector) {
     if (part.name !== this.expandedPart()?.name) return;
     this.router.navigate(['details', this.currentProduct()!.id, 'parts', 'base', 0]);
-  }
-
-  onSelectPartElement(part: PartModel) {
-    this.router.navigate(['details', this.currentProduct()!.id, 'parts', this.expandedPart()!.name, part.id], { queryParamsHandling: 'preserve' });
   }
 
   async addPart() {
@@ -108,7 +105,7 @@ export class ProductParts {
 
   openProduct(part: PartModel) {
     if (this.isEditMode()) {
-      this.onSelectPartElement(part);
+      this.router.navigate(['details', this.currentProduct()!.id, 'parts', this.expandedPart()!.name, part.id], { queryParamsHandling: 'preserve' });
       return;
     }
     this.router.navigate(['details', part.product?.id]);
