@@ -18,16 +18,25 @@
         @if (currentConnector?.name === connector.name) {
           @if (connector.isCollection) {
             <div class="parts-part-list">
-              <mat-list class="parts-part-list-list">
+              <mat-nav-list class="parts-part-list-list">
                 @for (partElement of connector.parts; track partElement.id) {
-                  <mat-list-item
+                  <a mat-list-item
                     (click)="onSelectPartElement(partElement)"
                     class="parts-part-list-list-item"
-                    [ngClass]="{ 'moryx-selected': currentPart?.id == partElement.id }">
-                    {{ createProductNameWithIdentity(partElement.product, true, 30) }}
-                  </mat-list-item>
+                    [class.moryx-selected]="currentPart?.id == partElement.id">
+                    <a matListItemMeta 
+                      class="product-link"
+                      [matTooltip]="TranslationConstants.PARTS.OPEN | translate"
+                      aria-label="Go to referenced product"
+                      [class.hidden]="isEditMode()"
+                      (click)="$event.stopPropagation(); $event.preventDefault(); openProduct(partElement)">
+                      <mat-icon>arrow_outward</mat-icon>
+                    </a>
+                    <span matListItemTitle>{{ partElement.product?.name }}</span>
+                    <span matListItemLine>{{ partElement.product?.identifier }}-{{ partElement.product?.revision }}</span>
+                </a>
                 }
-              </mat-list>
+              </mat-nav-list>
               <app-product-parts-details class="parts-part-list-details" />
             </div>
           } @else{
@@ -51,6 +60,15 @@
               {{ TranslationConstants.PARTS.ADD | translate }}
             </button>
           } @else {
+            @if (currentPart) {
+              <button
+                mat-button
+                [disabled]="isEditMode()"
+                (click)="openProduct(currentPart)"
+                >
+                {{ TranslationConstants.PARTS.OPEN | translate }}
+              </button>
+            }
             <button
               mat-button
               [disabled]="!isEditMode() || !currentPart"

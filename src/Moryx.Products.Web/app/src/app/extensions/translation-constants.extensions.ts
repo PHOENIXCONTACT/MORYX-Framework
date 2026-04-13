@@ -70,7 +70,8 @@ export class TranslationConstants {
   public static readonly PARTS = {
     REMOVE: 'PARTS.REMOVE',
     ADD: 'PARTS.ADD',
-    REPLACE: 'PARTS.REPLACE'
+    REPLACE: 'PARTS.REPLACE',
+    OPEN: 'PARTS.OPEN'
   };
 
   public static readonly ADD_DIALOG = {
@@ -117,8 +118,7 @@ export class TranslationConstants {
   public static readonly SHOW_REVISION_DIALOG = {
     TITLE: 'SHOW_REVISION_DIALOG.TITLE',
     CANCEL: 'SHOW_REVISION_DIALOG.CANCEL',
-    ADD_REVISION: 'SHOW_REVISION_DIALOG.ADD_REVISION',
-    OPEN: 'SHOW_REVISION_DIALOG.OPEN',
+    ADD_REVISION: 'SHOW_REVISION_DIALOG.ADD_REVISION'
   };
 
   public static readonly SIDEBAR_BUTTONS = {

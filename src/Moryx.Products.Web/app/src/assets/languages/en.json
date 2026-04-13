@@ -58,7 +58,8 @@
   "PARTS": {
     "REMOVE": "REMOVE",
     "ADD": "ADD",
-    "REPLACE": "REPLACE"
+    "REPLACE": "REPLACE",
+    "OPEN": "OPEN PRODUCT"
   },
   "ADD_DIALOG": {
     "TITLE": "Select Part",

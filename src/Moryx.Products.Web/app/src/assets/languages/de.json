@@ -58,7 +58,8 @@
   "PARTS": {
     "REMOVE": "ENTFERNEN",
     "ADD": "HINZUFÜGEN",
-    "REPLACE": "ERSETZEN"
+    "REPLACE": "ERSETZEN",
+    "OPEN": "PRODUKT ÖFFNEN"
   },
   "ADD_DIALOG": {
     "TITLE": "Teil auswählen",

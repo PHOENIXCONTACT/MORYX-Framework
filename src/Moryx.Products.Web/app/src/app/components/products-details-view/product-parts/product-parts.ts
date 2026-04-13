@@ -18,6 +18,8 @@ import { MatListModule } from '@angular/material/list';
 import { ProductPartsDetailsComponent } from './product-parts-details/product-parts-details';
 import { MatButtonModule } from '@angular/material/button';
 import { firstValueFrom } from 'rxjs';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-product-parts',
@@ -29,8 +31,10 @@ import { firstValueFrom } from 'rxjs';
     MatListModule,
     ProductPartsDetailsComponent,
     MatButtonModule,
-    TranslateModule
-  ]
+    TranslateModule,
+    MatIcon,
+    MatTooltip
+]
 })
 export class ProductParts {
   private editProductsService = inject(EditProductsService);
@@ -100,5 +104,13 @@ export class ProductParts {
     }
     const partNames = connector.parts.map(p => p.product ? this.createProductNameWithIdentity(p.product, true) : 'Unnamed Product');
     return partNames.join(', ');
+  }
+
+  openProduct(part: PartModel) {
+    if (this.isEditMode()) {
+      this.onSelectPartElement(part);
+      return;
+    }
+    this.router.navigate(['details', part.product?.id]);
   }
 }
