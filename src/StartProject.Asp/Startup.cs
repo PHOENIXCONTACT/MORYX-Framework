@@ -62,6 +62,12 @@ public class Startup
         services.AddSwaggerGen(c =>
         {
             c.CustomOperationIds(api => ((ControllerActionDescriptor)api.ActionDescriptor).MethodInfo.Name);
+
+            //Include XML comments
+            var xmlFile = $"{typeof(ResourceModificationController).Assembly.GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            if (File.Exists(xmlPath))
+                c.IncludeXmlComments(xmlPath);
         });
 
         //Authentification
