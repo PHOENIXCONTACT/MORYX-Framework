@@ -16,9 +16,7 @@ export class SessionService {
   private readonly PRODUCT_TREE_HIERARCHY: string = 'product-tree-hierarchy';
   private readonly WIP_PRODUCT: string = 'wip-product';
 
-  constructor() { }
-
-  setWipProduct(product: ProductModel, details: ProductStorageDetails) {
+  pushWipProduct(product: ProductModel, details: ProductStorageDetails) {
     const productStorageObject: ProductStorageObject = {product: product, details: details};
     sessionStorage.setItem(this.WIP_PRODUCT, JSON.stringify(productStorageObject));
   }
@@ -28,8 +26,10 @@ export class SessionService {
     return item ? JSON.parse(item) : undefined;
   }
 
-  removeWipProduct() {
+  popWipProduct(): ProductStorageObject | undefined {
+    const product = this.getWipProduct();
     sessionStorage.removeItem(this.WIP_PRODUCT);
+    return product;
   }
 
   getProductTreeHierarchy(): boolean {
@@ -60,15 +60,15 @@ export class SessionService {
         }
         expandedNodesString = expandedNodesString.slice(0, -1);
       }
-    } 
-    
+    }
+
     sessionStorage.setItem(this.PRODUCT_TREE, expandedNodesString);
   }
 
   expandNodesAccordingToStorage(treeControl: FlatTreeControl<FlatNode, FlatNode>) {
     const expandedNodes = sessionStorage.getItem(this.PRODUCT_TREE);
     if (!expandedNodes) return;
-  
+
     const expandedNodesArray = expandedNodes.split(',');
     for (let node of treeControl.dataNodes) {
       if (expandedNodesArray.includes(node.name)) {

@@ -6,6 +6,7 @@
 import { FlatTreeControl } from "@angular/cdk/tree";
 import {
   Component,
+  computed,
   inject,
   OnDestroy,
   OnInit,
@@ -96,13 +97,13 @@ export class App implements OnInit, OnDestroy {
   private translateService = inject(TranslateService);
 
   isEditMode = toSignal(this.editService.edit$, { initialValue: false });
-  selected = signal<ProductModel | undefined>(undefined);
+  selected = toSignal(this.editService.currentProduct$);
   products = signal<ProductModel[]>([]);
   productDefinitions = signal<ProductDefinitionModel[]>([]);
   hierarchic = signal(false);
   revisionOptions = signal<string[]>(Object.keys(RevisionFilter));
   selectorOptions = signal<string[]>(Object.keys(Selector));
-  importer = signal<string | undefined>(undefined);
+  importers = toSignal(this.cacheService.importers$, { initialValue: [] });
   menuTopLeftPosition = signal<{ x: String, y: String }>({x: '0', y: '0'});
   trigger = viewChild.required(MatMenuTrigger);
 
@@ -146,28 +147,9 @@ export class App implements OnInit, OnDestroy {
       this.createDatasource(this.hierarchic());
     });
 
-    this.cacheService.importers.subscribe((importers) => {
-      if (importers && importers.length > 0 && importers[0].name)
-        this.importer.set(importers[0].name!);
-    });
-
-    this.editService.currentProduct.subscribe((product) => {
-      this.selected.set(product);
-    });
-
-    this.router.events.subscribe((e) => {
-      if (e instanceof NavigationEnd) this.selectCurrentProduct();
-    });
-
+    // ToDo: MOve to route resolver for base path
     this.cacheService.loadConfiguration();
     this.cacheService.loadProductsForTree();
-
-    const wipProduct = this.sessionService.getWipProduct();
-    if (wipProduct) {
-      this.editService.loadFromStorage();
-    } else {
-      this.editService.loadProduct();
-    }
 
     this.searchbar.subscribe({
       next: (result: SearchRequest) => {
@@ -189,7 +171,7 @@ export class App implements OnInit, OnDestroy {
       if (products.length > 1)
         this.router.navigate(["search"], {queryParams: {q: searchterm}});
       else if (products.length === 1)
-        this.routeToAnotherProductOnSelect(products[0].id ?? 0);
+        this.router.navigate(['/details', products[0].id ?? 0]);
       this.searchbar.subscribe({
         next: (newRequest: SearchRequest) => {
           this.onSearch(newRequest);
@@ -198,7 +180,7 @@ export class App implements OnInit, OnDestroy {
     } else {
       const searchSuggestions = [] as SearchSuggestion[];
       for (let product of products) {
-        //TODO: change this in MORYX 10
+        //TODO: change this in MORYX 12
         const url = "Products/details/" + product.id; // <= BAD, hard coding a parent url 'Products' is no reliable.
         if (!product.id) continue;
 
@@ -277,23 +259,15 @@ export class App implements OnInit, OnDestroy {
   }
 
   beforeUnloadHander() {
-    if (this.isEditMode() && this.selected()) {
-      this.sessionService.setWipProduct(this.selected()!, <ProductStorageDetails>{
+    const product = this.selected();
+    if (this.isEditMode() && product) {
+      this.sessionService.pushWipProduct(product, <ProductStorageDetails>{
         currentPartId: this.editService.currentPartId,
         currentRecipeNumber: this.editService.currentRecipeNumber,
         maximumAlreadySavedPartId: this.editService.maximumAlreadySavedPartId,
-        maximumAlreadySavedRecipeId:
-        this.editService.maximumAlreadySavedRecipeId
+        maximumAlreadySavedRecipeId: this.editService.maximumAlreadySavedRecipeId
       });
     }
-  }
-
-  importDisabled(): boolean {
-    return this.isEditMode();
-  }
-
-  editDisabled() {
-    return !this.selected();
   }
 
   saveDisabled(): boolean {
@@ -370,10 +344,12 @@ export class App implements OnInit, OnDestroy {
     this.trigger().openMenu();
   }
 
-  async onDeselect() {
-    if (this.isEditMode())
-      await this.onCancel();
-    this.editService.unloadProduct();
+  async onDeselect() {    
+    if (this.isEditMode()) {
+      await this.editService.onCancel();
+    }
+    this.editService.resetProduct();
+    await this.router.navigate([``]);
   }
 
   onSelect(id: number) {
@@ -383,51 +359,18 @@ export class App implements OnInit, OnDestroy {
 
     if (id === this.selected()?.id) return;
 
-    const url = this.router.url;
-    const regexSpecificRecipe: RegExp = /(details\/\d*\/recipes\/\d*)/;
-    const regexParts: RegExp = /(details\/\d*\/parts)/;
-    if (regexSpecificRecipe.test(url) || regexParts.test(url)) {
-      this.router.navigate(["../../"], {relativeTo: this.route}).then(() => {
-        this.routeToAnotherProductOnSelect(id);
-      });
-    } else {
-      this.routeToAnotherProductOnSelect(id);
-    }
+    this.router.navigate(['/details', id]);
   }
 
   onOpenContextMenu(event: any, id: number) {
     this.open(event.pointers[0].clientX, event.pointers[0].clientY, id);
   }
 
-  private routeToAnotherProductOnSelect(id: number) {
-    const product = this.products().find((p) => p.id === id);
-    if (product) {
-      this.router
-        .navigate([`details/${product.id}`], {relativeTo: this.route})
-        .then(() => this.editService.loadProduct());
-    } else this.router.navigate([``]);
-  }
-
-  selectCurrentProduct() {
-    const url = this.router.url;
-    const regexId: RegExp = /(details\/\d*)/;
-    if (!regexId.test(url)) {
-      this.selected.set(undefined);
+  async clickContainer(event: MouseEvent) {
+    if ((event.target as HTMLElement).tagName !== "MAT-TREE") {
       return;
     }
-
-    const id = Number(url.split("/")[2]);
-    if (this.selected()?.id != id)
-      this.selected.set(this.products()?.find((p) => p.id === id));
-  }
-
-  clickContainer(event: MouseEvent) {
-    if ((event.target as HTMLElement).tagName === "MAT-TREE") {
-      this.snackBar.dismiss();
-      this.router
-        .navigate([``], {relativeTo: this.route})
-        .then(() => this.editService.onCancel());
-    }
+    this.onDeselect();
   }
 
   onDelete(id: number | undefined) {
@@ -443,16 +386,16 @@ export class App implements OnInit, OnDestroy {
       if (productToBeDeleted) {
         const actualProduct = productToBeDeleted();
         await this.cacheService.deleteProduct(actualProduct);
-        this.editService.unloadProduct();
+        this.editService.resetProduct();
       }
     });
   }
 
   async onImport() {
-    if (this.importer()) {
-      this.router.navigate([`/import/${this.importer()}`], {
-        relativeTo: this.route
-      });
+    const importers = this.importers();
+    const target = importers?.length ? importers[0].name : undefined;
+    if (target) {
+      this.router.navigate(['import', target]);
     } else {
       const translations = await this.getTranslations();
       this.snackBar.open(
@@ -491,22 +434,16 @@ export class App implements OnInit, OnDestroy {
   }
 
   onSelectAndEdit(id: number) {
-    const product = this.products().find((p) => p.id == id);
     this.searchbar.clearSuggestions();
     this.searchbar.unsubscribe();
-    if (id == 0 || product === undefined) {
+
+    if (this.editService.currentProductId() === id) {
+      this.editService.onEdit();
       return;
     }
-    if (this.selected()?.id === id) {
-      this.editService.onEdit();
-    } else {
-      this.router
-        .navigate([`/details/${product.id}`])
-        .then(() => this.editService.loadProduct())
-        .then(() => {
-          this.editService.onEdit();
-        });
-    }
+
+    this.router.navigate(['/details', id])
+      .then(() => this.editService.onEdit());
   }
 
   onDuplicate(id: number | undefined) {
