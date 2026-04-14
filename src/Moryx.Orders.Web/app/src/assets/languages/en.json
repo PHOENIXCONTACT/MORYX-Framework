@@ -23,6 +23,7 @@
     "CHANGE_AMOUNT": "CHANGE AMOUNT",
     "INTERRUPT": "INTERRUPT",
     "REPORT": "REPORT",
+    "ADVICE": "ADVICE",
     "REFRESH_DATA": "REFRESH",
     "REASSIGN_NOT_POSSIBLE": "Updating the operation is not possible in its current state",
     "REFRESH_RECOMMENDED": "Refresh recommended",
@@ -124,6 +125,15 @@
     "TITLE": "Update the current target amount",
     "UPDATE_AMOUNT": "UPDATE AMOUNT",
     "CANNOT_REDUCE_TARGET_AMOUNT": "The target amount cannot be further reduced"
+  },
+  "ADVICE_DIALOG": {
+    "TITLE": "Advice",
+    "PART": "Material",
+    "PART_DESCRIPTION": "Select the product or a part to advice",
+    "ALREADY_ADVICED": "Already adviced",
+    "TOTE_BOX_NUMBER": "Tote Box",
+    "TOTE_BOX_NUMBER_DESCRIPTION": "Identification of the tote box",
+    "AMOUNT": "Amount"
   },
   "DISMISS": "DISMISS",
   "CANCEL": "CANCEL",

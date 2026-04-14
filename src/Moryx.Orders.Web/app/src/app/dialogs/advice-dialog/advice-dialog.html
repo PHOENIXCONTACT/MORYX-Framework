@@ -1,0 +1,77 @@
+<h2 mat-dialog-title class="advice-dialog-title">
+  {{ TranslationConstants.ADVICE_DIALOG.TITLE | translate }}
+</h2>
+<mat-dialog-content>
+  <div class="advice-dialog-context">
+    <p class="advice-dialog-context-item">
+      <span class="info-label">{{ TranslationConstants.REPORT_DIALOG.ORDER | translate }}</span>
+      <span class="info-value">
+        {{ data.operation.model.order }} - {{ data.operation.model.number }}
+      </span>
+    </p>
+    <p class="advice-dialog-context-item">
+      <span class="info-label">{{ TranslationConstants.REPORT_DIALOG.PRODUCT | translate }}</span>
+      <span class="info-value">
+        {{ toString(mainProduct()) }}
+      </span>
+    </p>
+  </div>
+
+  @if (hasPickParts()) {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ TranslationConstants.ADVICE_DIALOG.PART | translate }}</mat-label>
+      <input 
+        #input
+        type="text" 
+        matInput 
+        [formControl]="partFormControl" 
+        [matAutocomplete]="auto"
+        (input)="filter()"
+        (focus)="filter()">
+      @if (part()) {
+        <button 
+          matSuffix 
+          matIconButton 
+          aria-label="Clear" 
+          class="suffix-icon" 
+          (click)="input.value = ''">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+      <mat-autocomplete autoActiveFirstOption requireSelection #auto="matAutocomplete" [displayWith]="toString">
+        @for (pp of filteredParts(); track pp) {
+          <mat-option [value]="pp">{{ toString(pp) }}</mat-option>
+        }
+      </mat-autocomplete>
+      <mat-hint align="start">
+        {{ TranslationConstants.ADVICE_DIALOG.PART_DESCRIPTION | translate }}
+      </mat-hint>
+    </mat-form-field>
+  }
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>{{ TranslationConstants.ADVICE_DIALOG.AMOUNT | translate }}</mat-label>
+    <input type="number" matInput [(ngModel)]="amount" [disabled]="isLoading()" />
+    @if (mainProduct().Id === part().Id) {
+      <mat-hint align="start">
+        {{ TranslationConstants.ADVICE_DIALOG.ALREADY_ADVICED | translate }}: {{ alreadyAdvicedAmount() }}
+      </mat-hint>
+    }    
+  </mat-form-field>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>{{ TranslationConstants.ADVICE_DIALOG.TOTE_BOX_NUMBER | translate }}</mat-label>
+    <input matInput [(ngModel)]="toteBoxNumber" [disabled]="isLoading()" />
+    <mat-hint align="start">{{ TranslationConstants.ADVICE_DIALOG.TOTE_BOX_NUMBER_DESCRIPTION | translate }}</mat-hint>
+  </mat-form-field>
+</mat-dialog-content>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close color="primary">
+    {{ TranslationConstants.CANCEL | translate }}
+  </button>
+  <button mat-flat-button (click)="submit()" [disabled]="!canAdvice()">
+    {{ TranslationConstants.CONFIRM | translate }}
+  </button>
+  @if (isLoading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+</div>

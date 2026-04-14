@@ -45,6 +45,7 @@ import { FilterService } from '../../services/filter.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { OperationsFilter } from './operations-filter/operations-filter';
 import { MultiProgressBar } from '../../multi-progress-bar/multi-progress-bar';
+import { AdviceDialog } from 'src/app/dialogs/advice-dialog/advice-dialog';
 
 @Component({
   selector: 'app-operations',
@@ -239,6 +240,10 @@ export class Operations implements OnInit, OnDestroy {
         onSubmit: this.submitReport.bind(this),
       }
     });
+  }
+
+  onAdvice(operation: OperationViewModel) {
+    this.dialog.open(AdviceDialog, { data: <ReportDialogData>{ operation: operation }});
   }
 
   private getReportContext(guid: string): Observable<ReportContext> {
