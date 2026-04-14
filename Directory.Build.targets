@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
+  
+  <Target Name="ReadVersionFromFile" BeforeTargets="PrepareForBuild" Condition="Exists('$(MSBuildThisFileDirectory)VERSION')">
+
+    <ReadLinesFromFile File="$(MSBuildThisFileDirectory)VERSION">
+      <Output TaskParameter="Lines" ItemName="VersionLines" />
+    </ReadLinesFromFile>
+
+    <PropertyGroup>
+      <SbomGenerationPackageVersion>%(VersionLines.Identity)</SbomGenerationPackageVersion>
+    </PropertyGroup>
+  </Target>
 
   <Import Project=".build\Common.props" Condition="'$(IsPackable)' == 'true'" />
 
-  <!-- Package refereces for all projects if IsPackable=true -->
+  <!-- Package references for all projects if IsPackable=true -->
   <ItemGroup Condition="'$(IsPackable)' == 'true'">
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Sbom.Targets" PrivateAssets="All" />

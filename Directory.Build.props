@@ -6,6 +6,10 @@
     <SbomGenerationManifestInfo>SPDX:3.0</SbomGenerationManifestInfo>
     <SbomGenerationFetchLicenseInformation>true</SbomGenerationFetchLicenseInformation>
 	<SbomGenerationEnablePackageMetadataParsing>true</SbomGenerationEnablePackageMetadataParsing>
+    <SbomGenerationPackageSupplier>Phoenix Contact</SbomGenerationPackageSupplier>
+    <SbomGenerationPackageName>Moryx-Framework</SbomGenerationPackageName>
+	<!--gets set in Directory.Build.targets-->
+	<SbomGenerationPackageVersion></SbomGenerationPackageVersion>
   </PropertyGroup>
 
 	<PropertyGroup>
